@@ -24,14 +24,52 @@
  */
 import EntitySearchInput from '@components/entity-search-input';
 import PriceInputToggle from '@pages/specific-price/form/price-input-toggle';
+import CurrencySymbolUpdater from '@components/form/currency-symbol-updater';
 import SpecificPriceMap from '@pages/specific-price/specific-price-map';
-import IncludeTaxFieldToggle from '@components/form/include-tax-field-toggle';
+import ReductionTaxFieldToggle from '@components/form/reduction-tax-field-toggle';
 
 const {$} = window;
 
 $(() => {
   new PriceInputToggle();
-  new IncludeTaxFieldToggle(SpecificPriceMap.reductionTypeSelect, SpecificPriceMap.includeTaxInputContainer);
+  new CurrencySymbolUpdater(
+    SpecificPriceMap.currencyId,
+    ((symbol: string): void => {
+      if (symbol === '') {
+        return;
+      }
+
+      // Specific Price
+      const priceSymbols = document.querySelectorAll(SpecificPriceMap.priceSymbol);
+
+      if (priceSymbols.length) {
+        priceSymbols.forEach((value: Element) => {
+          const elt = value;
+          elt.innerHTML = symbol;
+        });
+      }
+
+      // Reduction Amount
+      const reductionTypeSelect = document.querySelector<HTMLSelectElement>(SpecificPriceMap.reductionTypeSelect);
+
+      if (reductionTypeSelect?.options[reductionTypeSelect.selectedIndex].value === 'amount') {
+        const reductionTypeAmountSymbols = document.querySelectorAll(SpecificPriceMap.reductionTypeAmountSymbol);
+
+        if (reductionTypeAmountSymbols.length) {
+          reductionTypeAmountSymbols.forEach((value: Element) => {
+            const elt = value;
+            elt.innerHTML = symbol;
+          });
+        }
+      }
+    }),
+  );
+  new ReductionTaxFieldToggle(
+    SpecificPriceMap.reductionTypeSelect,
+    SpecificPriceMap.includeTaxInputContainer,
+    SpecificPriceMap.currencyId,
+    SpecificPriceMap.reductionTypeAmountSymbol,
+  );
   new EntitySearchInput($(SpecificPriceMap.customerSearchContainer), {
     responseTransformer: (response: any) => {
       if (!response || response.customers.length === 0) {

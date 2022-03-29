@@ -182,8 +182,15 @@ class SpecificPriceController extends FrameworkBundleAdminController
                 'country' => $specificPrice->getCountryName() ?? $this->trans('All countries', 'Admin.Global'),
                 'group' => $specificPrice->getGroupName() ?? $this->trans('All groups', 'Admin.Global'),
                 'customer' => $specificPrice->getCustomerName() ?? $this->trans('All customers', 'Admin.Global'),
-                'price' => $this->formatPrice($specificPrice->getFixedPrice()),
-                'impact' => $this->formatImpact($specificPrice->getReductionType(), $specificPrice->getReductionValue()),
+                'price' => $this->formatPrice(
+                    $specificPrice->getFixedPrice(),
+                    $specificPrice->getCurrencyISOCode() ?: $this->getContextCurrencyIso()
+                ),
+                'impact' => $this->formatImpact(
+                    $specificPrice->getReductionType(),
+                    $specificPrice->getReductionValue(),
+                    $specificPrice->getCurrencyISOCode() ?: $this->getContextCurrencyIso()
+                ),
                 'period' => $this->formatPeriod($specificPrice->getDateTimeFrom(), $specificPrice->getDateTimeTo()),
                 'fromQuantity' => $specificPrice->getFromQuantity(),
             ];
@@ -194,25 +201,27 @@ class SpecificPriceController extends FrameworkBundleAdminController
 
     /**
      * @param FixedPriceInterface $fixedPrice
+     * @param string $currencyIsoCode
      *
      * @return string
      */
-    private function formatPrice(FixedPriceInterface $fixedPrice): string
+    private function formatPrice(FixedPriceInterface $fixedPrice, string $currencyIsoCode): string
     {
         if (InitialPrice::isInitialPriceValue((string) $fixedPrice->getValue())) {
             return self::UNSPECIFIED_VALUE_FORMAT;
         }
 
-        return $this->getContextLocale()->formatPrice((string) $fixedPrice->getValue(), $this->getContextCurrencyIso());
+        return $this->getContextLocale()->formatPrice((string) $fixedPrice->getValue(), $currencyIsoCode);
     }
 
     /**
      * @param string $reductionType
      * @param DecimalNumber $reductionValue
+     * @param string $currencyIsoCode
      *
      * @return string
      */
-    private function formatImpact(string $reductionType, DecimalNumber $reductionValue): string
+    private function formatImpact(string $reductionType, DecimalNumber $reductionValue, string $currencyIsoCode): string
     {
         if ($reductionValue->equalsZero()) {
             return self::UNSPECIFIED_VALUE_FORMAT;
@@ -222,7 +231,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
 
         $locale = $this->getContextLocale();
         if ($reductionType === Reduction::TYPE_AMOUNT) {
-            return sprintf('%s', $locale->formatPrice((string) $reductionValue, $this->getContextCurrencyIso()));
+            return sprintf('%s', $locale->formatPrice((string) $reductionValue, $currencyIsoCode));
         }
 
         return sprintf('%s %%', (string) $reductionValue);

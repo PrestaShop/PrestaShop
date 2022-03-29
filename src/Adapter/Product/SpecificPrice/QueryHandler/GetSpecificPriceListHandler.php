@@ -131,6 +131,7 @@ class GetSpecificPriceListHandler implements GetSpecificPriceListHandlerInterfac
                 $combinationId ? $this->combinationNameBuilder->buildName($attributesInfo[$combinationId]) : null,
                 $specificPrice['shop_name'],
                 $specificPrice['currency_name'],
+                $specificPrice['currency_iso_code'],
                 $specificPrice['country_name'],
                 $specificPrice['group_name'],
                 $this->buildCustomerFullName($specificPrice)

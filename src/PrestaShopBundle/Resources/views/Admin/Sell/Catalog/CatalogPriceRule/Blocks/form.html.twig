@@ -83,9 +83,11 @@
         }) }}
       </div>
 
-      {{ ps.form_group_row(catalogPriceRuleForm.reduction.value, {}, {
-        'label': 'Reduction'|trans({}, 'Admin.Catalog.Feature'),
-      }) }}
+      <div class="js-reduction-row">
+        {{ ps.form_group_row(catalogPriceRuleForm.reduction.value, {}, {
+          'label': 'Reduction'|trans({}, 'Admin.Catalog.Feature'),
+        }) }}
+      </div>
 
       {% block catalog_price_rule_form_rest %}
         {{ form_rest(catalogPriceRuleForm) }}

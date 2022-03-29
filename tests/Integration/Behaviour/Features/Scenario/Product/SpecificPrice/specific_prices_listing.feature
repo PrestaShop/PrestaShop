@@ -67,7 +67,7 @@ Feature: List specific prices for product in Back Office (BO)
       | combination     | product1SWhite |
     And product "product1" should have 3 specific prices
     Then product "product1" should have following list of specific prices in "en" language:
-      | id reference | combination             | reduction type | reduction value | includes tax | fixed price | from quantity | shop      | currency | country       | group   | customer | from                | to                  |
-      | price1       |                         | amount         | 111.50          | true         | 400         | 1             |           |          |               |         |          | 0000-00-00 00:00:00 | 0000-00-00 00:00:00 |
-      | price2       |                         | amount         | 12.56           | true         | 45.78       | 1             | test_shop | USD      | United States | Visitor | John DOE | 0000-00-00 00:00:00 | 0000-00-00 00:00:00 |
-      | price3       | Size - S, Color - White | percentage     | 30              | false        | 0           | 1             |           |          |               |         |          | 0000-00-00 00:00:00 | 0000-00-00 00:00:00 |
+      | id reference | combination             | reduction type | reduction value | includes tax | fixed price | from quantity | shop      | currency | currencyISOCode | country       | group   | customer | from                | to                  |
+      | price1       |                         | amount         | 111.50          | true         | 400         | 1             |           |          |                 |               |         |          | 0000-00-00 00:00:00 | 0000-00-00 00:00:00 |
+      | price2       |                         | amount         | 12.56           | true         | 45.78       | 1             | test_shop | USD      | USD             | United States | Visitor | John DOE | 0000-00-00 00:00:00 | 0000-00-00 00:00:00 |
+      | price3       | Size - S, Color - White | percentage     | 30              | false        | 0           | 1             |           |          |                 |               |         |          | 0000-00-00 00:00:00 | 0000-00-00 00:00:00 |
