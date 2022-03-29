@@ -329,6 +329,10 @@ class ProductInformation extends CommonAbstractType
                 'multiple' => false,
                 'required' => true,
                 'label' => $this->translator->trans('Default category', [], 'Admin.Catalog.Feature'),
+                'attr' => [
+                    'data-toggle' => 'select2',
+                    'data-minimumResultsForSearch' => '7',
+                ],
             ])
             ->add('new_category', SimpleCategory::class, [
                 'ajax' => true,

@@ -78,6 +78,10 @@ class CategoriesType extends TranslatorAwareType
                 'choices' => $this->defaultCategoryChoiceProvider->getChoices(['product_id' => $options['product_id']]),
                 //@todo: wording - default or main?
                 'label' => $this->trans('Default category', 'Admin.Catalog.Feature'),
+                'attr' => [
+                    'data-toggle' => 'select2',
+                    'data-minimumResultsForSearch' => '7',
+                ],
             ])
             ->add('add_categories_btn', ButtonType::class, [
                 'label' => $this->trans('Add categories', 'Admin.Catalog.Feature'),

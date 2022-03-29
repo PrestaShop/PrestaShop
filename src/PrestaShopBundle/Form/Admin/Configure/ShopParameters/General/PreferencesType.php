@@ -231,6 +231,10 @@ class PreferencesType extends TranslatorAwareType
                 ],
                 'label' => $this->trans('Main Shop Activity', 'Admin.Shopparameters.Feature'),
                 'choice_translation_domain' => 'Install',
+                'attr' => [
+                    'data-toggle' => 'select2',
+                    'data-minimumResultsForSearch' => '7',
+                ],
             ]);
     }
 

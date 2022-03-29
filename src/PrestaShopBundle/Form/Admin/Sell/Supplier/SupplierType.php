@@ -232,6 +232,8 @@ class SupplierType extends TranslatorAwareType
                 'attr' => [
                     'class' => 'js-supplier-country-select',
                     'data-states-url' => $this->router->generate('admin_country_states'),
+                    'data-toggle' => 'select2',
+                    'data-minimumResultsForSearch' => '7',
                 ],
             ])
             ->add('id_state', ChoiceType::class, [
@@ -242,6 +244,10 @@ class SupplierType extends TranslatorAwareType
                     new AddressStateRequired([
                         'id_country' => $countryId,
                     ]),
+                ],
+                'attr' => [
+                    'data-toggle' => 'select2',
+                    'data-minimumResultsForSearch' => '7',
                 ],
             ])
             ->add('dni', TextType::class, [

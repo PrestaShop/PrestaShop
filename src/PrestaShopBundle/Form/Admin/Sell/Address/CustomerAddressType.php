@@ -374,6 +374,8 @@ class CustomerAddressType extends TranslatorAwareType
                 ],
                 'attr' => [
                     'data-states-url' => $this->router->generate('admin_country_states'),
+                    'data-toggle' => 'select2',
+                    'data-minimumResultsForSearch' => '7',
                 ],
             ])->add('id_state', ChoiceType::class, [
                 'label' => $this->trans('State', 'Admin.Global'),
@@ -389,6 +391,8 @@ class CustomerAddressType extends TranslatorAwareType
                 ],
                 'attr' => [
                     'visible' => $showStates,
+                    'data-toggle' => 'select2',
+                    'data-minimumResultsForSearch' => '7',
                 ],
             ])->add('phone', TextType::class, [
                 'label' => $this->trans('Phone', 'Admin.Global'),

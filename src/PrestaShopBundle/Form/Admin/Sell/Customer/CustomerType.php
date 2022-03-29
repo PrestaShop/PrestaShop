@@ -257,6 +257,10 @@ class CustomerType extends TranslatorAwareType
                 'required' => false,
                 'placeholder' => null,
                 'choices' => $this->groupChoices,
+                'attr' => [
+                    'data-toggle' => 'select2',
+                    'data-minimumResultsForSearch' => '7',
+                ],
             ])
         ;
 
