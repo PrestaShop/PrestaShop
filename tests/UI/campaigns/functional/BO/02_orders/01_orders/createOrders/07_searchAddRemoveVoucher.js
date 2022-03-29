@@ -58,8 +58,6 @@ Pre-condition:
 Scenario:
 
 Post-condition:
-
-
  */
 describe('BO - Orders - Create order : Search, add and remove voucher', async () => {
   // Pre-condition: Create cart rule without code
@@ -166,8 +164,13 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
       ]);
     });
 
-    it('should remove voucher', async function () {
+    it('should try to remove voucher and check that the voucher is not removed', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'removeVoucher', baseContext);
+
+      await addOrderPage.removeVoucher(page, 1);
+
+      const voucherName = await addOrderPage.getVoucherDetailsFromTable(page);
+      await expect(getVoucherDetailsFromTable.name).to.contains(cartRuleWithoutCodeData.name);
     });
   });
 
