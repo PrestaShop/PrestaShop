@@ -40,7 +40,7 @@ final class RemoteLanguagePackLoader implements LanguagePackLoaderInterface
      *
      * @TODO : add this to {prestashop_repository}/app/config/config.yml
      */
-    private const LANG_REPOSITORY_BASE_PATH = 'http://i18n.prestashop.com';
+    private const LANG_REPOSITORY_BASE_PATH = 'http://i18n.prestashop-project.org';
 
     /**
      * @var string Prestashop version
