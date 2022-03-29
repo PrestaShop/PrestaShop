@@ -61,12 +61,7 @@ class MailTemplateTwigRendererTest extends TestCase
             ->getMock()
         ;
 
-        $configurationMock = $this->getMockBuilder(ConfigurationInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-
-        $generator = new MailTemplateTwigRenderer($engineMock, $builderMock, $dispatcherMock, $configurationMock);
+        $generator = new MailTemplateTwigRenderer($engineMock, $builderMock, $dispatcherMock, false);
         $this->assertNotNull($generator);
     }
 
@@ -94,18 +89,13 @@ class MailTemplateTwigRendererTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock()
         ;
-        /** @var ConfigurationInterface $configurationMock */
-        $configurationMock = $this->getMockBuilder(ConfigurationInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
 
         /** @var Environment $engineMock */
         $generator = new MailTemplateTwigRenderer(
             $engineMock,
             $this->createVariablesBuilderMock($expectedVariables, $expectedLanguage),
             $dispatcherMock,
-            $configurationMock
+            false
         );
         $this->assertNotNull($generator);
 
@@ -126,7 +116,7 @@ class MailTemplateTwigRendererTest extends TestCase
             $this->createEngineMock($templatePaths[MailTemplateInterface::HTML_TYPE], $expectedVariables, $expectedTemplate),
             $this->createVariablesBuilderMock($expectedVariables, $expectedLanguage),
             $this->createHookDispatcherMock($mailLayout, MailTemplateInterface::HTML_TYPE),
-            $this->createConfigurationMock()
+            true
         );
         $this->assertNotNull($generator);
 
@@ -149,7 +139,7 @@ class MailTemplateTwigRendererTest extends TestCase
             $this->createEngineMock($templatePaths[MailTemplateInterface::TXT_TYPE], $expectedVariables, $expectedTemplate),
             $this->createVariablesBuilderMock($expectedVariables, $expectedLanguage),
             $this->createHookDispatcherMock($mailLayout, MailTemplateInterface::HTML_TYPE),
-            $this->createConfigurationMock()
+            true
         );
         $this->assertNotNull($generator);
 
@@ -171,7 +161,7 @@ class MailTemplateTwigRendererTest extends TestCase
             $this->createEngineMock($templatePaths[MailTemplateInterface::TXT_TYPE], $expectedVariables, $expectedTemplate),
             $this->createVariablesBuilderMock($expectedVariables, $expectedLanguage),
             $this->createHookDispatcherMock($mailLayout, MailTemplateInterface::TXT_TYPE),
-            $this->createConfigurationMock()
+            true
         );
         $this->assertNotNull($generator);
 
@@ -194,7 +184,7 @@ class MailTemplateTwigRendererTest extends TestCase
             $this->createEngineMock($templatePaths[MailTemplateInterface::HTML_TYPE], $expectedVariables, $expectedTemplate),
             $this->createVariablesBuilderMock($expectedVariables, $expectedLanguage),
             $this->createHookDispatcherMock($mailLayout, MailTemplateInterface::TXT_TYPE),
-            $this->createConfigurationMock()
+            true
         );
         $this->assertNotNull($generator);
 
@@ -217,7 +207,7 @@ class MailTemplateTwigRendererTest extends TestCase
             $this->createEngineMock($templatePaths[MailTemplateInterface::HTML_TYPE], $expectedVariables, $generatedTemplate),
             $this->createVariablesBuilderMock($expectedVariables, $expectedLanguage),
             $this->createHookDispatcherMock($mailLayout, MailTemplateInterface::HTML_TYPE, 1),
-            $this->createConfigurationMock()
+            true
         );
         $this->assertNotNull($generator);
 
@@ -394,22 +384,5 @@ class MailTemplateTwigRendererTest extends TestCase
         }
 
         return $mailLayoutMock;
-    }
-
-    /**
-     * @return MockObject|ConfigurationInterface
-     */
-    private function createConfigurationMock()
-    {
-        $configurationMock = $this->getMockBuilder(ConfigurationInterface::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-
-        $configurationMock
-            ->method('get')
-            ->willReturn(1);
-
-        return $configurationMock;
     }
 }
