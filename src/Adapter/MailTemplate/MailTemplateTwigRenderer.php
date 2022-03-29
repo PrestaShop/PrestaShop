@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\MailTemplate;
 
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
 use PrestaShop\PrestaShop\Core\Exception\TypeException;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
