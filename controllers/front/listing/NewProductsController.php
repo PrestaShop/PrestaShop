@@ -31,6 +31,11 @@ class NewProductsControllerCore extends ProductListingFrontController
 {
     public $php_self = 'new-products';
 
+    public function getCanonicalURL(): string
+    {
+        return $this->buildPaginatedUrl($this->context->link->getPageLink('new-products'));
+    }
+
     /**
      * {@inheritdoc}
      */

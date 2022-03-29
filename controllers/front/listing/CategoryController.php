@@ -59,22 +59,8 @@ class CategoryControllerCore extends ProductListingFrontController
         if (!Validate::isLoadedObject($this->category)) {
             return '';
         }
-        $canonicalUrl = $this->context->link->getCategoryLink($this->category);
-        $parsedUrl = parse_url($canonicalUrl);
-        $params = [];
-        $page = (int) Tools::getValue('page');
 
-        if (isset($parsedUrl['query'])) {
-            parse_str($parsedUrl['query'], $params);
-        }
-
-        if ($page > 1) {
-            $params['page'] = $page;
-        } else {
-            unset($params['page']);
-        }
-
-        return http_build_url($parsedUrl, ['query' => http_build_query($params)]);
+        return $this->buildPaginatedUrl($this->context->link->getCategoryLink($this->category));
     }
 
     /**
