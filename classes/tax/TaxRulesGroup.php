@@ -136,7 +136,7 @@ class TaxRulesGroupCore extends ObjectModel
 
     public static function getTaxRulesGroups($only_active = true)
     {
-        return static::getTaxRulesGroupsData($only_active);
+        return self::getTaxRulesGroupsData($only_active);
     }
 
     /**

@@ -38,10 +38,10 @@ class Inflector
 
     public static function getInflector(): DoctrineInflector
     {
-        if (null === static::$inflector) {
-            static::$inflector = InflectorFactory::create()->build();
+        if (null === self::$inflector) {
+            self::$inflector = InflectorFactory::create()->build();
         }
 
-        return static::$inflector;
+        return self::$inflector;
     }
 }

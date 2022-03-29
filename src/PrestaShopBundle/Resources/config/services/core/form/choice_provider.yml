@@ -77,7 +77,6 @@ services:
   prestashop.core.form.choice_provider.mail_method:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\MailMethodChoiceProvider'
     arguments:
-      - '@prestashop.adapter.legacy.configuration'
       - '@translator'
 
   prestashop.core.form.choice_provider.contact_by_id:

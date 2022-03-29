@@ -29,7 +29,9 @@
  */
 class AdminFeaturesControllerCore extends AdminController
 {
+    /** @var bool */
     public $bootstrap = true;
+    /** @var string */
     protected $position_identifier = 'id_feature';
     protected $feature_name;
 

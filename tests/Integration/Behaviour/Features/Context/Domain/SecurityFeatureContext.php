@@ -55,7 +55,7 @@ class SecurityFeatureContext extends AbstractDomainFeatureContext
     {
         $data = $node->getRowsHash();
 
-        SharedStorage::getStorage()->set(static::SECURITY_FORM_KEY, $data);
+        SharedStorage::getStorage()->set(self::SECURITY_FORM_KEY, $data);
     }
 
     /**
@@ -63,7 +63,7 @@ class SecurityFeatureContext extends AbstractDomainFeatureContext
      */
     public function submitTheSecurityForm(): void
     {
-        $data = SharedStorage::getStorage()->get(static::SECURITY_FORM_KEY);
+        $data = SharedStorage::getStorage()->get(self::SECURITY_FORM_KEY);
 
         $request = Request::createFromGlobals();
         $request->setMethod(Request::METHOD_POST);
@@ -83,7 +83,7 @@ class SecurityFeatureContext extends AbstractDomainFeatureContext
             $this->setLastException(new RuntimeException('Unable to save form: ' . print_r($saveErrors, true)));
         }
 
-        SharedStorage::getStorage()->clear(static::SECURITY_FORM_KEY);
+        SharedStorage::getStorage()->clear(self::SECURITY_FORM_KEY);
     }
 
     /**

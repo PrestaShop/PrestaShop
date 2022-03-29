@@ -173,7 +173,7 @@ class Download
     /**
      * @param SimpleXMLElement $feed
      *
-     * @return \StdClass
+     * @return SimpleXMLElement|null
      *
      * @throws PrestashopCouldNotDownloadLatestVersionException
      */

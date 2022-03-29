@@ -28,7 +28,6 @@ namespace PrestaShopBundle\Model\Product;
 
 use Attachment;
 use Configuration as ConfigurationLegacy;
-use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Feature\FeatureDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Pack\PackDataProvider;
@@ -58,8 +57,6 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     private $adminProductWrapper;
     /** @var array<int|array> */
     private $locales;
-    /** @var string */
-    private $defaultLocale;
     /** @var Tools */
     private $tools;
     /** @var ProductDataProvider */
@@ -70,8 +67,6 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     private $featureAdapter;
     /** @var PackDataProvider */
     private $packAdapter;
-    /** @var Configuration */
-    private $configuration;
     /** @var ShopContext */
     private $shopContext;
     /** @var TaxRuleDataProvider */
@@ -207,14 +202,12 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         $this->contextShop = $this->context->getContext();
         $this->adminProductWrapper = $adminProductWrapper;
         $this->locales = $this->context->getLanguages();
-        $this->defaultLocale = $this->locales[0]['id_lang'];
         $this->tools = $toolsAdapter;
         $this->productAdapter = $productDataProvider;
         $this->supplierAdapter = $supplierDataProvider;
         $this->warehouseAdapter = $warehouseDataProvider;
         $this->featureAdapter = $featureDataProvider;
         $this->packAdapter = $packDataProvider;
-        $this->configuration = new Configuration();
         $this->shopContext = $shopContext;
         $this->taxRuleDataProvider = $taxRuleDataProvider;
         $this->router = $router;
@@ -797,7 +790,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     private function getDataSuppliersCombinations(Product $product)
     {
         $combinations = $product->getAttributesResume($this->locales[0]['id_lang']);
-        if (!$combinations || empty($combinations)) {
+        if (empty($combinations)) {
             $combinations[] = [
                 'id_product' => $product->id,
                 'id_product_attribute' => 0,
@@ -846,7 +839,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
     private function getDataWarehousesCombinations(Product $product)
     {
         $combinations = $product->getAttributesResume($this->locales[0]['id_lang']);
-        if (!$combinations || empty($combinations)) {
+        if (empty($combinations)) {
             $combinations[] = [
                 'id_product' => $product->id,
                 'id_product_attribute' => 0,

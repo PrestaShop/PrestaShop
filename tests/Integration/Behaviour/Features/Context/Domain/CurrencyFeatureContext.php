@@ -56,7 +56,7 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
      */
     public static function restoreCurrenciesTablesBeforeFeature(): void
     {
-        static::restoreCurrenciesTables();
+        self::restoreCurrenciesTables();
     }
 
     /**
@@ -64,7 +64,7 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
      */
     public static function restoreCurrenciesTablesAfterFeature(): void
     {
-        static::restoreCurrenciesTables();
+        self::restoreCurrenciesTables();
     }
 
     /**
@@ -72,7 +72,7 @@ class CurrencyFeatureContext extends AbstractDomainFeatureContext
      */
     public static function restoreCurrenciesTablesBeforeScenario(): void
     {
-        static::restoreCurrenciesTables();
+        self::restoreCurrenciesTables();
     }
 
     private static function restoreCurrenciesTables(): void

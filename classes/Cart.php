@@ -44,10 +44,10 @@ class CartCore extends ObjectModel
 
     public $id_shop;
 
-    /** @var int Customer delivery address ID */
+    /** @var int|null Customer delivery address ID */
     public $id_address_delivery;
 
-    /** @var int Customer invoicing address ID */
+    /** @var int|null Customer invoicing address ID */
     public $id_address_invoice;
 
     /** @var int Customer currency ID */
@@ -3357,7 +3357,7 @@ class CartCore extends ObjectModel
      */
     public function setDeliveryOption($delivery_option = null)
     {
-        if (empty($delivery_option) || count($delivery_option) == 0) {
+        if (empty($delivery_option)) {
             $this->delivery_option = '';
             $this->id_carrier = 0;
 
@@ -3418,7 +3418,7 @@ class CartCore extends ObjectModel
      * @param bool $dontAutoSelectOptions Do not auto select delivery option
      * @param bool $use_cache Use cache
      *
-     * @return array|bool|mixed Delivery option
+     * @return array|false Delivery option
      */
     public function getDeliveryOption($default_country = null, $dontAutoSelectOptions = false, $use_cache = true)
     {
@@ -4115,19 +4115,20 @@ class CartCore extends ObjectModel
 
         foreach ($this->getProducts() as $product) {
             if (
-                !$this->allow_seperated_package &&
-                !$product['allow_oosp'] &&
-                StockAvailable::dependsOnStock($product['id_product']) &&
-                $product['advanced_stock_management'] &&
-                (bool) Context::getContext()->customer->isLogged() &&
-                ($delivery = $this->getDeliveryOption()) &&
-                !empty($delivery)
+                !$this->allow_seperated_package
+                && !$product['allow_oosp']
+                && StockAvailable::dependsOnStock($product['id_product'])
+                && $product['advanced_stock_management']
+                && (bool) Context::getContext()->customer->isLogged()
             ) {
-                $product['stock_quantity'] = StockManager::getStockByCarrier(
-                    (int) $product['id_product'],
-                    (int) $product['id_product_attribute'],
-                    $delivery
-                );
+                $delivery = $this->getDeliveryOption();
+                if (!empty($delivery)) {
+                    $product['stock_quantity'] = StockManager::getStockByCarrier(
+                        (int) $product['id_product'],
+                        (int) $product['id_product_attribute'],
+                        $delivery
+                    );
+                }
             }
 
             if (
@@ -4297,7 +4298,7 @@ class CartCore extends ObjectModel
     public static function getCartIdByOrderId($id_order)
     {
         $result = Db::getInstance()->getRow('SELECT `id_cart` FROM ' . _DB_PREFIX_ . 'orders WHERE `id_order` = ' . (int) $id_order);
-        if (!$result || empty($result) || !array_key_exists('id_cart', $result)) {
+        if (empty($result) || !array_key_exists('id_cart', $result)) {
             return false;
         }
 

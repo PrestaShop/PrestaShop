@@ -31,7 +31,6 @@ use Group;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\SearchCustomers;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\SearchCustomersHandlerInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Handles query that searches for customers by given phrases
@@ -51,22 +50,14 @@ final class SearchCustomersHandler implements SearchCustomersHandlerInterface
     private $contextLangId;
 
     /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
      * @param Configuration $configuration
-     * @param TranslatorInterface $translator
      * @param int $contextLangId
      */
     public function __construct(
         Configuration $configuration,
-        TranslatorInterface $translator,
         int $contextLangId
     ) {
         $this->configuration = $configuration;
-        $this->translator = $translator;
         $this->contextLangId = $contextLangId;
     }
 

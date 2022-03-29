@@ -29,6 +29,7 @@ use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 
 class NewProductsControllerCore extends ProductListingFrontController
 {
+    /** @var string */
     public $php_self = 'new-products';
 
     public function getCanonicalURL(): string

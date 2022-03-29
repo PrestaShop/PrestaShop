@@ -25,7 +25,9 @@
  */
 class ContactControllerCore extends FrontController
 {
+    /** @var string */
     public $php_self = 'contact';
+    /** @var bool */
     public $ssl = true;
 
     /**

@@ -31,8 +31,6 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Grid\Data\Factory;
 use Currency;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
-use PrestaShop\PrestaShop\Adapter\Product\ProductDataProvider;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
@@ -66,19 +64,9 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
     private $defaultCurrencyId;
 
     /**
-     * @var ProductDataProvider
-     */
-    private $productDataProvider;
-
-    /**
      * @var TaxComputer
      */
     private $taxComputer;
-
-    /**
-     * @var ProductRepository
-     */
-    private $productRepository;
 
     /**
      * @var int
@@ -100,9 +88,7 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
         Repository $localeRepository,
         string $contextLocale,
         int $defaultCurrencyId,
-        ProductDataProvider $productDataProvider,
         TaxComputer $taxComputer,
-        ProductRepository $productRepository,
         int $countryId,
         ProductImagePathFactory $productImagePathFactory,
         TranslatorInterface $translator
@@ -114,9 +100,7 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
         );
 
         $this->defaultCurrencyId = $defaultCurrencyId;
-        $this->productDataProvider = $productDataProvider;
         $this->taxComputer = $taxComputer;
-        $this->productRepository = $productRepository;
         $this->countryId = $countryId;
         $this->productImagePathFactory = $productImagePathFactory;
         $this->translator = $translator;

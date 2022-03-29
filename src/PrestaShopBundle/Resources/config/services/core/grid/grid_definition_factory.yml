@@ -22,8 +22,6 @@ services:
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
     public: true
     arguments:
-      - "@=service('router').generate('admin_common_reset_search', {'controller': 'email', 'action': 'index'})"
-      - "@=service('router').generate('admin_emails_index')"
       - '@prestashop.core.form.choice_provider.language_by_id'
 
   prestashop.core.grid.definition.factory.request_sql:
@@ -39,8 +37,6 @@ services:
   prestashop.core.grid.definition.factory.webservice_key:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\WebserviceKeyDefinitionFactory'
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
-    arguments:
-      - '@=service("prestashop.core.form.choice_provider.status").getChoices()'
     public: true
 
   prestashop.core.grid.definition.factory.meta:
@@ -52,8 +48,6 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CategoryGridDefinitionFactory'
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
     arguments:
-      - "@=service('router').generate('admin_common_reset_search', {'controller': 'category', 'action': 'index'})"
-      - "@=service('router').generate('admin_categories_index')"
       - '@prestashop.adapter.shop.context'
       - '@prestashop.adapter.grid.action.row.accessibility_checker.category_for_view'
     public: true
@@ -61,17 +55,11 @@ services:
   prestashop.core.grid.definition.factory.employee:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\EmployeeGridDefinitionFactory'
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
-    arguments:
-      - "@=service('router').generate('admin_common_reset_search', {'controller': 'employee', 'action': 'index'})"
-      - "@=service('router').generate('admin_employees_index')"
     public: true
 
   prestashop.core.grid.definition.factory.contacts:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ContactGridDefinitionFactory'
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
-    arguments:
-      - "@=service('router').generate('admin_common_reset_search', {'controller': 'contacts', 'action': 'index'})"
-      - "@=service('router').generate('admin_contacts_index')"
     public: true
 
   prestashop.core.grid.definition.factory.customer:
@@ -114,10 +102,6 @@ services:
   prestashop.core.grid.definition.factory.profile:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ProfileGridDefinitionFactory'
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
-    arguments:
-      - "@=service('router').generate('admin_common_reset_search', {'controller': 'profile', 'action': 'index'})"
-      - "@=service('router').generate('admin_profiles_index')"
-      - '@prestashop.core.grid.action.row.accessibility_checker.delete_profile'
     public: true
 
   prestashop.core.grid.definition.factory.cms_page_category:

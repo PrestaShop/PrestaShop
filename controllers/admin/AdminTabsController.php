@@ -29,6 +29,7 @@
  */
 class AdminTabsControllerCore extends AdminController
 {
+    /** @var string */
     protected $position_identifier = 'id_tab';
 
     public function __construct()

@@ -105,7 +105,7 @@ class PrestaShopExceptionCore extends Exception
      *
      * @param string $file
      * @param int $line
-     * @param string $id
+     * @param int|null $id
      */
     protected function displayFileDebug($file, $line, $id = null)
     {
@@ -183,7 +183,7 @@ class PrestaShopExceptionCore extends Exception
      * Display arguments list of traced function.
      *
      * @param array $args List of arguments
-     * @param string $id ID of argument
+     * @param int $id ID of argument
      */
     protected function displayArgsDebug($args, $id)
     {

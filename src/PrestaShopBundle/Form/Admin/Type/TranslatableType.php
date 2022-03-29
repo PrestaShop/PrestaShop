@@ -218,11 +218,11 @@ class TranslatableType extends TranslatorAwareType
 
         $formErrors = $form->getErrors(true);
 
-        if (empty($formErrors)) {
+        if (0 === $formErrors->count()) {
             return null;
         }
 
-        if (1 === count($formErrors)) {
+        if (1 === $formErrors->count()) {
             $errorByLocale = $this->getSingleTranslatableErrorExcludingDefaultLocale(
                 $formErrors,
                 $form,
@@ -236,13 +236,11 @@ class TranslatableType extends TranslatorAwareType
             return [$errorByLocale];
         }
 
-        $errorsByLocale = $this->getTranslatableErrors(
+        return $this->getTranslatableErrors(
             $formErrors,
             $form,
             $locales
         );
-
-        return $errorsByLocale;
     }
 
     /**

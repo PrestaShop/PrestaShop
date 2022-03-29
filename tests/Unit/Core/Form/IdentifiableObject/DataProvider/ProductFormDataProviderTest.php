@@ -122,7 +122,7 @@ class ProductFormDataProviderTest extends TestCase
             null
         );
 
-        $formData = $provider->getData(static::PRODUCT_ID);
+        $formData = $provider->getData(self::PRODUCT_ID);
         $this->assertNotNull($formData);
 
         $contextShopId = 51;
@@ -135,7 +135,7 @@ class ProductFormDataProviderTest extends TestCase
             $contextShopId
         );
 
-        $formData = $provider->getData(static::PRODUCT_ID);
+        $formData = $provider->getData(self::PRODUCT_ID);
         $this->assertNotNull($formData);
     }
 
@@ -150,7 +150,7 @@ class ProductFormDataProviderTest extends TestCase
         $queryBusMock = $this->createQueryBusMock($productData);
         $provider = $this->buildProvider($queryBusMock);
 
-        $formData = $provider->getData(static::PRODUCT_ID);
+        $formData = $provider->getData(self::PRODUCT_ID);
         Assert::assertSame($expectedData, $formData);
     }
 
@@ -688,7 +688,7 @@ class ProductFormDataProviderTest extends TestCase
         $productData = [
             'redirect_type' => RedirectType::TYPE_CATEGORY_TEMPORARY,
             'redirect_target' => new ProductRedirectTarget(
-                static::DEFAULT_CATEGORY_ID,
+                self::DEFAULT_CATEGORY_ID,
                 ProductRedirectTarget::CATEGORY_TYPE,
                 $categoryName,
                 $categoryImage
@@ -696,7 +696,7 @@ class ProductFormDataProviderTest extends TestCase
         ];
         $expectedOutputData['seo']['redirect_option']['type'] = RedirectType::TYPE_CATEGORY_TEMPORARY;
         $expectedOutputData['seo']['redirect_option']['target'] = [
-            'id' => static::DEFAULT_CATEGORY_ID,
+            'id' => self::DEFAULT_CATEGORY_ID,
             'name' => $categoryName,
             'image' => $categoryImage,
         ];
@@ -910,7 +910,7 @@ class ProductFormDataProviderTest extends TestCase
     private function createProductForEditing(array $product): ProductForEditing
     {
         return new ProductForEditing(
-            static::PRODUCT_ID,
+            self::PRODUCT_ID,
             $product['type'] ?? ProductType::TYPE_STANDARD,
             $product['active'] ?? true,
             ProductCustomizationOptions::createNotCustomizable(),
@@ -924,7 +924,7 @@ class ProductFormDataProviderTest extends TestCase
             $product['attachments'] ?? [],
             $this->createProductStockInformation($product),
             $this->createVirtualProductFile($product),
-            $product['cover_thumbnail'] ?? static::COVER_URL
+            $product['cover_thumbnail'] ?? self::COVER_URL
         );
     }
 
@@ -1094,7 +1094,7 @@ class ProductFormDataProviderTest extends TestCase
         return new ProductStockInformation(
             $product['pack_stock_type'] ?? PackStockType::STOCK_TYPE_DEFAULT,
             $product['out_of_stock'] ?? OutOfStockType::OUT_OF_STOCK_DEFAULT,
-            $product['quantity'] ?? static::DEFAULT_QUANTITY,
+            $product['quantity'] ?? self::DEFAULT_QUANTITY,
             $product['minimal_quantity'] ?? 0,
             $product['low_stock_threshold'] ?? 0,
             $product['low_stock_alert'] ?? false,
@@ -1322,11 +1322,11 @@ class ProductFormDataProviderTest extends TestCase
     private function getDefaultOutputData(): array
     {
         return [
-            'id' => static::PRODUCT_ID,
+            'id' => self::PRODUCT_ID,
             'header' => [
                 'type' => ProductType::TYPE_STANDARD,
                 'name' => [],
-                'cover_thumbnail' => static::COVER_URL,
+                'cover_thumbnail' => self::COVER_URL,
             ],
             'description' => [
                 'description' => [],
@@ -1355,7 +1355,7 @@ class ProductFormDataProviderTest extends TestCase
             'stock' => [
                 'quantities' => [
                     'delta_quantity' => [
-                        'quantity' => static::DEFAULT_QUANTITY,
+                        'quantity' => self::DEFAULT_QUANTITY,
                         'delta' => 0,
                     ],
                     'stock_movements' => [],

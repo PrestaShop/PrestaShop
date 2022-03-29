@@ -73,7 +73,7 @@ abstract class ModuleCore implements ModuleInterface
     /**
      * @var string Text to display when ask for confirmation on uninstall action
      */
-    public $confirmUninstall;
+    public $confirmUninstall = '';
 
     /** @var string author of the module */
     public $author;
@@ -296,11 +296,11 @@ abstract class ModuleCore implements ModuleInterface
             Tools::displayParameterAsDeprecated('name');
         }
 
-        if (isset($this->ps_versions_compliancy) && !isset($this->ps_versions_compliancy['min'])) {
+        if (!isset($this->ps_versions_compliancy['min'])) {
             $this->ps_versions_compliancy['min'] = '1.4.0.0';
         }
 
-        if (isset($this->ps_versions_compliancy) && !isset($this->ps_versions_compliancy['max'])) {
+        if (!isset($this->ps_versions_compliancy['max'])) {
             $this->ps_versions_compliancy['max'] = _PS_VERSION_;
         }
 
@@ -2387,7 +2387,7 @@ abstract class ModuleCore implements ModuleInterface
     protected function _generateConfigXml()
     {
         $author_uri = '';
-        if (isset($this->author_uri) && $this->author_uri) {
+        if ($this->author_uri) {
             $author_uri = '<author_uri><![CDATA[' . Tools::htmlentitiesUTF8($this->author_uri) . ']]></author_uri>';
         }
 
@@ -2399,9 +2399,9 @@ abstract class ModuleCore implements ModuleInterface
     <description><![CDATA[' . str_replace('&amp;', '&', Tools::htmlentitiesUTF8($this->description)) . ']]></description>
     <author><![CDATA[' . str_replace('&amp;', '&', Tools::htmlentitiesUTF8($this->author)) . ']]></author>'
         . $author_uri . '
-    <tab><![CDATA[' . Tools::htmlentitiesUTF8($this->tab) . ']]></tab>' . (isset($this->confirmUninstall) ? "\n\t" . '<confirmUninstall><![CDATA[' . $this->confirmUninstall . ']]></confirmUninstall>' : '') . '
+    <tab><![CDATA[' . Tools::htmlentitiesUTF8($this->tab) . ']]></tab>' . (!empty($this->confirmUninstall) ? "\n\t" . '<confirmUninstall><![CDATA[' . $this->confirmUninstall . ']]></confirmUninstall>' : '') . '
     <is_configurable>' . (isset($this->is_configurable) ? (int) $this->is_configurable : 0) . '</is_configurable>
-    <need_instance>' . (int) $this->need_instance . '</need_instance>' . (isset($this->limited_countries) ? "\n\t" . '<limited_countries>' . (count($this->limited_countries) == 1 ? $this->limited_countries[0] : '') . '</limited_countries>' : '') . '
+    <need_instance>' . (int) $this->need_instance . '</need_instance>' . (!empty($this->limited_countries) ? "\n\t" . '<limited_countries>' . (count($this->limited_countries) == 1 ? $this->limited_countries[0] : '') . '</limited_countries>' : '') . '
 </module>';
         if (is_writable(_PS_MODULE_DIR_ . $this->name . '/')) {
             $iso = substr(Context::getContext()->language->iso_code, 0, 2);
@@ -2440,7 +2440,7 @@ abstract class ModuleCore implements ModuleInterface
     public static function getModulesAccessesByIdProfile($idProfile)
     {
         if (empty(static::$cache_modules_roles)) {
-            static::warmupRolesCache();
+            self::warmupRolesCache();
         }
 
         $roles = static::$cache_lgc_access;
@@ -2796,7 +2796,7 @@ abstract class ModuleCore implements ModuleInterface
             $this->createOverrideDirectory($psOverrideDir, dirname($override_path));
 
             // Check if override file is writable
-            if ((!file_exists($override_path) && !is_writable(dirname($override_path))) || (file_exists($override_path) && !is_writable($override_path))) {
+            if (!is_writable(dirname($override_path)) || !is_writable($override_path)) {
                 throw new Exception(Context::getContext()->getTranslator()->trans('file (%s) not writable', [$override_path], 'Admin.Notifications.Error'));
             }
 

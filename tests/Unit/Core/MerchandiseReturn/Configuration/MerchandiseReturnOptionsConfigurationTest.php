@@ -70,26 +70,26 @@ class MerchandiseReturnOptionsConfigurationTest extends AbstractConfigurationTes
                         'PS_ORDER_RETURN',
                         null,
                         $shopConstraint,
-                        static::VALID_CONFIGURATION[MerchandiseReturnOptionsType::FIELD_ENABLE_ORDER_RETURN],
+                        self::VALID_CONFIGURATION[MerchandiseReturnOptionsType::FIELD_ENABLE_ORDER_RETURN],
                     ],
                     [
                         'PS_ORDER_RETURN_NB_DAYS',
                         null,
                         $shopConstraint,
-                        static::VALID_CONFIGURATION[MerchandiseReturnOptionsType::FIELD_ORDER_RETURN_PERIOD_IN_DAYS],
+                        self::VALID_CONFIGURATION[MerchandiseReturnOptionsType::FIELD_ORDER_RETURN_PERIOD_IN_DAYS],
                     ],
                     [
                         'PS_RETURN_PREFIX',
                         null,
                         $shopConstraint,
-                        static::VALID_CONFIGURATION[MerchandiseReturnOptionsType::FIELD_ORDER_RETURN_PREFIX],
+                        self::VALID_CONFIGURATION[MerchandiseReturnOptionsType::FIELD_ORDER_RETURN_PREFIX],
                     ],
                 ]
             );
 
         $result = $merchandiseReturnOptionsConfiguration->getConfiguration();
         $this->assertSame(
-            static::VALID_CONFIGURATION,
+            self::VALID_CONFIGURATION,
             $result
         );
     }
@@ -102,7 +102,11 @@ class MerchandiseReturnOptionsConfigurationTest extends AbstractConfigurationTes
      */
     public function testUpdateConfigurationWithInvalidConfiguration(string $exception, array $values): void
     {
-        $merchandiseReturnOptionsConfiguration = new MerchandiseReturnOptionsConfiguration($this->mockConfiguration, $this->mockShopConfiguration, $this->mockMultistoreFeature);
+        $merchandiseReturnOptionsConfiguration = new MerchandiseReturnOptionsConfiguration(
+            $this->mockConfiguration,
+            $this->mockShopConfiguration,
+            $this->mockMultistoreFeature
+        );
 
         $this->expectException($exception);
         $merchandiseReturnOptionsConfiguration->updateConfiguration($values);
@@ -120,24 +124,37 @@ class MerchandiseReturnOptionsConfigurationTest extends AbstractConfigurationTes
             ],
             [
                 InvalidOptionsException::class,
-                array_merge(self::VALID_CONFIGURATION, [MerchandiseReturnOptionsType::FIELD_ENABLE_ORDER_RETURN => 'wrong_type']),
+                array_merge(
+                    self::VALID_CONFIGURATION,
+                    [MerchandiseReturnOptionsType::FIELD_ENABLE_ORDER_RETURN => 'wrong_type']
+                ),
             ],
             [
                 InvalidOptionsException::class,
-                array_merge(self::VALID_CONFIGURATION, [MerchandiseReturnOptionsType::FIELD_ORDER_RETURN_PERIOD_IN_DAYS => 'wrong_type']),
+                array_merge(
+                    self::VALID_CONFIGURATION,
+                    [MerchandiseReturnOptionsType::FIELD_ORDER_RETURN_PERIOD_IN_DAYS => 'wrong_type']
+                ),
             ],
             [
                 InvalidOptionsException::class,
-                array_merge(self::VALID_CONFIGURATION, [MerchandiseReturnOptionsType::FIELD_ORDER_RETURN_PREFIX => 'wrong_type']),
+                array_merge(
+                    self::VALID_CONFIGURATION,
+                    [MerchandiseReturnOptionsType::FIELD_ORDER_RETURN_PREFIX => 'wrong_type']
+                ),
             ],
         ];
     }
 
     public function testSuccessfulUpdate(): void
     {
-        $merchandiseReturnOptionsConfiguration = new MerchandiseReturnOptionsConfiguration($this->mockConfiguration, $this->mockShopConfiguration, $this->mockMultistoreFeature);
+        $merchandiseReturnOptionsConfiguration = new MerchandiseReturnOptionsConfiguration(
+            $this->mockConfiguration,
+            $this->mockShopConfiguration,
+            $this->mockMultistoreFeature
+        );
 
-        $res = $merchandiseReturnOptionsConfiguration->updateConfiguration(static::VALID_CONFIGURATION);
+        $res = $merchandiseReturnOptionsConfiguration->updateConfiguration(self::VALID_CONFIGURATION);
 
         $this->assertSame([], $res);
     }

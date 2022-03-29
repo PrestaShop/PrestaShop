@@ -55,7 +55,7 @@ class DataTransfer
                 continue;
             }
 
-            if (static::isGetMethod($method)) {
+            if (self::isGetMethod($method)) {
                 $attributeName = lcfirst(substr($method->name, 3));
 
                 $attributeValue = $method->invoke($subObject);

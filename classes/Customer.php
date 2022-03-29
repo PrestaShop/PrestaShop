@@ -1022,7 +1022,7 @@ class CustomerCore extends ObjectModel
     public function updateGroup($list)
     {
         Hook::exec('actionCustomerBeforeUpdateGroup', ['id_customer' => $this->id, 'groups' => $list]);
-        if ($list && !empty($list)) {
+        if (!empty($list)) {
             $this->cleanGroups();
             $this->addGroups($list);
         } else {
@@ -1457,7 +1457,7 @@ class CustomerCore extends ObjectModel
      */
     public function hasRecentResetPasswordToken()
     {
-        if (!$this->reset_password_token || $this->reset_password_token == '') {
+        if (!$this->reset_password_token) {
             return false;
         }
 
@@ -1474,7 +1474,7 @@ class CustomerCore extends ObjectModel
      */
     public function getValidResetPasswordToken()
     {
-        if (!$this->reset_password_token || $this->reset_password_token == '') {
+        if (!$this->reset_password_token) {
             return false;
         }
 

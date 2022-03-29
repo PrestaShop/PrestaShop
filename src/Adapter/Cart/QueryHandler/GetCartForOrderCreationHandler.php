@@ -54,7 +54,6 @@ use PrestaShop\PrestaShop\Core\Localization\LocaleInterface;
 use PrestaShopException;
 use Product;
 use Shop;
-use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
 
 /**
@@ -83,29 +82,21 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
     private $contextStateManager;
 
     /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
      * @param LocaleInterface $locale
      * @param int $contextLangId
      * @param Link $contextLink
      * @param ContextStateManager $contextStateManager
-     * @param TranslatorInterface $translator
      */
     public function __construct(
         LocaleInterface $locale,
         int $contextLangId,
         Link $contextLink,
-        ContextStateManager $contextStateManager,
-        TranslatorInterface $translator
+        ContextStateManager $contextStateManager
     ) {
         $this->locale = $locale;
         $this->contextLangId = $contextLangId;
         $this->contextLink = $contextLink;
         $this->contextStateManager = $contextStateManager;
-        $this->translator = $translator;
     }
 
     /**

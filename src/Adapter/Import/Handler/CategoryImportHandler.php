@@ -501,7 +501,7 @@ final class CategoryImportHandler extends AbstractImportHandler
                     [
                         !empty($categoryName) ? $this->tools->sanitize($categoryName) : 'No Name',
                         !empty($categoryId) ? $this->tools->sanitize((string) $categoryId) : 'No ID',
-                        $runtimeConfig->shouldValidateData() ? 'validated' : 'saved',
+                        'saved',
                     ],
                     'Admin.Advparameters.Notification'
                 )

@@ -264,7 +264,7 @@ class OrderDetailCore extends ObjectModel
     /** @var bool */
     protected $outOfStock = false;
 
-    /** @var TaxCalculator object */
+    /** @var TaxCalculator|null object */
     protected $tax_calculator = null;
 
     /** @var Address object */

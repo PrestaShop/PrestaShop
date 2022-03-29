@@ -34,38 +34,9 @@ use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class CombinationStockType extends TranslatorAwareType
 {
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
-     * @var bool
-     */
-    private $stockManagementEnabled;
-
-    /**
-     * @param TranslatorInterface $translator
-     * @param array $locales
-     * @param RouterInterface $router
-     * @param bool $stockManagementEnabled
-     */
-    public function __construct(
-        TranslatorInterface $translator,
-        array $locales,
-        RouterInterface $router,
-        bool $stockManagementEnabled
-    ) {
-        parent::__construct($translator, $locales);
-        $this->router = $router;
-        $this->stockManagementEnabled = $stockManagementEnabled;
-    }
-
     /**
      * {@inheritDoc}
      */

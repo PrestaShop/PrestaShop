@@ -43,6 +43,7 @@ class CustomizationId
      */
     public function __construct(int $customizationId)
     {
+        $this->assertValueIsPositive($customizationId);
         $this->customizationId = $customizationId;
     }
 
@@ -54,15 +55,13 @@ class CustomizationId
         return $this->customizationId;
     }
 
-    /**
-     * @param int $value
-     *
-     * @throws CustomizationConstraintException
-     */
-    private function assertValueIsPositive(int $value)
+    private function assertValueIsPositive(int $value): void
     {
         if (0 >= $value) {
-            throw new CustomizationConstraintException(sprintf('Customization id must be positive integer. "%s" given', $value), CustomizationConstraintException::INVALID_ID);
+            throw new CustomizationConstraintException(
+                sprintf('Customization id must be positive integer. "%s" given', $value),
+                CustomizationConstraintException::INVALID_ID
+            );
         }
     }
 }

@@ -2382,7 +2382,9 @@ class ToolsCore
      */
     public static function getMediaServer(string $filename): string
     {
-        if (self::hasMediaServer() && ($id_media_server = (abs(crc32($filename)) % self::$_cache_nb_media_servers + 1))) {
+        if (self::hasMediaServer()) {
+            $id_media_server = abs(crc32($filename)) % self::$_cache_nb_media_servers + 1;
+
             return constant('_MEDIA_SERVER_' . $id_media_server . '_');
         }
 
@@ -3247,7 +3249,7 @@ exit;
                         $order_by_prefix = 'p.';
                     } elseif ($value == 'name') {
                         $order_by_prefix = 'pl.';
-                    } elseif ($value == 'manufacturer_name' && $prefix) {
+                    } elseif ($value == 'manufacturer_name') {
                         $order_by_prefix = 'm.';
                         $value = 'name';
                     } elseif ($value == 'position' || empty($value)) {

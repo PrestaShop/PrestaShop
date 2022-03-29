@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Kernel;
 
 use Doctrine\DBAL\DriverManager;
-use PrestaShop\PrestaShop\Adapter\Environment;
 
 /**
  * Class ModuleRepositoryFactory is used to build the ModuleRepository in context where symfony container is not
@@ -52,11 +51,6 @@ class ModuleRepositoryFactory
     private $parameters;
 
     /**
-     * @var string
-     */
-    private $environment;
-
-    /**
      * @var ModuleRepository
      */
     private $moduleRepository;
@@ -77,15 +71,10 @@ class ModuleRepositoryFactory
 
     /**
      * @param array|null $parameters
-     * @param string|null $environment
      */
-    public function __construct(array $parameters = null, $environment = null)
+    public function __construct(array $parameters = null)
     {
         $this->parameters = $parameters;
-        $this->environment = $environment;
-        if (null === $environment) {
-            $this->environment = (new Environment())->getName();
-        }
     }
 
     /**

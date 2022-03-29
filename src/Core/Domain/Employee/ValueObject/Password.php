@@ -34,12 +34,12 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\EmployeeConstraintExcep
 class Password
 {
     /**
-     * @var string minimum required password length
+     * @var int minimum required password length
      */
     public const MIN_LENGTH = 8;
 
     /**
-     * @var string maximum allowed password length
+     * @var int maximum allowed password length
      */
     public const MAX_LENGTH = 255;
 

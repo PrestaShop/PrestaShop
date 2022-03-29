@@ -56,6 +56,7 @@ class AdminProductsControllerCore extends AdminController
 
     protected $available_tabs_lang = [];
 
+    /** @var string */
     protected $position_identifier = 'id_product';
 
     protected $submitted_tabs;
@@ -104,7 +105,7 @@ class AdminProductsControllerCore extends AdminController
             $words = explode(',', $keywords);
             foreach ($words as $word_item) {
                 $word_item = trim($word_item);
-                if (!empty($word_item) && $word_item != '') {
+                if (!empty($word_item)) {
                     $out[] = $word_item;
                 }
             }
@@ -581,7 +582,8 @@ class AdminProductsControllerCore extends AdminController
 
     public function processDelete()
     {
-        if (Validate::isLoadedObject($object = $this->loadObject()) && isset($this->fieldImageSettings)) {
+        $object = $this->loadObject();
+        if (Validate::isLoadedObject($object)) {
             /** @var Product $object */
             // check if request at least one object with noZeroObject
             if (isset($object->noZeroObject) && count($taxes = call_user_func([$this->className, $object->noZeroObject])) <= 1) {
@@ -2258,13 +2260,6 @@ class AdminProductsControllerCore extends AdminController
             }
 
             $product->setDefaultAttribute(0); //reset cache_default_attribute
-            if (Tools::getValue('virtual_product_expiration_date') && !Validate::isDate(Tools::getValue('virtual_product_expiration_date'))) {
-                if (!Tools::getValue('virtual_product_expiration_date')) {
-                    $this->errors[] = $this->trans('The expiration-date attribute is required.', [], 'Admin.Catalog.Notification');
-
-                    return false;
-                }
-            }
 
             // Trick's
             if ($edit == 1) {
@@ -2523,7 +2518,7 @@ class AdminProductsControllerCore extends AdminController
                             0
                         );
 
-                        if ($id_currency <= 0 || (!($result = Currency::getCurrency($id_currency)) || empty($result))) {
+                        if ($id_currency <= 0 || !($result = Currency::getCurrency($id_currency))) {
                             $this->errors[] = $this->trans('The selected currency is not valid', [], 'Admin.Catalog.Notification');
                         }
 
@@ -2555,15 +2550,6 @@ class AdminProductsControllerCore extends AdminController
                                 $defaultWholeslePrice = (float) Tools::convertPrice($price, $id_currency);
                                 $defaultReference = $reference;
                             }
-                        }
-                    } elseif (Tools::isSubmit('supplier_reference_' . $product->id . '_' . $attribute['id_product_attribute'] . '_' . $supplier->id_supplier)) {
-                        //int attribute with default values if possible
-                        if ((int) $attribute['id_product_attribute'] > 0) {
-                            $product_supplier = new ProductSupplier();
-                            $product_supplier->id_product = $product->id;
-                            $product_supplier->id_product_attribute = (int) $attribute['id_product_attribute'];
-                            $product_supplier->id_supplier = $supplier->id_supplier;
-                            $product_supplier->save();
                         }
                     }
                 }
@@ -3321,13 +3307,13 @@ class AdminProductsControllerCore extends AdminController
         $items = Db::getInstance()->executeS($sql);
 
         if ($items && ($disableCombination || $excludeIds)) {
-            $results = [];
+            $results = $resultsJson = [];
             foreach ($items as $item) {
                 if (!$forceJson) {
                     $item['name'] = str_replace('|', '&#124;', $item['name']);
                     $results[] = trim($item['name']) . (!empty($item['reference']) ? ' (ref: ' . $item['reference'] . ')' : '') . '|' . (int) ($item['id_product']);
                 } else {
-                    $results[] = [
+                    $resultsJson[] = [
                         'id' => $item['id_product'],
                         'name' => $item['name'] . (!empty($item['reference']) ? ' (ref: ' . $item['reference'] . ')' : ''),
                         'ref' => (!empty($item['reference']) ? $item['reference'] : ''),
@@ -3340,7 +3326,7 @@ class AdminProductsControllerCore extends AdminController
                 return $this->ajaxRender(implode(PHP_EOL, $results));
             }
 
-            return $this->ajaxRender(json_encode($results));
+            return $this->ajaxRender(json_encode($resultsJson));
         }
         if ($items) {
             // packs
