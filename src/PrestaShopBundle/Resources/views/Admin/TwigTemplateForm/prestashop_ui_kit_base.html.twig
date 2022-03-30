@@ -105,7 +105,6 @@
     {{- block('form_prepend_alert') -}}
     {{- block('form_prepend_external_link') -}}
 
-    {{- block('form_disabling_toggle') -}}
     {{- form_widget(form) -}}
     {{- form_errors(form) -}}
     {{- block('form_modify_all_shops') -}}
@@ -131,11 +130,11 @@
   {% endif %}
 {% endblock %}
 
-{% block form_disabling_toggle %}
-  {% set overrideCheckboxName = disabling_toggle_prefix ~ form.vars.name %}
-  {% if attribute(form.parent, overrideCheckboxName) is defined %}
-    {{ form_errors(attribute(form.parent, overrideCheckboxName)) }}
-    {{ form_widget(attribute(form.parent, overrideCheckboxName)) }}
+{% block form_disabling_switch %}
+  {% set disablingSwitchName = disabling_switch_prefix ~ form.vars.name %}
+  {% if attribute(form.parent, disablingSwitchName) is defined %}
+    {{ form_errors(attribute(form.parent, disablingSwitchName)) }}
+    {{ form_widget(attribute(form.parent, disablingSwitchName)) }}
   {% endif %}
 {% endblock %}
 
@@ -197,6 +196,7 @@
       {% set placement = label_attr['popover_placement'] is defined ? label_attr['popover_placement'] : 'top' %}
       {% include '@Common/HelpBox/helpbox.html.twig' with { "placement" : placement, "content": content } %}
     {% endif %}
+    {{- block('form_disabling_switch') -}}
     </{{ labelTag }}>
     {% if label_subtitle is defined %}
       <p class="subtitle">{{ label_subtitle|raw('html') }}</p>

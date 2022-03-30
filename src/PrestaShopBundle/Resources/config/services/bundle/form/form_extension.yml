@@ -104,9 +104,10 @@ services:
     tags:
       - { name: form.type_extension }
 
-  form.extension.disabling_togle_extension:
-    class: 'PrestaShopBundle\Form\Admin\Extension\DisablingToggleExtension'
+  form.extension.disabling_switch_extension:
+    class: 'PrestaShopBundle\Form\Admin\Extension\DisablingSwitchExtension'
     arguments:
-      - '@form.event_listener.disabling_toggle_listener'
+      - '@form.event_listener.add_disabling_switch_listener'
+      - '@form.event_listener.update_disable_state_listener'
     tags:
       - { name: form.type_extension }
