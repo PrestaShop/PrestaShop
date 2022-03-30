@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Translation\Storage\Loader\DatabaseTranslationLoa
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\AbstractCoreProviderDefinition;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\FrontofficeProviderDefinition;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ModuleProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ModulesProviderDefinition;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ProviderDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ThemeProviderDefinition;
 use Symfony\Component\Filesystem\Filesystem;
@@ -206,11 +207,18 @@ class CatalogueProviderFactory
     {
         if (!isset($this->providers[$providerDefinition->getType()])) {
             $coreFrontProviderDefinition = new FrontofficeProviderDefinition();
+            $modulesProviderDefinition = new ModulesProviderDefinition();
             $coreFrontProvider = new CoreCatalogueLayersProvider(
                 $this->databaseTranslationLoader,
                 $this->translationsDirectory,
-                $coreFrontProviderDefinition->getFilenameFilters(),
-                $coreFrontProviderDefinition->getTranslationDomains()
+                array_merge(
+                    $coreFrontProviderDefinition->getFilenameFilters(),
+                    $modulesProviderDefinition->getFilenameFilters()
+                ),
+                array_merge(
+                    $coreFrontProviderDefinition->getTranslationDomains(),
+                    $modulesProviderDefinition->getTranslationDomains()
+                )
             );
 
             $this->providers[$providerDefinition->getType()] = new ThemeCatalogueLayersProvider(
