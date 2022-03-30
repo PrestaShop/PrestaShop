@@ -72,15 +72,15 @@ class StockOptionsType extends TranslatorAwareType
             ])
             ->add('low_stock_threshold', NumberType::class, [
                 'label' => $this->trans('Low stock level', 'Admin.Catalog.Feature'),
-                'help' => $this->trans('Leave empty to disable', 'Admin.Catalog.Help'),
                 'constraints' => [
                     new Type(['type' => 'numeric']),
                 ],
                 'required' => false,
+                // These two options allow to have a default data equals to zero but displayed as empty string
                 'default_empty_data' => 0,
-                // Using null here allows to keep the field empty in the page instead of 0
                 'empty_view_data' => null,
                 'modify_all_shops' => true,
+                'disabling_switch' => true,
             ])
             ->add('low_stock_alert', SwitchType::class, [
                 'required' => false,
