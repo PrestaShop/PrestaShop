@@ -124,6 +124,7 @@ module.exports = {
     tax_rules_group: './js/pages/tax-rules-group',
     theme: './scss/theme.scss',
     themes: './js/pages/themes',
+    title: './js/pages/title',
     translation_settings: './js/pages/translation-settings',
     translations: './js/app/pages/translations',
     webservice: './js/pages/webservice',
