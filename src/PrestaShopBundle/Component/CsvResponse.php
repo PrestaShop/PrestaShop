@@ -68,6 +68,11 @@ class CsvResponse extends StreamedResponse
     private $limit = 1000;
 
     /**
+     * @var boolean exportHeader
+     */
+    private $exportHeader = true;
+
+    /**
      * Constructor.
      *
      * @param callable|null $callback A valid PHP callback or null to set it later
@@ -167,6 +172,18 @@ class CsvResponse extends StreamedResponse
     }
 
     /**
+     * @param boolean $exportHeader
+     *
+     * @return $this
+     */
+    public function setExportHeader($exportHeader)
+    {
+        $this->exportHeader = (boolean) $exportHeader;
+
+        return $this;
+    }
+
+    /**
      * Callback function for StreamedResponse.
      *
      * @throws \LogicException
@@ -196,7 +213,10 @@ class CsvResponse extends StreamedResponse
     private function processDataArray()
     {
         $handle = tmpfile();
-        fputcsv($handle, $this->headersData, ';');
+
+        if ($this->exportHeader) {
+            fputcsv($handle, $this->headersData, ';');
+        }
 
         foreach ($this->data as $line) {
             fputcsv($handle, $line, ';');
@@ -211,7 +231,10 @@ class CsvResponse extends StreamedResponse
     private function processDataCallback()
     {
         $handle = tmpfile();
-        fputcsv($handle, $this->headersData, ';');
+
+        if ($this->exportHeader) {
+            fputcsv($handle, $this->headersData, ';');
+        }
 
         do {
             $data = call_user_func_array($this->data, [$this->start, $this->limit]);
