@@ -161,15 +161,8 @@
     ]
   },
   "scripts": {
-    "post-install-cmd": [
-      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
-    ],
     "post-update-cmd": [
-      "PrestaShopBundle\\Install\\Upgrade::migrateSettingsFile",
-      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
+      "PrestaShopBundle\\Install\\Upgrade::migrateSettingsFile"
     ],
     "create-test-db": [
       "@php ./tests-legacy/create-test-db.php"
