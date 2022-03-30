@@ -57,6 +57,7 @@ $(() => {
     'TextWithLengthCounter',
     'DeltaQuantityInput',
     'ModifyAllShopsCheckbox',
+    'DisablingSwitch',
   ]);
 
   const $productForm = $(ProductMap.productForm);
