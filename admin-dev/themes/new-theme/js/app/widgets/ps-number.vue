@@ -60,7 +60,7 @@
   export default Vue.extend({
     props: {
       value: {
-        type: Number,
+        type: [Number, String],
         default: 0,
       },
       danger: {
@@ -86,13 +86,12 @@
       focusOut($event: JQueryEventObject): void {
         this.$emit('blur', $event);
       },
-      increment(): void {
-        const value = Math.round(this.value);
-
-        this.$emit('change', Number.isNaN(value) ? 0 : value + 1);
+      increment() {
+        const value = Number.isNaN(this.value) ? 0 : Number.parseInt(<string> this.value, 10);
+        this.$emit('change', Number.isNaN(value) ? 1 : value + 1);
       },
       decrement(): void {
-        const value = Math.round(this.value);
+        const value = Number.isNaN(this.value) ? 0 : Number.parseInt(<string> this.value, 10);
         this.$emit('change', Number.isNaN(value) ? -1 : value - 1);
       },
     },
