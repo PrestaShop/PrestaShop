@@ -158,7 +158,8 @@ class AddressCore extends ObjectModel
     /**
      * Build an Address.
      *
-     * @param int $id_address Existing Address ID in order to load object (optional)
+     * @param int|null $id_address Existing Address ID in order to load object (optional)
+     * @param int|null $id_lang Language ID (optional). Configuration::PS_LANG_DEFAULT will be used if null
      */
     public function __construct($id_address = null, $id_lang = null)
     {
