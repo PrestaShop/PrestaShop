@@ -130,6 +130,7 @@ module.exports = {
     theme: './scss/theme.scss',
     rtl: './scss/rtl.scss',
     themes: './js/pages/themes',
+    title: './js/pages/title',
     translation_settings: './js/pages/translation-settings',
     translations: './js/app/pages/translations',
     webservice: './js/pages/webservice',

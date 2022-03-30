@@ -489,3 +489,18 @@ services:
       - '@prestashop.core.hook.dispatcher'
       - '@prestashop.core.grid.query.doctrine_query_parser'
       - 'state'
+
+  prestashop.core.grid.factory.title_decorator:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\TitleGridDataFactory'
+    arguments:
+      - '@prestashop.core.grid.data.factory.title'
+      - '@translator'
+      - '@prestashop.adapter.title.title_image_thumbnail_provider'
+
+  prestashop.core.grid.data.factory.title:
+    class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+    arguments:
+      - '@prestashop.core.grid.query.builder.title'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.core.grid.query.doctrine_query_parser'
+      - 'title'
