@@ -411,3 +411,11 @@ services:
     arguments:
       - '@prestashop.core.query.doctrine_search_criteria_applicator'
       - "@=service('prestashop.adapter.legacy.context').getContext().employee.id_lang"
+
+  prestashop.core.grid.query.builder.title:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Query\TitleQueryBuilder'
+    parent: 'prestashop.core.grid.abstract_query_builder'
+    arguments:
+      - '@prestashop.core.query.doctrine_search_criteria_applicator'
+      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+    public: true
