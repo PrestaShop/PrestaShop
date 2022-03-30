@@ -86,8 +86,8 @@ export default {
     newQuantitySelector: '.new-quantity',
     initialQuantityPreviewSelector: '.initial-quantity',
   },
-  disablingToggle: {
-    wrapper: '.ps-disabling-toggle',
+  disablingSwitch: {
+    disablingSelector: '.ps-disabling-switch input.ps-switch',
   },
   currentLength: '.js-current-length',
   recommendedLengthInput: '.js-recommended-length-input',
