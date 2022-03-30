@@ -131,7 +131,7 @@ class ProductTagUpdater
             }
 
             $currentTags = $this->stringifyTags($localizedProductTags[$localizedTags->getLanguageId()->getValue()] ?? []);
-            $updateTags = $this->stringifyTags($localizedTags->getTags() ?? []);
+            $updateTags = $this->stringifyTags($localizedTags->getTags());
             if ($currentTags !== $updateTags) {
                 return true;
             }
