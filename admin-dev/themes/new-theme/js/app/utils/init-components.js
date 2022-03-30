@@ -62,6 +62,8 @@ import SubmitGridActionExtension from '@components/grid/extension/submit-grid-ac
 import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 import DeltaQuantityInput from '@components/form/delta-quantity-input';
 import ModifyAllShopsCheckbox from '@components/modify-all-shops-checkbox';
+import FormFieldDisabler from '@components/form/form-field-disabler';
+import DisablingSwitch from '@components/form/disabling-switch';
 
 const GridExtensions = {
   AsyncToggleColumnExtension,
@@ -130,7 +132,9 @@ const initPrestashopComponents = () => {
     CountryDniRequiredToggler,
     CountryStateSelectionToggler,
     DeltaQuantityInput,
+    DisablingSwitch,
     EventEmitter,
+    FormFieldDisabler,
     GeneratableInput,
     Grid,
     GridExtensions,
