@@ -312,3 +312,10 @@ services:
       - "@=service('router').generate('admin_common_reset_search', {'controller': 'state', 'action': 'index'})"
       - "@=service('router').generate('admin_states_index')"
     public: true
+
+  prestashop.core.grid.definition.factory.title:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\TitleGridDefinitionFactory'
+    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    arguments:
+      - '@prestashop.core.form.choice_provider.gender_choice_provider'
+    public: true
