@@ -330,7 +330,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
             ],
             'options' => [
                 'stock_location' => $stockInformation->getLocation(),
-                'low_stock_threshold' => $stockInformation->getLowStockThreshold() ?: null,
+                'low_stock_threshold' => $stockInformation->getLowStockThreshold(),
                 'low_stock_alert' => $stockInformation->isLowStockAlertEnabled(),
             ],
             'virtual_product_file' => $this->extractVirtualProductFileData($productForEditing),
