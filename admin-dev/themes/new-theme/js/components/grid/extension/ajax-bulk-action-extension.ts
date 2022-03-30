@@ -53,6 +53,7 @@ export default class AjaxBulkActionExtension {
           total,
         );
         let Id;
+        let doneCount = 0;
         $('.js-bulk-action-checkbox:checked').each( function (i) {
           Id = $(this).val();
           $.ajax({
@@ -61,10 +62,11 @@ export default class AjaxBulkActionExtension {
             url: $ajaxButton.data('ajax-url'),
             data: { id: Id },
             success(data) {
+              doneCount++;
               if (data.success) {
-                modal.modalActionSuccess();
+                modal.modalActionSuccess(doneCount);
               } else {
-                modal.modalActionError(data.message);
+                modal.modalActionError(doneCount, data.message);
               }
             }
           });
