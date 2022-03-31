@@ -20,6 +20,7 @@ class AddOrder extends BOBasePage {
     this.pageTitle = 'Create order •';
     this.noCustomerFoundText = 'No customers found';
     this.noProductFoundText = 'No products found';
+    this.cartRuleErrorText = 'This voucher is already in your cart';
 
     // Iframe
     this.iframe = 'iframe.fancybox-iframe';
@@ -97,7 +98,8 @@ class AddOrder extends BOBasePage {
     this.vouchersTableRows = `${this.vouchersTableBody} tr`;
     this.vouchersTableRow = row => `${this.vouchersTableRows}:nth-child(${row})`;
     this.vouchersTableColumn = (column, row) => `${this.vouchersTableRow(row)} td.js-cart-rule-${column}`;
-    this.vouchersTableRowRemoveButton= row => `${this.vouchersTableRows}:nth-child(${row}) td button.js-cart-rule-delete-btn`;
+    this.vouchersTableRowRemoveButton = row => `${this.vouchersTableRows}:nth-child(${row})`
+      + ' td button.js-cart-rule-delete-btn';
 
     // Cart selectors
     this.productSearchInput = '#product-search';
