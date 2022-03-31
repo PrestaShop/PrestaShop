@@ -51,7 +51,7 @@ class Postcode extends ValueObject
 
         $this->validate($postcode, [
             new NotBlank(),
-            new TypedRegex(['type' =>TypedRegex::TYPE_POST_CODE]),
+            new TypedRegex(['type' => TypedRegex::TYPE_POST_CODE]),
         ], "$postcode is not a valid postcode");
 
         $this->postcode = $postcode;

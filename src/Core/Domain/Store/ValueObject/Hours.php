@@ -48,6 +48,8 @@ class Hours extends ValueObject
      */
     public function __construct(string $hours)
     {
+        parent::__construct();
+
         $this->validate($hours, [
             new NotBlank(),
             new Json(),

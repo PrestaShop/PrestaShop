@@ -749,6 +749,9 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
         yield ['|'];
     }
 
+    /**
+     * @return Generator
+     */
     public function getInvalidCharactersForCoordinate(): Generator
     {
         yield ['not_valid'];

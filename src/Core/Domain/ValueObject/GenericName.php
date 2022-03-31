@@ -51,7 +51,7 @@ class GenericName extends ValueObject
 
         $this->validate($genericName, [
             new NotBlank(),
-            new TypedRegex(['type' =>TypedRegex::TYPE_GENERIC_NAME]),
+            new TypedRegex(['type' => TypedRegex::TYPE_GENERIC_NAME]),
         ], "$genericName is not a valid generic name");
 
         $this->genericName = $genericName;

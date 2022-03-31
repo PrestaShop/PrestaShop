@@ -39,10 +39,10 @@ use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStoreForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Store\QueryResult\StoreForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Store\ValueObject\StoreId;
-use Tests\Integration\Behaviour\Features\Context\SharedStorage;
-use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 use RuntimeException;
 use Store;
+use Tests\Integration\Behaviour\Features\Context\SharedStorage;
+use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class StoreFeatureContext extends AbstractDomainFeatureContext
 {
@@ -63,6 +63,11 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
                 $this->getShopIdsByReferences($data['shops'])
             );
 
+            $dataHours = $data['hours'] ?? [];
+            foreach ($dataHours as $key => $dataHour) {
+                $dataHours[$key] = json_encode($dataHour);
+            }
+
             $addStoreCommand
                 ->setStateId($data['state'] ?? null)
                 ->setLatitude($data['latitude'] ?? null)
@@ -73,7 +78,7 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
                 ->setLocalizedNames($data['name'] ?? [])
                 ->setLocalizedAddress1($data['address1'] ?? [])
                 ->setLocalizedAddress2($data['address2'] ?? [])
-                ->setLocalizedHours($data['hours'] ?? [])
+                ->setLocalizedHours($dataHours)
                 ->setLocalizedNotes($data['note'] ?? [])
             ;
 
@@ -92,13 +97,16 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
      * @param string $reference
      * @param TableNode $table
      */
-    public function storeShouldHaveTheFollowingDetails(string $reference, TableNode $table): void
+    public function storeShouldHaveTheFollowingDetails(TableNode $table, string $reference): void
     {
-        $data = $table->getRowsHash();
+        $data = $this->localizeByRows($table);
 
-        /** @var StoreId $storeIdObject */
-        $storeIdObject = SharedStorage::getStorage()->get($reference);
-        $storeId = $storeIdObject->getValue();
+        foreach ($data['hours'] as $key => $dataHour) {
+            $data['hours'][$key] = json_encode($dataHour);
+        }
+
+        /** @var int $storeId */
+        $storeId = SharedStorage::getStorage()->get($reference);
 
         $expectedEditableStore = $this->mapToEditableStore($storeId, $data);
 

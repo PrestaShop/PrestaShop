@@ -51,7 +51,7 @@ class PhoneNumber extends ValueObject
 
         $this->validate($phoneNumber, [
             new NotBlank(),
-            new TypedRegex(['type' =>TypedRegex::TYPE_PHONE_NUMBER]),
+            new TypedRegex(['type' => TypedRegex::TYPE_PHONE_NUMBER]),
         ], "$phoneNumber is not a valid phone number");
 
         $this->phoneNumber = $phoneNumber;
