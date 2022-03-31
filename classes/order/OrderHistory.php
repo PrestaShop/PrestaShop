@@ -97,7 +97,7 @@ class OrderHistoryCore extends ObjectModel
         ShopUrl::cacheMainDomainForShop($order->id_shop);
 
         $new_os = new OrderState((int) $new_order_state, $order->id_lang);
-        $old_os = $order->getCurrentOrderState();
+        $old_os = new OrderState((int) $order->current_state, $order->id_lang);
 
         // executes hook
         if (in_array($new_os->id, [Configuration::get('PS_OS_PAYMENT'), Configuration::get('PS_OS_WS_PAYMENT')])) {
@@ -105,14 +105,18 @@ class OrderHistoryCore extends ObjectModel
         }
 
         // executes hook
-        Hook::exec('actionOrderStatusUpdate', ['newOrderStatus' => $new_os, 'id_order' => (int) $order->id], null, false, true, false, $order->id_shop);
+        Hook::exec('actionOrderStatusUpdate', [
+            'newOrderStatus' => $new_os,
+            'oldOrderStatus' => $old_os,
+            'id_order' => (int) $order->id,
+        ], null, false, true, false, $order->id_shop);
 
         if (Validate::isLoadedObject($order) && $new_os instanceof OrderState) {
             $context = Context::getContext();
 
             // An email is sent the first time a virtual item is validated
             $virtual_products = $order->getVirtualProducts();
-            if ($virtual_products && (!$old_os || !$old_os->logable) && $new_os->logable) {
+            if ($virtual_products && !$old_os->logable && $new_os->logable) {
                 $assign = [];
                 foreach ($virtual_products as $key => $virtual_product) {
                     $id_product_download = ProductDownload::getIdFromIdProduct($virtual_product['product_id']);
@@ -411,7 +415,11 @@ class OrderHistoryCore extends ObjectModel
         }
 
         // executes hook
-        Hook::exec('actionOrderStatusPostUpdate', ['newOrderStatus' => $new_os, 'id_order' => (int) $order->id], null, false, true, false, $order->id_shop);
+        Hook::exec('actionOrderStatusPostUpdate', [
+            'newOrderStatus' => $new_os,
+            'oldOrderStatus' => $old_os,
+            'id_order' => (int) $order->id,
+        ], null, false, true, false, $order->id_shop);
 
         // sync all stock
         (new StockManagerAdapter())->updatePhysicalProductQuantity(
