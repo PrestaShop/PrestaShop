@@ -528,7 +528,11 @@ final class CategoryImportHandler extends AbstractImportHandler
                 }
 
                 // Get shops for each attributes
-                $shopData = explode($importConfig->getMultipleValueSeparator(), $shopData);
+                $multipleValueSeparator = $importConfig->getMultipleValueSeparator();
+                if (empty($multipleValueSeparator)) {
+                    return;
+                }
+                $shopData = explode($multipleValueSeparator, $shopData);
 
                 foreach ($shopData as $shop) {
                     if (!empty($shop)) {

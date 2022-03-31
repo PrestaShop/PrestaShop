@@ -452,7 +452,12 @@ final class ProductImportHandler extends AbstractImportHandler
 
         // link product to shops
         $product->id_shop_list = [];
-        $productShops = explode($importConfig->getMultipleValueSeparator(), $product->shop);
+
+        $multipleValueSeparator = $importConfig->getMultipleValueSeparator();
+        if (empty($multipleValueSeparator)) {
+            return;
+        }
+        $productShops = explode($multipleValueSeparator, $product->shop);
 
         if (is_array($productShops)) {
             foreach ($productShops as $shop) {
@@ -1006,7 +1011,7 @@ final class ProductImportHandler extends AbstractImportHandler
         if (isset($product->id) && $product->id) {
             $tags = Tag::getProductTags($product->id);
             if (is_array($tags) && count($tags)) {
-                if (is_string($product->tags)) {
+                if (is_string($product->tags) && !empty($multipleValueSeparator)) {
                     $product->tags = explode($multipleValueSeparator, $product->tags);
                 }
                 if (is_array($product->tags)) {
@@ -1179,7 +1184,7 @@ final class ProductImportHandler extends AbstractImportHandler
         $features = get_object_vars($product);
         $multipleValueSeparator = $importConfig->getMultipleValueSeparator();
 
-        if (empty($features['features'])) {
+        if (empty($features['features']) || empty($multipleValueSeparator)) {
             return;
         }
 
