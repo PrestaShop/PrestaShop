@@ -16,10 +16,10 @@ Feature: Store
       | country         | France                        |
       | postcode        | 75009                         |
       | city            | Paris                         |
-      | latitude        | 48.88061405611175             |
-      | longitude       | 2.3279244006658972            |
-      | phone           | +33 (0)1 40 18 30 04          |
-      | fax             | +33 (0)1 40 18 30 04          |
+      | latitude        | 48.88061405                   |
+      | longitude       | 2.32792440                    |
+      | phone           | +33(0)140183004               |
+      | fax             | +33(0)140183004               |
       | email           | contact@prestashop.com        |
       | shops           | [shop1]                       |
       | name[en-US]     | PrestaShop                    |
@@ -28,30 +28,30 @@ Feature: Store
       | address2[en-US] | Paris 75009, France           |
       | address2[fr-FR] | 75009 Paris                   |
       | hours[en-US]    | 09:00AM - 06:30PM             |
-      | hours[fr-FR]    | 9h à 18h30                    |
+      | hours[fr-FR]    | 9h a 18h30                    |
       | note[en-US]     | Best store of course.         |
-      | note[fr-FR]     | Le meilleur magasin bien sûr. |
+      | note[fr-FR]     | Le meilleur magasin bien sur. |
     Then store "store1" should have the following details:
-      | active          | true                          |
       | country         | France                        |
+      | state           | 0                             |
       | postcode        | 75009                         |
       | city            | Paris                         |
-      | latitude        | 48.88061405611175             |
-      | longitude       | 2.3279244006658972            |
-      | phone           | +33 (0)1 40 18 30 04          |
-      | fax             | +33 (0)1 40 18 30 04          |
+      | latitude        | 48.88061405                   |
+      | longitude       | 2.32792440                    |
+      | phone           | +33(0)140183004               |
+      | fax             | +33(0)140183004               |
       | email           | contact@prestashop.com        |
       | shops           | [shop1]                       |
       | name[en-US]     | PrestaShop                    |
-      | name[fr-FR]     |                               |
+      | name[fr-FR]     | PrestaShop                    |
       | address1[en-US] | 4 Jules Lefebvre St.          |
       | address1[fr-FR] | 4 Rue Jules Lefebvre          |
       | address2[en-US] | Paris 75009, France           |
       | address2[fr-FR] | 75009 Paris                   |
-      | hours[en-US]    | 09:00AM - 06:30PM"            |
-      | hours[fr-FR]    | 9h à 18h30                    |
+      | hours[en-US]    | 09:00AM - 06:30PM             |
+      | hours[fr-FR]    | 9h a 18h30                    |
       | note[en-US]     | Best store of course.         |
-      | note[fr-FR]     | Le meilleur magasin bien sûr. |
+      | note[fr-FR]     | Le meilleur magasin bien sur. |
 
 
   Scenario: Toggle existing store

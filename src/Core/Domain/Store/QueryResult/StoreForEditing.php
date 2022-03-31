@@ -168,27 +168,39 @@ class StoreForEditing
         $this->stateId = $stateId !== null ? new StateId($stateId) : null;
         $this->latitude = $latitude !== null ? new Coordinate($latitude) : null;
         $this->longitude = $longitude !== null ? new Coordinate($longitude) : null;
-        $this->phone = $phone !== null ? new PhoneNumber($phone) : null;
-        $this->fax = $fax !== null ? new PhoneNumber($fax) : null;
-        $this->email = $email !== null ? new Email($email) : null;
+        $this->phone = $phone !== null && $phone !== '' ? new PhoneNumber($phone) : null;
+        $this->fax = $fax !== null && $fax !== '' ? new PhoneNumber($fax) : null;
+        $this->email = $email !== null && $email !== '' ? new Email($email) : null;
 
         foreach ($localizedNames as $langId => $name) {
             $this->localizedNames[$langId] = new GenericName($name);
         }
 
         foreach ($localizedAddress1 as $langId => $address) {
+            if (empty($address)) {
+                continue;
+            }
             $this->localizedAddress1[$langId] = new Address($address);
         }
 
         foreach ($localizedAddress2 as $langId => $address) {
+            if (empty($address)) {
+                continue;
+            }
             $this->localizedAddress2[$langId] = new Address($address);
         }
 
         foreach ($localizedHours as $langId => $hours) {
+            if (empty($hours)) {
+                continue;
+            }
             $this->localizedHours[$langId] = new Hours($hours);
         }
 
         foreach ($localizedNotes as $langId => $note) {
+            if (empty($note)) {
+                continue;
+            }
             $this->localizedNotes[$langId] = new Note($note);
         }
     }

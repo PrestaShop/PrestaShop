@@ -48,6 +48,8 @@ class Coordinate extends ValueObject
      */
     public function __construct(string $coordinate)
     {
+        parent::__construct();
+
         $this->validate($coordinate, [
             new NotBlank(),
             new TypedRegex(['type' => TypedRegex::TYPE_COORDINATE]),
