@@ -30,6 +30,7 @@ use Egulias\EmailValidator\Validation\RFCValidation;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerName;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Factory\CustomerNameValidatorFactory;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NumericIsoCode;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
 use PrestaShop\PrestaShop\Core\Email\SwiftMailerValidation;
 use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
 use Symfony\Component\Validator\Validation;
@@ -696,7 +697,7 @@ class ValidateCore
      */
     public static function isIsbn($isbn)
     {
-        return !$isbn || preg_match('/^[0-9-]{0,32}$/', $isbn);
+        return !$isbn || preg_match(Isbn::VALID_PATTERN, $isbn);
     }
 
     /**
