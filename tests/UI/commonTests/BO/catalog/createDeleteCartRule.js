@@ -75,6 +75,13 @@ function createCartRuleTest(cartRuleData, baseContext = 'commonTests-createCartR
 
       const validationMessage = await addCartRulePage.createEditCartRules(page, cartRuleData);
       await expect(validationMessage).to.contains(addCartRulePage.successfulCreationMessage);
+
+      await page.screenshot(
+        {
+          path: './screenshots/createVoucher.png',
+          fullPage: true,
+        },
+      );
     });
   });
 }
@@ -196,11 +203,11 @@ function deleteCartRuleTest(cartRuleName, baseContext = 'commonTests-deleteCartR
 }
 
 /**
- * Function to bulk delete cart rule
+ * Function to bulk delete cart rules
  * @param baseContext {string} String to identify the test
  */
-function bulkDeleteCartRuleTest(baseContext = 'commonTests-bulkDeleteCartRuleTest') {
-  describe('POST-TEST: BUlk delete cart rule', async () => {
+function bulkDeleteCartRulesTest(baseContext = 'commonTests-bulkDeleteCartRulesTest') {
+  describe('POST-TEST: Bulk delete cart rules', async () => {
     // before and after functions
     before(async function () {
       browserContext = await helper.createBrowserContext(this.browser);
@@ -251,4 +258,4 @@ function bulkDeleteCartRuleTest(baseContext = 'commonTests-bulkDeleteCartRuleTes
   });
 }
 
-module.exports = {createCartRuleTest, deleteCartRuleTest, bulkDeleteCartRuleTest};
+module.exports = {createCartRuleTest, deleteCartRuleTest, bulkDeleteCartRulesTest};

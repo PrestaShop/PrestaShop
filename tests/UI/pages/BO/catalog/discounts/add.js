@@ -261,6 +261,26 @@ class AddCartRule extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.saveButton);
     return this.getAlertSuccessBlockContent(page);
   }
+
+  /**
+   * Create cart rule without returning validation message
+   * @param page {Page} Browser tab
+   * @param cartRuleData {CartRuleData} Data to set on add/edit cart rule form
+   * @returns {Promise<string>}
+   */
+  async createCartRule(page, cartRuleData) {
+    // Fill information form
+    await this.fillInformationForm(page, cartRuleData);
+
+    // Fill conditions form
+    await this.fillConditionsForm(page, cartRuleData);
+
+    // Fill actions form
+    await this.fillActionsForm(page, cartRuleData);
+
+    // Save
+    await this.waitForSelectorAndClick(page, this.saveButton);
+  }
 }
 
 module.exports = new AddCartRule();
