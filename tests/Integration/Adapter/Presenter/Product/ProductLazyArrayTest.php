@@ -187,7 +187,7 @@ class ProductLazyArrayTest extends TestCase
             ->willReturnCallback(function (string $key) use ($language) {
                 if ('PS_LABEL_OOS_PRODUCTS_BOD' === $key) {
                     return [
-                        $language->id => static::PRODUCT_NOT_AVAILABLE,
+                        $language->id => self::PRODUCT_NOT_AVAILABLE,
                     ];
                 }
 
@@ -233,12 +233,12 @@ class ProductLazyArrayTest extends TestCase
                     'quantity' => 1000,
                     'show_availability' => 1,
                     'available_date' => false,
-                    'available_now' => static::PRODUCT_AVAILABLE_NOW,
-                    'available_later' => static::PRODUCT_AVAILABLE_LATER,
+                    'available_now' => self::PRODUCT_AVAILABLE_NOW,
+                    'available_later' => self::PRODUCT_AVAILABLE_LATER,
                     'allow_oosp' => OutOfStockType::OUT_OF_STOCK_DEFAULT,
                 ]
             ),
-            static::PRODUCT_AVAILABLE_NOW,
+            self::PRODUCT_AVAILABLE_NOW,
         ];
 
         // not enough stock, not allowed to order when out of stock
@@ -252,12 +252,12 @@ class ProductLazyArrayTest extends TestCase
                     'quantity' => 10,
                     'show_availability' => 1,
                     'available_date' => false,
-                    'available_now' => static::PRODUCT_AVAILABLE_NOW,
-                    'available_later' => static::PRODUCT_AVAILABLE_LATER,
+                    'available_now' => self::PRODUCT_AVAILABLE_NOW,
+                    'available_later' => self::PRODUCT_AVAILABLE_LATER,
                     'allow_oosp' => OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE,
                 ]
             ),
-            static::PRODUCT_WITH_NOT_ENOUGH_STOCK,
+            self::PRODUCT_WITH_NOT_ENOUGH_STOCK,
         ];
 
         // completely out of stock, not allowed to order when out of stock
@@ -271,12 +271,12 @@ class ProductLazyArrayTest extends TestCase
                     'quantity' => 0,
                     'show_availability' => 1,
                     'available_date' => false,
-                    'available_now' => static::PRODUCT_AVAILABLE_NOW,
-                    'available_later' => static::PRODUCT_AVAILABLE_LATER,
+                    'available_now' => self::PRODUCT_AVAILABLE_NOW,
+                    'available_later' => self::PRODUCT_AVAILABLE_LATER,
                     'allow_oosp' => OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE,
                 ]
             ),
-            static::PRODUCT_NOT_AVAILABLE,
+            self::PRODUCT_NOT_AVAILABLE,
         ];
 
         // out of stock, but allowed to order when out of stock
@@ -290,12 +290,12 @@ class ProductLazyArrayTest extends TestCase
                     'quantity' => 10,
                     'show_availability' => 1,
                     'available_date' => false,
-                    'available_now' => static::PRODUCT_AVAILABLE_NOW,
-                    'available_later' => static::PRODUCT_AVAILABLE_LATER,
+                    'available_now' => self::PRODUCT_AVAILABLE_NOW,
+                    'available_later' => self::PRODUCT_AVAILABLE_LATER,
                     'allow_oosp' => OutOfStockType::OUT_OF_STOCK_AVAILABLE,
                 ]
             ),
-            static::PRODUCT_AVAILABLE_LATER,
+            self::PRODUCT_AVAILABLE_LATER,
         ];
 
         // the combination is out of stock,
@@ -312,13 +312,13 @@ class ProductLazyArrayTest extends TestCase
                     'quantity' => 10,
                     'show_availability' => 1,
                     'available_date' => false,
-                    'available_now' => static::PRODUCT_AVAILABLE_NOW,
-                    'available_later' => static::PRODUCT_AVAILABLE_LATER,
-                    'availability_message' => static::PRODUCT_ATTRIBUTE_NOT_AVAILABLE,
+                    'available_now' => self::PRODUCT_AVAILABLE_NOW,
+                    'available_later' => self::PRODUCT_AVAILABLE_LATER,
+                    'availability_message' => self::PRODUCT_ATTRIBUTE_NOT_AVAILABLE,
                     'allow_oosp' => OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE,
                 ]
             ),
-            static::PRODUCT_WITH_NOT_ENOUGH_STOCK,
+            self::PRODUCT_WITH_NOT_ENOUGH_STOCK,
         ];
 
         // combinations is out of stock,
@@ -335,13 +335,13 @@ class ProductLazyArrayTest extends TestCase
                     'quantity' => 10,
                     'show_availability' => 1,
                     'available_date' => false,
-                    'available_now' => static::PRODUCT_AVAILABLE_NOW,
-                    'available_later' => static::PRODUCT_AVAILABLE_LATER,
-                    'availability_message' => static::PRODUCT_ATTRIBUTE_NOT_AVAILABLE,
+                    'available_now' => self::PRODUCT_AVAILABLE_NOW,
+                    'available_later' => self::PRODUCT_AVAILABLE_LATER,
+                    'availability_message' => self::PRODUCT_ATTRIBUTE_NOT_AVAILABLE,
                     'allow_oosp' => OutOfStockType::OUT_OF_STOCK_AVAILABLE,
                 ]
             ),
-            static::PRODUCT_AVAILABLE_LATER,
+            self::PRODUCT_AVAILABLE_LATER,
         ];
 
         // product with combinations
@@ -359,12 +359,12 @@ class ProductLazyArrayTest extends TestCase
                     'quantity_all_versions' => 4,
                     'show_availability' => 1,
                     'available_date' => false,
-                    'available_now' => static::PRODUCT_AVAILABLE_NOW,
-                    'available_later' => static::PRODUCT_AVAILABLE_LATER,
+                    'available_now' => self::PRODUCT_AVAILABLE_NOW,
+                    'available_later' => self::PRODUCT_AVAILABLE_LATER,
                     'allow_oosp' => OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE,
                 ]
             ),
-            static::PRODUCT_WITH_NOT_ENOUGH_STOCK,
+            self::PRODUCT_WITH_NOT_ENOUGH_STOCK,
         ];
     }
 

@@ -39,18 +39,15 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ProductWarehouseCombination extends CommonAbstractType
 {
     private $translator;
-    private $contextLegacy;
 
     /**
      * Constructor.
      *
      * @param object $translator
-     * @param object $legacyContext
      */
-    public function __construct($translator, $legacyContext)
+    public function __construct($translator)
     {
         $this->translator = $translator;
-        $this->contextLegacy = $legacyContext->getContext();
     }
 
     /**

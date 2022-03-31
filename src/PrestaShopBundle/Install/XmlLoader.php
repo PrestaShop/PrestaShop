@@ -1096,9 +1096,9 @@ class XmlLoader
         // Create list of fields
         foreach ($fields as $column => $info) {
             $field = $xml_fields->addChild('field');
-            $field['name'] = $column;
+            $field->name = $column;
             if (isset($info['relation'])) {
-                $field['relation'] = $info['relation'];
+                $field->relation = $info['relation'];
             }
         }
 
@@ -1205,7 +1205,7 @@ class XmlLoader
     public function getEntityContents($entity)
     {
         $xml = $this->fileLoader->load($entity);
-        $primary = (isset($xml->fields['primary']) && $xml->fields['primary']) ? (string) $xml->fields['primary'] : 'id_' . $entity;
+        $primary = !empty($xml->fields['primary']) ? (string) $xml->fields['primary'] : 'id_' . $entity;
         $is_multilang = $this->isMultilang($entity);
 
         // Check if current table is an association table (if multiple primary keys)
@@ -1224,22 +1224,22 @@ class XmlLoader
             $sql->leftJoin($entity . '_lang', 'b', 'a.' . $primary . ' = b.' . $primary);
         }
 
-        if (isset($xml->fields['sql']) && $xml->fields['sql']) {
+        if (!empty($xml->fields['sql'])) {
             $sql->where((string) $xml->fields['sql']);
         }
 
         if (!$is_association) {
             $sql->select('a.' . $primary);
-            if (!isset($xml->fields['ordersql']) || !$xml->fields['ordersql']) {
+            if (empty($xml->fields['ordersql'])) {
                 $sql->orderBy('a.' . $primary);
             }
         }
 
-        if ($is_multilang && (!isset($xml->fields['ordersql']) || !$xml->fields['ordersql'])) {
+        if ($is_multilang && empty($xml->fields['ordersql'])) {
             $sql->orderBy('b.id_lang');
         }
 
-        if (isset($xml->fields['ordersql']) && $xml->fields['ordersql']) {
+        if (!empty($xml->fields['ordersql'])) {
             $sql->orderBy((string) $xml->fields['ordersql']);
         }
 
@@ -1273,7 +1273,7 @@ class XmlLoader
                         $id .= '_' . $row[$key];
                     }
                 } else {
-                    $id = $this->generateId($entity, $row[$primary], $row, (isset($xml->fields['id']) && $xml->fields['id']) ? (string) $xml->fields['id'] : null);
+                    $id = $this->generateId($entity, $row[$primary], $row, (!empty($xml->fields['id'])) ? (string) $xml->fields['id'] : null);
                 }
 
                 if (!isset($nodes[$id])) {
@@ -1391,12 +1391,12 @@ class XmlLoader
         $types = array_merge($this->getColumns($entity), $this->getColumns($entity, true));
         foreach ($nodes as $id => $node) {
             $entity_node = $entities->addChild($entity);
-            $entity_node['id'] = $id;
+            $entity_node->id = $id;
             foreach ($node as $k => $v) {
-                if (isset($types[$k]) && $types[$k]) {
+                if (!empty($types[$k])) {
                     $entity_node->addChild($k, $v);
                 } else {
-                    $entity_node[$k] = $v;
+                    $entity_node->{$k} = $v;
                 }
             }
         }

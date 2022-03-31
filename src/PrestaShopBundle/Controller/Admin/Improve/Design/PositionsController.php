@@ -63,6 +63,13 @@ class PositionsController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request)
     {
+        $isSingleShopContext = $this->get('prestashop.adapter.shop.context')->isSingleShopContext();
+        if (!$isSingleShopContext) {
+            return [
+                'isSingleShopContext' => $isSingleShopContext,
+            ];
+        }
+
         $moduleAdapter = $this->get('prestashop.adapter.legacy.module');
         $hookProvider = $this->get('prestashop.adapter.legacy.hook');
         $installedModules = $moduleAdapter->getModulesInstalled();
@@ -137,7 +144,7 @@ class PositionsController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink('AdminModulesPositions'),
             'hooks' => $hooks,
             'modules' => $modules,
-            'canMove' => $this->get('prestashop.adapter.shop.context')->isSingleShopContext(),
+            'isSingleShopContext' => $isSingleShopContext,
         ];
     }
 

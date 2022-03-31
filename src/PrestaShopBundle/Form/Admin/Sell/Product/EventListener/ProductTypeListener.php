@@ -63,27 +63,30 @@ class ProductTypeListener implements EventSubscriberInterface
         if (ProductType::TYPE_COMBINATIONS === $productType) {
             $this->removeSuppliers($form);
             $form->remove('stock');
-        } else {
-            if ($form->has('stock')) {
-                $stock = $form->get('stock');
-                if (ProductType::TYPE_PACK !== $productType) {
-                    $stock->remove('pack_stock_type');
-                }
-                if (ProductType::TYPE_VIRTUAL !== $productType) {
-                    $stock->remove('virtual_product_file');
-                }
 
-                if ($stock->has('quantities')) {
-                    $quantities = $stock->get('quantities');
-                    if ($quantities->has('stock_movements') && empty($data['stock']['quantities']['stock_movements'])) {
-                        $quantities->remove('stock_movements');
-                    }
-                }
+            return;
+        }
+
+        if ($form->has('stock')) {
+            $stock = $form->get('stock');
+            if (ProductType::TYPE_PACK !== $productType) {
+                $stock->remove('pack_stock_type');
+            }
+            if (ProductType::TYPE_VIRTUAL !== $productType) {
+                $stock->remove('virtual_product_file');
             }
 
-            if (ProductType::TYPE_VIRTUAL === $productType) {
-                $form->remove('shipping');
+            if ($stock->has('quantities')) {
+                $quantities = $stock->get('quantities');
+                if ($quantities->has('stock_movements') && empty($data['stock']['quantities']['stock_movements'])) {
+                    $quantities->remove('stock_movements');
+                }
             }
+        }
+
+        if (ProductType::TYPE_VIRTUAL === $productType) {
+            $form->remove('shipping');
+            $this->removeEcotax($form);
         }
     }
 
@@ -97,5 +100,25 @@ class ProductTypeListener implements EventSubscriberInterface
             $optionsForm->remove('suppliers');
             $optionsForm->remove('product_suppliers');
         }
+    }
+
+    /**
+     * @param FormInterface $form
+     */
+    private function removeEcotax(FormInterface $form): void
+    {
+        if (!$form->has('pricing')) {
+            return;
+        }
+        $pricing = $form->get('pricing');
+        if (!$pricing->has('retail_price')) {
+            return;
+        }
+        $retailPrice = $pricing->get('retail_price');
+        if (!$retailPrice->has('ecotax')) {
+            return;
+        }
+
+        $retailPrice->remove('ecotax');
     }
 }

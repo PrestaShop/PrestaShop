@@ -29,6 +29,7 @@
  */
 class TranslatedConfigurationCore extends Configuration
 {
+    /** @var array */
     protected $webserviceParameters = [
         'objectNodeName' => 'translated_configuration',
         'objectsNodeName' => 'translated_configurations',
@@ -39,6 +40,7 @@ class TranslatedConfigurationCore extends Configuration
         ],
     ];
 
+    /** @var array */
     public static $definition = [
         'table' => 'configuration',
         'primary' => 'id_configuration',

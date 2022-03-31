@@ -293,10 +293,6 @@
     <access id="access_1_307" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINPROFILES_READ"/>
     <access id="access_1_308" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINPROFILES_UPDATE"/>
     <access id="access_1_309" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINPROFILES_DELETE"/>
-    <access id="access_1_310" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINREFERRERS_CREATE"/>
-    <access id="access_1_311" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINREFERRERS_READ"/>
-    <access id="access_1_312" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINREFERRERS_UPDATE"/>
-    <access id="access_1_313" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINREFERRERS_DELETE"/>
     <access id="access_1_314" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINREQUESTSQL_CREATE"/>
     <access id="access_1_315" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINREQUESTSQL_READ"/>
     <access id="access_1_316" id_profile="SuperAdmin" id_authorization_role="TAB_ADMINREQUESTSQL_UPDATE"/>

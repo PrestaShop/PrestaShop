@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Stock\Update;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
@@ -38,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockExcept
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -67,6 +69,11 @@ class ProductStockUpdater
     private $stockAvailableRepository;
 
     /**
+     * @var MovementReasonRepository
+     */
+    private $movementReasonRepository;
+
+    /**
      * @var Configuration
      */
     private $configuration;
@@ -80,17 +87,20 @@ class ProductStockUpdater
      * @param StockManager $stockManager
      * @param ProductMultiShopRepository $productRepository
      * @param StockAvailableMultiShopRepository $stockAvailableRepository
+     * @param MovementReasonRepository $movementReasonRepository
      * @param Configuration $configuration
      */
     public function __construct(
         StockManager $stockManager,
         ProductMultiShopRepository $productRepository,
         StockAvailableMultiShopRepository $stockAvailableRepository,
+        MovementReasonRepository $movementReasonRepository,
         Configuration $configuration
     ) {
         $this->stockManager = $stockManager;
         $this->productRepository = $productRepository;
         $this->stockAvailableRepository = $stockAvailableRepository;
+        $this->movementReasonRepository = $movementReasonRepository;
         $this->configuration = $configuration;
         $this->advancedStockEnabled = $this->configuration->getBoolean('PS_ADVANCED_STOCK_MANAGEMENT');
     }
@@ -102,7 +112,8 @@ class ProductStockUpdater
     public function update(ProductId $productId, ProductStockProperties $properties, ShopConstraint $shopConstraint): void
     {
         $product = $this->productRepository->getByShopConstraint($productId, $shopConstraint);
-        $stockAvailable = $this->getStockAvailable($product);
+        // Use the shop matching the Product instance (either the specified ShopId from constraint or the Product default shop)
+        $stockAvailable = $this->stockAvailableRepository->getForProduct($productId, new ShopId($product->getShopId()));
 
         $this->productRepository->partialUpdate(
             $product,
@@ -115,6 +126,61 @@ class ProductStockUpdater
 
         if ($this->advancedStockEnabled && $product->depends_on_stock) {
             StockAvailable::synchronize($product->id);
+        }
+    }
+
+    /**
+     * Resets product stock to zero, both Product and associated StockAvailable are reset, and a stock movement linked to
+     * the employee from context is generated.
+     *
+     * @param ProductId $productId
+     * @param ShopConstraint $shopConstraint
+     *
+     * @throws CoreException
+     * @throws ProductStockException
+     */
+    public function resetStock(ProductId $productId, ShopConstraint $shopConstraint): void
+    {
+        if ($shopConstraint->getShopGroupId()) {
+            throw new InvalidShopConstraintException('Product has no features related with shop group use single shop and all shops constraints');
+        }
+
+        if ($shopConstraint->forAllShops()) {
+            $shops = $this->productRepository->getAssociatedShopIds($productId);
+        } else {
+            $shops = [$shopConstraint->getShopId()];
+        }
+
+        foreach ($shops as $shopId) {
+            $stockAvailable = $this->stockAvailableRepository->getForProduct($productId, $shopId);
+            if ((int) $stockAvailable->quantity === 0) {
+                continue;
+            }
+
+            $employeeEditionReasonId = $this->movementReasonRepository->getIdForEmployeeEdition($stockAvailable->quantity > 0);
+            $stockModification = new StockModification(-$stockAvailable->quantity, $employeeEditionReasonId);
+
+            // Update product
+            $shopConstraint = ShopConstraint::shop($shopId->getValue());
+            $product = $this->productRepository->getByShopConstraint($productId, $shopConstraint);
+            $product->quantity = 0;
+            $this->productRepository->partialUpdate(
+                $product,
+                ['quantity'],
+                $shopConstraint,
+                CannotUpdateProductException::FAILED_UPDATE_STOCK
+            );
+
+            // Update stock
+            $stockAvailable->quantity = 0;
+            $this->stockAvailableRepository->update($stockAvailable);
+
+            // Generate stock movement related to the employee
+            $this->saveMovement($stockAvailable, $stockModification);
+
+            if ($this->advancedStockEnabled) {
+                StockAvailable::synchronize($productId->getValue(), $shopId->getValue());
+            }
         }
     }
 
@@ -243,22 +309,5 @@ class ProductStockUpdater
                 'id_shop' => (int) $stockAvailable->id_shop,
             ]
         );
-    }
-
-    /**
-     * @param Product $product
-     *
-     * @return StockAvailable
-     *
-     * @throws CoreException
-     * @throws ProductStockException
-     */
-    private function getStockAvailable(Product $product): StockAvailable
-    {
-        $productId = new ProductId($product->id);
-        // Use the shop matching the Product instance
-        $shopId = new ShopId($product->getShopId());
-
-        return $this->stockAvailableRepository->getForProduct($productId, $shopId);
     }
 }

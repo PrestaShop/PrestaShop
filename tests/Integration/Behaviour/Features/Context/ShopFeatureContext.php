@@ -52,7 +52,7 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
      */
     public static function restoreShopTablesAfterFeature(): void
     {
-        static::restoreShopTables();
+        self::restoreShopTables();
     }
 
     private static function restoreShopTables(): void
@@ -132,7 +132,7 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
             throw new RuntimeException(sprintf('Shop with name "%s" does not exist', $shopName));
         }
 
-        SharedStorage::getStorage()->set($reference, new ShopGroup($shopGroupId));
+        SharedStorage::getStorage()->set($reference, $shopGroupId);
     }
 
     /**
@@ -183,17 +183,17 @@ class ShopFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Given I add a shop :reference with name :shopName and color :color for the group :shopGroupName
+     * @Given I add a shop :reference with name :shopName and color :color for the group :shopGroupReference
      *
      * @param string $reference
      * @param string $shopName
-     * @param string $shopGroupName
+     * @param string $shopGroupReference
      */
-    public function addShop(string $reference, string $shopName, string $color, string $shopGroupName): void
+    public function addShop(string $reference, string $shopName, string $color, string $shopGroupReference): void
     {
         $shop = new Shop();
         $shop->active = true;
-        $shop->id_shop_group = ShopGroup::getIdByName($shopGroupName);
+        $shop->id_shop_group = (int) SharedStorage::getStorage()->get($shopGroupReference);
         // 2 : ID Category for "Home" in database
         $shop->id_category = 2;
         $shop->theme_name = _THEME_NAME_;

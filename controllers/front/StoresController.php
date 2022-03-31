@@ -25,6 +25,7 @@
  */
 class StoresControllerCore extends FrontController
 {
+    /** @var string */
     public $php_self = 'stores';
 
     /**
@@ -54,7 +55,7 @@ class StoresControllerCore extends FrontController
             foreach ($data_fields as $field_item) {
                 $field_item = trim($field_item);
                 if (!in_array($field_item, $ignore_field) && !empty($store[$field_item])) {
-                    $addr_out[] = ($field_item == 'city' && $state && isset($state->iso_code) && strlen($state->iso_code)) ?
+                    $addr_out[] = ($field_item == 'city' && $state && !empty($state->iso_code)) ?
                         $store[$field_item] . ', ' . $state->iso_code : $store[$field_item];
                     $data_fields_mod = true;
                 }

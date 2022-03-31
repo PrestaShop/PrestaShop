@@ -32,7 +32,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShopBundle\Entity\FeatureFlag;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * This class is in charge of controlling the state modifications of Feature Flags
@@ -44,17 +43,12 @@ class FeatureFlagsModifier implements DataConfigurationInterface
     /** @var EntityManagerInterface */
     private $doctrineEntityManager;
 
-    /** @var TranslatorInterface */
-    private $translator;
-
     /**
      * @param EntityManagerInterface $doctrineEntityManager
-     * @param TranslatorInterface $translator
      */
-    public function __construct(EntityManagerInterface $doctrineEntityManager, TranslatorInterface $translator)
+    public function __construct(EntityManagerInterface $doctrineEntityManager)
     {
         $this->doctrineEntityManager = $doctrineEntityManager;
-        $this->translator = $translator;
     }
 
     /**

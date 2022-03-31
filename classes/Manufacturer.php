@@ -361,8 +361,8 @@ class ManufacturerCore extends ObjectModel
      * @param int $idLang
      * @param int $p
      * @param int $n
-     * @param null $orderBy
-     * @param null $orderWay
+     * @param string|null $orderBy
+     * @param string|null $orderWay
      * @param bool $getTotal
      * @param bool $active
      * @param bool $activeCategory

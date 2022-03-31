@@ -21,7 +21,8 @@ class Install extends CommonPage {
     this.secondStepEnTitle = 'License Agreements';
     this.thirdStepEnTitle = 'We are currently checking PrestaShop compatibility with your system environment';
     this.fourthStepEnTitle = 'Information about your Store';
-    this.fifthStepEnTitle = 'Configure your database by filling out the following fields';
+    this.fifthStepEnTitle = 'Content of your store';
+    this.sixthStepEnTitle = 'Configure your database by filling out the following fields';
     this.finalStepEnTitle = 'Your installation is finished!';
 
     // Selectors for all steps
@@ -40,6 +41,7 @@ class Install extends CommonPage {
     this.thirdStepFinishedListItem = '#leftpannel #tabs li.finished:nth-child(3)';
 
     // Selectors for step 4
+    this.fourthStepFinishedListItem = '#leftpannel #tabs li.finished:nth-child(4)';
     this.storeInformationStepPageTitle = '#infosShopBlock h2';
     this.shopNameInput = '#infosShop';
     this.countryChosenSelect = '#infosCountry_chosen';
@@ -51,6 +53,10 @@ class Install extends CommonPage {
     this.repeatPasswordInput = '#infosPasswordRepeat';
 
     // Selectors for step 5
+    this.contentInformationStepPageTitle = '#contentInfosBlock h2';
+    this.fifthStepFinishedListItem = '#leftpannel #tabs li.finished:nth-child(5)';
+
+    // Selectors for step 6
     this.systemConfigurationStepPageTitle = '#dbPart h2';
     this.dbServerInput = '#dbServer';
     this.dbLoginInput = '#dbLogin';
@@ -100,6 +106,10 @@ class Install extends CommonPage {
 
       case 'Store information':
         selector = this.storeInformationStepPageTitle;
+        break;
+
+      case 'Content of your store':
+        selector = this.contentInformationStepPageTitle;
         break;
 
       case 'System configuration':

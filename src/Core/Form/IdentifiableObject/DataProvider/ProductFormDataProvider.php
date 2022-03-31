@@ -28,9 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
-use PrestaShop\PrestaShop\Adapter\Category\CategoryDataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Query\GetProductFeatureValues;
@@ -40,14 +39,12 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetRelatedProducts;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RelatedProduct;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetEmployeesStockMovements;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\EmployeeStockMovement;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 
@@ -60,26 +57,6 @@ class ProductFormDataProvider implements FormDataProviderInterface
      * @var CommandBusInterface
      */
     private $queryBus;
-
-    /**
-     * @var bool
-     */
-    private $defaultProductActivation;
-
-    /**
-     * @var int
-     */
-    private $mostUsedTaxRulesGroupId;
-
-    /**
-     * @var int
-     */
-    private $defaultCategoryId;
-
-    /**
-     * @var CategoryDataProvider
-     */
-    private $categoryDataProvider;
 
     /**
      * @var int
@@ -97,33 +74,29 @@ class ProductFormDataProvider implements FormDataProviderInterface
     private $contextShopId;
 
     /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
+    /**
      * @param CommandBusInterface $queryBus
-     * @param bool $defaultProductActivation
-     * @param int $mostUsedTaxRulesGroupId
-     * @param int $defaultCategoryId
-     * @param CategoryDataProvider $categoryDataProvider
+     * @param ConfigurationInterface $configuration
      * @param int $contextLangId
      * @param int $defaultShopId
      * @param int|null $contextShopId
      */
     public function __construct(
         CommandBusInterface $queryBus,
-        bool $defaultProductActivation,
-        int $mostUsedTaxRulesGroupId,
-        int $defaultCategoryId,
-        CategoryDataProvider $categoryDataProvider,
+        ConfigurationInterface $configuration,
         int $contextLangId,
         int $defaultShopId,
         ?int $contextShopId
     ) {
         $this->queryBus = $queryBus;
-        $this->defaultProductActivation = $defaultProductActivation;
-        $this->mostUsedTaxRulesGroupId = $mostUsedTaxRulesGroupId;
-        $this->defaultCategoryId = $defaultCategoryId;
         $this->contextLangId = $contextLangId;
-        $this->categoryDataProvider = $categoryDataProvider;
         $this->defaultShopId = $defaultShopId;
         $this->contextShopId = $contextShopId;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -157,69 +130,8 @@ class ProductFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData(): array
     {
-        //@todo: If the create product page is decided to be removed anyway (replaced by a creation modal as now discussed)
-        //  then this whole method content can be removed
-        //  If not - don't forget to refactor this - legacy object model cannot stay in Core. Don't forget related test.
-        $defaultCategory = $this->categoryDataProvider->getCategory($this->defaultCategoryId);
-
         return [
-            'header' => [
-                'type' => ProductType::TYPE_STANDARD,
-            ],
-            'description' => [
-                'categories' => [
-                    'product_categories' => [
-                        [
-                            'id' => $this->defaultCategoryId,
-                            'name' => $defaultCategory->name[$this->contextLangId],
-                        ],
-                    ],
-                    'default_category_id' => $this->defaultCategoryId,
-                ],
-                'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
-                'related_products' => [],
-            ],
-            'stock' => [
-                'quantities' => [
-                    'delta_quantity' => [
-                        'quantity' => 0,
-                        'delta' => 0,
-                    ],
-                    'stock_movements' => [],
-                    'minimal_quantity' => 0,
-                ],
-            ],
-            'pricing' => [
-                'retail_price' => [
-                    'price_tax_excluded' => 0,
-                    'price_tax_included' => 0,
-                ],
-                'tax_rules_group_id' => $this->mostUsedTaxRulesGroupId,
-                'wholesale_price' => 0,
-                'unit_price' => [
-                    'price_tax_excluded' => 0,
-                    'price_tax_included' => 0,
-                ],
-            ],
-            'shipping' => [
-                'dimensions' => [
-                    'width' => 0,
-                    'height' => 0,
-                    'depth' => 0,
-                    'weight' => 0,
-                ],
-                'additional_shipping_cost' => 0,
-                'delivery_time_note_type' => DeliveryTimeNoteType::TYPE_DEFAULT,
-            ],
-            'options' => [
-                'visibility' => [
-                    'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
-                ],
-                'condition' => ProductCondition::NEW,
-            ],
-            'footer' => [
-                'active' => $this->defaultProductActivation,
-            ],
+            'type' => ProductType::TYPE_STANDARD,
         ];
     }
 
@@ -346,6 +258,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
     private function extractSpecificationsData(ProductForEditing $productForEditing): array
     {
         $details = $productForEditing->getDetails();
+        $options = $productForEditing->getOptions();
 
         return [
             'references' => [
@@ -357,6 +270,8 @@ class ProductFormDataProvider implements FormDataProviderInterface
             ],
             'features' => $this->extractFeatureValues($productForEditing->getProductId()),
             'attachments' => $this->extractAttachmentsData($productForEditing),
+            'show_condition' => $options->showCondition(),
+            'condition' => $options->getCondition(),
             'customizations' => $this->extractCustomizationsData($productForEditing),
         ];
     }
@@ -472,6 +387,29 @@ class ProductFormDataProvider implements FormDataProviderInterface
                 'price_tax_included' => (float) (string) $productForEditing->getPricesInformation()->getUnitPriceTaxIncluded(),
                 'unity' => $productForEditing->getPricesInformation()->getUnity(),
             ],
+            'priority_management' => $this->getPriorityManagement($productForEditing),
+        ];
+    }
+
+    /**
+     * @param ProductForEditing $productForEditing
+     *
+     * @return array<string, bool|string[]>
+     */
+    private function getPriorityManagement(ProductForEditing $productForEditing): array
+    {
+        $priorities = $productForEditing->getPricesInformation()->getSpecificPricePriorities();
+
+        if (!$priorities) {
+            return [
+                'use_custom_priority' => false,
+                'priorities' => $this->getDefaultPrioritiesData(),
+            ];
+        }
+
+        return [
+            'use_custom_priority' => true,
+            'priorities' => $priorities->getPriorities(),
         ];
     }
 
@@ -561,8 +499,6 @@ class ProductFormDataProvider implements FormDataProviderInterface
                 'show_price' => $options->showPrice(),
                 'online_only' => $options->isOnlineOnly(),
             ],
-            'show_condition' => $options->showCondition(),
-            'condition' => $options->getCondition(),
             'suppliers' => $this->extractSuppliersData($productForEditing),
         ];
     }
@@ -672,5 +608,17 @@ class ProductFormDataProvider implements FormDataProviderInterface
         }
 
         return $suppliersData;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getDefaultPrioritiesData(): array
+    {
+        if (!empty($this->configuration->get('PS_SPECIFIC_PRICE_PRIORITIES'))) {
+            return explode(';', $this->configuration->get('PS_SPECIFIC_PRICE_PRIORITIES'));
+        }
+
+        return array_values(PriorityList::AVAILABLE_PRIORITIES);
     }
 }

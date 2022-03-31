@@ -1,6 +1,6 @@
 name: 🐛 Bug Report
 description: Report an issue in PrestaShop or one of the native modules. DO NOT disclose security issues here, contact security@prestashop.com instead!
-labels: [ "Bug" ]
+labels: [ "Bug", "New" ]
 body:
   - type: markdown
     attributes:

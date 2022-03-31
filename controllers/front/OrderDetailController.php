@@ -27,9 +27,13 @@ use PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderPresenter;
 
 class OrderDetailControllerCore extends FrontController
 {
+    /** @var string */
     public $php_self = 'order-detail';
+    /** @var bool */
     public $auth = true;
+    /** @var string */
     public $authRedirection = 'history';
+    /** @var bool */
     public $ssl = true;
 
     protected $order_to_display;

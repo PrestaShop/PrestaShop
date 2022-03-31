@@ -78,7 +78,6 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Supplier\QueryHandler\GetSupplierForEditingHandler'
     arguments:
       - '@prestashop.core.image.parser.image_tag_source_parser'
-      - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
     tags:
       - name: 'tactician.handler'
         command: 'PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForEditing'

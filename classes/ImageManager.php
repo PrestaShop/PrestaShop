@@ -381,7 +381,7 @@ class ImageManagerCore
         // 4 = Up to 25 times faster.  Almost identical to imagecopyresampled for most images.
         // 5 = No speedup. Just uses imagecopyresampled, no advantage over imagecopyresampled.
 
-        if (empty($srcImage) || empty($dstImage) || $quality <= 0) {
+        if ($quality <= 0) {
             return false;
         }
         if ($quality < 5 && (($dstW * $quality) < $srcW || ($dstH * $quality) < $srcH)) {

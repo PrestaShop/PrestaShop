@@ -107,7 +107,7 @@ class AdminModulesPositionsControllerCore extends AdminController
                         foreach ($exceptions as $key => $except) {
                             if (empty($except)) {
                                 unset($exceptions[$key]);
-                            } elseif (!empty($except) && !Validate::isFileName($except)) {
+                            } elseif (!Validate::isFileName($except)) {
                                 $this->errors[] = $this->trans('No valid value for field exceptions has been defined.', [], 'Admin.Notifications.Error');
                             }
                         }
@@ -502,7 +502,6 @@ class AdminModulesPositionsControllerCore extends AdminController
     {
         if ($this->access('view')) {
             /* PrestaShop demo mode */
-            /* @phpstan-ignore-next-line */
             if (_PS_MODE_DEMO_) {
                 die('{"hasError" : true, "errors" : ["Live Edit: This functionality has been disabled."]}');
             }
@@ -548,7 +547,6 @@ class AdminModulesPositionsControllerCore extends AdminController
     {
         if ($this->access('view')) {
             /* PrestaShop demo mode */
-            /* @phpstan-ignore-next-line */
             if (_PS_MODE_DEMO_) {
                 die('{"hasError" : true, "errors" : ["Live Edit: This functionality has been disabled."]}');
             }
@@ -579,7 +577,6 @@ class AdminModulesPositionsControllerCore extends AdminController
     {
         if ($this->access('edit')) {
             /* PrestaShop demo mode */
-            /* @phpstan-ignore-next-line */
             if (_PS_MODE_DEMO_) {
                 die('{"hasError" : true, "errors" : ["Live Edit: This functionality has been disabled."]}');
             }

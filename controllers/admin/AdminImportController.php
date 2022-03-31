@@ -47,6 +47,7 @@ class AdminImportControllerCore extends AdminController
 
     public $available_fields = [];
 
+    /** @var array|string[] */
     public $required_fields = [];
 
     public static $default_values = [];
@@ -401,6 +402,7 @@ class AdminImportControllerCore extends AdminController
 
                 self::$default_values = [
                     'active' => '1',
+                    'date_upd' => date('Y-m-d H:i:s'),
                     'id_shop' => Configuration::get('PS_SHOP_DEFAULT'),
                 ];
 
@@ -750,7 +752,7 @@ class AdminImportControllerCore extends AdminController
 
         $this->tpl_form_vars = [
             'post_max_size' => (int) $bytes,
-            'module_confirmation' => Tools::isSubmit('import') && (isset($this->warnings) && !count($this->warnings)),
+            'module_confirmation' => Tools::isSubmit('import') && !count($this->warnings),
             'path_import' => AdminImportController::getPath(),
             'entities' => $this->entities,
             'entity_selected' => $entity_selected,
@@ -1749,9 +1751,10 @@ class AdminImportControllerCore extends AdminController
 
             if (is_array($category_data)) {
                 foreach ($category_data as $tmp) {
-                    if (!isset($product->category) || !$product->category || is_array($product->category)) {
-                        $product->category[] = $tmp;
+                    if ($product->category && is_array($product->category)) {
+                        continue;
                     }
+                    $product->category[] = $tmp;
                 }
             }
         }
@@ -1878,7 +1881,7 @@ class AdminImportControllerCore extends AdminController
             $product->ecotax = 0;
         }
 
-        if (isset($product->category) && is_array($product->category) && count($product->category)) {
+        if (!empty($product->category) && is_array($product->category)) {
             $product->id_category = []; // Reset default values array
             foreach ($product->category as $value) {
                 if (is_numeric($value)) {
@@ -2033,7 +2036,7 @@ class AdminImportControllerCore extends AdminController
             $product->force_id = (bool) $force_ids;
 
             if (!$res) {
-                if (isset($product->date_add) && $product->date_add != '') {
+                if ($product->date_add != '') {
                     $res = ($validateOnly || $product->add(false));
                 } else {
                     $res = ($validateOnly || $product->add());
@@ -2097,7 +2100,7 @@ class AdminImportControllerCore extends AdminController
                 Db::getInstance()->getMsgError();
         } else {
             // Product supplier
-            if (!$validateOnly && isset($product->id) && $product->id && isset($product->id_supplier) && property_exists($product, 'supplier_reference')) {
+            if (!$validateOnly && !empty($product->id) && property_exists($product, 'supplier_reference')) {
                 $id_product_supplier = (int) ProductSupplier::getIdByProductAndSupplier((int) $product->id, 0, (int) $product->id_supplier);
                 if ($id_product_supplier) {
                     $product_supplier = new ProductSupplier($id_product_supplier);
@@ -2161,21 +2164,19 @@ class AdminImportControllerCore extends AdminController
                 }
             }
 
-            if (!$validateOnly && isset($product->tags) && !empty($product->tags)) {
+            if (!$validateOnly && !empty($product->tags)) {
                 if (isset($product->id) && $product->id) {
                     $tags = Tag::getProductTags($product->id);
                     if (is_array($tags) && count($tags)) {
                         /** @phpstan-ignore-next-line $product->tags is filled with a string at line 1986 */
                         $productTags = explode($this->multiple_value_separator, $product->tags);
-                        if (count($productTags)) {
-                            foreach ($productTags as $key => $tag) {
-                                if (!empty($tag)) {
-                                    $productTags[$key] = trim($tag);
-                                }
+                        foreach ($productTags as $key => $tag) {
+                            if (!empty($tag)) {
+                                $productTags[$key] = trim($tag);
                             }
-                            $tags[$id_lang] = $productTags;
-                            $product->tags = $tags;
                         }
+                        $tags[$id_lang] = $productTags;
+                        $product->tags = $tags;
                     }
                 }
                 // Delete tags for this id product, for no duplicating error
@@ -2300,7 +2301,7 @@ class AdminImportControllerCore extends AdminController
             Feature::cleanPositions();
 
             // set advanced stock managment
-            if (!$validateOnly && isset($product->advanced_stock_management)) {
+            if (!$validateOnly) {
                 if ($product->advanced_stock_management != 1 && $product->advanced_stock_management != 0) {
                     $this->warnings[] = $this->trans(
                         'Advanced stock management has incorrect value. Not set for product %name%',
@@ -2389,7 +2390,7 @@ class AdminImportControllerCore extends AdminController
                 }
 
                 // This code allows us to set qty and disable depends on stock
-                if (!$validateOnly && isset($product->quantity)) {
+                if (!$validateOnly) {
                     // if depends on stock and quantity, add quantity to stock
                     if ($product->depends_on_stock == 1) {
                         $stock_manager = StockManagerFactory::getManager();
@@ -2534,7 +2535,7 @@ class AdminImportControllerCore extends AdminController
 
         if (!$shop_is_feature_active) {
             $info['shop'] = 1;
-        } elseif (!isset($info['shop']) || empty($info['shop'])) {
+        } elseif (empty($info['shop'])) {
             $info['shop'] = implode($this->multiple_value_separator, Shop::getContextListShopID());
         }
 
@@ -2542,7 +2543,7 @@ class AdminImportControllerCore extends AdminController
         $info['shop'] = explode($this->multiple_value_separator, $info['shop']);
 
         $id_shop_list = [];
-        if (is_array($info['shop']) && count($info['shop'])) {
+        if (is_array($info['shop'])) {
             foreach ($info['shop'] as $shop) {
                 if (!empty($shop) && !is_numeric($shop)) {
                     $id_shop_list[] = Shop::getIdByName($shop);
@@ -2575,7 +2576,7 @@ class AdminImportControllerCore extends AdminController
         if (isset($info['image_url']) && $info['image_url']) {
             $info['image_url'] = explode($this->multiple_value_separator, $info['image_url']);
 
-            if (is_array($info['image_url']) && count($info['image_url'])) {
+            if (is_array($info['image_url'])) {
                 foreach ($info['image_url'] as $key => $url) {
                     $url = trim($url);
                     $product_has_images = (bool) Image::getImages($this->context->language->id, $product->id);
@@ -2618,7 +2619,7 @@ class AdminImportControllerCore extends AdminController
                             $this->warnings[] = $this->trans(
                                 '%data% cannot be saved',
                                 [
-                                    '%data%' => (isset($image->id_product) ? ' (' . Tools::htmlentitiesUTF8($image->id_product) . ')' : ''),
+                                    '%data%' => ' (' . Tools::htmlentitiesUTF8($image->id_product) . ')',
                                 ],
                                 'Admin.Advparameters.Notification'
                             );
@@ -2633,7 +2634,7 @@ class AdminImportControllerCore extends AdminController
         } elseif (isset($info['image_position']) && $info['image_position']) {
             $info['image_position'] = explode($this->multiple_value_separator, $info['image_position']);
 
-            if (is_array($info['image_position']) && count($info['image_position'])) {
+            if (is_array($info['image_position'])) {
                 foreach ($info['image_position'] as $position) {
                     // choose images from product by position
                     $images = $product->getImages($default_language);
@@ -2738,7 +2739,7 @@ class AdminImportControllerCore extends AdminController
 
                 if (isset($groups_attributes[$key])) {
                     $group = $groups_attributes[$key]['group'];
-                    if (!isset($attributes[$group . '_' . $attribute]) && count($groups_attributes[$key]) == 2) {
+                    if (!isset($attributes[$group . '_' . $attribute])) {
                         $id_attribute_group = $groups_attributes[$key]['id'];
                         $obj = new ProductAttribute();
                         // sets the proper id (corresponding to the right key)
@@ -3090,7 +3091,7 @@ class AdminImportControllerCore extends AdminController
                     continue;
                 }
                 $id_group = false;
-                if (is_numeric($group) && $group) {
+                if (is_numeric($group)) {
                     $my_group = new Group((int) $group);
                     if (Validate::isLoadedObject($my_group)) {
                         $customer_groups[] = (int) $group;
@@ -3120,7 +3121,7 @@ class AdminImportControllerCore extends AdminController
                     $customer_groups[] = (int) $id_group;
                 }
             }
-        } elseif (empty($info['group']) && isset($customer->id) && $customer->id) {
+        } elseif (!empty($customer->id)) {
             $customer_groups = [0 => Configuration::get('PS_CUSTOMER_GROUP')];
         }
 
@@ -3332,11 +3333,11 @@ class AdminImportControllerCore extends AdminController
         AdminImportController::arrayWalk($info, ['AdminImportController', 'fillInfo'], $address);
 
         /** @var Address $address */
-        if (isset($address->country) && is_numeric($address->country)) {
+        if (!empty($address->country) && is_numeric($address->country)) {
             if (Country::getNameById((int) Configuration::get('PS_LANG_DEFAULT'), (int) $address->country)) {
                 $address->id_country = (int) $address->country;
             }
-        } elseif (isset($address->country) && is_string($address->country) && !empty($address->country)) {
+        } elseif (!empty($address->country) && is_string($address->country)) {
             if ($id_country = Country::getIdByName(null, $address->country)) {
                 $address->id_country = (int) $id_country;
             } else {
@@ -3442,7 +3443,7 @@ class AdminImportControllerCore extends AdminController
 
                 return;
             }
-        } elseif (isset($address->id_customer) && !empty($address->id_customer)) {
+        } elseif (!empty($address->id_customer)) {
             if (Customer::customerIdExistsStatic((int) $address->id_customer)) {
                 $customer = new Customer((int) $address->id_customer);
 
@@ -4596,7 +4597,6 @@ class AdminImportControllerCore extends AdminController
     public function postProcess()
     {
         /* PrestaShop demo mode */
-        /* @phpstan-ignore-next-line */
         if (_PS_MODE_DEMO_) {
             $this->errors[] = $this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error');
 
@@ -4729,16 +4729,10 @@ class AdminImportControllerCore extends AdminController
             if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
                 switch ((int) Tools::getValue('entity')) {
                     case $this->entities[$import_type = $this->trans('Supply Orders', [], 'Admin.Advparameters.Feature')]:
-                        if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
-                            $doneCount += $this->supplyOrdersImport($offset, $limit, $validateOnly);
-                        }
-
+                        $doneCount += $this->supplyOrdersImport($offset, $limit, $validateOnly);
                         break;
                     case $this->entities[$import_type = $this->trans('Supply Order Details', [], 'Admin.Advparameters.Feature')]:
-                        if (Configuration::get('PS_ADVANCED_STOCK_MANAGEMENT')) {
-                            $doneCount += $this->supplyOrdersDetailsImport($offset, $limit, $crossStepsVariables, $validateOnly);
-                        }
-
+                        $doneCount += $this->supplyOrdersDetailsImport($offset, $limit, $crossStepsVariables, $validateOnly);
                         break;
                 }
             }

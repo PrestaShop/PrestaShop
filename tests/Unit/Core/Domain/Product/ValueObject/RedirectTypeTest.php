@@ -47,12 +47,13 @@ class RedirectTypeTest extends TestCase
      *
      * @throws ProductConstraintException
      */
-    public function testItSuccessfullyCreatesRedirectType(string $type,
+    public function testItSuccessfullyCreatesRedirectType(
+        string $type,
         bool $isProductType,
         bool $isCategoryType,
         bool $isTypeNotFound,
-        bool $isTypeGone): void
-    {
+        bool $isTypeGone
+    ): void {
         $redirectType = new RedirectType($type);
 
         Assert::assertSame($type, $redirectType->getValue());

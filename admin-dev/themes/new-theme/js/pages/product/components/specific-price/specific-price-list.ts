@@ -46,7 +46,8 @@ export default class SpecificPriceList {
   public renderList(): void {
     const {listFields} = SpecificPriceMap;
     const tbody = this.listContainer.querySelector(`${SpecificPriceMap.listContainer} tbody`) as HTMLElement;
-    const trTemplate = this.listContainer.querySelector(SpecificPriceMap.listRowTemplate) as HTMLTemplateElement;
+    const trTemplateContainer = this.listContainer.querySelector(SpecificPriceMap.listRowTemplate) as HTMLScriptElement;
+    const trTemplate = trTemplateContainer.innerHTML as string;
     tbody.innerHTML = '';
 
     getSpecificPrices(this.productId).then((response) => {
@@ -54,7 +55,10 @@ export default class SpecificPriceList {
       this.toggleListVisibility(specificPrices.length > 0);
 
       specificPrices.forEach((specificPrice: SpecificPriceForListing) => {
-        const trClone = trTemplate.content.cloneNode(true) as HTMLElement;
+        const temporaryContainer = document.createElement('tbody');
+        temporaryContainer.innerHTML = trTemplate.trim();
+
+        const trClone = temporaryContainer.firstChild as HTMLElement;
         const idField = this.selectListField(trClone, listFields.specificPriceId);
         const combinationField = this.selectListField(trClone, listFields.combination);
         const currencyField = this.selectListField(trClone, listFields.currency);

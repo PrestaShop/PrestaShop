@@ -117,7 +117,6 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Currency\QueryHandler\GetReferenceCurrencyHandler'
     arguments:
       - '@prestashop.core.localization.cldr.locale_repository'
-      - '@prestashop.core.query_bus'
       - '@=service("prestashop.core.admin.lang.repository").findAll()'
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetReferenceCurrency' }

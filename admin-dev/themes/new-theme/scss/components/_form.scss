@@ -38,6 +38,10 @@
     }
   }
 
+  .form-check-radio {
+    padding-top: calc(0.375rem + 1px);
+  }
+
   .form-group {
     > .alert {
       margin-top: 0.75rem;
@@ -110,6 +114,21 @@
     .modal-dialog {
       top: 45%;
     }
+  }
+}
+
+.form-group.inline-switch-widget {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+
+  > * {
+    width: auto;
+  }
+
+  > .input-group {
+    min-width: 35px;
+    margin-top: -7px;
   }
 }
 

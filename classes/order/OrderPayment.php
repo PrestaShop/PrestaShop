@@ -27,6 +27,9 @@ class OrderPaymentCore extends ObjectModel
 {
     public $order_reference;
     public $id_currency;
+    /**
+     * @var float
+     */
     public $amount;
     public $payment_method;
     public $conversion_rate;

@@ -52,6 +52,11 @@ class CategoriesProvider
     private $categories;
 
     /**
+     * @var array
+     */
+    private $categoriesMenu;
+
+    /**
      * @var object
      */
     private $categoriesFromSource;
@@ -61,6 +66,12 @@ class CategoriesProvider
         $this->modulesTheme = $modulesTheme;
         // We now avoid calling the API. This data is loaded from a local YML file
         $this->categoriesFromSource = $this->sortCategories($addonsCategories);
+        $this->categories = $this->initializeCategories($this->categoriesFromSource);
+    }
+
+    public function getCategories(): array
+    {
+        return $this->categories;
     }
 
     /**
@@ -72,12 +83,12 @@ class CategoriesProvider
      */
     public function getCategoriesMenu($modules): array
     {
-        if (null === $this->categories) {
+        if (null === $this->categoriesMenu) {
             // The Root category is "Categories"
-            $categories = $this->initializeCategories($this->categoriesFromSource);
+            // Co py the original array
+            $categories = $this->categories;
             foreach ($modules as $module) {
                 $category = $this->findModuleCategory($module, $categories);
-
                 $categories['categories']->subMenu[$category]->modules[] = $module;
             }
 
@@ -86,10 +97,10 @@ class CategoriesProvider
                 unset($categories['categories']->subMenu[self::CATEGORY_THEME]);
             }
 
-            $this->categories = $categories;
+            $this->categoriesMenu = $categories;
         }
 
-        return $this->categories;
+        return $this->categoriesMenu;
     }
 
     /**

@@ -27,8 +27,11 @@ use PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderPresenter;
 
 class GuestTrackingControllerCore extends FrontController
 {
+    /** @var bool */
     public $ssl = true;
+    /** @var bool */
     public $auth = false;
+    /** @var string */
     public $php_self = 'guest-tracking';
     protected $order;
 
@@ -79,6 +82,7 @@ class GuestTrackingControllerCore extends FrontController
 
         if (Tools::isSubmit('submitTransformGuestToCustomer') && Tools::getValue('password')) {
             $customer = new Customer((int) $this->order->id_customer);
+            /** @var string $password */
             $password = Tools::getValue('password');
 
             if (empty($password)) {

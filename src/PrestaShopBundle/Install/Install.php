@@ -55,16 +55,21 @@ use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 use PrestaShop\PrestaShop\Adapter\Entity\Validate;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
+use PrestaShop\PrestaShop\Core\Module\ConfigReader as ModuleConfigReader;
+use PrestaShop\PrestaShop\Core\Theme\ConfigReader as ThemeConfigReader;
 use PrestaShopBundle\Cache\LocalizationWarmer;
 use PrestaShopBundle\Service\Database\Upgrade as UpgradeDatabase;
 use PrestaShopException;
 use PrestashopInstallerException;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
 
 class Install extends AbstractInstall
 {
     public const SETTINGS_FILE = 'config/settings.inc.php';
     public const BOOTSTRAP_FILE = 'config/bootstrap.php';
+
+    public const DEFAULT_THEME = 'classic';
 
     protected $logger;
 
@@ -477,7 +482,7 @@ class Install extends AbstractInstall
         $xml_loader->setTranslator($this->translator);
         $xml_loader->setLanguages($languages);
 
-        if (isset($this->xml_loader_ids) && $this->xml_loader_ids) {
+        if ($this->xml_loader_ids) {
             $xml_loader->setIds($this->xml_loader_ids);
         }
 
@@ -705,14 +710,14 @@ class Install extends AbstractInstall
 
     public function getLocalizationPackContent($version, $country)
     {
-        if (static::$_cache_localization_pack_content === null || array_key_exists($country, static::$_cache_localization_pack_content)) {
+        if (self::$_cache_localization_pack_content === null || array_key_exists($country, self::$_cache_localization_pack_content)) {
             $localizationWarmer = new LocalizationWarmer($version, $country);
             $localization_file_content = $localizationWarmer->warmUp(_PS_CACHE_DIR_ . 'sandbox' . DIRECTORY_SEPARATOR);
 
-            static::$_cache_localization_pack_content[$country] = $localization_file_content;
+            self::$_cache_localization_pack_content[$country] = $localization_file_content;
         }
 
-        return isset(static::$_cache_localization_pack_content[$country]) ? static::$_cache_localization_pack_content[$country] : false;
+        return self::$_cache_localization_pack_content[$country] ?? false;
     }
 
     /**
@@ -894,10 +899,24 @@ class Install extends AbstractInstall
      */
     public function getModulesOnDisk(): array
     {
+        $modulesOnDisk = (new Finder())->directories()->depth('== 0')->in(_PS_MODULE_DIR_);
+
+        $configReader = new ModuleConfigReader(_PS_MODULE_DIR_);
+        $isoCode = Context::getContext()->language->iso_code;
+
         $modules = [];
-        foreach (scandir(_PS_MODULE_DIR_, SCANDIR_SORT_NONE) as $module) {
-            if ($module[0] != '.' && is_dir(_PS_MODULE_DIR_ . $module) && file_exists(_PS_MODULE_DIR_ . $module . '/' . $module . '.php')) {
-                $modules[] = $module;
+        foreach ($modulesOnDisk as $module) {
+            $moduleData = $configReader->read(
+                $module->getFileName(),
+                $isoCode
+            );
+
+            if ($moduleData !== null) {
+                if ($moduleData->get('name') !== $module->getFilename()) {
+                    continue;
+                }
+
+                $modules[$module->getFileName()] = $moduleData;
             }
         }
 
@@ -905,15 +924,59 @@ class Install extends AbstractInstall
     }
 
     /**
+     * Get all themes present on the disk
+     */
+    public function getThemesOnDisk(): array
+    {
+        $themesOnDisk = (new Finder())->directories()->depth('== 0')->in(_PS_ALL_THEMES_DIR_);
+        $configReader = new ThemeConfigReader(_PS_ALL_THEMES_DIR_);
+        $themes = [];
+        foreach ($themesOnDisk as $theme) {
+            $themeConfig = $configReader->read(
+                $theme->getFileName()
+            );
+
+            if ($themeConfig !== null) {
+                $themes[] = $themeConfig;
+            }
+        }
+
+        return $this->sortThemesByDisplayname($themes);
+    }
+
+    /**
+     * Sort addons categories by order field.
+     *
+     * @param array $themes
+     *
+     * @return array
+     */
+    private function sortThemesByDisplayName(array $themes): array
+    {
+        uasort(
+            $themes,
+            function ($a, $b) {
+                $a = !isset($a['display_name']) ? 0 : $a['display_name'];
+                $b = !isset($b['display_name']) ? 0 : $b['display_name'];
+
+                return $a <=> $b;
+            }
+        );
+
+        // Convert array to object to be consistent with current API call
+        return $themes;
+    }
+
+    /**
      * PROCESS : installModules
      * Download module from addons and Install all modules in ~/modules/ directory.
      *
+     * @param array $modules Modules to  install
+     *
      * @return bool
      */
-    public function installModules(): bool
+    public function installModules(array $modules): bool
     {
-        $modules = $this->getModulesOnDisk();
-
         Module::updateTranslationsAfterInstall(false);
 
         $result = $this->executeAction(
@@ -937,8 +1000,10 @@ class Install extends AbstractInstall
 
     public function postInstall(): bool
     {
+        $modules = array_keys(ModuleManagerBuilder::getInstance()->buildRepository()->getInstalledModules());
+
         return $this->executeAction(
-            $this->getModulesOnDisk(),
+            $modules,
             'postInstall',
             $this->translator->trans(
                 'Cannot execute post install on module "%module%"',
@@ -1024,7 +1089,7 @@ class Install extends AbstractInstall
 
         // Install XML data (data/xml/ folder)
         $xml_loader->setFixturesPath($fixtures_path);
-        if (isset($this->xml_loader_ids) && $this->xml_loader_ids) {
+        if ($this->xml_loader_ids) {
             $xml_loader->setIds($this->xml_loader_ids);
         }
 
@@ -1072,7 +1137,7 @@ class Install extends AbstractInstall
         return true;
     }
 
-    public function installTheme($themeName = null)
+    public function installTheme(string $themeName = null): bool
     {
         $themeName = $themeName ?: _THEME_NAME_;
         $builder = new ThemeManagerBuilder(

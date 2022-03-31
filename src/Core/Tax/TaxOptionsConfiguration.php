@@ -106,15 +106,13 @@ final class TaxOptionsConfiguration extends AbstractMultistoreConfiguration
      */
     protected function buildResolver(): OptionsResolver
     {
-        $resolver = (new OptionsResolver())
+        return (new OptionsResolver())
             ->setDefined(self::CONFIGURATION_FIELDS)
             ->setAllowedTypes('enable_tax', 'bool')
             ->setAllowedTypes('display_tax_in_cart', 'bool')
             ->setAllowedTypes('tax_address_type', ['string', 'null'])
             ->setAllowedTypes('use_eco_tax', 'bool')
             ->setAllowedTypes('eco_tax_rule_group', 'int');
-
-        return $resolver;
     }
 
     /**

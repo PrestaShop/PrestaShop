@@ -91,14 +91,14 @@ class ShippingType extends TranslatorAwareType
                 'multiple' => false,
                 'required' => false,
                 'label' => $this->trans('Delivery Time', 'Admin.Catalog.Feature'),
-                'label_tag_name' => 'h2',
+                'label_tag_name' => 'h3',
                 'label_help_box' => $this->trans('Display delivery time for a product is advised for merchants selling in Europe to comply with the local laws.', 'Admin.Catalog.Help'),
             ])
             ->add('delivery_time_notes', DeliveryTimeNotesType::class)
             ->add('additional_shipping_cost', MoneyType::class, [
                 'required' => false,
                 'label' => $this->trans('Shipping fees', 'Admin.Catalog.Feature'),
-                'label_tag_name' => 'h2',
+                'label_tag_name' => 'h3',
                 'label_subtitle' => $this->trans('Does this product incur additional shipping costs?', 'Admin.Catalog.Feature'),
                 'label_help_box' => $this->trans('If a carrier has a tax, it will be added to the shipping fees. Does not apply to free shipping.', 'Admin.Catalog.Help'),
                 'currency' => $this->currencyIsoCode,
@@ -114,7 +114,7 @@ class ShippingType extends TranslatorAwareType
                 'multiple' => true,
                 'required' => false,
                 'label' => $this->trans('Available carriers', 'Admin.Catalog.Feature'),
-                'label_tag_name' => 'h2',
+                'label_tag_name' => 'h3',
                 'alert_message' => $this->trans('If no carrier is selected then all the carriers will be available for customers orders.', 'Admin.Catalog.Notification'),
                 'alert_type' => 'warning',
             ])

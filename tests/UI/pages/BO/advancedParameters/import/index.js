@@ -33,6 +33,7 @@ class Import extends BOBasePage {
     this.progressImportBarInfo = '#import_progressbar_done';
     this.importDetailsFinished = '#import_details_finished';
     this.importProgressModalCloseButton = '#import_close_button';
+    this.forceAllIDNumber = toggle => `#forceIDs_${toggle}`;
   }
 
   /*
@@ -60,6 +61,25 @@ class Import extends BOBasePage {
     await page.setInputFiles(this.fileInputField, filePath);
 
     return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Is force all id numbers visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async isForceAllIDNumbersVisible(page) {
+    return this.elementVisible(page, this.forceAllIDNumber(1), 2000);
+  }
+
+  /**
+   * Enable/Disable force all ID numbers
+   * @param page {Page} Browser tab
+   * @param toEnable {boolean} True if we need to enable all id numbers
+   * @returns {Promise<void>}
+   */
+  async setForceAllIDNumbers(page, toEnable = true) {
+    await this.setChecked(page, this.forceAllIDNumber(toEnable ? 1 : 0));
   }
 
   /**

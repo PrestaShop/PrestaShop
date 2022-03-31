@@ -21,7 +21,12 @@ class Monitoring extends BOBasePage {
     this.gridTable = table => `#${table}_grid_table`;
     this.gridHeaderTitle = table => `${this.gridPanel(table)} div.card-header h3`;
 
+    // Bulk actions
+    this.bulkActionsButton = table => `${this.gridPanel(table)} .js-bulk-actions-btn`;
+    this.deleteSelectButton = table => `#${table}_grid_bulk_action_delete_selection`;
+
     // Filters
+    this.selectAllCheckBox = table => `${this.gridPanel(table)} .js-bulk-action-select-all`;
     this.filterColumn = (table, filterBY) => `${this.gridTable(table)} #${table}_${filterBY}`;
     this.filterSearchButton = table => `${this.gridTable(table)} .grid-search-button`;
     this.filterResetButton = table => `${this.gridTable(table)} .grid-reset-button`;
@@ -32,7 +37,7 @@ class Monitoring extends BOBasePage {
     this.tableEmptyRow = table => `${this.tableBody(table)} tr.empty_row`;
     this.tableColumn = (table, row, column) => `${this.tableRow(table, row)} td.column-${column}`;
 
-    // enable column
+    // Enable column
     this.enableColumn = (table, row) => this.tableColumn(table, row, 'active');
     this.enableColumnValidIcon = row => `${this.enableColumn(row)} i.grid-toggler-icon-valid`;
 
@@ -173,6 +178,36 @@ class Monitoring extends BOBasePage {
     ]);
 
     await this.clickAndWaitForNavigation(page, this.submitDeleteProductButton(tableName));
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Bulk delete elements in table
+   * @param page {Page} Browser tab
+   * @param tableName {string} Table name to delete elements from it
+   * @returns {Promise<string>}
+   */
+  async bulkDeleteElementsInTable(page, tableName) {
+    // Select all elements in table
+    await Promise.all([
+      page.$eval(this.selectAllCheckBox(tableName), el => el.click()),
+      this.waitForVisibleSelector(page, `${this.bulkActionsButton(tableName)}:not([disabled])`),
+    ]);
+
+    // Click on bulk actions
+    await Promise.all([
+      page.click(this.bulkActionsButton(tableName)),
+      this.waitForVisibleSelector(page, this.deleteSelectButton(tableName)),
+    ]);
+
+    // Click on delete selected and wait for modal
+    await Promise.all([
+      page.$eval(this.deleteSelectButton(tableName), el => el.click()),
+      this.waitForVisibleSelector(page, `${this.deleteProductModal(tableName)}.show`),
+    ]);
+
+    await this.clickAndWaitForNavigation(page, this.submitDeleteProductButton(tableName));
+
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 

@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Form\IdentifiableObject\OptionsProvider;
 
 use Generator;
-use PHPStan\Testing\TestCase;
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\CombinationFormOptionsProvider;
 
 class CombinationFormOptionsProviderTest extends TestCase

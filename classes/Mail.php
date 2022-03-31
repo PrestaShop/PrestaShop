@@ -599,7 +599,7 @@ class MailCore extends ObjectModel
                 $message->addPart($templateHtml, 'text/html', 'utf-8');
             }
 
-            if ($fileAttachment && !empty($fileAttachment)) {
+            if (!empty($fileAttachment)) {
                 // Multiple attachments?
                 if (!is_array(current($fileAttachment))) {
                     $fileAttachment = [$fileAttachment];

@@ -28,7 +28,9 @@ use PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderPresenter;
 
 class OrderConfirmationControllerCore extends FrontController
 {
+    /** @var bool */
     public $ssl = true;
+    /** @var string */
     public $php_self = 'order-confirmation';
     /** @var int Cart ID */
     public $id_cart;

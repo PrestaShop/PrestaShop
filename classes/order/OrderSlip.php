@@ -261,29 +261,6 @@ class OrderSlipCore extends ObjectModel
         return $slips;
     }
 
-    /**
-     * @deprecated since 1.6.0.10 use OrderSlip::create() instead
-     */
-    public static function createOrderSlip($order, $productList, $qtyList, $shipping_cost = false)
-    {
-        Tools::displayAsDeprecated('Use OrderSlip::create() instead');
-
-        $product_list = [];
-        foreach ($productList as $id_order_detail) {
-            $order_detail = new OrderDetail((int) $id_order_detail);
-            $product_list[$id_order_detail] = [
-                'id_order_detail' => $id_order_detail,
-                'quantity' => $qtyList[$id_order_detail],
-                'unit_price' => $order_detail->unit_price_tax_excl,
-                'amount' => $order_detail->unit_price_tax_incl * $qtyList[$id_order_detail],
-            ];
-
-            $shipping_cost = $shipping_cost ? null : false;
-        }
-
-        return OrderSlip::create($order, $product_list, $shipping_cost);
-    }
-
     public static function create(Order $order, $product_list, $shipping_cost = false, $amount = 0, $amount_choosen = false, $add_tax = true)
     {
         $currency = new Currency((int) $order->id_currency);

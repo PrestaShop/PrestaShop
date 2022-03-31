@@ -33,24 +33,14 @@ use PrestaShop\PrestaShop\Core\Currency\Exception\CurrencyFeedException;
 use PrestaShop\PrestaShop\Core\Currency\ExchangeRateProvider;
 use Symfony\Component\Cache\Adapter\AdapterInterface as CacheInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
-use Symfony\Component\Filesystem\Filesystem;
 
 class ExchangeRateProviderTest extends TestCase
 {
-    /** @var string */
-    private $cacheDir;
-
-    /** @var string */
-    private $cacheFile;
-
     /** @var string */
     private $feedFilePath;
 
     /** @var string */
     private $feedContent;
-
-    /** @var Filesystem */
-    private $fileSystem;
 
     /** @var CacheInterface */
     private $cache;

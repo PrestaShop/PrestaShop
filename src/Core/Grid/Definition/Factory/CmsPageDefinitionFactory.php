@@ -71,11 +71,6 @@ class CmsPageDefinitionFactory extends AbstractGridDefinitionFactory
     private $queryBus;
 
     /**
-     * @var RequestStack
-     */
-    private $requestStack;
-
-    /**
      * @var MultistoreContextCheckerInterface
      */
     private $multistoreContextChecker;
@@ -95,7 +90,6 @@ class CmsPageDefinitionFactory extends AbstractGridDefinitionFactory
         parent::__construct($hookDispatcher);
 
         $this->queryBus = $queryBus;
-        $this->requestStack = $requestStack;
 
         $this->setCmsPageCategoryParentId($requestStack);
         $this->multistoreContextChecker = $multistoreContextChecker;

@@ -27,8 +27,11 @@
 namespace PrestaShopBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Config\Loader\LoaderResolver;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
+use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\Finder\Finder;
 
@@ -67,7 +70,12 @@ class LoadServicesFromModulesPass implements CompilerPassInterface
             if (in_array($modulePath->getFilename(), $activeModules)) {
                 $moduleConfigPath = $modulePath . $this->configPath;
                 if (file_exists($moduleConfigPath . 'services.yml')) {
-                    $loader = new YamlFileLoader($container, new FileLocator($moduleConfigPath));
+                    $fileLocator = new FileLocator($moduleConfigPath);
+                    $loader = new YamlFileLoader($container, $fileLocator);
+                    $loader->setResolver(new LoaderResolver([
+                        new PhpFileLoader($container, $fileLocator),
+                        new XmlFileLoader($container, $fileLocator),
+                    ]));
                     $loader->load('services.yml');
                 }
             }

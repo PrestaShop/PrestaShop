@@ -217,14 +217,10 @@ abstract class PaymentModuleCore extends Module
         Shop $shop = null,
         ?string $order_reference = null
     ) {
-        /* @phpstan-ignore-next-line */
         if (self::DEBUG_MODE) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Function called', 1, null, 'Cart', (int) $id_cart, true);
         }
 
-        if (!isset($this->context)) {
-            $this->context = Context::getContext();
-        }
         $this->context->cart = new Cart((int) $id_cart);
         $this->context->customer = new Customer((int) $this->context->cart->id_customer);
         // The tax cart is loaded before the customer so re-cache the tax calculation method
@@ -372,7 +368,6 @@ abstract class PaymentModuleCore extends Module
             throw new PrestaShopException('The order address country is not active.');
         }
 
-        /* @phpstan-ignore-next-line */
         if (self::DEBUG_MODE) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Payment is about to be added', 1, null, 'Cart', (int) $id_cart, true);
         }
@@ -415,7 +410,6 @@ abstract class PaymentModuleCore extends Module
             if (!empty($message)) {
                 $message = strip_tags($message, '<br>');
                 if (Validate::isCleanHtml($message)) {
-                    /* @phpstan-ignore-next-line */
                     if (self::DEBUG_MODE) {
                         PrestaShopLogger::addLog('PaymentModule::validateOrder - Message is about to be added', 1, null, 'Cart', (int) $id_cart, true);
                     }
@@ -549,7 +543,6 @@ abstract class PaymentModuleCore extends Module
                 }
             }
 
-            /* @phpstan-ignore-next-line */
             if (self::DEBUG_MODE) {
                 PrestaShopLogger::addLog('PaymentModule::validateOrder - Hook validateOrder is about to be called', 1, null, 'Cart', (int) $id_cart, true);
             }
@@ -569,7 +562,6 @@ abstract class PaymentModuleCore extends Module
                 }
             }
 
-            /* @phpstan-ignore-next-line */
             if (self::DEBUG_MODE) {
                 PrestaShopLogger::addLog('PaymentModule::validateOrder - Order Status is about to be added', 1, null, 'Cart', (int) $id_cart, true);
             }
@@ -625,7 +617,6 @@ abstract class PaymentModuleCore extends Module
                     $file_attachement = null;
                 }
 
-                /* @phpstan-ignore-next-line */
                 if (self::DEBUG_MODE) {
                     PrestaShopLogger::addLog('PaymentModule::validateOrder - Mail is about to be sent', 1, null, 'Cart', (int) $id_cart, true);
                 }
@@ -670,7 +661,7 @@ abstract class PaymentModuleCore extends Module
                         '{invoice_other}' => $invoice->other,
                         '{order_name}' => $order->getUniqReference(),
                         '{id_order}' => $order->id,
-                        '{date}' => Tools::displayDate(date('Y-m-d H:i:s'), null, true),
+                        '{date}' => Tools::displayDate(date('Y-m-d H:i:s'), true),
                         '{carrier}' => ($virtual_product || !isset($carrier->name)) ? $this->trans('No carrier', [], 'Admin.Payment.Notification') : $carrier->name,
                         '{payment}' => Tools::substr($order->payment, 0, 255) . ($order->hasBeenPaid() ? '' : '&nbsp;' . $this->trans('(waiting for validation)', [], 'Emails.Body')),
                         '{products}' => $product_list_html,
@@ -744,7 +735,6 @@ abstract class PaymentModuleCore extends Module
             $this->currentOrder = (int) $order->id;
         }
 
-        /* @phpstan-ignore-next-line */
         if (self::DEBUG_MODE) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - End of validateOrder', 1, null, 'Cart', (int) $id_cart, true);
         }

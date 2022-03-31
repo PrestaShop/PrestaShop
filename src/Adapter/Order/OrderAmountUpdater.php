@@ -348,9 +348,9 @@ class OrderAmountUpdater
             }
         }
 
-        if (!$cart->isVirtualCart() && isset($order->id_carrier)) {
+        if (!$cart->isVirtualCart() && !empty($order->id_carrier)) {
             $carrier = new Carrier((int) $order->id_carrier, (int) $cart->id_lang);
-            if (null !== $carrier && Validate::isLoadedObject($carrier)) {
+            if (Validate::isLoadedObject($carrier)) {
                 $taxAddressId = (int) $order->{$this->getOrderConfiguration('PS_TAX_ADDRESS_TYPE', $order)};
                 $order->carrier_tax_rate = $carrier->getTaxesRate(new Address($taxAddressId));
             }

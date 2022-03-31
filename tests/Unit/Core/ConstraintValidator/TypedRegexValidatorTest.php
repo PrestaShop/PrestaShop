@@ -255,7 +255,7 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
 
     public function testItSucceedsForIsbnTypeWhenValidCharactersGiven(): void
     {
-        $this->validator->validate('-1780', new TypedRegex('isbn'));
+        $this->validator->validate('0-8044-2957-X', new TypedRegex('isbn'));
 
         $this->assertNoViolation();
     }

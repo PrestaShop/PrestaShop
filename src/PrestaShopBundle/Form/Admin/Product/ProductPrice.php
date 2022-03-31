@@ -27,10 +27,8 @@
 namespace PrestaShopBundle\Form\Admin\Product;
 
 use Currency;
-use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
-use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
 use PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
@@ -53,10 +51,6 @@ class ProductPrice extends CommonAbstractType
     public const DEFAULT_PRODUCT_ID_FOR_FORM_CREATION = 1;
 
     /**
-     * @var Configuration
-     */
-    private $configuration;
-    /**
      * @var CountryDataProvider
      */
     public $countryDataprovider;
@@ -68,10 +62,6 @@ class ProductPrice extends CommonAbstractType
      * @var CurrencyDataProvider
      */
     public $currencyDataprovider;
-    /**
-     * @var CustomerDataProvider
-     */
-    private $customerDataprovider;
     /**
      * @var float
      */
@@ -116,7 +106,6 @@ class ProductPrice extends CommonAbstractType
      * @param CurrencyDataProvider $currencyDataprovider
      * @param GroupDataProvider $groupDataprovider
      * @param LegacyContext $legacyContext
-     * @param CustomerDataProvider $customerDataprovider
      */
     public function __construct(
         $translator,
@@ -126,17 +115,14 @@ class ProductPrice extends CommonAbstractType
         $countryDataprovider,
         $currencyDataprovider,
         $groupDataprovider,
-        $legacyContext,
-        $customerDataprovider
+        $legacyContext
     ) {
         $this->translator = $translator;
         $this->router = $router;
-        $this->configuration = $this->getConfiguration();
         $this->shopContextAdapter = $shopContextAdapter;
         $this->countryDataprovider = $countryDataprovider;
         $this->currencyDataprovider = $currencyDataprovider;
         $this->groupDataprovider = $groupDataprovider;
-        $this->customerDataprovider = $customerDataprovider;
         $this->legacyContext = $legacyContext;
         $this->tax_rules_rates = $taxDataProvider->getTaxRulesGroupWithRates();
         $this->eco_tax_rate = $taxDataProvider->getProductEcotaxRate();

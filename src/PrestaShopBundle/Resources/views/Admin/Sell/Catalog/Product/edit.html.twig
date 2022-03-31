@@ -36,6 +36,7 @@
 {% endblock %}
 
 {% block content %}
+<div class="product-page-v2">
   {% set productType = productForm.vars.product_type %}
   {% set productId = productForm.vars.product_id %}
   {% set extraModulesHooks = renderhooksarray('displayAdminProductsExtra', { 'id_product': productId }) %}
@@ -45,22 +46,14 @@
   </div>
 
   {{ form_start(productForm, {'attr': {
-    'class': 'form-horizontal product-page product-page-v2 row justify-content-md-center', 'novalidate': 'novalidate',
+    'class': 'form-horizontal product-page justify-content-md-center', 'novalidate': 'novalidate',
     'data-product-id': productId,
     'data-product-type': productType
   }}) }}
 
   {% block product_header %}
-    {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/header.html.twig', {
-      'productForm': productForm,
-      'isMultiShopContext': isMultiShopContext,
-      'helpLink': helpLink,
-      'statsLink': statsLink
-    })
-    }}
+    {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/header.html.twig', {'productForm': productForm}) }}
   {% endblock %}
-
-  <div class="col-xxl-10">
 
   {{ block('session_alert') }}
 
@@ -139,7 +132,6 @@
         }) }}
       {% endblock %}
     </div>
-  </div>
 
   {% block product_footer %}
   {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/footer.html.twig', {
@@ -165,7 +157,7 @@
   {% block specific_price_form_modal %}
     {{ include('@PrestaShop/Admin/Sell/Catalog/Product/SpecificPrice/Blocks/form_modal.html.twig') }}
   {% endblock %}
-
+</div>
 {% endblock %}
 
 {% block javascripts %}

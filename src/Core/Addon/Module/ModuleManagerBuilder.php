@@ -228,12 +228,4 @@ class ModuleManagerBuilder
     {
         return _PS_ROOT_DIR_ . '/app/config';
     }
-
-    /**
-     * Returns country iso from context.
-     */
-    private function getCountryIso()
-    {
-        return \CountryCore::getIsoById((int) \Configuration::get('PS_COUNTRY_DEFAULT'));
-    }
 }

@@ -162,7 +162,7 @@ class AdminQuickAccessesControllerCore extends AdminController
 
     public function addQuickLink()
     {
-        if (!isset($this->className) || empty($this->className)) {
+        if (empty($this->className)) {
             return false;
         }
         $this->validateRules();

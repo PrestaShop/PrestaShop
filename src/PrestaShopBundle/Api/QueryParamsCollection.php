@@ -175,7 +175,7 @@ abstract class QueryParamsCollection
 
     /**
      * @param array $queryParams
-     * @param array $allParameters
+     * @param array<array|string|int> $allParameters
      *
      * @return array
      */

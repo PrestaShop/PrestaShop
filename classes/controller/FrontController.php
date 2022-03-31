@@ -33,37 +33,6 @@ use Symfony\Component\HttpFoundation\IpUtils;
 
 class FrontControllerCore extends Controller
 {
-    /**
-     * @deprecated Deprecated shortcuts as of 1.5.0.1 - Use $context->smarty instead
-     *
-     * @var Smarty
-     */
-    protected static $smarty;
-
-    /**
-     * @deprecated Deprecated shortcuts as of 1.5.0.1 - Use $context->cookie instead
-     *
-     * @var Cookie
-     */
-    protected static $cookie;
-
-    /**
-     * @deprecated Deprecated shortcuts as of 1.5.0.1 - Use $context->link instead
-     *
-     * @var Link
-     */
-    protected static $link;
-
-    /**
-     * @deprecated Deprecated shortcuts as of 1.5.0.1 - Use $context->cart instead
-     *
-     * @var Cart
-     */
-    protected static $cart;
-
-    /** @var array Controller errors */
-    public $errors = [];
-
     /** @var array Controller warning notifications */
     public $warning = [];
 
@@ -76,16 +45,32 @@ class FrontControllerCore extends Controller
     /** @var string Language ISO code */
     public $iso;
 
-    /** @var string ORDER BY field */
+    /**
+     * @deprecated Since 8.0 and will be removed in the next major.
+     *
+     * @var string ORDER BY field
+     */
     public $orderBy;
 
-    /** @var string Order way string ('ASC', 'DESC') */
+    /**
+     * @deprecated Since 8.0 and will be removed in the next major.
+     *
+     * @var string Order way string ('ASC', 'DESC')
+     */
     public $orderWay;
 
-    /** @var int Current page number */
+    /**
+     * @deprecated Since 8.0 and will be removed in the next major.
+     *
+     * @var int Current page number
+     */
     public $p;
 
-    /** @var int Items (products) per page */
+    /**
+     * @deprecated Since 8.0 and will be removed in the next major.
+     *
+     * @var int Items (products) per page
+     */
     public $n;
 
     /** @var bool If set to true, will redirected user to login page during init function. */
@@ -135,6 +120,8 @@ class FrontControllerCore extends Controller
     protected static $currentCustomerGroups;
 
     /**
+     * @deprecated Since 8.0 and will be removed in the next major.
+     *
      * @var int
      */
     public $nb_items_per_page;
@@ -263,17 +250,6 @@ class FrontControllerCore extends Controller
      * class properties, redirects depending on context, etc.
      *
      * @global bool     $useSSL           SSL connection flag
-     * @global Cookie   $cookie           Visitor's cookie
-     * @global Smarty   $smarty
-     * @global Cart     $cart             Visitor's cart
-     * @global string   $iso              Language ISO
-     * @global Country  $defaultCountry   Visitor's country object
-     * @global string   $protocol_link
-     * @global string   $protocol_content
-     * @global Link     $link
-     * @global array    $css_files
-     * @global array    $js_files
-     * @global Currency $currency         Visitor's selected currency
      *
      * @throws PrestaShopException
      */
@@ -291,7 +267,7 @@ class FrontControllerCore extends Controller
          * Use the Context object to access objects instead.
          * Example: $this->context->cart
          */
-        global $useSSL, $cookie, $smarty, $cart, $iso, $defaultCountry, $protocol_link, $protocol_content, $link, $css_files, $js_files, $currency;
+        global $useSSL;
 
         if (self::$initialized) {
             return;
@@ -305,10 +281,6 @@ class FrontControllerCore extends Controller
         if (Tools::usingSecureMode()) {
             $useSSL = true;
         }
-
-        // For compatibility with globals, DEPRECATED as of version 1.5.0.1
-        $css_files = $this->css_files;
-        $js_files = $this->js_files;
 
         $this->sslRedirection();
 
@@ -325,7 +297,7 @@ class FrontControllerCore extends Controller
         ob_start();
 
         $protocol_link = (Configuration::get('PS_SSL_ENABLED') || Tools::usingSecureMode()) ? 'https://' : 'http://';
-        $useSSL = ((isset($this->ssl) && $this->ssl && Configuration::get('PS_SSL_ENABLED')) || Tools::usingSecureMode()) ? true : false;
+        $useSSL = ($this->ssl && Configuration::get('PS_SSL_ENABLED')) || Tools::usingSecureMode();
         $protocol_content = ($useSSL) ? 'https://' : 'http://';
         $link = new Link($protocol_link, $protocol_content);
         $this->context->link = $link;
@@ -362,9 +334,11 @@ class FrontControllerCore extends Controller
             if ((!$has_currency || $has_country) && !$has_address_type) {
                 if ($has_country && Validate::isLanguageIsoCode($this->context->cookie->iso_code_country)) {
                     $id_country = (int) Country::getByIso(strtoupper($this->context->cookie->iso_code_country));
-                } elseif (Configuration::get('PS_DETECT_COUNTRY') && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])
-                        && preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array)
-                        && Validate::isLanguageIsoCode($array[0])) {
+                } elseif (
+                    isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])
+                    && preg_match('#(?<=-)\w\w|\w\w(?!-)#', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $array)
+                    && Validate::isLanguageIsoCode($array[0])
+                ) {
                     $id_country = (int) Country::getByIso($array[0], true);
                 } else {
                     $id_country = Tools::getCountry();
@@ -478,24 +452,12 @@ class FrontControllerCore extends Controller
             $this->context->country = $country;
         }
 
-        /*
-         * These shortcuts are DEPRECATED as of version 1.5.0.1
-         * Use the Context to access objects instead.
-         * Example: $this->context->cart
-         */
-        self::$cookie = $this->context->cookie;
-        self::$cart = $cart;
-        self::$smarty = $this->context->smarty;
-        self::$link = $link;
-        $defaultCountry = $this->context->country;
-
         $this->displayMaintenancePage();
 
         if (Country::GEOLOC_FORBIDDEN == $this->restrictedCountry) {
             $this->displayRestrictedCountryPage();
         }
 
-        $this->iso = $iso;
         $this->context->cart = $cart;
         $this->context->currency = $currency;
 
@@ -664,7 +626,7 @@ class FrontControllerCore extends Controller
      */
     protected function redirect()
     {
-        Tools::redirectLink($this->redirect_after);
+        Tools::redirect($this->redirect_after);
     }
 
     public function redirectWithNotifications()
@@ -846,7 +808,6 @@ class FrontControllerCore extends Controller
 
             // Don't send any cookie
             Context::getContext()->cookie->disallowWriting();
-            /* @phpstan-ignore-next-line */
             if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_ && $_SERVER['REQUEST_URI'] != __PS_BASE_URI__) {
                 die('[Debug] This page has moved<br />Please use the following URL instead: <a href="' . $final_url . '">' . $final_url . '</a>');
             }
@@ -854,7 +815,7 @@ class FrontControllerCore extends Controller
             $redirect_type = Configuration::get('PS_CANONICAL_REDIRECT') == 2 ? '301' : '302';
             header('HTTP/1.0 ' . $redirect_type . ' Moved');
             header('Cache-Control: no-cache');
-            Tools::redirectLink($final_url);
+            Tools::redirect($final_url);
         }
     }
 
@@ -1024,11 +985,9 @@ class FrontControllerCore extends Controller
         }
 
         $ips = array_map('trim', $ips);
-        if (is_array($ips) && count($ips)) {
-            foreach ($ips as $ip) {
-                if (!empty($ip) && preg_match('/^' . $ip . '.*/', $user_ip)) {
-                    $allowed = true;
-                }
+        foreach ($ips as $ip) {
+            if (!empty($ip) && preg_match('/^' . $ip . '.*/', $user_ip)) {
+                $allowed = true;
             }
         }
 
@@ -1877,7 +1836,6 @@ class FrontControllerCore extends Controller
         } catch (PrestaShopException $e) {
             PrestaShopLogger::addLog($e->getMessage());
 
-            /* @phpstan-ignore-next-line */
             if (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_) {
                 $this->warning[] = $e->getMessage();
                 $scope->assign(['notifications' => $this->prepareNotifications()]);

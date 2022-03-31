@@ -29,6 +29,7 @@
  */
 class AdminTabsControllerCore extends AdminController
 {
+    /** @var string */
     protected $position_identifier = 'id_tab';
 
     public function __construct()
@@ -270,7 +271,6 @@ class AdminTabsControllerCore extends AdminController
     public function postProcess()
     {
         /* PrestaShop demo mode */
-        /* @phpstan-ignore-next-line */
         if (_PS_MODE_DEMO_) {
             $this->errors[] = $this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error');
 

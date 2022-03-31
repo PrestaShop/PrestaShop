@@ -462,22 +462,6 @@ class ModuleManager implements AddonManagerInterface
 
     /**
      * Disable a module specifically on mobile.
-     * Not written in camel case because the route and the displayed action in the template
-     * are related to this function name.
-     *
-     * @deprecated use disableMobile()
-     *
-     * @param string $name The module name to disable
-     *
-     * @return bool True for success
-     */
-    public function disable_mobile($name)
-    {
-        return $this->disableMobile($name);
-    }
-
-    /**
-     * Disable a module specifically on mobile.
      *
      * @param string $name The module name to disable
      *
@@ -502,22 +486,6 @@ class ModuleManager implements AddonManagerInterface
         $this->checkAndClearCache($result);
 
         return $result;
-    }
-
-    /**
-     * Enable a module previously disabled on mobile
-     * Not written in camel case because the route and the displayed action in the template
-     * are related to this function name.
-     *
-     * @deprecated use enableMobile
-     *
-     * @param string $name The module name to enable
-     *
-     * @return bool True for success
-     */
-    public function enable_mobile($name)
-    {
-        return $this->enableMobile($name);
     }
 
     /**

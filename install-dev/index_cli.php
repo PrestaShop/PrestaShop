@@ -42,7 +42,7 @@ if (PHP_VERSION_ID > _PS_INSTALL_MAXIMUM_PHP_VERSION_ID_) {
     die();
 }
 
-/* Redefine REQUEST_URI */
+/* Redefine REQUEST_URI *//** @phpstan-ignore-next-line */
 $_SERVER['REQUEST_URI'] = '/install/index_cli.php';
 require_once __DIR__ . DIRECTORY_SEPARATOR . 'classes/datas.php';
 /**

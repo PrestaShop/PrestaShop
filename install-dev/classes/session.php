@@ -51,11 +51,15 @@
  * @property string $shop_timezone
  * @property bool $configuration_agrement
  * @property bool $licence_agrement
- * @property int $enable_ssl
+ * @property bool $enable_ssl
  * @property int $rewrite_engine
  * @property bool $use_smtp
  * @property string $smtp_encryption
  * @property int $smtp_port
+ * @property array $content_modules
+ * @property string $content_theme
+ * @property bool $content_install_fixtures
+ * @property int $moduleAction
  */
 class InstallSession
 {

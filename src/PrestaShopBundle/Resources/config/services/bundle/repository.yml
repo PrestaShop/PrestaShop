@@ -63,6 +63,7 @@ services:
       - "@prestashop.adapter.legacy.context"
       - "@prestashop.adapter.image_manager"
       - "%database_prefix%"
+      - '@=service("prestashop.adapter.legacy.context").getLanguage().date_format_full'
 
   prestashop.core.api.supplier.repository:
     class: PrestaShopBundle\Entity\Repository\SupplierRepository

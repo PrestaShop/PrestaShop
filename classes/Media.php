@@ -136,7 +136,6 @@ class MediaCore
             try {
                 $jsContent = JSMin::minify($jsContent);
             } catch (Exception $e) {
-                /* @phpstan-ignore-next-line */
                 if (_PS_MODE_DEV_) {
                     echo $e->getMessage();
                 }
@@ -792,7 +791,12 @@ class MediaCore
         $inline = isset($matches[2]) ? trim($matches[2]) : '';
 
         /* This is an inline script, add its content to inline scripts stack then remove it from content */
-        if (!empty($inline) && preg_match(Media::$pattern_js, $original) !== false && !preg_match('/' . Media::$pattern_keepinline . '/', $original) && Media::$inline_script[] = $inline) {
+        if (!empty($inline)
+            && preg_match(Media::$pattern_js, $original) !== false
+            && !preg_match('/' . Media::$pattern_keepinline . '/', $original)
+        ) {
+            Media::$inline_script[] = $inline;
+
             return '';
         }
         /* This is an external script, if it already belongs to js_files then remove it from content */

@@ -603,12 +603,10 @@ class AdminCartRulesControllerCore extends AdminController
                     $combinations[$attribute['id_product_attribute']]['attributes'] .= $attribute['attribute_name'] . ' - ';
                     $combinations[$attribute['id_product_attribute']]['id_product_attribute'] = $attribute['id_product_attribute'];
                     $combinations[$attribute['id_product_attribute']]['default_on'] = $attribute['default_on'];
-                    if (!isset($combinations[$attribute['id_product_attribute']]['price'])) {
-                        $price_tax_incl = Product::getPriceStatic((int) $product['id_product'], true, $attribute['id_product_attribute']);
-                        $combinations[$attribute['id_product_attribute']]['formatted_price'] = $price_tax_incl
-                            ? $this->context->getCurrentLocale()->formatPrice(Tools::convertPrice($price_tax_incl, $this->context->currency), $this->context->currency->iso_code)
-                            : '';
-                    }
+                    $price_tax_incl = Product::getPriceStatic((int) $product['id_product'], true, $attribute['id_product_attribute']);
+                    $combinations[$attribute['id_product_attribute']]['formatted_price'] = $price_tax_incl
+                        ? $this->context->getCurrentLocale()->formatPrice(Tools::convertPrice($price_tax_incl, $this->context->currency), $this->context->currency->iso_code)
+                        : '';
                 }
 
                 foreach ($combinations as &$combination) {

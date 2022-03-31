@@ -34,7 +34,6 @@ use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagsModifier;
 use PrestaShopBundle\Entity\FeatureFlag;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class FeatureFlagsModifierTest extends TestCase
 {
@@ -47,9 +46,8 @@ class FeatureFlagsModifierTest extends TestCase
         ];
 
         list($entityManagerMock, $repositoryMock) = $this->buildDoctrineServicesMocksForFetchAll($featureFlags);
-        $translatorMock = $this->getMockBuilder(TranslatorInterface::class)->getMock();
 
-        $modifier = new FeatureFlagsModifier($entityManagerMock, $translatorMock);
+        $modifier = new FeatureFlagsModifier($entityManagerMock);
 
         $expected = [
             'product_page_v1' => false,
@@ -63,9 +61,8 @@ class FeatureFlagsModifierTest extends TestCase
     public function testGetConfigurationReturnsEmptyIfNoFeatureFlagsAvailable()
     {
         list($entityManagerMock, $repositoryMock) = $this->buildDoctrineServicesMocksForFetchAll([]);
-        $translatorMock = $this->getMockBuilder(TranslatorInterface::class)->getMock();
 
-        $modifier = new FeatureFlagsModifier($entityManagerMock, $translatorMock);
+        $modifier = new FeatureFlagsModifier($entityManagerMock);
 
         $this->assertEquals([], $modifier->getConfiguration());
     }
@@ -79,9 +76,8 @@ class FeatureFlagsModifierTest extends TestCase
         ];
 
         list($entityManagerMock, $repositoryMock) = $this->buildDoctrineServicesMocksForFetchByName($featureFlags);
-        $translatorMock = $this->getMockBuilder(TranslatorInterface::class)->getMock();
 
-        $modifier = new FeatureFlagsModifier($entityManagerMock, $translatorMock);
+        $modifier = new FeatureFlagsModifier($entityManagerMock);
 
         $payload = [
             'product_page_v1' => false,
@@ -105,9 +101,8 @@ class FeatureFlagsModifierTest extends TestCase
         ];
 
         list($entityManagerMock, $repositoryMock) = $this->buildDoctrineServicesMocksForFetchByName($featureFlags);
-        $translatorMock = $this->getMockBuilder(TranslatorInterface::class)->getMock();
 
-        $modifier = new FeatureFlagsModifier($entityManagerMock, $translatorMock);
+        $modifier = new FeatureFlagsModifier($entityManagerMock);
 
         $modifier->updateConfiguration([]);
 
@@ -123,9 +118,8 @@ class FeatureFlagsModifierTest extends TestCase
         ];
 
         list($entityManagerMock, $repositoryMock) = $this->buildDoctrineServicesMocksForFetchByName($featureFlags);
-        $translatorMock = $this->getMockBuilder(TranslatorInterface::class)->getMock();
 
-        $modifier = new FeatureFlagsModifier($entityManagerMock, $translatorMock);
+        $modifier = new FeatureFlagsModifier($entityManagerMock);
 
         $payload = [
             1 => 'a',
@@ -143,9 +137,8 @@ class FeatureFlagsModifierTest extends TestCase
         ];
 
         list($entityManagerMock, $repositoryMock) = $this->buildDoctrineServicesMocksForFetchByName($featureFlags);
-        $translatorMock = $this->getMockBuilder(TranslatorInterface::class)->getMock();
 
-        $modifier = new FeatureFlagsModifier($entityManagerMock, $translatorMock);
+        $modifier = new FeatureFlagsModifier($entityManagerMock);
 
         $payload = [
             'product_page_v1' => false,
@@ -166,9 +159,8 @@ class FeatureFlagsModifierTest extends TestCase
         ];
 
         list($entityManagerMock, $repositoryMock) = $this->buildDoctrineServicesMocksForFetchByName($featureFlags);
-        $translatorMock = $this->getMockBuilder(TranslatorInterface::class)->getMock();
 
-        $modifier = new FeatureFlagsModifier($entityManagerMock, $translatorMock);
+        $modifier = new FeatureFlagsModifier($entityManagerMock);
 
         $payload = [
             'product_page_v1' => false,
@@ -186,9 +178,8 @@ class FeatureFlagsModifierTest extends TestCase
         ];
 
         list($entityManagerMock, $repositoryMock) = $this->buildDoctrineServicesMocksForFetchByName($featureFlags);
-        $translatorMock = $this->getMockBuilder(TranslatorInterface::class)->getMock();
 
-        $modifier = new FeatureFlagsModifier($entityManagerMock, $translatorMock);
+        $modifier = new FeatureFlagsModifier($entityManagerMock);
 
         $payload = [
             1 => 'a',

@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\OrderState\Exception\OrderStateConstraintE
 class Name
 {
     /**
-     * @var string Maximum allowed length for name
+     * @var int Maximum allowed length for name
      */
     public const MAX_LENGTH = 255;
 

@@ -31,10 +31,12 @@ namespace PrestaShop\PrestaShop\Adapter\Product\QueryHandler;
 use Customization;
 use PrestaShop\PrestaShop\Adapter\Attachment\AttachmentRepository;
 use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Options\RedirectTargetProvider;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
@@ -60,6 +62,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductStockInformatio
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\Exception\VirtualProductFileNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\VirtualProductFileForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
@@ -129,6 +132,16 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
     private $attachmentRepository;
 
     /**
+     * @var SpecificPriceRepository
+     */
+    private $specificPriceRepository;
+
+    /**
+     * @var Configuration
+     */
+    private $configuration;
+
+    /**
      * @param NumberExtractor $numberExtractor
      * @param ProductMultiShopRepository $productRepository
      * @param CategoryRepository $categoryRepository
@@ -140,6 +153,8 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
      * @param int $countryId
      * @param RedirectTargetProvider $targetProvider
      * @param ProductImagePathFactory $productImageUrlFactory
+     * @param SpecificPriceRepository $specificPriceRepository
+     * @param Configuration $configuration
      */
     public function __construct(
         NumberExtractor $numberExtractor,
@@ -152,7 +167,9 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
         TaxComputer $taxComputer,
         int $countryId,
         RedirectTargetProvider $targetProvider,
-        ProductImagePathFactory $productImageUrlFactory
+        ProductImagePathFactory $productImageUrlFactory,
+        SpecificPriceRepository $specificPriceRepository,
+        Configuration $configuration
     ) {
         $this->numberExtractor = $numberExtractor;
         $this->productRepository = $productRepository;
@@ -166,6 +183,8 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
         $this->targetProvider = $targetProvider;
         $this->productImageRepository = $productImageRepository;
         $this->productImageUrlFactory = $productImageUrlFactory;
+        $this->specificPriceRepository = $specificPriceRepository;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -185,7 +204,7 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
             $this->getCustomizationOptions($product),
             $this->getBasicInformation($product),
             $this->getCategoriesInformation($product),
-            $this->getPricesInformation($product),
+            $this->getPricesInformation($product, $query->getShopConstraint()),
             $this->getOptions($product),
             $this->getDetails($product),
             $this->getShippingInformation($product),
@@ -263,24 +282,35 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
 
     /**
      * @param Product $product
+     * @param ShopConstraint $shopConstraint
      *
      * @return ProductPricesInformation
+     *
+     * @throws NumberExtractorException
      */
-    private function getPricesInformation(Product $product): ProductPricesInformation
+    private function getPricesInformation(Product $product, ShopConstraint $shopConstraint): ProductPricesInformation
     {
-        $priceTaxExcluded = $this->numberExtractor->extract($product, 'price');
-        $priceTaxIncluded = $this->taxComputer->computePriceWithTaxes(
-            $priceTaxExcluded,
-            new TaxRulesGroupId((int) $product->id_tax_rules_group),
-            new CountryId($this->countryId)
-        );
+        $productId = new ProductId((int) $product->id);
 
+        $taxEnabled = (bool) $this->configuration->get('PS_TAX', null, $shopConstraint);
+        $priceTaxExcluded = $this->numberExtractor->extract($product, 'price');
         $unitPriceTaxExcluded = $this->numberExtractor->extract($product, 'unit_price');
-        $unitPriceTaxIncluded = $this->taxComputer->computePriceWithTaxes(
-            $unitPriceTaxExcluded,
-            new TaxRulesGroupId((int) $product->id_tax_rules_group),
-            new CountryId($this->countryId)
-        );
+
+        if ($taxEnabled) {
+            $priceTaxIncluded = $this->taxComputer->computePriceWithTaxes(
+                $priceTaxExcluded,
+                new TaxRulesGroupId((int) $product->id_tax_rules_group),
+                new CountryId($this->countryId)
+            );
+            $unitPriceTaxIncluded = $this->taxComputer->computePriceWithTaxes(
+                $unitPriceTaxExcluded,
+                new TaxRulesGroupId((int) $product->id_tax_rules_group),
+                new CountryId($this->countryId)
+            );
+        } else {
+            $priceTaxIncluded = $priceTaxExcluded;
+            $unitPriceTaxIncluded = $unitPriceTaxExcluded;
+        }
 
         return new ProductPricesInformation(
             $priceTaxExcluded,
@@ -292,7 +322,8 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
             $unitPriceTaxExcluded,
             $unitPriceTaxIncluded,
             (string) $product->unity,
-            $this->numberExtractor->extract($product, 'unit_price_ratio')
+            $this->numberExtractor->extract($product, 'unit_price_ratio'),
+            $this->specificPriceRepository->findPrioritiesForProduct($productId)
         );
     }
 
@@ -487,9 +518,9 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
     {
         $coverImage = $this->productImageRepository->findCover(new ProductId((int) $product->id));
         if ($coverImage) {
-            return $this->productImageUrlFactory->getPathByType(new ImageId((int) $coverImage->id), ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT);
+            return $this->productImageUrlFactory->getPathByType(new ImageId((int) $coverImage->id), ProductImagePathFactory::IMAGE_TYPE_CART_DEFAULT);
         }
 
-        return $this->productImageUrlFactory->getNoImagePath(ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT);
+        return $this->productImageUrlFactory->getNoImagePath(ProductImagePathFactory::IMAGE_TYPE_CART_DEFAULT);
     }
 }

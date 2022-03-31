@@ -195,11 +195,11 @@ class ToolsCore
             $link = Context::getContext()->link;
         }
 
-        if (strpos($url, 'http://') === false && strpos($url, 'https://') === false && $link) {
+        if (!preg_match('@^https?://@i', $url) && $link) {
             if (strpos($url, $base_uri) === 0) {
                 $url = substr($url, strlen($base_uri));
             }
-            if (strpos($url, 'index.php?controller=') !== false && strpos($url, 'index.php/') == 0) {
+            if (strpos($url, 'index.php?controller=') === 0) {
                 $url = substr($url, strlen('index.php?controller='));
                 if (Configuration::get('PS_REWRITING_SETTINGS')) {
                     $url = Tools::strReplaceFirst('&', '?', $url);
@@ -234,24 +234,13 @@ class ToolsCore
      * Warning: uses exit
      *
      * @param string $url Desired URL
+     *
+     * @deprecated since PrestaShop 8.0.0
      */
     public static function redirectLink($url)
     {
-        if (!preg_match('@^https?://@i', $url)) {
-            if (strpos($url, __PS_BASE_URI__) !== false && strpos($url, __PS_BASE_URI__) == 0) {
-                $url = substr($url, strlen(__PS_BASE_URI__));
-            }
-            if (strpos($url, 'index.php?controller=') !== false && strpos($url, 'index.php/') == 0) {
-                $url = substr($url, strlen('index.php?controller='));
-            }
-            $explode = explode('?', $url);
-            $url = Context::getContext()->link->getPageLink($explode[0]);
-            if (isset($explode[1])) {
-                $url .= '?' . $explode[1];
-            }
-        }
-        header('Location: ' . $url);
-        exit;
+        Tools::displayAsDeprecated('Use Tools::redirect() instead');
+        static::redirect($url);
     }
 
     /**
@@ -726,22 +715,6 @@ class ToolsCore
     }
 
     /**
-     * Return the CLDR associated with the context or given language_code.
-     *
-     * @see Tools::getContextLocale
-     * @deprecated since PrestaShop 1.7.6.0
-     *
-     * @param Context|null $context
-     * @param null $language_code
-     *
-     * @throws PrestaShopException
-     */
-    public static function getCldr(Context $context = null, $language_code = null)
-    {
-        throw new PrestaShopException('This CLDR library has been removed. See Tools::getContextLocale instead.');
-    }
-
-    /**
      * Return price with currency sign for a given product.
      *
      * @deprecated Since 1.7.6.0. Please use Locale::formatPrice() instead
@@ -893,38 +866,6 @@ class ToolsCore
     }
 
     /**
-     * Implement array_replace for PHP <= 5.2.
-     *
-     * @return array|mixed|null
-     *
-     * @deprecated since version 1.7.4.0, to be removed.
-     */
-    public static function array_replace()
-    {
-        Tools::displayAsDeprecated('Use PHP\'s array_replace() instead');
-        if (!function_exists('array_replace')) {
-            $args = func_get_args();
-            $num_args = func_num_args();
-            $res = [];
-            for ($i = 0; $i < $num_args; ++$i) {
-                if (is_array($args[$i])) {
-                    foreach ($args[$i] as $key => $val) {
-                        $res[$key] = $val;
-                    }
-                } else {
-                    trigger_error(__FUNCTION__ . '(): Argument #' . ($i + 1) . ' is not an array', E_USER_WARNING);
-
-                    return null;
-                }
-            }
-
-            return $res;
-        } else {
-            return call_user_func_array('array_replace', func_get_args());
-        }
-    }
-
-    /**
      * Convert amount from a currency to an other currency automatically.
      *
      * @param float $amount
@@ -968,28 +909,19 @@ class ToolsCore
      */
     public static function dateFormat($params, &$smarty)
     {
-        return Tools::displayDate($params['date'], null, (isset($params['full']) ? $params['full'] : false));
+        return Tools::displayDate($params['date'], (isset($params['full']) ? $params['full'] : false));
     }
 
     /**
      * Display date regarding to language preferences.
      *
      * @param string $date Date to display format UNIX
-     * @param int $id_lang Language id DEPRECATED
      * @param bool $full With time or not (optional)
-     * @param string $separator DEPRECATED
      *
      * @return string Date
      */
-    public static function displayDate($date, $id_lang = null, $full = false, $separator = null)
+    public static function displayDate($date, $full = false)
     {
-        if ($id_lang !== null) {
-            Tools::displayParameterAsDeprecated('id_lang');
-        }
-        if ($separator !== null) {
-            Tools::displayParameterAsDeprecated('separator');
-        }
-
         if (!$date || !($time = strtotime($date))) {
             return $date;
         }
@@ -1189,7 +1121,6 @@ class ToolsCore
                 ->trans('Fatal error', [], 'Admin.Notifications.Error');
         }
 
-        /* @phpstan-ignore-next-line */
         if (_PS_MODE_DEV_) {
             throw new PrestaShopException($errorMessage);
         }
@@ -2177,7 +2108,6 @@ class ToolsCore
 
             $content = curl_exec($curl);
 
-            /* @phpstan-ignore-next-line */
             if (false === $content && _PS_MODE_DEV_) {
                 $errorMessage = sprintf('file_get_contents_curl failed to download %s : (error code %d) %s',
                     $url,
@@ -2450,7 +2380,9 @@ class ToolsCore
      */
     public static function getMediaServer(string $filename): string
     {
-        if (self::hasMediaServer() && ($id_media_server = (abs(crc32($filename)) % self::$_cache_nb_media_servers + 1))) {
+        if (self::hasMediaServer()) {
+            $id_media_server = abs(crc32($filename)) % self::$_cache_nb_media_servers + 1;
+
             return constant('_MEDIA_SERVER_' . $id_media_server . '_');
         }
 
@@ -3124,7 +3056,6 @@ exit;
 
     protected static function throwDeprecated($error, $message, $class)
     {
-        /* @phpstan-ignore-next-line */
         if (_PS_DISPLAY_COMPATIBILITY_WARNING_) {
             @trigger_error($error, E_USER_DEPRECATED);
             PrestaShopLogger::addLog($message, 3, $class);
@@ -3315,7 +3246,7 @@ exit;
                         $order_by_prefix = 'p.';
                     } elseif ($value == 'name') {
                         $order_by_prefix = 'pl.';
-                    } elseif ($value == 'manufacturer_name' && $prefix) {
+                    } elseif ($value == 'manufacturer_name') {
                         $order_by_prefix = 'm.';
                         $value = 'name';
                     } elseif ($value == 'position' || empty($value)) {
@@ -3370,17 +3301,6 @@ exit;
     }
 
     /**
-     * @deprecated as of 1.5 use Controller::getController('PageNotFoundController')->run();
-     */
-    public static function display404Error()
-    {
-        header('HTTP/1.1 404 Not Found');
-        header('Status: 404 Not Found');
-        include __DIR__ . '/../404.php';
-        die;
-    }
-
-    /**
      * Concat $begin and $end, add ? or & between strings.
      *
      * @since 1.5.0
@@ -3405,7 +3325,6 @@ exit;
      */
     public static function dieOrLog($msg, $die = true)
     {
-        /* @phpstan-ignore-next-line */
         if ($die || (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_)) {
             header('HTTP/1.1 500 Internal Server Error', true, 500);
             die($msg);

@@ -111,7 +111,7 @@ class VirtualProductFileType extends TranslatorAwareType implements EventSubscri
         $builder
             ->add('has_file', SwitchType::class, [
                 'label' => $this->trans('Does this product have an associated file?', 'Admin.Catalog.Feature'),
-                'label_tag_name' => 'h2',
+                'label_tag_name' => 'h3',
             ])
             ->add('virtual_product_file_id', HiddenType::class)
             ->add('file', FileType::class, [

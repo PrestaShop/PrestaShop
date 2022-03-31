@@ -52,13 +52,14 @@
  * @property int $rewrite_engine
  * @property string $fixtures
  * @property array $xml_loader_ids
+ * @property string|array $modules
+ * @property string $theme
  */
 class Datas
 {
     private static $instance = null;
     protected static $available_args = [
         'step' => [
-            'name' => 'step',
             'default' => 'all',
             'validate' => 'isGenericName',
             'help' => 'all / database,fixtures,theme,modules,postInstall',
@@ -80,7 +81,6 @@ class Datas
             'alias' => 't',
         ],
         'base_uri' => [
-            'name' => 'base_uri',
             'validate' => 'isUrl',
             'default' => '/',
         ],
@@ -176,7 +176,6 @@ class Datas
             'help' => 'show PrestaShop license',
         ],
         'theme' => [
-            'name' => 'theme',
             'default' => '',
         ],
         'enable_ssl' => [
@@ -194,6 +193,10 @@ class Datas
             'default' => '1',
             'validate' => 'isInt',
             'help' => 'enable fixtures installation',
+        ],
+        'modules' => [
+            'default' => [],
+            'help' => 'Modules to install, separated by comma',
         ],
     ];
 
@@ -218,11 +221,11 @@ class Datas
      */
     public static function getInstance()
     {
-        if (static::$instance === null) {
-            static::$instance = new static();
+        if (self::$instance === null) {
+            self::$instance = new static();
         }
 
-        return static::$instance;
+        return self::$instance;
     }
 
     public static function getArgs()
@@ -260,9 +263,10 @@ class Datas
             } else {
                 $name = $key;
             }
+
             if (!isset($args_ok[$name])) {
                 if (!isset($row['default'])) {
-                    $errors[] = 'Field ' . $row['name'] . ' is empty';
+                    $errors[] = 'Field ' . $name . ' is empty';
                 } else {
                     $this->$key = $row['default'];
                 }

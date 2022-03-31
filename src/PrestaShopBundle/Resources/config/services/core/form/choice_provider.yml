@@ -77,7 +77,6 @@ services:
   prestashop.core.form.choice_provider.mail_method:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\MailMethodChoiceProvider'
     arguments:
-      - '@prestashop.adapter.legacy.configuration'
       - '@translator'
 
   prestashop.core.form.choice_provider.contact_by_id:
@@ -285,5 +284,19 @@ services:
 
   prestashop.core.form.choice_provider.product_type_choice_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ProductTypeChoiceProvider'
+    arguments:
+      - '@translator'
+
+  prestashop.core.form.choice_provider.zone_by_id:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ZoneByIdChoiceProvider'
+
+  prestashop.core.form.choice_provider.configurable_country_by_id:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CountryByIdConfigurableChoiceProvider'
+    arguments:
+      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'
+      - '@prestashop.adapter.data_provider.country'
+
+  prestashop.core.form.choice_provider.specific_price_priority_choice_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\SpecificPricePriorityChoiceProvider'
     arguments:
       - '@translator'

@@ -199,7 +199,7 @@ class GuestCore extends ObjectModel
 		FROM `' . _DB_PREFIX_ . 'guest`
 		WHERE `id_customer` = ' . (int) ($idCustomer));
 
-        return $result['id_guest'];
+        return $result['id_guest'] ?? false;
     }
 
     /**
@@ -214,6 +214,11 @@ class GuestCore extends ObjectModel
     {
         // Since the guests are merged, the guest id in the connections table must be changed too
         Db::getInstance()->update('connections', [
+            'id_guest' => (int) $idGuest,
+        ], 'id_guest = ' . (int) $this->id);
+
+        // Since the guests are merged, the guest id in the cart table must be changed too
+        Db::getInstance()->update('cart', [
             'id_guest' => (int) $idGuest,
         ], 'id_guest = ' . (int) $this->id);
 

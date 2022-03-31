@@ -44,7 +44,7 @@ class LangRepositoryTest extends KernelTestCase
     public function testInterface(): void
     {
         /** @var LanguageRepositoryInterface $languageRepository */
-        $languageRepository = self::$kernel->getContainer()->get(static::SERVICE_NAME);
+        $languageRepository = self::$kernel->getContainer()->get(self::SERVICE_NAME);
         $this->assertNotNull($languageRepository);
         $this->assertInstanceOf(LanguageRepositoryInterface::class, $languageRepository);
     }
@@ -52,7 +52,7 @@ class LangRepositoryTest extends KernelTestCase
     public function testGetByLocale(): void
     {
         /** @var LanguageRepositoryInterface $languageRepository */
-        $languageRepository = self::$kernel->getContainer()->get(static::SERVICE_NAME);
+        $languageRepository = self::$kernel->getContainer()->get(self::SERVICE_NAME);
         $availableLocales = ['en-US'];
         foreach ($availableLocales as $availableLocale) {
             $language = $languageRepository->getOneByLocale($availableLocale);
@@ -70,7 +70,7 @@ class LangRepositoryTest extends KernelTestCase
     public function testGetByIsoCode(): void
     {
         /** @var LanguageRepositoryInterface $languageRepository */
-        $languageRepository = self::$kernel->getContainer()->get(static::SERVICE_NAME);
+        $languageRepository = self::$kernel->getContainer()->get(self::SERVICE_NAME);
         $availableLocales = ['en'];
         foreach ($availableLocales as $availableLocale) {
             $language = $languageRepository->getOneByIsoCode($availableLocale);
@@ -88,7 +88,7 @@ class LangRepositoryTest extends KernelTestCase
     public function testGetLocaleByIsoCode(): void
     {
         /** @var LangRepository $languageRepository */
-        $languageRepository = self::$kernel->getContainer()->get(static::SERVICE_NAME);
+        $languageRepository = self::$kernel->getContainer()->get(self::SERVICE_NAME);
         $locale = $languageRepository->getLocaleByIsoCode('en');
         $this->assertEquals('en-US', $locale);
     }

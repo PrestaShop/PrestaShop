@@ -87,16 +87,19 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
      */
     public $smtp_port;
 
-    public function init()
+    /**
+     * {@inheritdoc}
+     */
+    public function init(): void
     {
         $this->model_database = new Database();
         $this->model_database->setTranslator($this->translator);
     }
 
     /**
-     * @see HttpConfigureInterface::processNextStep()
+     * {@inheritdoc}
      */
-    public function processNextStep()
+    public function processNextStep(): void
     {
         // Save database config
         $this->session->database_server = trim(Tools::getValue('dbServer'));
@@ -109,11 +112,9 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
     }
 
     /**
-     * Database configuration must be valid to validate this step
-     *
-     * @see HttpConfigureInterface::validate()
+     * {@inheritdoc}
      */
-    public function validate()
+    public function validate(): bool
     {
         $this->errors = $this->model_database->testDatabaseSettings(
             $this->session->database_server,
@@ -135,7 +136,10 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
         return true;
     }
 
-    public function process()
+    /**
+     * {@inheritdoc}
+     */
+    public function process(): void
     {
         if (Tools::getValue('checkDb')) {
             $this->processCheckDb();
@@ -147,7 +151,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
     /**
      * Check if a connection to database is possible with these data
      */
-    public function processCheckDb()
+    public function processCheckDb(): void
     {
         $server = Tools::getValue('dbServer');
         $database = Tools::getValue('dbName');
@@ -167,7 +171,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
     /**
      * Attempt to create the database
      */
-    public function processCreateDb()
+    public function processCreateDb(): void
     {
         $server = Tools::getValue('dbServer');
         $database = Tools::getValue('dbName');
@@ -183,9 +187,9 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
     }
 
     /**
-     * @see HttpConfigureInterface::display()
+     * {@inheritdoc}
      */
-    public function display()
+    public function display(): void
     {
         if (!$this->session->database_server) {
             if (file_exists(_PS_ROOT_DIR_ . '/app/config/parameters.php')) {
