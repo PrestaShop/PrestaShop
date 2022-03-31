@@ -2426,7 +2426,9 @@ abstract class ModuleCore implements ModuleInterface
     public function isHookableOn($hook_name)
     {
         if ($this instanceof WidgetInterface) {
-            return Hook::isDisplayHookName($hook_name);
+            if (Hook::isDisplayHookName($hook_name)) {
+                return true;
+            }
         }
 
         return is_callable([$this, 'hook' . ucfirst($hook_name)]);
@@ -3259,10 +3261,6 @@ abstract class ModuleCore implements ModuleInterface
      */
     public function getPossibleHooksList()
     {
-        if ($this instanceof WidgetInterface) {
-            return $this->getWidgetHooks();
-        }
-
         $hooks_list = Hook::getHooks();
         $possible_hooks_list = [];
         $registeredHookList = Hook::getHookModuleList();
@@ -3280,6 +3278,9 @@ abstract class ModuleCore implements ModuleInterface
             }
         }
 
+        if ($this instanceof WidgetInterface) {
+            $possible_hooks_list = array_merge($this->getWidgetHooks(), $possible_hooks_list);
+        }
         return $possible_hooks_list;
     }
 
