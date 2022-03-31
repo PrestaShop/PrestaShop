@@ -1351,7 +1351,7 @@ class FrontControllerCore extends Controller
         }
 
         if ($overridden_template = Hook::exec(
-            'DisplayOverrideTemplate',
+            'displayOverrideTemplate',
             [
                 'controller' => $this,
                 'template_file' => $template,
