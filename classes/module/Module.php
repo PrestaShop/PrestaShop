@@ -3281,6 +3281,7 @@ abstract class ModuleCore implements ModuleInterface
         if ($this instanceof WidgetInterface) {
             $possible_hooks_list = array_merge($this->getWidgetHooks(), $possible_hooks_list);
         }
+
         return $possible_hooks_list;
     }
 
