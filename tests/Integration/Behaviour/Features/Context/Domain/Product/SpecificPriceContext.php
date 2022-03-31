@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\AddProductSpecificPriceCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\DeleteProductSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\EditProductSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceException;
@@ -173,6 +174,22 @@ class SpecificPriceContext extends AbstractProductFeatureContext
         $specificPriceId = $this->getSharedStorage()->get($specificPriceReference);
         try {
             $command = $this->createEditSpecificPriceCommand($specificPriceId, $tableNode);
+            $this->getCommandBus()->handle($command);
+        } catch (DomainException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I delete specific price ":specificPriceReference"
+     *
+     * @param string $specificPriceReference
+     */
+    public function deleteSpecificPrice(string $specificPriceReference): void
+    {
+        $specificPriceId = $this->getSharedStorage()->get($specificPriceReference);
+        try {
+            $command = $this->createDeleteSpecificPriceCommand($specificPriceId);
             $this->getCommandBus()->handle($command);
         } catch (DomainException $e) {
             $this->setLastException($e);
@@ -495,6 +512,16 @@ class SpecificPriceContext extends AbstractProductFeatureContext
         }
 
         return $editCommand;
+    }
+
+    /**
+     * @param int $specificPriceId
+     *
+     * @return DeleteProductSpecificPriceCommand
+     */
+    private function createDeleteSpecificPriceCommand(int $specificPriceId): DeleteProductSpecificPriceCommand
+    {
+        return new DeleteProductSpecificPriceCommand($specificPriceId);
     }
 
     /**
