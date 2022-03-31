@@ -26,20 +26,58 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Store\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Store\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\Store\ValueObject\StoreId;
 
 /**
- * Thrown when cannot toggle store status
+ * Toggles store status on bulk action
  */
-class CannotToggleStoreStatusException extends StoreException
+class BulkUpdateStoreStatusCommand
 {
     /**
-     * Thrown when cannot toggle single store status.
+     * @var bool
      */
-    public const SINGLE_TOGGLE = 10;
+    private $expectedStatus;
 
     /**
-     * Thrown when cannot bulk toggle stores status.
+     * @var array<int, StoreId>
      */
-    public const BULK_TOGGLE = 20;
+    private $storeIds;
+
+    /**
+     * @param bool $expectedStatus
+     * @param array<int, int> $storeIds
+     */
+    public function __construct(bool $expectedStatus, array $storeIds)
+    {
+        $this->setStoreIds($storeIds);
+        $this->expectedStatus = $expectedStatus;
+    }
+
+    /**
+     * @return array<int, StoreId>
+     */
+    public function getStoreIds(): array
+    {
+        return $this->storeIds;
+    }
+
+    /**
+     * @param array<int, int> $storeIds
+     */
+    private function setStoreIds(array $storeIds): void
+    {
+        foreach ($storeIds as $storeId) {
+            $this->storeIds[] = new StoreId((int) $storeId);
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function getExpectedStatus(): bool
+    {
+        return $this->expectedStatus;
+    }
 }
