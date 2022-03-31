@@ -130,6 +130,7 @@ class ReleaseCreator
         'themes/classic/_dev',
         'themes/webpack\.config\.js$',
         'themes/package\.json$',
+        'themes/\.browserslistrc$',
         'vendor\/[a-zA-Z0-0_-]+\/[a-zA-Z0-0_-]+\/[Tt]ests?$',
         'vendor/tecnickcom/tcpdf/examples$',
         'app/cache/..*$',
