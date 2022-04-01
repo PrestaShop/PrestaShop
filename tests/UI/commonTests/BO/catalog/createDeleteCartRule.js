@@ -42,7 +42,7 @@ function createCartRuleTest(cartRuleData, baseContext = 'commonTests-createCartR
     });
 
     it('should go to \'Catalog > Discounts\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage3', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -101,7 +101,7 @@ function createCartRuleTest(cartRuleData, baseContext = 'commonTests-createCartR
     });
 
     it('should go to \'Catalog > Discounts\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage3', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage1', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
