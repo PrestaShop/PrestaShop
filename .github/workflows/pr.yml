@@ -17,7 +17,7 @@ jobs:
       - name: Check is merge PR
         id: check-is-merge
         run: |
-          if [[ ${{ toJSON(github.event.pull_request.body) }} =~ \|?[[:space:]]*Category\?[[:space:]]*\|[[:space:]]*ME[[:space:]]+ ]]; then
+          if [[ ${{ toJSON(github.event.pull_request.body) }} =~ \|?[[:space:]]*Category\?[[:space:]]*\|[[:space:]]*ME([[:space:]]|(\\[rn]))+ ]]; then
               echo ::set-output name=isMerge::true
           fi
 
