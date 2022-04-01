@@ -29,11 +29,32 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 class BulkCombinationFormDataProvider implements FormDataProviderInterface
 {
+    /**
+     * We return values matching the empty state of each field, this way they will be disabled by default.
+     *
+     * @return array
+     */
     public function getDefaultData()
     {
         return [
-            'disabling_toggle_reference' => false,
-            'disabling_toggle_price_tax_excluded' => false,
+            'stock' => [
+                'delta_quantity' => [
+                    'quantity' => 0,
+                    'delta' => 0,
+                ],
+                'minimal_quantity' => 0,
+                'stock_location' => '',
+                'low_stock_threshold' => 0,
+                'low_stock_alert' => '',
+                'available_date' => '',
+            ],
+            'price' => [
+                'wholesale_price' => 0,
+                'price_tax_excluded' => 0,
+                'price_tax_included' => 0,
+                'unit_price' => 0,
+                'weight' => 0,
+            ],
         ];
     }
 
@@ -43,11 +64,6 @@ class BulkCombinationFormDataProvider implements FormDataProviderInterface
     public function getData($id)
     {
         return [
-            //@todo: all of this smells :(
-            // This form is not handled before submit as usually, so data is always empty in PRE_SUBMIT event
-            // That is why these values must be truthy or else PRE_SUBMIT event will always disable the related inputs
-            'disabling_toggle_reference' => true,
-            'disabling_toggle_price_tax_excluded' => true,
         ];
     }
 }

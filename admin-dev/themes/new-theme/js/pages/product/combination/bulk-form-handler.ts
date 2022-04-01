@@ -74,6 +74,7 @@ export default class BulkFormHandler {
       id: CombinationMap.bulkFormModalId,
       formSelector: 'form[name="bulk_combination"]',
       formUrl,
+      closable: true,
       onFormLoaded: (form: HTMLElement, formData: JQuery.NameValuePair[] | null, dataAttributes: DOMStringMap | null): void => {
         console.log(form, formData, dataAttributes);
       },

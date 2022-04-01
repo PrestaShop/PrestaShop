@@ -1708,6 +1708,23 @@ services:
     tags:
       - { name: form.type }
 
+  form.type.sell.product.combination.combination_stock_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationStockType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+
+  form.type.sell.product.combination.combination_price_impact_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationPriceImpactType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    arguments:
+      - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
+      - "@=service('prestashop.adapter.legacy.configuration').get('PS_WEIGHT_UNIT')"
+    tags:
+      - { name: form.type }
+
   form.type.sell.product.combination.bulk_combination_type:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\BulkCombinationType'
     parent: 'form.type.translatable.aware'
@@ -1718,15 +1735,18 @@ services:
     tags:
       - { name: form.type }
 
-  form.type.sell.product.combination.combination_stock_type:
-    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationStockType'
+  form.type.sell.product.combination.bulk_combination_stock_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\BulkCombinationStockType'
     parent: 'form.type.translatable.aware'
     public: true
+    arguments:
+      - '@router'
+      - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_STOCK_MANAGEMENT')"
     tags:
       - { name: form.type }
 
-  form.type.sell.product.combination.combination_price_impact_type:
-    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationPriceImpactType'
+  form.type.sell.product.combination.bulk_combination_price_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\BulkCombinationPriceType'
     parent: 'form.type.translatable.aware'
     public: true
     arguments:

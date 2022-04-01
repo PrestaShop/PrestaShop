@@ -1340,10 +1340,43 @@ $product-page-padding-bottom: 80px !default;
   }
 }
 
-#modal-create-product-attachment,
+#modal-create-product-attachment {
+  .modal-dialog {
+    max-width: 810px;
+  }
+}
+
 #bulk-combination-form-modal {
   .modal-dialog {
     max-width: 810px;
+    min-height: 600px;
+  }
+}
+
+.bulk-combination-form {
+  label {
+    display: flex;
+    width: 100%;
+
+    .ps-disabling-switch {
+      margin-left: auto;
+    }
+  }
+
+  .card-body {
+    padding: 0;
+  }
+
+  .accordion-sub-form {
+    > .form-group {
+      padding: 0.625rem;
+      border-bottom: 1px solid #eaebec;
+    }
+
+    > .form-group:last-child {
+      margin-bottom: 0;
+      border-bottom: none;
+    }
   }
 }
 
