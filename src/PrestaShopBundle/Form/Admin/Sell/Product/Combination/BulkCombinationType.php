@@ -80,7 +80,7 @@ class BulkCombinationType extends TranslatorAwareType
                 'label_help_box' => $this->trans('Does this combination have a different price? Is it cheaper or more expensive than the default retail price?', 'Admin.Catalog.Help'),
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
                 'currency' => $this->defaultCurrencyIsoCode,
-                'disabling_toggle' => true,
+                'disabling_switch' => true,
                 'constraints' => [
                     new NotBlank(),
                     new Type(['type' => 'float']),
@@ -90,7 +90,7 @@ class BulkCombinationType extends TranslatorAwareType
                 'constraints' => [
                     new NotBlank(),
                 ],
-                'disabling_toggle' => true,
+                'disabling_switch' => true,
                 'required' => false,
                 'label' => $this->trans('Reference', 'Admin.Global'),
                 'label_help_box' => $this->trans('Your reference code for this product. Allowed special characters: .-_#.', 'Admin.Catalog.Help'),
