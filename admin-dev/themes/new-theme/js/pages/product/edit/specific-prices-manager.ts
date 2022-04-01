@@ -30,7 +30,7 @@ import Vue from 'vue';
 import VueI18n from 'vue-i18n';
 import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
 import SpecificPriceModal from '@pages/product/components/specific-price/SpecificPriceModal.vue';
-import DisablingToggler from '@components/form/disabling-toggler';
+import FormFieldDisabler from '@components/form/form-field-disabler';
 
 Vue.use(VueI18n);
 const SpecificPriceMap = ProductMap.specificPrice;
@@ -60,11 +60,11 @@ export default class SpecificPricesManager {
 
   private initComponents() {
     this.initSpecificPriceModal(this.productId, SpecificPriceMap.formModal, this.eventEmitter);
-    new DisablingToggler(
-      PriorityMap.priorityTypeCheckboxesSelector,
-      '0',
-      PriorityMap.priorityListWrapper,
-    );
+    new FormFieldDisabler({
+      disablingInputSelector: PriorityMap.priorityTypeCheckboxesSelector,
+      matchingValue: '0',
+      targetSelector: PriorityMap.priorityListWrapper,
+    });
   }
 
   private initSpecificPriceModal(

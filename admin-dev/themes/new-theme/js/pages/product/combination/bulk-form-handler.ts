@@ -25,11 +25,9 @@
 
 import ConfirmModal from '@components/modal';
 import ProductMap from '@pages/product/product-map';
-import ComponentsMap from '@components/components-map';
 import ProductEvents from '@pages/product/product-event-map';
 import CombinationsService from '@pages/product/services/combinations-service';
 import {EventEmitter} from 'events';
-import DisablingToggler from '@components/form/disabling-toggler';
 
 const CombinationMap = ProductMap.combinations;
 const CombinationEvents = ProductEvents.combinations;
@@ -85,22 +83,6 @@ export default class BulkFormHandler {
     );
 
     modal.show();
-    const form = document.querySelector(CombinationMap.bulkCombinationForm) as HTMLFormElement;
-    const disablingToggles = form.querySelectorAll(ComponentsMap.disablingToggle.wrapper) as NodeListOf<HTMLDivElement>;
-
-    disablingToggles.forEach((element) => {
-      const {disablingToggleName} = element.dataset;
-      //@todo: could these be set by default inside component?
-      const matchingValue = element.dataset.disablingToggleMatchingValue as string;
-      const disableOnMatch = !!element.dataset.disablingToggleDisableOnMatch;
-
-      new DisablingToggler(
-        `${CombinationMap.bulkCombinationForm} [data-disabling-toggle-name="${disablingToggleName}"] input`,
-        matchingValue,
-        `${CombinationMap.bulkCombinationForm} [data-toggled-by="${disablingToggleName}"]`,
-        disableOnMatch,
-      );
-    });
 
     return modal;
   }
