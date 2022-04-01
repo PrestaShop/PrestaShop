@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\ImageType\QueryResult\EditableImageType;
 /**
  * Provides data for image type add/edit
  */
-final class ImageTypeFormDataProvider implements FormDataProviderInterface
+class ImageTypeFormDataProvider implements FormDataProviderInterface
 {
     /**
      * @var CommandBusInterface
