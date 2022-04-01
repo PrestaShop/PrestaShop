@@ -1,5 +1,5 @@
 
-Copyright (c) Since 2007 PrestaShop.
+Copyright (c) Since 2007 PrestaShop and Contributors.
 
 PrestaShop Core is licensed under OSL-3.0 and PrestaShop Modules are licensed under AFL-3.0. Please read [/docs/licenses/LICENSE.txt](/docs/licenses/LICENSE.txt) for details.
 
