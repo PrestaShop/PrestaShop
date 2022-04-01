@@ -283,14 +283,14 @@ class Profiler
             $formattedOutput[$moduleName] = [
                 'total_time' => array_reduce(
                     $perfs,
-                    function (&$res, $item) {
+                    function ($res, $item) {
                         return $res + $item['time'];
                     },
                     0
                 ),
                 'total_memory' => array_reduce(
                     $perfs,
-                    function (&$res, $item) {
+                    function ($res, $item) {
                         return $res + $item['memory'];
                     },
                     0
