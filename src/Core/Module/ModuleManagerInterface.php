@@ -24,28 +24,37 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Controller\Admin\Improve\Modules;
+namespace PrestaShop\PrestaShop\Core\Module;
 
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use Symfony\Component\HttpFoundation\Response;
-
-/**
- * Responsible of "Improve > Modules > Modules & Services > Updates" page display.
- */
-class UpdatesController extends ModuleAbstractController
+interface ModuleManagerInterface
 {
     /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @param string $name
+     * @param mixed|null $source can be anything a SourceHandler can handle
      *
-     * @return Response
+     * @return bool
      */
-    public function indexAction()
-    {
-        $moduleRepository = $this->getModuleRepository();
+    public function install(string $name, $source = null): bool;
 
-        return $this->render(
-            '@PrestaShop/Admin/Module/updates.html.twig',
-            $this->getNotificationPageData($moduleRepository->getUpgradableModules())
-        );
-    }
+    public function uninstall(string $name, bool $deleteFiles = false): bool;
+
+    public function upgrade(string $name): bool;
+
+    public function enable(string $name): bool;
+
+    public function disable(string $name): bool;
+
+    public function enableMobile(string $name): bool;
+
+    public function disableMobile(string $name): bool;
+
+    public function reset(string $name, bool $keepData = false): bool;
+
+    public function postInstall(string $name): bool;
+
+    public function isInstalled(string $name): bool;
+
+    public function isEnabled(string $name): bool;
+
+    public function getError(string $name): string;
 }

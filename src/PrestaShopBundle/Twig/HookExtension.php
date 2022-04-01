@@ -27,8 +27,8 @@
 namespace PrestaShopBundle\Twig;
 
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -134,7 +134,7 @@ class HookExtension extends AbstractExtension
 
         $render = [];
         foreach ($renderedHook->getContent() as $module => $hookRender) {
-            $moduleAttributes = $this->moduleRepository->getModuleAttributes($module);
+            $moduleAttributes = $this->moduleRepository->getModule($module)->getAttributes();
             $render[] = [
                 'id' => $module,
                 'name' => $this->moduleDataProvider->getModuleName($module),

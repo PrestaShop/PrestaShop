@@ -711,7 +711,7 @@ class HookCore extends ObjectModel
      *
      * @throws PrestaShopException
      *
-     * @return mixed Module's output
+     * @return mixed|null Module's output
      */
     public static function exec(
         $hook_name,

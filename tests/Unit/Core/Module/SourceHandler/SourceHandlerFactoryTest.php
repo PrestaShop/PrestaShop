@@ -24,42 +24,38 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
-use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
-use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
+namespace Tests\Unit\Core\Module\SourceHandler;
 
-/**
- * Class ModuleByNameChoiceProvider provides module choices with name values.
- */
-final class ModuleByNameChoiceProvider implements FormChoiceProviderInterface
+use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerFactory;
+use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerInterface;
+use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerNotFoundException;
+
+class SourceHandlerFactoryTest extends TestCase
 {
-    /**
-     * @var ModuleCollection collection of installed modules
-     */
-    private $installedModules;
+    /** @var SourceHandlerFactory */
+    private $sourceHandlerFactory;
 
-    /**
-     * @param ModuleCollection $installedModules
-     */
-    public function __construct(ModuleCollection $installedModules)
+    public function setUp(): void
     {
-        $this->installedModules = $installedModules;
+        $this->sourceHandlerFactory = new SourceHandlerFactory();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getChoices()
+    public function testGetUnavailableHandler()
     {
-        $moduleChoices = [];
+        $this->expectException(SourceHandlerNotFoundException::class);
+        $this->sourceHandlerFactory->getHandler('unhandlablesource');
+    }
 
-        /** @var ModuleInterface $module */
-        foreach ($this->installedModules as $module) {
-            $moduleChoices[$module->get('displayName')] = $module->get('name');
-        }
+    public function testGetHandler()
+    {
+        $handlerMock = $this->createMock(SourceHandlerInterface::class);
+        $handlerMock->method('canHandle')->willReturn(true);
 
-        return $moduleChoices;
+        $this->sourceHandlerFactory->addHandler($handlerMock);
+
+        $this->assertEquals($handlerMock, $this->sourceHandlerFactory->getHandler('handlablesource'));
     }
 }

@@ -24,28 +24,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Controller\Admin\Improve\Modules;
+declare(strict_types=1);
 
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use Symfony\Component\HttpFoundation\Response;
+namespace PrestaShop\PrestaShop\Core\Module\SourceHandler;
 
-/**
- * Responsible of "Improve > Modules > Modules & Services > Updates" page display.
- */
-class UpdatesController extends ModuleAbstractController
+use Exception;
+
+class SourceHandlerNotFoundException extends Exception
 {
-    /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
-     * @return Response
-     */
-    public function indexAction()
-    {
-        $moduleRepository = $this->getModuleRepository();
-
-        return $this->render(
-            '@PrestaShop/Admin/Module/updates.html.twig',
-            $this->getNotificationPageData($moduleRepository->getUpgradableModules())
-        );
-    }
 }

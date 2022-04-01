@@ -33,7 +33,7 @@ use PhpParser;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Addon\Module\AddonListFilterDeviceStatus;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Tools;
 use Validate;
 
@@ -52,7 +52,7 @@ class ModuleDataProvider
     /**
      * Translator.
      *
-     * @var \Symfony\Component\Translation\TranslatorInterface
+     * @var TranslatorInterface
      */
     private $translator;
 
@@ -131,6 +131,41 @@ class ModuleDataProvider
         return [
             'installed' => 0,
         ];
+    }
+
+    /**
+     * Return installed modules along with their id, name and version
+     * If a specific shop is selected, active and active_on_mobile keys are added
+     *
+     * @return array
+     */
+    public function getInstalled(): array
+    {
+        $select = 'SELECT m.`id_module` as id, m.`name`, m.`version`, 1 as installed';
+        $from = ' FROM `' . _DB_PREFIX_ . 'module` m';
+
+        $id_shops = (new Context())->getContextListShopID();
+        if (count($id_shops) === 1) {
+            $select .= ', ms.`id_module` as active, ms.`enable_device` as active_on_mobile';
+            $from .= ' LEFT JOIN `' . _DB_PREFIX_ . 'module_shop` ms ON ms.`id_module` = m.`id_module`';
+            $from .= ' AND ms.`id_shop` = ' . reset($id_shops);
+        }
+
+        $results = Db::getInstance()->executeS($select . $from);
+        $modules = [];
+
+        foreach ($results as $module) {
+            $module['installed'] = (bool) $module['installed'];
+            if (array_key_exists('active_on_mobile', $module)) {
+                $module['active_on_mobile'] = (bool) ($module['active_on_mobile'] & AddonListFilterDeviceStatus::DEVICE_MOBILE);
+            }
+            if (array_key_exists('active', $module)) {
+                $module['active'] = (bool) $module['active'];
+            }
+            $modules[$module['name']] = $module;
+        }
+
+        return $modules;
     }
 
     /**

@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Module;
 use Module as LegacyModule;
 use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
 use PrestaShop\PrestaShop\Core\Addon\Module\AddonListFilterDeviceStatus;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface;
+use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -90,7 +90,7 @@ class Module implements ModuleInterface
         'author' => '',
         'author_uri' => false,
         'tab' => 'others',
-        'is_configurable' => 0,
+        'is_configurable' => false,
         'need_instance' => 0,
         'limited_countries' => [],
         'parent_class' => 'Module',
@@ -137,8 +137,8 @@ class Module implements ModuleInterface
      */
     private $database_default = [
         'installed' => 0,
-        'active' => 0,
-        'active_on_mobile' => true,
+        'active' => null,
+        'active_on_mobile' => null,
         'version' => null,
         'last_access_date' => '0000-00-00 00:00:00',
         'date_add' => null,
@@ -160,7 +160,7 @@ class Module implements ModuleInterface
         $this->disk->add($disk);
         $this->database->add($database);
 
-        if ($this->database->get('installed')) {
+        if ($this->isInstalled()) {
             $version = $this->database->get('version');
         } elseif (null === $this->attributes->get('version') && $this->disk->get('is_valid')) {
             $version = $this->disk->get('version');
@@ -183,14 +183,12 @@ class Module implements ModuleInterface
     }
 
     /**
-     * @return LegacyModule|void
-     *
-     * @throws \Exception
+     * @return LegacyModule|null
      */
-    public function getInstance()
+    public function getInstance(): ?LegacyModule
     {
         if (!$this->hasValidInstance()) {
-            return;
+            return null;
         }
 
         return $this->instance;
@@ -199,7 +197,7 @@ class Module implements ModuleInterface
     /**
      * @return bool True if valid Module instance
      */
-    public function hasValidInstance()
+    public function hasValidInstance(): bool
     {
         if (($this->disk->has('is_present') && $this->disk->getBoolean('is_present') === false)
             || ($this->disk->has('is_valid') && $this->disk->getBoolean('is_valid') === false)
@@ -226,9 +224,24 @@ class Module implements ModuleInterface
     /**
      * @return bool
      */
-    public function isActive()
+    public function isActive(): bool
     {
         return (bool) $this->database->get('active');
+    }
+
+    public function isActiveOnMobile(): bool
+    {
+        return (bool) $this->database->get('active_on_mobile');
+    }
+
+    public function isInstalled(): bool
+    {
+        return (bool) $this->database->get('installed');
+    }
+
+    public function isConfigurable(): bool
+    {
+        return (bool) $this->attributes->get('is_configurable');
     }
 
     /**
@@ -288,7 +301,7 @@ class Module implements ModuleInterface
     /**
      * {@inheritdoc}
      */
-    public function onUpgrade($version): bool
+    public function onUpgrade(string $version): bool
     {
         $this->database->set('version', $this->attributes->get('version_available'));
 
@@ -365,6 +378,21 @@ class Module implements ModuleInterface
         }
 
         return is_callable([$this->instance, 'reset']) ? $this->instance->reset() : true;
+    }
+
+    public function getAttributes(): ParameterBag
+    {
+        return $this->attributes;
+    }
+
+    public function getDiskAttributes(): ParameterBag
+    {
+        return $this->disk;
+    }
+
+    public function getDatabaseAttributes(): ParameterBag
+    {
+        return $this->database;
     }
 
     /**
@@ -448,12 +476,12 @@ class Module implements ModuleInterface
      */
     public function canBeUpgraded()
     {
-        if ($this->database->get('installed') == 0) {
+        if (!$this->isInstalled()) {
             return false;
         }
 
         // Potential update from API
-        if ($this->canBeUpgradedFromAddons()) {
+        if ($this->hasNewVersionAvailable()) {
             return true;
         }
 
@@ -462,11 +490,11 @@ class Module implements ModuleInterface
     }
 
     /**
-     * Only check if an upgrade is available on the marketplace.
+     * Only check if an upgrade is available
      *
      * @return bool
      */
-    public function canBeUpgradedFromAddons()
+    public function hasNewVersionAvailable(): bool
     {
         return $this->attributes->get('version_available') !== 0
             && version_compare($this->database->get('version'), $this->attributes->get('version_available'), '<');

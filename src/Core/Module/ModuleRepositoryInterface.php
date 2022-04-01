@@ -24,28 +24,21 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Controller\Admin\Improve\Modules;
+namespace PrestaShop\PrestaShop\Core\Module;
 
-use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use Symfony\Component\HttpFoundation\Response;
-
-/**
- * Responsible of "Improve > Modules > Modules & Services > Updates" page display.
- */
-class UpdatesController extends ModuleAbstractController
+interface ModuleRepositoryInterface
 {
-    /**
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
-     * @return Response
-     */
-    public function indexAction()
-    {
-        $moduleRepository = $this->getModuleRepository();
+    public function getList(): ModuleCollection;
 
-        return $this->render(
-            '@PrestaShop/Admin/Module/updates.html.twig',
-            $this->getNotificationPageData($moduleRepository->getUpgradableModules())
-        );
-    }
+    public function getInstalledModules(): ModuleCollection;
+
+    public function getUpgradableModules(): ModuleCollection;
+
+    public function getMustBeConfiguredModules(): ModuleCollection;
+
+    public function getModule(string $moduleName): ModuleInterface;
+
+    public function getModulePath(string $moduleName): ?string;
+
+    public function setActionUrls(ModuleCollection $moduleCollection): ModuleCollection;
 }
