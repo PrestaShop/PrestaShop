@@ -3139,7 +3139,7 @@ class AdminImportControllerCore extends AdminController
         $customers_shop = [];
         $customers_shop['shared'] = [];
         $default_shop = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
-        if ($shop_is_feature_active && $id_shop_list) {
+        if ($shop_is_feature_active && is_array($id_shop_list)) {
             foreach ($id_shop_list as $id_shop) {
                 if (empty($id_shop)) {
                     continue;
