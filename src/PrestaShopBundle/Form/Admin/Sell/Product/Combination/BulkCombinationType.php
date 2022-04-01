@@ -27,14 +27,12 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
+use PrestaShopBundle\Form\Admin\Type\AccordionType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Type;
 
 /**
  * For combination update in bulk action
@@ -74,27 +72,26 @@ class BulkCombinationType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('price_tax_excluded', MoneyType::class, [
-                'required' => false,
-                'label' => $this->trans('Impact on price (tax excl.)', 'Admin.Catalog.Feature'),
-                'label_help_box' => $this->trans('Does this combination have a different price? Is it cheaper or more expensive than the default retail price?', 'Admin.Catalog.Help'),
-                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
-                'currency' => $this->defaultCurrencyIsoCode,
-                'disabling_switch' => true,
-                'constraints' => [
-                    new NotBlank(),
-                    new Type(['type' => 'float']),
-                ],
-            ])
-            ->add('reference', TextType::class, [
-                'constraints' => [
-                    new NotBlank(),
-                ],
-                'disabling_switch' => true,
-                'required' => false,
-                'label' => $this->trans('Reference', 'Admin.Global'),
-                'label_help_box' => $this->trans('Your reference code for this product. Allowed special characters: .-_#.', 'Admin.Catalog.Help'),
-            ])
+            ->add('stock', BulkCombinationStockType::class)
+            ->add('price', BulkCombinationPriceType::class)
         ;
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+        $resolver->setDefaults([
+            'label' => false,
+            'expand_first' => false,
+            'display_one' => false,
+            'attr' => [
+                'class' => 'bulk-combination-form',
+            ],
+        ]);
+    }
+
+    public function getParent()
+    {
+        return AccordionType::class;
     }
 }
