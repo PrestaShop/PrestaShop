@@ -172,3 +172,27 @@
     display: block;
   }
 }
+
+.accordion-form {
+  .card {
+    margin-bottom: 0;
+
+    .accordion-form-button {
+      display: flex;
+
+      i.material-icons {
+        margin-left: auto;
+      }
+
+      i.material-icons::after {
+        content: "keyboard_arrow_up";
+      }
+
+      &.collapsed {
+        i.material-icons::after {
+          content: "keyboard_arrow_down";
+        }
+      }
+    }
+  }
+}
