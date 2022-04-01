@@ -1352,3 +1352,36 @@
     {{- block('submittable_input_button_widget') -}}
   </div>
 {% endblock %}
+
+{% block accordion_widget %}
+  <div class="accordion accordion-form" id="{{ form.vars.id }}">
+    {% set firstChild = true %}
+    {% for child in form %}
+      {% if child.vars.compound %}
+      {% set isExpanded = firstChild and expand_first %}
+      <div class="card">
+        <div class="card-header" id="{{ child.vars.id }}_accordion_header">
+          <h2 class="mb-0">
+            <button class="accordion-form-button btn btn-block text-left{% if not isExpanded %} collapsed{% endif %}" type="button" data-toggle="collapse" data-target="#{{ child.vars.id }}_accordion" aria-expanded="{% if isExpanded %}true{% else %}false{% endif %}" aria-controls="{{ child.vars.id }}_accordion">
+              {{ child.vars.label }}
+              <i class="material-icons"></i>
+            </button>
+          </h2>
+        </div>
+
+        <div id="{{ child.vars.id }}_accordion" class="collapse{% if isExpanded %} show{% endif %}" aria-labelledby="{{ child.vars.id }}_accordion_header" {% if display_one %}data-parent="#{{ form.vars.id }}"{% endif %}>
+          <div class="card-body">
+            {% set childAttr = {'class': 'accordion-sub-form'} %}
+            {{ form_widget(child, {attr: childAttr}) }}
+            {{ form_errors(child) }}
+          </div>
+        </div>
+      </div>
+      {% set firstChild = false %}
+      {% endif %}
+    {% endfor %}
+
+    {# Display rest of children that may have not been rendered because they were not compound forms, like token hidden field for example #}
+    {{ form_rest(form) }}
+  </div>
+{% endblock %}
