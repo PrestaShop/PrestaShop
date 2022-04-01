@@ -35,6 +35,8 @@ export interface IframeModalContainerType extends ModalContainerType {
   iframe: HTMLIFrameElement;
   loader: HTMLElement;
   spinner: HTMLElement;
+  closeButton?: HTMLElement;
+  confirmButton?: HTMLButtonElement;
 }
 export interface IframeModalType extends ModalType {
   modal: IframeModalContainerType;
@@ -50,6 +52,10 @@ export type IframeModalParams = ModalParams & {
   iframeUrl: string;
   autoSize: boolean;
   autoSizeContainer: string;
+  closeButtonLabel?: string;
+  confirmButtonLabel?: string;
+  confirmCallback?: (event: Event) => void;
+  closeOnConfirm: boolean;
 }
 export type InputIframeModalParams = Partial<IframeModalParams> & {
   iframeUrl: string; // iframeUrl is mandatory in input
@@ -71,6 +77,12 @@ export class IframeModalContainer extends ModalContainer implements IframeModalC
   loader!: HTMLElement;
 
   spinner!: HTMLElement;
+
+  footer?: HTMLElement;
+
+  closeButton?: HTMLElement;
+
+  confirmButton?: HTMLButtonElement;
 
   /* This constructor is important to force the input type but ESLint is not happy about it*/
   /* eslint-disable no-useless-constructor */
@@ -101,6 +113,37 @@ export class IframeModalContainer extends ModalContainer implements IframeModalC
 
     this.loader.appendChild(this.spinner);
     this.body.append(this.loader, this.iframe);
+
+    // Modal footer element
+    if (params.closeButtonLabel !== undefined || params.confirmButtonLabel !== undefined) {
+      this.footer = document.createElement('div');
+      this.footer.classList.add('modal-footer');
+
+      // Modal close button element
+      if (params.closeButtonLabel) {
+        this.closeButton = document.createElement('button');
+        this.closeButton.setAttribute('type', 'button');
+        this.closeButton.classList.add('btn', 'btn-outline-secondary', 'btn-lg');
+        this.closeButton.dataset.dismiss = 'modal';
+        this.closeButton.innerHTML = params.closeButtonLabel;
+        this.footer.append(this.closeButton);
+      }
+
+      // Modal confirm button element
+      if (params.confirmButtonLabel !== undefined) {
+        this.confirmButton = document.createElement('button');
+        this.confirmButton.setAttribute('type', 'button');
+        this.confirmButton.classList.add('btn', 'btn-primary', 'btn-lg', 'btn-confirm-submit');
+        if (params.closeOnConfirm) {
+          this.confirmButton.dataset.dismiss = 'modal';
+        }
+        this.confirmButton.innerHTML = params.confirmButtonLabel;
+        this.footer.append(this.confirmButton);
+      }
+
+      // Appending element to the modal
+      this.content.append(this.footer);
+    }
   }
 }
 
@@ -126,6 +169,7 @@ export class IframeModal extends Modal implements IframeModalType {
       closable: false,
       autoSize: true,
       autoSizeContainer: 'body',
+      closeOnConfirm: true,
       ...inputParams,
     };
     super(params);
@@ -166,6 +210,10 @@ export class IframeModal extends Modal implements IframeModalType {
         params.onIframeEvent(event);
       }
     }) as EventListener);
+
+    if (this.modal.confirmButton && params.confirmCallback) {
+      this.modal.confirmButton.addEventListener('click', params.confirmCallback);
+    }
   }
 
   render(content: string, hideIframe: boolean = true): void {
