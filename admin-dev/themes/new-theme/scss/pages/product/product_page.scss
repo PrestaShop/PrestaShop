@@ -1340,7 +1340,8 @@ $product-page-padding-bottom: 80px !default;
   }
 }
 
-#modal-create-product-attachment {
+#modal-create-product-attachment,
+#bulk-combination-form-modal {
   .modal-dialog {
     max-width: 810px;
   }
