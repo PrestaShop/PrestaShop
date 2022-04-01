@@ -22,7 +22,7 @@ class AddOrder extends BOBasePage {
 
     // Iframe
     this.iframe = 'iframe.fancybox-iframe';
-    this.closeIframe = 'a.fancybox-close';
+    this.closeFancyBoxIframe = 'a.fancybox-close';
 
     // Customer selectors
     this.addCustomerLink = '#customer-add-btn';
@@ -45,6 +45,15 @@ class AddOrder extends BOBasePage {
 
     // Checkout history selectors
     this.checkoutHistoryBlock = '#customer-checkout-history';
+
+    // Carts table selectors
+    this.customerCartsTable = '#customer-carts-table';
+    this.customerCartsTableBody = `${this.customerCartsTable} tbody`;
+    this.customerCartsTableRow = row => `${this.customerCartsTableBody} tr:nth-child(${row})`;
+    this.customerCartsTableColumn = (column, row) => `${this.customerCartsTableRow(row)} td.js-cart-${column}`;
+    this.emptyCartBlock = `${this.customerCartsTableBody} div.grid-table-empty`;
+    this.customerCartsTableDetailsButton = row => `${this.customerCartsTableRow(row)} td a.js-cart-details-btn`;
+    this.customerCartsTableUseButton = row => `${this.customerCartsTableRow(row)} td button.js-use-cart-btn`;
 
     // Cart selectors
     this.cartBlock = '#cart-block';
@@ -70,11 +79,13 @@ class AddOrder extends BOBasePage {
     // Shipping form selectors
     this.deliveryOptionSelect = '#delivery-option-select';
     this.freeShippingToggleInput = toggle => `#free-shipping_${toggle}`;
+    this.shippingCost = '#shipping-block span.js-total-shipping-tax-inc';
 
     // Summary selectors
     this.paymentMethodSelect = '#cart_summary_payment_module';
     this.orderStatusSelect = '#cart_summary_order_state';
     this.createOrderButton = '#create-order-button';
+    this.totalTaxIncluded = '#summary-block span.js-total-with-tax';
   }
 
   /* Customer functions */
@@ -191,6 +202,74 @@ class AddOrder extends BOBasePage {
     return page.frame({url: new RegExp(`sell/customers/${customerID}/view`, 'gmi')});
   }
 
+  /**
+   * Close iframe
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async closeIframe(page) {
+    await this.waitForSelectorAndClick(page, this.closeFancyBoxIframe);
+
+    return this.elementNotVisible(page, this.iframe, 3000);
+  }
+
+  /* Carts table methods */
+
+  /**
+   * Get text when carts table is empty
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getTextWhenCartsTableIsEmpty(page) {
+    await page.waitForTimeout(2000);
+    return this.getTextContent(page, this.emptyCartBlock, true);
+  }
+
+  /**
+   * Get text column from carts table
+   * @param page {Page} Browser tab
+   * @param column {String} Column name from table
+   * @param row {Number} Row on table
+   * @returns {Promise<string>}
+   */
+  async getTextColumnFromCartsTable(page, column, row = 1) {
+    return this.getTextContent(page, this.customerCartsTableColumn(column, row));
+  }
+
+  /**
+   * Click on cart details button
+   * @param page {Page} Browser tab
+   * @param row {Number} Row on table
+   * @returns {Promise<Boolean>}
+   */
+  async clickOnCartDetailsButton(page, row = 1) {
+    await this.waitForSelectorAndClick(page, this.customerCartsTableDetailsButton(row));
+
+    return this.elementVisible(page, this.iframe, 2000);
+  }
+
+  /**
+   * Get shopping cart Iframe
+   * @param page {Page} Browser tab
+   * @param cartId {number} Id of customer to check
+   * @returns {*}
+   */
+  getShoppingCartIframe(page, cartId) {
+    return page.frame({url: new RegExp(`sell/orders/carts/${cartId}/view`, 'gmi')});
+  }
+
+  /**
+   * Click on cart use button
+   * @param page {Page} Browser tab
+   * @param row {Number} Row on table
+   * @returns {Promise<Boolean>}
+   */
+  async clickOnCartUseButton(page, row = 1) {
+    await this.waitForSelectorAndClick(page, this.customerCartsTableUseButton(row));
+
+    return this.elementVisible(page, this.productsTable, 1000);
+  }
+
   /* Cart methods */
 
   /**
@@ -271,17 +350,6 @@ class AddOrder extends BOBasePage {
   }
 
   /**
-   * Close order iframe
-   * @param page {Page} Browser tab
-   * @returns {Promise<boolean>}
-   */
-  async closeOrderIframe(page) {
-    await this.waitForSelectorAndClick(page, this.closeIframe);
-
-    return this.elementNotVisible(page, this.iframe, 3000);
-  }
-
-  /**
    * Click on order use button
    * @param page {Page} Browser tab
    * @param row {number} Row in orders table
@@ -319,6 +387,33 @@ class AddOrder extends BOBasePage {
   async setDeliveryOption(page, deliveryOptionName, isFreeShipping = false) {
     await this.selectByVisibleText(page, this.deliveryOptionSelect, deliveryOptionName);
     await this.setChecked(page, this.freeShippingToggleInput(isFreeShipping ? 1 : 0));
+  }
+
+  /**
+   * Get Delivery Option Selected
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getDeliveryOption(page) {
+    return this.getTextContent(page, `${this.deliveryOptionSelect} option[selected='selected']`, false);
+  }
+
+  /**
+   * Get Shipping Cost
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getShippingCost(page) {
+    return this.getTextContent(page, this.shippingCost);
+  }
+
+  /**
+   * Get Total
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getTotal(page) {
+    return this.getTextContent(page, this.totalTaxIncluded);
   }
 
   /* Summary methods */
