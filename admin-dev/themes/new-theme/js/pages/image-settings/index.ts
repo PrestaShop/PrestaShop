@@ -37,11 +37,15 @@ import ImageSettingsIndexMap from '@pages/image-settings/index-map';
 
 const {$} = window;
 
-$(() => {
+function resetChoices(): void {
   $(ImageSettingsIndexMap.secondSelect).addClass('d-none');
   $(ImageSettingsIndexMap.format(
     String($(ImageSettingsIndexMap.thumbnailRegenerationImageCategory).val())),
   ).removeClass('d-none');
+}
+
+$(() => {
+  resetChoices();
 
   const grid = new Grid('image_type');
 
@@ -55,10 +59,5 @@ $(() => {
   grid.addExtension(new FiltersSubmitButtonEnablerExtension());
   grid.addExtension(new LinkRowActionExtension());
 
-  $(ImageSettingsIndexMap.thumbnailRegenerationImageCategory).change(() => {
-    $(ImageSettingsIndexMap.secondSelect).addClass('d-none');
-    $(ImageSettingsIndexMap.format(
-      String($(ImageSettingsIndexMap.thumbnailRegenerationImageCategory).val())),
-    ).removeClass('d-none');
-  });
+  $(ImageSettingsIndexMap.thumbnailRegenerationImageCategory).change(() => resetChoices());
 });
