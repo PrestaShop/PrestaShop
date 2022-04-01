@@ -46,6 +46,7 @@
       <button
         id="combination-bulk-form-btn" class="dropdown-item" type="button"
         data-btn-label="{{ 'Edit %s combinations'|trans({}, 'Admin.Actions') }}"
+        data-form-url="{{ url('admin_products_combinations_bulk_combination_form') }}"
       >
       {{ 'Edit %s combinations'|trans({'%s': ''}, 'Admin.Actions') }}
       </button>
@@ -69,11 +70,3 @@
 
      }|json_encode }}"
 ></div>
-
-{# @todo: need to implement dedicated theme for this form later #}
-{% form_theme bulkCombinationForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
-<div id="bulk-combination-form-template" class="d-none">
-  {{ form_start(bulkCombinationForm) }}
-  {{ form_widget(bulkCombinationForm) }}
-  {{ form_end(bulkCombinationForm) }}
-</div>

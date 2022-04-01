@@ -107,6 +107,22 @@ class CombinationController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
      * @param Request $request
+     *
+     * @return Response
+     */
+    public function bulkEditFormAction(Request $request): Response
+    {
+        $bulkCombinationForm = $this->getBulkCombinationFormBuilder()->getForm();
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/Combination/bulk.html.twig', [
+            'bulkCombinationForm' => $bulkCombinationForm->createView(),
+        ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
      * @param int $combinationId
      *
      * @return JsonResponse
@@ -156,13 +172,10 @@ class CombinationController extends FrameworkBundleAdminController
      */
     public function paginatedListAction(): Response
     {
-        $bulkCombinationForm = $this->getBulkCombinationFormBuilder()->getForm();
-
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/Combination/paginated_list.html.twig', [
             'combinationLimitChoices' => self::COMBINATIONS_PAGINATION_OPTIONS,
             'combinationsLimit' => ProductCombinationFilters::LIST_LIMIT,
             'combinationsForm' => $this->createForm(CombinationListType::class)->createView(),
-            'bulkCombinationForm' => $bulkCombinationForm->createView(),
             'combinationItemForm' => $this->getCombinationItemFormBuilder()->getForm()->createView(),
         ]);
     }
