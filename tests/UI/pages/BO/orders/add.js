@@ -20,7 +20,9 @@ class AddOrder extends BOBasePage {
     this.pageTitle = 'Create order •';
     this.noCustomerFoundText = 'No customers found';
     this.noProductFoundText = 'No products found';
-    this.cartRuleErrorText = 'This voucher is already in your cart';
+    this.cartRuleAlreadyExistErrorText = 'This voucher is already in your cart';
+    this.noVoucherFoudErrorMessage = 'No voucher was found';
+    this.voucherDisabledErrorMessage = 'This voucher is disabled';
 
     // Iframe
     this.iframe = 'iframe.fancybox-iframe';
@@ -93,6 +95,11 @@ class AddOrder extends BOBasePage {
     this.productTableColumnRemoveButton = row => `${this.productsTableRow(row)} td button.js-product-remove-btn`;
 
     // Vouchers block selectors
+    this.searchVoucherInput = '#search-cart-rules-input';
+    this.searchCartRuleResultBox = '#search-cart-rules-result-box';
+    this.searchCartRuleResultFound = '#cart-rules-search-block li.js-found-cart-rule.found-cart-rule';
+    this.cartRuleErrorText = '#js-cart-rule-error-text';
+    this.addVoucherBUtton = '#js-add-cart-rule-btn';
     this.vouchersTable = '#cart-rules-table';
     this.vouchersTableBody = `${this.vouchersTable} tbody`;
     this.vouchersTableRows = `${this.vouchersTableBody} tr`;
@@ -131,6 +138,7 @@ class AddOrder extends BOBasePage {
 
     // Shipping form selectors
     this.deliveryOptionSelect = '#delivery-option-select';
+    this.totalShippingTaxIncl = '.js-total-shipping-tax-inc';
     this.freeShippingToggleInput = toggle => `#free-shipping_${toggle}`;
     this.shippingCost = '#shipping-block span.js-total-shipping-tax-inc';
 
