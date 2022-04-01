@@ -1351,6 +1351,11 @@ $product-page-padding-bottom: 80px !default;
     max-width: 810px;
     min-height: 600px;
   }
+
+  .modal-footer {
+    padding: 1.125rem;
+    background-color: $background-grey;
+  }
 }
 
 .bulk-combination-form {
@@ -1370,7 +1375,7 @@ $product-page-padding-bottom: 80px !default;
   .accordion-sub-form {
     > .form-group {
       padding: 0.625rem;
-      border-bottom: 1px solid #eaebec;
+      border-bottom: 1px solid $background-grey;
     }
 
     > .form-group:last-child {

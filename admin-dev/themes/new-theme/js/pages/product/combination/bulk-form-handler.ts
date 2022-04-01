@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import ConfirmModal, {FormIframeModal} from '@components/modal';
+import {ConfirmModal, IframeModal} from '@components/modal';
 import ProductMap from '@pages/product/product-map';
 import ProductEvents from '@pages/product/product-event-map';
 import CombinationsService from '@pages/product/services/combinations-service';
@@ -51,7 +51,14 @@ export default class BulkFormHandler {
     this.eventEmitter.on(CombinationEvents.listRendered, () => this.toggleBulkActions());
 
     const bulkFormBtn = document.querySelector<HTMLButtonElement>(CombinationMap.bulkCombinationFormBtn);
-    bulkFormBtn?.addEventListener('click', () => this.showFormModal(bulkFormBtn.dataset.formUrl as string));
+    const bulkCombinationsBtn = this.tabContainer.querySelector(CombinationMap.bulkCombinationFormBtn) as HTMLButtonElement;
+
+    bulkFormBtn?.addEventListener('click', () => this.showFormModal(
+      bulkFormBtn.dataset.formUrl as string,
+      bulkCombinationsBtn.dataset.modalTitle as string,
+      bulkCombinationsBtn.dataset.modalConfirmLabel as string,
+      bulkCombinationsBtn.dataset.modalCancelLabel as string,
+    ));
   }
 
   private showProgressModal(): ConfirmModal {
@@ -69,14 +76,37 @@ export default class BulkFormHandler {
     return modal;
   }
 
-  private showFormModal(formUrl: string): void {
-    const iframeModal = new FormIframeModal({
+  private showFormModal(formUrl: string, modalTitle: string, confirmButtonLabel: string, closeButtonLabel: string): void {
+    const selectedCombinationsCount = this.getSelectedCheckboxes().length;
+
+    let initialFormData: JQuery.NameValuePair[];
+    const iframeModal = new IframeModal({
       id: CombinationMap.bulkFormModalId,
-      formSelector: 'form[name="bulk_combination"]',
-      formUrl,
+      iframeUrl: formUrl,
+      autoSizeContainer: 'form[name="bulk_combination"]',
       closable: true,
-      onFormLoaded: (form: HTMLElement, formData: JQuery.NameValuePair[] | null, dataAttributes: DOMStringMap | null): void => {
-        console.log(form, formData, dataAttributes);
+      confirmButtonLabel: confirmButtonLabel.replace(/%combinations_number%/, String(selectedCombinationsCount)),
+      closeButtonLabel,
+      modalTitle,
+      onLoaded: (iframe: HTMLIFrameElement) => {
+        if (iframe.contentWindow) {
+          // eslint-disable-next-line max-len
+          const form: HTMLFormElement | null = iframe.contentWindow.document.querySelector<HTMLFormElement>('form[name="bulk_combination"]');
+
+          if (form) {
+            initialFormData = $(form).serializeArray();
+          }
+        }
+      },
+      confirmCallback: () => {
+        if (iframeModal.modal.iframe.contentWindow) {
+          // eslint-disable-next-line max-len
+          const form: HTMLFormElement | null = iframeModal.modal.iframe.contentWindow.document.querySelector<HTMLFormElement>('form[name="bulk_combination"]');
+
+          if (form) {
+            this.submitForm(form, initialFormData);
+          }
+        }
       },
     });
 
@@ -116,14 +146,18 @@ export default class BulkFormHandler {
 
     const bulkCombinationsBtn = this.tabContainer.querySelector(CombinationMap.bulkCombinationFormBtn) as HTMLButtonElement;
     const bulkCombinationsLabel = bulkCombinationsBtn.dataset.btnLabel as string;
-    bulkCombinationsBtn.innerHTML = bulkCombinationsLabel.replace(/%s/, String(selectedCombinationsCount));
+    bulkCombinationsBtn.innerHTML = bulkCombinationsLabel.replace(/%combinations_number%/, String(selectedCombinationsCount));
 
     btn.toggleAttribute('disabled', !enable);
   }
 
-  private async submitForm(): Promise<void> {
-    //@todo: form errors should be handled in dedicated PR
-    const form = document.querySelector(CombinationMap.bulkCombinationForm) as HTMLFormElement;
+  private async submitForm(form: HTMLFormElement, initialFormData: JQuery.NameValuePair[]): Promise<void> {
+    const serializedArray: JQuery.NameValuePair[] = $(form).serializeArray();
+    console.log('submit', serializedArray, initialFormData);
+
+    if (serializedArray === initialFormData) {
+      return;
+    }
     const progressModal = this.showProgressModal();
 
     const checkboxes = this.getSelectedCheckboxes();
@@ -134,7 +168,7 @@ export default class BulkFormHandler {
     for (let i = 0; i < checkboxes.length; i += 1) {
       const checkbox = checkboxes[i];
       // eslint-disable-next-line no-await-in-loop
-      await this.combinationsService.bulkUpdate(Number(checkbox.value), $(form).serializeArray());
+      await this.combinationsService.bulkUpdate(Number(checkbox.value), serializedArray);
 
       //@todo: also related with temporary progress modal. Needs to be fixed according to new progress modal once its merged in #26004.
       const progressContent = progressModalElement?.querySelector('.progress-increment') as HTMLParagraphElement;
