@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import ConfirmModal from '@components/modal';
+import ConfirmModal, {FormIframeModal} from '@components/modal';
 import ProductMap from '@pages/product/product-map';
 import ProductEvents from '@pages/product/product-event-map';
 import CombinationsService from '@pages/product/services/combinations-service';
@@ -39,14 +39,10 @@ export default class BulkFormHandler {
 
   private tabContainer: HTMLDivElement;
 
-  private formModalContent: string;
-
   constructor() {
     this.combinationsService = new CombinationsService();
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.tabContainer = document.querySelector(CombinationMap.externalCombinationTab) as HTMLDivElement;
-    const formTemplate = document.querySelector(CombinationMap.bulkCombinationFormTemplate) as HTMLScriptElement;
-    this.formModalContent = formTemplate.innerHTML;
     this.init();
   }
 
@@ -55,7 +51,7 @@ export default class BulkFormHandler {
     this.eventEmitter.on(CombinationEvents.listRendered, () => this.toggleBulkActions());
 
     const bulkFormBtn = document.querySelector<HTMLButtonElement>(CombinationMap.bulkCombinationFormBtn);
-    bulkFormBtn?.addEventListener('click', () => this.showFormModal());
+    bulkFormBtn?.addEventListener('click', () => this.showFormModal(bulkFormBtn.dataset.formUrl as string));
   }
 
   private showProgressModal(): ConfirmModal {
@@ -73,18 +69,17 @@ export default class BulkFormHandler {
     return modal;
   }
 
-  private showFormModal(): ConfirmModal {
-    const modal = new ConfirmModal(
-      {
-        id: CombinationMap.bulkCombinationModalId,
-        confirmMessage: this.formModalContent,
+  private showFormModal(formUrl: string): void {
+    const iframeModal = new FormIframeModal({
+      id: CombinationMap.bulkFormModalId,
+      formSelector: 'form[name="bulk_combination"]',
+      formUrl,
+      onFormLoaded: (form: HTMLElement, formData: JQuery.NameValuePair[] | null, dataAttributes: DOMStringMap | null): void => {
+        console.log(form, formData, dataAttributes);
       },
-      () => this.submitForm(),
-    );
+    });
 
-    modal.show();
-
-    return modal;
+    iframeModal.show();
   }
 
   private listenSelections(): void {

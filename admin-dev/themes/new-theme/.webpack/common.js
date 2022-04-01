@@ -56,6 +56,7 @@ module.exports = {
     cldr: './js/app/cldr',
     cms_page: './js/pages/cms-page',
     cms_page_form: './js/pages/cms-page/form',
+    combination_bulk: './js/pages/product/combination/bulk',
     combination_edit: './js/pages/product/combination/edit',
     contacts: './js/pages/contacts',
     credit_slip: './js/pages/credit-slip',

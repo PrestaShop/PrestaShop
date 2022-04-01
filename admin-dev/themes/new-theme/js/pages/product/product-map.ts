@@ -135,7 +135,6 @@ export default {
     scrollBar: '.attributes-list-overflow',
     searchInput: '#product-combinations-generate .attributes-search',
     generateCombinationsButton: '.generate-combinations-button',
-    bulkCombinationFormTemplate: '#bulk-combination-form-template',
     bulkCombinationFormBtn: '#combination-bulk-form-btn',
     bulkActionsBtn: '#combination-bulk-actions-btn',
     bulkCombinationModalId,
@@ -143,6 +142,7 @@ export default {
     bulkSelectAllInPage: `#${bulkCombinationSelectAllInPageId}`,
     bulkSelectAllInPageId: bulkCombinationSelectAllInPageId,
     bulkProgressModalId: progressModalId,
+    bulkFormModalId: 'bulk-combination-form-modal',
   },
   virtualProduct: {
     container: '.virtual-product-file-container',
