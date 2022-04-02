@@ -34,6 +34,7 @@ class ApiNode
     public const TYPE_PARENT = 'parent';
     public const TYPE_LIST = 'list';
 
+    /** @var int[] Ids of available languages  */
     public static $languages;
 
     /** @var string */
