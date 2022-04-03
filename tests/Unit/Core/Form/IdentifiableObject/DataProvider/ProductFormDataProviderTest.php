@@ -1088,7 +1088,8 @@ class ProductFormDataProviderTest extends TestCase
                 $customization['type'],
                 $customization['name'],
                 $customization['required'],
-                false
+                false,
+                1
             );
         }
 

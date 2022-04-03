@@ -94,7 +94,8 @@ final class GetProductCustomizationFieldsHandler implements GetProductCustomizat
             (int) $fieldEntity->type,
             $fieldEntity->name,
             (bool) $fieldEntity->required,
-            (bool) $fieldEntity->is_module
+            (bool) $fieldEntity->is_module,
+            (int) $fieldEntity->getShopId()
         );
     }
 }

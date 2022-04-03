@@ -59,24 +59,32 @@ class CustomizationField
     private $addedByModule;
 
     /**
+     * @var int
+     */
+    private $shopId;
+
+    /**
      * @param int $customizationFieldId
      * @param int $type
      * @param string[] $localizedNames
      * @param bool $required
      * @param bool $addedByModule
+     * @param int $shopId
      */
     public function __construct(
         int $customizationFieldId,
         int $type,
         array $localizedNames,
         bool $required,
-        bool $addedByModule
+        bool $addedByModule,
+        int $shopId
     ) {
         $this->customizationFieldId = $customizationFieldId;
         $this->type = $type;
         $this->localizedNames = $localizedNames;
         $this->required = $required;
         $this->addedByModule = $addedByModule;
+        $this->shopId = $shopId;
     }
 
     /**
@@ -117,5 +125,13 @@ class CustomizationField
     public function isAddedByModule(): bool
     {
         return $this->addedByModule;
+    }
+
+    /**
+     * @return int
+     */
+    public function getShopId(): int
+    {
+        return $this->shopId;
     }
 }
