@@ -68,7 +68,7 @@ class CsvResponse extends StreamedResponse
     private $limit = 1000;
 
     /**
-     * @var boolean exportHeader
+     * @var bool exportHeader
      */
     private $exportHeader = true;
 
