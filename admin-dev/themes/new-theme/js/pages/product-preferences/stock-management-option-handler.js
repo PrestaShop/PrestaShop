@@ -86,6 +86,7 @@ class StockManagementOptionHandler {
   */
   handleDisplayOutOfStockLabelOption(isStockManagementEnabled) {
     const displayLabelRadio = $('input[name="stock[oos_show_label_listing_pages]"]');
+
     if (isStockManagementEnabled) {
       displayLabelRadio.removeAttr('disabled');
     } else {
