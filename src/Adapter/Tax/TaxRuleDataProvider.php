@@ -122,7 +122,7 @@ class TaxRuleDataProvider
         $choices = [];
 
         foreach ($taxRulesGroups as $taxRulesGroup) {
-            $choices[$taxRulesGroup['name']] = $taxRulesGroup['id_tax_rules_group'];
+            $choices[$taxRulesGroup['name']] = (int) $taxRulesGroup['id_tax_rules_group'];
         }
 
         return $choices;

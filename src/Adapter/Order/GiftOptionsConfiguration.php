@@ -26,34 +26,36 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Order;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Gift Settings configuration available in ShopParameters > Order Preferences.
  */
-class GiftOptionsConfiguration implements DataConfigurationInterface
+class GiftOptionsConfiguration extends AbstractMultistoreConfiguration
 {
     /**
-     * @var Configuration
+     * @var array<int, string>
      */
-    private $configuration;
-
-    public function __construct(Configuration $configuration)
-    {
-        $this->configuration = $configuration;
-    }
+    private const CONFIGURATION_FIELDS = [
+        'enable_gift_wrapping',
+        'gift_wrapping_price',
+        'gift_wrapping_tax_rules_group',
+        'offer_recyclable_pack',
+    ];
 
     /**
      * {@inheritdoc}
      */
     public function getConfiguration()
     {
+        $shopConstraint = $this->getShopConstraint();
+
         return [
-            'enable_gift_wrapping' => $this->configuration->getBoolean('PS_GIFT_WRAPPING'),
-            'gift_wrapping_price' => $this->configuration->get('PS_GIFT_WRAPPING_PRICE'),
-            'gift_wrapping_tax_rules_group' => $this->configuration->get('PS_GIFT_WRAPPING_TAX_RULES_GROUP'),
-            'offer_recyclable_pack' => $this->configuration->getBoolean('PS_RECYCLABLE_PACK'),
+            'enable_gift_wrapping' => (bool) $this->configuration->get('PS_GIFT_WRAPPING', false, $shopConstraint),
+            'gift_wrapping_price' => (float) $this->configuration->get('PS_GIFT_WRAPPING_PRICE', 0, $shopConstraint),
+            'gift_wrapping_tax_rules_group' => (int) $this->configuration->get('PS_GIFT_WRAPPING_TAX_RULES_GROUP', 0, $shopConstraint),
+            'offer_recyclable_pack' => (bool) $this->configuration->get('PS_RECYCLABLE_PACK', false, $shopConstraint),
         ];
     }
 
@@ -63,25 +65,29 @@ class GiftOptionsConfiguration implements DataConfigurationInterface
     public function updateConfiguration(array $configuration)
     {
         if ($this->validateConfiguration($configuration)) {
-            $this->configuration->set('PS_GIFT_WRAPPING', $configuration['enable_gift_wrapping']);
-            $this->configuration->set('PS_GIFT_WRAPPING_PRICE', $configuration['gift_wrapping_price']);
-            $this->configuration->set('PS_GIFT_WRAPPING_TAX_RULES_GROUP', $configuration['gift_wrapping_tax_rules_group']);
-            $this->configuration->set('PS_RECYCLABLE_PACK', $configuration['offer_recyclable_pack']);
+            $shopConstraint = $this->getShopConstraint();
+
+            $this->updateConfigurationValue('PS_GIFT_WRAPPING', 'enable_gift_wrapping', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_GIFT_WRAPPING_PRICE', 'gift_wrapping_price', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_GIFT_WRAPPING_TAX_RULES_GROUP', 'gift_wrapping_tax_rules_group', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_RECYCLABLE_PACK', 'offer_recyclable_pack', $configuration, $shopConstraint);
         }
 
         return [];
     }
 
     /**
-     * {@inheritdoc}
+     * @return OptionsResolver
      */
-    public function validateConfiguration(array $configuration)
+    protected function buildResolver(): OptionsResolver
     {
-        return isset(
-            $configuration['enable_gift_wrapping'],
-            $configuration['gift_wrapping_price'],
-            $configuration['gift_wrapping_tax_rules_group'],
-            $configuration['offer_recyclable_pack']
-        );
+        $resolver = (new OptionsResolver())
+            ->setDefined(self::CONFIGURATION_FIELDS)
+            ->setAllowedTypes('enable_gift_wrapping', 'bool')
+            ->setAllowedTypes('gift_wrapping_price', 'float')
+            ->setAllowedTypes('gift_wrapping_tax_rules_group', 'int')
+            ->setAllowedTypes('offer_recyclable_pack', 'bool');
+
+        return $resolver;
     }
 }

@@ -32,11 +32,15 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Order\GeneralConfiguration'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
 
   prestashop.adapter.order_gift.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Order\GiftOptionsConfiguration'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
 
   prestashop.adapter.debug_mode.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Debug\DebugModeConfiguration'
