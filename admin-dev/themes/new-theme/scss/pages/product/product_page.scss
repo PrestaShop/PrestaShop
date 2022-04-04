@@ -1286,6 +1286,35 @@ $product-page-padding-bottom: 80px !default;
       }
     }
   }
+
+  .tokenfield {
+    padding: 0.15rem;
+
+    .token {
+      padding: 0.4rem 0.7rem;
+      background-color: $gray-medium;
+      @include border-radius(0.25rem);
+
+      .close {
+        float: left;
+        margin: 0 0.4rem 0 0;
+        font-size: 1.5rem;
+        line-height: 1rem;
+        color: $white;
+        opacity: 1;
+
+        &:hover {
+          opacity: 0.5;
+        }
+      }
+    }
+
+    @media only screen and (min-width: 768px) {
+      .token-input {
+        min-width: 768px;
+      }
+    }
+  }
 }
 
 // Some of the following styles target product page v2 components, but since the are new and only used in the new
@@ -1336,33 +1365,6 @@ $product-page-padding-bottom: 80px !default;
 
     .material-icons {
       color: $brand-primary;
-    }
-  }
-
-  .tokenfield {
-    padding: 0.15rem;
-
-    .token {
-      padding: 0.4rem 0.7rem;
-      background-color: $gray-medium;
-      @include border-radius(0.25rem);
-
-      .close {
-        float: left;
-        margin: 0 0.4rem 0 0;
-        font-size: 1.5rem;
-        line-height: 1rem;
-        color: $white;
-        opacity: 1;
-
-        &:hover {
-          opacity: 0.5;
-        }
-      }
-    }
-
-    .token-input {
-      min-width: 768px;
     }
   }
 }
