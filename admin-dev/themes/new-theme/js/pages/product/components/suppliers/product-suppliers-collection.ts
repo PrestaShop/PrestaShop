@@ -172,14 +172,17 @@ export default class ProductSuppliersCollection {
       const newSupplier: ProductSupplier = Object.create(this.baseDataForSupplier);
       newSupplier.supplierId = supplier.supplierId;
       newSupplier.supplierName = supplier.supplierName;
-
+      newSupplier.price = defaultPrice;
       this.productSuppliers[supplier.supplierId] = newSupplier;
     } else {
-      this.productSuppliers[supplier.supplierId].removed = false;
-    }
+      const existingSupplier: ProductSupplier = this.productSuppliers[supplier.supplierId];
 
-    // Always add with the current default price
-    this.productSuppliers[supplier.supplierId].price = defaultPrice;
+      if (existingSupplier.removed) {
+        existingSupplier.removed = false;
+        // Update existing supplier with default price
+        existingSupplier.price = defaultPrice;
+      }
+    }
   }
 
   private removeSupplier(supplierId: string): void {
