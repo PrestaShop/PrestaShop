@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilder;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\DataField;
 
 final class ShippingCommandsBuilder implements MultiShopProductCommandsBuilderInterface
 {
@@ -63,15 +63,15 @@ final class ShippingCommandsBuilder implements MultiShopProductCommandsBuilderIn
         $shippingData = $formData['shipping'];
         $config = new CommandBuilderConfig($this->modifyAllNamePrefix);
         $config
-            ->addField('[dimensions][width]', 'setWidth', CommandField::TYPE_STRING)
-            ->addField('[dimensions][height]', 'setHeight', CommandField::TYPE_STRING)
-            ->addField('[dimensions][depth]', 'setDepth', CommandField::TYPE_STRING)
-            ->addField('[dimensions][weight]', 'setWeight', CommandField::TYPE_STRING)
-            ->addField('[delivery_time_note_type]', 'setDeliveryTimeNoteType', CommandField::TYPE_INT)
-            ->addMultiShopField('[additional_shipping_cost]', 'setAdditionalShippingCost', CommandField::TYPE_STRING)
-            ->addMultiShopField('[delivery_time_notes][in_stock]', 'setLocalizedDeliveryTimeInStockNotes', CommandField::TYPE_ARRAY)
-            ->addMultiShopField('[delivery_time_notes][out_of_stock]', 'setLocalizedDeliveryTimeOutOfStockNotes', CommandField::TYPE_ARRAY)
-            ->addMultiShopField('[carriers]', 'setCarrierReferences', CommandField::TYPE_ARRAY)
+            ->addField('[dimensions][width]', 'setWidth', DataField::TYPE_STRING)
+            ->addField('[dimensions][height]', 'setHeight', DataField::TYPE_STRING)
+            ->addField('[dimensions][depth]', 'setDepth', DataField::TYPE_STRING)
+            ->addField('[dimensions][weight]', 'setWeight', DataField::TYPE_STRING)
+            ->addField('[delivery_time_note_type]', 'setDeliveryTimeNoteType', DataField::TYPE_INT)
+            ->addMultiShopField('[additional_shipping_cost]', 'setAdditionalShippingCost', DataField::TYPE_STRING)
+            ->addMultiShopField('[delivery_time_notes][in_stock]', 'setLocalizedDeliveryTimeInStockNotes', DataField::TYPE_ARRAY)
+            ->addMultiShopField('[delivery_time_notes][out_of_stock]', 'setLocalizedDeliveryTimeOutOfStockNotes', DataField::TYPE_ARRAY)
+            ->addMultiShopField('[carriers]', 'setCarrierReferences', DataField::TYPE_ARRAY)
         ;
 
         $commandBuilder = new CommandBuilder($config);
