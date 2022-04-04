@@ -1496,7 +1496,7 @@ class CartCore extends ObjectModel
         $id_product_attribute = (int) $id_product_attribute;
         $id_customization = (int) $id_customization;
         $id_address_delivery = (int) $id_address_delivery;
-        $product = new Product($id_product, false, Configuration::get('PS_LANG_DEFAULT'), $shop->id);
+        $product = new Product($id_product, false, (int) Configuration::get('PS_LANG_DEFAULT'), $shop->id);
 
         if ($id_product_attribute) {
             $combination = new Combination((int) $id_product_attribute);
