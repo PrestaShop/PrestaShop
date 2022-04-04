@@ -49,7 +49,11 @@ class ToolsTest extends TestCase
      */
     public function testRefreshCaCertFile(): void
     {
-        @unlink(_PS_CACHE_CA_CERT_FILE_);
+        if (file_exists(dirname(_PS_CACHE_CA_CERT_FILE_))) {
+            @unlink(_PS_CACHE_CA_CERT_FILE_);
+        } else {
+            mkdir(dirname(_PS_CACHE_CA_CERT_FILE_));
+        }
         (new Tools())->refreshCaCertFile();
 
         // get original cacert.pem content and check it against cached version: _PS_CACHE_CA_CERT_FILE_
