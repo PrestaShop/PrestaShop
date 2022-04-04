@@ -172,7 +172,7 @@ class CsvResponse extends StreamedResponse
     }
 
     /**
-     * @param boolean $exportHeader
+     * @param bool $exportHeader
      *
      * @return $this
      */
