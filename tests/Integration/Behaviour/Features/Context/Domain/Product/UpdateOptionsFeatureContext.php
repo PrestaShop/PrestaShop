@@ -47,21 +47,33 @@ class UpdateOptionsFeatureContext extends AbstractProductFeatureContext
      * @param string $productReference
      * @param TableNode $table
      */
-    public function updateProductOptions(string $productReference, TableNode $table): void
+    public function updateProductOptionsForDefaultShop(string $productReference, TableNode $table): void
     {
-        $data = $table->getRowsHash();
-        $productId = $this->getSharedStorage()->get($productReference);
+        $this->updateProductOptions($productReference, $table, ShopConstraint::shop($this->getDefaultShopId()));
+    }
 
-        try {
-            $command = new UpdateProductOptionsCommand(
-                $productId,
-                ShopConstraint::shop($this->getDefaultShopId())
-            );
-            $this->fillCommand($data, $command);
-            $this->getCommandBus()->handle($command);
-        } catch (ProductException $e) {
-            $this->setLastException($e);
-        }
+    /**
+     * @When I update product :productReference options for shop ":shopReference" with following values:
+     *
+     * @param string $productReference
+     * @param string $shopReference
+     * @param TableNode $table
+     */
+    public function updateProductOptionsForShop(string $productReference, string $shopReference, TableNode $table): void
+    {
+        $shopId = $this->getSharedStorage()->get(trim($shopReference));
+        $this->updateProductOptions($productReference, $table, ShopConstraint::shop($shopId));
+    }
+
+    /**
+     * @When I update product :productReference options for all shops with following values:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function updateProductOptionsForAllShops(string $productReference, TableNode $table): void
+    {
+        $this->updateProductOptions($productReference, $table, ShopConstraint::allShops());
     }
 
     /**
@@ -114,7 +126,52 @@ class UpdateOptionsFeatureContext extends AbstractProductFeatureContext
      * @param string $productReference
      * @param ProductOptions $expectedOptions
      */
-    public function assertOptions(string $productReference, ProductOptions $expectedOptions): void
+    public function assertOptionsForDefaultShop(string $productReference, ProductOptions $expectedOptions): void
+    {
+        $this->assertOptions($productReference, $expectedOptions, $this->getDefaultShopId());
+    }
+
+    /**
+     * @Then product :productReference should have following options for shops :shopReferences:
+     *
+     * @param string $productReference
+     * @param ProductOptions $expectedOptions
+     * @param string $shopReferences
+     */
+    public function assertOptionsForShops(string $productReference, ProductOptions $expectedOptions, string $shopReferences): void
+    {
+        $shopReferences = explode(',', $shopReferences);
+        foreach ($shopReferences as $shopReference) {
+            $shopId = $this->getSharedStorage()->get(trim($shopReference));
+            $this->assertOptions($productReference, $expectedOptions, $shopId);
+        }
+    }
+
+    /**
+     * @param string $productReference
+     * @param TableNode $table
+     * @param ShopConstraint $shopConstraint
+     */
+    private function updateProductOptions(string $productReference, TableNode $table, ShopConstraint $shopConstraint): void
+    {
+        $data = $table->getRowsHash();
+        $productId = $this->getSharedStorage()->get($productReference);
+
+        try {
+            $command = new UpdateProductOptionsCommand($productId, $shopConstraint);
+            $this->fillCommand($data, $command);
+            $this->getCommandBus()->handle($command);
+        } catch (ProductException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @param string $productReference
+     * @param ProductOptions $expectedOptions
+     * @param int $shopId
+     */
+    private function assertOptions(string $productReference, ProductOptions $expectedOptions, int $shopId): void
     {
         $properties = [
             'availableForOrder',
@@ -125,7 +182,7 @@ class UpdateOptionsFeatureContext extends AbstractProductFeatureContext
             'showCondition',
             'manufacturerId',
         ];
-        $actualOptions = $this->getProductForEditing($productReference)->getOptions();
+        $actualOptions = $this->getProductForEditing($productReference, $shopId)->getOptions();
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
 
         foreach ($properties as $property) {
