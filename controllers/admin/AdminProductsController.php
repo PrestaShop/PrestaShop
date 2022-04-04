@@ -2323,10 +2323,8 @@ class AdminProductsControllerCore extends AdminController
         $product->deleteAccessories();
         if ($accessories = Tools::getValue('inputAccessories')) {
             $accessories_id = array_unique(explode('-', $accessories));
-            if (count($accessories_id)) {
-                array_pop($accessories_id);
-                $product->changeAccessories($accessories_id);
-            }
+            array_pop($accessories_id);
+            $product->changeAccessories($accessories_id);
         }
     }
 
@@ -2659,14 +2657,12 @@ class AdminProductsControllerCore extends AdminController
             $ids = array_unique(explode('-', $ids_input));
             $names = array_unique(explode('¤', $names_input));
 
-            if (!empty($ids)) {
-                $length = count($ids);
-                for ($i = 0; $i < $length; ++$i) {
-                    if (!empty($ids[$i]) && !empty($names[$i])) {
-                        list($pack_items[$i]['pack_quantity'], $pack_items[$i]['id']) = explode('x', $ids[$i]);
-                        $exploded_name = explode('x', $names[$i]);
-                        $pack_items[$i]['name'] = $exploded_name[1];
-                    }
+            $length = count($ids);
+            for ($i = 0; $i < $length; ++$i) {
+                if (isset($ids[$i]) && !empty($names[$i])) {
+                    list($pack_items[$i]['pack_quantity'], $pack_items[$i]['id']) = explode('x', $ids[$i]);
+                    $exploded_name = explode('x', $names[$i]);
+                    $pack_items[$i]['name'] = $exploded_name[1];
                 }
             }
         } else {
@@ -3107,17 +3103,15 @@ class AdminProductsControllerCore extends AdminController
             $lines = array_unique(explode('-', $items));
 
             // lines is an array of string with format : QTYxIDxID_PRODUCT_ATTRIBUTE
-            if (count($lines)) {
-                foreach ($lines as $line) {
-                    if (!empty($line)) {
-                        $item_id_attribute = 0;
-                        count($array = explode('x', $line)) == 3 ? list($qty, $item_id, $item_id_attribute) = $array : list($qty, $item_id) = $array;
-                        if ($qty > 0) {
-                            if (Pack::isPack((int) $item_id)) {
-                                $this->errors[] = $this->trans('You can\'t add product packs into a pack', [], 'Admin.Catalog.Notification');
-                            } elseif (!Pack::addItem((int) $product->id, (int) $item_id, (int) $qty, (int) $item_id_attribute)) {
-                                $this->errors[] = $this->trans('An error occurred while attempting to add products to the pack.', [], 'Admin.Catalog.Notification');
-                            }
+            foreach ($lines as $line) {
+                if (!empty($line)) {
+                    $item_id_attribute = 0;
+                    count($array = explode('x', $line)) == 3 ? list($qty, $item_id, $item_id_attribute) = $array : list($qty, $item_id) = $array;
+                    if ($qty > 0) {
+                        if (Pack::isPack((int) $item_id)) {
+                            $this->errors[] = $this->trans('You can\'t add product packs into a pack', [], 'Admin.Catalog.Notification');
+                        } elseif (!Pack::addItem((int) $product->id, (int) $item_id, (int) $qty, (int) $item_id_attribute)) {
+                            $this->errors[] = $this->trans('An error occurred while attempting to add products to the pack.', [], 'Admin.Catalog.Notification');
                         }
                     }
                 }

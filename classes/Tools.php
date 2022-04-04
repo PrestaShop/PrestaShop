@@ -1869,7 +1869,7 @@ class ToolsCore
     /**
      * @param int|float $value
      * @param int|float $places
-     * @param int $mode
+     * @param int<2,5> $mode (PS_ROUND_HALF_UP|PS_ROUND_HALF_DOWN|PS_ROUND_HALF_EVEN|PS_ROUND_HALF_ODD)
      *
      * @return false|float
      */
