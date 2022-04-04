@@ -76,6 +76,7 @@ class StockManagementOptionHandler {
       displayQuantitiesRadio.attr('disabled', 'disabled');
     }
   }
+
   /**
   * If stock managament is disabled
   * then 'Display out-of-stock label on product listing pages' option must be No and disabled
