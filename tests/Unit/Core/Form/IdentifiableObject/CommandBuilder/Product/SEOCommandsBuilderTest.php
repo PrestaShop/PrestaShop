@@ -49,7 +49,7 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
         $builtCommands = $builder->buildCommands(
             $this->getProductId(),
             $formData,
-            $this->singleShopConstraint
+            $this->getSingleShopConstraint()
         );
         $this->assertEquals($expectedCommands, $builtCommands);
     }
@@ -211,7 +211,7 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
         $builtCommands = $builder->buildCommands(
             $this->getProductId(),
             $formData,
-            $this->singleShopConstraint
+            $this->getSingleShopConstraint()
         );
         $this->assertEquals($expectedCommands, $builtCommands);
     }
