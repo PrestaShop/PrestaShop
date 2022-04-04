@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductOptions;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
@@ -52,7 +53,10 @@ class UpdateOptionsFeatureContext extends AbstractProductFeatureContext
         $productId = $this->getSharedStorage()->get($productReference);
 
         try {
-            $command = new UpdateProductOptionsCommand($productId);
+            $command = new UpdateProductOptionsCommand(
+                $productId,
+                ShopConstraint::shop($this->getDefaultShopId())
+            );
             $this->fillCommand($data, $command);
             $this->getCommandBus()->handle($command);
         } catch (ProductException $e) {
@@ -71,7 +75,10 @@ class UpdateOptionsFeatureContext extends AbstractProductFeatureContext
         $nonExistingId = 50000;
 
         try {
-            $command = new UpdateProductOptionsCommand($this->getSharedStorage()->get($productReference));
+            $command = new UpdateProductOptionsCommand(
+                $this->getSharedStorage()->get($productReference),
+                ShopConstraint::shop($this->getDefaultShopId())
+            );
             $command->setManufacturerId($nonExistingId);
             $this->getCommandBus()->handle($command);
         } catch (ManufacturerException $e) {
