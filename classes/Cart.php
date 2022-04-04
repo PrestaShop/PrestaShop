@@ -956,13 +956,13 @@ class CartCore extends ObjectModel
             case Order::ROUND_ITEM:
             default:
                 $row['total'] = Tools::ps_round(
-                        $row['price_with_reduction_without_tax'],
-                        Context::getContext()->getComputingPrecision()
-                    ) * $productQuantity;
+                    $row['price_with_reduction_without_tax'],
+                    Context::getContext()->getComputingPrecision()
+                ) * $productQuantity;
                 $row['total_wt'] = Tools::ps_round(
-                        $row['price_with_reduction'],
-                        Context::getContext()->getComputingPrecision()
-                    ) * $productQuantity;
+                    $row['price_with_reduction'],
+                    Context::getContext()->getComputingPrecision()
+                ) * $productQuantity;
 
                 break;
         }
@@ -3129,7 +3129,8 @@ class CartCore extends ObjectModel
             uasort($array, ['Cart', 'sortDeliveryOptionList']);
         }
 
-        Hook::exec('actionFilterDeliveryOptionList',
+        Hook::exec(
+            'actionFilterDeliveryOptionList',
             [
                 'delivery_option_list' => &$delivery_option_list,
             ]
@@ -4466,18 +4467,6 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * If the carrier name is 0, use this function to replace it with the shop name.
-     *
-     * @param string $echo Text to use
-     *
-     * @return string
-     */
-    public static function replaceZeroByShopName($echo)
-    {
-        return $echo == '0' ? Carrier::getCarrierNameFromShopName() : $echo;
-    }
-
-    /**
      * Duplicate this Cart in the database.
      *
      * @return array|bool Duplicated cart, with success bool
@@ -4544,11 +4533,11 @@ class CartCore extends ObjectModel
 
         // Backward compatibility: if true set customizations quantity to 0, they will be updated in Cart::_updateCustomizationQuantity
         $new_customization_method = (int) Db::getInstance()->getValue(
-                '
+            '
             SELECT COUNT(`id_customization`) FROM `' . _DB_PREFIX_ . 'cart_product`
             WHERE `id_cart` = ' . (int) $this->id .
                 ' AND `id_customization` != 0'
-            ) > 0;
+        ) > 0;
 
         // Insert new customizations
         $custom_ids = [];
