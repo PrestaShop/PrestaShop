@@ -28,6 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult;
 
+/**
+ * Transfers product associated suppliers minimal data, only the list of suppliers IDs and the default one.
+ */
 class AssociatedSuppliers
 {
     /**
