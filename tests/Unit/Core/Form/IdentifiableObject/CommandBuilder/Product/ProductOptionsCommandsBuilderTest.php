@@ -191,7 +191,7 @@ class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTes
         $command->setCondition(ProductCondition::NEW);
         yield [
             [
-                'options' => [
+                'specifications' => [
                     'condition' => 'new',
                     self::MODIFY_ALL_NAME_PREFIX . 'condition' => true,
                 ],
@@ -203,7 +203,7 @@ class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTes
         $command->setShowCondition(false);
         yield [
             [
-                'options' => [
+                'specifications' => [
                     'not_handled' => 0,
                     'show_condition' => 0,
                     self::MODIFY_ALL_NAME_PREFIX . 'show_condition' => true,
