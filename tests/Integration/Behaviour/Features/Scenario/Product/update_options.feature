@@ -131,7 +131,7 @@ Feature: Update product options from Back Office (BO)
       | manufacturer        |       |
     And product "product1" should not be indexed
 
-  Scenario: I update a product's options for a product that sould be indexed
+  Scenario: I update a product's options for a product that should be indexed
     Given I add product "product1" with following information:
       | name[en-US] | Presta camera |
       | type        | standard      |
@@ -152,7 +152,9 @@ Feature: Update product options from Back Office (BO)
       | condition           | used         |
       | show_condition      | true         |
       | manufacturer        | studioDesign |
-    Then product "product1" should have following options:
+    When I enable product "product1"
+    Then product "product1" should be enabled
+    And product "product1" should have following options:
       | product option      | value        |
       | visibility          | search       |
       | available_for_order | false        |
@@ -161,6 +163,7 @@ Feature: Update product options from Back Office (BO)
       | condition           | used         |
       | show_condition      | true         |
       | manufacturer        | studioDesign |
+    And product "product1" should be indexed
 
   Scenario: I update a product's options for an indexable product when indexation feature is disabled
     Given I add product "product1" with following information:
