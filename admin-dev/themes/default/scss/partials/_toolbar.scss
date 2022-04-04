@@ -13,8 +13,10 @@
   transition: padding-left 0.5s ease-out;
 
   .mobile & {
-    top: $size-header-height + ($header-mobile-padding-y * 2);
+    top: 2.5rem;
+    padding-top: 1rem;
   }
+
   @media (max-width: breakpoint-max("md")) {
     padding: 0;
   }
