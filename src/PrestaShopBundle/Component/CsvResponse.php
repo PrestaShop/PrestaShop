@@ -178,7 +178,7 @@ class CsvResponse extends StreamedResponse
      */
     public function setExportHeader($exportHeader)
     {
-        $this->exportHeader = (boolean) $exportHeader;
+        $this->exportHeader = $exportHeader;
 
         return $this;
     }
