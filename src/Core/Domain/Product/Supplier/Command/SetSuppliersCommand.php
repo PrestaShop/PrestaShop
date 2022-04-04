@@ -32,6 +32,15 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
+/**
+ * This command is used to set (or assign) suppliers to a product It is used for both product with or without
+ * combinations and only defines the association not the content themselves. To update contents you need to use
+ * UpdateProductSuppliersCommand or UpdateCombinationSuppliersCommand one you have correctly set the associations
+ * with this command.
+ *
+ * When no default supplier was associated this command will automatically use the first provided one, however
+ * to change it to your need you can use SetProductDefaultSupplierCommand.
+ */
 class SetSuppliersCommand
 {
     /**
