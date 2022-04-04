@@ -36,12 +36,12 @@ if (
         __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'var'.DIRECTORY_SEPARATOR.'cache'
     )
 ) {
-    require_once dirname(__FILE__).'/missing_requirement.php';
+    require_once __DIR__.'/missing_requirement.php';
     exit();
 }
 /** @phpstan-ignore-next-line */
-require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'init.php';
-require_once(__DIR__).DIRECTORY_SEPARATOR.'autoload.php';
+require_once __DIR__.DIRECTORY_SEPARATOR.'init.php';
+require_once __DIR__.DIRECTORY_SEPARATOR.'autoload.php';
 
 try {
     if (_PS_MODE_DEV_) {

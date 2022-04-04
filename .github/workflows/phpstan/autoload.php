@@ -11,7 +11,6 @@ define('_PS_ADMIN_DIR_', _PS_ROOT_DIR_ . '/admin-dev/');
 define('PS_ADMIN_DIR', _PS_ADMIN_DIR_);
 
 require_once _PS_ROOT_DIR_ . '/config/defines.inc.php';
-require_once _PS_ROOT_DIR_ . '/config/autoload.php';
 require_once _PS_ROOT_DIR_ . '/config/bootstrap.php';
 require_once _PS_ROOT_DIR_ . '/install-dev/classes/exception.php';
 require_once _PS_ROOT_DIR_ . '/install-dev/classes/session.php';
@@ -151,27 +150,6 @@ foreach ($constantsToDefine as $key => $value) {
             default:
                 define($key, 'DUMMY_VALUE');
                 break;
-        }
-    }
-}
-
-/*
- * At this time if _PS_VERSION_ is still undefined, this is likely because
- * - we are on a old PrestaShop (below 1.7.0.0),
- * - the shop hasn't been installed yet.
- *
- * In that case, the constant can be set from another one in the installation folder.
- */
-if (!defined('_PS_VERSION_')) {
-    $legacyInstallationFileDefiningConstant = [
-        '/install-dev/install_version.php',
-        '/install/install_version.php',
-    ];
-    foreach ($legacyInstallationFileDefiningConstant as $file) {
-        if (file_exists(_PS_ROOT_DIR_ . $file)) {
-            require_once _PS_ROOT_DIR_ . $file;
-            define('_PS_VERSION_', _PS_INSTALL_VERSION_);
-            break;
         }
     }
 }

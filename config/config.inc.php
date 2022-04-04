@@ -26,14 +26,14 @@
 
 use PrestaShop\PrestaShop\Core\Session\SessionHandler;
 
+require_once __DIR__ . '/../vendor/autoload.php';
+
 /* Custom defines made by users */
 if (is_file(__DIR__ . '/defines_custom.inc.php')) {
     include_once __DIR__ . '/defines_custom.inc.php';
 }
 
 require_once __DIR__ . '/defines.inc.php';
-
-require_once _PS_CONFIG_DIR_ . 'autoload.php';
 
 $start_time = microtime(true);
 
@@ -54,7 +54,7 @@ if (!file_exists(_PS_ROOT_DIR_ . '/app/config/parameters.yml') && !file_exists(_
     Tools::redirectToInstall();
 }
 
-require_once __DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php';
+require_once __DIR__ . '/bootstrap.php';
 
 if (defined('_PS_CREATION_DATE_')) {
     $creationDate = _PS_CREATION_DATE_;

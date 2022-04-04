@@ -52,19 +52,17 @@ if (!defined('_PS_MODE_DEMO_')) {
     define('_PS_MODE_DEMO_', false);
 }
 
-$currentDir = dirname(__FILE__);
-
 if (!defined('_PS_ROOT_DIR_') && (getenv('_PS_ROOT_DIR_') || getenv('REDIRECT__PS_ROOT_DIR_'))) {
     define('_PS_ROOT_DIR_', getenv('_PS_ROOT_DIR_') ? getenv('_PS_ROOT_DIR_') : getenv('REDIRECT__PS_ROOT_DIR_'));
 }
 
 /* Directories */
 if (!defined('_PS_ROOT_DIR_')) {
-    define('_PS_ROOT_DIR_', realpath($currentDir.'/..'));
+    define('_PS_ROOT_DIR_', dirname(__DIR__));
 }
 
 if (!defined('_PS_CORE_DIR_')) {
-    define('_PS_CORE_DIR_', realpath($currentDir.'/..'));
+    define('_PS_CORE_DIR_', dirname(__DIR__));
 }
 
 define('_PS_ALL_THEMES_DIR_', _PS_ROOT_DIR_.'/themes/');

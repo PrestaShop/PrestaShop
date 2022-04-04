@@ -177,6 +177,9 @@
         "classmap": [
             "app/AppKernel.php",
             "app/AppCache.php"
+        ],
+        "files": [
+            "config/autoload.php"
         ]
     },
     "autoload-dev": {
