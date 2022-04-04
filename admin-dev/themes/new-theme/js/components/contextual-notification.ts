@@ -65,6 +65,13 @@ class ContextualNotification {
     $element.setAttribute('data-notification-key', key);
     $element.innerHTML = `${message}<button type="button" class="close" data-dismiss="alert">&times;</button>`;
 
+    const notificationBoxId = document.getElementById(ComponentsMap.contextualNotification.notificationBoxId);
+
+    if (notificationBoxId instanceof HTMLElement) {
+      notificationBoxId.append($element);
+      return;
+    }
+
     const contentMessageBox = document.getElementById(ComponentsMap.contextualNotification.messageBoxId);
 
     if (contentMessageBox instanceof HTMLElement) {
