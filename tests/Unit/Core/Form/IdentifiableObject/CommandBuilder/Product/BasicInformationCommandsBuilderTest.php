@@ -45,7 +45,7 @@ class BasicInformationCommandsBuilderTest extends AbstractProductCommandBuilderT
     public function testBuildCommand(array $formData, array $expectedCommands)
     {
         $builder = new BasicInformationCommandsBuilder(self::MULTI_SHOP_PREFIX);
-        $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->singleShopConstraint);
+        $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 
@@ -122,7 +122,7 @@ class BasicInformationCommandsBuilderTest extends AbstractProductCommandBuilderT
     public function testBuildCommandMultiShop(array $formData, array $expectedCommands): void
     {
         $builder = new BasicInformationCommandsBuilder(self::MULTI_SHOP_PREFIX);
-        $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->singleShopConstraint);
+        $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 
