@@ -613,6 +613,10 @@ class ProductLazyArray extends AbstractLazyArray
             return false;
         }
 
+        if (!$this->configuration->getBoolean('PS_STOCK_MANAGEMENT')) {
+            return false;
+        }
+
         // Displayed only if the order of out of stock product is denied.
         if ($product['out_of_stock'] == OutOfStockType::OUT_OF_STOCK_AVAILABLE
             || (
