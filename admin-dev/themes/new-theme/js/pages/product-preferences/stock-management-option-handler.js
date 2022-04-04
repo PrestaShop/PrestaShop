@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const { $ } = window;
+const {$} = window;
 
 class StockManagementOptionHandler {
   constructor() {
@@ -85,7 +85,6 @@ class StockManagementOptionHandler {
   */
   handleDisplayOutOfStockLabelOption(isStockManagementEnabled) {
     const displayLabelRadio = $('input[name="stock[oos_show_label_listing_pages]"]');
-    console.log(isStockManagementEnabled);
     if (isStockManagementEnabled) {
       displayLabelRadio.removeAttr('disabled');
     } else {
