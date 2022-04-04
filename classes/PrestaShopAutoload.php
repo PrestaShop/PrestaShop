@@ -57,11 +57,11 @@ class PrestaShopAutoload
 
     protected function __construct()
     {
-        $this->root_dir = _PS_CORE_DIR_ . '/';
+        $this->root_dir = dirname(__DIR__);
         $file = static::getCacheFileIndex();
         $stubFile = static::getStubFileIndex();
         if (@filemtime($file) && is_readable($file) && @filemtime($stubFile) && is_readable($stubFile)) {
-            $this->index = include $file;
+            $this->index = require $file;
         } else {
             $this->generateIndex();
         }
@@ -82,13 +82,23 @@ class PrestaShopAutoload
     }
 
     /**
+     * Get cache directory.
+     *
+     * @return string
+     */
+    protected static function getCacheDir()
+    {
+        return dirname(__DIR__) . '/cache';
+    }
+
+    /**
      * Get Class index cache file.
      *
      * @return string
      */
     public static function getCacheFileIndex()
     {
-        return _PS_CACHE_DIR_ . 'class_index.php';
+        return static::getCacheDir() . '/class_index.php';
     }
 
     /**
@@ -98,7 +108,7 @@ class PrestaShopAutoload
      */
     public static function getNamespacedStubFileIndex()
     {
-        return _PS_CACHE_DIR_ . 'namespaced_class_stub.php';
+        return static::getCacheDir() . '/namespaced_class_stub.php';
     }
 
     /**
@@ -108,7 +118,7 @@ class PrestaShopAutoload
      */
     public static function getStubFileIndex()
     {
-        return _PS_CACHE_DIR_ . 'class_stub.php';
+        return static::getCacheDir() . '/class_stub.php';
     }
 
     /**
@@ -124,20 +134,17 @@ class PrestaShopAutoload
         }
 
         // regenerate the class index if the requested file doesn't exists
-        if ((isset($this->index[$className]) && $this->index[$className]['path'] && !is_file($this->root_dir . $this->index[$className]['path']))
-            || (isset($this->index[$className . 'Core']) && $this->index[$className . 'Core']['path'] && !is_file($this->root_dir . $this->index[$className . 'Core']['path']))
+        if ((isset($this->index[$className]) && $this->index[$className]['path'] && !is_file($this->root_dir . '/' . $this->index[$className]['path']))
+            || (isset($this->index[$className . 'Core']) && $this->index[$className . 'Core']['path'] && !is_file($this->root_dir . '/' . $this->index[$className . 'Core']['path']))
             || !file_exists(static::getNamespacedStubFileIndex())) {
             $this->generateIndex();
         }
 
         // If $classname has not core suffix (E.g. Shop, Product)
         if (substr($className, -4) != 'Core' && !class_exists($className, false)) {
-            $classDir = (isset($this->index[$className]['override'])
-                && $this->index[$className]['override'] === true) ? $this->normalizeDirectory(_PS_ROOT_DIR_) : $this->root_dir;
-
             // If requested class does not exist, load associated core class
             if (isset($this->index[$className]) && !$this->index[$className]['path']) {
-                require_once $classDir . $this->index[$className . 'Core']['path'];
+                require_once $this->root_dir . '/' . $this->index[$className . 'Core']['path'];
 
                 if ($this->index[$className . 'Core']['type'] != 'interface') {
                     eval($this->index[$className . 'Core']['type'] . ' ' . $className . ' extends ' . $className . 'Core {}');
@@ -145,16 +152,16 @@ class PrestaShopAutoload
             } else {
                 // request a non Core Class load the associated Core class if exists
                 if (isset($this->index[$className . 'Core'])) {
-                    require_once $this->root_dir . $this->index[$className . 'Core']['path'];
+                    require_once $this->root_dir . '/' . $this->index[$className . 'Core']['path'];
                 }
 
                 if (isset($this->index[$className])) {
-                    require_once $classDir . $this->index[$className]['path'];
+                    require_once $this->root_dir . '/' . $this->index[$className]['path'];
                 }
             }
         } elseif (isset($this->index[$className]['path']) && $this->index[$className]['path']) {
             // Call directly ProductCore, ShopCore class
-            require_once $this->root_dir . $this->index[$className]['path'];
+            require_once $this->root_dir . '/' . $this->index[$className]['path'];
         }
         if (strpos($className, 'PrestaShop\PrestaShop\Adapter\Entity') !== false) {
             require_once static::getNamespacedStubFileIndex();
@@ -222,7 +229,7 @@ class PrestaShopAutoload
 
         // Write classes index on disc to cache it
         $filename = static::getCacheFileIndex();
-        @mkdir(_PS_CACHE_DIR_, 0777, true);
+        @mkdir(static::getCacheDir(), 0777, true);
 
         if (!$this->dumpFile($filename, $content)) {
             Tools::error_log('Cannot write temporary file ' . $filename);
@@ -275,18 +282,17 @@ class PrestaShopAutoload
      */
     protected function getClassesFromDir($path)
     {
-        $rootDir = $this->root_dir;
-        if (!is_dir($rootDir . $path)) {
+        if (!is_dir($this->root_dir . '/' . $path)) {
             return [];
         }
 
         $classes = [];
-        foreach (scandir($rootDir . $path, SCANDIR_SORT_NONE) as $file) {
+        foreach (scandir($this->root_dir . '/' . $path, SCANDIR_SORT_NONE) as $file) {
             if ($file[0] != '.') {
-                if (is_dir($rootDir . $path . $file)) {
-                    $classes = array_merge($classes, $this->getClassesFromDir($path . $file . '/'));
+                if (is_dir($this->root_dir . '/' . $path . '/' . $file)) {
+                    $classes = array_merge($classes, $this->getClassesFromDir($path . '/' . $file . '/'));
                 } elseif (substr($file, -4) == '.php') {
-                    $content = file_get_contents($rootDir . $path . $file);
+                    $content = file_get_contents($this->root_dir . '/' . $path . '/' . $file);
 
                     $namePattern = '[a-z_\x7f-\xff][a-z0-9_\x7f-\xff]*';
                     $nameWithNsPattern = '(?:\\\\?(?:' . $namePattern . '\\\\)*' . $namePattern . ')';
@@ -305,7 +311,7 @@ class PrestaShopAutoload
 
                     if (!$usesNamespace && preg_match($pattern, $content, $m)) {
                         $classes[$m['classname']] = [
-                            'path' => $path . $file,
+                            'path' => $path . '/' . $file,
                             'type' => trim($m[1]),
                             'override' => false,
                         ];
@@ -333,18 +339,6 @@ class PrestaShopAutoload
     public function getClassPath($classname)
     {
         return (isset($this->index[$classname]['path'])) ? $this->index[$classname]['path'] : null;
-    }
-
-    /**
-     * Normalize directory.
-     *
-     * @param string $directory
-     *
-     * @return string
-     */
-    private function normalizeDirectory($directory)
-    {
-        return rtrim($directory, '/\\') . DIRECTORY_SEPARATOR;
     }
 }
 
