@@ -1372,10 +1372,6 @@ class ProductCore extends ObjectModel
             $categories = [$categories];
         }
 
-        if (!count($categories)) {
-            return false;
-        }
-
         $categories = array_map('intval', $categories);
 
         $current_categories = $this->getCategories();
