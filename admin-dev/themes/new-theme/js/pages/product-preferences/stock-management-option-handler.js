@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const {$} = window;
+const { $ } = window;
 
 class StockManagementOptionHandler {
   constructor() {
@@ -38,6 +38,7 @@ class StockManagementOptionHandler {
 
     this.handleAllowOrderingOutOfStockOption(isStockManagementEnabled);
     this.handleDisplayAvailableQuantitiesOption(isStockManagementEnabled);
+    this.handleDisplayOutOfStockLabelOption(isStockManagementEnabled);
   }
 
   /**
@@ -73,6 +74,23 @@ class StockManagementOptionHandler {
     } else {
       displayQuantitiesRadio.val([0]);
       displayQuantitiesRadio.attr('disabled', 'disabled');
+    }
+  }
+  /**
+  * If stock managament is disabled
+  * then 'Display out-of-stock label on product listing pages' option must be No and disabled
+  * otherwise it should be enabled
+  *
+  * @param {int} isStockManagementEnabled
+  */
+  handleDisplayOutOfStockLabelOption(isStockManagementEnabled) {
+    const displayLabelRadio = $('input[name="stock[oos_show_label_listing_pages]"]');
+    console.log(isStockManagementEnabled);
+    if (isStockManagementEnabled) {
+      displayLabelRadio.removeAttr('disabled');
+    } else {
+      displayLabelRadio.val([0]);
+      displayLabelRadio.attr('disabled', 'disabled');
     }
   }
 }
