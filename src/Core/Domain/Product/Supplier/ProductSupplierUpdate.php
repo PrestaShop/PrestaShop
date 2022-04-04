@@ -32,7 +32,8 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\SupplierAssociationInterface;
 
 /**
- * Transfers data of product supplier
+ * This class is a DTO containing the elements for a supplier's update, it is used in commands
+ * related to updating product suppliers.
  */
 class ProductSupplierUpdate
 {
