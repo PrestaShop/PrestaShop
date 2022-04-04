@@ -575,7 +575,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
     /**
      * @param ProductForEditing $productForEditing
      *
-     * @return array<string, array<int|string, array<int|string, int|string|null>|int>>
+     * @return array{suppliers: array{default_supplier_id: int, supplier_ids: int[]}, product_suppliers: array<int, array{supplier_id: int, supplier_name: string, product_supplier_id: int, price_tax_excluded: string, reference: string, currency_id: int, combination_id: int}>}
      */
     private function extractSuppliersData(ProductForEditing $productForEditing): array
     {
