@@ -28,26 +28,27 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Options;
 
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareTypeTrait;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class ProductSupplierCollectionType extends CollectionType
 {
-    use TranslatorAwareTypeTrait;
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
 
-    public function __construct(TranslatorInterface $translator, array $locales)
+    public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;
-        $this->locales = $locales;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([
-            'label' => $this->trans('Supplier reference(s)', 'Admin.Catalog.Feature'),
+            'label' => $this->translator->trans('Supplier reference(s)', [], 'Admin.Catalog.Feature'),
             'label_tag_name' => 'h4',
             'entry_type' => ProductSupplierType::class,
             'allow_add' => true,
@@ -56,12 +57,12 @@ class ProductSupplierCollectionType extends CollectionType
             'attr' => [
                 'class' => 'product-suppliers-collection',
             ],
-            'alert_message' => $this->trans(
+            'alert_message' => $this->translator->trans(
                 'You can specify product reference(s) for each associated supplier. Click "%save_label%" after changing selected suppliers to display the associated product references.',
-                'Admin.Catalog.Help',
                 [
-                    '%save_label%' => $this->trans('Save', 'Admin.Actions'),
-                ]
+                    '%save_label%' => $this->translator->trans('Save', [], 'Admin.Actions'),
+                ],
+                'Admin.Catalog.Help'
             ),
             'alert_position' => 'prepend',
             'block_prefix' => 'product_supplier_collection',

@@ -1638,11 +1638,9 @@ services:
 
   form.type.sell.product.options.product_supplier_collection_type:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\Options\ProductSupplierCollectionType'
-    parent: 'form.type.translatable.aware'
     public: true
     arguments:
       - "@translator"
-      - "@=service('prestashop.adapter.legacy.context').getLanguages()"
     tags:
       - { name: form.type }
 
