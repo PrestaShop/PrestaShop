@@ -31,8 +31,9 @@ use PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkDeleteStoreCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkUpdateStoreStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\DeleteStoreCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\ToggleStoreStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStoreForDeleting;
+use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStoreForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStoreForDeleting;
 use RuntimeException;
 use Store;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -183,7 +184,7 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
             if ($isToBePresent) {
                 throw new RuntimeException(sprintf('Store "%s" is present, but it was expected to be deleted', $storeReference));
             }
-            //SharedStorage::getStorage()->clear($stateReference);
+            SharedStorage::getStorage()->clear($storeReference);
         }
     }
 
