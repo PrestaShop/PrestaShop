@@ -800,12 +800,14 @@ class CategoryController extends FrameworkBundleAdminController
             $children = $this->formatCategoriesTreeForPresentation($categoryForTree->getChildren(), $langId);
 
             $names = $categoryForTree->getLocalizedNames();
+            $breadcrumbs = $categoryForTree->getLocalizedBreadcrumbs();
             $active = $categoryForTree->getActive();
             $formattedCategories[] = [
                 'id' => $categoryForTree->getCategoryId(),
                 'active' => $active,
                 'name' => $names[$langId] ?? reset($names),
                 'children' => $children,
+                'breadcrumb' => implode(' > ', $breadcrumbs[$langId] ?? reset($breadcrumbs)),
             ];
         }
 
