@@ -28,7 +28,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
     /** @var WebserviceOutputBuilder */
     protected $objOutput;
 
-    /** @var ApiNode */
+    /** @var ApiNode|null */
     protected $output;
 
     /** @var WebserviceRequest */
@@ -168,7 +168,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 return file_get_contents($this->imgToDisplay);
             }
         }
-
+        
         return '';
     }
 
@@ -577,7 +577,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
         }
 
         // in case of declinated images list of a product is get
-        if (!empty($this->output)) {
+        if (isset($this->output)) {
             return true;
         } elseif (isset($image_size) && $image_size != '' && isset($image_id)) {
             // If a size was given try to display it
