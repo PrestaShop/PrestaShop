@@ -32,8 +32,8 @@ use PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkUpdateStoreStatusCommand
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\DeleteStoreCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\ToggleStoreStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStoreForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStoreForDeleting;
+use PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStoreForEditing;
 use RuntimeException;
 use Store;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
@@ -109,7 +109,7 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
 
         try {
             $this->getCommandBus()->handle(new BulkDeleteStoreCommand($storeIds));
-        } catch (StateNotFoundException $e) {
+        } catch (StoreNotFoundException $e) {
             $this->setLastException($e);
         }
     }
@@ -193,7 +193,7 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
      *
      * @param string $storeReferences
      */
-    public function assertLastErrorStateNotFound(string $storeReferences): void
+    public function assertLastErrorStoreNotFound(string $storeReferences): void
     {
         foreach (PrimitiveUtils::castStringArrayIntoArray($storeReferences) as $storeReference) {
             $this->assertLastErrorIs(StoreNotFoundException::class);
