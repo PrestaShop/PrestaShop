@@ -72,7 +72,7 @@ Feature: Update product shipping information from Back Office (BO) for multiple 
       | delivery time in stock notes[fr-FR]     | produit en stock            |
       | delivery time out of stock notes[en-US] | product out of stock        |
       | delivery time out of stock notes[fr-FR] | produit en rupture de stock |
-#   @todo: carriers doesn't seem to be copied. Is that expected?
+      | carriers                                | [carrier1,carrier2]         |
     And product product1 is not associated to shop shop3
     And product product1 is not associated to shop shop4
 
