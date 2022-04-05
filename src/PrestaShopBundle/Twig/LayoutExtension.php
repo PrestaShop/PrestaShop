@@ -213,7 +213,12 @@ EOF;
             $useRegularH1Structure
         );
 
-        //test if legacy template from "content.tpl" has '{$content}'
+        // There is nothing to display no legacy layout are generated
+        if ($layout === '') {
+            return '';
+        }
+
+        // Test if legacy template from "content.tpl" has '{$content}'
         if (false === strpos($layout, '{$content}')) {
             throw new Exception('PrestaShopBundle\Twig\LayoutExtension cannot find the {$content} string in legacy layout template', 1);
         }
@@ -236,7 +241,15 @@ EOF;
 
     private function escapeSmarty(string $template): string
     {
-        return '{{ \'' . addslashes($template) . '\' | raw }}';
+        // Hard limit of twig filter at 8191 characters (2^13 - 1)
+        // Split the string in multiple chunks
+        $strings = str_split($template, 2000);
+        $return = '';
+        foreach ($strings as $string) {
+            $return .= '{{ \'' . addcslashes($string, "\\'\0") . '\' | raw }}';
+        }
+
+        return $return;
     }
 
     /**
