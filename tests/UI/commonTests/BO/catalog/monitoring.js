@@ -24,7 +24,7 @@ let page;
  * @param baseContext {string} String to identify the test
  */
 function bulkDeleteProductsTest(tableID, baseContext = `commonTests-bulkDelete${tableID}Test`) {
-  describe(`'POST-TEST: Bulk delete products from '${tableID}' table`, async () => {
+  describe(`POST-TEST: Bulk delete products from '${tableID}' table`, async () => {
     // before and after functions
     before(async function () {
       browserContext = await helper.createBrowserContext(this.browser);

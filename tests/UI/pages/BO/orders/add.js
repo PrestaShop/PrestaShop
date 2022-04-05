@@ -19,6 +19,7 @@ class AddOrder extends BOBasePage {
 
     this.pageTitle = 'Create order •';
     this.noCustomerFoundText = 'No customers found';
+    this.noProductFoundText = 'No products found';
 
     // Iframe
     this.iframe = 'iframe.fancybox-iframe';
@@ -57,13 +58,10 @@ class AddOrder extends BOBasePage {
 
     // Cart selectors
     this.cartBlock = '#cart-block';
-    this.productSearchInput = '#product-search';
-    this.addProductToCartForm = '#js-add-product-form';
-    this.productResultsSelect = '#product-select';
-    this.productQuantityInput = '#quantity-input';
-    this.addtoCartButton = '#add-product-to-cart-btn';
-    this.productsTable = '#products-table';
     this.ordersTab = '#customer-orders-tab';
+    this.cartErrorBlock = '#js-cart-error-block';
+
+    // Orders table selectors
     this.customerOrdersTable = '#customer-orders-table';
     this.customerOrdersTableBody = `${this.customerOrdersTable} tbody`;
     this.customerOrdersTableRows = `${this.customerOrdersTableBody} tr`;
@@ -71,6 +69,30 @@ class AddOrder extends BOBasePage {
     this.customerOrdersTableColumn = (column, row) => `${this.customerOrdersTableRow(row)} td.js-order-${column}`;
     this.orderDetailsButton = row => `${this.customerOrdersTableRow(row)} td a.js-order-details-btn`;
     this.orderUseButton = row => `${this.customerOrdersTableRow(row)} td button.js-use-order-btn`;
+
+    // Cart selectors
+    this.productSearchInput = '#product-search';
+    this.noProductFoundAlert = `${this.cartBlock} .js-no-products-found`;
+    this.addProductToCartForm = '#js-add-product-form';
+    this.productResultsSelect = '#product-select';
+    this.productQuantityInput = '#quantity-input';
+    this.productCustomInput = '.js-product-custom-input';
+    this.currencySelect = '#js-cart-currency-select';
+    this.languageSelect = '#js-cart-language-select';
+    this.addtoCartButton = '#add-product-to-cart-btn';
+    /* Products table selectors */
+    this.productsTable = '#products-table';
+    this.productsTableBody = `${this.productsTable} tbody`;
+    this.productsTableRows = `${this.productsTableBody} tr`;
+    this.productsTableRow = row => `${this.productsTableRows}:nth-child(${row})`;
+    this.productsTableColumn = (column, row) => `${this.productsTableRow(row)} td.js-product-${column}`;
+    this.productTableQuantityColumn = row => `${this.productsTableRow(row)} td input.js-product-qty-input`;
+    this.productTableImageColumn = row => `${this.productsTableRow(row)} td img.js-product-image`;
+    this.productTableQuantityStockColumn = row => `${this.productsTableRow(row)} td span.js-product-qty-stock`;
+    this.productTableColumnRemoveButton = row => `${this.productsTableRow(row)} td button.js-product-remove-btn`;
+
+    // Vouchers block selectors
+    this.cartRulesTable = '#cart-rules-table';
 
     // Addresses form selectors
     this.deliveryAddressSelect = '#delivery-address-select';
@@ -270,29 +292,7 @@ class AddOrder extends BOBasePage {
     return this.elementVisible(page, this.productsTable, 1000);
   }
 
-  /* Cart methods */
-
-  /**
-   * Add product to cart
-   * @param page {Page} Browser tab
-   * @param product {ProductData} Product data to search with
-   * @param quantity {number} Product quantity to add to the cart
-   * @returns {Promise<void>}
-   */
-  async addProductToCart(page, product, quantity) {
-    // Search product
-    await this.setValue(page, this.productSearchInput, product.name);
-    await this.waitForVisibleSelector(page, this.addProductToCartForm);
-
-    // Fill add product form
-    await this.selectByVisibleText(page, this.productResultsSelect, product.name);
-    await this.setValue(page, this.productQuantityInput, quantity.toString());
-
-    // Add to cart
-    await page.click(this.addtoCartButton);
-
-    await this.waitForVisibleSelector(page, this.productsTable);
-  }
+  /* Carts & Orders methods */
 
   /**
    * Click on orders tab
@@ -330,7 +330,7 @@ class AddOrder extends BOBasePage {
   /**
    * Click on order details button
    * @param page {Page} Browser tab
-   * @row {number} Column row in orders table
+   * @param row {number} Column row in orders table
    * @returns {Promise<boolean>}
    */
   async clickOnOrderDetailsButton(page, row = 1) {
@@ -350,6 +350,17 @@ class AddOrder extends BOBasePage {
   }
 
   /**
+   * Close order iframe
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async closeOrderIframe(page) {
+    await this.waitForSelectorAndClick(page, this.closeIframe);
+
+    return this.elementNotVisible(page, this.iframe, 3000);
+  }
+
+  /**
    * Click on order use button
    * @param page {Page} Browser tab
    * @param row {number} Row in orders table
@@ -359,6 +370,168 @@ class AddOrder extends BOBasePage {
     await this.waitForSelectorAndClick(page, this.orderUseButton(row));
 
     return this.elementVisible(page, this.productsTable, 1000);
+  }
+
+  /* Cart methods */
+
+  /**
+   * Search a product and get error alert
+   * @param page {Page} Browser tab
+   * @param productName {string} Product name to search
+   * @returns {Promise<string>}
+   */
+  async searchProductAndGetAlert(page, productName) {
+    await this.setValue(page, this.productSearchInput, productName);
+
+    return this.getTextContent(page, this.noProductFoundAlert);
+  }
+
+  /**
+   * Add product to cart and get alert
+   * @param page {Page} Browser tab
+   * @param productToSearch {string} Product name to search with
+   * @param productToSelect {string} Product name to select
+   * @param quantity {number} Product quantity to add to the cart
+   * @returns {Promise<string>}
+   */
+  async AddProductToCartAndGetAlert(page, productToSearch, productToSelect, quantity = 1) {
+    // Search product
+    await this.setValue(page, this.productSearchInput, productToSearch);
+    await this.waitForVisibleSelector(page, this.addProductToCartForm);
+
+    // Fill add product form
+    await this.selectByVisibleText(page, this.productResultsSelect, productToSelect);
+    await this.setValue(page, this.productQuantityInput, quantity);
+
+    // Add to cart
+    await page.click(this.addtoCartButton);
+
+    // Return error message
+    return this.getTextContent(page, this.cartErrorBlock);
+  }
+
+  /**
+   * Add quantity and add product to cart
+   * @param page {Page} Browser tab
+   * @param quantity {number} Product quantity to add to the cart
+   * @param row {number} Row on products table
+   * @returns {Promise<void>}
+   */
+  async addProductQuantity(page, quantity, row) {
+    await this.setValue(page, this.productTableQuantityColumn(row), quantity);
+
+    await page.click(this.productsTableColumn('total-price', row));
+
+    await page.waitForTimeout(2000);
+  }
+
+  /**
+   * Add product to cart
+   * @param page {Page} Browser tab
+   * @param productToSearch {object} Product data to search with
+   * @param productToSelect {string} Product name to select
+   * @param quantity {number} Product quantity to add to the cart
+   * @returns {Promise<void>}
+   */
+  async addProductToCart(page, productToSearch, productToSelect, quantity = 1) {
+    // Search product
+    await this.setValue(page, this.productSearchInput, productToSearch.name);
+    await this.waitForVisibleSelector(page, this.addProductToCartForm);
+
+    // Fill add product form
+    await this.selectByVisibleText(page, this.productResultsSelect, productToSelect);
+    if (await this.elementVisible(page, this.productCustomInput, 1000)) {
+      await this.setValue(page, this.productCustomInput, productToSearch.customizedValue);
+    }
+    await this.setValue(page, this.productQuantityInput, quantity);
+
+    // Add to cart
+    await page.click(this.addtoCartButton);
+
+    await page.waitForTimeout(500);
+    await this.waitForVisibleSelector(page, this.productsTable);
+  }
+
+  /**
+   * Get product details from table
+   * @param page {Page} Browser tab
+   * @param row {number} Row on product table
+   * @returns {Promise<{reference: string, image: string, quantityMax: number, price: number, description: string,
+   * quantityMin: number}>}
+   */
+  async getProductDetailsFromTable(page, row = 1) {
+    return {
+      image: await this.getAttributeContent(page, this.productTableImageColumn(row), 'src'),
+      description: await this.getTextContent(page, this.productsTableColumn('definition-td', row)),
+      reference: await this.getTextContent(page, this.productsTableColumn('ref', row)),
+      quantityMin: parseInt(await this.getAttributeContent(page, this.productTableQuantityColumn(row), 'min'), 10),
+      quantityMax: parseInt(await this.getTextContent(page, this.productTableQuantityStockColumn(row)), 10),
+      price: parseFloat(await this.getTextContent(page, this.productsTableColumn('total-price', row))),
+    };
+  }
+
+  /**
+   * Get product gift details from table
+   * @param page {Page} Browser tab
+   * @param row {number} Row on product table
+   * @returns {Promise<{reference: string, image: string, quantity: number, price: string, description: string,
+   * basePrice: string}>}
+   */
+  async getProductGiftDetailsFromTable(page, row = 1) {
+    return {
+      image: await this.getAttributeContent(page, `${this.productsTableRow(row)} td img.js-product-image`, 'src'),
+      description: await this.getTextContent(page, this.productsTableColumn('definition-td', row)),
+      reference: await this.getTextContent(page, this.productsTableColumn('ref', row)),
+      basePrice: await this.getTextContent(page, `${this.productsTableRow(row)} td:nth-child(4)`),
+      quantity: parseInt(await this.getTextContent(page, `${this.productsTableColumn('gift-qty', row)}`), 10),
+      price: await this.getTextContent(page, this.productsTableColumn('total-price', row)),
+    };
+  }
+
+  /**
+   * Remove product
+   * @param page {Page} Browser tab
+   * @param row {number} Row on product table
+   * @returns {Promise<boolean>}
+   */
+  async removeProduct(page, row = 1) {
+    await this.waitForSelectorAndClick(page, this.productTableColumnRemoveButton(row));
+
+    return this.elementNotVisible(page, this.productsTableColumn('total-price', row), 2000);
+  }
+
+  /**
+   * Is product not visible in the cart
+   * @param page {Page} Browser tab
+   * @param row {number} Row on cart table
+   * @returns {Promise<boolean>}
+   */
+  async isProductNotVisibleInCart(page, row) {
+    return this.elementNotVisible(page, this.productsTableColumn('definition-td', row), 2000);
+  }
+
+  /**
+   * Select another currency
+   * @param page {Page} Browser tab
+   * @param currency {string} Currency to select
+   * @returns {Promise<void>}
+   */
+  async selectAnotherCurrency(page, currency) {
+    await this.selectByVisibleText(page, this.currencySelect, currency);
+
+    await page.waitForTimeout(2000);
+  }
+
+  /**
+   * Select another language
+   * @param page {Page} Browser tab
+   * @param language {string} Language to select
+   * @returns {Promise<void>}
+   */
+  async selectAnotherLanguage(page, language) {
+    await this.selectByVisibleText(page, this.languageSelect, language);
+
+    await page.waitForTimeout(2000);
   }
 
   /* Addresses methods */
@@ -386,7 +559,10 @@ class AddOrder extends BOBasePage {
    */
   async setDeliveryOption(page, deliveryOptionName, isFreeShipping = false) {
     await this.selectByVisibleText(page, this.deliveryOptionSelect, deliveryOptionName);
-    await this.setChecked(page, this.freeShippingToggleInput(isFreeShipping ? 1 : 0));
+    await page.$eval(this.freeShippingToggleInput(isFreeShipping ? 1 : 0), el => el.click());
+    if (isFreeShipping) {
+      await this.waitForVisibleSelector(page, this.cartRulesTable);
+    }
   }
 
   /**
@@ -417,6 +593,7 @@ class AddOrder extends BOBasePage {
   }
 
   /* Summary methods */
+
   /**
    * Set payment method
    * @param page {Page} Browser tab
@@ -481,7 +658,8 @@ class AddOrder extends BOBasePage {
 
     // Add products to carts
     for (let i = 0; i < orderToMake.products.length; i++) {
-      await this.addProductToCart(page, orderToMake.products[i].value, orderToMake.products[i].quantity);
+      await this.addProductToCart(
+        page, orderToMake.products[i].value, orderToMake.products[i].value.name, orderToMake.products[i].quantity);
     }
 
     // Choose address
