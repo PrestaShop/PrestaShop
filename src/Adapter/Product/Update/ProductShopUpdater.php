@@ -92,6 +92,7 @@ class ProductShopUpdater
         );
 
         $this->copyStockToShop($productId, $sourceShopId, $targetShopId);
+        $this->copyCarriersToShop($sourceProduct, $targetShopId);
     }
 
     private function copyStockToShop(ProductId $productId, ShopId $sourceShopId, ShopId $targetShopId): void
@@ -117,5 +118,24 @@ class ProductShopUpdater
         // $targetStock->reserved_quantity = $sourceStock->reserved_quantity;
 
         $this->stockAvailableRepository->update($targetStock);
+    }
+
+    /**
+     * @param Product $sourceProduct
+     * @param ShopId $targetShopId
+     */
+    private function copyCarriersToShop(Product $sourceProduct, ShopId $targetShopId): void
+    {
+        $sourceCarriers = $sourceProduct->getCarriers();
+        $sourceCarrierReferences = [];
+        foreach ($sourceCarriers as $sourceCarrier) {
+            $sourceCarrierReferences[] = (int) $sourceCarrier['id_reference'];
+        }
+
+        $this->productRepository->setCarrierReferences(
+            new ProductId($sourceProduct->id),
+            $sourceCarrierReferences,
+            ShopConstraint::shop($targetShopId->getValue())
+        );
     }
 }
