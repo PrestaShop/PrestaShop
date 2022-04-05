@@ -64,8 +64,6 @@ Feature: store
   When I delete store "StorePau"
   Then stores "StorePau" should be deleted
   Then stores "StoreSerresCastet" should exist
-  When I delete store "StorePau"
-  Then I should get an error that the stores "StorePau" have not been found
   
   Scenario: Delete multiple stores
   When I add new store "StorePau" with following properties:
@@ -96,6 +94,3 @@ Feature: store
   When I delete stores "StorePau, StoreBuros" using bulk action
   Then stores "StorePau, StoreBuros" should be deleted
   Then stores "StoreSerresCastet" should exist
-  When I delete stores "StorePau, StoreSerresCastet, StoreBuros" using bulk action
-  Then stores "StoreSerresCastet" should be deleted
-  Then I should get an error that the stores "StorePau, StoreBuros" have not been found
