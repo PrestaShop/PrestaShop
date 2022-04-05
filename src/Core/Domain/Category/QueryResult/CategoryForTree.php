@@ -50,21 +50,29 @@ class CategoryForTree
     private $children;
 
     /**
+     * @var array<int, string[]>
+     */
+    private $localizedBreadcrumbs;
+
+    /**
      * @param int $categoryId
      * @param bool $active
      * @param array<int, string> $localizedNames
-     * @param array $children
+     * @param CategoryForTree[] $children
+     * @param array<int, string[]> $localizedBreadcrumbs
      */
     public function __construct(
         int $categoryId,
         bool $active,
         array $localizedNames,
-        array $children
+        array $children,
+        array $localizedBreadcrumbs
     ) {
         $this->categoryId = $categoryId;
         $this->active = $active;
         $this->localizedNames = $localizedNames;
         $this->children = $children;
+        $this->localizedBreadcrumbs = $localizedBreadcrumbs;
     }
 
     /**
@@ -97,5 +105,13 @@ class CategoryForTree
     public function getChildren(): array
     {
         return $this->children;
+    }
+
+    /**
+     * @return array<int, string[]>
+     */
+    public function getLocalizedBreadcrumbs(): array
+    {
+        return $this->localizedBreadcrumbs;
     }
 }
