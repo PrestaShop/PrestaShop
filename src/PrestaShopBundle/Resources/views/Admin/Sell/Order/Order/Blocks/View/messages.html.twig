@@ -27,7 +27,7 @@
 
 {% set messagesToShow = 4 %}
 
-<div class="card mt-2 d-print-none" data-role="message-card" >
+<div class="card mt-2" data-role="message-card" >
   <div class="card-header">
     <div class="row">
       <div class="col-md-6">
@@ -58,7 +58,7 @@
     </ul>
   {% endif %}
 
-  <div class="card-body">
+  <div class="card-body d-print-none">
     {{ form_start(orderMessageForm, {
       'action': path('admin_orders_send_message', { orderId: orderForViewing.id })
     }) }}
