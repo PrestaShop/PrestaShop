@@ -77,7 +77,7 @@ class StockApi extends AbstractApi
             'title_export' => $this->translator->trans('Export data into CSV', [], 'Admin.Catalog.Feature'),
             'title_movements_type' => $this->translator->trans('Type', [], 'Admin.Global'),
             'title_physical' => $this->translator->trans('Physical', [], 'Admin.Catalog.Feature'),
-            'title_product' => $this->translator->trans('Product', [], 'Admin.Global'),
+            'title_product' => $this->translator->trans('Product (id > combination)', [], 'Admin.Global'),
             'title_reference' => $this->translator->trans('Reference', [], 'Admin.Global'),
             'title_reserved' => $this->translator->trans('Reserved', [], 'Admin.Catalog.Feature'),
             'title_status' => $this->translator->trans('Status', [], 'Admin.Global'),
