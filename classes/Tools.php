@@ -26,12 +26,10 @@
 use Composer\CaBundle\CaBundle;
 use PHPSQLParser\PHPSQLParser;
 use PrestaShop\PrestaShop\Adapter\ContainerFinder;
-use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
-use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
@@ -3780,7 +3778,7 @@ exit;
     /**
      * Delete unicode class from regular expression patterns.
      *
-     * @deprecated Use PrestaShop\PrestaShop\Core\String\CharacterCleaner::cleanNonUnicodeSupport() instead
+     * @deprecated Since 8.0.0 and will be removed in the next major.
      *
      * @param string $pattern
      *
@@ -3790,17 +3788,15 @@ exit;
      */
     public static function cleanNonUnicodeSupport($pattern)
     {
-        $context = Context::getContext();
-        $containerFinder = new ContainerFinder($context);
-        try {
-            $container = $containerFinder->getContainer();
-            $characterCleaner = $container->get('prestashop.core.string.character_cleaner');
-        } catch (ContainerNotFoundException $e) {
-            // Used when the container is not generated
-            $characterCleaner = new CharacterCleaner();
-        }
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 8.0.0. Its use is not required.',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
+        );
 
-        return $characterCleaner->cleanNonUnicodeSupport($pattern);
+        return $pattern;
     }
 
     /**

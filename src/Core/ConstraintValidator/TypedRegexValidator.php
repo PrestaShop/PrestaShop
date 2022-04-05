@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Upc;
-use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
 use ReflectionClass;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -50,19 +49,6 @@ class TypedRegexValidator extends ConstraintValidator
     public const GENERIC_NAME_CHARS = '<>={}';
     public const MESSAGE_CHARS = '<>{}';
     public const NAME_CHARS = '0-9!<>,;?=+()@#"�{}_$%:';
-
-    /**
-     * @var CharacterCleaner
-     */
-    private $characterCleaner;
-
-    /**
-     * @param CharacterCleaner $characterCleaner
-     */
-    public function __construct(CharacterCleaner $characterCleaner)
-    {
-        $this->characterCleaner = $characterCleaner;
-    }
 
     /**
      * {@inheritdoc}
@@ -104,15 +90,15 @@ class TypedRegexValidator extends ConstraintValidator
     {
         switch ($type) {
             case TypedRegex::TYPE_NAME:
-                return $this->characterCleaner->cleanNonUnicodeSupport('/^[^0-9!<>,;?=+()@#"°{}_$%:¤|]*$/u');
+                return '/^[^0-9!<>,;?=+()@#"°{}_$%:¤|]*$/u';
             case TypedRegex::TYPE_CATALOG_NAME:
-                return $this->characterCleaner->cleanNonUnicodeSupport('/^[^<>;=#{}]*$/u');
+                return '/^[^<>;=#{}]*$/u';
             case TypedRegex::TYPE_GENERIC_NAME:
-                return $this->characterCleaner->cleanNonUnicodeSupport('/^[^<>={}]*$/u');
+                return '/^[^<>={}]*$/u';
             case TypedRegex::TYPE_CITY_NAME:
-                return $this->characterCleaner->cleanNonUnicodeSupport('/^[^!<>;?=+@#"°{}_$%]*$/u');
+                return '/^[^!<>;?=+@#"°{}_$%]*$/u';
             case TypedRegex::TYPE_ADDRESS:
-                return $this->characterCleaner->cleanNonUnicodeSupport('/^[^!<>?=+@{}_$%]*$/u');
+                return '/^[^!<>?=+@{}_$%]*$/u';
             case TypedRegex::TYPE_POST_CODE:
                 return '/^[a-zA-Z 0-9-]+$/';
             case TypedRegex::TYPE_PHONE_NUMBER:
@@ -140,7 +126,7 @@ class TypedRegexValidator extends ConstraintValidator
             case TypedRegex::TYPE_MODULE_NAME:
                 return '/^[a-zA-Z0-9_-]+$/';
             case TypedRegex::TYPE_URL:
-                return $this->characterCleaner->cleanNonUnicodeSupport('/^[~:#,$%&_=\(\)\.\? \+\-@\/a-zA-Z0-9\pL\pS-]+$/u');
+                return '/^[~:#,$%&_=\(\)\.\? \+\-@\/a-zA-Z0-9\pL\pS-]+$/u';
             default:
                 $definedTypes = implode(', ', array_values((new ReflectionClass(TypedRegex::class))->getConstants()));
                 throw new InvalidArgumentException(sprintf('Type "%s" is not defined. Defined types are: %s', $type, $definedTypes));
