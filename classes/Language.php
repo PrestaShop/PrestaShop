@@ -602,7 +602,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             }
 
             // Database translations deletion
-            $languagesTablesNames = static::getLanguagesTablesNames();
+            $languagesTablesNames = self::getLanguagesTablesNames();
 
             foreach ($languagesTablesNames as $tableName) {
                 if (!Db::getInstance()->execute('DELETE FROM `' . $tableName . '` WHERE `id_lang` = ' . (int) $this->id)) {
@@ -1008,7 +1008,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     public static function copyLanguageData($from, $to)
     {
         $excludeLangTable = [_DB_PREFIX_ . 'lang'];
-        $languagesTablesNames = static::getLanguagesTablesNames($excludeLangTable);
+        $languagesTablesNames = self::getLanguagesTablesNames($excludeLangTable);
         foreach ($languagesTablesNames as $tableName) {
             $result2 = Db::getInstance()->executeS('SELECT * FROM `' . $tableName . '` WHERE `id_lang` = ' . (int) $from);
             if (!count($result2)) {
