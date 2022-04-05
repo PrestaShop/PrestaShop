@@ -1763,10 +1763,10 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      * Get languages tables name in database
      *
      * @param array<int, string> $excludedTables
-     * 
+     *
      * @return array<int, string>
      */
-    public static function getLanguagesTablesNames(array $excludedTables = []): array
+    private static function getLanguagesTablesNames(array $excludedTables = []): array
     {
         $languagesTablesNames = [];
 
