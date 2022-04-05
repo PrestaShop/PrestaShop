@@ -78,10 +78,10 @@ Feature: Update product shipping information from Back Office (BO) for multiple 
 
   Scenario: I update product shipping information for a specific shop
     When I update product "product1" shipping information for shop "shop2" with following values:
-      | width                                   | 1           |
-      | height                                  | 2           |
-      | depth                                   | 3           |
-      | weight                                  | 0.5         |
+      | width                                   | 5           |
+      | height                                  | 5           |
+      | depth                                   | 5           |
+      | weight                                  | 5           |
       | additional_shipping_cost                | 3           |
       | delivery time notes type                | none        |
       | delivery time in stock notes[en-US]     | available   |
@@ -90,10 +90,10 @@ Feature: Update product shipping information from Back Office (BO) for multiple 
       | delivery time out of stock notes[fr-FR] | disparu     |
       | carriers                                | [carrier1]  |
     Then product product1 should have following shipping information for shops "shop2":
-      | width                                   | 1           |
-      | height                                  | 2           |
-      | depth                                   | 3           |
-      | weight                                  | 0.5         |
+      | width                                   | 5           |
+      | height                                  | 5           |
+      | depth                                   | 5           |
+      | weight                                  | 5           |
       | additional_shipping_cost                | 3           |
       | delivery time notes type                | none        |
       | delivery time in stock notes[en-US]     | available   |
@@ -102,10 +102,11 @@ Feature: Update product shipping information from Back Office (BO) for multiple 
       | delivery time out of stock notes[fr-FR] | disparu     |
       | carriers                                | [carrier1]  |
     And product product1 should have following shipping information for shops "shop1":
-      | width                                   | 1                           |
-      | height                                  | 2                           |
-      | depth                                   | 3                           |
-      | weight                                  | 0.5                         |
+# dimensions does not depend on multi shop, so they should always be updated no matter which shop is targeted
+      | width                                   | 5                           |
+      | height                                  | 5                           |
+      | depth                                   | 5                           |
+      | weight                                  | 5                           |
       | additional_shipping_cost                | 12                          |
       | delivery time notes type                | none                        |
       | delivery time in stock notes[en-US]     | product in stock            |
