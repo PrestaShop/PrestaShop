@@ -410,7 +410,7 @@ class WebserviceOutputBuilderCore
                     } else {
                         $this->renderEntity($this->output, $object);
                     }
-                } elseif ($key == 'empty' && $this->objectRender->getContentType() == 'application/json') {
+                } elseif ($this->objectRender->getContentType() == 'application/json') {
                     $this->renderEntity($this->output, $object);
                 }
             }
