@@ -471,6 +471,18 @@ class AddOrder extends BOBasePage {
   }
 
   /**
+   * Wait for visible product language
+   * @param page {Page} Browser tab
+   * @param row {number} Row on product table
+   * @param image {string} Image file name to check
+   * @returns {Promise<void>}
+   */
+  async waitForVisibleProductImage(page, row, image) {
+    await this.waitForVisibleSelector(page, `${this.productTableImageColumn(row)}[src*='${image}']`);
+  }
+
+
+  /**
    * Get product gift details from table
    * @param page {Page} Browser tab
    * @param row {number} Row on product table
@@ -530,8 +542,6 @@ class AddOrder extends BOBasePage {
    */
   async selectAnotherLanguage(page, language) {
     await this.selectByVisibleText(page, this.languageSelect, language);
-
-    await page.waitForTimeout(2000);
   }
 
   /* Addresses methods */

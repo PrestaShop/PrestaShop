@@ -661,8 +661,10 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
 
       await addOrderPage.selectAnotherLanguage(page, 'Français (French)');
 
-      const result = await addOrderPage.getProductDetailsFromTable(page, 2);
-      await expect(result.description).to.contains(Products.demo_1.nameFR);
+      await addOrderPage.waitForVisibleProductImage(page, 3, Products.demo_18.thumbnailImageFR);
+
+      const result = await addOrderPage.getProductDetailsFromTable(page, 3);
+      await expect(result.description).to.contains(Products.demo_18.nameFR);
     });
   });
 

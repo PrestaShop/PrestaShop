@@ -99,8 +99,10 @@ module.exports = {
     demo_18: {
       id: 12,
       name: 'Mountain fox - Vector graphics',
+      nameFR: 'Illustration vectorielle Renard',
       reference: 'demo_18',
       thumbnailImage: 'mountain-fox-vector-graphics.jpg',
+      thumbnailImageFR: 'illustration-vectorielle-renard.jpg',
       category: 'Art',
       price: 9,
       quantity: 300,
