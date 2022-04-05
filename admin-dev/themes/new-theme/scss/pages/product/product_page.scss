@@ -1121,14 +1121,6 @@ $product-page-padding-bottom: 80px !default;
     }
   }
 
-  #form_step6_tags .token-input {
-    min-width: 768px;
-  }
-
-  #form_step3_tags .token-input {
-    min-width: 768px;
-  }
-
   .alert-info {
     &.alert-experimental {
       &::before {
@@ -1287,7 +1279,9 @@ $product-page-padding-bottom: 80px !default;
     }
   }
 
+  // @TODO(NeOMakinG): Most of these styles could be moved to the global tokenfield style
   .tokenfield {
+    min-height: 100%;
     padding: 0.15rem;
 
     .token {
@@ -1309,10 +1303,27 @@ $product-page-padding-bottom: 80px !default;
       }
     }
 
-    @media only screen and (min-width: 768px) {
-      .token-input {
-        min-width: 768px;
-      }
+    // @TODO(NeOMakinG): This could probably be done on every token-input of the BO
+    input.token-input[type="text"] {
+      // stylelint-disable-next-line declaration-no-important
+      width: 100% !important;
+      max-width: 768px;
+    }
+  }
+
+  // @TODO(NeOMakinG): Moove this to a global file, because every locale-input-group should be the same
+  // But it can be done in this PR as it require more global QA on every forms
+  .locale-input-group {
+    flex-wrap: nowrap;
+
+    > div {
+      flex-shrink: 1;
+      width: 100%;
+    }
+
+    .dropdown {
+      flex-shrink: 0;
+      width: auto;
     }
   }
 }

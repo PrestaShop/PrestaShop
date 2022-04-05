@@ -162,6 +162,8 @@ export default {
     defaultDescription: '.serp-default-description',
     watchedDescription: '.serp-watched-description',
     watchedMetaUrl: '.serp-watched-url:input',
+    // @TODO(NeOMakinG): This feels weird, we would prefer selecting a js- class only instead
+    // But it's linked to a class duplicate in the taggable field markup not linked to the current PR
     tagFields: 'input.js-taggable-field',
     redirectOption: {
       typeInput: '#product_seo_redirect_option_type',
