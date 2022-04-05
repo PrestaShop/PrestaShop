@@ -254,6 +254,20 @@ class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTes
             ],
             [$command],
         ];
+
+        $command = $this->getAllShopsCommand();
+        $command->setOnlineOnly(false);
+        yield [
+            [
+                'options' => [
+                    'visibility' => [
+                        'online_only' => false,
+                        self::MODIFY_ALL_NAME_PREFIX . 'online_only' => true,
+                    ],
+                ],
+            ],
+            [$command],
+        ];
     }
 
     private function getSingleShopCommand(): UpdateProductOptionsCommand

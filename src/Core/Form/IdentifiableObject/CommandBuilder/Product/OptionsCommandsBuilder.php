@@ -64,7 +64,7 @@ final class OptionsCommandsBuilder implements MultiShopProductCommandsBuilderInt
         $config = new CommandBuilderConfig($this->modifyAllNamePrefix);
         $config
             ->addField('[description][manufacturer]', 'setManufacturerId', DataField::TYPE_INT)
-            ->addField('[options][visibility][online_only]', 'setOnlineOnly', DataField::TYPE_BOOL)
+            ->addMultiShopField('[options][visibility][online_only]', 'setOnlineOnly', DataField::TYPE_BOOL)
             ->addMultiShopField('[options][visibility][visibility]', 'setVisibility', DataField::TYPE_STRING)
             ->addMultiShopField('[options][visibility][available_for_order]', 'setAvailableForOrder', DataField::TYPE_BOOL)
             ->addMultiShopField('[options][visibility][show_price]', 'setShowPrice', DataField::TYPE_BOOL)

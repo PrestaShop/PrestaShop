@@ -86,6 +86,7 @@ class VisibilityType extends TranslatorAwareType
             ->add('online_only', SwitchType::class, [
                 'label' => $this->trans('Web only (not sold in your retail store)', 'Admin.Catalog.Feature'),
                 'required' => false,
+                'modify_all_shops' => true,
             ])
         ;
     }

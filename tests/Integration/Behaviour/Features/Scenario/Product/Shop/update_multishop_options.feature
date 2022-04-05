@@ -73,14 +73,14 @@ Feature: Feature: Update product options from Back Office (BO) for multiple shop
       | manufacturer        |             |
     And product "product1" should have following options for shops "shop1":
       | product option      | value   |
-#      online_only & manufacturer does not depend on multishop, so those values are always changing for all shops
-      | online_only         | false   |
-      | manufacturer        |         |
       | visibility          | catalog |
       | available_for_order | false   |
+      | online_only         | true    |
       | show_price          | false   |
       | condition           | used    |
       | show_condition      | true    |
+# manufacturer does not depend on multi shop, so it should be updated no matter which shop is targeted
+      | manufacturer        |         |
 
   Scenario: I update product options for all associated shops
     When I update product "product1" options for all shops with following values:
