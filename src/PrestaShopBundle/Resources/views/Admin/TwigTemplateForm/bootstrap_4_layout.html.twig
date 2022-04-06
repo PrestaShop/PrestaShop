@@ -826,11 +826,7 @@
   {{ form_widget(form['max_field'], { attr: {class: 'max-field'}}) }}
 {% endblock %}
 
-{% block form_help %}
-  {% if help %}
-    <small class="form-text">{{ help }}</small>
-  {% endif %}
-{% endblock form_help %}
+{% block form_help %}{% endblock form_help %}
 
 {% block form_hint %}
   {% if hint %}
