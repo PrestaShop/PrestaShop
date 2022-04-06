@@ -277,7 +277,8 @@ class AddProduct extends BOBasePage {
    */
   async setCombinationsQuantity(page, quantity) {
     // Select all combinations
-    await this.setChecked(page, this.productCombinationSelectAllCheckbox);
+    await this.waitForVisibleSelector(page, this.productCombinationSelectAllCheckbox);
+    await page.$eval(this.productCombinationSelectAllCheckbox, el => el.click());
 
     // Open combinations bulk form
     if (await this.elementNotVisible(page, this.productCombinationBulkQuantityInput, 1000)) {
