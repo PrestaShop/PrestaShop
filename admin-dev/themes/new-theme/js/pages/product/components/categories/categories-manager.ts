@@ -85,6 +85,8 @@ export default class CategoriesManager {
         categories.push({
           id: Number(idInput.value),
           name: this.extractCategoryName(tag as HTMLElement),
+          breadcrumb: this.extractCategoryBreadcrumb(tag as HTMLElement),
+          preview: this.extractCategoryPreview(tag as HTMLElement),
         });
       }
     });
@@ -92,8 +94,28 @@ export default class CategoriesManager {
     return categories;
   }
 
+  private extractCategoryPreview(tag: HTMLElement): string {
+    const tagPreviewElement = tag.querySelector(ProductCategoryMap.categoryNamePreview) as HTMLElement;
+
+    if (tagPreviewElement) {
+      return tagPreviewElement.innerText;
+    }
+
+    return '';
+  }
+
   private extractCategoryName(tag: HTMLElement): string {
-    const tagNameElement = tag.querySelector(ProductCategoryMap.categoryNamePreview) as HTMLElement;
+    const tagNameInput = tag.querySelector(ProductCategoryMap.categoryNameInput) as HTMLInputElement;
+
+    if (tagNameInput) {
+      return tagNameInput.value;
+    }
+
+    return '';
+  }
+
+  private extractCategoryBreadcrumb(tag: HTMLElement): string {
+    const tagNameElement = tag.querySelector('.category-breadcrumb') as HTMLElement;
 
     if (tagNameElement) {
       return tagNameElement.innerText;
