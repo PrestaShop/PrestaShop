@@ -43,9 +43,24 @@ class ProductCategoryType extends TranslatorAwareType
                 'attr' => [
                     'class' => 'category-name-input',
                 ],
+//@todo:
+//      The whole problem that in js category tree component communicates with tags component by collecting input names
+//      So when I change the name in php side, it all renders fine on page load, but name becomes the breadcrumb, and i cannot compare
+//      previoslySelectedCategory.name with new selectedCategoryName because one will have actual name and another will contain breadcrumb
+//      so its kind of a loophole. I need some additional var "displayName" which would be decided by comparing names.Thought the preview component automatically
+//      But the preview component renders the input value same as preview.
+//
+//      So the idea here was to provide custom value for a preview section (which could be a breadcrumb)
+//      then in js i could compare categories by name which stays in input value and show breadcrumbs as preview
+//      but this doesnt seem to ever work because data provider does not provide options.
+//      i could maybe try custom rendering in twig depending if data provider returns something like "isDuplicateName" in each category
+//      but that also sounds stupid
+//                'custom_preview_value' =>
             ])
-            ->add('breadcrumb', TextPreviewType::class, [
-                'preview_class' => 'category-breadcrumb-preview',
+            ->add('breadcrumb', HiddenType::class, [
+                'attr' => [
+                    'class' => 'category-breadcrumb',
+                ],
             ])
             ->add('id', HiddenType::class)
         ;

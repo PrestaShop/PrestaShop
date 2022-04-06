@@ -69,17 +69,24 @@ final class GetCategoriesTreeHandler implements GetCategoriesTreeHandlerInterfac
      *
      * @return CategoryForTree[]
      */
-    private function buildCategoriesTree(array $categories, int $langId, array $breadcrumbs = []): array
+    private function buildCategoriesTree(array $categories, int $langId, array $parents = []): array
     {
         $categoriesTree = [];
         foreach ($categories as $category) {
             $categoryId = (int) $category['id_category'];
             $categoryActive = (bool) $category['active'];
             $categoryChildren = [];
+
+            $breadcrumbs = [];
+            foreach ($parents as $parent) {
+                $breadcrumbs[] = $parent['name'];
+            }
             $breadcrumbs[] = $category['name'];
 
             if (!empty($category['children'])) {
-                $categoryChildren = $this->buildCategoriesTree($category['children'], $langId, $breadcrumbs);
+                $parentCategories = $parents;
+                $parentCategories[] = $category;
+                $categoryChildren = $this->buildCategoriesTree($category['children'], $langId, $parentCategories);
             }
 
             $categoriesTree[] = new CategoryForTree(

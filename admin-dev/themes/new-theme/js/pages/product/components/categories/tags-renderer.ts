@@ -48,7 +48,6 @@ export default class TagsRenderer {
 
   public render(categories: Array<Category>, defaultCategoryId: number): void {
     this.container.innerHTML = '';
-
     const tagTemplate = this.container.dataset.prototype;
     const {prototypeName} = this.container.dataset;
 
