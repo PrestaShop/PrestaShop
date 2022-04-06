@@ -1245,7 +1245,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             return false;
         }
 
-        $language_pack_loader = RemoteLanguagePackLoader::build();
+        $language_pack_loader = new RemoteLanguagePackLoader(_PS_VERSION_);
         $url = $language_pack_loader->getLanguagePackUrl($locale);
 
         $content = Tools::file_get_contents($url, false, null, static::PACK_DOWNLOAD_TIMEOUT);

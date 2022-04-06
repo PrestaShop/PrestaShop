@@ -38,7 +38,8 @@ final class RemoteLanguagePackLoader implements LanguagePackLoaderInterface
     /**
      * The languages repository base path
      *
-     * @TODO : add this to {prestashop_repository}/app/config/config.yml
+     * @TODO : duplicated from {prestashop_repository}/app/config/config.yml;
+     *         used for install context or other cases where no Symfony container is available
      */
     private const LANG_REPOSITORY_BASE_PATH = 'http://i18n.prestashop-project.org';
 
@@ -48,12 +49,19 @@ final class RemoteLanguagePackLoader implements LanguagePackLoaderInterface
     private $version;
 
     /**
-     * @param string $version Prestashop version
+     * @var string represents the language repository base path
      */
-    public function __construct(string $version)
+    private $langRepositoryBasePath;
+
+    /**
+     * @param string $version Prestashop version
+     * @param string $langRepositoryBasePath should become mandatory in future release
+     */
+    public function __construct(string $version, string $langRepositoryBasePath = self::LANG_REPOSITORY_BASE_PATH)
     {
         // Ensure version format
         $this->version = Version::buildFromString($version)->getSemVersion();
+        $this->langRepositoryBasePath = $langRepositoryBasePath;
     }
 
     /**
@@ -63,7 +71,7 @@ final class RemoteLanguagePackLoader implements LanguagePackLoaderInterface
      */
     public function getLanguagePackUrl(string $locale = null): string
     {
-        return self::LANG_REPOSITORY_BASE_PATH . "/translations/{$this->version}/{$locale}/{$locale}.zip";
+        return "{$this->langRepositoryBasePath}/translations/{$this->version}/{$locale}/{$locale}.zip";
     }
 
     /**
@@ -71,7 +79,7 @@ final class RemoteLanguagePackLoader implements LanguagePackLoaderInterface
      */
     public function getLanguagePackListUrl(): string
     {
-        return self::LANG_REPOSITORY_BASE_PATH . "/translations/{$this->version}/available_languages.json";
+        return "{$this->langRepositoryBasePath}/translations/{$this->version}/available_languages.json";
     }
 
     /**
@@ -84,15 +92,5 @@ final class RemoteLanguagePackLoader implements LanguagePackLoaderInterface
         $result = json_decode($jsonResponse, true) ?? [];
 
         return $result;
-    }
-
-    /**
-     * Builds an instance from version defined in environment (`_PS_VERSION_`) _
-     *
-     * @return self
-     */
-    public static function build()
-    {
-        return new self(_PS_VERSION_);
     }
 }

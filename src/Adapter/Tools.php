@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter;
 
-use PrestaShop\PrestaShop\Adapter\File\HtaccessFileGenerator;
 use Tools as LegacyTools;
 
 /**
@@ -80,7 +79,7 @@ class Tools
     }
 
     /**
-     * @see HtaccessFileGenerator::generateFile()
+     * @see PrestaShop\PrestaShop\Adapter\File\HtaccessFileGenerator::generateFile()
      *
      * @return bool
      */
@@ -96,7 +95,7 @@ class Tools
     }
 
     /**
-     * @see HtaccessFileGenerator::generateFile()
+     * @see PrestaShop\PrestaShop\Adapter\File\HtaccessFileGenerator::generateFile()
      *
      * @return bool
      */
