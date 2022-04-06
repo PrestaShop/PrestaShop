@@ -147,14 +147,36 @@ class CategoryRepository extends AbstractObjectModelRepository
     /**
      * @param CategoryId $categoryId
      * @param LanguageId $languageId
+     *
+     * @return string[]
+     */
+    public function getBreadcrumbParts(CategoryId $categoryId, LanguageId $languageId): array
+    {
+        return $this->fetchBreadcrumbs($categoryId, $languageId);
+    }
+
+    /**
+     * @param CategoryId $categoryId
+     * @param LanguageId $languageId
      * @param string $separator
      *
      * @return string
      */
     public function getBreadcrumb(CategoryId $categoryId, LanguageId $languageId, string $separator = ' > '): string
     {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
+        return implode($separator, $this->fetchBreadcrumbs($categoryId, $languageId));
+    }
+
+    /**
+     * @param CategoryId $categoryId
+     * @param LanguageId $languageId
+     *
+     * @return string[]
+     */
+    private function fetchBreadcrumbs(CategoryId $categoryId, LanguageId $languageId): array
+    {
+        $categoryQb = $this->connection->createQueryBuilder();
+        $categoryQb
             ->select('cl.name, c.nleft, c.nright')
             ->from($this->dbPrefix . 'category', 'c')
             ->innerJoin('c', $this->dbPrefix . 'category_lang', 'cl', 'c.id_category = cl.id_category')
@@ -164,12 +186,12 @@ class CategoryRepository extends AbstractObjectModelRepository
             ->setParameter('languageId', $languageId->getValue())
         ;
 
-        $result = $qb->execute()->fetchAll();
-        if (empty($result)) {
+        $category = $categoryQb->execute()->fetchAssociative();
+
+        if (empty($category)) {
             throw new CategoryNotFoundException($categoryId, 'Cannot find breadcrumb because category does not exist');
         }
 
-        $category = $result[0];
         $categoryName = $category['name'];
 
         $qb = $this->connection->createQueryBuilder();
@@ -188,13 +210,14 @@ class CategoryRepository extends AbstractObjectModelRepository
             ->setParameter('languageId', $languageId->getValue())
         ;
 
-        $result = $qb->execute()->fetchAll();
+        $results = $qb->execute()->fetchAllAssociative();
+
         $parentNames = [];
-        foreach ($result as $category) {
+        foreach ($results as $category) {
             $parentNames[] = $category['name'];
         }
         $parentNames[] = $categoryName;
 
-        return implode($separator, $parentNames);
+        return $parentNames;
     }
 }

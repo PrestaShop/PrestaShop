@@ -43,6 +43,7 @@ use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductCustomizabilitySettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
@@ -142,6 +143,11 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
     private $configuration;
 
     /**
+     * @var int
+     */
+    private $contextLangId;
+
+    /**
      * @param NumberExtractor $numberExtractor
      * @param ProductMultiShopRepository $productRepository
      * @param CategoryRepository $categoryRepository
@@ -155,6 +161,7 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
      * @param ProductImagePathFactory $productImageUrlFactory
      * @param SpecificPriceRepository $specificPriceRepository
      * @param Configuration $configuration
+     * @param int $contextLangId
      */
     public function __construct(
         NumberExtractor $numberExtractor,
@@ -169,7 +176,8 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
         RedirectTargetProvider $targetProvider,
         ProductImagePathFactory $productImageUrlFactory,
         SpecificPriceRepository $specificPriceRepository,
-        Configuration $configuration
+        Configuration $configuration,
+        int $contextLangId
     ) {
         $this->numberExtractor = $numberExtractor;
         $this->productRepository = $productRepository;
@@ -184,6 +192,7 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
         $this->productImageUrlFactory = $productImageUrlFactory;
         $this->specificPriceRepository = $specificPriceRepository;
         $this->configuration = $configuration;
+        $this->contextLangId = $contextLangId;
     }
 
     /**
@@ -269,11 +278,16 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
             $categoryIds[] = new CategoryId((int) $categoryIdValue);
         }
 
+        $languageId = new LanguageId($this->contextLangId);
         $categoryNames = $this->categoryRepository->getLocalizedNames($categoryIds);
 
         $categoriesInformation = [];
         foreach ($categoryNames as $categoryId => $localizedNames) {
-            $categoriesInformation[] = new CategoryInformation($categoryId, $localizedNames);
+            $categoriesInformation[] = new CategoryInformation(
+                $categoryId,
+                $localizedNames,
+                $this->categoryRepository->getBreadcrumbParts(new CategoryId($categoryId), $languageId)
+            );
         }
 
         return new CategoriesInformation($categoriesInformation, $defaultCategoryId);
