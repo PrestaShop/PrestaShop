@@ -167,8 +167,13 @@ export default class BulkFormHandler {
 
     for (let i = 0; i < checkboxes.length; i += 1) {
       const checkbox = checkboxes[i];
-      // eslint-disable-next-line no-await-in-loop
-      await this.combinationsService.bulkUpdate(Number(checkbox.value), serializedArray);
+
+      try {
+        // eslint-disable-next-line no-await-in-loop
+        await this.combinationsService.bulkUpdate(Number(checkbox.value), serializedArray);
+      } catch (error) {
+        console.log(error);
+      }
 
       //@todo: also related with temporary progress modal. Needs to be fixed according to new progress modal once its merged in #26004.
       const progressContent = progressModalElement?.querySelector('.progress-increment') as HTMLParagraphElement;
