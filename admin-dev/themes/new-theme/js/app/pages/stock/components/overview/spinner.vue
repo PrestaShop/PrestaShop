@@ -80,12 +80,12 @@
       },
     },
     methods: {
-      getQuantity(): number {
+      getQuantity(): number | string {
         if (!this.product.qty) {
           this.isEnabled = false;
-          this.value = 0;
+          this.value = '';
         }
-        return Math.round(<number> this.value);
+        return <string> this.value === '' ? '' : Number.parseInt(<string> this.value, 10);
       },
       onChange(val: number): void {
         this.value = val;
@@ -94,7 +94,7 @@
       deActivate(): void {
         this.isActive = false;
         this.isEnabled = false;
-        this.value = null;
+        this.value = '';
         this.product.qty = null;
       },
       onKeyup(event: Event): void {
@@ -150,7 +150,7 @@
     },
     data() {
       return {
-        value: null as null | number,
+        value: '' as string | number,
         isActive: false,
         isEnabled: false,
       };
