@@ -60,6 +60,96 @@ class AdminCartRulesControllerCore extends AdminController
         ];
     }
 
+    /**
+     * Function used to render the list to display for this controller.
+     * Add joins to show only cart_rules to which the employee has access, restrict edit and delete action
+     *
+     * @return string|false
+     *
+     * @throws PrestaShopException
+     */
+    public function renderList()
+    {
+        if (!($this->fields_list && is_array($this->fields_list))) {
+            return false;
+        }
+
+        $context = Context::getContext();
+        $all_shops = Shop::getCompleteListOfShopsID();
+        if ($context->employee->isSuperAdmin()) {
+            $employee_shops = $all_shops;
+        } else {
+            $employee_shops = $context->employee->getAssociatedShops();
+        }
+        $context_shops = Shop::getContextListShopID();
+        $employee_has_full_access = empty(array_diff($all_shops, $employee_shops));
+        $this->_select = ($employee_has_full_access ? '0' : '(cse.id_cart_rule is not null or cs.id_cart_rule is null)') . ' as restricted';
+        $this->_join = 'left join `' . _DB_PREFIX_ . 'cart_rule_shop` cs on cs.id_cart_rule = a.id_cart_rule ' . // if there is none, the cart_rule is in all shops
+            'left join `' . _DB_PREFIX_ . 'cart_rule_shop` csc on csc.id_cart_rule = a.id_cart_rule and csc.id_shop in (' . implode(', ', $context_shops) . ') ' . // shops in current context where employee has access
+            'left join `' . _DB_PREFIX_ . 'cart_rule_shop` cse on cse.id_cart_rule = a.id_cart_rule and cse.id_shop not in (' . implode(', ', $employee_shops) . ') '; // if a cart_rule belongs to a shop where the employee has no access then restrict
+        $this->_where = 'and (case when cs.id_cart_rule is null then 1 else (csc.id_cart_rule is not null) end) = 1';
+        $this->_group = 'group by a.id_cart_rule';
+
+        $this->getList($this->context->language->id);
+        $restricted = [];
+        foreach ($this->_list as $row) {
+            if ($row['restricted']) {
+                $restricted[] = $row['id_cart_rule'];
+            }
+        }
+
+        // If list has 'active' field, we automatically create bulk action
+        if (isset($this->fields_list) && is_array($this->fields_list) && array_key_exists('active', $this->fields_list)
+            && !empty($this->fields_list['active'])) {
+            if (!is_array($this->bulk_actions)) {
+                $this->bulk_actions = [];
+            }
+
+            $this->bulk_actions = array_merge([
+                'enableSelection' => [
+                    'text' => $this->trans('Enable selection'),
+                    'icon' => 'icon-power-off text-success',
+                ],
+                'disableSelection' => [
+                    'text' => $this->trans('Disable selection'),
+                    'icon' => 'icon-power-off text-danger',
+                ],
+                'divider' => [
+                    'text' => 'divider',
+                ],
+            ], $this->bulk_actions);
+        }
+
+        $helper = new HelperList();
+
+        // Empty list is ok
+        if (!is_array($this->_list)) {
+            $this->displayWarning($this->trans('Bad SQL query') . '<br />' . htmlspecialchars($this->_list_error));
+
+            return false;
+        }
+
+        $this->setHelperDisplay($helper);
+        $helper->_default_pagination = $this->_default_pagination;
+        $helper->_pagination = $this->_pagination;
+        $helper->tpl_vars = $this->getTemplateListVars();
+        $helper->tpl_delete_link_vars = $this->tpl_delete_link_vars;
+        $helper->list_skip_actions['edit'] = $restricted;
+        $helper->list_skip_actions['delete'] = $restricted;
+
+        // For compatibility reasons, we have to check standard actions in class attributes
+        foreach ($this->actions_available as $action) {
+            if (!in_array($action, $this->actions) && isset($this->$action) && $this->$action) {
+                $this->actions[] = $action;
+            }
+        }
+
+        $helper->is_cms = $this->is_cms;
+        $helper->sql = $this->_listsql;
+        $list = $helper->generateList($this->_list, $this->fields_list);
+
+        return $list;
+    }
     public function ajaxProcessLoadCartRules()
     {
         if (!$this->access('view')) {
