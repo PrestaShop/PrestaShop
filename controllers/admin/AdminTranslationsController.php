@@ -27,7 +27,6 @@
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
-use PrestaShop\PrestaShop\Core\Language\Pack\Loader\RemoteLanguagePackLoader;
 
 class AdminTranslationsControllerCore extends AdminController
 {
@@ -85,7 +84,7 @@ class AdminTranslationsControllerCore extends AdminController
 
         parent::__construct();
 
-        $language_pack_loader = RemoteLanguagePackLoader::build();
+        $language_pack_loader = $this->container->get('prestashop.core.language.pack.loader.remote');
         $this->link_lang_pack = $language_pack_loader->getLanguagePackListUrl();
 
         $this->themes = (new ThemeManagerBuilder($this->context, Db::getInstance()))
