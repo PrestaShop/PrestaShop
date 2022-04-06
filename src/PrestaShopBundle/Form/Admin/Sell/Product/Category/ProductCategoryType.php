@@ -44,6 +44,9 @@ class ProductCategoryType extends TranslatorAwareType
                     'class' => 'category-name-input',
                 ],
             ])
+            ->add('breadcrumb', TextPreviewType::class, [
+                'preview_class' => 'category-breadcrumb-preview',
+            ])
             ->add('id', HiddenType::class)
         ;
     }
