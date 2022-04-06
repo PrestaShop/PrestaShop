@@ -150,6 +150,7 @@ class AdminCartRulesControllerCore extends AdminController
 
         return $list;
     }
+
     public function ajaxProcessLoadCartRules()
     {
         if (!$this->access('view')) {
