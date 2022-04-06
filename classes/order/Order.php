@@ -655,6 +655,7 @@ class OrderCore extends ObjectModel
 
             $this->setProductImageInformations($row);
             $this->setProductCurrentStock($row);
+            $row = $this->setProductReduction($row);
 
             // Backward compatibility 1.4 -> 1.5
             $this->setProductPrices($row);
@@ -662,7 +663,7 @@ class OrderCore extends ObjectModel
             $this->setProductCustomizedDatas($row, $customized_datas);
 
             // Add information for virtual product
-            if ($row['download_hash'] && !empty($row['download_hash'])) {
+            if (!empty($row['download_hash'])) {
                 $row['filename'] = ProductDownload::getFilenameFromIdProduct((int) $row['product_id']);
                 // Get the display filename
                 $row['display_filename'] = ProductDownload::getFilenameFromFilename($row['filename']);
@@ -679,6 +680,35 @@ class OrderCore extends ObjectModel
         }
 
         return $result_array;
+    }
+
+    /**
+     * @param array $product
+     *
+     * @return array
+     */
+    protected function setProductReduction(array $product): array
+    {
+        $address = Address::initialize($this->id_address_delivery, true);
+        $id_country = (int) $address->id_country;
+
+        $specific_price = SpecificPrice::getSpecificPrice(
+            $product['product_id'],
+            $product['id_shop'],
+            $this->id_currency,
+            $id_country,
+            $this->id_shop_group,
+            $product['product_quantity'],
+            $product['product_attribute_id']
+        );
+        $product['reduction_type'] = 0;
+        $product['reduction_applies'] = false;
+        if ($specific_price) {
+            $product['reduction_type'] = $specific_price['reduction_type'];
+            $product['reduction_applies'] = (float) $specific_price['reduction'];
+        }
+
+        return $product;
     }
 
     public static function getIdOrderProduct($id_customer, $id_product)
