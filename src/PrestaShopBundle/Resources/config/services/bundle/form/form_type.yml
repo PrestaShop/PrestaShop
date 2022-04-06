@@ -1759,6 +1759,13 @@ services:
     tags:
       - { name: form.type }
 
+  form.type.sell.product.combination.bulk_combination_references_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\BulkCombinationReferencesType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+
   form.type.sell.product.event_listener.combination_listener:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\CombinationListener'
     public: true
