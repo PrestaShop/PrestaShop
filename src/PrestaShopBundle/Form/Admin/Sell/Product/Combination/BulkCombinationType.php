@@ -74,6 +74,7 @@ class BulkCombinationType extends TranslatorAwareType
         $builder
             ->add('stock', BulkCombinationStockType::class)
             ->add('price', BulkCombinationPriceType::class)
+            ->add('references', BulkCombinationReferencesType::class)
         ;
     }
 
