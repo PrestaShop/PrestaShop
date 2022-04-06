@@ -542,6 +542,10 @@
     {{ form_errors(form.from) }}
     {{ form_widget(form.to) }}
     {{ form_errors(form.to) }}
+    {% if form.unlimited is defined %}
+      {{ form_widget(form.unlimited) }}
+      {{ form_errors(form.unlimited) }}
+    {% endif %}
   {% endapply %}
 {% endblock date_range_widget %}
 

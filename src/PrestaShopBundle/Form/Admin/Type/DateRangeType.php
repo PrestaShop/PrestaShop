@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -38,14 +39,7 @@ class DateRangeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('from', DatePickerType::class, [
-                'required' => false,
-                'attr' => [
-                    'placeholder' => 'From',
-                ],
-                'translation_domain' => 'Admin.Global',
-                'date_format' => $options['date_format'],
-            ])
+            ->add('from', DatePickerType::class, $this->getFromFieldOptions($options))
             ->add('to', DatePickerType::class, [
                 'required' => false,
                 'attr' => [
@@ -54,12 +48,20 @@ class DateRangeType extends AbstractType
                 'translation_domain' => 'Admin.Global',
                 'date_format' => $options['date_format'],
             ]);
+        if ($options['has_unlimited_checkbox']) {
+            $builder->add('unlimited', CheckboxType::class, [
+                'required' => false,
+                'translation_domain' => 'Admin.Global',
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'date_format' => 'YYYY-MM-DD',
+            'start_date' => false,
+            'has_unlimited_checkbox' => false,
         ]);
         $resolver->setAllowedTypes('date_format', 'string');
     }
@@ -70,5 +72,27 @@ class DateRangeType extends AbstractType
     public function getBlockPrefix()
     {
         return 'date_range';
+    }
+
+    /**
+     * @param array $options
+     * @return array
+     */
+    private function getFromFieldOptions(array $options): array
+    {
+        $fromFieldOptions = [
+            'required' => false,
+            'attr' => [
+                'placeholder' => 'From',
+            ],
+            'translation_domain' => 'Admin.Global',
+            'date_format' => $options['date_format'],
+        ];
+
+        if ($options['start_date']) {
+            $fromFieldOptions['data'] = $options['start_date'];
+        }
+
+        return $fromFieldOptions;
     }
 }
