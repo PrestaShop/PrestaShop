@@ -35,22 +35,39 @@ final class RemoteLanguagePackLoaderTest extends TestCase
 {
     public function testGetLanguagePackUrl()
     {
-        $version_str = '8.0.0';
-        $locale = 'fr-FR';
-        $packLoader = new RemoteLanguagePackLoader($version_str);
+        $version = '8.0.0';
+        $basePath = 'http://i18n.mekey.com';
+        $packLoader = new RemoteLanguagePackLoader($version, $basePath);
 
-        $language_pack_locale_url = $packLoader->getLanguagePackUrl($locale);
-        $this->assertStringEndsWith("{$version_str}/{$locale}/{$locale}.zip", $language_pack_locale_url);
-        $this->assertTrue(filter_var($language_pack_locale_url, FILTER_VALIDATE_URL) !== false);
+        $locale = 'fr-FR';
+        $languagePackLangLocaleUrl = $packLoader->getLanguagePackUrl($locale);
+
+        $this->assertStringStartsWith($basePath, $languagePackLangLocaleUrl);
+        $this->assertStringEndsWith("{$version}/{$locale}/{$locale}.zip", $languagePackLangLocaleUrl);
+        $this->assertTrue(filter_var($languagePackLangLocaleUrl, FILTER_VALIDATE_URL) !== false);
     }
 
     public function testGetLanguagePackListUrl()
     {
-        $version_str = '8.0.0';
-        $packLoader = new RemoteLanguagePackLoader($version_str);
+        $version = '8.0.0';
+        $basePath = 'http://i18n.mekey.com';
+        $packLoader = new RemoteLanguagePackLoader($version, $basePath);
 
-        $language_pack_lang_list_url = $packLoader->getLanguagePackListUrl();
-        $this->assertStringEndsWith("{$version_str}/available_languages.json", $language_pack_lang_list_url);
-        $this->assertTrue(filter_var($language_pack_lang_list_url, FILTER_VALIDATE_URL) !== false);
+        $languagePackLangListUrl = $packLoader->getLanguagePackListUrl();
+
+        $this->assertStringEndsWith("{$version}/available_languages.json", $languagePackLangListUrl);
+        $this->assertStringStartsWith($basePath, $languagePackLangListUrl);
+        $this->assertTrue(filter_var($languagePackLangListUrl, FILTER_VALIDATE_URL) !== false, "Invalid URL found for {$languagePackLangListUrl}");
+    }
+
+    public function testGetLanguagePackUrlWithoutBasePath()
+    {
+        $version = '8.0.0';
+        $packLoader = new RemoteLanguagePackLoader($version);
+
+        $languagePackLangListUrl = $packLoader->getLanguagePackListUrl();
+
+        $this->assertStringEndsWith("{$version}/available_languages.json", $languagePackLangListUrl);
+        $this->assertTrue(filter_var($languagePackLangListUrl, FILTER_VALIDATE_URL) !== false, "Invalid URL found for {$languagePackLangListUrl}");
     }
 }
