@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\MailTemplate\Command\GenerateThemeMailTemplatesCommand;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Foundation\Version;
 use PrestaShop\PrestaShop\Core\Language\LanguageInterface;
 use PrestaShop\PrestaShop\Core\Language\Pack\Loader\RemoteLanguagePackLoader;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
@@ -1246,7 +1247,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             return false;
         }
 
-        $language_pack_loader = RemoteLanguagePackLoader::build();
+        $language_pack_loader = new RemoteLanguagePackLoader(Version::buildFromString(_PS_VERSION_));
         $url = $language_pack_loader->getLanguagePackUrl($locale);
 
         $content = Tools::file_get_contents($url, false, null, static::PACK_DOWNLOAD_TIMEOUT);

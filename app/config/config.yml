@@ -18,6 +18,8 @@ parameters:
   mail_themes_uri: "/mails/themes"
   mail_themes_dir: "%kernel.project_dir%%mail_themes_uri%"
   modules_translation_paths: [ ]
+  lang_repository_base_path: https://i18n.prestashop-project.org
+
 
 # Autowires Core controllers
 services:
