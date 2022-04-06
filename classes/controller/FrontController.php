@@ -371,7 +371,7 @@ class FrontControllerCore extends Controller
                 $cart = new Cart((int) $this->context->cookie->id_cart);
             }
 
-            if (Validate::isLoadedObject($cart) && $cart->orderExists()) {
+            if (!Validate::isLoadedObject($cart) || $cart->orderExists()) {
                 PrestaShopLogger::addLog('Frontcontroller::init - Cart cannot be loaded or an order has already been placed using this cart', 1, null, 'Cart', (int) $this->context->cookie->id_cart, true);
                 unset($this->context->cookie->id_cart, $cart, $this->context->cookie->checkedTOS);
                 $this->context->cookie->check_cgv = false;
