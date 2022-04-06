@@ -200,10 +200,40 @@ class AdminCartRulesControllerCore extends AdminController
                 }
             }
 
-            // These are checkboxes (which aren't sent through POST when they are not check), so they are forced to 0
+            // These are checkboxes (which aren't sent through POST when they are not checked), so they are forced to 0
+            $restrictions_selected = [];
             foreach (['country', 'carrier', 'group', 'cart_rule', 'product', 'shop'] as $type) {
                 if (!Tools::getValue($type . '_restriction')) {
                     $_POST[$type . '_restriction'] = 0;
+                } else {
+                    $restrictions_selected[] = $type;
+                }
+            }
+
+            // At least one of these is compulsary: code, customer or any restriction. If none of these are present, the cart rule applies to all carts !
+            if (empty($restrictions_selected) && empty(Tools::getValue('id_customer')) && empty(Tools::getValue('code'))) {
+                $this->errors[] = $this->trans('This cart rule would apply to all carts. Please define a code or select any condition.', [], 'Admin.Catalog.Feature');
+            }
+
+            // If the restriction is checked, but no item is selected, raise an error
+            foreach (['country', 'carrier', 'group', 'shop'] as $type) {
+                if (Tools::getValue($type . '_restriction') && empty(Tools::getValue($type . '_select'))) {
+                    switch ($type) {
+                        case 'country':
+                            $restriction_name = $this->trans('Country selection', [], 'Admin.Catalog.Feature');
+                            break;
+                        case 'carrier':
+                            $restriction_name = $this->trans('Carrier selection', [], 'Admin.Catalog.Feature');
+                            break;
+                        case 'group':
+                            $restriction_name = $this->trans('Customer group selection', [], 'Admin.Catalog.Feature');
+                            break;
+                        case 'shop':
+                        default:
+                            $restriction_name = $this->trans('Shop selection', [], 'Admin.Catalog.Feature');
+                            break;
+                    }
+                    $this->errors[] = $this->trans("'%s' is checked, but no item selected", [$restriction_name], 'Admin.Catalog.Notification');
                 }
             }
 
