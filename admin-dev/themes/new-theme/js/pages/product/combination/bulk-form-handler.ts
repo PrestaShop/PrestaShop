@@ -78,7 +78,7 @@ export default class BulkFormHandler {
   private showFormModal(formUrl: string, confirmButtonLabel: string, closeButtonLabel: string): void {
     const selectedCombinationsCount = this.getSelectedCheckboxes().length;
 
-    let initialFormData: JQuery.NameValuePair[];
+    let initialSerializedData: string;
     const iframeModal = new IframeModal({
       id: CombinationMap.bulkFormModalId,
       iframeUrl: formUrl,
@@ -87,12 +87,24 @@ export default class BulkFormHandler {
       confirmButtonLabel: confirmButtonLabel.replace(/%combinations_number%/, String(selectedCombinationsCount)),
       closeButtonLabel,
       onLoaded: (iframe: HTMLIFrameElement) => {
+        // Disable submit button as long as the form data has not changed
+        iframeModal.modal.confirmButton?.setAttribute('disabled', 'disabled');
+
         if (iframe.contentWindow) {
           // eslint-disable-next-line max-len
           const form: HTMLFormElement | null = iframe.contentWindow.document.querySelector<HTMLFormElement>('form[name="bulk_combination"]');
 
           if (form) {
-            initialFormData = $(form).serializeArray();
+            initialSerializedData = this.serializeForm(form);
+            form.addEventListener('change', () => {
+              const currentSerializedData: string = this.serializeForm(form);
+
+              if (currentSerializedData === initialSerializedData) {
+                iframeModal.modal.confirmButton?.setAttribute('disabled', 'disabled');
+              } else {
+                iframeModal.modal.confirmButton?.removeAttribute('disabled');
+              }
+            });
           }
         }
       },
@@ -102,13 +114,18 @@ export default class BulkFormHandler {
           const form: HTMLFormElement | null = iframeModal.modal.iframe.contentWindow.document.querySelector<HTMLFormElement>('form[name="bulk_combination"]');
 
           if (form) {
-            this.submitForm(form, initialFormData);
+            this.submitForm(form);
           }
         }
       },
     });
 
     iframeModal.show();
+  }
+
+  private serializeForm(form: HTMLFormElement): string {
+    // @ts-ignore
+    return new URLSearchParams(new FormData(form)).toString();
   }
 
   private listenSelections(): void {
@@ -149,13 +166,7 @@ export default class BulkFormHandler {
     btn.toggleAttribute('disabled', !enable);
   }
 
-  private async submitForm(form: HTMLFormElement, initialFormData: JQuery.NameValuePair[]): Promise<void> {
-    const serializedArray: JQuery.NameValuePair[] = $(form).serializeArray();
-    console.log('submit', serializedArray, initialFormData);
-
-    if (serializedArray === initialFormData) {
-      return;
-    }
+  private async submitForm(form: HTMLFormElement): Promise<void> {
     const progressModal = this.showProgressModal();
 
     const checkboxes = this.getSelectedCheckboxes();
@@ -168,7 +179,7 @@ export default class BulkFormHandler {
 
       try {
         // eslint-disable-next-line no-await-in-loop
-        await this.combinationsService.bulkUpdate(Number(checkbox.value), serializedArray);
+        await this.combinationsService.bulkUpdate(Number(checkbox.value), new FormData(form));
       } catch (error) {
         console.log(error);
       }
