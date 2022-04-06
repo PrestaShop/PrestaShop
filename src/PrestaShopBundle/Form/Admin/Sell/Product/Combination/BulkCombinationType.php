@@ -81,9 +81,12 @@ class BulkCombinationType extends TranslatorAwareType
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([
-            'label' => false,
+            'label' => $this->trans('Bulk combination edition', 'Admin.Catalog.Feature'),
+            'label_tag_name' => 'h3',
+            'label_subtitle' => $this->trans('You can bulk edit the selected combinations by enabling and filling each field that needs update.', 'Admin.Catalog.Feature'),
             'expand_first' => false,
             'display_one' => false,
+            'required' => false,
             'attr' => [
                 'class' => 'bulk-combination-form',
             ],
