@@ -46,6 +46,9 @@ class CategoryCore extends ObjectModel
     /** @var mixed string or array of Description */
     public $description;
 
+    /** @var mixed string or array of Additional description */
+    public $additional_description;
+
     /** @var int Parent category ID */
     public $id_parent;
 
@@ -125,6 +128,7 @@ class CategoryCore extends ObjectModel
                 ],
             ],
             'description' => ['type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'],
+            'additional_description' => ['type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'],
             'meta_title' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255],
             'meta_description' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 512],
             'meta_keywords' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255],
@@ -883,7 +887,7 @@ class CategoryCore extends ObjectModel
         }
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT c.*, cl.`id_lang`, cl.`name`, cl.`description`, cl.`link_rewrite`, cl.`meta_title`, cl.`meta_keywords`, cl.`meta_description`
+		SELECT c.*, cl.`id_lang`, cl.`name`, cl.`description`, cl.`additional_description`, cl.`link_rewrite`, cl.`meta_title`, cl.`meta_keywords`, cl.`meta_description`
 		FROM `' . _DB_PREFIX_ . 'category` c
 		' . Shop::addSqlAssociation('category', 'c') . '
 		LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl ON (c.`id_category` = cl.`id_category` AND `id_lang` = ' . (int) $idLang . ' ' . Shop::addSqlRestrictionOnLang('cl') . ')
