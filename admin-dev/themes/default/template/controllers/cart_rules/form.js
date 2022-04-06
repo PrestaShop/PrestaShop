@@ -255,12 +255,9 @@ $('#cart_rule_form').submit(() => {
   if ($('#customerFilter').val() == '') $('#id_customer').val('0');
 
   for (i in restrictions) {
-    if ($(`#${restrictions[i]}_select_1 option`).length == 0) $(`#${restrictions[i]}_restriction`).prop('checked', false);
-    else {
-      $(`#${restrictions[i]}_select_2 option`).each(function (i) {
-        $(this).prop('selected', true);
-      });
-    }
+    $(`#${restrictions[i]}_select_2 option`).each(function (i) {
+      $(this).prop('selected', true);
+    });
   }
 
   $('.product_rule_toselect option').each(function (i) {

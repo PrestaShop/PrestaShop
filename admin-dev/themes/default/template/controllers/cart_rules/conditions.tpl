@@ -294,7 +294,7 @@
 				</a>
 			</div>
 
-		{if ($shops.unselected|@count) + ($shops.selected|@count) > 1}
+		{if ($all_shops|@count) > 1}
 			<p class="checkbox">
 				<label>
 					<input type="checkbox" id="shop_restriction" name="shop_restriction" value="1" {if $shops.unselected|@count}checked="checked"{/if} />

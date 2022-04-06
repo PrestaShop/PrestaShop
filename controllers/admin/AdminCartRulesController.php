@@ -200,10 +200,32 @@ class AdminCartRulesControllerCore extends AdminController
                 }
             }
 
-            // These are checkboxes (which aren't sent through POST when they are not check), so they are forced to 0
+            // These are checkboxes (which aren't sent through POST when they are not checked), so they are forced to 0
             foreach (['country', 'carrier', 'group', 'cart_rule', 'product', 'shop'] as $type) {
                 if (!Tools::getValue($type . '_restriction')) {
                     $_POST[$type . '_restriction'] = 0;
+                }
+            }
+
+            // If the restriction is checked, but no item is selected, raise an error
+            foreach (['country', 'carrier', 'group', 'shop'] as $type) {
+                if (Tools::getValue($type . '_restriction') && empty(Tools::getValue($type . '_select'))) {
+                    switch ($type) {
+                        case 'country':
+                            $restriction_name = $this->trans('Country selection', [], 'Admin.Catalog.Feature');
+                            break;
+                        case 'carrier':
+                            $restriction_name = $this->trans('Carrier selection', [], 'Admin.Catalog.Feature');
+                            break;
+                        case 'group':
+                            $restriction_name = $this->trans('Customer group selection', [], 'Admin.Catalog.Feature');
+                            break;
+                        case 'shop':
+                        default:
+                            $restriction_name = $this->trans('Shop selection', [], 'Admin.Catalog.Feature');
+                            break;
+                    }
+                    $this->errors[] = $this->trans("'%s' is checked, but no item selected", [$restriction_name], 'Admin.Catalog.Notification');
                 }
             }
 
@@ -297,6 +319,21 @@ class AdminCartRulesControllerCore extends AdminController
      */
     protected function afterAdd($currentObject)
     {
+        // Add shop restrictions if employee has not access to all shops
+        $context = Context::getContext();
+        $all_shops = Shop::getCompleteListOfShopsID();
+        if ($context->employee->isSuperAdmin()) {
+            $employee_shops = $all_shops;
+        } else {
+            $employee_shops = $context->employee->getAssociatedShops();
+        }
+        if (count($all_shops) > count($employee_shops) && Tools::getValue('shop_restriction') == '0') {
+            $values = [];
+            foreach ($employee_shops as $id) {
+                $values[] = '(' . (int) $currentObject->id . ',' . (int) $id . ')';
+            }
+            Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'cart_rule_shop` (`id_cart_rule`, `id_shop`) VALUES ' . implode(',', $values));
+        }
         // Add restrictions for generic entities like country, carrier and group
         foreach (['country', 'carrier', 'group', 'shop'] as $type) {
             if (Tools::getValue($type . '_restriction') && is_array($array = Tools::getValue($type . '_select')) && count($array)) {
@@ -755,6 +792,7 @@ class AdminCartRulesControllerCore extends AdminController
                 'carriers' => $carriers,
                 'groups' => $groups,
                 'shops' => $shops,
+                'all_shops' => Shop::getCompleteListOfShopsID(),
                 'cart_rules' => $cart_rules,
                 'product_rule_groups' => $product_rule_groups,
                 'product_rule_groups_counter' => count($product_rule_groups),
