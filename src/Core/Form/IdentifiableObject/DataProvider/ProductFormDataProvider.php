@@ -164,6 +164,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
             $categories[] = [
                 'id' => $categoryId,
                 'name' => $localizedNames[$this->contextLangId],
+                'breadcrumb' => implode(' > ', $categoryInformation->getBreadcrumbs()),
             ];
         }
 
