@@ -55,7 +55,6 @@ export default class BulkFormHandler {
 
     bulkFormBtn?.addEventListener('click', () => this.showFormModal(
       bulkFormBtn.dataset.formUrl as string,
-      bulkCombinationsBtn.dataset.modalTitle as string,
       bulkCombinationsBtn.dataset.modalConfirmLabel as string,
       bulkCombinationsBtn.dataset.modalCancelLabel as string,
     ));
@@ -76,7 +75,7 @@ export default class BulkFormHandler {
     return modal;
   }
 
-  private showFormModal(formUrl: string, modalTitle: string, confirmButtonLabel: string, closeButtonLabel: string): void {
+  private showFormModal(formUrl: string, confirmButtonLabel: string, closeButtonLabel: string): void {
     const selectedCombinationsCount = this.getSelectedCheckboxes().length;
 
     let initialFormData: JQuery.NameValuePair[];
@@ -87,7 +86,6 @@ export default class BulkFormHandler {
       closable: true,
       confirmButtonLabel: confirmButtonLabel.replace(/%combinations_number%/, String(selectedCombinationsCount)),
       closeButtonLabel,
-      modalTitle,
       onLoaded: (iframe: HTMLIFrameElement) => {
         if (iframe.contentWindow) {
           // eslint-disable-next-line max-len
