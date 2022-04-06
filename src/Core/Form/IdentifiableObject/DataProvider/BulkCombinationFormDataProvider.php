@@ -55,6 +55,13 @@ class BulkCombinationFormDataProvider implements FormDataProviderInterface
                 'unit_price' => 0,
                 'weight' => 0,
             ],
+            'references' => [
+                'reference' => '',
+                'mpn' => '',
+                'upc' => '',
+                'ean_13' => '',
+                'isbn' => '',
+            ],
         ];
     }
 
