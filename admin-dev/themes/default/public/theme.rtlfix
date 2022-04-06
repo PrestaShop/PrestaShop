@@ -1,34 +1,3 @@
-@font-face {
-  font-family: Vazir;
-  src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Regular.eot');
-  src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Regular.eot?#iefix') format('embedded-opentype'),
-    url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Regular.woff2') format('woff2'),
-    url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Regular.woff') format('woff'),
-    url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Regular.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: Vazir;
-  src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Bold.eot');
-  src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Bold.eot?#iefix') format('embedded-opentype'),
-    url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Bold.woff2') format('woff2'),
-    url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Bold.woff') format('woff'),
-    url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Bold.ttf') format('truetype');
-  font-weight: bold;
-  font-style: normal;
-}
-@font-face {
-  font-family: Vazir;
-  src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Light.eot');
-  src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Light.eot?#iefix') format('embedded-opentype'),
-    url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Light.woff2') format('woff2'),
-    url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Light.woff') format('woff'),
-    url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Light.ttf') format('truetype');
-  font-weight: 300;
-  font-style: normal;
-}
-
 body.lang-rtl, .lang-rtl #content.bootstrap .panel .panel-heading a.btn, .lang-rtl #content.bootstrap #dash_version .panel-heading a.btn, .lang-rtl #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading a.btn, .lang-rtl #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading a.btn, .lang-rtl #notification .dropdown-menu .notifications .nav-tabs .nav-item .nav-link, .lang-rtl .bootstrap .tooltip, .lang-rtl .bootstrap .btn-group-action .btn, .lang-rtl .bootstrap .page-head h2.page-title, .lang-rtl .bootstrap .page-head h4.page-subtitle, .lang-rtl .bootstrap #dashboard #dashproducts nav, .lang-rtl .bootstrap #dashboard #dashtrends dt, .lang-rtl .bootstrap #dashboard section > section header .small, .bootstrap h1, .lang-rtl .bootstrap h2, .lang-rtl .bootstrap h3, .lang-rtl .bootstrap h4, .lang-rtl .bootstrap h5, .lang-rtl .bootstrap h6, .lang-rtl .bootstrap .h1, .lang-rtl .bootstrap .h2, .lang-rtl .bootstrap .h3, .lang-rtl .bootstrap .h4, .lang-rtl .bootstrap .h5, .lang-rtl .bootstrap .h6, .lang-rtl #content.bootstrap .panel .panel-heading, .lang-rtl #content.bootstrap #dash_version .panel-heading, .lang-rtl #content.bootstrap .message-item-initial .message-item-initial-body .panel-heading, .lang-rtl #content.bootstrap .timeline .timeline-item .timeline-caption .timeline-panel .panel-heading, .lang-rtl .bootstrap #dashboard .tooltip-panel-heading, .lang-rtl .bootstrap input[type="text"], .lang-rtl .bootstrap input[type="search"], .lang-rtl .bootstrap input[type="password"], .lang-rtl .bootstrap input[type="email"], .lang-rtl .bootstrap input[type="tel"], .lang-rtl #content.bootstrap input, .lang-rtl #content.bootstrap button, .lang-rtl #content.bootstrap textarea, .lang-rtl #content.bootstrap select {
   font-family: Vazir, Tahoma, Arial, sans-serif !important;
 }

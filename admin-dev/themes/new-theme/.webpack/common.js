@@ -34,6 +34,7 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FontPreloadPlugin = require('webpack-font-preload-plugin');
 const CssoWebpackPlugin = require('csso-webpack-plugin').default;
+const LicensePlugin = require('webpack-license-plugin');
 
 module.exports = {
   externals: {
@@ -123,6 +124,7 @@ module.exports = {
     tax: './js/pages/tax',
     tax_rules_group: './js/pages/tax-rules-group',
     theme: './scss/theme.scss',
+    rtl: './scss/rtl.scss',
     themes: './js/pages/themes',
     translation_settings: './js/pages/translation-settings',
     translations: './js/app/pages/translations',
@@ -402,6 +404,14 @@ module.exports = {
     }),
     new CssoWebpackPlugin({
       forceMediaMerge: true,
+    }),
+    new LicensePlugin({
+      outputFilename: 'thirdPartyNotice.json',
+      licenseOverrides: {
+        'vazirmatn@32.1.0': 'OFL-1.1',
+        'typeahead.js@0.11.1': 'MIT',
+      },
+      replenishDefaultLicenseTexts: true,
     }),
   ],
 };
