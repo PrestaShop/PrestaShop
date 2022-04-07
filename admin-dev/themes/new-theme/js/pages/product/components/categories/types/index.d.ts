@@ -1,8 +1,7 @@
 type Category = {
   id: number,
   name: string,
-  preview: string,
-  breadcrumb: string
+  displayName: string,
 }
 
 type TypeaheadCategory = {
@@ -14,7 +13,7 @@ type TypeaheadCategory = {
 type TreeCategory = {
   id: number,
   name: string,
+  displayName: string,
   active: boolean,
-  breadcrumb: string,
   children: Array<TreeCategory>,
 }

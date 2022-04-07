@@ -270,6 +270,9 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
      */
     private function getCategoriesInformation(Product $product): CategoriesInformation
     {
+        $languageId = new LanguageId($this->contextLangId);
+        //@todo: hardcoded shop Id, do I inject context shop or require shop constraint?
+        $duplicateNames = $this->categoryRepository->getDuplicateNames(new ShopId(1), $languageId);
         $categoryIdValues = $product->getCategories();
         $defaultCategoryId = (int) $product->id_category_default;
 
@@ -278,19 +281,40 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
             $categoryIds[] = new CategoryId((int) $categoryIdValue);
         }
 
-        $languageId = new LanguageId($this->contextLangId);
         $categoryNames = $this->categoryRepository->getLocalizedNames($categoryIds);
 
         $categoriesInformation = [];
         foreach ($categoryNames as $categoryId => $localizedNames) {
+            $localizedNames = $categoryNames[$categoryId];
+            $displayName = $this->buildDisplayName(
+                new CategoryId($categoryId),
+                $languageId,
+                $localizedNames[$this->contextLangId],
+                $duplicateNames
+            );
             $categoriesInformation[] = new CategoryInformation(
                 $categoryId,
-                $localizedNames,
-                $this->categoryRepository->getBreadcrumbParts(new CategoryId($categoryId), $languageId)
+                $displayName,
+                $localizedNames
             );
         }
 
         return new CategoriesInformation($categoriesInformation, $defaultCategoryId);
+    }
+
+    private function buildDisplayName(
+        CategoryId $categoryId,
+        LanguageId $languageId,
+        string $categoryName,
+        array $duplicateNames
+    ): string {
+        if (!in_array($categoryName, $duplicateNames)) {
+            return $categoryName;
+        }
+
+        $breadcrumbs = $this->categoryRepository->getBreadcrumbParts($categoryId, $languageId);
+
+        return implode(' > ', array_slice($breadcrumbs, -2, 2));
     }
 
     /**

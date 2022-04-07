@@ -156,32 +156,15 @@ class ProductFormDataProvider implements FormDataProviderInterface
         $categoriesInformation = $productForEditing->getCategoriesInformation();
         $defaultCategoryId = $categoriesInformation->getDefaultCategoryId();
 
-        $categoryNamesById = [];
-        foreach ($categoriesInformation->getCategoriesInformation() as $categoryInformation) {
-            $name = $categoryInformation->getLocalizedNames()[$this->contextLangId];
-            $categoryNamesById[$categoryInformation->getId()] = $name;
-        }
-
-        $duplicatedNameIds = [];
-        foreach ($categoryNamesById as $id => $name) {
-            if (array_count_values($categoryNamesById)[$name] > 1) {
-                $duplicatedNameIds[] = $id;
-            }
-        }
-
         $categories = [];
         foreach ($categoriesInformation->getCategoriesInformation() as $categoryInformation) {
             $localizedNames = $categoryInformation->getLocalizedNames();
             $categoryId = $categoryInformation->getId();
-            $name = $localizedNames[$this->contextLangId];
-//            if (in_array($categoryId, $duplicatedNameIds)) {
-//                $name = implode(' > ', array_slice($categoryInformation->getBreadcrumbs(), -2, 2));
-//            }
 
             $categories[] = [
                 'id' => $categoryId,
-                'name' => $name,
-                'breadcrumb' => implode(' > ', array_slice($categoryInformation->getBreadcrumbs(), -2, 2))
+                'name' => $localizedNames[$this->contextLangId] ?? reset($localizedNames),
+                'display_name' => $categoryInformation->getDisplayName(),
             ];
         }
 

@@ -40,6 +40,11 @@ class CategoryForTree
     private $active;
 
     /**
+     * @var string
+     */
+    private $displayName;
+
+    /**
      * @var array<int, string>
      */
     private $localizedNames;
@@ -50,29 +55,25 @@ class CategoryForTree
     private $children;
 
     /**
-     * @var array<int, string[]>
-     */
-    private $localizedBreadcrumbs;
-
-    /**
      * @param int $categoryId
      * @param bool $active
+     * @param string $displayName
      * @param array<int, string> $localizedNames
      * @param CategoryForTree[] $children
-     * @param array<int, string[]> $localizedBreadcrumbs
      */
     public function __construct(
         int $categoryId,
         bool $active,
+        string $displayName,
+        //@todo: probably shouldn't even be localized, as query has langId param
         array $localizedNames,
-        array $children,
-        array $localizedBreadcrumbs
+        array $children
     ) {
         $this->categoryId = $categoryId;
         $this->active = $active;
+        $this->displayName = $displayName;
         $this->localizedNames = $localizedNames;
         $this->children = $children;
-        $this->localizedBreadcrumbs = $localizedBreadcrumbs;
     }
 
     /**
@@ -92,6 +93,14 @@ class CategoryForTree
     }
 
     /**
+     * @return string
+     */
+    public function getDisplayName(): string
+    {
+        return $this->displayName;
+    }
+
+    /**
      * @return array<int, string>
      */
     public function getLocalizedNames(): array
@@ -105,13 +114,5 @@ class CategoryForTree
     public function getChildren(): array
     {
         return $this->children;
-    }
-
-    /**
-     * @return array<int, string[]>
-     */
-    public function getLocalizedBreadcrumbs(): array
-    {
-        return $this->localizedBreadcrumbs;
     }
 }

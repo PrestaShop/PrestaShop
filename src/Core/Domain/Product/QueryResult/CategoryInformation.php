@@ -38,6 +38,11 @@ class CategoryInformation
     private $id;
 
     /**
+     * @var string
+     */
+    private $displayName;
+
+    /**
      * @var array<int, string>
      * @todo: this doesn't need to be localized because we are not updating category info in product page
      *        (product name, description are localized, because all languages are needed for update)
@@ -45,23 +50,18 @@ class CategoryInformation
     private $localizedNames;
 
     /**
-     * @var string[]
-     */
-    private $breadcrumbs;
-
-    /**
      * @param int $id
+     * @param string $displayName
      * @param array<int, string> $localizedNames
-     * @param string[] $breadcrumbs
      */
     public function __construct(
         int $id,
-        array $localizedNames,
-        array $breadcrumbs
+        string $displayName,
+        array $localizedNames
     ) {
         $this->id = $id;
         $this->localizedNames = $localizedNames;
-        $this->breadcrumbs = $breadcrumbs;
+        $this->displayName = $displayName;
     }
 
     /**
@@ -73,18 +73,18 @@ class CategoryInformation
     }
 
     /**
+     * @return string
+     */
+    public function getDisplayName(): string
+    {
+        return $this->displayName;
+    }
+
+    /**
      * @return array<int, string>
      */
     public function getLocalizedNames(): array
     {
         return $this->localizedNames;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getBreadcrumbs(): array
-    {
-        return $this->breadcrumbs;
     }
 }
