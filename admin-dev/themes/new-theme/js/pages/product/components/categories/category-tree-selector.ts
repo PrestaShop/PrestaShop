@@ -341,14 +341,10 @@ export default class CategoryTreeSelector {
       const searchedCategory = this.searchCategoryInTree(categoryId, this.treeCategories);
 
       if (searchedCategory) {
-        const sameNameExists = this.selectedCategories.find(
-          (selectedCategory) => searchedCategory.name === selectedCategory.name);
-
         categories.push({
           id: searchedCategory.id,
           name: searchedCategory.name,
-          preview: sameNameExists ? searchedCategory.breadcrumb : searchedCategory.name,
-          breadcrumb: searchedCategory.breadcrumb,
+          displayName: searchedCategory.displayName,
         });
       }
     });

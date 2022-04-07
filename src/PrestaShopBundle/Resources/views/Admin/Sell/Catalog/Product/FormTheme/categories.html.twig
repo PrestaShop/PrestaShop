@@ -36,8 +36,8 @@
   {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' pstaggerTag tag-item')|trim }) -%}
 
   <span {{ block('widget_attributes') }}>
+    {{ form_widget(form.display_name) }}
     {{ form_widget(form.name) }}
-    {{ form_widget(form.breadcrumb) }}
     {% set hideCross = (form.vars.data.id is defined) and (form.vars.data.id == form.parent.parent.vars.data.default_category_id) %}
     <a class="pstaggerClosingCross {% if hideCross %}d-none{% endif %}" href="#">x</a>
     {{ form_widget(form.id, {'attr': {'class': 'category-id-input'}}) }}

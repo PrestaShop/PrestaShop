@@ -807,8 +807,9 @@ class CategoryController extends FrameworkBundleAdminController
                 'id' => $categoryForTree->getCategoryId(),
                 'active' => $active,
                 'name' => $names[$langId] ?? reset($names),
+                'displayName' => $categoryForTree->getDisplayName(),
                 'children' => $children,
-                'breadcrumb' => implode(' > ', array_slice($breadcrumbs[$langId], -2, 2)),
+                'breadcrumbs' => $breadcrumbs[$langId] ?? reset($breadcrumbs),
             ];
         }
 
