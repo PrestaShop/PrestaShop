@@ -1729,9 +1729,6 @@ services:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\BulkCombinationType'
     parent: 'form.type.translatable.aware'
     public: true
-    arguments:
-      - '@router'
-      - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency().iso_code'
     tags:
       - { name: form.type }
 
@@ -1889,12 +1886,6 @@ services:
 
   form.event_listener.add_disabling_switch_listener:
     class: 'PrestaShopBundle\Form\Admin\Type\EventListener\AddDisablingSwitchListener'
-    public: true
-    arguments:
-      - '@form.form_cloner'
-
-  form.event_listener.update_disable_state_listener:
-    class: 'PrestaShopBundle\Form\Admin\Type\EventListener\AdaptDisableStateListener'
     public: true
     arguments:
       - '@form.form_cloner'

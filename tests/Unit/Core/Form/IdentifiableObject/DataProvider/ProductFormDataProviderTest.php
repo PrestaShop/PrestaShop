@@ -1363,7 +1363,7 @@ class ProductFormDataProviderTest extends TestCase
                 ],
                 'options' => [
                     'stock_location' => 'location',
-                    'low_stock_threshold' => null,
+                    'low_stock_threshold' => 0,
                     'low_stock_alert' => false,
                 ],
                 'virtual_product_file' => [
