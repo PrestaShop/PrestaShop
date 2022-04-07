@@ -1667,9 +1667,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         return new RtlStylesheetProcessor(
             $adminDir,
             $themesDir,
-            [
-                _PS_MODULE_DIR_ . 'cronjobs',
-            ]
+            []
         );
     }
 
