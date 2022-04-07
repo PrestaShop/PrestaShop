@@ -29,7 +29,6 @@ namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreference
 
 use PrestaShop\PrestaShop\Adapter\Product\PageConfiguration;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class is responsible of managing the data manipulated using forms
@@ -42,17 +41,10 @@ class PageFormDataProvider implements FormDataProviderInterface
      */
     private $configuration;
 
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
     public function __construct(
-        PageConfiguration $configuration,
-        TranslatorInterface $translator
+        PageConfiguration $configuration
     ) {
         $this->configuration = $configuration;
-        $this->translator = $translator;
     }
 
     /**

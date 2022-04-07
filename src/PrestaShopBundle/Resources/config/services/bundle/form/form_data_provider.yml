@@ -60,7 +60,6 @@ services:
     class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\PageFormDataProvider'
     arguments:
       - '@prestashop.adapter.product_page.configuration'
-      - '@translator'
 
   prestashop.admin.product_preferences.stock.data_provider:
     class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\StockFormDataProvider'
