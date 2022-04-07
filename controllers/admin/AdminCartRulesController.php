@@ -99,8 +99,7 @@ class AdminCartRulesControllerCore extends AdminController
         }
 
         // If list has 'active' field, we automatically create bulk action
-        if (isset($this->fields_list) && is_array($this->fields_list) && array_key_exists('active', $this->fields_list)
-            && !empty($this->fields_list['active'])) {
+        if (array_key_exists('active', $this->fields_list) && $this->fields_list['active'] === true) {
             if (!is_array($this->bulk_actions)) {
                 $this->bulk_actions = [];
             }
