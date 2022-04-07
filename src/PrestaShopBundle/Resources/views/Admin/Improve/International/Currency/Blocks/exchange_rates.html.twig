@@ -41,7 +41,7 @@
 
             {% if exchangeRatesForm.live_exchange_rate.vars.disabled %}
                 <small class="form-text">
-                  {{ 'Please install the %module_name% module before using this feature.'|trans({'%module_name%': 'cronjobs'}, 'Admin.International.Notification') }}
+                  {{ 'Check the [a]developer documentation[/a] for setup instructions.'|trans({'[a]': '<a href="https://devdocs.prestashop.com/1.7/faq/pricing/#refresh-exchange-rates" target="_blank">', '[/a]': '</a>'}, 'Admin.International.Notification') }}
                 </small>
               {% else %}
                 <small class="form-text js-exchange-rate-text-when-disabled {{ (exchangeRatesForm.live_exchange_rate.vars.value == 0) ? '' : 'd-none' }}">
