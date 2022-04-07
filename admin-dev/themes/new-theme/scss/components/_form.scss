@@ -176,6 +176,20 @@
 .accordion-form {
   .card {
     margin-bottom: 0;
+    border: none;
+    box-shadow: none;
+
+    .card-header {
+      padding: 0;
+      margin-bottom: 0.5rem;
+      color: $dark-gray;
+      background-color: $background-grey;
+      @include border-radius(6px);
+
+      button {
+        padding: 0.7rem 1rem;
+      }
+    }
 
     .accordion-form-button {
       display: flex;
