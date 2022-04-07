@@ -72,7 +72,7 @@ class AddDisablingSwitchListener implements EventSubscriberInterface
         $form = $event->getForm();
         $parent = $form->getParent();
         if (null === $parent) {
-            throw new InvalidConfigurationException(sprintf('You cannot set the option %s on a root form.', DisablingSwitchExtension::FORM_OPTION));
+            throw new InvalidConfigurationException(sprintf('You cannot set the option %s on a root form.', DisablingSwitchExtension::SWITCH_OPTION));
         }
 
         $disablingFieldName = DisablingSwitchExtension::FIELD_PREFIX . $form->getName();

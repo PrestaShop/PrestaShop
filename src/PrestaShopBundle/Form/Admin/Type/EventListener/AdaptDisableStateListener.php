@@ -68,6 +68,10 @@ class AdaptDisableStateListener implements EventSubscriberInterface
 
         $submittedData = $event->getData();
         foreach ($form->all() as $child) {
+            if (!$child->getConfig()->getOption(DisablingSwitchExtension::SWITCH_OPTION) || !$child->getConfig()->hasOption(DisablingSwitchExtension::DISABLED_DATA_OPTION)) {
+                continue;
+            }
+
             $disablingFieldName = DisablingSwitchExtension::FIELD_PREFIX . $child->getName();
             if (!$form->has($disablingFieldName) || !isset($submittedData[$disablingFieldName])) {
                 continue;
@@ -75,31 +79,10 @@ class AdaptDisableStateListener implements EventSubscriberInterface
 
             $shouldBeDisabled = $submittedData[$disablingFieldName] === '0';
             if ($shouldBeDisabled) {
-                $disabledData = $this->getDisabledData($child);
-                $eventData = $event->getData();
+                $disabledData = $child->getConfig()->getOption(DisablingSwitchExtension::DISABLED_DATA_OPTION);
                 $eventData[$child->getName()] = $disabledData;
                 $event->setData($eventData);
             }
-        }
-    }
-
-    private function getDisabledData(FormInterface $form)
-    {
-        if ($form->count()) {
-            $formData = [];
-            foreach ($form->all() as $child) {
-                $formData[$child->getName()] = $this->getDisabledData($child);
-            }
-
-            return $formData;
-        } else {
-            $disabledValue = $form->getConfig()->getOption('default_empty_data');
-            if (null === $disabledValue) {
-                $emptyData = $form->getConfig()->getOption('empty_data');
-                $disabledValue = $emptyData instanceof \Closure ? $emptyData($form) : $emptyData;
-            }
-
-            return $disabledValue;
         }
     }
 }
