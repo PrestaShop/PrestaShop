@@ -43,24 +43,16 @@ class DisablingSwitchExtension extends AbstractTypeExtension
 
     public const SWITCH_OPTION = 'disabling_switch';
     public const DISABLED_VALUE_OPTION = 'disabled_value';
-    public const DISABLED_DATA_OPTION = 'disabled_data';
 
     /**
      * @var EventSubscriberInterface
      */
     private $addDisablingSwitchListener;
 
-    /**
-     * @var EventSubscriberInterface
-     */
-    private $adaptDisableStateListener;
-
     public function __construct(
-        EventSubscriberInterface $addDisablingSwitchListener,
-        EventSubscriberInterface $adaptDisableStateListener
+        EventSubscriberInterface $addDisablingSwitchListener
     ) {
         $this->addDisablingSwitchListener = $addDisablingSwitchListener;
-        $this->adaptDisableStateListener = $adaptDisableStateListener;
     }
 
     /**
@@ -79,13 +71,6 @@ class DisablingSwitchExtension extends AbstractTypeExtension
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        // The children state will be adapted from the parent form, but we have no way to detect the form parent from
-        // the builder so the AdaptDisableStateListener listener is added on any compound form since it may potentially
-        // contain some DisablingSwitchType, the listener will then detect if some disabling fields are present or not
-        if ($builder->getCompound()) {
-            // $builder->addEventSubscriber($this->adaptDisableStateListener);
-        }
-
         // This particular field has the expected option enabled, so we assign the add listener to dynamically add the
         // associated DisablingSwitchType to the parent
         $hasToggleOption = $builder->getOption(self::SWITCH_OPTION);
@@ -112,15 +97,16 @@ class DisablingSwitchExtension extends AbstractTypeExtension
         $resolver
             ->setDefaults([
                 self::SWITCH_OPTION => false,
-                // We use this value to know if the field state is disabled or not on first rendering
-                //
-                // When left null the default_empty_data option will be used for comparison, if default_empty_data
-                // is also null then the empty_data option is used
+                // We use this value to know if the field state is disabled or not on first rendering, if the value is null
+                // we have other fallback options, the priority is:
+                //   - disabled_value
+                //   - default_empty_data
+                //   - empty_data
                 //
                 // You can also specify a callback or a closure for this option this allows more complex use case
                 // to define if the form is considered empty or not (useful for compound form based on multiple values).
                 // The callback will receive the form data and the FormInterface, it must return true if the field should
-                // be disabled
+                // be disabled Keep in mind that the data, which comes from the Form event, can be null quite often.
                 //
                 // ex: 'disabled_value' => function (?array $data, FormInterface $form): bool {
                 //          return empty($data['reduction_type']) || empty($data['reduction_value']);
@@ -129,8 +115,6 @@ class DisablingSwitchExtension extends AbstractTypeExtension
             ])
             ->setAllowedTypes(self::SWITCH_OPTION, 'bool')
             ->setAllowedTypes(self::DISABLED_VALUE_OPTION, ['null', 'string', 'int', 'array', 'object', 'bool', 'float', 'callback', Closure::class])
-            ->setDefined(self::DISABLED_DATA_OPTION)
-            ->setAllowedTypes(self::DISABLED_DATA_OPTION, ['null', 'string', 'int', 'array', 'object', 'bool', 'float', 'callback', Closure::class])
         ;
     }
 }

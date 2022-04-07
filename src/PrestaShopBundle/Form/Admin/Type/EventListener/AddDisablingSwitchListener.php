@@ -80,7 +80,7 @@ class AddDisablingSwitchListener implements EventSubscriberInterface
             return;
         }
 
-        $disabledValue = $form->getConfig()->getOption('disabled_value');
+        $disabledValue = $form->getConfig()->getOption(DisablingSwitchExtension::DISABLED_VALUE_OPTION);
         if (is_callable($disabledValue)) {
             try {
                 $shouldBeDisabled = $disabledValue($event->getData(), $event->getForm());
