@@ -88,8 +88,8 @@
       {% if label_tag_name is not defined %}
         {{ form_label(form) }}
       {% endif %}
-      <div class="{{ block('form_group_class') }}">
-        {{ form_widget(form, {'attr': attr}) }}
+      <div class="{{ block('form_group_class') }}{% if disabledField %} disabled{% endif %}">
+        {{ form_widget(form) }}
         {{ form_errors(form, {'attr': {'fieldError': true}}) }}
       </div>
       {% if attribute(form.parent, form.vars.name) is defined and attribute(form.parent, form.vars.name).vars.multistore_dropdown != false %}
