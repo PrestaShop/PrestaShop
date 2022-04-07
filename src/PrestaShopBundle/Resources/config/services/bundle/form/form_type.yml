@@ -896,7 +896,6 @@ services:
     parent: 'form.type.translatable.aware'
     public: true
     arguments:
-      - '@=service("prestashop.adapter.data_provider.module").isInstalled("cronjobs")'
       - '@prestashop.router'
     tags:
       - { name: form.type }

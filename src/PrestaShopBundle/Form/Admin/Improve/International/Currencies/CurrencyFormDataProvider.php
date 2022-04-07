@@ -36,10 +36,6 @@ use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
  */
 final class CurrencyFormDataProvider implements FormDataProviderInterface
 {
-    /**
-     * @var int
-     */
-    private $cronExchangeRate;
 
     /**
      * @var CommandBusInterface
@@ -48,13 +44,10 @@ final class CurrencyFormDataProvider implements FormDataProviderInterface
 
     /**
      * @param CommandBusInterface $commandBus
-     * @param int $cronExchangeRate
      */
     public function __construct(
-        CommandBusInterface $commandBus,
-        $cronExchangeRate
+        CommandBusInterface $commandBus
     ) {
-        $this->cronExchangeRate = $cronExchangeRate;
         $this->commandBus = $commandBus;
     }
 
@@ -65,21 +58,15 @@ final class CurrencyFormDataProvider implements FormDataProviderInterface
     {
         return [
             'exchange_rates' => [
-                'live_exchange_rate' => 0 !== (int) $this->cronExchangeRate,
             ],
         ];
     }
 
     /**
      * {@inheritdoc}
-     *
-     * @throws CurrencyException
      */
     public function setData(array $data)
     {
-        $command = new ToggleExchangeRateAutomatizationCommand($data['exchange_rates']['live_exchange_rate']);
-        $this->commandBus->handle($command);
-
         return [];
     }
 }

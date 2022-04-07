@@ -37,10 +37,6 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class CurrencyExchangeRateType extends TranslatorAwareType
 {
-    /**
-     * @var bool
-     */
-    private $isCronModuleInstalled;
 
     /**
      * @var Router
@@ -50,17 +46,14 @@ class CurrencyExchangeRateType extends TranslatorAwareType
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param bool $isCronModuleInstalled
      * @param Router $router
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        bool $isCronModuleInstalled,
         Router $router
     ) {
         parent::__construct($translator, $locales);
-        $this->isCronModuleInstalled = $isCronModuleInstalled;
         $this->router = $router;
     }
 
@@ -69,15 +62,5 @@ class CurrencyExchangeRateType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('live_exchange_rate', SwitchType::class, [
-                'disabled' => !$this->isCronModuleInstalled,
-                'label' => $this->trans('Live exchange rates', 'Admin.International.Feature'),
-                'attr' => [
-                    'class' => 'js-live-exchange-rate',
-                    'data-url' => $this->router->generate('admin_currencies_update_live_exchange_rates'),
-                ],
-            ])
-        ;
     }
 }
