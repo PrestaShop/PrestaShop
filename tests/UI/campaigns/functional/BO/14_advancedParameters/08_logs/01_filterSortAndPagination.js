@@ -15,19 +15,9 @@ const loginCommon = require('@commonTests/BO/loginBO');
 const dashboardPage = require('@pages/BO/dashboard/index');
 const logsPage = require('@pages/BO/advancedParameters/logs');
 
-// Import FO pages
-const foLoginPage = require('@pages/FO/login');
-const homePage = require('@pages/FO/home');
-const productPage = require('@pages/FO/product');
-const cartPage = require('@pages/FO/cart');
-const checkoutPage = require('@pages/FO/checkout');
-const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
-
 const baseContext = 'functional_BO_advancedParameters_logs_filterSortAndPagination';
 
 // Import data
-const {PaymentMethods} = require('@data/demo/paymentMethods');
-const {DefaultCustomer} = require('@data/demo/customer');
 const {DefaultEmployee} = require('@data/demo/employees');
 
 let browserContext;
@@ -80,9 +70,9 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
     await expect(numberOfLogs).to.be.equal(0);
   });
 
-  // Login and logout 5 times to have 5 logs
-  describe('Logout then login 5 times to have 5 logs', async () => {
-    const tests = new Array(5).fill(0, 0, 5);
+  // Login and logout 11 times to have 11 logs
+  describe('Logout then login 11 times to have 11 logs', async () => {
+    const tests = new Array(11).fill(0, 0, 11);
 
     tests.forEach((test, index) => {
       it(`should logout from BO n°${index + 1}`, async function () {
@@ -92,104 +82,22 @@ describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs tab
       it(`should login in BO n°${index + 1}`, async function () {
         await loginCommon.loginBO(this, page);
       });
-
-      it('should go to \'Advanced parameters > Logs\' page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToLogsPage${index}`, baseContext);
-
-        await dashboardPage.goToSubMenu(page, dashboardPage.advancedParametersLink, dashboardPage.logsLink);
-
-        const pageTitle = await logsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(logsPage.pageTitle);
-
-        const numberOfElements = await logsPage.getNumberOfElementInGrid(page);
-        await expect(numberOfElements).to.be.equal(numberOfLogs + index + 1);
-      });
-    });
-  });
-
-  // Create 6 orders to have 6 logs
-  describe('Create 6 orders to have 6 logs', async () => {
-    it('should go to FO page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
-
-      // Click on view my shop
-      page = await dashboardPage.viewMyShop(page);
-
-      // Change language on FO
-      await homePage.changeLanguage(page, 'en');
-
-      const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
     });
 
-    it('should go to login page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToLoginFO', baseContext);
+    it('should go to \'Advanced parameters > Logs\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToLogsPage', baseContext);
 
-      await homePage.goToLoginPage(page);
-
-      const pageTitle = await foLoginPage.getPageTitle(page);
-      await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
-    });
-
-    it('should sign in with default customer', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
-
-      await foLoginPage.customerLogin(page, DefaultCustomer);
-
-      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
-    });
-
-    const tests = new Array(6).fill(0, 0, 6);
-
-    tests.forEach((test, index) => {
-      it(`should create the order n°${index + 1}`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `createOrder${index}`, baseContext);
-
-        // Go to home page
-        await foLoginPage.goToHomePage(page);
-
-        // Go to the first product page
-        await homePage.goToProductPage(page, 1);
-
-        // Add the created product to the cart
-        await productPage.addProductToTheCart(page);
-
-        // Proceed to checkout the shopping cart
-        await cartPage.clickOnProceedToCheckout(page);
-
-        // Address step - Go to delivery step
-        const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-        await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
-
-        // Delivery step - Go to payment step
-        const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-        await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
-
-        // Payment step - Choose payment step
-        await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
-
-        // Check the confirmation message
-        const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-        await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
-      });
-    });
-
-    it('should sign out from FO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'signOutFO', baseContext);
-
-      await orderConfirmationPage.logout(page);
-      const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is connected').to.be.false;
-    });
-
-    it('should go back to BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
-
-      page = await orderConfirmationPage.closePage(browserContext, page, 0);
+      await dashboardPage.goToSubMenu(page, dashboardPage.advancedParametersLink, dashboardPage.logsLink);
 
       const pageTitle = await logsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(logsPage.pageTitle);
+    });
+
+    it('should check the number of logs', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkLogsNumber', baseContext);
+
+      const numberOfElements = await logsPage.getNumberOfElementInGrid(page);
+      await expect(numberOfElements).to.be.equal(11);
     });
   });
 
