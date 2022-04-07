@@ -31,41 +31,12 @@ use PrestaShopBundle\Form\Admin\Type\AccordionType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * For combination update in bulk action
  */
 class BulkCombinationType extends TranslatorAwareType
 {
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
-     * @var string
-     */
-    private $defaultCurrencyIsoCode;
-
-    /**
-     * @param TranslatorInterface $translator
-     * @param array $locales
-     * @param RouterInterface $router
-     * @param string $defaultCurrencyIsoCode
-     */
-    public function __construct(
-        TranslatorInterface $translator,
-        array $locales,
-        RouterInterface $router,
-        string $defaultCurrencyIsoCode
-    ) {
-        parent::__construct($translator, $locales);
-        $this->router = $router;
-        $this->defaultCurrencyIsoCode = $defaultCurrencyIsoCode;
-    }
-
     /**
      * {@inheritDoc}
      */
