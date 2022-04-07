@@ -40,7 +40,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class DisablingSwitchExtension extends AbstractTypeExtension
 {
     public const FIELD_PREFIX = 'disabling_switch_';
-    public const FORM_OPTION = 'disabling_switch';
+
+    public const SWITCH_OPTION = 'disabling_switch';
+    public const DISABLED_VALUE_OPTION = 'disabled_value';
+    public const DISABLED_DATA_OPTION = 'disabled_data';
 
     /**
      * @var EventSubscriberInterface
@@ -80,12 +83,12 @@ class DisablingSwitchExtension extends AbstractTypeExtension
         // the builder so the AdaptDisableStateListener listener is added on any compound form since it may potentially
         // contain some DisablingSwitchType, the listener will then detect if some disabling fields are present or not
         if ($builder->getCompound()) {
-            $builder->addEventSubscriber($this->adaptDisableStateListener);
+            // $builder->addEventSubscriber($this->adaptDisableStateListener);
         }
 
         // This particular field has the expected option enabled, so we assign the add listener to dynamically add the
         // associated DisablingSwitchType to the parent
-        $hasToggleOption = $builder->getOption(self::FORM_OPTION);
+        $hasToggleOption = $builder->getOption(self::SWITCH_OPTION);
         if ($hasToggleOption) {
             $builder->addEventSubscriber($this->addDisablingSwitchListener);
         }
@@ -98,7 +101,7 @@ class DisablingSwitchExtension extends AbstractTypeExtension
      */
     public function buildView(FormView $view, FormInterface $form, array $options): void
     {
-        $view->vars[self::FORM_OPTION] = $options[self::FORM_OPTION];
+        $view->vars[self::SWITCH_OPTION] = $options[self::SWITCH_OPTION];
     }
 
     /**
@@ -108,7 +111,7 @@ class DisablingSwitchExtension extends AbstractTypeExtension
     {
         $resolver
             ->setDefaults([
-                self::FORM_OPTION => false,
+                self::SWITCH_OPTION => false,
                 // We use this value to know if the field state is disabled or not on first rendering
                 //
                 // When left null the default_empty_data option will be used for comparison, if default_empty_data
@@ -122,10 +125,12 @@ class DisablingSwitchExtension extends AbstractTypeExtension
                 // ex: 'disabled_value' => function (?array $data, FormInterface $form): bool {
                 //          return empty($data['reduction_type']) || empty($data['reduction_value']);
                 //      },
-                'disabled_value' => null,
+                self::DISABLED_VALUE_OPTION => null,
             ])
-            ->setAllowedTypes(self::FORM_OPTION, 'bool')
-            ->setAllowedTypes('disabled_value', ['null', 'string', 'int', 'array', 'object', 'bool', 'float', 'callback', Closure::class])
+            ->setAllowedTypes(self::SWITCH_OPTION, 'bool')
+            ->setAllowedTypes(self::DISABLED_VALUE_OPTION, ['null', 'string', 'int', 'array', 'object', 'bool', 'float', 'callback', Closure::class])
+            ->setDefined(self::DISABLED_DATA_OPTION)
+            ->setAllowedTypes(self::DISABLED_DATA_OPTION, ['null', 'string', 'int', 'array', 'object', 'bool', 'float', 'callback', Closure::class])
         ;
     }
 }
