@@ -100,6 +100,7 @@ export default {
   contextualNotification: {
     close: '.contextual-notification .close',
     messageBoxId: 'content-message-box',
+    notificationBoxId: 'contextual-notification-box',
     notificationClass: 'contextual-notification',
   },
   ajaxConfirmation: '#ajax_confirmation',
