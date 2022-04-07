@@ -123,6 +123,7 @@ module.exports = {
     supplier_form: './js/pages/supplier/supplier-form',
     tax: './js/pages/tax',
     tax_rules_group: './js/pages/tax-rules-group',
+    light_theme: './scss/light_theme.scss',
     theme: './scss/theme.scss',
     rtl: './scss/rtl.scss',
     themes: './js/pages/themes',

@@ -38,6 +38,7 @@
     "postcss": "^8.2.15",
     "prestakit": "^1.2.3",
     "punycode": "^2.1.1",
+    "resize-observer-polyfill": "^1.5.1",
     "tablednd": "^1.0.3",
     "terser-webpack-plugin": "^5.2.5",
     "typeahead.js": "^0.11.1",

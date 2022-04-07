@@ -26,6 +26,7 @@
 <html lang="{$iso}">
 <head>
   {$header}
+  <link href="{$baseAdminUrl}themes/new-theme/public/light_theme.css" rel="stylesheet" type="text/css">
 </head>
 
 <body
