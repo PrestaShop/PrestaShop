@@ -37,6 +37,14 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use TypeError;
 
+/**
+ * This listener is used by the DisablingSwitchExtension to automatically add the DisablingSwitchType to the parent,
+ * it is not possible to access the parent builder in the extension which is why this operation is delayed on the
+ * PRE_SET_DATA event.
+ *
+ * The switch state and the associated input's disabled state are automatically computed based on the input's data,
+ * if it matches the disabled_value then the field is considered as disabled and the switch is turned off.
+ */
 class AddDisablingSwitchListener implements EventSubscriberInterface
 {
     public const TOGGLE_DATA_ATTRIBUTE = 'data-toggled-by';
