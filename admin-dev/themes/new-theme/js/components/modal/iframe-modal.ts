@@ -99,7 +99,7 @@ export class IframeModalContainer extends ModalContainer implements IframeModalC
 
     this.iframe = document.createElement('iframe');
     this.iframe.frameBorder = '0';
-    this.iframe.scrolling = 'auto';
+    this.iframe.scrolling = 'no';
     this.iframe.width = '100%';
     if (!params.autoSize) {
       this.iframe.height = '100%';
@@ -284,7 +284,8 @@ export class IframeModal extends Modal implements IframeModalType {
 
       // Avoid applying height of 0 (on first load for example)
       if (contentHeight) {
-        this.modal.body.style.height = `${contentHeight}px`;
+        // We force the iframe to its real height and it's the container that handles the overflow with scrollbars
+        this.modal.iframe.style.height = `${contentHeight}px`;
       }
     }
   }
