@@ -130,6 +130,7 @@ class CombinationController extends FrameworkBundleAdminController
     public function bulkEditAction(Request $request, int $combinationId): JsonResponse
     {
         try {
+            // PATCH request is required to avoid disabled fields to be forced with null values
             $bulkCombinationForm = $this->getBulkCombinationFormBuilder()->getFormFor($combinationId, [], [
                 'method' => Request::METHOD_PATCH,
             ]);
@@ -144,7 +145,15 @@ class CombinationController extends FrameworkBundleAdminController
             $bulkCombinationForm->handleRequest($request);
             $result = $this->getBulkCombinationFormHandler()->handleFor($combinationId, $bulkCombinationForm);
 
-            if ($result->isSubmitted() && $result->isValid()) {
+            if (!$result->isSubmitted()) {
+                return $this->json(['errors' => [
+                    'form' => [
+                        $this->trans('No submitted data.', 'Admin.Notifications.Error'),
+                    ],
+                ]], Response::HTTP_BAD_REQUEST);
+            }
+
+            if ($result->isValid()) {
                 return $this->json([]);
             }
         } catch (CombinationException $e) {
@@ -154,7 +163,7 @@ class CombinationController extends FrameworkBundleAdminController
             );
         }
 
-        return $this->json($this->getFormErrorsForJS($bulkCombinationForm));
+        return $this->json(['errors' => $this->getFormErrorsForJS($bulkCombinationForm)], Response::HTTP_BAD_REQUEST);
     }
 
     /**
