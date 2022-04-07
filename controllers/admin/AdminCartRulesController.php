@@ -106,11 +106,11 @@ class AdminCartRulesControllerCore extends AdminController
 
             $this->bulk_actions = array_merge([
                 'enableSelection' => [
-                    'text' => $this->trans('Enable selection'),
+                    'text' => $this->trans('Enable selection', [], 'Admin.Actions'),
                     'icon' => 'icon-power-off text-success',
                 ],
                 'disableSelection' => [
-                    'text' => $this->trans('Disable selection'),
+                    'text' => $this->trans('Disable selection', [], 'Admin.Actions'),
                     'icon' => 'icon-power-off text-danger',
                 ],
                 'divider' => [
@@ -123,7 +123,7 @@ class AdminCartRulesControllerCore extends AdminController
 
         // Empty list is ok
         if (!is_array($this->_list)) {
-            $this->displayWarning($this->trans('Bad SQL query') . '<br />' . htmlspecialchars($this->_list_error));
+            $this->displayWarning($this->trans('Bad SQL query', [], 'Admin.Notifications.Error') . '<br />' . htmlspecialchars($this->_list_error));
 
             return false;
         }
