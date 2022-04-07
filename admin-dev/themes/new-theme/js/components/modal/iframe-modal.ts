@@ -45,16 +45,25 @@ export interface IframeModalType extends ModalType {
 export type IframeCallbackFunction = (iframe:HTMLIFrameElement, event: Event) => void;
 export type IframeEventCallbackFunction = (event: IframeEvent) => void;
 export type IframeModalParams = ModalParams & {
-  modalTitle?: string;
+  // Callback method executed each time the iframe loads an url
   onLoaded?: IframeCallbackFunction,
+  // Callback method executed each time the iframe is about to unload its content
   onUnload?: IframeCallbackFunction,
+  // The iframe can launch IframeEvent to communicate with its parent via this callback
   onIframeEvent?: IframeEventCallbackFunction,
+  // Initial url of the iframe
   iframeUrl: string;
+  // When true the iframe height is computed based on its content
   autoSize: boolean;
+  // By default the body of the iframe is used as a reference of its content's size but this option can customize it
   autoSizeContainer: string;
+  // Optional, when set a close button is added in the modal's footer
   closeButtonLabel?: string;
+  // Optional, when set a close button is added in the modal's footer
   confirmButtonLabel?: string;
+  // Callback when the confirm button is clicked
   confirmCallback?: (event: Event) => void;
+  // By default the iframe closes when confirm button is clicked, this options overrides this behaviour
   closeOnConfirm: boolean;
 }
 export type InputIframeModalParams = Partial<IframeModalParams> & {

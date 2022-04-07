@@ -26,7 +26,6 @@
 const combinationListId = '#combination_list';
 const attachmentsBlockId = '#product_specifications_attachments';
 // It does not include "#" so it can be selected by getElementById
-const bulkCombinationModalId = 'bulk-combination-modal';
 const isSelectedCombinationInputClass = 'combination-is-selected';
 const bulkCombinationSelectAllInPageId = 'bulk-select-all-in-page';
 const progressModalId = 'bulk-combination-progress-modal';
@@ -108,8 +107,6 @@ export default {
       'form[name="combination_form"] input, form[name="combination_form"] textarea, form[name="combination_form"] select',
     editCombinationButtons: '.edit-combination-item',
     tableRow: {
-      tableRowSelector: 'tr.combination',
-      isSelectedCombinationInputClass,
       isSelectedCombination: `.${isSelectedCombinationInputClass}`,
       combinationImg: '.combination-image',
       deltaQuantityWrapper: '.delta-quantity',
@@ -137,8 +134,6 @@ export default {
     generateCombinationsButton: '.generate-combinations-button',
     bulkCombinationFormBtn: '#combination-bulk-form-btn',
     bulkActionsBtn: '#combination-bulk-actions-btn',
-    bulkCombinationModalId,
-    bulkCombinationForm: `#${bulkCombinationModalId} form[name="bulk_combination"]`,
     bulkSelectAllInPage: `#${bulkCombinationSelectAllInPageId}`,
     bulkSelectAllInPageId: bulkCombinationSelectAllInPageId,
     bulkProgressModalId: progressModalId,

@@ -25,6 +25,11 @@
 import ComponentsMap from '@components/components-map';
 import FormFieldDisabler from '@components/form/form-field-disabler';
 
+/**
+ * This components work along with the form option disabling_switch it automatizes the initialzation
+ * of the switch disabler inputs, it is accessible easily with the other PrestaShop components via the
+ * initComponents method.
+ */
 export default class DisablingSwitch {
   constructor() {
     new FormFieldDisabler({
