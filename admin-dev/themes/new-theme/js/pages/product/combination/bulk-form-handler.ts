@@ -179,7 +179,19 @@ export default class BulkFormHandler {
 
       try {
         // eslint-disable-next-line no-await-in-loop
-        await this.combinationsService.bulkUpdate(Number(checkbox.value), new FormData(form));
+        const response: Response = await this.combinationsService.bulkUpdate(Number(checkbox.value), new FormData(form));
+        // eslint-disable-next-line no-await-in-loop
+        const jsonResponse = await response.json();
+
+        if (jsonResponse.errors) {
+          Object.keys(jsonResponse.errors).forEach((field: string) => {
+            if (Object.prototype.hasOwnProperty.call(jsonResponse.errors, field)) {
+              const fieldErrors: string[] = jsonResponse.errors[field];
+              const errors: string = fieldErrors.join(' ');
+              $.growl.error({message: `${field}: ${errors}`});
+            }
+          });
+        }
       } catch (error) {
         console.log(error);
       }
