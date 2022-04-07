@@ -31,6 +31,10 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * This type is used by the DisablingExtension and automatically added on form fields which have
+ * the disabling_switcher option enabled.
+ */
 class DisablingSwitchType extends SwitchType
 {
     /**
