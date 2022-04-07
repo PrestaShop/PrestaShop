@@ -17,7 +17,7 @@ const productSettingsPage = require('@pages/BO/shopParameters/productSettings');
 const foProductPage = require('@pages/FO/product');
 const foHomePage = require('@pages/FO/home');
 
-const baseContext = 'functional_BO_shopParameters_productSettings_productsStock_enableDeliveryTimeInStockProducts';
+const baseContext = 'functional_BO_shopParameters_productSettings_productsStock_enableDeliveryTimeOfInStockProducts';
 
 let browserContext;
 let page;

@@ -28,7 +28,7 @@ let page;
 
 const productAttributes = ['1', 'size', 's/8', 'color', 'white'];
 
-describe('BO - Shop Parameters - Product Settings : Update separator of attribute anchor on  '
+describe('BO - Shop Parameters - Product Settings : Update separator of attribute anchor on '
   + 'the product links', async () => {
   // before and after functions
   before(async function () {
