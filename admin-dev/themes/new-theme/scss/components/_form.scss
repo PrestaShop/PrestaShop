@@ -194,5 +194,17 @@
         }
       }
     }
+
+    .accordion-sub-form {
+      > .form-group {
+        padding: 0.625rem;
+        border-bottom: 1px solid $background-grey;
+      }
+
+      > .form-group:last-child {
+        margin-bottom: 0;
+        border-bottom: none;
+      }
+    }
   }
 }
