@@ -90,8 +90,8 @@
 			</div>
 			<div class="col-lg-4">
 				<select name="reduction_tax" >
-					<option value="0" {if $currentTab->getFieldValue($currentObject, 'reduction_tax') == 0}selected="selected"{/if}>{l s='Tax excluded' d='Admin.Global'}</option>
-					<option value="1" {if $currentTab->getFieldValue($currentObject, 'reduction_tax') == 1}selected="selected"{/if}>{l s='Tax included' d='Admin.Global'}</option>
+					<option value="0" {if $currentTab->getFieldValue($currentObject, 'reduction_tax') === '0'}selected="selected"{/if}>{l s='Tax excluded' d='Admin.Global'}</option>
+					<option value="1" {if $currentTab->getFieldValue($currentObject, 'reduction_tax') === '1' || $currentTab->getFieldValue($currentObject, 'reduction_tax') === false}selected="selected"{/if}>{l s='Tax included' d='Admin.Global'}</option>
 				</select>
 			</div>
 		</div>
