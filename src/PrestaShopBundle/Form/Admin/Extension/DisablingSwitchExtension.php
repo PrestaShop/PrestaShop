@@ -37,6 +37,15 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * This extension allows you to associate a switch disabler component to a form type byt setting
+ * the option disabling_switch to true. The component is automatically added to the form thanks to
+ * a form listener and automatically rendered in the prestashop form theme (although you can always
+ * override the rendering if needed).
+ *
+ * The switch state is detected based on your input empty data but you can also define a more accurate
+ * disabled value if needed thanks to the disabled_value option.
+ */
 class DisablingSwitchExtension extends AbstractTypeExtension
 {
     public const FIELD_PREFIX = 'disabling_switch_';
