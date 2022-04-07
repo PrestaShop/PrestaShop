@@ -78,8 +78,8 @@ class BulkCombinationFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data): void
     {
-        $data = $this->bulkCombinationFormDataFormatter->format($data);
-        $commands = $this->commandsBuilder->buildCommands(new CombinationId($id), $data);
+        $formattedData = $this->bulkCombinationFormDataFormatter->format($data);
+        $commands = $this->commandsBuilder->buildCommands(new CombinationId($id), $formattedData);
 
         foreach ($commands as $command) {
             $this->commandBus->handle($command);
