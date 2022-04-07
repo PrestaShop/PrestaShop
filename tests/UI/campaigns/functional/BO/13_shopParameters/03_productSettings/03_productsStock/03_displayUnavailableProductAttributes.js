@@ -39,7 +39,7 @@ const productData = new ProductFaker(
   },
 );
 
-describe('BO - Shop Parameters - Product Settings :  Display unavailable product attributes  '
+describe('BO - Shop Parameters - Product Settings : Display unavailable product attributes '
   + 'on the product page', async () => {
   // before and after functions
   before(async function () {
