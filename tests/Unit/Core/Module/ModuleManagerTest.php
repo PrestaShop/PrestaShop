@@ -44,8 +44,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ModuleManagerTest extends TestCase
 {
-    private const INSTALLED_MODULE_NAME = 'installed';
-    private const UNINSTALLED_MODULE_NAME = 'uninstalled';
+    public const INSTALLED_MODULE_NAME = 'installed';
+    public const UNINSTALLED_MODULE_NAME = 'uninstalled';
+    public const INSTALLED_THEN_UNINSTALLED_MODULE_NAME = 'installed_uninstalled';
 
     /** @var ModuleManager */
     private $moduleManager;
@@ -148,7 +149,7 @@ class ModuleManagerTest extends TestCase
         $this->module->expects($this->once())->method('onReset');
         $this->module->expects($this->once())->method('onInstall');
         $this->module->expects($this->once())->method('onUninstall');
-        $this->assertTrue($this->moduleManager->reset(self::INSTALLED_MODULE_NAME, false));
+        $this->assertTrue($this->moduleManager->reset(self::INSTALLED_THEN_UNINSTALLED_MODULE_NAME, false));
         $this->assertTrue($this->moduleManager->reset(self::INSTALLED_MODULE_NAME, true));
 
         $this->expectException(Exception::class);
@@ -211,6 +212,7 @@ class ModuleManagerTest extends TestCase
             ->getMock()
         ;
 
+        $module->method('get')->with('version')->willReturn('1.0.0');
         $module->method('onInstall')->willReturn(true);
         $module->method('onUninstall')->willReturn(true);
         $module->method('onEnable')->willReturn(true);
@@ -230,11 +232,23 @@ class ModuleManagerTest extends TestCase
     {
         $moduleDataProvider = $this->createMock(ModuleDataProvider::class);
 
+        // When you reset a module, there is 2 ways: using the reset function or using uninstall then install.
+        // With the second way, we need to be sure that the module is installed before calling uninstall and uninstalled
+        // before calling install. This callback returns true twice and then false to simulate the expected behavior
+        // for the `INSTALLED_THEN_UNINSTALLED_MODULE_NAME` module name
+        $isInstalledCallback = new class() {
+            private $count = 0;
+
+            public function isInstalled($name)
+            {
+                return $name === ModuleManagerTest::INSTALLED_MODULE_NAME
+                    || ($name === ModuleManagerTest::INSTALLED_THEN_UNINSTALLED_MODULE_NAME
+                        && ++$this->count < 3);
+            }
+        };
+
         $moduleDataProvider->method('isInstalled')
-            ->willReturnMap([
-                [self::INSTALLED_MODULE_NAME, true],
-                [self::UNINSTALLED_MODULE_NAME, false],
-            ])
+            ->willReturnCallback([$isInstalledCallback, 'isInstalled'])
         ;
 
         $moduleDataProvider->method('isEnabled')
