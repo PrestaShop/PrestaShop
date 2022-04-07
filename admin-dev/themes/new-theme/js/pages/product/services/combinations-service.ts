@@ -76,11 +76,15 @@ export default class CombinationsService {
     });
   }
 
-  bulkUpdate(combinationId: number, data: Record<string, any>): JQuery.jqXHR {
-    return $.ajax({
-      url: this.router.generate('admin_products_combinations_bulk_edit_combination', {combinationId}),
-      data,
-      method: 'PATCH',
+  bulkUpdate(combinationId: number, formData: FormData): Promise<Response> {
+    formData.append('_method', 'PATCH');
+
+    return fetch(this.router.generate('admin_products_combinations_bulk_edit_combination', {combinationId}), {
+      method: 'POST',
+      body: formData,
+      headers: {
+        _method: 'PATCH',
+      },
     });
   }
 
