@@ -27,6 +27,14 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataFormatter;
 
+use Symfony\Component\PropertyAccess\Exception\AccessException;
+use Symfony\Component\PropertyAccess\PropertyAccess;
+
+/**
+ * This class transforms the data from bulk form into data adapted to the combination form structure,
+ * since the forms are not constructed the same way the goal is to rebuild the same data values with the
+ * right property path. When the data is not detected it is not included in the formatted data.
+ */
 class BulkCombinationFormDataFormatter
 {
     /**
@@ -36,21 +44,42 @@ class BulkCombinationFormDataFormatter
      */
     public function format(array $formData): array
     {
-        $formattedData = [
-            'references' => [
-                'reference' => null,
-            ],
-            'price_impact' => [
-                'price_tax_excluded' => null,
-            ],
+        $pathAssociations = [
+            // References data follow same format so it is quite easy
+            '[references][reference]' => '[references][reference]',
+            '[references][mpn]' => '[references][mpn]',
+            '[references][upc]' => '[references][upc]',
+            '[references][ean_13]' => '[references][ean_13]',
+            '[references][isbn]' => '[references][isbn]',
+            // Prices data have almost the same format
+            '[price][wholesale_price]' => '[price_impact][wholesale_price]',
+            '[price][price_tax_excluded]' => '[price_impact][price_tax_excluded]',
+            '[price][price_tax_included]' => '[price_impact][price_tax_included]',
+            '[price][unit_price]' => '[price_impact][unit_price]',
+            '[price][weight]' => '[price_impact][weight]',
+            // Stock data are the trickiest
+            '[stock][delta_quantity][delta]' => '[stock][quantities][delta_quantity][delta]',
+            '[stock][minimal_quantity]' => '[stock][quantities][minimal_quantity]',
+            '[stock][stock_location]' => '[stock][options][stock_location]',
+            '[stock][low_stock_threshold]' => '[stock][options][low_stock_threshold]',
+            '[stock][low_stock_alert]' => '[stock][options][low_stock_alert]',
+            '[stock][available_date]' => '[stock][available_date]',
         ];
+        $formattedData = [];
 
-        if (isset($formData['disabling_toggle_reference']) && $formData['disabling_toggle_reference']) {
-            $formattedData['references']['reference'] = $formData['reference'] ?? '';
-        }
-
-        if (isset($formData['disabling_toggle_price_tax_excluded']) && $formData['disabling_toggle_price_tax_excluded']) {
-            $formattedData['price_impact']['price_tax_excluded'] = $formData['price_tax_excluded'] ?? 0;
+        $propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()
+            ->enableExceptionOnInvalidIndex()
+            ->enableExceptionOnInvalidPropertyPath()
+            ->disableMagicCall()
+            ->getPropertyAccessor()
+        ;
+        foreach ($pathAssociations as $bulkFormPath => $editFormPath) {
+            try {
+                $bulkValue = $propertyAccessor->getValue($formData, $bulkFormPath);
+                $propertyAccessor->setValue($formattedData, $editFormPath, $bulkValue);
+            } catch (AccessException $e) {
+                // When the bulk data is not found it means the field was disabled, so it is ignored
+            }
         }
 
         return $formattedData;
