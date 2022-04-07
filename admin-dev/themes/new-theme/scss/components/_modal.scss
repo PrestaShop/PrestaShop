@@ -30,22 +30,25 @@ $component-name: modal;
   .#{$component-name}-dialog {
     width: 90%;
     max-width: 1200px;
-    max-height: 95%;
+    max-height: 95vh;
     margin: 0 auto;
 
     .#{$component-name}-content {
       height: 100%;
+      max-height: 90vh;
       padding: 0;
       margin: 0;
 
       .#{$component-name}-body {
+        max-height: 80vh;
         padding: 0;
+        overflow: auto;
 
         iframe {
           width: 100%;
           height: 100%;
+          overflow: visible;
           border: none;
-          scroll-behavior: auto;
           @include border-radius(0 0 6px 6px);
         }
       }

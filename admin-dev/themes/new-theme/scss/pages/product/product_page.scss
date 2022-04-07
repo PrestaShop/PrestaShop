@@ -1349,16 +1349,17 @@ $product-page-padding-bottom: 80px !default;
 #bulk-combination-form-modal {
   .modal-dialog {
     max-width: 810px;
-    min-height: 600px;
-  }
 
-  .modal-footer {
-    padding: 1.125rem;
-    background-color: $background-grey;
+    .modal-footer {
+      padding: 1.125rem;
+      background-color: $background-grey;
+    }
   }
 }
 
 .bulk-combination-form {
+  padding: 0 1.625rem 1.625rem;
+
   label {
     display: flex;
     width: 100%;
@@ -1372,16 +1373,8 @@ $product-page-padding-bottom: 80px !default;
     padding: 0;
   }
 
-  .accordion-sub-form {
-    > .form-group {
-      padding: 0.625rem;
-      border-bottom: 1px solid $background-grey;
-    }
-
-    > .form-group:last-child {
-      margin-bottom: 0;
-      border-bottom: none;
-    }
+  > .form-group:last-child {
+    margin-bottom: 0;
   }
 }
 
