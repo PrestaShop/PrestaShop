@@ -32,6 +32,9 @@ import {EventEmitter} from 'events';
 const CombinationMap = ProductMap.combinations;
 const CombinationEvents = ProductEvents.combinations;
 
+/**
+ * This components handles the bulk actions of the combination list.
+ */
 export default class BulkFormHandler {
   private combinationsService: CombinationsService;
 
@@ -47,32 +50,21 @@ export default class BulkFormHandler {
   }
 
   private init(): void {
-    this.listenSelections();
+    this.listenCheckboxesChange();
     this.eventEmitter.on(CombinationEvents.listRendered, () => this.toggleBulkActions());
 
     const bulkFormBtn = document.querySelector<HTMLButtonElement>(CombinationMap.bulkCombinationFormBtn);
     const bulkCombinationsBtn = this.tabContainer.querySelector(CombinationMap.bulkCombinationFormBtn) as HTMLButtonElement;
 
+    // @todo: This is hard-coded but when the other bulk actions will be added this needs to be more generic via
+    //        the use of data attributes:
+    //           data-bulk-url: is the url to call for each selected IDs, by default only the ID is necessary in the data
+    //           data-form-url: indicates that a form must be opened, upon submit the data is used to be sent to the bulk-url
     bulkFormBtn?.addEventListener('click', () => this.showFormModal(
       bulkFormBtn.dataset.formUrl as string,
       bulkCombinationsBtn.dataset.modalConfirmLabel as string,
       bulkCombinationsBtn.dataset.modalCancelLabel as string,
     ));
-  }
-
-  private showProgressModal(): ConfirmModal {
-    //@todo: Replace with new progress modal when introduced in #26004.
-    const modal = new ConfirmModal(
-      {
-        id: CombinationMap.bulkProgressModalId,
-        confirmMessage: '<div>Updating combinations: <p class="progress-increment"></p></div>',
-      },
-      () => null,
-    );
-
-    modal.show();
-
-    return modal;
   }
 
   private showFormModal(formUrl: string, confirmButtonLabel: string, closeButtonLabel: string): void {
@@ -128,8 +120,10 @@ export default class BulkFormHandler {
     return new URLSearchParams(new FormData(form)).toString();
   }
 
-  private listenSelections(): void {
-    // delegated event listener on tabContainer, because every checkbox is re-rendered with dynamic pagination
+  /**
+   * Delegated event listener on tabContainer, because every checkbox is re-rendered with dynamic pagination
+   */
+  private listenCheckboxesChange(): void {
     this.tabContainer.addEventListener('change', (e) => {
       if (!(e.target instanceof HTMLInputElement)) {
         return;
@@ -177,6 +171,7 @@ export default class BulkFormHandler {
     for (let i = 0; i < checkboxes.length; i += 1) {
       const checkbox = checkboxes[i];
 
+      // @todo when the ProgressModal will be integrated this will update it after each request
       try {
         // eslint-disable-next-line no-await-in-loop
         const response: Response = await this.combinationsService.bulkUpdate(Number(checkbox.value), new FormData(form));
@@ -205,6 +200,21 @@ export default class BulkFormHandler {
     progressModal.hide();
 
     this.eventEmitter.emit(CombinationEvents.bulkUpdateFinished);
+  }
+
+  private showProgressModal(): ConfirmModal {
+    //@todo: Replace with new progress modal when introduced in #26004.
+    const modal = new ConfirmModal(
+      {
+        id: CombinationMap.bulkProgressModalId,
+        confirmMessage: '<div>Updating combinations: <p class="progress-increment"></p></div>',
+      },
+      () => null,
+    );
+
+    modal.show();
+
+    return modal;
   }
 
   private getSelectedCheckboxes(): NodeListOf<HTMLInputElement> {
