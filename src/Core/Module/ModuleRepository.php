@@ -51,9 +51,6 @@ class ModuleRepository implements ModuleRepositoryInterface
         'confirmUninstall',
     ];
 
-    /** @var Finder */
-    private $finder;
-
     /** @var ModuleDataProvider */
     private $moduleDataProvider;
 
@@ -79,7 +76,6 @@ class ModuleRepository implements ModuleRepositoryInterface
         HookManager $hookManager,
         string $modulePath
     ) {
-        $this->finder = new Finder();
         $this->moduleDataProvider = $moduleDataProvider;
         $this->adminModuleDataProvider = $adminModuleDataProvider;
         $this->cacheProvider = $cacheProvider;
@@ -90,7 +86,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     public function getList(): ModuleCollection
     {
         $modules = [];
-        $modulesDirsList = $this->finder->directories()
+        $modulesDirsList = (new Finder())->directories()
             ->in($this->modulePath)
             ->depth('== 0')
             ->exclude(['__MACOSX'])
