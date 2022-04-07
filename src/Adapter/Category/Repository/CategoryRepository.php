@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 
@@ -142,6 +143,29 @@ class CategoryRepository extends AbstractObjectModelRepository
         } catch (CategoryException $e) {
             throw new CategoryNotFoundException($categoryId, $e->getMessage());
         }
+    }
+
+    public function getDuplicateNames(ShopId $shopId, LanguageId $languageId): array
+    {
+        $qb = $this->connection->createQueryBuilder()
+            ->select('cl.name, COUNT(cl.name) AS nameCount')
+            ->from($this->dbPrefix . 'category_lang', 'cl')
+            ->where('id_lang = :langId')
+            ->andWhere('id_shop = :shopId')
+            ->having('nameCount > 1')
+            ->setParameter('langId', $languageId->getValue())
+            ->setParameter('shopId', $shopId->getValue())
+            ->groupBy('cl.name')
+        ;
+
+        $results = $qb->execute()->fetchAllAssociative();
+
+        $names = [];
+        foreach ($results as $result) {
+            $names[] = $result['name'];
+        }
+
+        return $names;
     }
 
     /**

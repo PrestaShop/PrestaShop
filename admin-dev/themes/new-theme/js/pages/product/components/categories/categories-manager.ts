@@ -85,8 +85,7 @@ export default class CategoriesManager {
         categories.push({
           id: Number(idInput.value),
           name: this.extractCategoryName(tag as HTMLElement),
-          breadcrumb: this.extractCategoryBreadcrumb(tag as HTMLElement),
-          preview: this.extractCategoryPreview(tag as HTMLElement),
+          displayName: this.extractCategoryPreview(tag as HTMLElement),
         });
       }
     });
@@ -109,16 +108,6 @@ export default class CategoriesManager {
 
     if (tagNameInput) {
       return tagNameInput.value;
-    }
-
-    return '';
-  }
-
-  private extractCategoryBreadcrumb(tag: HTMLElement): string {
-    const tagNameElement = tag.querySelector('.category-breadcrumb') as HTMLElement;
-
-    if (tagNameElement) {
-      return tagNameElement.innerText;
     }
 
     return '';

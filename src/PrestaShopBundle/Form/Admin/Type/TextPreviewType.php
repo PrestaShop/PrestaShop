@@ -48,7 +48,6 @@ class TextPreviewType extends HiddenType
         parent::buildView($view, $form, $options);
         $view->vars['type'] = 'hidden';
         $view->vars['preview_class'] = $options['preview_class'];
-        $view->vars['preview_value'] = $options['custom_preview_value'] ?? $form->getData();
         if (!empty($options['prefix'])) {
             $view->vars['prefix'] = $options['prefix'];
         }
@@ -70,17 +69,15 @@ class TextPreviewType extends HiddenType
         parent::configureOptions($resolver);
 
         $resolver
+            ->setRequired(['preview_class'])
+            ->setAllowedTypes('preview_class', 'string')
             ->setDefaults([
                 'preview_class' => 'text-preview',
                 'prefix' => null,
                 'suffix' => null,
-                'custom_preview_value' => null,
             ])
-            ->setRequired(['preview_class'])
-            ->setAllowedTypes('preview_class', 'string')
             ->setAllowedTypes('prefix', ['string', 'null'])
             ->setAllowedTypes('suffix', ['string', 'null'])
-            ->setAllowedTypes('custom_preview_value', ['null', 'string'])
         ;
     }
 }
