@@ -35,8 +35,6 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\SE
 
 class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
 {
-    private const MULTI_SHOP_PREFIX = 'seo_multi_shop';
-
     /**
      * @dataProvider getExpectedCommandsForSingleShop
      *
@@ -45,7 +43,7 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
      */
     public function testBuildCommandsForSingleShop(array $formData, array $expectedCommands)
     {
-        $builder = new SEOCommandsBuilder(self::MULTI_SHOP_PREFIX);
+        $builder = new SEOCommandsBuilder(self::MODIFY_ALL_NAME_PREFIX);
         $builtCommands = $builder->buildCommands(
             $this->getProductId(),
             $formData,
@@ -207,7 +205,7 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
      */
     public function testBuildCommandsForMultiShop(array $formData, array $expectedCommands): void
     {
-        $builder = new SEOCommandsBuilder(self::MULTI_SHOP_PREFIX);
+        $builder = new SEOCommandsBuilder(self::MODIFY_ALL_NAME_PREFIX);
         $builtCommands = $builder->buildCommands(
             $this->getProductId(),
             $formData,
@@ -242,11 +240,11 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [
                 'seo' => [
                     'meta_title' => $localizedMetaTitles,
-                    self::MULTI_SHOP_PREFIX . 'meta_title' => false,
+                    self::MODIFY_ALL_NAME_PREFIX . 'meta_title' => false,
                     'meta_description' => $localizedMetaDescriptions,
-                    self::MULTI_SHOP_PREFIX . 'meta_description' => '0',
+                    self::MODIFY_ALL_NAME_PREFIX . 'meta_description' => '0',
                     'link_rewrite' => $localizedLinkRewrites,
-                    self::MULTI_SHOP_PREFIX . 'link_rewrite' => '',
+                    self::MODIFY_ALL_NAME_PREFIX . 'link_rewrite' => '',
                     'redirect_option' => [
                         'type' => RedirectType::TYPE_PRODUCT_TEMPORARY,
                         'target' => [
@@ -269,14 +267,14 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [
                 'seo' => [
                     'meta_title' => $localizedMetaTitles,
-                    self::MULTI_SHOP_PREFIX . 'meta_title' => true,
+                    self::MODIFY_ALL_NAME_PREFIX . 'meta_title' => true,
                     'meta_description' => $localizedMetaDescriptions,
-                    self::MULTI_SHOP_PREFIX . 'meta_description' => 'enabled',
+                    self::MODIFY_ALL_NAME_PREFIX . 'meta_description' => 'enabled',
                     'link_rewrite' => $localizedLinkRewrites,
-                    self::MULTI_SHOP_PREFIX . 'link_rewrite' => 1,
+                    self::MODIFY_ALL_NAME_PREFIX . 'link_rewrite' => 1,
                     'redirect_option' => [
                         'type' => RedirectType::TYPE_PRODUCT_TEMPORARY,
-                        self::MULTI_SHOP_PREFIX . 'type' => true,
+                        self::MODIFY_ALL_NAME_PREFIX . 'type' => true,
                         'target' => [
                             'id' => 42,
                         ],
@@ -300,16 +298,16 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [
                 'seo' => [
                     'meta_title' => $localizedMetaTitles,
-                    self::MULTI_SHOP_PREFIX . 'meta_title' => false,
+                    self::MODIFY_ALL_NAME_PREFIX . 'meta_title' => false,
                     'meta_description' => $localizedMetaDescriptions,
-                    self::MULTI_SHOP_PREFIX . 'meta_description' => true,
+                    self::MODIFY_ALL_NAME_PREFIX . 'meta_description' => true,
                     'link_rewrite' => $localizedLinkRewrites,
-                    self::MULTI_SHOP_PREFIX . 'link_rewrite' => false,
+                    self::MODIFY_ALL_NAME_PREFIX . 'link_rewrite' => false,
                     'redirect_option' => [
                         'type' => RedirectType::TYPE_PRODUCT_TEMPORARY,
                         'target' => [
                             'id' => 42,
-                            self::MULTI_SHOP_PREFIX . 'id' => true,
+                            self::MODIFY_ALL_NAME_PREFIX . 'id' => true,
                         ],
                     ],
                 ],
