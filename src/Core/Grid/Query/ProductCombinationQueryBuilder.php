@@ -74,6 +74,11 @@ final class ProductCombinationQueryBuilder extends AbstractDoctrineQueryBuilder
             ->applyPagination($searchCriteria, $qb)
             ->applySorting($searchCriteria, $qb);
 
+        // Sort by quantity has been added first, this is the second order condition
+        if ('quantity' === $searchCriteria->getOrderBy()) {
+            $qb->addOrderBy('pa.id_product_attribute', 'asc');
+        }
+
         return $qb;
     }
 
@@ -146,8 +151,6 @@ final class ProductCombinationQueryBuilder extends AbstractDoctrineQueryBuilder
                     'pa.id_product_attribute = sa.id_product_attribute'
                 )
             ;
-
-            $qb->addOrderBy('pa.id_product_attribute', 'asc');
         }
 
         return $qb;
