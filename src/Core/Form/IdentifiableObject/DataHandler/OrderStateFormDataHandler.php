@@ -88,7 +88,8 @@ final class OrderStateFormDataHandler implements FormDataHandlerInterface
             $data['shipped'],
             $data['paid'],
             $data['delivery'],
-            $data['template']
+            $data['template'],
+            $data['hidden_employee']
         );
 
         return $command;
@@ -114,6 +115,7 @@ final class OrderStateFormDataHandler implements FormDataHandlerInterface
             ->setPaid($data['paid'])
             ->setDelivery($data['delivery'])
             ->setTemplate($data['template'])
+            ->setHiddenEmployee($data['hidden_employee'])
         ;
 
         return $command;

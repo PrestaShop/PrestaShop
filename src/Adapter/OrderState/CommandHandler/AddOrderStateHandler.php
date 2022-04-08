@@ -73,5 +73,6 @@ final class AddOrderStateHandler extends AbstractOrderStateHandler implements Ad
         $orderState->paid = $command->isPaid();
         $orderState->delivery = $command->isDelivery();
         $orderState->template = $command->getLocalizedTemplates();
+        $orderState->hidden_employee = $command->isHiddenEmployee();
     }
 }

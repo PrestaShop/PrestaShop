@@ -68,6 +68,9 @@ class OrderStateCore extends ObjectModel
     /** @var bool True if carrier has been deleted (staying in database as deleted) */
     public $deleted = false;
 
+    /** @var bool Hidden for emplyees on order screen */
+    public $hidden_employee;
+
     /**
      * @see ObjectModel::$definition
      */
@@ -89,6 +92,7 @@ class OrderStateCore extends ObjectModel
             'pdf_delivery' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'pdf_invoice' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'deleted' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'hidden_employee' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
 
             /* Lang fields */
             'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => 64],
@@ -101,6 +105,7 @@ class OrderStateCore extends ObjectModel
             'unremovable' => [],
             'delivery' => [],
             'hidden' => [],
+            'hidden_employee' => [],
         ],
     ];
 

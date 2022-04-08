@@ -345,6 +345,17 @@ class AdminStatusesControllerCore extends AdminController
                 ],
                 [
                     'type' => 'checkbox',
+                    'name' => 'hidden_employee',
+                    'values' => [
+                        'query' => [
+                            ['id' => 'on', 'name' => $this->trans('Hide on from employees on orders page.', [], 'Admin.Shopparameters.Feature'), 'val' => '1'],
+                        ],
+                        'id' => 'id',
+                        'name' => 'name',
+                    ],
+                ],
+                [
+                    'type' => 'checkbox',
                     'name' => 'send_email',
                     'values' => [
                         'query' => [
@@ -456,6 +467,7 @@ class AdminStatusesControllerCore extends AdminController
             'delivery_on' => $this->getFieldValue($obj, 'delivery'),
             'pdf_delivery_on' => $this->getFieldValue($obj, 'pdf_delivery'),
             'pdf_invoice_on' => $this->getFieldValue($obj, 'pdf_invoice'),
+            'hidden_employee_on' => $this->getFieldValue($obj, 'hidden_employee'),
         ];
 
         if ($this->getFieldValue($obj, 'color') !== false) {
@@ -642,6 +654,7 @@ class AdminStatusesControllerCore extends AdminController
             $_POST['delivery'] = (int) Tools::getValue('delivery_on');
             $_POST['pdf_delivery'] = (int) Tools::getValue('pdf_delivery_on');
             $_POST['pdf_invoice'] = (int) Tools::getValue('pdf_invoice_on');
+            $_POST['hidden_employee'] = (int) Tools::getValue('hidden_employee_on');
             if (!$_POST['send_email']) {
                 foreach ($langIds as $id_lang) {
                     $_POST['template_' . $id_lang] = '';

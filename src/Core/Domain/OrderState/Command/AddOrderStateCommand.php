@@ -82,6 +82,10 @@ class AddOrderStateCommand
      * @var array
      */
     private $localizedTemplates;
+    /**
+     * @var bool
+     */
+    private $hidden_employee;
 
     /**
      * @param string[] $localizedNames
@@ -99,7 +103,8 @@ class AddOrderStateCommand
         bool $shipped,
         bool $paid,
         bool $delivery,
-        array $localizedTemplates
+        array $localizedTemplates,
+        bool $hidden_employee
     ) {
         $this->setLocalizedNames($localizedNames);
         $this->color = $color;
@@ -113,6 +118,7 @@ class AddOrderStateCommand
         $this->paid = $paid;
         $this->delivery = $delivery;
         $this->localizedTemplates = $localizedTemplates;
+        $this->hidden_employee = $hidden_employee;
     }
 
     /**
@@ -171,6 +177,14 @@ class AddOrderStateCommand
     public function isHidden()
     {
         return $this->hidden;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isHiddenEmployee()
+    {
+        return $this->hidden_employee;
     }
 
     /**

@@ -132,5 +132,9 @@ final class EditOrderStateHandler extends AbstractOrderStateHandler implements E
         if (null !== $command->getTemplate()) {
             $orderState->template = $command->getTemplate();
         }
+
+        if (null !== $command->isHiddenEmployee()) {
+            $orderState->hidden_employee = $command->isHiddenEmployee();
+        }
     }
 }
