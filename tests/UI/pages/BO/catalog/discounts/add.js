@@ -245,7 +245,7 @@ class AddCartRule extends BOBasePage {
    * @param page {Page} Browser tab
    * @param cartRuleData {CartRuleData} Data to set on add/edit cart rule form
    * @param waitForNavigation {boolean} True if we need to save and waitForNavigation
-   * @returns {Promise<string|*>}
+   * @returns {Promise<string|null>}
    */
   async createEditCartRules(page, cartRuleData, waitForNavigation = true) {
     // Fill information form
