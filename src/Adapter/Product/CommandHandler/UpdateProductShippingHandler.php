@@ -70,10 +70,10 @@ final class UpdateProductShippingHandler implements UpdateProductShippingHandler
             CannotUpdateProductException::FAILED_UPDATE_SHIPPING_OPTIONS
         );
 
-        if (null !== $command->getCarrierReferences()) {
+        if (null !== $command->getCarrierReferenceIds()) {
             $this->productMultiShopRepository->setCarrierReferences(
                 new ProductId((int) $product->id),
-                $command->getCarrierReferences(),
+                $command->getCarrierReferenceIds(),
                 $shopConstraint
             );
         }

@@ -69,7 +69,7 @@ class ShippingCommandBuilderTest extends AbstractProductCommandBuilderTest
     {
         $command = $this->getAllShopsCommand();
         /* @phpstan-ignore-next-line */
-        $command->setCarrierReferences([1, 2, 3]);
+        $command->setCarrierReferenceIds([1, 2, 3]);
         yield [
             [
                 'shipping' => [
@@ -164,7 +164,7 @@ class ShippingCommandBuilderTest extends AbstractProductCommandBuilderTest
 
         $command = $this->getSingleShopCommand();
         /* @phpstan-ignore-next-line */
-        $command->setCarrierReferences([1, 2, 3]);
+        $command->setCarrierReferenceIds([1, 2, 3]);
         yield [
             [
                 'shipping' => [

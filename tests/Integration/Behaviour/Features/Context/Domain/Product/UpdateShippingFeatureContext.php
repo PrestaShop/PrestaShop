@@ -307,7 +307,7 @@ class UpdateShippingFeatureContext extends AbstractProductFeatureContext
         }
 
         if (isset($data['carriers'])) {
-            $command->setCarrierReferences($this->getCarrierReferenceIds($data['carriers']));
+            $command->setCarrierReferenceIds($this->getCarrierReferenceIds($data['carriers']));
             unset($unhandledValues['carriers']);
         }
 

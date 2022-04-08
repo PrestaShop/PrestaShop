@@ -33,6 +33,7 @@ use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\Manufacturer\Repository\ManufacturerRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator;
 use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierReferenceId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
@@ -233,13 +234,12 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
 
     /**
      * @param ProductId $productId
-     * @param int[] $carrierReferenceIds
+     * @param CarrierReferenceId[] $carrierReferenceIds
      * @param ShopConstraint $shopConstraint
      */
     public function setCarrierReferences(ProductId $productId, array $carrierReferenceIds, ShopConstraint $shopConstraint): void
     {
         $shopIds = $this->getShopIdsByConstraint($productId, $shopConstraint);
-        $referenceIds = array_unique($carrierReferenceIds);
         $productIdValue = $productId->getValue();
 
         $deleteQb = $this->connection->createQueryBuilder();
@@ -252,12 +252,12 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
         ;
 
         $insertValues = [];
-        foreach ($referenceIds as $referenceId) {
+        foreach ($carrierReferenceIds as $referenceId) {
             foreach ($shopIds as $shopId) {
                 $insertValues[] = sprintf(
                     '(%d, %d, %d)',
                     $productIdValue,
-                    $referenceId,
+                    $referenceId->getValue(),
                     $shopId
                 );
             }

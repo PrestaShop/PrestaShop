@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierReferenceId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -129,7 +130,7 @@ class ProductShopUpdater
         $sourceCarriers = $sourceProduct->getCarriers();
         $sourceCarrierReferences = [];
         foreach ($sourceCarriers as $sourceCarrier) {
-            $sourceCarrierReferences[] = (int) $sourceCarrier['id_reference'];
+            $sourceCarrierReferences[] = new CarrierReferenceId((int) $sourceCarrier['id_reference']);
         }
 
         $this->productRepository->setCarrierReferences(

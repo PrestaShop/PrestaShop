@@ -23,23 +23,51 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Carrier\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject;
+
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
 
 /**
- * Is thrown when carrier is invalid
+ * Carriers are referenced by id_reference (instead of usual primary id as most entities)
  */
-class CarrierConstraintException extends CarrierException
+class CarrierReferenceId
 {
     /**
-     * Thrown when provided carrier id is not valid
+     * @var int
      */
-    public const INVALID_ID = 10;
+    private $carrierReferenceId;
 
     /**
-     * Thrown when carrier reference id is not valid
+     * @param int $carrierReferenceId
+     *
+     * @throws CarrierConstraintException
      */
-    public const INVALID_REFERENCE_ID = 11;
+    public function __construct($carrierReferenceId)
+    {
+        $this->assertIntegerIsGreaterThanZero($carrierReferenceId);
+        $this->carrierReferenceId = $carrierReferenceId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getValue(): int
+    {
+        return $this->carrierReferenceId;
+    }
+
+    /**
+     * @param int $carrierReferenceId
+     */
+    private function assertIntegerIsGreaterThanZero(int $carrierReferenceId)
+    {
+        if (0 >= $carrierReferenceId) {
+            throw new CarrierConstraintException(
+                sprintf('CarrierReferenceId %s is invalid. It must greater than 0.', $carrierReferenceId),
+                CarrierConstraintException::INVALID_ID
+            );
+        }
+    }
 }
