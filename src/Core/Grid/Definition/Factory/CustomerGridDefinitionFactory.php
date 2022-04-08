@@ -421,6 +421,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setAssociatedColumn('default_group')
                 );
         }
+
         return $filters;
     }
 
