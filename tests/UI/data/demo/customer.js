@@ -1,6 +1,6 @@
 module.exports = {
   DefaultCustomer: {
-    id: '1',
+    id: '2',
     socialTitle: 'Mr.',
     firstName: 'John',
     lastName: 'DOE',
