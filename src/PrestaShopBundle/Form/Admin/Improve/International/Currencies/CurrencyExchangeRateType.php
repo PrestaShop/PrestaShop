@@ -26,37 +26,14 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Currencies;
 
-use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use PrestaShopBundle\Service\Routing\Router;
+use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class CurrencyExchangeRateType
  */
-class CurrencyExchangeRateType extends TranslatorAwareType
+class CurrencyExchangeRateType extends CommonAbstractType
 {
-
-    /**
-     * @var Router
-     */
-    private $router;
-
-    /**
-     * @param TranslatorInterface $translator
-     * @param array $locales
-     * @param Router $router
-     */
-    public function __construct(
-        TranslatorInterface $translator,
-        array $locales,
-        Router $router
-    ) {
-        parent::__construct($translator, $locales);
-        $this->router = $router;
-    }
-
     /**
      * {@inheritdoc}
      */

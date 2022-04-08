@@ -250,8 +250,6 @@ services:
 
   prestashop.admin.currency.form_data_provider:
     class: 'PrestaShopBundle\Form\Admin\Improve\International\Currencies\CurrencyFormDataProvider'
-    arguments:
-      - '@prestashop.core.command_bus'
 
   prestashop.admin.tax_options.form_data_provider:
     class: 'PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxOptionsFormDataProvider'

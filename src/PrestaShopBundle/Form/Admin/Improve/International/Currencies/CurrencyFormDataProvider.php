@@ -26,9 +26,6 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Currencies;
 
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleExchangeRateAutomatizationCommand;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
@@ -36,21 +33,6 @@ use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
  */
 final class CurrencyFormDataProvider implements FormDataProviderInterface
 {
-
-    /**
-     * @var CommandBusInterface
-     */
-    private $commandBus;
-
-    /**
-     * @param CommandBusInterface $commandBus
-     */
-    public function __construct(
-        CommandBusInterface $commandBus
-    ) {
-        $this->commandBus = $commandBus;
-    }
-
     /**
      * {@inheritdoc}
      */
