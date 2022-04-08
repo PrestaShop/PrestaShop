@@ -42,7 +42,7 @@ class BasicInformationCommandsBuilderTest extends AbstractProductCommandBuilderT
      */
     public function testBuildCommand(array $formData, array $expectedCommands)
     {
-        $builder = new BasicInformationCommandsBuilder(self::MODIFY_ALL_SHOPS_PREFIX);
+        $builder = new BasicInformationCommandsBuilder(self::MODIFY_ALL_NAME_PREFIX);
         $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
         $this->assertEquals($expectedCommands, $builtCommands);
     }
@@ -119,7 +119,7 @@ class BasicInformationCommandsBuilderTest extends AbstractProductCommandBuilderT
      */
     public function testBuildCommandMultiShop(array $formData, array $expectedCommands): void
     {
-        $builder = new BasicInformationCommandsBuilder(self::MODIFY_ALL_SHOPS_PREFIX);
+        $builder = new BasicInformationCommandsBuilder(self::MODIFY_ALL_NAME_PREFIX);
         $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
         $this->assertEquals($expectedCommands, $builtCommands);
     }
@@ -168,13 +168,13 @@ class BasicInformationCommandsBuilderTest extends AbstractProductCommandBuilderT
             [
                 'header' => [
                     'name' => $localizedNames,
-                    self::MODIFY_ALL_SHOPS_PREFIX . 'name' => true,
+                    self::MODIFY_ALL_NAME_PREFIX . 'name' => true,
                 ],
                 'description' => [
                     'description' => $localizedDescriptions,
-                    self::MODIFY_ALL_SHOPS_PREFIX . 'description' => true,
+                    self::MODIFY_ALL_NAME_PREFIX . 'description' => true,
                     'description_short' => $localizedShortDescriptions,
-                    self::MODIFY_ALL_SHOPS_PREFIX . 'description_short' => true,
+                    self::MODIFY_ALL_NAME_PREFIX . 'description_short' => true,
                 ],
             ],
             [$command],
@@ -193,7 +193,7 @@ class BasicInformationCommandsBuilderTest extends AbstractProductCommandBuilderT
                 ],
                 'description' => [
                     'description' => $localizedDescriptions,
-                    self::MODIFY_ALL_SHOPS_PREFIX . 'description' => false,
+                    self::MODIFY_ALL_NAME_PREFIX . 'description' => false,
                     'description_short' => $localizedShortDescriptions,
                 ],
             ],
@@ -213,13 +213,13 @@ class BasicInformationCommandsBuilderTest extends AbstractProductCommandBuilderT
             [
                 'header' => [
                     'name' => $localizedNames,
-                    self::MODIFY_ALL_SHOPS_PREFIX . 'name' => true,
+                    self::MODIFY_ALL_NAME_PREFIX . 'name' => true,
                 ],
                 'description' => [
                     'description' => $localizedDescriptions,
-                    self::MODIFY_ALL_SHOPS_PREFIX . 'description' => false,
+                    self::MODIFY_ALL_NAME_PREFIX . 'description' => false,
                     'description_short' => $localizedShortDescriptions,
-                    self::MODIFY_ALL_SHOPS_PREFIX . 'description_short' => true,
+                    self::MODIFY_ALL_NAME_PREFIX . 'description_short' => true,
                 ],
             ],
             [$singleCommand, $allShopsCommand],
@@ -241,9 +241,9 @@ class BasicInformationCommandsBuilderTest extends AbstractProductCommandBuilderT
                 ],
                 'description' => [
                     'description' => $localizedDescriptions,
-                    self::MODIFY_ALL_SHOPS_PREFIX . 'description' => true,
+                    self::MODIFY_ALL_NAME_PREFIX . 'description' => true,
                     'description_short' => $localizedShortDescriptions,
-                    self::MODIFY_ALL_SHOPS_PREFIX . 'description_short' => false,
+                    self::MODIFY_ALL_NAME_PREFIX . 'description_short' => false,
                 ],
             ],
             [$singleCommand, $allShopsCommand],

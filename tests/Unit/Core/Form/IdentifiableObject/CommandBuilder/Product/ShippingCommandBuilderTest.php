@@ -44,20 +44,20 @@ class ShippingCommandBuilderTest extends AbstractProductCommandBuilderTest
      */
     public function testBuildSingleShopCommands(array $formData, array $expectedCommands): void
     {
-        $builder = new ShippingCommandsBuilder(self::MODIFY_ALL_SHOPS_PREFIX);
+        $builder = new ShippingCommandsBuilder(self::MODIFY_ALL_NAME_PREFIX);
         $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 
     /**
-     * @dataProvider getExpectedAllShopCommands
+     * @dataProvider getExpectedMultiShopCommands
      *
      * @param array $formData
      * @param array $expectedCommands
      */
-    public function testBuildAllShopCommands(array $formData, array $expectedCommands): void
+    public function testBuildMultiShopCommands(array $formData, array $expectedCommands): void
     {
-        $builder = new ShippingCommandsBuilder(self::MODIFY_ALL_SHOPS_PREFIX);
+        $builder = new ShippingCommandsBuilder(self::MODIFY_ALL_NAME_PREFIX);
         $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
         $this->assertEquals($expectedCommands, $builtCommands);
     }
@@ -65,16 +65,15 @@ class ShippingCommandBuilderTest extends AbstractProductCommandBuilderTest
     /**
      * @return Generator
      */
-    public function getExpectedAllShopCommands(): Generator
+    public function getExpectedMultiShopCommands(): Generator
     {
         $command = $this->getAllShopsCommand();
-        /* @phpstan-ignore-next-line */
         $command->setCarrierReferenceIds([1, 2, 3]);
         yield [
             [
                 'shipping' => [
                     'carriers' => ['1', '2', '3'],
-                    self::MODIFY_ALL_SHOPS_PREFIX . 'carriers' => true,
+                    self::MODIFY_ALL_NAME_PREFIX . 'carriers' => true,
                 ],
             ],
             [$command],
@@ -91,7 +90,7 @@ class ShippingCommandBuilderTest extends AbstractProductCommandBuilderTest
                 'shipping' => [
                     'delivery_time_notes' => [
                         'out_of_stock' => $localizedNotes,
-                        self::MODIFY_ALL_SHOPS_PREFIX . 'out_of_stock' => true,
+                        self::MODIFY_ALL_NAME_PREFIX . 'out_of_stock' => true,
                     ],
                 ],
             ],
@@ -104,10 +103,31 @@ class ShippingCommandBuilderTest extends AbstractProductCommandBuilderTest
             [
                 'shipping' => [
                     'additional_shipping_cost' => '-0.55',
-                    self::MODIFY_ALL_SHOPS_PREFIX . 'additional_shipping_cost' => true,
+                    self::MODIFY_ALL_NAME_PREFIX . 'additional_shipping_cost' => true,
                 ],
             ],
             [$command],
+        ];
+
+        $singleShopCommand = $this->getSingleShopCommand();
+        $singleShopCommand->setDeliveryTimeNoteType(DeliveryTimeNoteType::TYPE_DEFAULT);
+        $allShopsCommand = $this->getAllShopsCommand();
+        $localizedNotes = [
+            '1' => 'test9',
+            '3' => 'test19',
+        ];
+        $allShopsCommand->setLocalizedDeliveryTimeOutOfStockNotes($localizedNotes);
+        yield [
+            [
+                'shipping' => [
+                    'delivery_time_note_type' => 1,
+                    'delivery_time_notes' => [
+                        'out_of_stock' => $localizedNotes,
+                        self::MODIFY_ALL_NAME_PREFIX . 'out_of_stock' => true,
+                    ],
+                ],
+            ],
+            [$singleShopCommand, $allShopsCommand],
         ];
     }
 
@@ -163,7 +183,6 @@ class ShippingCommandBuilderTest extends AbstractProductCommandBuilderTest
         ];
 
         $command = $this->getSingleShopCommand();
-        /* @phpstan-ignore-next-line */
         $command->setCarrierReferenceIds([1, 2, 3]);
         yield [
             [
@@ -222,7 +241,7 @@ class ShippingCommandBuilderTest extends AbstractProductCommandBuilderTest
 
     private function getSingleShopCommand(): UpdateProductShippingCommand
     {
-        return new UpdateProductShippingCommand($this->getProductId()->getValue(), ShopConstraint::shop(self::SHOP_ID));
+        return new UpdateProductShippingCommand($this->getProductId()->getValue(), $this->getSingleShopConstraint());
     }
 
     private function getAllShopsCommand(): UpdateProductShippingCommand

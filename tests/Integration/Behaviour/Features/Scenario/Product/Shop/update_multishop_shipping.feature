@@ -102,7 +102,7 @@ Feature: Update product shipping information from Back Office (BO) for multiple 
       | delivery time out of stock notes[fr-FR] | disparu     |
       | carriers                                | [carrier1]  |
     And product product1 should have following shipping information for shops "shop1":
-# dimensions does not depend on multi shop, so they should always be updated no matter which shop is targeted
+#     dimensions do not depend on multi shop, so they should always be updated no matter which shop is targeted
       | width                                   | 5                           |
       | height                                  | 5                           |
       | depth                                   | 5                           |
