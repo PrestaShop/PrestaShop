@@ -403,7 +403,7 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
     it('should create then search for the disabled voucher and check the error message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'searchDisabledVoucher', baseContext);
 
-      await addCartRulePage.createCartRule(addVoucherPage, disabledCartRuleData);
+      await addCartRulePage.createEditCartRules(addVoucherPage, disabledCartRuleData, false);
 
       await addOrderPage.searchVoucher(page, disabledCartRuleData.name);
 
@@ -426,7 +426,7 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
 
       addVoucherPage = await addOrderPage.getCreateVoucherIframe(page);
 
-      await addCartRulePage.createCartRule(addVoucherPage, cartRuleWithGiftData);
+      await addCartRulePage.createEditCartRules(addVoucherPage, cartRuleWithGiftData, false);
     });
 
     it('should search for the created voucher and check details', async function () {
@@ -520,7 +520,7 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
 
       addVoucherPage = await addOrderPage.getCreateVoucherIframe(page);
 
-      await addCartRulePage.createCartRule(addVoucherPage, cartRuleFreeShippingData);
+      await addCartRulePage.createEditCartRules(addVoucherPage, cartRuleFreeShippingData, false);
     });
 
     it('should search for the created voucher and check details', async function () {
