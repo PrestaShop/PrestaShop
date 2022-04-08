@@ -265,7 +265,7 @@ class AddCartRule extends BOBasePage {
 
     // Save
     await this.waitForSelectorAndClick(page, this.saveButton);
-    return page;
+    return null;
   }
 }
 
