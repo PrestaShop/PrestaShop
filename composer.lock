@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d09394412b7662f6f06e3e3ad56fb92b",
+    "content-hash": "7cdbb5f44bee9dae840f726098cd6d2e",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -4934,6 +4934,54 @@
                 "source": "https://github.com/silexphp/Pimple/tree/v3.4.0"
             },
             "time": "2021-03-06T08:28:00+00:00"
+        },
+        {
+            "name": "prestashop/blockreassurance",
+            "version": "v5.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PrestaShop/blockreassurance.git",
+                "reference": "7ec28ecf52fcc0ca9787a81edb00f9e7e85d4400"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PrestaShop/blockreassurance/zipball/7ec28ecf52fcc0ca9787a81edb00f9e7e85d4400",
+                "reference": "7ec28ecf52fcc0ca9787a81edb00f9e7e85d4400",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6.0"
+            },
+            "require-dev": {
+                "prestashop/php-dev-tools": "^3.4"
+            },
+            "type": "prestashop-module",
+            "autoload": {
+                "psr-4": {
+                    "PrestaShop\\Module\\BlockReassurance\\": "src/"
+                },
+                "classmap": [
+                    "blockreassurance.php",
+                    "classes/ReassuranceActivity.php"
+                ],
+                "exclude-from-classmap": []
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "AFL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "PrestaShop SA",
+                    "email": "contact@prestashop.com"
+                }
+            ],
+            "description": "PrestaShop module blockreassurance",
+            "homepage": "https://github.com/PrestaShop/blockreassurance",
+            "support": {
+                "source": "https://github.com/PrestaShop/blockreassurance/tree/v5.1.1"
+            },
+            "time": "2022-04-08T15:28:20+00:00"
         },
         {
             "name": "prestashop/blockwishlist",
