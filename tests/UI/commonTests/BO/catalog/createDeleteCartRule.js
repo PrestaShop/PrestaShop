@@ -21,7 +21,7 @@ let page;
 let numberOfCartRules;
 
 /**
- * Function to delete cart rule
+ * Function to create cart rule
  * @param cartRuleData {CartRuleData} Cart rule data to create
  * @param baseContext {string} String to identify the test
  */
@@ -42,7 +42,7 @@ function createCartRuleTest(cartRuleData, baseContext = 'commonTests-createCartR
     });
 
     it('should go to \'Catalog > Discounts\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage3', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -141,7 +141,7 @@ function deleteCartRuleTest(cartRuleName, baseContext = 'commonTests-deleteCartR
  * @param baseContext {string} String to identify the test
  */
 function bulkDeleteCartRuleTest(baseContext = 'commonTests-bulkDeleteCartRuleTest') {
-  describe('POST-TEST: BUlk delete cart rule', async () => {
+  describe('POST-TEST: Bulk delete cart rule', async () => {
     // before and after functions
     before(async function () {
       browserContext = await helper.createBrowserContext(this.browser);

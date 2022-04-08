@@ -20,6 +20,9 @@ class AddOrder extends BOBasePage {
     this.pageTitle = 'Create order •';
     this.noCustomerFoundText = 'No customers found';
     this.noProductFoundText = 'No products found';
+    this.cartRuleAlreadyExistErrorText = 'This voucher is already in your cart';
+    this.noVoucherFoudErrorMessage = 'No voucher was found';
+    this.voucherDisabledErrorMessage = 'This voucher is disabled';
 
     // Iframe
     this.iframe = 'iframe.fancybox-iframe';
@@ -92,7 +95,18 @@ class AddOrder extends BOBasePage {
     this.productTableColumnRemoveButton = row => `${this.productsTableRow(row)} td button.js-product-remove-btn`;
 
     // Vouchers block selectors
-    this.cartRulesTable = '#cart-rules-table';
+    this.searchVoucherInput = '#search-cart-rules-input';
+    this.searchCartRuleResultBox = '#search-cart-rules-result-box';
+    this.searchCartRuleResultFound = '#cart-rules-search-block li.js-found-cart-rule.found-cart-rule';
+    this.cartRuleErrorText = '#js-cart-rule-error-text';
+    this.addVoucherBUtton = '#js-add-cart-rule-btn';
+    this.vouchersTable = '#cart-rules-table';
+    this.vouchersTableBody = `${this.vouchersTable} tbody`;
+    this.vouchersTableRows = `${this.vouchersTableBody} tr`;
+    this.vouchersTableRow = row => `${this.vouchersTableRows}:nth-child(${row})`;
+    this.vouchersTableColumn = (column, row) => `${this.vouchersTableRow(row)} td.js-cart-rule-${column}`;
+    this.vouchersTableRowRemoveButton = row => `${this.vouchersTableRows}:nth-child(${row})`
+      + ' td button.js-cart-rule-delete-btn';
 
     // Addresses form selectors
     this.deliveryAddressSelect = '#delivery-address-select';
@@ -100,10 +114,18 @@ class AddOrder extends BOBasePage {
 
     // Shipping form selectors
     this.deliveryOptionSelect = '#delivery-option-select';
+    this.totalShippingTaxIncl = '.js-total-shipping-tax-inc';
     this.freeShippingToggleInput = toggle => `#free-shipping_${toggle}`;
     this.shippingCost = '#shipping-block span.js-total-shipping-tax-inc';
 
     // Summary selectors
+    this.summaryBlock = '#summary-block';
+    this.totalProducts = `${this.summaryBlock} .js-total-products`;
+    this.totalDiscountProduct = `${this.summaryBlock} .js-total-discounts`;
+    this.totalShippingProduct = `${this.summaryBlock} .js-total-shipping`;
+    this.totalTaxesProduct = `${this.summaryBlock} .js-total-taxes`;
+    this.totalTaxExcProduct = `${this.summaryBlock} .js-total-without-tax`;
+    this.totalTaxIncProduct = `${this.summaryBlock} div:nth-child(6)`;
     this.paymentMethodSelect = '#cart_summary_payment_module';
     this.orderStatusSelect = '#cart_summary_order_state';
     this.createOrderButton = '#create-order-button';
@@ -501,6 +523,17 @@ class AddOrder extends BOBasePage {
   }
 
   /**
+   * Is product table row visible
+   * @param page {Page} Browser tab
+   * @param row {number} Row on products table
+   * @returns {Promise<boolean>}
+   */
+  isProductTableRowNotVisible(page, row) {
+    return this.elementNotVisible(page, this.productsTableRow(row), 1000);
+  }
+
+
+  /**
    * Remove product
    * @param page {Page} Browser tab
    * @param row {number} Row on product table
@@ -544,6 +577,90 @@ class AddOrder extends BOBasePage {
     await this.selectByVisibleText(page, this.languageSelect, language);
   }
 
+  /* Vouchers methods */
+
+  /**
+   * Is voucher table not visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  isVouchersTableNotVisible(page) {
+    return this.elementNotVisible(page, this.vouchersTable, 1000);
+  }
+
+  /**
+   * Search and select voucher
+   * @param page {Page} Browser tab
+   * @param voucherName {string} Voucher name to search
+   * @returns {Promise<string>}
+   */
+  async searchVoucher(page, voucherName) {
+    await this.setValue(page, this.searchVoucherInput, voucherName);
+    const cartRuleResult = await this.getTextContent(page, this.searchCartRuleResultBox);
+    if (await this.elementVisible(page, this.searchCartRuleResultFound, 500)) {
+      await this.waitForSelectorAndClick(page, this.searchCartRuleResultBox);
+    }
+
+    return cartRuleResult;
+  }
+
+  /**
+   * Get cart rule error text
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getCartRuleErrorText(page) {
+    return this.getTextContent(page, this.cartRuleErrorText);
+  }
+
+  /**
+   * Click on add voucher button
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async clickOnAddVoucherButton(page) {
+    await this.waitForSelectorAndClick(page, this.addVoucherBUtton);
+    await this.waitForVisibleSelector(page, this.iframe);
+
+    return this.elementVisible(page, this.iframe, 2000);
+  }
+
+  /**
+   * Get create voucher iframe
+   * @param page {Page} Browser tab
+   * @returns {Promise<*>}
+   */
+  async getCreateVoucherIframe(page) {
+    return page.frame({
+      url: new RegExp(
+        'controller=AdminCartRules&liteDisplaying=1&submitFormAjax=1&addcart_rule=1', 'gmi'),
+    });
+  }
+
+  /**
+   * Get voucher details from table
+   * @param page {Page} Browser tab
+   * @param row {number} Row on vouchers table
+   * @returns {Promise<{name: string, description: string, value: number}>}
+   */
+  async getVoucherDetailsFromTable(page, row = 1) {
+    return {
+      name: await this.getTextContent(page, this.vouchersTableColumn('name', row)),
+      description: await this.getTextContent(page, this.vouchersTableColumn('description', row)),
+      value: parseFloat(await this.getTextContent(page, this.vouchersTableColumn('value', row))),
+    };
+  }
+
+  /**
+   * Remove voucher
+   * @param page {Page} Browser tab
+   * @param row {number} Row on vouchers table
+   * @returns {Promise<void>}
+   */
+  async removeVoucher(page, row = 1) {
+    await this.waitForSelectorAndClick(page, this.vouchersTableRowRemoveButton(row));
+  }
+
   /* Addresses methods */
 
   /**
@@ -571,8 +688,11 @@ class AddOrder extends BOBasePage {
     await this.selectByVisibleText(page, this.deliveryOptionSelect, deliveryOptionName);
     await page.$eval(this.freeShippingToggleInput(isFreeShipping ? 1 : 0), el => el.click());
     if (isFreeShipping) {
-      await this.waitForVisibleSelector(page, this.cartRulesTable);
+      await this.waitForVisibleSelector(page, this.vouchersTable);
     }
+    await page.waitForTimeout(1000);
+
+    return this.getTextContent(page, this.totalShippingTaxIncl);
   }
 
   /**
@@ -603,6 +723,24 @@ class AddOrder extends BOBasePage {
   }
 
   /* Summary methods */
+
+  /**
+   * Get summary block details
+   * @param page {Page} Browser tab
+   * @returns {Promise<{totalTaxIncluded: string, totalVouchers: string, totalTaxes: string, totalProducts: string,
+   * totalTaxExcluded: string, totalShipping: string}>}
+   */
+  async getSummaryDetails(page) {
+    return {
+      totalProducts: await this.getTextContent(page, this.totalProducts),
+      totalVouchers: await this.getTextContent(page, this.totalDiscountProduct),
+      totalShipping: await this.getTextContent(page, this.totalShippingProduct),
+      totalTaxes: await this.getTextContent(page, this.totalTaxesProduct),
+      totalTaxExcluded: await this.getTextContent(page, this.totalTaxExcProduct),
+      totalTaxIncluded: await this.getTextContent(page, this.totalTaxIncProduct),
+    };
+  }
+
 
   /**
    * Set payment method

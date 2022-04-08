@@ -240,14 +240,14 @@ class AddCartRule extends BOBasePage {
     }
   }
 
-
   /**
    * Create/edit cart rule
    * @param page {Page} Browser tab
    * @param cartRuleData {CartRuleData} Data to set on add/edit cart rule form
-   * @returns {Promise<string>}
+   * @param waitForNavigation {boolean} True if we need to save and waitForNavigation
+   * @returns {Promise<string|null>}
    */
-  async createEditCartRules(page, cartRuleData) {
+  async createEditCartRules(page, cartRuleData, waitForNavigation = true) {
     // Fill information form
     await this.fillInformationForm(page, cartRuleData);
 
@@ -257,9 +257,15 @@ class AddCartRule extends BOBasePage {
     // Fill actions form
     await this.fillActionsForm(page, cartRuleData);
 
-    // Save and return successful message
-    await this.clickAndWaitForNavigation(page, this.saveButton);
-    return this.getAlertSuccessBlockContent(page);
+    if (waitForNavigation) {
+      // Save and return successful message
+      await this.clickAndWaitForNavigation(page, this.saveButton);
+      return this.getAlertSuccessBlockContent(page);
+    }
+
+    // Save
+    await this.waitForSelectorAndClick(page, this.saveButton);
+    return null;
   }
 }
 
