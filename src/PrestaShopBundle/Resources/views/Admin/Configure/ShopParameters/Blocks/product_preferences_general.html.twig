@@ -81,7 +81,7 @@
           </div>
         </div>
         <div class="form-group row">
-          {{ ps.label_with_help(('Default activation status'|trans), ('When active, new products will be activated by default during creation.'|trans({}, 'Admin.Shopparameters.Help'))) }}
+          {{ ps.label_with_help(('Default activation status'|trans), ('Enable this option if you want to activate by default all your manually created new products.'|trans({}, 'Admin.Shopparameters.Help'))) }}
           <div class="col-sm">
             {{ form_errors(generalForm.default_status) }}
             {{ form_widget(generalForm.default_status) }}
