@@ -2049,7 +2049,7 @@ CREATE TABLE `PREFIX_state` (
   `id_state` int(10) unsigned NOT NULL auto_increment,
   `id_country` int(11) unsigned NOT NULL,
   `id_zone` int(11) unsigned NOT NULL,
-  `name` varchar(64) NOT NULL,
+  `name` varchar(80) NOT NULL,
   `iso_code` varchar(7) NOT NULL,
   `tax_behavior` smallint(1) NOT NULL DEFAULT '0',
   `active` tinyint(1) NOT NULL DEFAULT '0',
