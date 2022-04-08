@@ -59,23 +59,6 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
     }
 
     /**
-     * Get domain.
-     *
-     * @deprecated since 1.7.6, to be removed in the next major
-     *
-     * @return mixed
-     */
-    public function getDomain()
-    {
-        @trigger_error(
-            __METHOD__ . ' function is deprecated and will be removed in the next major',
-            E_USER_DEPRECATED
-        );
-
-        return $this->domain;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getTranslationDomains()
@@ -134,21 +117,6 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
         }
 
         return $xliffCatalogue;
-    }
-
-    /**
-     * @deprecated since 1.7.6, to be removed in the next major
-     *
-     * @return string
-     */
-    public function getModuleDirectory()
-    {
-        @trigger_error(
-            __METHOD__ . ' function is deprecated and will be removed in the next major',
-            E_USER_DEPRECATED
-        );
-
-        return $this->modulesDirectory;
     }
 
     /**
