@@ -122,10 +122,10 @@ module.exports = (env, argv) => {
       new CssoWebpackPlugin({
         forceMediaMerge: true,
       }),
-      new LicensePlugin({ 
+      new LicensePlugin({
         outputFilename: 'thirdPartyNotice.json',
         licenseOverrides: {
-          'vazirmatn@32.1.0': 'OFL-1.1'
+          'vazirmatn@32.102.0': 'OFL-1.1'
         },
         replenishDefaultLicenseTexts: true,
       })
