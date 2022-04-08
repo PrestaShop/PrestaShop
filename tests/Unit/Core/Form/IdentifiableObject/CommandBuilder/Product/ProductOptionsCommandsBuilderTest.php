@@ -51,12 +51,12 @@ class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTes
     }
 
     /**
-     * @dataProvider getExpectedCommandsForAllShops
+     * @dataProvider getExpectedCommandsForMultiShop
      *
      * @param array $formData
      * @param array $expectedCommands
      */
-    public function testBuildAllShopCommand(array $formData, array $expectedCommands): void
+    public function testBuildMultiShopCommand(array $formData, array $expectedCommands): void
     {
         $builder = new OptionsCommandsBuilder(self::MODIFY_ALL_NAME_PREFIX);
         $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
@@ -185,7 +185,7 @@ class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTes
     /**
      * @return Generator
      */
-    public function getExpectedCommandsForAllShops(): Generator
+    public function getExpectedCommandsForMultiShop(): Generator
     {
         $command = $this->getAllShopsCommand();
         $command->setCondition(ProductCondition::NEW);
@@ -267,6 +267,24 @@ class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTes
                 ],
             ],
             [$command],
+        ];
+
+        $singleShopCommand = $this->getSingleShopCommand();
+        $singleShopCommand->setVisibility(ProductVisibility::VISIBLE_EVERYWHERE);
+        $allShopsCommand = $this->getAllShopsCommand();
+        $allShopsCommand->setAvailableForOrder(true);
+        yield [
+            [
+                'options' => [
+                    'not_handled' => 0,
+                    'visibility' => [
+                        'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
+                        'available_for_order' => true,
+                        self::MODIFY_ALL_NAME_PREFIX . 'available_for_order' => true,
+                    ],
+                ],
+            ],
+            [$singleShopCommand, $allShopsCommand],
         ];
     }
 

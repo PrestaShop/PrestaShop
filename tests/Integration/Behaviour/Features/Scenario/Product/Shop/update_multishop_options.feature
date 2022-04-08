@@ -109,6 +109,7 @@ Feature: Feature: Update product options from Back Office (BO) for multiple shop
     Given product "product1" should not be indexed for shops "shop1,shop2"
     And product "product1" should be disabled for shops "shop2"
 #   @todo: UpdateProductStatus command does not yet support multishop, so it silently updates only single shop from context
+#          need to improve this scenario once UpdateProductStatus command supports multishop
     When I enable product "product1"
     And I update product "product1" options for shop "shop1" with following values:
       | visibility          | search       |
