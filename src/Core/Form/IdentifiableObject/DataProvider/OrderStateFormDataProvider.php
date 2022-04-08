@@ -68,6 +68,7 @@ final class OrderStateFormDataProvider implements FormDataProviderInterface
             'paid' => $editableOrderState->isPaid(),
             'delivery' => $editableOrderState->isDelivery(),
             'template' => $editableOrderState->getLocalizedTemplates(),
+            'hidden_employee' => $editableOrderState->isHiddenEmployee(),
         ];
     }
 

@@ -1520,6 +1520,7 @@ CREATE TABLE `PREFIX_order_state` (
   `pdf_invoice` tinyint(1) UNSIGNED NOT NULL default '0',
   `pdf_delivery` tinyint(1) UNSIGNED NOT NULL default '0',
   `deleted` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
+  `hidden_employee` tinyint(1) UNSIGNED NOT NULL DEFAULT '0',
   PRIMARY KEY (`id_order_state`),
   KEY `module_name` (`module_name`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;

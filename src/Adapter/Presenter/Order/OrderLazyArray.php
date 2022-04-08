@@ -463,6 +463,7 @@ class OrderLazyArray extends AbstractLazyArray
             'ostate_name' => '',
             'history_date' => '',
             'contrast' => '',
+            'hidden_employee' => '',
         ];
     }
 

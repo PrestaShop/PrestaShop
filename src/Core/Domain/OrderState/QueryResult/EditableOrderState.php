@@ -95,6 +95,7 @@ class EditableOrderState
      * @var bool
      */
     private $isDeleted;
+    private $hidden_employee;
 
     public function __construct(
         OrderStateId $orderStateId,
@@ -111,7 +112,8 @@ class EditableOrderState
         bool $paid,
         bool $delivery,
         array $localizedTemplates,
-        bool $isDeleted
+        bool $isDeleted,
+        bool $hidden_employee
     ) {
         $this->orderStateId = $orderStateId;
         $this->localizedNames = $name;
@@ -128,6 +130,7 @@ class EditableOrderState
         $this->delivery = $delivery;
         $this->localizedTemplates = $localizedTemplates;
         $this->isDeleted = $isDeleted;
+        $this->hidden_employee = $hidden_employee;
     }
 
     /**
@@ -184,6 +187,14 @@ class EditableOrderState
     public function isHidden()
     {
         return $this->hidden;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isHiddenEmployee()
+    {
+        return $this->hidden_employee;
     }
 
     /**

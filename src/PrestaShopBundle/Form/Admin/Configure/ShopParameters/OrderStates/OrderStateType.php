@@ -181,6 +181,13 @@ class OrderStateType extends TranslatorAwareType
                     'material_design' => true,
                 ],
             ])
+            ->add('hidden_employee', CheckboxType::class, [
+                'required' => false,
+                'label' => $this->trans('Hide on from employees on orders page.', 'Admin.Shopparameters.Feature'),
+                'attr' => [
+                    'material_design' => true,
+                ],
+            ])
             ->add('send_email', CheckboxType::class, [
                 'required' => false,
                 'label' => $this->trans('Send an email to the customer when their order status has changed.', 'Admin.Shopparameters.Feature'),

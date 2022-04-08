@@ -94,5 +94,6 @@ final class AddOrderStateHandler extends AbstractOrderStateHandler implements Ad
         if ($command->isSendEmailEnabled()) {
             $orderState->template = $command->getLocalizedTemplates();
         }
+        $orderState->hidden_employee = $command->isHiddenEmployee();
     }
 }

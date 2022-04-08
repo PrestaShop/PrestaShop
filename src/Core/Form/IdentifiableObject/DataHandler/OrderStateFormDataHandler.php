@@ -89,7 +89,8 @@ final class OrderStateFormDataHandler implements FormDataHandlerInterface
             $data['shipped'],
             $data['paid'],
             $data['delivery'],
-            $data['template']
+            $data['template'],
+            $data['hidden_employee']
         );
 
         if (isset($data['icon'])) {
@@ -127,6 +128,7 @@ final class OrderStateFormDataHandler implements FormDataHandlerInterface
             ->setPaid($data['paid'])
             ->setDelivery($data['delivery'])
             ->setTemplate($data['template'])
+            ->setHiddenEmployee($data['hidden_employee'])
         ;
 
         /** @var UploadedFile|null $fileObject */

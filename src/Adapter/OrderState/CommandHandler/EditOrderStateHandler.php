@@ -152,5 +152,9 @@ final class EditOrderStateHandler extends AbstractOrderStateHandler implements E
         if (null !== $command->isDelivery()) {
             $orderState->delivery = $command->isDelivery();
         }
+
+        if (null !== $command->isHiddenEmployee()) {
+            $orderState->hidden_employee = $command->isHiddenEmployee();
+        }
     }
 }

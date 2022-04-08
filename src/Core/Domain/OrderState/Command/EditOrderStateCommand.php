@@ -237,6 +237,24 @@ class EditOrderStateCommand
     /**
      * @return bool|null
      */
+    public function isHiddenEmployee()
+    {
+        return $this->hidden_employee;
+    }
+
+    /**
+     * @return self
+     */
+    public function setHiddenEmployee(?bool $hidden_employee)
+    {
+        $this->hidden_employee = $hidden_employee;
+
+        return $this;
+    }
+
+    /**
+     * @return bool|null
+     */
     public function isSendEmailEnabled()
     {
         return $this->sendEmail;

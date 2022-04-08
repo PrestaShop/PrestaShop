@@ -71,6 +71,9 @@ class OrderStateCore extends ObjectModel
     /** @var bool True if carrier has been deleted (staying in database as deleted) */
     public $deleted = false;
 
+    /** @var bool Hidden for emplyees on order screen */
+    public $hidden_employee;
+
     /**
      * @see ObjectModel::$definition
      */
@@ -92,6 +95,7 @@ class OrderStateCore extends ObjectModel
             'pdf_delivery' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'pdf_invoice' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'deleted' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
+            'hidden_employee' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
 
             /* Lang fields */
             'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'required' => true, 'size' => OrderStateSettings::NAME_MAX_LENGTH],
@@ -104,6 +108,7 @@ class OrderStateCore extends ObjectModel
             'unremovable' => [],
             'delivery' => [],
             'hidden' => [],
+            'hidden_employee' => [],
         ],
     ];
 
@@ -118,21 +123,29 @@ class OrderStateCore extends ObjectModel
      *
      * @param int $id_lang Language id for status name
      * @param bool $filterDeleted
+     * @param bool $filterDeleted
      *
      * @return array Order statuses
      */
-    public static function getOrderStates($id_lang, $filterDeleted = true)
+    public static function getOrderStates($id_lang, $filterDeleted = true, $filterHidden = false)
     {
-        $deletedStates = $filterDeleted ? ' WHERE deleted = 0' : '';
         $cache_id = 'OrderState::getOrderStates_' . (int) $id_lang;
-        $cache_id .= $filterDeleted ? '_filterDeleted' : '';
+        $where = [];
+        if ($filterDeleted) {
+            $where[] = 'deleted = 0';
+            $cache_id .= '_filterDeleted';
+        }
+        if ($filterHidden) {
+            $where[] = 'hidden_employee = 0';
+            $cache_id .= '_filterHidden';
+        }
 
         if (!Cache::isStored($cache_id)) {
             $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
             SELECT *
             FROM `' . _DB_PREFIX_ . 'order_state` os
             LEFT JOIN `' . _DB_PREFIX_ . 'order_state_lang` osl ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = ' . (int) $id_lang . ')'
-            . $deletedStates . ' ORDER BY `name` ASC');
+            . (!empty($where) ? ' WHERE ' . implode(' AND ', $where) : ' ') . ' ORDER BY `name` ASC');
             Cache::store($cache_id, $result);
 
             return $result;
