@@ -82,9 +82,6 @@ class EmployeeCore extends ObjectModel
     /** @var bool */
     public $bo_menu = true;
 
-    /* Deprecated */
-    public $bo_show_screencast = false;
-
     /** @var bool Status */
     public $active = true;
 
