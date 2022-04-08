@@ -28,11 +28,22 @@
       <tr class="column-headers">
         <th
           scope="col"
+        >
+          <PSSort
+            order="product_id"
+            @sort="sort"
+            :current-sort="currentSort"
+          >
+            {{ trans('title_product_id') }}
+          </PSSort>
+        </th>
+        <th
+          scope="col"
           width="27%"
           class="product-title"
         >
           <PSSort
-            order="product"
+            order="product_name"
             @sort="sort"
             :current-sort="currentSort"
           >
@@ -89,7 +100,7 @@
     </thead>
     <tbody>
       <tr v-if="this.isLoading">
-        <td colspan="8">
+        <td colspan="9">
           <PSLoader
             v-for="(n, index) in 3"
             class="mt-1"
@@ -104,7 +115,7 @@
         </td>
       </tr>
       <tr v-else-if="emptyProducts">
-        <td colspan="8">
+        <td colspan="9">
           <PSAlert
             alert-type="ALERT_TYPE_WARNING"
             :has-close="false"

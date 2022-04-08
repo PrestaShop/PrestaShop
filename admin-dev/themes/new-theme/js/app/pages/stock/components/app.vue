@@ -108,7 +108,7 @@
     methods: {
       onPageChanged(pageIndex: number): void {
         this.$store.dispatch('updatePageIndex', pageIndex);
-        this.fetch('asc');
+        this.fetch('desc');
       },
       fetch(sortDirection?: string): void {
         const action = this.isOverview ? 'getStock' : 'getMovements';

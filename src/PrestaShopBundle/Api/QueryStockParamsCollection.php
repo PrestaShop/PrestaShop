@@ -67,6 +67,9 @@ class QueryStockParamsCollection extends QueryParamsCollection
     {
         return [
             'product',
+            'product_id',
+            'product_name',
+            'combination_id',
             'reference',
             'supplier',
             'available_quantity',
@@ -83,7 +86,7 @@ class QueryStockParamsCollection extends QueryParamsCollection
      */
     protected function setDefaultOrderParam($queryParams)
     {
-        $queryParams['order'] = ['product DESC'];
+        $queryParams['order'] = ['product_id DESC'];
 
         return $queryParams;
     }

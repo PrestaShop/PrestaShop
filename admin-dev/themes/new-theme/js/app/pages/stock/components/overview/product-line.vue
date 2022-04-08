@@ -25,13 +25,22 @@
 <template>
   <tr :class="{'low-stock':lowStock}">
     <td>
-      <div class="d-flex align-items-center">
+      <div class="d-flex align-items-left">
         <PSCheckbox
           :id="id"
           :ref="id"
           :model="product"
           @checked="productChecked"
         />
+        <p
+          class="d-flex align-items-center ml-2"
+        >
+          {{ product.product_id }}
+        </p>
+      </div>
+    </td>
+    <td>
+      <div class="d-flex align-items-center">
         <PSMedia
           class="d-flex align-items-center ml-2"
           :thumbnail="thumbnail"
