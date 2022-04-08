@@ -62,8 +62,6 @@ class MultishopCommandListenerTest extends KernelTestCase
     {
         Shop::resetContext();
         $this->assertFalse($this->multishopContext->isShopContext(), 'isShopContext');
-        $this->assertFalse($this->multishopContext->isShopGroupContext(), 'isShopGroupContext');
-        $this->assertFalse($this->multishopContext->isAllContext(), 'isAllContext');
     }
 
     public function testSetShopID(): void
