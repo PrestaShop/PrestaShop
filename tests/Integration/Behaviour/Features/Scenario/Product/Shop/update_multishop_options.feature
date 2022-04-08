@@ -51,7 +51,8 @@ Feature: Feature: Update product options from Back Office (BO) for multiple shop
       | condition           | used         |
       | show_condition      | true         |
       | manufacturer        | studioDesign |
-    And product "product1" should not be indexed
+    And product "product1" should be disabled for shops "shop1,shop2"
+    And product "product1" should not be indexed for shops "shop1,shop2"
 
   Scenario: I update product options for specific shop (not the default one)
     When I update product "product1" options for shop "shop2" with following values:
@@ -79,8 +80,9 @@ Feature: Feature: Update product options from Back Office (BO) for multiple shop
       | show_price          | false   |
       | condition           | used    |
       | show_condition      | true    |
-# manufacturer does not depend on multi shop, so it should be updated no matter which shop is targeted
+#     manufacturer does not depend on multi shop, so it should be updated no matter which shop is targeted
       | manufacturer        |         |
+    And product "product1" should not be indexed for shops "shop1,shop2"
 
   Scenario: I update product options for all associated shops
     When I update product "product1" options for all shops with following values:
@@ -102,3 +104,21 @@ Feature: Feature: Update product options from Back Office (BO) for multiple shop
       | manufacturer        | graphicCorner |
     And product product1 is not associated to shop shop3
     And product product1 is not associated to shop shop4
+
+  Scenario: I update product search indexation related values in different shops
+    Given product "product1" should not be indexed for shops "shop1,shop2"
+    And product "product1" should be disabled for shops "shop2"
+#   @todo: UpdateProductStatus command does not yet support multishop, so it silently updates only single shop from context
+    When I enable product "product1"
+    And I update product "product1" options for shop "shop1" with following values:
+      | visibility          | search       |
+      | available_for_order | true         |
+      | online_only         | true         |
+      | show_price          | false        |
+      | condition           | used         |
+      | show_condition      | true         |
+      | manufacturer        | studioDesign |
+    Then product "product1" should be enabled for shops "shop1"
+    And product "product1" should be indexed for shops "shop1"
+    But product "product1" should be disabled for shops "shop2"
+    And product "product1" should not be indexed for shops "shop2"
