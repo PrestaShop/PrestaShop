@@ -25,49 +25,38 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject;
+namespace Tests\Unit\Core\Domain\Carrier\ValueObject;
 
+use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierReferenceId;
 
-/**
- * Carriers are referenced by id_reference (instead of usual primary id as most entities)
- */
-class CarrierReferenceId
+class CarrierReferenceIdTest extends TestCase
 {
-    /**
-     * @var int
-     */
-    private $carrierReferenceId;
-
-    /**
-     * @param int $carrierReferenceId
-     *
-     * @throws CarrierConstraintException
-     */
-    public function __construct($carrierReferenceId)
+    public function testItIsSuccessfullyConstructed(): void
     {
-        $this->assertIntegerIsGreaterThanZero($carrierReferenceId);
-        $this->carrierReferenceId = $carrierReferenceId;
+        $carrierReferenceId = new CarrierReferenceId(500);
+        Assert::assertSame(500, $carrierReferenceId->getValue());
     }
 
     /**
-     * @return int
+     * @dataProvider getInvalidValues
      */
-    public function getValue(): int
+    public function testItThrowsExceptionWhenInvalidValueIsProvided(int $invalidValue): void
     {
-        return $this->carrierReferenceId;
+        $this->expectException(CarrierConstraintException::class);
+        $this->expectExceptionCode(CarrierConstraintException::INVALID_REFERENCE_ID);
+
+        new CarrierReferenceId($invalidValue);
     }
 
     /**
-     * @param int $carrierReferenceId
+     * @return iterable
      */
-    private function assertIntegerIsGreaterThanZero(int $carrierReferenceId)
+    public function getInvalidValues(): iterable
     {
-        if (0 >= $carrierReferenceId) {
-            throw new CarrierConstraintException(
-                sprintf('CarrierReferenceId "%s" is invalid. It must greater than 0.', $carrierReferenceId),
-                CarrierConstraintException::INVALID_REFERENCE_ID
-            );
-        }
+        yield [0];
+        yield [-5];
     }
 }

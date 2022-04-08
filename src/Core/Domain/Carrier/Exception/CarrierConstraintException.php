@@ -41,5 +41,5 @@ class CarrierConstraintException extends CarrierException
     /**
      * Thrown when carrier reference id is not valid
      */
-    public const INVALID_REFERENCE_ID = 11;
+    public const INVALID_REFERENCE_ID = 20;
 }
