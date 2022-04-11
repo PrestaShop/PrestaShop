@@ -272,8 +272,10 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
     private function getCategoriesInformation(Product $product): CategoriesInformation
     {
         $languageId = new LanguageId($this->contextLangId);
-        //@todo: hardcoded shop Id, do I inject context shop or require shop constraint?
-        $duplicateNames = $this->categoryRepository->getDuplicateNames(new ShopId(1), $languageId);
+        $duplicateNames = $this->categoryRepository->getDuplicateNames(
+            new ShopId($product->getShopId()),
+            $languageId
+        );
         $categoryIdValues = $product->getCategories();
         $defaultCategoryId = (int) $product->id_category_default;
 

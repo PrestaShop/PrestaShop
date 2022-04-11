@@ -45,6 +45,11 @@ final class GetCategoriesTreeHandler implements GetCategoriesTreeHandlerInterfac
     private $contextLangId;
 
     /**
+     * @var int
+     */
+    private $contextShopId;
+
+    /**
      * @var CategoryRepository
      */
     private $categoryRepository;
@@ -56,13 +61,16 @@ final class GetCategoriesTreeHandler implements GetCategoriesTreeHandlerInterfac
 
     /**
      * @param string $contextLangId
+     * @param int $contextShopId
      * @param CategoryRepository $categoryRepository
      */
     public function __construct(
         string $contextLangId,
+        int $contextShopId,
         CategoryRepository $categoryRepository
     ) {
         $this->contextLangId = $contextLangId;
+        $this->contextShopId = $contextShopId;
         $this->categoryRepository = $categoryRepository;
     }
 
@@ -71,10 +79,10 @@ final class GetCategoriesTreeHandler implements GetCategoriesTreeHandlerInterfac
      */
     public function handle(GetCategoriesTree $query): array
     {
+        $shopId = new ShopId((int) $this->contextShopId);
         $langId = $query->getLanguageId() ? $query->getLanguageId()->getValue() : (int) $this->contextLangId;
         $nestedCategories = Category::getNestedCategories(null, $langId, false);
-        //@todo; hardcoded shop id. Should I add shop constraint to query, or take context shop id?
-        $this->duplicateCategoryNames = $this->categoryRepository->getDuplicateNames(new ShopId(1), $query->getLanguageId());
+        $this->duplicateCategoryNames = $this->categoryRepository->getDuplicateNames($shopId, $query->getLanguageId());
 
         return $this->buildCategoriesTree($nestedCategories, $langId);
     }
@@ -82,7 +90,7 @@ final class GetCategoriesTreeHandler implements GetCategoriesTreeHandlerInterfac
     /**
      * @param array<string, array<string, mixed>> $categories
      * @param int $langId
-     * @param array<string, array<string, mixed>> $parents
+     * @param array<int, array<string, mixed>> $parents
      *
      * @return CategoryForTree[]
      */
