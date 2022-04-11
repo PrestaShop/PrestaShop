@@ -38,13 +38,6 @@ services:
     tags:
       - { name: kernel.event_subscriber }
 
-  prestashop.module.zip.manager:
-    class: PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager
-    arguments:
-      - "@filesystem"
-      - "@translator"
-      - "@event_dispatcher"
-
   prestashop.adapter.presenter.module:
     class: PrestaShop\PrestaShop\Adapter\Presenter\Module\ModulePresenter
     arguments: [ "@=service('prestashop.adapter.legacy.context').getContext().currency", "@prestashop.adapter.formatter.price" ]
