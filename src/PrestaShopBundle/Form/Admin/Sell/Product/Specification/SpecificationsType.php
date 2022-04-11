@@ -73,6 +73,7 @@ class SpecificationsType extends TranslatorAwareType
                 'label_tag_name' => 'h3',
                 'show_choices' => false,
                 'inline_switch' => true,
+                'modify_all_shops' => true,
             ])
             ->add('condition', ChoiceType::class, [
                 'choices' => $this->productConditionChoiceProvider->getChoices(),
@@ -83,6 +84,7 @@ class SpecificationsType extends TranslatorAwareType
                 // placeholder false is important to avoid empty option in select input despite required being false
                 'placeholder' => false,
                 'label' => false,
+                'modify_all_shops' => true,
             ])
             ->add('customizations', CustomizationsType::class)
         ;
