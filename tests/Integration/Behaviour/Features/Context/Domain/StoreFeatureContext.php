@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkUpdateStoreStatusCommand
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\DeleteStoreCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\ToggleStoreStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreNotFoundException;
-use PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStoreForDeleting;
 use PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStoreForEditing;
 use RuntimeException;
 use Store;
@@ -174,7 +173,7 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
 
         $isToBePresent = 'exist' === $expectedPresence;
         $isToBeDeleted = 'be deleted' === $expectedPresence;
-        $query = new GetStoreForDeleting((int) $store->id);
+        $query = new GetStoreForEditing((int) $store->id);
         try {
             $storeQueried = $this->getQueryBus()->handle($query);
             if ($storeQueried && $isToBeDeleted) {
@@ -185,18 +184,6 @@ class StoreFeatureContext extends AbstractDomainFeatureContext
                 throw new RuntimeException(sprintf('Store "%s" is present, but it was expected to be deleted', $storeReference));
             }
             SharedStorage::getStorage()->clear($storeReference);
-        }
-    }
-
-    /**
-     * @Then /^I should get an error that the stores "(.+)" have not been found$/
-     *
-     * @param string $storeReferences
-     */
-    public function assertLastErrorStoreNotFound(string $storeReferences): void
-    {
-        foreach (PrimitiveUtils::castStringArrayIntoArray($storeReferences) as $storeReference) {
-            $this->assertLastErrorIs(StoreNotFoundException::class);
         }
     }
 }

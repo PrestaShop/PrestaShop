@@ -61,6 +61,7 @@ class BulkDeleteStoreCommand
      */
     private function setStoreIds(array $storeIds): void
     {
+        $this->storeIds = [];
         foreach ($storeIds as $storeId) {
             $this->storeIds[] = new StoreId((int) $storeId);
         }

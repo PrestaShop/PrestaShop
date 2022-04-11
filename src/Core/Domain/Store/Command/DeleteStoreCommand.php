@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Store\ValueObject\StoreId;
 class DeleteStoreCommand
 {
     /**
-     * @var storeId
+     * @var StoreId
      */
     private $storeId;
 
