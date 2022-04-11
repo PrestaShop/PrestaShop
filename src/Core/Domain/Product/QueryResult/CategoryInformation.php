@@ -40,26 +40,26 @@ class CategoryInformation
     /**
      * @var string
      */
-    private $displayName;
+    private $name;
 
     /**
      * @var string
      */
-    private $name;
+    private $displayName;
 
     /**
      * @param int $id
-     * @param string $displayName
      * @param string $name
+     * @param string $displayName
      */
     public function __construct(
         int $id,
-        string $displayName,
-        string $name
+        string $name,
+        string $displayName
     ) {
         $this->id = $id;
-        $this->displayName = $displayName;
         $this->name = $name;
+        $this->displayName = $displayName;
     }
 
     /**
@@ -73,16 +73,16 @@ class CategoryInformation
     /**
      * @return string
      */
-    public function getDisplayName(): string
+    public function getName(): string
     {
-        return $this->displayName;
+        return $this->name;
     }
 
     /**
      * @return string
      */
-    public function getName(): string
+    public function getDisplayName(): string
     {
-        return $this->name;
+        return $this->displayName;
     }
 }
