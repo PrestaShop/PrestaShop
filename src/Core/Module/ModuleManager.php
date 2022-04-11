@@ -99,6 +99,10 @@ class ModuleManager implements ModuleManagerInterface
             $handler->handle($source);
         }
 
+        if ($this->moduleDataProvider->isInstalled($name)) {
+            return $this->upgrade($name);
+        }
+
         $this->hookManager->exec('actionBeforeInstallModule', ['moduleName' => $name]);
 
         $module = $this->moduleRepository->getModule($name);
