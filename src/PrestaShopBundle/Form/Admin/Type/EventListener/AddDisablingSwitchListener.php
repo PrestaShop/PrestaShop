@@ -44,6 +44,16 @@ use TypeError;
  *
  * The switch state and the associated input's disabled state are automatically computed based on the input's data,
  * if it matches the disabled_value then the field is considered as disabled and the switch is turned off.
+ *
+ * Feature workflow:
+ *  - DisablingExtension handles the option when disabling_switch is enabled, it registers this listener on the target field
+ *  - on PRE_SET_DATA this listener:
+ *    - gets the target field's parent form field
+ *    - adds a new DisablingSwitchType on the parent
+ *    - updates the target's field disable attribute based on the option disabled_value
+ *    - it also adds a data-toggled-by attribute so that JS can select the fields on FO
+ *  - the prestashop UI kit form theme renders the DisablingSwitchType at the right place automatically
+ *  - the DisablingSwitch js component handles the front behaviour of the feature
  */
 class AddDisablingSwitchListener implements EventSubscriberInterface
 {
@@ -139,6 +149,8 @@ class AddDisablingSwitchListener implements EventSubscriberInterface
         if (empty($newOptions['attr'])) {
             $newOptions['attr'] = [];
         }
+
+        // Add data attribute that allows the JS component to select associated components
         $newOptions['attr'][self::TOGGLE_DATA_ATTRIBUTE] = $disablingFieldName;
 
         // We only set the HTML attribute not the form field option disabled, or else its value will be ignored and

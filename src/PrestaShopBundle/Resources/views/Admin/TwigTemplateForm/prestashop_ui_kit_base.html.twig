@@ -1353,7 +1353,7 @@
   </div>
 {% endblock %}
 
-{% block accordion_widget %}
+{%- block accordion_widget -%}
   <div class="accordion accordion-form" id="{{ form.vars.id }}">
     {% set firstChild = true %}
     {% for child in form %}
@@ -1362,7 +1362,13 @@
       <div class="card">
         <div class="card-header" id="{{ child.vars.id }}_accordion_header">
           <h2 class="mb-0">
-            <button class="accordion-form-button btn btn-block text-left{% if not isExpanded %} collapsed{% endif %}" type="button" data-toggle="collapse" data-target="#{{ child.vars.id }}_accordion" aria-expanded="{% if isExpanded %}true{% else %}false{% endif %}" aria-controls="{{ child.vars.id }}_accordion">
+            <button
+              class="accordion-form-button btn btn-block text-left{% if not isExpanded %} collapsed{% endif %}"
+              type="button"
+              data-toggle="collapse"
+              data-target="#{{ child.vars.id }}_accordion"
+              aria-expanded="{% if isExpanded %}true{% else %}false{% endif %}"
+              aria-controls="{{ child.vars.id }}_accordion">
               {{ child.vars.label }}
               <i class="material-icons"></i>
             </button>
@@ -1384,4 +1390,4 @@
     {# Display rest of children that may have not been rendered because they were not compound forms, like token hidden field for example #}
     {{ form_rest(form) }}
   </div>
-{% endblock %}
+{%- endblock -%}
