@@ -472,8 +472,8 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData = $this->getDefaultOutputData();
         $productData = [
             'categories' => [
-                ['id' => 42, 'localized_names' => [self::CONTEXT_LANG_ID => 'test1', 2 => 'test2']],
-                ['id' => 51, 'localized_names' => [self::CONTEXT_LANG_ID => 'test22', 3 => 'test3']],
+                ['id' => 42, 'name' => 'test1', 'display_name' => 'test > test1'],
+                ['id' => 51, 'name' => 'test22', 'display_name' => 'test > test22'],
             ],
             'default_category' => 51,
         ];
@@ -482,11 +482,13 @@ class ProductFormDataProviderTest extends TestCase
             [
                 'id' => 42,
                 'name' => 'test1',
+                'display_name' => 'test > test1',
             ],
         ];
         $expectedOutputData['description']['categories']['product_categories'][] = [
             'id' => 51,
             'name' => 'test22',
+            'display_name' => 'test > test22',
         ];
 
         $expectedOutputData['description']['categories']['default_category_id'] = 51;
@@ -1207,7 +1209,7 @@ class ProductFormDataProviderTest extends TestCase
         $categoriesInfo = [];
         if (isset($product['categories'])) {
             foreach ($product['categories'] as $category) {
-                $categoriesInfo[] = new CategoryInformation($category['id'], $category['localized_names']);
+                $categoriesInfo[] = new CategoryInformation($category['id'], $category['name'], $category['display_name']);
             }
         }
 
