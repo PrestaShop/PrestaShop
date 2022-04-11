@@ -39,7 +39,7 @@ abstract class AbstractProductCommandBuilderTest extends TestCase
 {
     public const SHOP_ID = 1;
 
-    protected const MODIFY_ALL_NAME_PREFIX = 'modify_all_shops_';
+    protected const MODIFY_ALL_SHOPS_PREFIX = 'modify_all_shops_';
 
     /**
      * @var ProductId

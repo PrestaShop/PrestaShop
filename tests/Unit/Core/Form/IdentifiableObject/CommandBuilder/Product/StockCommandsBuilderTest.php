@@ -46,7 +46,7 @@ class StockCommandsBuilderTest extends AbstractProductCommandBuilderTest
      */
     public function testBuildCommand(array $formData, array $expectedCommands): void
     {
-        $builder = new StockCommandsBuilder(self::MODIFY_ALL_NAME_PREFIX);
+        $builder = new StockCommandsBuilder(self::MODIFY_ALL_SHOPS_PREFIX);
         $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
         $this->assertEquals($expectedCommands, $builtCommands);
     }
@@ -234,7 +234,7 @@ class StockCommandsBuilderTest extends AbstractProductCommandBuilderTest
      */
     public function testBuildCommandMultiShop(array $formData, array $expectedCommands): void
     {
-        $builder = new StockCommandsBuilder(self::MODIFY_ALL_NAME_PREFIX);
+        $builder = new StockCommandsBuilder(self::MODIFY_ALL_SHOPS_PREFIX);
         $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
         $this->assertEquals($expectedCommands, $builtCommands);
     }
@@ -311,30 +311,30 @@ class StockCommandsBuilderTest extends AbstractProductCommandBuilderTest
                     'quantities' => [
                         'delta_quantity' => [
                             'delta' => '100',
-                            self::MODIFY_ALL_NAME_PREFIX . 'delta' => true,
+                            self::MODIFY_ALL_SHOPS_PREFIX . 'delta' => true,
                         ],
                         'minimal_quantity' => 1,
-                        self::MODIFY_ALL_NAME_PREFIX . 'minimal_quantity' => true,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'minimal_quantity' => true,
                     ],
                     'pack_stock_type' => '2',
-                    self::MODIFY_ALL_NAME_PREFIX . 'pack_stock_type' => true,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'pack_stock_type' => true,
                     'options' => [
                         'stock_location' => 'Im in miami...',
-                        self::MODIFY_ALL_NAME_PREFIX . 'stock_location' => true,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'stock_location' => true,
                         'low_stock_alert' => '0',
-                        self::MODIFY_ALL_NAME_PREFIX . 'low_stock_alert' => true,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'low_stock_alert' => true,
                         'low_stock_threshold' => '5',
-                        self::MODIFY_ALL_NAME_PREFIX . 'low_stock_threshold' => true,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'low_stock_threshold' => true,
                     ],
                     'availability' => [
                         'out_of_stock_type' => '2',
-                        self::MODIFY_ALL_NAME_PREFIX . 'out_of_stock_type' => true,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'out_of_stock_type' => true,
                         'available_date' => '2022-10-10',
-                        self::MODIFY_ALL_NAME_PREFIX . 'available_date' => true,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'available_date' => true,
                         'available_now_label' => $localizedAvailableNowLabels,
-                        self::MODIFY_ALL_NAME_PREFIX . 'available_now_label' => true,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'available_now_label' => true,
                         'available_later_label' => $localizedAvailableLaterLabels,
-                        self::MODIFY_ALL_NAME_PREFIX . 'available_later_label' => true,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'available_later_label' => true,
                     ],
                 ],
             ],
@@ -366,23 +366,23 @@ class StockCommandsBuilderTest extends AbstractProductCommandBuilderTest
                             'delta' => '100',
                         ],
                         'minimal_quantity' => 1,
-                        self::MODIFY_ALL_NAME_PREFIX . 'minimal_quantity' => true,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'minimal_quantity' => true,
                     ],
                     'pack_stock_type' => '2',
                     'options' => [
                         'stock_location' => 'Im in miami...',
                         'low_stock_alert' => '0',
-                        self::MODIFY_ALL_NAME_PREFIX . 'low_stock_alert' => true,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'low_stock_alert' => true,
                         'low_stock_threshold' => '5',
                     ],
                     'availability' => [
                         'out_of_stock_type' => '2',
-                        self::MODIFY_ALL_NAME_PREFIX . 'out_of_stock_type' => true,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'out_of_stock_type' => true,
                         'available_date' => '2022-10-10',
-                        self::MODIFY_ALL_NAME_PREFIX . 'available_date' => true,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'available_date' => true,
                         'available_now_label' => $localizedAvailableNowLabels,
                         'available_later_label' => $localizedAvailableLaterLabels,
-                        self::MODIFY_ALL_NAME_PREFIX . 'available_later_label' => true,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'available_later_label' => true,
                     ],
                 ],
             ],
@@ -412,30 +412,30 @@ class StockCommandsBuilderTest extends AbstractProductCommandBuilderTest
                     'quantities' => [
                         'delta_quantity' => [
                             'delta' => '100',
-                            self::MODIFY_ALL_NAME_PREFIX . 'delta' => true,
+                            self::MODIFY_ALL_SHOPS_PREFIX . 'delta' => true,
                         ],
                         'minimal_quantity' => 1,
-                        self::MODIFY_ALL_NAME_PREFIX . 'minimal_quantity' => false,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'minimal_quantity' => false,
                     ],
                     'pack_stock_type' => '2',
-                    self::MODIFY_ALL_NAME_PREFIX . 'pack_stock_type' => true,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'pack_stock_type' => true,
                     'options' => [
                         'stock_location' => 'Im in miami...',
-                        self::MODIFY_ALL_NAME_PREFIX . 'stock_location' => true,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'stock_location' => true,
                         'low_stock_alert' => '0',
-                        self::MODIFY_ALL_NAME_PREFIX . 'low_stock_alert' => false,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'low_stock_alert' => false,
                         'low_stock_threshold' => '5',
-                        self::MODIFY_ALL_NAME_PREFIX . 'low_stock_threshold' => true,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'low_stock_threshold' => true,
                     ],
                     'availability' => [
                         'out_of_stock_type' => '2',
-                        self::MODIFY_ALL_NAME_PREFIX . 'out_of_stock_type' => false,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'out_of_stock_type' => false,
                         'available_date' => '2022-10-10',
-                        self::MODIFY_ALL_NAME_PREFIX . 'available_date' => false,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'available_date' => false,
                         'available_now_label' => $localizedAvailableNowLabels,
-                        self::MODIFY_ALL_NAME_PREFIX . 'available_now_label' => true,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'available_now_label' => true,
                         'available_later_label' => $localizedAvailableLaterLabels,
-                        self::MODIFY_ALL_NAME_PREFIX . 'available_later_label' => false,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'available_later_label' => false,
                     ],
                 ],
             ],
