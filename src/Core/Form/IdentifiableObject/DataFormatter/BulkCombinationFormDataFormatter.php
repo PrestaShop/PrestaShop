@@ -78,7 +78,9 @@ class BulkCombinationFormDataFormatter
                 $bulkValue = $propertyAccessor->getValue($formData, $bulkFormPath);
                 $propertyAccessor->setValue($formattedData, $editFormPath, $bulkValue);
             } catch (AccessException $e) {
-                // When the bulk data is not found it means the field was disabled, so it is ignored
+                // When the bulk data is not found it means the field was disabled, which is the expected behaviour
+                // as the bulk request is a partial request not every data is expected And when it's not present
+                // it means there is no modification to do so this field is simply ignored
             }
         }
 

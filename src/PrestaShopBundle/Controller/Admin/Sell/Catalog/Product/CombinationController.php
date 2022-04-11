@@ -136,7 +136,7 @@ class CombinationController extends FrameworkBundleAdminController
             ]);
         } catch (CombinationNotFoundException $e) {
             return $this->returnErrorJsonResponse(
-                [$this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                ['error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
                 Response::HTTP_NOT_FOUND
             );
         }
@@ -158,8 +158,8 @@ class CombinationController extends FrameworkBundleAdminController
             }
         } catch (CombinationException $e) {
             return $this->returnErrorJsonResponse(
-                [$this->getErrorMessageForException($e, $this->getErrorMessages($e))],
-                Response::HTTP_INTERNAL_SERVER_ERROR
+                ['error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_BAD_REQUEST
             );
         }
 

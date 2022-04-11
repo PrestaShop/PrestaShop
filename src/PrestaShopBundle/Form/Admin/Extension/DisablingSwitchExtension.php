@@ -38,7 +38,7 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * This extension allows you to associate a switch disabler component to a form type byt setting
+ * This extension allows you to associate a switch disabler component to a form type by setting
  * the option disabling_switch to true. The component is automatically added to the form thanks to
  * a form listener and automatically rendered in the prestashop form theme (although you can always
  * override the rendering if needed).
