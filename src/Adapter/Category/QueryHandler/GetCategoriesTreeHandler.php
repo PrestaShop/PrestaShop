@@ -28,10 +28,12 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Category\QueryHandler;
 
 use Category;
-use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
+use PrestaShop\PrestaShop\Core\Category\NameBuilder\CategoryDisplayNameBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoriesTree;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryHandler\GetCategoriesTreeHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\CategoryForTree;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 /**
@@ -45,25 +47,28 @@ final class GetCategoriesTreeHandler implements GetCategoriesTreeHandlerInterfac
     private $contextLangId;
 
     /**
-     * @var CategoryRepository
+     * @var int
      */
-    private $categoryRepository;
+    private $contextShopId;
 
     /**
-     * @var string[]
+     * @var CategoryDisplayNameBuilder
      */
-    private $duplicateCategoryNames = [];
+    private $displayNameBuilder;
 
     /**
      * @param string $contextLangId
-     * @param CategoryRepository $categoryRepository
+     * @param int $contextShopId
+     * @param CategoryDisplayNameBuilder $displayNameBuilder
      */
     public function __construct(
         string $contextLangId,
-        CategoryRepository $categoryRepository
+        int $contextShopId,
+        CategoryDisplayNameBuilder $displayNameBuilder
     ) {
         $this->contextLangId = $contextLangId;
-        $this->categoryRepository = $categoryRepository;
+        $this->contextShopId = $contextShopId;
+        $this->displayNameBuilder = $displayNameBuilder;
     }
 
     /**
@@ -71,44 +76,52 @@ final class GetCategoriesTreeHandler implements GetCategoriesTreeHandlerInterfac
      */
     public function handle(GetCategoriesTree $query): array
     {
-        $langId = $query->getLanguageId() ? $query->getLanguageId()->getValue() : (int) $this->contextLangId;
-        $nestedCategories = Category::getNestedCategories(null, $langId, false);
-        //@todo; hardcoded shop id. Should I add shop constraint to query, or take context shop id?
-        $this->duplicateCategoryNames = $this->categoryRepository->getDuplicateNames(new ShopId(1), $query->getLanguageId());
+        $shopId = new ShopId((int) $this->contextShopId);
+        $langId = $query->getLanguageId() ?? new LanguageId((int) $this->contextLangId);
+        $nestedCategories = Category::getNestedCategories(null, $langId->getValue(), false);
 
-        return $this->buildCategoriesTree($nestedCategories, $langId);
+        return $this->buildCategoriesTree($nestedCategories, $shopId, $langId);
     }
 
     /**
      * @param array<string, array<string, mixed>> $categories
-     * @param int $langId
-     * @param array<string, array<string, mixed>> $parents
+     * @param ShopId $shopId
+     * @param LanguageId $langId
+     * @param array<int, array<string, mixed>> $parents
      *
      * @return CategoryForTree[]
      */
-    private function buildCategoriesTree(array $categories, int $langId, array $parents = []): array
+    private function buildCategoriesTree(array $categories, ShopId $shopId, LanguageId $langId, array $parents = []): array
     {
         $categoriesTree = [];
         foreach ($categories as $category) {
             $categoryId = (int) $category['id_category'];
+            $categoryName = $category['name'];
             $categoryActive = (bool) $category['active'];
             $categoryChildren = [];
 
             if (!empty($category['children'])) {
                 $categoryChildren = $this->buildCategoriesTree(
                     $category['children'],
+                    $shopId,
                     $langId,
                     array_merge($parents, [$category])
                 );
             }
 
+            $displayName = $this->displayNameBuilder->build(
+                new CategoryId($categoryId),
+                $categoryName,
+                $shopId,
+                $langId,
+                $this->getBreadcrumbParts($categoryName, $parents)
+            );
+
             $categoriesTree[] = new CategoryForTree(
                 $categoryId,
                 $categoryActive,
-                $this->buildDisplayName($category, $parents),
-                // @todo: it is always only one language now,
-                //   but this way it doesn't require changing the contract when we want to allow retrieving multiple languages
-                [$langId => $category['name']],
+                $categoryName,
+                $displayName,
                 $categoryChildren
             );
         }
@@ -117,33 +130,19 @@ final class GetCategoriesTreeHandler implements GetCategoriesTreeHandlerInterfac
     }
 
     /**
-     * If there are multiple categories with identical names, we want to be able to tell them apart,
-     * so we use breadcrumb path instead of category name.
-     * However, whole breadcrumb path would probably be too long, therefore not UX friendly.
-     * Calculating "optimal" breadcrumb length seems too complex compared to the value it could bring.
-     * So, we show one parent name and category name, as it is simple and should cover most cases.
-     *
-     * e.g. "Clothes > Women"
-     *
-     * @param array<string, mixed> $category
+     * @param string $categoryName
      * @param array<int, array<string, mixed>> $parentCategories
      *
-     * @return string
+     * @return string[]
      */
-    private function buildDisplayName(array $category, array $parentCategories): string
+    private function getBreadcrumbParts(string $categoryName, array $parentCategories): array
     {
-        $categoryName = $category['name'];
-
-        if (!in_array($categoryName, $this->duplicateCategoryNames)) {
-            return $categoryName;
-        }
-
         $breadcrumbs = [];
         foreach ($parentCategories as $parent) {
             $breadcrumbs[] = $parent['name'];
         }
         $breadcrumbs[] = $categoryName;
 
-        return implode(' > ', array_slice($breadcrumbs, -2, 2));
+        return $breadcrumbs;
     }
 }

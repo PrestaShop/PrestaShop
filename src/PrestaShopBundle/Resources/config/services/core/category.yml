@@ -1,0 +1,8 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.core.category.name_builder.category_display_name_builder:
+    class: 'PrestaShop\PrestaShop\Core\Category\NameBuilder\CategoryDisplayNameBuilder'
+    arguments:
+      - '@prestashop.adapter.category.repository.category_repository'

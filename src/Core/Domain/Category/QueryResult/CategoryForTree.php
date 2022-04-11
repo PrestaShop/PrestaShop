@@ -42,12 +42,12 @@ class CategoryForTree
     /**
      * @var string
      */
-    private $displayName;
+    private $name;
 
     /**
-     * @var array<int, string>
+     * @var string
      */
-    private $localizedNames;
+    private $displayName;
 
     /**
      * @var CategoryForTree[]
@@ -57,22 +57,21 @@ class CategoryForTree
     /**
      * @param int $categoryId
      * @param bool $active
+     * @param string $name,
      * @param string $displayName
-     * @param array<int, string> $localizedNames
      * @param CategoryForTree[] $children
      */
     public function __construct(
         int $categoryId,
         bool $active,
+        string $name,
         string $displayName,
-        //@todo: probably shouldn't even be localized, as query has langId param
-        array $localizedNames,
         array $children
     ) {
         $this->categoryId = $categoryId;
         $this->active = $active;
+        $this->name = $name;
         $this->displayName = $displayName;
-        $this->localizedNames = $localizedNames;
         $this->children = $children;
     }
 
@@ -95,17 +94,17 @@ class CategoryForTree
     /**
      * @return string
      */
-    public function getDisplayName(): string
+    public function getName(): string
     {
-        return $this->displayName;
+        return $this->name;
     }
 
     /**
-     * @return array<int, string>
+     * @return string
      */
-    public function getLocalizedNames(): array
+    public function getDisplayName(): string
     {
-        return $this->localizedNames;
+        return $this->displayName;
     }
 
     /**
