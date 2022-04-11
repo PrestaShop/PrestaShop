@@ -285,23 +285,39 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
 
         $categoriesInformation = [];
         foreach ($categoryNames as $categoryId => $localizedNames) {
-            $localizedNames = $categoryNames[$categoryId];
+            $categoryName = $categoryNames[$categoryId][$this->contextLangId];
             $displayName = $this->buildDisplayName(
                 new CategoryId($categoryId),
                 $languageId,
-                $localizedNames[$this->contextLangId],
+                $categoryName,
                 $duplicateNames
             );
             $categoriesInformation[] = new CategoryInformation(
                 $categoryId,
                 $displayName,
-                $localizedNames
+                $categoryName
             );
         }
 
         return new CategoriesInformation($categoriesInformation, $defaultCategoryId);
     }
 
+    /**
+     *  If there are multiple categories with identical names, we want to be able to tell them apart,
+     *  so we use breadcrumb path instead of category name.
+     *  However, whole breadcrumb path would probably be too long, therefore not UX friendly.
+     *  Calculating "optimal" breadcrumb length seems too complex compared to the value it could bring.
+     *  So, we show one parent name and category name, as it is simple and should cover most cases.
+     *
+     * e.g. "Clothes > Women"
+     *
+     * @param CategoryId $categoryId
+     * @param LanguageId $languageId
+     * @param string $categoryName
+     * @param string[] $duplicateNames
+     *
+     * @return string
+     */
     private function buildDisplayName(
         CategoryId $categoryId,
         LanguageId $languageId,
