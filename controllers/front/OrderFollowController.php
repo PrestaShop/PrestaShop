@@ -44,17 +44,15 @@ class OrderFollowControllerCore extends FrontController
     public function postProcess()
     {
         if (Tools::isSubmit('submitReturnMerchandise')) {
-            $customizationQtyInput = Tools::getValue('customization_qty_input');
             $order_qte_input = Tools::getValue('order_qte_input');
-            $customizationIds = Tools::getValue('customization_ids');
 
             if (!$id_order = (int) Tools::getValue('id_order')) {
                 Tools::redirect('index.php?controller=history');
             }
-            if (!($ids_order_detail = Tools::getValue('ids_order_detail')) && !$customizationQtyInput && !$customizationIds) {
+            if (!($ids_order_detail = Tools::getValue('ids_order_detail'))) {
                 Tools::redirect('index.php?controller=order-detail&id_order=' . $id_order . '&errorDetail1');
             }
-            if (!$customizationIds && !$order_qte_input) {
+            if (!$order_qte_input) {
                 Tools::redirect('index.php?controller=order-detail&id_order=' . $id_order . '&errorDetail2');
             }
 
@@ -78,13 +76,13 @@ class OrderFollowControllerCore extends FrontController
                     ]));
             }
 
-            if (!$orderReturn->checkEnoughProduct($ids_order_detail, $order_qte_input, $customizationIds, $customizationQtyInput)) {
+            if (!$orderReturn->checkEnoughProduct($ids_order_detail, $order_qte_input)) {
                 Tools::redirect('index.php?controller=order-detail&id_order=' . $id_order . '&errorQuantity');
             }
 
             $orderReturn->state = 1;
             $orderReturn->add();
-            $orderReturn->addReturnDetail($ids_order_detail, $order_qte_input, $customizationIds, $customizationQtyInput);
+            $orderReturn->addReturnDetail($ids_order_detail, $order_qte_input);
             Hook::exec('actionOrderReturn', ['orderReturn' => $orderReturn]);
             Tools::redirect('index.php?controller=order-follow');
         }

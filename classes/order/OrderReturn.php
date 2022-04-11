@@ -62,8 +62,15 @@ class OrderReturnCore extends ObjectModel
         ],
     ];
 
-    public function addReturnDetail($order_detail_list, $product_qty_list, $customization_ids, $customization_qty_input)
+    public function addReturnDetail($order_detail_list, $product_qty_list)
     {
+        if (func_num_args() > 2) {
+            @trigger_error(
+                'Passing customization infos is deprecated since version 8.0.0. The customization is already included in the order details.',
+                E_USER_DEPRECATED
+            );
+        }
+
         /* Classic product return */
         if ($order_detail_list) {
             foreach ($order_detail_list as $key => $order_detail) {
@@ -74,20 +81,17 @@ class OrderReturnCore extends ObjectModel
                 }
             }
         }
-        /* Customized product return */
-        if ($customization_ids) {
-            foreach ($customization_ids as $order_detail_id => $customizations) {
-                foreach ($customizations as $customization_id) {
-                    if ($quantity = (int) $customization_qty_input[(int) $customization_id]) {
-                        Db::getInstance()->insert('order_return_detail', ['id_order_return' => (int) $this->id, 'id_order_detail' => (int) $order_detail_id, 'product_quantity' => $quantity, 'id_customization' => (int) $customization_id]);
-                    }
-                }
-            }
-        }
     }
 
-    public function checkEnoughProduct($order_detail_list, $product_qty_list, $customization_ids, $customization_qty_input)
+    public function checkEnoughProduct($order_detail_list, $product_qty_list)
     {
+        if (func_num_args() > 2) {
+            @trigger_error(
+                'Passing customization infos is deprecated since version 8.0.0. The customization is already included in the order details.',
+                E_USER_DEPRECATED
+            );
+        }
+
         $order = new Order((int) $this->id_order);
         if (!Validate::isLoadedObject($order)) {
             die(Tools::displayError());
@@ -109,22 +113,6 @@ class OrderReturnCore extends ObjectModel
                 }
                 if ($qty = (int) $product_qty_list[$key]) {
                     if ($products[$key]['product_quantity'] - $qty < 0) {
-                        return false;
-                    }
-                }
-            }
-        }
-        /* Customization quantity check */
-        if ($customization_ids) {
-            $ordered_customizations = Customization::getOrderedCustomizations((int) $order->id_cart);
-            foreach ($customization_ids as $customizations) {
-                foreach ($customizations as $customization_id) {
-                    $customization_id = (int) $customization_id;
-                    if (!isset($ordered_customizations[$customization_id])) {
-                        return false;
-                    }
-                    $quantity = (isset($customization_qty_input[$customization_id]) ? (int) $customization_qty_input[$customization_id] : 0);
-                    if ((int) $ordered_customizations[$customization_id]['quantity'] - $quantity < 0) {
                         return false;
                     }
                 }
