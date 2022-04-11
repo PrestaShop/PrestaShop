@@ -3608,7 +3608,7 @@
     <hook id="displayAdminThemesListAfter">
       <name>displayAdminThemesListAfter</name>
       <title>BO themes list extra content</title>
-      <description>This hook displays content after the themes list in the BackOffice</description>
+      <description>This hook displays content after the themes list in the back office</description>
     </hook>
   </entities>
 </entity_hook>
