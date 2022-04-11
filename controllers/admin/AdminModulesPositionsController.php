@@ -27,16 +27,8 @@ class AdminModulesPositionsControllerCore extends AdminController
 {
     protected $display_key = 0;
 
-    /**
-     * @deprecated since 1.7.6, to be removed in the next minor
-     */
     public function __construct()
     {
-        @trigger_error(
-            'The AdminModulesPositionsController is deprecated and will be removed in the next minor',
-            E_USER_DEPRECATED
-        );
-
         $this->bootstrap = true;
         parent::__construct();
     }
@@ -253,8 +245,6 @@ class AdminModulesPositionsControllerCore extends AdminController
             $this->display = 'edit';
 
             $this->content .= $this->renderForm();
-        } else {
-            $this->content .= $this->initMain();
         }
 
         $this->context->smarty->assign([
@@ -271,69 +261,6 @@ class AdminModulesPositionsControllerCore extends AdminController
         ];
 
         return parent::initPageHeaderToolbar();
-    }
-
-    public function initMain()
-    {
-        // Init toolbar
-        $this->initToolbarTitle();
-
-        $modules = Module::getModulesInstalled();
-
-        $assoc_modules_id = $module_instances = [];
-        foreach ($modules as $module) {
-            if ($tmp_instance = Module::getInstanceById((int) $module['id_module'])) {
-                // We want to be able to sort modules by display name
-                $module_instances[$tmp_instance->displayName] = $tmp_instance;
-                // But we also want to associate hooks to modules using the modules IDs
-                $assoc_modules_id[(int) $module['id_module']] = $tmp_instance->displayName;
-            }
-        }
-        ksort($module_instances);
-        $hooks = Hook::getHooks(false, false);
-        foreach ($hooks as $key => $hook) {
-            $hooks[$key]['position'] = Hook::isDisplayHookName($hook['name']);
-
-            // Get all modules for this hook or only the filtered module
-            $hooks[$key]['modules'] = Hook::getModulesFromHook($hook['id_hook'], $this->display_key);
-            $hooks[$key]['module_count'] = count($hooks[$key]['modules']);
-            if ($hooks[$key]['module_count']) {
-                // If modules were found, link to the previously created Module instances
-                if (is_array($hooks[$key]['modules']) && !empty($hooks[$key]['modules'])) {
-                    foreach ($hooks[$key]['modules'] as $module_key => $module) {
-                        if (isset($assoc_modules_id[$module['id_module']])) {
-                            $hooks[$key]['modules'][$module_key]['instance'] = $module_instances[$assoc_modules_id[$module['id_module']]];
-                        }
-                    }
-                }
-            } else {
-                unset($hooks[$key]);
-            }
-        }
-
-        $this->addJqueryPlugin('tablednd');
-
-        $this->toolbar_btn['save'] = [
-            'href' => self::$currentIndex . '&addToHook' . ($this->display_key ? '&show_modules=' . $this->display_key : '') . '&token=' . $this->token,
-            'desc' => $this->trans('Transplant a module', [], 'Admin.Design.Feature'),
-        ];
-
-        $this->context->smarty->assign([
-            'show_toolbar' => true,
-            'toolbar_btn' => $this->toolbar_btn,
-            'title' => $this->toolbar_title,
-            'toolbar_scroll' => 'false',
-            'token' => $this->token,
-            'url_show_modules' => self::$currentIndex . '&token=' . $this->token . '&show_modules=',
-            'modules' => $module_instances,
-            'url_show_invisible' => self::$currentIndex . '&token=' . $this->token . '&show_modules=' . (int) Tools::getValue('show_modules') . '&hook_position=',
-            'display_key' => $this->display_key,
-            'hooks' => $hooks,
-            'url_submit' => self::$currentIndex . '&token=' . $this->token,
-            'can_move' => (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP) ? false : true,
-        ]);
-
-        return $this->createTemplate('list_modules.tpl')->fetch();
     }
 
     public function renderForm()
