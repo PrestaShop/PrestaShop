@@ -23,6 +23,7 @@ class AddEmployee extends BOBasePage {
     this.emailInput = '#employee_email';
     this.passwordInput = '#employee_password';
     this.defaultPageSpan = '.select2-selection[aria-labelledby=\'select2-employee_default_page-container\']';
+    this.searchDefaultPageInput = '.select2-search__field';
     this.languageSelect = '#employee_language';
     this.statusToggleInput = toggle => `#employee_active_${toggle}`;
     this.permissionProfileSelect = '#employee_profile';
@@ -66,7 +67,7 @@ class AddEmployee extends BOBasePage {
       page.click(this.defaultPageSpan),
       this.waitForVisibleSelector(page, `${this.defaultPageSpan}[aria-expanded='true']`),
     ]);
-    await page.keyboard.type(defaultPage);
+    await this.setValue(page, this.searchDefaultPageInput, defaultPage);
     await page.keyboard.press('Enter');
   }
 
