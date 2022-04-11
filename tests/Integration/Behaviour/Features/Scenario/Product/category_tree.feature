@@ -27,18 +27,18 @@ Feature: Show category tree in product page (BO)
 
   Scenario: I can see categories tree with product associations
     Given I should see following root categories in "en" language:
-      | id reference | category name | direct child categories   |
-      | home         | Home          | [clothes,accessories,art] |
+      | id reference | category name | display name | direct child categories   |
+      | home         | Home          | Home         | [clothes,accessories,art] |
     And I should see following categories in "home" category in "en" language:
-      | id reference | category name | direct child categories       |
-      | clothes      | Clothes       | [men,women]                   |
-      | accessories  | Accessories   | [stationery,home_accessories] |
-      | art          | Art           |                               |
+      | id reference | category name | display name | direct child categories       |
+      | clothes      | Clothes       | Clothes      | [men,women]                   |
+      | accessories  | Accessories   | Accessories  | [stationery,home_accessories] |
+      | art          | Art           | Art          |                               |
     And I should see following categories in "clothes" category in "en" language:
-      | id reference | category name | direct child categories |
-      | men          | Men           |                         |
-      | women        | Women         |                         |
+      | id reference | category name | display name | direct child categories |
+      | men          | Men           | Men          |                         |
+      | women        | Women         | Women        |                         |
     And I should see following categories in "accessories" category in "en" language:
-      | id reference     | category name    | direct child categories |
-      | stationery       | Stationery       |                         |
-      | home_accessories | Home Accessories |                         |
+      | id reference     | category name    | display name     | direct child categories |
+      | stationery       | Stationery       | Stationery       |                         |
+      | home_accessories | Home Accessories | Home Accessories |                         |

@@ -108,7 +108,7 @@ final class GetCategoriesTreeHandler implements GetCategoriesTreeHandlerInterfac
                 $this->buildDisplayName($category, $parents),
                 // @todo: it is always only one language now,
                 //   but this way it doesn't require changing the contract when we want to allow retrieving multiple languages
-                [$langId => $category['name']],
+                $category['name'],
                 $categoryChildren
             );
         }
