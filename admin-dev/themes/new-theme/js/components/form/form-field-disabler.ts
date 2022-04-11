@@ -23,6 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import {isUndefined} from '@PSTypes/typeguard';
+
 /**
  * @param {string} disablingInputSelector - selector of input (e.g. checkbox or radio)
  *                 which on change enables/disables the element selected by targetSelector.
@@ -77,15 +79,15 @@ export default class FormFieldDisabler {
   }
 
   private updateTargetState(inputElement: HTMLInputElement): void {
-    const toggleValue: string | undefined = this.getInputValue(inputElement);
+    const toggleValue = this.getInputValue(inputElement);
 
-    if (toggleValue === undefined) {
+    if (isUndefined(toggleValue)) {
       return;
     }
 
-    const matchingValue: string | null = inputElement.dataset.matchingValue || this.params.matchingValue;
-    const targetSelector: string | null = inputElement.dataset.targetSelector || this.params.targetSelector;
-    const disableOnMatch: boolean = <boolean> (inputElement.dataset.disableOnMatch || this.params.disableOnMatch);
+    const matchingValue = inputElement.dataset.matchingValue || this.params.matchingValue;
+    const targetSelector = inputElement.dataset.targetSelector || this.params.targetSelector;
+    const disableOnMatch: boolean = inputElement.dataset.disableOnMatch === '1' || this.params.disableOnMatch;
 
     if (matchingValue === null) {
       console.error('No matching value defined for inputElement', inputElement);
@@ -110,7 +112,7 @@ export default class FormFieldDisabler {
   private getInputValue(inputElement: HTMLInputElement): string | undefined {
     switch (inputElement.type) {
       case 'radio': {
-        const checkedRadios = document.querySelectorAll(`[name="${inputElement.name}"]`) as NodeListOf<HTMLInputElement>;
+        const checkedRadios = document.querySelectorAll<HTMLInputElement>(`[name="${inputElement.name}"]`);
         let checkedValue: string | undefined;
         checkedRadios.forEach((radio: HTMLInputElement) => {
           if (radio.checked) {

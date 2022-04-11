@@ -30,6 +30,7 @@ import {
   ModalContainerType, ModalContainer, ModalType, ModalParams, Modal,
 } from '@components/modal/modal';
 import IframeEvent from '@components/modal/iframe-event';
+import {isUndefined} from '@PSTypes/typeguard';
 
 export interface IframeModalContainerType extends ModalContainerType {
   iframe: HTMLIFrameElement;
@@ -59,7 +60,7 @@ export type IframeModalParams = ModalParams & {
   autoSizeContainer: string;
   // Optional, when set a close button is added in the modal's footer
   closeButtonLabel?: string;
-  // Optional, when set a close button is added in the modal's footer
+  // Optional, when set a confirm button is added in the modal's footer
   confirmButtonLabel?: string;
   // Callback when the confirm button is clicked
   confirmCallback?: (event: Event) => void;
@@ -124,12 +125,12 @@ export class IframeModalContainer extends ModalContainer implements IframeModalC
     this.body.append(this.loader, this.iframe);
 
     // Modal footer element
-    if (params.closeButtonLabel !== undefined || params.confirmButtonLabel !== undefined) {
+    if (!isUndefined(params.closeButtonLabel) || !isUndefined(params.confirmButtonLabel)) {
       this.footer = document.createElement('div');
       this.footer.classList.add('modal-footer');
 
       // Modal close button element
-      if (params.closeButtonLabel) {
+      if (!isUndefined(params.closeButtonLabel)) {
         this.closeButton = document.createElement('button');
         this.closeButton.setAttribute('type', 'button');
         this.closeButton.classList.add('btn', 'btn-outline-secondary', 'btn-lg');
@@ -139,7 +140,7 @@ export class IframeModalContainer extends ModalContainer implements IframeModalC
       }
 
       // Modal confirm button element
-      if (params.confirmButtonLabel !== undefined) {
+      if (!isUndefined(params.confirmButtonLabel)) {
         this.confirmButton = document.createElement('button');
         this.confirmButton.setAttribute('type', 'button');
         this.confirmButton.classList.add('btn', 'btn-primary', 'btn-lg', 'btn-confirm-submit');
