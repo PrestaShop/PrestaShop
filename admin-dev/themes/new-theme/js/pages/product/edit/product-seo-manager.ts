@@ -81,6 +81,8 @@ export default class ProductSEOManager {
       options: {
         createTokensOnBlur: true,
         delimiter: ',',
+        // Tag entity is limited to 32 characters
+        maxCharacters: 32,
       },
     });
   }

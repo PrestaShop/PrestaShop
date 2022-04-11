@@ -1302,13 +1302,6 @@ $product-page-padding-bottom: 80px !default;
         }
       }
     }
-
-    // @TODO(NeOMakinG): This could probably be done on every token-input of the BO
-    input.token-input[type="text"] {
-      // stylelint-disable-next-line declaration-no-important
-      width: 100% !important;
-      max-width: 768px;
-    }
   }
 
   // @TODO(NeOMakinG): Moove this to a global file, because every locale-input-group should be the same
