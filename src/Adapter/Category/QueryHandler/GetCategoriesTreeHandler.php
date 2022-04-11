@@ -105,10 +105,8 @@ final class GetCategoriesTreeHandler implements GetCategoriesTreeHandlerInterfac
             $categoriesTree[] = new CategoryForTree(
                 $categoryId,
                 $categoryActive,
-                $this->buildDisplayName($category, $parents),
-                // @todo: it is always only one language now,
-                //   but this way it doesn't require changing the contract when we want to allow retrieving multiple languages
                 $category['name'],
+                $this->buildDisplayName($category, $parents),
                 $categoryChildren
             );
         }

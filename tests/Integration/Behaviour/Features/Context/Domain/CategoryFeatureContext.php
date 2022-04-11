@@ -27,6 +27,7 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
+use Cache;
 use Category;
 use Configuration;
 use Language;
@@ -115,6 +116,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertCategoriesTree(TableNode $tableNode, string $langIso, string $parentReference): void
     {
+        Cache::clean('Category::getNestedCategories_*');
         $langId = Language::getIdByIso($langIso);
         $categoriesTree = $this->getQueryBus()->handle(new GetCategoriesTree($langId));
 

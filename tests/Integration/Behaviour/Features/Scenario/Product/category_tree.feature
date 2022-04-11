@@ -25,7 +25,7 @@ Feature: Show category tree in product page (BO)
     And category "art" in default language named "Art" exists
     And category "art" parent is category "home"
 
-  Scenario: I can see categories tree with product associations
+  Scenario: I can see categories tree
     Given I should see following root categories in "en" language:
       | id reference | category name | display name | direct child categories   |
       | home         | Home          | Home         | [clothes,accessories,art] |
@@ -42,3 +42,15 @@ Feature: Show category tree in product page (BO)
       | id reference     | category name    | display name     | direct child categories |
       | stationery       | Stationery       | Stationery       |                         |
       | home_accessories | Home Accessories | Home Accessories |                         |
+    When I add new category "artWomen" with following details:
+      | Name            | Women     |
+      | Displayed       | true      |
+      | Parent category | Art       |
+      | Friendly URL    | art-women |
+    Then I should see following categories in "art" category in "en" language:
+      | id reference | category name | display name | direct child categories |
+      | artWomen     | Women         | Art > Women  |                         |
+    And I should see following categories in "clothes" category in "en" language:
+      | id reference | category name | display name    | direct child categories |
+      | men          | Men           | Men             |                         |
+      | women        | Women         | Clothes > Women |                         |
