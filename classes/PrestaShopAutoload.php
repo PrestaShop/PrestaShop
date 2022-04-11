@@ -86,7 +86,7 @@ class PrestaShopAutoload
      *
      * @return string
      */
-    protected static function getCacheDir()
+    protected static function getCacheDir(): string
     {
         return dirname(__DIR__) . '/var/cache';
     }
