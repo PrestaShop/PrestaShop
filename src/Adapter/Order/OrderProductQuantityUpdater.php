@@ -156,7 +156,7 @@ class OrderProductQuantityUpdater
             // Product deletion
             $cartComparator = $this->orderProductRemover->deleteProductFromOrder($order, $orderDetail, $updateCart);
             if ((int) $orderDetail->id_customization) {
-                $this->deleteProductCustomization($orderDetail->id_customization);
+                $this->deleteProductCustomization((int) $orderDetail->id_customization);
             }
             $this->applyOtherProductUpdates($order, $cart, $orderInvoice, $cartComparator->getUpdatedProducts());
             $this->applyOtherProductCreation($order, $cart, $orderInvoice, $cartComparator->getAdditionalProducts());
