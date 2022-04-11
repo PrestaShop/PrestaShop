@@ -6087,13 +6087,21 @@ class ProductCore extends ObjectModel
     }
 
     /**
-     * @deprecated since 8.0.0, the customization price impact is already included in Product::getPriceStatic
+     * @deprecated since 8.0.0, the customization price impact is already included in Product::getPriceStatic.
      *
      * @param array $products
      * @param array $customized_datas
      */
     public static function addCustomizationPrice(&$products, &$customized_datas)
     {
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 8.0.0. The customization price impact is already included in Product::getPriceStatic.',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
+        );
+
         if (!$customized_datas) {
             return;
         }
@@ -6149,7 +6157,7 @@ class ProductCore extends ObjectModel
     }
 
     /**
-     * @deprecated since 8.0.0, the customization price impact is already included in Product::getPriceStatic
+     * @deprecated since 8.0.0, the customization price impact is already included in Product::getPriceStatic.
      *
      * Add customization price for a single product
      *
@@ -6158,6 +6166,14 @@ class ProductCore extends ObjectModel
      */
     public static function addProductCustomizationPrice(&$product, &$customized_datas)
     {
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 8.0.0. The customization price impact is already included in Product::getPriceStatic.',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
+        );
+
         if (!$customized_datas) {
             return;
         }
