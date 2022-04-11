@@ -15,6 +15,5 @@ type TreeCategory = {
   name: string,
   displayName: string,
   active: boolean,
-  breadcrumb: string,
   children: Array<TreeCategory>,
 }

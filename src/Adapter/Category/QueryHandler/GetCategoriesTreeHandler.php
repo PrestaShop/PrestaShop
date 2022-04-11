@@ -94,39 +94,55 @@ final class GetCategoriesTreeHandler implements GetCategoriesTreeHandlerInterfac
             $categoryActive = (bool) $category['active'];
             $categoryChildren = [];
 
-            $breadcrumbs = [];
-            foreach ($parents as $parent) {
-                $breadcrumbs[] = $parent['name'];
-            }
-            $breadcrumbs[] = $category['name'];
-
             if (!empty($category['children'])) {
-                $parentCategories = $parents;
-                $parentCategories[] = $category;
-                $categoryChildren = $this->buildCategoriesTree($category['children'], $langId, $parentCategories);
+                $categoryChildren = $this->buildCategoriesTree(
+                    $category['children'],
+                    $langId,
+                    array_merge($parents, [$category])
+                );
             }
 
             $categoriesTree[] = new CategoryForTree(
                 $categoryId,
                 $categoryActive,
-                $this->buildDisplayName($category, $breadcrumbs),
+                $this->buildDisplayName($category, $parents),
                 // @todo: it is always only one language now,
                 //   but this way it doesn't require changing the contract when we want to allow retrieving multiple languages
                 [$langId => $category['name']],
-                $categoryChildren,
-                [$langId => $breadcrumbs]
+                $categoryChildren
             );
         }
 
         return $categoriesTree;
     }
 
-    private function buildDisplayName(array $category, array $breadcrumbs): string
+    /**
+     * If there are multiple categories with identical names, we want to be able to tell them apart,
+     * so we use breadcrumb path instead of category name.
+     * However, whole breadcrumb path would probably be too long, therefore not UX friendly.
+     * Calculating "optimal" breadcrumb length seems too complex compared to the value it could bring.
+     * So, we show one parent name and category name, as it is simple and should cover most cases.
+     *
+     * e.g. "Clothes > Women"
+     *
+     * @param array<string, mixed> $category
+     * @param array<int, array<string, mixed>> $parentCategories
+     *
+     * @return string
+     */
+    private function buildDisplayName(array $category, array $parentCategories): string
     {
-        $name = $category['name'];
-        if (!in_array($name, $this->duplicateCategoryNames)) {
-            return $name;
+        $categoryName = $category['name'];
+
+        if (!in_array($categoryName, $this->duplicateCategoryNames)) {
+            return $categoryName;
         }
+
+        $breadcrumbs = [];
+        foreach ($parentCategories as $parent) {
+            $breadcrumbs[] = $parent['name'];
+        }
+        $breadcrumbs[] = $categoryName;
 
         return implode(' > ', array_slice($breadcrumbs, -2, 2));
     }
