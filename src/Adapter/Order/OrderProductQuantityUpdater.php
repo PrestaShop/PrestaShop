@@ -507,7 +507,7 @@ class OrderProductQuantityUpdater
      *
      * @throws OrderException
      */
-    private function deleteProductCustomization($id_customization): void
+    private function deleteProductCustomization(int $id_customization): void
     {
         if (!Db::getInstance()->execute(
             'DELETE FROM `' . _DB_PREFIX_ . 'customization` 
