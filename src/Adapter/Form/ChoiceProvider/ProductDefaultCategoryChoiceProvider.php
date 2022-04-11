@@ -28,7 +28,11 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 
 use PrestaShop\PrestaShop\Adapter\Category\Repository\CategoryRepository;
+use PrestaShop\PrestaShop\Core\Category\NameBuilder\CategoryDisplayNameBuilder;
+use PrestaShop\PrestaShop\Core\Category\NameBuilder\CategoryInformation;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use Product;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -46,15 +50,39 @@ class ProductDefaultCategoryChoiceProvider implements ConfigurableFormChoiceProv
     private $categoryRepository;
 
     /**
+     * @var CategoryDisplayNameBuilder
+     */
+    private $categoryDisplayNameBuilder;
+
+    /**
+     * @var int
+     */
+    private $shopId;
+
+    /**
+     * @var int
+     */
+    private $languageId;
+
+    /**
      * @param int $homeCategoryId
      * @param CategoryRepository $categoryRepository
+     * @param CategoryDisplayNameBuilder $categoryDisplayNameBuilder
+     * @param int $shopId
+     * @param int $languageId
      */
     public function __construct(
         int $homeCategoryId,
-        CategoryRepository $categoryRepository
+        CategoryRepository $categoryRepository,
+        CategoryDisplayNameBuilder $categoryDisplayNameBuilder,
+        int $shopId,
+        int $languageId
     ) {
         $this->defaultCategoryId = $homeCategoryId;
         $this->categoryRepository = $categoryRepository;
+        $this->categoryDisplayNameBuilder = $categoryDisplayNameBuilder;
+        $this->shopId = $shopId;
+        $this->languageId = $languageId;
     }
 
     /**
@@ -65,10 +93,11 @@ class ProductDefaultCategoryChoiceProvider implements ConfigurableFormChoiceProv
         $options = $this->resolveOptions($options);
 
         if (!$options['product_id']) {
-            $category = $this->categoryRepository->get(new CategoryId($this->defaultCategoryId));
-
+            $categoryId = new CategoryId($this->defaultCategoryId);
+            $category = $this->categoryRepository->get($categoryId);
+            $displayName = $this->getDisplayName($categoryId, $category->getName($this->languageId));
             // if no product is provided, then default category can only be home
-            return [$category->getName() => (int) $category->id];
+            return [$displayName => $categoryId->getValue()];
         }
 
         return $this->getChoicesForExistingProduct($options['product_id']);
@@ -85,10 +114,27 @@ class ProductDefaultCategoryChoiceProvider implements ConfigurableFormChoiceProv
         $choices = [];
 
         foreach ($productCategories as $categoryId => $productCategory) {
-            $choices[$productCategory['name']] = (int) $categoryId;
+            $categoryIdVo = new CategoryId((int) $categoryId);
+            $displayName = $this->getDisplayName($categoryIdVo, $productCategory['name']);
+            $choices[$displayName] = $categoryIdVo->getValue();
         }
 
         return $choices;
+    }
+
+    /**
+     * @param CategoryId $categoryId
+     * @param string $categoryName
+     *
+     * @return string
+     */
+    private function getDisplayName(CategoryId $categoryId, string $categoryName): string
+    {
+        return $this->categoryDisplayNameBuilder->build(
+            new CategoryInformation($categoryId, $categoryName),
+            new ShopId($this->shopId),
+            new LanguageId($this->languageId)
+        );
     }
 
     /**

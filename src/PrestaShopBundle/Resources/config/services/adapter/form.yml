@@ -85,6 +85,9 @@ services:
     arguments:
       - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_HOME_CATEGORY')"
       - '@prestashop.adapter.category.repository.category_repository'
+      - '@prestashop.core.category.name_builder.category_display_name_builder'
+      - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
+      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
 
   prestashop.adapter.form.choice_provider.combination_id_choice_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CombinationIdChoiceProvider'

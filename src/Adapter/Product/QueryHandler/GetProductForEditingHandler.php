@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPrice
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\VirtualProduct\Repository\VirtualProductFileRepository;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
+use PrestaShop\PrestaShop\Core\Category\NameBuilder\CategoryDisplayNameBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
@@ -75,7 +76,7 @@ use Tag;
 /**
  * Handles the query @see GetProductForEditing using legacy ObjectModel
  */
-final class GetProductForEditingHandler implements GetProductForEditingHandlerInterface
+class GetProductForEditingHandler implements GetProductForEditingHandlerInterface
 {
     /**
      * @var NumberExtractor
@@ -148,6 +149,11 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
     private $contextLangId;
 
     /**
+     * @var CategoryDisplayNameBuilder
+     */
+    private $categoryDisplayNameBuilder;
+
+    /**
      * @param NumberExtractor $numberExtractor
      * @param ProductMultiShopRepository $productRepository
      * @param CategoryRepository $categoryRepository
@@ -162,6 +168,7 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
      * @param SpecificPriceRepository $specificPriceRepository
      * @param Configuration $configuration
      * @param int $contextLangId
+     * @param CategoryDisplayNameBuilder $categoryDisplayNameBuilder
      */
     public function __construct(
         NumberExtractor $numberExtractor,
@@ -177,7 +184,8 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
         ProductImagePathFactory $productImageUrlFactory,
         SpecificPriceRepository $specificPriceRepository,
         Configuration $configuration,
-        int $contextLangId
+        int $contextLangId,
+        CategoryDisplayNameBuilder $categoryDisplayNameBuilder
     ) {
         $this->numberExtractor = $numberExtractor;
         $this->productRepository = $productRepository;
@@ -193,6 +201,7 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
         $this->specificPriceRepository = $specificPriceRepository;
         $this->configuration = $configuration;
         $this->contextLangId = $contextLangId;
+        $this->categoryDisplayNameBuilder = $categoryDisplayNameBuilder;
     }
 
     /**
@@ -271,8 +280,7 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
     private function getCategoriesInformation(Product $product): CategoriesInformation
     {
         $languageId = new LanguageId($this->contextLangId);
-        //@todo: hardcoded shop Id, do I inject context shop or require shop constraint?
-        $duplicateNames = $this->categoryRepository->getDuplicateNames(new ShopId(1), $languageId);
+        $shopId = new ShopId($product->getShopId());
         $categoryIdValues = $product->getCategories();
         $defaultCategoryId = (int) $product->id_category_default;
 
@@ -286,11 +294,11 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
         $categoriesInformation = [];
         foreach ($categoryNames as $categoryId => $localizedNames) {
             $categoryName = $categoryNames[$categoryId][$this->contextLangId];
-            $displayName = $this->buildDisplayName(
+            $displayName = $this->categoryDisplayNameBuilder->build(
                 new CategoryId($categoryId),
-                $languageId,
                 $categoryName,
-                $duplicateNames
+                $shopId,
+                $languageId
             );
             $categoriesInformation[] = new CategoryInformation(
                 $categoryId,
@@ -300,37 +308,6 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
         }
 
         return new CategoriesInformation($categoriesInformation, $defaultCategoryId);
-    }
-
-    /**
-     *  If there are multiple categories with identical names, we want to be able to tell them apart,
-     *  so we use breadcrumb path instead of category name.
-     *  However, whole breadcrumb path would probably be too long, therefore not UX friendly.
-     *  Calculating "optimal" breadcrumb length seems too complex compared to the value it could bring.
-     *  So, we show one parent name and category name, as it is simple and should cover most cases.
-     *
-     * e.g. "Clothes > Women"
-     *
-     * @param CategoryId $categoryId
-     * @param LanguageId $languageId
-     * @param string $categoryName
-     * @param string[] $duplicateNames
-     *
-     * @return string
-     */
-    private function buildDisplayName(
-        CategoryId $categoryId,
-        LanguageId $languageId,
-        string $categoryName,
-        array $duplicateNames
-    ): string {
-        if (!in_array($categoryName, $duplicateNames)) {
-            return $categoryName;
-        }
-
-        $breadcrumbs = $this->categoryRepository->getBreadcrumbParts($categoryId, $languageId);
-
-        return implode(' > ', array_slice($breadcrumbs, -2, 2));
     }
 
     /**

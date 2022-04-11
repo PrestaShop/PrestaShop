@@ -128,7 +128,8 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Category\QueryHandler\GetCategoriesTreeHandler
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
-      - '@prestashop.adapter.category.repository.category_repository'
+      - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
+      - '@prestashop.core.category.name_builder.category_display_name_builder'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoriesTree

@@ -76,7 +76,6 @@ class CategoriesType extends TranslatorAwareType
             ->add('default_category_id', ChoiceType::class, [
                 'constraints' => [],
                 'choices' => $this->defaultCategoryChoiceProvider->getChoices(['product_id' => $options['product_id']]),
-                //@todo: wording - default or main?
                 'label' => $this->trans('Default category', 'Admin.Catalog.Feature'),
                 'attr' => [
                     'data-toggle' => 'select2',

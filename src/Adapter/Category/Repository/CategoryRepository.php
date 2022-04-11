@@ -145,6 +145,12 @@ class CategoryRepository extends AbstractObjectModelRepository
         }
     }
 
+    /**
+     * @param ShopId $shopId
+     * @param LanguageId $languageId
+     *
+     * @return string[]
+     */
     public function getDuplicateNames(ShopId $shopId, LanguageId $languageId): array
     {
         $qb = $this->connection->createQueryBuilder()

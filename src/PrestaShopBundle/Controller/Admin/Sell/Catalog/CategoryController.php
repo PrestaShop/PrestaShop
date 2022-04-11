@@ -799,12 +799,11 @@ class CategoryController extends FrameworkBundleAdminController
         foreach ($categoriesTree as $categoryForTree) {
             $children = $this->formatCategoriesTreeForPresentation($categoryForTree->getChildren(), $langId);
 
-            $names = $categoryForTree->getLocalizedNames();
             $active = $categoryForTree->getActive();
             $formattedCategories[] = [
                 'id' => $categoryForTree->getCategoryId(),
                 'active' => $active,
-                'name' => $names[$langId] ?? reset($names),
+                'name' => $categoryForTree->getName(),
                 'displayName' => $categoryForTree->getDisplayName(),
                 'children' => $children,
             ];
