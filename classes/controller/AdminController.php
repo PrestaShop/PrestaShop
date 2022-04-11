@@ -2402,7 +2402,7 @@ class AdminControllerCore extends Controller
         $this->getList($this->context->language->id);
 
         // If list has 'active' field, we automatically create bulk action
-        if (array_key_exists('active', $this->fields_list) && $this->fields_list['active'] === true) {
+        if (array_key_exists('active', $this->fields_list) && $this->fields_list['active'] == true) {
             if (!is_array($this->bulk_actions)) {
                 $this->bulk_actions = [];
             }
