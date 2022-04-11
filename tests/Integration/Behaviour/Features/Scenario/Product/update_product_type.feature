@@ -31,8 +31,8 @@ Feature: Add basic product from Back Office (BO)
       | locale | value          |
       | en-US  | bottle of beer |
     And product "productCombinations" should be assigned to following categories:
-      | id reference | name[en-US] | is default |
-      | home         | Home        | true       |
+      | id reference | name | is default |
+      | home         | Home | true       |
     When I update product "productCombinations" stock with following information:
       | delta_quantity | 51 |
     And product "productCombinations" should have following stock information:
@@ -56,8 +56,8 @@ Feature: Add basic product from Back Office (BO)
       | locale | value          |
       | en-US  | bottle of beer |
     And product "productCombinations2" should be assigned to following categories:
-      | id reference | name[en-US] | is default |
-      | home         | Home        | true       |
+      | id reference | name | is default |
+      | home         | Home | true       |
     And product "productCombinations2" should have following stock information:
       | quantity | 0 |
     When I update product "productCombinations2" type to combinations
@@ -75,8 +75,8 @@ Feature: Add basic product from Back Office (BO)
       | locale | value          |
       | en-US  | bottle of beer |
     And product "virtualProduct" should be assigned to following categories:
-      | id reference | name[en-US] | is default |
-      | home         | Home        | true       |
+      | id reference | name | is default |
+      | home         | Home | true       |
     When I update product "virtualProduct" type to virtual
     Then product "virtualProduct" type should be virtual
 
@@ -90,8 +90,8 @@ Feature: Add basic product from Back Office (BO)
       | locale | value          |
       | en-US  | bottle of beer |
     And product "packProduct" should be assigned to following categories:
-      | id reference | name[en-US] | is default |
-      | home         | Home        | true       |
+      | id reference | name | is default |
+      | home         | Home | true       |
     When I update product "packProduct" type to pack
     Then product "packProduct" type should be pack
 
@@ -105,8 +105,8 @@ Feature: Add basic product from Back Office (BO)
       | locale | value          |
       | en-US  | bottle of beer |
     And product "standardProduct" should be assigned to following categories:
-      | id reference | name[en-US] | is default |
-      | home         | Home        | true       |
+      | id reference | name | is default |
+      | home         | Home | true       |
     When I update product "standardProduct" type to standard
     Then product "standardProduct" type should be standard
 
@@ -139,7 +139,7 @@ Feature: Add basic product from Back Office (BO)
       | Size  | [S,M]              |
       | Color | [White,Black,Blue] |
     Then product "productCombinations3" should have following combinations:
-      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default | combination reference |
+      | id reference               | combination name        | reference | attributes           | impact on price | quantity | is default | combination reference |
       | productCombinations3SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |                       |
       | productCombinations3SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |                       |
       | productCombinations3Blue   | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | false      |                       |
@@ -147,29 +147,29 @@ Feature: Add basic product from Back Office (BO)
       | productCombinations3MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |                       |
       | productCombinations3MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |                       |
     When I update combination "productCombinations3SWhite" stock with following details:
-      | delta quantity             | 100         |
+      | delta quantity | 100 |
     Then combination "productCombinations3SWhite" should have following stock details:
-      | combination stock detail   | value       |
-      | quantity                   | 100         |
-      | minimal quantity           | 1           |
-      | low stock threshold        | 0           |
-      | low stock alert is enabled | false       |
-      | location                   |             |
-      | available date             |             |
+      | combination stock detail   | value |
+      | quantity                   | 100   |
+      | minimal quantity           | 1     |
+      | low stock threshold        | 0     |
+      | low stock alert is enabled | false |
+      | location                   |       |
+      | available date             |       |
     And combination "productCombinations3SWhite" last employees stock movements should be:
       | first_name | last_name | delta_quantity |
       | Puff       | Daddy     | 100            |
     And combination "productCombinations3SWhite" last stock movement increased by 100
     When I update combination "productCombinations3SBlack" stock with following details:
-      | delta quantity             | 50          |
+      | delta quantity | 50 |
     Then combination "productCombinations3SBlack" should have following stock details:
-      | combination stock detail   | value       |
-      | quantity                   | 50          |
-      | minimal quantity           | 1           |
-      | low stock threshold        | 0           |
-      | low stock alert is enabled | false       |
-      | location                   |             |
-      | available date             |             |
+      | combination stock detail   | value |
+      | quantity                   | 50    |
+      | minimal quantity           | 1     |
+      | low stock threshold        | 0     |
+      | low stock alert is enabled | false |
+      | location                   |       |
+      | available date             |       |
     And combination "productCombinations3SBlack" last employees stock movements should be:
       | first_name | last_name | delta_quantity |
       | Puff       | Daddy     | 50             |

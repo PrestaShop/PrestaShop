@@ -85,7 +85,7 @@ class UpdateCategoriesFeatureContext extends AbstractProductFeatureContext
     {
         Cache::clear();
         $productForEditing = $this->getProductForEditing($productReference);
-        $expectedCategories = $this->localizeByColumns($table);
+        $expectedCategories = $table->getColumnsHash();
         $categoriesInfo = $productForEditing->getCategoriesInformation();
         $actualCategories = $categoriesInfo->getCategoriesInformation();
 
@@ -114,7 +114,7 @@ class UpdateCategoriesFeatureContext extends AbstractProductFeatureContext
             );
             Assert::assertEquals(
                 $expectedCategory['name'],
-                $categoryInformation->getLocalizedNames(),
+                $categoryInformation->getName(),
                 'Category localized names doesn\'t match'
             );
 
