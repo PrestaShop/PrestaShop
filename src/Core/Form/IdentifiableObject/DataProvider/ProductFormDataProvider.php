@@ -158,12 +158,11 @@ class ProductFormDataProvider implements FormDataProviderInterface
 
         $categories = [];
         foreach ($categoriesInformation->getCategoriesInformation() as $categoryInformation) {
-            $localizedNames = $categoryInformation->getLocalizedNames();
             $categoryId = $categoryInformation->getId();
 
             $categories[] = [
                 'id' => $categoryId,
-                'name' => $localizedNames[$this->contextLangId] ?? reset($localizedNames),
+                'name' => $categoryInformation->getName(),
                 'display_name' => $categoryInformation->getDisplayName(),
             ];
         }

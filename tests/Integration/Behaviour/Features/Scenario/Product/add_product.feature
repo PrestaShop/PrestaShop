@@ -22,8 +22,8 @@ Feature: Add basic product from Back Office (BO)
       | locale | value          |
       | en-US  | bottle of beer |
     And product "product1" should be assigned to following categories:
-      | id reference | name[en-US] | is default |
-      | home         | Home        | true       |
+      | id reference | name | is default |
+      | home         | Home | true       |
 
   Scenario: I add a product with basic information
     When I add product "product1" with following information:
@@ -44,8 +44,8 @@ Feature: Add basic product from Back Office (BO)
       | locale | value          |
       | en-US  | bottle of beer |
     And product "product1" should be assigned to following categories:
-      | id reference | name[en-US] | is default |
-      | home         | Home        | true       |
+      | id reference | name | is default |
+      | home         | Home | true       |
 
   Scenario: I add a product with invalid characters in name
     When I add product "product2" with following information:
@@ -70,7 +70,7 @@ Feature: Add basic product from Back Office (BO)
       | locale | value |
       | en-US  |       |
     And product "product1" should be assigned to following categories:
-      | id reference | name[en-US] | is default |
+      | id reference | name | is default |
       | home         | Home        | true       |
 
   Scenario: Empty friendly-urls should be auto-filled using product name value when adding new product
