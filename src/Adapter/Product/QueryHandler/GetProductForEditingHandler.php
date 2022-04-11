@@ -294,8 +294,8 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
             );
             $categoriesInformation[] = new CategoryInformation(
                 $categoryId,
-                $displayName,
-                $categoryName
+                $categoryName,
+                $displayName
             );
         }
 
