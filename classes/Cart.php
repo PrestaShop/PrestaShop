@@ -903,7 +903,7 @@ class CartCore extends ObjectModel
         } else {
             $address_id = (int) $row['id_address_delivery'];
         }
-        if (!Address::addressExists($address_id)) {
+        if (!Address::addressExists($address_id, true)) {
             $address_id = null;
         }
 
@@ -3579,7 +3579,7 @@ class CartCore extends ObjectModel
         } else {
             $address_id = null;
         }
-        if (!Address::addressExists($address_id)) {
+        if (!Address::addressExists($address_id, true)) {
             $address_id = null;
         }
 
