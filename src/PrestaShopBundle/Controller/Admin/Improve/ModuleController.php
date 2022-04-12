@@ -307,8 +307,12 @@ class ModuleController extends ModuleAbstractController
         try {
             if ($serverParams->hasPostMaxSizeBeenExceeded()) {
                 throw new Exception($this->trans(
-                    'The uploaded file exceeds the post_max_size directive in php.ini',
-                    'Admin.Notifications.Error'
+                    'Your uploaded file might exceed the [1]upload_max_filesize[/1] and the [1]post_max_size[/1] directives in [1]php.ini[/1], please check your server configuration.',
+                    'Admin.Notifications.Error',
+                    [
+                        '[1]' => '<i>',
+                        '[/1]' => '</i>',
+                    ]
                 ));
             }
 
