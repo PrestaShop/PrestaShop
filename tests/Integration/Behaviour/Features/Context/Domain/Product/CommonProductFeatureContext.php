@@ -374,7 +374,7 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Then product :productReference should not be indexed for shops ":shopReferences"
+     * @Then product ":productReference" should not be indexed for shops ":shopReferences"
      *
      * @param string $productReference
      * @param string $shopReferences
@@ -396,7 +396,7 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
     {
         $productId = $this->getSharedStorage()->get($productReference);
         $shopId = $shopReference ? $this->getSharedStorage()->get($shopReference) : null;
-        $product = new Product($productId, false, null, $shopId);
+        $product = new Product($productId, true, null, $shopId);
         Assert::assertSame(
             $expectedIsIndexed,
             (bool) $product->indexed,

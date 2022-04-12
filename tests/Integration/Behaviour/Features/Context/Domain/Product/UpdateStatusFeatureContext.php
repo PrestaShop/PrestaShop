@@ -37,28 +37,51 @@ use Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext;
 class UpdateStatusFeatureContext extends AbstractProductFeatureContext
 {
     /**
-     * @When /^I (enable|disable) product "(.*)"$/
+     * @When /^I (enable|disable) product "([^"]*)"$/
      *
      * status transformation handled by @see StringToBoolTransformContext
      *
      * @param bool $status
      * @param string $productReference
      */
-    public function updateStatus(bool $status, string $productReference): void
+    public function updateStatusForDefaultShop(bool $status, string $productReference): void
     {
-        try {
-            $this->getCommandBus()->handle(new UpdateProductStatusCommand(
-                $this->getSharedStorage()->get($productReference),
-                $status,
-                ShopConstraint::shop($this->getDefaultShopId())
-            ));
-        } catch (ProductConstraintException $e) {
-            if (ProductConstraintException::INVALID_ONLINE_DATA === $e->getCode()) {
-                $this->setLastException($e);
-            } else {
-                throw $e;
-            }
-        }
+        $this->updateStatus($status, $productReference, ShopConstraint::shop($this->getDefaultShopId()));
+    }
+
+    /**
+     * @When /^I (enable|disable) product "([^"]*)" for shop "([^"]*)"$/
+     *
+     * status transformation handled by @see StringToBoolTransformContext
+     *
+     * @param bool $status
+     * @param string $productReference
+     * @param string $shopReference
+     */
+    public function updateStatusForShop(bool $status, string $productReference, string $shopReference): void
+    {
+        $this->updateStatus(
+            $status,
+            $productReference,
+            ShopConstraint::shop($this->getSharedStorage()->get($shopReference))
+        );
+    }
+
+    /**
+     * @When /^I (enable|disable) product "(.*)" for all shops$/
+     *
+     * status transformation handled by @see StringToBoolTransformContext
+     *
+     * @param bool $status
+     * @param string $productReference
+     */
+    public function updateStatusForAllShops(bool $status, string $productReference): void
+    {
+        $this->updateStatus(
+            $status,
+            $productReference,
+            ShopConstraint::allShops()
+        );
     }
 
     /**
@@ -100,5 +123,27 @@ class UpdateStatusFeatureContext extends AbstractProductFeatureContext
     public function assertInvalidOnlineDataException(): void
     {
         $this->assertLastErrorIs(ProductConstraintException::class, ProductConstraintException::INVALID_ONLINE_DATA);
+    }
+
+    /**
+     * @param bool $status
+     * @param string $productReference
+     * @param ShopConstraint $shopConstraint
+     */
+    private function updateStatus(bool $status, string $productReference, ShopConstraint $shopConstraint): void
+    {
+        try {
+            $this->getCommandBus()->handle(new UpdateProductStatusCommand(
+                $this->getSharedStorage()->get($productReference),
+                $status,
+                $shopConstraint
+            ));
+        } catch (ProductConstraintException $e) {
+            if (ProductConstraintException::INVALID_ONLINE_DATA === $e->getCode()) {
+                $this->setLastException($e);
+            } else {
+                throw $e;
+            }
+        }
     }
 }

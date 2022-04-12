@@ -431,6 +431,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater
     arguments:
       - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_SEARCH_INDEXATION')"
+      - "@prestashop.adapter.context_state_manager"
 
   prestashop.adapter.product.repository.product_preview_repository:
     class: PrestaShop\PrestaShop\Adapter\Product\Repository\ProductPreviewRepository

@@ -34,6 +34,7 @@ use Country;
 use Currency;
 use Customer;
 use Language;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Shop;
 
 /**
@@ -46,6 +47,7 @@ use Shop;
  */
 final class ContextStateManager
 {
+    //@todo: add private constant for each field?
     private const MANAGED_FIELDS = [
         'cart',
         'country',
@@ -174,6 +176,36 @@ final class ContextStateManager
         $this->saveContextField('shop');
         $this->getContext()->shop = $shop;
         Shop::setContext(Shop::CONTEXT_SHOP, $shop->id);
+
+        return $this;
+    }
+
+    /**
+     * @todo: unfinished POC. Consider deprecating "setShop" method.
+     *
+     * @return $this
+     */
+    public function setShopContext(ShopConstraint $shopConstraint): self
+    {
+        $this->saveContextField('shop');
+
+        if ($shopConstraint->forAllShops()) {
+            Shop::setContext(Shop::CONTEXT_ALL);
+
+            return $this;
+        }
+
+        if ($shopConstraint->getShopGroupId()) {
+            Shop::setContext(Shop::CONTEXT_GROUP, $shopConstraint->getShopGroupId()->getValue());
+
+            return $this;
+        }
+
+        if ($shopConstraint->getShopId()) {
+            $shopId = $shopConstraint->getShopId()->getValue();
+            Shop::setContext(Shop::CONTEXT_SHOP, $shopId);
+            $this->getContext()->shop = new Shop($shopId);
+        }
 
         return $this;
     }
