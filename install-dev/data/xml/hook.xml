@@ -3605,5 +3605,10 @@
       <title>Before a module is reset</title>
       <description>This hook is called just before a module is reset</description>
     </hook>
+    <hook id="displayAdminThemesListAfter">
+      <name>displayAdminThemesListAfter</name>
+      <title>BO themes list extra content</title>
+      <description>This hook displays content after the themes list in the back office</description>
+    </hook>
   </entities>
 </entity_hook>
