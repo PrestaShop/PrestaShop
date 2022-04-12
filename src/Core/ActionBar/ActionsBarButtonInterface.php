@@ -24,7 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Component\ActionBar;
+namespace PrestaShop\PrestaShop\Core\ActionBar;
 
 /**
  * This class represents buttons to be rendered in Twig

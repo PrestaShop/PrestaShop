@@ -26,19 +26,14 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Modules;
 
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepositoryInterface;
-use PrestaShopBundle\Component\ActionBar\ActionsBarButtonInterface;
-use PrestaShopBundle\Component\ActionBar\ActionsBarButtonsCollection;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Voter\PageVoter;
-use PrestaShopBundle\Service\Hook\HookFinder;
 
 abstract class ModuleAbstractController extends FrameworkBundleAdminController
 {
     public const CONTROLLER_NAME = 'ADMINMODULESSF';
-    public const MANDATORY_TOOLBAR_BUTTON_KEYS = ['href', 'icon', 'help'];
 
     public const CONFIGURABLE_MODULE_TYPE = 'to_configure';
     public const UPDATABLE_MODULE_TYPE = 'to_update';
@@ -74,7 +69,7 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
      *
      * @return array
      */
-    protected function getToolbarButtons()
+    protected function getToolbarButtons(): array
     {
         // toolbarButtons
         $toolbarButtons = [];
@@ -94,57 +89,6 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
             ];
         }
 
-        return array_merge($toolbarButtons, $this->getExtraToolbarButtons());
-    }
-
-    /**
-     * This method will call the actionAdminModuleExtraToolbarButton hook and allow
-     * modules to add some extra buttons to the modules catalogue toolbar.
-     * All the button's specification keys ('href', 'desc', 'icon', 'help') are mandatory
-     */
-    private function getExtraToolbarButtons(): array
-    {
-        try {
-            $toolbarActionButtonsFromHook = new ActionsBarButtonsCollection();
-            (new HookFinder())
-                ->setHookName('actionAdminModuleExtraToolbarButton')
-                ->setParams([
-                    'controller' => $this,
-                    'toolbar_extra_buttons_collection' => $toolbarActionButtonsFromHook,
-                ])
-                ->find();
-        } catch (CoreException $exception) {
-            return [];
-        }
-
-        $extraToolbarButtons = [];
-
-        foreach ($toolbarActionButtonsFromHook as $toolbarActionButtonFromHook) {
-            $extraToolbarButtons = array_merge(
-                $extraToolbarButtons,
-                $this->transformActionBarButtonToToolbarButton($toolbarActionButtonFromHook)
-            );
-        }
-
-        return $extraToolbarButtons;
-    }
-
-    private function transformActionBarButtonToToolbarButton(ActionsBarButtonInterface $actionBarButton): array
-    {
-        $buttonProperties = $actionBarButton->getProperties();
-
-        // Validation. We check that we have the exact keys
-        if (count(array_intersect_key(static::MANDATORY_TOOLBAR_BUTTON_KEYS, array_keys($buttonProperties))) !== count(static::MANDATORY_TOOLBAR_BUTTON_KEYS)) {
-            return [];
-        } else {
-            return [
-                $actionBarButton->getClass() => [
-                    'href' => $buttonProperties['href'],
-                    'desc' => $actionBarButton->getContent(),
-                    'icon' => $buttonProperties['icon'],
-                    'help' => $buttonProperties['help'],
-                ],
-            ];
-        }
+        return $toolbarButtons;
     }
 }

@@ -24,17 +24,58 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Component\ActionBar;
+namespace PrestaShop\PrestaShop\Core\ActionBar;
 
-use PrestaShop\PrestaShop\Core\Data\AbstractTypedCollection;
-
-class ActionsBarButtonsCollection extends AbstractTypedCollection
+class ActionsBarButton implements ActionsBarButtonInterface
 {
     /**
-     * {@inheritdoc}
+     * @var string
      */
-    protected function getType()
+    protected $class;
+
+    /**
+     * @var string[]
+     */
+    protected $properties;
+
+    /**
+     * @var string
+     */
+    protected $content;
+
+    /**
+     * @param string $class
+     * @param string[] $properties
+     * @param string $content
+     */
+    public function __construct(string $class = '', array $properties = [], string $content = '')
     {
-        return ActionsBarButtonInterface::class;
+        $this->class = $class;
+        $this->properties = $properties;
+        $this->content = $content;
+    }
+
+    /**
+     * @return string
+     */
+    public function getClass(): string
+    {
+        return $this->class;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getProperties(): array
+    {
+        return $this->properties;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContent(): string
+    {
+        return $this->content;
     }
 }
