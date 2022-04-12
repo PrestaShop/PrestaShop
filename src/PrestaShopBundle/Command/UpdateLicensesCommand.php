@@ -147,8 +147,6 @@ class UpdateLicensesCommand extends Command
                 'tests/Resources/themes/',
                 'tests/Resources/translations/',
                 'tests/resources/ModulesOverrideInstallUninstallTest/',
-                'tests-legacy/PrestaShopBundle/Twig/Fixtures/',
-                'tests-legacy/resources/',
                 'tests/E2E/',
                 'tests/Unit/Resources/assets/',
                 'tests/UI/',
