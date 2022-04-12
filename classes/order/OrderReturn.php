@@ -62,9 +62,9 @@ class OrderReturnCore extends ObjectModel
         ],
     ];
 
-    public function addReturnDetail($order_detail_list, $product_qty_list)
+    public function addReturnDetail($order_detail_list, $product_qty_list, $customization_ids = null, $customization_qty_input = null)
     {
-        if (func_num_args() > 2) {
+        if ($customization_ids !== null || $customization_qty_input !== null) {
             @trigger_error(
                 'Passing customization infos is deprecated since version 8.0.0. The customization is already included in the order details.',
                 E_USER_DEPRECATED
@@ -83,9 +83,9 @@ class OrderReturnCore extends ObjectModel
         }
     }
 
-    public function checkEnoughProduct($order_detail_list, $product_qty_list)
+    public function checkEnoughProduct($order_detail_list, $product_qty_list, $customization_ids = null, $customization_qty_input = null)
     {
-        if (func_num_args() > 2) {
+        if ($customization_ids !== null || $customization_qty_input !== null) {
             @trigger_error(
                 'Passing customization infos is deprecated since version 8.0.0. The customization is already included in the order details.',
                 E_USER_DEPRECATED
