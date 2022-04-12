@@ -112,10 +112,14 @@ class DisablingSwitchExtension extends AbstractTypeExtension
                 //   - default_empty_data
                 //   - empty_data
                 //
-                // You can also specify a callback or a closure for this option this allows more complex use case
-                // to define if the form is considered empty or not (useful for compound form based on multiple values).
+                // We then compare this value with the form data, if the two values match (strict equality) then the field
+                // is considered disabled and the input will be assigned the disabled attribute.
+                //
+                // You can also specify a callback or a closure for this option this allows more complex use case to define
+                // if the form is considered empty/disabled or not (useful for compound form based on multiple values).
                 // The callback will receive the form data and the FormInterface, it must return true if the field should
-                // be disabled Keep in mind that the data, which comes from the Form event, can be null quite often.
+                // be disabled. Keep in mind that the data, which comes from the Form event, can be null quite often, so
+                // your callback should accept nullable data.
                 //
                 // ex: 'disabled_value' => function (?array $data, FormInterface $form): bool {
                 //          return empty($data['reduction_type']) || empty($data['reduction_value']);
