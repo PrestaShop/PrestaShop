@@ -24,12 +24,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-// Deprecated since 1.5.0.1 use Product::CUSTOMIZE_FILE
-define('_CUSTOMIZE_FILE_', 0);
-
-// Deprecated since 1.5.0.1 use Product::CUSTOMIZE_TEXTFIELD
-define('_CUSTOMIZE_TEXTFIELD_', 1);
-
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
@@ -1968,46 +1962,6 @@ class ProductCore extends ObjectModel
     }
 
     /**
-     * @deprecated 1.5.5.0
-     *
-     * @param array $attributes
-     * @param bool $set_default
-     *
-     * @return array
-     */
-    public function addProductAttributeMultiple($attributes, $set_default = true)
-    {
-        Tools::displayAsDeprecated();
-        $return = [];
-        $default_value = true;
-        foreach ($attributes as $attribute) {
-            $obj = new Combination();
-            foreach ($attribute as $key => $value) {
-                $obj->$key = $value;
-            }
-
-            if ($set_default) {
-                $obj->default_on = $default_value;
-                $default_value = false;
-                // if we add a combination for this shop and this product does not use the combination feature in other shop,
-                // we clone the default combination in every shop linked to this product
-                if (!$this->hasAttributesInOtherShops()) {
-                    $id_shop_list_array = Product::getShopsByProduct($this->id);
-                    $id_shop_list = [];
-                    foreach ($id_shop_list_array as $array_shop) {
-                        $id_shop_list[] = $array_shop['id_shop'];
-                    }
-                    $obj->id_shop_list = $id_shop_list;
-                }
-            }
-            $obj->add();
-            $return[] = $obj->id;
-        }
-
-        return $return;
-    }
-
-    /**
      * Delete all default attributes for product.
      *
      * @return bool
@@ -2579,59 +2533,6 @@ class ProductCore extends ObjectModel
                 LEFT JOIN `' . _DB_PREFIX_ . 'search_index` si ON (sw.id_word=si.id_word)
                 WHERE si.id_word IS NULL;'
             );
-    }
-
-    /**
-     * Add a product attributes combinaison.
-     *
-     * @deprecated since 1.5.0.7
-     *
-     * @param int $id_product_attribute Attribute identifier
-     * @param array $attributes Attributes to forge combinaison
-     *
-     * @return bool Insertion result
-     */
-    public function addAttributeCombinaison($id_product_attribute, $attributes)
-    {
-        Tools::displayAsDeprecated();
-        if (!is_array($attributes)) {
-            die(Tools::displayError());
-        }
-        if (!count($attributes)) {
-            return false;
-        }
-
-        $combination = new Combination((int) $id_product_attribute);
-
-        return $combination->setAttributes($attributes);
-    }
-
-    /**
-     * @deprecated 1.5.5.0
-     *
-     * @param array $id_attributes
-     * @param array $combinations
-     *
-     * @return bool
-     *
-     * @throws PrestaShopDatabaseException
-     */
-    public function addAttributeCombinationMultiple($id_attributes, $combinations)
-    {
-        Tools::displayAsDeprecated();
-        $attributes_list = [];
-        foreach ($id_attributes as $nb => $id_product_attribute) {
-            if (isset($combinations[$nb])) {
-                foreach ($combinations[$nb] as $id_attribute) {
-                    $attributes_list[] = [
-                        'id_product_attribute' => (int) $id_product_attribute,
-                        'id_attribute' => (int) $id_attribute,
-                    ];
-                }
-            }
-        }
-
-        return Db::getInstance()->insert('product_attribute_combination', $attributes_list);
     }
 
     /**
@@ -4337,42 +4238,6 @@ class ProductCore extends ObjectModel
         $sql .= StockAvailable::addSqlShopRestriction(null, $id_shop, 'stock') . ' )';
 
         return $sql;
-    }
-
-    /**
-     * @deprecated since 1.5.0
-     *
-     * It's not possible to use this method with new stockManager and stockAvailable features
-     * Now this method do nothing
-     * @see StockManager if you want to manage real stock
-     * @see StockAvailable if you want to manage available quantities for sale on your shop(s)
-     * @deprecated 1.5.3.0
-     *
-     * @return false
-     */
-    public static function updateQuantity()
-    {
-        Tools::displayAsDeprecated();
-
-        return false;
-    }
-
-    /**
-     * @deprecated since 1.5.0
-     *
-     * It's not possible to use this method with new stockManager and stockAvailable features
-     * Now this method do nothing
-     * @deprecated 1.5.3.0
-     * @see StockManager if you want to manage real stock
-     * @see StockAvailable if you want to manage available quantities for sale on your shop(s)
-     *
-     * @return false
-     */
-    public static function reinjectQuantities()
-    {
-        Tools::displayAsDeprecated();
-
-        return false;
     }
 
     /**
@@ -7556,21 +7421,6 @@ class ProductCore extends ObjectModel
     }
 
     /**
-     * @see Product::getIdProductAttributeByIdAttributes()
-     * @deprecated 1.7.3.1
-     *
-     * @param int $id_product Product identifier
-     * @param int|int[] $id_attributes Attribute identifier(s)
-     * @param bool $find_best
-     *
-     * @return int
-     */
-    public static function getIdProductAttributesByIdAttributes($id_product, $id_attributes, $find_best = false)
-    {
-        return self::getIdProductAttributeByIdAttributes($id_product, $id_attributes, $find_best);
-    }
-
-    /**
      * Get the combination url anchor of the product.
      *
      * @param int $id_product_attribute Attribute identifier
@@ -7874,36 +7724,6 @@ class ProductCore extends ObjectModel
         }
 
         return $result;
-    }
-
-    /**
-     * @deprecated 1.5.0.10
-     * @see Product::getAttributeCombinations()
-     *
-     * @param int $id_lang Language identifier
-     *
-     * @return array
-     */
-    public function getAttributeCombinaisons($id_lang)
-    {
-        Tools::displayAsDeprecated('Use Product::getAttributeCombinations($id_lang)');
-
-        return $this->getAttributeCombinations($id_lang);
-    }
-
-    /**
-     * @deprecated 1.5.0.10
-     * @see Product::deleteAttributeCombination()
-     *
-     * @param int $id_product_attribute Attribute identifier
-     *
-     * @return bool
-     */
-    public function deleteAttributeCombinaison($id_product_attribute)
-    {
-        Tools::displayAsDeprecated('Use Product::deleteAttributeCombination($id_product_attribute)');
-
-        return $this->deleteAttributeCombination($id_product_attribute);
     }
 
     /**
