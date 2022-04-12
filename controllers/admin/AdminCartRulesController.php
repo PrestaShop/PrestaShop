@@ -211,8 +211,11 @@ class AdminCartRulesControllerCore extends AdminController
             }
 
             // At least one of these is compulsary: code, customer or any restriction. If none of these are present, the cart rule applies to all carts !
-            if (empty($restrictions_selected) && empty(Tools::getValue('id_customer')) && empty(Tools::getValue('code'))) {
-                $this->errors[] = $this->trans('This cart rule would apply to all carts. Please define a code or select any condition.', [], 'Admin.Catalog.Feature');
+            if (empty($restrictions_selected) &&
+                empty(Tools::getValue('id_customer')) && empty(Tools::getValue('code')) && empty(Tools::getValue('minimum_amount')) &&
+                Tools::getValue('date_from') < date('Y-m.d H:i:s')
+            ) {
+                $this->errors[] = $this->trans('This cart rule would apply immediately to all carts. Please define a code, select any condition or define a start time in the future.', [], 'Admin.Catalog.Feature');
             }
 
             // If the restriction is checked, but no item is selected, raise an error
