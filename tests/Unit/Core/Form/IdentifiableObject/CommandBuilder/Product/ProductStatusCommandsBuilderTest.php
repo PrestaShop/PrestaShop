@@ -29,24 +29,34 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductStatusCommandsBuilder;
 
 class ProductStatusCommandsBuilderTest extends AbstractProductCommandBuilderTest
 {
     /**
-     * @dataProvider getExpectedCommands
+     * @dataProvider getExpectedSingleShopCommands
      *
      * @param array $formData
      * @param array $expectedCommands
      */
-    public function testBuildCommand(array $formData, array $expectedCommands)
+    public function testBuildSingleShopCommands(array $formData, array $expectedCommands)
     {
-        $builder = new ProductStatusCommandsBuilder();
-        $builtCommands = $builder->buildCommands($this->getProductId(), $formData);
-        $this->assertEquals($expectedCommands, $builtCommands);
+        $this->assertBuildCommands($formData, $expectedCommands);
     }
 
-    public function getExpectedCommands()
+    /**
+     * @dataProvider getExpectedMultiShopCommands
+     *
+     * @param array $formData
+     * @param array $expectedCommands
+     */
+    public function testBuildMultiShopCommands(array $formData, array $expectedCommands): void
+    {
+        $this->assertBuildCommands($formData, $expectedCommands);
+    }
+
+    public function getExpectedSingleShopCommands(): iterable
     {
         yield [
             [
@@ -55,7 +65,7 @@ class ProductStatusCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [],
         ];
 
-        $command = new UpdateProductStatusCommand($this->getProductId()->getValue(), true);
+        $command = $this->getSingleShopCommand(true);
         yield [
             [
                 'footer' => [
@@ -65,7 +75,7 @@ class ProductStatusCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = new UpdateProductStatusCommand($this->getProductId()->getValue(), false);
+        $command = $this->getSingleShopCommand(false);
         yield [
             [
                 'footer' => [
@@ -74,5 +84,76 @@ class ProductStatusCommandsBuilderTest extends AbstractProductCommandBuilderTest
             ],
             [$command],
         ];
+    }
+
+    /**
+     * @return iterable
+     */
+    public function getExpectedMultiShopCommands(): iterable
+    {
+        $command = $this->getAllShopsCommand(false);
+        yield [
+            [
+                'footer' => [
+                    'active' => false,
+                    self::MODIFY_ALL_NAME_PREFIX . 'active' => true,
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getAllShopsCommand(true);
+        yield [
+            [
+                'footer' => [
+                    'active' => true,
+                    self::MODIFY_ALL_NAME_PREFIX . 'active' => true,
+                ],
+            ],
+            [$command],
+        ];
+    }
+
+    /**
+     * @param array $formData
+     * @param array $expectedCommands
+     */
+    private function assertBuildCommands(array $formData, array $expectedCommands): void
+    {
+        $builder = new ProductStatusCommandsBuilder(self::MODIFY_ALL_NAME_PREFIX);
+        $builtCommands = $builder->buildCommands(
+            $this->getProductId(),
+            $formData,
+            $this->getSingleShopConstraint()
+        );
+        $this->assertEquals($expectedCommands, $builtCommands);
+    }
+
+    /**
+     * @param bool $status
+     *
+     * @return UpdateProductStatusCommand
+     */
+    private function getSingleShopCommand(bool $status): UpdateProductStatusCommand
+    {
+        return new UpdateProductStatusCommand(
+            $this->getProductId()->getValue(),
+            $status,
+            $this->getSingleShopConstraint()
+        );
+    }
+
+    /**
+     * @param bool $status
+     *
+     * @return UpdateProductStatusCommand
+     */
+    private function getAllShopsCommand(bool $status): UpdateProductStatusCommand
+    {
+        return new UpdateProductStatusCommand(
+            $this->getProductId()->getValue(),
+            $status,
+            ShopConstraint::allShops()
+        );
     }
 }
