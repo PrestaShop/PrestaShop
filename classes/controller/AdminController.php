@@ -24,15 +24,21 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\ActionBar\ActionsBarButton;
+use PrestaShop\PrestaShop\Core\ActionBar\ActionsBarButtonInterface;
+use PrestaShop\PrestaShop\Core\ActionBar\ActionsBarButtonsCollection;
+use PrestaShop\PrestaShop\Core\Exception\TypeException;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
-use PrestaShopBundle\Component\ActionBar\ActionsBarButtonsCollection;
+use PrestaShopBundle\Service\Hook\HookFinder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class AdminControllerCore extends Controller
 {
+    public const MANDATORY_TOOLBAR_BUTTON_KEYS = ['href', 'icon', 'help'];
+
     /** @var string */
     public $path;
 
@@ -1644,6 +1650,9 @@ class AdminControllerCore extends Controller
 
                 break;
         }
+
+        // Add the extra toolbar buttons provided by hooks
+        $this->mergeExtraToolbarButtons();
 
         if (count($this->toolbar_title)) {
             $this->show_page_header_toolbar = true;
@@ -4788,5 +4797,75 @@ class AdminControllerCore extends Controller
     protected function isAnonymousAllowed()
     {
         return $this->allowAnonymous;
+    }
+
+    /**
+     * Get the buttons provided by hooks and merge them into the already defined page toolbar buttons
+     *
+     * @throws TypeException
+     */
+    protected function mergeExtraToolbarButtons(): void
+    {
+        $toolbarButtonsCollection = new ActionsBarButtonsCollection();
+
+        // Get previously assigned toolbar buttons of the controller
+        $controllerButtons = $this->page_header_toolbar_btn;
+        if (!empty($controllerButtons)) {
+            // Build ActionsBarButton based on array setting from the controller and add it to collection
+            foreach ($controllerButtons as $controllerButton) {
+                $toolbarButtonsCollection->add(
+                    new ActionsBarButton(
+                        $controllerButton['class'] ?? '',
+                        $controllerButton,
+                        $controllerButton['desc'] ?? ''
+                    )
+                );
+            }
+        }
+
+        // Get the toolbar buttons defined by hooks and add them to the main collection
+        try {
+            (new HookFinder())
+                ->setHookName('actionGetAdminToolbarButtons')
+                ->setParams([
+                    'controller' => $this,
+                    'toolbar_extra_buttons_collection' => $toolbarButtonsCollection,
+                ])
+                ->find();
+        } catch (Exception $exception) {
+            return; // In case of any error, the buttons from hooks are simply ignored
+        }
+
+        // Transform the collection of buttons into array and reassign it to the page header toolbar buttons
+        $toolbarButtons = [];
+
+        foreach ($toolbarButtonsCollection as $toolbarActionButton) {
+            $toolbarButtons = array_merge(
+                $toolbarButtons,
+                $this->transformActionBarButtonToToolbarButton($toolbarActionButton)
+            );
+        }
+
+        $this->page_header_toolbar_btn = $toolbarButtons;
+    }
+
+    /**
+     * @param ActionsBarButtonInterface $actionBarButton
+     *
+     * @return array
+     */
+    private function transformActionBarButtonToToolbarButton(ActionsBarButtonInterface $actionBarButton): array
+    {
+        $buttonProperties = $actionBarButton->getProperties();
+
+        return [
+            $actionBarButton->getClass() => array_merge(
+                $buttonProperties,
+                [
+                    'desc' => $buttonProperties['desc'] ?? $actionBarButton->getContent(),
+                    'class' => $buttonProperties['class'] ?? $actionBarButton->getClass() . ' btn-primary',
+                ]
+            ),
+        ];
     }
 }
