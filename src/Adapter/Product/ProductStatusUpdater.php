@@ -57,6 +57,7 @@ class ProductStatusUpdater
 
     public function updateStatus(ProductId $productId, bool $newStatus): void
     {
+        //@todo: use multishop repo getByConstraint instead
         $product = $this->productRepository->get($productId);
         $initialState = (bool) $product->active;
         $product->active = $newStatus;

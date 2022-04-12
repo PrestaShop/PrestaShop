@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintExcepti
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use RuntimeException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext;
 
 class UpdateStatusFeatureContext extends AbstractProductFeatureContext
@@ -80,7 +81,8 @@ class UpdateStatusFeatureContext extends AbstractProductFeatureContext
         try {
             $this->getCommandBus()->handle(new UpdateProductStatusCommand(
                 $this->getSharedStorage()->get($productReference),
-                $status
+                $status,
+                ShopConstraint::shop($this->getDefaultShopId())
             ));
         } catch (ProductConstraintException $e) {
             if (ProductConstraintException::INVALID_ONLINE_DATA === $e->getCode()) {

@@ -42,6 +42,7 @@ class UpdateProductStatusHandler implements UpdateProductStatusHandlerInterface
      */
     private $productStatusUpdater;
 
+
     public function __construct(ProductStatusUpdater $productStatusUpdater)
     {
         $this->productStatusUpdater = $productStatusUpdater;
