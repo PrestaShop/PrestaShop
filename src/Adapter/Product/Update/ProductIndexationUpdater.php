@@ -28,8 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopException;
 use Product;
@@ -46,11 +48,19 @@ class ProductIndexationUpdater
     private $isSearchIndexationOn;
 
     /**
+     * @var ContextStateManager
+     */
+    private $contextStateManager;
+
+    /**
      * @param bool $isSearchIndexationOn
      */
-    public function __construct(bool $isSearchIndexationOn)
-    {
+    public function __construct(
+        bool $isSearchIndexationOn,
+        ContextStateManager $contextStateManager
+    ) {
         $this->isSearchIndexationOn = $isSearchIndexationOn;
+        $this->contextStateManager = $contextStateManager;
     }
 
     /**
@@ -72,17 +82,22 @@ class ProductIndexationUpdater
      * @throws CannotUpdateProductException
      * @throws CoreException
      */
-    public function updateIndexation(Product $product): void
+    public function updateIndexation(Product $product, ShopConstraint $shopConstraint): void
     {
         if (!$this->isSearchIndexationOn) {
             return;
         }
+
+        //@todo: unfinished POC. Check all method usages if accepted
+        $this->contextStateManager->setShopContext($shopConstraint);
 
         if ($this->isVisibleOnSearch($product)) {
             $this->updateProductIndexes((int) $product->id);
         } else {
             $this->removeProductIndexes((int) $product->id);
         }
+
+        $this->contextStateManager->restorePreviousContext();
     }
 
     /**
