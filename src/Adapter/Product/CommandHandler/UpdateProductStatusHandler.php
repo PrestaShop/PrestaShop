@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductStatusHandlerInterface;
@@ -40,7 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductExcep
 class UpdateProductStatusHandler implements UpdateProductStatusHandlerInterface
 {
     /**
-     * @var ProductRepository
+     * @var ProductMultiShopRepository
      */
     private $productRepository;
 
@@ -50,11 +50,11 @@ class UpdateProductStatusHandler implements UpdateProductStatusHandlerInterface
     private $productIndexationUpdater;
 
     /**
-     * @param ProductRepository $productRepository
+     * @param ProductMultiShopRepository $productRepository
      * @param ProductIndexationUpdater $productIndexationUpdater
      */
     public function __construct(
-        ProductRepository $productRepository,
+        ProductMultiShopRepository $productRepository,
         ProductIndexationUpdater $productIndexationUpdater
     ) {
         $this->productRepository = $productRepository;
@@ -66,12 +66,14 @@ class UpdateProductStatusHandler implements UpdateProductStatusHandlerInterface
      */
     public function handle(UpdateProductStatusCommand $command)
     {
-        $product = $this->productRepository->get($command->getProductId());
+        $shopConstraint = $command->getShopConstraint();
+        $product = $this->productRepository->getByShopConstraint($command->getProductId(), $shopConstraint);
         $initialState = (bool) $product->active;
         $product->active = $command->getEnable();
         $this->productRepository->partialUpdate(
             $product,
             ['active'],
+            $shopConstraint,
             CannotUpdateProductException::FAILED_UPDATE_STATUS
         );
 

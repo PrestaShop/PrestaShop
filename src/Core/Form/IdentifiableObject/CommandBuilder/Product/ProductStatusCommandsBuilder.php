@@ -30,18 +30,49 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Prod
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
-class ProductStatusCommandsBuilder implements ProductCommandsBuilderInterface
+class ProductStatusCommandsBuilder implements MultiShopProductCommandsBuilderInterface
 {
+    /**
+     * @var string
+     */
+    private $modifyAllShopsPrefix;
+
+    /**
+     * @param string $modifyAllNamePrefix
+     */
+    public function __construct(string $modifyAllNamePrefix)
+    {
+        $this->modifyAllShopsPrefix = $modifyAllNamePrefix;
+    }
+
     /**
      * {@inheritDoc}
      */
-    public function buildCommands(ProductId $productId, array $formData): array
+    public function buildCommands(ProductId $productId, array $formData, ShopConstraint $singleShopConstraint): array
     {
         if (!isset($formData['footer']['active'])) {
             return [];
         }
 
-        return [new UpdateProductStatusCommand($productId->getValue(), (bool) $formData['footer']['active'])];
+        $status = (bool) $formData['footer']['active'];
+        $applyToAllShops = (bool) $formData['footer'][$this->modifyAllShopsPrefix . 'active'];
+
+        if ($applyToAllShops) {
+            $command = new UpdateProductStatusCommand(
+                $productId->getValue(),
+                $status,
+                ShopConstraint::allShops()
+            );
+        } else {
+            $command = new UpdateProductStatusCommand(
+                $productId->getValue(),
+                $status,
+                $singleShopConstraint
+            );
+        }
+
+        return [$command];
     }
 }

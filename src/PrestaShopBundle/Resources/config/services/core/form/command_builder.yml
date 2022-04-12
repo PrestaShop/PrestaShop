@@ -20,6 +20,8 @@ services:
   # Status update should be after the visibility as it is the final dependency on the product indexation
   prestashop.core.form.command_builder.product.product_status_commands_builder:
     class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ProductStatusCommandsBuilder
+    arguments:
+      - !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
     tags:
       - { name: 'core.product_command_builder', priority: -21 }
 

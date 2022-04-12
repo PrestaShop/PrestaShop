@@ -154,6 +154,7 @@ class FooterType extends TranslatorAwareType
                     $this->trans('Offline', 'Admin.Global') => false,
                     $this->trans('Online', 'Admin.Global') => true,
                 ],
+                'modify_all_shops' => true,
             ])
             ->add('save', SubmitType::class, [
                 'label' => $options['active'] ? $this->trans('Save and publish', 'Admin.Actions') : $this->trans('Save', 'Admin.Actions'),

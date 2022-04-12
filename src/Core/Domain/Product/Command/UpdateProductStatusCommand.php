@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Class UpdateProductStatusCommand update a given product status
@@ -46,15 +47,23 @@ class UpdateProductStatusCommand
     private $enable;
 
     /**
-     * UpdateProductStatusCommand constructor.
-     *
+     * @var ShopConstraint
+     */
+    private $shopConstraint;
+
+    /**
      * @param int $productId
      * @param bool $enable
+     * @param ShopConstraint $shopConstraint
      */
-    public function __construct(int $productId, bool $enable)
-    {
+    public function __construct(
+        int $productId,
+        bool $enable,
+        ShopConstraint $shopConstraint
+    ) {
         $this->productId = new ProductId($productId);
         $this->enable = $enable;
+        $this->shopConstraint = $shopConstraint;
     }
 
     /**
@@ -71,5 +80,13 @@ class UpdateProductStatusCommand
     public function getEnable(): bool
     {
         return $this->enable;
+    }
+
+    /**
+     * @return ShopConstraint
+     */
+    public function getShopConstraint(): ShopConstraint
+    {
+        return $this->shopConstraint;
     }
 }
