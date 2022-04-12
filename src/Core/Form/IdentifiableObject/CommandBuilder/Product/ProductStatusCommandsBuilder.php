@@ -56,23 +56,14 @@ class ProductStatusCommandsBuilder implements MultiShopProductCommandsBuilderInt
             return [];
         }
 
-        $status = (bool) $formData['footer']['active'];
         $applyToAllShops = (bool) $formData['footer'][$this->modifyAllShopsPrefix . 'active'];
 
-        if ($applyToAllShops) {
-            $command = new UpdateProductStatusCommand(
+        return [
+            new UpdateProductStatusCommand(
                 $productId->getValue(),
-                $status,
-                ShopConstraint::allShops()
-            );
-        } else {
-            $command = new UpdateProductStatusCommand(
-                $productId->getValue(),
-                $status,
-                $singleShopConstraint
-            );
-        }
-
-        return [$command];
+                (bool) $formData['footer']['active'],
+                $applyToAllShops ? ShopConstraint::allShops() : $singleShopConstraint
+            ),
+        ];
     }
 }
