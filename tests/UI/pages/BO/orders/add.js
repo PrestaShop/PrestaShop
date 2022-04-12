@@ -113,10 +113,14 @@ class AddOrder extends BOBasePage {
     this.invoiceAddressSelect = '#invoice-address-select';
 
     // Shipping form selectors
+    this.shippingBlock = '#shipping-block';
     this.deliveryOptionSelect = '#delivery-option-select';
     this.totalShippingTaxIncl = '.js-total-shipping-tax-inc';
     this.freeShippingToggleInput = toggle => `#free-shipping_${toggle}`;
-    this.shippingCost = '#shipping-block span.js-total-shipping-tax-inc';
+    this.giftToggleInput = toggle => `#is-gift_${toggle}`;
+    this.recycledPackagingToggleInput = toggle => `#recycled-packaging_${toggle}`;
+    this.shippingCost = `${this.shippingBlock} span.js-total-shipping-tax-inc`;
+    this.giftMessageTextarea = '#cart_gift_message';
 
     // Summary selectors
     this.summaryBlock = '#summary-block';
@@ -678,6 +682,15 @@ class AddOrder extends BOBasePage {
   /* Shipping methods */
 
   /**
+   * Is shipping block visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  isShippingBlockVisible(page) {
+    return this.elementVisible(page, this.shippingBlock);
+  }
+
+  /**
    * Fill delivery option form
    * @param page {Page} Browser tab
    * @param deliveryOptionName {string} Delivery option name to choose
@@ -710,8 +723,52 @@ class AddOrder extends BOBasePage {
    * @returns {Promise<string>}
    */
   async getShippingCost(page) {
+    await page.waitForTimeout(1000);
+
     return this.getTextContent(page, this.shippingCost);
   }
+
+  /**
+   * Enable/disable free shipping
+   * @param page {Page} Browser tab
+   * @param isEnabled {boolean} True if we need to enable free shipping
+   * @returns {Promise<void>}
+   */
+  async setFreeShipping(page, isEnabled) {
+    await this.setChecked(page, this.freeShippingToggleInput(isEnabled ? 1 : 0));
+  }
+
+  /**
+   * Enable/disable recycled packaging
+   * @param page {Page} Browser tab
+   * @param isEnabled {boolean} True if we need to enable recycled packaging
+   * @returns {Promise<void>}
+   */
+  async setRecycledPackaging(page, isEnabled) {
+    await this.setChecked(page, this.recycledPackagingToggleInput(isEnabled ? 1 : 0));
+  }
+
+  /**
+   * Enable/disable gift
+   * @param page {Page} Browser tab
+   * @param isEnabled {boolean} True if we need to enable gift
+   * @returns {Promise<void>}
+   */
+  async setGift(page, isEnabled) {
+    return this.setChecked(page, this.giftToggleInput(isEnabled ? 1 : 0));
+  }
+
+  /**
+   * Set gift message
+   * @param page {Page} Browser tab
+   * @param giftMessage {string} Gift message text to set on textarea
+   * @returns {Promise<void>}
+   */
+  async setGiftMessage(page, giftMessage) {
+    await this.setValue(page, this.giftMessageTextarea, giftMessage);
+  }
+
+  /* Summary methods */
 
   /**
    * Get Total
@@ -722,8 +779,6 @@ class AddOrder extends BOBasePage {
     return this.getTextContent(page, this.totalTaxIncluded);
   }
 
-  /* Summary methods */
-
   /**
    * Get summary block details
    * @param page {Page} Browser tab
@@ -731,6 +786,7 @@ class AddOrder extends BOBasePage {
    * totalTaxExcluded: string, totalShipping: string}>}
    */
   async getSummaryDetails(page) {
+    await page.waitForTimeout(2000);
     return {
       totalProducts: await this.getTextContent(page, this.totalProducts),
       totalVouchers: await this.getTextContent(page, this.totalDiscountProduct),

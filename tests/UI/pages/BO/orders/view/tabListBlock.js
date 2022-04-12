@@ -14,6 +14,8 @@ class TabListBlock extends ViewOrderBasePage.constructor {
   constructor() {
     super();
 
+    this.successBadge = id => `.tab-content span.badge-success:nth-child(${id + 3})`;
+
     // Status tab
     this.historyTabContent = '#historyTabContent';
     this.secondOrderStatusesSelect = '#update_order_status_new_order_status_id';
@@ -57,6 +59,7 @@ class TabListBlock extends ViewOrderBasePage.constructor {
     this.trackingNumberInput = `${this.updateOrderShippingModalDialog} #update_order_shipping_tracking_number`;
     this.carrierSelect = `${this.updateOrderShippingModalDialog} #update_order_shipping_new_carrier_id`;
     this.updateCarrierButton = `${this.updateOrderShippingModalDialog} button.btn-primary`;
+    this.giftMessage = '#gift-message';
 
     // Merchandise returns tab
     this.merchandiseReturnsTab = '#orderReturnsTab';
@@ -71,6 +74,17 @@ class TabListBlock extends ViewOrderBasePage.constructor {
   /*
   Methods
    */
+
+  /**
+   * Get success badge
+   * @param page {Page} Browser tab
+   * @param idBadge {number} Badge id to get text content
+   * @returns {Promise<string>}
+   */
+  async getSuccessBadge(page, idBadge) {
+    return this.getTextContent(page, this.successBadge(idBadge));
+  }
+
   // Methods for status tab
   /**
    * Get statuses number
@@ -375,6 +389,17 @@ class TabListBlock extends ViewOrderBasePage.constructor {
     await this.waitForSelectorAndClick(page, this.carriersTab);
 
     return this.elementVisible(page, `${this.carriersTab}.active`, 1000);
+  }
+
+  /**
+   * Get gift message
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getGiftMessage(page) {
+    await this.waitForSelectorAndClick(page, this.carriersTab);
+
+    return this.getTextContent(page, this.giftMessage);
   }
 
   /**
