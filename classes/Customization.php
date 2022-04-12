@@ -277,8 +277,6 @@ class CustomizationCore extends ObjectModel
     }
 
     /**
-     * @deprecated 8.0.0 This was needed to validate order cancellation.
-     *
      * Count quantity by Cart.
      *
      * @param int $idCart Cart ID
@@ -287,14 +285,6 @@ class CustomizationCore extends ObjectModel
      */
     public static function countQuantityByCart($idCart)
     {
-        @trigger_error(
-            sprintf(
-                '%s is deprecated since version 8.0.0. This method is no longer used to validate order cancellation.',
-                __METHOD__
-            ),
-            E_USER_DEPRECATED
-        );
-
         $quantity = [];
 
         $results = Db::getInstance()->executeS('
