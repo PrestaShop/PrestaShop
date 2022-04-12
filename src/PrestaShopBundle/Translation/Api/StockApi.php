@@ -70,7 +70,7 @@ class StockApi extends AbstractApi
             'product_low_stock_alert' => $this->translator->trans('Low stock alert:', [], 'Admin.Catalog.Feature'),
             'title_available' => $this->translator->trans('Available', [], 'Admin.Global'),
             'title_bulk' => $this->translator->trans('Bulk edit quantity', [], 'Admin.Catalog.Feature'),
-            'title_combination_id' => $this->translator->trans('Combination's ID', [], 'Admin.Catalog.Feature'),
+            'title_combination_id' => $this->translator->trans('Combination\'s ID', [], 'Admin.Catalog.Feature'),
             'title_date' => $this->translator->trans('Date & Time', [], 'Admin.Catalog.Feature'),
             'title_edit_quantity' => $this->translator->trans('Edit quantity', [], 'Admin.Catalog.Feature'),
             'title_employee' => $this->translator->trans('Employee', [], 'Admin.Global'),
