@@ -60,7 +60,7 @@ class ProductStatusCommandsBuilder implements MultiShopProductCommandsBuilderInt
             return [];
         }
 
-        $applyToAllShops = (bool) $formData['header'][$this->modifyAllShopsPrefix . 'active'];
+        $applyToAllShops = !empty($formData['header'][$this->modifyAllShopsPrefix . 'active']);
 
         return [
             new UpdateProductStatusCommand(
