@@ -6,6 +6,7 @@ const helper = require('@utils/helpers');
 // Import common tests
 const loginCommon = require('@commonTests/BO/loginBO');
 const {createOrderByGuestTest} = require('@commonTests/FO/createOrder');
+const {deleteCustomerTest} = require('@commonTests/BO/customers/createDeleteCustomer');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -50,6 +51,8 @@ Scenario:
 - Filter by guest email
 - Click on guest link on grid
 - Check that View customer(guest) page is displayed
+Post-condition
+- Delete guest account
  */
 describe('BO - Orders : View guest from orders page', async () => {
   // Pre-condition: Create order by guest in FO
@@ -116,4 +119,7 @@ describe('BO - Orders : View guest from orders page', async () => {
         .contains(`${viewCustomerPage.pageTitle} ${customerData.firstName[0]}. ${customerData.lastName}`);
     });
   });
+
+  // Post-condition: Delete guest account
+  deleteCustomerTest(customerData, baseContext);
 });
