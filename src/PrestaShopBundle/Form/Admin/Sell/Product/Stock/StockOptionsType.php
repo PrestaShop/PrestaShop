@@ -68,6 +68,9 @@ class StockOptionsType extends TranslatorAwareType
             ->add('stock_location', TextType::class, [
                 'label' => $this->trans('Stock location', 'Admin.Catalog.Feature'),
                 'required' => false,
+                'attr' => [
+                    'placeholder' => $this->trans('Enter stock location', 'Admin.Catalog.Feature'),
+                ],
                 'modify_all_shops' => true,
             ])
             ->add('low_stock_threshold', NumberType::class, [
@@ -85,7 +88,7 @@ class StockOptionsType extends TranslatorAwareType
             ->add('low_stock_alert', SwitchType::class, [
                 'required' => false,
                 'label' => $this->trans(
-                    'Send me an email when the quantity is below or equals this level',
+                    'Receive a low stock alert by email',
                     'Admin.Catalog.Feature'
                 ),
                 'label_help_box' => $this->trans(

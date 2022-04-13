@@ -51,8 +51,12 @@ class ReferencesType extends TranslatorAwareType
             ->add('reference', TextType::class, [
                 'required' => false,
                 'label' => $this->trans('Reference', 'Admin.Global'),
-                'label_help_box' => $this->trans('Your reference code for this product. Allowed special characters: .-_#.', 'Admin.Catalog.Help'),
+                'label_help_box' => implode(' ', [
+                    $this->trans('Your reference code for this product.', 'Admin.Catalog.Help'),
+                    $this->trans('Allowed special characters: %allowed_characters%', 'Admin.Catalog.Help', ['%allowed_characters%' => '.-_#']),
+                ]),
                 'constraints' => [
+                    new TypedRegex(TypedRegex::TYPE_REFERENCE),
                     new Length(['max' => Reference::MAX_LENGTH]),
                 ],
                 'empty_data' => '',

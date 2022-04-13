@@ -50,6 +50,7 @@ class BulkCombinationReferencesType extends TranslatorAwareType
                 'label' => $this->trans('Reference', 'Admin.Global'),
                 'label_help_box' => $this->trans('Your reference code for this product. Allowed special characters: .-_#.', 'Admin.Catalog.Help'),
                 'constraints' => [
+                    new TypedRegex(TypedRegex::TYPE_REFERENCE),
                     new Length(['max' => Reference::MAX_LENGTH]),
                 ],
                 'empty_data' => '',
