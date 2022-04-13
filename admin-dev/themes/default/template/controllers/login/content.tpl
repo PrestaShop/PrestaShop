@@ -165,7 +165,7 @@
 		{/if}
 	</div>
 
-  <a class='login-back' href='{$homeUrl}'><i class="material-icons">arrow_back</i> <span>{l s='Back to' d='Admin.Actions'}</span> <span class="login-back-shop">{$shop_name}</span></a>
+  <a class='login-back' href='{$homeUrl}'><i class="material-icons">{if $lang_is_rtl}arrow_forward{else}arrow_back{/if}</i> <span>{l s='Back to' d='Admin.Actions'}</span> <span class="login-back-shop">{$shop_name}</span></a>
 
 	{hook h="displayAdminLogin"}
 

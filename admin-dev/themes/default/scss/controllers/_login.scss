@@ -126,11 +126,21 @@
     margin-right: 0.5rem;
     font-size: 1.4rem;
     vertical-align: middle;
+    margin-top: -0.075rem;
   }
 
   &-shop {
     margin-left: 0.25rem;
     color: $link-color;
+  }
+
+  &:hover {
+    color: inherit;
+    text-decoration: none;
+
+    .login-back-shop {
+      text-decoration: underline;
+    }
   }
 
   span {
