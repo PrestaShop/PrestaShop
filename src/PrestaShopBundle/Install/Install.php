@@ -1026,6 +1026,10 @@ class Install extends AbstractInstall
         foreach ($modules as $module_name) {
             $moduleException = null;
 
+            if ($moduleManager->isInstalled($module_name)) {
+                continue;
+            }
+
             try {
                 $moduleActionIsExecuted = $moduleManager->{$action}($module_name);
             } catch (PrestaShopException $e) {

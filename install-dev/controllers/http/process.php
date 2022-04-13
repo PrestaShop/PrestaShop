@@ -100,11 +100,11 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
                     ->setProcessFOThemes(['classic'])
                     ->process();
                 $this->processConfigureShop();
-            } elseif (Tools::getValue('installModules') && (!empty($this->session->process_validated['configureShop']) || !$validateFixturesInstallation)) {
-                $this->processInstallModules();
-            } elseif (Tools::getValue('installTheme') && !empty($this->session->process_validated['installModules'])) {
+            } elseif (Tools::getValue('installTheme') && !empty($this->session->process_validated['configureShop'])) {
                 $this->processInstallTheme();
-            } elseif (Tools::getValue('installFixtures') && !empty($this->session->process_validated['installTheme'])) {
+            } elseif (Tools::getValue('installModules') && (!empty($this->session->process_validated['installTheme']) || !$validateFixturesInstallation)) {
+                $this->processInstallModules();
+            } elseif (Tools::getValue('installFixtures') && !empty($this->session->process_validated['installModules'])) {
                 $this->processInstallFixtures();
             } elseif (Tools::getValue('postInstall') && (!$validateFixturesInstallation || $fixturesInstalled)) {
                 $this->processPostInstall();
@@ -310,8 +310,8 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
         $this->process_steps[] = ['key' => 'populateDatabase', 'lang' => $this->translator->trans('Populate database tables', [], 'Install')];
         $this->process_steps[] = ['key' => 'configureShop', 'lang' => $this->translator->trans('Configure shop information', [], 'Install')];
 
-        $this->process_steps[] = ['key' => 'installModules', 'lang' => $this->translator->trans('Install modules', [], 'Install')];
         $this->process_steps[] = ['key' => 'installTheme', 'lang' => $this->translator->trans('Install theme', [], 'Install')];
+        $this->process_steps[] = ['key' => 'installModules', 'lang' => $this->translator->trans('Install modules', [], 'Install')];
 
         if ($this->session->content_install_fixtures) {
             $fixtures_step = ['key' => 'installFixtures', 'lang' => $this->translator->trans('Install demonstration data', [], 'Install')];
