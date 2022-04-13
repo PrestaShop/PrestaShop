@@ -181,7 +181,7 @@ final class ContextStateManager
     }
 
     /**
-     * @todo: unfinished POC. Consider deprecating "setShop" method.
+     * @param ShopConstraint $shopConstraint
      *
      * @return $this
      */

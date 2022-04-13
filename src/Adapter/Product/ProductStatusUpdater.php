@@ -69,9 +69,8 @@ class ProductStatusUpdater
         );
 
         // If status changed we need to update its indexes (we check if it is necessary because index build can be
-        // an expensive operation).
-        //@todo: is it reliable in AllShops constraint? It would take default shop "active" value which may differ from other shops
-        //       then all other shops products will not be reindexed, but they should.
+        // an expensive operation). We cannot have this optimization check in multi-shop context, because product is loaded from a single shop,
+        // so it would end up checking one shop product and leaving all other shops unhandled
         if ($initialState !== $newStatus) {
             $this->productIndexationUpdater->updateIndexation($product);
         }

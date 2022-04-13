@@ -83,8 +83,10 @@ final class UpdateProductOptionsHandler implements UpdateProductOptionsHandlerIn
         );
 
         $isVisibleOnSearch = $this->productIndexationUpdater->isVisibleOnSearch($product);
-        if ($wasVisibleOnSearch !== $isVisibleOnSearch) {
-            $this->productIndexationUpdater->updateIndexation($product);
+        // Cannot perform this optimization check for multi-shop context, because product is always loaded from single shop
+        // so it would end up checking one shop product and leaving all other shops unhandled
+        if (!$shopConstraint->getShopId() || $wasVisibleOnSearch !== $isVisibleOnSearch) {
+            $this->productIndexationUpdater->updateIndexation($product, $shopConstraint);
         }
     }
 

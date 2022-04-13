@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductIsEnabled;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcher;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Entity\AdminFilter;
@@ -1190,8 +1191,11 @@ class ProductController extends FrameworkBundleAdminController
 
         try {
             $isEnabled = $this->getQueryBus()->handle(new GetProductIsEnabled($productId));
-
-            $this->getCommandBus()->handle(new UpdateProductStatusCommand($productId, !$isEnabled));
+            $this->getCommandBus()->handle(new UpdateProductStatusCommand(
+                $productId,
+                !$isEnabled,
+                ShopConstraint::shop((int) $this->getContextShopId())
+            ));
             $response = [
                 'status' => true,
                 'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'),
