@@ -23,43 +23,51 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
+namespace PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject;
 
-use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
 
 /**
- * Base class to test a product command builder
+ * Carriers are referenced by id_reference (instead of usual primary id as most entities)
  */
-abstract class AbstractProductCommandBuilderTest extends TestCase
+class CarrierReferenceId
 {
-    public const SHOP_ID = 1;
-
-    protected const MODIFY_ALL_SHOPS_PREFIX = 'modify_all_shops_';
+    /**
+     * @var int
+     */
+    private $carrierReferenceId;
 
     /**
-     * @var ProductId
+     * @param int $carrierReferenceId
+     *
+     * @throws CarrierConstraintException
      */
-    private $productId;
-
-    /**
-     * @return ProductId
-     */
-    protected function getProductId(): ProductId
+    public function __construct($carrierReferenceId)
     {
-        if (null === $this->productId) {
-            $this->productId = new ProductId(42);
-        }
-
-        return $this->productId;
+        $this->assertIntegerIsGreaterThanZero($carrierReferenceId);
+        $this->carrierReferenceId = $carrierReferenceId;
     }
 
-    protected function getSingleShopConstraint(): ShopConstraint
+    /**
+     * @return int
+     */
+    public function getValue(): int
     {
-        return ShopConstraint::shop(self::SHOP_ID);
+        return $this->carrierReferenceId;
+    }
+
+    /**
+     * @param int $carrierReferenceId
+     */
+    private function assertIntegerIsGreaterThanZero(int $carrierReferenceId)
+    {
+        if (0 >= $carrierReferenceId) {
+            throw new CarrierConstraintException(
+                sprintf('CarrierReferenceId "%s" is invalid. It must greater than 0.', $carrierReferenceId),
+                CarrierConstraintException::INVALID_REFERENCE_ID
+            );
+        }
     }
 }

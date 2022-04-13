@@ -45,7 +45,7 @@ class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTes
      */
     public function testBuildSingleShopCommand(array $formData, array $expectedCommands): void
     {
-        $builder = new OptionsCommandsBuilder(self::MODIFY_ALL_NAME_PREFIX);
+        $builder = new OptionsCommandsBuilder(self::MODIFY_ALL_SHOPS_PREFIX);
         $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
         $this->assertEquals($expectedCommands, $builtCommands);
     }
@@ -58,7 +58,7 @@ class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTes
      */
     public function testBuildMultiShopCommand(array $formData, array $expectedCommands): void
     {
-        $builder = new OptionsCommandsBuilder(self::MODIFY_ALL_NAME_PREFIX);
+        $builder = new OptionsCommandsBuilder(self::MODIFY_ALL_SHOPS_PREFIX);
         $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
         $this->assertEquals($expectedCommands, $builtCommands);
     }
@@ -193,7 +193,7 @@ class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTes
             [
                 'specifications' => [
                     'condition' => 'new',
-                    self::MODIFY_ALL_NAME_PREFIX . 'condition' => true,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'condition' => true,
                 ],
             ],
             [$command],
@@ -206,7 +206,7 @@ class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTes
                 'specifications' => [
                     'not_handled' => 0,
                     'show_condition' => 0,
-                    self::MODIFY_ALL_NAME_PREFIX . 'show_condition' => true,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'show_condition' => true,
                 ],
             ],
             [$command],
@@ -220,7 +220,7 @@ class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTes
                     'not_handled' => 0,
                     'visibility' => [
                         'show_price' => false,
-                        self::MODIFY_ALL_NAME_PREFIX . 'show_price' => true,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'show_price' => true,
                     ],
                 ],
             ],
@@ -234,7 +234,7 @@ class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTes
                 'options' => [
                     'visibility' => [
                         'available_for_order' => '1',
-                        self::MODIFY_ALL_NAME_PREFIX . 'available_for_order' => true,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'available_for_order' => true,
                     ],
                 ],
             ],
@@ -248,7 +248,7 @@ class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTes
                 'options' => [
                     'visibility' => [
                         'visibility' => ProductVisibility::INVISIBLE,
-                        self::MODIFY_ALL_NAME_PREFIX . 'visibility' => true,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'visibility' => true,
                     ],
                 ],
             ],
@@ -262,7 +262,7 @@ class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTes
                 'options' => [
                     'visibility' => [
                         'online_only' => false,
-                        self::MODIFY_ALL_NAME_PREFIX . 'online_only' => true,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'online_only' => true,
                     ],
                 ],
             ],
@@ -280,7 +280,7 @@ class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTes
                     'visibility' => [
                         'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
                         'available_for_order' => true,
-                        self::MODIFY_ALL_NAME_PREFIX . 'available_for_order' => true,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'available_for_order' => true,
                     ],
                 ],
             ],

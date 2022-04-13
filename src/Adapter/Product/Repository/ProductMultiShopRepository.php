@@ -33,6 +33,7 @@ use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\Manufacturer\Repository\ManufacturerRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator;
 use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierReferenceId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
@@ -220,7 +221,7 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
         }
 
         $this->validateProduct($product, $propertiesToUpdate);
-        $shopIds = $this->getShopIdsByConstraint($product, $shopConstraint);
+        $shopIds = $this->getShopIdsByConstraint(new ProductId((int) $product->id), $shopConstraint);
 
         $this->partiallyUpdateObjectModelForShops(
             $product,
@@ -229,6 +230,53 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
             CannotUpdateProductException::class,
             $errorCode
         );
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param CarrierReferenceId[] $carrierReferenceIds
+     * @param ShopConstraint $shopConstraint
+     */
+    public function setCarrierReferences(ProductId $productId, array $carrierReferenceIds, ShopConstraint $shopConstraint): void
+    {
+        $shopIds = $this->getShopIdsByConstraint($productId, $shopConstraint);
+        $productIdValue = $productId->getValue();
+
+        $deleteQb = $this->connection->createQueryBuilder();
+        $deleteQb->delete($this->dbPrefix . 'product_carrier', 'pc')
+            ->where('pc.id_product = :productId')
+            ->andWhere($deleteQb->expr()->in('pc.id_shop', ':shopIds'))
+            ->setParameter('productId', $productIdValue)
+            ->setParameter('shopIds', $shopIds, Connection::PARAM_INT_ARRAY)
+            ->execute()
+        ;
+
+        $insertValues = [];
+        foreach ($carrierReferenceIds as $referenceId) {
+            foreach ($shopIds as $shopId) {
+                $insertValues[] = sprintf(
+                    '(%d, %d, %d)',
+                    $productIdValue,
+                    $referenceId->getValue(),
+                    $shopId
+                );
+            }
+        }
+
+        if (empty($insertValues)) {
+            return;
+        }
+
+        $stmt = '
+            INSERT INTO ' . $this->dbPrefix . 'product_carrier (
+                id_product,
+                id_carrier_reference,
+                id_shop
+            )
+            VALUES ' . implode(',', $insertValues) . '
+        ';
+
+        $this->connection->executeStatement($stmt);
     }
 
     /**
@@ -243,7 +291,7 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
         }
 
         $this->validateProduct($product);
-        $shopIds = $this->getShopIdsByConstraint($product, $shopConstraint);
+        $shopIds = $this->getShopIdsByConstraint(new ProductId((int) $product->id), $shopConstraint);
 
         $this->updateObjectModelForShops(
             $product,
@@ -317,12 +365,12 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
     }
 
     /**
-     * @param Product $product
+     * @param ProductId $productId
      * @param ShopConstraint $shopConstraint
      *
      * @return int[]
      */
-    private function getShopIdsByConstraint(Product $product, ShopConstraint $shopConstraint): array
+    private function getShopIdsByConstraint(ProductId $productId, ShopConstraint $shopConstraint): array
     {
         if ($shopConstraint->getShopGroupId()) {
             throw new InvalidShopConstraintException('Product has no features related with shop group use single shop and all shops constraints');
@@ -330,7 +378,7 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
 
         $shopIds = [];
         if ($shopConstraint->forAllShops()) {
-            $shops = $this->getAssociatedShopIds(new ProductId((int) $product->id));
+            $shops = $this->getAssociatedShopIds($productId);
             foreach ($shops as $shopId) {
                 $shopIds[] = $shopId->getValue();
             }

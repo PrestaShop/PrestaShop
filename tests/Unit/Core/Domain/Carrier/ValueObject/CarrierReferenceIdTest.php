@@ -23,43 +23,40 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
+namespace Tests\Unit\Core\Domain\Carrier\ValueObject;
 
+use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\Exception\CarrierConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierReferenceId;
 
-/**
- * Base class to test a product command builder
- */
-abstract class AbstractProductCommandBuilderTest extends TestCase
+class CarrierReferenceIdTest extends TestCase
 {
-    public const SHOP_ID = 1;
-
-    protected const MODIFY_ALL_SHOPS_PREFIX = 'modify_all_shops_';
-
-    /**
-     * @var ProductId
-     */
-    private $productId;
-
-    /**
-     * @return ProductId
-     */
-    protected function getProductId(): ProductId
+    public function testItIsSuccessfullyConstructed(): void
     {
-        if (null === $this->productId) {
-            $this->productId = new ProductId(42);
-        }
-
-        return $this->productId;
+        $carrierReferenceId = new CarrierReferenceId(500);
+        Assert::assertSame(500, $carrierReferenceId->getValue());
     }
 
-    protected function getSingleShopConstraint(): ShopConstraint
+    /**
+     * @dataProvider getInvalidValues
+     */
+    public function testItThrowsExceptionWhenInvalidValueIsProvided(int $invalidValue): void
     {
-        return ShopConstraint::shop(self::SHOP_ID);
+        $this->expectException(CarrierConstraintException::class);
+        $this->expectExceptionCode(CarrierConstraintException::INVALID_REFERENCE_ID);
+
+        new CarrierReferenceId($invalidValue);
+    }
+
+    /**
+     * @return iterable
+     */
+    public function getInvalidValues(): iterable
+    {
+        yield [0];
+        yield [-5];
     }
 }

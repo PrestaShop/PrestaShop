@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
+use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierReferenceId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -92,6 +93,7 @@ class ProductShopUpdater
         );
 
         $this->copyStockToShop($productId, $sourceShopId, $targetShopId);
+        $this->copyCarriersToShop($sourceProduct, $targetShopId);
     }
 
     private function copyStockToShop(ProductId $productId, ShopId $sourceShopId, ShopId $targetShopId): void
@@ -117,5 +119,24 @@ class ProductShopUpdater
         // $targetStock->reserved_quantity = $sourceStock->reserved_quantity;
 
         $this->stockAvailableRepository->update($targetStock);
+    }
+
+    /**
+     * @param Product $sourceProduct
+     * @param ShopId $targetShopId
+     */
+    private function copyCarriersToShop(Product $sourceProduct, ShopId $targetShopId): void
+    {
+        $sourceCarriers = $sourceProduct->getCarriers();
+        $sourceCarrierReferences = [];
+        foreach ($sourceCarriers as $sourceCarrier) {
+            $sourceCarrierReferences[] = new CarrierReferenceId((int) $sourceCarrier['id_reference']);
+        }
+
+        $this->productRepository->setCarrierReferences(
+            new ProductId($sourceProduct->id),
+            $sourceCarrierReferences,
+            ShopConstraint::shop($targetShopId->getValue())
+        );
     }
 }
