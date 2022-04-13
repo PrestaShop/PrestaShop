@@ -37,6 +37,7 @@ use Cookie;
 use Country;
 use Currency;
 use Customer;
+use Employee;
 use Language;
 use Link;
 use Module;
@@ -70,9 +71,14 @@ use Tools;
 class ContextMocker
 {
     /**
-     * @var \Context
+     * @var Context
      */
-    private $contextBackup;
+    private $backupContext;
+
+    /**
+     * @var Context|null
+     */
+    private $mockedContext;
 
     /**
      * properly mock global context object with required properties
@@ -105,8 +111,8 @@ class ContextMocker
 
         Cache::clean('*');
 
-        $this->contextBackup = Context::getContext();
-        $context = clone $this->contextBackup;
+        $this->backupContext();
+        $context = clone $this->backupContext;
         Context::setInstanceForTesting($context);
         LegacyContext::setInstanceForTesting($context);
         Module::setContextInstanceForTesting($context);
@@ -114,29 +120,65 @@ class ContextMocker
         Shop::setContext(Shop::CONTEXT_SHOP, (int) Context::getContext()->shop->id);
         $context->customer = new Customer();
         $context->cookie = new Cookie('mycookie');
-        $context->country = new Country();
+        $context->country = new Country((int) Configuration::get('PS_LANG_DEFAULT'));
         $context->language = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
+        // Use super admin employee by default
+        $context->employee = new Employee(1);
+        $context->employee->id_lang = $context->language->id;
         $context->currency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
         $protocol_link = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED'))
             ? 'https://' : 'http://';
         $protocol_content = (Tools::usingSecureMode() && Configuration::get('PS_SSL_ENABLED'))
             ? 'https://' : 'http://';
         $context->link = new Link($protocol_link, $protocol_content);
-        $context->currency = new Currency(1, 1, 1);
         $context->cart = new Cart();
         $context->smarty = $smarty;
+
+        $this->mockedContext = $context;
 
         return $this;
     }
 
     /**
-     * restore previous context to avoid modifying global properties through tests
+     * Backup current context
+     */
+    public function backupContext(): void
+    {
+        $this->backupContext = Context::getContext();
+    }
+
+    /**
+     * Restore previous context to avoid modifying global properties through tests
      */
     public function resetContext()
     {
-        Context::setInstanceForTesting($this->contextBackup);
-        LegacyContext::setInstanceForTesting($this->contextBackup);
-        Shop::setContext(Shop::CONTEXT_SHOP, (int) Context::getContext()->shop->id);
-        Module::setContextInstanceForTesting($this->contextBackup);
+        Context::setInstanceForTesting($this->backupContext);
+        LegacyContext::setInstanceForTesting($this->backupContext);
+        // If a shop context was previously reset it, if not rest shop context
+        if (Context::getContext()->shop && Context::getContext()->shop->id) {
+            Shop::setContext(Shop::CONTEXT_SHOP, (int) Context::getContext()->shop->id);
+        } else {
+            Shop::resetContext();
+        }
+        Module::setContextInstanceForTesting($this->backupContext);
+    }
+
+    public function getMockedContext(): ?Context
+    {
+        return $this->mockedContext;
+    }
+
+    public function getBackupContext(): ?Context
+    {
+        return $this->backupContext;
+    }
+
+    public function getContext(): Context
+    {
+        if ($this->mockedContext) {
+            return $this->mockedContext;
+        }
+
+        return $this->backupContext;
     }
 }

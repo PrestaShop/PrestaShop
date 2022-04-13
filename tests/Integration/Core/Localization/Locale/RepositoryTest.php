@@ -30,17 +30,20 @@ declare(strict_types=1);
 namespace Tests\Integration\Core\Localization\Locale;
 
 use Currency;
-use PrestaShop\PrestaShop\Adapter\Entity\LocalizationPack;
+use Language;
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Currency\Command\AddCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShopBundle\Cache\LocalizationWarmer;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Tests\Resources\LocalizationPackResetter;
+use Tests\Resources\ResourceResetter;
 
 class RepositoryTest extends KernelTestCase
 {
     private const SERVICE_LOCALE_REPOSITORY = 'prestashop.core.localization.locale.repository';
-    private const SERVICE_CLDR_CACHE_ADAPTER = 'prestashop.core.localization.cldr.cache.adapter';
+    private const COMMAND_BUS = 'prestashop.core.command_bus';
 
     /**
      * The Locale repository is the entry point to retrieve a given Locale object.
@@ -49,6 +52,24 @@ class RepositoryTest extends KernelTestCase
      * @var LocaleRepository
      */
     protected $localeRepository;
+
+    /**
+     * @var CommandBusInterface
+     */
+    protected $commandBus;
+
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+        LocalizationPackResetter::resetLocalizationPacks();
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+        LocalizationPackResetter::resetLocalizationPacks();
+        (new ResourceResetter())->resetTestModules();
+    }
 
     protected function setUp(): void
     {
@@ -61,6 +82,7 @@ class RepositoryTest extends KernelTestCase
         $kernel = self::$kernel;
 
         $this->localeRepository = self::$kernel->getContainer()->get(self::SERVICE_LOCALE_REPOSITORY);
+        $this->commandBus = self::$kernel->getContainer()->get(self::COMMAND_BUS);
     }
 
     /**
@@ -78,7 +100,7 @@ class RepositoryTest extends KernelTestCase
      */
     public function testItShouldFormatNumbers(string $localeCode, float $rawNumber, string $formattedNumber): void
     {
-        $this->setupLocalisationPack($localeCode);
+        $this->installLanguagesByLocaleCode($localeCode);
 
         $locale = $this->localeRepository->getLocale($localeCode);
 
@@ -88,21 +110,44 @@ class RepositoryTest extends KernelTestCase
         );
     }
 
-    private function setupLocalisationPack(string $localeCode): void
+    private function checkAndInstallLanguage(string $isoCode): void
     {
-        // Clear Cache
-        /** @var FilesystemAdapter $cacheAdapter */
-        $cacheAdapter = self::$kernel->getContainer()->get(self::SERVICE_CLDR_CACHE_ADAPTER);
-        $cacheAdapter->clear();
+        if (!empty(Language::getIdByIso($isoCode))) {
+            return;
+        }
 
+        Language::checkAndAddLanguage($isoCode);
+    }
+
+    private function installLanguagesByLocaleCode(string $localeCode): void
+    {
         $cacheDir = _PS_CACHE_DIR_ . 'sandbox' . DIRECTORY_SEPARATOR;
-
-        $localizationWarmer = new LocalizationWarmer(_PS_VERSION_, strtolower(substr($localeCode, 3, 2)));
+        $countryCode = strtolower(substr($localeCode, 3, 2));
+        $localizationWarmer = new LocalizationWarmer(_PS_VERSION_, $countryCode);
         $xmlContent = $localizationWarmer->warmUp($cacheDir);
 
-        $localizationPack = new LocalizationPack();
-        $localizationPack->loadLocalisationPack($xmlContent, [], true);
-        $localizationPack->loadLocalisationPack($xmlContent, ['languages'], true);
+        // Install each language associated to the country
+        $xml = @simplexml_load_string($xmlContent);
+        foreach ($xml->languages->language as $data) {
+            /** @var \SimpleXMLElement $data */
+            $attributes = $data->attributes();
+            $this->checkAndInstallLanguage((string) $attributes['iso_code']);
+        }
+    }
+
+    private function checkAndInstallCurrency(string $currencyCode): void
+    {
+        // Make sure currency is installed since it maybe not be in the country's default currencies
+        if (Currency::exists($currencyCode)) {
+            return;
+        }
+
+        $command = new AddCurrencyCommand(
+            (string) $currencyCode,
+            (float) 1,
+            true
+        );
+        $this->commandBus->handle($command);
     }
 
     public function provideLocalizedNumbers(): array
@@ -220,6 +265,9 @@ class RepositoryTest extends KernelTestCase
      */
     public function testItShouldFormatPrices(string $localeCode, float $rawNumber, string $currencyCode, string $formattedPrice): void
     {
+        $this->installLanguagesByLocaleCode($localeCode);
+        $this->checkAndInstallCurrency($currencyCode);
+
         $locale = $this->localeRepository->getLocale($localeCode);
 
         $this->assertSame(
@@ -359,7 +407,6 @@ class RepositoryTest extends KernelTestCase
                 'currencyCode' => 'AZN',
                 'formattedPrice' => "1.234.568,12\u{a0}₼",
             ],
-            // BGN does not have a symbol in en-US
             'United States AZN' => [
                 'localeCode' => 'en-US',
                 'rawNumber' => 1234568.12345,

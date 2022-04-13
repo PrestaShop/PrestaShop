@@ -23,7 +23,6 @@ npm-debug.log.*
 !/cache/smarty/compile/index.php
 !/cache/smarty/index.php
 !/cache/tcpdf/index.php
-/tests/Integration/.phpunit.result.cache
 
 # Download
 /download/*
@@ -87,6 +86,8 @@ tests/Resources/img/tmp/.gitkeep
 tests/Resources/download/*
 tests/Unit/.phpunit.result.cache
 .phpunit.result.cache
+tests/Integration/.phpunit.result.cache
+tests-legacy/.phpunit.result.cache
 
 /admin-dev/autoupgrade/*
 !/admin-dev/autoupgrade/index.php

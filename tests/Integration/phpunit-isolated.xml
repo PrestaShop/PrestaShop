@@ -1,7 +1,7 @@
 <phpunit
     bootstrap="bootstrap.php"
     convertDeprecationsToExceptions="false"
-    processIsolation="false">
+    processIsolation="true">
   <php>
     <env name="KERNEL_CLASS" value="AppKernel" />
     <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>
@@ -13,8 +13,8 @@
   </testsuites>
 
   <groups>
-    <exclude>
+    <include>
       <group>isolatedProcess</group>
-    </exclude>
+    </include>
   </groups>
 </phpunit>

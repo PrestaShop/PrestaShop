@@ -30,7 +30,7 @@ namespace Tests\Integration\Classes;
 
 use Language;
 use PHPUnit\Framework\TestCase;
-use PrestaShopBundle\Install\DatabaseDump;
+use Tests\Resources\DatabaseDump;
 
 class LanguageTest extends TestCase
 {
@@ -38,7 +38,7 @@ class LanguageTest extends TestCase
     {
         parent::setUp();
 
-        DatabaseDump::restoreDb();
+        DatabaseDump::restoreAllTables();
     }
 
     public function testGetIdByIso()

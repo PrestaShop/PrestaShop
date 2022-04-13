@@ -35,24 +35,32 @@ use Language;
 use LocalizationPack;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShopBundle\Cache\LocalizationWarmer;
-use Shop;
 use SpecificPriceFormatter;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\Translation\Translator;
+use Tests\Integration\Utility\ContextMockerTrait;
+use Tests\Resources\LocalizationPackResetter;
 
 class SpecificPriceFormatterTest extends KernelTestCase
 {
+    use ContextMockerTrait;
+
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+        LocalizationPackResetter::resetLocalizationPacks();
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
+
+        self::mockContext();
 
         // Init Symfony
         self::bootKernel();
         // Global var for SymfonyContainer
         global $kernel;
         $kernel = self::$kernel;
-
-        Context::setInstanceForTesting($this->getMockContext());
 
         foreach (['us', 'fr'] as $country) {
             $localizationWarmer = new LocalizationWarmer(_PS_VERSION_, $country);
@@ -317,36 +325,5 @@ class SpecificPriceFormatterTest extends KernelTestCase
                 ],
             ],
         ];
-    }
-
-    private function getMockTranslator(): Translator
-    {
-        return $this->getMockBuilder(Translator::class)->disableOriginalConstructor()->getMock();
-    }
-
-    private function getMockLanguage(): Language
-    {
-        $mockLanguage = $this->getMockBuilder(Language::class)->getMock();
-        $mockLanguage->id = 1;
-
-        return $mockLanguage;
-    }
-
-    private function getMockShop(): Shop
-    {
-        return $this->getMockBuilder(Shop::class)->getMock();
-    }
-
-    private function getMockContext(): Context
-    {
-        $mockContext = $this->getMockBuilder(Context::class)->getMock();
-        $mockContext->method('getTranslator')->willReturn(
-            $this->getMockTranslator()
-        );
-
-        $mockContext->language = $this->getMockLanguage();
-        $mockContext->shop = $this->getMockShop();
-
-        return $mockContext;
     }
 }

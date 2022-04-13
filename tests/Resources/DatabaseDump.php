@@ -25,11 +25,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Install;
+namespace Tests\Resources;
 
 use AppKernel;
+use Cache;
 use Db;
 use Exception;
+use Tools;
 
 class DatabaseDump
 {
@@ -129,6 +131,9 @@ class DatabaseDump
         $restoreCommand = $this->buildMySQLCommand('mysql', [$this->databaseName]);
         $restoreCommand .= ' < ' . escapeshellarg($this->dumpFile) . ' 2> /dev/null';
         $this->exec($restoreCommand);
+
+        // Clean EntityManager cache
+        Cache::clean('objectmodel_*');
     }
 
     /**
@@ -138,6 +143,7 @@ class DatabaseDump
      */
     public function restoreTable(string $table): void
     {
+        $className = Tools::toCamelCase($table, true);
         $tableName = $this->dbPrefix . $table;
         $this->checkTableDumpFile($tableName);
 
@@ -152,6 +158,9 @@ class DatabaseDump
         $restoreCommand = $this->buildMySQLCommand('mysql', [$this->databaseName]);
         $restoreCommand .= ' < ' . escapeshellarg($dumpFile) . ' 2> /dev/null';
         $this->exec($restoreCommand);
+
+        // Clean EntityManager cache
+        Cache::clean(sprintf('objectmodel_%s_*', $className));
     }
 
     /**

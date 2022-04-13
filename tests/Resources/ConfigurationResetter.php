@@ -26,28 +26,18 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\Classes;
+namespace Tests\Resources;
 
-use PHPUnit\Framework\TestCase;
-use Product;
-use Tests\Integration\Utility\ContextMockerTrait;
+use Configuration;
 
-class ProductTest extends TestCase
+class ConfigurationResetter
 {
-    use ContextMockerTrait;
-
-    protected function setUp(): void
+    public static function resetConfiguration(): void
     {
-        parent::setUp();
-        self::mockContext();
-    }
-
-    public function testSaveActiveRecordStyle(): void
-    {
-        $product = new Product(null, false, 1);
-        $product->name = 'A Product';
-        $product->price = 42.42;
-        $product->link_rewrite = 'a-product';
-        $this->assertTrue($product->save());
+        DatabaseDump::restoreTables([
+            'configuration',
+            'configuration_lang',
+        ]);
+        Configuration::resetStaticCache();
     }
 }

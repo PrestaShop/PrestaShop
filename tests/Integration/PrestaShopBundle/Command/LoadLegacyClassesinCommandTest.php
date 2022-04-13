@@ -39,6 +39,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
 use TypeError;
 
+/**
+ * These tests need to run a symfony command with and without the context helper, so it needs to be run isolated or
+ * other tests may have already fixed or mocked the context.
+ *
+ * @group isolatedProcess
+ */
 class LoadLegacyClassesinCommandTest extends KernelTestCase
 {
     private $previousErrorReportingLevel;

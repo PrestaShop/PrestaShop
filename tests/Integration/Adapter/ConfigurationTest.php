@@ -28,12 +28,14 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Adapter;
 
-use Doctrine\ORM\EntityManager;
+use Configuration as LegacyConfiguration;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShopBundle\Entity\Shop;
 use PrestaShopBundle\Entity\ShopGroup;
+use Shop as LegacyShop;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Tests\Resources\DatabaseDump;
 
 class ConfigurationTest extends KernelTestCase
 {
@@ -42,20 +44,25 @@ class ConfigurationTest extends KernelTestCase
      */
     private $configuration;
 
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+        static::initMultistore();
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+        DatabaseDump::restoreAllTables();
+        LegacyShop::resetStaticCache();
+        LegacyConfiguration::resetStaticCache();
+    }
 
     protected function setUp(): void
     {
         self::bootKernel();
-
         $container = self::$kernel->getContainer();
-        $this->entityManager = $container->get('doctrine.orm.entity_manager');
         $this->configuration = $container->get('prestashop.adapter.legacy.configuration');
-
-        $this->initMultistore();
     }
 
     /**
@@ -453,35 +460,38 @@ class ConfigurationTest extends KernelTestCase
                 $this->configuration->set($params['key'], $params['value'], $params['shopConstraint']);
             }
         }
+        LegacyConfiguration::resetStaticCache();
         $result = $this->configuration->get($getParams['key'], $getParams['default'], $getParams['shopConstraint']);
         $this->assertEquals($expectedResult, $result);
     }
 
-    private function initMultistore(): void
+    protected static function initMultistore(): void
     {
-        // we want to execute this only once for the whole class
-        $flag = $this->configuration->get('CONFIGURATION_INTEGRATION_TEST_FLAG');
+        DatabaseDump::restoreAllTables();
+        LegacyConfiguration::resetStaticCache();
+        LegacyShop::resetStaticCache();
+        self::bootKernel();
+        $container = self::$kernel->getContainer();
+        $configuration = $container->get('prestashop.adapter.legacy.configuration');
+        $entityManager = $container->get('doctrine.orm.entity_manager');
 
-        if ($flag === null) {
-            // activate multistore
-            $this->configuration->set('PS_MULTISHOP_FEATURE_ACTIVE', 1);
+        // activate multistore
+        $configuration->set('PS_MULTISHOP_FEATURE_ACTIVE', 1);
 
-            // add a shop in existing group
-            $shopGroup = $this->entityManager->find(ShopGroup::class, 1);
-            $shop = new Shop();
-            $shop->setActive(true);
-            $shop->setIdCategory(2);
-            $shop->setName('test_shop_2');
-            $shop->setShopGroup($shopGroup);
-            $shop->setColor('red');
-            $shop->setThemeName('classic');
-            $shop->setDeleted(false);
+        // add a shop in existing group
+        $shopGroup = $entityManager->find(ShopGroup::class, 1);
+        $shop = new Shop();
+        $shop->setActive(true);
+        $shop->setIdCategory(2);
+        $shop->setName('test_shop_2');
+        $shop->setShopGroup($shopGroup);
+        $shop->setColor('red');
+        $shop->setThemeName('classic');
+        $shop->setDeleted(false);
 
-            $this->entityManager->persist($shop);
-            $this->entityManager->flush();
+        $entityManager->persist($shop);
+        $entityManager->flush();
 
-            // activate flag
-            $this->configuration->set('CONFIGURATION_INTEGRATION_TEST_FLAG', 1);
-        }
+        LegacyShop::resetStaticCache();
     }
 }

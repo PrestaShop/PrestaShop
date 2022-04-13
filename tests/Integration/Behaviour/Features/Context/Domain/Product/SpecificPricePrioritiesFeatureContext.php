@@ -36,9 +36,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\RemoveSpecif
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\SetSpecificPricePriorityForProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
-use PrestaShopBundle\Install\DatabaseDump;
 use SpecificPrice;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
+use Tests\Resources\DatabaseDump;
 
 class SpecificPricePrioritiesFeatureContext extends AbstractProductFeatureContext
 {

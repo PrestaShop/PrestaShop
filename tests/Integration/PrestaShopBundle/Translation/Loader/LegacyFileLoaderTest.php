@@ -33,7 +33,7 @@ use Tests\Integration\PrestaShopBundle\Translation\CatalogueVerifier;
 /**
  * Tests extract of translations from legacy translation files
  *
- * @doc ./vendor/bin/phpunit -c tests/Integration/phpunit.xml --filter="LegacyFileLoaderTest"
+ * ./vendor/bin/phpunit -c tests/Integration/phpunit.xml --filter="LegacyFileLoaderTest"
  */
 class LegacyFileLoaderTest extends KernelTestCase
 {

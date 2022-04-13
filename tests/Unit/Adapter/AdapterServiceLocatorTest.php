@@ -34,6 +34,23 @@ use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 
 class AdapterServiceLocatorTest extends TestCase
 {
+    /**
+     * @var Container
+     */
+    private $savedContainer;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->savedContainer = ServiceLocator::getContainer();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+        ServiceLocator::setServiceContainerInstance($this->savedContainer);
+    }
+
     public function testGetDelegatesToServiceContainer(): void
     {
         ServiceLocator::setServiceContainerInstance(new Container());

@@ -26,28 +26,32 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\Classes;
+namespace Tests\Resources;
 
-use PHPUnit\Framework\TestCase;
-use Product;
-use Tests\Integration\Utility\ContextMockerTrait;
+use Configuration;
+use Db;
+use Language;
 
-class ProductTest extends TestCase
+class LanguageResetter
 {
-    use ContextMockerTrait;
-
-    protected function setUp(): void
+    public static function resetLanguages(): void
     {
-        parent::setUp();
-        self::mockContext();
-    }
+        // Removing Language manually includes cleaning all related lang tables, this cleaning is handled in
+        // Language::delete in a more efficient way than relying on table restoration
+        $langIds = Db::getInstance()->executeS(sprintf('SELECT id_lang FROM %slang;', _DB_PREFIX_));
+        unset($langIds[0]);
+        foreach ($langIds as $langId) {
+            $lang = new Language($langId['id_lang']);
+            $lang->delete();
+        }
 
-    public function testSaveActiveRecordStyle(): void
-    {
-        $product = new Product(null, false, 1);
-        $product->name = 'A Product';
-        $product->price = 42.42;
-        $product->link_rewrite = 'a-product';
-        $this->assertTrue($product->save());
+        // We still restore lang table to reset increment ID
+        DatabaseDump::restoreTables(['lang', 'lang_shop']);
+
+        // Reset default language
+        Configuration::updateValue('PS_LANG_DEFAULT', 1);
+
+        // Restore static cache
+        Language::resetStaticCache();
     }
 }

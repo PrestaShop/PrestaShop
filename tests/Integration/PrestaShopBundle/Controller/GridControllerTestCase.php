@@ -28,18 +28,20 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Controller;
 
-use Employee;
 use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Form;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Tests\Integration\PrestaShopBundle\Controller\FormFiller\FormFiller;
+use Tests\Integration\Utility\ContextMockerTrait;
+use Tests\Resources\DatabaseDump;
 
 abstract class GridControllerTestCase extends WebTestCase
 {
+    use ContextMockerTrait;
+
     /**
      * @var Client
      */
@@ -55,31 +57,24 @@ abstract class GridControllerTestCase extends WebTestCase
      */
     protected $formFiller;
 
-    public function setUp(): void
+    public static function setUpBeforeClass(): void
     {
-        $this->client = static::createClient();
-        $this->mockLegacyContextParts($this->client->getKernel());
-
-        $this->router = $this->client->getContainer()->get('router');
-        $this->formFiller = new FormFiller();
+        parent::setUpBeforeClass();
+        DatabaseDump::restoreTables(['admin_filter']);
     }
 
-    /**
-     * This is where you can mock part of the context if some are missing, by default only Employee is mocked
-     * but you improve this function or, more likely, extend it in your test class to add your required dependencies.
-     *
-     * @param KernelInterface $kernel
-     */
-    protected function mockLegacyContextParts(KernelInterface $kernel): void
+    public static function tearDownAfterClass(): void
     {
-        // Employee mock (so that profile and language is accessible)
-        $employeeMock = $this->getMockBuilder(Employee::class)->getMock();
-        $employeeMock->id_profile = 1;
-        $employeeMock->id_lang = 1;
+        parent::tearDownAfterClass();
+        DatabaseDump::restoreTables(['admin_filter']);
+    }
 
-        // Legacy context is updated with employee mock
-        $legacyContext = $kernel->getContainer()->get('prestashop.adapter.legacy.context');
-        $legacyContext->getContext()->employee = $employeeMock;
+    public function setUp(): void
+    {
+        self::mockContext();
+        $this->client = static::createClient();
+        $this->router = $this->client->getContainer()->get('router');
+        $this->formFiller = new FormFiller();
     }
 
     /**
