@@ -755,7 +755,8 @@ class AddOrder extends BOBasePage {
    * @returns {Promise<void>}
    */
   async setGift(page, isEnabled) {
-    return this.setChecked(page, this.giftToggleInput(isEnabled ? 1 : 0));
+    await this.setChecked(page, this.giftToggleInput(isEnabled ? 1 : 0));
+    await page.waitForTimeout(1000);
   }
 
   /**
@@ -786,7 +787,6 @@ class AddOrder extends BOBasePage {
    * totalTaxExcluded: string, totalShipping: string}>}
    */
   async getSummaryDetails(page) {
-    await page.waitForTimeout(2000);
     return {
       totalProducts: await this.getTextContent(page, this.totalProducts),
       totalVouchers: await this.getTextContent(page, this.totalDiscountProduct),

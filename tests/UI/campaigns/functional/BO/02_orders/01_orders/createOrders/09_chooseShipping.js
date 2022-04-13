@@ -51,11 +51,17 @@ const giftMessage = 'Gift message to test';
 
 /*
 Pre-condition:
-
+- Enable and configure gift option
 Scenario:
-
+- Go to create order page and choose customer
+- Check that shipping block is not visible before add product
+- Choose carrier 'My carrier' and check details
+- Enable free shipping and check details
+- Add gift message, enable gift and enable recycling product
+- Complete the order
+- Check all details from view order page
 Post-condition:
-
+- Go back to default gift options configuration
  */
 describe('BO - Orders - Create order : Choose shipping', async () => {
   before(async function () {
@@ -68,7 +74,7 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
   });
 
   // Pre-condition : configure gift options
-  describe('PRE-TEST: Enable and configure gift option', async () => {
+  describe('PRE-TEST: Enable and configure gift options', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
