@@ -13,6 +13,7 @@ module.exports = {
       name: 'My carrier',
       delay: 'Delivery next day!',
       priceTTC: 8.40,
+      price: 7.00,
       status: true,
       freeShipping: false,
       position: 2,
