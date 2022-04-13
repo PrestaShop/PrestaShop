@@ -105,21 +105,54 @@ Feature: Feature: Update product options from Back Office (BO) for multiple shop
     And product product1 is not associated to shop shop3
     And product product1 is not associated to shop shop4
 
-  Scenario: I update product search indexation related values in different shops
-    Given product "product1" should not be indexed for shops "shop1,shop2"
-    And product "product1" should be disabled for shops "shop2"
-#   @todo: UpdateProductStatus command does not yet support multishop, so it silently updates only single shop from context
-#          need to improve this scenario once UpdateProductStatus command supports multishop
-    When I enable product "product1"
+  Scenario: I update product search indexation related values for different shops
+    Given product "product1" should be disabled for shops "shop1,shop2"
+    And product "product1" should not be indexed for shops "shop1,shop2"
+    When I enable product "product1" for shop "shop1"
     And I update product "product1" options for shop "shop1" with following values:
-      | visibility          | search       |
-      | available_for_order | true         |
+      | visibility | search |
+    And I update product "product1" options for shop "shop2" with following values:
+      | visibility | search |
+    Then product "product1" should be enabled for shops "shop1"
+    And product "product1" should be indexed for shops "shop1"
+    But product "product1" should be disabled for shops "shop2"
+    And product "product1" should not be indexed for shops "shop2"
+    And I enable product "product1" for shop "shop2"
+    Then product "product1" should be enabled for shops "shop1,shop2"
+    And product "product1" should be indexed for shops "shop1,shop2"
+    When I update product "product1" options for all shops with following values:
+      | visibility | none |
+    Then product "product1" should not be indexed for shops "shop1,shop2"
+    When I update product "product1" options for all shops with following values:
+      | visibility | both |
+    Then product "product1" should be indexed for shops "shop1,shop2"
+    When I update product "product1" options for all shops with following values:
+      | visibility | catalog |
+    Then product "product1" should not be indexed for shops "shop1,shop2"
+
+  Scenario: I update product search indexation related values for all shops
+    Given product "product1" should have following options for shops "shop1,shop2":
+      | product option      | value        |
+      | visibility          | catalog      |
+      | available_for_order | false        |
       | online_only         | true         |
       | show_price          | false        |
       | condition           | used         |
       | show_condition      | true         |
       | manufacturer        | studioDesign |
+    Given product "product1" should be disabled for shops "shop1,shop2"
+    And product "product1" should not be indexed for shops "shop1,shop2"
+    When I enable product "product1" for all shops
+    Then product "product1" should be enabled for shops "shop1,shop2"
+    But product "product1" should not be indexed for shops "shop1,shop2"
+#   It is important that we first update product for shop1 (which is the default shop) to make sure
+#   that default shop product differs from others, because in multi-shop context only the default shop may be loaded, so
+#   some if statements might rely on default shop values, leaving other shops unhandled
+#   (e.g. if statement in UpdateProductOptionsHandler which decides if indexation is needed for product based on it's fields)
+    When I update product "product1" options for shop "shop1" with following values:
+      | visibility | search |
     Then product "product1" should be enabled for shops "shop1"
     And product "product1" should be indexed for shops "shop1"
-    But product "product1" should be disabled for shops "shop2"
-    And product "product1" should not be indexed for shops "shop2"
+    And I update product "product1" options for all shops with following values:
+      | visibility | search |
+    Then product "product1" should be indexed for shops "shop1,shop2"

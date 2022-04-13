@@ -59,7 +59,6 @@ Feature: Update product status from Back Office (BO) for multiple shops.
     And product "product1" should not be indexed for shops "shop2"
     When I enable product "product1" for shop "shop2"
     Then product "product1" should be enabled for shops "shop1,shop2"
-#   @todo: this only works with context state manger if we set related shop in context
     And product "product1" should be indexed for shops "shop1,shop2"
 
   Scenario: I expect product indexation to change when updating product status for all shops
@@ -74,7 +73,15 @@ Feature: Update product status from Back Office (BO) for multiple shops.
       | manufacturer        |       |
     And product "product1" should be disabled for shops "shop1,shop2"
     And product "product1" should not be indexed for shops "shop1,shop2"
+#   It is important that we first enable product for shop1 (which is the default shop) to make sure
+#   that default shop product differs from others, because in multi-shop context only the default shop may be loaded, so
+#   some if statements might rely on default shop values, leaving other shops unhandled
+#   (e.g. if statement in UpdateProductStatusHandler which decides if indexation is needed for product based on it's fields)
+    When I enable product "product1" for shop "shop1"
+    Then product "product1" should be enabled for shops "shop1"
+    And product "product1" should be indexed for shops "shop1"
+    But product "product1" should be disabled for shops "shop2"
+    And product "product1" should not be indexed for shops "shop2"
     When I enable product "product1" for all shops
-    And product "product1" should be enabled for shops "shop1,shop2"
-#   @todo: this works only when setting all shops context in contextStateManager
+    Then product "product1" should be enabled for shops "shop1,shop2"
     And product "product1" should be indexed for shops "shop1,shop2"

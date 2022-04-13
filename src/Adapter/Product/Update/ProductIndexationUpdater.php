@@ -78,9 +78,7 @@ class ProductIndexationUpdater
 
     /**
      * @param Product $product
-     *
-     * @throws CannotUpdateProductException
-     * @throws CoreException
+     * @param ShopConstraint $shopConstraint
      */
     public function updateIndexation(Product $product, ShopConstraint $shopConstraint): void
     {
@@ -88,7 +86,6 @@ class ProductIndexationUpdater
             return;
         }
 
-        //@todo: unfinished POC. Check all method usages if accepted
         $this->contextStateManager->setShopContext($shopConstraint);
 
         if ($this->isVisibleOnSearch($product)) {
