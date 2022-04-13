@@ -3559,16 +3559,6 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * @deprecated 1.5.0, use Cart->getPackageShippingCost()
-     */
-    public function getOrderShippingCost($id_carrier = null, $use_tax = true, Country $default_country = null, $product_list = null)
-    {
-        Tools::displayAsDeprecated('Use Cart->getPackageShippingCost()');
-
-        return $this->getPackageShippingCost((int) $id_carrier, $use_tax, $default_country, $product_list);
-    }
-
-    /**
      * Return package shipping cost.
      *
      * @param int $id_carrier Carrier ID (default : current carrier)
@@ -3978,23 +3968,6 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * @deprecated 1.5.0
-     *
-     * @param CartRule $obj
-     *
-     * @return bool|string
-     */
-    public function checkDiscountValidity($obj, $discounts, $order_total, $products, $check_cart_discount = false)
-    {
-        Tools::displayAsDeprecated();
-        $context = Context::getContext()->cloneContext();
-        /* @phpstan-ignore-next-line */
-        $context->cart = $this;
-
-        return $obj->checkValidity($context);
-    }
-
-    /**
      * Return useful information about the cart for display purpose.
      * Products are splitted between paid ones and gift
      * Gift price and shipping (if shipping is free) are removed from Discounts
@@ -4353,21 +4326,6 @@ class CartCore extends ObjectModel
             0,
             $returnCustomizationId
         );
-    }
-
-    /**
-     * @deprecated 1.5.5.0
-     *
-     * @param int $id_product Product ID
-     * @param int $index Customization field identifier as id_customization_field in table customization_field
-     *
-     * @return bool
-     */
-    public function deletePictureToProduct($id_product, $index)
-    {
-        Tools::displayAsDeprecated('Use deleteCustomizationToProduct() instead');
-
-        return $this->deleteCustomizationToProduct($id_product, (int) $index);
     }
 
     /**
