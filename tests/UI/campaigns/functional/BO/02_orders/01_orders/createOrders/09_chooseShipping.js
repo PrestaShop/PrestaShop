@@ -23,6 +23,7 @@ const {Statuses} = require('@data/demo/orderStatuses');
 
 // Import common tests
 const loginCommon = require('@commonTests/BO/loginBO');
+const {deleteCartRuleTest} = require('@commonTests/BO/catalog/createDeleteCartRule');
 
 const baseContext = 'functional_BO_orders_orders_createOrders_chooseShipping';
 
@@ -62,6 +63,7 @@ Scenario:
 - Check all details from view order page
 Post-condition:
 - Go back to default gift options configuration
+- Delete cart rule free shipping
  */
 describe('BO - Orders - Create order : Choose shipping', async () => {
   before(async function () {
@@ -296,4 +298,7 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
       await expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
     });
   });
+
+  // Post-Condition: delete cart rule free shipping
+  deleteCartRuleTest('Free Shipping', baseContext);
 });
