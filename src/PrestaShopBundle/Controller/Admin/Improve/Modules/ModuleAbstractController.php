@@ -69,7 +69,7 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
      *
      * @return array
      */
-    protected function getToolbarButtons(): array
+    protected function getToolbarButtons()
     {
         // toolbarButtons
         $toolbarButtons = [];
