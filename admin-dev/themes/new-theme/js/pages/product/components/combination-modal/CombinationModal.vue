@@ -188,7 +188,7 @@
         editCombinationUrl: '',
         loadingCombinationForm: false,
         submittingCombinationForm: false,
-        combinationList: <JQuery>$(ProductMap.combinations.combinationsContainer),
+        combinationList: <JQuery>$(ProductMap.combinations.combinationsListContainer),
         hasSubmittedCombinations: false,
         combinationsHistory: [],
         showConfirm: false,
@@ -212,7 +212,8 @@
       },
     },
     mounted() {
-      this.combinationsService = new CombinationsService(this.productId);
+      this.combinationList = $(ProductMap.combinations.combinationsListContainer);
+      this.combinationsService = new CombinationsService();
       this.initCombinationIds();
       this.watchEditButtons();
       this.eventEmitter.on(CombinationEvents.refreshCombinationList, () => this.initCombinationIds(),
@@ -233,8 +234,8 @@
           },
         );
       },
-      async initCombinationIds(): Promise<void> {
-        this.combinationIds = await this.combinationsService?.getCombinationIds();
+      async initCombinationIds() {
+        this.combinationIds = await this.combinationsService?.getCombinationIds(this.productId);
       },
       frameLoading(): void {
         this.applyIframeStyling();

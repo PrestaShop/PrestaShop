@@ -1346,13 +1346,61 @@ $product-page-padding-bottom: 80px !default;
   }
 }
 
+#bulk-combination-form-modal {
+  .modal-dialog {
+    max-width: 810px;
+
+    .modal-footer {
+      padding: 1.125rem;
+      background-color: $background-grey;
+    }
+  }
+}
+
+.bulk-combination-form {
+  padding: 0 1.625rem 1.625rem;
+
+  label {
+    display: flex;
+    width: 100%;
+
+    .ps-disabling-switch {
+      margin-left: auto;
+    }
+  }
+
+  .card-body {
+    padding: 0;
+  }
+
+  > .form-group:last-child {
+    margin-bottom: 0;
+  }
+}
+
 #external-combination-tab {
   padding-bottom: $product-page-padding-bottom;
   margin-top: -$product-page-padding-bottom;
 
+  #combination-actions {
+    margin: 0.5rem 0;
+  }
+
   #combinations-list {
     position: relative;
     min-height: 3.5rem;
+
+    #id-header {
+      white-space: nowrap;
+
+      .md-checkbox {
+        display: inline-block;
+      }
+
+      .ps-sortable-column {
+        display: inline-block;
+      }
+    }
 
     .combination {
       &-actions {

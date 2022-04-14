@@ -87,7 +87,7 @@ class CombinationPriceImpactType extends TranslatorAwareType
             ->add('price_tax_excluded', MoneyType::class, [
                 'required' => false,
                 'label' => $this->trans('Impact on price (tax excl.)', 'Admin.Catalog.Feature'),
-                'label_help_box' => $this->trans('Does this combination have a different price? Is it cheaper or more expensive than the default retail price?', 'Admin.Catalog.Help'),
+                'label_help_box' => $this->trans('If the price of this combination is different from the initial retail price, enter the value of the impact (negative or positive).', 'Admin.Catalog.Help'),
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
                 'currency' => $this->defaultCurrency->iso_code,
                 'constraints' => [
@@ -108,7 +108,7 @@ class CombinationPriceImpactType extends TranslatorAwareType
             ->add('unit_price', MoneyType::class, [
                 'required' => false,
                 'label' => $this->trans('Impact on price per unit (tax excl.)', 'Admin.Catalog.Feature'),
-                'label_help_box' => $this->trans('Does this combination have a different price per unit?', 'Admin.Catalog.Feature'),
+                'label_help_box' => $this->trans('If the price per unit of this combination is different from the initial price per unit, enter the value of the impact (negative or positive).', 'Admin.Catalog.Feature'),
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
                 'currency' => $this->defaultCurrency->iso_code,
                 'constraints' => [

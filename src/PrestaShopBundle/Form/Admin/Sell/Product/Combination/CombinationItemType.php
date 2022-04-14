@@ -51,6 +51,9 @@ class CombinationItemType extends TranslatorAwareType
         $builder
             ->add('is_selected', CheckboxType::class, [
                 'label' => false,
+                'attr' => [
+                    'class' => 'combination-is-selected',
+                ],
             ])
             ->add('combination_id', HiddenType::class, [
                 'attr' => [

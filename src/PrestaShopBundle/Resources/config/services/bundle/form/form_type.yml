@@ -1725,6 +1725,40 @@ services:
     tags:
       - { name: form.type }
 
+  form.type.sell.product.combination.bulk_combination_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\BulkCombinationType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+
+  form.type.sell.product.combination.bulk_combination_stock_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\BulkCombinationStockType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    arguments:
+      - '@router'
+      - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_STOCK_MANAGEMENT')"
+    tags:
+      - { name: form.type }
+
+  form.type.sell.product.combination.bulk_combination_price_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\BulkCombinationPriceType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    arguments:
+      - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
+      - "@=service('prestashop.adapter.legacy.configuration').get('PS_WEIGHT_UNIT')"
+    tags:
+      - { name: form.type }
+
+  form.type.sell.product.combination.bulk_combination_references_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\BulkCombinationReferencesType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+
   form.type.sell.product.event_listener.combination_listener:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\CombinationListener'
     public: true
@@ -1847,5 +1881,17 @@ services:
     class: 'PrestaShopBundle\Form\Admin\Type\ConfigurableCountryChoiceType'
     arguments:
       - '@prestashop.core.form.choice_provider.configurable_country_by_id'
+    tags:
+      - { name: form.type }
+
+  form.event_listener.add_disabling_switch_listener:
+    class: 'PrestaShopBundle\Form\Admin\Type\EventListener\AddDisablingSwitchListener'
+    public: true
+    arguments:
+      - '@form.form_cloner'
+
+  form.type.disabling_switch_type:
+    class: 'PrestaShopBundle\Form\Admin\Type\DisablingSwitchType'
+    public: true
     tags:
       - { name: form.type }

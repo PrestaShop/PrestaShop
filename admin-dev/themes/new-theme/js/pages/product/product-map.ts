@@ -25,6 +25,10 @@
 
 const combinationListId = '#combination_list';
 const attachmentsBlockId = '#product_specifications_attachments';
+// It does not include "#" so it can be selected by getElementById
+const isSelectedCombinationInputClass = 'combination-is-selected';
+const bulkCombinationSelectAllInPageId = 'bulk-select-all-in-page';
+const progressModalId = 'bulk-combination-progress-modal';
 
 export default {
   productForm: 'form[name=product]',
@@ -76,7 +80,7 @@ export default {
     preloader: '#combinations-preloader',
     emptyState: '#combinations-empty-state',
     combinationsPaginatedList: '#combinations-paginated-list',
-    combinationsContainer: `${combinationListId}`,
+    combinationsListContainer: `${combinationListId}`,
     combinationsFiltersContainer: '#combinations_filters',
     combinationsGeneratorContainer: '#product_combinations_generator',
     combinationsTable: `${combinationListId} table`,
@@ -103,6 +107,7 @@ export default {
       'form[name="combination_form"] input, form[name="combination_form"] textarea, form[name="combination_form"] select',
     editCombinationButtons: '.edit-combination-item',
     tableRow: {
+      isSelectedCombination: `.${isSelectedCombinationInputClass}`,
       combinationImg: '.combination-image',
       deltaQuantityWrapper: '.delta-quantity',
       deltaQuantityInput: (rowIndex: number): string => `${combinationListId}_combinations_${rowIndex}_delta_quantity_delta`,
@@ -127,6 +132,12 @@ export default {
     scrollBar: '.attributes-list-overflow',
     searchInput: '#product-combinations-generate .attributes-search',
     generateCombinationsButton: '.generate-combinations-button',
+    bulkCombinationFormBtn: '#combination-bulk-form-btn',
+    bulkActionsBtn: '#combination-bulk-actions-btn',
+    bulkSelectAllInPage: `#${bulkCombinationSelectAllInPageId}`,
+    bulkSelectAllInPageId: bulkCombinationSelectAllInPageId,
+    bulkProgressModalId: progressModalId,
+    bulkFormModalId: 'bulk-combination-form-modal',
   },
   virtualProduct: {
     container: '.virtual-product-file-container',

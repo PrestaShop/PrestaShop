@@ -24,13 +24,10 @@
  */
 
 import Router from '@components/router';
-import ServiceType from '@PSTypes/services';
 
 const {$} = window;
 
-export default class CombinationsService implements ServiceType {
-  productId: number;
-
+export default class CombinationsService {
   router: Router;
 
   filters: Record<string, any>;
@@ -39,49 +36,13 @@ export default class CombinationsService implements ServiceType {
 
   orderWay: string | null;
 
-  /**
-   * @param {Number} productId
-   */
-  constructor(productId: number) {
-    this.productId = productId;
+  constructor() {
     this.router = new Router();
     this.filters = {};
     this.orderBy = null;
     this.orderWay = null;
   }
 
-  /**
-   * @param {Number} offset
-   * @param {Number} limit
-   *
-   * @returns {Promise}
-   */
-  fetch(offset: number, limit: number): JQuery.jqXHR<any> {
-    const filterId = `product_combinations_${this.productId}`;
-    const requestParams: Record<string, any> = {};
-    // Required for route generation
-    requestParams.productId = this.productId;
-
-    // These are the query parameters
-    requestParams[filterId] = {};
-    requestParams[filterId].offset = offset;
-    requestParams[filterId].limit = limit;
-    requestParams[filterId].filters = this.filters;
-    if (this.orderBy !== null) {
-      requestParams[filterId].orderBy = this.orderBy;
-    }
-    if (this.orderWay !== null) {
-      requestParams[filterId].sortOrder = this.orderWay;
-    }
-
-    return $.get(this.router.generate('admin_products_combinations', requestParams));
-  }
-
-  /**
-   * @param {number} combinationId
-   *
-   * @returns {Promise}
-   */
   deleteCombination(combinationId: number): JQuery.jqXHR<any> {
     return $.ajax({
       url: this.router.generate('admin_products_combinations_delete_combination', {
@@ -91,12 +52,6 @@ export default class CombinationsService implements ServiceType {
     });
   }
 
-  /**
-   * @param {Number} combinationId
-   * @param {Object} data
-   *
-   * @returns {Promise}
-   */
   updateListedCombination(combinationId: number, data: Record<string, any>): JQuery.jqXHR<any> {
     return $.ajax({
       url: this.router.generate('admin_products_combinations_update_combination_from_listing', {
@@ -108,49 +63,36 @@ export default class CombinationsService implements ServiceType {
   }
 
   /**
-   * @param {Object} data Attributes indexed by attributeGroupId { 1: [23, 34], 3: [45, 52]}
+   * @param {number} productId
+   * @param {Record<number, number[]>} data Attributes indexed by attributeGroupId { 1: [23, 34], 3: [45, 52]}
    */
-  generateCombinations(data: Record<string, any>): JQuery.jqXHR<any> {
+  generateCombinations(productId: number, data: Record<number, number[]>): JQuery.jqXHR {
     return $.ajax({
       url: this.router.generate('admin_products_combinations_generate', {
-        productId: this.productId,
+        productId,
       }),
       data,
       method: 'POST',
     });
   }
 
-  /**
-   * @returns {Promise}
-   */
-  getCombinationIds(): JQuery.jqXHR<any> {
+  bulkUpdate(combinationId: number, formData: FormData): Promise<Response> {
+    formData.append('_method', 'PATCH');
+
+    return fetch(this.router.generate('admin_products_combinations_bulk_edit_combination', {combinationId}), {
+      method: 'POST',
+      body: formData,
+      headers: {
+        _method: 'PATCH',
+      },
+    });
+  }
+
+  getCombinationIds(productId: number): JQuery.jqXHR<any> {
     return $.get(
       this.router.generate('admin_products_combinations_ids', {
-        productId: this.productId,
+        productId,
       }),
     );
-  }
-
-  /**
-   * @param {string} orderBy
-   * @param {string} orderWay
-   */
-  setOrderBy(orderBy: string, orderWay: string): void {
-    this.orderBy = orderBy;
-    this.orderWay = orderWay.toLowerCase() === 'desc' ? 'DESC' : 'ASC';
-  }
-
-  /**
-   * @returns {Object}
-   */
-  getFilters(): Record<string, any> {
-    return this.filters;
-  }
-
-  /**
-   * @param {Object} filters
-   */
-  setFilters(filters: Record<string, any>): void {
-    this.filters = filters;
   }
 }

@@ -51,6 +51,7 @@ export default {
     clearFilters: 'clearFilters',
     selectCombination: 'selectCombination',
     listRendered: 'combinationsListRendered',
+    bulkUpdateFinished: 'combinationsBulkUpdateFinished',
   },
   categories: {
     applyCategoryTreeChanges: 'applyCategoryTreeChanges',
