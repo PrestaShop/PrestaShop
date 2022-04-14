@@ -172,10 +172,9 @@ class ProductSupplierUpdater
         if (null === $defaultSupplierId) {
             // We use the first created association by default
             $firstAssociation = $allAssociations[0];
-            $defaultProductSupplier = $this->productSupplierRepository->getByAssociation($firstAssociation);
 
-            // Only the product needs to be updated, combination don't store the default supplier association
-            $this->updateDefaultSupplierDataForProduct($defaultProductSupplier, false);
+            // Update the default supplier for products, and potentially all its combinations
+            $this->updateProductDefaultSupplier($productId, $firstAssociation->getSupplierId());
         }
 
         return $allAssociations;
@@ -277,6 +276,21 @@ class ProductSupplierUpdater
             // For products without combinations only one association is possible
             $defaultProductSupplier = $this->getDefaultProductSupplier($productId, $defaultSupplierId);
             $this->updateDefaultSupplierDataForProduct($defaultProductSupplier, true);
+        }
+    }
+
+    /**
+     * @param ProductId[] $productIds
+     */
+    public function resetSupplierAssociations(array $productIds): void
+    {
+        foreach ($productIds as $productId) {
+            $suppliers = $this->productSupplierRepository->getAssociatedSupplierIds($productId);
+            if (!empty($suppliers)) {
+                $this->associateSuppliers($productId, $suppliers);
+            } else {
+                $this->resetDefaultSupplier($this->productRepository->get($productId));
+            }
         }
     }
 

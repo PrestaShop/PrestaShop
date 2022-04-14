@@ -403,3 +403,82 @@ Feature: Update product suppliers from Back Office (BO)
       | product_supplier  | supplier  | reference                       | currency | price_tax_excluded |
       | product6supplier1 | supplier1 | my first supplier for product6  | USD      | 10                 |
       | product6supplier2 | supplier2 | my second supplier for product6 | EUR      | 11                 |
+
+    Scenario: I delete a supplier the default suppliers are updated for affected products
+      Given I add new supplier supplier3 with following properties:
+        | name                    | my supplier 3        |
+        | address                 | Donelaicio st. 3     |
+        | city                    | Kaunas               |
+        | country                 | Lithuania            |
+        | enabled                 | true                 |
+        | description[en-US]      | just a supplier      |
+        | meta title[en-US]       | my supplier nr three |
+        | meta description[en-US] |                      |
+        | meta keywords[en-US]    | sup,3                |
+        | shops                   | [shop1]              |
+      And I add new supplier supplier4 with following properties:
+        | name                    | my supplier 4       |
+        | address                 | Donelaicio st. 4    |
+        | city                    | Kaunas              |
+        | country                 | Lithuania           |
+        | enabled                 | true                |
+        | description[en-US]      | just a supplier     |
+        | meta title[en-US]       | my supplier nr four |
+        | meta description[en-US] |                     |
+        | meta keywords[en-US]    | sup,4               |
+        | shops                   | [shop1]             |
+      Given I add product "product7" with following information:
+        | name[en-US] | magic staff |
+        | type        | standard    |
+      And product product7 type should be standard
+      And product product7 should not have any suppliers assigned
+      When I associate suppliers to product "product7"
+        | supplier  | product_supplier  |
+        | supplier4 | product7supplier4 |
+        | supplier3 | product7supplier3 |
+      And I update product product7 suppliers:
+        | product_supplier  | supplier  | reference                    | currency | price_tax_excluded |
+        | product7supplier3 | supplier3 | third supplier for product7  | EUR      | 11                 |
+        | product7supplier4 | supplier4 | fourth supplier for product7 | USD      | 10                 |
+      Then product product7 should have the following suppliers assigned:
+        | supplier3 |
+        | supplier4 |
+      And product product7 should have following suppliers:
+        | product_supplier  | supplier  | reference                    | currency | price_tax_excluded |
+        | product7supplier3 | supplier3 | third supplier for product7  | EUR      | 11                 |
+        | product7supplier4 | supplier4 | fourth supplier for product7 | USD      | 10                 |
+      And product product7 should have following supplier values:
+        | default supplier           | supplier4                    |
+        | default supplier reference | fourth supplier for product7 |
+      Given I add product "product8" with following information:
+        | name[en-US] | magic staff |
+        | type        | standard    |
+      And product product8 type should be standard
+      And product product8 should not have any suppliers assigned
+      When I associate suppliers to product "product8"
+        | supplier  | product_supplier  |
+        | supplier4 | product8supplier4 |
+      And I update product product8 suppliers:
+        | product_supplier  | supplier  | reference                    | currency | price_tax_excluded |
+        | product8supplier4 | supplier4 | fourth supplier for product8 | USD      | 10                 |
+      Then product product8 should have the following suppliers assigned:
+        | supplier4 |
+      And product product8 should have following suppliers:
+        | product_supplier  | supplier  | reference                    | currency | price_tax_excluded |
+        | product8supplier4 | supplier4 | fourth supplier for product8 | USD      | 10                 |
+      And product product8 should have following supplier values:
+        | default supplier           | supplier4                    |
+        | default supplier reference | fourth supplier for product8 |
+      When I delete supplier supplier4
+      Then product product7 should have the following suppliers assigned:
+        | supplier3 |
+      And product product7 should have following suppliers:
+        | product_supplier  | supplier  | reference                    | currency | price_tax_excluded |
+        | product7supplier3 | supplier3 | third supplier for product7  | EUR      | 11                 |
+      And product product7 should have following supplier values:
+        | default supplier           | supplier3                   |
+        | default supplier reference | third supplier for product7 |
+      And product product8 should not have any suppliers assigned
+      And product product8 should have following supplier values:
+        | default supplier           | |
+        | default supplier reference | |

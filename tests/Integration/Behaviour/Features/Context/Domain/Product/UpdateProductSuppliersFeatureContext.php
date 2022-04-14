@@ -335,8 +335,9 @@ class UpdateProductSuppliersFeatureContext extends AbstractProductFeatureContext
         $associatedSuppliers = $this->getAssociatedSuppliers($productReference);
 
         if (isset($data['default supplier'])) {
+            $defaultSupplierId = !empty($data['default supplier']) ? $this->getSharedStorage()->get($data['default supplier']) : 0;
             Assert::assertEquals(
-                $this->getSharedStorage()->get($data['default supplier']),
+                $defaultSupplierId,
                 $associatedSuppliers->getDefaultSupplierId(),
                 'Unexpected product default supplier'
             );
