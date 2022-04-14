@@ -59,6 +59,12 @@ global_settings:
         - blockreassurance
       displayNavFullWidth:
         - blockreassurance
+      displayAdminCustomers:
+        - blockwishlist
+      displayCustomerAccount:
+        - blockwishlist
+      displayMyAccountBlock:
+        - blockwishlist
       displayNav1:
         - ps_contactinfo
       displayNav2:
@@ -82,6 +88,7 @@ global_settings:
         - ps_linklist
         - ps_customeraccountlinks
         - ps_contactinfo
+        - blockwishlist
       displayFooterAfter:
         - blockreassurance
       displayLeftColumn:
@@ -97,6 +104,8 @@ global_settings:
         - ps_featuredproducts
       displayCrossSellingShoppingCart:
         - ps_featuredproducts
+      displayProductActions:
+        - blockwishlist
 
   image_types:
     cart_default:
