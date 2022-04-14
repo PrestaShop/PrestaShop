@@ -47,15 +47,22 @@ use Shop;
  */
 final class ContextStateManager
 {
-    //@todo: add private constant for each field?
+    private const FIELD_CART = 'cart';
+    private const FIELD_COUNTRY = 'country';
+    private const FIELD_CURRENCY = 'currency';
+    private const FIELD_LANGUAGE = 'language';
+    private const FIELD_CUSTOMER = 'customer';
+    private const FIELD_SHOP = 'shop';
+    private const FIELD_SHOP_CONTEXT = 'shopContext';
+
     private const MANAGED_FIELDS = [
-        'cart',
-        'country',
-        'currency',
-        'language',
-        'customer',
-        'shop',
-        'shopContext',
+        self::FIELD_CART,
+        self::FIELD_COUNTRY,
+        self::FIELD_CURRENCY,
+        self::FIELD_LANGUAGE,
+        self::FIELD_CUSTOMER,
+        self::FIELD_SHOP,
+        self::FIELD_SHOP_CONTEXT,
     ];
 
     /**
@@ -93,7 +100,7 @@ final class ContextStateManager
      */
     public function setCart(?Cart $cart): self
     {
-        $this->saveContextField('cart');
+        $this->saveContextField(self::FIELD_CART);
         $this->getContext()->cart = $cart;
 
         return $this;
@@ -108,7 +115,7 @@ final class ContextStateManager
      */
     public function setCountry(?Country $country): self
     {
-        $this->saveContextField('country');
+        $this->saveContextField(self::FIELD_COUNTRY);
         $this->getContext()->country = $country;
 
         return $this;
@@ -123,7 +130,7 @@ final class ContextStateManager
      */
     public function setCurrency(?Currency $currency): self
     {
-        $this->saveContextField('currency');
+        $this->saveContextField(self::FIELD_CURRENCY);
         $this->getContext()->currency = $currency;
 
         return $this;
@@ -138,7 +145,7 @@ final class ContextStateManager
      */
     public function setLanguage(?Language $language): self
     {
-        $this->saveContextField('language');
+        $this->saveContextField(self::FIELD_LANGUAGE);
         $this->getContext()->language = $language;
         if ($language) {
             $this->getContext()->getTranslator()->setLocale($language->locale);
@@ -156,7 +163,7 @@ final class ContextStateManager
      */
     public function setCustomer(?Customer $customer): self
     {
-        $this->saveContextField('customer');
+        $this->saveContextField(self::FIELD_CUSTOMER);
         $this->getContext()->customer = $customer;
 
         return $this;
@@ -173,7 +180,7 @@ final class ContextStateManager
      */
     public function setShop(Shop $shop): self
     {
-        $this->saveContextField('shop');
+        $this->saveContextField(self::FIELD_SHOP);
         $this->getContext()->shop = $shop;
         Shop::setContext(Shop::CONTEXT_SHOP, $shop->id);
 
@@ -187,7 +194,7 @@ final class ContextStateManager
      */
     public function setShopContext(ShopConstraint $shopConstraint): self
     {
-        $this->saveContextField('shop');
+        $this->saveContextField(self::FIELD_SHOP);
 
         if ($shopConstraint->forAllShops()) {
             Shop::setContext(Shop::CONTEXT_ALL);
@@ -277,9 +284,9 @@ final class ContextStateManager
         // NOTE: array_key_exists important here, isset cannot be used because it would not detect if null is stored
         if (!array_key_exists($fieldName, $this->contextFieldsStack[$currentStashIndex])) {
             switch ($fieldName) {
-                case 'shop':
-                    $this->contextFieldsStack[$currentStashIndex]['shop'] = $this->getContext()->$fieldName;
-                    $this->contextFieldsStack[$currentStashIndex]['shopContext'] = Shop::getContext();
+                case self::FIELD_SHOP:
+                    $this->contextFieldsStack[$currentStashIndex][self::FIELD_SHOP] = $this->getContext()->$fieldName;
+                    $this->contextFieldsStack[$currentStashIndex][self::FIELD_SHOP_CONTEXT] = Shop::getContext();
                     break;
                 default:
                     $this->contextFieldsStack[$currentStashIndex][$fieldName] = $this->getContext()->$fieldName;
@@ -297,10 +304,10 @@ final class ContextStateManager
         $currentStashIndex = $this->getCurrentStashIndex();
         // NOTE: array_key_exists important here, isset cannot be used because it would not detect if null is stored
         if (array_key_exists($fieldName, $this->contextFieldsStack[$currentStashIndex])) {
-            if ('shop' === $fieldName) {
+            if (self::FIELD_SHOP === $fieldName) {
                 $this->restoreShopContext($currentStashIndex);
             }
-            if ('language' === $fieldName && $this->contextFieldsStack[$currentStashIndex][$fieldName] instanceof Language) {
+            if (self::FIELD_LANGUAGE === $fieldName && $this->contextFieldsStack[$currentStashIndex][$fieldName] instanceof Language) {
                 $this->getContext()->getTranslator()->setLocale($this->contextFieldsStack[$currentStashIndex][$fieldName]->locale);
             }
             $this->getContext()->$fieldName = $this->contextFieldsStack[$currentStashIndex][$fieldName];
@@ -331,9 +338,9 @@ final class ContextStateManager
      */
     private function restoreShopContext(int $currentStashIndex): void
     {
-        $shop = $this->contextFieldsStack[$currentStashIndex]['shop'];
+        $shop = $this->contextFieldsStack[$currentStashIndex][self::FIELD_SHOP];
         $shopId = $shop instanceof Shop ? $shop->id : null;
-        $shopContext = $this->contextFieldsStack[$currentStashIndex]['shopContext'];
+        $shopContext = $this->contextFieldsStack[$currentStashIndex][self::FIELD_SHOP_CONTEXT];
         if (null !== $shopContext) {
             Shop::setContext($shopContext, $shopId);
         }
