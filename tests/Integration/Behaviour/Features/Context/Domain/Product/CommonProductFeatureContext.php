@@ -396,7 +396,7 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
     {
         $productId = $this->getSharedStorage()->get($productReference);
         $shopId = $shopReference ? $this->getSharedStorage()->get($shopReference) : null;
-        $product = new Product($productId, true, null, $shopId);
+        $product = new Product($productId, false, null, $shopId);
         Assert::assertSame(
             $expectedIsIndexed,
             (bool) $product->indexed,
