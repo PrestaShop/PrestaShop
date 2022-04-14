@@ -85,3 +85,11 @@ Feature: Update product status from Back Office (BO) for multiple shops.
     When I enable product "product1" for all shops
     Then product "product1" should be enabled for shops "shop1,shop2"
     And product "product1" should be indexed for shops "shop1,shop2"
+    When I disable product "product1" for shop "shop1"
+    Then product "product1" should be disabled for shops "shop1"
+    And product "product1" should not be indexed for shops "shop1"
+    But product "product1" should be enabled for shops "shop2"
+    And product "product1" should be indexed for shops "shop2"
+    When I disable product "product1" for all shops
+    Then product "product1" should be disabled for shops "shop1,shop2"
+    And product "product1" should be disabled for shops "shop1,shop2"
