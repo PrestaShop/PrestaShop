@@ -291,7 +291,7 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
 
     public function testInvalidTags(): void
     {
-        $builder = new SEOCommandsBuilder(self::MULTI_SHOP_PREFIX);
+        $builder = new SEOCommandsBuilder(self::MODIFY_ALL_SHOPS_PREFIX);
 
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Expected tags to be a localized array');
@@ -300,7 +300,7 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
             'seo' => [
                 'tags' => 'cotton, candy',
             ],
-        ], $this->singleShopConstraint);
+        ], $this->getSingleShopConstraint());
     }
 
     /**
