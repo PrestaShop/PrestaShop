@@ -31,6 +31,7 @@ use Configuration;
 use Country;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\AddSupplierCommand;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\DeleteSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForViewing;
@@ -117,6 +118,18 @@ class SupplierFeatureContext extends AbstractDomainFeatureContext
         } catch (SupplierException $e) {
             $this->setLastException($e);
         }
+    }
+
+    /**
+     * @When I delete supplier :supplierReference
+     *
+     * @param string $supplierReference
+     *
+     * @throws SupplierException
+     */
+    public function deleteSupplier(string $supplierReference): void
+    {
+        $this->getCommandBus()->handle(new DeleteSupplierCommand($this->getSharedStorage()->get($supplierReference)));
     }
 
     /**
