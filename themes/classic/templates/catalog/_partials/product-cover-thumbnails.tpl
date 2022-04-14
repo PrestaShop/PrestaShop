@@ -28,7 +28,7 @@
       {if $product.default_image}
         <img
           class="js-qv-product-cover img-fluid"
-          src="{$product.default_image.bySize.medium_default.url}"
+          src="{$product.default_image.bySize.large_default.url}"
           {if !empty($product.default_image.legend)}
             alt="{$product.default_image.legend}"
             title="{$product.default_image.legend}"
@@ -36,8 +36,8 @@
             alt="{$product.name}"
           {/if}
           loading="lazy"
-          width="{$product.default_image.bySize.medium_default.width}"
-          height="{$product.default_image.bySize.medium_default.height}"
+          width="{$product.default_image.bySize.large_default.width}"
+          height="{$product.default_image.bySize.large_default.height}"
         >
         <div class="layer hidden-sm-down" data-toggle="modal" data-target="#product-modal">
           <i class="material-icons zoom-in">search</i>
