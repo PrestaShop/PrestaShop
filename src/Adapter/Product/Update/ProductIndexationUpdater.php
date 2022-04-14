@@ -118,6 +118,8 @@ class ProductIndexationUpdater
                 0,
                 $e
             );
+        } finally {
+            $this->contextStateManager->restorePreviousContext();
         }
     }
 
@@ -136,6 +138,8 @@ class ProductIndexationUpdater
                 0,
                 $e
             );
+        } finally {
+            $this->contextStateManager->restorePreviousContext();
         }
     }
 }
