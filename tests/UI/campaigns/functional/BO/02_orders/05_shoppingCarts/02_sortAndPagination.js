@@ -50,7 +50,7 @@ Scenario:
 - Pagination
 - Sort shopping cart table by Id, Order ID, Customer, carrier, date and Online
 Post-condition:
--Delete customers
+- Delete customers
 */
 describe('BO - Orders - Shopping carts : Sort and pagination shopping carts', async () => {
   // Pre-condition: Create 16 orders
@@ -217,5 +217,5 @@ describe('BO - Orders - Shopping carts : Sort and pagination shopping carts', as
   });
 
   // Post-condition: Delete created guest customers by bulk action
-  bulkDeleteCustomersTest(customerData, baseContext);
+  bulkDeleteCustomersTest('email', customerData.email, baseContext);
 });

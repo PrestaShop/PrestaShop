@@ -128,10 +128,11 @@ function deleteCustomerTest(customerData, baseContext = 'commonTests-deleteCusto
 
 /**
  * Function to bulk delete customers
- * @param customerData {CustomerData} Data to set to delete customers
+ * @param filterBy {string} Value to filter by
+ * @param value {string} Value to set in filter input to delete
  * @param baseContext {string} String to identify the test
  */
-function bulkDeleteCustomersTest(customerData, baseContext = 'commonTests-deleteCustomersByBulkActionsTest') {
+function bulkDeleteCustomersTest(filterBy, value, baseContext = 'commonTests-deleteCustomersByBulkActionsTest') {
   describe('POST-TEST: Delete customers by bulk actions', async () => {
     // before and after functions
     before(async function () {
@@ -165,13 +166,13 @@ function bulkDeleteCustomersTest(customerData, baseContext = 'commonTests-delete
       await expect(numberOfCustomers).to.be.above(0);
     });
 
-    it('should filter list by lastName', async function () {
+    it(`should filter list by '${filterBy}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkEdit', baseContext);
 
-      await customersPage.filterCustomers(page, 'input', 'lastname', customerData.lastName);
+      await customersPage.filterCustomers(page, 'input', filterBy, value);
 
-      const textResult = await customersPage.getTextColumnFromTableCustomers(page, 1, 'lastname');
-      await expect(textResult).to.contains(customerData.lastName);
+      const textResult = await customersPage.getTextColumnFromTableCustomers(page, 1, filterBy);
+      await expect(textResult).to.contains(value);
     });
 
     it('should delete customers with Bulk Actions and check result', async function () {
@@ -185,7 +186,7 @@ function bulkDeleteCustomersTest(customerData, baseContext = 'commonTests-delete
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterBulkDelete', baseContext);
 
       const numberOfCustomersAfterReset = await customersPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCustomersAfterReset).to.be.above(0);
+      await expect(numberOfCustomersAfterReset).to.be.below(numberOfCustomers);
     });
   });
 }
