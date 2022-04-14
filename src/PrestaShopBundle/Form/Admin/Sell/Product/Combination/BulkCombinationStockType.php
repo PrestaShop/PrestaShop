@@ -125,7 +125,7 @@ class BulkCombinationStockType extends TranslatorAwareType
                     'Admin.Catalog.Feature'
                 ),
                 'label_help_box' => $this->trans(
-                    'The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]',
+                    'The email will be sent to all users who have access to the Stock page. To modify permissions, go to [1]Advanced Parameters > Team[/1].',
                     'Admin.Catalog.Help',
                     [
                         '[1]' => sprintf(
