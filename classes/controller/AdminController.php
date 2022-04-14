@@ -32,13 +32,10 @@ use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
-use PrestaShopBundle\Service\Hook\HookFinder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class AdminControllerCore extends Controller
 {
-    public const MANDATORY_TOOLBAR_BUTTON_KEYS = ['href', 'icon', 'help'];
-
     /** @var string */
     public $path;
 
@@ -4825,13 +4822,10 @@ class AdminControllerCore extends Controller
 
         // Get the toolbar buttons defined by hooks and add them to the main collection
         try {
-            (new HookFinder())
-                ->setHookName('actionGetAdminToolbarButtons')
-                ->setParams([
+            Hook::exec('actionGetAdminToolbarButtons', [
                     'controller' => $this,
-                    'toolbar_extra_buttons_collection' => $toolbarButtonsCollection,
-                ])
-                ->find();
+                    'toolbar_extra_buttons_collection' => &$toolbarButtonsCollection,
+            ]);
         } catch (Exception $exception) {
             return; // In case of any error, the buttons from hooks are simply ignored
         }
