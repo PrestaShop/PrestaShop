@@ -171,3 +171,29 @@ Feature: Update product tags from Back Office (BO)
     When I remove all product "productTags" tags
     When I search for products on front office with sentence "time" with locale "en-US" I should find nothing
     And I search for products on front office with sentence "temps" with locale "fr-FR" I should find nothing
+
+  Scenario: I update tags with duplicate values (add space in the value to make sure they are correctly trimmed)
+    And product "productTags" localized "tags" should be:
+      | locale | value |
+      | en-US  |       |
+      | fr-FR  |       |
+    When I update product "productTags" tags with following values:
+      | tags[en-US] | Set_of_biological_beauty_product,Set_of_biological_beauty_product, Set_of_biological_beauty_product |
+      | tags[fr-FR] | Ensembles_des_produits_de_beauté,Ensembles_des_produits_de_beauté, Ensembles_des_produits_de_beauté |
+    And product "productTags" localized "tags" should be:
+      | locale | value                            |
+      | en-US  | Set_of_biological_beauty_product |
+      | fr-FR  | Ensembles_des_produits_de_beauté |
+
+  Scenario: I update tags with too long values only 32 characters are saved
+    And product "productTags" localized "tags" should be:
+      | locale | value |
+      | en-US  |       |
+      | fr-FR  |       |
+    When I update product "productTags" tags with following values:
+      | tags[en-US] | Set_of_biological_beauty_product_for_the_morning |
+      | tags[fr-FR] | Ensembles_des_produits_de_beauté_pour_le_matin   |
+    And product "productTags" localized "tags" should be:
+      | locale | value                            |
+      | en-US  | Set_of_biological_beauty_product |
+      | fr-FR  | Ensembles_des_produits_de_beauté |
