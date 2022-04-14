@@ -4823,10 +4823,19 @@ class AdminControllerCore extends Controller
         // Get the toolbar buttons defined by hooks and add them to the main collection
         try {
             Hook::exec('actionGetAdminToolbarButtons', [
-                    'controller' => $this,
-                    'toolbar_extra_buttons_collection' => &$toolbarButtonsCollection,
+                'controller' => $this,
+                'toolbar_extra_buttons_collection' => &$toolbarButtonsCollection,
             ]);
         } catch (Exception $exception) {
+            $this->get('logger')->addWarning(
+                'There was an error retrieving toolbar buttons from Hooks. Toolbar buttons are probably not complete',
+                [
+                    'message' => $exception->getMessage(),
+                    'file' => $exception->getFile(),
+                    'line' => $exception->getLine(),
+                ]
+            );
+
             return; // In case of any error, the buttons from hooks are simply ignored
         }
 
