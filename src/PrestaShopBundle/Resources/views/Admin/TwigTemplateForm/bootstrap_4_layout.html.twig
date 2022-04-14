@@ -691,11 +691,11 @@
                 {% endif %}
                 aria-haspopup="true"
                 aria-expanded="false"
-                id="{{ form.vars.id }}"
+                id="{{ form.vars.id }}_dropdown"
         >
           {{ form.vars.default_locale.iso_code }}
         </button>
-        <div class="dropdown-menu locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}">
+        <div class="dropdown-menu locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}_dropdown">
           {% for locale in locales %}
             <span class="dropdown-item js-locale-item" data-locale="{{ locale.iso_code }}">{{ locale.name }}</span>
           {% endfor %}
