@@ -38,6 +38,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 
 /**
  * Is used to create form for adding/editing Webservice Key
@@ -108,6 +109,13 @@ class WebserviceKeyType extends TranslatorAwareType
                         'max' => Key::LENGTH,
                         'exactMessage' => $this->trans(
                             'Key length must be 32 character long.',
+                            'Admin.Advparameters.Notification'
+                        ),
+                    ]),
+                    new Regex([
+                        'pattern' => '/^[a-zA-Z0-9@\#\?\-\_]+$/i',
+                        'message' => $this->trans(
+                            'The key can contains only numbers, letters, and these special chars: @ ? # - _',
                             'Admin.Advparameters.Notification'
                         ),
                     ]),
