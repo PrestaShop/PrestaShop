@@ -96,7 +96,7 @@ class ProductStatusCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [
                 'footer' => [
                     'active' => false,
-                    self::MODIFY_ALL_NAME_PREFIX . 'active' => true,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'active' => true,
                 ],
             ],
             [$command],
@@ -107,7 +107,7 @@ class ProductStatusCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [
                 'footer' => [
                     'active' => true,
-                    self::MODIFY_ALL_NAME_PREFIX . 'active' => true,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'active' => true,
                 ],
             ],
             [$command],
@@ -120,7 +120,7 @@ class ProductStatusCommandsBuilderTest extends AbstractProductCommandBuilderTest
      */
     private function assertBuildCommands(array $formData, array $expectedCommands): void
     {
-        $builder = new ProductStatusCommandsBuilder(self::MODIFY_ALL_NAME_PREFIX);
+        $builder = new ProductStatusCommandsBuilder(self::MODIFY_ALL_SHOPS_PREFIX);
         $builtCommands = $builder->buildCommands(
             $this->getProductId(),
             $formData,
