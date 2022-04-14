@@ -4843,10 +4843,7 @@ class AdminControllerCore extends Controller
         $toolbarButtons = [];
 
         foreach ($toolbarButtonsCollection as $toolbarActionButton) {
-            $toolbarButtons = array_merge(
-                $toolbarButtons,
-                $this->transformActionBarButtonToToolbarButton($toolbarActionButton)
-            );
+            $toolbarButtons[] = $this->transformActionBarButtonToToolbarButton($toolbarActionButton);
         }
 
         $this->page_header_toolbar_btn = $toolbarButtons;
@@ -4861,14 +4858,13 @@ class AdminControllerCore extends Controller
     {
         $buttonProperties = $actionBarButton->getProperties();
 
-        return [
-            $actionBarButton->getClass() => array_merge(
-                $buttonProperties,
-                [
-                    'desc' => $buttonProperties['desc'] ?? $actionBarButton->getContent(),
-                    'class' => $buttonProperties['class'] ?? $actionBarButton->getClass() . ' btn-primary',
-                ]
-            ),
-        ];
+        return array_merge(
+            $buttonProperties,
+            [
+                'desc' => $buttonProperties['desc'] ?? $actionBarButton->getContent(),
+                'class' => ($buttonProperties['class'] ?? $actionBarButton->getClass()) . ' btn-primary',
+                'imgclass' => $buttonProperties['class'] ?? $actionBarButton->getClass(),
+            ]
+        );
     }
 }
