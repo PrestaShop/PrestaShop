@@ -504,7 +504,7 @@ class CombinationController extends FrameworkBundleAdminController
                 ProductConstraintException::INVALID_MINIMAL_QUANTITY => $this->trans(
                     'The %s field is invalid.',
                     'Admin.Notifications.Error',
-                    [sprintf('"%s"', $this->trans('Minimum quantity for sale', 'Admin.Catalog.Feature'))]
+                    [sprintf('"%s"', $this->trans('Minimum order quantity', 'Admin.Catalog.Feature'))]
                 ),
             ],
             ProductStockConstraintException::class => [

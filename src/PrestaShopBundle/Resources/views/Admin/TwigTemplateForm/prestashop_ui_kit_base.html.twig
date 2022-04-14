@@ -198,10 +198,10 @@
     {% endif %}
     {{- block('form_disabling_switch') -}}
     </{{ labelTag }}>
-    {% if label_subtitle is defined %}
-      <p class="subtitle">{{ label_subtitle|raw('html') }}</p>
-    {% endif %}
   {%- endif -%}
+  {% if label_subtitle is defined %}
+    <p class="subtitle">{{ label_subtitle|raw('html') }}</p>
+  {% endif %}
 {%- endblock form_label -%}
 
 {# Widgets #}

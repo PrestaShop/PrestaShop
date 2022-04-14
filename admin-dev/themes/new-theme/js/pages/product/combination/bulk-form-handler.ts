@@ -69,6 +69,7 @@ export default class BulkFormHandler {
       if (formUrl) {
         bulkFormBtn.addEventListener('click', () => this.showFormModal(
           formUrl,
+          bulkCombinationsBtn.innerHTML,
           modalConfirmLabel || 'Confirm',
           modalCancelLabel || 'Cancel',
         ));
@@ -76,12 +77,13 @@ export default class BulkFormHandler {
     }
   }
 
-  private showFormModal(formUrl: string, confirmButtonLabel: string, closeButtonLabel: string): void {
+  private showFormModal(formUrl: string, modalTitle: string, confirmButtonLabel: string, closeButtonLabel: string): void {
     const selectedCombinationsCount = this.getSelectedCheckboxes().length;
 
     let initialSerializedData: string;
     const iframeModal = new IframeModal({
       id: CombinationMap.bulkFormModalId,
+      modalTitle,
       iframeUrl: formUrl,
       autoSizeContainer: 'form[name="bulk_combination"]',
       closable: true,

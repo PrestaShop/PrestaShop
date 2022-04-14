@@ -87,8 +87,7 @@ class BulkCombinationStockType extends TranslatorAwareType
 
         $builder
             ->add('minimal_quantity', NumberType::class, [
-                'label' => $this->trans('Minimum quantity for sale', 'Admin.Catalog.Feature'),
-                'label_help_box' => $this->trans('The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity.', 'Admin.Catalog.Help'),
+                'label' => $this->trans('Minimum order quantity', 'Admin.Catalog.Feature'),
                 'constraints' => [
                     new NotBlank(),
                     new Type(['type' => 'numeric']),

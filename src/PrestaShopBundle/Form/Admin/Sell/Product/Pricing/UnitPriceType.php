@@ -81,7 +81,6 @@ class UnitPriceType extends TranslatorAwareType
                     new PositiveOrZero(),
                     new Positive([
                         'groups' => [self::ENABLED_GROUP],
-                        'message' => $this->trans('The unit price will not be displayed unless you specify a value different from zero.', 'Admin.Catalog.Help'),
                     ]),
                 ],
                 'default_empty_data' => 0.0,
@@ -98,7 +97,6 @@ class UnitPriceType extends TranslatorAwareType
                     new PositiveOrZero(),
                     new Positive([
                         'groups' => [self::ENABLED_GROUP],
-                        'message' => $this->trans('The unit price will not be displayed unless you specify a value different from zero.', 'Admin.Catalog.Help'),
                     ]),
                 ],
                 'default_empty_data' => 0.0,
@@ -112,7 +110,6 @@ class UnitPriceType extends TranslatorAwareType
                 'constraints' => [
                     new NotBlank([
                         'groups' => [self::ENABLED_GROUP],
-                        'message' => $this->trans('The unit price will not be displayed unless you specify its unity.', 'Admin.Catalog.Help'),
                     ]),
                 ],
             ])
