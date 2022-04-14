@@ -103,6 +103,7 @@ class UnitPriceType extends TranslatorAwareType
                 'modify_all_shops' => true,
             ])
             ->add('unity', TextType::class, [
+                'label' => $this->trans('Unit', 'Admin.Catalog.Feature'),
                 'required' => false,
                 'attr' => ['placeholder' => $this->trans('Per kilo, per litre', 'Admin.Catalog.Help')],
                 'modify_all_shops' => true,
