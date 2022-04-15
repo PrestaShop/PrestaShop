@@ -97,6 +97,8 @@ class TypeaheadProductCollectionType extends CommonAbstractType
                         $productName = '';
                         if (!empty($product->name[$lang])) {
                             $productName .= $product->name[$lang] . ' ';
+                        } elseif (!empty(reset($product->name))) {
+                            $productName .= reset($product->name);
                         }
 
                         if (!empty($product->reference)) {
