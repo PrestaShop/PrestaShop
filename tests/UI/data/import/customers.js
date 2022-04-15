@@ -11,7 +11,7 @@ function createRecord() {
       id: i + 3,
       active: faker.random.number({min: 0, max: 1}),
       title: faker.random.number({min: 1, max: 2}),
-      email: faker.internet.email('test', this.lastName, 'prestashop.com'),
+      email: `test.${this.lastName}@prestashop.com`,
       password: faker.internet.password(),
       birthdate: faker.date.between('1950-01-01', '2000-12-31').toISOString().slice(0, 10),
       lastName: faker.name.lastName(),
