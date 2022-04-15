@@ -17,8 +17,8 @@ class AddSeoUrl extends BOBasePage {
     this.pageTitle = 'SEO & URLs • ';
 
     // Selectors
-    this.pageTitleLangButton = '#meta_page_title';
-    this.pageTitleLangSpan = lang => 'div.dropdown-menu[aria-labelledby=\'meta_page_title\']'
+    this.pageTitleLangButton = '#meta_page_title_dropdown';
+    this.pageTitleLangSpan = lang => 'div.dropdown-menu[aria-labelledby=\'meta_page_title_dropdown\']'
       + ` span[data-locale='${lang}']`;
     this.pageNameSelect = '#meta_page_name';
     this.pageTitleInput = id => `#meta_page_title_${id}`;
