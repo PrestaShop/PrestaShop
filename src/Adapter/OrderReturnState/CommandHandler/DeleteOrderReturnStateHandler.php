@@ -24,34 +24,32 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Grid\Column\Type\Common;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+namespace PrestaShop\PrestaShop\Adapter\OrderReturnState\CommandHandler;
 
-final class BulkActionColumn extends AbstractColumn
+use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Command\DeleteOrderReturnStateCommand;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\CommandHandler\DeleteOrderReturnStateHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Exception\DeleteOrderReturnStateException;
+
+/**
+ * Handles command which deletes order states
+ */
+class DeleteOrderReturnStateHandler extends AbstractOrderReturnStateHandler implements DeleteOrderReturnStateHandlerInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function getType()
+    public function handle(DeleteOrderReturnStateCommand $command): void
     {
-        return 'bulk_action';
-    }
+        $orderReturnStateId = $command->getOrderReturnStateId();
+        $orderReturnState = $this->getOrderReturnState($orderReturnStateId);
 
-    /**
-     * {@inheritdoc}
-     */
-    protected function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver
-            ->setRequired([
-                'bulk_field',
-            ])
-            ->setDefaults([
-                'disabled_field' => null,
-            ])
-            ->setAllowedTypes('bulk_field', 'string')
-            ->setAllowedTypes('disabled_field', ['string', 'null']);
+        if (!$this->deleteOrderReturnState($orderReturnState)) {
+            throw new DeleteOrderReturnStateException(
+                sprintf('Cannot delete OrderReturnState object with id "%d".', $orderReturnStateId->getValue()),
+                DeleteOrderReturnStateException::FAILED_DELETE
+            );
+        }
     }
 }

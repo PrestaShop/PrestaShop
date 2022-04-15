@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,18 +22,42 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-{% if column.options.disabled_field is empty or not record[column.options.disabled_field] %}
-<div class="md-checkbox">
-  <label>
-    <input type="checkbox"
-           title="{{ column.name }}"
-           class="js-bulk-action-checkbox"
-           name="{{ grid.id~'_'~column.id }}[]"
-           value="{{ record[column.options.bulk_field] }}"
-    >
-    <i class="md-checkbox-control"></i>
-  </label>
-</div>
-{% endif %}
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Exception;
+
+use Exception;
+
+/**
+ * Thrown on failure to delete all selected order return states without errors
+ */
+class BulkDeleteOrderReturnStateException extends OrderReturnStateException
+{
+    /**
+     * @var int[]
+     */
+    private $orderReturnStatesId;
+
+    /**
+     * @param int[] $orderReturnStatesId
+     * @param string $message
+     * @param int $code
+     * @param Exception|null $previous
+     */
+    public function __construct(array $orderReturnStatesId, string $message = '', int $code = 0, Exception $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+
+        $this->orderReturnStatesId = $orderReturnStatesId;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getOrderReturnStatesIds(): array
+    {
+        return $this->orderReturnStatesId;
+    }
+}
