@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This class will provide Shop Preferences configuration.
@@ -144,22 +145,28 @@ class PreferencesConfiguration extends AbstractMultistoreConfiguration
     }
 
     /**
-     * {@inheritdoc}
+     * @return OptionsResolver
      */
-    public function validateConfiguration(array $configuration)
+    protected function buildResolver(): OptionsResolver
     {
-        return isset(
-            $configuration['enable_ssl'],
-            $configuration['enable_ssl_everywhere'],
-            $configuration['enable_token'],
-            $configuration['allow_html_iframes'],
-            $configuration['use_htmlpurifier'],
-            $configuration['price_round_mode'],
-            $configuration['price_round_type'],
-            $configuration['display_suppliers'],
-            $configuration['display_manufacturers'],
-            $configuration['display_best_sellers'],
-            $configuration['multishop_feature_active']
-        );
+        $resolver = (new OptionsResolver())
+            ->setDefined(
+                [
+                    'enable_ssl',
+                    'enable_ssl_everywhere',
+                    'enable_token',
+                    'allow_html_iframes',
+                    'use_htmlpurifier',
+                    'price_round_mode',
+                    'price_round_type',
+                    'display_suppliers',
+                    'display_manufacturers',
+                    'display_best_sellers',
+                    'multishop_feature_active',
+                    'shop_activity',
+                ]
+            );
+
+        return $resolver;
     }
 }
