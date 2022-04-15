@@ -64,6 +64,7 @@ class MailTemplateTwigRenderer implements MailTemplateRendererInterface
      * @param Environment $twig
      * @param LayoutVariablesBuilderInterface $variablesBuilder
      * @param HookDispatcherInterface $hookDispatcher
+     * @param bool $hasGiftWrapping
      *
      * @throws TypeException
      */
