@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
+use Context;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -90,11 +91,24 @@ class TypeaheadProductCollectionType extends CommonAbstractType
                         break;
 
                     default:
+                        $lang = Context::getContext()->language->id;
                         $product = $this->productAdapter->getProduct($id);
+
+                        $productName = '';
+                        if (!empty($product->name[$lang])) {
+                            $productName .= $product->name[$lang] . ' ';
+                        }
+
+                        if (!empty($product->reference)) {
+                            $productName .= '(ref:' . $product->reference . ')';
+                        } else {
+                            $productName .= '(id:' . $product->id . ')';
+                        }
+
                         $collection[] = [
                             'id' => $id,
-                            'name' => reset($product->name) . ' (ref:' . $product->reference . ')',
-                            'image' => $product->image,
+                            'name' => $productName,
+                            'image' => !empty($product->image) ? $product->image : null,
                         ];
 
                         break;
