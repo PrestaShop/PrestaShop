@@ -9739,16 +9739,16 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "v4.4.32",
+            "version": "v4.4.40",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "70674a2bd2e08f357d8bb98642fa47273d7f8940"
+                "reference": "406847f8c944b577c116531cb342d2875324a2c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/70674a2bd2e08f357d8bb98642fa47273d7f8940",
-                "reference": "70674a2bd2e08f357d8bb98642fa47273d7f8940",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/406847f8c944b577c116531cb342d2875324a2c1",
+                "reference": "406847f8c944b577c116531cb342d2875324a2c1",
                 "shasum": ""
             },
             "require": {
@@ -9791,7 +9791,7 @@
                 "psr/http-client-implementation": "1.0",
                 "psr/link-implementation": "1.0",
                 "psr/log-implementation": "1.0|2.0",
-                "psr/simple-cache-implementation": "1.0",
+                "psr/simple-cache-implementation": "1.0|2.0",
                 "symfony/cache-implementation": "1.0|2.0",
                 "symfony/event-dispatcher-implementation": "1.1",
                 "symfony/http-client-implementation": "1.1|2.0",
@@ -9881,7 +9881,7 @@
                 "phpdocumentor/reflection-docblock": "^3.0|^4.0|^5.0",
                 "predis/predis": "~1.1",
                 "psr/http-client": "^1.0",
-                "psr/simple-cache": "^1.0",
+                "psr/simple-cache": "^1.0|^2.0",
                 "symfony/phpunit-bridge": "^5.2",
                 "symfony/security-acl": "~2.8|~3.0",
                 "twig/cssinliner-extra": "^2.12|^3",
@@ -9926,7 +9926,7 @@
             ],
             "support": {
                 "issues": "https://github.com/symfony/symfony/issues",
-                "source": "https://github.com/symfony/symfony/tree/v4.4.32"
+                "source": "https://github.com/symfony/symfony/tree/v4.4.40"
             },
             "funding": [
                 {
@@ -9942,7 +9942,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-09-28T10:20:15+00:00"
+            "time": "2022-04-02T05:56:07+00:00"
         },
         {
             "name": "tecnickcom/tcpdf",
