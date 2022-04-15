@@ -38,8 +38,8 @@ class ProductSettings extends BOBasePage {
     this.productsStockForm = '#configuration_fieldset_stock';
     this.allowOrderingOosToggleInput = toggle => `#stock_allow_ordering_oos_${toggle}`;
     this.enableStockManagementToggleInput = toggle => `#stock_stock_management_${toggle}`;
-    this.nameLangButton = '#stock_in_stock_label';
-    this.nameLangSpan = lang => 'div.dropdown-menu[aria-labelledby=\'stock_in_stock_label\']'
+    this.nameLangButton = '#stock_in_stock_label_dropdown';
+    this.nameLangSpan = lang => 'div.dropdown-menu[aria-labelledby=\'stock_in_stock_label_dropdown\']'
       + ` span[data-locale='${lang}']`;
     this.labelInStock = idLang => `#stock_in_stock_label_${idLang}`;
     this.deliveryTimeInStockInput = '#stock_delivery_time_1';
