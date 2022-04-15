@@ -115,8 +115,11 @@ class WebserviceKeyType extends TranslatorAwareType
                     new Regex([
                         'pattern' => '/^[a-zA-Z0-9@\#\?\-\_]+$/i',
                         'message' => $this->trans(
-                            'The key can contains only numbers, letters, and these special chars: @ ? # - _',
-                            'Admin.Advparameters.Notification'
+                            'Only letters, numbers, and the following special characters are allowed: %allowed_characters%',
+                            'Admin.Advparameters.Notification',
+                            [
+                                '%allowed_characters%' => '@ ? # - _',
+                            ]
                         ),
                     ]),
                 ],
