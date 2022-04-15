@@ -91,26 +91,35 @@ class TypeaheadProductCollectionType extends CommonAbstractType
                         break;
 
                     default:
-                        $lang = Context::getContext()->language->id;
+                        $id_lang = Context::getContext()->language->id;
                         $product = $this->productAdapter->getProduct($id);
 
                         $productName = '';
-                        if (!empty($product->name[$lang])) {
-                            $productName .= $product->name[$lang] . ' ';
-                        } elseif (!empty(reset($product->name))) {
-                            $productName .= reset($product->name);
+                        if (!is_array($product->name)) {
+                            $productName = $product->name;
+                        } elseif (!empty($product->name[$id_lang])) {
+                            // Use the current langage product name if defined.
+                            $productName = $product->name[$id_lang];
+                        } else {
+                            // Use the first product name defined.
+                            foreach ($product->name as $pname) {
+                                if (!empty($pname)) {
+                                    $productName = $pname;
+                                    break;
+                                }
+                            }
                         }
 
                         if (!empty($product->reference)) {
-                            $productName .= '(ref:' . $product->reference . ')';
+                            $productName .= ' (ref:' . $product->reference . ')';
                         } else {
-                            $productName .= '(id:' . $product->id . ')';
+                            $productName .= ' (id:' . $product->id . ')';
                         }
 
                         $collection[] = [
                             'id' => $id,
                             'name' => $productName,
-                            'image' => !empty($product->image) ? $product->image : null,
+                            'image' => $product->image,
                         ];
 
                         break;
