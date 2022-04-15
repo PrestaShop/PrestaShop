@@ -73,6 +73,7 @@ class ProductDataProvider
 
         $product = new Product($id_product, $full, $id_lang, $id_shop, $context);
 
+        $linkRewrite = '';
         if (!is_array($product->link_rewrite)) {
             $linkRewrite = $product->link_rewrite;
         } elseif ($id_lang !== null && !empty($product->link_rewrite[$id_lang])) {
