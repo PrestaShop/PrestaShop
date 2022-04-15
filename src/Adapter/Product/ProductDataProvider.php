@@ -75,8 +75,17 @@ class ProductDataProvider
 
         if (!is_array($product->link_rewrite)) {
             $linkRewrite = $product->link_rewrite;
+        } elseif ($id_lang !== null && !empty($product->link_rewrite[$id_lang])) {
+            // Use the current langage rewrite if defined.
+            $linkRewrite = $product->link_rewrite[$id_lang];
         } else {
-            $linkRewrite = $product->link_rewrite[$id_lang ? $id_lang : key($product->link_rewrite)];
+            // Take the first rewrite defined.
+            foreach ($product->link_rewrite as $productLinkRewrite) {
+                if (!empty($productLinkRewrite)) {
+                    $linkRewrite = $productLinkRewrite;
+                    break;
+                }
+            }
         }
 
         $cover = Product::getCover($product->id);
