@@ -460,7 +460,7 @@ class AdminModuleController {
 
     self.updateModuleSorting();
 
-    if (self.isModulesPage()) {
+    if (self.isModulesPage() && !self.isReadMoreModalOpened()) {
       $(self.recentlyUsedSelector)
         .find('.module-item')
         .remove();
@@ -1217,6 +1217,10 @@ class AdminModuleController {
 
   isModulesPage() {
     return $(this.upgradeContainer).length === 0 && $(this.notificationContainer).length === 0;
+  }
+
+  isReadMoreModalOpened() {
+    return $('.modal-read-more').is(':visible');
   }
 }
 
