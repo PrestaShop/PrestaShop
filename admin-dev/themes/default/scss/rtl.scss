@@ -147,6 +147,23 @@ body {
         select {
           font-family: Vazirmatn, sans-serif !important;
         }
+
+        .nav-tabs {
+          li {
+            a {
+              font-family: Vazirmatn, sans-serif;
+            }
+          }
+        }
+      }
+    }
+
+    .ui-widget {
+      input,
+      select,
+      textarea,
+      button {
+        font-family: Vazirmatn, sans-serif !important;
       }
     }
 
