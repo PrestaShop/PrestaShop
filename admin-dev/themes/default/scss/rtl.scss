@@ -158,6 +158,16 @@ body {
       }
     }
 
+    input {
+      &[type="email"],
+      &[type="password"],
+      &[type="search"],
+      &[type="tel"],
+      &[type="text"] {
+        font-family: Vazirmatn, sans-serif !important;
+      }
+    }
+
     .ui-widget {
       input,
       select,
@@ -187,10 +197,16 @@ body {
     }
 
     #login-panel {
-      input[type="email"],
-      input[type="password"],
+      input {
+        &[type="email"],
+        &[type="password"],
+        &[type="text"] {
+          font-family: Vazirmatn, FontAwesome, sans-serif !important;
+        }
+      }
+
       #forgot_name {
-        font-family: Vazirmatn, FontAwesome, sans-serif !important;
+        font-family: Vazirmatn, sans-serif;
       }
     }
   }
