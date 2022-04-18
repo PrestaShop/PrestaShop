@@ -41,7 +41,7 @@ body {
     .tooltip,
     .popover,
     .module-search-result-title {
-      font-family: Vazirmatn, sans-serif;
+      font-family: Vazirmatn, sans-serif !important;
     }
   }
 }
@@ -50,7 +50,6 @@ body {
   from {
     opacity: 0;
     transform: translate(-20px) translateX(-1);
-
   }
 
   to {
