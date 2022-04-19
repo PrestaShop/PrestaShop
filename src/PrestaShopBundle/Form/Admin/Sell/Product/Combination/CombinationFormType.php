@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
-use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Sell\Product\Options\SuppliersType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Specification\ReferencesType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -44,11 +43,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 class CombinationFormType extends TranslatorAwareType
 {
     /**
-     * @var ConfigurableFormChoiceProviderInterface
-     */
-    private $imagesChoiceProvider;
-
-    /**
      * @var EventSubscriberInterface
      */
     private $combinationListener;
@@ -56,17 +50,14 @@ class CombinationFormType extends TranslatorAwareType
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param ConfigurableFormChoiceProviderInterface $imagesChoiceProvider
      * @param EventSubscriberInterface $combinationListener
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        ConfigurableFormChoiceProviderInterface $imagesChoiceProvider,
         EventSubscriberInterface $combinationListener
     ) {
         parent::__construct($translator, $locales);
-        $this->imagesChoiceProvider = $imagesChoiceProvider;
         $this->combinationListener = $combinationListener;
     }
 

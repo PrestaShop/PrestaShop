@@ -1703,7 +1703,6 @@ services:
     parent: 'form.type.translatable.aware'
     public: true
     arguments:
-      - '@prestashop.core.form.choice_provider.product_images_choice_provider'
       - '@form.type.sell.product.event_listener.combination_listener'
     tags:
       - { name: form.type }
