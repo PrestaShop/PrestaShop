@@ -24,12 +24,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-// Deprecated since 1.5.0.1 use Product::CUSTOMIZE_FILE
-define('_CUSTOMIZE_FILE_', 0);
-
-// Deprecated since 1.5.0.1 use Product::CUSTOMIZE_TEXTFIELD
-define('_CUSTOMIZE_TEXTFIELD_', 1);
-
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
@@ -104,7 +98,7 @@ class ProductCore extends ObjectModel
     /** @var string|array Text when not in stock but available to order or array of text by id_lang */
     public $available_later;
 
-    /** @var float Price */
+    /** @var float|null Price */
     public $price = 0;
 
     /** @var array|int|null Will be filled by reference by priceCalculation() */
@@ -125,7 +119,7 @@ class ProductCore extends ObjectModel
     /** @var string unity */
     public $unity = null;
 
-    /** @var float price for product's unity */
+    /** @var float|null price for product's unity */
     public $unit_price = 0;
 
     /** @var float price for product's unity ratio */
@@ -265,7 +259,7 @@ class ProductCore extends ObjectModel
     public $base_price;
 
     /**
-     * @var int TaxRulesGroup identifier
+     * @var int|null TaxRulesGroup identifier
      */
     public $id_tax_rules_group;
 
@@ -300,7 +294,7 @@ class ProductCore extends ObjectModel
      * @deprecated since 1.7.8
      * This property was only relevant to advanced stock management and that feature is not maintained anymore
      *
-     * @var bool
+     * @var bool|null
      */
     public $depends_on_stock;
 
@@ -788,6 +782,10 @@ class ProductCore extends ObjectModel
         }
 
         $id_shop_list = Shop::getContextListShopID();
+        if (count($this->id_shop_list)) {
+            $id_shop_list = $this->id_shop_list;
+        }
+
         if ($this->getType() == Product::PTYPE_VIRTUAL) {
             foreach ($id_shop_list as $value) {
                 StockAvailable::setProductOutOfStock((int) $this->id, OutOfStockType::OUT_OF_STOCK_AVAILABLE, $value);
@@ -851,8 +849,8 @@ class ProductCore extends ObjectModel
     private function updateUnitRatio(): void
     {
         // Update instance field
-        $unitPrice = new DecimalNumber((string) ($this->unit_price ?? 0));
-        $price = new DecimalNumber((string) ($this->price ?? 0));
+        $unitPrice = new DecimalNumber((string) $this->unit_price);
+        $price = new DecimalNumber((string) $this->price);
         if ($unitPrice->isGreaterThanZero()) {
             $this->unit_price_ratio = (float) (string) $price->dividedBy($unitPrice);
         }
@@ -1293,7 +1291,6 @@ class ProductCore extends ObjectModel
             !$this->deleteProductFeatures() ||
             !$this->deleteTags() ||
             !$this->deleteCartProducts() ||
-            !$this->deleteAttributesImpacts() ||
             !$this->deleteAttachments(false) ||
             !$this->deleteCustomization() ||
             !SpecificPrice::deleteByProductId((int) $this->id) ||
@@ -1322,7 +1319,7 @@ class ProductCore extends ObjectModel
         if (is_array($products) && ($count = count($products))) {
             // Deleting products can be quite long on a cheap server. Let's say 1.5 seconds by product (I've seen it!).
             if ((int) (ini_get('max_execution_time')) < round($count * 1.5)) {
-                ini_set('max_execution_time', round($count * 1.5));
+                ini_set('max_execution_time', (string) round($count * 1.5));
             }
 
             foreach ($products as $id_product) {
@@ -1367,10 +1364,6 @@ class ProductCore extends ObjectModel
 
         if (!is_array($categories)) {
             $categories = [$categories];
-        }
-
-        if (!count($categories)) {
-            return false;
         }
 
         $categories = array_map('intval', $categories);
@@ -1710,7 +1703,7 @@ class ProductCore extends ObjectModel
         );
 
         /* If something's wrong */
-        if (!$result || empty($result)) {
+        if (empty($result)) {
             return false;
         }
         /* Product attributes simulation */
@@ -1851,7 +1844,7 @@ class ProductCore extends ObjectModel
                 $obj->$field = $value;
             }
 
-            $obj->default_on = 0;
+            $obj->default_on = false;
             $this->setAvailableDate();
 
             $obj->save();
@@ -1966,46 +1959,6 @@ class ProductCore extends ObjectModel
         }
 
         return $id_product_attribute;
-    }
-
-    /**
-     * @deprecated 1.5.5.0
-     *
-     * @param array $attributes
-     * @param bool $set_default
-     *
-     * @return array
-     */
-    public function addProductAttributeMultiple($attributes, $set_default = true)
-    {
-        Tools::displayAsDeprecated();
-        $return = [];
-        $default_value = 1;
-        foreach ($attributes as $attribute) {
-            $obj = new Combination();
-            foreach ($attribute as $key => $value) {
-                $obj->$key = $value;
-            }
-
-            if ($set_default) {
-                $obj->default_on = $default_value;
-                $default_value = 0;
-                // if we add a combination for this shop and this product does not use the combination feature in other shop,
-                // we clone the default combination in every shop linked to this product
-                if (!$this->hasAttributesInOtherShops()) {
-                    $id_shop_list_array = Product::getShopsByProduct($this->id);
-                    $id_shop_list = [];
-                    foreach ($id_shop_list_array as $array_shop) {
-                        $id_shop_list[] = $array_shop['id_shop'];
-                    }
-                    $obj->id_shop_list = $id_shop_list;
-                }
-            }
-            $obj->add();
-            $return[] = $obj->id;
-        }
-
-        return $return;
     }
 
     /**
@@ -2252,20 +2205,20 @@ class ProductCore extends ObjectModel
             ]);
         }
 
-        $price = str_replace(',', '.', $price);
-        $weight = str_replace(',', '.', $weight);
+        $price = (float) str_replace(',', '.', (string) $price);
+        $weight = (float) str_replace(',', '.', (string) $weight);
 
-        $combination->price = (float) $price;
+        $combination->price = $price;
         $combination->wholesale_price = (float) $wholesale_price;
         $combination->ecotax = (float) $ecotax;
-        $combination->weight = (float) $weight;
+        $combination->weight = $weight;
         $combination->unit_price_impact = (float) $unit;
         $combination->reference = pSQL($reference);
         $combination->ean13 = pSQL($ean13);
         $combination->isbn = pSQL($isbn);
         $combination->upc = pSQL($upc);
         $combination->mpn = pSQL($mpn);
-        $combination->default_on = (int) $default;
+        $combination->default_on = (bool) $default;
         $combination->minimal_quantity = (int) $minimal_quantity;
         $combination->low_stock_threshold = empty($low_stock_threshold) && '0' != $low_stock_threshold ? null : (int) $low_stock_threshold;
         $combination->low_stock_alert = !empty($low_stock_alert);
@@ -2353,12 +2306,12 @@ class ProductCore extends ObjectModel
             return;
         }
 
-        $price = str_replace(',', '.', $price);
-        $weight = str_replace(',', '.', $weight);
+        $price = (float) str_replace(',', '.', (string) $price);
+        $weight = (float) str_replace(',', '.', (string) $weight);
 
         $combination = new Combination();
         $combination->id_product = (int) $this->id;
-        $combination->price = (float) $price;
+        $combination->price = $price;
         $combination->ecotax = (float) $ecotax;
         $combination->weight = (float) $weight;
         $combination->unit_price_impact = (float) $unit_impact;
@@ -2367,7 +2320,7 @@ class ProductCore extends ObjectModel
         $combination->isbn = pSQL($isbn);
         $combination->upc = pSQL($upc);
         $combination->mpn = pSQL($mpn);
-        $combination->default_on = (int) $default;
+        $combination->default_on = (bool) $default;
         $combination->minimal_quantity = (int) $minimal_quantity;
         $combination->low_stock_threshold = empty($low_stock_threshold) && '0' != $low_stock_threshold ? null : (int) $low_stock_threshold;
         $combination->low_stock_alert = !empty($low_stock_alert);
@@ -2384,8 +2337,7 @@ class ProductCore extends ObjectModel
         }
 
         $total_quantity = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
-            '
-            SELECT SUM(quantity) as quantity
+            'SELECT SUM(quantity) as quantity
             FROM ' . _DB_PREFIX_ . 'stock_available
             WHERE id_product = ' . (int) $this->id . '
             AND id_product_attribute <> 0 '
@@ -2462,19 +2414,6 @@ class ProductCore extends ObjectModel
         Tools::clearColorListCache($this->id);
 
         return $result;
-    }
-
-    /**
-     * Delete product attributes impacts.
-     *
-     * @return bool
-     */
-    public function deleteAttributesImpacts()
-    {
-        return Db::getInstance()->execute(
-            'DELETE FROM `' . _DB_PREFIX_ . 'attribute_impact`
-            WHERE `id_product` = ' . (int) $this->id
-        );
     }
 
     /**
@@ -2594,59 +2533,6 @@ class ProductCore extends ObjectModel
                 LEFT JOIN `' . _DB_PREFIX_ . 'search_index` si ON (sw.id_word=si.id_word)
                 WHERE si.id_word IS NULL;'
             );
-    }
-
-    /**
-     * Add a product attributes combinaison.
-     *
-     * @deprecated since 1.5.0.7
-     *
-     * @param int $id_product_attribute Attribute identifier
-     * @param array $attributes Attributes to forge combinaison
-     *
-     * @return bool Insertion result
-     */
-    public function addAttributeCombinaison($id_product_attribute, $attributes)
-    {
-        Tools::displayAsDeprecated();
-        if (!is_array($attributes)) {
-            die(Tools::displayError());
-        }
-        if (!count($attributes)) {
-            return false;
-        }
-
-        $combination = new Combination((int) $id_product_attribute);
-
-        return $combination->setAttributes($attributes);
-    }
-
-    /**
-     * @deprecated 1.5.5.0
-     *
-     * @param array $id_attributes
-     * @param array $combinations
-     *
-     * @return bool
-     *
-     * @throws PrestaShopDatabaseException
-     */
-    public function addAttributeCombinationMultiple($id_attributes, $combinations)
-    {
-        Tools::displayAsDeprecated();
-        $attributes_list = [];
-        foreach ($id_attributes as $nb => $id_product_attribute) {
-            if (isset($combinations[$nb])) {
-                foreach ($combinations[$nb] as $id_attribute) {
-                    $attributes_list[] = [
-                        'id_product_attribute' => (int) $id_product_attribute,
-                        'id_attribute' => (int) $id_attribute,
-                    ];
-                }
-            }
-        }
-
-        return Db::getInstance()->insert('product_attribute_combination', $attributes_list);
     }
 
     /**
@@ -2781,7 +2667,7 @@ class ProductCore extends ObjectModel
                 $combinations[$key]['quantity'] = Cache::retrieve($cache_key);
             }
 
-            $ecotax = (float) $combinations[$key]['ecotax'] ?? 0;
+            $ecotax = (float) $combinations[$key]['ecotax'] ?: 0;
             $combinations[$key]['ecotax_tax_excluded'] = $ecotax;
             $combinations[$key]['ecotax_tax_included'] = Tools::ps_round($ecotax * (1 + Tax::getProductEcotaxRate() / 100), $computingPrecision);
         }
@@ -2885,7 +2771,7 @@ class ProductCore extends ObjectModel
                 $res[$key]['quantity'] = Cache::retrieve($cache_key);
             }
 
-            $ecotax = (float) $res[$key]['ecotax'] ?? 0;
+            $ecotax = (float) $res[$key]['ecotax'] ?: 0;
             $res[$key]['ecotax_tax_excluded'] = $ecotax;
             $res[$key]['ecotax_tax_included'] = Tools::ps_round($ecotax * (1 + Tax::getProductEcotaxRate() / 100), $computingPrecision);
         }
@@ -4105,7 +3991,7 @@ class ProductCore extends ObjectModel
 
         $id_currency = (int) $context->currency->id;
         $ids = Address::getCountryAndState((int) $context->cart->{Configuration::get('PS_TAX_ADDRESS_TYPE')});
-        $id_country = $ids['id_country'] ? (int) $ids['id_country'] : (int) Configuration::get('PS_COUNTRY_DEFAULT');
+        $id_country = (int) ($ids['id_country'] ?? Configuration::get('PS_COUNTRY_DEFAULT'));
 
         return (bool) SpecificPrice::getSpecificPrice((int) $id_product, $context->shop->id, $id_currency, $id_country, $id_group, $quantity, null, 0, 0, $quantity);
     }
@@ -4289,7 +4175,7 @@ class ProductCore extends ObjectModel
      * @param int $idProduct Product identifier
      * @param int|null $idProductAttribute Product attribute id (optional)
      * @param bool|null $cacheIsPack
-     * @param Cart|null $cart
+     * @param CartCore|null $cart
      * @param int|null $idCustomization Product customization id (optional)
      *
      * @return int Available quantities
@@ -4298,7 +4184,7 @@ class ProductCore extends ObjectModel
         $idProduct,
         $idProductAttribute = null,
         $cacheIsPack = null,
-        Cart $cart = null,
+        CartCore $cart = null,
         $idCustomization = null
     ) {
         // pack usecase: Pack::getQuantity() returns the pack quantity after cart quantities have been removed from stock
@@ -4310,7 +4196,7 @@ class ProductCore extends ObjectModel
 
         // we don't substract products in cart if the cart is already attached to an order, since stock quantity
         // has already been updated, this is only useful when the order has not yet been created
-        if (!empty($cart) && empty(Order::getByCartId($cart->id))) {
+        if ($cart && empty(Order::getByCartId($cart->id))) {
             $cartProduct = $cart->getProductQuantity($idProduct, $idProductAttribute, $idCustomization);
 
             if (!empty($cartProduct['deep_quantity'])) {
@@ -4352,42 +4238,6 @@ class ProductCore extends ObjectModel
         $sql .= StockAvailable::addSqlShopRestriction(null, $id_shop, 'stock') . ' )';
 
         return $sql;
-    }
-
-    /**
-     * @deprecated since 1.5.0
-     *
-     * It's not possible to use this method with new stockManager and stockAvailable features
-     * Now this method do nothing
-     * @see StockManager if you want to manage real stock
-     * @see StockAvailable if you want to manage available quantities for sale on your shop(s)
-     * @deprecated 1.5.3.0
-     *
-     * @return false
-     */
-    public static function updateQuantity()
-    {
-        Tools::displayAsDeprecated();
-
-        return false;
-    }
-
-    /**
-     * @deprecated since 1.5.0
-     *
-     * It's not possible to use this method with new stockManager and stockAvailable features
-     * Now this method do nothing
-     * @deprecated 1.5.3.0
-     * @see StockManager if you want to manage real stock
-     * @see StockAvailable if you want to manage available quantities for sale on your shop(s)
-     *
-     * @return false
-     */
-    public static function reinjectQuantities()
-    {
-        Tools::displayAsDeprecated();
-
-        return false;
     }
 
     /**
@@ -5044,48 +4894,7 @@ class ProductCore extends ObjectModel
             }
         }
 
-        $impacts = self::getAttributesImpacts($id_product_old);
-
-        if (is_array($impacts) && count($impacts)) {
-            $impact_sql = 'INSERT INTO `' . _DB_PREFIX_ . 'attribute_impact` (`id_product`, `id_attribute`, `weight`, `price`) VALUES ';
-
-            foreach ($impacts as $id_attribute => $impact) {
-                $impact_sql .= '(' . (int) $id_product_new . ', ' . (int) $id_attribute . ', ' . (float) $impacts[$id_attribute]['weight'] . ', '
-                    . (float) $impacts[$id_attribute]['price'] . '),';
-            }
-
-            $impact_sql = substr_replace($impact_sql, '', -1);
-            $impact_sql .= ' ON DUPLICATE KEY UPDATE `price` = VALUES(price), `weight` = VALUES(weight)';
-
-            Db::getInstance()->execute($impact_sql);
-        }
-
         return !$return ? false : $combination_images;
-    }
-
-    /**
-     * @param int $id_product Product identifier
-     *
-     * @return array
-     */
-    public static function getAttributesImpacts($id_product)
-    {
-        $return = [];
-        $result = Db::getInstance()->executeS(
-            'SELECT ai.`id_attribute`, ai.`price`, ai.`weight`
-            FROM `' . _DB_PREFIX_ . 'attribute_impact` ai
-            WHERE ai.`id_product` = ' . (int) $id_product
-        );
-
-        if (!$result) {
-            return [];
-        }
-        foreach ($result as $impact) {
-            $return[$impact['id_attribute']]['price'] = (float) $impact['price'];
-            $return[$impact['id_attribute']]['weight'] = (float) $impact['weight'];
-        }
-
-        return $return;
     }
 
     /**
@@ -5623,7 +5432,7 @@ class ProductCore extends ObjectModel
         $row['allow_oosp'] = Product::isAvailableWhenOutOfStock($row['out_of_stock']);
         if (Combination::isFeatureActive() && $id_product_attribute === null
             && ((isset($row['cache_default_attribute']) && ($ipa_default = $row['cache_default_attribute']) !== null)
-                || ($ipa_default = Product::getDefaultAttribute($row['id_product'], !$row['allow_oosp'])))) {
+                || ($ipa_default = Product::getDefaultAttribute($row['id_product'], (int) !$row['allow_oosp'])))) {
             $id_product_attribute = $row['id_product_attribute'] = $ipa_default;
         }
         if (!Combination::isFeatureActive() || !isset($row['id_product_attribute'])) {
@@ -5843,7 +5652,7 @@ class ProductCore extends ObjectModel
         ]);
 
         // Always recompute unit prices based on initial ratio so that discounts are applied on unit price as well
-        $unitPriceRatio = static::computeUnitPriceRatio($row, $id_product_attribute, $quantity, $context);
+        $unitPriceRatio = self::computeUnitPriceRatio($row, $id_product_attribute, $quantity, $context);
         $row['unit_price_ratio'] = $unitPriceRatio;
         $row['unit_price_tax_excluded'] = $unitPriceRatio != 0 ? $priceTaxExcluded / $unitPriceRatio : 0.0;
         $row['unit_price_tax_included'] = $unitPriceRatio != 0 ? $priceTaxIncluded / $unitPriceRatio : 0.0;
@@ -6688,7 +6497,7 @@ class ProductCore extends ObjectModel
 
     /**
      * @param int $id_product Product identifier
-     * @param int $id_customer Customer identifier
+     * @param int|bool $id_customer Customer identifier
      *
      * @return bool
      */
@@ -7612,21 +7421,6 @@ class ProductCore extends ObjectModel
     }
 
     /**
-     * @see Product::getIdProductAttributeByIdAttributes()
-     * @deprecated 1.7.3.1
-     *
-     * @param int $id_product Product identifier
-     * @param int|int[] $id_attributes Attribute identifier(s)
-     * @param bool $find_best
-     *
-     * @return int
-     */
-    public static function getIdProductAttributesByIdAttributes($id_product, $id_attributes, $find_best = false)
-    {
-        return self::getIdProductAttributeByIdAttributes($id_product, $id_attributes, $find_best);
-    }
-
-    /**
      * Get the combination url anchor of the product.
      *
      * @param int $id_product_attribute Attribute identifier
@@ -7930,36 +7724,6 @@ class ProductCore extends ObjectModel
         }
 
         return $result;
-    }
-
-    /**
-     * @deprecated 1.5.0.10
-     * @see Product::getAttributeCombinations()
-     *
-     * @param int $id_lang Language identifier
-     *
-     * @return array
-     */
-    public function getAttributeCombinaisons($id_lang)
-    {
-        Tools::displayAsDeprecated('Use Product::getAttributeCombinations($id_lang)');
-
-        return $this->getAttributeCombinations($id_lang);
-    }
-
-    /**
-     * @deprecated 1.5.0.10
-     * @see Product::deleteAttributeCombination()
-     *
-     * @param int $id_product_attribute Attribute identifier
-     *
-     * @return bool
-     */
-    public function deleteAttributeCombinaison($id_product_attribute)
-    {
-        Tools::displayAsDeprecated('Use Product::deleteAttributeCombination($id_product_attribute)');
-
-        return $this->deleteAttributeCombination($id_product_attribute);
     }
 
     /**

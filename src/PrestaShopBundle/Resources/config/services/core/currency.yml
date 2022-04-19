@@ -6,7 +6,6 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Currency\CurrencyGridDataFactory'
     arguments:
       - '@prestashop.core.grid.data_provider.currency'
-      - '@translator'
 
   prestashop.core.currency.exchange_rate.settings:
     class: PrestaShop\CircuitBreaker\FactorySettings

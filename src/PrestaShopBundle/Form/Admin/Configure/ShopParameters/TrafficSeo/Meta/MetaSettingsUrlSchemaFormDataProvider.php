@@ -28,7 +28,6 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\TrafficSeo\Meta;
 
 use PrestaShop\PrestaShop\Adapter\Routes\RouteValidator;
-use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShopException;
@@ -56,28 +55,20 @@ final class MetaSettingsUrlSchemaFormDataProvider implements FormDataProviderInt
     private $translator;
 
     /**
-     * @var Validate
-     */
-    private $validate;
-
-    /**
      * MetaFormDataProvider constructor.
      *
      * @param DataConfigurationInterface $urlSchemaDataConfiguration
      * @param TranslatorInterface $translator
      * @param RouteValidator $routeValidator
-     * @param Validate $validate
      */
     public function __construct(
         DataConfigurationInterface $urlSchemaDataConfiguration,
         TranslatorInterface $translator,
-        RouteValidator $routeValidator,
-        Validate $validate
+        RouteValidator $routeValidator
     ) {
         $this->urlSchemaDataConfiguration = $urlSchemaDataConfiguration;
         $this->routeValidator = $routeValidator;
         $this->translator = $translator;
-        $this->validate = $validate;
     }
 
     /**

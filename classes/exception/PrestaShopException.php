@@ -42,7 +42,7 @@ class PrestaShopExceptionCore extends Exception
         if (ToolsCore::isPHPCLI()) {
             echo get_class($this) . ' in ' . $this->getFile() . ' line ' . $this->getLine() . "\n";
             echo $this->getTraceAsString() . "\n";
-        } elseif (_PS_MODE_DEV_) { /* @phpstan-ignore-line */
+        } elseif (_PS_MODE_DEV_) {
             // Display error message
             echo '<style>
                 #psException{font-family: Verdana; font-size: 14px}
@@ -105,7 +105,7 @@ class PrestaShopExceptionCore extends Exception
      *
      * @param string $file
      * @param int $line
-     * @param string $id
+     * @param int|null $id
      */
     protected function displayFileDebug($file, $line, $id = null)
     {
@@ -183,7 +183,7 @@ class PrestaShopExceptionCore extends Exception
      * Display arguments list of traced function.
      *
      * @param array $args List of arguments
-     * @param string $id ID of argument
+     * @param int $id ID of argument
      */
     protected function displayArgsDebug($args, $id)
     {

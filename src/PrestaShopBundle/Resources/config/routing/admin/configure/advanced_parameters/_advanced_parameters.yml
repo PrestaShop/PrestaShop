@@ -49,3 +49,11 @@ _profiles:
 _feature_flags:
   resource: "feature_flags.yml"
   prefix: /feature-flags
+
+_security:
+  resource: "security.yml"
+  prefix: /security
+
+_permission:
+  resource: "permission.yml"
+  prefix: /permissions

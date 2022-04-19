@@ -3,7 +3,7 @@ require('module-alias/register');
 const {expect} = require('chai');
 
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 const taxOptions = require('@data/demo/taxOptions');
 
 // Import pages

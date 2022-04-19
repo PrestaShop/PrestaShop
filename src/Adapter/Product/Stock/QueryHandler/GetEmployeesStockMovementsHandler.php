@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Stock\QueryHandler;
 
 use DateTime;
-use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockMovementRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetEmployeesStockMovements;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryHandler\GetEmployeesStockMovementsHandlerInterface;
@@ -38,7 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\EmployeeStockMov
 class GetEmployeesStockMovementsHandler implements GetEmployeesStockMovementsHandlerInterface
 {
     /**
-     * @var StockAvailableRepository
+     * @var StockAvailableMultiShopRepository
      */
     private $stockAvailableRepository;
 
@@ -48,7 +48,7 @@ class GetEmployeesStockMovementsHandler implements GetEmployeesStockMovementsHan
     private $stockMovementRepository;
 
     public function __construct(
-        StockAvailableRepository $stockAvailableRepository,
+        StockAvailableMultiShopRepository $stockAvailableRepository,
         StockMovementRepository $stockMovementRepository
     ) {
         $this->stockAvailableRepository = $stockAvailableRepository;
@@ -60,7 +60,7 @@ class GetEmployeesStockMovementsHandler implements GetEmployeesStockMovementsHan
      */
     public function handle(GetEmployeesStockMovements $query): array
     {
-        $stockId = $this->stockAvailableRepository->getStockIdByProduct($query->getProductId());
+        $stockId = $this->stockAvailableRepository->getStockIdByProduct($query->getProductId(), $query->getShopId());
         $movementsData = $this->stockMovementRepository->getLastEmployeeStockMovements(
             $stockId,
             $query->getOffset(),

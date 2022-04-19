@@ -120,6 +120,7 @@ class SEOType extends TranslatorAwareType
                         ]),
                     ],
                 ],
+                'modify_all_shops' => true,
             ])
             ->add('meta_description', TranslatableType::class, [
                 'label' => $this->trans('Meta description', 'Admin.Catalog.Feature'),
@@ -148,6 +149,7 @@ class SEOType extends TranslatorAwareType
                         ]),
                     ],
                 ],
+                'modify_all_shops' => true,
             ])
             ->add('link_rewrite', TranslatableType::class, [
                 'label' => $this->trans('Friendly URL', 'Admin.Catalog.Feature'),
@@ -164,6 +166,7 @@ class SEOType extends TranslatorAwareType
                         'class' => 'serp-watched-url',
                     ],
                 ],
+                'modify_all_shops' => true,
             ])
             ->add('redirect_option', RedirectOptionType::class, [
                 'product_id' => $options['product_id'],
@@ -171,7 +174,7 @@ class SEOType extends TranslatorAwareType
             ->add('tags', TranslatableType::class, [
                 'required' => false,
                 'label' => $this->trans('Tags', 'Admin.Catalog.Feature'),
-                'label_tag_name' => 'h2',
+                'label_tag_name' => 'h3',
                 'help' => $this->trans('Use a comma to create separate tags. E.g.: dress, cotton, party dresses.', 'Admin.Catalog.Help'),
                 'options' => [
                     'constraints' => [
@@ -193,6 +196,7 @@ class SEOType extends TranslatorAwareType
                         '[/1]' => '</a>',
                     ]),
                 ],
+                'modify_all_shops' => true,
             ])
         ;
     }
@@ -249,7 +253,7 @@ class SEOType extends TranslatorAwareType
             ->setDefaults([
                 'product_id' => null,
                 'label' => $this->trans('Search engine optimization', 'Admin.Catalog.Feature'),
-                'label_tag_name' => 'h2',
+                'label_tag_name' => 'h3',
                 'label_subtitle' => $this->trans('Improve your ranking and how your product page will appear in search engines results.', 'Admin.Catalog.Feature'),
                 'required' => false,
             ])

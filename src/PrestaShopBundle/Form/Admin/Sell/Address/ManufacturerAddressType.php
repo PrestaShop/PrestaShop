@@ -52,16 +52,6 @@ class ManufacturerAddressType extends TranslatorAwareType
     private $manufacturerChoices;
 
     /**
-     * @var array
-     */
-    private $countryChoices;
-
-    /**
-     * @var array
-     */
-    private $countryChoicesAttributes;
-
-    /**
      * @var ConfigurableFormChoiceProviderInterface
      */
     private $statesChoiceProvider;
@@ -77,29 +67,25 @@ class ManufacturerAddressType extends TranslatorAwareType
     private $router;
 
     /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
      * @param array $manufacturerChoices
-     * @param array $countryChoices
      * @param ConfigurableFormChoiceProviderInterface $statesChoiceProvider
      * @param int $contextCountryId
-     * @param TranslatorInterface $translator
-     * @param array $countryChoicesAttributes
+     * @param Router $router
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         array $manufacturerChoices,
-        array $countryChoices,
         ConfigurableFormChoiceProviderInterface $statesChoiceProvider,
         $contextCountryId,
-        array $countryChoicesAttributes,
         Router $router
     ) {
         parent::__construct($translator, $locales);
         $this->manufacturerChoices = $manufacturerChoices;
-        $this->countryChoices = $countryChoices;
         $this->statesChoiceProvider = $statesChoiceProvider;
         $this->contextCountryId = $contextCountryId;
-        $this->countryChoicesAttributes = $countryChoicesAttributes;
         $this->router = $router;
     }
 

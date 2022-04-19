@@ -195,7 +195,7 @@ class WebserviceRequestCore
     /**
      * The object to build the output.
      *
-     * @var WebserviceOutputBuilder
+     * @var WebserviceOutputBuilder|null
      */
     protected $objOutput;
 
@@ -411,14 +411,14 @@ class WebserviceRequestCore
             $id_currency = (int) (isset($value['currency']) ? $value['currency'] : Configuration::get('PS_CURRENCY_DEFAULT'));
             $id_group = (int) (isset($value['group']) ? $value['group'] : (int) Configuration::get('PS_CUSTOMER_GROUP'));
             $quantity = (int) (isset($value['quantity']) ? $value['quantity'] : 1);
-            $use_tax = (int) (isset($value['use_tax']) ? $value['use_tax'] : Configuration::get('PS_TAX'));
+            $use_tax = (bool) (isset($value['use_tax']) ? $value['use_tax'] : Configuration::get('PS_TAX'));
             $decimals = (int) (isset($value['decimals']) ? $value['decimals'] : Configuration::get('PS_PRICE_ROUND_MODE'));
             $id_product_attribute = (int) (isset($value['product_attribute']) ? $value['product_attribute'] : null);
-            $only_reduc = (int) (isset($value['only_reduction']) ? $value['only_reduction'] : false);
-            $use_reduc = (int) (isset($value['use_reduction']) ? $value['use_reduction'] : true);
-            $use_ecotax = (int) (isset($value['use_ecotax']) ? $value['use_ecotax'] : Configuration::get('PS_USE_ECOTAX'));
+            $only_reduc = (bool) (isset($value['only_reduction']) ? $value['only_reduction'] : false);
+            $use_reduc = (bool) (isset($value['use_reduction']) ? $value['use_reduction'] : true);
+            $use_ecotax = (bool) (isset($value['use_ecotax']) ? $value['use_ecotax'] : Configuration::get('PS_USE_ECOTAX'));
             $specific_price_output = null;
-            $id_county = (int) (isset($value['county']) ? $value['county'] : 0);
+            $id_county = (string) (isset($value['county']) ? $value['county'] : 0);
             $return_value = Product::priceCalculation(
                 $id_shop,
                 $value['object_id'],
@@ -435,7 +435,7 @@ class WebserviceRequestCore
                 $use_reduc,
                 $use_ecotax,
                 $specific_price_output,
-                null
+                false
             );
             $arr_return[$name] = ['sqlId' => strtolower($name), 'value' => sprintf('%f', $return_value)];
         }
@@ -603,8 +603,10 @@ class WebserviceRequestCore
                         $this->setError(501, sprintf('The specific management class is not implemented for the "%s" entity.', $this->urlSegment[0]), 124);
                     } else {
                         $this->setObjectSpecificManagement(new $specificObjectName());
-                        $this->objectSpecificManagement->setObjectOutput($this->objOutput)
-                            ->setWsObject($this);
+                        $this->objectSpecificManagement->setObjectOutput($this->objOutput);
+                        if ($this instanceof WebserviceRequest) {
+                            $this->objectSpecificManagement->setWsObject($this);
+                        }
 
                         try {
                             $this->objectSpecificManagement->manage();
@@ -657,7 +659,7 @@ class WebserviceRequestCore
      *
      * @param int $num
      * @param string $label
-     * @param array $value
+     * @param string $value
      * @param array $available_values
      * @param int $code
      */
@@ -1130,7 +1132,7 @@ class WebserviceRequestCore
         }
 
         // Date feature : date=1
-        if (!empty($this->urlFragments['date']) && $this->urlFragments['date']) {
+        if (!empty($this->urlFragments['date'])) {
             if (!in_array('date_add', $available_filters)) {
                 $available_filters[] = 'date_add';
             }
@@ -1784,12 +1786,12 @@ class WebserviceRequestCore
     {
         $return = [];
 
-        // write headers
+        // Write headers
         $this->objOutput
-            ->setHeaderParams('Access-Time', time())
+            ->setHeaderParams('Access-Time', (string) time())
             ->setHeaderParams('X-Powered-By', 'PrestaShop Webservice')
-            ->setHeaderParams('PSWS-Version', _PS_VERSION_)
-            ->setHeaderParams('Execution-Time', round(microtime(true) - $this->_startTime, 3));
+            ->setHeaderParams('Execution-Time', (string) round(microtime(true) - $this->_startTime, 3))
+        ;
 
         $return['type'] = strtolower($this->outputFormat);
 
@@ -1852,9 +1854,7 @@ class WebserviceRequestCore
         // if the output is not enable, delete the content
         // the type content too
         if (!$this->_outputEnabled) {
-            if (isset($return['type'])) {
-                unset($return['type']);
-            }
+            unset($return['type']);
             if (isset($return['content'])) {
                 unset($return['content']);
             }

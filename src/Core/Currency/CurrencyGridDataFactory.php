@@ -31,7 +31,6 @@ use PrestaShop\PrestaShop\Core\Grid\Data\GridData;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class CurrencyGridDataFactory is responsible for providing modified currency list grid data.
@@ -44,22 +43,13 @@ final class CurrencyGridDataFactory implements GridDataFactoryInterface
     private $gridDataFactory;
 
     /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
      * CurrencyGridDataFactory constructor.
      *
      * @param GridDataFactoryInterface $gridDataFactory
-     * @param TranslatorInterface $translator
      */
-    public function __construct(
-        GridDataFactoryInterface $gridDataFactory,
-        TranslatorInterface $translator
-    ) {
+    public function __construct(GridDataFactoryInterface $gridDataFactory)
+    {
         $this->gridDataFactory = $gridDataFactory;
-        $this->translator = $translator;
     }
 
     /**

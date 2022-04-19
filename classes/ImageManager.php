@@ -207,7 +207,7 @@ class ImageManagerCore
 
         list($tmpWidth, $tmpHeight, $type) = getimagesize($sourceFile);
         $rotate = 0;
-        if (function_exists('exif_read_data') && function_exists('mb_strtolower')) {
+        if (function_exists('exif_read_data')) {
             $exif = @exif_read_data($sourceFile);
 
             if ($exif && isset($exif['Orientation'])) {
@@ -317,6 +317,7 @@ class ImageManagerCore
 
         $srcImage = ImageManager::create($type, $sourceFile);
         if ($rotate) {
+            /** @phpstan-ignore-next-line */
             $srcImage = imagerotate($srcImage, $rotate, 0);
         }
 
@@ -380,7 +381,7 @@ class ImageManagerCore
         // 4 = Up to 25 times faster.  Almost identical to imagecopyresampled for most images.
         // 5 = No speedup. Just uses imagecopyresampled, no advantage over imagecopyresampled.
 
-        if (empty($srcImage) || empty($dstImage) || $quality <= 0) {
+        if ($quality <= 0) {
             return false;
         }
         if ($quality < 5 && (($dstW * $quality) < $srcW || ($dstH * $quality) < $srcH)) {
@@ -552,7 +553,7 @@ class ImageManagerCore
     /**
      * Cut image.
      *
-     * @param array $srcFile Origin filename
+     * @param string $srcFile Origin filename
      * @param string $dstFile Destination filename
      * @param int $dstWidth Desired width
      * @param int $dstHeight Desired height
@@ -585,10 +586,12 @@ class ImageManagerCore
         $dest['ressource'] = ImageManager::createWhiteImage($dest['width'], $dest['height']);
 
         $white = imagecolorallocate($dest['ressource'], 255, 255, 255);
+        // @phpstan-ignore-next-line
         imagecopyresampled($dest['ressource'], $src['ressource'], 0, 0, $dest['x'], $dest['y'], $dest['width'], $dest['height'], $dest['width'], $dest['height']);
         imagecolortransparent($dest['ressource'], $white);
         $return = ImageManager::write($fileType, $dest['ressource'], $dstFile);
         Hook::exec('actionOnImageCutAfter', ['dst_file' => $dstFile, 'file_type' => $fileType]);
+        // @phpstan-ignore-next-line
         @imagedestroy($src['ressource']);
 
         return $return;
@@ -666,18 +669,21 @@ class ImageManagerCore
 
         switch ($type) {
             case 'gif':
+                // @phpstan-ignore-next-line
                 $success = imagegif($resource, $filename);
 
                 break;
 
             case 'png':
                 $quality = ($psPngQuality === false ? 7 : $psPngQuality);
+                // @phpstan-ignore-next-line
                 $success = imagepng($resource, $filename, (int) $quality);
 
                 break;
 
             case 'webp':
                 $quality = ($psWebpQuality === false ? 80 : $psWebpQuality);
+                // @phpstan-ignore-next-line
                 $success = imagewebp($resource, $filename, (int) $quality);
 
                 break;
@@ -686,11 +692,14 @@ class ImageManagerCore
             case 'jpeg':
             default:
                 $quality = ($psJpegQuality === false ? 90 : $psJpegQuality);
-                imageinterlace($resource, 1); /// make it PROGRESSIVE
+                // @phpstan-ignore-next-line
+                imageinterlace($resource, true); /// make it PROGRESSIVE
+                // @phpstan-ignore-next-line
                 $success = imagejpeg($resource, $filename, (int) $quality);
 
                 break;
         }
+        // @phpstan-ignore-next-line
         imagedestroy($resource);
         @chmod($filename, 0664);
 

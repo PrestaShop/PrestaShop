@@ -29,6 +29,7 @@ import Router from '@components/router';
 import AutoCompleteSearch from '@components/auto-complete-search';
 import PerfectScrollbar from 'perfect-scrollbar';
 import ComponentsMap from '@components/components-map';
+import initContextualNotification from '@components/contextual-notification';
 import 'perfect-scrollbar/css/perfect-scrollbar.css';
 
 const {$} = window;
@@ -99,6 +100,9 @@ const initMultistoreHeader = () => {
    */
   function updateLinksAnchor(): void {
     function updateLinkAnchor(shopLink: HTMLLinkElement) {
+      if (!shopLink.hasAttribute('href')) {
+        return;
+      }
       const updatedLink = shopLink.href.replace(/#(.*)$/, '') + window.location.hash;
       shopLink.setAttribute('href', updatedLink);
     }
@@ -116,4 +120,5 @@ const initMultistoreHeader = () => {
 
 $(() => {
   initMultistoreHeader();
+  initContextualNotification('header-color');
 });

@@ -726,7 +726,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
             $products = $customer->getBoughtProducts();
             if ($products && count($products)) {
                 foreach ($products as $key => $product) {
-                    $products[$key]['date_add'] = Tools::displayDate($product['date_add'], null, true);
+                    $products[$key]['date_add'] = Tools::displayDate($product['date_add'], true);
                 }
             }
         }
@@ -838,7 +838,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 $id_order_product = Order::getIdOrderProduct((int) $message['id_customer'], (int) $message['id_product']);
             }
         }
-        $message['date_add'] = Tools::displayDate($message['date_add'], null, true);
+        $message['date_add'] = Tools::displayDate($message['date_add'], true);
         $message['user_agent'] = strip_tags($message['user_agent']);
         $message['message'] = preg_replace(
             '/(https?:\/\/[a-z0-9#%&_=\(\)\.\? \+\-@\/]{6,1000})([\s\n<])/Uui',
@@ -1078,7 +1078,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         // parse from attribute and fix it if needed
                         $from_parsed = [];
                         if (!isset($overview->from)
-                            || (!preg_match('/<(' . Tools::cleanNonUnicodeSupport('[a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]+[.a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]*@[a-z\p{L}0-9]+[._a-z\p{L}0-9-]*\.[a-z0-9]+') . ')>/', $overview->from, $from_parsed)
+                            || (!preg_match('/<([a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]+[.a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]*@[a-z\p{L}0-9]+[._a-z\p{L}0-9-]*\.[a-z0-9]+)>/', $overview->from, $from_parsed)
                             && !Validate::isEmail($overview->from))) {
                             $message_errors[] = $this->trans('Cannot create message in a new thread.', [], 'Admin.Orderscustomers.Notification');
 
@@ -1147,14 +1147,14 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         }
                         $message = iconv($this->getEncoding($structure), 'utf-8', $message);
                         $message = nl2br($message);
-                        if (!$message || strlen($message) == 0) {
+                        if (empty($message)) {
                             $message_errors[] = $this->trans('The message body is empty, cannot import it.', [], 'Admin.Orderscustomers.Notification');
 
                             continue;
                         }
                         $cm = new CustomerMessage();
                         $cm->id_customer_thread = $ct->id;
-                        if (empty($message) || !Validate::isCleanHtml($message)) {
+                        if (!Validate::isCleanHtml($message)) {
                             $str_errors .= $this->trans('Invalid message content for subject: %s', [$subject], 'Admin.Orderscustomers.Notification');
                         } else {
                             try {
@@ -1174,7 +1174,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
         imap_expunge($mbox);
         imap_close($mbox);
         if (count($message_errors) > 0) {
-            if (($more_error = $str_errors . $str_error_delete) && strlen($more_error) > 0) {
+            $more_error = $str_errors . $str_error_delete;
+            if (strlen($more_error) > 0) {
                 $message_errors = array_merge([$more_error], $message_errors);
             }
 

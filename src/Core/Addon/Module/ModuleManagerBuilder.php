@@ -29,24 +29,25 @@ namespace PrestaShop\PrestaShop\Core\Addon\Module;
 
 use Context;
 use Db;
-use PrestaShop\PrestaShop\Adapter\Cache\Clearer;
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Adapter\HookManager;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater;
-use PrestaShop\PrestaShop\Adapter\Module\ModuleZipManager;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
+use PrestaShop\PrestaShop\Core\Module\ModuleManager;
+use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
+use PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerFactory;
 use PrestaShop\PrestaShop\Core\Util\File\YamlParser;
 use PrestaShopBundle\Event\Dispatcher\NullDispatcher;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\Cache\DoctrineProvider;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\Router;
 
@@ -69,7 +70,6 @@ class ModuleManagerBuilder
     public static $legacyLogger = null;
     public static $moduleDataProvider = null;
     public static $moduleDataUpdater = null;
-    public static $moduleZipManager = null;
     public static $translator = null;
     public static $categoriesProvider = null;
     public static $instance = null;
@@ -105,14 +105,13 @@ class ModuleManagerBuilder
                 self::$moduleManager = $sfContainer->get('prestashop.module.manager');
             } else {
                 self::$moduleManager = new ModuleManager(
-                    self::$adminModuleDataProvider,
-                    self::$moduleDataProvider,
-                    self::$moduleDataUpdater,
                     $this->buildRepository(),
-                    self::$moduleZipManager,
+                    self::$moduleDataProvider,
+                    self::$adminModuleDataProvider,
+                    new SourceHandlerFactory(),
                     self::$translator,
                     new NullDispatcher(),
-                    new Clearer\SymfonyCacheClearer()
+                    new HookManager()
                 );
             }
         }
@@ -134,10 +133,10 @@ class ModuleManagerBuilder
             } else {
                 self::$modulesRepository = new ModuleRepository(
                     self::$moduleDataProvider,
-                    self::$legacyLogger,
-                    self::$translator,
-                    _PS_MODULE_DIR_,
-                    self::$cacheProvider
+                    self::$adminModuleDataProvider,
+                    self::$cacheProvider,
+                    new HookManager(),
+                    _PS_MODULE_DIR_
                 );
             }
         }
@@ -168,8 +167,6 @@ class ModuleManagerBuilder
         $tools->refreshCaCertFile();
 
         self::$translator = Context::getContext()->getTranslator();
-
-        self::$moduleZipManager = new ModuleZipManager(new Filesystem(), self::$translator, new NullDispatcher());
 
         $kernelDir = realpath($this->getConfigDir() . '/../../var');
         $cacheDir = $kernelDir . ($this->isDebug ? '/cache/dev' : '/cache/prod');
@@ -227,13 +224,5 @@ class ModuleManagerBuilder
     protected function getConfigDir()
     {
         return _PS_ROOT_DIR_ . '/app/config';
-    }
-
-    /**
-     * Returns country iso from context.
-     */
-    private function getCountryIso()
-    {
-        return \CountryCore::getIsoById((int) \Configuration::get('PS_COUNTRY_DEFAULT'));
     }
 }

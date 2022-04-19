@@ -158,7 +158,7 @@ class OrderInvoiceCore extends ObjectModel
             WHERE number = ' . (int) $id_invoice
         );
 
-        return $id_order_invoice ? new OrderInvoice($id_order_invoice) : false;
+        return $id_order_invoice ? new OrderInvoice((int) $id_order_invoice) : false;
     }
 
     /**
@@ -305,7 +305,7 @@ class OrderInvoiceCore extends ObjectModel
         $product['image_size'] = null;
 
         if ($id_image) {
-            $product['image'] = new Image($id_image);
+            $product['image'] = new Image((int) $id_image);
         }
     }
 

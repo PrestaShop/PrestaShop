@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Product\ProductExtraContentFinder;
 
 class ProductControllerCore extends ProductPresentingFrontControllerCore
 {
+    /** @var string */
     public $php_self = 'product';
 
     /** @var Product */
@@ -150,13 +151,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                     if (!$this->product->id_type_redirected) {
                         if (in_array($this->product->redirect_type, [RedirectType::TYPE_CATEGORY_PERMANENT, RedirectType::TYPE_CATEGORY_TEMPORARY])) {
                             $this->product->id_type_redirected = $this->product->id_category_default;
-                        } else {
-                            $this->product->redirect_type = RedirectType::TYPE_NOT_FOUND;
                         }
                     } elseif (in_array($this->product->redirect_type, [RedirectType::TYPE_PRODUCT_PERMANENT, RedirectType::TYPE_PRODUCT_TEMPORARY]) && $this->product->id_type_redirected == $this->product->id) {
                         $this->product->redirect_type = RedirectType::TYPE_NOT_FOUND;
                     }
-
                     switch ($this->product->redirect_type) {
                         case RedirectType::TYPE_PRODUCT_PERMANENT:
                             header('HTTP/1.1 301 Moved Permanently');
@@ -176,6 +174,13 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                             header('Cache-Control: no-cache');
                             header('Location: ' . $this->context->link->getCategoryLink($this->product->id_type_redirected));
                             exit;
+                        case RedirectType::TYPE_GONE:
+                            header('HTTP/1.1 410 Gone');
+                            header('Status: 410 Gone');
+                            $this->errors[] = $this->trans('This product is no longer available.', [], 'Shop.Notifications.Error');
+                            $this->setTemplate('errors/410');
+
+                            break;
                         case RedirectType::TYPE_NOT_FOUND:
                         default:
                             header('HTTP/1.1 404 Not Found');
@@ -232,7 +237,13 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
                 $moduleManager = $moduleManagerBuilder->build();
 
-                if (isset($this->context->cookie, $this->category->id_category) && !($moduleManager->isInstalled('ps_categorytree') && $moduleManager->isEnabled('ps_categorytree'))) {
+                if (
+                    isset($this->context->cookie)
+                    && !(
+                        $moduleManager->isInstalled('ps_categorytree')
+                        && $moduleManager->isEnabled('ps_categorytree')
+                    )
+                ) {
                     $this->context->cookie->last_visited_category = (int) $this->category->id_category;
                 }
             }
@@ -385,7 +396,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $productManufacturer = new Manufacturer((int) $this->product->id_manufacturer, $this->context->language->id);
 
             $manufacturerImageUrl = $this->context->link->getManufacturerImageLink($productManufacturer->id);
-            $undefinedImage = $this->context->link->getManufacturerImageLink(null);
+            $undefinedImage = $this->context->link->getManufacturerImageLink(0);
             if ($manufacturerImageUrl === $undefinedImage) {
                 $manufacturerImageUrl = null;
             }
@@ -862,7 +873,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $indexes = array_flip($authorized_file_fields);
         foreach ($_FILES as $field_name => $file) {
             if (in_array($field_name, $authorized_file_fields) && isset($file['tmp_name']) && !empty($file['tmp_name'])) {
-                $file_name = md5(uniqid(mt_rand(0, mt_getrandmax()), true));
+                $file_name = md5(uniqid((string) mt_rand(0, mt_getrandmax()), true));
                 if ($error = ImageManager::validateUpload($file, (int) Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE'))) {
                     $this->errors[] = $error;
                 }
@@ -1238,6 +1249,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $categoryDefault = new Category($this->product->id_category_default, $this->context->language->id);
 
         foreach ($categoryDefault->getAllParents() as $category) {
+            /** @var Category $category */
             if ($category->id_parent != 0 && !$category->is_root_category && $category->active) {
                 $breadcrumb['links'][] = [
                     'title' => $category->name,

@@ -6,16 +6,20 @@ const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
 
-// Import common tests
-const loginCommon = require('@commonTests/loginBO');
+// Import BO common tests
+const loginCommon = require('@commonTests/BO/loginBO');
+const {enableEcoTaxTest, disableEcoTaxTest} = require('@commonTests/BO/international/enableDisableEcoTax');
+const {deleteCustomerTest} = require('@commonTests/BO/customers/createDeleteCustomer');
+const {deleteCartRuleTest} = require('@commonTests/BO/catalog/createDeleteCartRule');
+const {bulkDeleteProductsTest} = require('@commonTests/BO/catalog/createDeleteProduct');
+
+// Import FO common tests
 const {createOrderByGuestTest} = require('@commonTests/FO/createOrder');
-const {deleteCustomerTest} = require('@commonTests/BO/createDeleteCustomer');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders');
 const orderPageProductsBlock = require('@pages/BO/orders/view/productsBlock');
-const taxesPage = require('@pages/BO/international/taxes');
 const productsPage = require('@pages/BO/catalog/products');
 const addProductPage = require('@pages/BO/catalog/products/add');
 const cartRulesPage = require('@pages/BO/catalog/discounts');
@@ -35,6 +39,8 @@ const baseContext = 'functional_BO_orders_orders_viewAndEditOrder_productBlock';
 
 let browserContext;
 let page;
+// Prefix for the new products to simply delete them by bulk actions
+const prefixNewProduct = 'TOTEST';
 
 const customerData = new CustomerFaker({password: ''});
 const addressData = new AddressFaker({country: 'France'});
@@ -48,7 +54,7 @@ const orderData = {
   paymentMethod: PaymentMethods.wirePayment.moduleName,
 };
 const productOutOfStockAllowed = new ProductFaker({
-  name: 'Out of stock allowed',
+  name: `Out of stock allowed ${prefixNewProduct}`,
   type: 'Standard product',
   taxRule: 'No tax',
   quantity: -12,
@@ -57,7 +63,7 @@ const productOutOfStockAllowed = new ProductFaker({
   behaviourOutOfStock: 'Allow orders',
 });
 const productOutOfStockNotAllowed = new ProductFaker({
-  name: 'Out of stock not allowed',
+  name: `Out of stock not allowed ${prefixNewProduct}`,
   type: 'Standard product',
   taxRule: 'No tax',
   quantity: -36,
@@ -67,7 +73,7 @@ const productOutOfStockNotAllowed = new ProductFaker({
   behaviourOutOfStock: 'Deny orders',
 });
 const packOfProducts = new ProductFaker({
-  name: 'Pack of products',
+  name: `Pack of products ${prefixNewProduct}`,
   type: 'Pack of products',
   pack: {demo_13: 1, demo_7: 1},
   taxRule: 'No tax',
@@ -78,13 +84,13 @@ const packOfProducts = new ProductFaker({
   behaviourOutOfStock: 'Default behavior',
 });
 const virtualProduct = new ProductFaker({
-  name: 'Virtual product',
+  name: `Virtual product ${prefixNewProduct}`,
   type: 'Virtual product',
   taxRule: 'No tax',
   quantity: 20,
 });
 const combinationProduct = new ProductFaker({
-  name: 'Product with combination',
+  name: `Product with combination ${prefixNewProduct}`,
   type: 'Standard product',
   productHasCombinations: true,
   taxRule: 'No tax',
@@ -94,7 +100,7 @@ const combinationProduct = new ProductFaker({
   behaviourOutOfStock: 'Default behavior',
 });
 const simpleProduct = new ProductFaker({
-  name: 'Simple product',
+  name: `Simple product ${prefixNewProduct}`,
   type: 'Standard product',
   taxRule: 'No tax',
   quantity: 50,
@@ -106,7 +112,7 @@ const simpleProduct = new ProductFaker({
 });
 
 const productWithSpecificPrice = new ProductFaker({
-  name: 'Product with specific price',
+  name: `Product with specific price ${prefixNewProduct}`,
   type: 'Standard product',
   taxRule: 'No tax',
   quantity: 20,
@@ -118,7 +124,7 @@ const productWithSpecificPrice = new ProductFaker({
 });
 
 const productWithEcoTax = new ProductFaker({
-  name: 'Product with ecotax',
+  name: `Product with ecotax ${prefixNewProduct}`,
   type: 'Standard product',
   taxRule: 'No tax',
   quantity: 20,
@@ -127,7 +133,7 @@ const productWithEcoTax = new ProductFaker({
 });
 
 const productWithCartRule = new ProductFaker({
-  name: 'Product with cart rule',
+  name: `Product with cart rule ${prefixNewProduct}`,
   type: 'Standard product',
   taxRule: 'No tax',
   quantity: 50,
@@ -186,6 +192,9 @@ describe('BO - Orders - View and edit order : Check product block in view order 
   // Pre-condition: Create order by guest
   createOrderByGuestTest(orderData, baseContext);
 
+  // Pre-condition: Enable EcoTax
+  enableEcoTaxTest(baseContext);
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -198,27 +207,6 @@ describe('BO - Orders - View and edit order : Check product block in view order 
 
   it('should login in BO', async function () {
     await loginCommon.loginBO(this, page);
-  });
-
-  // Pre-condition: Enable EcoTax
-  describe('PRE-TEST: Enable ecoTax', async () => {
-    it('should go to \'International > Taxes\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToTaxesPage', baseContext);
-
-      await dashboardPage.goToSubMenu(page, dashboardPage.internationalParentLink, dashboardPage.taxesLink);
-
-      await taxesPage.closeSfToolBar(page);
-
-      const pageTitle = await taxesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(taxesPage.pageTitle);
-    });
-
-    it('should enable EcoTax', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'enableEcoTax', baseContext);
-
-      const textResult = await taxesPage.enableEcoTax(page, true);
-      await expect(textResult).to.be.equal('Update successful');
-    });
   });
 
   // Pre-condition: Create 9 products, Enable ecoTax, Create cart rule
@@ -832,83 +820,11 @@ describe('BO - Orders - View and edit order : Check product block in view order 
   deleteCustomerTest(customerData, baseContext);
 
   // Post-condition: Delete the created products
-  describe('POST-TEST: Delete the created products', async () => {
-    it('should go to \'Catalog > Products\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPageToDelete', baseContext);
-
-      await addProductPage.goToSubMenu(page, addProductPage.catalogParentLink, addProductPage.productsLink);
-
-      const pageTitle = await productsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(productsPage.pageTitle);
-    });
-
-    [productOutOfStockAllowed,
-      productOutOfStockNotAllowed,
-      packOfProducts,
-      virtualProduct,
-      combinationProduct,
-      simpleProduct,
-      productWithSpecificPrice,
-      productWithEcoTax,
-      productWithCartRule,
-    ].forEach((product, index) => {
-      it(`should delete product '${product.name}' from DropDown Menu`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `deleteProduct${index}`, baseContext);
-
-        const deleteTextResult = await productsPage.deleteProduct(page, product);
-        await expect(deleteTextResult).to.equal(productsPage.productDeletedSuccessfulMessage);
-      });
-
-      it('should reset all filters', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `resetFiltersAfterDelete${index}`, baseContext);
-
-        const numberOfProducts = await productsPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfProducts).to.be.above(0);
-      });
-    });
-  });
+  bulkDeleteProductsTest(prefixNewProduct, baseContext);
 
   // Post-condition: Delete cart rule
-  describe('POST-TEST: Delete the created cart rule', async () => {
-    it('should go to \'Catalog > Discounts\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage2', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.discountsLink,
-      );
-
-      const pageTitle = await cartRulesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
-    });
-
-    it('should delete cart rule', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'deleteCartRule', baseContext);
-
-      const validationMessage = await cartRulesPage.deleteCartRule(page);
-      await expect(validationMessage).to.contains(cartRulesPage.successfulDeleteMessage);
-    });
-  });
+  deleteCartRuleTest(newCartRuleData.name, baseContext);
 
   // Post-condition: Disable EcoTax
-  describe('POST-TEST: Disable EcoTax', async () => {
-    it('should go to \'International > Taxes\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToTaxesPage2', baseContext);
-
-      await dashboardPage.goToSubMenu(page, dashboardPage.internationalParentLink, dashboardPage.taxesLink);
-
-      await taxesPage.closeSfToolBar(page);
-
-      const pageTitle = await taxesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(taxesPage.pageTitle);
-    });
-
-    it('should disable EcoTax', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'disableEcoTax', baseContext);
-
-      const textResult = await taxesPage.enableEcoTax(page, false);
-      await expect(textResult).to.be.equal('Update successful');
-    });
-  });
+  disableEcoTaxTest(baseContext);
 });

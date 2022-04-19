@@ -78,7 +78,7 @@ class AdminControllerCore extends Controller
     /** @var string Associated table name */
     public $table = 'configuration';
 
-    /** @var string */
+    /** @var string|null */
     public $list_id;
 
     /** @var string|false Object identifier inside the associated table */
@@ -87,7 +87,7 @@ class AdminControllerCore extends Controller
     /** @var string */
     protected $identifier_name = 'name';
 
-    /** @var string Associated object class name */
+    /** @var string|null Associated object class name */
     public $className;
 
     /** @var array */
@@ -144,7 +144,7 @@ class AdminControllerCore extends Controller
     /** @var bool Define if the header of the list contains filter and sorting links or not */
     protected $list_simple_header;
 
-    /** @var array List to be generated */
+    /** @var array|null List to be generated */
     protected $fields_list;
 
     /** @var array Modules list filters */
@@ -198,10 +198,10 @@ class AdminControllerCore extends Controller
     /** @var bool Automatically join language table if true */
     public $lang = false;
 
-    /** @var array|bool WHERE clause determined by filter fields */
+    /** @var array|bool|null WHERE clause determined by filter fields */
     protected $_filter;
 
-    /** @var string */
+    /** @var string|null */
     protected $_filterHaving;
 
     /** @var string Temporary SQL table WHERE clause determined by filter fields */
@@ -288,19 +288,19 @@ class AdminControllerCore extends Controller
     /** @var bool Do not automatically select * anymore but select only what is necessary */
     protected $explicitSelect = false;
 
-    /** @var string Add fields into data query to display list */
+    /** @var string|null Add fields into data query to display list */
     protected $_select;
 
-    /** @var string Join tables into data query to display list */
+    /** @var string|null Join tables into data query to display list */
     protected $_join;
 
-    /** @var string Add conditions into data query to display list */
+    /** @var string|null Add conditions into data query to display list */
     protected $_where;
 
-    /** @var string Group rows into data query to display list */
+    /** @var string|null Group rows into data query to display list */
     protected $_group;
 
-    /** @var string Having rows into data query to display list */
+    /** @var string|null Having rows into data query to display list */
     protected $_having;
 
     /** @var string|bool Use SQL_CALC_FOUND_ROWS / FOUND_ROWS to count the number of records */
@@ -384,7 +384,7 @@ class AdminControllerCore extends Controller
     /** @var array|Traversable Bootstrap variable */
     public $page_header_toolbar_btn = [];
 
-    /** @var bool Bootstrap variable */
+    /** @var bool|null Bootstrap variable */
     public $show_form_cancel_button;
 
     /** @var string */
@@ -590,7 +590,7 @@ class AdminControllerCore extends Controller
         }
 
         $this->context->smarty->assign([
-            'multistore_header' => $this->container->get('prestashop.core.admin.multistore')->header($this->lockedToAllShopContext)->getContent(),
+            'multistore_header' => $this->get('prestashop.core.admin.multistore')->header($this->lockedToAllShopContext)->getContent(),
         ]);
     }
 
@@ -670,7 +670,7 @@ class AdminControllerCore extends Controller
 
         $this->context->smarty->assign([
             'breadcrumbs2' => $breadcrumbs2,
-            'quick_access_current_link_name' => Tools::safeOutput($breadcrumbs2['tab']['name'] . (isset($breadcrumbs2['action']) ? ' - ' . $breadcrumbs2['action']['name'] : '')),
+            'quick_access_current_link_name' => Tools::safeOutput($breadcrumbs2['tab']['name'] . ' - ' . $breadcrumbs2['action']['name']),
             'quick_access_current_link_icon' => $breadcrumbs2['container']['icon'],
         ]);
 
@@ -953,7 +953,7 @@ class AdminControllerCore extends Controller
                         } elseif ($type == 'select') {
                             $sql_filter .= ($check_key ? $alias . '.' : '') . pSQL($key) . ' = \'' . pSQL($value) . '\' ';
                         } elseif ($type == 'price') {
-                            $value = (float) str_replace(',', '.', $value);
+                            $value = str_replace(',', '.', $value);
                             $sql_filter .= ($check_key ? $alias . '.' : '') . pSQL($key) . ' = ' . pSQL(trim($value)) . ' ';
                         } else {
                             $sql_filter .= ($check_key ? $alias . '.' : '') . pSQL($key) . ' LIKE \'%' . pSQL(trim($value)) . '%\' ';
@@ -1058,7 +1058,7 @@ class AdminControllerCore extends Controller
         if (ob_get_level() && ob_get_length() > 0) {
             ob_clean();
         }
-        $this->getList($this->context->language->id, null, null, 0, false);
+        $this->getList($this->context->language->id);
         if (!count($this->_list)) {
             return;
         }
@@ -1085,7 +1085,6 @@ class AdminControllerCore extends Controller
 
         foreach ($this->_list as $i => $row) {
             $content = [];
-            $path_to_image = false;
             foreach ($this->fields_list as $key => $params) {
                 $field_value = isset($row[$key]) ? Tools::htmlentitiesDecodeUTF8(Tools::nl2br($row[$key])) : '';
                 if ($key == 'image') {
@@ -1094,9 +1093,7 @@ class AdminControllerCore extends Controller
                     } else {
                         $path_to_image = Tools::getShopDomain(true) . _PS_IMG_ . $params['image'] . '/' . Image::getImgFolderStatic($row['id_image']) . (int) $row['id_image'] . '.' . $this->imageType;
                     }
-                    if ($path_to_image) {
-                        $field_value = $path_to_image;
-                    }
+                    $field_value = $path_to_image;
                 }
                 if (isset($params['callback'])) {
                     $callback_obj = (isset($params['callback_object'])) ? $params['callback_object'] : $this->context->controller;
@@ -1428,7 +1425,7 @@ class AdminControllerCore extends Controller
     /**
      * Cancel all filters for this tab.
      *
-     * @param int|null $list_id
+     * @param string|null $list_id
      */
     public function processResetFilters($list_id = null)
     {
@@ -2210,10 +2207,6 @@ class AdminControllerCore extends Controller
         } elseif ($this->display == 'details') {
             $this->content .= $this->renderDetails();
         } elseif (!$this->ajax) {
-            // FIXME: Sorry. I'm not very proud of this, but no choice... Please wait sf refactoring to solve this.
-            if (get_class($this) != 'AdminCarriersController') {
-                $this->content .= $this->renderModulesList();
-            }
             $this->content .= $this->renderKpis();
             $this->content .= $this->renderList();
             $this->content .= $this->renderOptions();
@@ -2249,43 +2242,9 @@ class AdminControllerCore extends Controller
         ]);
     }
 
-    /**
-     * Init tab modules list and add button in toolbar.
-     *
-     * @deprecated since 1.7.7.0
-     */
-    protected function initTabModuleList()
-    {
-        @trigger_error(sprintf('The "%s()" method is deprecated and has no effect since 1.7.7.0', __METHOD__), E_USER_DEPRECATED);
-    }
-
-    /**
-     * @deprecated since 1.7.7.0
-     */
-    protected function addPageHeaderToolBarModulesListButton()
-    {
-        @trigger_error(sprintf('The "%s()" method is deprecated and has no effect since 1.7.7.0', __METHOD__), E_USER_DEPRECATED);
-    }
-
-    /**
-     * @deprecated since 1.7.7.0
-     */
-    protected function addToolBarModulesListButton()
-    {
-        @trigger_error(sprintf('The "%s()" method is deprecated and has no effect since 1.7.7.0', __METHOD__), E_USER_DEPRECATED);
-    }
-
     protected function getAdminModulesUrl()
     {
         return $this->context->link->getAdminLink('AdminModulesCatalog');
-    }
-
-    /**
-     * @deprecated since 1.7.7.0
-     */
-    protected function filterTabModuleList()
-    {
-        @trigger_error(sprintf('The "%s()" method is deprecated and has no effect since 1.7.7.0', __METHOD__), E_USER_DEPRECATED);
     }
 
     /**
@@ -2343,20 +2302,6 @@ class AdminControllerCore extends Controller
         }
 
         return $modal_render;
-    }
-
-    /**
-     * Was used to display a list of recommended modules.
-     *
-     * @param string|bool $tracking_source Source information for URL used by "Install" button
-     *
-     * @return string Empty
-     *
-     * @deprecated since 1.7.4.0
-     */
-    public function renderModulesList($tracking_source = false)
-    {
-        return '';
     }
 
     /**
@@ -2576,7 +2521,7 @@ class AdminControllerCore extends Controller
     /**
      * This function sets various display options for helper list.
      *
-     * @param HelperList|HelperView|HelperOptions $helper
+     * @param HelperList|HelperView|HelperOptions|HelperForm $helper
      */
     public function setHelperDisplay(Helper $helper)
     {
@@ -2646,27 +2591,28 @@ class AdminControllerCore extends Controller
     }
 
     /**
-     * @deprecated 1.6.0
-     */
-    public function setDeprecatedMedia()
-    {
-    }
-
-    /**
      * @param bool $isNewTheme
      */
     public function setMedia($isNewTheme = false)
     {
         if ($isNewTheme) {
+            if ($this->context->language->is_rtl) {
+                $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/rtl.css', 'all', 1);
+            }
+
             $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/theme.css', 'all', 1);
             $this->addJS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/main.bundle.js');
 
             // the multistore dropdown should be called only once, and only if multistore is used
-            if ($this->container->get('prestashop.adapter.multistore_feature')->isUsed()) {
+            if ($this->isMultistoreEnabled()) {
                 $this->addJs(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/multistore_dropdown.bundle.js');
             }
             $this->addJqueryPlugin(['chosen', 'fancybox']);
         } else {
+            if ($this->context->language->is_rtl) {
+                $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/public/rtl.css', 'all', 0);
+            }
+
             //Bootstrap
             $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/css/' . $this->bo_css, 'all', 0);
             $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/css/vendor/titatoggle-min.css', 'all', 0);
@@ -2688,7 +2634,7 @@ class AdminControllerCore extends Controller
             $this->addJS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/js/vendor/modernizr.min.js');
             $this->addJS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/js/modernizr-loads.js');
             $this->addJS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/js/vendor/moment-with-langs.min.js');
-            $this->addJS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/public/bundle.js');
+            $this->addJS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/public/theme.bundle.js');
 
             $this->addJS(_PS_JS_DIR_ . 'jquery/plugins/timepicker/jquery-ui-timepicker-addon.js');
 
@@ -2904,7 +2850,7 @@ class AdminControllerCore extends Controller
                         $shop_id = (int) $this->context->employee->getDefaultShopID();
                         Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
                     }
-                } elseif (Shop::getShop($split[1]) && $this->context->employee->hasAuthOnShop($split[1])) {
+                } elseif (Shop::getShop((int) $split[1]) && $this->context->employee->hasAuthOnShop((int) $split[1])) {
                     $shop_id = (int) $split[1];
                     Shop::setContext(Shop::CONTEXT_SHOP, $shop_id);
                 } else {
@@ -2933,7 +2879,7 @@ class AdminControllerCore extends Controller
 
         // Replace current default country
         $this->context->country = new Country((int) Configuration::get('PS_COUNTRY_DEFAULT'));
-        $this->context->currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+        $this->context->currency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
     }
 
     /**
@@ -3166,8 +3112,7 @@ class AdminControllerCore extends Controller
         if ((int) Tools::getValue('submitFilter' . $this->list_id)) {
             $start = ((int) Tools::getValue('submitFilter' . $this->list_id) - 1) * $limit;
         } elseif (
-            empty($start)
-            && isset($this->context->cookie->{$this->list_id . '_start'})
+            isset($this->context->cookie->{$this->list_id . '_start'})
             && Tools::isSubmit('export' . $this->table)
         ) {
             $start = $this->context->cookie->{$this->list_id . '_start'};
@@ -3192,7 +3137,7 @@ class AdminControllerCore extends Controller
         if ($this->multishop_context && Shop::isTableAssociated($this->table) && !empty($this->className)) {
             if (Shop::getContext() != Shop::CONTEXT_ALL || !$this->context->employee->isSuperAdmin()) {
                 $test_join = !preg_match('#`?' . preg_quote(_DB_PREFIX_ . $this->table . '_shop') . '`? *sa#', $this->_join);
-                if (Shop::isFeatureActive() && $test_join && Shop::isTableAssociated($this->table)) {
+                if (Shop::isFeatureActive() && $test_join) {
                     $this->_where .= ' AND EXISTS (
                         SELECT 1
                         FROM `' . _DB_PREFIX_ . $this->table . '_shop` sa
@@ -4119,7 +4064,7 @@ class AdminControllerCore extends Controller
      */
     protected function processBulkEnableSelection()
     {
-        return $this->processBulkStatusSelection(1);
+        return $this->processBulkStatusSelection(true);
     }
 
     /**
@@ -4129,7 +4074,7 @@ class AdminControllerCore extends Controller
      */
     protected function processBulkDisableSelection()
     {
-        return $this->processBulkStatusSelection(0);
+        return $this->processBulkStatusSelection(false);
     }
 
     /**
@@ -4334,7 +4279,7 @@ class AdminControllerCore extends Controller
         $module->optionsHtml = $this->displayModuleOptions($module, $output_type, $back, $install_source_tracking);
         // pay modules get their source tracking data here
         if ($install_source_tracking && isset($module->addons_buy_url)) {
-            $module->addons_buy_url .= ($install_source_tracking ? '&utm_term=' . $install_source_tracking : '');
+            $module->addons_buy_url .= '&utm_term=' . $install_source_tracking;
         }
 
         $module->options['uninstall_onclick'] = ((isset($module->onclick_option) && !$module->onclick_option) ?
@@ -4578,9 +4523,16 @@ class AdminControllerCore extends Controller
         foreach ($modules_options as $option_name => $option) {
             if ($option['cond']) {
                 if ($output_type == 'link') {
-                    $return .= '<li><a class="' . $option_name . ' action_module';
-                    $return .= '" href="' . $option['href'] . (null !== $back ? '&back=' . urlencode($back) : '') . '"';
-                    $return .= ' onclick="' . $option['onclick'] . '"  title="' . $option['title'] . '"><i class="icon-' . (isset($option['icon']) && $option['icon'] ? $option['icon'] : 'cog') . '"></i>&nbsp;' . $option['text'] . '</a></li>';
+                    $return .= '<li>'
+                        . '<a '
+                        . 'class="' . $option_name . ' action_module" '
+                        . 'href="' . $option['href'] . (null !== $back ? '&back=' . urlencode($back) : '') . '" '
+                        . 'onclick="' . $option['onclick'] . '" '
+                        . 'title="' . $option['title'] . '">'
+                        . '<i class="icon-' . (!empty($option['icon']) ? $option['icon'] : 'cog') . '"></i>'
+                        . '&nbsp;' . $option['text']
+                        . '</a>'
+                        . '</li>';
                 } elseif ($output_type == 'array') {
                     if (!is_array($return)) {
                         $return = [];
@@ -4614,7 +4566,10 @@ class AdminControllerCore extends Controller
                         $html .= ' style="' . $option['style'] . '"';
                     }
 
-                    $html .= ' href="' . htmlentities($option['href']) . (null !== $back ? '&back=' . urlencode($back) : '') . '" onclick="' . $option['onclick'] . '"  title="' . $option['title'] . '"><i class="icon-' . (isset($option['icon']) && $option['icon'] ? $option['icon'] : 'cog') . '"></i> ' . $option['text'] . '</a>';
+                    $html .= ' href="' . htmlentities($option['href']) . (null !== $back ? '&back=' . urlencode($back) : '') . '"';
+                    $html .= ' onclick="' . $option['onclick'] . '"';
+                    $html .= ' title="' . $option['title'] . '">';
+                    $html .= '<i class="icon-' . (!empty($option['icon']) ? $option['icon'] : 'cog') . '"></i> ' . $option['text'] . '</a>';
                     $return[] = $html;
                 } elseif ($output_type == 'select') {
                     $return .= '<option id="' . $option_name . '" data-href="' . htmlentities($option['href']) . (null !== $back ? '&back=' . urlencode($back) : '') . '" data-onclick="' . $option['onclick'] . '">' . $option['text'] . '</option>';
@@ -4790,9 +4745,6 @@ class AdminControllerCore extends Controller
         $currency = $context->currency;
         /* @var PriceSpecification */
         $priceSpecification = $context->getCurrentLocale()->getPriceSpecification($currency->iso_code);
-        if (empty($priceSpecification)) {
-            return [];
-        }
 
         return array_merge(
             ['symbol' => $priceSpecification->getSymbolsByNumberingSystem(Locale::NUMBERING_SYSTEM_LATIN)->toArray()],
@@ -4811,9 +4763,6 @@ class AdminControllerCore extends Controller
     {
         /* @var NumberSpecification */
         $numberSpecification = $context->getCurrentLocale()->getNumberSpecification();
-        if (empty($numberSpecification)) {
-            return [];
-        }
 
         return array_merge(
             ['symbol' => $numberSpecification->getSymbolsByNumberingSystem(Locale::NUMBERING_SYSTEM_LATIN)->toArray()],

@@ -90,12 +90,14 @@ class CheckoutProcessCore implements RenderableInterface
     /**
      * @param CheckoutStepInterface $step
      *
-     * @return $this
+     * @return self
      */
     public function addStep(CheckoutStepInterface $step)
     {
-        $step->setCheckoutProcess($this);
-        $this->steps[] = $step;
+        if ($this instanceof CheckoutProcess) {
+            $step->setCheckoutProcess($this);
+            $this->steps[] = $step;
+        }
 
         return $this;
     }

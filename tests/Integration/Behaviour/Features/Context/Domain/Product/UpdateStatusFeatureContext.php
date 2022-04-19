@@ -74,6 +74,25 @@ class UpdateStatusFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @Then /^product "(.*)" should be (enabled|disabled) for shops "(.*)"$/
+     *
+     * Status transformation handled by @see StringToBoolTransformContext
+     *
+     * @param string $productReference
+     * @param bool $expectedStatus
+     * @param string $shopReferences
+     */
+    public function assertStatusForShops(string $productReference, bool $expectedStatus, string $shopReferences): void
+    {
+        $shopReferences = explode(',', $shopReferences);
+        foreach ($shopReferences as $shopReference) {
+            $shopId = $this->getSharedStorage()->get($shopReference);
+            $actualStatus = $this->extractValueFromProductForEditing($this->getProductForEditing($productReference, $shopId), 'active');
+            Assert::assertSame($expectedStatus, $actualStatus, sprintf('Unexpected product status for shop %s', $shopReference));
+        }
+    }
+
+    /**
      * @Then I should get an error that product online data are invalid
      */
     public function assertInvalidOnlineDataException(): void

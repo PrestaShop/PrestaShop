@@ -101,7 +101,7 @@ class TagCore extends ObjectModel
         }
 
         if (!is_array($tagList)) {
-            $tagList = array_filter(array_unique(array_map('trim', preg_split('#\\' . $separator . '#', $tagList, null, PREG_SPLIT_NO_EMPTY))));
+            $tagList = array_filter(array_unique(array_map('trim', preg_split('#\\' . $separator . '#', $tagList, 0, PREG_SPLIT_NO_EMPTY))));
         }
 
         $list = [];

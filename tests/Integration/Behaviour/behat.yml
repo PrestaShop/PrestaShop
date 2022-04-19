@@ -9,12 +9,26 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+        state:
+            paths:
+                - "%paths.base%/Features/Scenario/State"
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\StateFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\StateFeatureContext
         contact:
             paths:
                 - "%paths.base%/Features/Scenario/Contact"
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\ContactFeatureContext
+        store:
+            paths:
+                - "%paths.base%/Features/Scenario/Store"
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\StoreFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\StoreFeatureContext
         customer:
             paths:
                 - "%paths.base%/Features/Scenario/Customer"
@@ -96,6 +110,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\CountryFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Configuration\RoundingTypeConfigurationFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\CartRuleFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\OrderPaymentFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\OrderShippingFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\OrderCartFeatureContext
@@ -120,6 +135,20 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateCustomizationFieldsFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateDetailsFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateStockFeatureContext
+        order_return_state:
+          paths:
+            - "%paths.base%/Features/Scenario/OrderReturnState"
+          contexts:
+            - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+            - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+            - Tests\Integration\Behaviour\Features\Context\Domain\OrderReturnStateFeatureContext
+        order_state:
+          paths:
+            - "%paths.base%/Features/Scenario/OrderState"
+          contexts:
+            - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+            - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+            - Tests\Integration\Behaviour\Features\Context\Domain\OrderStateFeatureContext
         currency:
             paths:
                 - "%paths.base%/Features/Scenario/Currency"
@@ -336,6 +365,17 @@ default:
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\FeatureFlagFeatureContext
+
+        security:
+            paths:
+                - "%paths.base%/Features/Scenario/Security"
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\SecurityFeatureContext
+
         zone:
             paths:
                 - "%paths.base%/Features/Scenario/Zone"
@@ -357,3 +397,11 @@ default:
             contexts:
                 - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\SearchEngineFeatureContext
+        profile:
+            paths:
+                - "%paths.base%/Features/Scenario/Profile"
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\ProfileFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\PermissionFeatureContext

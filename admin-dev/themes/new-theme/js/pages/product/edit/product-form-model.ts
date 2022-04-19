@@ -119,16 +119,26 @@ export default class ProductFormModel {
     }
 
     const $taxRulesGroupIdInput = this.mapper.getInputsFor('product.price.taxRulesGroupId');
-    const $selectedTaxOption = $(':selected', $taxRulesGroupIdInput);
 
-    let taxRate;
-    try {
-      taxRate = new BigNumber($selectedTaxOption.data('taxRate'));
-    } catch (error) {
-      taxRate = new BigNumber(NaN);
+    if (!$taxRulesGroupIdInput) {
+      console.error('Could not find tax rules input');
+      return;
     }
-    if (taxRate.isNaN()) {
-      taxRate = new BigNumber(0);
+
+    const $selectedTaxOption = $(':selected', $taxRulesGroupIdInput);
+    const isTaxEnabled = $taxRulesGroupIdInput.data('taxEnabled');
+
+    let taxRate = new BigNumber(0);
+
+    if (isTaxEnabled) {
+      try {
+        taxRate = new BigNumber($selectedTaxOption.data('taxRate'));
+      } catch (error) {
+        taxRate = new BigNumber(NaN);
+      }
+      if (taxRate.isNaN()) {
+        taxRate = new BigNumber(0);
+      }
     }
 
     const taxRatio = taxRate.dividedBy(100).plus(1);

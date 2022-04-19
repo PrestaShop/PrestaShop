@@ -6,7 +6,7 @@ const files = require('@utils/files');
 const {getDateFormat} = require('@utils/date');
 
 // Import login steps
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');

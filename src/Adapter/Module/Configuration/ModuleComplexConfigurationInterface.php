@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Module\Configuration;
 
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface;
+use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 
 /**
  * @todo: document what is the contract of this interface.

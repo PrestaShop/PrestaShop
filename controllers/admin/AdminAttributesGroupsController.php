@@ -29,8 +29,10 @@
  */
 class AdminAttributesGroupsControllerCore extends AdminController
 {
+    /** @var bool */
     public $bootstrap = true;
     protected $id_attribute;
+    /** @var string */
     protected $position_identifier = 'id_attribute_group';
     protected $attribute_name;
 
@@ -706,7 +708,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
         if (!Validate::isLoadedObject($object)) {
             $this->errors[] = $this->trans('An error occurred while updating the status for an object.', [], 'Admin.Notifications.Error') .
                 ' <b>' . $this->table . '</b> ' . $this->trans('(cannot load object)', [], 'Admin.Notifications.Error');
-        } elseif (!$object->updatePosition((int) Tools::getValue('way'), (int) Tools::getValue('position'))) {
+        } elseif (!$object->updatePosition((bool) Tools::getValue('way'), (int) Tools::getValue('position'))) {
             $this->errors[] = $this->trans('Failed to update the position.', [], 'Admin.Notifications.Error');
         } else {
             $id_identifier_str = ($id_identifier = (int) Tools::getValue($this->identifier)) ? '&' . $this->identifier . '=' . $id_identifier : '';
@@ -764,7 +766,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
             if (Tools::getValue('position') !== false && Tools::getValue('id_attribute')) {
                 $_POST['id_attribute_group'] = $object->id_attribute_group;
-                if (!$object->updatePosition((int) Tools::getValue('way'), (int) Tools::getValue('position'))) {
+                if (!$object->updatePosition((bool) Tools::getValue('way'), (int) Tools::getValue('position'))) {
                     $this->errors[] = $this->trans('Failed to update the position.', [], 'Admin.Notifications.Error');
                 } else {
                     Tools::redirectAdmin(self::$currentIndex . '&conf=5&token=' . Tools::getAdminTokenLite('AdminAttributesGroups') . '#details_details_' . $object->id_attribute_group);
@@ -907,7 +909,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
     /* Modify group attribute position */
     public function ajaxProcessUpdateGroupsPositions()
     {
-        $way = (int) Tools::getValue('way');
+        $way = (bool) Tools::getValue('way');
         $id_attribute_group = (int) Tools::getValue('id_attribute_group');
         $positions = Tools::getValue('attribute_group');
 
@@ -941,7 +943,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
     /* Modify attribute position */
     public function ajaxProcessUpdateAttributesPositions()
     {
-        $way = (int) Tools::getValue('way');
+        $way = (bool) Tools::getValue('way');
         $id_attribute = (int) Tools::getValue('id_attribute');
         $positions = Tools::getValue('attribute');
 

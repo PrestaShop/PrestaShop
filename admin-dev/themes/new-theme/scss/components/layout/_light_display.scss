@@ -1,4 +1,8 @@
 // Handle special rendering for light display layout which is usually used inside an iframe in a modal
+body {
+  background: #fff;
+}
+
 .light_display_layout {
   form {
     /*

@@ -1,16 +1,18 @@
-.js-mobile-menu {
-  display: none;
-  flex-direction: column;
-  justify-content: center;
-  float: left;
-  padding-top: 0;
-  margin-right: 0.6rem;
-  margin-left: 0.6rem;
-  font-size: 1.8rem;
-  cursor: pointer;
+#header_infos {
+  .js-mobile-menu {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    float: left;
+    padding-top: 0;
+    margin-right: 0.6rem;
+    margin-left: 0.6rem;
+    font-size: 1.8rem;
+    cursor: pointer;
 
-  @include media-breakpoint-down(md) {
-    display: inline-flex;
+    @include media-breakpoint-down(md) {
+      display: inline-flex;
+    }
   }
 }
 
@@ -397,10 +399,6 @@
         color: $sidebar-primary-link-color;
         background: $sidebar-active-background-color;
         @include transition(background 300ms ease);
-
-        @include media-breakpoint-down(md) {
-          background: $gray-dark;
-        }
       }
 
       &.has_submenu {

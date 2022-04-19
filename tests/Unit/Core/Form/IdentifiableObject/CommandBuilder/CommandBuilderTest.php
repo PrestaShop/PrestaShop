@@ -28,11 +28,13 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder;
 
+use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilder;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\DataField;
+use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 
 class CommandBuilderTest extends TestCase
 {
@@ -52,8 +54,10 @@ class CommandBuilderTest extends TestCase
         array $expectedCommands
     ): void {
         $builder = new CommandBuilder($config);
-        $command = new CommandBuilderTestCommand(ShopConstraint::shop(self::SHOP_ID));
-        $commands = $builder->buildCommands($data, $command);
+        $commands = $builder->buildCommands(
+            $data,
+            $this->getSingleShopCommand()
+        );
         $this->assertEquals($expectedCommands, $commands);
     }
 
@@ -61,24 +65,27 @@ class CommandBuilderTest extends TestCase
     {
         $config = new CommandBuilderConfig(self::MULTI_SHOP_PREFIX);
         $config
-            ->addField('[url]', 'setUrl', CommandField::TYPE_STRING)
-            ->addField('[name]', 'setName', CommandField::TYPE_STRING)
-            ->addField('[command][isValid]', 'setIsValid', CommandField::TYPE_BOOL)
-            ->addField('[_number]', 'setCount', CommandField::TYPE_INT)
-            ->addField('[parent][children]', 'setChildren', CommandField::TYPE_ARRAY)
+            ->addField('[url]', 'setUrl', DataField::TYPE_STRING)
+            ->addField('[name]', 'setName', DataField::TYPE_STRING)
+            ->addField('[command][isValid]', 'setIsValid', DataField::TYPE_BOOL)
+            ->addField('[_number]', 'setCount', DataField::TYPE_INT)
+            ->addField('[parent][children]', 'setChildren', DataField::TYPE_ARRAY)
+            ->addField('[date_time]', 'setDate', DataField::TYPE_DATETIME)
         ;
         $children = [
             'bob',
             'steve',
         ];
+        $dateTime = new DateTimeImmutable('2022-10-10 15:34:45');
 
-        $command = new CommandBuilderTestCommand(ShopConstraint::shop(self::SHOP_ID));
-        $command
+        $command = $this
+            ->getSingleShopCommand()
             ->setUrl('http://localhost')
             ->setName('toto')
             ->setIsValid(true)
             ->setCount(42)
             ->setChildren($children)
+            ->setDate($dateTime)
         ;
 
         yield [
@@ -93,6 +100,7 @@ class CommandBuilderTest extends TestCase
                 'parent' => [
                     'children' => $children,
                 ],
+                'date_time' => '2022-10-10 15:34:45',
             ],
             [$command],
         ];
@@ -100,11 +108,12 @@ class CommandBuilderTest extends TestCase
         // prefix is not mandatory especially when dealing with single shop command
         $config = new CommandBuilderConfig();
         $config
-            ->addField('[url]', 'setUrl', CommandField::TYPE_STRING)
-            ->addField('[name]', 'setName', CommandField::TYPE_STRING)
-            ->addField('[command][isValid]', 'setIsValid', CommandField::TYPE_BOOL)
-            ->addField('[_number]', 'setCount', CommandField::TYPE_INT)
-            ->addField('[parent][children]', 'setChildren', CommandField::TYPE_ARRAY)
+            ->addField('[url]', 'setUrl', DataField::TYPE_STRING)
+            ->addField('[name]', 'setName', DataField::TYPE_STRING)
+            ->addField('[command][isValid]', 'setIsValid', DataField::TYPE_BOOL)
+            ->addField('[_number]', 'setCount', DataField::TYPE_INT)
+            ->addField('[parent][children]', 'setChildren', DataField::TYPE_ARRAY)
+            ->addField('[date_time]', 'setDate', DataField::TYPE_DATETIME)
         ;
 
         yield [
@@ -119,12 +128,13 @@ class CommandBuilderTest extends TestCase
                 'parent' => [
                     'children' => $children,
                 ],
+                'date_time' => '2022-10-10 15:34:45',
             ],
             [$command],
         ];
 
-        $command = new CommandBuilderTestCommand(ShopConstraint::shop(self::SHOP_ID));
-        $command
+        $command = $this
+            ->getSingleShopCommand()
             ->setName('toto')
             ->setIsValid(false)
         ;
@@ -143,19 +153,20 @@ class CommandBuilderTest extends TestCase
 
         $config = new CommandBuilderConfig(self::MULTI_SHOP_PREFIX);
         $config
-            ->addMultiShopField('[url]', 'setUrl', CommandField::TYPE_STRING)
-            ->addField('[name]', 'setName', CommandField::TYPE_STRING)
-            ->addMultiShopField('[command][isValid]', 'setIsValid', CommandField::TYPE_BOOL)
-            ->addField('[_number]', 'setCount', CommandField::TYPE_INT)
-            ->addField('[parent][children]', 'setChildren', CommandField::TYPE_ARRAY)
+            ->addMultiShopField('[url]', 'setUrl', DataField::TYPE_STRING)
+            ->addField('[name]', 'setName', DataField::TYPE_STRING)
+            ->addMultiShopField('[command][isValid]', 'setIsValid', DataField::TYPE_BOOL)
+            ->addField('[_number]', 'setCount', DataField::TYPE_INT)
+            ->addField('[parent][children]', 'setChildren', DataField::TYPE_ARRAY)
+            ->addMultiShopField('[date_time]', 'setDate', DataField::TYPE_DATETIME)
         ;
-
-        $command = new CommandBuilderTestCommand(ShopConstraint::shop(self::SHOP_ID));
-        $command
+        $command = $this
+            ->getSingleShopCommand()
             ->setUrl('http://localhost')
             ->setName('toto')
             ->setIsValid(true)
             ->setCount(42)
+            ->setDate($dateTime)
         ;
 
         // Same test but now some fields are multishop, since no multishop command is provided it shouldn't change the final result
@@ -169,6 +180,76 @@ class CommandBuilderTest extends TestCase
                 ],
                 '_number' => 42,
                 'unknown' => 45,
+                'date_time' => '2022-10-10 15:34:45',
+            ],
+            [$command],
+        ];
+
+        // Handle empty date time
+        $config = new CommandBuilderConfig(self::MULTI_SHOP_PREFIX);
+        $config
+            ->addField('[date_time]', 'setDate', DataField::TYPE_DATETIME)
+        ;
+        $command = $this
+            ->getSingleShopCommand()
+            ->setDate(new NullDateTime())
+        ;
+
+        // Test empty datetime
+        yield [
+            $config,
+            [
+                'date_time' => '',
+            ],
+            [$command],
+        ];
+
+        // Test empty datetime
+        yield [
+            $config,
+            [
+                'date_time' => null,
+            ],
+            [$command],
+        ];
+
+        // Single shop compound field
+        $config = new CommandBuilderConfig(self::MULTI_SHOP_PREFIX);
+        $config
+            ->addCompoundField('setOption', [
+                '[option][name]' => DataField::TYPE_STRING,
+                '[option][value]' => [
+                    'type' => DataField::TYPE_STRING,
+                    'default' => 'default',
+                ],
+            ])
+        ;
+
+        $command = $this
+            ->getSingleShopCommand()
+            ->setOption('foo', 'bar')
+        ;
+        yield 'single shop compound field without default value' => [
+            $config,
+            [
+                'option' => [
+                    'name' => 'foo',
+                    'value' => 'bar',
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this
+            ->getSingleShopCommand()
+            ->setOption('foo', 'default')
+        ;
+        yield 'single shop compound field with default value' => [
+            $config,
+            [
+                'option' => [
+                    'name' => 'foo',
+                ],
             ],
             [$command],
         ];
@@ -187,9 +268,11 @@ class CommandBuilderTest extends TestCase
         array $expectedCommands
     ): void {
         $builder = new CommandBuilder($config);
-        $command = new CommandBuilderTestCommand(ShopConstraint::shop(self::SHOP_ID));
-        $allShopsCommand = new CommandBuilderTestCommand(ShopConstraint::allShops());
-        $commands = $builder->buildCommands($data, $command, $allShopsCommand);
+        $commands = $builder->buildCommands(
+            $data,
+            $this->getSingleShopCommand(),
+            $this->getAllShopsCommand()
+        );
         $this->assertEquals($expectedCommands, $commands);
     }
 
@@ -197,26 +280,28 @@ class CommandBuilderTest extends TestCase
     {
         $config = new CommandBuilderConfig(self::MULTI_SHOP_PREFIX);
         $config
-            ->addField('[url]', 'setUrl', CommandField::TYPE_STRING)
-            ->addMultiShopField('[name]', 'setName', CommandField::TYPE_STRING)
-            ->addMultiShopField('[command][isValid]', 'setIsValid', CommandField::TYPE_BOOL)
-            ->addMultiShopField('[_number]', 'setCount', CommandField::TYPE_INT)
-            ->addMultiShopField('[parent][children]', 'setChildren', CommandField::TYPE_ARRAY)
+            ->addField('[url]', 'setUrl', DataField::TYPE_STRING)
+            ->addMultiShopField('[name]', 'setName', DataField::TYPE_STRING)
+            ->addMultiShopField('[command][isValid]', 'setIsValid', DataField::TYPE_BOOL)
+            ->addMultiShopField('[_number]', 'setCount', DataField::TYPE_INT)
+            ->addMultiShopField('[parent][children]', 'setChildren', DataField::TYPE_ARRAY)
+            ->addMultiShopField('[date_time]', 'setDate', DataField::TYPE_DATETIME)
         ;
         $children = [
             'bob',
             'steve',
         ];
+        $dateTime = new DateTimeImmutable('2022-10-10 15:34:45');
 
-        $command = new CommandBuilderTestCommand(ShopConstraint::shop(self::SHOP_ID));
-        $command
+        $singleShopCommand = $this
+            ->getSingleShopCommand()
             ->setUrl('http://localhost')
             ->setName('toto')
             ->setIsValid(true)
             ->setCount(42)
             ->setChildren($children)
+            ->setDate($dateTime)
         ;
-
         yield [
             $config,
             [
@@ -229,23 +314,23 @@ class CommandBuilderTest extends TestCase
                 'parent' => [
                     'children' => $children,
                 ],
+                'date_time' => '2022-10-10 15:34:45',
             ],
-            [$command],
+            [$singleShopCommand],
         ];
 
-        $command = new CommandBuilderTestCommand(ShopConstraint::shop(self::SHOP_ID));
-        $command
+        $singleShopCommand = $this
+            ->getSingleShopCommand()
             ->setUrl('http://localhost')
             ->setName('toto')
             ->setIsValid(false)
         ;
-
-        $allShopsCommand = new CommandBuilderTestCommand(ShopConstraint::allShops());
-        $allShopsCommand
+        $allShopsCommand = $this
+            ->getAllShopsCommand()
             ->setCount(42)
             ->setChildren($children)
+            ->setDate($dateTime)
         ;
-
         yield [
             $config,
             [
@@ -260,10 +345,11 @@ class CommandBuilderTest extends TestCase
                     'children' => $children,
                     self::MULTI_SHOP_PREFIX . 'children' => true,
                 ],
+                'date_time' => '2022-10-10 15:34:45',
+                self::MULTI_SHOP_PREFIX . 'date_time' => true,
             ],
-            [$command, $allShopsCommand],
+            [$singleShopCommand, $allShopsCommand],
         ];
-
         yield [
             $config,
             [
@@ -273,24 +359,25 @@ class CommandBuilderTest extends TestCase
                     'children' => $children,
                     self::MULTI_SHOP_PREFIX . 'children' => true,
                 ],
+                'date_time' => '2022-10-10 15:34:45',
+                self::MULTI_SHOP_PREFIX . 'date_time' => true,
             ],
             [$allShopsCommand],
         ];
 
         // More advanced use, multishop field is present but not always true, and url is not a multishop field
-        $command = new CommandBuilderTestCommand(ShopConstraint::shop(self::SHOP_ID));
-        $command
+        $singleShopCommand = $this
+            ->getSingleShopCommand()
             ->setUrl('http://localhost')
             ->setName('toto')
             ->setCount(42)
             ->setIsValid(false)
+            ->setDate($dateTime)
         ;
-
-        $allShopsCommand = new CommandBuilderTestCommand(ShopConstraint::allShops());
-        $allShopsCommand
+        $allShopsCommand = $this
+            ->getAllShopsCommand()
             ->setChildren($children)
         ;
-
         yield [
             $config,
             [
@@ -306,33 +393,35 @@ class CommandBuilderTest extends TestCase
                     'children' => $children,
                     self::MULTI_SHOP_PREFIX . 'children' => true,
                 ],
+                'date_time' => '2022-10-10 15:34:45',
+                self::MULTI_SHOP_PREFIX . 'date_time' => false,
             ],
-            [$command, $allShopsCommand],
+            [$singleShopCommand, $allShopsCommand],
         ];
 
         // Same test but now url is a multishop field
         $config = new CommandBuilderConfig(self::MULTI_SHOP_PREFIX);
         $config
-            ->addMultiShopField('[url]', 'setUrl', CommandField::TYPE_STRING)
-            ->addMultiShopField('[name]', 'setName', CommandField::TYPE_STRING)
-            ->addMultiShopField('[command][isValid]', 'setIsValid', CommandField::TYPE_BOOL)
-            ->addMultiShopField('[_number]', 'setCount', CommandField::TYPE_INT)
-            ->addMultiShopField('[parent][children]', 'setChildren', CommandField::TYPE_ARRAY)
+            ->addMultiShopField('[url]', 'setUrl', DataField::TYPE_STRING)
+            ->addMultiShopField('[name]', 'setName', DataField::TYPE_STRING)
+            ->addMultiShopField('[command][isValid]', 'setIsValid', DataField::TYPE_BOOL)
+            ->addMultiShopField('[_number]', 'setCount', DataField::TYPE_INT)
+            ->addMultiShopField('[parent][children]', 'setChildren', DataField::TYPE_ARRAY)
+            ->addField('[date_time]', 'setDate', DataField::TYPE_DATETIME)
         ;
 
-        $command = new CommandBuilderTestCommand(ShopConstraint::shop(self::SHOP_ID));
-        $command
+        $singleShopCommand = $this
+            ->getSingleShopCommand()
             ->setName('toto')
             ->setCount(42)
             ->setIsValid(false)
+            ->setDate($dateTime)
         ;
-
-        $allShopsCommand = new CommandBuilderTestCommand(ShopConstraint::allShops());
-        $allShopsCommand
+        $allShopsCommand = $this
+            ->getAllShopsCommand()
             ->setUrl('http://localhost')
             ->setChildren($children)
         ;
-
         yield [
             $config,
             [
@@ -348,8 +437,127 @@ class CommandBuilderTest extends TestCase
                     'children' => $children,
                     self::MULTI_SHOP_PREFIX . 'children' => true,
                 ],
+                'date_time' => '2022-10-10 15:34:45',
+                self::MULTI_SHOP_PREFIX . 'date_time' => true,
             ],
-            [$command, $allShopsCommand],
+            [$singleShopCommand, $allShopsCommand],
         ];
+
+        // Mlti-shop compound field
+        $config = new CommandBuilderConfig(self::MULTI_SHOP_PREFIX);
+        $config
+            ->addField('[url]', 'setUrl', DataField::TYPE_STRING)
+            ->addMultiShopField('[name]', 'setName', DataField::TYPE_STRING)
+            ->addMultiShopCompoundField('setOption', [
+                '[option][name]' => DataField::TYPE_STRING,
+                '[option][value]' => [
+                    'type' => DataField::TYPE_STRING,
+                    'default' => 'default',
+                ],
+            ])
+        ;
+
+        $singleShopCommand = $this
+            ->getSingleShopCommand()
+            ->setUrl('http://localhost')
+            ->setOption('foo', 'bar')
+        ;
+        $allShopsCommand = $this
+            ->getAllShopsCommand()
+            ->setName('whatever')
+        ;
+        yield 'disabled multi-shop compound field' => [
+            $config,
+            [
+                'url' => 'http://localhost',
+                'name' => 'whatever',
+                self::MULTI_SHOP_PREFIX . 'name' => true,
+                'option' => [
+                    'name' => 'foo',
+                    'value' => 'bar',
+                ],
+            ],
+            [$singleShopCommand, $allShopsCommand],
+        ];
+
+        $singleShopCommand = $this
+            ->getSingleShopCommand()
+            ->setUrl('http://localhost')
+            ->setOption('foo', 'default')
+        ;
+        yield 'disabled multi-shop compound field with default value' => [
+            $config,
+            [
+                'url' => 'http://localhost',
+                self::MULTI_SHOP_PREFIX . 'url' => false,
+                'name' => 'whatever',
+                self::MULTI_SHOP_PREFIX . 'name' => true,
+                'option' => [
+                    'name' => 'foo',
+                    self::MULTI_SHOP_PREFIX . 'name' => false,
+                ],
+            ],
+            [$singleShopCommand, $allShopsCommand],
+        ];
+
+        $singleShopCommand = $this
+            ->getSingleShopCommand()
+            ->setUrl('http://localhost')
+        ;
+        $allShopsCommand = $this
+            ->getAllShopsCommand()
+            ->setName('whatever')
+            ->setOption('foo', 'bar')
+        ;
+        yield 'partially enabled multi-shop compound field' => [
+            $config,
+            [
+                'url' => 'http://localhost',
+                self::MULTI_SHOP_PREFIX . 'url' => false,
+                'name' => 'whatever',
+                self::MULTI_SHOP_PREFIX . 'name' => true,
+                'option' => [
+                    'name' => 'foo',
+                    self::MULTI_SHOP_PREFIX . 'name' => false,
+                    'value' => 'bar',
+                    self::MULTI_SHOP_PREFIX . 'value' => true,
+                ],
+            ],
+            [$singleShopCommand, $allShopsCommand],
+        ];
+
+        $allShopsCommand = $this
+            ->getAllShopsCommand()
+            ->setName('whatever')
+            ->setOption('foo', 'default')
+        ;
+        yield 'enabled multi-shop compound field with default value' => [
+            $config,
+            [
+                'url' => 'http://localhost',
+                self::MULTI_SHOP_PREFIX . 'url' => false,
+                'name' => 'whatever',
+                self::MULTI_SHOP_PREFIX . 'name' => true,
+                'option' => [
+                    'name' => 'foo',
+                    self::MULTI_SHOP_PREFIX . 'name' => true,
+                ],
+            ],
+            [$singleShopCommand, $allShopsCommand],
+        ];
+    }
+
+    private function getSingleShopCommand(): CommandBuilderTestCommand
+    {
+        return new CommandBuilderTestCommand(
+            ShopConstraint::shop(self::SHOP_ID)
+        );
+    }
+
+    private function getAllShopsCommand(): CommandBuilderTestCommand
+    {
+        return new CommandBuilderTestCommand(
+            ShopConstraint::allShops()
+        );
     }
 }

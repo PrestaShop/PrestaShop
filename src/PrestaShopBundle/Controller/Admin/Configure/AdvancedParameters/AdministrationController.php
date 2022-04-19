@@ -207,7 +207,9 @@ class AdministrationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @var InvalidConfigurationDataErrorCollection
+     * @param InvalidConfigurationDataErrorCollection $errors
+     *
+     * @return array<int, string>
      */
     private function getErrorMessages(InvalidConfigurationDataErrorCollection $errors): array
     {

@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Module\Tab;
 
 use Exception;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface;
+use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 use PrestaShopBundle\Entity\Repository\LangRepository;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use Psr\Log\LoggerInterface;
@@ -197,10 +197,8 @@ class ModuleTabRegister
         $legacyControllers = array_map(function ($legacyControllersFilename) {
             return str_replace('Controller.php', '', $legacyControllersFilename);
         }, $legacyControllersFilenames);
-        $legacyControllers = $legacyControllers ?? [];
 
         $routingControllers = $this->getModuleControllersFromRouting($moduleName);
-        $routingControllers = $routingControllers ?? [];
 
         return array_merge($legacyControllers, $routingControllers);
     }

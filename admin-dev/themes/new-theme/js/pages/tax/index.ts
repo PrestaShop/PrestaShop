@@ -23,20 +23,21 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Grid from '../../components/grid/grid';
-import SortingExtension from '../../components/grid/extension/sorting-extension';
-import FiltersResetExtension from '../../components/grid/extension/filters-reset-extension';
-import ReloadListActionExtension from '../../components/grid/extension/reload-list-extension';
-import ColumnTogglingExtension from '../../components/grid/extension/column-toggling-extension';
-import SubmitRowActionExtension from '../../components/grid/extension/action/row/submit-row-action-extension';
-import SubmitBulkExtension from '../../components/grid/extension/submit-bulk-action-extension';
-import BulkActionCheckboxExtension from '../../components/grid/extension/bulk-action-checkbox-extension';
-import ExportToSqlManagerExtension from '../../components/grid/extension/export-to-sql-manager-extension';
-import DisplayInCartOptionHandler from './display-in-cart-option-handler';
-import TranslatableInput from '../../components/translatable-input';
+import TaxMap from '@pages/tax/tax-map';
+import Grid from '@components/grid/grid';
+import SortingExtension from '@components/grid/extension/sorting-extension';
+import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
+import ReloadListActionExtension from '@components/grid/extension/reload-list-extension';
+import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
+import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
+import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
+import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-checkbox-extension';
+import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
+import TranslatableInput from '@components/translatable-input';
 import FiltersSubmitButtonEnablerExtension
-  from '../../components/grid/extension/filters-submit-button-enabler-extension';
-import LinkRowActionExtension from '../../components/grid/extension/link-row-action-extension';
+  from '@components/grid/extension/filters-submit-button-enabler-extension';
+import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
+import DisplayInCartOptionHandler from '@pages/tax/display-in-cart-option-handler';
 
 const {$} = window;
 
@@ -56,4 +57,15 @@ $(() => {
 
   new DisplayInCartOptionHandler();
   new TranslatableInput();
+
+  window.prestashop.component.initComponents(
+    [
+      'MultistoreConfigField',
+    ],
+  );
+
+  $(TaxMap.optionsForm.useEcoTax).on('change', (event) => {
+    const useEcoTax = Number($(event.currentTarget).val());
+    $(TaxMap.optionsForm.rowEcoTaxRuleGroup).toggleClass('d-none', useEcoTax === 0);
+  });
 });

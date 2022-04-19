@@ -25,9 +25,13 @@
  */
 class DiscountControllerCore extends FrontController
 {
+    /** @var bool */
     public $auth = true;
+    /** @var string */
     public $php_self = 'discount';
+    /** @var string */
     public $authRedirection = 'discount';
+    /** @var bool */
     public $ssl = true;
 
     /**
@@ -180,7 +184,7 @@ class DiscountControllerCore extends FrontController
      */
     protected function buildCartRuleFromVoucher(array $voucher): array
     {
-        $voucher['voucher_date'] = Tools::displayDate($voucher['date_to'], null, false);
+        $voucher['voucher_date'] = Tools::displayDate($voucher['date_to'], false);
 
         if ((int) $voucher['minimum_amount'] === 0) {
             $voucher['voucher_minimal'] = $this->trans('None', [], 'Shop.Theme.Global');

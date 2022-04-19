@@ -7,7 +7,7 @@ const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
 
 // Import login steps
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -31,7 +31,7 @@ let page;
 Enable/disable reordering option
 Check reordering option in FO (Go to history page and check reodering link)
  */
-describe('Enable/Disable reordering option', async () => {
+describe('BO - Shop Parameters - Order Settings : Enable/Disable reordering option', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

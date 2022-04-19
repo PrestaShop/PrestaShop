@@ -9,8 +9,12 @@ const testContext = require('@utils/testContext');
 const {getDateFormat} = require('@utils/date');
 
 // Import common tests
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
+const {
+  enableMerchandiseReturns,
+  disableMerchandiseReturns,
+} = require('@commonTests/BO/customerService/enableDisableMerchandiseReturns');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -51,20 +55,27 @@ const orderByCustomerData = {
 };
 
 /*
-Create order in FO
-Enable merchandise returns and check 'Return products' button
-Change order status to 'Shipped'
-Create merchandise returns on FO then check it on BO
-Update status of merchandise return
+Pre-condition:
+- Create order in FO
+- Enable merchandise returns
+Scenario:
+- Change order status to 'Shipped'
+- Check 'Return products' button
+- Create merchandise returns in FO then check it in BO
+- Update status of merchandise return
 - Waiting for package
 - Package received
 - Return complete
-Check the new status on BO and FO
-Disable merchandise returns
+- Check the new status in BO and FO
+Post-condition:
+- Disable merchandise returns
  */
 describe('BO - Orders - View and edit order : Check merchandise returns tab', async () => {
-  // Pre-condition - Create order by default customer
+  // Pre-condition: Create order by default customer
   createOrderByCustomerTest(orderByCustomerData, baseContext);
+
+  // Pre-condition: Enable merchandise returns
+  enableMerchandiseReturns(baseContext);
 
   // before and after functions
   before(async function () {
@@ -76,35 +87,11 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
     await helper.closeBrowserContext(browserContext);
   });
 
-  describe('Enable merchandise returns', async () => {
+  describe(`Change the new order status to '${Statuses.shipped.status}'`, async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
 
-    it('should go to \'Customer Service > Merchandise Returns\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToMerchandiseReturnsPage', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.customerServiceParentLink,
-        dashboardPage.merchandiseReturnsLink,
-      );
-
-      await boMerchandiseReturnsPage.closeSfToolBar(page);
-
-      const pageTitle = await boMerchandiseReturnsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(boMerchandiseReturnsPage.pageTitle);
-    });
-
-    it('should enable merchandise returns', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'enableReturns', baseContext);
-
-      const result = await boMerchandiseReturnsPage.setOrderReturnStatus(page, true);
-      await expect(result).to.contains(boMerchandiseReturnsPage.successfulUpdateMessage);
-    });
-  });
-
-  describe(`Change the new order status to '${Statuses.shipped.status}'`, async () => {
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
@@ -246,7 +233,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
         dashboardPage.merchandiseReturnsLink,
       );
 
-      await boMerchandiseReturnsPage.closeSfToolBar(page);
+      await ordersPage.closeSfToolBar(page);
 
       const pageTitle = await boMerchandiseReturnsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(boMerchandiseReturnsPage.pageTitle);
@@ -483,25 +470,6 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
     });
   });
 
-  describe('Disable merchandise returns', async () => {
-    it('should go to \'Customer Service > Merchandise Returns\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToMerchandiseReturnsPageToDisable', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.customerServiceParentLink,
-        dashboardPage.merchandiseReturnsLink,
-      );
-
-      const pageTitle = await boMerchandiseReturnsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(boMerchandiseReturnsPage.pageTitle);
-    });
-
-    it('should disable merchandise returns', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'disableReturns', baseContext);
-
-      const result = await boMerchandiseReturnsPage.setOrderReturnStatus(page, false);
-      await expect(result).to.contains(boMerchandiseReturnsPage.successfulUpdateMessage);
-    });
-  });
+  // Post-condition: Disable merchandise returns
+  disableMerchandiseReturns(baseContext);
 });

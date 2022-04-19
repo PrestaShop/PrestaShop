@@ -257,7 +257,7 @@ class ProductSaleCore
     public static function getNbrSales($idProduct)
     {
         $result = Db::getInstance()->getRow('SELECT `sale_nbr` FROM ' . _DB_PREFIX_ . 'product_sale WHERE `id_product` = ' . (int) $idProduct);
-        if (!$result || empty($result) || !array_key_exists('sale_nbr', $result)) {
+        if (empty($result) || !array_key_exists('sale_nbr', $result)) {
             return -1;
         }
 

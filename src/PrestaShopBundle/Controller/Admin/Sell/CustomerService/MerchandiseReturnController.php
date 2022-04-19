@@ -73,6 +73,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
         }
 
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/MerchandiseReturn/index.html.twig', [
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'merchandiseReturnsGrid' => $this->presentGrid($gridFactory->getGrid($filters)),
             'merchandiseReturnsOptionsForm' => $optionsForm->createView(),
         ]);

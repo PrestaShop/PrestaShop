@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Module;
 use Context;
 use Employee;
 use Module as LegacyModule;
-use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
+use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
 use Symfony\Component\Routing\Router;
@@ -49,21 +49,46 @@ class AdminModuleDataProvider implements ModuleInterface
      * @const array giving a translation domain key for each module action
      */
     public const _ACTIONS_TRANSLATION_DOMAINS_ = [
-        'install' => 'Admin.Actions',
-        'uninstall' => 'Admin.Actions',
-        'enable' => 'Admin.Actions',
-        'disable' => 'Admin.Actions',
-        'enable_mobile' => 'Admin.Modules.Feature',
-        'disable_mobile' => 'Admin.Modules.Feature',
-        'reset' => 'Admin.Actions',
-        'upgrade' => 'Admin.Actions',
-        'configure' => 'Admin.Actions',
+        Module::ACTION_INSTALL => 'Admin.Actions',
+        Module::ACTION_UNINSTALL => 'Admin.Actions',
+        Module::ACTION_ENABLE => 'Admin.Actions',
+        Module::ACTION_DISABLE => 'Admin.Actions',
+        Module::ACTION_ENABLE_MOBILE => 'Admin.Modules.Feature',
+        Module::ACTION_DISABLE_MOBILE => 'Admin.Modules.Feature',
+        Module::ACTION_RESET => 'Admin.Actions',
+        Module::ACTION_UPGRADE => 'Admin.Actions',
+        Module::ACTION_CONFIGURE => 'Admin.Actions',
     ];
 
     /**
-     * @var array of defined and callable module actions
+     * @const array giving a translation label for each module action
      */
-    protected $moduleActions = ['install', 'uninstall', 'enable', 'disable', 'enable_mobile', 'disable_mobile', 'reset', 'upgrade'];
+    public const ACTIONS_TRANSLATION_LABELS = [
+        Module::ACTION_INSTALL => 'Install',
+        Module::ACTION_UNINSTALL => 'Uninstall',
+        Module::ACTION_ENABLE => 'Enable',
+        Module::ACTION_DISABLE => 'Disable',
+        Module::ACTION_ENABLE_MOBILE => 'Enable mobile',
+        Module::ACTION_DISABLE_MOBILE => 'Disable mobile',
+        Module::ACTION_RESET => 'Reset',
+        Module::ACTION_UPGRADE => 'Upgrade',
+        Module::ACTION_CONFIGURE => 'Configure',
+    ];
+
+    /**
+     * @var array<string> of defined and callable module actions
+     */
+    protected $moduleActions = [
+        Module::ACTION_INSTALL,
+        Module::ACTION_UPGRADE,
+        Module::ACTION_ENABLE,
+        Module::ACTION_CONFIGURE,
+        Module::ACTION_DISABLE,
+        Module::ACTION_UNINSTALL,
+        Module::ACTION_ENABLE_MOBILE,
+        Module::ACTION_DISABLE_MOBILE,
+        Module::ACTION_RESET,
+    ];
 
     /**
      * @var Router|null
@@ -177,97 +202,79 @@ class AdminModuleDataProvider implements ModuleInterface
     }
 
     /**
-     * @param AddonsCollection $addons
+     * @param ModuleCollection $modules
      * @param string|null $specific_action
      *
-     * @return AddonsCollection
+     * @return ModuleCollection
      */
-    public function generateAddonsUrls(AddonsCollection $addons, $specific_action = null)
+    public function setActionUrls(ModuleCollection $modules, ?string $specific_action = null): ModuleCollection
     {
-        foreach ($addons as $addon) {
+        foreach ($modules as $module) {
             $urls = [];
+            $moduleAttributes = $module->getAttributes();
+            $moduleDatabaseAttributes = $module->getDatabaseAttributes();
+
             foreach ($this->moduleActions as $action) {
+                if ($action === 'configure') {
+                    $urls[$action] = $this->router->generate('admin_module_configure_action', [
+                        'module_name' => $moduleAttributes->get('name'),
+                    ]);
+                    continue;
+                }
                 $urls[$action] = $this->router->generate('admin_module_manage_action', [
                     'action' => $action,
-                    'module_name' => $addon->attributes->get('name'),
+                    'module_name' => $moduleAttributes->get('name'),
                 ]);
             }
-            $urls['configure'] = $this->router->generate('admin_module_configure_action', [
-                'module_name' => $addon->attributes->get('name'),
-            ]);
 
-            if ($addon->database->has('installed') && $addon->database->getBoolean('installed')) {
-                if (!$addon->database->getBoolean('active')) {
-                    $url_active = 'enable';
+            if ($module->isInstalled()) {
+                unset($urls['install']);
+                if (!$module->isActive()) {
                     unset(
-                        $urls['install'],
-                        $urls['disable']
+                        $urls['disable'],
+                        $urls['enableMobile'],
+                        $urls['disableMobile']
                     );
-                } elseif ($addon->attributes->getBoolean('is_configurable')) {
-                    $url_active = 'configure';
-                    unset(
-                        $urls['enable'],
-                        $urls['install']
-                    );
+                    if ($moduleDatabaseAttributes->get('active') === null) {
+                        unset($urls['enable']);
+                    }
                 } else {
-                    $url_active = 'disable';
                     unset(
-                        $urls['install'],
                         $urls['enable'],
-                        $urls['configure']
+                        $urls[$module->isActiveOnMobile() ? 'enableMobile' : 'disableMobile']
                     );
                 }
 
-                if (!$addon->attributes->getBoolean('is_configurable')) {
+                if (!$module->canBeUpgraded()) {
+                    unset($urls['upgrade']);
+                }
+
+                if (!$module->isConfigurable()) {
                     unset($urls['configure']);
                 }
-
-                if (!$addon->database->getBoolean('active_on_mobile')) {
-                    unset($urls['disable_mobile']);
-                } else {
-                    unset($urls['enable_mobile']);
-                }
-                if (!$addon->canBeUpgraded()) {
-                    unset(
-                        $urls['upgrade']
-                    );
-                }
-            } elseif (
-                !$addon->attributes->has('origin') ||
-                $addon->disk->getBoolean('is_present') ||
-                in_array($addon->attributes->get('origin'), ['native', 'native_all', 'partner', 'customer'], true)
-            ) {
-                $url_active = 'install';
-                unset(
-                    $urls['uninstall'],
-                    $urls['enable'],
-                    $urls['disable'],
-                    $urls['enable_mobile'],
-                    $urls['disable_mobile'],
-                    $urls['reset'],
-                    $urls['upgrade'],
-                    $urls['configure']
-                );
             } else {
-                $url_active = 'buy';
+                $urls = ['install' => $urls['install']];
             }
 
-            $urls = $this->filterAllowedActions($urls, $addon->attributes->get('name'));
-            $addon->attributes->set('urls', $urls);
-            $addon->attributes->set('actionTranslationDomains', self::_ACTIONS_TRANSLATION_DOMAINS_);
-            if ($specific_action && array_key_exists($specific_action, $urls)) {
-                $addon->attributes->set('url_active', $specific_action);
-            } elseif ($url_active === 'buy' || array_key_exists($url_active, $urls)) {
-                $addon->attributes->set('url_active', $url_active);
+            $filteredUrls = $this->filterAllowedActions($urls, $moduleAttributes->get('name'));
+
+            if ($specific_action && array_key_exists($specific_action, $filteredUrls)) {
+                $urlActive = $specific_action;
             } else {
-                $addon->attributes->set('url_active', key($urls));
+                $urlActive = key($filteredUrls);
             }
 
-            $categoryParent = $this->categoriesProvider->getParentCategory($addon->attributes->get('categoryName'));
-            $addon->attributes->set('categoryParent', $categoryParent);
+            $moduleAttributes->set('urls', $filteredUrls);
+            $moduleAttributes->set('url_active', $urlActive);
+            $moduleAttributes->set('actionTranslationDomains', self::_ACTIONS_TRANSLATION_DOMAINS_);
+            $moduleAttributes->set('actionTranslationLabels', self::ACTIONS_TRANSLATION_LABELS);
+            $moduleAttributes->set(
+                'categoryParent',
+                $this->categoriesProvider->getParentCategory($moduleAttributes->get('categoryName'))
+            );
         }
 
-        return $addons;
+        return $modules;
     }
 
     /**

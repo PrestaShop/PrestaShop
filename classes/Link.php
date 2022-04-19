@@ -122,7 +122,7 @@ class LinkCore
     /**
      * Create a link to a product.
      *
-     * @param Product|array|int $product Product object (can be an ID product, but deprecated)
+     * @param ProductCore|array|int $product Product object (can be an ID product, but deprecated)
      * @param string|null $alias
      * @param string|null $category
      * @param string|null $ean13
@@ -411,7 +411,7 @@ class LinkCore
     /**
      * Create a link to a category.
      *
-     * @param Category|array|int $category Category object (can be an ID category, but deprecated)
+     * @param CategoryCore|array|int $category Category object (can be an ID category, but deprecated)
      * @param string|null $alias
      * @param int|null $idLang
      * @param string|null $selectedFilters Url parameter to autocheck filters of the module blocklayered
@@ -919,7 +919,7 @@ class LinkCore
             if (null !== $idShop) {
                 $shop = new Shop($idShop);
             } else {
-                $shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
+                $shop = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
             }
         } else {
             $shop = Context::getContext()->shop;

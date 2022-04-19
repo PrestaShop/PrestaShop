@@ -575,7 +575,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
             return die(json_encode(['error' => 'You do not have the right permission']));
         }
 
-        $currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+        $currency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
         $tooltip = null;
         $value = false;
         switch (Tools::getValue('kpi')) {
@@ -858,7 +858,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
                 break;
 
             case 'orders_per_customer':
-                $value = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+                $value = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
                     '
 				SELECT COUNT(*)
 				FROM `' . _DB_PREFIX_ . 'customer` c
@@ -866,7 +866,7 @@ class AdminStatsControllerCore extends AdminStatsTabController
 				' . Shop::addSqlRestriction()
                 );
                 if ($value) {
-                    $orders = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+                    $orders = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
                         '
 					SELECT COUNT(*)
 					FROM `' . _DB_PREFIX_ . 'orders` o

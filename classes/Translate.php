@@ -34,6 +34,15 @@ class TranslateCore
     public static $regexSprintfParams = '#(?:%%|%(?:[0-9]+\$)?[+-]?(?:[ 0]|\'.)?-?[0-9]*(?:\.[0-9]+)?[bcdeufFosxX])#';
     public static $regexClassicParams = '/%\w+%/';
 
+    /**
+     * @param string $string
+     * @param string $class
+     * @param bool $addslashes
+     * @param bool $htmlentities
+     * @param array|null $sprintf
+     *
+     * @return string
+     */
     public static function getFrontTranslation($string, $class, $addslashes = false, $htmlentities = true, $sprintf = null)
     {
         global $_LANG;
@@ -53,9 +62,9 @@ class TranslateCore
         $str = str_replace('"', '&quot;', $str);
 
         if (
-            $sprintf !== null &&
-            (!is_array($sprintf) || !empty($sprintf)) &&
-            !(count($sprintf) === 1 && isset($sprintf['legacy']))
+            $sprintf !== null
+            && (!is_array($sprintf) || !empty($sprintf))
+            && !(count($sprintf) === 1 && isset($sprintf['legacy']))
         ) {
             $str = Translate::checkAndReplaceArgs($str, $sprintf);
         }
@@ -72,6 +81,7 @@ class TranslateCore
      * @param string $class
      * @param bool $addslashes
      * @param bool $htmlentities
+     * @param array|null $sprintf
      *
      * @return string
      */
@@ -100,7 +110,7 @@ class TranslateCore
     /**
      * Get a translation for a module.
      *
-     * @param string|Module $module
+     * @param string|ModuleCore $module
      * @param string $originalString
      * @param string $source
      * @param string|array|null $sprintf
@@ -129,7 +139,7 @@ class TranslateCore
         // $translations_merged is a cache of wether a specific module's translations have already been added to $_MODULES
         static $translationsMerged = [];
 
-        $name = $module instanceof Module ? $module->name : $module;
+        $name = $module instanceof ModuleCore ? $module->name : $module;
 
         if (null !== $locale) {
             $iso = Language::getIsoByLocale($locale);
@@ -228,6 +238,7 @@ class TranslateCore
      * Get a translation for a PDF.
      *
      * @param string $string
+     * @param array|null $sprintf
      *
      * @return string
      */

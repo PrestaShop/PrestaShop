@@ -40,6 +40,32 @@ use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 abstract class ProductListingFrontControllerCore extends ProductPresentingFrontController
 {
     /**
+     * Generates an URL to a product listing controller
+     * with only the essential query params and page remaining.
+     *
+     * @param string $canonicalUrl an url to a listing controller page
+     *
+     * @return string a canonical URL for the current page in the list
+     */
+    public function buildPaginatedUrl(string $canonicalUrl): string
+    {
+        $parsedUrl = parse_url($canonicalUrl);
+        if (isset($parsedUrl['query'])) {
+            parse_str($parsedUrl['query'], $params);
+        } else {
+            $params = [];
+        }
+        $page = (int) Tools::getValue('page');
+        if ($page > 1) {
+            $params['page'] = $page;
+        } else {
+            unset($params['page']);
+        }
+
+        return http_build_url($parsedUrl, ['query' => http_build_query($params)]);
+    }
+
+    /**
      * Takes an associative array with at least the "id_product" key
      * and returns an array containing all information necessary for
      * rendering the product in the template.

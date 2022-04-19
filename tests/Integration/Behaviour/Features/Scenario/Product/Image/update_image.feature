@@ -20,6 +20,7 @@ Feature: Update product image from Back Office (BO)
       | type        | standard       |
     And product "product1" type should be standard
     And product "product1" should have no images
+    And product "product1" should have following cover "http://myshop.com/img/p/{no_picture}-cart_default.jpg"
     When I add new image "image1" named "app_icon.png" to product "product1"
     When I add new image "image2" named "logo.jpg" to product "product1"
     When I add new image "image3" named "app_icon.png" to product "product1"
@@ -34,7 +35,7 @@ Feature: Update product image from Back Office (BO)
       | image4          | false    |               | 4        | http://myshop.com/img/p/{image4}.jpg | http://myshop.com/img/p/{image4}-small_default.jpg |
       | image5          | false    |               | 5        | http://myshop.com/img/p/{image5}.jpg | http://myshop.com/img/p/{image5}-small_default.jpg |
       | image6          | false    |               | 6        | http://myshop.com/img/p/{image6}.jpg | http://myshop.com/img/p/{image6}-small_default.jpg |
-    And product "product1" should have following cover "http://myshop.com/img/p/{image1}-small_default.jpg"
+    And product "product1" should have following cover "http://myshop.com/img/p/{image1}-cart_default.jpg"
     And images "[image1, image2, image3, image4, image5, image6]" should have following types generated:
       | name           | width | height |
       | cart_default   | 125   | 125    |
@@ -59,7 +60,7 @@ Feature: Update product image from Back Office (BO)
       | image4          | false    |                  | 4        | http://myshop.com/img/p/{image4}.jpg | http://myshop.com/img/p/{image4}-small_default.jpg |
       | image5          | false    |                  | 5        | http://myshop.com/img/p/{image5}.jpg | http://myshop.com/img/p/{image5}-small_default.jpg |
       | image6          | false    |                  | 6        | http://myshop.com/img/p/{image6}.jpg | http://myshop.com/img/p/{image6}-small_default.jpg |
-    And product "product1" should have following cover "http://myshop.com/img/p/{image1}-small_default.jpg"
+    And product "product1" should have following cover "http://myshop.com/img/p/{image1}-cart_default.jpg"
 
   Scenario: I update image cover
     When I update image "image2" with following information:
@@ -72,7 +73,7 @@ Feature: Update product image from Back Office (BO)
       | image4          | false    |               | 4        | http://myshop.com/img/p/{image4}.jpg | http://myshop.com/img/p/{image4}-small_default.jpg |
       | image5          | false    |               | 5        | http://myshop.com/img/p/{image5}.jpg | http://myshop.com/img/p/{image5}-small_default.jpg |
       | image6          | false    |               | 6        | http://myshop.com/img/p/{image6}.jpg | http://myshop.com/img/p/{image6}-small_default.jpg |
-    And product "product1" should have following cover "http://myshop.com/img/p/{image2}-small_default.jpg"
+    And product "product1" should have following cover "http://myshop.com/img/p/{image2}-cart_default.jpg"
     # Set cover false just to check it does not force the cover (it happened ^^)
     When I update image "image1" with following information:
       | legend[en-US] | preston is alive |
@@ -97,7 +98,7 @@ Feature: Update product image from Back Office (BO)
       | image5          | false    |               | 4        | http://myshop.com/img/p/{image5}.jpg | http://myshop.com/img/p/{image5}-small_default.jpg |
       | image2          | false    |               | 5        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
       | image6          | false    |               | 6        | http://myshop.com/img/p/{image6}.jpg | http://myshop.com/img/p/{image6}-small_default.jpg |
-    And product "product1" should have following cover "http://myshop.com/img/p/{image1}-small_default.jpg"
+    And product "product1" should have following cover "http://myshop.com/img/p/{image1}-cart_default.jpg"
     When I update image "image6" with following information:
       | position | 2 |
     Then product "product1" should have following images:
@@ -108,7 +109,7 @@ Feature: Update product image from Back Office (BO)
       | image4          | false    |               | 4        | http://myshop.com/img/p/{image4}.jpg | http://myshop.com/img/p/{image4}-small_default.jpg |
       | image5          | false    |               | 5        | http://myshop.com/img/p/{image5}.jpg | http://myshop.com/img/p/{image5}-small_default.jpg |
       | image2          | false    |               | 6        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
-    And product "product1" should have following cover "http://myshop.com/img/p/{image1}-small_default.jpg"
+    And product "product1" should have following cover "http://myshop.com/img/p/{image1}-cart_default.jpg"
     When I update image "image1" with following information:
       | position | 2 |
     Then product "product1" should have following images:
@@ -119,7 +120,7 @@ Feature: Update product image from Back Office (BO)
       | image4          | false    |               | 4        | http://myshop.com/img/p/{image4}.jpg | http://myshop.com/img/p/{image4}-small_default.jpg |
       | image5          | false    |               | 5        | http://myshop.com/img/p/{image5}.jpg | http://myshop.com/img/p/{image5}-small_default.jpg |
       | image2          | false    |               | 6        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
-    And product "product1" should have following cover "http://myshop.com/img/p/{image1}-small_default.jpg"
+    And product "product1" should have following cover "http://myshop.com/img/p/{image1}-cart_default.jpg"
     When I update image "image1" with following information:
       | position | 42 |
     Then product "product1" should have following images:
@@ -130,7 +131,7 @@ Feature: Update product image from Back Office (BO)
       | image5          | false    |               | 4        | http://myshop.com/img/p/{image5}.jpg | http://myshop.com/img/p/{image5}-small_default.jpg |
       | image2          | false    |               | 5        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
       | image1          | true     |               | 6        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
-    And product "product1" should have following cover "http://myshop.com/img/p/{image1}-small_default.jpg"
+    And product "product1" should have following cover "http://myshop.com/img/p/{image1}-cart_default.jpg"
     When I update image "image3" with following information:
       | position | -8000 |
     Then product "product1" should have following images:
@@ -141,4 +142,4 @@ Feature: Update product image from Back Office (BO)
       | image5          | false    |               | 4        | http://myshop.com/img/p/{image5}.jpg | http://myshop.com/img/p/{image5}-small_default.jpg |
       | image2          | false    |               | 5        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
       | image1          | true     |               | 6        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
-    And product "product1" should have following cover "http://myshop.com/img/p/{image1}-small_default.jpg"
+    And product "product1" should have following cover "http://myshop.com/img/p/{image1}-cart_default.jpg"

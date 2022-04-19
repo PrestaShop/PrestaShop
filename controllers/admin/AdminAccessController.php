@@ -137,7 +137,6 @@ class AdminAccessControllerCore extends AdminController
 
     public function ajaxProcessUpdateAccess()
     {
-        /* @phpstan-ignore-next-line */
         if (_PS_MODE_DEMO_) {
             throw new PrestaShopException($this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error'));
         }
@@ -152,10 +151,10 @@ class AdminAccessControllerCore extends AdminController
                 throw new PrestaShopException('permission does not exist');
             }
 
-            $enabled = (int) Tools::getValue('enabled');
+            $enabled = (bool) Tools::getValue('enabled');
             $id_tab = (int) Tools::getValue('id_tab');
             $id_profile = (int) Tools::getValue('id_profile');
-            $addFromParent = (int) Tools::getValue('addFromParent');
+            $addFromParent = (bool) Tools::getValue('addFromParent');
 
             die($access->updateLgcAccess((int) $id_profile, $id_tab, $perm, $enabled, $addFromParent));
         }
@@ -163,7 +162,6 @@ class AdminAccessControllerCore extends AdminController
 
     public function ajaxProcessUpdateModuleAccess()
     {
-        /* @phpstan-ignore-next-line */
         if (_PS_MODE_DEMO_) {
             throw new PrestaShopException($this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error'));
         }
@@ -174,7 +172,7 @@ class AdminAccessControllerCore extends AdminController
         if (Tools::isSubmit('changeModuleAccess')) {
             $access = new Access();
             $perm = Tools::getValue('perm');
-            $enabled = (int) Tools::getValue('enabled');
+            $enabled = (bool) Tools::getValue('enabled');
             $id_module = (int) Tools::getValue('id_module');
             $id_profile = (int) Tools::getValue('id_profile');
 

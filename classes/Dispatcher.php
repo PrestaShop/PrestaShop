@@ -410,7 +410,7 @@ class DispatcherCore
                     );
                 }
 
-                $tab = Tab::getInstanceFromClassName($this->controller, Configuration::get('PS_LANG_DEFAULT'));
+                $tab = Tab::getInstanceFromClassName($this->controller, (int) Configuration::get('PS_LANG_DEFAULT'));
                 $retrocompatibility_admin_tab = null;
 
                 if ($tab->module) {
@@ -1081,7 +1081,7 @@ class DispatcherCore
     /**
      * Get list of all available FO controllers.
      *
-     * @var mixed
+     * @param mixed $dirs
      *
      * @return array
      */

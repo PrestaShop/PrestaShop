@@ -35,23 +35,6 @@ use Tools as LegacyTools;
 
 class ToolsTest extends TestCase
 {
-    /**
-     * Given two numbers with arbitrary precision
-     * When calling Tools:bcAdd with those numbers and a specific precision
-     * Then the method should return the sum of those numbers, rounded to the specified precision
-     *
-     * @param string $leftOperand
-     * @param string $rightOperand
-     * @param int $scale
-     * @param string $expectedResult
-     *
-     * @dataProvider provideTestCasesForBcAdd
-     */
-    public function testBcAdd(string $leftOperand, string $rightOperand, int $scale, string $expectedResult): void
-    {
-        $this->assertSame($expectedResult, (new Tools())->bcadd($leftOperand, $rightOperand, $scale));
-    }
-
     public function provideTestCasesForBcAdd(): iterable
     {
         yield ['1.234', '5', 4, '6.2340'];

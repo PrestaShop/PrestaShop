@@ -376,14 +376,11 @@ class StockManagerTest extends TestCase
 class FakeProduct4759 extends Product
 {
     private static $LAST_ID = 0;
-    public $id;
-    public $pack_stock_type;
     public $stock_available;
-    public $low_stock_alert;
 
     public function __construct($stock_available, int $pack_stock_type = PackStockType::STOCK_TYPE_PACK_ONLY)
     {
-        $this->id = ++static::$LAST_ID;
+        $this->id = ++self::$LAST_ID;
         $this->pack_stock_type = $pack_stock_type;
         $this->stock_available = new FakeStockAvailable4759($stock_available);
     }
@@ -455,8 +452,6 @@ class FakePackItemsManager4759 extends PackItemsManager
 
 class FakeStockAvailable4759 extends StockAvailable
 {
-    public $quantity = 0;
-
     public function __construct($quantity)
     {
         $this->quantity = $quantity;

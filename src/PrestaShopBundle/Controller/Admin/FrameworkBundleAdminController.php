@@ -100,7 +100,7 @@ class FrameworkBundleAdminController extends AbstractController
     {
         $errors = [];
 
-        if (empty($form)) {
+        if ($form->count() === 0) {
             return $errors;
         }
 
@@ -386,7 +386,7 @@ class FrameworkBundleAdminController extends AbstractController
      * Get fallback error message when something unexpected happens.
      *
      * @param string $type
-     * @param string $code
+     * @param int $code
      * @param string $message
      *
      * @return string

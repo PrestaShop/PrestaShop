@@ -25,26 +25,32 @@
 
 const combinationListId = '#combination_list';
 const attachmentsBlockId = '#product_specifications_attachments';
+// It does not include "#" so it can be selected by getElementById
+const isSelectedCombinationInputClass = 'combination-is-selected';
+const bulkCombinationSelectAllInPageId = 'bulk-select-all-in-page';
+const progressModalId = 'bulk-combination-progress-modal';
 
 export default {
   productForm: 'form[name=product]',
-  productTypeSelector: '#product_header_type',
+  productTypePreview: '.product-type-preview',
   productType: {
-    STANDARD: 'standard',
-    PACK: 'pack',
-    VIRTUAL: 'virtual',
-    COMBINATIONS: 'combinations',
-  },
-  create: {
-    newProductButton: 'a.new-product',
+    headerSelector: '#product_header_type',
+    headerPreviewButton: '.product-type-preview',
+    switchModalId: 'switch-product-type-modal',
+    switchModalSelector: '#switch-product-type-modal .header-product-type-selector',
+    switchModalContent: '#product-type-selector-modal-content',
+    switchModalButton: '#switch-product-type-modal .btn-confirm-submit',
     productTypeSelector: {
-      select: '#product_type',
       choicesContainer: '.product-type-choices',
       typeChoices: '.product-type-choice',
       defaultChoiceClass: 'btn-outline-secondary',
       selectedChoiceClass: 'btn-primary',
       typeDescription: '.product-type-description-content',
     },
+  },
+  create: {
+    newProductButton: 'a.new-product',
+    createModalSelector: '#product_type',
   },
   invalidField: '.is-invalid',
   productFormSubmitButton: '.product-form-save-button',
@@ -74,7 +80,7 @@ export default {
     preloader: '#combinations-preloader',
     emptyState: '#combinations-empty-state',
     combinationsPaginatedList: '#combinations-paginated-list',
-    combinationsContainer: `${combinationListId}`,
+    combinationsListContainer: `${combinationListId}`,
     combinationsFiltersContainer: '#combinations_filters',
     combinationsGeneratorContainer: '#product_combinations_generator',
     combinationsTable: `${combinationListId} table`,
@@ -101,6 +107,7 @@ export default {
       'form[name="combination_form"] input, form[name="combination_form"] textarea, form[name="combination_form"] select',
     editCombinationButtons: '.edit-combination-item',
     tableRow: {
+      isSelectedCombination: `.${isSelectedCombinationInputClass}`,
       combinationImg: '.combination-image',
       deltaQuantityWrapper: '.delta-quantity',
       deltaQuantityInput: (rowIndex: number): string => `${combinationListId}_combinations_${rowIndex}_delta_quantity_delta`,
@@ -125,6 +132,12 @@ export default {
     scrollBar: '.attributes-list-overflow',
     searchInput: '#product-combinations-generate .attributes-search',
     generateCombinationsButton: '.generate-combinations-button',
+    bulkCombinationFormBtn: '#combination-bulk-form-btn',
+    bulkActionsBtn: '#combination-bulk-actions-btn',
+    bulkSelectAllInPage: `#${bulkCombinationSelectAllInPageId}`,
+    bulkSelectAllInPageId: bulkCombinationSelectAllInPageId,
+    bulkProgressModalId: progressModalId,
+    bulkFormModalId: 'bulk-combination-form-modal',
   },
   virtualProduct: {
     container: '.virtual-product-file-container',
@@ -258,6 +271,10 @@ export default {
       fromQuantity: '.from-qty',
       editBtn: '.js-edit-specific-price-btn',
       deleteBtn: '.js-delete-specific-price-btn',
+    },
+    priority: {
+      priorityListWrapper: '.specific-price-priority-list',
+      priorityTypeCheckboxesSelector: 'input[name="product[pricing][priority_management][use_custom_priority]"]',
     },
   },
 };

@@ -30,18 +30,22 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FontPreloadPlugin = require('webpack-font-preload-plugin');
+const CssoWebpackPlugin = require('csso-webpack-plugin').default;
+const LicensePlugin = require('webpack-license-plugin');
+const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 
 module.exports = (env, argv) => {
   const devMode = argv.mode === 'development';
 
   const config = {
-    entry: [
-      './js/theme.js',
-    ],
+    entry: {
+      theme: './js/theme.js',
+      rtl: './scss/rtl.scss',
+    },
     output: {
       path: path.resolve(__dirname, 'public'),
       publicPath: '',
-      filename: 'bundle.js',
+      filename: '[name].bundle.js',
     },
     module: {
       rules: [{
@@ -92,6 +96,7 @@ module.exports = (env, argv) => {
 
     },
     plugins: [
+      new RemoveEmptyScriptsPlugin(),
       new CleanWebpackPlugin({
         root: path.resolve(__dirname),
         cleanOnceBeforeBuildPatterns: [
@@ -100,7 +105,7 @@ module.exports = (env, argv) => {
         ],
       }),
       new MiniCssExtractPlugin({
-        filename: 'theme.css',
+        filename: '[name].css',
       }),
       new HtmlWebpackPlugin({
         filename: 'preload.tpl',
@@ -114,6 +119,16 @@ module.exports = (env, argv) => {
         // eslint-disable-next-line
         replaceCallback: ({indexSource, linksAsString}) => indexSource.replace('{{{preloadLinks}}}', linksAsString.replace(/href="auto/g, 'href="{"`$admin_dir`"}')),
       }),
+      new CssoWebpackPlugin({
+        forceMediaMerge: true,
+      }),
+      new LicensePlugin({
+        outputFilename: 'thirdPartyNotice.json',
+        licenseOverrides: {
+          'vazirmatn@32.102.0': 'OFL-1.1'
+        },
+        replenishDefaultLicenseTexts: true,
+      })
     ],
   };
 

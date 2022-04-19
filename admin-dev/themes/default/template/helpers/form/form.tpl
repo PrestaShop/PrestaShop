@@ -755,6 +755,7 @@
 												data-hex="true"
 												{if isset($input.class)} class="{$input.class}"
 												{else}class="datepicker"{/if}
+												autocomplete="off"
 												name="{$input.name}"
 												value="{$fields_value[$input.name]|escape:'html':'UTF-8'}" />
 											<span class="input-group-addon">
@@ -771,6 +772,7 @@
 												data-hex="true"
 												{if isset($input.class)} class="{$input.class}"
 												{else} class="datetimepicker"{/if}
+												autocomplete="off"
 												name="{$input.name}"
 												value="{$fields_value[$input.name]|escape:'html':'UTF-8'}" />
 											<span class="input-group-addon">
@@ -906,7 +908,6 @@
 		var module_dir = '{$smarty.const._MODULE_DIR_}';
 		var id_language = {$defaultFormLanguage|intval};
 		var languages = new Array();
-		var vat_number = {if $vat_number}1{else}0{/if};
 		// Multilang field setup must happen before document is ready so that calls to displayFlags() to avoid
 		// precedence conflicts with other document.ready() blocks
 		{foreach $languages as $k => $language}

@@ -18,8 +18,9 @@ class AddFile extends BOBasePage {
     this.pageTitleEdit = 'Edit:';
 
     // Selectors
-    this.nameLangButton = '#attachment_name';
-    this.nameLangSpan = lang => `div.dropdown-menu[aria-labelledby='attachment_name'] span[data-locale='${lang}']`;
+    this.nameLangButton = '#attachment_name_dropdown';
+    this.nameLangSpan = lang => 'div.dropdown-menu[aria-labelledby=\'attachment_name_dropdown\']'
+      + ` span[data-locale='${lang}']`;
     this.nameInput = id => `#attachment_name_${id}`;
     this.descriptionInput = id => `#attachment_file_description_${id}`;
     this.fileInput = '#attachment_file';

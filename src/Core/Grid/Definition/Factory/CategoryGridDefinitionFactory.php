@@ -62,16 +62,6 @@ final class CategoryGridDefinitionFactory extends AbstractFilterableGridDefiniti
     public const GRID_ID = 'category';
 
     /**
-     * @var string
-     */
-    private $resetActionUrl;
-
-    /**
-     * @var string
-     */
-    private $redirectActionUrl;
-
-    /**
      * @var AccessibilityCheckerInterface
      */
     private $categoryForViewAccessibilityChecker;
@@ -83,21 +73,15 @@ final class CategoryGridDefinitionFactory extends AbstractFilterableGridDefiniti
 
     /**
      * @param HookDispatcherInterface $hookDispatcher
-     * @param string $resetActionUrl
-     * @param string $redirectActionUrl
      * @param MultistoreContextCheckerInterface $multistoreContextChecker
      * @param AccessibilityCheckerInterface $categoryForViewAccessibilityChecker
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
-        $resetActionUrl,
-        $redirectActionUrl,
         MultistoreContextCheckerInterface $multistoreContextChecker,
         AccessibilityCheckerInterface $categoryForViewAccessibilityChecker
     ) {
         parent::__construct($hookDispatcher);
-        $this->resetActionUrl = $resetActionUrl;
-        $this->redirectActionUrl = $redirectActionUrl;
         $this->categoryForViewAccessibilityChecker = $categoryForViewAccessibilityChecker;
         $this->multistoreContextChecker = $multistoreContextChecker;
     }

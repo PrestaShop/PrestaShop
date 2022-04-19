@@ -77,7 +77,7 @@ class OrderHistoryCore extends ObjectModel
      * Sets the new state of the given order.
      *
      * @param int $new_order_state
-     * @param int|Order $id_order
+     * @param int|OrderCore $id_order
      * @param bool $use_existing_payment
      */
     public function changeIdOrderState($new_order_state, $id_order, $use_existing_payment = false)
@@ -97,7 +97,7 @@ class OrderHistoryCore extends ObjectModel
         ShopUrl::cacheMainDomainForShop($order->id_shop);
 
         $new_os = new OrderState((int) $new_order_state, $order->id_lang);
-        $old_os = $order->getCurrentOrderState();
+        $old_os = new OrderState((int) $order->current_state, $order->id_lang);
 
         // executes hook
         if (in_array($new_os->id, [Configuration::get('PS_OS_PAYMENT'), Configuration::get('PS_OS_WS_PAYMENT')])) {
@@ -105,14 +105,18 @@ class OrderHistoryCore extends ObjectModel
         }
 
         // executes hook
-        Hook::exec('actionOrderStatusUpdate', ['newOrderStatus' => $new_os, 'id_order' => (int) $order->id], null, false, true, false, $order->id_shop);
+        Hook::exec('actionOrderStatusUpdate', [
+            'newOrderStatus' => $new_os,
+            'oldOrderStatus' => $old_os,
+            'id_order' => (int) $order->id,
+        ], null, false, true, false, $order->id_shop);
 
         if (Validate::isLoadedObject($order) && $new_os instanceof OrderState) {
             $context = Context::getContext();
 
             // An email is sent the first time a virtual item is validated
             $virtual_products = $order->getVirtualProducts();
-            if ($virtual_products && (!$old_os || !$old_os->logable) && $new_os->logable) {
+            if ($virtual_products && !$old_os->logable && $new_os->logable) {
                 $assign = [];
                 foreach ($virtual_products as $key => $virtual_product) {
                     $id_product_download = ProductDownload::getIdFromIdProduct($virtual_product['product_id']);
@@ -262,7 +266,7 @@ class OrderHistoryCore extends ObjectModel
                         $product['product_attribute_id'],
                         $warehouse,
                         ($product['product_quantity'] - $product['product_quantity_refunded'] - $product['product_quantity_return']),
-                        Configuration::get('PS_STOCK_CUSTOMER_ORDER_REASON'),
+                        (int) Configuration::get('PS_STOCK_CUSTOMER_ORDER_REASON'),
                         true,
                         (int) $order->id
                     );
@@ -411,7 +415,11 @@ class OrderHistoryCore extends ObjectModel
         }
 
         // executes hook
-        Hook::exec('actionOrderStatusPostUpdate', ['newOrderStatus' => $new_os, 'id_order' => (int) $order->id], null, false, true, false, $order->id_shop);
+        Hook::exec('actionOrderStatusPostUpdate', [
+            'newOrderStatus' => $new_os,
+            'oldOrderStatus' => $old_os,
+            'id_order' => (int) $order->id,
+        ], null, false, true, false, $order->id_shop);
 
         // sync all stock
         (new StockManagerAdapter())->updatePhysicalProductQuantity(
@@ -423,34 +431,6 @@ class OrderHistoryCore extends ObjectModel
         );
 
         ShopUrl::resetMainDomainCache();
-    }
-
-    /**
-     * Returns the last order status.
-     *
-     * @param int $id_order
-     *
-     * @return OrderState|bool
-     *
-     * @deprecated 1.5.0.4
-     * @see Order->current_state
-     */
-    public static function getLastOrderState($id_order)
-    {
-        Tools::displayAsDeprecated();
-        $id_order_state = Db::getInstance()->getValue('
-        SELECT `id_order_state`
-        FROM `' . _DB_PREFIX_ . 'order_history`
-        WHERE `id_order` = ' . (int) $id_order . '
-        ORDER BY `date_add` DESC, `id_order_history` DESC');
-
-        // returns false if there is no state
-        if (!$id_order_state) {
-            return false;
-        }
-
-        // else, returns an OrderState object
-        return new OrderState($id_order_state, Configuration::get('PS_LANG_DEFAULT'));
     }
 
     /**

@@ -38,6 +38,10 @@
     }
   }
 
+  .form-check-radio {
+    padding-top: calc(0.375rem + 1px);
+  }
+
   .form-group {
     > .alert {
       margin-top: 0.75rem;
@@ -113,6 +117,21 @@
   }
 }
 
+.form-group.inline-switch-widget {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+
+  > * {
+    width: auto;
+  }
+
+  > .input-group {
+    min-width: 35px;
+    margin-top: -7px;
+  }
+}
+
 [class*="form-columns-"] {
   display: flex;
   flex-wrap: wrap;
@@ -151,5 +170,58 @@
   &.multi-shop-focused,
   &.multi-shop-updated {
     display: block;
+  }
+}
+
+/**
+ * Style related to the accordion form type
+ */
+.accordion-form {
+  .card {
+    margin-bottom: 0;
+    border: none;
+    box-shadow: none;
+
+    .card-header {
+      padding: 0;
+      margin-bottom: 0.5rem;
+      color: $dark-gray;
+      background-color: $background-grey;
+      @include border-radius(6px);
+
+      button {
+        padding: 0.7rem 1rem;
+      }
+    }
+
+    .accordion-form-button {
+      display: flex;
+
+      i.material-icons {
+        margin-left: auto;
+      }
+
+      i.material-icons::after {
+        content: "keyboard_arrow_up";
+      }
+
+      &.collapsed {
+        i.material-icons::after {
+          content: "keyboard_arrow_down";
+        }
+      }
+    }
+
+    .accordion-sub-form {
+      > .form-group {
+        padding: 0.625rem;
+        border-bottom: 1px solid $background-grey;
+      }
+
+      > .form-group:last-child {
+        margin-bottom: 0;
+        border-bottom: none;
+      }
+    }
   }
 }

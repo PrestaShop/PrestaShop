@@ -28,75 +28,70 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder;
 
-use Symfony\Component\PropertyAccess\PropertyPath;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
 class CommandField
 {
-    public const TYPE_STRING = 'string';
-    public const TYPE_BOOL = 'bool';
-    public const TYPE_INT = 'int';
-    public const TYPE_ARRAY = 'array';
-
-    public const ACCEPTED_TYPES = [
-        self::TYPE_STRING,
-        self::TYPE_BOOL,
-        self::TYPE_INT,
-        self::TYPE_ARRAY,
-    ];
-
-    /**
-     * @var PropertyPath
-     */
-    private $dataPath;
-
     /**
      * @var string
      */
     private $commandSetter;
 
     /**
-     * @var string
+     * @var array<int, DataField>
      */
-    private $type;
+    private $dataFields;
 
     /**
      * @var bool
      */
-    private $multiShopField;
+    private $isMultiShopField;
 
-    /**
-     * @param string $dataPath
-     * @param string $commandSetter
-     * @param string $type
-     *
-     * @throws InvalidCommandFieldTypeException
-     */
-    public function __construct(
-        string $dataPath,
-        string $commandSetter,
-        string $type,
-        bool $multiShopField
-    ) {
-        if (!in_array($type, self::ACCEPTED_TYPES)) {
-            throw new InvalidCommandFieldTypeException(sprintf(
-                'Invalid type "%s" used, only accepted values are: %s',
-                $type,
-                implode(',', self::ACCEPTED_TYPES)
-            ));
+    protected function __construct(string $commandSetter, array $dataFields, bool $isMultiShopField)
+    {
+        if (empty($dataFields)) {
+            throw new InvalidArgumentException(
+                sprintf('No data field provided to command setter "%s"', $commandSetter)
+            );
         }
-
-        $this->dataPath = new PropertyPath($dataPath);
+        foreach ($dataFields as $dataField) {
+            if (!$dataField instanceof DataField) {
+                throw new InvalidArgumentException(sprintf(
+                    'Invalid data field type "%s", expected "%s"',
+                    is_object($dataField) ? get_class($dataField) : gettype($dataField),
+                    DataField::class
+                ));
+            }
+        }
         $this->commandSetter = $commandSetter;
-        $this->type = $type;
-        $this->multiShopField = $multiShopField;
+        $this->dataFields = array_values($dataFields);
+        $this->isMultiShopField = $isMultiShopField;
     }
 
     /**
-     * @return PropertyPath
+     * Returns a new command field for single shop
+     *
+     * @param string $commandSetter
+     * @param array<int, DataField> $dataFields
+     *
+     * @return static
      */
-    public function getDataPath(): PropertyPath
+    public static function createAsSingleShop(string $commandSetter, array $dataFields): self
     {
-        return $this->dataPath;
+        return new static($commandSetter, $dataFields, false);
+    }
+
+    /**
+     * Returns a new command field for multiple shops
+     *
+     * @param string $commandSetter
+     * @param array<int, DataField> $dataFields
+     *
+     * @return static
+     */
+    public static function createAsMultiShop(string $commandSetter, array $dataFields): self
+    {
+        return new static($commandSetter, $dataFields, true);
     }
 
     /**
@@ -108,11 +103,11 @@ class CommandField
     }
 
     /**
-     * @return string
+     * @return array<int, DataField>
      */
-    public function getType(): string
+    public function getDataFields(): array
     {
-        return $this->type;
+        return $this->dataFields;
     }
 
     /**
@@ -120,6 +115,6 @@ class CommandField
      */
     public function isMultiShopField(): bool
     {
-        return $this->multiShopField;
+        return $this->isMultiShopField;
     }
 }

@@ -30,7 +30,6 @@ namespace PrestaShopBundle\Command;
 
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider;
-use PrestaShop\PrestaShop\Adapter\LegacyContextLoader;
 use PrestaShop\PrestaShop\Core\Domain\Configuration\ShopConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Symfony\Component\Console\Command\Command;
@@ -96,12 +95,10 @@ class ConfigCommand extends Command
     private $idLang;
 
     public function __construct(
-        LegacyContextLoader $legacyContextLoader,
         ShopConfigurationInterface $configuration,
         LanguageDataProvider $languageDataProvider
     ) {
         parent::__construct();
-        $legacyContextLoader->loadGenericContext();
         $this->configuration = $configuration;
         $this->languageDataProvider = $languageDataProvider;
     }

@@ -24,16 +24,19 @@
  */
 import ProductMap from '@pages/product/product-map';
 
-const ProductTypeMap = ProductMap.create.productTypeSelector;
+const ProductTypeMap = ProductMap.productType.productTypeSelector;
 
 export default class ProductTypeSelector {
   private $typeSelector: JQuery;
 
   private $descriptionContainer: JQuery;
 
-  constructor() {
-    this.$typeSelector = $(ProductTypeMap.select);
+  private initialType?: string;
+
+  constructor(typeSelector: string, initialType: string | undefined = undefined) {
+    this.$typeSelector = $(typeSelector);
     this.$descriptionContainer = $(ProductTypeMap.typeDescription);
+    this.initialType = initialType;
     this.init();
   }
 
@@ -57,6 +60,10 @@ export default class ProductTypeSelector {
 
     // Display initial value
     this.selectChoice(<string> this.$typeSelector.find(':selected').val());
+    if (this.initialType) {
+      const $initialChoice = $(`${ProductTypeMap.typeChoices}[data-value=${this.initialType}]`);
+      $initialChoice.prop('disabled', true);
+    }
   }
 
   /**
@@ -74,8 +81,8 @@ export default class ProductTypeSelector {
     selectedChoice.removeClass(ProductTypeMap.defaultChoiceClass);
     selectedChoice.addClass(ProductTypeMap.selectedChoiceClass);
 
-    // Update selected option in select input
-    this.$typeSelector.val(<string> selectedChoice.data('value'));
+    // Update selected option in select input, trigger change for those who listen
+    this.$typeSelector.val(<string> selectedChoice.data('value')).trigger('change');
     this.displaySelectedDescription();
   }
 

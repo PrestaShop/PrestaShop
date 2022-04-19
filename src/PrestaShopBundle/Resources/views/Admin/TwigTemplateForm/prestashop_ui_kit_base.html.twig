@@ -130,6 +130,14 @@
   {% endif %}
 {% endblock %}
 
+{% block form_disabling_switch %}
+  {% set disablingSwitchName = disabling_switch_prefix ~ form.vars.name %}
+  {% if attribute(form.parent, disablingSwitchName) is defined %}
+    {{ form_errors(attribute(form.parent, disablingSwitchName)) }}
+    {{ form_widget(attribute(form.parent, disablingSwitchName)) }}
+  {% endif %}
+{% endblock %}
+
 {% block widget_type_class %}
 {% if not compound and form.vars.block_prefixes|length > 2 %}
  {% apply spaceless %}
@@ -188,11 +196,12 @@
       {% set placement = label_attr['popover_placement'] is defined ? label_attr['popover_placement'] : 'top' %}
       {% include '@Common/HelpBox/helpbox.html.twig' with { "placement" : placement, "content": content } %}
     {% endif %}
+    {{- block('form_disabling_switch') -}}
     </{{ labelTag }}>
-    {% if label_subtitle is defined %}
-      <p class="subtitle">{{ label_subtitle|raw('html') }}</p>
-    {% endif %}
   {%- endif -%}
+  {% if label_subtitle is defined %}
+    <p class="subtitle">{{ label_subtitle|raw('html') }}</p>
+  {% endif %}
 {%- endblock form_label -%}
 
 {# Widgets #}
@@ -402,7 +411,7 @@
 
 {% block translatefields_widget %}
   {{ form_errors(form) }}
-  <div class="translations tabbable" id="{{ form.vars.id }}">
+  <div class="translations tabbable" id="{{ form.vars.id }}" tabindex="1">
     {% if hideTabs == false and form|length > 1 %}
       <ul class="translationsLocales nav nav-pills">
         {% for translationsFields in form %}
@@ -539,7 +548,7 @@
 {% block search_and_reset_widget %}
   {% apply spaceless %}
     <button type="submit"
-            class="btn btn-primary grid-search-button d-block float-right"
+            class="btn btn-primary grid-search-button d-block"
             title="{{ 'Search'|trans({}, 'Admin.Actions') }}"
             name="{{ full_name }}[search]"
     >
@@ -548,10 +557,9 @@
     </button>
     {% if show_reset_button %}
       <div class="js-grid-reset-button">
-        <div class="clearfix"></div>
         <button type="reset"
                 name="{{ full_name }}[reset]"
-                class="btn btn-link js-reset-search btn d-block grid-reset-button float-right"
+                class="btn btn-link js-reset-search btn d-block grid-reset-button"
                 data-url="{{ reset_url }}"
                 data-redirect="{{ redirect_url }}"
         >
@@ -565,8 +573,9 @@
 
 {% block switch_widget %}
   {% apply spaceless %}
-  <div class="input-group">
-    <span class="ps-switch">
+  {% set rowAttributes  = row_attr|default({})%}
+  <div class="input-group {{ rowAttributes.class|default('') }}" {% for key, rowAttr in rowAttributes %} {% if key != 'class' %}{{ key }}="{{ rowAttr }}"{% endif %}{% endfor %}>
+    <span class="ps-switch" id="{{ form.vars.id }}">
         {% for choice in choices %}
           {% set inputId = id ~'_' ~ choice.value %}
           <input id="{{inputId}}"
@@ -577,7 +586,7 @@
             {% if disabled %}disabled=""{% endif %}
             type="radio"
           >
-          <label for="{{inputId}}">{{ choice.label|trans({}, choice_translation_domain) }}</label>
+          {% if show_choices %}<label for="{{inputId}}">{{ choice.label|trans({}, choice_translation_domain) }}</label>{% endif %}
         {% endfor %}
         <span class="slide-button"></span>
     </span>
@@ -879,7 +888,7 @@
 
 {# Copied translatablefields_widget made to be compatible with TranslatableType.php and to be used in translatable widget#}
 {% block translatable_fields_with_tabs %}
-  <div class="translations tabbable" id="{{ form.vars.id }}">
+  <div class="translations tabbable" id="{{ form.vars.id }}" tabindex="1">
     {% if hide_locales == false and form|length > 1 %}
       <ul class="translationsLocales nav nav-pills">
         {% for translationsFields in form %}
@@ -904,7 +913,7 @@
 
 {% block translatable_fields_with_dropdown -%}
     {% set formClass = (form.vars.attr.class|default('') ~ ' input-group locale-input-group js-locale-input-group d-flex')|trim %}
-    <div class="{{ formClass }}">
+    <div class="{{ formClass }}" id="{{ form.vars.id }}" tabindex="1">
       {% for translateField in form %}
         {% set classes = translateField.vars.attr.class|default('') ~ ' js-locale-input'%}
         {% set classes = classes ~ ' js-locale-' ~ translateField.vars.label %}
@@ -925,11 +934,11 @@
             {% endif %}
                   aria-haspopup="true"
                   aria-expanded="false"
-                  id="{{ form.vars.id }}"
+                  id="{{ form.vars.id }}_dropdown"
           >
             {{ form.vars.default_locale.iso_code }}
           </button>
-          <div class="dropdown-menu locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}">
+          <div class="dropdown-menu locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}_dropdown">
             {% for locale in locales %}
               <span class="dropdown-item js-locale-item" data-locale="{{ locale.iso_code }}">{{ locale.name }}</span>
             {% endfor %}
@@ -1114,6 +1123,12 @@
   {{- block('form_help') -}}
 {%- endblock number_widget -%}
 
+{%- block integer_widget -%}
+  {%- set type = type|default('number') -%}
+  {{ block('form_widget_simple') }}
+  {{- block('form_help') -}}
+{%- endblock integer_widget -%}
+
 {% block form_help %}
   {% if help is not null %}
     <small class="form-text">{{ help|raw }}</small>
@@ -1294,6 +1309,7 @@
       {{- block('form_append_external_link') -}}
     </div>
     {{- form_errors(form) -}}
+    {{- block('form_modify_all_shops') -}}
   </div>
 {% endblock %}
 
@@ -1336,3 +1352,42 @@
     {{- block('submittable_input_button_widget') -}}
   </div>
 {% endblock %}
+
+{%- block accordion_widget -%}
+  <div class="accordion accordion-form" id="{{ form.vars.id }}">
+    {% set firstChild = true %}
+    {% for child in form %}
+      {% if child.vars.compound %}
+      {% set isExpanded = firstChild and expand_first %}
+      <div class="card">
+        <div class="card-header" id="{{ child.vars.id }}_accordion_header">
+          <h2 class="mb-0">
+            <button
+              class="accordion-form-button btn btn-block text-left{% if not isExpanded %} collapsed{% endif %}"
+              type="button"
+              data-toggle="collapse"
+              data-target="#{{ child.vars.id }}_accordion"
+              aria-expanded="{% if isExpanded %}true{% else %}false{% endif %}"
+              aria-controls="{{ child.vars.id }}_accordion">
+              {{ child.vars.label }}
+              <i class="material-icons"></i>
+            </button>
+          </h2>
+        </div>
+
+        <div id="{{ child.vars.id }}_accordion" class="collapse{% if isExpanded %} show{% endif %}" aria-labelledby="{{ child.vars.id }}_accordion_header" {% if display_one %}data-parent="#{{ form.vars.id }}"{% endif %}>
+          <div class="card-body">
+            {% set childAttr = {'class': 'accordion-sub-form'} %}
+            {{ form_widget(child, {attr: childAttr}) }}
+            {{ form_errors(child) }}
+          </div>
+        </div>
+      </div>
+      {% set firstChild = false %}
+      {% endif %}
+    {% endfor %}
+
+    {# Display rest of children that may have not been rendered because they were not compound forms, like token hidden field for example #}
+    {{ form_rest(form) }}
+  </div>
+{%- endblock -%}

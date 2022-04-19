@@ -48,6 +48,10 @@ final class BulkActionColumn extends AbstractColumn
             ->setRequired([
                 'bulk_field',
             ])
-            ->setAllowedTypes('bulk_field', 'string');
+            ->setDefaults([
+                'disabled_field' => null,
+            ])
+            ->setAllowedTypes('bulk_field', 'string')
+            ->setAllowedTypes('disabled_field', ['string', 'null']);
     }
 }

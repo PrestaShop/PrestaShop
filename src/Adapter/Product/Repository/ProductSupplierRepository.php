@@ -217,7 +217,7 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
     /**
      * @param ProductSupplierId $productSupplierId
      *
-     * @throws ProductSupplierNotFoundException
+     * @throws CannotDeleteProductSupplierException
      */
     public function delete(ProductSupplierId $productSupplierId): void
     {

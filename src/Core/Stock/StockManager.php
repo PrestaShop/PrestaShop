@@ -382,7 +382,7 @@ class StockManager
 
         if ($product->id) {
             $stockManager = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\StockManager');
-            $stockAvailable = $stockManager->getStockAvailableByProduct($product, $productAttributeId);
+            $stockAvailable = $stockManager->getStockAvailableByProduct($product, $productAttributeId, $params['id_shop'] ?? null);
 
             if ($stockAvailable->id) {
                 $stockMvt = new StockMvt();

@@ -55,6 +55,9 @@ class AdminLoginControllerCore extends AdminController
         $this->addJs(_PS_JS_DIR_ . 'jquery/jquery-3.4.1.min.js');
         $this->addjqueryPlugin('validate');
         $this->addJS(_PS_JS_DIR_ . 'jquery/plugins/validate/localization/messages_' . $this->context->language->iso_code . '.js');
+        if ($this->context->language->is_rtl) {
+            $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/public/rtl.css', 'all', 0);
+        }
         $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/' . $this->bo_theme . '/public/theme.css', 'all', 0);
         $this->addJS(_PS_JS_DIR_ . 'vendor/spin.js');
         $this->addJS(_PS_JS_DIR_ . 'vendor/ladda.js');
@@ -298,7 +301,6 @@ class AdminLoginControllerCore extends AdminController
             ]
         );
 
-        /* @phpstan-ignore-next-line */
         if (_PS_MODE_DEMO_) {
             $this->errors[] = $this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error');
         } elseif (!$email) {
@@ -390,7 +392,6 @@ class AdminLoginControllerCore extends AdminController
             ]
         );
 
-        /* @phpstan-ignore-next-line */
         if (_PS_MODE_DEMO_) {
             $this->errors[] = $this->trans('This functionality has been disabled.', [], 'Admin.Notifications.Error');
         } elseif (!$reset_token_value) {

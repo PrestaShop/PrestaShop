@@ -27,6 +27,9 @@ class OrderPaymentCore extends ObjectModel
 {
     public $order_reference;
     public $id_currency;
+    /**
+     * @var float
+     */
     public $amount;
     public $payment_method;
     public $conversion_rate;
@@ -72,24 +75,7 @@ class OrderPaymentCore extends ObjectModel
     /**
      * Get the detailed payment of an order.
      *
-     * @deprecated 1.5.3.0
-     *
-     * @param int $id_order
-     *
-     * @return array
-     */
-    public static function getByOrderId($id_order)
-    {
-        Tools::displayAsDeprecated();
-        $order = new Order($id_order);
-
-        return OrderPayment::getByOrderReference($order->reference);
-    }
-
-    /**
-     * Get the detailed payment of an order.
-     *
-     * @param int $order_reference
+     * @param string $order_reference
      *
      * @return array
      *

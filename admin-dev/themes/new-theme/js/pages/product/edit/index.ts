@@ -25,6 +25,7 @@
 
 import NavbarHandler from '@components/navbar-handler';
 import ProductMap from '@pages/product/product-map';
+import ProductConst from '@pages/product/constants';
 
 import AttachmentsManager from '@pages/product/edit/attachments-manager';
 import CategoriesManager from '@pages/product/components/categories/categories-manager';
@@ -37,13 +38,13 @@ import ProductModulesManager from '@pages/product/edit/product-modules-manager';
 import ProductPartialUpdater from '@pages/product/edit/product-partial-updater';
 import ProductSEOManager from '@pages/product/edit/product-seo-manager';
 import ProductSuppliersManager from '@pages/product/edit/product-suppliers-manager';
-import ProductTypeManager from '@pages/product/edit/product-type-manager';
+import ProductTypeSwitcher from '@pages/product/edit/product-type-switcher';
 import VirtualProductManager from '@pages/product/edit/virtual-product-manager';
 import RelatedProductsManager from '@pages/product/edit/related-products-manager';
 import CreateProductModal from '@pages/product/components/create-product-modal';
+import SpecificPricesManager from '@pages/product/edit/specific-prices-manager';
 import initDropzone from '@pages/product/components/dropzone';
 import initTabs from '@pages/product/components/nav-tabs';
-import SpecificPricesManager from '@pages/product/edit/specific-prices-manager';
 
 const {$} = window;
 
@@ -56,6 +57,7 @@ $(() => {
     'TextWithLengthCounter',
     'DeltaQuantityInput',
     'ModifyAllShopsCheckbox',
+    'DisablingSwitch',
   ]);
 
   const $productForm = $(ProductMap.productForm);
@@ -70,7 +72,7 @@ $(() => {
   // Init product model along with input watching and syncing
   const productFormModel = new ProductFormModel($productForm, eventEmitter);
 
-  if (productType === ProductMap.productType.COMBINATIONS) {
+  if (productType === ProductConst.PRODUCT_TYPE.COMBINATIONS) {
     // Combinations manager must be initialized BEFORE nav handler, or it won't trigger the pagination if the tab is
     // selected on load
     new CombinationsManager(productId);
@@ -80,7 +82,7 @@ $(() => {
   new ProductSEOManager(eventEmitter);
 
   // Product type has strong impact on the page rendering so when it is modified it must be submitted right away
-  new ProductTypeManager($(ProductMap.productTypeSelector), $productForm);
+  new ProductTypeSwitcher($productForm);
   new CategoriesManager(eventEmitter);
   new ProductFooterManager();
   new ProductModulesManager();
@@ -102,10 +104,10 @@ $(() => {
   new AttachmentsManager();
   new SpecificPricesManager(productId);
 
-  if (productType !== ProductMap.productType.COMBINATIONS) {
+  if (productType !== ProductConst.PRODUCT_TYPE.COMBINATIONS) {
     new ProductSuppliersManager(ProductMap.suppliers.productSuppliers, true, productFormModel);
   }
-  if (productType === ProductMap.productType.VIRTUAL) {
+  if (productType === ProductConst.PRODUCT_TYPE.VIRTUAL) {
     new VirtualProductManager(productFormModel);
   }
 });

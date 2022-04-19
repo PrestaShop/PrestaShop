@@ -36,6 +36,8 @@ import {EventEmitter} from 'events';
 import initCombinationGenerator from '@pages/product/components/generator';
 import {getProductAttributeGroups} from '@pages/product/services/attribute-groups';
 import SubmittableDeltaQuantityInput from '@components/form/submittable-delta-quantity-input';
+import BulkFormHandler from '@pages/product/combination/bulk-form-handler';
+import PaginatedCombinationsService from '@pages/product/services/paginated-combinations-service';
 
 const {$} = window;
 const CombinationEvents = ProductEventMap.combinations;
@@ -72,6 +74,8 @@ export default class CombinationsManager {
 
   combinationsService: CombinationsService;
 
+  paginatedCombinationsService: PaginatedCombinationsService;
+
   productAttributeGroups: Array<Record<string, any>>;
 
   /**
@@ -82,7 +86,7 @@ export default class CombinationsManager {
     this.productId = productId;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.$productForm = $(ProductMap.productForm);
-    this.$combinationsContainer = $(CombinationsMap.combinationsContainer);
+    this.$combinationsContainer = $(CombinationsMap.combinationsListContainer);
     this.$externalCombinationTab = $(CombinationsMap.externalCombinationTab);
 
     this.$preloader = $(CombinationsMap.preloader);
@@ -92,8 +96,10 @@ export default class CombinationsManager {
     this.combinationModalApp = null;
 
     this.initialized = false;
-    this.combinationsService = new CombinationsService(this.productId);
+    this.combinationsService = new CombinationsService();
+    this.paginatedCombinationsService = new PaginatedCombinationsService(productId);
     this.productAttributeGroups = [];
+    new BulkFormHandler();
 
     this.init();
   }
@@ -169,9 +175,7 @@ export default class CombinationsManager {
     this.$emptyState.addClass('d-none');
 
     // Wait for product attributes to adapt rendering depending on their number
-    this.productAttributeGroups = await getProductAttributeGroups(
-      this.productId,
-    );
+    this.productAttributeGroups = await getProductAttributeGroups(this.productId);
 
     if (this.filtersApp) {
       this.filtersApp.filters = this.productAttributeGroups;
@@ -209,7 +213,7 @@ export default class CombinationsManager {
     // Initial page is zero, we will load the first page after several other init functions
     this.paginator = new DynamicPaginator(
       CombinationsMap.paginationContainer,
-      this.combinationsService,
+      this.paginatedCombinationsService,
       this.combinationsRenderer,
       0,
     );
@@ -238,22 +242,14 @@ export default class CombinationsManager {
     this.initSortingColumns();
   }
 
-  /**
-   * @private
-   */
   private watchEvents(): void {
-    /* eslint-disable */
-    this.eventEmitter.on(CombinationEvents.refreshCombinationList, () =>
-      this.refreshCombinationList(false)
-    );
-    this.eventEmitter.on(CombinationEvents.refreshPage, () =>
-      this.refreshPage()
-    );
+    this.eventEmitter.on(CombinationEvents.refreshCombinationList, () => this.refreshCombinationList(false));
+    this.eventEmitter.on(CombinationEvents.refreshPage, () => this.refreshPage());
     /* eslint-disable */
     this.eventEmitter.on(
       CombinationEvents.updateAttributeGroups,
       attributeGroups => {
-        const currentFilters = this.combinationsService.getFilters();
+        const currentFilters = this.paginatedCombinationsService.getFilters();
         currentFilters.attributes = {};
         Object.keys(attributeGroups).forEach(attributeGroupId => {
           currentFilters.attributes[attributeGroupId] = [];
@@ -263,8 +259,7 @@ export default class CombinationsManager {
           });
         });
 
-        this.combinationsService.setFilters(currentFilters);
-
+        this.paginatedCombinationsService.setFilters(currentFilters);
         if(this.paginator) {
           this.paginator.paginate(1);
         }
@@ -286,12 +281,11 @@ export default class CombinationsManager {
         }
       );
     });
+
+    this.eventEmitter.on(CombinationEvents.bulkUpdateFinished, () => this.refreshPage());
   }
 
-  /**
-   * @private
-   */
-  initSubmittableInputs() {
+  private initSubmittableInputs() {
     const combinationToken = this.getCombinationToken();
     const {impactOnPriceKey, referenceKey, tokenKey, deltaQuantityKey} = CombinationsMap.combinationItemForm;
 
@@ -329,7 +323,7 @@ export default class CombinationsManager {
           [tokenKey]: combinationToken,
         },
       ),
-      containerSelector: `${CombinationsMap.combinationsContainer} ${CombinationsMap.tableRow.deltaQuantityWrapper}`,
+      containerSelector: `${CombinationsMap.combinationsListContainer} ${CombinationsMap.tableRow.deltaQuantityWrapper}`,
     });
   }
 
@@ -381,8 +375,7 @@ export default class CombinationsManager {
         $sortableColumn.attr('data-sort-direction', direction);
 
         // Finally update list
-        this.combinationsService.setOrderBy(columnName, direction);
-
+        this.paginatedCombinationsService.setOrderBy(columnName, direction);
         if (this.paginator) {
           this.paginator.paginate(1);
         }
@@ -448,11 +441,8 @@ export default class CombinationsManager {
     });
   }
 
-  /**
-   * @returns {String}
-   */
-  getCombinationToken(): string {
-    return $(CombinationsMap.combinationsContainer).data('combinationToken');
+  private getCombinationToken(): string {
+    return $(CombinationsMap.combinationsListContainer).data('combinationToken');
   }
 
   /**

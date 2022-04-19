@@ -114,12 +114,8 @@
           {include file='components/layout/warning_messages.tpl'}
         {/if}
 
-        <div class="row ">
-          <div class="col-sm-12">
-            {$page}
-            {hook h='displayAdminEndContent'}
-          </div>
-        </div>
+        {$page}
+        {hook h='displayAdminEndContent'}
 
       </div>
     {/if}

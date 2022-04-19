@@ -34,8 +34,6 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Pr
 
 class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
 {
-    private const MULTI_SHOP_PREFIX = 'prices_multi_shop';
-
     /**
      * @dataProvider getExpectedCommands
      *
@@ -44,8 +42,8 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
      */
     public function testBuildCommand(array $formData, array $expectedCommands): void
     {
-        $builder = new PricesCommandsBuilder(self::MULTI_SHOP_PREFIX);
-        $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->singleShopConstraint);
+        $builder = new PricesCommandsBuilder(self::MODIFY_ALL_SHOPS_PREFIX);
+        $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 
@@ -195,8 +193,8 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
      */
     public function testBuildCommandMultiShop(array $formData, array $expectedCommands): void
     {
-        $builder = new PricesCommandsBuilder(self::MULTI_SHOP_PREFIX);
-        $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->singleShopConstraint);
+        $builder = new PricesCommandsBuilder(self::MODIFY_ALL_SHOPS_PREFIX);
+        $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 
@@ -224,7 +222,7 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
                     'not_handled' => 0,
                     'retail_price' => [
                         'price_tax_excluded' => 45.56,
-                        self::MULTI_SHOP_PREFIX . 'price_tax_excluded' => true,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'price_tax_excluded' => true,
                     ],
                 ],
             ],
@@ -275,7 +273,7 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
                 'pricing' => [
                     'retail_price' => [
                         'price_tax_excluded' => 45.56,
-                        self::MULTI_SHOP_PREFIX . 'price_tax_excluded' => false,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'price_tax_excluded' => false,
                         'ecotax' => '45.56',
                     ],
                     'tax_rules_group_id' => '42',
@@ -308,7 +306,7 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
                 'pricing' => [
                     'retail_price' => [
                         'price_tax_excluded' => 45.56,
-                        self::MULTI_SHOP_PREFIX . 'price_tax_excluded' => true,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'price_tax_excluded' => true,
                         'ecotax' => '45.56',
                     ],
                     'tax_rules_group_id' => '42',
@@ -326,7 +324,7 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
 
     private function getSingleShopCommand(): UpdateProductPricesCommand
     {
-        return new UpdateProductPricesCommand($this->getProductId()->getValue(), ShopConstraint::shop(self::SHOP_ID));
+        return new UpdateProductPricesCommand($this->getProductId()->getValue(), $this->getSingleShopConstraint());
     }
 
     private function getAllShopsCommand(): UpdateProductPricesCommand

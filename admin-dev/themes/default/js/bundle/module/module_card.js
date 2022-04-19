@@ -17,8 +17,8 @@ const AdminModuleCard = function () {
   this.moduleActionMenuEnableLinkSelector = 'button.module_action_menu_enable';
   this.moduleActionMenuUninstallLinkSelector = 'button.module_action_menu_uninstall';
   this.moduleActionMenuDisableLinkSelector = 'button.module_action_menu_disable';
-  this.moduleActionMenuEnableMobileLinkSelector = 'button.module_action_menu_enable_mobile';
-  this.moduleActionMenuDisableMobileLinkSelector = 'button.module_action_menu_disable_mobile';
+  this.moduleActionMenuEnableMobileLinkSelector = 'button.module_action_menu_enableMobile';
+  this.moduleActionMenuDisableMobileLinkSelector = 'button.module_action_menu_disableMobile';
   this.moduleActionMenuResetLinkSelector = 'button.module_action_menu_reset';
   this.moduleActionMenuUpdateLinkSelector = 'button.module_action_menu_upgrade';
   this.moduleItemListSelector = '.module-item-list';
@@ -95,10 +95,10 @@ const AdminModuleCard = function () {
       return that.dispatchPreEvent('disable', this) && that.confirmAction('disable', this) && that.requestToController('disable', $(this));
     });
     $(document).on('click', this.moduleActionMenuEnableMobileLinkSelector, function () {
-      return that.dispatchPreEvent('enable_mobile', this) && that.confirmAction('enable_mobile', this) && that.requestToController('enable_mobile', $(this));
+      return that.dispatchPreEvent('enableMobile', this) && that.confirmAction('enableMobile', this) && that.requestToController('enableMobile', $(this));
     });
     $(document).on('click', this.moduleActionMenuDisableMobileLinkSelector, function () {
-      return that.dispatchPreEvent('disable_mobile', this) && that.confirmAction('disable_mobile', this) && that.requestToController('disable_mobile', $(this));
+      return that.dispatchPreEvent('disableMobile', this) && that.confirmAction('disableMobile', this) && that.requestToController('disableMobile', $(this));
     });
     $(document).on('click', this.moduleActionMenuResetLinkSelector, function () {
       return that.dispatchPreEvent('reset', this) && that.confirmAction('reset', this) && that.requestToController('reset', $(this));

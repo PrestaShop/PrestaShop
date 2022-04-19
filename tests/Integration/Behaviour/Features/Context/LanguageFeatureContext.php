@@ -40,7 +40,7 @@ class LanguageFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public static function restoreLanguagesTablesBeforeFeature(): void
     {
-        static::restoreLanguagesTables();
+        self::restoreLanguagesTables();
     }
 
     /**
@@ -48,7 +48,7 @@ class LanguageFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public static function restoreLanguagesTablesAfterFeature(): void
     {
-        static::restoreLanguagesTables();
+        self::restoreLanguagesTables();
     }
 
     private static function restoreLanguagesTables(): void
@@ -77,7 +77,7 @@ class LanguageFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function restoreLanguageTablesOnDemand(): void
     {
-        static::restoreLanguagesTables();
+        self::restoreLanguagesTables();
     }
 
     /**

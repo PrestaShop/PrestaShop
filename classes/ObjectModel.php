@@ -59,7 +59,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     /** @var int|null Language ID */
     protected $id_lang = null;
 
-    /** @var int Shop ID */
+    /** @var int|null Shop ID */
     protected $id_shop = null;
 
     /**
@@ -387,7 +387,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     {
         $language = new Language($this->id_lang);
         if (null === $language->id) {
-            $language = new Language(Configuration::get('PS_LANG_DEFAULT'));
+            $language = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
         }
 
         return $language;
@@ -1879,6 +1879,16 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 (!empty($where) ? ' WHERE ' . $where : '');
 
         return Db::getInstance()->execute($sql);
+    }
+
+    /**
+     * Returns the shop ID used to fetch initial object data.
+     *
+     * @return int
+     */
+    public function getShopId(): int
+    {
+        return (int) $this->id_shop;
     }
 
     /**

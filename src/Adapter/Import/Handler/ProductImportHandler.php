@@ -423,9 +423,10 @@ final class ProductImportHandler extends AbstractImportHandler
 
         if (is_array($category_data)) {
             foreach ($category_data as $tmp) {
-                if (!isset($product->category) || !$product->category || is_array($product->category)) {
-                    $product->category[] = $tmp;
+                if ($product->category && !is_array($product->category)) {
+                    continue;
                 }
+                $product->category[] = $tmp;
             }
         }
     }
@@ -451,7 +452,12 @@ final class ProductImportHandler extends AbstractImportHandler
 
         // link product to shops
         $product->id_shop_list = [];
-        $productShops = explode($importConfig->getMultipleValueSeparator(), $product->shop);
+
+        $multipleValueSeparator = $importConfig->getMultipleValueSeparator();
+        if (empty($multipleValueSeparator)) {
+            return;
+        }
+        $productShops = explode($multipleValueSeparator, $product->shop);
 
         if (is_array($productShops)) {
             foreach ($productShops as $shop) {
@@ -642,7 +648,7 @@ final class ProductImportHandler extends AbstractImportHandler
      */
     private function loadCategory(Product $product, $validateOnly)
     {
-        if (isset($product->category) && is_array($product->category) && count($product->category)) {
+        if (is_array($product->category) && count($product->category)) {
             $unfriendlyError = $this->configuration->getBoolean('UNFRIENDLY_ERROR');
             $defaultLanguageId = $this->configuration->getInt('PS_LANG_DEFAULT');
             $homeCategoryId = $this->configuration->getInt('PS_HOME_CATEGORY');
@@ -911,7 +917,7 @@ final class ProductImportHandler extends AbstractImportHandler
      */
     private function saveProductSupplier(Product $product)
     {
-        if ($product->id && isset($product->id_supplier) && property_exists($product, 'supplier_reference')) {
+        if ($product->id && property_exists($product, 'supplier_reference')) {
             $productSupplierId = (int) ProductSupplier::getIdByProductAndSupplier(
                 (int) $product->id,
                 0,
@@ -1005,10 +1011,10 @@ final class ProductImportHandler extends AbstractImportHandler
         if (isset($product->id) && $product->id) {
             $tags = Tag::getProductTags($product->id);
             if (is_array($tags) && count($tags)) {
-                if (!empty($product->tags) && is_string($product->tags)) {
+                if (is_string($product->tags) && !empty($multipleValueSeparator)) {
                     $product->tags = explode($multipleValueSeparator, $product->tags);
                 }
-                if (is_array($product->tags) && count($product->tags)) {
+                if (is_array($product->tags)) {
                     foreach ($product->tags as $key => $tag) {
                         if (!empty($tag)) {
                             $product->tags[$key] = trim($tag);
@@ -1178,7 +1184,7 @@ final class ProductImportHandler extends AbstractImportHandler
         $features = get_object_vars($product);
         $multipleValueSeparator = $importConfig->getMultipleValueSeparator();
 
-        if (empty($features['features'])) {
+        if (empty($features['features']) || empty($multipleValueSeparator)) {
             return;
         }
 
@@ -1225,7 +1231,7 @@ final class ProductImportHandler extends AbstractImportHandler
         $asmEnabled = $this->configuration->getBoolean('PS_ADVANCED_STOCK_MANAGEMENT');
 
         // set advanced stock managment
-        if (!$validateOnly && isset($product->advanced_stock_management)) {
+        if (!$validateOnly) {
             if ($product->advanced_stock_management != 1 && $product->advanced_stock_management != 0) {
                 $this->warning(
                     $this->translator->trans(
@@ -1318,7 +1324,7 @@ final class ProductImportHandler extends AbstractImportHandler
             }
 
             // This code allows us to set qty and disable depends on stock
-            if (!$validateOnly && isset($product->quantity)) {
+            if (!$validateOnly) {
                 // if depends on stock and quantity, add quantity to stock
                 if ($product->depends_on_stock == 1) {
                     $stockManager = StockManagerFactory::getManager();

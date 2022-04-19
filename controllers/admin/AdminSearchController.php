@@ -98,7 +98,7 @@ class AdminSearchControllerCore extends AdminController
             if (!$searchType || $searchType == 1) {
                 /* Handle product ID */
                 if ($searchType == 1 && (int) $this->query && Validate::isUnsignedInt((int) $this->query)) {
-                    $product = new Product($this->query);
+                    $product = new Product((int) $this->query);
                     if (Validate::isLoadedObject($product)) {
                         Tools::redirectAdmin('index.php?tab=AdminProducts&id_product=' . (int) ($product->id) . '&token=' . Tools::getAdminTokenLite('AdminProducts'));
                     }
@@ -113,7 +113,7 @@ class AdminSearchControllerCore extends AdminController
                 if (!$searchType || $searchType == 2) {
                     /* Handle customer ID */
                     if ($searchType && (int) $this->query && Validate::isUnsignedInt((int) $this->query)) {
-                        $customer = new Customer($this->query);
+                        $customer = new Customer((int) $this->query);
                         if (Validate::isLoadedObject($customer)) {
                             Tools::redirectAdmin($this->context->link->getAdminLink(
                                 'AdminCustomers',
@@ -183,7 +183,7 @@ class AdminSearchControllerCore extends AdminController
 
             /* Cart */
             if ($searchType == 5) {
-                if ((int) $this->query && Validate::isUnsignedInt((int) $this->query) && Validate::isLoadedObject($cart = new Cart($this->query))) {
+                if ((int) $this->query && Validate::isUnsignedInt((int) $this->query) && Validate::isLoadedObject($cart = new Cart((int) $this->query))) {
                     Tools::redirectAdmin('index.php?tab=AdminCarts&id_cart=' . (int) ($cart->id) . '&viewcart' . '&token=' . Tools::getAdminToken('AdminCarts' . (int) (Tab::getIdFromClassName('AdminCarts')) . (int) $this->context->employee->id));
                 }
                 $this->errors[] = $this->trans('No cart was found with this ID:', [], 'Admin.Orderscustomers.Notification') . ' ' . Tools::htmlentitiesUTF8($this->query);
@@ -500,7 +500,7 @@ class AdminSearchControllerCore extends AdminController
         }
 
         // Considering the indexing task can be really long, we ask the PHP process to not stop before 2 hours.
-        ini_set('max_execution_time', 7200);
+        ini_set('max_execution_time', '7200');
         Search::indexation(Tools::getValue('full'));
         if (Tools::getValue('redirect')) {
             Tools::redirectAdmin($_SERVER['HTTP_REFERER'] . '&conf=4');

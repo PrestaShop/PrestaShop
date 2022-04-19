@@ -63,7 +63,7 @@
       </span>
     </td>
     <td class="text-sm-center">
-      {{ dateAdd }}
+      {{ product.date_add_formatted }}
     </td>
     <td>
       {{ employeeName }}
@@ -96,11 +96,6 @@
       },
       orderLink(): string | null {
         return this.product.order_link !== 'N/A' ? this.product.order_link : null;
-      },
-      dateAdd() {
-        const date = new Date(Date.parse(this.product.date_add));
-
-        return date.toLocaleDateString(window.data.locale, {});
       },
     },
     components: {

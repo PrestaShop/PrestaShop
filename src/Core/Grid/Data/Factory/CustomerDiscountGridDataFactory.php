@@ -40,23 +40,15 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 final class CustomerDiscountGridDataFactory implements GridDataFactoryInterface
 {
     /**
-     * @var int
-     */
-    private $contextLangId;
-    /**
      * @var Customer
      */
     private $customer;
 
     /**
-     * @param int $contextLangId
      * @param Customer $customer
      */
-    public function __construct(
-        int $contextLangId,
-        Customer $customer
-    ) {
-        $this->contextLangId = $contextLangId;
+    public function __construct(Customer $customer)
+    {
         $this->customer = $customer;
     }
 
@@ -65,26 +57,21 @@ final class CustomerDiscountGridDataFactory implements GridDataFactoryInterface
      */
     public function getData(SearchCriteriaInterface $searchCriteria)
     {
-        $discounts = CartRule::getCustomerCartRules(
-            $this->contextLangId,
-            $this->customer->id,
-            false,
-            false
+        $allDiscounts = CartRule::getAllCustomerCartRules(
+            $this->customer->id
         );
 
-        $numDiscounts = count($discounts);
-
-        $discounts = array_slice(
-            $discounts,
+        $discountsToDisplay = array_slice(
+            $allDiscounts,
             (int) $searchCriteria->getOffset(),
             (int) $searchCriteria->getLimit()
         );
 
-        $records = new RecordCollection($discounts);
+        $records = new RecordCollection($discountsToDisplay);
 
         return new GridData(
             $records,
-            $numDiscounts
+            count($allDiscounts)
         );
     }
 }

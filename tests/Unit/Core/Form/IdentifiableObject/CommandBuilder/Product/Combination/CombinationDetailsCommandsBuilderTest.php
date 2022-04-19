@@ -114,12 +114,12 @@ class CombinationDetailsCommandsBuilderTest extends AbstractCombinationCommandBu
         ];
 
         $command = new UpdateCombinationDetailsCommand($this->getCombinationId()->getValue());
-        $command->setIsbn('123456789');
+        $command->setIsbn('0-8044-2957-X');
         $command->setEan13('12345678910');
         yield [
             [
                 'references' => [
-                    'isbn' => '123456789',
+                    'isbn' => '0-8044-2957-X',
                     'ean_13' => '12345678910',
                 ],
             ],

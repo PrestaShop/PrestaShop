@@ -25,9 +25,13 @@
  */
 class AddressesControllerCore extends FrontController
 {
+    /** @var bool */
     public $auth = true;
+    /** @var string */
     public $php_self = 'addresses';
+    /** @var string */
     public $authRedirection = 'addresses';
+    /** @var bool */
     public $ssl = true;
 
     /**

@@ -71,18 +71,22 @@ class VisibilityType extends TranslatorAwareType
                 // placeholder false is important to avoid empty option in radio select despite required being false
                 'placeholder' => false,
                 'column_breaker' => true,
+                'modify_all_shops' => true,
             ])
             ->add('available_for_order', SwitchType::class, [
                 'label' => $this->trans('Available for order', 'Admin.Catalog.Feature'),
                 'required' => false,
+                'modify_all_shops' => true,
             ])
             ->add('show_price', SwitchType::class, [
                 'label' => $this->trans('Show price', 'Admin.Catalog.Feature'),
                 'required' => false,
+                'modify_all_shops' => true,
             ])
             ->add('online_only', SwitchType::class, [
                 'label' => $this->trans('Web only (not sold in your retail store)', 'Admin.Catalog.Feature'),
                 'required' => false,
+                'modify_all_shops' => true,
             ])
         ;
     }
@@ -95,7 +99,7 @@ class VisibilityType extends TranslatorAwareType
         parent::configureOptions($resolver);
         $resolver->setDefaults([
             'label' => $this->trans('Visibility', 'Admin.Catalog.Feature'),
-            'label_tag_name' => 'h2',
+            'label_tag_name' => 'h3',
             'label_subtitle' => $this->trans('Where do you want your product to appear?', 'Admin.Catalog.Feature'),
             'required' => false,
             'columns_number' => 4,

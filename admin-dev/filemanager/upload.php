@@ -41,7 +41,7 @@ while ($cycle && $i < $max_cycles) {
 if (!empty($_FILES) && isset($_FILES['file']) && $_FILES['file']['size']) {
     $info = pathinfo($_FILES['file']['name']);
     if (isset($info['extension'])
-            && in_array(fix_strtolower($info['extension']), $ext)
+            && in_array(mb_strtolower($info['extension']), $ext)
             && in_array(mime_content_type($_FILES['file']['tmp_name']), $mime)
     ) {
         $tempFile = $_FILES['file']['tmp_name'];
@@ -65,7 +65,7 @@ if (!empty($_FILES) && isset($_FILES['file']) && $_FILES['file']['size']) {
         $targetFile = $targetPath.$_FILES['file']['name'];
         $targetFileThumb = $targetPathThumb.$_FILES['file']['name'];
 
-        if (in_array(fix_strtolower($info['extension']), $ext_img) && @getimagesize($tempFile) != false) {
+        if (in_array(mb_strtolower($info['extension']), $ext_img) && @getimagesize($tempFile) != false) {
             $is_img = true;
         } else {
             $is_img = false;

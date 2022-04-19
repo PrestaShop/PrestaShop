@@ -29,93 +29,75 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandField;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\InvalidCommandFieldTypeException;
-use Symfony\Component\PropertyAccess\Exception\InvalidPropertyPathException;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\DataField;
 
 class CommandFieldTest extends TestCase
 {
     /**
      * @dataProvider getValidParameters
      *
-     * @param string $dataPath
      * @param string $commandSetter
-     * @param string $type
+     * @param array<int, DataField> $dataFields
      * @param bool $isMultiShopField
      */
-    public function testValidConstructors(string $dataPath, string $commandSetter, string $type, bool $isMultiShopField): void
+    public function testValidConstructors(string $commandSetter, array $dataFields, bool $isMultiShopField): void
     {
-        $field = new CommandField($dataPath, $commandSetter, $type, $isMultiShopField);
-        $this->assertNotNull($field);
-        $this->assertEquals($dataPath, $field->getDataPath());
-        $this->assertEquals($commandSetter, $field->getCommandSetter());
-        $this->assertEquals($type, $field->getType());
-        $this->assertEquals($isMultiShopField, $field->isMultiShopField());
+        if ($isMultiShopField) {
+            $field = CommandField::createAsMultiShop($commandSetter, $dataFields);
+        } else {
+            $field = CommandField::createAsSingleShop($commandSetter, $dataFields);
+        }
+        $this->assertInstanceOf(CommandField::class, $field);
+        $this->assertSame($commandSetter, $field->getCommandSetter());
+        $this->assertSame($dataFields, $field->getDataFields());
+        $this->assertSame($isMultiShopField, $field->isMultiShopField());
     }
 
     public function getValidParameters(): iterable
     {
-        yield [
-            '[form_data][my_field]',
+        $dataFields = [
+            new DataField('foo', DataField::TYPE_STRING),
+            new DataField('bar', DataField::TYPE_INT, 42),
+        ];
+        yield 'multishop enabled' => [
             'setMyField',
-            CommandField::TYPE_STRING,
+            $dataFields,
             true,
         ];
-
-        yield [
-            'form_data.my_field',
+        yield 'multishop disabled' => [
             'setMyField',
-            CommandField::TYPE_BOOL,
+            $dataFields,
             false,
-        ];
-
-        yield [
-            'my_field',
-            'setMyField',
-            CommandField::TYPE_INT,
-            true,
         ];
     }
 
     /**
      * @dataProvider getInvalidParameters
      *
-     * @param string $dataPath
      * @param string $commandSetter
-     * @param string $type
-     * @param bool $isMultiShopField
+     * @param array<int, DataField> $dataFields
      * @param string $expectedException
      */
-    public function testInvalidConstructors(string $dataPath, string $commandSetter, string $type, bool $isMultiShopField, string $expectedException): void
+    public function testInvalidConstructors(string $commandSetter, array $dataFields, string $expectedException): void
     {
         $this->expectException($expectedException);
-        new CommandField($dataPath, $commandSetter, $type, $isMultiShopField);
+
+        CommandField::createAsSingleShop($commandSetter, $dataFields);
     }
 
     public function getInvalidParameters(): iterable
     {
-        yield [
-            '[form_data][my_field]',
+        yield 'no data fields' => [
             'setMyField',
-            'invalid',
-            true,
-            InvalidCommandFieldTypeException::class,
+            [],
+            InvalidArgumentException::class,
         ];
-
-        yield [
-            '',
+        yield 'invalid data field type' => [
             'setMyField',
-            CommandField::TYPE_INT,
-            false,
-            InvalidPropertyPathException::class,
-        ];
-
-        yield [
-            '[form_data.objectField',
-            'setMyField',
-            CommandField::TYPE_INT,
-            true,
-            InvalidPropertyPathException::class,
+            [new InvalidArgumentException()],
+            InvalidArgumentException::class,
         ];
     }
 }

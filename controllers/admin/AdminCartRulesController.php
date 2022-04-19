@@ -88,7 +88,7 @@ class AdminCartRulesControllerCore extends AdminController
             $search = Tools::getValue('search');
         }
 
-        $page = floor($count / $limit);
+        $page = (int) floor($count / $limit);
 
         $html = '';
         $next_link = '';
@@ -100,7 +100,7 @@ class AdminCartRulesControllerCore extends AdminController
 
             /** @var CartRule $current_object */
             $current_object = $this->loadObject(true);
-            $cart_rules = $current_object->getAssociatedRestrictions('cart_rule', false, true, ($page) * $limit, $limit, $search);
+            $cart_rules = $current_object->getAssociatedRestrictions('cart_rule', false, true, $page * $limit, $limit, $search);
 
             if ($type == 'selected') {
                 $i = 1;
@@ -603,12 +603,10 @@ class AdminCartRulesControllerCore extends AdminController
                     $combinations[$attribute['id_product_attribute']]['attributes'] .= $attribute['attribute_name'] . ' - ';
                     $combinations[$attribute['id_product_attribute']]['id_product_attribute'] = $attribute['id_product_attribute'];
                     $combinations[$attribute['id_product_attribute']]['default_on'] = $attribute['default_on'];
-                    if (!isset($combinations[$attribute['id_product_attribute']]['price'])) {
-                        $price_tax_incl = Product::getPriceStatic((int) $product['id_product'], true, $attribute['id_product_attribute']);
-                        $combinations[$attribute['id_product_attribute']]['formatted_price'] = $price_tax_incl
-                            ? $this->context->getCurrentLocale()->formatPrice(Tools::convertPrice($price_tax_incl, $this->context->currency), $this->context->currency->iso_code)
-                            : '';
-                    }
+                    $price_tax_incl = Product::getPriceStatic((int) $product['id_product'], true, $attribute['id_product_attribute']);
+                    $combinations[$attribute['id_product_attribute']]['formatted_price'] = $price_tax_incl
+                        ? $this->context->getCurrentLocale()->formatPrice(Tools::convertPrice($price_tax_incl, $this->context->currency), $this->context->currency->iso_code)
+                        : '';
                 }
 
                 foreach ($combinations as &$combination) {

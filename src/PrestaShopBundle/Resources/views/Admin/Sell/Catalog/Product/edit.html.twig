@@ -36,6 +36,7 @@
 {% endblock %}
 
 {% block content %}
+<div class="product-page-v2">
   {% set productType = productForm.vars.product_type %}
   {% set productId = productForm.vars.product_id %}
   {% set extraModulesHooks = renderhooksarray('displayAdminProductsExtra', { 'id_product': productId }) %}
@@ -45,22 +46,14 @@
   </div>
 
   {{ form_start(productForm, {'attr': {
-    'class': 'form-horizontal product-page product-page-v2 row justify-content-md-center', 'novalidate': 'novalidate',
+    'class': 'form-horizontal product-page justify-content-md-center', 'novalidate': 'novalidate',
     'data-product-id': productId,
     'data-product-type': productType
   }}) }}
 
   {% block product_header %}
-    {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/header.html.twig', {
-      'productForm': productForm,
-      'isMultiShopContext': isMultiShopContext,
-      'helpLink': helpLink,
-      'statsLink': statsLink
-    })
-    }}
+    {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/header.html.twig', {'productForm': productForm}) }}
   {% endblock %}
-
-  <div class="col-xxl-10">
 
   {{ block('session_alert') }}
 
@@ -72,6 +65,7 @@
       {{ 'This page benefits from increased performance and includes new features such as a new combination management system. Please note this is a work in progress and some features are not available yet.'|trans({}, 'Admin.Advparameters.Help') }}
     </p>
   </div>
+  <div id="contextual-notification-box"></div>
 
     {% block product_tabs_container %}
       {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/tabs.html.twig', {
@@ -139,7 +133,6 @@
         }) }}
       {% endblock %}
     </div>
-  </div>
 
   {% block product_footer %}
   {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/footer.html.twig', {
@@ -165,7 +158,7 @@
   {% block specific_price_form_modal %}
     {{ include('@PrestaShop/Admin/Sell/Catalog/Product/SpecificPrice/Blocks/form_modal.html.twig') }}
   {% endblock %}
-
+</div>
 {% endblock %}
 
 {% block javascripts %}

@@ -38,13 +38,13 @@ class StoreCore extends ObjectModel
     /** @var int State id */
     public $id_state;
 
-    /** @var string Store name */
+    /** @var string|array<string> Name */
     public $name;
 
-    /** @var string Address first line */
+    /** @var string|array<string> Address first line */
     public $address1;
 
-    /** @var string Address second line (optional) */
+    /** @var string|array<string> Address second line (optional) */
     public $address2;
 
     /** @var string Postal code */
@@ -68,7 +68,7 @@ class StoreCore extends ObjectModel
     /** @var string Fax number */
     public $fax;
 
-    /** @var string Note */
+    /** @var string|array<string> Note */
     public $note;
 
     /** @var string e-mail */
@@ -124,8 +124,8 @@ class StoreCore extends ObjectModel
     /**
      * StoreCore constructor.
      *
-     * @param null $idStore
-     * @param null $idLang
+     * @param int|null $idStore
+     * @param int|null $idLang
      */
     public function __construct($idStore = null, $idLang = null)
     {

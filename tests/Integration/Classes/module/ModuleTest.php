@@ -105,7 +105,7 @@ class HelperModule
     /**
      * Copy the directory in resources which get the name $module_dir_name in the module directory
      *
-     * @var string module_dir_name take the directory name of a module contain in /home/prestashop/tests/resources/module
+     * @param string $module_dir_name take the directory name of a module contain in /home/prestashop/tests/resources/module
      */
     public static function addModule(string $module_dir_name): bool
     {
@@ -121,7 +121,7 @@ class HelperModule
     /**
      * Delete the directory in /home/prestashop/module which get the name $module_dir_name
      *
-     * @var string module_dir_name take the directory name of a module contain in /home/prestashop/module
+     * @param string $module_dir_name take the directory name of a module contain in /home/prestashop/module
      */
     public static function removeModule(string $module_dir_name): bool
     {
@@ -137,8 +137,8 @@ class HelperModule
     /**
      * Recursivly copy a directory
      *
-     * @var string the source path (eg. /home/dir/to/copy)
-     * @var string the destination path (eg. /home/)
+     * @param string $src the source path (eg. /home/dir/to/copy)
+     * @param string $dst the destination path (eg. /home/)
      */
     private static function recurseCopy(string $src, string $dst): void
     {
@@ -148,7 +148,7 @@ class HelperModule
         while ($file !== false) {
             if ($file != '.' && $file != '..') {
                 if (is_dir($src . '/' . $file)) {
-                    static::recurseCopy($src . '/' . $file, $dst . '/' . $file);
+                    self::recurseCopy($src . '/' . $file, $dst . '/' . $file);
                 } else {
                     copy($src . '/' . $file, $dst . '/' . $file);
                 }
@@ -161,7 +161,7 @@ class HelperModule
     /**
      * Recursivly delete a directory
      *
-     * @var string the directory to delete path (eg. /home/dir/to/delete)
+     * @param string $dir the directory to delete path (eg. /home/dir/to/delete)
      */
     private static function recurseDelete(string $dir): void
     {
@@ -170,7 +170,7 @@ class HelperModule
         while ($file !== false) {
             if ($file != '.' && $file != '..') {
                 if (is_dir($dir . '/' . $file)) {
-                    static::recurseDelete($dir . '/' . $file);
+                    self::recurseDelete($dir . '/' . $file);
                 } else {
                     unlink($dir . '/' . $file);
                 }

@@ -163,6 +163,7 @@ class ProductSeo extends CommonAbstractType
                         $this->translator->trans('Temporary redirection to a category (302)', [], 'Admin.Catalog.Feature') => RedirectType::TYPE_CATEGORY_TEMPORARY,
                         $this->translator->trans('Permanent redirection to a product (301)', [], 'Admin.Catalog.Feature') => RedirectType::TYPE_PRODUCT_PERMANENT,
                         $this->translator->trans('Temporary redirection to a product (302)', [], 'Admin.Catalog.Feature') => RedirectType::TYPE_PRODUCT_TEMPORARY,
+                        $this->translator->trans('No redirection (410)', [], 'Admin.Catalog.Feature') => RedirectType::TYPE_GONE,
                         $this->translator->trans('No redirection (404)', [], 'Admin.Catalog.Feature') => RedirectType::TYPE_NOT_FOUND,
                     ],
                     'choice_attr' => function ($val, $key, $index) use ($remoteUrls) {
