@@ -78,6 +78,12 @@
   .front {
     @include rotateY(0);
     z-index: 2;
+
+    .form-group {
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
   }
 
   .back {
