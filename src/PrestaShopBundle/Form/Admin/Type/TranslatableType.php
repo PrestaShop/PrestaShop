@@ -141,6 +141,7 @@ class TranslatableType extends TranslatorAwareType
             }
         }
 
+        /** @var FormInterface $varsForm */
         $varsForm = $view->vars['errors']->getForm();
         $view->vars['errors'] = new FormErrorIterator($varsForm, $errors);
         $view->vars['locales'] = $options['locales'];
@@ -212,10 +213,6 @@ class TranslatableType extends TranslatorAwareType
      */
     private function getErrorsByLocale(FormView $view, FormInterface $form, array $locales)
     {
-        if (count($locales) <= 1) {
-            return null;
-        }
-
         $formErrors = $form->getErrors(true);
 
         if (0 === $formErrors->count()) {
