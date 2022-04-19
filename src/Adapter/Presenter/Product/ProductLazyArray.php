@@ -1059,6 +1059,7 @@ class ProductLazyArray extends AbstractLazyArray
             'low_stock_alert',
             'low_stock_threshold',
             'main_variants',
+            'manufacturer_name',
             'meta_description',
             'meta_keywords',
             'meta_title',
