@@ -27,38 +27,16 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
-use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\AccordionType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * For combination update in bulk action
  */
 class BulkCombinationType extends TranslatorAwareType
 {
-    /**
-     * @var ConfigurableFormChoiceProviderInterface
-     */
-    private $imagesChoiceProvider;
-
-    /**
-     * @param TranslatorInterface $translator
-     * @param array<int, array<string, mixed>> $locales
-     * @param ConfigurableFormChoiceProviderInterface $imagesChoiceProvider
-     */
-    public function __construct(
-        TranslatorInterface $translator,
-        array $locales,
-        ConfigurableFormChoiceProviderInterface $imagesChoiceProvider
-    ) {
-        parent::__construct($translator, $locales);
-        $this->imagesChoiceProvider = $imagesChoiceProvider;
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -68,16 +46,10 @@ class BulkCombinationType extends TranslatorAwareType
             ->add('stock', BulkCombinationStockType::class)
             ->add('price', BulkCombinationPriceType::class)
             ->add('references', BulkCombinationReferencesType::class)
-            ->add('images', ChoiceType::class, [
-                'label' => $this->trans('Images', 'Admin.Global'),
-                'label_tag_name' => 'h3',
-                'choices' => $this->imagesChoiceProvider->getChoices(['product_id' => $options['product_id']]),
-                'choice_attr' => function ($choice, $key) {
-                    return ['data-image-url' => $key];
-                },
-                'multiple' => true,
-                'expanded' => true,
-            ]);
+            ->add('images', CombinationImagesChoiceType::class, [
+                'product_id' => $options['product_id'],
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)

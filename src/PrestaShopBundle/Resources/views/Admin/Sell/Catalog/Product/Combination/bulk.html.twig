@@ -32,7 +32,7 @@
 {% endblock %}
 
 {% block content %}
-  {{ form_start(bulkCombinationForm) }}
+  {{ form_start(bulkCombinationForm, {'attr': {'class': 'combination-page' }}) }}
     {{ form_row(bulkCombinationForm) }}
   {{ form_end(bulkCombinationForm) }}
 {% endblock %}
