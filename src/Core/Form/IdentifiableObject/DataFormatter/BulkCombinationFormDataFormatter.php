@@ -64,6 +64,7 @@ class BulkCombinationFormDataFormatter
             '[stock][low_stock_threshold]' => '[stock][options][low_stock_threshold]',
             '[stock][low_stock_alert]' => '[stock][options][low_stock_alert]',
             '[stock][available_date]' => '[stock][available_date]',
+            '[images]' => '[images]',
         ];
         $formattedData = [];
 

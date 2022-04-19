@@ -38,7 +38,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\DeleteCombinat
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
@@ -130,9 +132,12 @@ class CombinationController extends FrameworkBundleAdminController
     public function bulkEditAction(Request $request, int $combinationId): JsonResponse
     {
         try {
+            /** @var CombinationForEditing $combinationForEditing */
+            $combinationForEditing = $this->getQueryBus()->handle(new GetCombinationForEditing($combinationId));
             // PATCH request is required to avoid disabled fields to be forced with null values
             $bulkCombinationForm = $this->getBulkCombinationFormBuilder()->getFormFor($combinationId, [], [
                 'method' => Request::METHOD_PATCH,
+                'product_id' => $combinationForEditing->getProductId(),
             ]);
         } catch (CombinationNotFoundException $e) {
             return $this->returnErrorJsonResponse(
