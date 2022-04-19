@@ -225,7 +225,7 @@ class AdminCartRulesControllerCore extends AdminController
                             $restriction_name = $this->trans('Shop selection', [], 'Admin.Catalog.Feature');
                             break;
                     }
-                    $this->errors[] = $this->trans("'%s' is checked, but no item selected", [$restriction_name], 'Admin.Catalog.Notification');
+                    $this->errors[] = $this->trans('The "%s" restriction is checked, but no item is selected.', [$restriction_name], 'Admin.Catalog.Notification');
                 }
             }
 
