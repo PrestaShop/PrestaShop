@@ -27,7 +27,9 @@
 {% block combinations_paginated_list %}
   <div id="combinations-paginated-list" class="d-none">
 
-    {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Combination/paginated_list_header.html.twig') }}
+    {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Combination/paginated_list_header.html.twig', {
+      'productId': productId,
+    }) }}
 
     <div class="justify-content-center" id="combinations-list">
       <div class="spinner-product-combinations-container" id="productCombinationsLoading">

@@ -70,7 +70,6 @@ class BulkCombinationFormDataProvider implements FormDataProviderInterface
      */
     public function getData($id)
     {
-        return [
-        ];
+        return [];
     }
 }

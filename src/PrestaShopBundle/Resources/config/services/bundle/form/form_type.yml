@@ -1729,6 +1729,8 @@ services:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\BulkCombinationType'
     parent: 'form.type.translatable.aware'
     public: true
+    arguments:
+      - '@prestashop.core.form.choice_provider.product_images_choice_provider'
     tags:
       - { name: form.type }
 

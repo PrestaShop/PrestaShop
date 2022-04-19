@@ -48,7 +48,9 @@
            }|json_encode }}"
       ></div>
 
-        {{ render(controller('PrestaShopBundle:Admin\\Sell\\Catalog\\Product\\Combination:paginatedList')) }}
+        {{ render(controller('PrestaShopBundle:Admin\\Sell\\Catalog\\Product\\Combination:paginatedList', {
+          'productId': productId,
+        })) }}
 
       <div id="combinations-stock-availability">
         {{ include('@PrestaShop/Admin/Common/unavailable-feature.html.twig', {
