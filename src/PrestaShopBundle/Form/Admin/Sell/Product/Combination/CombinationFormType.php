@@ -77,6 +77,7 @@ class CombinationFormType extends TranslatorAwareType
             ])
             ->add('images', CombinationImagesChoiceType::class, [
                 'product_id' => $options['product_id'],
+                'label_tag_name' => 'h3',
             ])
         ;
 

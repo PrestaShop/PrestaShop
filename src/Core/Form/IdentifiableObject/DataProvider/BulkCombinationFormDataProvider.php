@@ -62,7 +62,9 @@ class BulkCombinationFormDataProvider implements FormDataProviderInterface
                 'ean_13' => '',
                 'isbn' => '',
             ],
-            'images' => [],
+            'images' => [
+                'images' => [],
+            ],
         ];
     }
 

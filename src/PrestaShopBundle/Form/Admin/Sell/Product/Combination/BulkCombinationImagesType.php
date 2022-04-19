@@ -27,53 +27,34 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
-use PrestaShopBundle\Form\Admin\Type\AccordionType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-/**
- * For combination update in bulk action
- */
-class BulkCombinationType extends TranslatorAwareType
+class BulkCombinationImagesType extends TranslatorAwareType
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('stock', BulkCombinationStockType::class)
-            ->add('price', BulkCombinationPriceType::class)
-            ->add('references', BulkCombinationReferencesType::class)
-            ->add('images', BulkCombinationImagesType::class, [
-                'label' => $this->trans('Images', 'Admin.Global'),
-                'product_id' => $options['product_id'],
-            ])
-        ;
+        $builder->add('images', CombinationImagesChoiceType::class, [
+            'product_id' => $options['product_id'],
+            'disabling_switch' => true,
+        ]);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function configureOptions(OptionsResolver $resolver)
     {
-        parent::configureOptions($resolver);
         $resolver
             ->setDefaults([
-                'label' => false,
-                'label_subtitle' => $this->trans('You can bulk edit the selected combinations by enabling and filling each field that needs update.', 'Admin.Catalog.Feature'),
-                'expand_first' => false,
-                'display_one' => false,
-                'required' => false,
-                'attr' => [
-                    'class' => 'bulk-combination-form',
-                ],
+                'label' => $this->trans('Images', 'Admin.Global'),
             ])
-            ->setRequired(['product_id'])
+            ->setRequired('product_id')
             ->setAllowedTypes('product_id', 'int')
         ;
-    }
-
-    public function getParent()
-    {
-        return AccordionType::class;
     }
 }

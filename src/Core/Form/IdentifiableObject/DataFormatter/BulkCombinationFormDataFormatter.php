@@ -64,7 +64,7 @@ class BulkCombinationFormDataFormatter
             '[stock][low_stock_threshold]' => '[stock][options][low_stock_threshold]',
             '[stock][low_stock_alert]' => '[stock][options][low_stock_alert]',
             '[stock][available_date]' => '[stock][available_date]',
-            '[images]' => '[images]',
+            '[images][images]' => '[images]',
         ];
         $formattedData = [];
 
@@ -83,6 +83,13 @@ class BulkCombinationFormDataFormatter
                 // as the bulk request is a partial request not every data is expected And when it's not present
                 // it means there is no modification to do so this field is simply ignored
             }
+        }
+
+        if (!empty($formData['images']['disabling_switch_images']) && empty($formData['images']['images'])) {
+            // Images are collection of checkboxes and there are no values submitted if none of them are checked,
+            // therefore, we need to determine if images was intended to be "unselected" (by checking disabling_switch value)
+            // and format new value accordingly
+            $formattedData['images'] = [];
         }
 
         return $formattedData;

@@ -65,7 +65,6 @@ class CombinationImagesChoiceType extends TranslatorAwareType
             ->setAllowedTypes('product_id', 'int')
             ->setDefaults([
                 'label' => $this->trans('Images', 'Admin.Global'),
-                'label_tag_name' => 'h3',
                 'choice_attr' => function ($choice, $key) {
                     return ['data-image-url' => $key];
                 },
