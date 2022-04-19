@@ -85,9 +85,6 @@ class SuppliersType extends TranslatorAwareType
                 'placeholder' => false,
                 'label' => $this->trans('Default supplier', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h4',
-                'choice_attr' => [
-                    'disabled' => true,
-                ],
             ])
         ;
     }
