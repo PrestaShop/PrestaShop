@@ -28,9 +28,12 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllProductTagsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\SEOCommandsBuilder;
 
 class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
@@ -195,6 +198,109 @@ class SEOCommandsBuilderTest extends AbstractProductCommandBuilderTest
             ],
             [$command],
         ];
+
+        $localizedTagsData = [
+            1 => 'coton,bonbon',
+            2 => 'cotton,candy',
+        ];
+        $localizedTags = [
+            1 => ['coton', 'bonbon'],
+            2 => ['cotton', 'candy'],
+        ];
+        $tagCommands = new SetProductTagsCommand($this->getProductId()->getValue(), $localizedTags);
+        yield 'tags command' => [
+            [
+                'seo' => [
+                    'tags' => $localizedTagsData,
+                ],
+            ],
+            [$tagCommands],
+        ];
+
+        $command = $this
+            ->getSingleShopCommand()
+            ->setRedirectOption(RedirectType::TYPE_CATEGORY_TEMPORARY, 51)
+        ;
+        yield 'seo command and tags command' => [
+            [
+                'seo' => [
+                    'redirect_option' => [
+                        'type' => RedirectType::TYPE_CATEGORY_TEMPORARY,
+                        'target' => [
+                            'id' => 51,
+                        ],
+                    ],
+                    'tags' => $localizedTagsData,
+                ],
+            ],
+            [$command, $tagCommands],
+        ];
+
+        $localizedTagsData = [
+            1 => 'coton,bonbon',
+            2 => null,
+        ];
+        $localizedTags = [
+            1 => ['coton', 'bonbon'],
+            2 => [],
+        ];
+        $tagCommands = new SetProductTagsCommand($this->getProductId()->getValue(), $localizedTags);
+        yield 'tags with empty value for one language' => [
+            [
+                'seo' => [
+                    'tags' => $localizedTagsData,
+                ],
+            ],
+            [$tagCommands],
+        ];
+
+        $localizedTagsData = [
+            1 => null,
+            2 => null,
+        ];
+        $tagCommands = new RemoveAllProductTagsCommand($this->getProductId()->getValue());
+        yield 'remove tags command with all localized values empty' => [
+            [
+                'seo' => [
+                    'tags' => $localizedTagsData,
+                ],
+            ],
+            [$tagCommands],
+        ];
+
+        $tagCommands = new RemoveAllProductTagsCommand($this->getProductId()->getValue());
+        yield 'remove tags command with empty array' => [
+            [
+                'seo' => [
+                    'tags' => [],
+                ],
+            ],
+            [$tagCommands],
+        ];
+
+        $tagCommands = new RemoveAllProductTagsCommand($this->getProductId()->getValue());
+        yield 'remove tags commands with empty string' => [
+            [
+                'seo' => [
+                    'tags' => '',
+                ],
+            ],
+            [$tagCommands],
+        ];
+    }
+
+    public function testInvalidTags(): void
+    {
+        $builder = new SEOCommandsBuilder(self::MODIFY_ALL_SHOPS_PREFIX);
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Expected tags to be a localized array');
+
+        $builder->buildCommands($this->getProductId(), [
+            'seo' => [
+                'tags' => 'cotton, candy',
+            ],
+        ], $this->getSingleShopConstraint());
     }
 
     /**
