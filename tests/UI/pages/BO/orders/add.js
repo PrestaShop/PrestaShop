@@ -687,7 +687,7 @@ class AddOrder extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   isShippingBlockVisible(page) {
-    return this.elementVisible(page, this.shippingBlock);
+    return this.elementVisible(page, this.shippingBlock, 1000);
   }
 
   /**
