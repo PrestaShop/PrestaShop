@@ -144,7 +144,6 @@ class AdminCartRulesControllerCore extends AdminController
         }
 
         $helper->is_cms = $this->is_cms;
-        $helper->sql = $this->_listsql;
         $list = $helper->generateList($this->_list, $this->fields_list);
 
         return $list;
