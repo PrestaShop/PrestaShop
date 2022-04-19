@@ -23,6 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import ImageSelector from '@pages/product/combination/image-selector';
+
 // @ts-ignore
 const {$} = window;
 
@@ -31,4 +33,5 @@ $(() => {
     'DeltaQuantityInput',
     'DisablingSwitch',
   ]);
+  new ImageSelector();
 });
