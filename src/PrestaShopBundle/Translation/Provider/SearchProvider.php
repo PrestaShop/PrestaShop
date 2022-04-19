@@ -37,11 +37,6 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
 class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInterface, UseModuleInterface
 {
     /**
-     * @var string the "modules" directory path
-     */
-    private $modulesDirectory;
-
-    /**
      * @var ExternalModuleLegacySystemProvider
      */
     private $externalModuleLegacySystemProvider;
@@ -49,10 +44,8 @@ class SearchProvider extends AbstractProvider implements UseDefaultCatalogueInte
     public function __construct(
         LoaderInterface $databaseLoader,
         ExternalModuleLegacySystemProvider $externalModuleLegacySystemProvider,
-        $resourceDirectory,
-        $modulesDirectory
+        $resourceDirectory
     ) {
-        $this->modulesDirectory = $modulesDirectory;
         $this->externalModuleLegacySystemProvider = $externalModuleLegacySystemProvider;
 
         parent::__construct($databaseLoader, $resourceDirectory);
