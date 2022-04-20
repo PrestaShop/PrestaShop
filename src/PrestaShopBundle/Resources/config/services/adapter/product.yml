@@ -149,6 +149,16 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\SetProductTagsCommand
 
+  prestashop.adapter.product.command_handler.update_product_position_handler:
+    class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductPositionHandler
+    arguments:
+      - '@prestashop.core.grid.product.position_definition'
+      - '@prestashop.core.grid.position.position_update_factory'
+      - '@prestashop.core.grid.position.doctrine_grid_position_updater'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPositionCommand
+
   prestashop.adapter.product.command_handler.remove_all_product_tags_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\RemoveAllProductTagsHandler
     arguments:
@@ -327,6 +337,20 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand
 
+  prestashop.adapter.product.command_handler.bulk_duplicate_product_handler:
+    class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\BulkDuplicateProductHandler
+    arguments:
+      - '@prestashop.adapter.product.product_duplicator'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductCommand
+
+  prestashop.adapter.product.command_handler.bulk_toggle_product_handle:
+    class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\BulkToggleProductHandler
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkToggleProductCommand
+
   prestashop.adapter.product.command_handler.set_associated_product_attachments_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\Attachment\CommandHandler\SetAssociatedProductAttachmentsHandler
     arguments:
@@ -378,6 +402,14 @@ services:
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\SetRelatedProductsCommand
+
+  prestashop.adapter.product.command_handler.toggle_product_status_handler:
+    class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\ToggleProductStatusHandler
+    arguments:
+      - '@prestashop.adapter.product.repository.product_repository'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Pro
 
   prestashop.adapter.product.query_handler.get_related_products_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetRelatedProductsHandler

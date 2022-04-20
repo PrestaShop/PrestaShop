@@ -48,3 +48,12 @@ services:
       $positionField: 'position'
       $parentIdField: 'id_product'
       $firstPosition: 1
+
+  prestashop.core.grid.product.position_definition:
+      class: 'PrestaShop\PrestaShop\Core\Grid\Position\PositionDefinition'
+      arguments:
+          $table: 'category_product'
+          $idField: 'id_product'
+          $positionField: 'position'
+          $parentIdField: 'id_category'
+          $firstPosition: 1

@@ -24,14 +24,49 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Exception;
+declare(strict_types=1);
 
-use Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Exception thrown when an update of a data in the repository (DB) failed.
+ * Toggles product status
  */
-class UpdateProductException extends Exception
+class ToggleProductStatusCommand
 {
-    public const FAILED_BULK_UPDATE_STATUS = 10;
+    /**
+     * @var ProductId
+     */
+    private $productId;
+
+    /**
+     * @var bool
+     */
+    private $expectedStatus;
+
+    /**
+     * @param int $productId
+     */
+    public function __construct(int $productId, bool $expectedStatus)
+    {
+        $this->productId = new ProductId($productId);
+        $this->expectedStatus = $expectedStatus;
+    }
+
+    /**
+     * @return ProductId
+     */
+    public function getProductId(): ProductId
+    {
+        return $this->productId;
+    }
+
+    /**
+     * @param bool $expectedStatus
+     */
+    public function getExpectedStatus(): bool
+    {
+        return $this->expectedStatus;
+    }
 }

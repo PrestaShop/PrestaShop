@@ -24,5 +24,9 @@
  *#}
 
 <div class="text-center">
-  {{ record[column.options.position_field] + 1 }}
+  {% if column.options.increment_position %}
+    {{ record[column.options.position_field] + 1}}
+  {% else %}
+    {{ record[column.options.position_field] }}
+  {% endif %}
 </div>

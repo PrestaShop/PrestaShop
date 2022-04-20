@@ -1,0 +1,40 @@
+<div id="product_catalog_category_tree_filter" class="d-inline-block dropdown dropdown-clickable mr-2 mb-2">
+  <button
+    class="btn btn-outline-secondary dropdown-toggle"
+    type="button"
+    data-toggle="dropdown"
+    aria-haspopup="true"
+    aria-expanded="false"
+  >
+    {{ 'Filter by categories'|trans({}, 'Admin.Actions') }}
+    {% if selectedCategoryName is defined and selectedCategoryName is not null %}
+      ({{ selectedCategoryName }})
+    {% endif %}
+  </button>
+  <div id="tree-categories" class="dropdown-menu">
+    <div class="categories-tree-actions">
+      <a
+        href="#"
+        id="product_catalog_category_tree_filter_expand"
+      >
+        <i class="material-icons">expand_more</i>
+        {{ 'Expand'|trans({}, 'Admin.Actions') }}
+      </a>
+      <a
+        href="#"
+        id="product_catalog_category_tree_filter_collapse"
+      >
+        <i class="material-icons">expand_less</i>
+        {{ 'Collapse'|trans({}, 'Admin.Actions') }}
+      </a>
+      <a
+        href="#"
+        id="product_catalog_category_tree_filter_reset"
+      >
+        <i class="material-icons">radio_button_unchecked</i>
+        {{ 'Unselect'|trans({}, 'Admin.Actions') }}
+      </a>
+    </div>
+    {{ form_widget(categories) }}
+  </div>
+</div>

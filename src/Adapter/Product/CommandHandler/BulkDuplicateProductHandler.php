@@ -24,14 +24,39 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Exception;
+declare(strict_types=1);
 
-use Exception;
+namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
+
+use PrestaShop\PrestaShop\Adapter\Product\ProductDuplicator;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\BulkDuplicateProductHandlerInterface;
 
 /**
- * Exception thrown when an update of a data in the repository (DB) failed.
+ * Handles command which deletes addresses in bulk action
  */
-class UpdateProductException extends Exception
+final class BulkDuplicateProductHandler implements BulkDuplicateProductHandlerInterface
 {
-    public const FAILED_BULK_UPDATE_STATUS = 10;
+    /**
+     * @var ProductDuplicator
+     */
+    private $productDuplicator;
+
+    /**
+     * @param ProductDuplicator $productRepository
+     */
+    public function __construct(ProductDuplicator $productDuplicator)
+    {
+        $this->productDuplicator = $productDuplicator;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function handle(BulkDuplicateProductCommand $command): void
+    {
+        foreach ($command->getProductIds() as $productId) {
+            $this->productDuplicator->duplicate($productId);
+        }
+    }
 }

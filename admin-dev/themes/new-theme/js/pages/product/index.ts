@@ -26,6 +26,8 @@
 // This had to be commented because of TS2451: Cannot redeclare block-scoped variable '$'.
 // But in other index.ts there is no such issue
 // const {$} = window;
+import categoryTree from '@pages/product/components/category-tree-search';
+import PositionExtension from "@components/grid/extension/position-extension";
 
 import CreateProductModal from '@pages/product/components/create-product-modal';
 
@@ -43,4 +45,34 @@ $(() => {
   grid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
 
   new CreateProductModal();
+  grid.addExtension(new window.prestashop.component.GridExtensions.PositionExtension(grid));
+
+  /*
+   * Tree behavior: collapse/expand system and radio button change event.
+   */
+  categoryTree('div#product_catalog_category_tree_filter');
+
+  $('#product_catalog_category_tree_filter_reset').on('click', function () {
+    categoryTree('#product_categories', 'unselect')
+    $('form#product_filter_form input[name="product[id_category]"]').val('');
+    $('form#product_filter_form').submit();
+  })
+
+  $('#product_catalog_category_tree_filter_expand').on('click', function () {
+    categoryTree('#product_categories', 'unfold')
+  })
+
+  $('#product_catalog_category_tree_filter_collapse').on('click', function () {
+    categoryTree('#product_categories', 'fold')
+  })
+
+  $('div#product_catalog_category_tree_filter div.radio > label > input:radio').on('change',function () {
+    if ($(this).is(':checked')) {
+      // @ts-ignore
+      let categoryId = $(this).val().toString();
+      $('form#product_filter_form input[name="product[id_category]"]').val(categoryId);
+      $('form#product_filter_form').submit();
+    }
+  });
+
 });

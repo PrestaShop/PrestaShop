@@ -29,9 +29,21 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoryPositionCommand;
+use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
+use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
+use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkToggleProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\ToggleProductStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPositionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductPositionException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\DuplicateFeatureValueAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidAssociatedFeatureException;
@@ -39,17 +51,24 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForAssociation
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionDataException;
+use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Entity\ProductDownload;
+use PrestaShopBundle\Form\Admin\Product\ProductCategories;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -90,8 +109,19 @@ class ProductController extends FrameworkBundleAdminController
     {
         $productGridFactory = $this->get('prestashop.core.grid.factory.product');
         $productGrid = $productGridFactory->getGrid($filters);
+        $categoryName = null;
+
+        if (isset($filters->getFilters()['id_category'])) {
+            $idFilteredCategory = (int)$filters->getFilters()['id_category'];
+            $category = $this->getCommandBus()->handle(new GetCategoryForEditing($idFilteredCategory));
+            $categoryName = $category->getName()[$this->getContextLangId()];
+        }
+
+        $categoriesForm = $this->createForm(ProductCategories::class);
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/index.html.twig', [
+            'categories' => $categoriesForm->createView(),
+            'selectedCategoryName' => $categoryName,
             'productGrid' => $this->presentGrid($productGrid),
             'enableSidebar' => true,
             'layoutHeaderToolbarBtn' => $this->getProductToolbarButtons(),
@@ -203,6 +233,262 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         return $this->redirectToRoute('admin_products_v2_index');
+    }
+
+    /**
+     * @param Request $request
+     * @param int $productId
+     *
+     * @return Response
+     */
+    public function previewAction(Request $request, int $productId): Response
+    {
+        try {
+            $productUrlProvider = $this->get('prestashop.adapter.shop.url.product_provider');
+            $url = $productUrlProvider->getUrl($productId, '{friendly-url}');
+        } catch (ProductException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirect($url);
+    }
+
+    /**
+     * @param Request $request
+     * @param int $productId
+     *
+     * @return Response
+     */
+    public function duplicateAction(Request $request, int $productId): Response
+    {
+        try {
+            $this->getCommandBus()->handle(new DuplicateProductCommand($productId));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful duplication', 'Admin.Notifications.Success')
+            );
+        } catch (ProductException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_products_v2_index');
+    }
+
+    /**
+     * Toggles product status
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_products_v2_index")
+     * @DemoRestricted(redirectRoute="admin_products_v2_index")
+     *
+     * @param int $productId
+     *
+     * @return RedirectResponse
+     */
+    public function toggleStatusAction(int $productId): RedirectResponse
+    {
+        try {
+            /** @var ProductForEditing $editableProduct */
+            $editableProduct = $this->getQueryBus()->handle(new GetProductForEditing((int)$productId));
+            $this->getCommandBus()->handle(
+                new ToggleProductStatusCommand((int)$productId, !$editableProduct->getOptions()->isActive())
+            );
+            $this->addFlash(
+                'success',
+                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+            );
+        } catch (ManufacturerException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_products_v2_index');
+    }
+
+    /**
+     * Updates product position.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_products_v2_index",
+     *     redirectQueryParamsToKeep={"id_category"},
+     *     message="You do not have permission to edit this."
+     * )
+     * @DemoRestricted(
+     *     redirectRoute="admin_products_v2_index",
+     *     redirectQueryParamsToKeep={"id_category"}
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function updatePositionAction(Request $request): RedirectResponse
+    {
+        try {
+            $this->getCommandBus()->handle(
+                new UpdateProductPositionCommand(
+                    $request->request->get('positions'),
+                    $request->query->getInt('id_category')
+                )
+            );
+        } catch (CannotUpdateProductPositionException $e) {
+            $errors = $e->getErrors();
+            $this->flashErrors($errors);
+
+            return $this->redirectToRoute('admin_products_v2_index');
+        }
+        $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+        return $this->redirectToRoute('admin_products_v2_index');
+    }
+
+    /**
+     * Delete products in bulk action.
+     *
+     * @AdminSecurity(
+     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_products_v2_index",
+     *     message="You do not have permission to delete this."
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function bulkDeleteAction(Request $request): RedirectResponse
+    {
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteProductCommand(
+                    $this->getProductIdsFromRequest($request))
+            );
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+            );
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_products_v2_index');
+    }
+
+    /**
+     * Enable products in bulk action.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_products_v2_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function bulkEnableAction(Request $request): RedirectResponse
+    {
+        try {
+            $this->getCommandBus()->handle(
+                new BulkToggleProductCommand(
+                    $this->getProductIdsFromRequest($request),
+                    true
+                )
+            );
+            $this->addFlash(
+                'success',
+                $this->trans('Successful enable.', 'Admin.Notifications.Success')
+            );
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_products_v2_index');
+    }
+
+    /**
+     * Disable products in bulk action.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_products_v2_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+
+    public function bulkDisableAction(Request $request): RedirectResponse
+    {
+        try {
+            $this->getCommandBus()->handle(
+                new BulkToggleProductCommand(
+                    $this->getProductIdsFromRequest($request),
+                    false
+                )
+            );
+            $this->addFlash(
+                'success',
+                $this->trans('Successful disable.', 'Admin.Notifications.Success')
+            );
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_products_v2_index');
+    }
+
+    /**
+     * Duplicate products in bulk action.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_products_v2_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+
+    public function bulkDuplicateAction(Request $request): RedirectResponse
+    {
+        try {
+            $this->getCommandBus()->handle(
+                new BulkDuplicateProductCommand(
+                    $this->getProductIdsFromRequest($request)
+                )
+            );
+            $this->addFlash(
+                'success',
+                $this->trans('Successful duplicate.', 'Admin.Notifications.Success')
+            );
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->redirectToRoute('admin_products_v2_index');
+    }
+
+
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function getProductIdsFromRequest(Request $request): array
+    {
+        $productIds = $request->request->get('product_bulk');
+
+        if (!is_array($productIds)) {
+            return [];
+        }
+
+        foreach ($productIds as $i => $productId) {
+            $productIds[$i] = (int) $productId;
+        }
+
+        return $productIds;
     }
 
     /**

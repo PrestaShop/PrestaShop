@@ -29,26 +29,33 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\AbstractBulkAction;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\LinkGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
+use PrestaShop\PrestaShop\Core\Grid\Column\AbstractColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ImageColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\PositionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShop\PrestaShop\Core\Grid\Filter\HiddenFilter;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\IntegerMinMaxFilterType;
 use PrestaShopBundle\Form\Admin\Type\NumberMinMaxFilterType;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
@@ -56,6 +63,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    use BulkDeleteActionTrait;
+
     public const GRID_ID = 'product';
 
     /**
@@ -171,8 +180,22 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setOptions([
                         'field' => 'active',
                         'primary_field' => 'id_product',
-                        'route' => 'admin_products_v2_index',
+                        'route' => 'admin_products_v2_toggle_status',
                         'route_param_name' => 'productId',
+                    ])
+            )
+            ->add(
+                (new PositionColumn('position'))
+                    ->setName($this->trans('Position', [], 'Admin.Global'))
+                    ->setOptions([
+                        'increment_position' => false,
+                        'id_field' => 'id_product',
+                        'position_field' => 'position',
+                        'update_method' => 'POST',
+                        'update_route' => 'admin_products_v2_update_position',
+                        'record_route_params' => [
+                            'id_category' => 'id_category',
+                        ],
                     ])
             )
             ->add((new ActionColumn('actions'))
@@ -188,21 +211,46 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'route_param_field' => 'id_product',
                     ])
                     )
+                    ->add((new SubmitRowAction('preview'))
+                        ->setName($this->trans('Preview', [], 'Admin.Actions'))
+                        ->setIcon('remove_red_eye')
+                        ->setOptions([
+                            'method' => 'POST',
+                            'route' => 'admin_products_v2_preview',
+                            'route_param_name' => 'productId',
+                            'route_param_field' => 'id_product',
+                        ])
+                    )
+                    ->add((new SubmitRowAction('duplicate'))
+                        ->setName($this->trans('Duplicate', [], 'Admin.Actions'))
+                        ->setIcon('content_copy')
+                        ->setOptions([
+                            'method' => 'POST',
+                            'route' => 'admin_products_v2_duplicate',
+                            'route_param_name' => 'productId',
+                            'route_param_field' => 'id_product',
+                            'confirm_message' => $this->trans(
+                                'Duplicate selected item?',
+                                [],
+                                'Admin.Notifications.Warning'
+                            ),
+                        ])
+                    )
                     ->add((new SubmitRowAction('delete'))
-                    ->setName($this->trans('Delete', [], 'Admin.Actions'))
-                    ->setIcon('delete')
-                    ->setOptions([
-                        'method' => 'DELETE',
-                        'route' => 'admin_products_v2_delete',
-                        'route_param_name' => 'productId',
-                        'route_param_field' => 'id_product',
-                        'confirm_message' => $this->trans(
-                            'Delete selected item?',
-                            [],
-                            'Admin.Notifications.Warning'
-                        ),
-                    ])
-                    ),
+                        ->setName($this->trans('Delete', [], 'Admin.Actions'))
+                        ->setIcon('delete')
+                        ->setOptions([
+                            'method' => 'DELETE',
+                            'route' => 'admin_products_v2_delete',
+                            'route_param_name' => 'productId',
+                            'route_param_field' => 'id_product',
+                            'confirm_message' => $this->trans(
+                                'Delete selected item?',
+                                [],
+                                'Admin.Notifications.Warning'
+                            ),
+                        ])
+                    )
             ])
             );
         if ($this->configuration->get('PS_STOCK_MANAGEMENT')) {
@@ -255,6 +303,13 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                         ],
                     ])
                     ->setAssociatedColumn('reference')
+            )
+            ->add(
+                (new HiddenFilter('id_category', HiddenType::class))
+                    ->setTypeOptions([
+                        'required' => false,
+                    ])
+                    ->setAssociatedColumn('id_category')
             )
             ->add(
                 (new Filter('category', TextType::class))
@@ -335,6 +390,40 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new SimpleGridAction('common_export_sql_manager'))
                     ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
                     ->setIcon('storage')
+            );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getBulkActions()
+    {
+        return (new BulkActionCollection())
+            ->add(
+                (new SubmitBulkAction('enable_selection'))
+                    ->setName($this->trans('Activate selection', [], 'Admin.Actions'))
+                    ->setOptions([
+                        'submit_route' => 'admin_products_v2_bulk_enable',
+                    ])
+            )
+            ->add(
+                (new SubmitBulkAction('disable_selection'))
+                    ->setName($this->trans('Deactivate selection', [], 'Admin.Actions'))
+                    ->setOptions([
+                        'submit_route' => 'admin_products_v2_bulk_disable',
+                    ])
+            )
+            ->add(
+                (new SubmitBulkAction('duplicate_selection'))
+                    ->setName($this->trans('Duplicate selection', [], 'Admin.Actions'))
+                    ->setOptions([
+                        'submit_route' => 'admin_products_v2_bulk_duplicate',
+                    ])
+            )
+            ->add(
+                $this->buildBulkDeleteAction(
+                    'admin_products_v2_bulk_delete'
+                )
             );
     }
 }

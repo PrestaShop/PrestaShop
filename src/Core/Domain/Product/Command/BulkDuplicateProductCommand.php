@@ -24,14 +24,40 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Exception;
+declare(strict_types=1);
 
-use Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Exception thrown when an update of a data in the repository (DB) failed.
+ * Deletes multiple products
  */
-class UpdateProductException extends Exception
+class BulkDuplicateProductCommand
 {
-    public const FAILED_BULK_UPDATE_STATUS = 10;
+    /**
+     * @var ProductId[]
+     */
+    private $productIds;
+
+    /**
+     * @param int[] $productIds
+     *
+     * @throws ProductConstraintException
+     */
+    public function __construct(array $productIds)
+    {
+        foreach ($productIds as $productId) {
+            $this->productIds[] = new ProductId($productId);
+        }
+    }
+
+    /**
+     * @return ProductId[]
+     */
+    public function getProductIds(): array
+    {
+        return $this->productIds;
+    }
 }

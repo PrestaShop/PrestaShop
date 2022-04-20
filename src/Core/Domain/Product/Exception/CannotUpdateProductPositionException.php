@@ -24,14 +24,30 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Exception;
+declare(strict_types=1);
 
-use Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
 
-/**
- * Exception thrown when an update of a data in the repository (DB) failed.
- */
-class UpdateProductException extends Exception
+class CannotUpdateProductPositionException extends ProductException
 {
-    public const FAILED_BULK_UPDATE_STATUS = 10;
+    /**
+     * @var array
+     */
+    private $errors;
+
+    /**
+     * @param array $errors
+     */
+    public function setErrors(array $errors): void
+    {
+        $this->errors = $errors;
+    }
+
+    /**
+     * @return array
+     */
+    public function getErrors(): array
+    {
+        return $this->errors;
+    }
 }

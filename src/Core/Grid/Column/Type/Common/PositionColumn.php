@@ -64,6 +64,7 @@ final class PositionColumn extends AbstractColumn
                 'update_method' => 'GET',
                 'record_route_params' => [],
                 'clickable' => true,
+                'increment_position' => true,
             ])
             ->setAllowedTypes('id_field', 'string')
             ->setAllowedTypes('position_field', 'string')
@@ -72,6 +73,8 @@ final class PositionColumn extends AbstractColumn
             ->setAllowedTypes('update_method', 'string')
             ->setAllowedTypes('record_route_params', ['array'])
             ->setAllowedTypes('clickable', 'bool')
+            /** In some cases position needs to be incremented by one to make sense to merchant */
+            ->setAllowedTypes('increment_position', 'bool')
             ->setAllowedValues('update_method', ['GET', 'POST']);
     }
 }

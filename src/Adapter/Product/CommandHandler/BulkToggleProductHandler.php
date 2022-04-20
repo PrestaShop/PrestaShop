@@ -24,14 +24,33 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Exception;
+declare(strict_types=1);
 
-use Exception;
+namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkToggleProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\BulkToggleProductHandlerInterface;
+use PrestaShopBundle\Exception\UpdateProductException;
+use Product;
 
 /**
- * Exception thrown when an update of a data in the repository (DB) failed.
+ * Handles command which deletes addresses in bulk action
  */
-class UpdateProductException extends Exception
+final class BulkToggleProductHandler implements BulkToggleProductHandlerInterface
 {
-    public const FAILED_BULK_UPDATE_STATUS = 10;
+    /**
+     * {@inheritdoc}
+     */
+    public function handle(BulkToggleProductCommand $command): void
+    {
+        foreach ($command->getProductIds() as $productId) {
+            $product = new Product($productId->getValue());
+            $product->active = $command->getNewStatus();
+
+
+            if (!$product->save()) {
+                throw new UpdateProductException(sprintf('Unable to toggle product status with id "%s"', $product->id), UpdateProductException::FAILED_BULK_UPDATE_STATUS);
+            }
+        }
+    }
 }
