@@ -45,13 +45,6 @@ class ModuleTest extends TestCase
     {
         parent::setUpBeforeClass();
         static::mockContext();
-        Module::resetStaticCache();
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-        Module::resetStaticCache();
     }
 
     /**
