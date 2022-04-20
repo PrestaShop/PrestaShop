@@ -135,7 +135,7 @@ describe('BO - Shop Parameters - General - Maintenance : Enable/Disable shop', a
     await expect(result).to.be.true;
   });
 
-  it('should delete the maintenance ip address and enable the shop', async function () {
+  it('should delete the maintenance ip address', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'deleteIpAddress', baseContext);
 
     page = await homePage.closePage(browserContext, page, 0);
