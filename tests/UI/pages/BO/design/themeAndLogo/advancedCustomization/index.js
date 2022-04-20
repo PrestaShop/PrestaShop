@@ -4,7 +4,7 @@ const themeAndLogoBasePage = require('@pages/BO/design/themeAndLogo/themeAndLogo
 /**
  * Advanced customization page, contains functions that can be used on the page
  * @class
- * @extends BOBasePage
+ * @extends themeAndLogoBasePage
  */
 class AdvancedCustomization extends themeAndLogoBasePage {
   /**
@@ -19,15 +19,18 @@ class AdvancedCustomization extends themeAndLogoBasePage {
     this.uploadChildThemeModal = '#upload-child-modal';
     this.uploadChildThemeButton = `#psthemecusto a[data-target= '${this.uploadChildThemeModal}']`;
     this.modalDialogUploadChildTheme = `${this.uploadChildThemeModal} div[role='document']`;
+    this.modalCloseButton = `${this.uploadChildThemeModal} .close`;
     this.childThemeImportDropZone = '#importDropzone';
     this.modalDialogUploadChildThemeSelectLink = `${this.childThemeImportDropZone} a.module-import-start-select-manual`;
     this.successMsgUploadChildTheme = `${this.childThemeImportDropZone} .module-import-success`;
+    this.clickOnHowToUseParentsChildThemesLink = '#psthemecusto .link-child';
+    this.newPageSelector = '#body-inner #parentchild-theme';
   }
 
   /* Methods */
   /**
    * Download theme
-   * @param page
+   * @param {Page} Browser tab
    * @returns {Promise<string>}
    */
   async downloadTheme(page) {
@@ -36,7 +39,7 @@ class AdvancedCustomization extends themeAndLogoBasePage {
 
   /**
    * Click on upload a child theme
-   * @param page
+   * @param {Page} Browser tab
    * @returns {Promise<string>}
    */
   async clickOnUploadChildThemeButton(page) {
@@ -48,8 +51,8 @@ class AdvancedCustomization extends themeAndLogoBasePage {
 
   /**
    * Upload child theme
-   * @param page
-   * @param filePath
+   * @param {Page} Browser tab
+   * @param {string} filePath
    * @returns {Promise<string>}
    */
   async uploadTheme(page, filePath) {
@@ -59,6 +62,28 @@ class AdvancedCustomization extends themeAndLogoBasePage {
     ]);
 
     return this.getTextContent(page, this.successMsgUploadChildTheme);
+  }
+
+  /**
+   * Close the modal of the Upload child theme
+   * @param {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async closeModal(page) {
+    await this.waitForSelectorAndClick(page, this.modalCloseButton);
+    return this.elementNotVisible(page, this.modalDialogUploadChildTheme, 3000);
+  }
+
+  /**
+   * Click on the How to use Parent's child theme
+   * @param {Page} Browser tab
+   * @returns {Promise<Page>}
+   */
+  async clickOnHowToUseParentsChildThemes(page) {
+    return this.openLinkWithTargetBlank(page,
+      this.clickOnHowToUseParentsChildThemesLink,
+      this.newPageSelector,
+    );
   }
 }
 
