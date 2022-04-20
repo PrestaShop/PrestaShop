@@ -30,11 +30,13 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Doctrine\DBAL\Driver\Exception;
 use ObjectModel;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Manufacturer\Repository\ManufacturerRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator;
 use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
@@ -135,6 +137,37 @@ class ProductRepository extends AbstractObjectModelRepository
         $this->addObjectModel($product, CannotDuplicateProductException::class);
 
         return $product;
+    }
+
+    /**
+     * Gets position product position in category
+     *
+     * @param ProductId $productId
+     * @param CategoryId $categoryId
+     *
+     * @return int|null
+     *
+     * @throws Exception
+     * @throws \Doctrine\DBAL\Exception
+     */
+    public function getPositionInCategory(ProductId $productId, CategoryId $categoryId): ?int
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('position')
+            ->from($this->dbPrefix . 'category_product')
+            ->where('id_product = :productId')
+            ->andWhere('id_category = :categoryId')
+            ->setParameter('productId', $productId->getValue())
+            ->setParameter('categoryId', $categoryId->getValue())
+        ;
+
+        $position = $qb->execute()->fetchOne();
+
+        if (!$position) {
+            return null;
+        }
+
+        return (int) $position;
     }
 
     /**

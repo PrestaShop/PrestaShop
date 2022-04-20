@@ -152,7 +152,7 @@ admin_products_v2_bulk_disable:
 
 admin_products_v2_bulk_duplicate:
   path: /bulk-duplicate
-  methods: [ POST, DELETE]
+  methods: [ POST, DELETE ]
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:bulkDuplicate
     _legacy_controller: AdminProducts
