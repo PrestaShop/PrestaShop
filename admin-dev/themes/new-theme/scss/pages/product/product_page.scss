@@ -1470,6 +1470,17 @@ $product-page-padding-bottom: 80px !default;
 }
 
 .combination-page {
+  .combination-images-selector:not(.disabled) {
+    .combination-image-choice {
+      cursor: pointer;
+
+      &:hover,
+      &.selected {
+        border: solid $primary 3px;
+      }
+    }
+  }
+
   .combination-images-selector {
     display: flex;
     flex-direction: row;
@@ -1477,13 +1488,7 @@ $product-page-padding-bottom: 80px !default;
 
     .combination-image-choice {
       margin: 0.35rem;
-      cursor: pointer;
       border: solid transparent 3px;
-
-      &:hover,
-      &.selected {
-        border: solid $primary 3px;
-      }
 
       .form-check-radio {
         display: none;
@@ -1500,6 +1505,10 @@ $product-page-padding-bottom: 80px !default;
     &.date_picker-widget {
       max-width: 20rem;
     }
+  }
+
+  .combination-images-selector.disabled {
+    opacity: 0.4;
   }
 }
 
