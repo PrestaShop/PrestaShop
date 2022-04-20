@@ -281,15 +281,8 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
-    public function activeAjaxAction(Request $request): JsonResponse
+    public function activateAjaxAction(Request $request): JsonResponse
     {
-        if ($request->get('id') === 5) {
-            $response = [
-                'success' => false,
-                'message' => 'Failure'
-            ];
-            return new JsonResponse($response);
-        }
         try {
             $this->getCommandBus()->handle(
                 new UpdateProductStatusCommand((int) $request->get('id'), true)

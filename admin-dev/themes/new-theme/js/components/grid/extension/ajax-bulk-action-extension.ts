@@ -24,7 +24,7 @@
  */
 
 import {Grid} from '@PSTypes/grid';
-import AjaxProgressModal from '@components/modal/ajax-progress-modal';
+import ProgressModal from '@components/modal/progress-modal';
 import GridMap from '@components/grid/grid-map';
 
 const {$} = window;
@@ -47,26 +47,28 @@ export default class AjaxBulkActionExtension {
 
         const $ajaxButton = $(event.currentTarget);
 
-        this.showAjaxProgressModal(
+        const modal = this.showProgressModal(
           $ajaxButton,
           grid,
+          total,
         );
-        let done = 0;
+        let Id;
         $('.js-bulk-action-checkbox:checked').each( function (i) {
+          Id = $(this).val();
+          // @todo there is bug with id not changing
+          modal.addProgressDetail(Number(Id));
+
           $.ajax({
             type: "POST",
             headers: { "cache-control": "no-cache" },
             url: $ajaxButton.data('ajax-url'),
-            data: { id: $(this).val() },
+            data: { id: Id },
             success(data) {
-              done++;
-              var progressionDone = done * 100 / total;
-              // var progressionNext = (done+1) * 100 / total;
-              $('#ajax_progressbar_done').width((100-progressionDone)+'%');
-              $('#ajax_progressbar_info').width(progressionDone+'%');
-              $('.progress-success-count').html(done + '/' + total);
-
-              //$('#ajax_progressbar_next').width((progressionNext-progressionDone)+'%');
+              if (data.success) {
+                modal.modalActionSuccess();
+              } else {
+                modal.modalActionError(data.message);
+              }
             }
           });
         })
@@ -76,35 +78,34 @@ export default class AjaxBulkActionExtension {
   /**
    * @param {jQuery} $submitBtn
    * @param {Grid} grid
-   * @param {string} confirmMessage
-   * @param {string} confirmTitle
-   * @param modalTitle
-   * @param modalProgressTitle
+   * @param total
    */
-  private showAjaxProgressModal(
+  private showProgressModal(
     $submitBtn: JQuery<Element>,
     grid: Grid,
-  ): void {
-    const confirmButtonLabel = $submitBtn.data('confirmButtonLabel');
+    total: number,
+  ): ProgressModal {
+    const modalDescription = $submitBtn.data('modalDescription');
     const closeButtonLabel = $submitBtn.data('closeButtonLabel');
-    const confirmButtonClass = $submitBtn.data('confirmButtonClass');
-    const confirmMessage = $submitBtn.data('confirmMessage');
     const modalTitle = $submitBtn.data('modalTitle');
     const modalProgressTitle = $submitBtn.data('modalProgressTitle');
-    const modal = new AjaxProgressModal(
+    const modalFailureTitle = $submitBtn.data('modalFailureTitle');
+
+    const modal = new ProgressModal(
       {
-        id: GridMap.confirmModal(grid.getId()),
-        confirmMessage,
-        confirmButtonLabel,
+        modalDescription,
         closeButtonLabel,
-        confirmButtonClass,
         modalTitle,
         modalProgressTitle,
+        modalFailureTitle,
       },
+      total,
       () => this.postForm($submitBtn, grid),
     );
 
     modal.show();
+
+    return modal;
   }
 
   /**

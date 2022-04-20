@@ -55,18 +55,17 @@ final class AjaxBulkAction extends AbstractBulkAction
                 'class' => '',
                 'modal_title' => 'Completing action',
                 'modal_progress_title' => 'Processing...',
-                'modal_confirm_message' => 'Action in progress',
-                'modal_confirm_button_label' => 'Confirm',
-                'modal_confirm_button_class' => '',
+                'modal_failure_title' => 'Failed to process:',
+                'modal_description' => 'Action in progress',
                 'modal_close_button_label' => 'Close',
                 'route_params' => [],
             ])
             ->setAllowedTypes('class', 'string')
             ->setAllowedTypes('modal_title', 'string')
             ->setAllowedTypes('modal_progress_title', 'string')
-            ->setAllowedTypes('modal_confirm_message', 'string')
-            ->setAllowedTypes('modal_confirm_button_label', 'string')
-            ->setAllowedTypes('modal_confirm_button_class', 'string')
+            ->setAllowedTypes('modal_failure_title', 'string')
+            ->setAllowedTypes('modal_description', 'string')
+            ->setAllowedTypes('modal_close_button_label', 'string')
             ->setAllowedTypes('ajax_route', 'string')
             ->setAllowedTypes('attributes', 'array')
             ->setAllowedTypes('attributes', 'array');

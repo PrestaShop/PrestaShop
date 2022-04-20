@@ -84,11 +84,11 @@ admin_products_v2_duplicate:
   requirements:
     productId: \d+
 
-admin_products_v2_active_ajax:
+admin_products_v2_activate_ajax:
   path: /activate_ajax
   methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:activeAjax
+    _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:activateAjax
     _legacy_controller: AdminProducts
     _legacy_link:
       - AdminProducts:statusproduct

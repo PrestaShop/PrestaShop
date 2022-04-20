@@ -27,13 +27,11 @@
         class="dropdown-item js-bulk-action-ajax-btn {{ action.options.class }}"
         type="button"
         data-ajax-url="{{ path(action.options.ajax_route, action.options.route_params) }}"
-        data-confirm-message="{{ action.options.modal_confirm_message }}"
+        data-modal-description="{{ action.options.modal_description }}"
         data-modal-title="{{ action.options.modal_title }}"
-        data-close-button-label="{{ action.options.modal_close_button_label }}"
-        data-confirm-button-label="{{ action.options.modal_confirm_button_label }}"
-        data-confirm-button-class="{{ action.options.modal_confirm_button_class }}"
         data-modal-progress-title="{{ action.options.modal_progress_title }}"
-        {% for attribute, value in action.options.attributes %}
+        data-modal-failure-title="{{ action.options.modal_failure_title }}"
+{% for attribute, value in action.options.attributes %}
         {{ attribute }}="{{ value }}"
         {% endfor %}
 >
