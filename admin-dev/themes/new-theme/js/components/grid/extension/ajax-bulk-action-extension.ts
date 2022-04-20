@@ -24,7 +24,7 @@
  */
 
 import {Grid} from '@PSTypes/grid';
-import ProgressModal from '@components/modal/progress-modal';
+import ProgressModal, {ProgressModalContainer} from '@components/modal/progress-modal';
 import GridMap from '@components/grid/grid-map';
 
 const {$} = window;
@@ -33,17 +33,20 @@ const {$} = window;
  * Handles submit of grid actions
  */
 export default class AjaxBulkActionExtension {
+  stopProcess = false;
   /**
    * Extend grid with bulk action submitting
    *
    * @param {Grid} grid
    */
   extend(grid: Grid): void {
+    let AjaxBulkExtension = this;
+
     grid
       .getContainer()
       .on('click', GridMap.bulks.ajaxAction, (event: JQueryEventObject) => {
-
-        let total = $('.js-bulk-action-checkbox:checked').length;
+        let checkboxes = $('.js-bulk-action-checkbox:checked');
+        let total = checkboxes.length;
 
         const $ajaxButton = $(event.currentTarget);
 
@@ -52,15 +55,19 @@ export default class AjaxBulkActionExtension {
           grid,
           total,
         );
-        let Id;
         let doneCount = 0;
-        $('.js-bulk-action-checkbox:checked').each( function (i) {
-          Id = $(this).val();
+
+
+        for (let i = 0; i < checkboxes.length; i += 1) {
+          const checkbox = checkboxes[i];
+          if (AjaxBulkExtension.stopProcess) {
+            return false;
+          }
           $.ajax({
             type: "POST",
             headers: { "cache-control": "no-cache" },
             url: $ajaxButton.data('ajax-url'),
-            data: { id: Id },
+            data: { id: checkbox.getAttribute('value') },
             success(data) {
               doneCount++;
               if (data.success) {
@@ -70,8 +77,13 @@ export default class AjaxBulkActionExtension {
               }
             }
           });
-        })
-      });
+      }
+    });
+  }
+
+  private cancelAjaxAction(): void
+  {
+    this.stopProcess = true;
   }
 
   /**
@@ -92,6 +104,7 @@ export default class AjaxBulkActionExtension {
       },
       total,
       () => this.postForm($submitBtn, grid),
+      () => this.cancelAjaxAction(),
     );
 
     modal.show();

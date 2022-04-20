@@ -260,3 +260,21 @@ $line-height-computed: floor($font-size-base * $line-height-base);
   max-height: 250px;
   overflow: scroll;
 }
+
+.switch-to-errors-button{
+  cursor: pointer;
+}
+
+.alert.switch-to-errors-button span{
+  padding: 0;
+}
+
+#error-modal-container .modal-footer{
+  justify-content: space-between;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+#progress-modal-container .modal-footer{
+  justify-content: space-between;
+}

@@ -26,7 +26,7 @@
 /* eslint max-classes-per-file: ["error", 2] */
 
 import {
-  ModalContainerType, ModalContainer, ModalType, ModalParams, Modal,
+  ModalContainerType, ModalContainer, ModalType, ModalParams, Modal, InputModalParams,
 } from '@components/modal/modal';
 
 export interface ProgressModalParentContainerType extends ModalContainerType {
@@ -42,68 +42,120 @@ export type ProgressModalParams = ModalParams & {
 }
 export type InputProgressModalParams = Partial<ProgressModalParams>;
 
-export class ProgressModalParentContainer extends ModalContainer implements ProgressModalParentContainerType {
-  /* This constructor is important to force the input type but ESLint is not happy about it*/
-  /* eslint-disable no-useless-constructor */
+export class ProgressModalParentContainer implements ProgressModalParentContainerType{
+  container!: HTMLElement;
+
+  dialog!: HTMLElement;
+
+  content!: HTMLElement;
+
+  body!: HTMLElement;
+
+  closeIcon!: HTMLButtonElement;
+
+  header!: HTMLElement;
+
+  message!: HTMLElement;
+
   constructor(params: ProgressModalParams) {
-    super(params);
+    this.buildModalContainer(params);
   }
 
   buildModalContainer(params: ProgressModalParams): void {
-    super.buildModalContainer(params);
+    this.container = document.createElement('div');
+    this.container.classList.add('modal', 'fade');
+    this.container.id = params.id;
 
-    let progressContainer = document.createElement('div');
-    progressContainer.id = 'progress-modal-container';
-    this.dialog.append(progressContainer)
+    // Modal dialog element
+    this.dialog = document.createElement('div');
+    this.dialog.classList.add('modal-dialog');
+    if (params.dialogStyle) {
+      Object.keys(params.dialogStyle).forEach((key: string) => {
+        // @ts-ignore
+        this.dialog.style[key] = params.dialogStyle[key];
+      });
+    }
 
-    let errorContainer = document.createElement('div');
-    errorContainer.id = 'error-modal-container';
-    this.dialog.append(errorContainer)
+    this.container.appendChild(this.dialog);
   }
 }
 
-export class ProgressModalContainer extends ModalContainer implements ProgressModalParentContainerType {
+export class ProgressModalContainer {
   footer!: HTMLElement;
-  closeButton!: HTMLElement;
 
-  /* This constructor is important to force the input type but ESLint is not happy about it*/
-  /* eslint-disable no-useless-constructor */
+  container!: HTMLElement;
+
+  dialog!: HTMLElement;
+
+  content!: HTMLElement;
+
+  message!: HTMLElement;
+
+  header!: HTMLElement;
+
+  title?: HTMLElement;
+
+  body!: HTMLElement;
+
+  stopProcessingButton!: HTMLElement;
+
+  switchToErrorButton!: HTMLElement;
+
+  progressDone!: HTMLElement;
+
+  progressPercentage!: HTMLElement;
+
+  errorCount!: HTMLElement;
+
   constructor(params: ProgressModalParams) {
-    super(params);
+    this.buildModalContainer(params);
   }
 
   buildModalContainer(params: ProgressModalParams): void {
-    params.modalTitle = params.modalTitle.replace('%d', params.total.toString());
-    super.buildModalContainer(params);
+    // Modal content element
+    this.content = document.createElement('div');
+    this.content.classList.add('modal-content');
 
-    let progressDetails = document.createElement('div');
-    progressDetails.classList.add(
+    // Modal message element
+    this.message = document.createElement('p');
+    this.message.classList.add('modal-message');
+
+    // Modal header element
+    this.header = document.createElement('div');
+    this.header.classList.add('modal-header');
+
+    params.modalTitle = params.modalTitle.replace('%d', params.total.toString());
+
+    this.progressPercentage = document.createElement('div');
+    this.progressPercentage.classList.add(
       'float-right',
       'progress-percent',
     );
-    progressDetails.append('0%');
+    this.progressPercentage.append('0%');
 
-    this.body.append(progressDetails);
+    this.body = document.createElement('div');
+    this.body.classList.add('modal-body', 'text-left', 'font-weight-normal');
+
+    this.body.append(this.progressPercentage);
     this.body.append(this.buildProgressBar());
 
-    let switchButtonContainer = document.createElement('div');
-    switchButtonContainer.classList.add(
+    this.switchToErrorButton = document.createElement('div');
+    this.switchToErrorButton.classList.add(
       'switch-to-errors-button',
       'alert',
       'alert-warning'
     );
 
-    let errorCountSpan = document.createElement('span');
-    errorCountSpan.classList.add(
+    this.errorCount = document.createElement('span');
+    this.errorCount.classList.add(
       'modal-error-count'
     )
-    errorCountSpan.innerHTML = '0';
+    this.errorCount.innerHTML = '0';
 
     let errorLogString = 'View %d error logs';
-    switchButtonContainer.innerHTML = errorLogString.replace('%d', errorCountSpan.outerHTML);
+    this.switchToErrorButton.innerHTML = errorLogString.replace('%d', this.errorCount.outerHTML);
 
-
-    this.header.insertBefore(switchButtonContainer, this.closeIcon);
+    this.header.append(this.switchToErrorButton);
 
     let errorContainer = document.createElement('div');
     errorContainer.classList.add('modal-error-container-single');
@@ -112,17 +164,28 @@ export class ProgressModalContainer extends ModalContainer implements ProgressMo
     this.footer = document.createElement('div');
     this.footer.classList.add('modal-footer');
 
-    // Modal close button element
-    this.closeButton = document.createElement('button');
-    this.closeButton.setAttribute('type', 'button');
-    this.closeButton.setAttribute('disabled', 'true');
-    this.closeButton.classList.add('btn', 'btn-outline-secondary', 'btn-lg');
-    this.closeButton.dataset.dismiss = 'modal';
-    this.closeButton.innerHTML = 'Close';
+    this.stopProcessingButton = document.createElement('button');
+    this.stopProcessingButton.setAttribute('type', 'button');
+    this.stopProcessingButton.classList.add('btn', 'btn-outline-secondary', 'btn-lg', 'stop-processing');
+    this.stopProcessingButton.innerHTML = 'Stop processing';
 
     // Appending element to the modal
-    this.footer.append(this.closeButton, ...params.customButtons);
+    this.footer.append(this.stopProcessingButton, ...params.customButtons);
     this.content.append(this.footer);
+
+
+    // Modal title element
+    if (params.modalTitle) {
+      this.title = document.createElement('h4');
+      this.title.classList.add('modal-title');
+      this.title.innerHTML = params.modalTitle;
+    }
+
+    // Constructing the modal
+    if (this.title) {
+      this.header.appendChild(this.title);
+    }
+    this.content.append(this.header, this.body);
   }
 
   private buildProgressBar(): HTMLElement
@@ -140,64 +203,108 @@ export class ProgressModalContainer extends ModalContainer implements ProgressMo
     progressBar.setAttribute('role', 'progressbar');
     progressBar.setAttribute('style', 'width: 0%;');
 
-    let progressDone = document.createElement('div');
-    progressDone.setAttribute('style', 'width: 0%');
+    this.progressDone = document.createElement('div');
+    this.progressDone.setAttribute('style', 'width: 0%');
 
-    progressDone.classList.add
+    this.progressDone.classList.add
     (
       'progress-bar',
       'progress-bar-success',
     );
-    progressDone.setAttribute('role', 'progressbar');
-    progressDone.setAttribute('id', 'modal_progressbar_done');
-    progress.append(progressDone);
+    this.progressDone.setAttribute('role', 'progressbar');
+    this.progressDone.setAttribute('id', 'modal_progressbar_done');
+    progress.append(this.progressDone);
 
     return progress;
   }
 }
-export class ProgressModalErrorContainer extends ModalContainer implements ModalContainerType {
+export class ProgressModalErrorContainer {
   footer!: HTMLElement;
+
+  container!: HTMLElement;
+
+  dialog!: HTMLElement;
+
+  content!: HTMLElement;
+
+  message!: HTMLElement;
+
+  header!: HTMLElement;
+
+  title?: HTMLElement;
+
+  body!: HTMLElement;
+
+  switchButton!: HTMLElement;
+
+  downloadErrorsButton!: HTMLElement;
+
+  errorContainer!: HTMLElement;
 
   /* This constructor is important to force the input type but ESLint is not happy about it*/
   /* eslint-disable no-useless-constructor */
   constructor(params: ProgressModalParams) {
-    super(params);
+    this.buildModalContainer(params);
   }
 
   buildModalContainer(params: ProgressModalParams): void {
-    super.buildModalContainer(params);
+    this.content = document.createElement('div');
+    this.content.classList.add('modal-content');
 
-    let errorContainer = document.createElement('div');
-    errorContainer.classList.add('progress-modal-error-container');
-    errorContainer.classList.add
+    // Modal message element
+    this.message = document.createElement('p');
+    this.message.classList.add('modal-message');
+
+    // Modal header element
+    this.header = document.createElement('div');
+    this.header.classList.add('modal-header');
+    this.body = document.createElement('div');
+
+    this.errorContainer = document.createElement('div');
+    this.errorContainer.classList.add('progress-modal-error-container');
+    this.errorContainer.classList.add
     (
       'alert',
       'alert-warning',
       'd-print-none'
     );
-    this.body.append(errorContainer);
+    this.body.append(this.errorContainer);
 
     this.footer = document.createElement('div');
     this.footer.classList.add('modal-footer');
-    let switchButtonContainer = document.createElement('div');
-    switchButtonContainer.classList.add(
+    this.switchButton = document.createElement('div');
+    this.switchButton.classList.add(
       'switch-to-progress-button',
       'btn',
       'btn-secondary'
     );
-    switchButtonContainer.innerHTML = 'Back to processing';
+    this.switchButton.innerHTML = 'Back to processing';
 
-    let downloadButtonContainer = document.createElement('div');
-    downloadButtonContainer.classList.add(
+    this.downloadErrorsButton = document.createElement('div');
+    this.downloadErrorsButton.classList.add(
       'download-error-log',
       'btn',
       'btn-secondary'
     );
-    downloadButtonContainer.innerHTML = 'Download error log';
+    this.downloadErrorsButton.innerHTML = 'Download error log';
 
-    this.footer.append(switchButtonContainer);
-    this.footer.append(downloadButtonContainer);
+    this.footer.append(this.switchButton);
+    this.footer.append(this.downloadErrorsButton);
     this.body.append(this.footer);
+
+
+    // Modal title element
+    if (params.modalTitle) {
+      this.title = document.createElement('h4');
+      this.title.classList.add('modal-title');
+      this.title.innerHTML = params.modalTitle;
+    }
+
+    // Constructing the modal
+    if (this.title) {
+      this.header.appendChild(this.title);
+    }
+    this.content.append(this.header, this.body);
   }
 }
 
@@ -213,17 +320,14 @@ export class ProgressModal extends Modal implements ProgressModalType {
   doneCount !: number;
   total !: number;
   errors !: Array<string>;
-  progressModalElement !: HTMLElement;
-  errorModalElement !: HTMLElement;
-  progressDoneElement !: HTMLElement;
-  progressPercentElement !: HTMLElement;
-  errorElement !: HTMLElement;
-
+  cancelCallback !: () => void;
+  progressModal !: ProgressModalContainer;
+  errorModal !: ProgressModalErrorContainer;
   constructor(
     inputParams: InputProgressModalParams,
     total: number,
     confirmCallback: (event: Event) => void,
-    cancelCallback = () => true,
+    cancelCallback: () => void,
   ) {
     const params: ProgressModalParams = {
       id: 'progress-modal',
@@ -233,21 +337,23 @@ export class ProgressModal extends Modal implements ProgressModalType {
       total: total,
       dialogStyle: {},
       confirmCallback,
-      closeCallback: cancelCallback,
       ...inputParams,
     };
 
     super(params);
+    this.cancelCallback = cancelCallback;
     this.total = total;
     this.errors = [];
   }
 
   protected initContainer(params: ProgressModalParams): void {
-    /** I still need to init those things in order for them to appear. How do I do that? */
     this.modal = new ProgressModalParentContainer(params);
     super.initContainer(params);
-    this.initModalContainers(params);
-    this.initDynamicContentVariables();
+    this.progressModal = new ProgressModalContainer(params);
+    this.errorModal = new ProgressModalErrorContainer(params);
+
+    this.modal.dialog.appendChild(this.progressModal.content);
+
     this.initListeners();
   }
 
@@ -265,8 +371,8 @@ export class ProgressModal extends Modal implements ProgressModalType {
   private updatePercentage(doneCount: number)
   {
     let progressBarDone = doneCount * 100 / this.total;
-    this.progressDoneElement.style.width = progressBarDone+'%';
-    this.progressPercentElement.innerHTML = progressBarDone+'%';
+    this.progressModal.progressDone.style.width = progressBarDone+'%';
+    this.progressModal.progressPercentage.innerHTML = progressBarDone+'%';
   }
 
   private addError(error: string)
@@ -274,31 +380,17 @@ export class ProgressModal extends Modal implements ProgressModalType {
     this.errors.push(error);
     let errorContent = document.createElement('p');
     errorContent.append(error);
-    $('.progress-modal-error-container').append(errorContent);
+    this.errorModal.errorContainer.append(errorContent);
+    this.progressModal.errorCount.innerHTML = this.errors.length.toString();
   }
 
-  private initModalContainers(params: ProgressModalParams)
-  {
-    let progressModal = new ProgressModalContainer(params);
-    let errorModal = new ProgressModalErrorContainer(params);
-    this.progressModalElement = document.getElementById('progress-modal-container') as HTMLElement;
-    this.progressModalElement.innerHTML = progressModal.container.innerHTML;
-
-    this.errorModalElement = document.getElementById('error-modal-container') as HTMLElement;
-    this.errorModalElement.innerHTML = errorModal.container.innerHTML;
-    this.errorModalElement.hidden = true;
-  }
-
+  /** If I have variable append will still work, so need to try that */
+  /** Modal container should not be extended for children */
+  /** Return 401 on error */
+  /** pass params and take cancelCallback from there */
   private initListeners()
   {
-    const switchToErrorsButton = document.querySelector('.switch-to-errors-button') as HTMLElement;
-    switchToErrorsButton.addEventListener('click', () => {
-      this.progressModalElement.hidden = true;
-      this.errorModalElement.hidden = false;
-    });
-
-    const downloadErrorLogButton = document.querySelector('.download-error-log') as HTMLElement;
-    downloadErrorLogButton.addEventListener('click', () => {
+    this.errorModal.downloadErrorsButton.addEventListener('click', () => {
       let csvContent = 'data:text/csv;charset=utf-8,';
       this.errors.forEach(function(error) {
         csvContent += error + "\r\n";
@@ -309,19 +401,20 @@ export class ProgressModal extends Modal implements ProgressModalType {
       link.click();
     });
 
-    const switchButtonContainer = document.querySelector('.switch-to-progress-button') as HTMLElement;
-    switchButtonContainer.addEventListener('click', () => {
-      this.progressModalElement.hidden = false;
-      this.errorModalElement.hidden = true;
+    this.errorModal.switchButton.addEventListener('click', () => {
+      this.modal.dialog.removeChild(this.errorModal.content);
+      this.modal.dialog.appendChild(this.progressModal.content);
     });
-  }
 
-  /** Initializes variables for dynamic content that can be altered */
-  private initDynamicContentVariables()
-  {
-    this.progressDoneElement = document.getElementById('modal_progressbar_done') as HTMLElement;
-    this.progressPercentElement = document.querySelector('.progress-percent') as HTMLElement;
-    this.errorElement = document.querySelector('.progress-modal-error-container') as HTMLElement;
+
+    this.progressModal.switchToErrorButton.addEventListener('click', () => {
+      this.modal.dialog.removeChild(this.progressModal.content);
+      this.modal.dialog.appendChild(this.errorModal.content);
+    });
+
+    this.progressModal.stopProcessingButton.addEventListener('click', () => {
+      this.cancelCallback();
+    });
   }
 }
 
