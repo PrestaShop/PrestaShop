@@ -61,9 +61,7 @@ final class UpdateProductPositionHandler implements UpdateProductPositionHandler
         PositionDefinitionInterface $positionDefinition,
         PositionUpdateFactoryInterface $positionUpdateFactory,
         GridPositionUpdaterInterface $positionUpdater
-    )
-    {
-
+    ) {
         $this->positionDefinition = $positionDefinition;
         $this->positionUpdateFactory = $positionUpdateFactory;
         $this->positionUpdater = $positionUpdater;

@@ -276,6 +276,7 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
                 return (int) $filter;
             }
         }
+
         return $this->configuration->getInt('PS_HOME_CATEGORY');
     }
 }

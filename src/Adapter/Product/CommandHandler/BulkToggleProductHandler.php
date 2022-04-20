@@ -47,7 +47,6 @@ final class BulkToggleProductHandler implements BulkToggleProductHandlerInterfac
             $product = new Product($productId->getValue());
             $product->active = $command->getNewStatus();
 
-
             if (!$product->save()) {
                 throw new UpdateProductException(sprintf('Unable to toggle product status with id "%s"', $product->id), UpdateProductException::FAILED_BULK_UPDATE_STATUS);
             }

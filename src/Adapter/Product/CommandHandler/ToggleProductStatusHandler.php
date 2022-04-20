@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\ToggleProductStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\DeleteProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\ToggleProductStatusHandlerInterface;
 
 /**

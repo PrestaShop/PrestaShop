@@ -311,7 +311,7 @@ class ProductRepository extends AbstractObjectModelRepository
     public function toggleStatus(ProductId $productId, bool $status): void
     {
         $product = new Product($productId->getValue());
-        $product->active =$status;
+        $product->active = $status;
         $product->save();
     }
 

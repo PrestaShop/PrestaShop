@@ -29,10 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use Exception;
-use PrestaShop\PrestaShop\Core\Domain\Category\Command\UpdateCategoryPositionCommand;
-use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
-use PrestaShop\PrestaShop\Core\Domain\CmsPageCategory\ValueObject\CmsPageCategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductCommand;
@@ -47,17 +44,15 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductPosit
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\DuplicateFeatureValueAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidAssociatedFeatureException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
-use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
-use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionDataException;
-use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Entity\ProductDownload;
@@ -112,7 +107,7 @@ class ProductController extends FrameworkBundleAdminController
         $categoryName = null;
 
         if (isset($filters->getFilters()['id_category'])) {
-            $idFilteredCategory = (int)$filters->getFilters()['id_category'];
+            $idFilteredCategory = (int) $filters->getFilters()['id_category'];
             $category = $this->getCommandBus()->handle(new GetCategoryForEditing($idFilteredCategory));
             $categoryName = $category->getName()[$this->getContextLangId()];
         }
@@ -288,9 +283,9 @@ class ProductController extends FrameworkBundleAdminController
     {
         try {
             /** @var ProductForEditing $editableProduct */
-            $editableProduct = $this->getQueryBus()->handle(new GetProductForEditing((int)$productId));
+            $editableProduct = $this->getQueryBus()->handle(new GetProductForEditing((int) $productId));
             $this->getCommandBus()->handle(
-                new ToggleProductStatusCommand((int)$productId, !$editableProduct->getOptions()->isActive())
+                new ToggleProductStatusCommand((int) $productId, !$editableProduct->getOptions()->isActive())
             );
             $this->addFlash(
                 'success',
@@ -337,6 +332,7 @@ class ProductController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_products_v2_index');
         }
         $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
         return $this->redirectToRoute('admin_products_v2_index');
     }
 
@@ -416,7 +412,6 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-
     public function bulkDisableAction(Request $request): RedirectResponse
     {
         try {
@@ -450,7 +445,6 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-
     public function bulkDuplicateAction(Request $request): RedirectResponse
     {
         try {
@@ -469,7 +463,6 @@ class ProductController extends FrameworkBundleAdminController
 
         return $this->redirectToRoute('admin_products_v2_index');
     }
-
 
     /**
      * @param Request $request

@@ -44,6 +44,7 @@ class UpdateProductPositionCommand
      * @var CategoryId
      */
     private $categoryId;
+
     /**
      * UpdateProductPositionCommand constructor.
      *
