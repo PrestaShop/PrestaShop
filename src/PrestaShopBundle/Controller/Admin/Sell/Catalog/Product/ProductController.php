@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkToggleProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkToggleProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPositionCommand;
@@ -385,7 +385,7 @@ class ProductController extends FrameworkBundleAdminController
     {
         try {
             $this->getCommandBus()->handle(
-                new BulkToggleProductCommand(
+                new BulkToggleProductStatusCommand(
                     $this->getProductIdsFromRequest($request),
                     true
                 )
@@ -418,7 +418,7 @@ class ProductController extends FrameworkBundleAdminController
     {
         try {
             $this->getCommandBus()->handle(
-                new BulkToggleProductCommand(
+                new BulkToggleProductStatusCommand(
                     $this->getProductIdsFromRequest($request),
                     false
                 )

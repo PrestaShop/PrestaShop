@@ -345,11 +345,11 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductCommand
 
-  prestashop.adapter.product.command_handler.bulk_toggle_product_handle:
-    class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\BulkToggleProductHandler
+  prestashop.adapter.product.command_handler.bulk_toggle_product_status_handle:
+    class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\BulkToggleProductStatusHandler
     tags:
       - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkToggleProductCommand
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkToggleProductStatusCommand
     arguments:
       - '@prestashop.adapter.product.repository.product_repository'
       - '@prestashop.adapter.product.update.product_indexation_updater'

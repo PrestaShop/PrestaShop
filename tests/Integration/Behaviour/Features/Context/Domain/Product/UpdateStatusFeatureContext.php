@@ -31,6 +31,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkToggleProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkToggleProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
@@ -53,7 +54,7 @@ class UpdateStatusFeatureContext extends AbstractProductFeatureContext
         }
 
         try {
-            $this->getCommandBus()->handle(new BulkToggleProductCommand(
+            $this->getCommandBus()->handle(new BulkToggleProductStatusCommand(
                 $productIds,
                 $status
             ));

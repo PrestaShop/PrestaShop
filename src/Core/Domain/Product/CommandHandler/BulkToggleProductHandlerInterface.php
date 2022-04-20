@@ -26,15 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkToggleProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkToggleProductStatusCommand;
 
 /**
- * Defines contract to handle @see BulkToggleProductCommand
+ * Defines contract to handle @see BulkToggleProductStatusCommand
  */
 interface BulkToggleProductHandlerInterface
 {
     /**
-     * @param BulkToggleProductCommand $command
+     * @param BulkToggleProductStatusCommand $command
      */
-    public function handle(BulkToggleProductCommand $command): void;
+    public function handle(BulkToggleProductStatusCommand $command): void;
 }

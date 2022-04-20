@@ -30,11 +30,9 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkToggleProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkToggleProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\BulkToggleProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
-use PrestaShopBundle\Exception\UpdateProductException;
-use Product;
 
 /**
  * Handles command which deletes addresses in bulk action
@@ -65,7 +63,7 @@ class BulkToggleProductStatusHandler implements BulkToggleProductHandlerInterfac
     /**
      * {@inheritdoc}
      */
-    public function handle(BulkToggleProductCommand $command): void
+    public function handle(BulkToggleProductStatusCommand $command): void
     {
         foreach ($command->getProductIds() as $productId) {
             $product = $this->productRepository->get($productId);

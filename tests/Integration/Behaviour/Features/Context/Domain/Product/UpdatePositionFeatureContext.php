@@ -67,7 +67,7 @@ class UpdatePositionFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Then positions should be assigned accordingly:
+     * @Then products should have the following positions in category :category:
      *
      * @param TableNode $tableNode
      *
@@ -75,13 +75,13 @@ class UpdatePositionFeatureContext extends AbstractProductFeatureContext
      * @throws \Doctrine\DBAL\Exception
      * @throws ProductConstraintException
      */
-    public function assertPositionInformation(TableNode $tableNode): void
+    public function assertPositionInformation(TableNode $tableNode, string $categoryReference): void
     {
         $products = $this->localizeByColumns($tableNode);
         $productRepository = CommonFeatureContext::getContainer()->get('prestashop.adapter.product.repository.product_repository');
         foreach ($products as $product) {
             $productId = new ProductId($this->getSharedStorage()->get($product['product_reference']));
-            $categoryId = new CategoryId($this->getSharedStorage()->get($product['category_reference']));
+            $categoryId = new CategoryId($this->getSharedStorage()->get($categoryReference));
             Assert::assertSame((int) $product['position'], $productRepository->getPositionInCategory($productId, $categoryId));
         }
     }
