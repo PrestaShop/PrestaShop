@@ -41,8 +41,8 @@ use Symfony\Component\Intl\Intl;
 class LanguageCore extends ObjectModel implements LanguageInterface
 {
     const ALL_LANGUAGES_FILE = '/app/Resources/all_languages.json';
-    const SF_LANGUAGE_PACK_URL = 'https://i18n.prestashop.com/translations/%version%/%locale%/%locale%.zip';
-    const EMAILS_LANGUAGE_PACK_URL = 'https://i18n.prestashop.com/mails/%version%/%locale%/%locale%.zip';
+    const SF_LANGUAGE_PACK_URL = 'https://i18n.prestashop-project.org/translations/%version%/%locale%/%locale%.zip';
+    const EMAILS_LANGUAGE_PACK_URL = 'https://i18n.prestashop-project.org/mails/%version%/%locale%/%locale%.zip';
     public const PACK_TYPE_EMAILS = 'emails';
     public const PACK_TYPE_SYMFONY = 'sf';
 
