@@ -38,10 +38,10 @@ class CustomerData {
     this.yearOfBirth = customerToCreate.yearOfBirth || this.birthDate.getFullYear().toString();
 
     /** @type {string} Month of the birth 'mm' */
-    this.monthOfBirth = customerToCreate.monthOfBirth || (this.birthDate.getMonth() + 1).toString();
+    this.monthOfBirth = customerToCreate.monthOfBirth || (`0${this.birthDate.getMonth() + 1}`).slice(-2);
 
     /** @type {string} Day of the birth 'dd'  */
-    this.dayOfBirth = customerToCreate.dayOfBirth || this.birthDate.getDate().toString();
+    this.dayOfBirth = customerToCreate.dayOfBirth || (`0${this.birthDate.getDate()}`).slice(-2).toString();
 
     /** @type {boolean} Status of the customer */
     this.enabled = customerToCreate.enabled === undefined ? true : customerToCreate.enabled;

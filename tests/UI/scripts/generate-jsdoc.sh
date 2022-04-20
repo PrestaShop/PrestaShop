@@ -9,8 +9,8 @@ cd $PROJECT_PATH
 
 DOC_DIRECTORY=".doc"
 PAGES_DIRECTORY="pages"
-FAKER_DIRECTORY="campaigns/data/faker"
-UTILS_DIRECTORY="campaigns/utils"
+FAKER_DIRECTORY="data/faker"
+UTILS_DIRECTORY="utils"
 
 # Create .doc directory
 mkdir -p $PROJECT_PATH/$DOC_DIRECTORY
@@ -21,6 +21,7 @@ function generate_doc() {
   local JS_DIRECTORIES=$(find $JS_DIRECTORY -type d)
   local JS_FILES=($(find $JS_DIRECTORY -type f -name \*.js))
 
+  echo "Start generating files for '$JS_DIRECTORY'"
   # 1 Create directories
   pushd $PROJECT_PATH/$DOC_DIRECTORY
   mkdir -p $JS_DIRECTORIES
@@ -39,8 +40,8 @@ function generate_doc() {
 # 1. Generate documentation for pages directory
 generate_doc $PAGES_DIRECTORY
 
-# 2. Generate documentation for campaigns/data/faker directory
+# 2. Generate documentation for data/faker directory
 generate_doc $FAKER_DIRECTORY
 
-# 3. Generate documentation for campaigns/utils directory
+# 3. Generate documentation for utils directory
 generate_doc $UTILS_DIRECTORY

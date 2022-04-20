@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Image\Repository;
 use Doctrine\DBAL\Connection;
 use Image;
 use ImageType;
-use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Validate\ProductImageValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\CannotAddProductImageException;
@@ -42,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\Exception\ProductImageNotFou
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 use PrestaShopException;
 
 /**

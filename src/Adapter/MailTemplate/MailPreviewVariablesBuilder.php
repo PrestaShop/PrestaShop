@@ -227,7 +227,7 @@ final class MailPreviewVariablesBuilder
                 'firstname' => '<span style="font-weight:bold;">%s</span>',
                 'lastname' => '<span style="font-weight:bold;">%s</span>',
             ]),
-            '{date}' => Tools::displayDate($order->date_add, null, true),
+            '{date}' => Tools::displayDate($order->date_add, true),
             '{order_name}' => $order->getUniqReference(),
             '{id_order}' => $order->id,
             '{payment}' => Tools::substr($order->payment, 0, 255),

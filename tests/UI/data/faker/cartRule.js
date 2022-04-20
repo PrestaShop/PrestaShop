@@ -49,7 +49,6 @@ class CartRuleData {
     /** @type {string|boolean} Ending date for the cart rule or false to disable it */
     this.dateTo = cartRuleToCreate.dateTo || false;
 
-
     /** @type {{shipping: string, currency: string, tax: string, value: number}} Minimum amount parameters */
     this.minimumAmount = {
       /** @type {number} Value of the minimum amount */
@@ -87,7 +86,7 @@ class CartRuleData {
 
     if (this.discountType === 'Percent') {
       this.discountPercent = cartRuleToCreate.discountPercent || faker.random.number({min: 10, max: 80});
-    } else if (this.discountPercent === 'Amount') {
+    } else if (this.discountType === 'Amount') {
       this.discountAmount = {
         /** @type {number} Value of the discount amount */
         value: cartRuleToCreate.discountAmount === undefined ? 0 : cartRuleToCreate.discountAmount.value,

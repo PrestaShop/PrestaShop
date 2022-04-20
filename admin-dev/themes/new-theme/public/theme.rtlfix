@@ -1,34 +1,3 @@
-@font-face {
-  font-family: Vazir;
-  src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Regular.eot');
-  src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Regular.eot?#iefix') format('embedded-opentype'),
-    url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Regular.woff2') format('woff2'),
-    url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Regular.woff') format('woff'),
-    url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Regular.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
-  font-family: Vazir;
-  src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Bold.eot');
-  src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Bold.eot?#iefix') format('embedded-opentype'),
-    url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Bold.woff2') format('woff2'),
-    url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Bold.woff') format('woff'),
-    url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Bold.ttf') format('truetype');
-  font-weight: bold;
-  font-style: normal;
-}
-@font-face {
-  font-family: Vazir;
-  src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Light.eot');
-  src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Light.eot?#iefix') format('embedded-opentype'),
-    url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Light.woff2') format('woff2'),
-    url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Light.woff') format('woff'),
-    url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/Vazir-Light.ttf') format('truetype');
-  font-weight: 300;
-  font-style: normal;
-}
-
 body.lang-rtl, .lang-rtl h1, .lang-rtl h2, .lang-rtl .modal-title, .lang-rtl h3, .lang-rtl h4, .lang-rtl h5, .lang-rtl h6, .lang-rtl .h1, .lang-rtl .h2, .lang-rtl .h3, .lang-rtl .h4, .lang-rtl .h5, .lang-rtl .h6, .lang-rtl .tooltip, .lang-rtl .popover, .lang-rtl .module-search-result-title {
   font-family: Vazir, Tahoma, Arial, sans-serif !important;
 }
@@ -185,4 +154,9 @@ ul.category-tree .more > .radio:before,
 /* Fix dropdown overflow inside grid table */
 .table-responsive {
   overflow-y: hidden;
+}
+
+/* Fix scrollbar position in sidebar menu */
+.nav-bar-overflow .ps__rail-y {
+  left: 0 !important;
 }

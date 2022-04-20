@@ -20,9 +20,10 @@ interface Window {
   modalConfirmation: any;
   // eslint-disable-next-line
   ps_round: any;
-  Dropzone: any;
+  Dropzone: Dropzone;
   data: any;
   pstooltip: any;
+  permissionsMessages: Array<string>;
 }
 
 /* eslint-disable */
@@ -115,3 +116,7 @@ type VPrincipal = Vue & {
   saveTranslations: () => void;
   edited: () => boolean;
 };
+
+interface KeyStringRecord extends Dropzone.DropzoneOptions {
+  [key: string]: any;
+}

@@ -23,23 +23,23 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import TranslatableField from '@js/components/translatable-field';
-import TranslatableInput from '@js/components/translatable-input';
-import TinyMCEEditor from '@js/components/tinymce-editor';
-import TaggableField from '@js/components/taggable-field';
 import ChoiceTable from '@js/components/choice-table';
 import ChoiceTree from '@js/components/form/choice-tree';
-import MultipleChoiceTable from '@js/components/multiple-choice-table';
-import GeneratableInput from '@js/components/generatable-input';
-import CountryStateSelectionToggler from '@components/country-state-selection-toggler';
-import CountryDniRequiredToggler from '@components/country-dni-required-toggler';
-import TextWithLengthCounter from '@components/form/text-with-length-counter';
-import PreviewOpener from '@components/form/preview-opener';
-import MultistoreConfigField from '@js/components/form/multistore-config-field';
-import {EventEmitter} from '@components/event-emitter';
-import Grid from '@components/grid/grid';
-import Router from '@components/router';
 import ColorPicker from '@js/app/utils/colorpicker';
+import CountryDniRequiredToggler from '@components/country-dni-required-toggler';
+import CountryStateSelectionToggler from '@components/country-state-selection-toggler';
+import GeneratableInput from '@js/components/generatable-input';
+import Grid from '@components/grid/grid';
+import MultipleChoiceTable from '@js/components/multiple-choice-table';
+import MultistoreConfigField from '@js/components/form/multistore-config-field';
+import PreviewOpener from '@components/form/preview-opener';
+import Router from '@components/router';
+import TaggableField from '@js/components/taggable-field';
+import TextWithLengthCounter from '@components/form/text-with-length-counter';
+import TinyMCEEditor from '@js/components/tinymce-editor';
+import TranslatableField from '@js/components/translatable-field';
+import TranslatableInput from '@js/components/translatable-input';
+import {EventEmitter} from '@components/event-emitter';
 
 // Grid extensions
 import AsyncToggleColumnExtension from '@components/grid/extension/column/common/async-toggle-column-extension';
@@ -50,6 +50,7 @@ import ColumnTogglingExtension from '@components/grid/extension/column-toggling-
 import ExportToSqlManagerExtension from '@components/grid/extension/export-to-sql-manager-extension';
 import FiltersResetExtension from '@components/grid/extension/filters-reset-extension';
 import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
+import IframeClient from '@components/modal/iframe-client';
 import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 import ModalFormSubmitExtension from '@components/grid/extension/modal-form-submit-extension';
 import PositionExtension from '@components/grid/extension/position-extension';
@@ -60,6 +61,9 @@ import SubmitBulkActionExtension from '@components/grid/extension/submit-bulk-ac
 import SubmitGridActionExtension from '@components/grid/extension/submit-grid-action-extension';
 import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 import DeltaQuantityInput from '@components/form/delta-quantity-input';
+import ModifyAllShopsCheckbox from '@components/modify-all-shops-checkbox';
+import FormFieldDisabler from '@components/form/form-field-disabler';
+import DisablingSwitch from '@components/form/disabling-switch';
 
 const GridExtensions = {
   AsyncToggleColumnExtension,
@@ -122,25 +126,29 @@ const initPrestashopComponents = () => {
       EventEmitter.emit('PSComponentsInitiated');
     },
     // @todo: add all standard components in this list
-    TranslatableField,
-    TinyMCEEditor,
-    TranslatableInput,
-    TaggableField,
     ChoiceTable,
-    EventEmitter,
     ChoiceTree,
-    MultipleChoiceTable,
-    GeneratableInput,
-    CountryStateSelectionToggler,
+    ColorPicker,
     CountryDniRequiredToggler,
-    TextWithLengthCounter,
-    MultistoreConfigField,
-    PreviewOpener,
+    CountryStateSelectionToggler,
+    DeltaQuantityInput,
+    DisablingSwitch,
+    EventEmitter,
+    FormFieldDisabler,
+    GeneratableInput,
     Grid,
     GridExtensions,
+    IframeClient,
+    ModifyAllShopsCheckbox,
+    MultipleChoiceTable,
+    MultistoreConfigField,
+    PreviewOpener,
     Router,
-    ColorPicker,
-    DeltaQuantityInput,
+    TaggableField,
+    TextWithLengthCounter,
+    TinyMCEEditor,
+    TranslatableField,
+    TranslatableInput,
   };
 };
 export default initPrestashopComponents;

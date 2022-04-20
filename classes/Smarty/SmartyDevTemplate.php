@@ -23,11 +23,12 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+/**
+ * @property SmartyCustom|null $smarty
+ */
 class SmartyDevTemplateCore extends Smarty_Internal_Template
 {
-    /** @var SmartyCustom|null */
-    public $smarty = null;
-
     /**
      * @param SmartyDevTemplateCore|null $template
      * @param null $cache_id
@@ -50,8 +51,9 @@ class SmartyDevTemplateCore extends Smarty_Internal_Template
             $tpl = $this->template_resource;
         }
 
-        return "\n<!-- begin $tpl -->\n"
-            . parent::fetch($template, $cache_id, $compile_id, $parent)
-            . "\n<!-- end $tpl -->\n";
+        // @phpstan-ignore-next-line
+        $fetch = parent::fetch($template, $cache_id, $compile_id, $parent);
+
+        return "\n<!-- begin $tpl -->\n" . $fetch . "\n<!-- end $tpl -->\n";
     }
 }

@@ -293,22 +293,4 @@ class HelperCore
 
         return $tpl->fetch();
     }
-
-    public function renderModulesList($modules_list)
-    {
-        $this->tpl_vars = [
-            'modules_list' => $modules_list,
-            'modules_uri' => __PS_BASE_URI__ . basename(_PS_MODULE_DIR_),
-        ];
-        // The translations for this are defined by AdminModules, so override the context for the translations
-        $override_controller_name_for_translations = Context::getContext()->override_controller_name_for_translations;
-        Context::getContext()->override_controller_name_for_translations = 'AdminModules';
-        $tpl = $this->createTemplate('helpers/modules_list/list.tpl');
-        $tpl->assign($this->tpl_vars);
-        $html = $tpl->fetch();
-        // Restore the previous context
-        Context::getContext()->override_controller_name_for_translations = $override_controller_name_for_translations;
-
-        return $html;
-    }
 }

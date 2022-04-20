@@ -35,7 +35,7 @@
  * and of course the hash is kept in sync when the navbar or alternative links are used.
  */
 export default class NavbarHandler {
-  tabPrefix: string;
+  tabPrefix?: string;
 
   $navigationContainer: JQuery;
 
@@ -70,13 +70,8 @@ export default class NavbarHandler {
   }
 
   private updateBrowserHash(target: string): void {
-    const hashName = target.replace('#', `#${this.tabPrefix}`);
-
-    if (window.history.pushState) {
-      window.history.pushState(null, '', hashName);
-    } else {
-      window.location.hash = hashName;
-    }
+    // Better use this rather than pushState because the hashchange event can be listened
+    window.location.hash = target.replace('#', `#${this.tabPrefix}`);
   }
 
   private watchNavbar(): void {

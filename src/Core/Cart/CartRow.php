@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Cart;
 
 use Cart;
+use CartCore;
 use PrestaShop\PrestaShop\Adapter\AddressFactory;
 use PrestaShop\PrestaShop\Adapter\Cache\CacheAdapter;
 use PrestaShop\PrestaShop\Adapter\CoreException;
@@ -267,11 +268,11 @@ class CartRow
     /**
      * run initial row calculation.
      *
-     * @param Cart $cart
+     * @param CartCore $cart
      *
      * @throws CoreException
      */
-    public function processCalculation(Cart $cart)
+    public function processCalculation(CartCore $cart)
     {
         $rowData = $this->getRowData();
         $quantity = (int) $rowData['cart_quantity'];
@@ -297,7 +298,7 @@ class CartRow
         $this->isProcessed = true;
     }
 
-    protected function getProductPrice(Cart $cart, $rowData)
+    protected function getProductPrice(CartCore $cart, $rowData)
     {
         $productId = (int) $rowData['id_product'];
         $quantity = (int) $rowData['cart_quantity'];

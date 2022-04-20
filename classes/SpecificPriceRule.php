@@ -221,7 +221,7 @@ class SpecificPriceRuleCore extends ObjectModel
         $result = [];
 
         if ($conditions_group) {
-            foreach ($conditions_group as $id_condition_group => $condition_group) {
+            foreach ($conditions_group as $condition_group) {
                 // Base request
                 $query = new DbQuery();
                 $query->select('p.`id_product`')
@@ -275,8 +275,11 @@ class SpecificPriceRuleCore extends ObjectModel
                     $query->select('NULL as `id_product_attribute`');
                 }
 
+                // Merge previous result to current results
                 $result = array_merge($result, Db::getInstance()->executeS($query));
             }
+            // Remove duplicate after the array_merge
+            $result = array_unique($result, SORT_REGULAR);
         } else {
             // All products without conditions
             if ($products && count($products)) {

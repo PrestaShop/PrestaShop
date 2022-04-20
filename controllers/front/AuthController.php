@@ -25,14 +25,17 @@
  */
 class AuthControllerCore extends FrontController
 {
+    /** @var bool */
     public $ssl = true;
+    /** @var string */
     public $php_self = 'authentication';
+    /** @var bool */
     public $auth = false;
 
     public function checkAccess()
     {
         if ($this->context->customer->isLogged() && !$this->ajax) {
-            $this->redirect_after = ($this->authRedirection) ? urlencode($this->authRedirection) : 'my-account';
+            $this->redirect_after = $this->authRedirection ? urlencode($this->authRedirection) : 'my-account';
             $this->redirect();
         }
 

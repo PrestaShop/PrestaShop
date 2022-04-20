@@ -160,12 +160,12 @@ class GenerateMailTemplatesCommandTest extends KernelTestCase
     {
         $themeInfos = [
             'coreLayouts' => [],
-            'coreLayoutsNb' => 0,
+            'coreLayoutsNb' => '0',
             'modulesLayouts' => [],
-            'modulesLayoutsNb' => 0,
+            'modulesLayoutsNb' => '0',
         ];
         $container = static::$kernel->getContainer();
-        $mailThemesFolder = $container->getParameter('mail_themes_dir');
+        $mailThemesFolder = (string) $container->getParameter('mail_themes_dir');
         $themeFolder = implode(DIRECTORY_SEPARATOR, [$mailThemesFolder, $theme]);
         $coreFolder = implode(DIRECTORY_SEPARATOR, [$themeFolder, MailTemplateInterface::CORE_CATEGORY]);
         $modulesFolder = implode(DIRECTORY_SEPARATOR, [$themeFolder, MailTemplateInterface::MODULES_CATEGORY]);

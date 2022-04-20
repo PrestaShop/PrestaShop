@@ -281,6 +281,11 @@
       <title>Customer account creation form</title>
       <description>This hook displays some information on the form to create a customer account</description>
     </hook>
+    <hook id="displayModuleConfigureExtraButtons">
+      <name>displayModuleConfigureExtraButtons</name>
+      <title>Module configuration - After toolbar buttons</title>
+      <description>This hook allows to add toolbar's additional content on module configuration page</description>
+    </hook>
     <hook id="displayAdminStatsModules">
       <name>displayAdminStatsModules</name>
       <title>Stats - Modules</title>
@@ -3485,6 +3490,16 @@
       <title>Modify feature flag form submitted data</title>
       <description>This hook allows to modify the Feature Flag data being submitted through the form after it was saved</description>
     </hook>
+    <hook id="actionAdminSecurityControllerPostProcessBefore">
+      <name>actionAdminSecurityControllerPostProcessBefore</name>
+      <title>On post-process in Admin Security Controller</title>
+      <description>This hook is called on Admin Security Controller post-process before processing any form</description>
+    </hook>
+    <hook id="actionAdminSecurityControllerPostProcessGeneralBefore">
+      <name>actionAdminSecurityControllerPostProcessGeneralBefore</name>
+      <title>On post-process in Admin Security Controller</title>
+      <description>This hook is called on Admin Security Controller post-process before processing the General form</description>
+    </hook>
     <hook id="actionBeforeCreateCartSummaryFormHandler">
       <name>actionBeforeCreateCartSummaryFormHandler</name>
       <title>Modify back office order data before creating it</title>
@@ -3534,6 +3549,66 @@
       <name>actionFilterDeliveryOptionList</name>
       <title>Modify delivery option list result</title>
       <description>This hook allows you to modify delivery option list</description>
+    </hook>
+    <hook id="displayCheckoutBeforeConfirmation">
+      <name>displayCheckoutBeforeConfirmation</name>
+      <title>Show custom content before checkout confirmation</title>
+      <description>This hook allows you to display custom content at the end of checkout process</description>
+    </hook>
+    <hook id="actionListModules">
+      <name>actionListModules</name>
+      <title>Add modules to the module manager list</title>
+      <description>This hook allows you to add modules to the list of modules displayed in the module manager page</description>
+    </hook>
+    <hook id="actionBeforeInstallModule">
+      <name>actionBeforeInstallModule</name>
+      <title>Before a module is installed</title>
+      <description>This hook is called just before a module is installed</description>
+    </hook>
+    <hook id="actionBeforePostInstallModule">
+      <name>actionBeforePostInstallModule</name>
+      <title>Before method `postInstall()` is called</title>
+      <description>This hook is called juste before a module execute its `postInstall()` method</description>
+    </hook>
+    <hook id="actionBeforeUninstallModule">
+      <name>actionBeforeUninstallModule</name>
+      <title>Before a module is uninstalled</title>
+      <description>This hook is called just before a module is uninstalled</description>
+    </hook>
+    <hook id="actionBeforeUpgradeModule">
+      <name>actionBeforeUpgradeModule</name>
+      <title>Before a module is upgraded</title>
+      <description>This hook is called just before a module is upgraded</description>
+    </hook>
+    <hook id="actionBeforeEnableModule">
+      <name>actionBeforeEnableModule</name>
+      <title>Before a module is enabled</title>
+      <description>This hook is called just before a module is enabled</description>
+    </hook>
+    <hook id="actionBeforeDisableModule">
+      <name>actionBeforeDisableModule</name>
+      <title>Before a module is disabled</title>
+      <description>This hook is called just before a module is disabled</description>
+    </hook>
+    <hook id="actionBeforeEnableMobileModule">
+      <name>actionBeforeEnableMobileModule</name>
+      <title>Before a module is enabled for mobile</title>
+      <description>This hook is called just before a module is enabled for mobile</description>
+    </hook>
+    <hook id="actionBeforeDisableMobileModule">
+      <name>actionBeforeDisableMobileModule</name>
+      <title>Before a module is disabled for mobile</title>
+      <description>This hook is called just before a module is disabled for mobile</description>
+    </hook>
+    <hook id="actionBeforeResetModule">
+      <name>actionBeforeResetModule</name>
+      <title>Before a module is reset</title>
+      <description>This hook is called just before a module is reset</description>
+    </hook>
+    <hook id="displayAdminThemesListAfter">
+      <name>displayAdminThemesListAfter</name>
+      <title>BO themes list extra content</title>
+      <description>This hook displays content after the themes list in the back office</description>
     </hook>
   </entities>
 </entity_hook>

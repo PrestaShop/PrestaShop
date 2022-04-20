@@ -20,14 +20,12 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Converter\ExcelToCsvFileConverter'
     arguments:
       - '@filesystem'
-      - '@=service("prestashop.core.import.dir").getDir()'
       - '@=service("prestashop.core.import.dir").getDir() ~ "csvfromexcel/"'
 
   prestashop.adapter.import.file_opener:
     class: 'PrestaShop\PrestaShop\Adapter\Import\CsvFileOpener'
     arguments:
       - '@prestashop.adapter.import.excel_to_csv_converter'
-      - '@prestashop.core.import.dir'
 
   prestashop.adapter.import.handler.product:
     class: 'PrestaShop\PrestaShop\Adapter\Import\Handler\ProductImportHandler'

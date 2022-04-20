@@ -62,22 +62,22 @@ class SearchCombinationsForAssociationTest extends TestCase
     {
         yield [
             'mug',
-            static::LANGUAGE_ID,
-            static::SHOP_ID,
+            self::LANGUAGE_ID,
+            self::SHOP_ID,
             null,
         ];
 
         yield [
             'mug',
-            static::LANGUAGE_ID,
-            static::SHOP_ID,
+            self::LANGUAGE_ID,
+            self::SHOP_ID,
             1,
         ];
 
         yield [
             'pretty mug',
-            static::LANGUAGE_ID,
-            static::SHOP_ID,
+            self::LANGUAGE_ID,
+            self::SHOP_ID,
             1,
         ];
     }
@@ -108,8 +108,8 @@ class SearchCombinationsForAssociationTest extends TestCase
     {
         yield [
             'mu',
-            static::LANGUAGE_ID,
-            static::SHOP_ID,
+            self::LANGUAGE_ID,
+            self::SHOP_ID,
             null,
             ProductConstraintException::class,
             ProductConstraintException::INVALID_SEARCH_PHRASE_LENGTH,
@@ -117,8 +117,8 @@ class SearchCombinationsForAssociationTest extends TestCase
 
         yield [
             'u',
-            static::LANGUAGE_ID,
-            static::SHOP_ID,
+            self::LANGUAGE_ID,
+            self::SHOP_ID,
             null,
             ProductConstraintException::class,
             ProductConstraintException::INVALID_SEARCH_PHRASE_LENGTH,
@@ -126,8 +126,8 @@ class SearchCombinationsForAssociationTest extends TestCase
 
         yield [
             '',
-            static::LANGUAGE_ID,
-            static::SHOP_ID,
+            self::LANGUAGE_ID,
+            self::SHOP_ID,
             null,
             ProductConstraintException::class,
             ProductConstraintException::INVALID_SEARCH_PHRASE_LENGTH,
@@ -135,8 +135,8 @@ class SearchCombinationsForAssociationTest extends TestCase
 
         yield [
             'mug',
-            static::LANGUAGE_ID,
-            static::SHOP_ID,
+            self::LANGUAGE_ID,
+            self::SHOP_ID,
             0,
             ProductConstraintException::class,
             ProductConstraintException::INVALID_SEARCH_LIMIT,
@@ -144,8 +144,8 @@ class SearchCombinationsForAssociationTest extends TestCase
 
         yield [
             'mug',
-            static::LANGUAGE_ID,
-            static::SHOP_ID,
+            self::LANGUAGE_ID,
+            self::SHOP_ID,
             -1,
             ProductConstraintException::class,
             ProductConstraintException::INVALID_SEARCH_LIMIT,
@@ -154,7 +154,7 @@ class SearchCombinationsForAssociationTest extends TestCase
         yield [
             'mug',
             0,
-            static::SHOP_ID,
+            self::SHOP_ID,
             null,
             LanguageException::class,
             0,
@@ -162,7 +162,7 @@ class SearchCombinationsForAssociationTest extends TestCase
 
         yield [
             'mug',
-            static::LANGUAGE_ID,
+            self::LANGUAGE_ID,
             0,
             null,
             ShopException::class,

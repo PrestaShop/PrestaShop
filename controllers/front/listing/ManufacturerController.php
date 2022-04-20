@@ -29,6 +29,7 @@ use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 
 class ManufacturerControllerCore extends ProductListingFrontController
 {
+    /** @var string */
     public $php_self = 'manufacturer';
 
     protected $manufacturer;
@@ -41,6 +42,15 @@ class ManufacturerControllerCore extends ProductListingFrontController
         } elseif ($canonicalURL) {
             parent::canonicalRedirection($canonicalURL);
         }
+    }
+
+    public function getCanonicalURL(): string
+    {
+        if (Validate::isLoadedObject($this->manufacturer)) {
+            return $this->buildPaginatedUrl($this->context->link->getManufacturerLink($this->manufacturer));
+        }
+
+        return $this->context->link->getPageLink('manufacturer');
     }
 
     /**
@@ -179,7 +189,7 @@ class ManufacturerControllerCore extends ProductListingFrontController
 
     public function getTemplateVarManufacturers()
     {
-        $manufacturers = Manufacturer::getManufacturers(true, $this->context->language->id, true, $this->p, $this->n, false);
+        $manufacturers = Manufacturer::getManufacturers(true, $this->context->language->id);
         $manufacturers_for_display = [];
 
         foreach ($manufacturers as $manufacturer) {

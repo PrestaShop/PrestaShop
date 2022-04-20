@@ -49,7 +49,13 @@ class CartRuleCore extends ObjectModel
     public $id;
     public $name;
     public $id_customer;
+    /**
+     * @var string|null
+     */
     public $date_from;
+    /**
+     * @var string|null
+     */
     public $date_to;
     public $description;
     public $quantity = 1;
@@ -142,10 +148,10 @@ class CartRuleCore extends ObjectModel
             'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             /* Lang fields */
             'name' => [
-                'type' => self::TYPE_STRING,
+                'type' => self::TYPE_HTML,
                 'lang' => true,
-                'validate' => 'isCleanHtml',
-                'required' => true, 'size' => 254,
+                'required' => true,
+                'size' => 254,
             ],
         ],
     ];
@@ -362,7 +368,7 @@ class CartRuleCore extends ObjectModel
      * @param bool $active Active vouchers only
      * @param bool $includeGeneric Include generic AND highlighted vouchers, regardless of highlight_only setting
      * @param bool $inStock Vouchers in stock only
-     * @param Cart|null $cart Cart
+     * @param CartCore|null $cart Cart
      * @param bool $free_shipping_only Free shipping only
      * @param bool $highlight_only Highlighted vouchers only
      *
@@ -376,18 +382,16 @@ class CartRuleCore extends ObjectModel
         $active = false,
         $includeGeneric = true,
         $inStock = false,
-        Cart $cart = null,
+        CartCore $cart = null,
         $free_shipping_only = false,
         $highlight_only = false
     ) {
-        if (!CartRule::isFeatureActive()
-            || !CartRule::haveCartRuleToday($id_customer)
-        ) {
+        if (!CartRule::isFeatureActive() || !CartRule::haveCartRuleToday($id_customer)) {
             return [];
         }
 
         $sql_part1 = '* FROM `' . _DB_PREFIX_ . 'cart_rule` cr
-			LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule_lang` crl ON (cr.`id_cart_rule` = crl.`id_cart_rule` AND crl.`id_lang` = ' . (int) $id_lang . ')';
+            LEFT JOIN `' . _DB_PREFIX_ . 'cart_rule_lang` crl ON (cr.`id_cart_rule` = crl.`id_cart_rule` AND crl.`id_lang` = ' . (int) $id_lang . ')';
 
         $sql_where = ' WHERE ((cr.`id_customer` = ' . (int) $id_customer . ' OR (cr.`id_customer` = 0 AND (cr.`highlight` = 1 OR cr.`code` = "")))';
 
@@ -509,10 +513,45 @@ class CartRuleCore extends ObjectModel
         return $result;
     }
 
+    /**
+     * Get all (inactive too) CartRules for a given customer
+     *
+     * @param int $customerId
+     *
+     * @return array
+     */
+    public static function getAllCustomerCartRules(
+        int $customerId
+    ): array {
+        $query = new DbQuery();
+        $query->select('cr.*, crl.name');
+        $query->from('cart_rule', 'cr');
+        $query->where('cr.id_customer = ' . $customerId . ' OR (cr.`id_customer` = 0 AND (cr.`highlight` = 1 OR cr.`code` = ""))');
+        $query->leftJoin('cart_rule_lang', 'crl', 'cr.id_cart_rule = crl.id_cart_rule AND crl.id_lang = ' . (int) Configuration::get('PS_LANG_DEFAULT'));
+        $query->orderBy('cr.active DESC, cr.id_customer DESC');
+
+        $result = Db::getInstance()->executeS($query);
+
+        if (!$result) {
+            return [];
+        }
+
+        foreach ($result as &$cart_rule) {
+            if ($cart_rule['quantity_per_user']) {
+                $quantity_used = Order::getDiscountsCustomer($customerId, (int) $cart_rule['id_cart_rule']);
+                $cart_rule['quantity_for_user'] = $cart_rule['quantity_per_user'] - $quantity_used;
+            } else {
+                $cart_rule['quantity_for_user'] = 0;
+            }
+        }
+
+        return $result;
+    }
+
     public static function getCustomerHighlightedDiscounts(
         $languageId,
         $customerId,
-        Cart $cart
+        CartCore $cart
     ) {
         return static::getCustomerCartRules(
            $languageId,
@@ -900,7 +939,7 @@ class CartRuleCore extends ObjectModel
     /**
      * Checks if the products chosen by the customer are usable with the cart rule.
      *
-     * @param \Cart $cart
+     * @param CartCore $cart
      * @param bool $returnProducts [default=false]
      *                             If true, this method will return an array of eligible products.
      *                             Otherwise, it returns TRUE on success and string|false on errors (depending on the value of $displayError)
@@ -913,7 +952,7 @@ class CartRuleCore extends ObjectModel
      *
      * @throws PrestaShopDatabaseException
      */
-    public function checkProductRestrictionsFromCart(Cart $cart, $returnProducts = false, $displayError = true, $alreadyInCart = false)
+    public function checkProductRestrictionsFromCart(CartCore $cart, $returnProducts = false, $displayError = true, $alreadyInCart = false)
     {
         $selected_products = [];
 

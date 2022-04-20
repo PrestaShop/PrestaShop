@@ -27,7 +27,7 @@
 global $smarty;
 if (Configuration::get('PS_SMARTY_LOCAL')) {
     $smarty = new SmartyCustom();
-} elseif (_PS_MODE_DEV_ && !defined('_PS_ADMIN_DIR_')) { /* @phpstan-ignore-line */
+} elseif (_PS_MODE_DEV_ && !defined('_PS_ADMIN_DIR_')) {
     $smarty = new SmartyDev();
 } else {
     $smarty = new Smarty();

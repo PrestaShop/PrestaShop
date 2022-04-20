@@ -7,9 +7,9 @@ parameters:
     - app
     - bin
     - cache
-    # - classes
+    - classes
     - config
-    # - controllers
+    - controllers
     - docs
     - download
     - img
@@ -22,7 +22,6 @@ parameters:
     - pdf
     - src
     - tests
-    - tests-legacy
     - themes
     - tools
     - translations
@@ -39,12 +38,13 @@ parameters:
   ignoreErrors:
     - '#^Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition\:\:#'
     - '#^Unsafe usage of new static\(\)\.$#'
-    - '#^Constructor of class PrestaShopBundle\\Service\\DataProvider\\Marketplace\\ApiClient has an unused parameter \$toolsAdapter\.$#'
     - '#constructor expects Symfony\\Contracts\\Translation\\TranslatorInterface\|null, Symfony\\Component\\Translation\\TranslatorInterface given\.$#'
     - '#^Method Symfony\\Contracts\\EventDispatcher\\EventDispatcherInterface\:\:dispatch\(\) invoked with 2 parameters, 1 required\.$#'
-    - '~^Access to an undefined property PrestaShop\\PrestaShop\\Core\\Addon\\Module\\ModuleInterface::\$(attributes|disk|database)\.$~'
+    - '~^Access to an undefined property PrestaShop\\PrestaShop\\Core\\Module\\ModuleInterface::\$(attributes|disk|database)\.$~'
     ## Smarty functions
     - '#^Function smartyRegisterFunction not found\.$#'
+    ## Doctrine Entities
+    - '#Property PrestaShopBundle\\Entity\\[A-Za-z]+\:\:\$[A-Za-z]+ is never written, only read.#'
   reportUnmatchedIgnoredErrors: false
   universalObjectCratesClasses:
     - Cookie
@@ -52,3 +52,19 @@ parameters:
     - Order
     - OrderInvoice
     - Product
+  dynamicConstantNames:
+    - _DB_PREFIX_
+    - _PS_CREATION_DATE_
+    - _PS_DEBUG_PROFILING_
+    - _PS_DEBUG_SQL_
+    - _PS_DISPLAY_COMPATIBILITY_WARNING_
+    - _PS_INSTALL_MINIMUM_PHP_VERSION_ID_
+    - _PS_INSTALL_MAXIMUM_PHP_VERSION_ID_
+    - _PS_INSTALL_VERSION_
+    - _PS_MODE_DEMO_
+    - _PS_MODE_DEV_
+    - _PS_VERSION_
+    - __PS_BASE_URI__
+    - PHP_VERSION_ID
+    - Memcached::HAVE_IGBINARY
+    - PaymentModuleCore::DEBUG_MODE

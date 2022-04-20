@@ -40,16 +40,6 @@ class CategoryFeatureContext extends AbstractPrestaShopFeatureContext
     protected $categories = [];
 
     /**
-     * @var int
-     */
-    private $defaultLanguageId;
-
-    public function __construct()
-    {
-        $this->defaultLanguageId = (int) \Configuration::get('PS_LANG_DEFAULT');
-    }
-
-    /**
      * @Given /^there is a category named "(.+)"$/
      */
     public function createCategory($categoryName)

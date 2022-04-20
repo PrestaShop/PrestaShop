@@ -296,7 +296,7 @@ class TranslationService
      * @param Lang $lang
      * @param string $domain
      * @param string $key
-     * @param null $theme
+     * @param string|null $theme
      *
      * @return bool
      */

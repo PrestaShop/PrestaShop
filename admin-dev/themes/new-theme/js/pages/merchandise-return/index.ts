@@ -32,6 +32,12 @@ import TranslatableInput from '../../components/translatable-input';
 const {$} = window;
 
 $(() => {
+  window.prestashop.component.initComponents(
+    [
+      'MultistoreConfigField',
+    ],
+  );
+
   const grid = new Grid('merchandise_return');
   grid.addExtension(new SortingExtension());
   grid.addExtension(new FiltersResetExtension());

@@ -306,7 +306,7 @@ class AdminStoresControllerCore extends AdminController
 
         $hours = [];
 
-        $hours_temp = ($this->getFieldValue($obj, 'hours'));
+        $hours_temp = $this->getFieldValue($obj, 'hours');
         if (is_array($hours_temp) && !empty($hours_temp)) {
             $langs = Language::getLanguages(false);
             $hours_temp = array_map('json_decode', $hours_temp);
@@ -350,9 +350,9 @@ class AdminStoresControllerCore extends AdminController
             /* If the selected country does not contain states */
             $id_state = (int) Tools::getValue('id_state');
             $id_country = (int) Tools::getValue('id_country');
-            $country = new Country((int) $id_country);
+            $country = new Country($id_country);
 
-            if ($id_country && $country && !(int) $country->contains_states && $id_state) {
+            if ($id_country && !(int) $country->contains_states && $id_state) {
                 $this->errors[] = $this->trans('You\'ve selected a state for a country that does not contain states.', [], 'Admin.Advparameters.Notification');
             }
 

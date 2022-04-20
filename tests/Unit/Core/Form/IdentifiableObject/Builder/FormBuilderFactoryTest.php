@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace Tests\Unit\Core\Form\IdentifiableObject\Builder;
 
 use PHPUnit\Framework\TestCase;
@@ -33,29 +35,30 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterf
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormRegistryInterface;
 
 class FormBuilderFactoryTest extends TestCase
 {
-    public function testCanBeConstructed()
+    public function testCanBeConstructed(): void
     {
         $factory = new FormBuilderFactory(
             $this->createMock(FormFactoryInterface::class),
-            $this->createMock(HookDispatcherInterface::class)
+            $this->createMock(HookDispatcherInterface::class),
+            $this->createMock(FormRegistryInterface::class)
         );
 
         $this->assertInstanceOf(FormBuilderFactoryInterface::class, $factory);
     }
 
-    public function testCreate()
+    public function testCreate(): void
     {
         // constructor mocks
-        $formFactoryMock = $this->createMock(FormFactoryInterface::class);
-        $hookDispatcherMock = $this->createMock(HookDispatcherInterface::class);
         $dataProviderMock = $this->createMock(FormDataProviderInterface::class);
 
         $factory = new FormBuilderFactory(
-            $formFactoryMock,
-            $hookDispatcherMock
+            $this->createMock(FormFactoryInterface::class),
+            $this->createMock(HookDispatcherInterface::class),
+            $this->createMock(FormRegistryInterface::class)
         );
 
         $builder = $factory->create('a', $dataProviderMock);

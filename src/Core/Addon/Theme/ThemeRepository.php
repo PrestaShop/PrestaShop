@@ -51,7 +51,7 @@ class ThemeRepository implements AddonRepositoryInterface
      */
     private $shop;
     /**
-     * @var array
+     * @var array|null
      */
     public $themes;
 
@@ -126,7 +126,7 @@ class ThemeRepository implements AddonRepositoryInterface
     {
         $filter->setType(AddonListFilterType::THEME);
 
-        if (!isset($filter->status)) {
+        if (empty($filter->status)) {
             $filter->setStatus(AddonListFilterStatus::ALL);
         }
 

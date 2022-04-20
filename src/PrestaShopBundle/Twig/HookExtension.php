@@ -27,8 +27,8 @@
 namespace PrestaShopBundle\Twig;
 
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -93,7 +93,6 @@ class HookExtension extends AbstractExtension
         return [
             new TwigFunction('renderhook', [$this, 'renderHook'], ['is_safe' => ['html']]),
             new TwigFunction('renderhooksarray', [$this, 'renderHooksArray'], ['is_safe' => ['html']]),
-            new TwigFunction('hookcount', [$this, 'hookCount']),
             new TwigFunction('hooksarraycontent', [$this, 'hooksArrayContent']),
         ];
     }
@@ -135,7 +134,7 @@ class HookExtension extends AbstractExtension
 
         $render = [];
         foreach ($renderedHook->getContent() as $module => $hookRender) {
-            $moduleAttributes = $this->moduleRepository->getModuleAttributes($module);
+            $moduleAttributes = $this->moduleRepository->getModule($module)->getAttributes();
             $render[] = [
                 'id' => $module,
                 'name' => $this->moduleDataProvider->getModuleName($module),
@@ -190,22 +189,5 @@ class HookExtension extends AbstractExtension
         }
 
         return $content;
-    }
-
-    /**
-     * Count how many listeners will respond to the hook name.
-     * Does not trigger the hook, so maybe some listeners could not add a response to the result.
-     *
-     * @deprecated since 1.7.7.0
-     *
-     * @param string $hookName
-     *
-     * @return number the listeners count that will respond to the hook name
-     */
-    public function hookCount($hookName)
-    {
-        @trigger_error('The ' . __METHOD__ . ' method is deprecated since version 1.7.7.0.', E_USER_DEPRECATED);
-
-        return count($this->hookDispatcher->getListeners(strtolower($hookName)));
     }
 }

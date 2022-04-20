@@ -30,7 +30,7 @@ namespace Tests\Integration\PrestaShopBundle\Controller\Admin\Improve;
 
 use Context;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
+use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;

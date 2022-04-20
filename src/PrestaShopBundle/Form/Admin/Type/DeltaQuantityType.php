@@ -58,6 +58,7 @@ class DeltaQuantityType extends TranslatorAwareType
                     new Type(['type' => 'numeric']),
                     new NotBlank(),
                 ],
+                'modify_all_shops' => true,
             ]);
 
         $builder->get('quantity')->addViewTransformer(new NumberToLocalizedStringTransformer(0, false));

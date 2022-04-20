@@ -29,6 +29,7 @@
  */
 class AdminSearchConfControllerCore extends AdminController
 {
+    /** @var bool */
     protected $toolbar_scroll = false;
 
     public function __construct()

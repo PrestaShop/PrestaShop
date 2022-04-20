@@ -72,7 +72,7 @@ class ManufacturerType extends ChoiceType
 
         $resolver->setDefaults([
             'label' => $this->trans('Brand', 'Admin.Catalog.Feature'),
-            'label_tag_name' => 'h2',
+            'label_tag_name' => 'h3',
             'required' => false,
             // placeholder false is important to avoid empty option in select input despite required being false
             'placeholder' => false,

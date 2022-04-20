@@ -8,7 +8,7 @@ admin_order_preferences:
 
 admin_order_preferences_general_save:
   path: /general
-  methods: [ POST ]
+  methods: [ PATCH, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\OrderPreferencesController::processGeneralFormAction'
     _legacy_controller: AdminOrderPreferences
@@ -16,7 +16,7 @@ admin_order_preferences_general_save:
 
 admin_order_preferences_gift_options_save:
   path: /gift-options
-  methods: [ POST ]
+  methods: [ PATCH, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\OrderPreferencesController::processGiftOptionsFormAction'
     _legacy_controller: AdminOrderPreferences

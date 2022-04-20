@@ -187,7 +187,7 @@ class GuestCore extends ObjectModel
      *
      * @param int $idCustomer Customer ID
      *
-     * @return bool
+     * @return bool|int
      */
     public static function getFromCustomer($idCustomer)
     {
@@ -199,7 +199,7 @@ class GuestCore extends ObjectModel
 		FROM `' . _DB_PREFIX_ . 'guest`
 		WHERE `id_customer` = ' . (int) ($idCustomer));
 
-        return $result['id_guest'];
+        return $result['id_guest'] ?? false;
     }
 
     /**
@@ -214,6 +214,11 @@ class GuestCore extends ObjectModel
     {
         // Since the guests are merged, the guest id in the connections table must be changed too
         Db::getInstance()->update('connections', [
+            'id_guest' => (int) $idGuest,
+        ], 'id_guest = ' . (int) $this->id);
+
+        // Since the guests are merged, the guest id in the cart table must be changed too
+        Db::getInstance()->update('cart', [
             'id_guest' => (int) $idGuest,
         ], 'id_guest = ' . (int) $this->id);
 
@@ -237,11 +242,11 @@ class GuestCore extends ObjectModel
     /**
      * Set new guest.
      *
-     * @param Cookie $cookie
+     * @param CookieCore $cookie
      */
     public static function setNewGuest($cookie)
     {
-        $guest = new Guest(isset($cookie->id_customer) ? Guest::getFromCustomer((int) ($cookie->id_customer)) : null);
+        $guest = new Guest(isset($cookie->id_customer) ? (int) Guest::getFromCustomer((int) ($cookie->id_customer)) : null);
         $guest->userAgent();
         $guest->save();
         $cookie->id_guest = (int) ($guest->id);

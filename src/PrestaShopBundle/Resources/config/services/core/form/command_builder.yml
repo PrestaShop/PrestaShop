@@ -12,6 +12,8 @@ services:
   # before the product type though as it doesn't influence the indexes
   prestashop.core.form.command_builder.product.options_commands_builder:
     class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\OptionsCommandsBuilder
+    arguments:
+      - !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
     tags:
       - { name: 'core.product_command_builder', priority: -15 }
 
@@ -30,22 +32,32 @@ services:
 
   prestashop.core.form.command_builder.product.basic_information:
     class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\BasicInformationCommandsBuilder
+    arguments:
+      - !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
     tags: [ 'core.product_command_builder' ]
 
   prestashop.core.form.command_builder.product.prices:
     class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\PricesCommandsBuilder
+    arguments:
+      - !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
     tags: [ 'core.product_command_builder' ]
 
   prestashop.core.form.command_builder.product.seo:
     class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\SEOCommandsBuilder
+    arguments:
+      - !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
     tags: [ 'core.product_command_builder' ]
 
   prestashop.core.form.command_builder.product.shipping:
     class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ShippingCommandsBuilder
+    arguments:
+      - !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
     tags: [ 'core.product_command_builder' ]
 
   prestashop.core.form.command_builder.product.stock_commands_builder:
     class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\StockCommandsBuilder
+    arguments:
+      - !php/const PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension::MODIFY_ALL_SHOPS_PREFIX
     tags: [ 'core.product_command_builder' ]
 
   prestashop.core.form.command_builder.product.product_suppliers_commands_builder:
@@ -78,6 +90,10 @@ services:
 
   prestashop.core.form.command_builder.product.related_products_commands_builder:
     class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\RelatedProductsCommandsBuilder
+    tags: [ 'core.product_command_builder' ]
+
+  prestashop_core_form_command_builder_product_specific_price_priority_commands_builder:
+    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\SpecificPricePriorityCommandsBuilder
     tags: [ 'core.product_command_builder' ]
 
   # Combination builders

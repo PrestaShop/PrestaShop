@@ -322,7 +322,7 @@ class SupplyOrderDetailCore extends ObjectModel
         /* Checks fields validity */
         foreach ($this->fieldsValidate as $field => $function) {
             if ($value = $this->{$field}) {
-                if (!Validate::$function($value) && (!empty($value) || in_array($field, $this->fieldsRequired))) {
+                if (!Validate::$function($value)) {
                     $errors[] = '<b>' . SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities) . '</b> ' . $this->trans('is invalid.', [], 'Shop.Notifications.Error');
                 } elseif ($field == 'passwd') {
                     if ($value = Tools::getValue($field)) {

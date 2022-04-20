@@ -245,9 +245,6 @@ export default class NavBar {
       .find('.employee_avatar .material-icons, .employee_avatar span')
       .wrap(`<a href='${profileLink}'></a>`);
     $('.js-mobile-menu').on('click', expand);
-    $('.js-notifs_dropdown').css({
-      height: window.innerHeight,
-    });
 
     function expand() {
       if ($('div.notification-center.dropdown').hasClass('open')) {

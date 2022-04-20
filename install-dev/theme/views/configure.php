@@ -51,21 +51,6 @@
   </div>
 
   <div class="field clearfix">
-	<label class="aligned"><?php echo $this->translator->trans('Install demonstration data', [], 'Install'); ?></label>
-	<div class="contentinput">
-	  <label>
-		<input value="full" type="radio" name="db_mode" style="vertical-align: middle;" <?php if ($this->install_type == 'full') { ?>checked="checked"<?php } ?> autocomplete="off" />
-		<?php echo $this->translator->trans('Yes', [], 'Install'); ?>
-	  </label>
-	  <label>
-		<input value="lite" type="radio" name="db_mode" style="vertical-align: middle;" <?php if ($this->install_type == 'lite') { ?>checked="checked"<?php } ?> autocomplete="off" />
-		<?php echo $this->translator->trans('No', [], 'Install'); ?>
-	  </label>
-	</div>
-	<p class="userInfos aligned"><?php echo $this->translator->trans('Demo products are a good way to learn how to use PrestaShop. You should install them if you are not familiar with it.', [], 'Install'); ?></p>
-  </div>
-
-  <div class="field clearfix">
 	<label for="infosCountry" class="aligned"><?php echo $this->translator->trans('Country', [], 'Install'); ?></label>
 	<div class="contentinput">
 	  <select name="shop_country" id="infosCountry" class="chosen">
@@ -99,11 +84,11 @@
     <label class="aligned"><?php echo $this->translator->trans('Enable SSL', [], 'Install'); ?></label>
     <div class="contentinput">
       <label>
-        <input value="1" type="radio" name="enable_ssl" style="vertical-align: middle;" <?php if ($this->session->enable_ssl == '1') { ?>checked="checked"<?php } ?> autocomplete="off" />
+        <input value="1" type="radio" name="enable_ssl" style="vertical-align: middle;" <?php if ($this->session->enable_ssl) { ?>checked="checked"<?php } ?> autocomplete="off" />
         <?php echo $this->translator->trans('Yes', [], 'Install'); ?>
       </label>
       <label>
-        <input value="0" type="radio" name="enable_ssl" style="vertical-align: middle;" <?php if ($this->session->enable_ssl == '0') { ?>checked="checked"<?php } ?> autocomplete="off" />
+        <input value="0" type="radio" name="enable_ssl" style="vertical-align: middle;" <?php if (!$this->session->enable_ssl) { ?>checked="checked"<?php } ?> autocomplete="off" />
         <?php echo $this->translator->trans('No', [], 'Install'); ?>
       </label>
     </div>

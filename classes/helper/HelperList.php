@@ -142,7 +142,7 @@ class HelperListCore extends Helper
     public $imageType;
 
     /**
-     * @var string
+     * @var string|null
      */
     public $list_id;
 
@@ -824,7 +824,7 @@ class HelperListCore extends Helper
             return false;
         }
 
-        if (isset($this->list_skip_actions) && count($this->list_skip_actions)
+        if (count($this->list_skip_actions)
             && isset($this->bulk_actions) && is_array($this->bulk_actions) && count($this->bulk_actions)) {
             foreach ($this->bulk_actions as $action => $data) {
                 if (array_key_exists($action, $this->list_skip_actions)) {

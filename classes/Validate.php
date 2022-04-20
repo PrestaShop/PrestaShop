@@ -25,17 +25,24 @@
  */
 use Egulias\EmailValidator\EmailValidator;
 use Egulias\EmailValidator\Validation\MultipleValidationWithAnd;
+use Egulias\EmailValidator\Validation\NoRFCWarningsValidation;
 use Egulias\EmailValidator\Validation\RFCValidation;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerName;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Factory\CustomerNameValidatorFactory;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NumericIsoCode;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
 use PrestaShop\PrestaShop\Core\Email\SwiftMailerValidation;
-use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
 use Symfony\Component\Validator\Validation;
 
 class ValidateCore
 {
     public const ORDER_BY_REGEXP = '/^(?:(`?)[\w!_-]+\1\.)?(?:(`?)[\w!_-]+\2)$/';
+    /**
+     * Maximal 32 bits value: (2^32)-1
+     *
+     * @var int
+     */
+    public const MYSQL_UNSIGNED_INT_MAX = 4294967295;
 
     const ADMIN_PASSWORD_LENGTH = 8;
     const PASSWORD_LENGTH = 5;
@@ -59,9 +66,16 @@ class ValidateCore
      */
     public static function isEmail($email)
     {
-        return !empty($email) && (new EmailValidator())->isValid($email, new MultipleValidationWithAnd([
+        // Check if the value is empty
+        if (empty($email)) {
+            return false;
+        }
+
+        // Check if the value is correct according to both validators (RFC & SwiftMailer)
+        return (new EmailValidator())->isValid($email, new MultipleValidationWithAnd([
             new RFCValidation(),
             new SwiftMailerValidation(), // special validation to be compatible with Swift Mailer
+            new NoRFCWarningsValidation(),
         ]));
     }
 
@@ -156,7 +170,7 @@ class ValidateCore
      */
     public static function isCarrierName($name)
     {
-        return empty($name) || preg_match(Tools::cleanNonUnicodeSupport('/^[^<>;=#{}]*$/u'), $name);
+        return empty($name) || preg_match('/^[^<>;=#{}]*$/u', $name);
     }
 
     /**
@@ -181,9 +195,7 @@ class ValidateCore
     public static function isCustomerName($name)
     {
         $validatorBuilder = Validation::createValidatorBuilder();
-        $validatorBuilder->setConstraintValidatorFactory(
-            new CustomerNameValidatorFactory(new CharacterCleaner())
-        );
+        $validatorBuilder->setConstraintValidatorFactory(new CustomerNameValidatorFactory());
         $validator = $validatorBuilder->getValidator();
         $violations = $validator->validate($name, [
             new CustomerName(),
@@ -201,11 +213,7 @@ class ValidateCore
      */
     public static function isName($name)
     {
-        $validityPattern = Tools::cleanNonUnicodeSupport(
-            '/^[^0-9!<>,;?=+()@#"°{}_$%:¤|]*$/u'
-        );
-
-        return preg_match($validityPattern, $name);
+        return preg_match('/^[^0-9!<>,;?=+()@#"°{}_$%:¤|]*$/u', $name);
     }
 
     /**
@@ -229,7 +237,7 @@ class ValidateCore
      */
     public static function isMailName($mail_name)
     {
-        return is_string($mail_name) && preg_match(Tools::cleanNonUnicodeSupport('/^[^<>;=#{}]*$/u'), $mail_name);
+        return is_string($mail_name) && preg_match('/^[^<>;=#{}]*$/u', $mail_name);
     }
 
     /**
@@ -241,7 +249,7 @@ class ValidateCore
      */
     public static function isMailSubject($mail_subject)
     {
-        return preg_match(Tools::cleanNonUnicodeSupport('/^[^<>]*$/u'), $mail_subject);
+        return preg_match('/^[^<>]*$/u', $mail_subject);
     }
 
     /**
@@ -352,7 +360,7 @@ class ValidateCore
      */
     public static function isDiscountName($voucher)
     {
-        return preg_match(Tools::cleanNonUnicodeSupport('/^[^!<>,;?=+()@"°{}_$%:]{3,32}$/u'), $voucher);
+        return preg_match('/^[^!<>,;?=+()@"°{}_$%:]{3,32}$/u', $voucher);
     }
 
     /**
@@ -364,7 +372,7 @@ class ValidateCore
      */
     public static function isCatalogName($name)
     {
-        return preg_match(Tools::cleanNonUnicodeSupport('/^[^<>;=#{}]*$/u'), $name);
+        return preg_match('/^[^<>;=#{}]*$/u', $name);
     }
 
     /**
@@ -401,7 +409,7 @@ class ValidateCore
     public static function isLinkRewrite($link)
     {
         if (Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL')) {
-            return preg_match(Tools::cleanNonUnicodeSupport('/^[_a-zA-Z0-9\x{0600}-\x{06FF}\pL\pS-]+$/u'), $link);
+            return preg_match('/^[_a-zA-Z0-9\x{0600}-\x{06FF}\pL\pS-]+$/u', $link);
         }
 
         return preg_match('/^[_a-zA-Z0-9\-]+$/', $link);
@@ -417,7 +425,7 @@ class ValidateCore
     public static function isRoutePattern($pattern)
     {
         if (Configuration::get('PS_ALLOW_ACCENTED_CHARS_URL')) {
-            return preg_match(Tools::cleanNonUnicodeSupport('/^[_a-zA-Z0-9\x{0600}-\x{06FF}\(\)\.{}:\/\pL\pS-]+$/u'), $pattern);
+            return preg_match('/^[_a-zA-Z0-9\x{0600}-\x{06FF}\(\)\.{}:\/\pL\pS-]+$/u', $pattern);
         }
 
         return preg_match('/^[_a-zA-Z0-9\(\)\.{}:\/\-]+$/', $pattern);
@@ -432,7 +440,7 @@ class ValidateCore
      */
     public static function isAddress($address)
     {
-        return empty($address) || preg_match(Tools::cleanNonUnicodeSupport('/^[^!<>?=+@{}_$%]*$/u'), $address);
+        return empty($address) || preg_match('/^[^!<>?=+@{}_$%]*$/u', $address);
     }
 
     /**
@@ -444,7 +452,7 @@ class ValidateCore
      */
     public static function isCityName($city)
     {
-        return preg_match(Tools::cleanNonUnicodeSupport('/^[^!<>;?=+@#"°{}_$%]*$/u'), $city);
+        return preg_match('/^[^!<>;?=+@#"°{}_$%]*$/u', $city);
     }
 
     /**
@@ -456,7 +464,7 @@ class ValidateCore
      */
     public static function isValidSearch($search)
     {
-        return preg_match(Tools::cleanNonUnicodeSupport('/^[^<>;=#{}]{0,64}$/u'), $search);
+        return preg_match('/^[^<>;=#{}]{0,64}$/u', $search);
     }
 
     /**
@@ -468,7 +476,7 @@ class ValidateCore
      */
     public static function isGenericName($name)
     {
-        return empty($name) || preg_match(Tools::cleanNonUnicodeSupport('/^[^<>={}]*$/u'), $name);
+        return empty($name) || preg_match('/^[^<>={}]*$/u', $name);
     }
 
     /**
@@ -508,7 +516,7 @@ class ValidateCore
      */
     public static function isReference($reference)
     {
-        return preg_match(Tools::cleanNonUnicodeSupport('/^[^<>;={}]*$/u'), $reference);
+        return preg_match('/^[^<>;={}]*$/u', $reference);
     }
 
     /**
@@ -640,7 +648,7 @@ class ValidateCore
     /**
      * Check for boolean validity.
      *
-     * @param bool|string|null $bool Boolean to validate
+     * @param mixed $bool Value to validate as a boolean
      *
      * @return bool Validity is ok or not
      */
@@ -682,7 +690,7 @@ class ValidateCore
      */
     public static function isIsbn($isbn)
     {
-        return !$isbn || preg_match('/^[0-9-]{0,32}$/', $isbn);
+        return !$isbn || preg_match(Isbn::VALID_PATTERN, $isbn);
     }
 
     /**
@@ -785,7 +793,7 @@ class ValidateCore
      */
     public static function isTagsList($list)
     {
-        return preg_match(Tools::cleanNonUnicodeSupport('/^[^!<>;?=+#"°{}_$%]*$/u'), $list);
+        return preg_match('/^[^!<>;?=+#"°{}_$%]*$/u', $list);
     }
 
     /**
@@ -821,7 +829,10 @@ class ValidateCore
      */
     public static function isUnsignedInt($value)
     {
-        return (is_numeric($value) || is_string($value)) && (string) (int) $value === (string) $value && $value < 4294967296 && $value >= 0;
+        return (is_numeric($value) || is_string($value))
+            && (string) (int) $value === (string) $value
+            && $value < (static::MYSQL_UNSIGNED_INT_MAX + 1)
+            && $value >= 0;
     }
 
     /**
@@ -887,7 +898,7 @@ class ValidateCore
      */
     public static function isUrl($url)
     {
-        return preg_match(Tools::cleanNonUnicodeSupport('/^[~:#,$%&_=\(\)\.\? \+\-@\/a-zA-Z0-9\pL\pS-]+$/u'), $url);
+        return preg_match('/^[~:#,$%&_=\(\)\.\? \+\-@\/a-zA-Z0-9\pL\pS-]+$/u', $url);
     }
 
     /**
@@ -937,13 +948,13 @@ class ValidateCore
 
     public static function isUnixName($data)
     {
-        return preg_match(Tools::cleanNonUnicodeSupport('/^[a-z0-9\._-]+$/ui'), $data);
+        return preg_match('/^[a-z0-9\._-]+$/ui', $data);
     }
 
     public static function isTablePrefix($data)
     {
         // Even if "-" is theorically allowed, it will be considered a syntax error if you do not add backquotes (`) around the table name
-        return preg_match(Tools::cleanNonUnicodeSupport('/^[a-z0-9_]+$/ui'), $data);
+        return preg_match('/^[a-z0-9_]+$/ui', $data);
     }
 
     /**
@@ -979,7 +990,7 @@ class ValidateCore
      */
     public static function isTabName($name)
     {
-        return preg_match(Tools::cleanNonUnicodeSupport('/^[^<>]+$/u'), $name);
+        return preg_match('/^[^<>]+$/u', $name);
     }
 
     public static function isWeightUnit($unit)
@@ -1023,7 +1034,7 @@ class ValidateCore
      */
     public static function isLabel($label)
     {
-        return preg_match(Tools::cleanNonUnicodeSupport('/^[^{}<>]*$/u'), $label);
+        return preg_match('/^[^{}<>]*$/u', $label);
     }
 
     /**
@@ -1242,7 +1253,7 @@ class ValidateCore
 
     public static function isControllerName($name)
     {
-        return (bool) (is_string($name) && preg_match(Tools::cleanNonUnicodeSupport('/^[0-9a-zA-Z-_]*$/u'), $name));
+        return (bool) (is_string($name) && preg_match('/^[0-9a-zA-Z-_]*$/u', $name));
     }
 
     public static function isPrestaShopVersion($version)

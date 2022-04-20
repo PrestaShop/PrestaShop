@@ -535,7 +535,8 @@ function showRedirectProductOptions(show)
 
 function redirectSelectChange()
 {
-  if ($('#redirect_type :selected').val() == '404')
+  redirectTypeValue = $('#redirect_type :selected').val();
+  if (redirectTypeValue == '404' || redirectTypeValue == '410' )
     showRedirectProductSelectOptions(false);
   else
     showRedirectProductSelectOptions(true);
@@ -1258,21 +1259,6 @@ function ajaxStates(id_state_selected)
       }
     }
   });
-
-  if (module_dir && vat_number)
-  {
-    $.ajax({
-      type: "GET",
-      url: window.location.origin + module_dir + "vatnumber/ajax.php?id_country=" + $('#id_country').val(),
-      success: function(isApplicable)
-      {
-        if(isApplicable == 1)
-          $('#vat_area').show();
-        else
-          $('#vat_area').hide();
-      }
-    });
-  }
 }
 
 function dniRequired() {

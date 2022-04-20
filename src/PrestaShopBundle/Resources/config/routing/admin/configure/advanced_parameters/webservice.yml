@@ -18,7 +18,7 @@ admin_webservice_keys_search:
 
 admin_webservice_save_settings:
   path: /settings
-  methods: POST
+  methods: [ PATCH, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\WebserviceController::saveSettingsAction'
     _legacy_controller: AdminWebservice

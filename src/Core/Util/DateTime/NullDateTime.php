@@ -80,7 +80,7 @@ class NullDateTime extends DateTimeImmutable
      */
     public function add($interval)
     {
-        throw $this::buildUnusableMethodException('add');
+        return $this;
     }
 
     /**
@@ -88,7 +88,7 @@ class NullDateTime extends DateTimeImmutable
      */
     public static function createFromFormat($format, $datetime, $timezone = null)
     {
-        throw static::buildUnusableMethodException('createFromFormat');
+        throw self::buildUnusableMethodException('createFromFormat');
     }
 
     /**
@@ -96,7 +96,7 @@ class NullDateTime extends DateTimeImmutable
      */
     public static function createFromMutable($object)
     {
-        throw static::buildUnusableMethodException('createFromMutable');
+        throw self::buildUnusableMethodException('createFromMutable');
     }
 
     /**
@@ -104,7 +104,7 @@ class NullDateTime extends DateTimeImmutable
      */
     public static function getLastErrors()
     {
-        throw static::buildUnusableMethodException('getLastErrors');
+        throw self::buildUnusableMethodException('getLastErrors');
     }
 
     /**
@@ -152,7 +152,7 @@ class NullDateTime extends DateTimeImmutable
      */
     public function setTimezone($timezone)
     {
-        throw $this::buildUnusableMethodException('setTimezone');
+        return $this;
     }
 
     /**
@@ -164,7 +164,7 @@ class NullDateTime extends DateTimeImmutable
      */
     public function sub($interval)
     {
-        throw $this::buildUnusableMethodException('sub');
+        return $this;
     }
 
     /**
@@ -204,7 +204,7 @@ class NullDateTime extends DateTimeImmutable
      */
     public static function createFromInterface(DateTimeInterface $object): DateTimeImmutable
     {
-        throw static::buildUnusableMethodException('createFromInterface');
+        throw self::buildUnusableMethodException('createFromInterface');
     }
 
     /**

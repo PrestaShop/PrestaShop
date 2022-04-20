@@ -29,7 +29,9 @@
  */
 class AdminFeaturesControllerCore extends AdminController
 {
+    /** @var bool */
     public $bootstrap = true;
+    /** @var string */
     protected $position_identifier = 'id_feature';
     protected $feature_name;
 
@@ -431,9 +433,7 @@ class AdminFeaturesControllerCore extends AdminController
                 }
                 $this->content .= $this->renderView();
             } elseif ($this->display == 'editFeatureValue') {
-                if (!$this->object = new FeatureValue((int) Tools::getValue('id_feature_value'))) {
-                    return;
-                }
+                $this->object = new FeatureValue((int) Tools::getValue('id_feature_value'));
                 $this->content .= $this->initFormFeatureValue();
             } elseif ($this->display != 'view' && !$this->ajax) {
                 // If a feature value was saved, we need to reset the values to display the list
@@ -621,7 +621,7 @@ class AdminFeaturesControllerCore extends AdminController
     public function ajaxProcessUpdatePositions()
     {
         if ($this->access('edit')) {
-            $way = (int) Tools::getValue('way');
+            $way = (bool) Tools::getValue('way');
             $id_feature = (int) Tools::getValue('id');
             $positions = Tools::getValue('feature');
 
@@ -636,7 +636,8 @@ class AdminFeaturesControllerCore extends AdminController
                 $pos = explode('_', $value);
 
                 if (isset($pos[2]) && (int) $pos[2] === $id_feature) {
-                    if ($feature = new Feature((int) $pos[2])) {
+                    $feature = new Feature((int) $pos[2]);
+                    if (Validate::isLoadedObject($feature)) {
                         if ($feature->updatePosition($way, $position, $id_feature)) {
                             echo 'ok position ' . (int) $position . ' for feature ' . (int) $pos[1] . '\r\n';
                         } else {

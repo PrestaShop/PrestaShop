@@ -151,7 +151,7 @@ class DimensionsType extends TranslatorAwareType
         parent::configureOptions($resolver);
         $resolver->setDefaults([
             'label' => $this->trans('Package dimension', 'Admin.Catalog.Feature'),
-            'label_tag_name' => 'h2',
+            'label_tag_name' => 'h3',
             'label_subtitle' => $this->trans('Adjust your shipping costs by filling in the product dimensions.', 'Admin.Catalog.Feature'),
             'required' => false,
             'columns_number' => 6,

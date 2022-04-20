@@ -31,6 +31,10 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 const bourbon = require('bourbon');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const FontPreloadPlugin = require('webpack-font-preload-plugin');
+const CssoWebpackPlugin = require('csso-webpack-plugin').default;
+const LicensePlugin = require('webpack-license-plugin');
 
 module.exports = {
   externals: {
@@ -52,6 +56,7 @@ module.exports = {
     cldr: './js/app/cldr',
     cms_page: './js/pages/cms-page',
     cms_page_form: './js/pages/cms-page/form',
+    combination_bulk: './js/pages/product/combination/bulk',
     combination_edit: './js/pages/product/combination/edit',
     contacts: './js/pages/contacts',
     credit_slip: './js/pages/credit-slip',
@@ -99,6 +104,8 @@ module.exports = {
     order_view: './js/pages/order/view',
     orders: './scss/pages/orders/orders.scss',
     payment_preferences: './js/pages/payment-preferences',
+    permission: './js/pages/permission',
+    permissions: './scss/pages/permissions/permissions.scss',
     product: './scss/pages/product/product_page.scss',
     product_catalog: './scss/pages/product/products_catalog.scss',
     product_edit: './js/pages/product/edit',
@@ -108,15 +115,20 @@ module.exports = {
     product_preferences: './js/pages/product-preferences',
     profiles: './js/pages/profiles',
     search_engine: './js/pages/search-engine',
+    shipping_preferences: './js/pages/shipping-preferences',
     specific_price_form: './js/pages/specific-price/form',
+    security: './js/pages/security',
     sql_manager: './js/pages/sql-manager',
+    state: './js/pages/state',
     stock: './js/app/pages/stock',
     stock_page: './scss/pages/stock/stock_page.scss',
     supplier: './js/pages/supplier',
     supplier_form: './js/pages/supplier/supplier-form',
     tax: './js/pages/tax',
     tax_rules_group: './js/pages/tax-rules-group',
+    light_theme: './scss/light_theme.scss',
     theme: './scss/theme.scss',
+    rtl: './scss/rtl.scss',
     themes: './js/pages/themes',
     translation_settings: './js/pages/translation-settings',
     translations: './js/app/pages/translations',
@@ -345,6 +357,14 @@ module.exports = {
         options: {
           name: '[hash].[ext]',
         },
+        exclude: /MaterialIcons-Regular\.(woff2?|ttf)$/,
+      },
+      {
+        test: /MaterialIcons-Regular\.(woff2?|ttf)$/,
+        loader: 'file-loader',
+        options: {
+          name: '[hash].preload.[ext]',
+        },
       },
     ],
   },
@@ -373,6 +393,29 @@ module.exports = {
           syntactic: true,
         },
       },
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'preload.tpl',
+      templateContent: '{{{preloadLinks}}}',
+      inject: false,
+    }),
+    new FontPreloadPlugin({
+      index: 'preload.tpl',
+      extensions: ['woff2'],
+      filter: /preload/,
+      // eslint-disable-next-line
+      replaceCallback: ({indexSource, linksAsString}) => indexSource.replace('{{{preloadLinks}}}', linksAsString.replace(/href="auto/g, 'href="{"`$admin_dir`"}')),
+    }),
+    new CssoWebpackPlugin({
+      forceMediaMerge: true,
+    }),
+    new LicensePlugin({
+      outputFilename: 'thirdPartyNotice.json',
+      licenseOverrides: {
+        'vazirmatn@32.102.0': 'OFL-1.1',
+        'typeahead.js@0.11.1': 'MIT',
+      },
+      replenishDefaultLicenseTexts: true,
     }),
   ],
 };

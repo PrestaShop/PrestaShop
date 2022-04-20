@@ -39,7 +39,6 @@ use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use Shop;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 abstract class ApiTestCase extends WebTestCase
@@ -58,11 +57,6 @@ abstract class ApiTestCase extends WebTestCase
      * @var Context
      */
     protected $oldContext;
-
-    /**
-     * @var ContainerInterface|null
-     */
-    protected static $container;
 
     protected function setUp(): void
     {
@@ -87,7 +81,6 @@ abstract class ApiTestCase extends WebTestCase
     {
         parent::tearDown();
 
-        self::$container = null;
         self::$client = null;
         Context::setInstanceForTesting($this->oldContext);
     }

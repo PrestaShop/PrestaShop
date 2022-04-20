@@ -43,7 +43,7 @@ class PhpErrorsCounter
         set_error_handler([$this, 'errorHandler'], E_ALL);
     }
 
-    public function errorHandler(int $errorType, string $errstr, string $errfile, int $errline, array $errcontext)
+    public function errorHandler(int $errorType): bool
     {
         switch ($errorType) {
             case E_WARNING:
@@ -62,6 +62,8 @@ class PhpErrorsCounter
             default:
                 // nothing to do.
         }
+
+        return false;
     }
 
     public function restoreErrorHandler()

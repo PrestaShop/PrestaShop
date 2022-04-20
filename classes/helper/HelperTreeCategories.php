@@ -298,7 +298,7 @@ class HelperTreeCategoriesCore extends TreeCore
             } elseif ($this->getContext()->shop->id) {
                 $this->setShop(new Shop($this->getContext()->shop->id));
             } elseif (!Shop::isFeatureActive()) {
-                $this->setShop(new Shop(Configuration::get('PS_SHOP_DEFAULT')));
+                $this->setShop(new Shop((int) Configuration::get('PS_SHOP_DEFAULT')));
             } else {
                 $this->setShop(new Shop(0));
             }

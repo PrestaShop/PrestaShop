@@ -29,7 +29,8 @@ namespace PrestaShopBundle\EventListener;
 use Doctrine\Common\Annotations\AnnotationException;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Util\ClassUtils;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
+use PrestaShop\PrestaShop\Adapter\Module\Module;
+use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use PrestaShopBundle\Security\Annotation\ModuleActivated;
 use ReflectionClass;
 use ReflectionObject;
@@ -116,6 +117,7 @@ class ModuleActivatedListener
             return;
         }
 
+        /** @var Module $module */
         $module = $this->moduleRepository->getModule($moduleActivated->getModuleName());
         if (!$module->isActive()) {
             $this->showNotificationMessage($moduleActivated);

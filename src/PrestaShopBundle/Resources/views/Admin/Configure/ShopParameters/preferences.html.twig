@@ -34,8 +34,8 @@
         <i class="material-icons">settings</i>
         {{ 'General'|trans({}, 'Admin.Global') }}
       </h3>
-      <div class="card-block row">
-        <div class="card-text">
+      <div class="card-body">
+        <div class="form-wrapper">
           {% if not app.request.isSecure() %}
             <div class="form-group row">
               <label class="form-control-label ">

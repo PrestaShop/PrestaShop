@@ -27,28 +27,51 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\AccessibilityCheckerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\ColorColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
+use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ToggleColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class OrderStatesGridDefinitionFactory defines order_states grid structure.
  */
 final class OrderStatesGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
+    use BulkDeleteActionTrait;
+    use DeleteActionTrait;
+
     public const GRID_ID = 'order_states';
+
+    /**
+     * @var AccessibilityCheckerInterface
+     */
+    protected $deleteOrderStatesAccessibilityChecker;
+
+    public function __construct(
+        HookDispatcherInterface $hookDispatcher,
+        AccessibilityCheckerInterface $deleteOrderStatesAccessibilityChecker
+    ) {
+        parent::__construct($hookDispatcher);
+
+        $this->deleteOrderStatesAccessibilityChecker = $deleteOrderStatesAccessibilityChecker;
+    }
 
     /**
      * {@inheritdoc}
@@ -71,7 +94,14 @@ final class OrderStatesGridDefinitionFactory extends AbstractGridDefinitionFacto
      */
     protected function getColumns()
     {
-        $columns = (new ColumnCollection())
+        return (new ColumnCollection())
+            ->add(
+                (new BulkActionColumn('order_states_bulk'))
+                    ->setOptions([
+                        'bulk_field' => 'id_order_state',
+                        'disabled_field' => 'unremovable',
+                    ])
+            )
             ->add(
                 (new DataColumn('id_order_state'))
                     ->setName($this->trans('ID', [], 'Admin.Global'))
@@ -79,12 +109,13 @@ final class OrderStatesGridDefinitionFactory extends AbstractGridDefinitionFacto
                         'field' => 'id_order_state',
                     ])
             )
-            ->add((new ColorColumn('name'))
-            ->setName($this->trans('Status', [], 'Admin.Global'))
-            ->setOptions([
-                'field' => 'name',
-                'color_field' => 'color',
-            ])
+            ->add(
+                (new ColorColumn('name'))
+                    ->setName($this->trans('Status', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'name',
+                        'color_field' => 'color',
+                    ])
             )
             ->add(
                 (new ToggleColumn('send_email'))
@@ -123,25 +154,36 @@ final class OrderStatesGridDefinitionFactory extends AbstractGridDefinitionFacto
                         'field' => 'template',
                     ])
             )
-            ->add((new ActionColumn('actions'))
-            ->setName($this->trans('Actions', [], 'Admin.Global'))
-            ->setOptions([
-                'actions' => (new RowActionCollection())
-                    ->add(
-                        (new LinkRowAction('edit'))
-                            ->setName($this->trans('Edit', [], 'Admin.Actions'))
-                            ->setIcon('edit')
-                            ->setOptions([
-                                'route' => 'admin_order_states_edit',
-                                'route_param_name' => 'orderStateId',
-                                'route_param_field' => 'id_order_state',
-                                'clickable_row' => true,
-                            ])
-                    ),
-            ])
-            );
-
-        return $columns;
+            ->add(
+                (new ActionColumn('actions'))
+                    ->setName($this->trans('Actions', [], 'Admin.Global'))
+                    ->setOptions([
+                        'actions' => (new RowActionCollection())
+                            ->add(
+                                (new LinkRowAction('edit'))
+                                    ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                                    ->setIcon('edit')
+                                    ->setOptions([
+                                        'route' => 'admin_order_states_edit',
+                                        'route_param_name' => 'orderStateId',
+                                        'route_param_field' => 'id_order_state',
+                                        'clickable_row' => true,
+                                    ])
+                            )
+                            ->add(
+                                $this->buildDeleteAction(
+                                    'admin_order_states_delete',
+                                    'orderStateId',
+                                    'id_order_state',
+                                    Request::METHOD_DELETE,
+                                    [],
+                                    [
+                                        'accessibility_checker' => $this->deleteOrderStatesAccessibilityChecker,
+                                    ]
+                                )
+                            ),
+                    ])
+        );
     }
 
     /**
@@ -149,7 +191,7 @@ final class OrderStatesGridDefinitionFactory extends AbstractGridDefinitionFacto
      */
     protected function getFilters()
     {
-        $filters = (new FilterCollection())
+        return (new FilterCollection())
             ->add(
                 (new Filter('id_order_state', NumberType::class))
                     ->setTypeOptions([
@@ -203,8 +245,6 @@ final class OrderStatesGridDefinitionFactory extends AbstractGridDefinitionFacto
                     ])
                     ->setAssociatedColumn('actions')
             );
-
-        return $filters;
     }
 
     /**
@@ -227,6 +267,17 @@ final class OrderStatesGridDefinitionFactory extends AbstractGridDefinitionFacto
                 (new SimpleGridAction('common_export_sql_manager'))
                     ->setName($this->trans('Export to SQL Manager', [], 'Admin.Actions'))
                     ->setIcon('storage')
+            );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getBulkActions(): BulkActionCollectionInterface
+    {
+        return (new BulkActionCollection())
+            ->add(
+                $this->buildBulkDeleteAction('admin_order_states_delete_bulk')
             );
     }
 }

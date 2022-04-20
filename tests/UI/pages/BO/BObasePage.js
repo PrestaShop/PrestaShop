@@ -213,6 +213,7 @@ class BOBasePage extends CommonPage {
   async quickAccessToPage(page, linkId) {
     await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
     await this.clickAndWaitForNavigation(page, this.quickAccessLink(linkId));
+    await this.waitForPageTitleToLoad(page);
   }
 
   /**
@@ -246,9 +247,9 @@ class BOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async manageQuickAccess(page) {
+  async goToManageQuickAccessPage(page) {
     await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
-    await this.waitForSelectorAndClick(page, this.manageYourQuickAccessLink);
+    await this.clickAndWaitForNavigation(page, this.manageYourQuickAccessLink);
   }
 
   /**

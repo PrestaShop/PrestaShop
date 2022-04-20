@@ -282,11 +282,9 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
          * */
 
         // Pre configuration...
-        if (isset($this->wsObject->urlSegment)) {
-            for ($i = 1; $i < 6; ++$i) {
-                if (count($this->wsObject->urlSegment) == $i) {
-                    $this->wsObject->urlSegment[$i] = '';
-                }
+        for ($i = 1; $i < 6; ++$i) {
+            if (count($this->wsObject->urlSegment) == $i) {
+                $this->wsObject->urlSegment[$i] = '';
             }
         }
 
@@ -411,7 +409,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
         switch ($this->wsObject->method) {
             case 'GET':
             case 'HEAD':
-                $this->imgToDisplay = ($path != '' && file_exists($path) && is_file($path)) ? $path : $alternative_path;
+                $this->imgToDisplay = is_file($path) ? $path : $alternative_path;
 
                 return true;
             case 'PUT':
@@ -551,7 +549,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                     $current_product = new Product($object_id);
                     $this->wsObject->urlSegment[3] = $current_product->getCoverWs();
                 }
-                if (!Validate::isUnsignedId($object_id) || !in_array($this->wsObject->urlSegment[3], $available_image_ids)) {
+                if (!in_array($this->wsObject->urlSegment[3], $available_image_ids)) {
                     throw new WebserviceException('This image id does not exist', [57, 400]);
                 } else {
                     // Check for new image system
@@ -1110,9 +1108,6 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                         if (!$image->add()) {
                             throw new WebserviceException('Error while creating image', [76, 400]);
                         }
-                        if (!Validate::isLoadedObject($product)) {
-                            throw new WebserviceException('Product ' . (int) $this->wsObject->urlSegment[2] . ' does not exist', [76, 400]);
-                        }
                         Hook::exec('actionProductUpdate', ['id_product' => (int) $this->wsObject->urlSegment[2]]);
                     }
 
@@ -1166,7 +1161,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                         @unlink(_PS_TMP_IMG_DIR_ . $tmp_name);
                         $this->imgToDisplay = $reception_path;
                     } elseif ($this->imageType == 'customizations') {
-                        $filename = md5(uniqid(mt_rand(0, mt_getrandmax()), true));
+                        $filename = md5(uniqid((string) mt_rand(0, mt_getrandmax()), true));
                         $this->imgToDisplay = _PS_UPLOAD_DIR_ . $filename;
                         if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($file['tmp_name'], $tmp_name)) {
                             throw new WebserviceException('An error occurred during the image upload', [76, 400]);

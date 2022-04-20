@@ -29,14 +29,6 @@ services:
   prestashop.adapter.check_missing_files:
     class: 'PrestaShop\PrestaShop\Adapter\Requirement\CheckMissingOrUpdatedFiles'
 
-  prestashop.adapter.cache_clearer:
-    class: 'PrestaShop\PrestaShop\Adapter\Cache\CacheClearer'
-    arguments:
-      - '@prestashop.core.cache.clearer.cache_clearer_chain'
-      - '@prestashop.adapter.cache.clearer.symfony_cache_clearer'
-      - '@prestashop.adapter.cache.clearer.media_cache_clearer'
-      - '@prestashop.adapter.cache.clearer.smarty_cache_clearer'
-
   prestashop.adapter.debug_mode:
     class: 'PrestaShop\PrestaShop\Adapter\Debug\DebugMode'
 
@@ -91,9 +83,6 @@ services:
 
   prestashop.core.module.updater:
     class: PrestaShop\PrestaShop\Adapter\Module\ModuleDataUpdater
-    arguments:
-      - "@prestashop.core.admin.data_provider.addons_interface"
-      - "@prestashop.adapter.admin.data_provider.module"
 
   prestashop.adapter.admin.model.product:
     class: PrestaShopBundle\Model\Product\AdminModelAdapter
@@ -126,7 +115,7 @@ services:
   prestashop.adapter.file.htaccess_file_generator:
     class: 'PrestaShop\PrestaShop\Adapter\File\HtaccessFileGenerator'
     arguments:
-      - '@prestashop.adapter.cache_clearer'
+      - '@prestashop.core.cache.clearer.cache_clearer_chain'
       - '@prestashop.adapter.tools'
       - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_HTACCESS_DISABLE_MULTIVIEWS')"
 

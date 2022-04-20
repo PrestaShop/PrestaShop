@@ -101,6 +101,7 @@
 					<div>{l s='Manage hooks' d='Admin.Modules.Feature'}</div>
 				</a>
 			</li>
+			{hook h="displayModuleConfigureExtraButtons"}
 		</ul>
 	</div>
 </div>

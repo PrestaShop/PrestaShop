@@ -369,7 +369,7 @@
 {% block search_and_reset_widget %}
     {% apply spaceless %}
         <button type="submit"
-                class="btn btn-primary grid-search-button d-block float-right"
+                class="btn btn-primary grid-search-button d-block"
                 title="{{ 'Search'|trans({}, 'Admin.Actions') }}"
                 name="{{ full_name }}[search]"
         >
@@ -378,10 +378,9 @@
         </button>
       {% if show_reset_button %}
           <div class="js-grid-reset-button">
-          <div class="clearfix"></div>
             <button type="reset"
                     name="{{ full_name }}[reset]"
-                    class="btn btn-link js-reset-search btn d-block grid-reset-button float-right"
+                    class="btn btn-link js-reset-search btn d-block grid-reset-button"
                     data-url="{{ reset_url }}"
                     data-redirect="{{ redirect_url }}"
             >
@@ -692,11 +691,11 @@
                 {% endif %}
                 aria-haspopup="true"
                 aria-expanded="false"
-                id="{{ form.vars.id }}"
+                id="{{ form.vars.id }}_dropdown"
         >
           {{ form.vars.default_locale.iso_code }}
         </button>
-        <div class="dropdown-menu locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}">
+        <div class="dropdown-menu locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}_dropdown">
           {% for locale in locales %}
             <span class="dropdown-item js-locale-item" data-locale="{{ locale.iso_code }}">{{ locale.name }}</span>
           {% endfor %}

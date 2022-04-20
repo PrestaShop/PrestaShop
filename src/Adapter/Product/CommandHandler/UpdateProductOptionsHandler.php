@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductOptionsHandlerInterface;
@@ -41,9 +41,9 @@ use Product;
 final class UpdateProductOptionsHandler implements UpdateProductOptionsHandlerInterface
 {
     /**
-     * @var ProductRepository
+     * @var ProductMultiShopRepository
      */
-    private $productRepository;
+    private $productMultiShopRepository;
 
     /**
      * @var ProductIndexationUpdater
@@ -51,14 +51,14 @@ final class UpdateProductOptionsHandler implements UpdateProductOptionsHandlerIn
     private $productIndexationUpdater;
 
     /**
-     * @param ProductRepository $productRepository
+     * @param ProductMultiShopRepository $productMultiShopRepository
      * @param ProductIndexationUpdater $productIndexationUpdater
      */
     public function __construct(
-        ProductRepository $productRepository,
+        ProductMultiShopRepository $productMultiShopRepository,
         ProductIndexationUpdater $productIndexationUpdater
     ) {
-        $this->productRepository = $productRepository;
+        $this->productMultiShopRepository = $productMultiShopRepository;
         $this->productIndexationUpdater = $productIndexationUpdater;
     }
 
@@ -67,11 +67,20 @@ final class UpdateProductOptionsHandler implements UpdateProductOptionsHandlerIn
      */
     public function handle(UpdateProductOptionsCommand $command): void
     {
-        $product = $this->productRepository->get($command->getProductId());
+        $shopConstraint = $command->getShopConstraint();
+        $product = $this->productMultiShopRepository->getByShopConstraint(
+            $command->getProductId(),
+            $shopConstraint
+        );
         $wasVisibleOnSearch = $this->productIndexationUpdater->isVisibleOnSearch($product);
 
         $updatableProperties = $this->fillUpdatableProperties($product, $command);
-        $this->productRepository->partialUpdate($product, $updatableProperties, CannotUpdateProductException::FAILED_UPDATE_OPTIONS);
+        $this->productMultiShopRepository->partialUpdate(
+            $product,
+            $updatableProperties,
+            $shopConstraint,
+            CannotUpdateProductException::FAILED_UPDATE_OPTIONS
+        );
 
         $isVisibleOnSearch = $this->productIndexationUpdater->isVisibleOnSearch($product);
         if ($wasVisibleOnSearch !== $isVisibleOnSearch) {

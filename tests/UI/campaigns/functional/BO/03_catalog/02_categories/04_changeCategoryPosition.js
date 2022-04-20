@@ -6,7 +6,7 @@ const {expect} = require('chai');
 // Import utils
 const helper = require('@utils/helpers');
 const basicHelper = require('@utils/basicHelper');
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');

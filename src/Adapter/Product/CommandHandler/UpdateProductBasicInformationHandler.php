@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductBasicInformationHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
@@ -37,10 +37,10 @@ use Product;
 /**
  * Handles command for product basic information update using legacy object model
  */
-final class UpdateProductBasicInformationHandler implements UpdateProductBasicInformationHandlerInterface
+class UpdateProductBasicInformationHandler implements UpdateProductBasicInformationHandlerInterface
 {
     /**
-     * @var ProductRepository
+     * @var ProductMultiShopRepository
      */
     private $productRepository;
 
@@ -50,10 +50,10 @@ final class UpdateProductBasicInformationHandler implements UpdateProductBasicIn
     private $defaultLanguageId;
 
     /**
-     * @param ProductRepository $productRepository
+     * @param ProductMultiShopRepository $productRepository
      */
     public function __construct(
-        ProductRepository $productRepository,
+        ProductMultiShopRepository $productRepository,
         int $defaultLanguageId
     ) {
         $this->productRepository = $productRepository;
@@ -67,14 +67,19 @@ final class UpdateProductBasicInformationHandler implements UpdateProductBasicIn
      */
     public function handle(UpdateProductBasicInformationCommand $command): void
     {
-        $product = $this->productRepository->get($command->getProductId());
+        $product = $this->productRepository->getByShopConstraint($command->getProductId(), $command->getShopConstraint());
         $updatableProperties = $this->fillUpdatableProperties($product, $command);
 
         if (empty($updatableProperties)) {
             return;
         }
 
-        $this->productRepository->partialUpdate($product, $updatableProperties, CannotUpdateProductException::FAILED_UPDATE_BASIC_INFO);
+        $this->productRepository->partialUpdate(
+            $product,
+            $updatableProperties,
+            $command->getShopConstraint(),
+            CannotUpdateProductException::FAILED_UPDATE_BASIC_INFO
+        );
     }
 
     /**

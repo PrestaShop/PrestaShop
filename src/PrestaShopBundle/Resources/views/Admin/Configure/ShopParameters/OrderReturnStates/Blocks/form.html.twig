@@ -32,8 +32,8 @@
         <i class="material-icons">schedule</i>
         {{ 'Return statuses'|trans({}, 'Admin.Shopparameters.Feature') }}
       </h3>
-      <div class="card-block row">
-        <div class="card-text">
+      <div class="card-body">
+        <div class="form-wrapper">
           {{ form_errors(orderReturnStateForm) }}
 
           {{ ps.form_group_row(orderReturnStateForm.name, {}, {

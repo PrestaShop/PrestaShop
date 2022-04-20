@@ -81,6 +81,7 @@ services:
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.adapter.shop.context'
       - '@prestashop.core.admin.multistore'
+      - '@form.form_cloner'
 
   form.extension.downloadable_file:
     class: 'PrestaShopBundle\Form\Admin\Extension\DownloadFileExtension'
@@ -93,3 +94,19 @@ services:
       - '@session.flash_bag'
     tags:
       - { name: form.type_extension, extended_type: Symfony\Component\Form\Extension\Core\Type\FormType }
+
+  form.extension.modify_all_shops_extension:
+    class: 'PrestaShopBundle\Form\Admin\Extension\ModifyAllShopsExtension'
+    arguments:
+      - '@prestashop.adapter.feature.multistore'
+      - '@prestashop.adapter.shop.context'
+      - '@translator'
+    tags:
+      - { name: form.type_extension }
+
+  form.extension.disabling_switch_extension:
+    class: 'PrestaShopBundle\Form\Admin\Extension\DisablingSwitchExtension'
+    arguments:
+      - '@form.event_listener.add_disabling_switch_listener'
+    tags:
+      - { name: form.type_extension }

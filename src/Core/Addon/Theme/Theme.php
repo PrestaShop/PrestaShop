@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
 use AbstractAssetManager;
-use Configuration;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Addon\AddonInterface;
 use PrestaShop\PrestaShop\Core\Util\ArrayFinder;
 use PrestaShop\PrestaShop\Core\Util\File\YamlParser;

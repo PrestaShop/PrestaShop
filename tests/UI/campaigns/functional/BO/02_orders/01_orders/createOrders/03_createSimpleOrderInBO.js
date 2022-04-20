@@ -7,11 +7,12 @@ const helper = require('@utils/helpers');
 const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders');
 const addOrderPage = require('@pages/BO/orders/add');
-const viewOrderPage = require('@pages/BO/orders/view');
-const cartRulesPage = require('@pages/BO/catalog/discounts');
+const orderPageProductsBlock = require('@pages/BO/orders/view/productsBlock');
+const orderPageCustomerBlock = require('@pages/BO/orders/view/customerBlock');
 
-// Import login steps
-const loginCommon = require('@commonTests/loginBO');
+// Import common tests
+const loginCommon = require('@commonTests/BO/loginBO');
+const {deleteCartRuleTest} = require('@commonTests/BO/catalog/createDeleteCartRule');
 
 // Import data
 // Customer
@@ -57,21 +58,22 @@ const {expect} = require('chai');
 
 let browserContext;
 let page;
-let numberOfCartRules = 0;
 
 /*
-Go to create order page
-Search and choose a customer
-Add products to cart
-Choose addresses for delivery and invoice
-Choose payment status
-Set order status and save the order
-From view order page check these details :
-- Order status
-- Total price
-- Shipping address
-- Invoice address
-- Products names
+Scenario:
+- Choose the default customer from Create order page
+- Add products to cart
+- Choose addresses for delivery and invoice
+- Choose payment status
+- Set order status and save the order
+- From view order page check these details :
+  - Order status
+  - Total price
+  - Shipping address
+  - Invoice address
+  - Products names
+Post-condition:
+- Delete Free shipping cart rule
  */
 describe('BO - Orders - Create order : Create simple order in BO', async () => {
   before(async function () {
@@ -115,28 +117,28 @@ describe('BO - Orders - Create order : Create simple order in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'createOrder', baseContext);
 
       await addOrderPage.createOrder(page, orderToMake);
-      const pageTitle = await viewOrderPage.getPageTitle(page);
-      await expect(pageTitle).to.contain(viewOrderPage.pageTitle);
+      const pageTitle = await orderPageProductsBlock.getPageTitle(page);
+      await expect(pageTitle).to.contain(orderPageProductsBlock.pageTitle);
     });
 
     it('should check order status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrderStatus', baseContext);
 
-      const orderStatus = await viewOrderPage.getOrderStatus(page);
+      const orderStatus = await orderPageProductsBlock.getOrderStatus(page);
       await expect(orderStatus).to.equal(orderToMake.orderStatus.status);
     });
 
     it('should check order total price', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkOrderPrice', baseContext);
 
-      const totalPrice = await viewOrderPage.getOrderTotalPrice(page);
+      const totalPrice = await orderPageProductsBlock.getOrderTotalPrice(page);
       await expect(totalPrice).to.equal(orderToMake.totalPrice);
     });
 
     it('should check order shipping address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkShippingAddress', baseContext);
 
-      const shippingAddress = await viewOrderPage.getShippingAddress(page);
+      const shippingAddress = await orderPageCustomerBlock.getShippingAddress(page);
       await expect(shippingAddress)
         .to.contain(orderToMake.addressValue.firstName)
         .and.to.contain(orderToMake.addressValue.lastName)
@@ -149,7 +151,7 @@ describe('BO - Orders - Create order : Create simple order in BO', async () => {
     it('should check order invoice address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkInvoiceAddress', baseContext);
 
-      const invoiceAddress = await viewOrderPage.getInvoiceAddress(page);
+      const invoiceAddress = await orderPageCustomerBlock.getInvoiceAddress(page);
       await expect(invoiceAddress)
         .to.contain(orderToMake.addressValue.firstName)
         .and.to.contain(orderToMake.addressValue.lastName)
@@ -163,46 +165,12 @@ describe('BO - Orders - Create order : Create simple order in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkProductsNames', baseContext);
 
       for (let i = 1; i <= orderToMake.products.length; i++) {
-        const productName = await viewOrderPage.getProductNameFromTable(page, i);
+        const productName = await orderPageProductsBlock.getProductNameFromTable(page, i);
         await expect(productName).to.contain(orderToMake.products[i - 1].value.name);
       }
     });
   });
 
-  // Post-Condition - Bulk delete cart rules
-  describe('POST-TEST: Delete cart rule', async () => {
-    it('should go to \'Catalog > Discounts\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToDiscountsPage3', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.catalogParentLink,
-        dashboardPage.discountsLink,
-      );
-
-      const pageTitle = await cartRulesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(cartRulesPage.pageTitle);
-    });
-
-    it('should reset and get number of cart rules', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
-
-      numberOfCartRules = await cartRulesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCartRules).to.be.at.least(0);
-    });
-
-    it('should delete cart rule', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'deleteCartRule', baseContext);
-
-      const validationMessage = await cartRulesPage.deleteCartRule(page);
-      await expect(validationMessage).to.contains(cartRulesPage.successfulDeleteMessage);
-    });
-
-    it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterBulkDelete', baseContext);
-
-      const numberOfCartRulesAfterDelete = await cartRulesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCartRulesAfterDelete).to.equal(numberOfCartRules - 1);
-    });
-  });
+  // Post-Condition: delete cart rules
+  deleteCartRuleTest('Free Shipping', baseContext);
 });

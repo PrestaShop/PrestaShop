@@ -190,8 +190,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $combinationId = isset($data['combination']) ? $this->getProductCombinationId($product, $data['combination']) : 0;
 
         if (empty($data['price_tax_incl'])) {
-            $taxCalculator = $this->getProductTaxCalculator((int) $orderId, $productId);
-            $data['price_tax_incl'] = !empty($taxCalculator) ? (string) $taxCalculator->addTaxes($data['price']) : $data['price'];
+            $data['price_tax_incl'] = (string) $this->getProductTaxCalculator((int) $orderId, $productId)
+                ->addTaxes($data['price']);
         }
 
         try {
@@ -284,8 +284,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         }
 
         if (empty($data['price_tax_incl'])) {
-            $taxCalculator = $this->getProductTaxCalculator((int) $orderId, $product->getProductId());
-            $data['price_tax_incl'] = !empty($taxCalculator) ? (string) $taxCalculator->addTaxes($data['price']) : $data['price'];
+            $data['price_tax_incl'] = (string) $this->getProductTaxCalculator((int) $orderId, $product->getProductId())
+                ->addTaxes($data['price']);
         }
 
         try {
@@ -645,8 +645,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
         // If tax included price is not given, it is calculated
         if (!isset($data['price_tax_incl'])) {
-            $taxCalculator = $this->getProductTaxCalculator($orderId, (int) $productOrderDetail['product_id']);
-            $data['price_tax_incl'] = !empty($taxCalculator) ? (string) $taxCalculator->addTaxes($data['price']) : $data['price'];
+            $data['price_tax_incl'] = (string) $this->getProductTaxCalculator($orderId, (int) $productOrderDetail['product_id'])
+                ->addTaxes($data['price']);
         }
 
         try {
@@ -840,6 +840,27 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $discount = $this->getOrderDiscountByName($orderId, self::ORDER_CART_RULE_FREE_SHIPPING);
         if (null === $discount) {
             throw new RuntimeException('Order should have free shipping.');
+        }
+    }
+
+    /**
+     * @Then order :reference should have a cart rule with name :cartRuleName
+     *
+     * @param string $reference
+     * @param string $cartRuleName
+     *
+     * @throws RuntimeException
+     */
+    public function createdOrderShouldHaveNamedCartRule(string $reference, string $cartRuleName): void
+    {
+        $orderId = SharedStorage::getStorage()->get($reference);
+
+        $discount = $this->getOrderDiscountByName($orderId, $cartRuleName);
+        if (null === $discount) {
+            throw new RuntimeException(sprintf(
+                'Order should have a cart rule with name "%s"',
+                $cartRuleName
+            ));
         }
     }
 
@@ -1600,27 +1621,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
                 );
             }
         }
-    }
-
-    /**
-     * @deprecated
-     *
-     * @param TableNode $table
-     *
-     * @return array
-     *
-     * @throws RuntimeException
-     */
-    private function extractFirstRowFromProperties(TableNode $table): array
-    {
-        $hash = $table->getHash();
-        if (count($hash) != 1) {
-            throw new RuntimeException('Properties are invalid');
-        }
-        /** @var array $data */
-        $data = $hash[0];
-
-        return $data;
     }
 
     /**

@@ -31,20 +31,55 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 use Behat\Gherkin\Node\TableNode;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class UpdateBasicInformationFeatureContext extends AbstractProductFeatureContext
 {
+    /**
+     * @When I update product :productReference basic information for shop :shopReference with following values:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function updateProductBasicInfoForShop(string $productReference, string $shopReference, TableNode $table): void
+    {
+        $shopId = $this->getSharedStorage()->get(trim($shopReference));
+        $shopConstraint = ShopConstraint::shop($shopId);
+        $this->updateProductBasicInfo($productReference, $table, $shopConstraint);
+    }
+
+    /**
+     * @When I update product :productReference basic information for all shops with following values:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function updateProductBasicInfoForAllShops(string $productReference, TableNode $table): void
+    {
+        $this->updateProductBasicInfo($productReference, $table, ShopConstraint::allShops());
+    }
+
     /**
      * @When I update product :productReference basic information with following values:
      *
      * @param string $productReference
      * @param TableNode $table
      */
-    public function updateProductBasicInfo(string $productReference, TableNode $table): void
+    public function updateProductBasicInfoWithDefaultShop(string $productReference, TableNode $table): void
+    {
+        $this->updateProductBasicInfo($productReference, $table, ShopConstraint::shop($this->getDefaultShopId()));
+    }
+
+    /**
+     * @param string $productReference
+     * @param TableNode $table
+     * @param ShopConstraint $shopConstraint
+     */
+    private function updateProductBasicInfo(string $productReference, TableNode $table, ShopConstraint $shopConstraint): void
     {
         $data = $this->localizeByRows($table);
         $productId = $this->getSharedStorage()->get($productReference);
-        $command = new UpdateProductBasicInformationCommand($productId);
+        $command = new UpdateProductBasicInformationCommand($productId, $shopConstraint);
 
         if (isset($data['name'])) {
             $command->setLocalizedNames($data['name']);

@@ -30,9 +30,13 @@ export default {
   },
   multistoreHeader: {
     modal: '.js-multishop-modal',
+    modalDialog: '.js-multishop-modal-dialog',
+    headerMultiShop: '.header-multishop',
     headerButton: '.js-header-multishop-open-modal',
     searchInput: '.js-multishop-modal-search',
     jsScrollbar: '.js-multishop-scrollbar',
+    shopLinks: 'a.multishop-modal-shop-name',
+    groupShopLinks: 'a.multishop-modal-group-name',
     setContextUrl: (
       location: string,
       urlLetter: string,
@@ -82,6 +86,9 @@ export default {
     newQuantitySelector: '.new-quantity',
     initialQuantityPreviewSelector: '.initial-quantity',
   },
+  disablingSwitch: {
+    disablingSelector: '.ps-disabling-switch input.ps-switch',
+  },
   currentLength: '.js-current-length',
   recommendedLengthInput: '.js-recommended-length-input',
   multistoreCheckbox: '.multistore-checkbox',
@@ -89,4 +96,15 @@ export default {
   inputNotCheckbox: ':input:not(.multistore-checkbox)',
   inputContainer: '.input-container',
   formControlLabel: '.form-control-label',
+  tineMceEditor: {
+    selector: '.autoload_rte',
+    selectorClass: 'autoload_rte',
+  },
+  contextualNotification: {
+    close: '.contextual-notification .close',
+    messageBoxId: 'content-message-box',
+    notificationBoxId: 'contextual-notification-box',
+    notificationClass: 'contextual-notification',
+  },
+  ajaxConfirmation: '#ajax_confirmation',
 };

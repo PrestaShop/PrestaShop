@@ -26,7 +26,8 @@
 
 namespace PrestaShopBundle\Controller\Admin\Improve\Modules;
 
-use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
+use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
+use PrestaShop\PrestaShop\Core\Module\ModuleRepositoryInterface;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Voter\PageVoter;
 
@@ -34,29 +35,23 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
 {
     public const CONTROLLER_NAME = 'ADMINMODULESSF';
 
-    /**
-     * Common method of alerts & updates routes for getting template variables.
-     *
-     * @param string $type Type of alert to display (to_configure / to_update ...)
-     *
-     * @return array
-     */
-    protected function getNotificationPageData($type)
+    public const CONFIGURABLE_MODULE_TYPE = 'to_configure';
+    public const UPDATABLE_MODULE_TYPE = 'to_update';
+    public const TOTAL_MODULE_TYPE = 'count';
+
+    final protected function getNotificationPageData(ModuleCollection $moduleCollection): array
     {
         $modulePresenter = $this->get('prestashop.adapter.presenter.module');
-        $modulesPresenterCallback = function (AddonsCollection &$modules) use ($modulePresenter) {
-            return $modulePresenter->presentCollection($modules);
-        };
+        $moduleRepository = $this->getModuleRepository();
 
-        $moduleManager = $this->get('prestashop.module.manager');
-        $modules = $moduleManager->getModulesWithNotifications($modulesPresenterCallback);
+        $moduleRepository->setActionUrls($moduleCollection);
 
         return [
             'enableSidebar' => true,
             'layoutHeaderToolbarBtn' => $this->getToolbarButtons(),
             'layoutTitle' => $this->trans('Module notifications', 'Admin.Modules.Feature'),
             'help_link' => $this->generateSidebarLink('AdminModules'),
-            'modules' => $modules->{$type},
+            'modules' => $modulePresenter->presentCollection($moduleCollection),
             'requireBulkActions' => false,
             'requireFilterStatus' => false,
             'level' => $this->authorizationLevel($this::CONTROLLER_NAME),
@@ -90,5 +85,10 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
         }
 
         return $toolbarButtons;
+    }
+
+    protected function getModuleRepository(): ModuleRepositoryInterface
+    {
+        return $this->get('prestashop.core.admin.module.repository');
     }
 }

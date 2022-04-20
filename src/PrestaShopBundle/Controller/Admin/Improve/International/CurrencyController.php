@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Command\BulkToggleCurrenciesStatu
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\DeleteCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\RefreshExchangeRatesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\AutomateExchangeRatesUpdateException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\BulkDeleteCurrenciesException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\BulkToggleCurrenciesException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteDefaultCurrencyException;
@@ -586,15 +585,6 @@ class CurrencyController extends FrameworkBundleAdminController
                 CurrencyConstraintException::EMPTY_BULK_DELETE => $this->trans(
                     'You must select at least one item to perform a bulk action.',
                     'Admin.Notifications.Error'
-                ),
-            ],
-            AutomateExchangeRatesUpdateException::class => [
-                AutomateExchangeRatesUpdateException::CRON_TASK_MANAGER_MODULE_NOT_INSTALLED => $this->trans(
-                    'Please install the %module_name% module before using this feature.',
-                    'Admin.International.Notification',
-                    [
-                        '%module_name%' => 'cronjobs',
-                    ]
                 ),
             ],
             DefaultCurrencyInMultiShopException::class => [
