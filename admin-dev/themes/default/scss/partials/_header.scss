@@ -686,9 +686,10 @@ $search-border-color: #bbcdd2;
     line-height: 0.75rem;
     color: #fff;
     vertical-align: middle;
-    background: #f1b746;
+    background: $brand-danger;
     border: 2px solid #fff;
     border-radius: 0.625rem;
+
     font: {
       size: 0.625rem;
     }
