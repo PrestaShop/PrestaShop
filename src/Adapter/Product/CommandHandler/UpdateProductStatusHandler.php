@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Product\ProductStatusUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
@@ -40,25 +41,13 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductExcep
 class UpdateProductStatusHandler implements UpdateProductStatusHandlerInterface
 {
     /**
-     * @var ProductRepository
+     * @var ProductStatusUpdater
      */
-    private $productRepository;
+    private $productStatusUpdater;
 
-    /**
-     * @var ProductIndexationUpdater
-     */
-    private $productIndexationUpdater;
+    public function __construct(ProductStatusUpdater $productStatusUpdater) {
 
-    /**
-     * @param ProductRepository $productRepository
-     * @param ProductIndexationUpdater $productIndexationUpdater
-     */
-    public function __construct(
-        ProductRepository $productRepository,
-        ProductIndexationUpdater $productIndexationUpdater
-    ) {
-        $this->productRepository = $productRepository;
-        $this->productIndexationUpdater = $productIndexationUpdater;
+        $this->productStatusUpdater = $productStatusUpdater;
     }
 
     /**
@@ -66,19 +55,6 @@ class UpdateProductStatusHandler implements UpdateProductStatusHandlerInterface
      */
     public function handle(UpdateProductStatusCommand $command)
     {
-        $product = $this->productRepository->get($command->getProductId());
-        $initialState = (bool) $product->active;
-        $product->active = $command->getEnable();
-        $this->productRepository->partialUpdate(
-            $product,
-            ['active'],
-            CannotUpdateProductException::FAILED_UPDATE_STATUS
-        );
-
-        // If status changed we need to update its indexes (we check if it is necessary because index build can be
-        // an expensive operation).
-        if ($initialState !== $command->getEnable()) {
-            $this->productIndexationUpdater->updateIndexation($product);
-        }
+        $this->productStatusUpdater->updateStatus($command->getProductId(), $command->getEnable());
     }
 }

@@ -24,17 +24,35 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkToggleProductStatusCommand;
+namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
+
+use PrestaShop\PrestaShop\Adapter\Product\ProductStatusUpdater;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkUpdateProductStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\BulkUpdateProductStatusHandlerInterface;
 
 /**
- * Defines contract to handle @see BulkToggleProductStatusCommand
+ * Handles command which deletes addresses in bulk action
  */
-interface BulkToggleProductHandlerInterface
+class BulkUpdateProductStatusHandler implements BulkUpdateProductStatusHandlerInterface
 {
     /**
-     * @param BulkToggleProductStatusCommand $command
+     * @var ProductStatusUpdater
      */
-    public function handle(BulkToggleProductStatusCommand $command): void;
+    private $productStatusUpdater;
+
+    public function __construct(ProductStatusUpdater $productStatusUpdater) {
+
+        $this->productStatusUpdater = $productStatusUpdater;
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function handle(BulkUpdateProductStatusCommand $command): void
+    {
+        foreach ($command->getProductIds() as $productId) {
+          $this->productStatusUpdater->updateStatus($productId, $command->getNewStatus());
+        }
+    }
 }

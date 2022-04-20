@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 /**
  * Deletes multiple products
  */
-class BulkToggleProductStatusCommand
+class BulkUpdateProductStatusCommand
 {
     /**
      * @var ProductId[]

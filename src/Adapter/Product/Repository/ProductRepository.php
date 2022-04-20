@@ -337,19 +337,6 @@ class ProductRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param ProductId $productId
-     * @param bool $status
-     *
-     * @throws CoreException
-     */
-    public function toggleStatus(ProductId $productId, bool $status): void
-    {
-        $product = new Product($productId->getValue());
-        $product->active = $status;
-        $product->save();
-    }
-
-    /**
      * @param array $productIds
      *
      * @throws CannotBulkDeleteProductException

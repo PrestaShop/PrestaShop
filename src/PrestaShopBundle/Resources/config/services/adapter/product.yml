@@ -48,8 +48,7 @@ services:
   prestashop.adapter.product.command_handler.update_product_status_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductStatusHandler
     arguments:
-      - '@prestashop.adapter.product.repository.product_repository'
-      - '@prestashop.adapter.product.update.product_indexation_updater'
+      - '@prestashop.adapter.product.product_status_updater'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand
@@ -346,14 +345,13 @@ services:
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductCommand
 
   prestashop.adapter.product.command_handler.bulk_toggle_product_status_handle:
-    class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\BulkToggleProductStatusHandler
+    class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\BulkUpdateProductStatusHandler
     tags:
       - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkToggleProductStatusCommand
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkUpdateProductStatusCommand
     arguments:
-      - '@prestashop.adapter.product.repository.product_repository'
-      - '@prestashop.adapter.product.update.product_indexation_updater'
-
+      - '@prestashop.adapter.product.product_status_updater'
+      -
   prestashop.adapter.product.command_handler.set_associated_product_attachments_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\Attachment\CommandHandler\SetAssociatedProductAttachmentsHandler
     arguments:
@@ -466,6 +464,12 @@ services:
       - '@prestashop.adapter.shop.context'
       - '@translator'
       - '@prestashop.core.util.string.string_modifier'
+
+  prestashop.adapter.product.product_status_updater:
+    class: PrestaShop\PrestaShop\Adapter\Product\ProductStatusUpdater
+    arguments:
+      - '@prestashop.adapter.product.repository.product_repository'
+      - '@prestashop.adapter.product.update.product_indexation_updater'
 
   prestashop.adapter.product.command_handler.update_product_type_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\UpdateProductTypeHandler
