@@ -79,7 +79,7 @@ class ShopParamsMaintenance extends BOBasePage {
    */
   async addMaintenanceIPAddress(page, ipAddress) {
     await this.setValue(page, this.maintenanceIpInput, ipAddress);
-    await page.click(this.saveFormButton);
+    await this.clickAndWaitForNavigation(page, this.saveFormButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }

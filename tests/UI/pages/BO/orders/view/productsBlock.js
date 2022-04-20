@@ -97,6 +97,7 @@ class ProductsBlock extends ViewOrderBasePage.constructor {
   /*
   Methods
    */
+
   // Methods for create partial refund
   /**
    * Add partial refund product
@@ -228,7 +229,11 @@ class ProductsBlock extends ViewOrderBasePage.constructor {
     if (await this.elementVisible(page, this.growlMessageBlock)) {
       await this.closeGrowlMessage(page);
     }
-    await this.waitForSelectorAndClick(page, this.deleteProductButton(row));
+
+    await Promise.all([
+      page.waitForResponse(response => response.url().includes('/products?_token')),
+      this.waitForSelectorAndClick(page, this.deleteProductButton(row)),
+    ]);
 
     return this.getGrowlMessageContent(page);
   }
@@ -432,11 +437,11 @@ class ProductsBlock extends ViewOrderBasePage.constructor {
     await this.waitForVisibleSelector(page, this.orderDiscountModal);
     await this.waitForSelectorAndClick(page, this.addOrderCartRuleNameInput);
     await this.setValue(page, this.addOrderCartRuleNameInput, discountData.name);
-    await this.selectByVisibleText(page, this.addOrderCartRuleTypeSelect, discountData.type);
 
     if (discountData.type !== 'Free shipping') {
       await this.setValue(page, this.addOrderCartRuleValueInput, discountData.value);
     }
+    await this.selectByVisibleText(page, this.addOrderCartRuleTypeSelect, discountData.type);
 
     await this.waitForVisibleSelector(page, `${this.addOrderCartRuleAddButton}:not([disabled])`);
     await page.$eval(this.addOrderCartRuleAddButton, el => el.click());

@@ -119,10 +119,11 @@ class CartRules extends BOBasePage {
    * Delete cart rule
    * @param page {Page} Browser tab
    * @param row {number} Row on table
+   * @param cartRuleName {string} Cart rule name to delete
    * @returns {Promise<unknown>}
    */
   async deleteCartRule(page, row = 1, cartRuleName = '') {
-    if (await this.elementVisible(page, this.filterColumn('name'))) {
+    if (await this.elementVisible(page, this.filterColumn('name'), 1000)) {
       await this.filterCartRules(page, 'input', 'name', cartRuleName);
     }
 
@@ -209,7 +210,7 @@ class CartRules extends BOBasePage {
    * @return {Promise<void>}
    */
   async resetFilter(page) {
-    if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
+    if (await this.elementVisible(page, this.filterResetButton, 2000)) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
 
@@ -245,6 +246,7 @@ class CartRules extends BOBasePage {
    * @return {Promise<void>}
    */
   async filterCartRules(page, filterType, filterBy, value) {
+    await this.resetFilter(page);
     switch (filterType) {
       case 'input':
         await this.setValue(page, this.filterColumn(filterBy), value);
