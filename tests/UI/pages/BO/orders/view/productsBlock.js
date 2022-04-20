@@ -97,6 +97,7 @@ class ProductsBlock extends ViewOrderBasePage.constructor {
   /*
   Methods
    */
+
   // Methods for create partial refund
   /**
    * Add partial refund product
@@ -231,7 +232,7 @@ class ProductsBlock extends ViewOrderBasePage.constructor {
 
     await Promise.all([
       page.waitForResponse(response => response.url().includes('/products?_token')),
-      await this.waitForSelectorAndClick(page, this.deleteProductButton(row)),
+      this.waitForSelectorAndClick(page, this.deleteProductButton(row)),
     ]);
 
     return this.getGrowlMessageContent(page);
