@@ -28,8 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkToggleProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\BulkToggleProductHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShopBundle\Exception\UpdateProductException;
 use Product;
 
@@ -39,16 +42,45 @@ use Product;
 final class BulkToggleProductHandler implements BulkToggleProductHandlerInterface
 {
     /**
+     * @var ProductRepository
+     */
+    private $productRepository;
+
+    /**
+     * @var ProductIndexationUpdater
+     */
+    private $productIndexationUpdater;
+
+    /**
+     * @param ProductRepository $productRepository
+     * @param ProductIndexationUpdater $productIndexationUpdater
+     */
+    public function __construct(
+        ProductRepository $productRepository,
+        ProductIndexationUpdater $productIndexationUpdater
+    ) {
+        $this->productRepository = $productRepository;
+        $this->productIndexationUpdater = $productIndexationUpdater;
+    }
+    /**
      * {@inheritdoc}
      */
     public function handle(BulkToggleProductCommand $command): void
     {
         foreach ($command->getProductIds() as $productId) {
-            $product = new Product($productId->getValue());
+            $product = $this->productRepository->get($productId);
+            $initialState = (bool) $product->active;
             $product->active = $command->getNewStatus();
+            $this->productRepository->partialUpdate(
+                $product,
+                ['active'],
+                CannotUpdateProductException::FAILED_UPDATE_STATUS
+            );
 
-            if (!$product->save()) {
-                throw new UpdateProductException(sprintf('Unable to toggle product status with id "%s"', $product->id), UpdateProductException::FAILED_BULK_UPDATE_STATUS);
+            // If status changed we need to update its indexes (we check if it is necessary because index build can be
+            // an expensive operation).
+            if ($initialState !== $command->getNewStatus()) {
+                $this->productIndexationUpdater->updateIndexation($product);
             }
         }
     }

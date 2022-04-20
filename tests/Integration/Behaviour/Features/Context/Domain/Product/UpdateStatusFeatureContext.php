@@ -28,13 +28,41 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
+use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkToggleProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext;
 
 class UpdateStatusFeatureContext extends AbstractProductFeatureContext
 {
+    /**
+     * @When /^I bulk change status to be (enabled|disabled) for following products:$/
+     *
+     * @param bool $status
+     * @param TableNode $productsList
+     *
+     */
+    public function bulkUpdateStatus(bool $status, TableNode $productsList): void
+    {
+        $productIds = [];
+        foreach ($productsList->getColumnsHash() as $productInfo) {
+            $productIds[] = $this->getSharedStorage()->get($productInfo['reference']);
+        }
+
+        try {
+            $this->getCommandBus()->handle(new BulkToggleProductCommand(
+                $productIds,
+                $status
+            ));
+        } catch (ProductException $e) {
+            $this->setLastException($e);
+            return;
+        }
+    }
+
     /**
      * @When /^I (enable|disable) product "(.*)"$/
      *

@@ -350,6 +350,9 @@ services:
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkToggleProductCommand
+    arguments:
+      - '@prestashop.adapter.product.repository.product_repository'
+      - '@prestashop.adapter.product.update.product_indexation_updater'
 
   prestashop.adapter.product.command_handler.set_associated_product_attachments_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\Attachment\CommandHandler\SetAssociatedProductAttachmentsHandler
