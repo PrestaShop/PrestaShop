@@ -65,7 +65,7 @@ class CombinationImagesChoiceType extends TranslatorAwareType
             ->setAllowedTypes('product_id', 'int')
             ->setDefaults([
                 'label' => $this->trans('Images', 'Admin.Global'),
-                'choice_attr' => function ($choice, $key) {
+                'choice_attr' => function (string $choice, string $key): array {
                     return ['data-image-url' => $key];
                 },
                 'multiple' => true,
