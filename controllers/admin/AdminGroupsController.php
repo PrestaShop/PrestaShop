@@ -327,7 +327,7 @@ class AdminGroupsControllerCore extends AdminController
                     'label' => $this->trans('Discount', [], 'Admin.Global'),
                     'name' => 'reduction',
                     'suffix' => '%',
-                    'col' => 1,
+                    'col' => 3,
                     'hint' => $this->trans('Automatically apply this value as a discount on all products for members of this customer group.', [], 'Admin.Shopparameters.Help'),
                 ],
                 [
