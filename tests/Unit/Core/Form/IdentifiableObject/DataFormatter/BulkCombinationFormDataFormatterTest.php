@@ -208,5 +208,45 @@ class BulkCombinationFormDataFormatterTest extends TestCase
                 ],
             ],
         ];
+
+        yield 'images data' => [
+            [
+                'images' => [
+                    'images' => [1, 3, 5],
+                ],
+            ],
+            [
+                'images' => [1, 3, 5],
+            ],
+        ];
+
+        yield 'all images unselected' => [
+            [
+                'images' => [
+                    'images' => [],
+                ],
+            ],
+            [
+                'images' => [],
+            ],
+        ];
+
+        yield 'empty images data' => [
+            [
+                'images' => [],
+            ],
+            [],
+        ];
+
+        yield 'empty images data, but with disabling_switch on' => [
+            [
+                'images' => [
+                    'disabling_switch_images' => true,
+                ],
+            ],
+            [
+                'images' => [],
+            ],
+        ];
     }
 }
