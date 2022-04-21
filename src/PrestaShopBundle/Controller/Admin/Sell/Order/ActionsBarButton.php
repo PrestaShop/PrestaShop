@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
-use PrestaShop\PrestaShop\Core\ActionBar\ActionsBarButton as CoreActionsBarButton;
+use PrestaShop\PrestaShop\Core\Action\ActionsBarButton as CoreActionsBarButton;
 
 /**
  * @deprecated since 8.0 and will be removed in next major. Use PrestaShop\PrestaShop\Core\ActionBar\ActionsBarButton instead

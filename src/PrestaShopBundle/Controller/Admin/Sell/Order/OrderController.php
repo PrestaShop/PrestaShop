@@ -30,7 +30,7 @@ use Currency;
 use Exception;
 use InvalidArgumentException;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
-use PrestaShop\PrestaShop\Core\ActionBar\ActionsBarButtonsCollection;
+use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonsCollection;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\CartRule\Exception\InvalidCartRuleDiscountValueException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Command\AddOrderCustomerMessageCommand;

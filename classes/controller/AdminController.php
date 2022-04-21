@@ -24,9 +24,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
-use PrestaShop\PrestaShop\Core\ActionBar\ActionsBarButton;
-use PrestaShop\PrestaShop\Core\ActionBar\ActionsBarButtonInterface;
-use PrestaShop\PrestaShop\Core\ActionBar\ActionsBarButtonsCollection;
+use PrestaShop\PrestaShop\Core\Action\ActionsBarButton;
+use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonInterface;
+use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonsCollection;
 use PrestaShop\PrestaShop\Core\Exception\TypeException;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
