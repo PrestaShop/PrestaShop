@@ -1396,6 +1396,15 @@ class CategoryCore extends ObjectModel
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public static function resetStaticCache()
+    {
+        parent::resetStaticCache();
+        Cache::clean('Category::*');
+    }
+
+    /**
      * Light back office search for categories.
      *
      * @param int $idLang Language ID

@@ -124,6 +124,7 @@ class CategoryDisplayNameBuilder
 
         $cacheKey = $this->buildCacheKey($shopId, $languageId);
 
+//      @todo: consider using Symfony\Component\Cache\Adapter\AdapterInterface instead of legacy Cache
         if (Cache::isStored($this->buildCacheKey($shopId, $languageId))) {
             return Cache::retrieve($cacheKey);
         }

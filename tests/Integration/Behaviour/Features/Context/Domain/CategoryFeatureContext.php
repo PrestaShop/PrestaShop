@@ -27,7 +27,6 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
-use Cache;
 use Category;
 use Configuration;
 use Language;
@@ -100,7 +99,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     public function assertRootCategoriesTree(TableNode $tableNode, string $langIso): void
     {
         $langId = Language::getIdByIso($langIso);
-        $categoriesTree = $this->getQueryBus()->handle(new GetCategoriesTree($langId));
+        $categoriesTree = $this->getQueryBus()->handle(new GetCategoriesTree($langId, $this->getDefaultShopId()));
 
         Assert::assertNotEmpty($categoriesTree, 'Categories tree is empty');
 
@@ -116,10 +115,9 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertCategoriesTree(TableNode $tableNode, string $langIso, string $parentReference): void
     {
-        Cache::clean('Category::getNestedCategories_*');
-        Cache::clean('duplicateCategoryNames_*');
+        Category::resetStaticCache();
         $langId = Language::getIdByIso($langIso);
-        $categoriesTree = $this->getQueryBus()->handle(new GetCategoriesTree($langId));
+        $categoriesTree = $this->getQueryBus()->handle(new GetCategoriesTree($langId, $this->getDefaultShopId()));
 
         Assert::assertNotEmpty($categoriesTree, 'Categories tree is empty');
 
