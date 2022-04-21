@@ -34,6 +34,7 @@ use Behat\Gherkin\Node\StepNode;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
 use Configuration;
+use Context as PrestashopContext;
 use Currency;
 use Exception;
 use Language;
@@ -291,6 +292,14 @@ abstract class AbstractDomainFeatureContext implements Context
         }
 
         return $localizedValues;
+    }
+
+    /**
+     * @return int
+     */
+    protected function getDefaultShopId(): int
+    {
+        return (int) Configuration::get('PS_SHOP_DEFAULT');
     }
 
     /**

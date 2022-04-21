@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Query;
 
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
@@ -45,17 +46,23 @@ class GetProductForEditing
     private $shopConstraint;
 
     /**
-     * GetProductForEditing constructor.
-     *
+     * @var LanguageId
+     */
+    private $displayLanguageId;
+
+    /**
      * @param int $productId
      * @param ShopConstraint $shopConstraint
+     * @param int $displayLanguageId
      */
     public function __construct(
         int $productId,
-        ShopConstraint $shopConstraint
+        ShopConstraint $shopConstraint,
+        int $displayLanguageId
     ) {
         $this->productId = new ProductId($productId);
         $this->shopConstraint = $shopConstraint;
+        $this->displayLanguageId = new LanguageId($displayLanguageId);
     }
 
     /**
@@ -72,5 +79,13 @@ class GetProductForEditing
     public function getShopConstraint(): ShopConstraint
     {
         return $this->shopConstraint;
+    }
+
+    /**
+     * @return LanguageId
+     */
+    public function getDisplayLanguageId(): LanguageId
+    {
+        return $this->displayLanguageId;
     }
 }

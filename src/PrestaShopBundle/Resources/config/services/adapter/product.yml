@@ -120,7 +120,6 @@ services:
       - '@prestashop.adapter.product.image.product_image_url_factory'
       - '@prestashop.adapter.product.specific_price.repository.specific_price_repository'
       - '@prestashop.adapter.legacy.configuration'
-      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
       - '@prestashop.core.category.name_builder.category_display_name_builder'
     tags:
       - name: tactician.handler

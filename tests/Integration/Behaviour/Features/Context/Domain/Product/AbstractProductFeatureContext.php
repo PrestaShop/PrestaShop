@@ -132,7 +132,8 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
 
         return $this->getQueryBus()->handle(new GetProductForEditing(
             $productId,
-            $shopConstraint
+            $shopConstraint,
+            $this->getDefaultLangId()
         ));
     }
 

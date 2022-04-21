@@ -109,7 +109,9 @@ class ProductFormDataProvider implements FormDataProviderInterface
         $productId = (int) $id;
         $shopConstraint = null !== $this->contextShopId ? ShopConstraint::shop($this->contextShopId) : ShopConstraint::shop($this->defaultShopId);
         /** @var ProductForEditing $productForEditing */
-        $productForEditing = $this->queryBus->handle(new GetProductForEditing($productId, $shopConstraint));
+        $productForEditing = $this->queryBus->handle(
+            new GetProductForEditing($productId, $shopConstraint, $this->contextLangId)
+        );
 
         $productData = [
             'id' => $productId,

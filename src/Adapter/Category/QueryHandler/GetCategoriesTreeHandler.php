@@ -28,6 +28,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Category\QueryHandler;
 
 use Category;
+use PrestaShop\PrestaShop\Adapter\ContextStateManager;
+use PrestaShop\PrestaShop\Adapter\Shop\Repository\ShopRepository;
 use PrestaShop\PrestaShop\Core\Category\NameBuilder\CategoryDisplayNameBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoriesTree;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryHandler\GetCategoriesTreeHandlerInterface;
@@ -42,33 +44,33 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 final class GetCategoriesTreeHandler implements GetCategoriesTreeHandlerInterface
 {
     /**
-     * @var string
-     */
-    private $contextLangId;
-
-    /**
-     * @var int
-     */
-    private $contextShopId;
-
-    /**
      * @var CategoryDisplayNameBuilder
      */
     private $displayNameBuilder;
 
     /**
-     * @param string $contextLangId
-     * @param int $contextShopId
+     * @var ContextStateManager
+     */
+    private $contextStateManager;
+
+    /**
+     * @var ShopRepository
+     */
+    private $shopRepository;
+
+    /**
      * @param CategoryDisplayNameBuilder $displayNameBuilder
+     * @param ContextStateManager $contextStateManager
+     * @param ShopRepository $shopRepository
      */
     public function __construct(
-        string $contextLangId,
-        int $contextShopId,
-        CategoryDisplayNameBuilder $displayNameBuilder
+        CategoryDisplayNameBuilder $displayNameBuilder,
+        ContextStateManager $contextStateManager,
+        ShopRepository $shopRepository
     ) {
-        $this->contextLangId = $contextLangId;
-        $this->contextShopId = $contextShopId;
         $this->displayNameBuilder = $displayNameBuilder;
+        $this->contextStateManager = $contextStateManager;
+        $this->shopRepository = $shopRepository;
     }
 
     /**
@@ -76,11 +78,19 @@ final class GetCategoriesTreeHandler implements GetCategoriesTreeHandlerInterfac
      */
     public function handle(GetCategoriesTree $query): array
     {
-        $shopId = new ShopId((int) $this->contextShopId);
-        $langId = $query->getLanguageId() ?? new LanguageId((int) $this->contextLangId);
-        $nestedCategories = Category::getNestedCategories(null, $langId->getValue(), false);
+        $langId = $query->getLanguageId();
+        $this->contextStateManager
+            ->saveCurrentContext()
+            ->setShop($this->shopRepository->get($query->getShopId()))
+        ;
 
-        return $this->buildCategoriesTree($nestedCategories, $shopId, $langId);
+        try {
+            $nestedCategories = Category::getNestedCategories(null, $langId->getValue(), false);
+        } finally {
+            $this->contextStateManager->restorePreviousContext();
+        }
+
+        return $this->buildCategoriesTree($nestedCategories, $query->getShopId(), $langId);
     }
 
     /**

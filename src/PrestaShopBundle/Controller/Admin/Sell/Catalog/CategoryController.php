@@ -778,7 +778,7 @@ class CategoryController extends FrameworkBundleAdminController
     public function getCategoriesTreeAction(Request $request): JsonResponse
     {
         $langId = $request->query->getInt('langId') ?: (int) $this->getContextLangId();
-        $categoriesTree = $this->getQueryBus()->handle(new GetCategoriesTree($langId));
+        $categoriesTree = $this->getQueryBus()->handle(new GetCategoriesTree($langId, $this->getContextShopId()));
 
         return $this->json($this->formatCategoriesTreeForPresentation($categoriesTree, $langId));
     }

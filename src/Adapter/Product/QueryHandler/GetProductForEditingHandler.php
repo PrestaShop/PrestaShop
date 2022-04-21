@@ -144,11 +144,6 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
     private $configuration;
 
     /**
-     * @var int
-     */
-    private $contextLangId;
-
-    /**
      * @var CategoryDisplayNameBuilder
      */
     private $categoryDisplayNameBuilder;
@@ -167,7 +162,6 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
      * @param ProductImagePathFactory $productImageUrlFactory
      * @param SpecificPriceRepository $specificPriceRepository
      * @param Configuration $configuration
-     * @param int $contextLangId
      * @param CategoryDisplayNameBuilder $categoryDisplayNameBuilder
      */
     public function __construct(
@@ -184,7 +178,6 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
         ProductImagePathFactory $productImageUrlFactory,
         SpecificPriceRepository $specificPriceRepository,
         Configuration $configuration,
-        int $contextLangId,
         CategoryDisplayNameBuilder $categoryDisplayNameBuilder
     ) {
         $this->numberExtractor = $numberExtractor;
@@ -200,7 +193,6 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
         $this->productImageUrlFactory = $productImageUrlFactory;
         $this->specificPriceRepository = $specificPriceRepository;
         $this->configuration = $configuration;
-        $this->contextLangId = $contextLangId;
         $this->categoryDisplayNameBuilder = $categoryDisplayNameBuilder;
     }
 
@@ -220,7 +212,7 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
             (bool) $product->active,
             $this->getCustomizationOptions($product),
             $this->getBasicInformation($product),
-            $this->getCategoriesInformation($product),
+            $this->getCategoriesInformation($product, $query->getDisplayLanguageId()),
             $this->getPricesInformation($product, $query->getShopConstraint()),
             $this->getOptions($product),
             $this->getDetails($product),
@@ -277,9 +269,8 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
      *
      * @return CategoriesInformation
      */
-    private function getCategoriesInformation(Product $product): CategoriesInformation
+    private function getCategoriesInformation(Product $product, LanguageId $languageId): CategoriesInformation
     {
-        $languageId = new LanguageId($this->contextLangId);
         $shopId = new ShopId($product->getShopId());
         $categoryIdValues = $product->getCategories();
         $defaultCategoryId = (int) $product->id_category_default;
@@ -293,7 +284,7 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
 
         $categoriesInformation = [];
         foreach ($categoryNames as $categoryId => $localizedNames) {
-            $categoryName = $categoryNames[$categoryId][$this->contextLangId];
+            $categoryName = $categoryNames[$categoryId][$languageId->getValue()];
             $displayName = $this->categoryDisplayNameBuilder->build(
                 new CategoryId($categoryId),
                 $categoryName,

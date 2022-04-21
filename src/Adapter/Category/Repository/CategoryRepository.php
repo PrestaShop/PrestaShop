@@ -146,6 +146,12 @@ class CategoryRepository extends AbstractObjectModelRepository
     }
 
     /**
+     * Provides category names which are not unique per shop and language.
+     *
+     * e.g. if certain shop contains following categories in english language:
+     *      Clothes -> Men, Bags -> Men, Clothes -> Woman, Bags -> Women,
+     *      then method should return ["Men", "Women"]
+     *
      * @param ShopId $shopId
      * @param LanguageId $languageId
      *
