@@ -357,17 +357,10 @@ export class ProgressModal extends Modal implements ProgressModalType {
     this.initListeners();
   }
 
-  public modalActionSuccess(doneCount: number)
+  public updateCount(doneCount: number)
   {
     this.updatePercentage(doneCount);
   }
-
-  public modalActionError(doneCount: number, error: string)
-  {
-    this.updatePercentage(doneCount);
-    this.addError(error);
-  }
-
   private updatePercentage(doneCount: number)
   {
     let progressBarDone = doneCount * 100 / this.total;
@@ -375,7 +368,7 @@ export class ProgressModal extends Modal implements ProgressModalType {
     this.progressModal.progressPercentage.innerHTML = progressBarDone+'%';
   }
 
-  private addError(error: string)
+  public addError(error: string)
   {
     this.errors.push(error);
     let errorContent = document.createElement('p');
@@ -413,6 +406,7 @@ export class ProgressModal extends Modal implements ProgressModalType {
     });
 
     this.progressModal.stopProcessingButton.addEventListener('click', () => {
+      console.log('cancel');
       this.cancelCallback();
     });
   }
