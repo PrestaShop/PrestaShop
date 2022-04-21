@@ -53,6 +53,13 @@ class DispatcherCore
      * @var array List of default routes
      */
     public $default_routes = [
+        'upload' => [
+            'controller' => 'upload',
+            'rule' => 'upload/{file}',
+            'keywords' => [
+                'file' => ['regexp' => '.+', 'param' => 'file'],
+            ],
+        ],
         'category_rule' => [
             'controller' => 'category',
             'rule' => '{id}-{rewrite}',

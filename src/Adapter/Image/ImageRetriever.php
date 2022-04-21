@@ -243,8 +243,8 @@ class ImageRetriever
      */
     public function getCustomizationImage($imageHash)
     {
-        $large_image_url = rtrim($this->link->getBaseLink(), '/') . '/upload/' . $imageHash;
-        $small_image_url = $large_image_url . '_small';
+        $large_image_url = $this->link->getPageLink('upload', null, null, ['file' => $imageHash]);
+        $small_image_url = $this->link->getPageLink('upload', null, null, ['file' => $imageHash . '_small']);
 
         $small = [
             'url' => $small_image_url,
