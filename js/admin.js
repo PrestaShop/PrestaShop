@@ -36,7 +36,7 @@ function str2url(str, encoding, ucfirst)
     str = str.replace(/[^a-z0-9\s\'\:\/\[\]-]\\u00A1-\\uFFFF/g,'');
    str = str.replace(/[\u00AC\uFFE2\u00AE\u2122\u00A9\u20AC\u0024\uFF04\uFE69\u00B0\u00B2\u00B3\u00B9\u02AF\u0670\u0711\u2121\u213B\u2207\u29B5\u2070\u2071\u2074-\u208E\u2090-\u209C\u17D2\u1D62-\u1D6A\u2A27]/g, '');
     /*List of replaced characters in the above line
-    * € ¬ ® ™ © $ ° ² ³ ¹ ʯ ٰ ܑ ℡ ℻ ∇ ⦵ 	⁰ ⁱ 	⁴ ₎ ₐ ₜ ្ ᵢ ᵪ ⨧
+    * € ¬ ® ™ © $ ° ² ³ ¹ ʯ ٰ ܑ ℡ ℻ ∇ ⦵ ⁰ ⁱ ⁴ ₎ ₐ ₜ ᵢ ᵪ ⨧
     *  */
   else
   {
