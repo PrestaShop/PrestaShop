@@ -56,6 +56,7 @@ admin_products_combinations_bulk_edit_combination:
     _legacy_controller: AdminProducts
   requirements:
     combinationId: \d+
+    productId: \d+
 
 admin_products_combinations_delete_combination:
   path: /combinations/{combinationId}/delete
