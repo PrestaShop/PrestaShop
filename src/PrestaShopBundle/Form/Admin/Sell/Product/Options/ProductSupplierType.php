@@ -40,6 +40,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\PositiveOrZero;
 use Symfony\Component\Validator\Constraints\Type;
 
 class ProductSupplierType extends TranslatorAwareType
@@ -104,6 +105,7 @@ class ProductSupplierType extends TranslatorAwareType
                 'constraints' => [
                     new NotBlank(),
                     new Type(['type' => 'float']),
+                    new PositiveOrZero(),
                 ],
                 'default_empty_data' => 0.0,
             ])
