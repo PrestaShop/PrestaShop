@@ -99,7 +99,7 @@ export default class CombinationsManager {
     this.combinationsService = new CombinationsService();
     this.paginatedCombinationsService = new PaginatedCombinationsService(productId);
     this.productAttributeGroups = [];
-    new BulkFormHandler();
+    new BulkFormHandler(productId);
 
     this.init();
   }

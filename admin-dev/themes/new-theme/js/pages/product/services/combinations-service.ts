@@ -76,10 +76,14 @@ export default class CombinationsService {
     });
   }
 
-  bulkUpdate(combinationId: number, formData: FormData): Promise<Response> {
+  bulkUpdate(productId: number, combinationId: number, formData: FormData): Promise<Response> {
     formData.append('_method', 'PATCH');
 
-    return fetch(this.router.generate('admin_products_combinations_bulk_edit_combination', {combinationId}), {
+    return fetch(this.router.generate('admin_products_combinations_bulk_edit_combination',
+      {
+        productId,
+        combinationId,
+      }), {
       method: 'POST',
       body: formData,
       headers: {
