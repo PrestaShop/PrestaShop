@@ -1895,7 +1895,7 @@ class OrderController extends FrameworkBundleAdminController
 
         return [
             ProductSearchEmptyPhraseException::class => $this->trans(
-                'Product search phrase must be a not empty string.',
+                'Product search phrase must not be an empty string.',
                 'Admin.Orderscustomers.Notification'
             ),
             CannotEditDeliveredOrderProductException::class => $this->trans(
