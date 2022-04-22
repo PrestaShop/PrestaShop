@@ -1179,6 +1179,8 @@ class ProductController extends FrameworkBundleAdminController
      * @param int $productId
      *
      * @return JsonResponse
+     *
+     * @todo: move/copy this action to product V2 controller
      */
     public function toggleStatusAction($productId)
     {
