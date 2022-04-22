@@ -145,7 +145,7 @@ export default class PositionExtension {
         const position = $positionWrapper.data('position');
         const id = `row_${rowId}_${position}`;
         $positionWrapper.closest('tr').attr('id', id);
-        $positionWrapper.closest('td').addClass(GridMap.dragHandler);
+        $positionWrapper.closest('td').addClass(GridMap.dragHandlerClass);
         $positionWrapper.closest('tr').data('dragAndDropOffset', counter);
 
         counter += 1;
