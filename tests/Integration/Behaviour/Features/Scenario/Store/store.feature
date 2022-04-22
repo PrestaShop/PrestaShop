@@ -56,90 +56,106 @@ Feature: Store
 
   Scenario: Toggle existing store
     Given the store "store1" should have status enabled
-      When I toggle "store1"
-      Then the store "store1" should have status disabled
-      When I toggle "store1"
-      Then the store "store1" should have status enabled
+    When I toggle "store1"
+    Then the store "store1" should have status disabled
+    When I toggle "store1"
+    Then the store "store1" should have status enabled
 
   Scenario: Enabling and disabling multiple stores in bulk action
-    When I add new store "StorePau" with following properties:
-      | name      | StorePau               |
-      | enabled   | true                   |
-      | address1  | 1 rue de la republique |
-      | city      | Pau                    |
-      | latitude  | 43.2951                |
-      | longitude | -0.370797              |
-      | country   | France                 |
-    And I add new store "StoreSerresCastet" with following properties:
-      | name      | StoreSerresCastet      |
-      | enabled   | true                   |
-      | address1  | 1 rue de la foire      |
-      | city      | Serres-Castet          |
-      | latitude  | 43.2951                |
-      | longitude | -0.370797              |
-      | country   | France                 |
-    And I add new store "StoreBuros" with following properties:
-      | name      | StoreBuros             |
-      | enabled   | true                   |
-      | address1  | 1 chemin de carrere    |
-      | city      | Buros                  |
-      | latitude  | 43.2951                |
-      | longitude | -0.370797              |
-      | country   | France                 |
+    When I add new store "StorePau" with the following details:
+      | name[en-US]     | StorePau               |
+      | enabled         | true                   |
+      | address1[en-US] | 1 rue de la republique |
+      | city            | Pau                    |
+      | postcode        | 64000                  |
+      | shops           | [shop1]                |
+      | latitude        | 43.2951                |
+      | longitude       | -0.370797              |
+      | country         | France                 |
+    And I add new store "StoreSerresCastet" with the following details:
+      | name[en-US]     | StoreSerresCastet |
+      | enabled         | true              |
+      | address1[en-US] | 1 rue de la foire |
+      | city            | Serres-Castet     |
+      | postcode        | 64121             |
+      | shops           | [shop1]           |
+      | latitude        | 43.2951           |
+      | longitude       | -0.370797         |
+      | country         | France            |
+    And I add new store "StoreBuros" with the following details:
+      | name[en-US]     | StoreBuros          |
+      | enabled         | true                |
+      | address1[en-US] | 1 chemin de carrere |
+      | city            | Buros               |
+      | postcode        | 64160               |
+      | shops           | [shop1]             |
+      | latitude        | 43.2951             |
+      | longitude       | -0.370797           |
+      | country         | France              |
     Then stores "StorePau, StoreSerresCastet, StoreBuros" should be enabled
     When I disable multiple stores "StorePau, StoreSerresCastet" using bulk action
     Then stores "StorePau, StoreSerresCastet" should be disabled
     Then stores "StoreBuros" should be enabled
     When I enable multiple stores "StorePau, StoreSerresCastet" using bulk action
     Then stores "StorePau, StoreSerresCastet, StoreBuros" should be enabled
-    
+
   Scenario: Delete stores
-    When I add new store "StorePau" with following properties:
-      | name      | StorePau               |
-      | enabled   | true                   |
-      | address1  | 1 rue de la republique |
-      | city      | Pau                    |
-      | latitude  | 43.2951                |
-      | longitude | -0.370797              |
-      | country   | France                 |
-    And I add new store "StoreSerresCastet" with following properties:
-      | name      | StoreSerresCastet      |
-      | enabled   | true                   |
-      | address1  | 1 rue de la foire      |
-      | city      | Serres-Castet          |
-      | latitude  | 43.2951                |
-      | longitude | -0.370797              |
-      | country   | France                 |
+    When I add new store "StorePau" with the following details:
+      | name[en-US]     | StorePau               |
+      | enabled         | true                   |
+      | address1[en-US] | 1 rue de la republique |
+      | city            | Pau                    |
+      | postcode        | 64000                  |
+      | shops           | [shop1]                |
+      | latitude        | 43.2951                |
+      | longitude       | -0.370797              |
+      | country         | France                 |
+    And I add new store "StoreSerresCastet" with the following details:
+      | name[en-US]     | StoreSerresCastet |
+      | enabled         | true              |
+      | address1[en-US] | 1 rue de la foire |
+      | city            | Serres-Castet     |
+      | postcode        | 64121             |
+      | shops           | [shop1]           |
+      | latitude        | 43.2951           |
+      | longitude       | -0.370797         |
+      | country         | France            |
     And stores "StorePau, StoreSerresCastet" should exist
     When I delete store "StorePau"
     Then stores "StorePau" should be deleted
     And stores "StoreSerresCastet" should exist
-  
+
   Scenario: Delete multiple stores
-    When I add new store "StorePau" with following properties:
-      | name      | StorePau               |
-      | enabled   | true                   |
-      | address1  | 1 rue de la republique |
-      | city      | Pau                    |
-      | latitude  | 43.2951                |
-      | longitude | -0.370797              |
-      | country   | France                 |
-    And I add new store "StoreSerresCastet" with following properties:
-      | name      | StoreSerresCastet      |
-      | enabled   | true                   |
-      | address1  | 1 rue de la foire      |
-      | city      | Serres-Castet          |
-      | latitude  | 43.2951                |
-      | longitude | -0.370797              |
-      | country   | France                 |
-    And I add new store "StoreBuros" with following properties:
-      | name      | StoreBuros             |
-      | enabled   | true                   |
-      | address1  | 1 chemin de carrere    |
-      | city      | Buros                  |
-      | latitude  | 43.2951                |
-      | longitude | -0.370797              |
-      | country   | France                 |
+    When I add new store "StorePau" with the following details:
+      | name[en-US]     | StorePau               |
+      | enabled         | true                   |
+      | address1[en-US] | 1 rue de la republique |
+      | city            | Pau                    |
+      | postcode        | 64000                  |
+      | shops           | [shop1]                |
+      | latitude        | 43.2951                |
+      | longitude       | -0.370797              |
+      | country         | France                 |
+    And I add new store "StoreSerresCastet" with the following details:
+      | name[en-US]     | StoreSerresCastet |
+      | enabled         | true              |
+      | address1[en-US] | 1 rue de la foire |
+      | city            | Serres-Castet     |
+      | postcode        | 64121             |
+      | shops           | [shop1]           |
+      | latitude        | 43.2951           |
+      | longitude       | -0.370797         |
+      | country         | France            |
+    And I add new store "StoreBuros" with the following details:
+      | name[en-US]     | StoreBuros          |
+      | enabled         | true                |
+      | address1[en-US] | 1 chemin de carrere |
+      | city            | Buros               |
+      | postcode        | 64160               |
+      | shops           | [shop1]             |
+      | latitude        | 43.2951             |
+      | longitude       | -0.370797           |
+      | country         | France              |
     And stores "StorePau, StoreSerresCastet, StoreBuros" should exist
     When I delete stores "StorePau, StoreBuros" using bulk action
     Then stores "StorePau, StoreBuros" should be deleted

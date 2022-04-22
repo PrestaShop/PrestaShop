@@ -250,7 +250,7 @@ class AddStoreCommand
         return $this;
     }
 
-    public function getEmail(): Email
+    public function getEmail(): ?Email
     {
         return $this->email;
     }

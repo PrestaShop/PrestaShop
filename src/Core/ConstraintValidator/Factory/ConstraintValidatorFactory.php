@@ -30,33 +30,13 @@ namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Factory;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\CleanHtmlValidator;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
-use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
-use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
 use Symfony\Component\Validator\Constraint;
-use Symfony\Component\Validator\ConstraintValidatorFactory;
+use Symfony\Component\Validator\ConstraintValidatorFactory as BaseConstraintValidatorFactory;
 use Symfony\Component\Validator\ConstraintValidatorFactoryInterface;
 use Symfony\Component\Validator\ConstraintValidatorInterface;
 
-class TypedRegexValidatorFactory extends ConstraintValidatorFactory implements ConstraintValidatorFactoryInterface
+class ConstraintValidatorFactory extends BaseConstraintValidatorFactory implements ConstraintValidatorFactoryInterface
 {
-    /**
-     * @var CharacterCleaner
-     */
-    private $characterCleaner;
-
-    /**
-     * CustomerNameValidatorFactory constructor.
-     *
-     * @param CharacterCleaner $characterCleaner
-     */
-    public function __construct(CharacterCleaner $characterCleaner)
-    {
-        parent::__construct();
-
-        $this->characterCleaner = $characterCleaner;
-    }
-
     /**
      * @param Constraint $constraint
      *
@@ -64,9 +44,6 @@ class TypedRegexValidatorFactory extends ConstraintValidatorFactory implements C
      */
     public function getInstance(Constraint $constraint)
     {
-        if ($constraint instanceof TypedRegex) {
-            return new TypedRegexValidator($this->characterCleaner);
-        }
         if ($constraint instanceof CleanHtml) {
             return new CleanHtmlValidator(false);
         }
