@@ -122,3 +122,6 @@ jobs:
         run: ./vendor/phpunit/phpunit/phpunit -c tests/Unit/phpunit.xml
         env:
           SYMFONY_DEPRECATIONS_HELPER: disabled
+
+      - name: Test git versionned files unchanged
+        run: git diff --exit-code
