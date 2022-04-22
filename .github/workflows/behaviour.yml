@@ -68,3 +68,6 @@ jobs:
         run: composer run-script integration-behaviour-tests --timeout=0
         env:
           SYMFONY_DEPRECATIONS_HELPER: disabled
+
+      - name: Test git versionned files unchanged
+        run: git diff --exit-code
