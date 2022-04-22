@@ -75,7 +75,7 @@ $(() => {
   if (productType === ProductConst.PRODUCT_TYPE.COMBINATIONS) {
     // Combinations manager must be initialized BEFORE nav handler, or it won't trigger the pagination if the tab is
     // selected on load
-    new CombinationsManager(productId);
+    new CombinationsManager(productId, productFormModel);
   }
 
   new NavbarHandler($(ProductMap.navigationBar));

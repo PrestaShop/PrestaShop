@@ -23,10 +23,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import ComponentsMap from '@components/components-map';
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
 import {EventEmitter} from 'events';
+import ProductFormModel from '@pages/product/edit/product-form-model';
+import BigNumber from 'bignumber.js';
+
+import ChangeEvent = JQuery.ChangeEvent;
 
 const {$} = window;
 
@@ -46,16 +49,24 @@ export default class CombinationsGridRenderer {
 
   prototypeName: string;
 
-  /**
-   * @returns {{render: (function(*=): void)}}
-   */
-  constructor() {
+  productFormModel: ProductFormModel;
+
+  constructor(productFormModel: ProductFormModel) {
+    this.productFormModel = productFormModel;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.$combinationsTable = $(ProductMap.combinations.combinationsTable);
     this.$combinationsTableBody = $(ProductMap.combinations.combinationsTableBody);
     this.$loadingSpinner = $(ProductMap.combinations.loadingSpinner);
     this.prototypeTemplate = this.$combinationsTable.data('prototype');
     this.prototypeName = this.$combinationsTable.data('prototypeName');
+
+    this.$combinationsTable.on('change', ProductMap.combinations.list.priceImpactTaxExcluded, (event: ChangeEvent) => {
+      this.updateByPriceImpactTaxExcluded($(event.currentTarget));
+    });
+
+    this.$combinationsTable.on('change', ProductMap.combinations.list.priceImpactTaxIncluded, (event: ChangeEvent) => {
+      this.updateByPriceImpactTaxIncluded($(event.currentTarget));
+    });
   }
 
   /**
@@ -83,59 +94,99 @@ export default class CombinationsGridRenderer {
 
     let rowIndex = 0;
     combinations.forEach((combination: Record<string, any>) => {
-      const $row = $(this.getPrototypeRow(rowIndex));
+      const $row = $(this.getPrototypeRow(rowIndex, combination));
 
-      // fill inputs
-      const $combinationCheckbox = $(ProductMap.combinations.tableRow.combinationCheckbox(rowIndex), $row);
-      const $combinationIdInput = $(ProductMap.combinations.tableRow.combinationIdInput(rowIndex), $row);
-      const $combinationNameInput = $(ProductMap.combinations.tableRow.combinationNameInput(rowIndex), $row);
-      const $quantityInput = $(ProductMap.combinations.tableRow.quantityInput(rowIndex), $row);
-      const $impactOnPriceInput = $(ProductMap.combinations.tableRow.impactOnPriceInput(rowIndex), $row);
-      const $deltaQuantityContainer = $(ProductMap.combinations.tableRow.deltaQuantityWrapper, $row);
-      const $referenceInput = $(ProductMap.combinations.tableRow.referenceInput(rowIndex), $row);
-      // @todo final price should be calculated based on price impact and product price,
-      //    so it doesnt need to be in api response
-      const $finalPriceInput = $(ProductMap.combinations.tableRow.finalPriceTeInput(rowIndex), $row);
-      $combinationIdInput.val(combination.id);
-      $combinationCheckbox.val(combination.id);
-      $combinationNameInput.val(combination.name);
-      // This adds the ID in the checkbox label
-      $combinationCheckbox.closest('label').append(combination.id);
-      // This adds a text after the cell children (do not use text which replaces everything)
-      $combinationNameInput.closest('td').append(combination.name);
-      $finalPriceInput.closest('td').append(combination.finalPriceTe);
-      $referenceInput.val(combination.reference);
-      $referenceInput.data('initial-value', combination.reference);
-      $quantityInput.val(combination.quantity);
-      $quantityInput.data('initial-value', combination.quantity);
-      $quantityInput.find(ComponentsMap.deltaQuantityInput.initialQuantityPreviewSelector).text(combination.quantity);
-      $deltaQuantityContainer.data('initial-quantity', combination.quantity);
-      $impactOnPriceInput.val(combination.impactOnPrice);
-      $impactOnPriceInput.data('initial-value', combination.impactOnPrice);
-      $(ProductMap.combinations.tableRow.editButton(rowIndex), $row).data('id', combination.id);
-      $(ProductMap.combinations.tableRow.deleteButton(rowIndex), $row).data('id', combination.id);
-      $(ProductMap.combinations.tableRow.combinationImg, $row)
-        .attr('src', combination.imageUrl)
-        .attr('alt', combination.name);
+      $(':input', $row).each((index, input) => {
+        const $input = $(input);
+
+        if ($input.val()) {
+          // @ts-ignore
+          $input.data('initialValue', $input.val());
+        }
+      });
 
       if (combination.isDefault) {
         $(ProductMap.combinations.tableRow.isDefaultInput(rowIndex), $row).prop('checked', true);
       }
 
+      this.updateByPriceImpactTaxExcluded($(ProductMap.combinations.list.priceImpactTaxExcluded, $row));
+
       this.$combinationsTableBody.append($row);
       rowIndex += 1;
     });
+
     this.eventEmitter.emit(ProductEventMap.combinations.listRendered);
   }
 
-  /**
-   * @param {Number} rowIndex
-   *
-   * @returns {String}
-   *
-   * @private
-   */
-  private getPrototypeRow(rowIndex: number): string {
-    return this.prototypeTemplate.replace(new RegExp(this.prototypeName, 'g'), rowIndex.toString());
+  private getPrototypeRow(rowIndex: number, combination: Record<string, any>): string {
+    let rowTemplate: string = this.prototypeTemplate.replace(new RegExp(this.prototypeName, 'g'), rowIndex.toString());
+    Object.keys(combination).forEach((field: string) => {
+      if (typeof combination[field] === 'boolean') {
+        rowTemplate = rowTemplate.replace(new RegExp(`__${field}__`, 'g'), (combination[field] ? '1' : '0'));
+      } else {
+        rowTemplate = rowTemplate.replace(new RegExp(`__${field}__`, 'g'), combination[field]);
+      }
+    });
+
+    return rowTemplate;
+  }
+
+  private updateByPriceImpactTaxExcluded($priceImpactTaxExcluded: JQuery): void {
+    const $row = $priceImpactTaxExcluded.parents(ProductMap.combinations.list.combinationRow);
+    const $priceImpactTaxIncluded = $(ProductMap.combinations.list.priceImpactTaxIncluded, $row);
+
+    if (typeof $row === 'undefined' || typeof $priceImpactTaxIncluded === 'undefined') {
+      return;
+    }
+
+    // @ts-ignore
+    const priceImpactTaxExcluded: BigNumber = new BigNumber($priceImpactTaxExcluded.val());
+
+    if (priceImpactTaxExcluded.isNaN()) {
+      return;
+    }
+
+    $priceImpactTaxIncluded.val(this.productFormModel.addTax(priceImpactTaxExcluded));
+    this.updateFinalPrice(priceImpactTaxExcluded, $row);
+  }
+
+  private updateByPriceImpactTaxIncluded($priceImpactTaxIncluded: JQuery): void {
+    const $row = $priceImpactTaxIncluded.parents(ProductMap.combinations.list.combinationRow);
+    const $priceImpactTaxExcluded = $(ProductMap.combinations.list.priceImpactTaxExcluded, $row);
+
+    if (typeof $row === 'undefined' || typeof $priceImpactTaxExcluded === 'undefined') {
+      return;
+    }
+
+    // @ts-ignore
+    const priceImpactTaxIncluded: BigNumber = new BigNumber($priceImpactTaxIncluded.val());
+
+    if (priceImpactTaxIncluded.isNaN()) {
+      return;
+    }
+
+    $priceImpactTaxExcluded.val(this.productFormModel.removeTax(priceImpactTaxIncluded));
+    const taxRatio = this.productFormModel.getTaxRatio();
+
+    if (taxRatio.isNaN()) {
+      return;
+    }
+
+    this.updateFinalPrice(priceImpactTaxIncluded.dividedBy(taxRatio), $row);
+  }
+
+  private updateFinalPrice(priceImpactTaxExcluded: BigNumber, $row: JQuery) {
+    const productPrice = this.productFormModel.getPriceTaxExcluded();
+    const $finalPrice = $(ProductMap.combinations.list.finalPrice, $row);
+    const $finalPricePreview = $finalPrice.siblings(ProductMap.combinations.list.finalPricePreview);
+    const finalPrice = this.productFormModel.displayPrice(productPrice.plus(priceImpactTaxExcluded));
+
+    if (typeof $finalPrice !== 'undefined') {
+      $finalPrice.val(finalPrice);
+    }
+
+    if (typeof $finalPricePreview !== 'undefined') {
+      $finalPricePreview.html(finalPrice);
+    }
   }
 }

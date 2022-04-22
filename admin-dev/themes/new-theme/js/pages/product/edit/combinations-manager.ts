@@ -27,7 +27,6 @@ import ProductMap from '@pages/product/product-map';
 import CombinationsGridRenderer from '@pages/product/edit/combinations-grid-renderer';
 import CombinationsService from '@pages/product/services/combinations-service';
 import DynamicPaginator from '@components/pagination/dynamic-paginator';
-import SubmittableInput from '@components/form/submittable-input';
 import ProductEventMap from '@pages/product/product-event-map';
 import initCombinationModal from '@pages/product/components/combination-modal';
 import initFilters from '@pages/product/components/filters';
@@ -35,11 +34,11 @@ import ConfirmModal from '@components/modal';
 import {EventEmitter} from 'events';
 import initCombinationGenerator from '@pages/product/components/generator';
 import {getProductAttributeGroups} from '@pages/product/services/attribute-groups';
-import SubmittableDeltaQuantityInput from '@components/form/submittable-delta-quantity-input';
 import BulkFormHandler from '@pages/product/combination/bulk-form-handler';
 import PaginatedCombinationsService from '@pages/product/services/paginated-combinations-service';
 import BulkDeleteHandler from '@pages/product/combination/bulk-delete-handler';
 import BulkChoicesSelector from '@pages/product/combination/bulk-choices-selector';
+import ProductFormModel from '@pages/product/edit/product-form-model';
 
 const {$} = window;
 const CombinationEvents = ProductEventMap.combinations;
@@ -80,12 +79,11 @@ export default class CombinationsManager {
 
   productAttributeGroups: Array<Record<string, any>>;
 
-  /**
-   * @param {int} productId
-   * @returns {{}}
-   */
-  constructor(productId: number) {
+  productFormModel: ProductFormModel;
+
+  constructor(productId: number, productFormModel: ProductFormModel) {
     this.productId = productId;
+    this.productFormModel = productFormModel;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.$productForm = $(ProductMap.productForm);
     this.$combinationsContainer = $(CombinationsMap.combinationsListContainer);
@@ -214,26 +212,13 @@ export default class CombinationsManager {
    * @private
    */
   private initPaginatedList(): void {
-    this.combinationsRenderer = new CombinationsGridRenderer();
+    this.combinationsRenderer = new CombinationsGridRenderer(this.productFormModel);
     // Initial page is zero, we will load the first page after several other init functions
     this.paginator = new DynamicPaginator(
       CombinationsMap.paginationContainer,
       this.paginatedCombinationsService,
       this.combinationsRenderer,
       0,
-    );
-
-    this.initSubmittableInputs();
-
-    this.$combinationsContainer.on(
-      'change',
-      CombinationsMap.isDefaultInputsSelector,
-      async (e) => {
-        if (!e.currentTarget.checked) {
-          return;
-        }
-        await this.updateDefaultCombination(e.currentTarget);
-      },
     );
 
     this.$combinationsContainer.on(
@@ -288,48 +273,6 @@ export default class CombinationsManager {
     });
 
     this.eventEmitter.on(CombinationEvents.bulkUpdateFinished, () => this.refreshPage());
-  }
-
-  private initSubmittableInputs() {
-    const combinationToken = this.getCombinationToken();
-    const {impactOnPriceKey, referenceKey, tokenKey, deltaQuantityKey} = CombinationsMap.combinationItemForm;
-
-    new SubmittableInput({
-      wrapperSelector: CombinationsMap.impactOnPriceInputWrapper,
-      submitCallback: input =>
-        this.combinationsService.updateListedCombination(
-          this.findCombinationId(input),
-          {
-            [impactOnPriceKey]: input.value,
-            [tokenKey]: combinationToken
-          }
-        )
-    });
-
-    new SubmittableInput({
-        wrapperSelector: CombinationsMap.referenceInputWrapper,
-        submitCallback: input =>
-          this.combinationsService.updateListedCombination(
-            this.findCombinationId(input),
-            {
-              [referenceKey]: input.value,
-              [tokenKey]: combinationToken
-            }
-          )
-      },
-    );
-
-    new SubmittableDeltaQuantityInput({
-      submittableWrapperSelector: CombinationsMap.tableRow.deltaQuantityWrapper,
-      submitCallback: input => this.combinationsService.updateListedCombination(
-        this.findCombinationId(input),
-        {
-          [deltaQuantityKey]: input.value,
-          [tokenKey]: combinationToken,
-        },
-      ),
-      containerSelector: `${CombinationsMap.combinationsListContainer} ${CombinationsMap.tableRow.deltaQuantityWrapper}`,
-    });
   }
 
   /**
@@ -421,29 +364,6 @@ export default class CombinationsManager {
         : error;
       $.growl.error({message: errorMessage});
     }
-  }
-
-  /**
-   * @param {HTMLElement} checkedInput
-   *
-   * @private
-   */
-  private async updateDefaultCombination(checkedInput: HTMLInputElement): Promise<void> {
-    const checkedInputs = this.$combinationsContainer.find(
-      `${CombinationsMap.isDefaultInputsSelector}:checked`,
-    );
-    const checkedDefaultId = this.findCombinationId(checkedInput);
-
-    await this.combinationsService.updateListedCombination(checkedDefaultId, {
-      [CombinationsMap.combinationItemForm.isDefaultKey]: checkedInput.value,
-      [CombinationsMap.combinationItemForm.tokenKey]: this.getCombinationToken(),
-    });
-
-    $.each(checkedInputs, (index, input) => {
-      if (this.findCombinationId(input) !== checkedDefaultId) {
-        $(input).prop('checked', false);
-      }
-    });
   }
 
   private getCombinationToken(): string {
