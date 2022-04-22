@@ -243,9 +243,9 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
         $productIdValue = $productId->getValue();
 
         $deleteQb = $this->connection->createQueryBuilder();
-        $deleteQb->delete($this->dbPrefix . 'product_carrier', 'pc')
-            ->where('pc.id_product = :productId')
-            ->andWhere($deleteQb->expr()->in('pc.id_shop', ':shopIds'))
+        $deleteQb->delete($this->dbPrefix . 'product_carrier')
+            ->where('id_product = :productId')
+            ->andWhere($deleteQb->expr()->in('id_shop', ':shopIds'))
             ->setParameter('productId', $productIdValue)
             ->setParameter('shopIds', $shopIds, Connection::PARAM_INT_ARRAY)
             ->execute()
