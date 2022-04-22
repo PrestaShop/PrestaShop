@@ -86,25 +86,25 @@ class ProductIndexationUpdater
             return;
         }
 
-        $this->contextStateManager->setShopContext($shopConstraint);
-
         if ($this->isVisibleOnSearch($product)) {
-            $this->updateProductIndexes((int) $product->id);
+            $this->updateProductIndexes((int) $product->id, $shopConstraint);
         } else {
-            $this->removeProductIndexes((int) $product->id);
+            $this->removeProductIndexes((int) $product->id, $shopConstraint);
         }
-
-        $this->contextStateManager->restorePreviousContext();
     }
 
     /**
      * @param int $productId
+     * @param ShopConstraint $shopConstraint
      *
      * @throws CannotUpdateProductException
      * @throws CoreException
      */
-    private function updateProductIndexes(int $productId): void
+    private function updateProductIndexes(int $productId, ShopConstraint $shopConstraint): void
     {
+        $this->contextStateManager->saveCurrentContext();
+        $this->contextStateManager->setShopContext($shopConstraint);
+
         try {
             if (!Search::indexation(false, $productId)) {
                 throw new CannotUpdateProductException(
@@ -125,11 +125,15 @@ class ProductIndexationUpdater
 
     /**
      * @param int $productId
+     * @param ShopConstraint $shopConstraint
      *
      * @throws CoreException
      */
-    private function removeProductIndexes(int $productId): void
+    private function removeProductIndexes(int $productId, ShopConstraint $shopConstraint): void
     {
+        $this->contextStateManager->saveCurrentContext();
+        $this->contextStateManager->setShopContext($shopConstraint);
+
         try {
             Search::removeProductsSearchIndex([$productId]);
         } catch (PrestaShopException $e) {

@@ -54,6 +54,7 @@ final class ContextStateManager
     private const FIELD_CUSTOMER = 'customer';
     private const FIELD_SHOP = 'shop';
     private const FIELD_SHOP_CONTEXT = 'shopContext';
+    private const FIELD_SHOP_GROUP_ID = 'shopGroupId';
 
     private const MANAGED_FIELDS = [
         self::FIELD_CART,
@@ -63,6 +64,7 @@ final class ContextStateManager
         self::FIELD_CUSTOMER,
         self::FIELD_SHOP,
         self::FIELD_SHOP_CONTEXT,
+        self::FIELD_SHOP_GROUP_ID,
     ];
 
     /**
@@ -285,8 +287,9 @@ final class ContextStateManager
         if (!array_key_exists($fieldName, $this->contextFieldsStack[$currentStashIndex])) {
             switch ($fieldName) {
                 case self::FIELD_SHOP:
-                    $this->contextFieldsStack[$currentStashIndex][self::FIELD_SHOP] = $this->getContext()->$fieldName;
+                    $this->contextFieldsStack[$currentStashIndex][self::FIELD_SHOP] = $this->getContext()->shop;
                     $this->contextFieldsStack[$currentStashIndex][self::FIELD_SHOP_CONTEXT] = Shop::getContext();
+                    $this->contextFieldsStack[$currentStashIndex][self::FIELD_SHOP_GROUP_ID] = Shop::getContextShopGroupID();
                     break;
                 default:
                     $this->contextFieldsStack[$currentStashIndex][$fieldName] = $this->getContext()->$fieldName;
@@ -340,11 +343,23 @@ final class ContextStateManager
     {
         $shop = $this->contextFieldsStack[$currentStashIndex][self::FIELD_SHOP];
         $shopId = $shop instanceof Shop ? $shop->id : null;
+        $shopGroupId = $this->contextFieldsStack[$currentStashIndex][self::FIELD_SHOP_GROUP_ID];
         $shopContext = $this->contextFieldsStack[$currentStashIndex][self::FIELD_SHOP_CONTEXT];
-        if (null !== $shopContext) {
-            Shop::setContext($shopContext, $shopId);
+
+        switch ($shopContext) {
+            case Shop::CONTEXT_SHOP:
+                Shop::setContext($shopContext, $shopId);
+                break;
+            case Shop::CONTEXT_GROUP:
+                Shop::setContext($shopContext, $shopGroupId);
+                break;
+            case Shop::CONTEXT_ALL:
+                Shop::setContext($shopContext);
+                break;
         }
-        unset($this->contextFieldsStack[$currentStashIndex]['shopContext']);
+
+        unset($this->contextFieldsStack[$currentStashIndex][self::FIELD_SHOP_GROUP_ID]);
+        unset($this->contextFieldsStack[$currentStashIndex][self::FIELD_SHOP_CONTEXT]);
     }
 
     /**
