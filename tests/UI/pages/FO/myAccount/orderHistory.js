@@ -81,6 +81,18 @@ class OrderHistory extends FOBasePage {
   }
 
   /**
+   * Is invoice visible on order history table row
+   * @param page {Page} Browser tab
+   * @param orderRow {number} Row number in orders table
+   * @param orderId {number} The id of the order
+   * @returns {Promise<boolean>}
+   */
+  isInvoiceVisible(page, orderRow = 1, orderId) {
+    return this.elementVisible(page, `${this.orderTableColumn(orderRow, 6)}`
+      + ` a[href*="pdf-invoice&id_order=${orderId}"]`);
+  }
+
+  /**
    * Go to details page from order history page
    * @param page {Page} Browser tab
    * @param orderRow {Number} row in orders table

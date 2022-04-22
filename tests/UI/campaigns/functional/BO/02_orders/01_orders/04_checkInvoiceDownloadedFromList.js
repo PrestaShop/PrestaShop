@@ -34,6 +34,7 @@ const {expect} = require('chai');
 let browserContext;
 let page;
 let filePath;
+let orderId;
 
 const orderByCustomerData = {
   customer: DefaultCustomer,
@@ -83,11 +84,24 @@ describe('BO - orders : Check invoice downloaded from list', async () => {
       await expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
+    it('should reset filter on orders table and get the last order ID', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilter', baseContext);
+
+      await ordersPage.resetFilter(page);
+
+      orderId = await ordersPage.getTextColumn(page, 'id_order', 1);
+      await expect(orderId).to.be.at.least(1);
+    });
+
     it(`should update order status to '${Statuses.paymentAccepted.status}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
       const textResult = await ordersPage.setOrderStatus(page, 1, Statuses.paymentAccepted);
       await expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
+    });
+
+    it('should check that the status is updated successfully', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkStatus', baseContext);
 
       const orderStatus = await ordersPage.getTextColumn(page, 'osname', 1);
       await expect(orderStatus, 'Order status was not updated').to.equal(Statuses.paymentAccepted.status);
@@ -97,8 +111,9 @@ describe('BO - orders : Check invoice downloaded from list', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'downloadInvoice', baseContext);
 
       filePath = await ordersPage.downloadInvoice(page, 1);
+
       const doesFileExist = await files.doesFileExist(filePath, 5000);
-      await expect(doesFileExist).to.be.true;
+      await expect(doesFileExist, 'The file is not existing!').to.be.true;
     });
 
     it('should check invoice pdf text', async function () {
@@ -166,6 +181,13 @@ describe('BO - orders : Check invoice downloaded from list', async () => {
 
       const orderStatusFO = await foOrderHistoryPage.getOrderStatus(page, 1);
       await expect(orderStatusFO, 'Order status is not correct').to.equal(Statuses.paymentAccepted.status);
+    });
+
+    it('should check last invoice', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkLastInvoice', baseContext);
+
+      const isVisible = await foOrderHistoryPage.isInvoiceVisible(page, 1, orderId);
+      await expect(isVisible, 'The invoice file is not existing!').to.be.true;
     });
   });
 });
