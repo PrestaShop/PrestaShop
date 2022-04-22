@@ -50,7 +50,7 @@ Scenario:
 - Go to BO orders page and change order status to 'payment accepted'
 - Check invoice creation
 - Download invoice from list and check pdf text
-- Go to FO and check the new order status
+- Go to FO and check the new order status and the invoice
  */
 describe('BO - orders : Check invoice downloaded from list', async () => {
   // Pre-condition: Create order in FO
