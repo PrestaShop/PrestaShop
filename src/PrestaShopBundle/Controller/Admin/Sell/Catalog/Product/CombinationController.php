@@ -439,14 +439,14 @@ class CombinationController extends FrameworkBundleAdminController
         $fallbackImageUrl = $this->getFallbackImageUrl();
         foreach ($combinationListForEditing->getCombinations() as $combination) {
             $data['combinations'][] = [
-                'id' => $combination->getCombinationId(),
-                'isSelected' => false,
+                'combination_id' => $combination->getCombinationId(),
+                'is_selected' => false,
                 'name' => $combination->getCombinationName(),
                 'reference' => $combination->getReference(),
-                'impactOnPrice' => (string) $combination->getImpactOnPrice(),
+                'impact_on_price_te' => (string) $combination->getImpactOnPrice(),
                 'quantity' => $combination->getQuantity(),
-                'isDefault' => $combination->isDefault(),
-                'imageUrl' => $combination->getImageUrl() ?: $fallbackImageUrl,
+                'is_default' => $combination->isDefault(),
+                'image_url' => $combination->getImageUrl() ?: $fallbackImageUrl,
             ];
         }
 
