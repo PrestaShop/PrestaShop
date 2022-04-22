@@ -28,6 +28,27 @@
 {% block content %}
     {% if isSingleShopContext %}
       <div class="row">
+        <div class="col-md-3 order-first order-md-last">
+          <div class="card" id="modules-position-selection-panel">
+            <h3 class="card-header">
+              <i class="material-icons">check</i>
+              {{ 'Selection' | trans({}, 'Admin.Global') }}</h3>
+            <div class="card-body">
+              <p>
+                <span id="modules-position-single-selection">{{ '1 module selected' | trans }}</span>
+                <span id="modules-position-multiple-selection">
+                  <span id="modules-position-selection-count"></span>
+                  {{ 'modules selected' | trans({}, 'Admin.Design.Feature') }}
+                </span>
+              </p>
+              <div>
+                <button class="btn btn-primary">
+                  <i class="icon-remove"></i>
+                  {{ 'Unhook the selection' | trans }}</button>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="col-md-9 order-md-first">
           <div class="card card-body">
             <div class="card bg-light p-3">
@@ -208,27 +229,6 @@
                 </button>
               </div>
             </form>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="card" id="modules-position-selection-panel">
-            <h3 class="card-header">
-              <i class="material-icons">check</i>
-              {{ 'Selection' | trans({}, 'Admin.Global') }}</h3>
-            <div class="card-body">
-              <p>
-                <span id="modules-position-single-selection">{{ '1 module selected' | trans }}</span>
-                <span id="modules-position-multiple-selection">
-                  <span id="modules-position-selection-count"></span>
-                  {{ 'modules selected' | trans({}, 'Admin.Design.Feature') }}
-                </span>
-              </p>
-              <div>
-                <button class="btn btn-primary">
-                  <i class="icon-remove"></i>
-                  {{ 'Unhook the selection' | trans }}</button>
-              </div>
-            </div>
           </div>
         </div>
       </div>

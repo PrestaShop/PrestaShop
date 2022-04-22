@@ -702,6 +702,7 @@ form#importDropzone {
 
 #modules-position-selection-panel {
   position: relative;
+  z-index: 1;
   display: none;
 
   .btn {
