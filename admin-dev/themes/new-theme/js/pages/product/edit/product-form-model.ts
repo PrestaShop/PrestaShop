@@ -28,6 +28,7 @@ import {EventEmitter} from 'events';
 import FormObjectMapper, {FormUpdateEvent} from '@components/form/form-object-mapper';
 import ProductFormMapping from '@pages/product/edit/product-form-mapping';
 import ProductEventMap from '@pages/product/product-event-map';
+import {NumberFormatter} from '@app/cldr';
 
 export default class ProductFormModel {
   eventEmitter: EventEmitter;
@@ -35,6 +36,8 @@ export default class ProductFormModel {
   mapper: FormObjectMapper;
 
   precision: number;
+
+  numberFormatter: NumberFormatter;
 
   constructor($form: JQuery, eventEmitter: EventEmitter) {
     this.eventEmitter = eventEmitter;
@@ -56,6 +59,8 @@ export default class ProductFormModel {
     const $priceTaxExcludedInput = this.mapper.getInputsFor('product.price.priceTaxExcluded');
     this.precision = <number>$priceTaxExcludedInput?.data('displayPricePrecision');
 
+    this.numberFormatter = NumberFormatter.build($priceTaxExcludedInput?.data('priceSpecification'));
+
     // Listens to event for product modification (registered after the model is constructed, because events are
     // triggered during the initial parsing but don't need them at first).
     this.eventEmitter.on(ProductEventMap.updatedProductField, (event) => this.productFieldUpdated(event));
@@ -68,6 +73,10 @@ export default class ProductFormModel {
    */
   getProduct(): Record<string, any> {
     return this.mapper.getModel().product;
+  }
+
+  getBigNumber(productModelKey: string): BigNumber {
+    return this.mapper.getBigNumber(`product.${productModelKey}`);
   }
 
   /**
@@ -88,41 +97,12 @@ export default class ProductFormModel {
     this.mapper.set(`product.${productModelKey}`, value);
   }
 
-  /**
-   * Handles modifications that have happened in the product
-   *
-   * @param {Object} event
-   *
-   * @private
-   */
-  private productFieldUpdated(event: FormUpdateEvent): void {
-    this.updateProductPrices(event);
-  }
-
-  /**
-   * Specific handler for modifications related to the product price
-   *
-   * @param {Object} event
-   * @private
-   */
-  private updateProductPrices(event: Record<string, any>) {
-    const pricesFields = [
-      'product.price.priceTaxIncluded',
-      'product.price.priceTaxExcluded',
-      'product.price.taxRulesGroupId',
-      'product.price.unitPriceTaxIncluded',
-      'product.price.unitPriceTaxExcluded',
-    ];
-
-    if (!pricesFields.includes(event.modelKey)) {
-      return;
-    }
-
+  getTaxRatio(): BigNumber {
     const $taxRulesGroupIdInput = this.mapper.getInputsFor('product.price.taxRulesGroupId');
 
     if (!$taxRulesGroupIdInput) {
       console.error('Could not find tax rules input');
-      return;
+      return new BigNumber(NaN);
     }
 
     const $selectedTaxOption = $(':selected', $taxRulesGroupIdInput);
@@ -141,63 +121,114 @@ export default class ProductFormModel {
       }
     }
 
-    const taxRatio = taxRate.dividedBy(100).plus(1);
+    return taxRate.dividedBy(100).plus(1);
+  }
 
-    // eslint-disable-next-line default-case
-    switch (event.modelKey) {
-      case 'product.price.priceTaxIncluded': {
-        const priceTaxIncluded = this.mapper.getBigNumber('product.price.priceTaxIncluded');
-        this.mapper.set('product.price.priceTaxExcluded', this.removeTax(priceTaxIncluded, taxRatio));
-        break;
-      }
-      case 'product.price.priceTaxExcluded': {
-        const priceTaxExcluded = this.mapper.getBigNumber('product.price.priceTaxExcluded');
-        this.mapper.set('product.price.priceTaxIncluded', this.addTax(priceTaxExcluded, taxRatio));
-        break;
-      }
+  getPriceTaxExcluded(): BigNumber {
+    return this.mapper.getBigNumber('product.price.priceTaxExcluded');
+  }
 
-      case 'product.price.unitPriceTaxIncluded': {
-        const unitPriceTaxIncluded = this.mapper.getBigNumber('product.price.unitPriceTaxIncluded');
-        this.mapper.set('product.price.unitPriceTaxExcluded', this.removeTax(unitPriceTaxIncluded, taxRatio));
-        break;
-      }
-      case 'product.price.unitPriceTaxExcluded': {
-        const unitPriceTaxExcluded = this.mapper.getBigNumber('product.price.unitPriceTaxExcluded');
-        this.mapper.set('product.price.unitPriceTaxIncluded', this.addTax(unitPriceTaxExcluded, taxRatio));
-        break;
-      }
-
-      case 'product.price.taxRulesGroupId': {
-        const priceTaxExcluded = this.mapper.getBigNumber('product.price.priceTaxExcluded');
-        this.mapper.set('product.price.priceTaxIncluded', this.addTax(priceTaxExcluded, taxRatio));
-        const unitPriceTaxExcluded = this.mapper.getBigNumber('product.price.unitPriceTaxExcluded');
-        this.mapper.set('product.price.unitPriceTaxIncluded', this.addTax(unitPriceTaxExcluded, taxRatio));
-        break;
-      }
-    }
+  displayPrice(price: BigNumber): string {
+    return this.numberFormatter.format(price.toNumber());
   }
 
   /**
    * @param {BigNumber} price
-   * @param {BigNumber} taxRatio
-   *
-   * @private
    *
    * @returns {string}
    */
-  private removeTax(price: BigNumber, taxRatio: BigNumber): string {
+  removeTax(price: BigNumber): string {
+    const taxRatio = this.getTaxRatio();
+
+    if (taxRatio.isNaN()) {
+      return price.toFixed(this.precision);
+    }
+
     return price.dividedBy(taxRatio).toFixed(this.precision);
   }
 
   /**
    * @param {BigNumber} price
-   * @param {BigNumber} taxRatio
-   *
-   * @private
    *
    * @returns {string}
    */
-  private addTax(price: BigNumber, taxRatio: BigNumber): string {
+  addTax(price: BigNumber): string {
+    const taxRatio = this.getTaxRatio();
+
+    if (taxRatio.isNaN()) {
+      return price.toFixed(this.precision);
+    }
+
     return price.times(taxRatio).toFixed(this.precision);
+  }
+
+  /**
+   * Handles modifications that have happened in the product
+   *
+   * @param {Object} event
+   *
+   * @private
+   */
+  private productFieldUpdated(event: FormUpdateEvent): void {
+    this.updateProductPrices(event);
+  }
+
+  /**
+   * Specific handler for modifications related to the product price
+   *
+   * @param {Object} event
+   * @private
+   */
+  private updateProductPrices(event: FormUpdateEvent) {
+    const pricesFields = [
+      'product.price.priceTaxIncluded',
+      'product.price.priceTaxExcluded',
+      'product.price.taxRulesGroupId',
+      'product.price.unitPriceTaxIncluded',
+      'product.price.unitPriceTaxExcluded',
+    ];
+
+    if (!pricesFields.includes(event.modelKey)) {
+      return;
+    }
+
+    const taxRatio = this.getTaxRatio();
+
+    if (taxRatio.isNaN()) {
+      return;
+    }
+
+    // eslint-disable-next-line default-case
+    switch (event.modelKey) {
+      case 'product.price.priceTaxIncluded': {
+        const priceTaxIncluded = this.mapper.getBigNumber('product.price.priceTaxIncluded');
+        this.mapper.set('product.price.priceTaxExcluded', this.removeTax(priceTaxIncluded));
+        break;
+      }
+      case 'product.price.priceTaxExcluded': {
+        const priceTaxExcluded = this.mapper.getBigNumber('product.price.priceTaxExcluded');
+        this.mapper.set('product.price.priceTaxIncluded', this.addTax(priceTaxExcluded));
+        break;
+      }
+
+      case 'product.price.unitPriceTaxIncluded': {
+        const unitPriceTaxIncluded = this.mapper.getBigNumber('product.price.unitPriceTaxIncluded');
+        this.mapper.set('product.price.unitPriceTaxExcluded', this.removeTax(unitPriceTaxIncluded));
+        break;
+      }
+      case 'product.price.unitPriceTaxExcluded': {
+        const unitPriceTaxExcluded = this.mapper.getBigNumber('product.price.unitPriceTaxExcluded');
+        this.mapper.set('product.price.unitPriceTaxIncluded', this.addTax(unitPriceTaxExcluded));
+        break;
+      }
+
+      case 'product.price.taxRulesGroupId': {
+        const priceTaxExcluded = this.mapper.getBigNumber('product.price.priceTaxExcluded');
+        this.mapper.set('product.price.priceTaxIncluded', this.addTax(priceTaxExcluded));
+        const unitPriceTaxExcluded = this.mapper.getBigNumber('product.price.unitPriceTaxExcluded');
+        this.mapper.set('product.price.unitPriceTaxIncluded', this.addTax(unitPriceTaxExcluded));
+        break;
+      }
+    }
   }
 }

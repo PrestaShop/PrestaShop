@@ -1526,6 +1526,7 @@ services:
     parent: 'form.type.translatable.aware'
     public: true
     arguments:
+      - '@prestashop.core.localization.locale.context_locale'
       - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
       - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_USE_ECOTAX')"
     tags:

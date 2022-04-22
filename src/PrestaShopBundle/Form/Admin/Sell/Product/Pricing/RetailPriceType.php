@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
 use Currency;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use PrestaShopBundle\Form\Admin\Type\UnavailableType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -42,6 +43,11 @@ use Symfony\Component\Validator\Constraints\Type;
 class RetailPriceType extends TranslatorAwareType
 {
     /**
+     * @var Locale
+     */
+    private $contextLocale;
+
+    /**
      * @var Currency
      */
     private $defaultCurrency;
@@ -54,15 +60,19 @@ class RetailPriceType extends TranslatorAwareType
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
+     * @param Locale $contextLocale
      * @param Currency $defaultCurrency
+     * @param bool $isEcotaxEnabled
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
+        Locale $contextLocale,
         Currency $defaultCurrency,
         bool $isEcotaxEnabled
     ) {
         parent::__construct($translator, $locales);
+        $this->contextLocale = $contextLocale;
         $this->defaultCurrency = $defaultCurrency;
         $this->isEcotaxEnabled = $isEcotaxEnabled;
     }
@@ -77,7 +87,10 @@ class RetailPriceType extends TranslatorAwareType
             ->add('price_tax_excluded', MoneyType::class, [
                 'required' => false,
                 'label' => $this->trans('Retail price (tax excl.)', 'Admin.Catalog.Feature'),
-                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
+                'attr' => [
+                    'data-display-price-precision' => self::PRESTASHOP_DECIMALS,
+                    'data-price-specification' => json_encode($this->contextLocale->getPriceSpecification($this->defaultCurrency->iso_code)->toArray()),
+                ],
                 'currency' => $this->defaultCurrency->iso_code,
                 'constraints' => [
                     new NotBlank(),
