@@ -68,11 +68,19 @@ class ProductStatusUpdater
             CannotUpdateProductException::FAILED_UPDATE_STATUS
         );
 
-        // If status changed we need to update its indexes (we check if it is necessary because index build can be
-        // an expensive operation). We cannot have this optimization check in multi-shop context, because product is loaded from a single shop,
-        // so it would end up checking one shop product and leaving all other shops unhandled
-        if ($initialState !== $newStatus) {
-            $this->productIndexationUpdater->updateIndexation($product);
+//      We cannot easily check if status changed in multi-shop context, because product is loaded from a single shop
+//      (it would end up checking one shop product and leaving all other shops unhandled)
+//      So in multi-shop context we always reindex product
+        if ($shopConstraint->forAllShops() || $shopConstraint->getShopGroupId()) {
+            $this->productIndexationUpdater->updateIndexation($product, $shopConstraint);
+
+            return;
+        }
+
+//      In single shop context we check if status changed to make sure we need to reindex product
+//      because reindexing is an expensive operation performance-wise
+        if ($initialState !== $command->getEnable()) {
+            $this->productIndexationUpdater->updateIndexation($product, $shopConstraint);
         }
     }
 }

@@ -82,16 +82,17 @@ final class UpdateProductOptionsHandler implements UpdateProductOptionsHandlerIn
             CannotUpdateProductException::FAILED_UPDATE_OPTIONS
         );
 
-        // if its single shop context we may proceed with additional optimization check, but can't do that for multi-shop,
-//      // because product is always loaded from single shop
-        // so it would end up checking one shop product and leaving all other shops unhandled
-        if (!$shopConstraint->getShopId()) {
+//      We cannot easily check if visibility changed in multi-shop context, because product is loaded from a single shop
+//      (it would end up checking one shop product and leaving all other shops unhandled)
+//      So in multi-shop context we always reindex product
+        if ($shopConstraint->forAllShops() || $shopConstraint->getShopGroupId()) {
             $this->productIndexationUpdater->updateIndexation($product, $shopConstraint);
 
             return;
         }
 
-        // check if product visibility changed before reindexing (reindexing is costly operation)
+//      In single shop context we check if visibility changed to make sure we need to reindex product
+//      because reindexing is an expensive operation performance-wise
         if ($this->productIndexationUpdater->isVisibleOnSearch($product) !== $wasVisibleOnSearch) {
             $this->productIndexationUpdater->updateIndexation($product, $shopConstraint);
         }
