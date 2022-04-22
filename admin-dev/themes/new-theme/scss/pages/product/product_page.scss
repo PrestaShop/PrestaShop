@@ -1487,16 +1487,13 @@ $product-page-padding-bottom: 80px !default;
     flex-wrap: wrap;
 
     .combination-image-choice {
+      flex: 0 0 0;
       margin: 0.35rem;
       border: solid transparent 3px;
 
       .form-check-radio {
         display: none;
       }
-    }
-
-    .combination-images-selector > .combination-image-choice {
-      flex: 0 0 0;
     }
   }
 
@@ -1507,7 +1504,8 @@ $product-page-padding-bottom: 80px !default;
     }
   }
 
-  .combination-images-selector.disabled {
+  .combination-images-selector.disabled .combination-image-choice {
+    cursor: not-allowed;
     opacity: 0.4;
   }
 }
