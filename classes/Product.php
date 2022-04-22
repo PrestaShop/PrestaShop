@@ -1209,6 +1209,7 @@ class ProductCore extends ObjectModel
         static::$_pricesLevel2 = [];
         static::$_incat = [];
         static::$_combinations = [];
+        Cache::clean('Product::*');
     }
 
     /**
