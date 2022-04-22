@@ -31,13 +31,11 @@ namespace Tests\Unit\Core\Module\SourceHandler;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorException;
 use PrestaShop\PrestaShop\Core\Module\SourceHandler\ZipSourceHandler;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Tests\Resources\ResourceResetter;
 
 class ZipSourceHandlerTest extends TestCase
 {
-    private const TEST_MODULES_DIRECTORY = __DIR__ . '/../../../Resources/modules';
-
     private const UNHANDLABLE_SOURCE = 'unhandlablesource';
     private const INVALID_SOURCE = __DIR__ . '/../../../../Resources/dummyFile/invalid_module.zip';
     private const VALID_SOURCE = __DIR__ . '/../../../../Resources/dummyFile/valid_module.zip';
@@ -45,21 +43,28 @@ class ZipSourceHandlerTest extends TestCase
     /** @var ZipSourceHandler */
     private $zipSourceHandler;
 
+    /**
+     * @var ResourceResetter : responsible to reset resources used for tests
+     * */
+    private $resourceResetter;
+
     public function setUp(): void
     {
+        $this->resourceResetter = new ResourceResetter();
+        $this->resourceResetter->backupTestModules();
+
         $translator = $this->createMock(TranslatorInterface::class);
         $translator->method('trans')->willReturnArgument(0);
 
         $this->zipSourceHandler = new ZipSourceHandler(
-            self::TEST_MODULES_DIRECTORY,
+            $this->resourceResetter::TEST_MODULES_DIR,
             $translator
         );
     }
 
     public function tearDown(): void
     {
-        $filesystem = new Filesystem();
-        $filesystem->remove(self::TEST_MODULES_DIRECTORY);
+        $this->resourceResetter->resetTestModules();
     }
 
     public function testCanHandle()
@@ -98,6 +103,6 @@ class ZipSourceHandlerTest extends TestCase
     public function testHandleValidSource()
     {
         $this->zipSourceHandler->handle(self::VALID_SOURCE);
-        $this->assertFileExists(self::TEST_MODULES_DIRECTORY . '/valid_module/valid_module.php');
+        $this->assertFileExists($this->resourceResetter::TEST_MODULES_DIR . '/valid_module/valid_module.php');
     }
 }
