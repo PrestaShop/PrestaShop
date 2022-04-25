@@ -94,7 +94,7 @@ class GuestTrackingControllerCore extends FrontController
                 );
             } elseif (!Validate::isAcceptablePasswordLength($password)) {
                 $this->errors[] = $this->trans(
-                    'Customer password length must be between %s and %s',
+                    'Your password length must be between %s and %s',
                     [Configuration::get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH), Configuration::get(PasswordPolicyConfiguration::CONFIGURATION_MAXIMUM_LENGTH)],
                     'Shop.Forms.Help'
                 );

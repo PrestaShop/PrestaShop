@@ -55,7 +55,7 @@
     {% block administration_form_password_policy %}
       <div class="card" id="configuration_fieldset_password_policy">
         <h3 class="card-header">
-          <i class="material-icons">settings</i> {{ 'Password policy'|trans({}, 'Admin.Global') }}
+          <i class="material-icons">settings</i> {{ 'Password policy'|trans({}, 'Admin.Advparameters.Feature') }}
         </h3>
         <div class="card-body">
           <div class="form-group row">
@@ -63,13 +63,13 @@
             <div class="col-sm">
               {{ form_widget(passwordPolicyForm.minimum_score) }}
               <small class="form-text">
-                {{ 'Scores are integers from 0 to 4.'|trans({}, 'Admin.Advparameters.Feature') }}
+                {{ 'Scores are integers from 0 to 4.'|trans({}, 'Admin.Advparameters.Help') }}
                 <ol id="help-password-score">
-                  <li>{{ '0 means the password is extremely guessable (within 10^3 guesses), dictionary words like "password" or "mother" score a 0.'|trans({}, 'Admin.Advparameters.Feature') }}</li>
-                  <li>{{ '1 is still very guessable (guesses &lt; 10^6), an extra character on a dictionary word can score a 1'|trans({}, 'Admin.Advparameters.Feature') }}</li>
-                  <li>{{ '2 is somewhat guessable (guesses &lt; 10^8), provides some protection from unthrottled online attacks'|trans({}, 'Admin.Advparameters.Feature') }}</li>
-                  <li>{{ '3 is safely unguessable (guesses &lt; 10^10), offers moderate protection from offline slow-hash scenario.'|trans({}, 'Admin.Advparameters.Feature') }}</li>
-                  <li>{{ '4 is very unguessable (guesses &gt;= 10^10) and provides strong protection from offline slow-hash scenario.'|trans({}, 'Admin.Advparameters.Feature') }}</li>
+                  <li>{{ '0 means the password is extremely easy to guess (within 10^3 guesses). Dictionary words like "password" or "mother" score 0.'|trans({}, 'Admin.Advparameters.Feature') }}</li>
+                  <li>{{ '1 is still very easy to guess (guesses lesser than 10^6). An extra character on a dictionary word can score 1.'|trans({}, 'Admin.Advparameters.Feature') }}</li>
+                  <li>{{ '2 is pretty easy to guess (guesses lesser than 10^8). It provides some protection from unthrottled online attacks.'|trans({}, 'Admin.Advparameters.Feature') }}</li>
+                  <li>{{ '3 is safely unguessable (guesses lesser than 10^10). It offers moderate protection from offline slow-hash scenario.'|trans({}, 'Admin.Advparameters.Feature') }}</li>
+                  <li>{{ '4 is very unguessable (guesses greater than or equal to 10^10) and provides strong protection from offline slow-hash scenario.'|trans({}, 'Admin.Advparameters.Feature') }}</li>
                 </ol>
               </small>
             </div>
