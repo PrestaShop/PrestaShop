@@ -194,7 +194,7 @@ export default class BulkFormHandler {
       try {
         // eslint-disable-next-line no-await-in-loop
         const response: Response = await this.combinationsService.bulkUpdate(
-          Number(this.productId),
+          this.productId,
           Number(checkbox.value),
           new FormData(form),
         );
