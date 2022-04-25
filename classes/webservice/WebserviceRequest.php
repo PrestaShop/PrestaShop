@@ -1458,7 +1458,7 @@ class WebserviceRequestCore
      *
      * @return bool
      */
-    public function executeEntityPatch()
+    public function executeEntityPatch(): bool
     {
         return $this->saveEntityFromXml(200);
     }
