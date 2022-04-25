@@ -269,7 +269,7 @@ class ProductLazyArrayTest extends TestCase
             $this->mockConfiguration
         );
 
-        $this->assertEquals($deliveryInformationMessage, $productLazyArray->delivery_information);
+        $this->assertEquals($deliveryInformationMessage, $productLazyArray->getDeliveryInformation());
     }
 
     public function providerDeliveryInformationCases(): iterable
