@@ -3610,5 +3610,10 @@
       <title>BO themes list extra content</title>
       <description>This hook displays content after the themes list in the back office</description>
     </hook>
+    <hook id="displayEmptyModuleCategoryExtraMessage">
+      <name>displayEmptyModuleCategoryExtraMessage</name>
+      <title>Extra message to display for an empty modules category</title>
+      <description>This hook allows to add an extra message to display in the Module manager page when a category doesn't have any module</description>
+    </hook>
   </entities>
 </entity_hook>
