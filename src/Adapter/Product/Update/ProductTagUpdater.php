@@ -102,6 +102,8 @@ class ProductTagUpdater
 
         // Since tags have been modified we need to update the indexation values (only for active products)
         if ($product->active) {
+            // Tags do not have multi-shop data, so we don't have a shopId to build single shop constraint
+            // that's why we use an allShops constraint
             $this->productIndexationUpdater->updateIndexation($product, ShopConstraint::allShops());
         }
     }
