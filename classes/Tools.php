@@ -4127,6 +4127,33 @@ exit;
 
         return false;
     }
+
+    /**
+     * Inserts a new element in array after a given index
+     *
+     * @param array $array Array to modify
+     * @param string $targetKey Key to search for
+     * @param string $newDataKey Key for an added data
+     * @param array $newDataArray New data to insert
+     *
+     * @return array
+     */
+    public static function arrayInsertElementAfterKey(array $array, string $targetKey, string $newDataKey, array $newDataArray): array
+    {
+        if (array_key_exists($targetKey, $array)) {
+            $newArray = [];
+            foreach ($array as $k => $value) {
+                $newArray[$k] = $value;
+                if ($k === $targetKey) {
+                    $newArray[$newDataKey] = $newDataArray;
+                }
+            }
+
+            return $newArray;
+        }
+
+        return $array;
+    }
 }
 
 /**
