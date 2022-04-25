@@ -91,6 +91,7 @@ class ProductLazyArrayTest extends TestCase
         'new' => 0,
         'pack' => 0,
         'out_of_stock' => OutOfStockType::OUT_OF_STOCK_DEFAULT,
+        'customizable' => 0,
     ];
 
     private const PRODUCT_AVAILABLE_NOW = 'This product is available now';
@@ -98,6 +99,9 @@ class ProductLazyArrayTest extends TestCase
     private const PRODUCT_NOT_AVAILABLE = 'This product is not available for order';
     private const PRODUCT_ATTRIBUTE_NOT_AVAILABLE = 'Product available with different options';
     private const PRODUCT_WITH_NOT_ENOUGH_STOCK = 'There are not enough products in stock';
+
+    private const PRODUCT_DELIVERY_TIME_AVAILABLE = '1-2 weeks - product in stock';
+    private const PRODUCT_DELIVERY_TIME_OOSBOA = '2-4 weeks - backorder';
 
     public function setUp(): void
     {
@@ -214,6 +218,114 @@ class ProductLazyArrayTest extends TestCase
         );
 
         $this->assertEquals($availabilityMessage, $productLazyArray->availability_message);
+    }
+
+    /**
+     * @param array $product
+     * @param string|null $deliveryInformationMessage
+     *
+     * @dataProvider providerDeliveryInformationCases
+     */
+    public function testDeliveryInformation(
+        array $product,
+        ?string $deliveryInformationMessage
+    ): void {
+        $language = $this->mockLanguage;
+
+        $this->mockConfiguration
+            ->method('get')
+            ->willReturnCallback(function (string $key) use ($language) {
+                if ('PS_LABEL_DELIVERY_TIME_AVAILABLE' === $key) {
+                    return [
+                        $language->id => self::PRODUCT_DELIVERY_TIME_AVAILABLE,
+                    ];
+                }
+
+                if ('PS_LABEL_DELIVERY_TIME_OOSBOA' === $key) {
+                    return [
+                        $language->id => self::PRODUCT_DELIVERY_TIME_OOSBOA,
+                    ];
+                }
+
+                return true;
+            })
+        ;
+
+        $this->mockProductPresentationSettings->showLabelOOSListingPages = true;
+        $this->mockProductPresentationSettings->stock_management_enabled = true;
+        $this->mockProductPresentationSettings->showPrices = true;
+        $this->mockProductPresentationSettings->catalog_mode = false;
+
+        $productLazyArray = new ProductLazyArray(
+            $this->mockProductPresentationSettings,
+            $product,
+            $this->mockLanguage,
+            $this->mockImageRetriever,
+            $this->mockLink,
+            $this->mockPriceFormatter,
+            $this->mockProductColorsRetriever,
+            $this->mockTranslatorInterface,
+            $this->mockHookManager,
+            $this->mockConfiguration
+        );
+
+        $this->assertEquals($deliveryInformationMessage, $productLazyArray->delivery_information);
+    }
+
+    public function providerDeliveryInformationCases(): iterable
+    {
+        $product = array_merge(
+            $this->baseProduct, [
+                'show_availability' => 1,
+                'available_date' => false,
+                'available_for_order' => 1,
+            ]
+        );
+
+        // Product page: in stock && out of stock not available
+        yield [
+            array_merge(
+                $product,
+                [
+                    'cache_default_attribute' => 0,
+                    'quantity_wanted' => 1,
+                    'stock_quantity' => 1000,
+                    'quantity' => 1000,
+                    'allow_oosp' => OutOfStockType::OUT_OF_STOCK_DEFAULT,
+                ]
+            ),
+            self::PRODUCT_DELIVERY_TIME_AVAILABLE,
+        ];
+
+        // not enough stock, not allowed to order when out of stock, we should not see any delivery information
+        yield [
+            array_merge(
+                $product,
+                [
+                    'cache_default_attribute' => 0,
+                    'quantity_wanted' => 11,
+                    'stock_quantity' => 10,
+                    'quantity' => 10,
+                    'allow_oosp' => OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE,
+                ]
+            ),
+            null,
+        ];
+
+        // not enough stock, allowed to order when out of stock
+        yield [
+            array_merge(
+                $product,
+                [
+                    'cache_default_attribute' => 0,
+                    'quantity_wanted' => 11,
+                    'stock_quantity' => 10,
+                    'quantity' => 10,
+                    'allow_oosp' => OutOfStockType::OUT_OF_STOCK_AVAILABLE,
+                ]
+            ),
+            self::PRODUCT_DELIVERY_TIME_OOSBOA,
+        ];
     }
 
     public function providerQuantityInformationCases(): iterable
