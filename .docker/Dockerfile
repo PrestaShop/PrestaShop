@@ -10,6 +10,10 @@ COPY /docker_run_git.sh /tmp/
 RUN mkdir -p /var/www/.npm
 RUN chown -R www-data:www-data /var/www/.npm
 
+# These two directories are docker mounted volumes
+RUN chown -R www-data:www-data /var/www/html/vendor
+RUN chown -R www-data:www-data /var/www/html/var
+
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
 RUN apt install -y nodejs
 
