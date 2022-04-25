@@ -1255,7 +1255,10 @@ abstract class PaymentModuleCore extends Module
 
             $cart_rules_list[] = [
                 'voucher_name' => $cartRule->name,
-                'voucher_reduction' => ($values['tax_incl'] != 0.00 ? '-' : '') . Tools::getContextLocale($this->context)->formatPrice($values['tax_incl'], $this->context->currency->iso_code),
+                'voucher_reduction' => ($values['tax_incl'] != 0.00 ? '-' : '') . (Product::getTaxCalculationMethod() == PS_TAX_EXC
+                    ? Tools::getContextLocale($this->context)->formatPrice($values['tax_excl'], $this->context->currency->iso_code)
+                    : Tools::getContextLocale($this->context)->formatPrice($values['tax_incl'], $this->context->currency->iso_code)
+                ),
             ];
         }
 
