@@ -100,7 +100,7 @@ class GuestTrackingControllerCore extends FrontController
                 );
             } elseif (!Validate::isAcceptablePasswordScore($password)) {
                 $this->errors[] = $this->trans(
-                    'Employee password is too weak',
+                    'Customer password is too weak',
                     [],
                     'Shop.Forms.Help'
                 );
