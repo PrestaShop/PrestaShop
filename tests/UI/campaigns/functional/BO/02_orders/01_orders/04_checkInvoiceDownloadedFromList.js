@@ -183,11 +183,18 @@ describe('BO - orders : Check invoice downloaded from list', async () => {
       await expect(orderStatusFO, 'Order status is not correct').to.equal(Statuses.paymentAccepted.status);
     });
 
-    it('should check last invoice', async function () {
+    it('should check if the last invoice is visible', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkLastInvoice', baseContext);
 
-      const isVisible = await foOrderHistoryPage.isInvoiceVisible(page, 1, orderId);
+      const isVisible = await foOrderHistoryPage.isInvoiceVisible(page, 1);
       await expect(isVisible, 'The invoice file is not existing!').to.be.true;
+    });
+
+    it('should check the order ID of the invoice', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkOrderID', baseContext);
+
+      const orderID = await foOrderHistoryPage.getOrderIdFromInvoiceHref(page, 1);
+      await expect(orderID, 'The invoice file attached is not correct!').to.contains(`id_order=${orderId}`);
     });
   });
 });
