@@ -85,7 +85,7 @@ final class UpdateProductOptionsHandler implements UpdateProductOptionsHandlerIn
 //      We cannot easily check if visibility changed in multi-shop context, because product is loaded from a single shop
 //      (it would end up checking one shop product and leaving all other shops unhandled)
 //      So in multi-shop context we always reindex product
-        if ($shopConstraint->forAllShops() || $shopConstraint->getShopGroupId()) {
+        if ($shopConstraint->forAllShops()) {
             $this->productIndexationUpdater->updateIndexation($product, $shopConstraint);
 
             return;
