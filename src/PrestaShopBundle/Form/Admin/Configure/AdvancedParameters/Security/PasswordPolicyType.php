@@ -71,7 +71,7 @@ class PasswordPolicyType extends TranslatorAwareType
                 'minimum_score',
                 ChoiceType::class,
                 [
-                    'label' => $this->trans('Minimum accepted score', 'Admin.Advparameters.Feature'),
+                    'label' => $this->trans('Minimum password security score', 'Admin.Advparameters.Feature'),
                     'choices' => [
                         '0 - Extremely guessable' => PasswordPolicyConfiguration::PASSWORD_EXTREMELY_GUESSABLE,
                         '1 - Very guessable' => PasswordPolicyConfiguration::PASSWORD_VERY_GUESSABLE,
