@@ -58,8 +58,10 @@ class Order extends BOBasePage {
 
     // Bulk actions
     this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .grid_bulk_action_select_all`;
+    this.selectAllRowsLabela= `${this.gridPanel} tr.column-filters .md-checkbox`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
     this.bulkUpdateOrdersStatusButton = '#order_grid_bulk_action_change_order_status';
+    this.bulkOpenInNewTabsButton = '#order_grid_bulk_action_open_tabs';
     this.tableColumnOrderBulk = row => `${this.tableRow(row)} td.column-orders_bulk`;
     this.tableColumnOrderBulkCheckboxLabel = row => `${this.tableColumnOrderBulk(row)} .md-checkbox`;
 
@@ -323,8 +325,65 @@ class Order extends BOBasePage {
     return parseFloat((await this.getTextColumn(page, 'total_paid_tax_incl', row)).substring(1));
   }
 
-
   /* Bulk actions methods */
+  /**
+   * Select all orders
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async selectAllOrders(page) {
+    await Promise.all([
+      this.waitForSelectorAndClick(page, this.selectAllRowsLabela),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
+    ]);
+  }
+
+  /**
+   * Select some orders
+   * @param page {Page} Browser tab
+   * @param rows {Array<number>} Array of which orders rows to change
+   * @returns {Promise<void>}
+   */
+  async selectOrdersRows(page, rows = []) {
+    for (let i = 0; i < rows.length; i++) {
+      await page.click(this.tableColumnOrderBulkCheckboxLabel(rows[i]));
+    }
+    await this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`);
+  }
+
+  /**
+   * Click on bulk actions button
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async clickOnBulkActionsButton(page) {
+    await Promise.all([
+      page.click(this.bulkActionsToggleButton),
+      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
+    ]);
+  }
+
+  /**
+   * Bulk open in new tabs
+   * @param page {Page} Browser tab
+   * @param isAllOrders {boolean} True if want to update all orders status
+   * @param rows {Array<number>|boolean} Array of which orders rows to change (if allOrders = false)
+   * @returns {Promise<Page>}
+   */
+  async bulkOpenInNewTabs(page, isAllOrders = true, rows = []) {
+    // Select all orders or some
+    if (isAllOrders) {
+      await this.selectAllOrders(page);
+    } else {
+      await this.selectOrdersRows(page, rows);
+    }
+
+    // Open bulk actions button
+    await this.clickOnBulkActionsButton(page);
+
+    // Click on open in new tabs
+    return this.openLinkWithTargetBlank(page, this.bulkOpenInNewTabsButton);
+  }
 
   /**
    * Bulk change orders status
@@ -337,26 +396,20 @@ class Order extends BOBasePage {
   async bulkUpdateOrdersStatus(page, status, isAllOrders = true, rows = []) {
     // Select all orders or some
     if (isAllOrders) {
-      await Promise.all([
-        page.click(this.selectAllRowsLabel),
-        this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
-      ]);
+      await this.selectAllOrders(page);
     } else {
-      for (let i = 0; i < rows.length; i++) {
-        await page.click(this.tableColumnOrderBulkCheckboxLabel(rows[i]));
-      }
-      await this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`);
+      await this.selectOrdersRows(page, rows);
     }
+
     // Open bulk actions button
-    await Promise.all([
-      page.click(this.bulkActionsToggleButton),
-      this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}[aria-expanded='true']`),
-    ]);
+    await this.clickOnBulkActionsButton(page);
+
     // Click on change order status button
     await Promise.all([
       page.click(this.bulkUpdateOrdersStatusButton),
       this.waitForVisibleSelector(page, `${this.updateOrdersStatusModal}:not([aria-hidden='true'])`),
     ]);
+
     // Select new orders status in modal and confirm update
     await this.selectByVisibleText(page, this.updateOrdersStatusModalSelect, status);
     await this.clickAndWaitForNavigation(page, this.updateOrdersStatusModalButton);
