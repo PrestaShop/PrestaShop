@@ -57,8 +57,7 @@ class Order extends BOBasePage {
     this.gridActionExportLink = '#order-grid-action-export';
 
     // Bulk actions
-    this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .grid_bulk_action_select_all`;
-    this.selectAllRowsLabela= `${this.gridPanel} tr.column-filters .md-checkbox`;
+    this.selectAllRowsLabel = `${this.gridPanel} tr.column-filters .md-checkbox`;
     this.bulkActionsToggleButton = `${this.gridPanel} button.js-bulk-actions-btn`;
     this.bulkUpdateOrdersStatusButton = '#order_grid_bulk_action_change_order_status';
     this.bulkOpenInNewTabsButton = '#order_grid_bulk_action_open_tabs';
@@ -333,7 +332,7 @@ class Order extends BOBasePage {
    */
   async selectAllOrders(page) {
     await Promise.all([
-      this.waitForSelectorAndClick(page, this.selectAllRowsLabela),
+      this.waitForSelectorAndClick(page, this.selectAllRowsLabel),
       this.waitForVisibleSelector(page, `${this.bulkActionsToggleButton}:not([disabled])`),
     ]);
   }

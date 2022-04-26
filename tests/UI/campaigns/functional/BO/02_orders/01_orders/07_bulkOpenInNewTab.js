@@ -15,6 +15,7 @@ const orderPageCustomerBlock = require('@pages/BO/orders/view/customerBlock');
 // Import common tests
 const loginCommon = require('@commonTests/BO/loginBO');
 const {createOrderByGuestTest} = require('@commonTests/FO/createOrder');
+const {deleteCustomerTest} = require('@commonTests/BO/customers/createDeleteCustomer');
 
 // Import demo data
 const {PaymentMethods} = require('@data/demo/paymentMethods');
@@ -51,9 +52,13 @@ const secondOrderByGuestData = {
 Pre-condition:
 - Create 2 orders in FO
 Scenario:
-
+- Go to BO > Orders page
+- Bulk open in new tabs the 2 last orders
+- Check the 2 orders (Check customer block)
+Post-condition:
+- Delete the 2 created guest customers
  */
-describe('BO - Orders : Bulk update orders status', async () => {
+describe('BO - Orders : Bulk open on new tab', async () => {
   // Pre-condition: Create first order in FO
   createOrderByGuestTest(firstOrderByGuestData, baseContext);
 
@@ -70,7 +75,7 @@ describe('BO - Orders : Bulk update orders status', async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  describe('Update orders status', async () => {
+  describe('Open on new tab by bulk actions', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
@@ -133,4 +138,10 @@ describe('BO - Orders : Bulk update orders status', async () => {
       await expect(customerInfo).to.contains(firstCustomerData.lastName);
     });
   });
+
+  // Post-condition: Delete first guest customers
+  deleteCustomerTest(firstCustomerData, baseContext);
+
+  // Post-condition: Delete second guest customers
+  deleteCustomerTest(secondCustomerData, baseContext);
 });

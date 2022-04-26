@@ -101,6 +101,13 @@ function deleteCustomerTest(customerData, baseContext = 'commonTests-deleteCusto
       await expect(pageTitle).to.contains(customersPage.pageTitle);
     });
 
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetCustomerFilterFirst', baseContext);
+
+      numberOfCustomers = await customersPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfCustomers).to.be.above(0);
+    });
+
     it('should filter list by customer email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDelete', baseContext);
 
