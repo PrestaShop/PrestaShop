@@ -14,6 +14,14 @@ admin_products_v2_index:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::indexAction
     _legacy_controller: AdminProducts
 
+admin_products_v2_light_list:
+  path: /light-list
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::lightListAction
+    _legacy_controller: AdminProducts
+
+
 admin_products_search:
   path: /
   methods: [ POST ]

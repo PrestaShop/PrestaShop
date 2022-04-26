@@ -1,0 +1,22 @@
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/product_catalog.css') }}" type="text/css" media="all">
+{% endblock %}
+
+{% block content %}
+  {% block products_light_listing %}
+    <div class="card-body">
+      {% block grid_table_row %}
+        {{ include('@PrestaShop/Admin/Common/Grid/Blocks/table.html.twig', {'grid': productLightGrid}) }}
+      {% endblock %}
+      {% block pagination %}
+        <div>
+{#      @todo: should be able to use dynamic-paginator.ts to render the grid. Just need to implement new grid renderer in js to render whole template at once    #}
+{#      @todo: hardcoded values #}
+          {{ include('@PrestaShop/Admin/Common/javascript_pagination.html.twig', {
+            'limit': 5,
+          }) }}
+        </div>
+      {% endblock %}
+    </div>
+  {% endblock %}
+{% endblock %}

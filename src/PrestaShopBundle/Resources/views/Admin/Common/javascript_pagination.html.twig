@@ -69,18 +69,20 @@
   >
   </label>
 </div>
-<div class="mx-3">
-  <div class="form-group row mb-0">
-    <label for="paginator-limit" class="col-form-label mr-2">{{ 'Items per page:'|trans({}, 'Admin.Catalog.Feature') }}</label>
-    <div>
-      <select name="paginator-limit" id="paginator-limit" class="pagination-link custom-select">
-        {% if limit not in limitChoices %}
-          <option value="{{ limit }}" selected="selected">{{ limit }}</option>
-        {% endif %}
-        {% for limitChoice in limitChoices %}
-          <option value="{{ limitChoice }}" {% if limit==limitChoice %}selected="selected"{% endif %}>{{ limitChoice }}</option>
-        {% endfor %}
-      </select>
+{% if limitChoices is defined and limitChoices is not empty %}
+  <div class="mx-3">
+    <div class="form-group row mb-0">
+      <label for="paginator-limit" class="col-form-label mr-2">{{ 'Items per page:'|trans({}, 'Admin.Catalog.Feature') }}</label>
+      <div>
+        <select name="paginator-limit" id="paginator-limit" class="pagination-link custom-select">
+          {% if limit not in limitChoices %}
+            <option value="{{ limit }}" selected="selected">{{ limit }}</option>
+          {% endif %}
+          {% for limitChoice in limitChoices %}
+            <option value="{{ limitChoice }}" {% if limit==limitChoice %}selected="selected"{% endif %}>{{ limitChoice }}</option>
+          {% endfor %}
+        </select>
+      </div>
     </div>
   </div>
-</div>
+{% endif %}

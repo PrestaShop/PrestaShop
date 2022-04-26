@@ -302,6 +302,13 @@ services:
       - '@prestashop.adapter.legacy.configuration'
     public: true
 
+  prestashop.core.grid.definition.factory.product_light:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ProductLightGridDefinitionFactory'
+    parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+    public: true
+
   prestashop.core.grid.definition.factory.security.session.employee:
     class: 'PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Security\Session\EmployeeGridDefinitionFactory'
     parent: 'prestashop.core.grid.definition.factory.abstract_grid_definition'

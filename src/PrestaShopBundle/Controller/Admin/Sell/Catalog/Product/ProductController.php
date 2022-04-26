@@ -53,6 +53,7 @@ use PrestaShop\PrestaShop\Core\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteria;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Entity\ProductDownload;
@@ -121,6 +122,24 @@ class ProductController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'layoutHeaderToolbarBtn' => $this->getProductToolbarButtons(),
             'help_link' => $this->generateSidebarLink('AdminProducts'),
+        ]);
+    }
+
+    public function lightListAction(Request $request): Response
+    {
+        $productGridFactory = $this->get('prestashop.core.grid.factory.product_light');
+        //@todo: product light filters
+
+        $productGrid = $productGridFactory->getGrid(new SearchCriteria(
+            [],
+            null,
+            null,
+            $request->query->getInt('offset'),
+            $request->query->getInt('limit', 10)
+        ));
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/light_list.html.twig', [
+            'productLightGrid' => $this->presentGrid($productGrid),
         ]);
     }
 
