@@ -157,11 +157,7 @@
           this.tags.push(itemLabel);
         } else {
           const index = this.tags.indexOf(itemLabel);
-
-          if (this.splice) {
-            this.tags.splice(index, 1);
-          }
-          this.splice = true;
+          this.tags.splice(index, 1);
         }
         if (this.tags.length) {
           this.$emit('active', this.filterList(this.tags), filterType);
@@ -178,7 +174,7 @@
         if (this.tags.indexOf(this.currentVal) !== -1) {
           this.tags.pop();
         }
-        this.splice = false;
+
         if (this.match) {
           checkedTag = this.match[this.label];
         }
@@ -206,7 +202,6 @@
         currentVal: '',
         match: null as null | Record<string, any>,
         tags: [] as Array<any>,
-        splice: true,
         hasChildren: false,
       };
     },
