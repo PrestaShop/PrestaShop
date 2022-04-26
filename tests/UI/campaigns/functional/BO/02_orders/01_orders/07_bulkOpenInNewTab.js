@@ -110,7 +110,7 @@ describe('BO - Orders : Bulk open on new tab', async () => {
     });
 
     it('should check the first opened order page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkSecondOrderPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkFirstOrderPage', baseContext);
 
       // Check second customer information
       const customerInfo = await orderPageCustomerBlock.getCustomerInfoBlock(page);
