@@ -1415,13 +1415,17 @@ $product-page-padding-bottom: 80px !default;
   padding-bottom: $product-page-padding-bottom;
   margin-top: -$product-page-padding-bottom;
 
-  #combination-actions {
+  #combination-list-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
     margin: 0.5rem 0;
   }
 
   #combinations-list {
     position: relative;
     min-height: 3.5rem;
+    margin-top: 0.5rem;
 
     #id-header {
       white-space: nowrap;
@@ -1436,13 +1440,17 @@ $product-page-padding-bottom: 80px !default;
     }
 
     .combination {
-      &-actions {
+      &-row-actions {
         display: flex;
         align-items: center;
       }
 
       &-image {
         width: 3rem;
+      }
+
+      &-name-preview {
+        min-width: 10rem;
       }
 
       td {
@@ -1473,6 +1481,49 @@ $product-page-padding-bottom: 80px !default;
         margin-top: -1.25rem;
         margin-right: auto;
         margin-left: auto;
+      }
+    }
+  }
+
+  #combinations-list-footer {
+    display: none;
+  }
+
+  #combinations-paginated-list {
+    &.edition-mode {
+      #combinations-pagination {
+        display: none;
+      }
+
+      #combinations-list-footer {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        padding: 1.25rem;
+        background-color: rgba(37, 185, 215, 0.1);
+        @include border-radius(0 0 0.5rem 0.5rem);
+
+        &-buttons {
+          display: flex;
+          flex-direction: row;
+          gap: 0.5rem;
+        }
+
+        span {
+          display: block;
+          padding-top: 0.5rem;
+          margin: 0 auto;
+        }
+      }
+
+      .combinations-table {
+        margin-bottom: 0;
+        background-color: rgba(37, 185, 215, 0.1);
+        @include border-radius(0.5rem 0.5rem 0 0);
+
+        .combination-value-changed {
+          background: #F4FCFD;
+        }
       }
     }
   }

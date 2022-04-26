@@ -40,6 +40,8 @@ import BulkDeleteHandler from '@pages/product/combination/bulk-delete-handler';
 import BulkChoicesSelector from '@pages/product/combination/bulk-choices-selector';
 import ProductFormModel from '@pages/product/edit/product-form-model';
 
+import ChangeEvent = JQuery.ChangeEvent;
+
 const {$} = window;
 const CombinationEvents = ProductEventMap.combinations;
 const CombinationsMap = ProductMap.combinations;
@@ -80,6 +82,8 @@ export default class CombinationsManager {
   productAttributeGroups: Array<Record<string, any>>;
 
   productFormModel: ProductFormModel;
+
+  editionMode: boolean = false;
 
   constructor(productId: number, productFormModel: ProductFormModel) {
     this.productId = productId;
@@ -229,10 +233,50 @@ export default class CombinationsManager {
       },
     );
 
+    this.$combinationsContainer.on('change', CombinationsMap.list.fieldInputs, (event: ChangeEvent) => {
+      const $input = $(event.currentTarget);
+      console.log($input.val(), $input.data('initialValue'));
+
+      if (
+        typeof $input.val() !== 'undefined'
+        && typeof $input.data('initialValue') !== 'undefined'
+        && $input.val() !== $input.data('initialValue')
+      ) {
+        this.enableEditionMode();
+      }
+    });
+
+    $(CombinationsMap.list.footer.cancel).on('click', () => {
+      this.cancelEdition();
+    });
+
+    $(CombinationsMap.list.footer.reset).on('click', () => {
+      this.resetEdition();
+    });
+
+    $(CombinationsMap.list.footer.save).on('click', () => {
+      this.saveEdition();
+    });
+
     this.initSortingColumns();
   }
 
   private watchEvents(): void {
+    // Preset initial data attribute after each list rendering
+    this.eventEmitter.on(CombinationEvents.listRendered, () => {
+      $(ProductMap.combinations.list.fieldInputs, this.$combinationsContainer).each((index, input) => {
+        const $input = $(input);
+
+        if ($input.val()) {
+          // @ts-ignore
+          $input.data('initialValue', $input.val());
+          $input.on('change', () => {
+            $input.toggleClass(ProductMap.combinations.list.modifiedFieldClass, $input.val() !== $input.data('initialValue'));
+          });
+        }
+      });
+    });
+
     this.eventEmitter.on(CombinationEvents.refreshCombinationList, () => this.refreshCombinationList(false));
     this.eventEmitter.on(CombinationEvents.refreshPage, () => this.refreshPage());
     /* eslint-disable */
@@ -283,6 +327,10 @@ export default class CombinationsManager {
       'click',
       CombinationsMap.sortableColumns,
       (event) => {
+        if (this.editionMode) {
+          return;
+        }
+
         const $sortableColumn = $(event.currentTarget);
         const columnName = $sortableColumn.data('sortColName');
 
@@ -382,5 +430,39 @@ export default class CombinationsManager {
       .closest('tr')
       .find(CombinationsMap.combinationIdInputsSelector)
       .val();
+  }
+
+  private enableEditionMode(): void {
+    this.editionMode = true;
+    this.$paginatedList.addClass(CombinationsMap.list.editionModeClass);
+  }
+
+  private disableEditionMode(): void {
+    this.editionMode = false;
+    this.$paginatedList.removeClass(CombinationsMap.list.editionModeClass);
+  }
+
+  private resetEdition(): void {
+    $(CombinationsMap.list.fieldInputs, this.$combinationsContainer).each((index, input) => {
+      const $input = $(input);
+
+      if (
+        typeof $input.val() !== 'undefined'
+        && typeof $input.data('initialValue') !== 'undefined'
+        && $input.val() !== $input.data('initialValue')
+      ) {
+        $input.val($input.data('initialValue')).trigger('change');
+        $input.removeClass(ProductMap.combinations.list.modifiedFieldClass);
+      }
+    });
+  }
+
+  private cancelEdition(): void {
+    this.resetEdition();
+    this.disableEditionMode();
+  }
+
+  private saveEdition(): void {
+
   }
 }

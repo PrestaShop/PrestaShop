@@ -60,6 +60,7 @@ class CombinationItemType extends TranslatorAwareType
             ])
             ->add('image_url', ImagePreviewType::class, [
                 'label' => false,
+                'image_class' => 'combination-image',
             ])
             ->add('combination_id', TextPreviewType::class, [
                 'attr' => [
@@ -70,6 +71,9 @@ class CombinationItemType extends TranslatorAwareType
             ])
             ->add('name', TextPreviewType::class, [
                 'label' => $this->trans('Combination', 'Admin.Global'),
+                'attr' => [
+                    'preview_class' => 'combination-name-preview',
+                ],
             ])
             ->add('reference', TextType::class, [
                 'constraints' => [
@@ -152,6 +156,9 @@ class CombinationItemType extends TranslatorAwareType
                     ],
                 ],
                 'label' => $this->trans('Actions', 'Admin.Global'),
+                'attr' => [
+                    'class' => 'combination-row-actions',
+                ],
             ])
         ;
     }

@@ -96,20 +96,20 @@ export default class CombinationsGridRenderer {
     combinations.forEach((combination: Record<string, any>) => {
       const $row = $(this.getPrototypeRow(rowIndex, combination));
 
-      $(':input', $row).each((index, input) => {
-        const $input = $(input);
-
-        if ($input.val()) {
-          // @ts-ignore
-          $input.data('initialValue', $input.val());
-        }
+      // Init first default, and handle radio behaviour amongst lines
+      if (combination.is_default) {
+        $(ProductMap.combinations.list.isDefault, $row).prop('checked', true);
+      }
+      $(ProductMap.combinations.list.isDefault, $row).on('click', (event) => {
+        const clickedDefaultId = event.currentTarget.id;
+        $(`${ProductMap.combinations.list.isDefault}:not(#${clickedDefaultId})`).prop('checked', false);
+        $(`#${clickedDefaultId}`).prop('checked', true);
       });
 
-      if (combination.isDefault) {
-        $(ProductMap.combinations.tableRow.isDefaultInput(rowIndex), $row).prop('checked', true);
-      }
-
       this.updateByPriceImpactTaxExcluded($(ProductMap.combinations.list.priceImpactTaxExcluded, $row));
+
+      // JS event to allow external module to change the row, add listeners, ... before it is added
+      this.eventEmitter.emit(ProductEventMap.combinations.buildCombinationRow, {combination, $row});
 
       this.$combinationsTableBody.append($row);
       rowIndex += 1;
