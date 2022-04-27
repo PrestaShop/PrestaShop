@@ -325,20 +325,19 @@ export class ProgressModal extends Modal implements ProgressModalType {
   progressModal !: ProgressModalContainer;
   errorModal !: ProgressModalErrorContainer;
   constructor(
-    inputParams: InputProgressModalParams,
-    total: number,
+    inputParams: InputProgressModalParams
   ) {
     const params: ProgressModalParams = {
       id: 'progress-modal',
       customButtons: [],
       closable: false,
-      total: total,
+      total: 0,
       dialogStyle: {},
       ...inputParams,
     };
 
     super(params);
-    this.total = total;
+    this.total = params.total;
     this.errors = [];
   }
 
@@ -402,7 +401,6 @@ export class ProgressModal extends Modal implements ProgressModalType {
     });
 
     this.progressModal.stopProcessingButton.addEventListener('click', () => {
-      console.log('cancel');
       if (params.cancelCallback) {
         params.cancelCallback();
       }
