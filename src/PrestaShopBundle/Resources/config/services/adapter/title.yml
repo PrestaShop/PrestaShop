@@ -1,0 +1,10 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.adapter.title.title_image_thumbnail_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Title\TitleImageThumbnailProvider'
+    arguments:
+      - '@prestashop.core.image.parser.image_tag_source_parser'
+      - '@prestashop.adapter.image_manager'
+      - !php/const _PS_GENDERS_DIR_

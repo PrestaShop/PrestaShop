@@ -222,7 +222,7 @@ class AdminGendersControllerCore extends AdminController
             }
         }
 
-        return !count($this->errors) ? true : false;
+        return !count($this->errors);
     }
 
     protected function afterImageUpload()
