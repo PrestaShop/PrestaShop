@@ -431,6 +431,7 @@ class WebserviceController extends FrameworkBundleAdminController
             ]);
         } catch (Exception $e) {
             $this->addFlash('error', $e->getMessage());
+
             return false;
         }
 
