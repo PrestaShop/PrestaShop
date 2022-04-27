@@ -106,13 +106,13 @@ class CombinationController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
-     * @param Request $request
+     * @param int $productId
      *
      * @return Response
      */
-    public function bulkEditFormAction(Request $request): Response
+    public function bulkEditFormAction(int $productId): Response
     {
-        $bulkCombinationForm = $this->getBulkCombinationFormBuilder()->getForm();
+        $bulkCombinationForm = $this->getBulkCombinationFormBuilder()->getForm([], ['product_id' => $productId]);
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/Combination/bulk.html.twig', [
             'bulkCombinationForm' => $bulkCombinationForm->createView(),
@@ -123,16 +123,18 @@ class CombinationController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
      * @param Request $request
+     * @param int $productId
      * @param int $combinationId
      *
      * @return JsonResponse
      */
-    public function bulkEditAction(Request $request, int $combinationId): JsonResponse
+    public function bulkEditAction(Request $request, int $productId, int $combinationId): JsonResponse
     {
         try {
             // PATCH request is required to avoid disabled fields to be forced with null values
             $bulkCombinationForm = $this->getBulkCombinationFormBuilder()->getFormFor($combinationId, [], [
                 'method' => Request::METHOD_PATCH,
+                'product_id' => $productId,
             ]);
         } catch (CombinationNotFoundException $e) {
             return $this->returnErrorJsonResponse(
@@ -177,11 +179,14 @@ class CombinationController extends FrameworkBundleAdminController
      *
      * src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/Tabs/combinations.html.twig
      *
+     * @param int $productId
+     *
      * @return Response
      */
-    public function paginatedListAction(): Response
+    public function paginatedListAction(int $productId): Response
     {
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/Combination/paginated_list.html.twig', [
+            'productId' => $productId,
             'combinationLimitChoices' => self::COMBINATIONS_PAGINATION_OPTIONS,
             'combinationsLimit' => ProductCombinationFilters::LIST_LIMIT,
             'combinationsForm' => $this->createForm(CombinationListType::class)->createView(),

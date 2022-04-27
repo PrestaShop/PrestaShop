@@ -37,13 +37,16 @@ const CombinationEvents = ProductEvents.combinations;
  * This components handles the bulk actions of the combination list.
  */
 export default class BulkFormHandler {
+  readonly productId: number;
+
   private combinationsService: CombinationsService;
 
   private eventEmitter: EventEmitter;
 
   private tabContainer!: HTMLDivElement;
 
-  constructor() {
+  constructor(productId: number) {
+    this.productId = productId;
     this.combinationsService = new CombinationsService();
     this.eventEmitter = window.prestashop.instance.eventEmitter;
 
@@ -190,7 +193,11 @@ export default class BulkFormHandler {
       // @todo when the ProgressModal will be integrated this will update it after each request
       try {
         // eslint-disable-next-line no-await-in-loop
-        const response: Response = await this.combinationsService.bulkUpdate(Number(checkbox.value), new FormData(form));
+        const response: Response = await this.combinationsService.bulkUpdate(
+          this.productId,
+          Number(checkbox.value),
+          new FormData(form),
+        );
         // eslint-disable-next-line no-await-in-loop
         const jsonResponse = await response.json();
 

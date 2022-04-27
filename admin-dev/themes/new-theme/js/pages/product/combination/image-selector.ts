@@ -38,6 +38,9 @@ export default class ImageSelector {
   private init(): void {
     $(ProductMap.combinations.images.checkboxContainer, this.$selectorContainer).hide();
     this.$selectorContainer.on('click', ProductMap.combinations.images.imageChoice, (event) => {
+      if (this.$selectorContainer.hasClass('disabled')) {
+        return;
+      }
       const $imageChoice = $(event.currentTarget);
       const $checkbox = $(ProductMap.combinations.images.checkbox, $imageChoice);
 

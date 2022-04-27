@@ -46,6 +46,9 @@ class BulkCombinationFormDataFormatterTest extends TestCase
         $this->assertEquals($formData, $expectedFormattedData);
     }
 
+    /**
+     * @return iterable
+     */
     public function getDataToFormat(): iterable
     {
         yield 'empty data' => [
@@ -207,6 +210,95 @@ class BulkCombinationFormDataFormatterTest extends TestCase
                     'unit_price' => 87,
                 ],
             ],
+        ];
+
+        yield 'images selected, but disabling switch is not provided' => [
+            [
+                'images' => [
+                    'images' => [1, 3, 5],
+                ],
+            ],
+            [],
+        ];
+
+        yield 'images selected and disabling switch is true' => [
+            [
+                'images' => [
+                    'images' => [1, 3, 5],
+                    'disabling_switch_images' => true,
+                ],
+            ],
+            [
+                'images' => [1, 3, 5],
+            ],
+        ];
+
+        yield 'images selected, but disabling switch is false' => [
+            [
+                'images' => [
+                    'images' => [1, 3, 5],
+                    'disabling_switch_images' => false,
+                ],
+            ],
+            [],
+        ];
+
+        yield 'all images unselected, disabling switch not provided' => [
+            [
+                'images' => [
+                    'images' => [],
+                ],
+            ],
+            [],
+        ];
+
+        yield 'all images unselected and disabling switch is true' => [
+            [
+                'images' => [
+                    'disabling_switch_images' => true,
+                    'images' => [],
+                ],
+            ],
+            [
+                'images' => [],
+            ],
+        ];
+
+        yield 'all images unselected, but disabling switch is false' => [
+            [
+                'images' => [
+                    'disabling_switch_images' => false,
+                    'images' => [],
+                ],
+            ],
+            [],
+        ];
+
+        yield 'empty images data, disabling switch not provided' => [
+            [
+                'images' => [],
+            ],
+            [],
+        ];
+
+        yield 'empty images data and disabling switch is true' => [
+            [
+                'images' => [
+                    'disabling_switch_images' => true,
+                ],
+            ],
+            [
+                'images' => [],
+            ],
+        ];
+
+        yield 'empty images data, but disabling switch is false' => [
+            [
+                'images' => [
+                    'disabling_switch_images' => false,
+                ],
+            ],
+            [],
         ];
     }
 }

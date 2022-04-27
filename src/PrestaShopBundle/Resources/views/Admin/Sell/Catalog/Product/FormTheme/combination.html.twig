@@ -24,8 +24,9 @@
  *#}
 {% extends '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
 
-{% block _combination_form_images_widget %}
-  <div class="combination-images-selector">
+{% block combination_images_choice_widget %}
+  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' combination-images-selector')|trim }) -%}
+  <div {{ block('widget_container_attributes') }}>
     {%- for child in form %}
       <label class="combination-image-choice{% if child.vars.checked %} selected{% endif %}">
         <img src="{{ child.vars.attr['data-image-url'] }}" />

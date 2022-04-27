@@ -1502,21 +1502,27 @@ $product-page-padding-bottom: 80px !default;
   }
 }
 
-// Combination form page (in modal)
 .combination-page {
-  .combination-images-selector {
-    display: flex;
-    flex-direction: row;
-
+  .combination-images-selector:not(.disabled) {
     .combination-image-choice {
-      margin: 0.35rem;
       cursor: pointer;
-      border: solid transparent 3px;
 
       &:hover,
       &.selected {
         border: solid $primary 3px;
       }
+    }
+  }
+
+  .combination-images-selector {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    .combination-image-choice {
+      flex: 0 0 0;
+      margin: 0.35rem;
+      border: solid transparent 3px;
 
       .form-check-radio {
         display: none;
@@ -1529,6 +1535,11 @@ $product-page-padding-bottom: 80px !default;
     &.date_picker-widget {
       max-width: 20rem;
     }
+  }
+
+  .combination-images-selector.disabled .combination-image-choice {
+    cursor: not-allowed;
+    opacity: 0.4;
   }
 }
 

@@ -84,6 +84,19 @@ class BulkCombinationFormDataFormatter
             }
         }
 
+        // We only update images if disabling_switch_images value is truthy
+        if (!empty($formData['images']['disabling_switch_images'])) {
+            if (empty($formData['images']['images'])) {
+                // Images are collection of checkboxes and there are no values submitted if none of them are checked, but
+                // truthy disabling_switch_images value suggests, that it was intended to "unselect" all images
+                // so we adapt array structure accordingly
+                $formattedData['images'] = [];
+            } else {
+                // if images array is not empty, we simply adapt array structure to fit combinationForm structure
+                $formattedData['images'] = $formData['images']['images'];
+            }
+        }
+
         return $formattedData;
     }
 }

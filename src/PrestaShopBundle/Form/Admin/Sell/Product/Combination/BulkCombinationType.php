@@ -46,22 +46,30 @@ class BulkCombinationType extends TranslatorAwareType
             ->add('stock', BulkCombinationStockType::class)
             ->add('price', BulkCombinationPriceType::class)
             ->add('references', BulkCombinationReferencesType::class)
+            ->add('images', BulkCombinationImagesType::class, [
+                'label' => $this->trans('Images', 'Admin.Global'),
+                'product_id' => $options['product_id'],
+            ])
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-        $resolver->setDefaults([
-            'label' => false,
-            'label_subtitle' => $this->trans('You can bulk edit the selected combinations by enabling and filling each field that needs update.', 'Admin.Catalog.Feature'),
-            'expand_first' => false,
-            'display_one' => false,
-            'required' => false,
-            'attr' => [
-                'class' => 'bulk-combination-form',
-            ],
-        ]);
+        $resolver
+            ->setDefaults([
+                'label' => false,
+                'label_subtitle' => $this->trans('You can bulk edit the selected combinations by enabling and filling each field that needs update.', 'Admin.Catalog.Feature'),
+                'expand_first' => false,
+                'display_one' => false,
+                'required' => false,
+                'attr' => [
+                    'class' => 'bulk-combination-form',
+                ],
+            ])
+            ->setRequired(['product_id'])
+            ->setAllowedTypes('product_id', 'int')
+        ;
     }
 
     public function getParent()

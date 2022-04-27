@@ -1703,7 +1703,6 @@ services:
     parent: 'form.type.translatable.aware'
     public: true
     arguments:
-      - '@prestashop.core.form.choice_provider.product_images_choice_provider'
       - '@form.type.sell.product.event_listener.combination_listener'
     tags:
       - { name: form.type }
@@ -1722,6 +1721,15 @@ services:
     arguments:
       - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
       - "@=service('prestashop.adapter.legacy.configuration').get('PS_WEIGHT_UNIT')"
+    tags:
+      - { name: form.type }
+
+  form.type.sell.product.combination.combination_images_choice_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationImagesChoiceType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    arguments:
+      - '@prestashop.core.form.choice_provider.product_images_choice_provider'
     tags:
       - { name: form.type }
 
@@ -1754,6 +1762,13 @@ services:
 
   form.type.sell.product.combination.bulk_combination_references_type:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\BulkCombinationReferencesType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+
+  form.type.sell.product.combination.bulk_combination_images_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\BulkCombinationImagesType'
     parent: 'form.type.translatable.aware'
     public: true
     tags:
