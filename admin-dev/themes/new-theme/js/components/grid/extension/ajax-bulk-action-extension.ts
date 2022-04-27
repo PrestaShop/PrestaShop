@@ -24,8 +24,9 @@
  */
 
 import {Grid} from '@PSTypes/grid';
-import ProgressModal, {ProgressModalContainer} from '@components/modal/progress-modal';
+import ProgressModal from '@components/modal/progress-modal';
 import GridMap from '@components/grid/grid-map';
+import Router from '@components/router';
 
 const {$} = window;
 
@@ -40,87 +41,63 @@ export default class AjaxBulkActionExtension {
    * @param {Grid} grid
    */
   extend(grid: Grid): void {
-    let AjaxBulkExtension = this;
-
     grid
       .getContainer()
       .on('click', GridMap.bulks.ajaxAction, (event: JQueryEventObject) => {
         let checkboxes = $('.js-bulk-action-checkbox:checked');
-        let total = checkboxes.length;
 
-        const $ajaxButton = $(event.currentTarget);
+        const ajaxButton = $(event.currentTarget);
+        const modalTitle = ajaxButton.data('modalTitle');
 
-        const modal = this.showProgressModal(
-          $ajaxButton,
-          grid,
-          total,
-        );
-        let doneCount = 0;
-
-
-        for (let i = 0; i < checkboxes.length; i += 1) {
-          const checkbox = checkboxes[i];
-          if (AjaxBulkExtension.stopProcess) {
-            return false;
-          }
-          $.ajax({
-            type: "POST",
-            headers: { "cache-control": "no-cache" },
-            url: $ajaxButton.data('ajax-url'),
-            data: { id: checkbox.getAttribute('value') },
-            success(data) {
-              doneCount++;
-              if (data.success) {
-                modal.modalActionSuccess(doneCount);
-              } else {
-                modal.modalActionError(doneCount, data.message);
-              }
-            }
-          });
-      }
+        this.submitForm(ajaxButton, checkboxes, modalTitle);
     });
   }
 
-  private cancelAjaxAction(): void
+  private async submitForm(ajaxButton: JQuery<Element>, checkboxes: JQuery<Element>, modalTitle: string)
   {
-    this.stopProcess = true;
-  }
-
-  /**
-   * @param {jQuery} $submitBtn
-   * @param {Grid} grid
-   * @param total
-   */
-  private showProgressModal(
-    $submitBtn: JQuery<Element>,
-    grid: Grid,
-    total: number,
-  ): ProgressModal {
-    const modalTitle = $submitBtn.data('modalTitle');
+    let total = checkboxes.length;
+    let stopProcess = false;
 
     const modal = new ProgressModal(
       {
         modalTitle,
       },
       total,
-      () => this.postForm($submitBtn, grid),
-      () => this.cancelAjaxAction(),
+      () => function () {stopProcess = true; console.log(stopProcess)},
     );
 
     modal.show();
+    let doneCount = 0;
 
-    return modal;
+    for (let i = 0; i < checkboxes.length; i += 1) {
+      const checkbox = checkboxes[i];
+      if (stopProcess) {
+        return false;
+      }
+      // eslint-disable-next-line no-await-in-loop
+      const data = await this.callAjaxAction(ajaxButton, checkbox, modal, doneCount);
+      console.log(stopProcess);
+      doneCount++;
+      if (data.success) {
+        modal.updateCount(doneCount);
+      } else {
+        modal.updateCount(doneCount);
+        modal.addError(data.message);
+      }
+    }
   }
 
-  /**
-   * @param {jQuery} $submitBtn
-   * @param {Grid} grid
-   */
-  private postForm($submitBtn: JQuery<Element>, grid: Grid): void {
-    const $form = $(GridMap.filterForm(grid.getId()));
-
-    $form.attr('action', $submitBtn.data('form-url'));
-    $form.attr('method', $submitBtn.data('form-method'));
-    $form.submit();
+  private callAjaxAction($ajaxButton: JQuery<Element>, checkbox: Element, modal: ProgressModal, doneCount: number): JQuery.jqXHR
+  {
+    const router = new Router();
+    console.log(router.generate($ajaxButton.data('ajax-url')));
+    return $.ajax({
+      url: router.generate($ajaxButton.data('ajax-url')),
+      type: 'POST',
+      data: { id: checkbox.getAttribute('value') },
+        success(data) {
+          return data;
+        }
+    });
   }
 }

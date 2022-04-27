@@ -37,7 +37,6 @@ export interface ProgressModalType extends ModalType {
 export type ProgressModalParams = ModalParams & {
   modalTitle: string;
   total: number;
-  confirmCallback: (event: Event) => void,
   customButtons: Array<HTMLButtonElement | HTMLAnchorElement>;
 }
 export type InputProgressModalParams = Partial<ProgressModalParams>;
@@ -312,7 +311,6 @@ export class ProgressModalErrorContainer {
  * ConfirmModal component
  *
  * @param {InputConfirmModalParams} params
- * @param {Function} confirmCallback @deprecated You should rely on the confirmCallback param
  * @param {Function} cancelCallback @deprecated You should rely on the closeCallback param
  */
 export class ProgressModal extends Modal implements ProgressModalType {
@@ -326,7 +324,6 @@ export class ProgressModal extends Modal implements ProgressModalType {
   constructor(
     inputParams: InputProgressModalParams,
     total: number,
-    confirmCallback: (event: Event) => void,
     cancelCallback: () => void,
   ) {
     const params: ProgressModalParams = {
@@ -336,7 +333,6 @@ export class ProgressModal extends Modal implements ProgressModalType {
       modalTitle: "Progress action",
       total: total,
       dialogStyle: {},
-      confirmCallback,
       ...inputParams,
     };
 
@@ -361,6 +357,7 @@ export class ProgressModal extends Modal implements ProgressModalType {
   {
     this.updatePercentage(doneCount);
   }
+
   private updatePercentage(doneCount: number)
   {
     let progressBarDone = doneCount * 100 / this.total;

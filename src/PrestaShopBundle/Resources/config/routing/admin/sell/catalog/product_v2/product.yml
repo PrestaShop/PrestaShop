@@ -87,6 +87,8 @@ admin_products_v2_duplicate:
 admin_products_v2_activate_ajax:
   path: /activate_ajax
   methods: [ POST ]
+  options:
+    expose: true
   defaults:
     _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:activateAjax
     _legacy_controller: AdminProducts
