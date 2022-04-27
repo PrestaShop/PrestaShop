@@ -165,18 +165,26 @@ export default class BulkFormHandler {
 
   private toggleBulkActions(): void {
     const selectAllCheckbox = document.getElementById(CombinationMap.bulkSelectAllInPageId);
-    const btn = this.tabContainer.querySelector<HTMLInputElement>(CombinationMap.bulkActionsBtn);
+    const dropdownBtn = this.tabContainer.querySelector<HTMLInputElement>(CombinationMap.bulkActionsDropdownBtn);
     const selectedCombinationsCount = this.getSelectedCheckboxes().length;
     const enable = isChecked(selectAllCheckbox) || selectedCombinationsCount !== 0;
 
-    const bulkCombinationsBtn = this.tabContainer.querySelector<HTMLButtonElement>(CombinationMap.bulkCombinationFormBtn);
-    const bulkCombinationsLabel = bulkCombinationsBtn?.dataset.btnLabel || 'Edit %combinations_number% combinations';
+    const bulkActionButtons = this.tabContainer.querySelectorAll<HTMLButtonElement>(CombinationMap.bulkActionBtn);
 
-    if (bulkCombinationsBtn) {
-      bulkCombinationsBtn.innerHTML = bulkCombinationsLabel.replace(/%combinations_number%/, String(selectedCombinationsCount));
-    }
+    bulkActionButtons.forEach((button: HTMLButtonElement) => {
+      const label = button.dataset.btnLabel;
 
-    btn?.toggleAttribute('disabled', !enable);
+      if (!label) {
+        console.error('Attribute "data-btn-label" is not defined for combinations bulk action button');
+        return;
+      }
+
+      // eslint-disable-next-line no-param-reassign
+      button.innerHTML = label.replace(/%combinations_number%/, String(selectedCombinationsCount));
+      button?.toggleAttribute('disabled', !enable);
+    });
+
+    dropdownBtn?.toggleAttribute('disabled', !enable);
   }
 
   private async submitForm(form: HTMLFormElement): Promise<void> {
