@@ -373,10 +373,7 @@ export class ProgressModal extends Modal implements ProgressModalType {
     this.progressModal.errorCount.innerHTML = this.errors.length.toString();
   }
 
-  /** If I have variable append will still work, so need to try that */
-  /** Modal container should not be extended for children */
   /** Return 401 on error */
-  /** pass params and take cancelCallback from there */
   private initListeners(params: ProgressModalParams)
   {
     this.errorModal.downloadErrorsButton.addEventListener('click', () => {
