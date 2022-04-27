@@ -78,7 +78,7 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $searchQueryBuilder = $this->getCustomerQueryBuilder($searchCriteria)
             ->select('c.id_customer, c.firstname, c.lastname, c.email, c.active, c.newsletter, c.optin')
-            ->addSelect('c.date_add, gl.name as social_title, s.name as shop_name, c.company');
+            ->addSelect('c.date_add, gl.name as social_title, grl.name as default_group, s.name as shop_name, c.company');
 
         $this->appendTotalSpentQuery($searchQueryBuilder);
         $this->appendLastVisitQuery($searchQueryBuilder);
@@ -117,6 +117,12 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
                 $this->dbPrefix . 'gender_lang',
                 'gl',
                 'c.id_gender = gl.id_gender AND gl.id_lang = :context_lang_id'
+            )
+            ->leftJoin(
+                'c',
+                $this->dbPrefix . 'group_lang',
+                'grl',
+                'c.id_default_group = grl.id_group AND grl.id_lang = :context_lang_id'
             )
             ->leftJoin(
                 'c',
@@ -182,6 +188,7 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
             'firstname',
             'lastname',
             'email',
+            'default_group',
             'active',
             'newsletter',
             'optin',
@@ -203,6 +210,13 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
 
             if ('social_title' === $filterName) {
                 $qb->andWhere('gl.id_gender = :' . $filterName);
+                $qb->setParameter($filterName, $filterValue);
+
+                continue;
+            }
+
+            if ('default_group' === $filterName) {
+                $qb->andWhere('grl.id_group = :' . $filterName);
                 $qb->setParameter($filterName, $filterValue);
 
                 continue;
@@ -250,6 +264,10 @@ final class CustomerQueryBuilder extends AbstractDoctrineQueryBuilder
                 break;
             case 'social_title':
                 $orderBy = 'gl.name';
+
+                break;
+            case 'default_group':
+                $orderBy = 'grl.name';
 
                 break;
             case 'connect':

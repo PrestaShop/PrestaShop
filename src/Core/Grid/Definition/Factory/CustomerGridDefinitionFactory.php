@@ -70,9 +70,19 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
     private $isMultistoreFeatureEnabled;
 
     /**
+     * @var bool
+     */
+    private $isGroupsFeatureEnabled;
+
+    /**
      * @var array
      */
     private $genderChoices;
+
+    /**
+     * @var array
+     */
+    private $groupChoices;
 
     /**
      * @var string
@@ -85,19 +95,25 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
      * @param bool $isMultistoreFeatureEnabled
      * @param array $genderChoices
      * @param string $contextDateFormat
+     * @param bool $isGroupsFeatureEnabled
+     * @param array $groupChoices
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
         $isB2bFeatureEnabled,
         $isMultistoreFeatureEnabled,
         array $genderChoices,
-        string $contextDateFormat
+        string $contextDateFormat,
+        bool $isGroupsFeatureEnabled = true,
+        array $groupChoices = []
     ) {
         parent::__construct($hookDispatcher);
         $this->isB2bFeatureEnabled = $isB2bFeatureEnabled;
         $this->isMultistoreFeatureEnabled = $isMultistoreFeatureEnabled;
         $this->genderChoices = $genderChoices;
         $this->contextDateFormat = $contextDateFormat;
+        $this->isGroupsFeatureEnabled = $isGroupsFeatureEnabled;
+        $this->groupChoices = $groupChoices;
     }
 
     /**
@@ -277,6 +293,17 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
             );
         }
 
+        if ($this->isGroupsFeatureEnabled) {
+            $columns->addAfter(
+                'email',
+                (new DataColumn('default_group'))
+                    ->setName($this->trans('Group', [], 'Admin.Global'))
+                    ->setOptions([
+                        'field' => 'default_group',
+                    ])
+            );
+        }
+
         return $columns;
     }
 
@@ -379,6 +406,20 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
                     ->setAssociatedColumn('company')
             );
+        }
+
+        if ($this->isGroupsFeatureEnabled) {
+            $filters->add(
+                (new Filter('default_group', ChoiceType::class))
+                    ->setTypeOptions([
+                        'choices' => $this->groupChoices,
+                        'expanded' => false,
+                        'multiple' => false,
+                        'required' => false,
+                        'choice_translation_domain' => false,
+                    ])
+                    ->setAssociatedColumn('default_group')
+                );
         }
 
         return $filters;
