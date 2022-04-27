@@ -38,6 +38,7 @@ import {getProductAttributeGroups} from '@pages/product/services/attribute-group
 import SubmittableDeltaQuantityInput from '@components/form/submittable-delta-quantity-input';
 import BulkFormHandler from '@pages/product/combination/bulk-form-handler';
 import PaginatedCombinationsService from '@pages/product/services/paginated-combinations-service';
+import BulkDeleteHandler from '@pages/product/combination/bulk-delete-handler';
 
 const {$} = window;
 const CombinationEvents = ProductEventMap.combinations;
@@ -100,6 +101,7 @@ export default class CombinationsManager {
     this.paginatedCombinationsService = new PaginatedCombinationsService(productId);
     this.productAttributeGroups = [];
     new BulkFormHandler(productId);
+    new BulkDeleteHandler(productId);
 
     this.init();
   }

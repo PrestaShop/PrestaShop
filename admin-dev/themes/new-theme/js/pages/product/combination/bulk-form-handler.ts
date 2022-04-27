@@ -58,6 +58,7 @@ export default class BulkFormHandler {
   }
 
   private init(): void {
+    //@todo; what does this mean? why there are 2 almost same looking selectors?
     const bulkFormBtn = document.querySelector<HTMLButtonElement>(CombinationMap.bulkCombinationFormBtn);
     const bulkCombinationsBtn = this.tabContainer.querySelector<HTMLButtonElement>(CombinationMap.bulkCombinationFormBtn);
 

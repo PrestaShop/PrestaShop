@@ -133,6 +133,7 @@ export default {
     searchInput: '#product-combinations-generate .attributes-search',
     generateCombinationsButton: '.generate-combinations-button',
     bulkCombinationFormBtn: '#combination-bulk-form-btn',
+    bulkDeleteBtn: '#combination-bulk-delete-btn',
     bulkActionBtn: '.bulk-action-btn',
     bulkActionsDropdownBtn: '#combination-bulk-actions-btn',
     bulkSelectAllInPage: `#${bulkCombinationSelectAllInPageId}`,
