@@ -30,9 +30,12 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use Configuration;
+use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForAssociation;
+use RuntimeException;
+use Search;
 
 class SearchProductFeatureContext extends AbstractProductFeatureContext
 {
@@ -122,5 +125,43 @@ class SearchProductFeatureContext extends AbstractProductFeatureContext
             (int) Configuration::get('PS_SHOP_DEFAULT')
         ));
         Assert::assertEmpty($foundProducts);
+    }
+
+    /**
+     * @When I search for products on front office with sentence :searchSentence with locale :locale I should find:
+     */
+    public function legacySearchProduct(string $searchSentence, string $locale, TableNode $table): void
+    {
+        $languageId = Language::getIdByLocale($locale, true);
+        $search = Search::find($languageId, $searchSentence);
+
+        $expectedProducts = $table->getColumnsHash();
+        foreach ($expectedProducts as $expectedProduct) {
+            $productId = $this->getSharedStorage()->get($expectedProduct['product_id']);
+            $foundProduct = false;
+            foreach ($search['result'] as $product) {
+                if ((int) $product['id_product'] === $productId) {
+                    $foundProduct = true;
+                    Assert::assertEquals($expectedProduct['name'], $product['name']);
+                    break;
+                }
+            }
+
+            if (!$foundProduct) {
+                throw new RuntimeException(sprintf('Could not find product %s in search result', $expectedProduct['product_id']));
+            }
+        }
+    }
+
+    /**
+     * @When I search for products on front office with sentence :searchSentence with locale :locale I should find nothing
+     */
+    public function legacySearchProductNotFound(string $searchSentence, string $locale): void
+    {
+        $languageId = Language::getIdByLocale($locale, true);
+        $search = Search::find($languageId, $searchSentence);
+
+        Assert::assertEquals(0, (int) $search['total']);
+        Assert::assertEmpty($search['result']);
     }
 }

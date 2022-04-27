@@ -24,46 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Language\Pack\Loader;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Foundation\Version;
+namespace PrestaShop\PrestaShop\Core\Domain\Store\Exception;
 
 /**
- * Class RemoteLanguagePackLoader is responsible for retrieving language pack data from remote host.
+ * Thrown when cannot delete store
  */
-final class RemoteLanguagePackLoader implements LanguagePackLoaderInterface
+class CannotDeleteStoreException extends StoreException
 {
-    /**
-     * The link from which available languages are retrieved.
-     */
-    public const PACK_LINK = 'http://i18n.prestashop-project.org/translations/%ps_version%/available_languages.json';
-
-    /**
-     * @var Version
-     */
-    private $version;
-
-    /**
-     * @param Version $version
-     */
-    public function __construct(Version $version)
-    {
-        $this->version = $version;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getLanguagePackList()
-    {
-        $normalizedLink = str_replace('%ps_version%', $this->version->getSemVersion(), self::PACK_LINK);
-        $jsonResponse = file_get_contents($normalizedLink);
-
-        $result = [];
-        if ($jsonResponse) {
-            $result = json_decode($jsonResponse, true);
-        }
-
-        return $result;
-    }
 }

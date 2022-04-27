@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\SEO;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShopBundle\Form\Admin\Type\TextWithLengthCounterType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
@@ -175,7 +176,16 @@ class SEOType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('Tags', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h3',
-                'help' => $this->trans('Use a comma to create separate tags. E.g.: dress, cotton, party dresses.', 'Admin.Catalog.Help'),
+                'label_subtitle' => $this->trans('Enter the keywords that customers might search for when looking for this product.', 'Admin.Catalog.Feature'),
+                'help' => sprintf(
+                    '%s %s',
+                    $this->trans('Separate each tag with a comma or press the Enter key.', 'Admin.Catalog.Help'),
+                    $this->trans('Invalid characters: %s', 'Admin.Notifications.Info', [TypedRegexValidator::GENERIC_NAME_CHARS])
+                ),
+                'external_link' => [
+                    'href' => $this->legacyContext->getAdminLink('AdminTags', true),
+                    'text' => $this->trans('[1]Manage all tags[/1]', 'Admin.Catalog.Feature'),
+                ],
                 'options' => [
                     'constraints' => [
                         new TypedRegex(TypedRegex::TYPE_GENERIC_NAME),
@@ -185,18 +195,6 @@ class SEOType extends TranslatorAwareType
                     ],
                     'required' => false,
                 ],
-                'alert_title' => $this->trans('Tags are meant to help your customers find your products via the search bar.', 'Admin.Catalog.Help'),
-                'alert_message' => [
-                    $this->trans('Choose terms and keywords that your customers will use to search for this product and make sure you are consistent with the tags you may have already used.', 'Admin.Catalog.Help'),
-                    $this->trans('You can manage tag aliases in the [1]Search section[/1]. If you add new tags, you have to rebuild the index.', 'Admin.Catalog.Help', [
-                        '[1]' => sprintf(
-                            '<a target="_blank" href="%s">',
-                            $this->legacyContext->getAdminLink('AdminSearchConf')
-                        ),
-                        '[/1]' => '</a>',
-                    ]),
-                ],
-                'modify_all_shops' => true,
             ])
         ;
     }

@@ -56,8 +56,7 @@ class SearchProviderTest extends TestCase
         $this->provider = new SearchProvider(
             $loader,
             $externalSystemProvider,
-            $resourcesDir,
-            ''
+            $resourcesDir
         );
 
         $this->provider->setDomain('AdminActions');

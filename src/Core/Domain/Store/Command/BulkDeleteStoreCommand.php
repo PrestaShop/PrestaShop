@@ -24,46 +24,46 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Language\Pack\Loader;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Foundation\Version;
+namespace PrestaShop\PrestaShop\Core\Domain\Store\Command;
+
+use PrestaShop\PrestaShop\Core\Domain\Store\ValueObject\StoreId;
 
 /**
- * Class RemoteLanguagePackLoader is responsible for retrieving language pack data from remote host.
+ * Deletes stores on bulk action
  */
-final class RemoteLanguagePackLoader implements LanguagePackLoaderInterface
+class BulkDeleteStoreCommand
 {
     /**
-     * The link from which available languages are retrieved.
+     * @var array<int, StoreId>
      */
-    public const PACK_LINK = 'http://i18n.prestashop-project.org/translations/%ps_version%/available_languages.json';
+    private $storeIds;
 
     /**
-     * @var Version
+     * @param array<int, int> $storeIds
      */
-    private $version;
-
-    /**
-     * @param Version $version
-     */
-    public function __construct(Version $version)
+    public function __construct(array $storeIds)
     {
-        $this->version = $version;
+        $this->setStoreIds($storeIds);
     }
 
     /**
-     * {@inheritdoc}
+     * @return array<int, StoreId>
      */
-    public function getLanguagePackList()
+    public function getStoreIds(): array
     {
-        $normalizedLink = str_replace('%ps_version%', $this->version->getSemVersion(), self::PACK_LINK);
-        $jsonResponse = file_get_contents($normalizedLink);
+        return $this->storeIds;
+    }
 
-        $result = [];
-        if ($jsonResponse) {
-            $result = json_decode($jsonResponse, true);
+    /**
+     * @param array<int, int> $storeIds
+     */
+    private function setStoreIds(array $storeIds): void
+    {
+        $this->storeIds = [];
+        foreach ($storeIds as $storeId) {
+            $this->storeIds[] = new StoreId((int) $storeId);
         }
-
-        return $result;
     }
 }

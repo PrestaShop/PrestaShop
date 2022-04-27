@@ -146,7 +146,6 @@ services:
       - "@prestashop.translation.database_loader"
       - "@prestashop.translation.external_module_provider"
       - "%translations_dir%"
-      - "%modules_dir%"
     tags:
       - { name: "ps.translation_provider" }
 

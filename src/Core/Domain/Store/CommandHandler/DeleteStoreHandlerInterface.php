@@ -24,46 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Language\Pack\Loader;
+namespace PrestaShop\PrestaShop\Core\Domain\Store\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Foundation\Version;
+use PrestaShop\PrestaShop\Core\Domain\Store\Command\DeleteStoreCommand;
 
 /**
- * Class RemoteLanguagePackLoader is responsible for retrieving language pack data from remote host.
+ * Interface for DeleteStoreHandler
  */
-final class RemoteLanguagePackLoader implements LanguagePackLoaderInterface
+interface DeleteStoreHandlerInterface
 {
     /**
-     * The link from which available languages are retrieved.
+     * @param DeleteStoreCommand $command
      */
-    public const PACK_LINK = 'http://i18n.prestashop-project.org/translations/%ps_version%/available_languages.json';
-
-    /**
-     * @var Version
-     */
-    private $version;
-
-    /**
-     * @param Version $version
-     */
-    public function __construct(Version $version)
-    {
-        $this->version = $version;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getLanguagePackList()
-    {
-        $normalizedLink = str_replace('%ps_version%', $this->version->getSemVersion(), self::PACK_LINK);
-        $jsonResponse = file_get_contents($normalizedLink);
-
-        $result = [];
-        if ($jsonResponse) {
-            $result = json_decode($jsonResponse, true);
-        }
-
-        return $result;
-    }
+    public function handle(DeleteStoreCommand $command): void;
 }

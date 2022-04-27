@@ -1515,6 +1515,12 @@ class AdminControllerCore extends Controller
                         $this->errors[] = $this->trans('field %s is required.', [$values['title']], 'Admin.Notifications.Error');
                     }
                 }
+                // Check if field value on type select is valid
+                if (isset($values['type']) && $values['type'] === 'select' && isset($values['identifier']) && !empty($values['list'])) {
+                    if (false !== ($value = Tools::getValue($field)) && false === in_array($value, array_column($values['list'], $values['identifier']))) {
+                        $this->errors[] = $this->trans('The option selected in the %s field is invalid.', [$values['title']], 'Admin.Notifications.Error');
+                    }
+                }
 
                 // Check field validator
                 if (isset($values['type']) && $values['type'] == 'textLang') {

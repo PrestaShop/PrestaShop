@@ -24,46 +24,36 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Language\Pack\Loader;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Foundation\Version;
+namespace PrestaShop\PrestaShop\Adapter\Store\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkDeleteStoreCommand;
+use PrestaShop\PrestaShop\Core\Domain\Store\CommandHandler\BulkDeleteStoreHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Store\Repository\StoreRepository;
 
 /**
- * Class RemoteLanguagePackLoader is responsible for retrieving language pack data from remote host.
+ * Handles command that deletes stores
  */
-final class RemoteLanguagePackLoader implements LanguagePackLoaderInterface
+class BulkDeleteStoreHandler implements BulkDeleteStoreHandlerInterface
 {
     /**
-     * The link from which available languages are retrieved.
+     * @var StoreRepository
      */
-    public const PACK_LINK = 'http://i18n.prestashop-project.org/translations/%ps_version%/available_languages.json';
+    private $storeRepository;
 
-    /**
-     * @var Version
-     */
-    private $version;
-
-    /**
-     * @param Version $version
-     */
-    public function __construct(Version $version)
+    public function __construct(StoreRepository $storeRepository)
     {
-        $this->version = $version;
+        $this->storeRepository = $storeRepository;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getLanguagePackList()
+    public function handle(BulkDeleteStoreCommand $command): void
     {
-        $normalizedLink = str_replace('%ps_version%', $this->version->getSemVersion(), self::PACK_LINK);
-        $jsonResponse = file_get_contents($normalizedLink);
-
-        $result = [];
-        if ($jsonResponse) {
-            $result = json_decode($jsonResponse, true);
+        foreach ($command->getStoreIds() as $storeId) {
+            $this->storeRepository->delete($storeId);
         }
-
-        return $result;
     }
 }

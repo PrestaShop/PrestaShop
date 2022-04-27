@@ -257,12 +257,12 @@ class MediaCore
         }
 
         $urlData = parse_url($mediaUri);
-        if (!is_array($urlData)) {
+        if (!is_array($urlData) || !array_key_exists('path', $urlData)) {
             return false;
         }
 
         if (!array_key_exists('host', $urlData)) {
-            $mediaUri = '/' . ltrim(str_replace(str_replace(['/', '\\'], DIRECTORY_SEPARATOR, _PS_ROOT_DIR_), __PS_BASE_URI__, $mediaUri), '/\\');
+            $mediaUri = '/' . ltrim(str_replace(str_replace(['/', '\\'], DIRECTORY_SEPARATOR, _PS_ROOT_DIR_), __PS_BASE_URI__, $urlData['path']), '/\\');
             // remove PS_BASE_URI on _PS_ROOT_DIR_ for the following
             $fileUri = _PS_ROOT_DIR_ . Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $mediaUri);
             if (!file_exists($fileUri) || !@filemtime($fileUri) || @filesize($fileUri) === 0) {
@@ -270,6 +270,9 @@ class MediaCore
             }
 
             $mediaUri = str_replace('//', '/', $mediaUri);
+            if (array_key_exists('query', $urlData)) {
+                $mediaUri .= '?' . $urlData['query'];
+            }
         }
 
         if ($cssMediaType) {
