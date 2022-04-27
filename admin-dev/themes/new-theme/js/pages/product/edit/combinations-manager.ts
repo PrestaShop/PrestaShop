@@ -41,6 +41,7 @@ import BulkChoicesSelector from '@pages/product/combination/bulk-choices-selecto
 import ProductFormModel from '@pages/product/edit/product-form-model';
 
 import ChangeEvent = JQuery.ChangeEvent;
+import BigNumber from "@node_modules/bignumber.js";
 
 const {$} = window;
 const CombinationEvents = ProductEventMap.combinations;
@@ -235,7 +236,6 @@ export default class CombinationsManager {
 
     this.$combinationsContainer.on('change', CombinationsMap.list.fieldInputs, (event: ChangeEvent) => {
       const $input = $(event.currentTarget);
-      console.log($input.val(), $input.data('initialValue'));
 
       if (
         typeof $input.val() !== 'undefined'
@@ -244,6 +244,14 @@ export default class CombinationsManager {
       ) {
         this.enableEditionMode();
       }
+    });
+
+    this.$combinationsContainer.on('change', ProductMap.combinations.list.priceImpactTaxExcluded, (event: ChangeEvent) => {
+      this.updateByPriceImpactTaxExcluded($(event.currentTarget));
+    });
+
+    this.$combinationsContainer.on('change', ProductMap.combinations.list.priceImpactTaxIncluded, (event: ChangeEvent) => {
+      this.updateByPriceImpactTaxIncluded($(event.currentTarget));
     });
 
     $(CombinationsMap.list.footer.cancel).on('click', () => {
@@ -262,12 +270,27 @@ export default class CombinationsManager {
   }
 
   private watchEvents(): void {
+    // Build combination row
+    this.eventEmitter.on(CombinationEvents.buildCombinationRow, ({combination, $row}) => {
+      // Init first default, and handle radio behaviour amongst lines
+      if (combination.is_default) {
+        $(ProductMap.combinations.list.isDefault, $row).prop('checked', true);
+      }
+      $(ProductMap.combinations.list.isDefault, $row).on('click', (event) => {
+        const clickedDefaultId = event.currentTarget.id;
+        $(`${ProductMap.combinations.list.isDefault}:not(#${clickedDefaultId})`).prop('checked', false).val(0);
+        $(`#${clickedDefaultId}`).prop('checked', true).val(1);
+      });
+
+      this.updateByPriceImpactTaxExcluded($(ProductMap.combinations.list.priceImpactTaxExcluded, $row));
+    });
+
     // Preset initial data attribute after each list rendering
     this.eventEmitter.on(CombinationEvents.listRendered, () => {
       $(ProductMap.combinations.list.fieldInputs, this.$combinationsContainer).each((index, input) => {
         const $input = $(input);
 
-        if ($input.val()) {
+        if (typeof $input.val() !== 'undefined') {
           // @ts-ignore
           $input.data('initialValue', $input.val());
           $input.on('change', () => {
@@ -317,6 +340,65 @@ export default class CombinationsManager {
     });
 
     this.eventEmitter.on(CombinationEvents.bulkUpdateFinished, () => this.refreshPage());
+  }
+
+  private updateByPriceImpactTaxExcluded($priceImpactTaxExcluded: JQuery): void {
+    const $row = $priceImpactTaxExcluded.parents(ProductMap.combinations.list.combinationRow);
+    const $priceImpactTaxIncluded = $(ProductMap.combinations.list.priceImpactTaxIncluded, $row);
+
+    if (typeof $row === 'undefined' || typeof $priceImpactTaxIncluded === 'undefined') {
+      return;
+    }
+
+    // @ts-ignore
+    const priceImpactTaxExcluded: BigNumber = new BigNumber($priceImpactTaxExcluded.val());
+
+    if (priceImpactTaxExcluded.isNaN()) {
+      return;
+    }
+
+    $priceImpactTaxIncluded.val(this.productFormModel.addTax(priceImpactTaxExcluded));
+    this.updateFinalPrice(priceImpactTaxExcluded, $row);
+  }
+
+  private updateByPriceImpactTaxIncluded($priceImpactTaxIncluded: JQuery): void {
+    const $row = $priceImpactTaxIncluded.parents(ProductMap.combinations.list.combinationRow);
+    const $priceImpactTaxExcluded = $(ProductMap.combinations.list.priceImpactTaxExcluded, $row);
+
+    if (typeof $row === 'undefined' || typeof $priceImpactTaxExcluded === 'undefined') {
+      return;
+    }
+
+    // @ts-ignore
+    const priceImpactTaxIncluded: BigNumber = new BigNumber($priceImpactTaxIncluded.val());
+
+    if (priceImpactTaxIncluded.isNaN()) {
+      return;
+    }
+
+    $priceImpactTaxExcluded.val(this.productFormModel.removeTax(priceImpactTaxIncluded));
+    const taxRatio = this.productFormModel.getTaxRatio();
+
+    if (taxRatio.isNaN()) {
+      return;
+    }
+
+    this.updateFinalPrice(priceImpactTaxIncluded.dividedBy(taxRatio), $row);
+  }
+
+  private updateFinalPrice(priceImpactTaxExcluded: BigNumber, $row: JQuery) {
+    const productPrice = this.productFormModel.getPriceTaxExcluded();
+    const $finalPrice = $(ProductMap.combinations.list.finalPrice, $row);
+    const $finalPricePreview = $finalPrice.siblings(ProductMap.combinations.list.finalPricePreview);
+    const finalPrice = this.productFormModel.displayPrice(productPrice.plus(priceImpactTaxExcluded));
+
+    if (typeof $finalPrice !== 'undefined') {
+      $finalPrice.val(finalPrice);
+    }
+
+    if (typeof $finalPricePreview !== 'undefined') {
+      $finalPricePreview.html(finalPrice);
+    }
   }
 
   /**

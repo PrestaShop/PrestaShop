@@ -59,14 +59,6 @@ export default class CombinationsGridRenderer {
     this.$loadingSpinner = $(ProductMap.combinations.loadingSpinner);
     this.prototypeTemplate = this.$combinationsTable.data('prototype');
     this.prototypeName = this.$combinationsTable.data('prototypeName');
-
-    this.$combinationsTable.on('change', ProductMap.combinations.list.priceImpactTaxExcluded, (event: ChangeEvent) => {
-      this.updateByPriceImpactTaxExcluded($(event.currentTarget));
-    });
-
-    this.$combinationsTable.on('change', ProductMap.combinations.list.priceImpactTaxIncluded, (event: ChangeEvent) => {
-      this.updateByPriceImpactTaxIncluded($(event.currentTarget));
-    });
   }
 
   /**
@@ -95,19 +87,6 @@ export default class CombinationsGridRenderer {
     let rowIndex = 0;
     combinations.forEach((combination: Record<string, any>) => {
       const $row = $(this.getPrototypeRow(rowIndex, combination));
-
-      // Init first default, and handle radio behaviour amongst lines
-      if (combination.is_default) {
-        $(ProductMap.combinations.list.isDefault, $row).prop('checked', true);
-      }
-      $(ProductMap.combinations.list.isDefault, $row).on('click', (event) => {
-        const clickedDefaultId = event.currentTarget.id;
-        $(`${ProductMap.combinations.list.isDefault}:not(#${clickedDefaultId})`).prop('checked', false);
-        $(`#${clickedDefaultId}`).prop('checked', true);
-      });
-
-      this.updateByPriceImpactTaxExcluded($(ProductMap.combinations.list.priceImpactTaxExcluded, $row));
-
       // JS event to allow external module to change the row, add listeners, ... before it is added
       this.eventEmitter.emit(ProductEventMap.combinations.buildCombinationRow, {combination, $row});
 
@@ -129,64 +108,5 @@ export default class CombinationsGridRenderer {
     });
 
     return rowTemplate;
-  }
-
-  private updateByPriceImpactTaxExcluded($priceImpactTaxExcluded: JQuery): void {
-    const $row = $priceImpactTaxExcluded.parents(ProductMap.combinations.list.combinationRow);
-    const $priceImpactTaxIncluded = $(ProductMap.combinations.list.priceImpactTaxIncluded, $row);
-
-    if (typeof $row === 'undefined' || typeof $priceImpactTaxIncluded === 'undefined') {
-      return;
-    }
-
-    // @ts-ignore
-    const priceImpactTaxExcluded: BigNumber = new BigNumber($priceImpactTaxExcluded.val());
-
-    if (priceImpactTaxExcluded.isNaN()) {
-      return;
-    }
-
-    $priceImpactTaxIncluded.val(this.productFormModel.addTax(priceImpactTaxExcluded));
-    this.updateFinalPrice(priceImpactTaxExcluded, $row);
-  }
-
-  private updateByPriceImpactTaxIncluded($priceImpactTaxIncluded: JQuery): void {
-    const $row = $priceImpactTaxIncluded.parents(ProductMap.combinations.list.combinationRow);
-    const $priceImpactTaxExcluded = $(ProductMap.combinations.list.priceImpactTaxExcluded, $row);
-
-    if (typeof $row === 'undefined' || typeof $priceImpactTaxExcluded === 'undefined') {
-      return;
-    }
-
-    // @ts-ignore
-    const priceImpactTaxIncluded: BigNumber = new BigNumber($priceImpactTaxIncluded.val());
-
-    if (priceImpactTaxIncluded.isNaN()) {
-      return;
-    }
-
-    $priceImpactTaxExcluded.val(this.productFormModel.removeTax(priceImpactTaxIncluded));
-    const taxRatio = this.productFormModel.getTaxRatio();
-
-    if (taxRatio.isNaN()) {
-      return;
-    }
-
-    this.updateFinalPrice(priceImpactTaxIncluded.dividedBy(taxRatio), $row);
-  }
-
-  private updateFinalPrice(priceImpactTaxExcluded: BigNumber, $row: JQuery) {
-    const productPrice = this.productFormModel.getPriceTaxExcluded();
-    const $finalPrice = $(ProductMap.combinations.list.finalPrice, $row);
-    const $finalPricePreview = $finalPrice.siblings(ProductMap.combinations.list.finalPricePreview);
-    const finalPrice = this.productFormModel.displayPrice(productPrice.plus(priceImpactTaxExcluded));
-
-    if (typeof $finalPrice !== 'undefined') {
-      $finalPrice.val(finalPrice);
-    }
-
-    if (typeof $finalPricePreview !== 'undefined') {
-      $finalPricePreview.html(finalPrice);
-    }
   }
 }
