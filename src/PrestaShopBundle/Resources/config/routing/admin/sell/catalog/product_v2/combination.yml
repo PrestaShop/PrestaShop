@@ -73,7 +73,7 @@ admin_products_combinations_delete_combination:
 
 admin_products_combinations_bulk_delete:
   path: /{productId}/combinations/bulk-delete
-  methods: [ DELETE ]
+  methods: [ POST ]
   options:
     expose: true
   defaults:

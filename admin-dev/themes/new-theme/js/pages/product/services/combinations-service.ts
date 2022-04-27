@@ -52,6 +52,15 @@ export default class CombinationsService {
     });
   }
 
+  bulkDeleteCombinations(productId: number, combinationIds: number[]): JQuery.jqXHR {
+    return $.post({
+      url: this.router.generate('admin_products_combinations_bulk_delete', {productId}),
+      data: {
+        combinationIds: JSON.stringify(combinationIds),
+      },
+    });
+  }
+
   updateListedCombination(combinationId: number, data: Record<string, any>): JQuery.jqXHR<any> {
     return $.ajax({
       url: this.router.generate('admin_products_combinations_update_combination_from_listing', {

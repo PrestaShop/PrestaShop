@@ -301,7 +301,9 @@ class CombinationController extends FrameworkBundleAdminController
     {
         $combinationIds = $request->request->get('combinationIds');
         if (!$combinationIds) {
-            return $this->json([], Response::HTTP_NO_CONTENT);
+            return $this->json([
+                'error' => $this->getFallbackErrorMessage('', 0, 'Missing combinationIds in request body'),
+            ], Response::HTTP_BAD_REQUEST);
         }
 
         try {
