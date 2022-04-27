@@ -177,7 +177,7 @@ class CombinationItemType extends TranslatorAwareType
      *
      * @return array
      */
-    private function getPlaceholderData(array $children): array
+    protected function getPlaceholderData(array $children): array
     {
         $data = [];
         foreach ($children as $child) {

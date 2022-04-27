@@ -49,7 +49,6 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterf
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationListType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -186,12 +185,13 @@ class CombinationController extends FrameworkBundleAdminController
      */
     public function paginatedListAction(int $productId): Response
     {
+        $combinationsForm = $this->getCombinationListFormBuilder()->getForm();
+
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/Combination/paginated_list.html.twig', [
             'productId' => $productId,
             'combinationLimitChoices' => self::COMBINATIONS_PAGINATION_OPTIONS,
             'combinationsLimit' => ProductCombinationFilters::LIST_LIMIT,
-            'combinationsForm' => $this->createForm(CombinationListType::class)->createView(),
-            'combinationItemForm' => $this->getCombinationItemFormBuilder()->getForm()->createView(),
+            'combinationsForm' => $combinationsForm->createView(),
         ]);
     }
 
@@ -501,6 +501,14 @@ class CombinationController extends FrameworkBundleAdminController
     private function getBulkCombinationFormBuilder(): FormBuilderInterface
     {
         return $this->get('prestashop.core.form.identifiable_object.builder.bulk_combination_form_builder');
+    }
+
+    /**
+     * @return FormBuilderInterface
+     */
+    private function getCombinationListFormBuilder(): FormBuilderInterface
+    {
+        return $this->get('prestashop.core.form.identifiable_object.builder.combination_list_form_builder');
     }
 
     /**

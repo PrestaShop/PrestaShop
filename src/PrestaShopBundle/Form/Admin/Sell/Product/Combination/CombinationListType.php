@@ -28,8 +28,6 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -40,30 +38,17 @@ class CombinationListType extends CollectionType
     /**
      * {@inheritDoc}
      */
-    public function buildView(FormView $view, FormInterface $form, array $options)
-    {
-        // If no mapping has been defined it is built based on the prototype field names
-        /** @var FormInterface $prototype */
-        $prototype = $form->getConfig()->getAttribute('prototype');
-        // $this->setPlaceHolderData($prototype->all());
-
-        // Force the data in prototype so that placeholders are injected in the prototype template then render the view
-        //$prototype->setData($prototypeData);
-        parent::buildView($view, $form, $options);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-        $resolver->setDefaults([
-            'entry_type' => CombinationItemType::class,
-            'allow_add' => true,
-            'allow_delete' => true,
-            'prototype_name' => '__COMBINATION_INDEX__',
-        ]);
+        $resolver
+            ->setDefaults([
+                'entry_type' => CombinationItemType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'prototype_name' => '__COMBINATION_INDEX__',
+            ])
+        ;
     }
 
     /**
