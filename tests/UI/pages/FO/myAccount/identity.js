@@ -58,7 +58,7 @@ class AccountIdentity extends FOBasePage {
     );
 
     await page.click(this.customerPrivacyCheckbox);
-    if (await this.elementVisible(page, this.psgdprCheckbox, 500)) {
+    if (await this.elementVisible(page, this.psgdprCheckbox)) {
       await page.click(this.psgdprCheckbox);
     }
 
@@ -69,7 +69,7 @@ class AccountIdentity extends FOBasePage {
 
   /**
    * Unsubscribe from the newsletter from customer edit information page
-   * @param page {object} Browser tab
+   * @param page {Page} Browser tab
    * @param password {string} String for the password
    * @returns {Promise<string>}
    */
@@ -77,7 +77,7 @@ class AccountIdentity extends FOBasePage {
     await this.setValue(page, this.passwordInput, password);
 
     await page.click(this.customerPrivacyCheckbox);
-    if (await this.elementVisible(page, this.psgdprCheckbox, 500)) {
+    if (await this.elementVisible(page, this.psgdprCheckbox)) {
       await page.click(this.psgdprCheckbox);
     }
     await page.click(this.newsletterCheckbox);

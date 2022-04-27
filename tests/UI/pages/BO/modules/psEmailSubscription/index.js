@@ -31,7 +31,7 @@ class PsEmailSubscription extends ModuleConfiguration.constructor {
    * @returns {Promise<number>}
    */
   async getNumberOfNewsletterRegistration(page) {
-    if (await this.elementVisible(page, this.newsletterTableEmptyColumn, 1000)) {
+    if (await this.elementVisible(page, this.newsletterTableEmptyColumn)) {
       return 0;
     }
 

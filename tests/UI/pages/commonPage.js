@@ -121,7 +121,7 @@ class CommonPage {
    * @param timeout {number} Time to wait on milliseconds before throwing an error
    * @returns {Promise<boolean>} True if visible, false if not
    */
-  async elementVisible(page, selector, timeout = 10) {
+  async elementVisible(page, selector, timeout = 10000) {
     try {
       await this.waitForVisibleSelector(page, selector, timeout);
       return true;
@@ -137,7 +137,7 @@ class CommonPage {
    * @param timeout {number} Time to wait on milliseconds before throwing an error
    * @returns {Promise<boolean>} True if not visible, false if visible
    */
-  async elementNotVisible(page, selector, timeout = 10) {
+  async elementNotVisible(page, selector, timeout = 10000) {
     try {
       await this.waitForHiddenSelector(page, selector, timeout);
       return true;
@@ -172,7 +172,7 @@ class CommonPage {
    * @param timeout {number} Time to wait on milliseconds before throwing an error
    * @return {Promise<void>}
    */
-  async waitForSelectorAndClick(page, selector, timeout = 5000) {
+  async waitForSelectorAndClick(page, selector, timeout = 10000) {
     await this.waitForVisibleSelector(page, selector, timeout);
     await page.click(selector);
   }

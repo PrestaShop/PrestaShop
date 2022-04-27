@@ -164,7 +164,7 @@ class AddProduct extends BOBasePage {
     await this.setValueOnTinymceInput(page, this.productShortDescriptionIframe, productData.summary);
     await this.selectByVisibleText(page, this.productTypeSelect, productData.type, true);
     await this.setValue(page, this.productReferenceInput, productData.reference);
-    if (await this.elementVisible(page, this.productQuantityInput, 500)) {
+    if (await this.elementVisible(page, this.productQuantityInput)) {
       await this.setValue(page, this.productQuantityInput, productData.quantity);
     }
     await this.selectByVisibleText(page, this.productTaxRuleSelect, productData.taxRule);
@@ -281,7 +281,7 @@ class AddProduct extends BOBasePage {
     await page.$eval(this.productCombinationSelectAllCheckbox, el => el.click());
 
     // Open combinations bulk form
-    if (await this.elementNotVisible(page, this.productCombinationBulkQuantityInput, 1000)) {
+    if (await this.elementNotVisible(page, this.productCombinationBulkQuantityInput)) {
       await page.click(this.productCombinationsBulkFormTitle);
       await this.waitForVisibleSelector(page, this.productCombinationBulkQuantityInput, 5000);
     }
@@ -345,7 +345,7 @@ class AddProduct extends BOBasePage {
    * @return {Promise<boolean>}
    */
   hasCombinations(page) {
-    return this.elementVisible(page, this.productCombinationTableRow(1), 2000);
+    return this.elementVisible(page, this.productCombinationTableRow(1));
   }
 
   /**
@@ -359,7 +359,7 @@ class AddProduct extends BOBasePage {
       await this.setChecked(page, this.productCombinationSelectAllCheckbox);
 
       // Open combinations bulk form
-      if (await this.elementNotVisible(page, this.productCombinationBulkQuantityInput, 1000)) {
+      if (await this.elementNotVisible(page, this.productCombinationBulkQuantityInput)) {
         await page.click(this.productCombinationsBulkFormTitle);
         await this.waitForVisibleSelector(page, this.productCombinationBulkQuantityInput, 5000);
       }

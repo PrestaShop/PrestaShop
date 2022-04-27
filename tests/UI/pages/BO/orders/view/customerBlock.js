@@ -182,7 +182,7 @@ class CustomerBlock extends ViewOrderBasePage.constructor {
    * @returns {Promise<boolean>}
    */
   isPrivateNoteTextareaVisible(page) {
-    return this.elementVisible(page, this.privateNoteTextarea, 2000);
+    return this.elementVisible(page, this.privateNoteTextarea);
   }
 
   /**

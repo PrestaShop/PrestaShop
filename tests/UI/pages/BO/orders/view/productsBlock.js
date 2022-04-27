@@ -334,7 +334,7 @@ class ProductsBlock extends ViewOrderBasePage.constructor {
     if (quantity !== 1) {
       await this.addQuantity(page, quantity);
     }
-    await this.waitForSelectorAndClick(page, this.addProductAddButton, 1000);
+    await this.waitForSelectorAndClick(page, this.addProductAddButton);
     if (createNewInvoice) {
       await this.waitForSelectorAndClick(page, this.addProductCreateNewInvoiceButton);
     }
@@ -357,7 +357,7 @@ class ProductsBlock extends ViewOrderBasePage.constructor {
    * @returns {Promise<boolean>}
    */
   isAddButtonDisabled(page) {
-    return this.elementVisible(page, `${this.addProductAddButton}[disabled]`, 1000);
+    return this.elementVisible(page, `${this.addProductAddButton}[disabled]`);
   }
 
   /**
@@ -366,7 +366,7 @@ class ProductsBlock extends ViewOrderBasePage.constructor {
    * @returns {Promise<boolean>}
    */
   isAddProductTableRowVisible(page) {
-    return this.elementVisible(page, this.addProductTableRow, 1000);
+    return this.elementVisible(page, this.addProductTableRow);
   }
 
   /**
@@ -455,7 +455,7 @@ class ProductsBlock extends ViewOrderBasePage.constructor {
    * @returns {Promise<boolean>}
    */
   async isDiscountListTableVisible(page) {
-    return this.elementVisible(page, this.discountListTable, 2000);
+    return this.elementVisible(page, this.discountListTable);
   }
 
   /**
@@ -531,7 +531,7 @@ class ProductsBlock extends ViewOrderBasePage.constructor {
     await this.selectByVisibleText(page, this.paginationLimitSelect, number);
     await this.waitForVisibleSelector(page, this.orderProductsTableProductName(1));
 
-    return this.elementVisible(page, this.paginationNextLink, 1000);
+    return this.elementVisible(page, this.paginationNextLink);
   }
 }
 

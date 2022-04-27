@@ -260,7 +260,7 @@ class BOBasePage extends CommonPage {
    * @returns {Promise<void>}
    */
   async goToSubMenu(page, parentSelector, linkSelector) {
-    if (await this.elementNotVisible(page, `${parentSelector}.open`, 1000)) {
+    if (await this.elementNotVisible(page, `${parentSelector}.open`)) {
       // open the block
       await this.scrollTo(page, parentSelector);
 
@@ -280,7 +280,7 @@ class BOBasePage extends CommonPage {
    * @returns {Promise<void>}
    */
   async logoutBO(page) {
-    if (await this.elementVisible(page, this.userProfileIcon, 1000)) {
+    if (await this.elementVisible(page, this.userProfileIcon)) {
       await page.click(this.userProfileIcon);
     } else {
       await page.click(this.userProfileIconNonMigratedPages);
@@ -342,7 +342,7 @@ class BOBasePage extends CommonPage {
    * @return {Promise<void>}
    */
   async closeSfToolBar(page) {
-    if (await this.elementVisible(page, `${this.sfToolbarMainContentDiv}[style='display: block;']`, 1000)) {
+    if (await this.elementVisible(page, `${this.sfToolbarMainContentDiv}[style='display: block;']`)) {
       await page.click(this.sfCloseToolbarLink);
     }
   }
@@ -354,7 +354,7 @@ class BOBasePage extends CommonPage {
    */
   async openHelpSideBar(page) {
     await this.waitForSelectorAndClick(page, this.helpButton);
-    return this.elementVisible(page, `${this.rightSidebar}.sidebar-open`, 2000);
+    return this.elementVisible(page, `${this.rightSidebar}.sidebar-open`);
   }
 
   /**
@@ -364,7 +364,7 @@ class BOBasePage extends CommonPage {
    */
   async closeHelpSideBar(page) {
     await this.waitForSelectorAndClick(page, this.helpButton);
-    return this.elementVisible(page, `${this.rightSidebar}:not(.sidebar-open)`, 2000);
+    return this.elementVisible(page, `${this.rightSidebar}:not(.sidebar-open)`);
   }
 
   /**
@@ -384,7 +384,7 @@ class BOBasePage extends CommonPage {
    * @return {Promise<boolean>}
    */
   async isSubmenuVisible(page, parentSelector, linkSelector) {
-    if (await this.elementNotVisible(page, `${parentSelector}.open`, 1000)) {
+    if (await this.elementNotVisible(page, `${parentSelector}.open`)) {
       // Scroll before opening menu
       await this.scrollTo(page, parentSelector);
 
@@ -395,7 +395,7 @@ class BOBasePage extends CommonPage {
 
       await this.waitForVisibleSelector(page, `${parentSelector}.open`);
     }
-    return this.elementVisible(page, linkSelector, 1000);
+    return this.elementVisible(page, linkSelector);
   }
 
   /**
@@ -414,7 +414,7 @@ class BOBasePage extends CommonPage {
    * @return {Promise<void>}
    */
   async closeGrowlMessage(page) {
-    let growlNotVisible = await this.elementNotVisible(page, this.growlMessageBlock, 10000);
+    let growlNotVisible = await this.elementNotVisible(page, this.growlMessageBlock);
 
     while (!growlNotVisible) {
       try {
@@ -423,7 +423,7 @@ class BOBasePage extends CommonPage {
         // If element does not exist it's already not visible
       }
 
-      growlNotVisible = await this.elementNotVisible(page, this.growlMessageBlock, 2000);
+      growlNotVisible = await this.elementNotVisible(page, this.growlMessageBlock);
     }
 
     await this.waitForHiddenSelector(page, this.growlMessageBlock);
@@ -474,7 +474,7 @@ class BOBasePage extends CommonPage {
    */
   async navigateToPageWithInvalidToken(page, url, continueToPage = true) {
     await this.goTo(page, url);
-    if (await this.elementVisible(page, this.invalidTokenContinuelink, 10000)) {
+    if (await this.elementVisible(page, this.invalidTokenContinuelink)) {
       await this.clickAndWaitForNavigation(
         page,
         continueToPage ? this.invalidTokenContinuelink : this.invalidTokenCancellink,

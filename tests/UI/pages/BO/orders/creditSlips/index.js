@@ -54,7 +54,7 @@ class CreditSlips extends BOBasePage {
    * @returns {Promise<void>}
    */
   async resetFilter(page) {
-    if (await this.elementVisible(page, this.filterResetButton, 2000)) {
+    if (await this.elementVisible(page, this.filterResetButton)) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
   }

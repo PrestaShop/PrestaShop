@@ -80,7 +80,7 @@ class Home extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   async isHomePage(page) {
-    return this.elementVisible(page, this.homePageSection, 3000);
+    return this.elementVisible(page, this.homePageSection);
   }
 
   /**
@@ -100,7 +100,7 @@ class Home extends FOBasePage {
    * @return {Promise<boolean>}
    */
   async isPriceVisible(page, id = 1) {
-    return this.elementVisible(page, this.productPrice(id), 1000);
+    return this.elementVisible(page, this.productPrice(id));
   }
 
   /**
@@ -110,7 +110,7 @@ class Home extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   async isNewFlagVisible(page, id = 1) {
-    return this.elementVisible(page, this.newFlag(id), 1000);
+    return this.elementVisible(page, this.newFlag(id));
   }
 
   /**
@@ -167,7 +167,7 @@ class Home extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   isQuickViewProductModalVisible(page) {
-    return this.elementVisible(page, this.quickViewModalDiv, 2000);
+    return this.elementVisible(page, this.quickViewModalDiv);
   }
 
   /**
@@ -238,7 +238,7 @@ class Home extends FOBasePage {
   async closeQuickViewModal(page) {
     await this.waitForSelectorAndClick(page, this.quickViewCloseButton);
 
-    return this.elementNotVisible(page, this.quickViewModalDiv, 1000);
+    return this.elementNotVisible(page, this.quickViewModalDiv);
   }
 
   /**
@@ -249,7 +249,7 @@ class Home extends FOBasePage {
   async closeBlockCartModal(page) {
     await this.waitForSelectorAndClick(page, this.blockCartModalCloseButton);
 
-    return this.elementNotVisible(page, this.blockCartModalDiv, 1000);
+    return this.elementNotVisible(page, this.blockCartModalDiv);
   }
 
   /**

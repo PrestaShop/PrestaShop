@@ -98,7 +98,7 @@ class Countries extends BOBasePage {
    * @returns {Promise<void>}
    */
   async resetFilter(page) {
-    if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
+    if (!(await this.elementNotVisible(page, this.filterResetButton))) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
     await this.waitForVisibleSelector(page, this.filterSearchButton, 2000);
@@ -212,7 +212,7 @@ class Countries extends BOBasePage {
    * @return {Promise<boolean>}
    */
   getCountryStatus(page, row) {
-    return this.elementVisible(page, this.tableColumnStatusEnableLink(row), 1000);
+    return this.elementVisible(page, this.tableColumnStatusEnableLink(row));
   }
 
   /**

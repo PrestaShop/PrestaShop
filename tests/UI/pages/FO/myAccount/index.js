@@ -53,7 +53,7 @@ class MyAccount extends FOBasePage {
    * @returns {Promise<void>}
    */
   async goToAddressesPage(page) {
-    if (await this.elementVisible(page, this.accountFirstAddressLink, 2000)) {
+    if (await this.elementVisible(page, this.accountFirstAddressLink)) {
       await this.clickAndWaitForNavigation(page, this.accountFirstAddressLink);
     } else {
       await this.clickAndWaitForNavigation(page, this.accountAddressesLink);

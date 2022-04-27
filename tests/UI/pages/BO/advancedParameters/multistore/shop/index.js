@@ -88,7 +88,7 @@ class ShopSettings extends BOBasePage {
    * @return {Promise<void>}
    */
   async resetFilter(page) {
-    if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
+    if (!(await this.elementNotVisible(page, this.filterResetButton))) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
   }

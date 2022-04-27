@@ -77,7 +77,7 @@ class ViewOrderBasePage extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   isUpdateStatusButtonDisabled(page) {
-    return this.elementVisible(page, `${this.updateStatusButton}[disabled]`, 1000);
+    return this.elementVisible(page, `${this.updateStatusButton}[disabled]`);
   }
 
   /**
@@ -123,7 +123,7 @@ class ViewOrderBasePage extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   isViewInvoiceButtonVisible(page) {
-    return this.elementVisible(page, this.viewInvoiceButton, 1000);
+    return this.elementVisible(page, this.viewInvoiceButton);
   }
 
   /**
@@ -141,7 +141,7 @@ class ViewOrderBasePage extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   isPartialRefundButtonVisible(page) {
-    return this.elementVisible(page, this.partialRefundButton, 1000);
+    return this.elementVisible(page, this.partialRefundButton);
   }
 
   /**
@@ -159,7 +159,7 @@ class ViewOrderBasePage extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   isDeliverySlipButtonVisible(page) {
-    return this.elementVisible(page, this.viewDeliverySlipButton, 1000);
+    return this.elementVisible(page, this.viewDeliverySlipButton);
   }
 
   /**
@@ -177,7 +177,7 @@ class ViewOrderBasePage extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   isReturnProductsButtonVisible(page) {
-    return this.elementVisible(page, this.returnProductsButton, 2000);
+    return this.elementVisible(page, this.returnProductsButton);
   }
 }
 

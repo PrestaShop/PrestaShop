@@ -127,10 +127,10 @@ class Statuses extends BOBasePage {
    * @return {Promise<void>}
    */
   async resetFilter(page, tableName) {
-    if (!(await this.elementNotVisible(page, this.filterResetButton(tableName), 2000))) {
+    if (!(await this.elementNotVisible(page, this.filterResetButton(tableName)))) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton(tableName));
     }
-    await this.waitForVisibleSelector(page, this.filterSearchButton(tableName), 2000);
+    await this.waitForVisibleSelector(page, this.filterSearchButton(tableName));
   }
 
   /**
@@ -346,7 +346,7 @@ class Statuses extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   getStatus(page, row, columnName) {
-    return this.elementVisible(page, this.tableColumnValidIcon(row, columnName), 100);
+    return this.elementVisible(page, this.tableColumnValidIcon(row, columnName));
   }
 
   /**

@@ -114,10 +114,10 @@ class Carriers extends BOBasePage {
    * @return {Promise<void>}
    */
   async resetFilter(page) {
-    if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
+    if (!(await this.elementNotVisible(page, this.filterResetButton))) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
-    await this.waitForVisibleSelector(page, this.filterSearchButton, 2000);
+    await this.waitForVisibleSelector(page, this.filterSearchButton);
   }
 
   /**
@@ -402,7 +402,7 @@ class Carriers extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async getStatus(page, row = 1) {
-    return this.elementVisible(page, this.enableColumnValidIcon(row), 100);
+    return this.elementVisible(page, this.enableColumnValidIcon(row));
   }
 
   /**

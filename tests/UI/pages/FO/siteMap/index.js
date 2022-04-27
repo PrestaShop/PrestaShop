@@ -62,7 +62,7 @@ class SiteMap extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   isSuppliersLinkVisible(page) {
-    return this.elementVisible(page, this.suppliersPageLink, 2000);
+    return this.elementVisible(page, this.suppliersPageLink);
   }
 
   /**
@@ -71,7 +71,7 @@ class SiteMap extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   isBrandsLinkVisible(page) {
-    return this.elementVisible(page, this.brandsPageLink, 2000);
+    return this.elementVisible(page, this.brandsPageLink);
   }
 }
 

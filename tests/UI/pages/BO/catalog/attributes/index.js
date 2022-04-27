@@ -123,10 +123,10 @@ class Attributes extends BOBasePage {
    * @return {Promise<void>}
    */
   async resetFilter(page) {
-    if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
+    if (!(await this.elementNotVisible(page, this.filterResetButton))) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
-    await this.waitForVisibleSelector(page, this.filterSearchButton, 2000);
+    await this.waitForVisibleSelector(page, this.filterSearchButton);
   }
 
   /**
@@ -403,7 +403,7 @@ class Attributes extends BOBasePage {
   async openHelpSideBar(page) {
     await page.click(this.helpCardLink);
 
-    return this.elementVisible(page, this.helpContainterBlock, 2000);
+    return this.elementVisible(page, this.helpContainterBlock);
   }
 
   /**
@@ -415,7 +415,7 @@ class Attributes extends BOBasePage {
   async closeHelpSideBar(page) {
     await page.click(this.helpCardLink);
 
-    return this.elementNotVisible(page, this.helpContainterBlock, 2000);
+    return this.elementNotVisible(page, this.helpContainterBlock);
   }
 
   /**

@@ -48,7 +48,7 @@ class AddAddress extends BOBasePage {
    * @returns {Promise<?string>}
    */
   async createEditAddress(page, addressData, save = true) {
-    if (await this.elementVisible(page, this.customerEmailInput, 2000)) {
+    if (await this.elementVisible(page, this.customerEmailInput)) {
       await this.setValue(page, this.customerEmailInput, addressData.email);
     }
     await this.setValue(page, this.customerAddressdniInput, addressData.dni);

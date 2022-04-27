@@ -34,7 +34,7 @@ class OrderConfirmation extends FOBasePage {
    * @returns {boolean}
    */
   isFinalSummaryVisible(page) {
-    return this.elementVisible(page, this.orderSummaryContent, 2000);
+    return this.elementVisible(page, this.orderSummaryContent);
   }
 
   /**

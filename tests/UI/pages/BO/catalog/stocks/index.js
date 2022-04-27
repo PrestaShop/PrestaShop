@@ -95,7 +95,7 @@ class Stocks extends BOBasePage {
    * @returns {Promise<number>}
    */
   async getTotalNumberOfProducts(page) {
-    await this.waitForVisibleSelector(page, this.searchButton, 2000);
+    await this.waitForVisibleSelector(page, this.searchButton);
     await this.waitForHiddenSelector(page, this.productListLoading);
     // If pagination that return number of products in this page
     const pagesLength = await this.getProductsPagesLength(page);
@@ -120,7 +120,7 @@ class Stocks extends BOBasePage {
    * @returns {Promise<number>}
    */
   async getNumberOfProductsFromList(page) {
-    await this.waitForVisibleSelector(page, this.searchButton, 2000);
+    await this.waitForVisibleSelector(page, this.searchButton);
     await this.waitForHiddenSelector(page, this.productListLoading);
     return (await page.$$(this.productRows)).length;
   }
@@ -176,7 +176,7 @@ class Stocks extends BOBasePage {
 
     await Promise.all([
       page.click(this.searchButton),
-      this.waitForVisibleSelector(page, this.productListLoading, 10000),
+      this.waitForVisibleSelector(page, this.productListLoading),
     ]);
 
     await this.waitForHiddenSelector(page, this.productListLoading);
@@ -326,7 +326,7 @@ class Stocks extends BOBasePage {
    */
   async openHelpSideBar(page) {
     await page.$eval(this.helpButton, el => el.click());
-    return this.elementVisible(page, `${this.rightSidebar}.sidebar-open`, 2000);
+    return this.elementVisible(page, `${this.rightSidebar}.sidebar-open`);
   }
 
   /**
@@ -337,7 +337,7 @@ class Stocks extends BOBasePage {
    */
   async closeHelpSideBar(page) {
     await page.$eval(this.helpButton, el => el.click());
-    return this.elementVisible(page, `${this.rightSidebar}:not(.sidebar-open)`, 2000);
+    return this.elementVisible(page, `${this.rightSidebar}:not(.sidebar-open)`);
   }
 }
 

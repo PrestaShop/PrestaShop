@@ -145,7 +145,7 @@ class TabListBlock extends ViewOrderBasePage.constructor {
    * @returns {Promise<boolean>}
    */
   async isOrderNoteOpened(page) {
-    return this.elementVisible(page, this.orderNoteCloseButton, 100);
+    return this.elementVisible(page, this.orderNoteCloseButton);
   }
 
   /**
@@ -204,7 +204,7 @@ class TabListBlock extends ViewOrderBasePage.constructor {
    */
   async goToDocumentsTab(page) {
     await page.click(this.documentTab);
-    return this.elementVisible(page, `${this.documentTab}.active`, 1000);
+    return this.elementVisible(page, `${this.documentTab}.active`);
   }
 
   /**
@@ -213,7 +213,7 @@ class TabListBlock extends ViewOrderBasePage.constructor {
    * @returns {Promise<boolean>}
    */
   isGenerateInvoiceButtonVisible(page) {
-    return this.elementVisible(page, this.generateInvoiceButton, 1000);
+    return this.elementVisible(page, this.generateInvoiceButton);
   }
 
   /**
@@ -319,7 +319,7 @@ class TabListBlock extends ViewOrderBasePage.constructor {
   async isEditDocumentNoteButtonVisible(page, row = 1) {
     await this.goToDocumentsTab(page);
 
-    return this.elementVisible(page, this.editDocumentNoteButton(row), 1000);
+    return this.elementVisible(page, this.editDocumentNoteButton(row));
   }
 
   /**
@@ -331,7 +331,7 @@ class TabListBlock extends ViewOrderBasePage.constructor {
   async isAddDocumentNoteButtonVisible(page, row = 1) {
     await this.goToDocumentsTab(page);
 
-    return this.elementVisible(page, this.addDocumentNoteButton(row), 1000);
+    return this.elementVisible(page, this.addDocumentNoteButton(row));
   }
 
   /**
@@ -343,7 +343,7 @@ class TabListBlock extends ViewOrderBasePage.constructor {
   async isEnterPaymentButtonVisible(page, row = 1) {
     await this.goToDocumentsTab(page);
 
-    return this.elementVisible(page, this.enterPaymentButton(row), 1000);
+    return this.elementVisible(page, this.enterPaymentButton(row));
   }
 
   /**
@@ -388,7 +388,7 @@ class TabListBlock extends ViewOrderBasePage.constructor {
   async goToCarriersTab(page) {
     await this.waitForSelectorAndClick(page, this.carriersTab);
 
-    return this.elementVisible(page, `${this.carriersTab}.active`, 1000);
+    return this.elementVisible(page, `${this.carriersTab}.active`);
   }
 
   /**
@@ -426,7 +426,7 @@ class TabListBlock extends ViewOrderBasePage.constructor {
   async clickOnEditLink(page) {
     await this.waitForSelectorAndClick(page, this.editLink);
 
-    return this.elementVisible(page, this.updateOrderShippingModalDialog, 1000);
+    return this.elementVisible(page, this.updateOrderShippingModalDialog);
   }
 
   /**
@@ -452,7 +452,7 @@ class TabListBlock extends ViewOrderBasePage.constructor {
   async goToMerchandiseReturnsTab(page) {
     await this.waitForSelectorAndClick(page, this.merchandiseReturnsTab);
 
-    return this.elementVisible(page, `${this.merchandiseReturnsTab}.active`, 1000);
+    return this.elementVisible(page, `${this.merchandiseReturnsTab}.active`);
   }
 
   /**

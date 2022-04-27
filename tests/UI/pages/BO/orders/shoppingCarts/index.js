@@ -85,10 +85,10 @@ class ShoppingCarts extends BOBasePage {
    * @returns {Promise<void>}
    */
   async resetFilter(page) {
-    if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
+    if (!(await this.elementNotVisible(page, this.filterResetButton))) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
-    await this.waitForVisibleSelector(page, this.filterSearchButton, 2000);
+    await this.waitForVisibleSelector(page, this.filterSearchButton);
   }
 
   /**

@@ -73,7 +73,7 @@ class Contacts extends BOBasePage {
    * @returns {Promise<void>}
    */
   async resetFilter(page) {
-    if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
+    if (!(await this.elementNotVisible(page, this.filterResetButton))) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
   }
@@ -232,7 +232,7 @@ class Contacts extends BOBasePage {
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
 
     let i = 0;
-    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
+    while (await this.elementNotVisible(page, sortColumnDiv) && i < 2) {
       await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
       i += 1;
     }

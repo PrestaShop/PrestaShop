@@ -56,7 +56,7 @@ class OrderHistory extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   isReorderLinkVisible(page, orderRow = 1) {
-    return this.elementVisible(page, this.reorderLink(orderRow), 1000);
+    return this.elementVisible(page, this.reorderLink(orderRow));
   }
 
   /**
@@ -97,7 +97,7 @@ class OrderHistory extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   isBoxMessagesSectionVisible(page) {
-    return this.elementVisible(page, this.boxMessagesSection, 1000);
+    return this.elementVisible(page, this.boxMessagesSection);
   }
 
   /**
@@ -107,7 +107,7 @@ class OrderHistory extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   isMessageRowVisible(page, row = 1) {
-    return this.elementVisible(page, this.messageRow(row + 1), 1000);
+    return this.elementVisible(page, this.messageRow(row + 1));
   }
 
   /**

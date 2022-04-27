@@ -49,10 +49,10 @@ class OrderDetails extends FOBasePage {
   /**
    * Is orderReturn form visible
    * @param page {Page} Browser tab
-   * @returns {boolean}
+   * @returns {Promise<boolean>}
    */
   isOrderReturnFormVisible(page) {
-    return this.elementVisible(page, this.orderReturnForm, 1000);
+    return this.elementVisible(page, this.orderReturnForm);
   }
 
   /**

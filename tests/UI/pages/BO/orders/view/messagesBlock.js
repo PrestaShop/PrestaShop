@@ -73,10 +73,10 @@ class MessagesBlock extends ViewOrderBasePage.constructor {
    */
   isMessageVisible(page, messageID = 1, messageFrom = 'employee') {
     if (messageFrom === 'employee') {
-      return this.elementVisible(page, this.messageEmployeeBlockContent(messageID), 1000);
+      return this.elementVisible(page, this.messageEmployeeBlockContent(messageID));
     }
 
-    return this.elementVisible(page, this.messageCustomerBlockContent(messageID), 1000);
+    return this.elementVisible(page, this.messageCustomerBlockContent(messageID));
   }
 
   /**
@@ -86,7 +86,7 @@ class MessagesBlock extends ViewOrderBasePage.constructor {
    * @returns {Promise<boolean>}
    */
   isEmployeeIconVisible(page, messageID = 1) {
-    return this.elementVisible(page, `${this.messageBlockIcon(messageID)} .employee-icon`, 1000);
+    return this.elementVisible(page, `${this.messageBlockIcon(messageID)} .employee-icon`);
   }
 
   /**
@@ -96,7 +96,7 @@ class MessagesBlock extends ViewOrderBasePage.constructor {
    * @returns {Promise<boolean>}
    */
   isEmployeePrivateIconVisible(page, messageID = 1) {
-    return this.elementVisible(page, `${this.messageBlockIcon(messageID)} .employee-icon--private`, 1000);
+    return this.elementVisible(page, `${this.messageBlockIcon(messageID)} .employee-icon--private`);
   }
 
   /**

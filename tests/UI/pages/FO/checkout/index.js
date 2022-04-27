@@ -89,7 +89,7 @@ class Checkout extends FOBasePage {
    * @return {Promise<boolean>}
    */
   async isCheckoutPage(page) {
-    return this.elementVisible(page, this.checkoutPageBody, 1000);
+    return this.elementVisible(page, this.checkoutPageBody);
   }
 
   /**
@@ -99,7 +99,7 @@ class Checkout extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   async isStepCompleted(page, stepSelector) {
-    return this.elementVisible(page, `${stepSelector}.-complete`, 1000);
+    return this.elementVisible(page, `${stepSelector}.-complete`);
   }
 
   /**
@@ -132,7 +132,7 @@ class Checkout extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   isShippingMethodVisible(page, shippingMethod) {
-    return this.elementVisible(page, this.deliveryOptionLabel(shippingMethod), 2000);
+    return this.elementVisible(page, this.deliveryOptionLabel(shippingMethod));
   }
 
   /**
@@ -142,7 +142,7 @@ class Checkout extends FOBasePage {
    */
   isPaymentConfirmationButtonVisibleAndEnabled(page) {
     // small side effect note, the selector is the one that checks for disabled
-    return this.elementVisible(page, this.paymentConfirmationButton, 1000);
+    return this.elementVisible(page, this.paymentConfirmationButton);
   }
 
   /**
@@ -238,7 +238,7 @@ class Checkout extends FOBasePage {
    */
   async orderWithoutPaymentMethod(page) {
     // Click on terms of services checkbox if visible
-    if (await this.elementVisible(page, this.conditionToApproveLabel, 500)) {
+    if (await this.elementVisible(page, this.conditionToApproveLabel)) {
       await Promise.all([
         this.waitForVisibleSelector(page, this.paymentConfirmationButton),
         page.click(this.conditionToApproveLabel),
@@ -256,7 +256,7 @@ class Checkout extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   isPaymentMethodExist(page, paymentModuleName) {
-    return this.elementVisible(page, this.paymentOptionInput(paymentModuleName), 2000);
+    return this.elementVisible(page, this.paymentOptionInput(paymentModuleName));
   }
 
   /**
@@ -288,7 +288,7 @@ class Checkout extends FOBasePage {
    * @returns {boolean}
    */
   isCreateAnAccountNoticeVisible(page) {
-    return this.elementVisible(page, this.createAccountOptionalNotice, 1000);
+    return this.elementVisible(page, this.createAccountOptionalNotice);
   }
 
   /**
@@ -297,7 +297,7 @@ class Checkout extends FOBasePage {
    * @returns {boolean}
    */
   isPasswordRequired(page) {
-    return this.elementVisible(page, `${this.checkoutGuestPasswordInput}:required`, 1000);
+    return this.elementVisible(page, `${this.checkoutGuestPasswordInput}:required`);
   }
 
   /**
@@ -306,7 +306,7 @@ class Checkout extends FOBasePage {
    * @returns {boolean}
    */
   isConditionToApproveCheckboxVisible(page) {
-    return this.elementVisible(page, this.conditionToApproveCheckbox, 1000);
+    return this.elementVisible(page, this.conditionToApproveCheckbox);
   }
 
   /**
@@ -325,7 +325,7 @@ class Checkout extends FOBasePage {
    * @return {boolean}
    */
   isGiftCheckboxVisible(page) {
-    return this.elementVisible(page, this.giftCheckbox, 1000);
+    return this.elementVisible(page, this.giftCheckbox);
   }
 
   /**
@@ -334,7 +334,7 @@ class Checkout extends FOBasePage {
    * @return {boolean}
    */
   isRecyclableCheckboxVisible(page) {
-    return this.elementVisible(page, this.recycableGiftCheckbox, 1000);
+    return this.elementVisible(page, this.recycableGiftCheckbox);
   }
 
   /**
@@ -418,12 +418,12 @@ class Checkout extends FOBasePage {
     }
 
     // Check customer privacy input if visible
-    if (await this.elementVisible(page, this.checkoutGuestCustomerPrivacyCheckbox, 500)) {
+    if (await this.elementVisible(page, this.checkoutGuestCustomerPrivacyCheckbox)) {
       await this.setChecked(page, this.checkoutGuestCustomerPrivacyCheckbox);
     }
 
     // Check gdpr input if visible
-    if (await this.elementVisible(page, this.checkoutGuestGdprCheckbox, 500)) {
+    if (await this.elementVisible(page, this.checkoutGuestGdprCheckbox)) {
       await this.setChecked(page, this.checkoutGuestGdprCheckbox);
     }
 

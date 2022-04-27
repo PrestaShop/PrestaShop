@@ -43,7 +43,7 @@ class ProductComments extends ModuleConfiguration.constructor {
    * @returns {Promise<number>}
    */
   async getTableReviewCount(page, table) {
-    if (await this.elementVisible(page, this.reviewsTableEmptyRows(table), 3000)) {
+    if (await this.elementVisible(page, this.reviewsTableEmptyRows(table))) {
       return 0;
     }
     const selector = this.reviewsTableRows(table);

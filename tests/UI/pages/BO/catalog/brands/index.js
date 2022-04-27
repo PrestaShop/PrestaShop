@@ -108,7 +108,7 @@ class Brands extends BOBasePage {
    * @return {Promise<void>}
    */
   async resetFilter(page, tableName) {
-    if (await this.elementVisible(page, this.filterResetButton(tableName), 2000)) {
+    if (await this.elementVisible(page, this.filterResetButton(tableName))) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton(tableName));
     }
   }
@@ -509,7 +509,7 @@ class Brands extends BOBasePage {
     const sortColumnSpanButton = this.sortColumnSpanButton(tableName, sortBy);
 
     let i = 0;
-    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
+    while (await this.elementNotVisible(page, sortColumnDiv) && i < 2) {
       await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
       i += 1;
     }

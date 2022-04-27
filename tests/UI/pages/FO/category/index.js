@@ -31,7 +31,7 @@ class Category extends FOBasePage {
    * @return {Promise<boolean>}
    */
   async isCategoryPage(page) {
-    return this.elementVisible(page, this.bodySelector, 2000);
+    return this.elementVisible(page, this.bodySelector);
   }
 
   /**

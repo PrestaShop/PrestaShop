@@ -85,7 +85,7 @@ class Customers extends BOBasePage {
    * @returns {Promise<void>}
    */
   async resetFilter(page) {
-    if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
+    if (!(await this.elementNotVisible(page, this.filterResetButton))) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
   }
@@ -452,7 +452,7 @@ class Customers extends BOBasePage {
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
 
     let i = 0;
-    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
+    while (await this.elementNotVisible(page, sortColumnDiv) && i < 2) {
       await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
       i += 1;
     }
@@ -469,7 +469,7 @@ class Customers extends BOBasePage {
    */
   async setRequiredFields(page, id, valueWanted = true) {
     // Check if form is open
-    if (await this.elementNotVisible(page, `${this.requiredFieldsForm}.show`, 1000)) {
+    if (await this.elementNotVisible(page, `${this.requiredFieldsForm}.show`)) {
       await Promise.all([
         this.waitForSelectorAndClick(page, this.setRequiredFieldsButton),
         this.waitForVisibleSelector(page, `${this.requiredFieldsForm}.show`),

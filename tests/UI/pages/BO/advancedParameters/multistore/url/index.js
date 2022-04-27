@@ -103,7 +103,7 @@ class ShopURLSettings extends BOBasePage {
    * @return {Promise<void>}
    */
   async resetFilter(page) {
-    if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
+    if (!(await this.elementNotVisible(page, this.filterResetButton))) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
   }
@@ -310,7 +310,7 @@ class ShopURLSettings extends BOBasePage {
    * @return {Promise<boolean>}
    */
   async getStatus(page, row, column) {
-    return this.elementVisible(page, this.columnValidIcon(row, column), 100);
+    return this.elementVisible(page, this.columnValidIcon(row, column));
   }
 
   /**
@@ -322,7 +322,7 @@ class ShopURLSettings extends BOBasePage {
    * @return {Promise<boolean>} return true if action is done, false otherwise
    */
   async setStatus(page, row, column, valueWanted = true) {
-    await this.waitForVisibleSelector(page, this.tableColumn(row, column), 2000);
+    await this.waitForVisibleSelector(page, this.tableColumn(row, column));
     if (await this.getStatus(page, row, column) !== valueWanted) {
       await page.click(this.tableColumn(row, column));
       await this.waitForVisibleSelector(

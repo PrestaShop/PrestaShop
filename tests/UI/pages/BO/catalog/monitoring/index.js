@@ -93,7 +93,7 @@ class Monitoring extends BOBasePage {
    * @return {Promise<void>}
    */
   async resetFilter(page, tableName) {
-    if (!(await this.elementNotVisible(page, this.filterResetButton(tableName), 2000))) {
+    if (!(await this.elementNotVisible(page, this.filterResetButton(tableName)))) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton(tableName));
     }
   }
@@ -244,7 +244,7 @@ class Monitoring extends BOBasePage {
    * @return {Promise<boolean>}
    */
   async getStatus(page, tableName, row = 1) {
-    return this.elementVisible(page, this.enableColumnValidIcon(tableName, row), 100);
+    return this.elementVisible(page, this.enableColumnValidIcon(tableName, row));
   }
 
   // Sort methods
@@ -284,7 +284,7 @@ class Monitoring extends BOBasePage {
     const sortColumnSpanButton = this.sortColumnSpanButton(tableName, sortBy);
 
     let i = 0;
-    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
+    while (await this.elementNotVisible(page, sortColumnDiv) && i < 2) {
       await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
       i += 1;
     }

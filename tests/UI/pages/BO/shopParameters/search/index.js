@@ -118,10 +118,10 @@ class Search extends BOBasePage {
    * @return {Promise<void>}
    */
   async resetFilter(page) {
-    if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
+    if (!(await this.elementNotVisible(page, this.filterResetButton))) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
-    await this.waitForVisibleSelector(page, this.filterSearchButton, 2000);
+    await this.waitForVisibleSelector(page, this.filterSearchButton);
   }
 
   /**
@@ -287,7 +287,7 @@ class Search extends BOBasePage {
    * @return {Promise<boolean>}
    */
   getStatus(page, row) {
-    return this.elementVisible(page, this.tableColumnStatusEnabledIcon(row), 500);
+    return this.elementVisible(page, this.tableColumnStatusEnabledIcon(row));
   }
 
   /**
@@ -298,7 +298,7 @@ class Search extends BOBasePage {
    * @returns {Promise<boolean>} return true if action is done, false otherwise
    */
   async setStatus(page, row, valueWanted = true) {
-    await this.waitForVisibleSelector(page, this.tableColumnStatus(row), 2000);
+    await this.waitForVisibleSelector(page, this.tableColumnStatus(row));
     if (await this.getStatus(page, row) !== valueWanted) {
       await page.click(this.tableColumnStatus(row));
       await this.waitForVisibleSelector(

@@ -66,7 +66,7 @@ class CreateAccount extends FOBasePage {
     );
 
     await page.click(this.customerPrivacyCheckbox);
-    if (await this.elementVisible(page, this.psgdprCheckbox, 500)) {
+    if (await this.elementVisible(page, this.psgdprCheckbox)) {
       await page.click(this.psgdprCheckbox);
     }
     await page.click(this.saveButton);
@@ -78,7 +78,7 @@ class CreateAccount extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   async isPartnerOfferRequired(page) {
-    return this.elementVisible(page, `${this.partnerOfferCheckbox}:required`, 1000);
+    return this.elementVisible(page, `${this.partnerOfferCheckbox}:required`);
   }
 
   /**
@@ -87,7 +87,7 @@ class CreateAccount extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   async isBirthDateVisible(page) {
-    return this.elementVisible(page, this.birthdateInput, 1000);
+    return this.elementVisible(page, this.birthdateInput);
   }
 
   /**
@@ -96,7 +96,7 @@ class CreateAccount extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   async isPartnerOfferVisible(page) {
-    return this.elementVisible(page, this.partnerOfferCheckbox, 1000);
+    return this.elementVisible(page, this.partnerOfferCheckbox);
   }
 
   /**
@@ -105,7 +105,7 @@ class CreateAccount extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   async isCompanyInputVisible(page) {
-    return this.elementVisible(page, this.companyInput, 1000);
+    return this.elementVisible(page, this.companyInput);
   }
 }
 

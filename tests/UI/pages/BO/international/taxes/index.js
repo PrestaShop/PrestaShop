@@ -81,7 +81,7 @@ class Taxes extends BOBasePage {
    * @returns {Promise<void>}
    */
   async resetFilter(page) {
-    if (await this.elementVisible(page, this.resetFilterButton, 2000)) {
+    if (await this.elementVisible(page, this.resetFilterButton)) {
       await this.clickAndWaitForNavigation(page, this.resetFilterButton);
     }
   }
@@ -354,7 +354,7 @@ class Taxes extends BOBasePage {
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
 
     let i = 0;
-    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
+    while (await this.elementNotVisible(page, sortColumnDiv) && i < 2) {
       await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
       i += 1;
     }

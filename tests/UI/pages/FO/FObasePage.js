@@ -157,7 +157,7 @@ class FOBasePage extends CommonPage {
    * @return {Promise<boolean>}
    */
   async isCustomerConnected(page) {
-    return this.elementVisible(page, this.logoutLink, 1000);
+    return this.elementVisible(page, this.logoutLink);
   }
 
   /**
@@ -200,7 +200,7 @@ class FOBasePage extends CommonPage {
    */
   async languageExists(page, lang = 'en') {
     await page.click(this.languageSelectorExpandIcon);
-    return this.elementVisible(page, this.languageSelectorMenuItemLink(lang), 1000);
+    return this.elementVisible(page, this.languageSelectorMenuItemLink(lang));
   }
 
   /**
@@ -228,7 +228,7 @@ class FOBasePage extends CommonPage {
    */
   async currencyExists(page, currencyName = 'Euro') {
     await page.click(this.currencySelectorExpandIcon);
-    return this.elementVisible(page, this.currencySelectorMenuItemLink(currencyName), 1000);
+    return this.elementVisible(page, this.currencySelectorMenuItemLink(currencyName));
   }
 
   /**

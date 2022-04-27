@@ -226,7 +226,7 @@ class AddOrder extends BOBasePage {
       this.waitForVisibleSelector(page, this.checkoutHistoryBlock),
     ]);
 
-    return this.elementVisible(page, this.checkoutHistoryBlock, 1000);
+    return this.elementVisible(page, this.checkoutHistoryBlock);
   }
 
   /**
@@ -237,7 +237,7 @@ class AddOrder extends BOBasePage {
   async clickOnDetailsButton(page) {
     await this.waitForSelectorAndClick(page, this.customerCardDetailButton);
 
-    return this.elementVisible(page, this.iframe, 2000);
+    return this.elementVisible(page, this.iframe);
   }
 
   /**
@@ -258,7 +258,7 @@ class AddOrder extends BOBasePage {
   async closeIframe(page) {
     await this.waitForSelectorAndClick(page, this.closeFancyBoxIframe);
 
-    return this.elementNotVisible(page, this.iframe, 3000);
+    return this.elementNotVisible(page, this.iframe);
   }
 
   /* Carts table methods */
@@ -293,7 +293,7 @@ class AddOrder extends BOBasePage {
   async clickOnCartDetailsButton(page, row = 1) {
     await this.waitForSelectorAndClick(page, this.customerCartsTableDetailsButton(row));
 
-    return this.elementVisible(page, this.iframe, 2000);
+    return this.elementVisible(page, this.iframe);
   }
 
   /**
@@ -315,7 +315,7 @@ class AddOrder extends BOBasePage {
   async clickOnCartUseButton(page, row = 1) {
     await this.waitForSelectorAndClick(page, this.customerCartsTableUseButton(row));
 
-    return this.elementVisible(page, this.productsTable, 1000);
+    return this.elementVisible(page, this.productsTable);
   }
 
   /* Carts & Orders methods */
@@ -328,7 +328,7 @@ class AddOrder extends BOBasePage {
   async clickOnOrdersTab(page) {
     await this.waitForSelectorAndClick(page, this.ordersTab);
 
-    return this.elementVisible(page, this.customerOrdersTable, 1000);
+    return this.elementVisible(page, this.customerOrdersTable);
   }
 
   /**
@@ -362,7 +362,7 @@ class AddOrder extends BOBasePage {
   async clickOnOrderDetailsButton(page, row = 1) {
     await this.waitForSelectorAndClick(page, this.orderDetailsButton(row));
 
-    return this.elementVisible(page, this.iframe, 2000);
+    return this.elementVisible(page, this.iframe);
   }
 
   /**
@@ -383,7 +383,7 @@ class AddOrder extends BOBasePage {
   async closeOrderIframe(page) {
     await this.waitForSelectorAndClick(page, this.closeIframe);
 
-    return this.elementNotVisible(page, this.iframe, 3000);
+    return this.elementNotVisible(page, this.iframe);
   }
 
   /**
@@ -395,7 +395,7 @@ class AddOrder extends BOBasePage {
   async clickOnOrderUseButton(page, row = 1) {
     await this.waitForSelectorAndClick(page, this.orderUseButton(row));
 
-    return this.elementVisible(page, this.productsTable, 1000);
+    return this.elementVisible(page, this.productsTable);
   }
 
   /* Cart methods */
@@ -466,7 +466,7 @@ class AddOrder extends BOBasePage {
 
     // Fill add product form
     await this.selectByVisibleText(page, this.productResultsSelect, productToSelect);
-    if (await this.elementVisible(page, this.productCustomInput, 1000)) {
+    if (await this.elementVisible(page, this.productCustomInput)) {
       await this.setValue(page, this.productCustomInput, productToSearch.customizedValue);
     }
     await this.setValue(page, this.productQuantityInput, quantity);
@@ -533,7 +533,7 @@ class AddOrder extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   isProductTableRowNotVisible(page, row) {
-    return this.elementNotVisible(page, this.productsTableRow(row), 1000);
+    return this.elementNotVisible(page, this.productsTableRow(row));
   }
 
 
@@ -546,7 +546,7 @@ class AddOrder extends BOBasePage {
   async removeProduct(page, row = 1) {
     await this.waitForSelectorAndClick(page, this.productTableColumnRemoveButton(row));
 
-    return this.elementNotVisible(page, this.productsTableColumn('total-price', row), 2000);
+    return this.elementNotVisible(page, this.productsTableColumn('total-price', row));
   }
 
   /**
@@ -556,7 +556,7 @@ class AddOrder extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async isProductNotVisibleInCart(page, row) {
-    return this.elementNotVisible(page, this.productsTableColumn('definition-td', row), 2000);
+    return this.elementNotVisible(page, this.productsTableColumn('definition-td', row));
   }
 
   /**
@@ -589,7 +589,7 @@ class AddOrder extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   isVouchersTableNotVisible(page) {
-    return this.elementNotVisible(page, this.vouchersTable, 1000);
+    return this.elementNotVisible(page, this.vouchersTable);
   }
 
   /**
@@ -601,7 +601,7 @@ class AddOrder extends BOBasePage {
   async searchVoucher(page, voucherName) {
     await this.setValue(page, this.searchVoucherInput, voucherName);
     const cartRuleResult = await this.getTextContent(page, this.searchCartRuleResultBox);
-    if (await this.elementVisible(page, this.searchCartRuleResultFound, 500)) {
+    if (await this.elementVisible(page, this.searchCartRuleResultFound)) {
       await this.waitForSelectorAndClick(page, this.searchCartRuleResultBox);
     }
 
@@ -626,7 +626,7 @@ class AddOrder extends BOBasePage {
     await this.waitForSelectorAndClick(page, this.addVoucherBUtton);
     await this.waitForVisibleSelector(page, this.iframe);
 
-    return this.elementVisible(page, this.iframe, 2000);
+    return this.elementVisible(page, this.iframe);
   }
 
   /**
@@ -687,7 +687,7 @@ class AddOrder extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   isShippingBlockVisible(page) {
-    return this.elementVisible(page, this.shippingBlock, 1000);
+    return this.elementVisible(page, this.shippingBlock);
   }
 
   /**

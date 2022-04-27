@@ -139,7 +139,7 @@ class Cart extends FOBasePage {
    * @returns {boolean}
    */
   isProceedToCheckoutButtonDisabled(page) {
-    return this.elementVisible(page, this.disabledProceedToCheckoutButton, 1000);
+    return this.elementVisible(page, this.disabledProceedToCheckoutButton);
   }
 
   /**
@@ -148,7 +148,7 @@ class Cart extends FOBasePage {
    * @returns {boolean}
    */
   isAlertWarningForMinimumPurchaseVisible(page) {
-    return this.elementVisible(page, this.alertWarning, 1000);
+    return this.elementVisible(page, this.alertWarning);
   }
 
   /**

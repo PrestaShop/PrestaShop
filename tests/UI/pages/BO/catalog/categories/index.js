@@ -95,7 +95,7 @@ class Categories extends BOBasePage {
    * @returns {Promise<void>}
    */
   async resetFilter(page) {
-    if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
+    if (!(await this.elementNotVisible(page, this.filterResetButton))) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
   }
@@ -251,7 +251,7 @@ class Categories extends BOBasePage {
    */
   async goToViewSubCategoriesPage(page, row) {
     if (
-      await this.elementVisible(page, this.categoriesListTableViewLink(row, 'actions'), 100)
+      await this.elementVisible(page, this.categoriesListTableViewLink(row, 'actions'))
     ) {
       await this.clickAndWaitForNavigation(page, this.categoriesListTableViewLink(row, 'actions'));
     } else {
@@ -380,7 +380,7 @@ class Categories extends BOBasePage {
     const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
 
     let i = 0;
-    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
+    while (await this.elementNotVisible(page, sortColumnDiv) && i < 2) {
       await page.hover(this.sortColumnDiv(sortBy));
       await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
       i += 1;

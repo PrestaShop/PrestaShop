@@ -52,7 +52,7 @@ class ModuleManager extends BOBasePage {
   async searchModule(page, moduleTag, moduleName) {
     await page.type(this.searchModuleTagInput, moduleTag);
     await page.click(this.searchModuleButton);
-    return this.elementVisible(page, this.moduleBlock(moduleName), 10000);
+    return this.elementVisible(page, this.moduleBlock(moduleName));
   }
 
   /**
@@ -62,7 +62,7 @@ class ModuleManager extends BOBasePage {
    * @return {Promise<void>}
    */
   async goToConfigurationPage(page, moduleName) {
-    if (await this.elementNotVisible(page, this.configureModuleButton(moduleName), 1000)) {
+    if (await this.elementNotVisible(page, this.configureModuleButton(moduleName))) {
       await Promise.all([
         page.click(this.actionsDropdownButton(moduleName)),
         this.waitForVisibleSelector(page, `${this.actionsDropdownButton(moduleName)}[aria-expanded='true']`),
@@ -94,7 +94,7 @@ class ModuleManager extends BOBasePage {
    * @return {Promise<boolean>}
    */
   async isModuleEnabled(page, moduleName) {
-    return this.elementNotVisible(page, this.enableModuleButton(moduleName), 1000);
+    return this.elementNotVisible(page, this.enableModuleButton(moduleName));
   }
 
   /**

@@ -198,11 +198,11 @@ class Install extends CommonPage {
     await page.click(this.testDbConnectionButton);
 
     // Create database 'prestashop' if not exist
-    if (await this.elementVisible(page, this.createDbButton, 3000)) {
+    if (await this.elementVisible(page, this.createDbButton)) {
       await page.click(this.createDbButton);
     }
 
-    return this.elementVisible(page, this.dbResultCheckOkBlock, 3000);
+    return this.elementVisible(page, this.dbResultCheckOkBlock);
   }
 
   /**

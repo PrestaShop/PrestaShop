@@ -275,7 +275,7 @@ class Product extends FOBasePage {
       await this.setValue(page, this.productQuantity, quantity.toString());
     }
 
-    if (await this.elementVisible(page, this.custumizedTextarea, 2000)) {
+    if (await this.elementVisible(page, this.custumizedTextarea)) {
       await this.setValue(page, this.custumizedTextarea, customizedText);
       await this.waitForSelectorAndClick(page, this.saveCustomizationButton);
     }
@@ -338,7 +338,7 @@ class Product extends FOBasePage {
    */
   async isQuantityDisplayed(page) {
     await this.waitForSelectorAndClick(page, this.productDetail);
-    return this.elementVisible(page, this.productQuantitySpan, 1000);
+    return this.elementVisible(page, this.productQuantitySpan);
   }
 
   /**
@@ -347,7 +347,7 @@ class Product extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   isAvailabilityQuantityDisplayed(page) {
-    return this.elementVisible(page, this.productAvailabilityIcon, 1000);
+    return this.elementVisible(page, this.productAvailabilityIcon);
   }
 
   /**
@@ -356,7 +356,7 @@ class Product extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   isPriceDisplayed(page) {
-    return this.elementVisible(page, this.productPrice, 1000);
+    return this.elementVisible(page, this.productPrice);
   }
 
   /**
@@ -365,7 +365,7 @@ class Product extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   isAddToCartButtonDisplayed(page) {
-    return this.elementVisible(page, this.addToCartButton, 1000);
+    return this.elementVisible(page, this.addToCartButton);
   }
 
   /**
@@ -386,7 +386,7 @@ class Product extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   isUnavailableProductColorDisplayed(page, color) {
-    return this.elementVisible(page, this.productColorInput(color), 1000);
+    return this.elementVisible(page, this.productColorInput(color));
   }
 
   /**
@@ -395,7 +395,7 @@ class Product extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   isAddToCartButtonEnabled(page) {
-    return this.elementNotVisible(page, `${this.addToCartButton}:disabled`, 1000);
+    return this.elementNotVisible(page, `${this.addToCartButton}:disabled`);
   }
 
   /**
@@ -425,7 +425,7 @@ class Product extends FOBasePage {
     await page.click(this.reviewRating(productReviewData.reviewRating));
     await page.click(this.reviewSubmitButton);
     await page.click(this.closeReviewSentConfirmationModalButton);
-    return this.elementNotVisible(page, this.reviewSentConfirmationModal, 3000);
+    return this.elementNotVisible(page, this.reviewSentConfirmationModal);
   }
 
   /**

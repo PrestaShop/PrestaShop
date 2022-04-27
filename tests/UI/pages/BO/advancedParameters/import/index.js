@@ -69,7 +69,7 @@ class Import extends BOBasePage {
    * @returns {Promise<boolean>}
    */
   async isForceAllIDNumbersVisible(page) {
-    return this.elementVisible(page, this.forceAllIDNumber(1), 2000);
+    return this.elementVisible(page, this.forceAllIDNumber(1));
   }
 
   /**
@@ -125,7 +125,7 @@ class Import extends BOBasePage {
     await this.waitForVisibleSelector(page, this.importProgressModalCloseButton);
     await this.clickAndWaitForNavigation(page, this.importProgressModalCloseButton);
 
-    return this.elementNotVisible(page, this.importProgressModalCloseButton, 1000);
+    return this.elementNotVisible(page, this.importProgressModalCloseButton);
   }
 }
 

@@ -82,7 +82,7 @@ class ContactUs extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   isAttachmentInputVisible(page) {
-    return this.elementVisible(page, this.attachmentLabel, 1000);
+    return this.elementVisible(page, this.attachmentLabel);
   }
 }
 

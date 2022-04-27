@@ -100,7 +100,7 @@ class AddAddress extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   async isVatNumberRequired(page) {
-    return this.elementVisible(page, `${this.vatNumberInput}:required`, 1000);
+    return this.elementVisible(page, `${this.vatNumberInput}:required`);
   }
 
   /**

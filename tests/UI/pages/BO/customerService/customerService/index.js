@@ -73,7 +73,7 @@ class CustomerService extends BOBasePage {
    * @return {Promise<void>}
    */
   async resetFilter(page) {
-    if (await this.elementVisible(page, this.filterResetButton, 2000)) {
+    if (await this.elementVisible(page, this.filterResetButton)) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
   }
@@ -115,7 +115,7 @@ class CustomerService extends BOBasePage {
    */
   async getTextColumn(page, row, columnName) {
     let i = 0;
-    if (await this.elementVisible(page, this.filterColumn('id_customer_thread'), 2000)) {
+    if (await this.elementVisible(page, this.filterColumn('id_customer_thread'))) {
       i += 1;
     }
     let columnSelector;
@@ -177,7 +177,7 @@ class CustomerService extends BOBasePage {
    */
   async isStatusChanged(page, row = 1, status) {
     let statusColumn = 6;
-    if (await this.elementVisible(page, this.filterColumn('id_customer_thread'), 500)) {
+    if (await this.elementVisible(page, this.filterColumn('id_customer_thread'))) {
       statusColumn += 1;
     }
 
@@ -203,7 +203,7 @@ class CustomerService extends BOBasePage {
         throw new Error(`${status} was not found as an option`);
     }
 
-    return this.elementVisible(page, selector(row, statusColumn), 2000);
+    return this.elementVisible(page, selector(row, statusColumn));
   }
 
   /**
