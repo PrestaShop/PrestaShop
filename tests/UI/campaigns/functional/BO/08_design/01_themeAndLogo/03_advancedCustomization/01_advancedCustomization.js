@@ -4,7 +4,6 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const testContext = require('@utils/testContext');
 const files = require('@utils/files');
 
 // Import login steps
@@ -20,13 +19,18 @@ const moduleManagerPage = require('@pages/BO/modules/moduleManager');
 // Import FO pages
 const homePage = require('@pages/FO/home');
 
-// Import data
+// Import demo data
 const {themeCustomization} = require('@data/demo/modules');
+
+// Import test context
+const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_design_themeAndLogo_advancedCustomization';
 
 let browserContext;
 let page;
+
+// Variable used to create temporary theme file
 let filePath;
 
 // Variable used to create child_classic.zip file
@@ -44,6 +48,7 @@ Scenario:
 - Use the classic theme and remove the child theme
 - Click on the link How to use parents/child themes
  */
+
 describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
   // before and after functions
   before(async function () {
@@ -154,9 +159,9 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
       await files.deleteFile(generatedFilePath);
     });
 
-    it('should remove the zip file of the child theme from the origin path', async function () {
+    it('should remove the zip file of the child theme from the temporary path', async function () {
       await testContext
-        .addContextItem(this, 'testIdentifier', 'removeChildThemeFromOriginPath', baseContext);
+        .addContextItem(this, 'testIdentifier', 'removeChildThemeFromTemporaryPath', baseContext);
 
       await files.deleteFile(renamedFilePath);
     });
@@ -241,20 +246,6 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
 
   // 4 - Click on the link How to use parents/child themes
   describe('BO - Design - Theme & Logo - Advanced Customization : How to use parents/child themes', async () => {
-    it('should go to \'Design > Theme & Logo\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToThemeAndLogoPage_4', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.designParentLink,
-        dashboardPage.themeAndLogoParentLink,
-      );
-
-      await themeAndLogoPage.closeSfToolBar(page);
-
-      const pageTitle = await themeAndLogoPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
-    });
 
     it('should go to \'Advanced Customization\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAdvancedCustomizationPage_2', baseContext);

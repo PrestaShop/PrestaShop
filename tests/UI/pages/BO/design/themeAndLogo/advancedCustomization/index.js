@@ -30,7 +30,7 @@ class AdvancedCustomization extends themeAndLogoBasePage {
   /* Methods */
   /**
    * Download theme
-   * @param {Page} Browser tab
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async downloadTheme(page) {
@@ -39,7 +39,7 @@ class AdvancedCustomization extends themeAndLogoBasePage {
 
   /**
    * Click on upload a child theme
-   * @param {Page} Browser tab
+   * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async clickOnUploadChildThemeButton(page) {
@@ -51,8 +51,8 @@ class AdvancedCustomization extends themeAndLogoBasePage {
 
   /**
    * Upload child theme
-   * @param {Page} Browser tab
-   * @param {string} filePath
+   * @param page {Page} Browser tab
+   * @param filePath {string} Path of the file to add
    * @returns {Promise<string>}
    */
   async uploadTheme(page, filePath) {
@@ -66,7 +66,7 @@ class AdvancedCustomization extends themeAndLogoBasePage {
 
   /**
    * Close the modal of the Upload child theme
-   * @param {Page} Browser tab
+   * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
   async closeModal(page) {
@@ -76,7 +76,7 @@ class AdvancedCustomization extends themeAndLogoBasePage {
 
   /**
    * Click on the How to use Parent's child theme
-   * @param {Page} Browser tab
+   * @param page {Page} Browser tab
    * @returns {Promise<Page>}
    */
   async clickOnHowToUseParentsChildThemes(page) {

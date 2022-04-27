@@ -25,9 +25,9 @@ module.exports = class themeAndLogoBasePage extends BOBasePage {
     this.deleteThemeModalDialogYesButton = `${this.deleteThemeModalDialog} .js-submit-delete-theme`;
   }
 
-  /* Header Methods */
+  /* Methods */
   /**
-   * Go to advanced customizationpage
+   * Go to advanced customization page
    * @param page {Page} Browser tab
    * @return {Promise<void>}
    */

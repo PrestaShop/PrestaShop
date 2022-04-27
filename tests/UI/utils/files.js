@@ -193,12 +193,12 @@ module.exports = {
 
   /**
    * Get the path of the file automatically generated
-   * @param folder {string} Name of the folder where the file exist
-   * @param filename {string} Name of the file automatically created
+   * @param folderPath {string} Path of the folder where the file exists
+   * @param filename {string} Path of the file automatically created
    * @returns {Promise<string>}
    */
-  async getFilePathAutomaticallyGenerated(folder, filename) {
-    const generatedFilePath = path.resolve(__dirname, '../../../', folder, filename);
+  async getFilePathAutomaticallyGenerated(folderPath, filename) {
+    const generatedFilePath = path.resolve(__dirname, '../../../', folderPath, filename);
     return generatedFilePath;
   },
 };

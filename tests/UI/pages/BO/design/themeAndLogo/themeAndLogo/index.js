@@ -4,7 +4,7 @@ const themeAndLogoBasePage = require('@pages/BO/design/themeAndLogo/themeAndLogo
 /**
  * Theme & logo page, contains functions that can be used on the page
  * @class
- * @extends BOBasePage
+ * @extends themeAndLogoBasePage
  */
 class ThemeAndLogo extends themeAndLogoBasePage {
   /**
