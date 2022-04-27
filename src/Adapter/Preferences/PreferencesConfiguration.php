@@ -165,7 +165,19 @@ class PreferencesConfiguration extends AbstractMultistoreConfiguration
                     'multishop_feature_active',
                     'shop_activity',
                 ]
-            );
+            )
+            ->setAllowedTypes('enable_ssl', 'bool')
+            ->setAllowedTypes('enable_ssl_everywhere', 'bool')
+            ->setAllowedTypes('enable_token', 'bool')
+            ->setAllowedTypes('allow_html_iframes', 'bool')
+            ->setAllowedTypes('use_htmlpurifier', 'bool')
+            ->setAllowedTypes('price_round_mode', 'integer')
+            ->setAllowedTypes('price_round_type', 'integer')
+            ->setAllowedTypes('display_suppliers', 'bool')
+            ->setAllowedTypes('display_manufacturers', 'bool')
+            ->setAllowedTypes('display_best_sellers', 'bool')
+            ->setAllowedTypes('multishop_feature_active', 'bool')
+            ->setAllowedTypes('shop_activity', 'integer');
 
         return $resolver;
     }
