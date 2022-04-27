@@ -38,8 +38,11 @@ export type ProgressModalParams = ModalParams & {
   modalTitle: string;
   total: number;
   customButtons: Array<HTMLButtonElement | HTMLAnchorElement>;
+  cancelCallback?: () => void;
 }
-export type InputProgressModalParams = Partial<ProgressModalParams>;
+export type InputProgressModalParams = Partial<ProgressModalParams> & {
+  modalTitle: string;
+};
 
 export class ProgressModalParentContainer implements ProgressModalParentContainerType{
   container!: HTMLElement;
@@ -324,20 +327,17 @@ export class ProgressModal extends Modal implements ProgressModalType {
   constructor(
     inputParams: InputProgressModalParams,
     total: number,
-    cancelCallback: () => void,
   ) {
     const params: ProgressModalParams = {
       id: 'progress-modal',
       customButtons: [],
       closable: false,
-      modalTitle: "Progress action",
       total: total,
       dialogStyle: {},
       ...inputParams,
     };
 
     super(params);
-    this.cancelCallback = cancelCallback;
     this.total = total;
     this.errors = [];
   }
@@ -350,7 +350,7 @@ export class ProgressModal extends Modal implements ProgressModalType {
 
     this.modal.dialog.appendChild(this.progressModal.content);
 
-    this.initListeners();
+    this.initListeners(params);
   }
 
   public updateCount(doneCount: number)
@@ -378,7 +378,7 @@ export class ProgressModal extends Modal implements ProgressModalType {
   /** Modal container should not be extended for children */
   /** Return 401 on error */
   /** pass params and take cancelCallback from there */
-  private initListeners()
+  private initListeners(params: ProgressModalParams)
   {
     this.errorModal.downloadErrorsButton.addEventListener('click', () => {
       let csvContent = 'data:text/csv;charset=utf-8,';
@@ -396,7 +396,6 @@ export class ProgressModal extends Modal implements ProgressModalType {
       this.modal.dialog.appendChild(this.progressModal.content);
     });
 
-
     this.progressModal.switchToErrorButton.addEventListener('click', () => {
       this.modal.dialog.removeChild(this.progressModal.content);
       this.modal.dialog.appendChild(this.errorModal.content);
@@ -404,7 +403,9 @@ export class ProgressModal extends Modal implements ProgressModalType {
 
     this.progressModal.stopProcessingButton.addEventListener('click', () => {
       console.log('cancel');
-      this.cancelCallback();
+      if (params.cancelCallback) {
+        params.cancelCallback();
+      }
     });
   }
 }

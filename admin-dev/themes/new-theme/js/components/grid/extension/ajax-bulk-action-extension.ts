@@ -60,10 +60,10 @@ export default class AjaxBulkActionExtension {
 
     const modal = new ProgressModal(
       {
-        modalTitle,
+        cancelCallback: () => {stopProcess = true; console.log(stopProcess)},
+        modalTitle: modalTitle,
       },
-      total,
-      () => function () {stopProcess = true; console.log(stopProcess)},
+      total
     );
 
     modal.show();
