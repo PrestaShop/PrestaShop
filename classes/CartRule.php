@@ -869,7 +869,7 @@ class CartRuleCore extends ObjectModel
             }
 
             if ($cartTotal < $minimum_amount) {
-                return (!$display_error) ? false : $this->trans('You have not reached the minimum amount required to use this voucher', [], 'Shop.Notifications.Error');
+                return (!$display_error) ? false : $this->trans('The minimum amount to benefit from this promo code is %s.', [Tools::getContextLocale($context)->formatPrice($minimum_amount, $context->currency->iso_code)], 'Shop.Notifications.Error');
             }
         }
 
