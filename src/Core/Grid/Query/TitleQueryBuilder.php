@@ -113,26 +113,28 @@ class TitleQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     private function applyFilters(QueryBuilder $builder, SearchCriteriaInterface $searchCriteria): void
     {
-        $allowedFilters = [
-            'id_gender',
-            'type',
-            'name',
+        $allowedFiltersMap = [
+            'id_gender' => 'g.id_gender',
+            'type' => 'g.type',
+            'name' => 'gl.name',
         ];
 
         foreach ($searchCriteria->getFilters() as $filterName => $filterValue) {
-            if (!in_array($filterName, $allowedFilters)) {
+            if (!array_key_exists($filterName, $allowedFiltersMap)) {
                 continue;
             }
 
             if ($filterName === 'type') {
-                $builder->andWhere('g.' . $filterName . ' = :' . $filterName);
-                $builder->setParameter($filterName, $filterValue);
+                $builder
+                    ->andWhere($allowedFiltersMap[$filterName] . ' = :' . $filterName)
+                    ->setParameter($filterName, $filterValue);
 
                 continue;
             }
 
-            $builder->andWhere($filterName . ' LIKE :' . $filterName);
-            $builder->setParameter($filterName, '%' . $filterValue . '%');
+            $builder
+                ->andWhere($allowedFiltersMap[$filterName] . ' LIKE :' . $filterName)
+                ->setParameter($filterName, '%' . $filterValue . '%');
         }
     }
 }
