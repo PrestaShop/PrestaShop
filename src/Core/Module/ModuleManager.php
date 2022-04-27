@@ -99,7 +99,7 @@ class ModuleManager implements ModuleManagerInterface
             $handler->handle($source);
         }
 
-        if ($this->moduleDataProvider->isInstalled($name)) {
+        if ($this->isInstalled($name)) {
             return $this->upgrade($name);
         }
 
