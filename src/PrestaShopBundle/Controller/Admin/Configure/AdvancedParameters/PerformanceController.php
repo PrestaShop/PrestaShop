@@ -256,6 +256,7 @@ class PerformanceController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", message="Access denied.")
      * @DemoRestricted(redirectRoute="admin_performance")
      *
      * @return RedirectResponse

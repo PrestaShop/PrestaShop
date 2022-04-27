@@ -27,6 +27,7 @@
 use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
+use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
@@ -1630,10 +1631,7 @@ abstract class ModuleCore implements ModuleInterface
      */
     public static function getNonNativeModuleList()
     {
-        $finder = new ContainerFinder(Context::getContext());
-        $sfContainer = $finder->getContainer();
-
-        return $sfContainer->get('prestashop.adapter.module.repository.module_repository')->getNonNativeModules();
+        return self::getModuleRepository()->getNonNativeModules();
     }
 
     /**
@@ -1641,10 +1639,20 @@ abstract class ModuleCore implements ModuleInterface
      */
     public static function getNativeModuleList()
     {
+        return self::getModuleRepository()->getNativeModules();
+    }
+
+    /**
+     * @return ModuleRepository
+     *
+     * @throws ContainerNotFoundException
+     */
+    private static function getModuleRepository(): ModuleRepository
+    {
         $finder = new ContainerFinder(Context::getContext());
         $sfContainer = $finder->getContainer();
 
-        return $sfContainer->get('prestashop.adapter.module.repository.module_repository')->getNativeModules();
+        return $sfContainer->get('prestashop.adapter.module.repository.module_repository');
     }
 
     /**

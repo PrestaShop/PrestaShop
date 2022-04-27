@@ -3,10 +3,11 @@ services:
     public: true
 
   prestashop.adapter.module.command_handler.bulk_toggle_module_status_handler:
-    class: 'PrestaShop\PrestaShop\Adapter\Module\CommandHandler\BulkToggleModuleStatusHandler'
+    class: PrestaShop\PrestaShop\Adapter\Module\CommandHandler\BulkToggleModuleStatusHandler
     arguments:
-      - "@prestashop.module.manager"
+      - '@prestashop.module.manager'
       - '@prestashop.adapter.legacy.logger'
+      - '@prestashop.core.cache.clearer.cache_clearer_chain'
     tags:
       - name: 'tactician.handler'
         command: 'PrestaShop\PrestaShop\Core\Domain\Module\Command\BulkToggleModuleStatusCommand'

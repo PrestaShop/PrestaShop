@@ -29,10 +29,12 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Module\CommandHandler;
 
 use Module;
+use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Module\Command\BulkToggleModuleStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Module\CommandHandler\BulkToggleModuleStatusHandlerInterface;
 use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use Psr\Log\LoggerInterface;
+use Validate;
 
 /**
  * Bulk toggles Module status
@@ -47,14 +49,24 @@ class BulkToggleModuleStatusHandler implements BulkToggleModuleStatusHandlerInte
      * @return LoggerInterface
      */
     protected $logger;
+    /**
+     * @return CacheClearerInterface
+     */
+    protected $cacheClearer;
 
     /**
      * @param ModuleManager $moduleManager
+     * @param LoggerInterface $logger
+     * @param CacheClearerInterface $cacheClearer
      */
-    public function __construct(ModuleManager $moduleManager, LoggerInterface $logger)
-    {
+    public function __construct(
+        ModuleManager $moduleManager,
+        LoggerInterface $logger,
+        CacheClearerInterface $cacheClearer
+    ) {
         $this->moduleManager = $moduleManager;
         $this->logger = $logger;
+        $this->cacheClearer = $cacheClearer;
     }
 
     /**
@@ -64,7 +76,7 @@ class BulkToggleModuleStatusHandler implements BulkToggleModuleStatusHandlerInte
     {
         foreach ($command->getModules() as $moduleName) {
             $module = Module::getInstanceByName($moduleName);
-            if (!$module || !$this->moduleManager->isInstalled($moduleName)) {
+            if (!Validate::isLoadedObject($module) || !$this->moduleManager->isInstalled($moduleName)) {
                 continue;
             }
 
@@ -88,5 +100,12 @@ class BulkToggleModuleStatusHandler implements BulkToggleModuleStatusHandlerInte
                 }
             }
         }
+
+        // Clear cache
+        // Why ?
+        //    It seems that in prod environment the kernel caches the list of activated modules.
+        //    So after this loop we clear the caches (especially Symfony one but it's safer to clear them all).
+        //    If you don't the modification of the status will be ignored even if the state of the DB has changed.
+        $this->cacheClearer->clear();
     }
 }
