@@ -78,6 +78,12 @@
   .front {
     @include rotateY(0);
     z-index: 2;
+
+    .form-group {
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
   }
 
   .back {
@@ -109,5 +115,44 @@
 
   a {
     color: #a0aab5;
+  }
+}
+
+.login-back {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  font-weight: 100;
+  color: inherit;
+
+  i {
+    margin-top: -0.075rem;
+    margin-right: 0.5rem;
+    font-size: 1.4rem;
+    vertical-align: middle;
+  }
+
+  &-shop {
+    margin-left: 0.25rem;
+    color: $link-color;
+  }
+
+  &:hover,
+  &:focus {
+    color: inherit;
+    text-decoration: none;
+
+    .login-back-shop {
+      text-decoration: underline;
+    }
+  }
+
+  span {
+    @media screen and (max-width: $screen-phone) {
+      display: none;
+    }
   }
 }
