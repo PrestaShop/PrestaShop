@@ -92,7 +92,7 @@ describe('Enable/Disable shop', async () => {
     await expect(result).to.contains(maintenancePage.successfulUpdateMessage);
   });
 
-  it('should verify the existence of the new maintenance text', async function () {
+  it('should verify that the maintenance text is updated successfully', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'verifyNewMaintenanceText', baseContext);
 
     page = await maintenancePage.viewMyShop(page);
@@ -101,7 +101,7 @@ describe('Enable/Disable shop', async () => {
     await expect(pageContent).to.equal(newMaintenanceText);
   });
 
-  it('should back to the default maintenance text', async function () {
+  it('should go back to the default maintenance text', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'backToDefaultMaintenanceText', baseContext);
 
     page = await homePage.closePage(browserContext, page, 0);
@@ -133,15 +133,19 @@ describe('Enable/Disable shop', async () => {
     await expect(result).to.be.true;
   });
 
-  it('should delete the maintenance ip address and enable the shop', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'deleteIpAddressAndEnableShop', baseContext);
+  it('should delete the maintenance ip address', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'deleteIpAddress', baseContext);
 
     page = await homePage.closePage(browserContext, page, 0);
 
-    let result = await maintenancePage.addMaintenanceIPAddress(page, ' ');
+    const result = await maintenancePage.addMaintenanceIPAddress(page, null);
     await expect(result).to.contains(maintenancePage.successfulUpdateMessage);
+  });
 
-    result = await maintenancePage.changeShopStatus(page);
+  it('should enable the shop', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'enableShop', baseContext);
+
+    const result = await maintenancePage.changeShopStatus(page);
     await expect(result).to.contains(maintenancePage.successfulUpdateMessage);
   });
 
