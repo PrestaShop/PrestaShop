@@ -246,7 +246,6 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
 
   // 4 - Click on the link How to use parents/child themes
   describe('BO - Design - Theme & Logo - Advanced Customization : How to use parents/child themes', async () => {
-
     it('should go to \'Advanced Customization\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAdvancedCustomizationPage_2', baseContext);
 
