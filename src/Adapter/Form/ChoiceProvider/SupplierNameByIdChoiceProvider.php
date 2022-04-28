@@ -31,6 +31,9 @@ namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Supplier;
 
+/**
+ * Returns the list of selectable suppliers, including those which are disabled.
+ */
 final class SupplierNameByIdChoiceProvider implements FormChoiceProviderInterface
 {
     /**
@@ -39,7 +42,7 @@ final class SupplierNameByIdChoiceProvider implements FormChoiceProviderInterfac
     public function getChoices()
     {
         $choices = [];
-        foreach (Supplier::getSuppliers() as $supplier) {
+        foreach (Supplier::getSuppliers(false, 0, false) as $supplier) {
             $choices[$supplier['name']] = (int) $supplier['id_supplier'];
         }
 
