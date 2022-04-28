@@ -67,6 +67,13 @@ class Order extends BOBasePage {
     this.updateOrdersStatusModal = '#changeOrdersStatusModal';
     this.updateOrdersStatusModalSelect = '#change_orders_status_new_order_status_id';
     this.updateOrdersStatusModalButton = `${this.updateOrdersStatusModal} .modal-footer .js-submit-modal-form-btn`;
+
+    // Pagination selectors
+    this.paginationBlock = '.pagination-block';
+    this.paginationLimitSelect = '#paginator_select_page_limit';
+    this.paginationLabel = `${this.gridPanel} .col-form-label`;
+    this.paginationNextLink = `${this.gridPanel} #pagination_next_url`;
+    this.paginationPreviousLink = `${this.gridPanel} .pagination .previous a.page-link`;
   }
 
   /*
@@ -182,11 +189,14 @@ class Order extends BOBasePage {
    * @param page {Page} Browser tab
    * @param columnName {string} Column name on table
    * @param row {number} Order row in table
-   * @returns {Promise<string>}
+   * @returns {Promise<string|number>}
    */
   async getTextColumn(page, columnName, row) {
     if (columnName === 'osname') {
       return this.getTextContent(page, this.updateStatusInTableButton(row));
+    }
+    if (columnName === 'total_paid_tax_incl') {
+      return parseFloat((await this.getTextContent(page, this.tableColumn(row, 'total_paid_tax_incl'))).substring(1));
     }
 
     return this.getTextContent(page, this.tableColumn(row, columnName));
@@ -229,9 +239,16 @@ class Order extends BOBasePage {
    * @returns {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, column) {
-    const rowsNumber = await this.getNumberOfElementInGrid(page);
+    let rowsNumber = await this.getNumberOfElementInGrid(page);
+    if (await this.elementVisible(page, this.paginationBlock, 2000)) {
+      const paginationLimit = parseInt(await this.getTextContent(
+        page,
+        `${this.paginationLimitSelect} option[selected="selected"]`, false), 10);
+      if (paginationLimit <= rowsNumber) {
+        rowsNumber = paginationLimit;
+      }
+    }
     const allRowsContentTable = [];
-
     for (let i = 1; i <= rowsNumber; i++) {
       const rowContent = await this.getTextColumn(page, column, i);
       allRowsContentTable.push(rowContent);
@@ -383,6 +400,53 @@ class Order extends BOBasePage {
     }
 
     await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
+  }
+
+  /* Pagination methods */
+  /**
+   * Get pagination label
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
+  getPaginationLabel(page) {
+    return this.getTextContent(page, this.paginationLabel);
+  }
+
+  /**
+   * Select pagination limit
+   * @param page {Page} Browser tab
+   * @param number {number} Value of pagination limit to select
+   * @returns {Promise<string>}
+   */
+  async selectPaginationLimit(page, number) {
+    await Promise.all([
+      this.selectByVisibleText(page, this.paginationLimitSelect, number),
+      page.waitForNavigation({waitUntil: 'networkidle'}),
+    ]);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on next
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async paginationNext(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on previous
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async paginationPrevious(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+
+    return this.getPaginationLabel(page);
   }
 }
 
