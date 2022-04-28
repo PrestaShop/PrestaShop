@@ -98,6 +98,11 @@ class CatalogueProviderFactory
     private $themesDirectory;
 
     /**
+     * @var ModuleCatalogueProviderFactory
+     */
+    private $moduleCatalogueProviderFactory;
+
+    /**
      * @param DatabaseTranslationLoader $databaseTranslationLoader
      * @param LegacyModuleExtractorInterface $legacyModuleExtractor
      * @param LoaderInterface $legacyFileLoader
@@ -128,6 +133,13 @@ class CatalogueProviderFactory
         $this->themeRepository = $themeRepository;
         $this->filesystem = $filesystem;
         $this->themesDirectory = $themesDirectory;
+        $this->moduleCatalogueProviderFactory = new ModuleCatalogueProviderFactory(
+            $this->databaseTranslationLoader,
+            $this->legacyModuleExtractor,
+            $this->legacyFileLoader,
+            $this->modulesDirectory,
+            $this->translationsDirectory
+        );
     }
 
     /**
@@ -145,7 +157,7 @@ class CatalogueProviderFactory
         }
 
         if ($providerDefinition instanceof ModuleProviderDefinition) {
-            return $this->getModuleCatalogueProvider($providerDefinition);
+            return $this->moduleCatalogueProviderFactory->getModuleCatalogueProvider($providerDefinition);
         } elseif ($providerDefinition instanceof AbstractCoreProviderDefinition) {
             return $this->getCoreCatalogueProvider($providerDefinition);
         } elseif ($providerDefinition instanceof ThemeProviderDefinition) {
@@ -167,29 +179,6 @@ class CatalogueProviderFactory
             $this->providers[$providerDefinition->getType()] = new CoreCatalogueLayersProvider(
                 $this->databaseTranslationLoader,
                 $this->translationsDirectory,
-                $providerDefinition->getFilenameFilters(),
-                $providerDefinition->getTranslationDomains()
-            );
-        }
-
-        return $this->providers[$providerDefinition->getType()];
-    }
-
-    /**
-     * @param ModuleProviderDefinition $providerDefinition
-     *
-     * @return CatalogueLayersProviderInterface
-     */
-    private function getModuleCatalogueProvider(ModuleProviderDefinition $providerDefinition): CatalogueLayersProviderInterface
-    {
-        if (!isset($this->providers[$providerDefinition->getType()])) {
-            $this->providers[$providerDefinition->getType()] = new ModuleCatalogueLayersProvider(
-                $this->databaseTranslationLoader,
-                $this->legacyModuleExtractor,
-                $this->legacyFileLoader,
-                $this->modulesDirectory,
-                $this->translationsDirectory,
-                $providerDefinition->getModuleName(),
                 $providerDefinition->getFilenameFilters(),
                 $providerDefinition->getTranslationDomains()
             );
@@ -222,6 +211,7 @@ class CatalogueProviderFactory
             );
 
             $this->providers[$providerDefinition->getType()] = new ThemeCatalogueLayersProvider(
+                $this->moduleCatalogueProviderFactory,
                 $coreFrontProvider,
                 $this->databaseTranslationLoader,
                 $this->themeExtractor,
