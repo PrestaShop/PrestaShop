@@ -482,3 +482,69 @@ Feature: Update product suppliers from Back Office (BO)
       And product product8 should have following supplier values:
         | default supplier           | |
         | default supplier reference | |
+
+    Scenario: I disable a supplier associated to a product
+      Given I add new supplier supplier5 with following properties:
+        | name                    | my supplier 5       |
+        | address                 | Donelaicio st. 5    |
+        | city                    | Kaunas              |
+        | country                 | Lithuania           |
+        | enabled                 | true                |
+        | description[en-US]      | just a supplier     |
+        | meta title[en-US]       | my supplier nr five |
+        | meta description[en-US] |                     |
+        | meta keywords[en-US]    | sup,5               |
+        | shops                   | [shop1]             |
+      Given I add product "product9" with following information:
+        | name[en-US] | magic staff |
+        | type        | standard    |
+      And product product9 type should be standard
+      And product product9 should not have any suppliers assigned
+      When I associate suppliers to product "product9"
+        | supplier  | product_supplier  |
+        | supplier5 | product9supplier5 |
+        | supplier1 | product9supplier1 |
+      And I update product product9 suppliers:
+        | product_supplier  | supplier  | reference                   | currency | price_tax_excluded |
+        | product9supplier1 | supplier1 | first supplier for product9 | EUR      | 11                 |
+        | product9supplier5 | supplier5 | fifth supplier for product9 | USD      | 10                 |
+      Then product product9 should have the following suppliers assigned:
+        | supplier1 |
+        | supplier5 |
+      And product product9 should have following suppliers:
+        | product_supplier  | supplier  | reference                   | currency | price_tax_excluded |
+        | product9supplier1 | supplier1 | first supplier for product9 | EUR      | 11                 |
+        | product9supplier5 | supplier5 | fifth supplier for product9 | USD      | 10                 |
+      And product product9 should have following supplier values:
+        | default supplier           | supplier5                   |
+        | default supplier reference | fifth supplier for product9 |
+      # Now I disable supplier
+      When I toggle status for supplier supplier5
+      Then supplier supplier5 should have following properties:
+        | name                    | my supplier 5       |
+        | address                 | Donelaicio st. 5    |
+        | city                    | Kaunas              |
+        | country                 | Lithuania           |
+        | enabled                 | false               |
+        | description[en-US]      | just a supplier     |
+        | meta title[en-US]       | my supplier nr five |
+        | meta description[en-US] |                     |
+        | meta keywords[en-US]    | sup,5               |
+        | shops                   | [shop1]             |
+      # Product data don't change
+      And product product9 should have following suppliers:
+        | product_supplier  | supplier  | reference                   | currency | price_tax_excluded |
+        | product9supplier1 | supplier1 | first supplier for product9 | EUR      | 11                 |
+        | product9supplier5 | supplier5 | fifth supplier for product9 | USD      | 10                 |
+      And product product9 should have following supplier values:
+        | default supplier           | supplier5                   |
+        | default supplier reference | fifth supplier for product9 |
+      # We can still edit them
+      When I update product product9 suppliers:
+        | product_supplier  | supplier  | reference                   | currency | price_tax_excluded |
+        | product9supplier1 | supplier1 | first supplier for product9 | EUR      | 22                 |
+        | product9supplier5 | supplier5 | fifth supplier for product9 | USD      | 20                 |
+      Then product product9 should have following suppliers:
+        | product_supplier  | supplier  | reference                   | currency | price_tax_excluded |
+        | product9supplier1 | supplier1 | first supplier for product9 | EUR      | 22                 |
+        | product9supplier5 | supplier5 | fifth supplier for product9 | USD      | 20                 |

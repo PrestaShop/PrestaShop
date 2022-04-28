@@ -32,6 +32,7 @@ use Country;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\AddSupplierCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\DeleteSupplierCommand;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\ToggleSupplierStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForViewing;
@@ -118,6 +119,18 @@ class SupplierFeatureContext extends AbstractDomainFeatureContext
         } catch (SupplierException $e) {
             $this->setLastException($e);
         }
+    }
+
+    /**
+     * @When I toggle status for supplier :supplierReference
+     *
+     * @param string $supplierReference
+     *
+     * @throws SupplierException
+     */
+    public function toggleSupplier(string $supplierReference): void
+    {
+        $this->getCommandBus()->handle(new ToggleSupplierStatusCommand($this->getSharedStorage()->get($supplierReference)));
     }
 
     /**
