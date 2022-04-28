@@ -40,16 +40,18 @@ export default class BulkDeleteHandler {
 
     bulkDeleteBtn.addEventListener('click', () => {
       try {
+        const selectedCombinationsCount = this.bulkChoicesSelector.getSelectedCheckboxes().length;
+        const confirmLabel = bulkDeleteBtn.dataset.modalConfirmLabel
+          ?.replace(/%combinations_number%/, String(selectedCombinationsCount));
+
         const modal = new (ConfirmModal as any)(
           {
-            id: 'modal-confirm-delete-combination',
-            // @todo: add translation data attributes
-            // confirmTitle: $deleteButton.data('modal-title'),
-            // confirmMessage: $deleteButton.data('modal-message'),
-            // confirmButtonLabel: $deleteButton.data('modal-apply'),
-            // closeButtonLabel: $deleteButton.data('modal-cancel'),
-            // confirmButtonClass: 'btn-danger',
-            // closable: true,
+            id: 'modal-confirm-delete-combinations',
+            confirmTitle: bulkDeleteBtn.innerHTML,
+            confirmMessage: bulkDeleteBtn.dataset.modalMessage,
+            confirmButtonLabel: confirmLabel,
+            closeButtonLabel: bulkDeleteBtn.dataset.modalCancelLabel,
+            closable: true,
           },
           async () => {
             const response = await this.bulkDelete();
