@@ -160,9 +160,18 @@ class CustomerFormCore extends AbstractForm
             }
 
             if (Validate::isAcceptablePasswordScore($passwordField->getValue()) === false) {
+                $wordingsForScore = [
+                    $this->translator->trans('Very weak'),
+                    $this->translator->trans('Weak'),
+                    $this->translator->trans('Average'),
+                    $this->translator->trans('Strong'),
+                    $this->translator->trans('Very strong'),
+                ];
                 $passwordField->addError($this->translator->trans(
-                    'Password score must be higher',
-                    [],
+                    'The minimum score must be: %s',
+                    [
+                        $wordingsForScore[(int) Configuration::get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_SCORE)],
+                    ],
                     'Shop.Notifications.Error'
                 ));
             }
