@@ -5,6 +5,12 @@
     }
   }
 
+  #customer_discount_grid_table {
+    td.column-id_cart_rule {
+      word-break: inherit;
+    }
+  }
+
   .customer-personal-informations-card {
     .col-8 {
       .badge {
