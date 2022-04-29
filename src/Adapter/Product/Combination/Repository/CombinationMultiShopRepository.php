@@ -29,10 +29,12 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Repository;
 
 use Combination;
 use Doctrine\DBAL\Connection;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotBulkDeleteCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotDeleteCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
@@ -143,6 +145,72 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
     }
 
     /**
+     * @param CombinationId[] $combinationIds
+     * @param ShopConstraint $shopConstraint
+     *
+     * @throws CannotBulkDeleteCombinationException
+     */
+    public function bulkDelete(array $combinationIds, ShopConstraint $shopConstraint): void
+    {
+        $failedIds = [];
+        foreach ($combinationIds as $combinationId) {
+            try {
+                $this->delete($combinationId, $shopConstraint);
+            } catch (CannotDeleteCombinationException $e) {
+                $failedIds[] = $combinationId->getValue();
+            }
+        }
+
+        if (empty($failedIds)) {
+            return;
+        }
+
+        throw new CannotBulkDeleteCombinationException($failedIds, sprintf(
+            'Failed to delete following combinations: %s',
+            implode(', ', $failedIds)
+        ));
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param ShopConstraint $shopConstraint
+     *
+     * @return Combination|null
+     *
+     * @throws InvalidShopConstraintException
+     */
+    public function findDefaultCombination(ProductId $productId, ShopConstraint $shopConstraint): ?Combination
+    {
+        if ($shopConstraint->getShopGroupId()) {
+            throw new InvalidShopConstraintException('Combination has no features related with shop group use single shop and all shops constraints');
+        }
+
+        if ($shopConstraint->getShopId()) {
+            $shopId = $shopConstraint->getShopId();
+        } else {
+            $shopId = $this->getProductDefaultShopId($productId);
+        }
+
+        $qb = $this->connection->createQueryBuilder()
+            ->select('pas.id_product_attribute, pas.default_on')
+            ->from($this->dbPrefix . 'product_attribute_shop', 'pas')
+            ->where('pas.id_shop = :shopId')
+            ->andWhere('pas.default_on = 1')
+            ->setParameter('shopId', $shopId->getValue())
+        ;
+
+        $result = $qb->execute()->fetchAssociative();
+
+        if (!isset($result['id_product_attribute'])) {
+            return null;
+        }
+
+        $combinationId = (int) $result['id_product_attribute'];
+
+        return $this->getCombinationByShopId(new CombinationId($combinationId), $shopId);
+    }
+
+    /**
      * @param CombinationId $combinationId
      *
      * @return Combination
@@ -173,5 +241,35 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
         );
 
         return $combination;
+    }
+
+    /**
+     * @todo: duplicate from ProductMultiShopRepository. How could we reuse it?
+     *
+     * @param ProductId $productId
+     *
+     * @return ShopId
+     *
+     * @throws ProductNotFoundException
+     */
+    public function getProductDefaultShopId(ProductId $productId): ShopId
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('id_shop_default')
+            ->from($this->dbPrefix . 'product')
+            ->where('id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+        ;
+
+        $result = $qb->execute()->fetch();
+        if (empty($result['id_shop_default'])) {
+            throw new ProductNotFoundException(sprintf(
+                'Could not find Product with id %d',
+                $productId->getValue()
+            ));
+        }
+
+        return new ShopId((int) $result['id_shop_default']);
     }
 }
