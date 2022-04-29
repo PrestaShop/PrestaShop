@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Deletes multiple combinations
@@ -46,15 +47,23 @@ class BulkDeleteCombinationCommand
     private $combinationIds;
 
     /**
+     * @var ShopConstraint
+     */
+    private $shopConstraint;
+
+    /**
      * @param int $productId
      * @param int[] $combinationIds
+     * @param ShopConstraint $shopConstraint
      */
     public function __construct(
         int $productId,
-        array $combinationIds
+        array $combinationIds,
+        ShopConstraint $shopConstraint
     ) {
         $this->productId = new ProductId($productId);
         $this->setCombinationIds($combinationIds);
+        $this->shopConstraint = $shopConstraint;
     }
 
     /**
@@ -71,6 +80,14 @@ class BulkDeleteCombinationCommand
     public function getCombinationIds(): array
     {
         return $this->combinationIds;
+    }
+
+    /**
+     * @return ShopConstraint
+     */
+    public function getShopConstraint(): ShopConstraint
+    {
+        return $this->shopConstraint;
     }
 
     /**
