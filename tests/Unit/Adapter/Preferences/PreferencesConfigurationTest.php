@@ -28,23 +28,23 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Adapter\Preferences;
 
-use Cookie;
-use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Preferences\PreferencesConfiguration;
 use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
+use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
+use Tests\TestCase\AbstractConfigurationTestCase;
 
-class PreferencesConfigurationTest extends TestCase
+class PreferencesConfigurationTest extends AbstractConfigurationTestCase
 {
-    /**
-     * @var PreferencesConfiguration
-     */
-    private $object;
+    private const SHOP_ID = 42;
 
     /**
-     * @var Configuration|MockObject
+     * @dataProvider provideShopConstraints
+     *
+     * @param ShopConstraint $shopConstraint
      */
     private $mockConfiguration;
 
@@ -74,48 +74,41 @@ class PreferencesConfigurationTest extends TestCase
         $this->featureFlagRepository = $this->getMockBuilder(FeatureFlagRepository::class)
             ->setMethods(['get'])
             ->disableOriginalConstructor()
-            ->getMock()
-        ;
+            ->getMock();
         $this->featureFlagRepository
             ->method('get')
-            ->willReturn(false)
-        ;
-
-        $this->mockShopConfiguration = $this->getMockShopConfiguration();
-        $this->mockMultistoreFeature = $this->getMockMultistoreFeature();
-
-        $this->object = new PreferencesConfiguration($this->mockConfiguration, $this->mockShopConfiguration, $this->mockMultistoreFeature);
+            ->willReturn(false);
     }
 
-    public function testGetConfiguration()
+    public function testGetConfiguration(ShopConstraint $shopConstraint): void
     {
+        $preferencesConfiguration = new PreferencesConfiguration($this->mockConfiguration, $this->mockShopConfiguration, $this->mockMultistoreFeature);
+
+        $this->mockShopConfiguration
+            ->method('getShopConstraint')
+            ->willReturn($shopConstraint);
+
         $this->mockConfiguration
             ->method('get')
             ->willReturnMap(
                 [
-                    ['PS_PRICE_ROUND_MODE', null, null, 'test'],
-                    ['PS_ROUND_TYPE', null, null, 'test'],
-                    ['PS_SHOP_ACTIVITY', null, null, 'test'],
+                    ['PS_SSL_ENABLED', true, $shopConstraint, true],
+                    ['PS_SSL_ENABLED_EVERYWHERE', true, $shopConstraint, true],
+                    ['PS_TOKEN_ENABLE', true, $shopConstraint, true],
+                    ['PS_ALLOW_HTML_IFRAME', true, $shopConstraint, true],
+                    ['PS_USE_HTMLPURIFIER', true, $shopConstraint, true],
+                    ['PS_PRICE_ROUND_MODE', 1, $shopConstraint, 1],
+                    ['PS_ROUND_TYPE', 1, $shopConstraint, 1],
+                    ['PS_DISPLAY_SUPPLIERS', true, $shopConstraint, true],
+                    ['PS_DISPLAY_MANUFACTURERS', true, $shopConstraint, true],
+                    ['PS_DISPLAY_BEST_SELLERS', true, $shopConstraint, true],
+                    ['PS_MULTISHOP_FEATURE_ACTIVE', true, $shopConstraint, true],
+                    ['PS_SHOP_ACTIVITY', 1, $shopConstraint, 1],
                 ]
             );
 
-        $this->mockConfiguration
-            ->method('getBoolean')
-            ->willReturnMap(
-                [
-                    ['PS_SSL_ENABLED', false, true],
-                    ['PS_SSL_ENABLED_EVERYWHERE', false, true],
-                    ['PS_TOKEN_ENABLE', false, true],
-                    ['PS_ALLOW_HTML_IFRAME', false, true],
-                    ['PS_USE_HTMLPURIFIER', false, true],
-                    ['PS_DISPLAY_SUPPLIERS', false, false],
-                    ['PS_DISPLAY_MANUFACTURERS', false, true],
-                    ['PS_DISPLAY_BEST_SELLERS', false, false],
-                    ['PS_MULTISHOP_FEATURE_ACTIVE', false, true],
-                ]
-            );
+        $result = $preferencesConfiguration->getConfiguration();
 
-        $result = $this->object->getConfiguration();
         $this->assertSame(
             [
                 'enable_ssl' => true,
@@ -123,141 +116,277 @@ class PreferencesConfigurationTest extends TestCase
                 'enable_token' => true,
                 'allow_html_iframes' => true,
                 'use_htmlpurifier' => true,
-                'price_round_mode' => 'test',
-                'price_round_type' => 'test',
-                'display_suppliers' => false,
+                'price_round_mode' => 1,
+                'price_round_type' => 1,
+                'display_suppliers' => true,
                 'display_manufacturers' => true,
-                'display_best_sellers' => false,
+                'display_best_sellers' => true,
                 'multishop_feature_active' => true,
-                'shop_activity' => 'test',
+                'shop_activity' => 1,
             ],
             $result
         );
     }
 
-    public function testUpdateConfigurationWithInvalidConfiguration()
+    /**
+     * @dataProvider provideInvalidConfiguration
+     *
+     * @param string $exception
+     * @param array $values
+     */
+    public function testUpdateConfigurationWithInvalidConfiguration(string $exception, array $values): void
     {
-        $this->assertSame(
-            [
-                [
-                    'key' => 'Invalid configuration',
-                    'domain' => 'Admin.Notifications.Warning',
-                    'parameters' => [],
-                ],
-            ],
-            $this->object->updateConfiguration([])
-        );
-    }
+        $maintenanceConfiguration = new PreferencesConfiguration($this->mockConfiguration, $this->mockShopConfiguration, $this->mockMultistoreFeature);
 
-    public function testUpdateConfigurationWithInvalidSSLConfiguration()
-    {
-        $this->mockConfiguration
-            ->method('get')
-            ->willReturnMap(
-                [
-                    ['PS_COOKIE_SAMESITE', null, null, Cookie::SAMESITE_NONE],
-                ]
-            );
-
-        $this->assertSame(
-            [
-                [
-                    'key' => 'Cannot disable SSL configuration due to the Cookie SameSite=None.',
-                    'domain' => 'Admin.Advparameters.Notification',
-                    'parameters' => [],
-                ],
-            ],
-
-            $this->object->updateConfiguration(
-                [
-                    'enable_ssl' => false,
-                    'enable_ssl_everywhere' => false,
-                    'enable_token' => true,
-                    'allow_html_iframes' => true,
-                    'use_htmlpurifier' => true,
-                    'price_round_mode' => 'test',
-                    'price_round_type' => 'test',
-                    'display_suppliers' => false,
-                    'display_manufacturers' => true,
-                    'display_best_sellers' => false,
-                    'multishop_feature_active' => true,
-                    'shop_activity' => 'test',
-                ]
-            )
-        );
-    }
-
-    public function testUpdateConfiguration()
-    {
-        $this->mockConfiguration
-            ->method('get')
-            ->willReturnMap(
-                [
-                    ['PS_COOKIE_SAMESITE', null, null, Cookie::SAMESITE_NONE],
-                ]
-            );
-        $this->mockConfiguration
-            ->method('set')
-            ->willReturnMap(
-                [
-                    ['PS_SSL_ENABLED', true],
-                    ['PS_SSL_ENABLED_EVERYWHERE', true],
-                    ['PS_TOKEN_ENABLE', true],
-                    ['PS_ALLOW_HTML_IFRAME', true],
-                    ['PS_USE_HTMLPURIFIER', true],
-                    ['PS_DISPLAY_SUPPLIERS', false],
-                    ['PS_DISPLAY_MANUFACTURERS', true],
-                    ['PS_DISPLAY_BEST_SELLERS', false],
-                    ['PS_MULTISHOP_FEATURE_ACTIVE', true],
-                    ['PS_PRICE_ROUND_MODE', 'test'],
-                    ['PS_ROUND_TYPE', 'test'],
-                    ['PS_SHOP_ACTIVITY', 'test'],
-                ]
-            );
-
-        $this->assertSame(
-            [
-                [
-                    'key' => 'Cannot disable SSL configuration due to the Cookie SameSite=None.',
-                    'domain' => 'Admin.Advparameters.Notification',
-                    'parameters' => [],
-                ],
-            ],
-
-            $this->object->updateConfiguration(
-                [
-                    'enable_ssl' => false,
-                    'enable_ssl_everywhere' => false,
-                    'enable_token' => true,
-                    'allow_html_iframes' => true,
-                    'use_htmlpurifier' => true,
-                    'price_round_mode' => 'test',
-                    'price_round_type' => 'test',
-                    'display_suppliers' => false,
-                    'display_manufacturers' => true,
-                    'display_best_sellers' => false,
-                    'multishop_feature_active' => true,
-                    'shop_activity' => 'test',
-                ]
-            )
-        );
+        $this->expectException($exception);
+        $maintenanceConfiguration->updateConfiguration($values);
     }
 
     /**
-     * @return ShopContext
+     * @return array[]
      */
-    private function getMockShopConfiguration(): ShopContext
+    public function provideInvalidConfiguration(): array
     {
-        return $this->getMockBuilder(ShopContext::class)
-            ->setMethods(['getContextShopGroup', 'getContextShopID', 'isAllShopContext'])
-            ->getMock();
+        return [
+            [UndefinedOptionsException::class, ['does_not_exist' => 'does_not_exist']],
+            [
+                InvalidOptionsException::class,
+                [
+                    'enable_ssl' => 'invalid_value_type',
+                    'enable_ssl_everywhere' => true,
+                    'enable_token' => true,
+                    'allow_html_iframes' => true,
+                    'use_htmlpurifier' => true,
+                    'price_round_mode' => 1,
+                    'price_round_type' => 1,
+                    'display_suppliers' => true,
+                    'display_manufacturers' => true,
+                    'display_best_sellers' => true,
+                    'multishop_feature_active' => true,
+                    'shop_activity' => 1,
+                ],
+            ],
+            [
+                InvalidOptionsException::class,
+                [
+                    'enable_ssl' => true,
+                    'enable_ssl_everywhere' => 'invalid_value_type',
+                    'enable_token' => true,
+                    'allow_html_iframes' => true,
+                    'use_htmlpurifier' => true,
+                    'price_round_mode' => 1,
+                    'price_round_type' => 1,
+                    'display_suppliers' => true,
+                    'display_manufacturers' => true,
+                    'display_best_sellers' => true,
+                    'multishop_feature_active' => true,
+                    'shop_activity' => 1,
+                ],
+            ],
+            [
+                InvalidOptionsException::class,
+                [
+                    'enable_ssl' => true,
+                    'enable_ssl_everywhere' => true,
+                    'enable_token' => 'invalid_value_type',
+                    'allow_html_iframes' => true,
+                    'use_htmlpurifier' => true,
+                    'price_round_mode' => 1,
+                    'price_round_type' => 1,
+                    'display_suppliers' => true,
+                    'display_manufacturers' => true,
+                    'display_best_sellers' => true,
+                    'multishop_feature_active' => true,
+                    'shop_activity' => 1,
+                ],
+            ],
+            [
+                InvalidOptionsException::class,
+                [
+                    'enable_ssl' => true,
+                    'enable_ssl_everywhere' => true,
+                    'enable_token' => true,
+                    'allow_html_iframes' => 'invalid_value_type',
+                    'use_htmlpurifier' => true,
+                    'price_round_mode' => 1,
+                    'price_round_type' => 1,
+                    'display_suppliers' => true,
+                    'display_manufacturers' => true,
+                    'display_best_sellers' => true,
+                    'multishop_feature_active' => true,
+                    'shop_activity' => 1,
+                ],
+            ],
+            [
+                InvalidOptionsException::class,
+                [
+                    'enable_ssl' => true,
+                    'enable_ssl_everywhere' => true,
+                    'enable_token' => true,
+                    'allow_html_iframes' => true,
+                    'use_htmlpurifier' => 'invalid_value_type',
+                    'price_round_mode' => 1,
+                    'price_round_type' => 1,
+                    'display_suppliers' => true,
+                    'display_manufacturers' => true,
+                    'display_best_sellers' => true,
+                    'multishop_feature_active' => true,
+                    'shop_activity' => 1,
+                ],
+            ],
+            [
+                InvalidOptionsException::class,
+                [
+                    'enable_ssl' => true,
+                    'enable_ssl_everywhere' => true,
+                    'enable_token' => true,
+                    'allow_html_iframes' => true,
+                    'use_htmlpurifier' => true,
+                    'price_round_mode' => 'invalid_value_type',
+                    'price_round_type' => 1,
+                    'display_suppliers' => true,
+                    'display_manufacturers' => true,
+                    'display_best_sellers' => true,
+                    'multishop_feature_active' => true,
+                    'shop_activity' => 1,
+                ],
+            ],
+            [
+                InvalidOptionsException::class,
+                [
+                    'enable_ssl' => true,
+                    'enable_ssl_everywhere' => true,
+                    'enable_token' => true,
+                    'allow_html_iframes' => true,
+                    'use_htmlpurifier' => true,
+                    'price_round_mode' => 1,
+                    'price_round_type' => 'invalid_value_type',
+                    'display_suppliers' => true,
+                    'display_manufacturers' => true,
+                    'display_best_sellers' => true,
+                    'multishop_feature_active' => true,
+                    'shop_activity' => 1,
+                ],
+            ],
+            [
+                InvalidOptionsException::class,
+                [
+                    'enable_ssl' => true,
+                    'enable_ssl_everywhere' => true,
+                    'enable_token' => true,
+                    'allow_html_iframes' => true,
+                    'use_htmlpurifier' => true,
+                    'price_round_mode' => 1,
+                    'price_round_type' => 1,
+                    'display_suppliers' => 'invalid_value_type',
+                    'display_manufacturers' => true,
+                    'display_best_sellers' => true,
+                    'multishop_feature_active' => true,
+                    'shop_activity' => 1,
+                ],
+            ],
+            [
+                InvalidOptionsException::class,
+                [
+                    'enable_ssl' => true,
+                    'enable_ssl_everywhere' => true,
+                    'enable_token' => true,
+                    'allow_html_iframes' => true,
+                    'use_htmlpurifier' => true,
+                    'price_round_mode' => 1,
+                    'price_round_type' => 1,
+                    'display_suppliers' => true,
+                    'display_manufacturers' => 'invalid_value_type',
+                    'display_best_sellers' => true,
+                    'multishop_feature_active' => true,
+                    'shop_activity' => 1,
+                ],
+            ],
+            [
+                InvalidOptionsException::class,
+                [
+                    'enable_ssl' => true,
+                    'enable_ssl_everywhere' => true,
+                    'enable_token' => true,
+                    'allow_html_iframes' => true,
+                    'use_htmlpurifier' => true,
+                    'price_round_mode' => 1,
+                    'price_round_type' => 1,
+                    'display_suppliers' => true,
+                    'display_manufacturers' => true,
+                    'display_best_sellers' => 'invalid_value_type',
+                    'multishop_feature_active' => true,
+                    'shop_activity' => 1,
+                ],
+            ],
+            [
+                InvalidOptionsException::class,
+                [
+                    'enable_ssl' => true,
+                    'enable_ssl_everywhere' => true,
+                    'enable_token' => true,
+                    'allow_html_iframes' => true,
+                    'use_htmlpurifier' => true,
+                    'price_round_mode' => 1,
+                    'price_round_type' => 1,
+                    'display_suppliers' => true,
+                    'display_manufacturers' => true,
+                    'display_best_sellers' => true,
+                    'multishop_feature_active' => 'invalid_value_type',
+                    'shop_activity' => 1,
+                ],
+            ],
+            [
+                InvalidOptionsException::class,
+                [
+                    'enable_ssl' => true,
+                    'enable_ssl_everywhere' => true,
+                    'enable_token' => true,
+                    'allow_html_iframes' => true,
+                    'use_htmlpurifier' => true,
+                    'price_round_mode' => 1,
+                    'price_round_type' => 1,
+                    'display_suppliers' => true,
+                    'display_manufacturers' => true,
+                    'display_best_sellers' => true,
+                    'multishop_feature_active' => true,
+                    'shop_activity' => 'invalid_value_type',
+                ],
+            ],
+        ];
+    }
+
+    public function testSuccessfulUpdate(): void
+    {
+        $preferencesConfiguration = new PreferencesConfiguration($this->mockConfiguration, $this->mockShopConfiguration, $this->mockMultistoreFeature);
+
+        $res = $preferencesConfiguration->updateConfiguration([
+            'enable_ssl' => true,
+            'enable_ssl_everywhere' => true,
+            'enable_token' => true,
+            'allow_html_iframes' => true,
+            'use_htmlpurifier' => true,
+            'price_round_mode' => 1,
+            'price_round_type' => 1,
+            'display_suppliers' => true,
+            'display_manufacturers' => true,
+            'display_best_sellers' => true,
+            'multishop_feature_active' => true,
+            'shop_activity' => 1,
+        ]);
+
+        $this->assertSame([], $res);
     }
 
     /**
-     * @return FeatureInterface
+     * @return array[]
      */
-    private function getMockMultistoreFeature(): FeatureInterface
+    public function provideShopConstraints(): array
     {
-        return $this->getMockForAbstractClass(FeatureInterface::class);
+        return [
+            [ShopConstraint::shop(self::SHOP_ID)],
+            [ShopConstraint::shopGroup(self::SHOP_ID)],
+            [ShopConstraint::allShops()],
+        ];
     }
 }
