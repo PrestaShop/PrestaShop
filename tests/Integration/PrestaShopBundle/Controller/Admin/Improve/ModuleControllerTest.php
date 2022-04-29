@@ -30,6 +30,7 @@ namespace Tests\Integration\PrestaShopBundle\Controller\Admin\Improve;
 
 use Context;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
@@ -82,7 +83,7 @@ class ModuleControllerTest extends WebTestCase
         self::$kernel->getContainer()->set('prestashop.adapter.legacy.configuration', $configurationMock);
 
         $moduleRepository = $this->createMock(ModuleRepository::class);
-        $moduleRepository->method('getList')->willReturn([]);
+        $moduleRepository->method('getList')->willReturn(new ModuleCollection());
         self::$kernel->getContainer()->set('prestashop.core.admin.module.repository', $moduleRepository);
     }
 

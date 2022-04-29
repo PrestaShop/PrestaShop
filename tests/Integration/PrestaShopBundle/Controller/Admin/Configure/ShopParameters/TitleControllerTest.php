@@ -33,9 +33,12 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
+use Tests\Integration\Utility\ContextMockerTrait;
 
 class TitleControllerTest extends WebTestCase
 {
+    use ContextMockerTrait;
+
     /**
      * @var KernelBrowser
      */
@@ -48,6 +51,7 @@ class TitleControllerTest extends WebTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        self::mockContext();
         self::bootKernel();
 
         $this->client = self::createClient();
