@@ -61,19 +61,21 @@ class PreferencesConfiguration extends AbstractMultistoreConfiguration
      */
     public function getConfiguration()
     {
+        $shopConstraint = $this->getShopConstraint();
+
         return [
-            'enable_ssl' => $this->configuration->getBoolean('PS_SSL_ENABLED'),
-            'enable_ssl_everywhere' => $this->configuration->getBoolean('PS_SSL_ENABLED_EVERYWHERE'),
-            'enable_token' => $this->configuration->getBoolean('PS_TOKEN_ENABLE'),
-            'allow_html_iframes' => $this->configuration->getBoolean('PS_ALLOW_HTML_IFRAME'),
-            'use_htmlpurifier' => $this->configuration->getBoolean('PS_USE_HTMLPURIFIER'),
-            'price_round_mode' => $this->configuration->get('PS_PRICE_ROUND_MODE'),
-            'price_round_type' => $this->configuration->get('PS_ROUND_TYPE'),
-            'display_suppliers' => $this->configuration->getBoolean('PS_DISPLAY_SUPPLIERS'),
-            'display_manufacturers' => $this->configuration->getBoolean('PS_DISPLAY_MANUFACTURERS'),
-            'display_best_sellers' => $this->configuration->getBoolean('PS_DISPLAY_BEST_SELLERS'),
-            'multishop_feature_active' => $this->configuration->getBoolean('PS_MULTISHOP_FEATURE_ACTIVE'),
-            'shop_activity' => $this->configuration->get('PS_SHOP_ACTIVITY'),
+            'enable_ssl' => $this->configuration->get('PS_SSL_ENABLED', null, $shopConstraint),
+            'enable_ssl_everywhere' => $this->configuration->get('PS_SSL_ENABLED_EVERYWHERE', null, $shopConstraint),
+            'enable_token' => $this->configuration->get('PS_TOKEN_ENABLE', null, $shopConstraint),
+            'allow_html_iframes' => $this->configuration->get('PS_ALLOW_HTML_IFRAME', null, $shopConstraint),
+            'use_htmlpurifier' => $this->configuration->get('PS_USE_HTMLPURIFIER', null, $shopConstraint),
+            'price_round_mode' => $this->configuration->get('PS_PRICE_ROUND_MODE', null, $shopConstraint),
+            'price_round_type' => $this->configuration->get('PS_ROUND_TYPE', null, $shopConstraint),
+            'display_suppliers' => $this->configuration->get('PS_DISPLAY_SUPPLIERS', null, $shopConstraint),
+            'display_manufacturers' => $this->configuration->get('PS_DISPLAY_MANUFACTURERS', null, $shopConstraint),
+            'display_best_sellers' => $this->configuration->get('PS_DISPLAY_BEST_SELLERS', null, $shopConstraint),
+            'multishop_feature_active' => $this->configuration->get('PS_MULTISHOP_FEATURE_ACTIVE', null, $shopConstraint),
+            'shop_activity' => $this->configuration->get('PS_SHOP_ACTIVITY', null, $shopConstraint),
         ];
     }
 

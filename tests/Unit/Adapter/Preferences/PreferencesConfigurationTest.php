@@ -92,18 +92,18 @@ class PreferencesConfigurationTest extends AbstractConfigurationTestCase
             ->method('get')
             ->willReturnMap(
                 [
-                    ['PS_SSL_ENABLED', true, $shopConstraint, true],
-                    ['PS_SSL_ENABLED_EVERYWHERE', true, $shopConstraint, true],
-                    ['PS_TOKEN_ENABLE', true, $shopConstraint, true],
-                    ['PS_ALLOW_HTML_IFRAME', true, $shopConstraint, true],
-                    ['PS_USE_HTMLPURIFIER', true, $shopConstraint, true],
-                    ['PS_PRICE_ROUND_MODE', 1, $shopConstraint, 1],
-                    ['PS_ROUND_TYPE', 1, $shopConstraint, 1],
-                    ['PS_DISPLAY_SUPPLIERS', true, $shopConstraint, true],
-                    ['PS_DISPLAY_MANUFACTURERS', true, $shopConstraint, true],
-                    ['PS_DISPLAY_BEST_SELLERS', true, $shopConstraint, true],
-                    ['PS_MULTISHOP_FEATURE_ACTIVE', true, $shopConstraint, true],
-                    ['PS_SHOP_ACTIVITY', 1, $shopConstraint, 1],
+                    ['PS_SSL_ENABLED', null, $shopConstraint, true],
+                    ['PS_SSL_ENABLED_EVERYWHERE', null, $shopConstraint, true],
+                    ['PS_TOKEN_ENABLE', null, $shopConstraint, true],
+                    ['PS_ALLOW_HTML_IFRAME', null, $shopConstraint, true],
+                    ['PS_USE_HTMLPURIFIER', null, $shopConstraint, true],
+                    ['PS_PRICE_ROUND_MODE', null, $shopConstraint, 1],
+                    ['PS_ROUND_TYPE', null, $shopConstraint, 1],
+                    ['PS_DISPLAY_SUPPLIERS', null, $shopConstraint, true],
+                    ['PS_DISPLAY_MANUFACTURERS', null, $shopConstraint, true],
+                    ['PS_DISPLAY_BEST_SELLERS', null, $shopConstraint, true],
+                    ['PS_MULTISHOP_FEATURE_ACTIVE', null, $shopConstraint, true],
+                    ['PS_SHOP_ACTIVITY', null, $shopConstraint, 1],
                 ]
             );
 
