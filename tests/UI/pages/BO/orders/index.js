@@ -195,8 +195,9 @@ class Order extends BOBasePage {
     if (columnName === 'osname') {
       return this.getTextContent(page, this.updateStatusInTableButton(row));
     }
-    if (columnName === 'total_paid_tax_incl') {
-      return parseFloat((await this.getTextContent(page, this.tableColumn(row, 'total_paid_tax_incl'))).substring(1));
+
+    if (columnName === 'id_order') {
+      return this.getNumberFromText(page, this.tableColumn(row, 'id_order'));
     }
 
     return this.getTextContent(page, this.tableColumn(row, columnName));
@@ -233,24 +234,30 @@ class Order extends BOBasePage {
   }
 
   /**
+   * Get number of orders in page
+   * @param page {Page} Browser tab
+   * @returns {Promise<*>}
+   */
+  async getNumberOfOrdersInPage(page) {
+    return (await page.$$(`${this.tableBody} tr`)).length;
+  }
+
+  /**
    * Get column content in all rows
    * @param page {Page} Browser tab
    * @param column {string} Column name on table
    * @returns {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, column) {
-    let rowsNumber = await this.getNumberOfElementInGrid(page);
-    if (await this.elementVisible(page, this.paginationBlock, 2000)) {
-      const paginationLimit = parseInt(await this.getTextContent(
-        page,
-        `${this.paginationLimitSelect} option[selected="selected"]`, false), 10);
-      if (paginationLimit <= rowsNumber) {
-        rowsNumber = paginationLimit;
-      }
-    }
+    let rowContent;
+    const rowsNumber = await this.getNumberOfOrdersInPage(page);
     const allRowsContentTable = [];
     for (let i = 1; i <= rowsNumber; i++) {
-      const rowContent = await this.getTextColumn(page, column, i);
+      if (column === 'total_paid_tax_incl') {
+        rowContent = await this.getOrderATIPrice(page, i);
+      } else {
+        rowContent = await this.getTextColumn(page, column, i);
+      }
       allRowsContentTable.push(rowContent);
     }
 
@@ -288,10 +295,7 @@ class Order extends BOBasePage {
       page.click(this.updateStatusInTableButton(row)),
       this.waitForVisibleSelector(page, `${this.updateStatusInTableDropdown(row)}.show`),
     ]);
-    await this.clickAndWaitForNavigation(
-      page,
-      this.updateStatusInTableDropdownChoice(row, status.id),
-    );
+    await this.clickAndWaitForNavigation(page, this.updateStatusInTableDropdownChoice(row, status.id));
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -333,13 +337,12 @@ class Order extends BOBasePage {
    * Get order total price
    * @param page {Page} Browser tab
    * @param row {number} Order row on table
-   * @returns {number}
+   * @returns {Promise<number>}
    */
   async getOrderATIPrice(page, row) {
     // Delete the first character (currency symbol) before getting price ATI
     return parseFloat((await this.getTextColumn(page, 'total_paid_tax_incl', row)).substring(1));
   }
-
 
   /* Bulk actions methods */
 
