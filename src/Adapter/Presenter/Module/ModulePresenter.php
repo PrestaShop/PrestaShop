@@ -32,8 +32,8 @@ use Hook;
 use Module as LegacyModule;
 use PrestaShop\PrestaShop\Adapter\Presenter\PresenterInterface;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
-use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleInterface;
+use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
+use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 
 class ModulePresenter implements PresenterInterface
 {
@@ -103,7 +103,7 @@ class ModulePresenter implements PresenterInterface
     /**
      * Transform a collection of addons as a simple array of data.
      *
-     * @param AddonsCollection|array $modules
+     * @param ModuleCollection|array $modules
      *
      * @return array
      */

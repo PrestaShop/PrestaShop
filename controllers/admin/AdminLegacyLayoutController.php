@@ -52,7 +52,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
      *
      * If $enableSidebar is false, the 'Help' button is a link that redirects to $helpLink
      *
-     * @var string
+     * @var string|bool
      */
     protected $helpLink;
     /** @var bool */
@@ -91,11 +91,15 @@ class AdminLegacyLayoutControllerCore extends AdminController
         // This makes sure that user cannot switch shop contexts
         // when in one of pages (controller) below.
         $controllers = [
+            'AdminAccess',
             'AdminFeatureFlag',
             'AdminLanguages',
             'AdminProfiles',
             'AdminSpecificPriceRule',
             'AdminStatuses',
+            'AdminSecurity',
+            'AdminSecuritySessionEmployee',
+            'AdminSecuritySessionCustomer',
             'AdminTranslations',
         ];
 
@@ -194,7 +198,7 @@ class AdminLegacyLayoutControllerCore extends AdminController
             /* allow complex <h1> structure. @since 1.7.7 */
             'use_regular_h1_structure' => $this->useRegularH1Structure,
             // legacy context selector is hidden on migrated pages when multistore feature is used
-            'hideLegacyStoreContextSelector' => $this->container->get('prestashop.adapter.multistore_feature')->isUsed(),
+            'hideLegacyStoreContextSelector' => $this->isMultistoreEnabled(),
         ];
 
         if ($this->helpLink === false || !empty($this->helpLink)) {

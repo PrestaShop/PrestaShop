@@ -2211,7 +2211,8 @@ window.seo = (function () {
 
   /** Hide or show the input product selector */
   function hideShowRedirectToProduct() {
-    if (redirectTypeElem.val() === '404') {
+    redirectTypeValue = redirectTypeElem.val();
+    if (redirectTypeValue === '404' || redirectTypeValue === '410') {
       $('#id-product-redirected').hide();
     } else {
       updateRemoteUrl();

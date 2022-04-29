@@ -36,7 +36,7 @@ class TinyMceMaxLength extends Constraint
     public $max;
 
     /**
-     * @var string
+     * @var string|null
      */
     public $message;
 

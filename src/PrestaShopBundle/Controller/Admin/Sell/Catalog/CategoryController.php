@@ -27,7 +27,9 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Category;
+use Dispatcher;
 use Exception;
+use ImageManager;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDeleteCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkDisableCategoriesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Command\BulkEnableCategoriesCommand;
@@ -55,6 +57,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed;
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CategoryGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use PrestaShop\PrestaShop\Core\Search\Filters\CategoryFilters;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -306,6 +309,11 @@ class CategoryController extends FrameworkBundleAdminController
         }
 
         $defaultGroups = $this->get('prestashop.adapter.group.provider.default_groups_provider')->getGroups();
+
+        // If we don't create the dispatcher instance with the current request,
+        // a new instance will be created later using `SymfonyRequest::createFromGlobals()`
+        // but as we may have already uploaded files, this can throw an exception
+        Dispatcher::getInstance($request);
 
         return $this->render(
             '@PrestaShop/Admin/Sell/Catalog/Categories/edit.html.twig',
@@ -885,6 +893,15 @@ class CategoryController extends FrameworkBundleAdminController
                 '%s %s',
                 $this->trans('An error occurred while uploading the image:', 'Admin.Catalog.Notification'),
                 $this->trans('You cannot upload more files', 'Admin.Notifications.Error')
+            ),
+            UploadedImageConstraintException::class => sprintf(
+                '%s %s',
+                $this->trans('An error occurred while uploading the image:', 'Admin.Catalog.Notification'),
+                $this->trans(
+                    'Image format not recognized, allowed formats are: %s',
+                    'Admin.Notifications.Error',
+                    [implode(', ', ImageManager::EXTENSIONS_SUPPORTED)]
+                )
             ),
         ];
     }

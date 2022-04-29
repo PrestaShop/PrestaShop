@@ -1,0 +1,22 @@
+name: my-theme
+display_name: My super aweosome theme
+version: 1.0.0
+author:
+  name: "Me"
+
+meta:
+  compatibility:
+    from: 1.7.0.0
+    to: ~
+
+  available_layouts:
+    layout-full-width:
+      name: Full Width
+      description: No side columns, ideal for distraction-free pages such as product pages.
+
+global_settings:
+  configuration:
+    PS_IMAGE_QUALITY: png
+  modules:
+    to_enable:
+      - ps_linklist

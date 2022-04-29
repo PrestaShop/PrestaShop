@@ -155,14 +155,14 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
             }
         }
 
-        if (in_array('modules', $steps)) {
-            if (!$this->processInstallModules()) {
+        if (in_array('theme', $steps)) {
+            if (!$this->processInstallTheme()) {
                 $this->printErrors();
             }
         }
 
-        if (in_array('theme', $steps)) {
-            if (!$this->processInstallTheme()) {
+        if (in_array('modules', $steps)) {
+            if (!$this->processInstallModules()) {
                 $this->printErrors();
             }
         }
@@ -276,8 +276,13 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
     public function processInstallModules()
     {
         $this->initializeContext();
+        if (is_string($this->datas->modules)) {
+            $modules = explode(',', $this->datas->modules);
+        } else {
+            $modules = array_keys($this->model_install->getModulesOnDisk());
+        }
 
-        return $this->model_install->installModules();
+        return $this->model_install->installModules($modules);
     }
 
     /**

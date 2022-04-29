@@ -53,7 +53,8 @@ class ReductionListener implements EventSubscriberInterface
     public function adaptReductionField(FormEvent $event): void
     {
         $data = $event->getData();
-        if ($data['type'] === Reduction::TYPE_PERCENTAGE) {
+
+        if (isset($data['type']) && $data['type'] === Reduction::TYPE_PERCENTAGE) {
             $form = $event->getForm();
             $valueField = $form->get('value');
             $options = $valueField->getConfig()->getOptions();

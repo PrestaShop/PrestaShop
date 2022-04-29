@@ -26,6 +26,7 @@
 
 namespace Tests\Integration\Utility;
 
+use Context;
 use PaymentModule;
 
 /**
@@ -40,7 +41,12 @@ use PaymentModule;
  */
 class PaymentModuleFake extends PaymentModule
 {
-    public $active = 1;
-    public $name = 'payment_test';
-    public $displayName = 'Test order';
+    public function __construct($name = null, Context $context = null)
+    {
+        parent::__construct($name, $context);
+
+        $this->active = true;
+        $this->name = 'payment_test';
+        $this->displayName = 'Test order';
+    }
 }

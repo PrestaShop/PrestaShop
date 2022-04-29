@@ -96,7 +96,6 @@ services:
   prestashop.core.grid.data_provider.customer_discount:
     class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\CustomerDiscountGridDataFactory'
     arguments:
-      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
       - "@=service('prestashop.adapter.legacy.context').getContext().customer"
 
   prestashop.core.grid.data_provider.customer_address:
@@ -105,7 +104,7 @@ services:
       - '@prestashop.core.grid.query_builder.customer_address'
       - '@prestashop.core.hook.dispatcher'
       - '@prestashop.core.grid.query.doctrine_query_parser'
-      - 'customer'
+      - 'customer_address'
 
   prestashop.core.grid.data_provider.customer_address_decorator:
     class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\CustomerAddressGridDataFactoryDecorator'
@@ -466,3 +465,42 @@ services:
       - '@prestashop.core.hook.dispatcher'
       - '@prestashop.core.grid.query.doctrine_query_parser'
       - 'search_engines'
+
+  prestashop.core.grid.data_factory.security.session.employee:
+    class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+    arguments:
+      - '@prestashop.core.grid.query_builder.security.session.employee'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.core.grid.query.doctrine_query_parser'
+      - 'security_session_employee'
+
+  prestashop.core.grid.data_factory.security.session.customer:
+    class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+    arguments:
+      - '@prestashop.core.grid.query_builder.security.session.customer'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.core.grid.query.doctrine_query_parser'
+      - 'security_session_customer'
+
+  prestashop.core.grid.data.factory.state:
+    class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+    arguments:
+      - '@prestashop.core.grid.query_builder.state'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.core.grid.query.doctrine_query_parser'
+      - 'state'
+
+  prestashop.core.grid.factory.title_decorator:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Data\Factory\TitleGridDataFactory'
+    arguments:
+      - '@prestashop.core.grid.data.factory.title'
+      - '@translator'
+      - '@prestashop.adapter.title.title_image_thumbnail_provider'
+
+  prestashop.core.grid.data.factory.title:
+    class: '%prestashop.core.grid.data.factory.doctrine_grid_data_factory%'
+    arguments:
+      - '@prestashop.core.grid.query.builder.title'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.core.grid.query.doctrine_query_parser'
+      - 'title'

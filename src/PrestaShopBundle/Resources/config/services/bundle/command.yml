@@ -50,13 +50,11 @@ services:
     arguments:
       - '@prestashop.core.command_bus'
       - '@prestashop.adapter.debug_mode'
-      - '@prestashop.adapter.legacy_context_loader'
     tags:
       - 'console.command'
 
   PrestaShopBundle\Command\ConfigCommand:
     arguments:
-      - '@prestashop.adapter.legacy_context_loader'
       - '@prestashop.adapter.legacy.configuration'
       - '@prestashop.adapter.data_provider.language'
     tags:

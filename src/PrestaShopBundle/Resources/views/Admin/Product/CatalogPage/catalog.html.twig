@@ -190,13 +190,14 @@
   {# Confirmation deletion product modal #}
   {% embed '@PrestaShop/Admin/Helpers/bootstrap_popup.html.twig' with {
     'id': "catalog_deletion_modal",
-    'title': "Delete products?"|trans({}, 'Admin.Catalog.Feature'),
+    'title': 'Delete products?'|trans({}, 'Admin.Catalog.Feature'),
     'closable': true,
+    'closeLabel': 'Cancel'|trans({}, 'Admin.Actions'),
     'actions': [{
       'type': 'button',
-      'label': "Delete now"|trans({}, 'Admin.Actions'),
+      'label': 'Delete'|trans({}, 'Admin.Actions'),
       'value': 'confirm',
-      'class': 'btn btn-primary btn-lg',
+      'class': 'btn btn-danger btn-lg',
     }],
   }%}
     {% block content %}

@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Profile\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Profile\Query\GetProfileForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Profile\QueryResult\EditableProfile;
 
 /**
  * Interface for service that gets Profile data for editing
@@ -36,7 +37,7 @@ interface GetProfileForEditingHandlerInterface
     /**
      * @param GetProfileForEditing $query
      *
-     * @return mixed
+     * @return EditableProfile
      */
-    public function handle(GetProfileForEditing $query);
+    public function handle(GetProfileForEditing $query): EditableProfile;
 }

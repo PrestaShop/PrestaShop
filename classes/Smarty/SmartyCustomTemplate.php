@@ -23,11 +23,12 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+/**
+ * @property SmartyCustom|null $smarty
+ */
 class SmartyCustomTemplateCore extends Smarty_Internal_Template
 {
-    /** @var SmartyCustom|null */
-    public $smarty = null;
-
     public function fetch($template = null, $cache_id = null, $compile_id = null, $parent = null, $display = false, $merge_tpl_vars = true, $no_output_filter = false)
     {
         if ($this->smarty->caching) {

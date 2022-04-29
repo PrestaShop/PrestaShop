@@ -24,8 +24,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
-
 /**
  * Class CategoryCore.
  */
@@ -48,13 +46,16 @@ class CategoryCore extends ObjectModel
     /** @var mixed string or array of Description */
     public $description;
 
+    /** @var mixed string or array of Additional description */
+    public $additional_description;
+
     /** @var int Parent category ID */
     public $id_parent;
 
     /** @var int default Category id */
     public $id_category_default;
 
-    /** @var int Parents number */
+    /** @var int|null Parents number */
     public $level_depth;
 
     /** @var int Nested tree model "left" value */
@@ -127,6 +128,7 @@ class CategoryCore extends ObjectModel
                 ],
             ],
             'description' => ['type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'],
+            'additional_description' => ['type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'],
             'meta_title' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255],
             'meta_description' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 512],
             'meta_keywords' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255],
@@ -828,11 +830,11 @@ class CategoryCore extends ObjectModel
     {
         $context = Context::getContext();
         if (count(Category::getCategoriesWithoutParent()) > 1
-            && \Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE')
+            && Configuration::get('PS_MULTISHOP_FEATURE_ACTIVE')
             && count(Shop::getShops(true, null, true)) !== 1) {
-            $idCategoryRoot = (int) \Configuration::get('PS_ROOT_CATEGORY');
+            $idCategoryRoot = (int) Configuration::get('PS_ROOT_CATEGORY');
         } elseif (!$context->shop->id) {
-            $idCategoryRoot = (new Shop(\Configuration::get('PS_SHOP_DEFAULT')))->id_category;
+            $idCategoryRoot = (new Shop((int) Configuration::get('PS_SHOP_DEFAULT')))->id_category;
         } else {
             $idCategoryRoot = $context->shop->id_category;
         }
@@ -885,7 +887,7 @@ class CategoryCore extends ObjectModel
         }
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS('
-		SELECT c.*, cl.`id_lang`, cl.`name`, cl.`description`, cl.`link_rewrite`, cl.`meta_title`, cl.`meta_keywords`, cl.`meta_description`
+		SELECT c.*, cl.`id_lang`, cl.`name`, cl.`description`, cl.`additional_description`, cl.`link_rewrite`, cl.`meta_title`, cl.`meta_keywords`, cl.`meta_description`
 		FROM `' . _DB_PREFIX_ . 'category` c
 		' . Shop::addSqlAssociation('category', 'c') . '
 		LEFT JOIN `' . _DB_PREFIX_ . 'category_lang` cl ON (c.`id_category` = cl.`id_category` AND `id_lang` = ' . (int) $idLang . ' ' . Shop::addSqlRestrictionOnLang('cl') . ')
@@ -1055,7 +1057,7 @@ class CategoryCore extends ObjectModel
      */
     public static function getHomeCategories($idLang, $active = true, $idShop = false)
     {
-        return self::getChildren(Configuration::get('PS_HOME_CATEGORY'), $idLang, $active, $idShop);
+        return self::getChildren((int) Configuration::get('PS_HOME_CATEGORY'), $idLang, $active, $idShop);
     }
 
     /**
@@ -1075,7 +1077,7 @@ class CategoryCore extends ObjectModel
         }
         if (!$shop) {
             if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP) {
-                $shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
+                $shop = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
             } else {
                 $shop = $context->shop;
             }
@@ -1207,7 +1209,7 @@ class CategoryCore extends ObjectModel
      * This method allow to return children categories with the number of sub children selected for a product.
      *
      * @param int $idParent Parent Category ID
-     * @param int $selectedCategory Selected SubCategory ID
+     * @param string $selectedCategory Selected SubCategory ID
      * @param int $idLang Language ID
      * @param Shop $shop Shop ID
      * @param bool $useShopContext Limit to current Shop
@@ -1511,7 +1513,7 @@ class CategoryCore extends ObjectModel
         $categories = null;
         $idCurrent = $this->id;
         if (!$context->shop->id) {
-            $context->shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
+            $context->shop = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
         }
         if (count(Category::getCategoriesWithoutParent()) > 1) {
             $context->shop->id_category = (int) Configuration::get('PS_ROOT_CATEGORY');
@@ -1730,9 +1732,7 @@ class CategoryCore extends ObjectModel
         }
         $this->cleanGroups();
         if (empty($list)) {
-            $sfContainer = SymfonyContainer::getInstance();
-            $groupDataProvider = $sfContainer->get('prestashop.adapter.group.group_data_provider');
-            $list = $groupDataProvider->getAllGroupIds();
+            $list = Group::getAllGroupIds();
         }
         $this->addGroups($list);
 
@@ -2309,13 +2309,13 @@ class CategoryCore extends ObjectModel
      * Update Categories for a shop.
      *
      * @param array $categories Categories list to associate a shop
-     * @param string $idShop Categories list to associate a shop
+     * @param int|null $idShop Categories list to associate a shop
      *
      * @return bool Update/insertion result (`false` if not successfully inserted/updated)
      */
     public static function updateFromShop($categories, $idShop)
     {
-        $shop = new Shop($idShop);
+        $shop = new Shop((int) $idShop);
         // if array is empty or if the default category is not selected, return false
         if (!is_array($categories) || !count($categories) || !in_array($shop->id_category, $categories)) {
             return false;

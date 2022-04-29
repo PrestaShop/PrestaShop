@@ -81,7 +81,7 @@
   import PSTree from '@app/widgets/ps-tree/ps-tree.vue';
   import {EventBus} from '@app/utils/event-bus';
 
-  export default Vue.extend({
+  const FilterComponent = Vue.extend({
     props: {
       placeholder: {
         type: String,
@@ -117,6 +117,9 @@
       },
     },
     methods: {
+      reset(): void {
+        this.tags = [];
+      },
       getItems(): Array<any> {
         /* eslint-disable camelcase */
         const matchList: Array<{
@@ -154,11 +157,7 @@
           this.tags.push(itemLabel);
         } else {
           const index = this.tags.indexOf(itemLabel);
-
-          if (this.splice) {
-            this.tags.splice(index, 1);
-          }
-          this.splice = true;
+          this.tags.splice(index, 1);
         }
         if (this.tags.length) {
           this.$emit('active', this.filterList(this.tags), filterType);
@@ -175,7 +174,7 @@
         if (this.tags.indexOf(this.currentVal) !== -1) {
           this.tags.pop();
         }
-        this.splice = false;
+
         if (this.match) {
           checkedTag = this.match[this.label];
         }
@@ -203,7 +202,6 @@
         currentVal: '',
         match: null as null | Record<string, any>,
         tags: [] as Array<any>,
-        splice: true,
         hasChildren: false,
       };
     },
@@ -213,4 +211,8 @@
       PSTreeItem,
     },
   });
+
+  export type FilterComponentInstanceType = InstanceType<typeof FilterComponent> | undefined;
+
+  export default FilterComponent;
 </script>

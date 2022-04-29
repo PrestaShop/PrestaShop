@@ -217,14 +217,10 @@ abstract class PaymentModuleCore extends Module
         Shop $shop = null,
         ?string $order_reference = null
     ) {
-        /* @phpstan-ignore-next-line */
         if (self::DEBUG_MODE) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Function called', 1, null, 'Cart', (int) $id_cart, true);
         }
 
-        if (!isset($this->context)) {
-            $this->context = Context::getContext();
-        }
         $this->context->cart = new Cart((int) $id_cart);
         $this->context->customer = new Customer((int) $this->context->cart->id_customer);
         // The tax cart is loaded before the customer so re-cache the tax calculation method
@@ -255,7 +251,7 @@ abstract class PaymentModuleCore extends Module
         $cart_is_loaded = Validate::isLoadedObject($this->context->cart);
         if (!$cart_is_loaded || $this->context->cart->OrderExists()) {
             $error = $this->trans('Cart cannot be loaded or an order has already been placed using this cart', [], 'Admin.Payment.Notification');
-            PrestaShopLogger::addLog($error, 4, '0000001', 'Cart', (int) ($this->context->cart->id));
+            PrestaShopLogger::addLog($error, 4, 1, 'Cart', (int) ($this->context->cart->id));
             die(Tools::displayError($error));
         }
 
@@ -320,7 +316,7 @@ abstract class PaymentModuleCore extends Module
                     } else {
                         $rule_name = isset($rule->name[(int) $this->context->cart->id_lang]) ? $rule->name[(int) $this->context->cart->id_lang] : $rule->code;
                         $error = $this->trans('The cart rule named "%1s" (ID %2s) used in this cart is not valid and has been withdrawn from cart', [$rule_name, (int) $rule->id], 'Admin.Payment.Notification');
-                        PrestaShopLogger::addLog($error, 3, '0000002', 'Cart', (int) $this->context->cart->id);
+                        PrestaShopLogger::addLog($error, 3, 2, 'Cart', (int) $this->context->cart->id);
                     }
                 }
             }
@@ -329,8 +325,10 @@ abstract class PaymentModuleCore extends Module
         // Amount paid by customer is not the right one -> Status = payment error
         // We don't use the following condition to avoid the float precision issues : http://www.php.net/manual/en/language.types.float.php
         // if ($order->total_paid != $order->total_paid_real)
-        // We use number_format in order to compare two string
-        if ($order_status->logable && number_format($cart_total_paid, Context::getContext()->getComputingPrecision()) != number_format($amount_paid, _PS_PRICE_COMPUTE_PRECISION_)) {
+        // We use number_format to convert the numbers to strings and strict inequality to compare them to avoid auto reconversions to numbers in PHP < 8.0
+        $comp_precision = Context::getContext()->getComputingPrecision();
+        if ($order_status->logable && (number_format($cart_total_paid, $comp_precision) !== number_format($amount_paid, $comp_precision))) {
+            PrestaShopLogger::addLog('PaymentModule::validateOrder - Total paid amount does not match cart total', 3, null, 'Cart', (int) $id_cart, true);
             $id_order_state = Configuration::get('PS_OS_ERROR');
         }
 
@@ -372,7 +370,6 @@ abstract class PaymentModuleCore extends Module
             throw new PrestaShopException('The order address country is not active.');
         }
 
-        /* @phpstan-ignore-next-line */
         if (self::DEBUG_MODE) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Payment is about to be added', 1, null, 'Cart', (int) $id_cart, true);
         }
@@ -405,7 +402,7 @@ abstract class PaymentModuleCore extends Module
             $order = $order_list[$key];
             if (!isset($order->id)) {
                 $error = $this->trans('Order creation failed', [], 'Admin.Payment.Notification');
-                PrestaShopLogger::addLog($error, 4, '0000002', 'Cart', (int) ($order->id_cart));
+                PrestaShopLogger::addLog($error, 4, 2, 'Cart', (int) ($order->id_cart));
                 die(Tools::displayError($error));
             }
             if (!$secure_key) {
@@ -415,7 +412,6 @@ abstract class PaymentModuleCore extends Module
             if (!empty($message)) {
                 $message = strip_tags($message, '<br>');
                 if (Validate::isCleanHtml($message)) {
-                    /* @phpstan-ignore-next-line */
                     if (self::DEBUG_MODE) {
                         PrestaShopLogger::addLog('PaymentModule::validateOrder - Message is about to be added', 1, null, 'Cart', (int) $id_cart, true);
                     }
@@ -549,7 +545,6 @@ abstract class PaymentModuleCore extends Module
                 }
             }
 
-            /* @phpstan-ignore-next-line */
             if (self::DEBUG_MODE) {
                 PrestaShopLogger::addLog('PaymentModule::validateOrder - Hook validateOrder is about to be called', 1, null, 'Cart', (int) $id_cart, true);
             }
@@ -569,7 +564,6 @@ abstract class PaymentModuleCore extends Module
                 }
             }
 
-            /* @phpstan-ignore-next-line */
             if (self::DEBUG_MODE) {
                 PrestaShopLogger::addLog('PaymentModule::validateOrder - Order Status is about to be added', 1, null, 'Cart', (int) $id_cart, true);
             }
@@ -586,7 +580,11 @@ abstract class PaymentModuleCore extends Module
                     $order_detail->product_quantity_in_stock < 0)) {
                 $history = new OrderHistory();
                 $history->id_order = (int) $order->id;
-                $history->changeIdOrderState(Configuration::get($order->hasBeenPaid() ? 'PS_OS_OUTOFSTOCK_PAID' : 'PS_OS_OUTOFSTOCK_UNPAID'), $order, true);
+                $history->changeIdOrderState(
+                    (int) Configuration::get($order->hasBeenPaid() ? 'PS_OS_OUTOFSTOCK_PAID' : 'PS_OS_OUTOFSTOCK_UNPAID'),
+                    $order,
+                    true
+                );
                 $history->addWithemail();
             }
 
@@ -613,7 +611,7 @@ abstract class PaymentModuleCore extends Module
                     Hook::exec('actionPDFInvoiceRender', ['order_invoice_list' => $order_invoice_list]);
                     $pdf = new PDF($order_invoice_list, PDF::TEMPLATE_INVOICE, $this->context->smarty);
                     $file_attachement['content'] = $pdf->render(false);
-                    $file_attachement['name'] = Configuration::get('PS_INVOICE_PREFIX', (int) $order->id_lang, null, $order->id_shop) . sprintf('%06d', $order->invoice_number) . '.pdf';
+                    $file_attachement['name'] = $pdf->getFilename();
                     $file_attachement['mime'] = 'application/pdf';
                     $this->context->language = $currentLanguage;
                     $this->context->getTranslator()->setLocale($currentLanguage->locale);
@@ -621,7 +619,6 @@ abstract class PaymentModuleCore extends Module
                     $file_attachement = null;
                 }
 
-                /* @phpstan-ignore-next-line */
                 if (self::DEBUG_MODE) {
                     PrestaShopLogger::addLog('PaymentModule::validateOrder - Mail is about to be sent', 1, null, 'Cart', (int) $id_cart, true);
                 }
@@ -666,7 +663,7 @@ abstract class PaymentModuleCore extends Module
                         '{invoice_other}' => $invoice->other,
                         '{order_name}' => $order->getUniqReference(),
                         '{id_order}' => $order->id,
-                        '{date}' => Tools::displayDate(date('Y-m-d H:i:s'), null, 1),
+                        '{date}' => Tools::displayDate(date('Y-m-d H:i:s'), true),
                         '{carrier}' => ($virtual_product || !isset($carrier->name)) ? $this->trans('No carrier', [], 'Admin.Payment.Notification') : $carrier->name,
                         '{payment}' => Tools::substr($order->payment, 0, 255) . ($order->hasBeenPaid() ? '' : '&nbsp;' . $this->trans('(waiting for validation)', [], 'Emails.Body')),
                         '{products}' => $product_list_html,
@@ -740,7 +737,6 @@ abstract class PaymentModuleCore extends Module
             $this->currentOrder = (int) $order->id;
         }
 
-        /* @phpstan-ignore-next-line */
         if (self::DEBUG_MODE) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - End of validateOrder', 1, null, 'Cart', (int) $id_cart, true);
         }

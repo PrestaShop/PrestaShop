@@ -46,6 +46,7 @@
           >
             <h2>{{ trans('filter_suppliers') }}</h2>
             <FilterComponent
+              ref="suppliers"
               :placeholder="trans('filter_search_suppliers')"
               :list="this.$store.getters.suppliers"
               class="filter-suppliers"
@@ -107,6 +108,7 @@
           <div class="py-3">
             <h2>{{ trans('filter_categories') }}</h2>
             <FilterComponent
+              ref="categories"
               :placeholder="trans('filter_search_category')"
               :list="categoriesList"
               class="filter-categories"
@@ -153,7 +155,7 @@
   import PSSelect from '@app/widgets/ps-select.vue';
   import PSDatePicker from '@app/widgets/ps-datepicker.vue';
   import PSRadio from '@app/widgets/ps-radio.vue';
-  import FilterComponent from './filters/filter-component.vue';
+  import FilterComponent, {FilterComponentInstanceType} from './filters/filter-component.vue';
 
   export interface StockCategory {
     active: number;
@@ -166,7 +168,7 @@
     visible: boolean;
   }
 
-  export default Vue.extend({
+  const Filters = Vue.extend({
     computed: {
       locale(): string {
         return window.data.locale;
@@ -183,8 +185,24 @@
       categoriesList(): Array<StockCategory> {
         return this.$store.getters.categories;
       },
+      suppliersFilterRef(): FilterComponentInstanceType {
+        return <FilterComponentInstanceType>(this.$refs.suppliers);
+      },
+      categoriesFilterRef(): FilterComponentInstanceType {
+        return <FilterComponentInstanceType>(this.$refs.categories);
+      },
     },
     methods: {
+      reset(): void {
+        const dataOption = this.$options.data;
+
+        Object.assign(
+          this.$data,
+          dataOption instanceof Function ? dataOption.apply(this) : dataOption,
+        );
+        this.suppliersFilterRef?.reset();
+        this.categoriesFilterRef?.reset();
+      },
       onClear(event: any): void {
         delete this.date_add[<number>event.dateType];
         this.applyFilter();
@@ -254,4 +272,8 @@
       };
     },
   });
+
+  export type FiltersInstanceType = InstanceType<typeof Filters> | undefined;
+
+  export default Filters;
 </script>

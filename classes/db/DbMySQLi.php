@@ -61,9 +61,10 @@ class DbMySQLiCore extends Db
         }
 
         if ($socket) {
-            $this->link = @new mysqli(null, $this->user, $this->password, $this->database, null, $socket);
+            /* @phpstan-ignore-next-line */
+            $this->link = @new mysqli(null, $this->user, $this->password, $this->database, 0, $socket);
         } elseif ($port) {
-            $this->link = @new mysqli($server, $this->user, $this->password, $this->database, $port);
+            $this->link = @new mysqli($server, $this->user, $this->password, $this->database, (int) $port);
         } else {
             $this->link = @new mysqli($this->server, $this->user, $this->password, $this->database);
         }
@@ -98,7 +99,7 @@ class DbMySQLiCore extends Db
     {
         if (strpos($host, ':') !== false) {
             list($host, $port) = explode(':', $host);
-            $link = @new mysqli($host, $user, $password, null, $port);
+            $link = @new mysqli($host, $user, $password, '', (int) $port);
         } else {
             $link = @new mysqli($host, $user, $password);
         }
@@ -448,27 +449,26 @@ class DbMySQLiCore extends Db
             return false;
         }
 
-        if ($engine === null) {
-            $engine = 'MyISAM';
+        $enginesToTest = ['InnoDB', 'MyISAM'];
+        if ($engine !== null) {
+            $enginesToTest = [$engine];
         }
 
-        // Create a table
-        $link->query('
-		CREATE TABLE `' . $prefix . 'test` (
-			`test` tinyint(1) unsigned NOT NULL
-		) ENGINE=' . $engine);
+        foreach ($enginesToTest as $engineToTest) {
+            $link->query('CREATE TABLE `' . $prefix . 'test` (
+                `test` tinyint(1) unsigned NOT NULL
+            ) ENGINE=' . $engineToTest);
 
-        // Select content
-        $result = $link->query('SELECT * FROM `' . $prefix . 'test`');
+            $result = $link->query('SELECT * FROM `' . $prefix . 'test`');
 
-        // Drop the table
-        $link->query('DROP TABLE `' . $prefix . 'test`');
+            $link->query('DROP TABLE `' . $prefix . 'test`');
 
-        if (!$result) {
-            return $link->error;
+            if ($result) {
+                return true;
+            }
         }
 
-        return true;
+        return $link->error;
     }
 
     /**

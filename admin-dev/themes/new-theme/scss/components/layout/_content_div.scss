@@ -28,9 +28,18 @@
     padding-top: 0;
 
     .header-toolbar {
-      padding-left: 0;
-      margin: 0 -#{$grid-gutter-width / 2};
-      margin-bottom: 1rem;
+      display: none;
+    }
+  }
+
+  @at-root .multishop-enabled & {
+    &.-notoolbar {
+      .header-toolbar {
+        display: block;
+        padding-left: 0;
+        margin: 0 -#{$grid-gutter-width / 2};
+        border-bottom: none;
+      }
     }
   }
 }
@@ -47,9 +56,21 @@
   }
 }
 
+.light_display_layout {
+  #main-div {
+    padding-top: 0.625rem;
+  }
+}
+
 .page-sidebar-closed:not(.mobile) {
   .content-div {
     padding-left: $size-navbar-width-mini + ($grid-gutter-width / 2);
+
+    &.-notoolbar {
+      .header-toolbar {
+        padding-left: 0;
+      }
+    }
   }
 }
 

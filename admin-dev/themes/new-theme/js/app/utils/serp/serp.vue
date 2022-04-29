@@ -25,11 +25,13 @@
 <template>
   <div id="serp">
     <div class="serp-preview">
+      <div class="serp-url">
+        <span class="serp-base-url">{{ displayedBaseURL }}</span>
+        {{ displayedRelativePath }}
+        <i class="material-icons serp-url-more">more_vert</i>
+      </div>
       <div class="serp-title">
         {{ displayedTitle }}
-      </div>
-      <div class="serp-url">
-        {{ url }}<span class="serp-arrow" />
       </div>
       <div class="serp-description">
         {{ displayedDescription }}
@@ -56,6 +58,22 @@
       },
     },
     computed: {
+      displayedBaseURL() {
+        const parseUrl = new URL(this.url);
+        const baseUrl = `${parseUrl.protocol}//${parseUrl.hostname}`;
+
+        return baseUrl;
+      },
+      displayedRelativePath() {
+        const parseUrl = new URL(this.url);
+        const relativePath = decodeURI(parseUrl.pathname).replaceAll('/', ' \u203a ');
+
+        if (relativePath.length > 50) {
+          return `${relativePath.substring(0, 50)}...`;
+        }
+
+        return relativePath;
+      },
       displayedTitle() {
         if (this.title.length > 70) {
           return `${this.title.substring(0, 70)}...`;
@@ -75,77 +93,66 @@
 </script>
 
 <style lang="scss" type="text/scss" scoped>
-    .serp-preview {
-        margin-top: 15px;
-        margin-bottom: 15px;
-        border-radius: 2px;
-        box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.12);
-        background-color: #ffffff;
-        border: solid 1px #e7e7e7;
-        padding: 30px;
-        max-width: 700px;
+  @import "~@scss/config/bootstrap.scss";
+  @import "~@scss/config/settings.scss";
 
-        .serp-arrow {
-            border-bottom-color: rgb(0, 102, 33);
-            border-bottom-style: solid;
-            border-bottom-width: 0px;
-            border-left-color: rgba(0, 0, 0, 0);
-            border-left-style: solid;
-            border-left-width: 4px;
-            border-right-color: rgba(0, 0, 0, 0);
-            border-right-style: solid;
-            border-right-width: 4px;
-            border-top-color: rgb(0, 102, 33);
-            border-top-style: solid;
-            border-top-width: 5px;
-            color: rgb(128, 128, 128);
-            cursor: default;
-            font-family: arial, sans-serif;
-            font-size: 11px;
-            font-weight: bold;
-            height: 0px;
-            position: absolute;
-            line-height: 27px;
-            margin-left: 3px;
-            margin-top: 6px;
-            text-align: center;
-            user-select: none;
-            visibility: visible;
-            white-space: nowrap;
-            width: 0px;
-        }
+  .serp-preview {
+    max-width: 43.75rem;
+    padding: 1.5rem 1.875rem;
+    margin: 0.938rem 0;
+    background-color: $white;
+    border: solid 1px $widget-border-color;
+    @include border-radius(0.25rem);
+    @include box-shadow(0 0 0.375rem 0 rgba($black, 0.1));
 
-        .serp-title {
-            color: #1A0DAB;
-            cursor: pointer;
-            font-family: arial, regular;
-            font-size: 18px;
-            font-weight: normal;
-            text-align: left;
-            text-decoration: none;
-            visibility: visible;
-            white-space: nowrap;
-        }
-
-        .serp-url {
-            color: #006621;
-            font-family: arial, regular;
-            font-size: 14px;
-            font-style: normal;
-            font-weight: normal;
-            line-height: 24px;
-            text-align: left;
-            visibility: visible;
-        }
-
-        .serp-description {
-            color: #545454;
-            font-family: arial, regular;
-            font-size: 13px;
-            font-weight: normal;
-            text-align: left;
-            visibility: visible;
-            word-wrap: break-word;
-        }
+    .serp-url {
+      font-family: arial, sans-serif;
+      font-size: 0.875rem;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 1.5rem;
+      color: $serp-url-light-color;
+      text-align: left;
+      direction: ltr;
+      cursor: pointer;
+      visibility: visible;
     }
+
+    .serp-base-url {
+      color: $serp-url-dark-color;
+    }
+
+    .serp-url-more {
+      margin: -0.25rem 0 0 0.875rem;
+      font-size: 1.125rem;
+      color: $serp-url-light-color;
+      cursor: pointer;
+    }
+
+    .serp-title {
+      font-family: arial, sans-serif;
+      font-size: 1.25rem;
+      font-weight: 400;
+      color: $serp-title-color;
+      text-align: left;
+      text-decoration: none;
+      white-space: nowrap;
+      cursor: pointer;
+      visibility: visible;
+    }
+
+    .serp-title:hover {
+      text-decoration: underline;
+    }
+
+    .serp-description {
+      font-family: arial, sans-serif;
+      font-size: 0.875rem;
+      font-weight: 400;
+      color: $serp-description-color;
+      text-align: left;
+      word-wrap: break-word;
+      visibility: visible;
+    }
+  }
 </style>

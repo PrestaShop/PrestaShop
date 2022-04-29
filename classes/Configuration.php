@@ -652,7 +652,7 @@ class ConfigurationCore extends ObjectModel
      * Check if configuration var is defined in given context.
      *
      * @param string $key
-     * @param int $idLang
+     * @param int|null $idLang
      * @param int $context
      */
     public static function hasContext($key, $idLang, $context)

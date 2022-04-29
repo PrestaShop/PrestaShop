@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Import\Handler;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportConfigInterface;
 use PrestaShop\PrestaShop\Core\Import\Configuration\ImportRuntimeConfigInterface;
 use PrestaShop\PrestaShop\Core\Import\Exception\EmptyDataRowException;
+use PrestaShop\PrestaShop\Core\Import\Exception\SkippedIterationException;
 use PrestaShop\PrestaShop\Core\Import\File\DataRow\DataRowInterface;
 
 /**
@@ -52,6 +53,7 @@ interface ImportHandlerInterface
      * @param DataRowInterface $dataRow
      *
      * @throws EmptyDataRowException
+     * @throws SkippedIterationException
      */
     public function importRow(
         ImportConfigInterface $importConfig,

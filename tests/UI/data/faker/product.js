@@ -41,8 +41,16 @@ class ProductData {
       ? faker.random.number({min: 1, max: 9})
       : productToCreate.quantity;
 
+    /** @type {number} Tax for the product */
+    this.tax = productToCreate.tax === undefined
+      ? faker.random.number({min: 1, max: 100})
+      : productToCreate.tax;
+
     /** @type {string} Price tax included of the product */
     this.price = productToCreate.price === undefined ? faker.random.number({min: 10, max: 20}) : productToCreate.price;
+
+    /** @type {string} Price tax excluded of the product */
+    this.priceTaxExcluded = productToCreate.priceTaxExcluded || (this.price * 100) / (100 + this.tax);
 
     /** @type {boolean} True to create product with combination */
     this.productHasCombinations = productToCreate.productHasCombinations || false;
@@ -64,7 +72,7 @@ class ProductData {
 
     /** @type {number} EcoTax tax included of the product */
     this.ecoTax = productToCreate.ecoTax === undefined
-      ? faker.random.number({min: 10, max: 20})
+      ? faker.random.number({min: 1, max: 5})
       : productToCreate.ecoTax;
 
     /** @type {Object|{combinations: ?string, discount: ?number, startingAt: ?number}} Specific price of the product */
@@ -95,6 +103,13 @@ class ProductData {
 
     /** @type {string} Product behavior when it's out of stock */
     this.behaviourOutOfStock = productToCreate.behaviourOutOfStock || faker.random.arrayElement(behavior);
+
+    /** @type {Object|{label: ?string, type: ?string, required: ?boolean}} Customized value of the product */
+    this.customization = productToCreate.customization || {
+      label: 'Type your text here',
+      type: 'Text',
+      required: true,
+    };
   }
 }
 

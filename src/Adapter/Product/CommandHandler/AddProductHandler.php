@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\AddProductHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -39,15 +39,15 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 final class AddProductHandler implements AddProductHandlerInterface
 {
     /**
-     * @var ProductRepository
+     * @var ProductMultiShopRepository
      */
     private $productRepository;
 
     /**
-     * @param ProductRepository $productRepository
+     * @param ProductMultiShopRepository $productRepository
      */
     public function __construct(
-        ProductRepository $productRepository
+        ProductMultiShopRepository $productRepository
     ) {
         $this->productRepository = $productRepository;
     }
@@ -57,7 +57,11 @@ final class AddProductHandler implements AddProductHandlerInterface
      */
     public function handle(AddProductCommand $command): ProductId
     {
-        $product = $this->productRepository->create($command->getLocalizedNames(), $command->getProductType()->getValue());
+        $product = $this->productRepository->create(
+            $command->getLocalizedNames(),
+            $command->getProductType()->getValue(),
+            $command->getShopId()
+        );
 
         return new ProductId((int) $product->id);
     }

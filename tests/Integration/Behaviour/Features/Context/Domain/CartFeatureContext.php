@@ -67,13 +67,13 @@ use Product;
 use RuntimeException;
 use SpecificPrice;
 use State;
-use Tests\Integration\Behaviour\Features\Context\ProductFeatureContext;
+use Tests\Integration\Behaviour\Features\Context\LegacyProductFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class CartFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @var ProductFeatureContext
+     * @var LegacyProductFeatureContext
      */
     protected $productFeatureContext;
 
@@ -82,8 +82,8 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     {
         /** @var InitializedContextEnvironment $environment */
         $environment = $scope->getEnvironment();
-        /** @var ProductFeatureContext $productFeatureContext */
-        $productFeatureContext = $environment->getContext(ProductFeatureContext::class);
+        /** @var LegacyProductFeatureContext $productFeatureContext */
+        $productFeatureContext = $environment->getContext(LegacyProductFeatureContext::class);
 
         $this->productFeatureContext = $productFeatureContext;
     }

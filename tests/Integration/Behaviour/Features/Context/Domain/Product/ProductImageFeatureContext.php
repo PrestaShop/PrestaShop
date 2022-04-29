@@ -37,8 +37,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Image\Command\UpdateProductImageCo
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImage;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\Query\GetProductImages;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\QueryResult\ProductImage;
-use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 use Tests\Resources\DummyFileUploader;
@@ -279,10 +277,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
      */
     public function assertProductCover(string $productReference, string $coverUrl): void
     {
-        /** @var ProductForEditing $productForEditing */
-        $productForEditing = $this->getCommandBus()->handle(new GetProductForEditing(
-            (int) $this->getSharedStorage()->get($productReference)
-        ));
+        $productForEditing = $this->getProductForEditing($productReference);
         $realImageUrl = $this->getRealImageUrl($coverUrl);
 
         Assert::assertEquals($realImageUrl, $productForEditing->getCoverThumbnailUrl());

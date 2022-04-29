@@ -31,7 +31,6 @@ use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchProviderInterface;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchResult;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
-use PrestaShop\PrestaShop\Core\Product\Search\SortOrderFactory;
 use Product;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -45,16 +44,10 @@ class PricesDropProductSearchProvider implements ProductSearchProviderInterface
      */
     private $translator;
 
-    /**
-     * @var SortOrderFactory
-     */
-    private $sortOrderFactory;
-
     public function __construct(
         TranslatorInterface $translator
     ) {
         $this->translator = $translator;
-        $this->sortOrderFactory = new SortOrderFactory($this->translator);
     }
 
     /**

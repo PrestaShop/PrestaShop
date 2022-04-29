@@ -505,7 +505,7 @@ abstract class CacheCore
             $tableBuffer = array_slice(
                 $this->sql_tables_cached[$table],
                 0,
-                ceil($this->maxCachedObjectsByTable / 3),
+                (int) ceil($this->maxCachedObjectsByTable / 3),
                 true
             );
             foreach (array_keys($tableBuffer) as $fs_key) {

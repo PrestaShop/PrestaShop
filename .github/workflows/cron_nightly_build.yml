@@ -53,7 +53,7 @@ jobs:
         run: today=`date +%Y-%m-%d-`; for i in *; do mv $i $today$GH_BRANCH-$i; done
         working-directory: ${{ env.RELEASE_DIR }}
 
-      - uses: google-github-actions/setup-gcloud@master
+      - uses: google-github-actions/setup-gcloud@v0
         name: Setup Cloud Sdk
         with:
           service_account_key: ${{ env.GC_SERVICE_KEY }}

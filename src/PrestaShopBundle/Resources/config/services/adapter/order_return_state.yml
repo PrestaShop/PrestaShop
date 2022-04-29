@@ -19,3 +19,15 @@ services:
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Command\EditOrderReturnStateCommand'
+
+  prestashop.adapter.order_return_state.command_handler.delete_order_return_state_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\OrderReturnState\CommandHandler\DeleteOrderReturnStateHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Command\DeleteOrderReturnStateCommand'
+
+  prestashop.adapter.order_return_state.command_handler.bulk_delete_order_return_state_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\OrderReturnState\CommandHandler\BulkDeleteOrderReturnStateHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Command\BulkDeleteOrderReturnStateCommand'

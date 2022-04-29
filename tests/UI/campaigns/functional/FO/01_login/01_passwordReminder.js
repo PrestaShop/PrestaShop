@@ -4,7 +4,7 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const {setupSmtpConfigTest, resetSmtpConfigTest} = require('@commonTests/configSMTP');
+const {setupSmtpConfigTest, resetSmtpConfigTest} = require('@commonTests/BO/advancedParameters/configSMTP');
 const mailHelper = require('@utils/mailHelper');
 
 // Importing pages

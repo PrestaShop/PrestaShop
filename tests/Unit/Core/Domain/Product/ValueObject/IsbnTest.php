@@ -40,6 +40,8 @@ class IsbnTest extends TestCase
     {
         $isbn = new Isbn('978-3-16-148410-0');
         Assert::assertSame('978-3-16-148410-0', $isbn->getValue());
+        $isbn = new Isbn('0-8044-2957-X');
+        Assert::assertSame('0-8044-2957-X', $isbn->getValue());
     }
 
     /**
@@ -60,7 +62,9 @@ class IsbnTest extends TestCase
      */
     public function getInvalidValues(): Generator
     {
-        yield ['12345678901234567890123412345678901234-33'];
+        yield ['123456789123456789123456789-33'];
+        yield ['978-3-16-144100-X']; // X is not valid for ISBN 13
+        yield ['0-8044-29X7-X']; // X not at the end is not valid for ISBN 10
         yield ['what'];
         yield ['!'];
         yield ['@'];

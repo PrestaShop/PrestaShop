@@ -119,8 +119,18 @@ class HookCore extends ObjectModel
     public function add($autodate = true, $null_values = false)
     {
         Cache::clean('hook_idsbyname');
+        Cache::clean('hook_idsbyname_withalias');
+        Cache::clean('active_hooks');
 
         return parent::add($autodate, $null_values);
+    }
+
+    public function clearCache($all = false)
+    {
+        Cache::clean('hook_idsbyname');
+        Cache::clean('hook_idsbyname_withalias');
+        Cache::clean('active_hooks');
+        parent::clearCache($all);
     }
 
     /**
@@ -202,7 +212,7 @@ class HookCore extends ObjectModel
             return false;
         }
 
-        $hook_ids = static::getAllHookIds($withAliases, $refreshCache);
+        $hook_ids = self::getAllHookIds($withAliases, $refreshCache);
 
         return $hook_ids[$hookName] ?? false;
     }
@@ -246,7 +256,7 @@ class HookCore extends ObjectModel
      */
     public static function isAlias(string $hookName): bool
     {
-        $aliases = static::getCanonicalHookNames();
+        $aliases = self::getCanonicalHookNames();
 
         return isset($aliases[strtolower($hookName)]);
     }
@@ -343,7 +353,7 @@ class HookCore extends ObjectModel
         return array_unique(
             array_merge(
                 [$canonical],
-                static::getHookAliasesFor($canonical)
+                self::getHookAliasesFor($canonical)
             )
         );
     }
@@ -364,7 +374,7 @@ class HookCore extends ObjectModel
         $hooksToCheck = (!$strict) ? static::getAllKnownNames($hookName) : [$hookName];
 
         foreach ($hooksToCheck as $currentHookName) {
-            if (is_callable([$module, static::getMethodName($currentHookName)])) {
+            if (is_callable([$module, self::getMethodName($currentHookName)])) {
                 return true;
             }
         }
@@ -391,14 +401,14 @@ class HookCore extends ObjectModel
             // Since is_callable() will always return true when __call() is available,
             // if the module was expecting an aliased hook name to be invoked, but we send
             // the canonical hook name instead, the hook will never be acknowledged by the module.
-            $methodName = static::getMethodName($hookName);
+            $methodName = self::getMethodName($hookName);
             if (is_callable([$module, $methodName])) {
                 return static::coreCallHook($module, $methodName, $hookArgs);
             }
 
             // fall back to all other names
             foreach (static::getAllKnownNames($hookName) as $hook) {
-                $methodName = static::getMethodName($hook);
+                $methodName = self::getMethodName($hook);
                 if (is_callable([$module, $methodName])) {
                     return static::coreCallHook($module, $methodName, $hookArgs);
                 }
@@ -498,7 +508,7 @@ class HookCore extends ObjectModel
     /**
      * Registers a module to a given hook
      *
-     * @param Module $module_instance The affected module
+     * @param ModuleCore $module_instance The affected module
      * @param string|string[] $hook_name Hook name(s) to register this module to
      * @param int[]|null $shop_list List of shop ids
      *
@@ -655,7 +665,7 @@ class HookCore extends ObjectModel
      */
     public static function getHookModuleExecList($hookName = null)
     {
-        $allHookRegistrations = static::getAllHookRegistrations(Context::getContext(), $hookName);
+        $allHookRegistrations = self::getAllHookRegistrations(Context::getContext(), $hookName);
 
         // If no hook_name is given, return all registered hooks
         if (null === $hookName) {
@@ -701,7 +711,7 @@ class HookCore extends ObjectModel
      *
      * @throws PrestaShopException
      *
-     * @return mixed Module's output
+     * @return mixed|null Module's output
      */
     public static function exec(
         $hook_name,
@@ -721,7 +731,7 @@ class HookCore extends ObjectModel
             return $array_return ? [] : null;
         }
 
-        $hookRegistry = static::getHookRegistry();
+        $hookRegistry = self::getHookRegistry();
         $isRegistryEnabled = null !== $hookRegistry;
 
         if ($isRegistryEnabled) {
@@ -1211,11 +1221,23 @@ class HookCore extends ObjectModel
      */
     public static function getHookStatusByName($hook_name): bool
     {
-        $sql = new DbQuery();
-        $sql->select('active');
-        $sql->from('hook', 'h');
-        $sql->where('h.name = "' . pSQL($hook_name) . '"');
+        $hook_names = [];
+        if (Cache::isStored('active_hooks')) {
+            $hook_names = Cache::retrieve('active_hooks');
+        } else {
+            $sql = new DbQuery();
+            $sql->select('lower(name) as name');
+            $sql->from('hook', 'h');
+            $sql->where('h.active = 1');
+            $active_hooks = Db::getInstance()->executeS($sql);
+            if (!empty($active_hooks)) {
+                $hook_names = array_column($active_hooks, 'name');
+                if (is_array($hook_names)) {
+                    Cache::store('active_hooks', $hook_names);
+                }
+            }
+        }
 
-        return (bool) Db::getInstance()->getValue($sql);
+        return in_array(strtolower($hook_name), $hook_names);
     }
 }

@@ -124,7 +124,7 @@ class OrderSettings extends BOBasePage {
   async setGiftOptions(page, wantedStatus = false, price = 0, tax = 'none', recyclePackagingStatus = false) {
     await this.setChecked(page, this.giftWrappingToggleInput(wantedStatus ? 1 : 0));
     if (wantedStatus) {
-      await this.setValue(page, this.giftWrappingPriceInput, price.toString());
+      await this.setValue(page, this.giftWrappingPriceInput, price);
       await this.selectByVisibleText(page, this.giftWrappingTaxSelect, tax);
     }
 

@@ -26,12 +26,9 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
-use PrestaShop\PrestaShop\Core\Addon\AddonListFilter;
-use PrestaShop\PrestaShop\Core\Addon\AddonListFilterStatus;
-use PrestaShop\PrestaShop\Core\Addon\AddonListFilterType;
-use PrestaShop\PrestaShop\Core\Addon\AddonRepositoryInterface;
 use PrestaShop\PrestaShop\Core\Module\DataProvider\PaymentModuleListProviderInterface;
-use PrestaShopBundle\Entity\Repository\ModuleRepository;
+use PrestaShop\PrestaShop\Core\Module\ModuleRepositoryInterface;
+use PrestaShopBundle\Entity\Repository\ModuleRepository as ModuleEntityRepository;
 
 /**
  * Class PaymentModuleListProvider is responsible for providing payment module list.
@@ -39,14 +36,14 @@ use PrestaShopBundle\Entity\Repository\ModuleRepository;
 final class PaymentModuleListProvider implements PaymentModuleListProviderInterface
 {
     /**
-     * @var AddonRepositoryInterface
-     */
-    private $addonRepository;
-
-    /**
-     * @var ModuleRepository
+     * @var ModuleRepositoryInterface
      */
     private $moduleRepository;
+
+    /**
+     * @var ModuleEntityRepository
+     */
+    private $moduleEntityRepository;
 
     /**
      * @var int
@@ -54,17 +51,17 @@ final class PaymentModuleListProvider implements PaymentModuleListProviderInterf
     private $shopId;
 
     /**
-     * @param AddonRepositoryInterface $addonRepository
-     * @param ModuleRepository $moduleRepository
+     * @param ModuleRepositoryInterface $moduleRepository
+     * @param ModuleEntityRepository $moduleEntityRepository
      * @param int $shopId
      */
     public function __construct(
-        AddonRepositoryInterface $addonRepository,
-        ModuleRepository $moduleRepository,
-        $shopId
+        ModuleRepositoryInterface $moduleRepository,
+        ModuleEntityRepository $moduleEntityRepository,
+        int $shopId
     ) {
-        $this->addonRepository = $addonRepository;
         $this->moduleRepository = $moduleRepository;
+        $this->moduleEntityRepository = $moduleEntityRepository;
         $this->shopId = $shopId;
     }
 
@@ -73,29 +70,25 @@ final class PaymentModuleListProvider implements PaymentModuleListProviderInterf
      */
     public function getPaymentModuleList()
     {
-        $filters = (new AddonListFilter())
-            ->setType(AddonListFilterType::MODULE)
-            ->setStatus(AddonListFilterStatus::INSTALLED);
-
-        $modules = $this->addonRepository->getFilteredList($filters);
+        $modules = $this->moduleRepository->getInstalledModules();
         $paymentModules = [];
 
         /** @var Module $module */
         foreach ($modules as $module) {
             if ($module->attributes->get('is_paymentModule')) {
-                $restrictedCountries = $this->moduleRepository->findRestrictedCountryIds(
+                $restrictedCountries = $this->moduleEntityRepository->findRestrictedCountryIds(
                     $module->database->get('id'),
                     $this->shopId
                 );
-                $restrictedCurrencies = $this->moduleRepository->findRestrictedCurrencyIds(
+                $restrictedCurrencies = $this->moduleEntityRepository->findRestrictedCurrencyIds(
                     $module->database->get('id'),
                     $this->shopId
                 );
-                $restrictedGroups = $this->moduleRepository->findRestrictedGroupIds(
+                $restrictedGroups = $this->moduleEntityRepository->findRestrictedGroupIds(
                     $module->database->get('id'),
                     $this->shopId
                 );
-                $restrictedCarriers = $this->moduleRepository->findRestrictedCarrierReferenceIds(
+                $restrictedCarriers = $this->moduleEntityRepository->findRestrictedCarrierReferenceIds(
                     $module->database->get('id'),
                     $this->shopId
                 );

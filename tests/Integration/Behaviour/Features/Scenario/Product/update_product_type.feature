@@ -21,65 +21,94 @@ Feature: Add basic product from Back Office (BO)
     And attribute "Blue" named "Blue" in en language exists
     And attribute "Red" named "Red" in en language exists
 
-  Scenario: I update product type to combinations
-    When I add product "product1" with following information:
+  Scenario: I update product type to combinations (stock is reset to zero)
+    When I add product "productCombinations" with following information:
       | name[en-US] | bottle of beer |
       | type        | standard       |
-    Then product "product1" should be disabled
-    And product "product1" type should be standard
-    And product "product1" localized "name" should be:
+    Then product "productCombinations" should be disabled
+    And product "productCombinations" type should be standard
+    And product "productCombinations" localized "name" should be:
       | locale | value          |
       | en-US  | bottle of beer |
-    And product "product1" should be assigned to following categories:
+    And product "productCombinations" should be assigned to following categories:
       | id reference | name[en-US] | is default |
       | home         | Home        | true       |
-    When I update product "product1" type to combinations
-    Then product "product1" type should be combinations
+    When I update product "productCombinations" stock with following information:
+      | delta_quantity | 51 |
+    And product "productCombinations" should have following stock information:
+      | quantity | 51 |
+    When I update product "productCombinations" type to combinations
+    Then product "productCombinations" type should be combinations
+    And product "productCombinations" should have following stock information:
+      | quantity | 0 |
+    And product "productCombinations" last employees stock movements should be:
+      | first_name | last_name | delta_quantity |
+      | Puff       | Daddy     | -51            |
+      | Puff       | Daddy     | 51             |
+
+  Scenario: I update product type to combinations (if stock was zero no problem occurs)
+    When I add product "productCombinations2" with following information:
+      | name[en-US] | bottle of beer |
+      | type        | standard       |
+    Then product "productCombinations2" should be disabled
+    And product "productCombinations2" type should be standard
+    And product "productCombinations2" localized "name" should be:
+      | locale | value          |
+      | en-US  | bottle of beer |
+    And product "productCombinations2" should be assigned to following categories:
+      | id reference | name[en-US] | is default |
+      | home         | Home        | true       |
+    And product "productCombinations2" should have following stock information:
+      | quantity | 0 |
+    When I update product "productCombinations2" type to combinations
+    Then product "productCombinations2" type should be combinations
+    And product "productCombinations2" should have following stock information:
+      | quantity | 0 |
 
   Scenario: I update product type to virtual
-    When I add product "product1" with following information:
+    When I add product "virtualProduct" with following information:
       | name[en-US] | bottle of beer |
       | type        | standard       |
-    Then product "product1" should be disabled
-    And product "product1" type should be standard
-    And product "product1" localized "name" should be:
+    Then product "virtualProduct" should be disabled
+    And product "virtualProduct" type should be standard
+    And product "virtualProduct" localized "name" should be:
       | locale | value          |
       | en-US  | bottle of beer |
-    And product "product1" should be assigned to following categories:
+    And product "virtualProduct" should be assigned to following categories:
       | id reference | name[en-US] | is default |
       | home         | Home        | true       |
-    When I update product "product1" type to virtual
-    Then product "product1" type should be virtual
+    When I update product "virtualProduct" type to virtual
+    Then product "virtualProduct" type should be virtual
 
   Scenario: I update product type to pack
-    When I add product "product1" with following information:
+    When I add product "packProduct" with following information:
       | name[en-US] | bottle of beer |
       | type        | standard       |
-    Then product "product1" should be disabled
-    And product "product1" type should be standard
-    And product "product1" localized "name" should be:
+    Then product "packProduct" should be disabled
+    And product "packProduct" type should be standard
+    And product "packProduct" localized "name" should be:
       | locale | value          |
       | en-US  | bottle of beer |
-    And product "product1" should be assigned to following categories:
+    And product "packProduct" should be assigned to following categories:
       | id reference | name[en-US] | is default |
       | home         | Home        | true       |
-    When I update product "product1" type to pack
-    Then product "product1" type should be pack
+    When I update product "packProduct" type to pack
+    Then product "packProduct" type should be pack
 
   Scenario: I update product type to standard
-    When I add product "product1" with following information:
+    When I add product "standardProduct" with following information:
       | name[en-US] | bottle of beer |
       | type        | virtual        |
-    Then product "product1" should be disabled
-    And product "product1" type should be virtual
-    And product "product1" localized "name" should be:
+    Then product "standardProduct" should be disabled
+    And product "standardProduct" type should be virtual
+    And product "standardProduct" localized "name" should be:
       | locale | value          |
       | en-US  | bottle of beer |
-    And product "product1" should be assigned to following categories:
+    And product "standardProduct" should be assigned to following categories:
       | id reference | name[en-US] | is default |
       | home         | Home        | true       |
-    When I update product "product1" type to standard
-    Then product "product1" type should be standard
+    When I update product "standardProduct" type to standard
+    Then product "standardProduct" type should be standard
 
   Scenario: Changing pack type should remove all pack associations
     Given I add product "productPack1" with following information:
@@ -101,42 +130,90 @@ Feature: Add basic product from Back Office (BO)
     Then product "productPack1" type should be standard
     And pack "productPack1" should be empty
 
-  Scenario: Changing combinations type should remove all combinations
-    Given I add product "product1" with following information:
+  Scenario: Changing combinations type should remove all combinations (and stock is reset to zero)
+    Given I add product "productCombinations3" with following information:
       | name[en-US] | universal T-shirt |
       | type        | combinations      |
-    And product product1 type should be combinations
-    And I generate combinations for product product1 using following attributes:
+    And product productCombinations3 type should be combinations
+    And I generate combinations for product productCombinations3 using following attributes:
       | Size  | [S,M]              |
       | Color | [White,Black,Blue] |
-    Then product "product1" should have following combinations:
+    Then product "productCombinations3" should have following combinations:
       | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default | combination reference |
-      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |                       |
-      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |                       |
-      | product1Blue   | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | false      |                       |
-      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |                       |
-      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |                       |
-      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |                       |
-    When I update product "product1" type to standard
-    Then product "product1" type should be standard
-    And product "product1" should have no combinations
+      | productCombinations3SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |                       |
+      | productCombinations3SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |                       |
+      | productCombinations3Blue   | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | false      |                       |
+      | productCombinations3MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |                       |
+      | productCombinations3MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |                       |
+      | productCombinations3MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |                       |
+    When I update combination "productCombinations3SWhite" stock with following details:
+      | delta quantity             | 100         |
+    Then combination "productCombinations3SWhite" should have following stock details:
+      | combination stock detail   | value       |
+      | quantity                   | 100         |
+      | minimal quantity           | 1           |
+      | low stock threshold        | 0           |
+      | low stock alert is enabled | false       |
+      | location                   |             |
+      | available date             |             |
+    And combination "productCombinations3SWhite" last employees stock movements should be:
+      | first_name | last_name | delta_quantity |
+      | Puff       | Daddy     | 100            |
+    And combination "productCombinations3SWhite" last stock movement increased by 100
+    When I update combination "productCombinations3SBlack" stock with following details:
+      | delta quantity             | 50          |
+    Then combination "productCombinations3SBlack" should have following stock details:
+      | combination stock detail   | value       |
+      | quantity                   | 50          |
+      | minimal quantity           | 1           |
+      | low stock threshold        | 0           |
+      | low stock alert is enabled | false       |
+      | location                   |             |
+      | available date             |             |
+    And combination "productCombinations3SBlack" last employees stock movements should be:
+      | first_name | last_name | delta_quantity |
+      | Puff       | Daddy     | 50             |
+    And combination "productCombinations3SBlack" last stock movement increased by 50
+    # Product stock is the sum of all combinations
+    And product "productCombinations3" should have following stock information:
+      | quantity            | 150   |
+      | minimal_quantity    | 1     |
+      | location            |       |
+      | low_stock_threshold | 0     |
+      | low_stock_alert     | false |
+      | available_date      |       |
+    And product "productCombinations3" should have no stock movements
+    When I update product "productCombinations3" type to standard
+    Then product "productCombinations3" type should be standard
+    And product "productCombinations3" should have no combinations
+    And product "productCombinations3" should have following stock information:
+      | quantity            | 0     |
+      | minimal_quantity    | 1     |
+      | location            |       |
+      | low_stock_threshold | 0     |
+      | low_stock_alert     | false |
+      | available_date      |       |
+    And product "productCombinations3" last employees stock movements should be:
+      | first_name | last_name | delta_quantity |
+      | Puff       | Daddy     | -150           |
+    And product "productCombinations3" last stock movement decreased by 150
 
   Scenario: Changing virtual type should remove virtual file
-    Given I add product "product1" with following information:
+    Given I add product "virtualProduct2" with following information:
       | name[en-US] | puffin icon |
       | type        | virtual     |
-    And product "product1" should not have a file
-    And product product1 type should be virtual
-    And I add virtual product file "file1" to product "product1" with following details:
+    And product "virtualProduct2" should not have a file
+    And product virtualProduct2 type should be virtual
+    And I add virtual product file "file1" to product "virtualProduct2" with following details:
       | filename reference | filename_file1  |
       | display name       | puffin-logo.png |
       | file name          | app_icon.png    |
-    And product "product1" should have a virtual product file "file1" with following details:
+    And product "virtualProduct2" should have a virtual product file "file1" with following details:
       | display name         | puffin-logo.png |
       | access days          | 0               |
       | download times limit | 0               |
       | expiration date      |                 |
-    And file "file1" for product "product1" exists in system
-    When I update product "product1" type to standard
-    And product "product1" should not have a file
-    And file "file1" for product "product1" should not exist in system
+    And file "file1" for product "virtualProduct2" exists in system
+    When I update product "virtualProduct2" type to standard
+    And product "virtualProduct2" should not have a file
+    And file "file1" for product "virtualProduct2" should not exist in system

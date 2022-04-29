@@ -24,9 +24,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 use PrestaShop\PrestaShop\Adapter\Presenter\Cart\CartPresenter;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 
 class CartControllerCore extends FrontController
 {
+    /** @var string */
     public $php_self = 'cart';
 
     protected $id_product;
@@ -40,6 +42,7 @@ class CartControllerCore extends FrontController
      * @var bool
      */
     protected $preview;
+    /** @var bool */
     public $ssl = true;
     /**
      * An array of errors, in case the update action of product is wrong.
@@ -117,7 +120,9 @@ class CartControllerCore extends FrontController
             $this->setTemplate('checkout/cart');
         } else {
             $this->context->smarty->assign([
-                'allProductsLink' => $this->context->link->getCategoryLink(Configuration::get('PS_HOME_CATEGORY')),
+                'allProductsLink' => $this->context->link->getCategoryLink(
+                    (int) Configuration::get('PS_HOME_CATEGORY')
+                ),
             ]);
             $this->setTemplate('checkout/cart-empty');
         }
@@ -261,10 +266,9 @@ class CartControllerCore extends FrontController
                             'Shop.Notifications.Error'
                         );
                     } else {
-                        if (($cartRule = new CartRule(CartRule::getIdByCode($code)))
-                            && Validate::isLoadedObject($cartRule)
-                        ) {
-                            if ($error = $cartRule->checkValidity($this->context, false, true)) {
+                        $cartRule = new CartRule(CartRule::getIdByCode($code));
+                        if (Validate::isLoadedObject($cartRule)) {
+                            if ($error = $cartRule->checkValidity($this->context)) {
                                 $this->errors[] = $error;
                             } else {
                                 $this->context->cart->addCartRule($cartRule->id);
@@ -403,10 +407,10 @@ class CartControllerCore extends FrontController
         }
 
         if (!$this->id_product_attribute && $product->hasAttributes()) {
-            $minimum_quantity = ($product->out_of_stock == 2)
+            $minimum_quantity = ($product->out_of_stock == OutOfStockType::OUT_OF_STOCK_DEFAULT)
                 ? !Configuration::get('PS_ORDER_OUT_OF_STOCK')
                 : !$product->out_of_stock;
-            $this->id_product_attribute = Product::getDefaultAttribute($product->id, $minimum_quantity);
+            $this->id_product_attribute = Product::getDefaultAttribute($product->id, (int) $minimum_quantity);
             // @todo do something better than a redirect admin !!
             if (!$this->id_product_attribute) {
                 Tools::redirectAdmin($this->context->link->getProductLink($product));
@@ -470,17 +474,16 @@ class CartControllerCore extends FrontController
             // Add cart if no cart found
             if (!$this->context->cart->id) {
                 if (Context::getContext()->cookie->id_guest) {
-                    $guest = new Guest(Context::getContext()->cookie->id_guest);
+                    $guest = new Guest((int) Context::getContext()->cookie->id_guest);
                     $this->context->cart->mobile_theme = $guest->mobile_theme;
                 }
                 $this->context->cart->add();
-                if ($this->context->cart->id) {
+                if (Validate::isLoadedObject($this->context->cart)) {
                     $this->context->cookie->id_cart = (int) $this->context->cart->id;
                 }
             }
 
             // Check customizable fields
-
             if (!$product->hasAllRequiredCustomizableFields() && !$this->customization_id) {
                 $this->{$ErrorKey}[] = $this->trans(
                     'Please fill in all of the required fields, and then save your customizations.',
@@ -489,42 +492,40 @@ class CartControllerCore extends FrontController
                 );
             }
 
-            if (!$this->errors) {
-                $update_quantity = $this->context->cart->updateQty(
-                    $this->qty,
-                    $this->id_product,
-                    $this->id_product_attribute,
-                    $this->customization_id,
-                    Tools::getValue('op', 'up'),
-                    $this->id_address_delivery,
-                    null,
-                    true,
-                    true
+            $update_quantity = $this->context->cart->updateQty(
+                $this->qty,
+                $this->id_product,
+                $this->id_product_attribute,
+                $this->customization_id,
+                Tools::getValue('op', 'up'),
+                $this->id_address_delivery,
+                null,
+                true,
+                true
+            );
+            if ($update_quantity < 0) {
+                // If product has attribute, minimal quantity is set with minimal quantity of attribute
+                $minimal_quantity = ($this->id_product_attribute)
+                    ? ProductAttribute::getAttributeMinimalQty($this->id_product_attribute)
+                    : $product->minimal_quantity;
+                $this->{$ErrorKey}[] = $this->trans(
+                    'You must add %quantity% minimum quantity',
+                    ['%quantity%' => $minimal_quantity],
+                    'Shop.Notifications.Error'
                 );
-                if ($update_quantity < 0) {
-                    // If product has attribute, minimal quantity is set with minimal quantity of attribute
-                    $minimal_quantity = ($this->id_product_attribute)
-                        ? ProductAttribute::getAttributeMinimalQty($this->id_product_attribute)
-                        : $product->minimal_quantity;
-                    $this->{$ErrorKey}[] = $this->trans(
-                        'You must add %quantity% minimum quantity',
-                        ['%quantity%' => $minimal_quantity],
-                        'Shop.Notifications.Error'
-                    );
-                } elseif (!$update_quantity) {
-                    $this->errors[] = $this->trans(
-                        'You already have the maximum quantity available for this product.',
-                        [],
-                        'Shop.Notifications.Error'
-                    );
-                } elseif ($this->shouldAvailabilityErrorBeRaised($product, $qty_to_check)) {
-                    // check quantity after cart quantity update
-                    $this->{$ErrorKey}[] = $this->trans(
-                        'The product is no longer available in this quantity.',
-                        [],
-                        'Shop.Notifications.Error'
-                    );
-                }
+            } elseif (!$update_quantity) {
+                $this->errors[] = $this->trans(
+                    'You already have the maximum quantity available for this product.',
+                    [],
+                    'Shop.Notifications.Error'
+                );
+            } elseif ($this->shouldAvailabilityErrorBeRaised($product, $qty_to_check)) {
+                // check quantity after cart quantity update
+                $this->{$ErrorKey}[] = $this->trans(
+                    'The product is no longer available in this quantity.',
+                    [],
+                    'Shop.Notifications.Error'
+                );
             }
         }
 

@@ -2,14 +2,6 @@ _addons:
   resource: "addons.yml"
   prefix: /addons/
 
-admin_module_cart:
-  path: /cart/{moduleId}
-  methods: [ GET ]
-  defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Improve\ModuleController::getModuleCartAction
-  requirements:
-    moduleId: \d+
-
 admin_module_manage:
   path: /manage/{category}/{keyword}
   methods: [ GET ]
@@ -28,7 +20,7 @@ admin_module_manage_action:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Improve\ModuleController::moduleAction
   requirements:
-    action: install|uninstall|enable|disable|enable_mobile|disable_mobile|reset|upgrade
+    action: install|uninstall|enable|disable|enableMobile|disableMobile|reset|upgrade
 
 admin_module_configure_action:
   path: /manage/action/configure/{module_name}

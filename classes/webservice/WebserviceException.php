@@ -26,7 +26,13 @@
 class WebserviceExceptionCore extends Exception
 {
     protected $status;
+    /**
+     * @var string
+     */
     protected $wrong_value;
+    /**
+     * @var array
+     */
     protected $available_values;
     protected $type;
 
@@ -70,11 +76,20 @@ class WebserviceExceptionCore extends Exception
         return $this->status;
     }
 
+    /**
+     * @return string
+     */
     public function getWrongValue()
     {
         return $this->wrong_value;
     }
 
+    /**
+     * @param string $wrong_value
+     * @param array $available_values
+     *
+     * @return self
+     */
     public function setDidYouMean($wrong_value, $available_values)
     {
         $this->type = self::DID_YOU_MEAN;

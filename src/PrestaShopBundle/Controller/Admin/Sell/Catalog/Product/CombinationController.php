@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAtt
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryResult\AttributeGroup;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\DeleteCombinationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
@@ -103,6 +104,71 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
+     * @param int $productId
+     *
+     * @return Response
+     */
+    public function bulkEditFormAction(int $productId): Response
+    {
+        $bulkCombinationForm = $this->getBulkCombinationFormBuilder()->getForm([], ['product_id' => $productId]);
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/Combination/bulk.html.twig', [
+            'bulkCombinationForm' => $bulkCombinationForm->createView(),
+        ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     * @param int $productId
+     * @param int $combinationId
+     *
+     * @return JsonResponse
+     */
+    public function bulkEditAction(Request $request, int $productId, int $combinationId): JsonResponse
+    {
+        try {
+            // PATCH request is required to avoid disabled fields to be forced with null values
+            $bulkCombinationForm = $this->getBulkCombinationFormBuilder()->getFormFor($combinationId, [], [
+                'method' => Request::METHOD_PATCH,
+                'product_id' => $productId,
+            ]);
+        } catch (CombinationNotFoundException $e) {
+            return $this->returnErrorJsonResponse(
+                ['error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
+        try {
+            $bulkCombinationForm->handleRequest($request);
+            $result = $this->getBulkCombinationFormHandler()->handleFor($combinationId, $bulkCombinationForm);
+
+            if (!$result->isSubmitted()) {
+                return $this->json(['errors' => [
+                    'form' => [
+                        $this->trans('No submitted data.', 'Admin.Notifications.Error'),
+                    ],
+                ]], Response::HTTP_BAD_REQUEST);
+            }
+
+            if ($result->isValid()) {
+                return $this->json([]);
+            }
+        } catch (CombinationException $e) {
+            return $this->returnErrorJsonResponse(
+                ['error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+
+        return $this->json(['errors' => $this->getFormErrorsForJS($bulkCombinationForm)], Response::HTTP_BAD_REQUEST);
+    }
+
+    /**
      * @AdminSecurity("is_granted('read', 'AdminProducts')")
      *
      * Note: role must be hard coded because there is no route associated to this action therefore not
@@ -113,11 +179,14 @@ class CombinationController extends FrameworkBundleAdminController
      *
      * src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/Tabs/combinations.html.twig
      *
+     * @param int $productId
+     *
      * @return Response
      */
-    public function paginatedListAction(): Response
+    public function paginatedListAction(int $productId): Response
     {
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/Combination/paginated_list.html.twig', [
+            'productId' => $productId,
             'combinationLimitChoices' => self::COMBINATIONS_PAGINATION_OPTIONS,
             'combinationsLimit' => ProductCombinationFilters::LIST_LIMIT,
             'combinationsForm' => $this->createForm(CombinationListType::class)->createView(),
@@ -388,6 +457,22 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
+     * @return FormHandlerInterface
+     */
+    private function getBulkCombinationFormHandler(): FormHandlerInterface
+    {
+        return $this->get('prestashop.core.form.identifiable_object.bulk_combination_form_handler');
+    }
+
+    /**
+     * @return FormBuilderInterface
+     */
+    private function getBulkCombinationFormBuilder(): FormBuilderInterface
+    {
+        return $this->get('prestashop.core.form.identifiable_object.builder.bulk_combination_form_builder');
+    }
+
+    /**
      * @return FormBuilderInterface
      */
     private function getCombinationItemFormBuilder(): FormBuilderInterface
@@ -424,7 +509,7 @@ class CombinationController extends FrameworkBundleAdminController
                 ProductConstraintException::INVALID_MINIMAL_QUANTITY => $this->trans(
                     'The %s field is invalid.',
                     'Admin.Notifications.Error',
-                    [sprintf('"%s"', $this->trans('Minimum quantity for sale', 'Admin.Catalog.Feature'))]
+                    [sprintf('"%s"', $this->trans('Minimum order quantity', 'Admin.Catalog.Feature'))]
                 ),
             ],
             ProductStockConstraintException::class => [
@@ -439,6 +524,10 @@ class CombinationController extends FrameworkBundleAdminController
                     [sprintf('"%s"', $this->trans('Stock location', 'Admin.Catalog.Feature'))]
                 ),
             ],
+            CombinationNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found)',
+                'Admin.Notifications.Error'
+            ),
         ];
     }
 }

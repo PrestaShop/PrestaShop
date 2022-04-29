@@ -11,7 +11,7 @@ services:
   prestashop.adapter.image.uploader.category_menu_thumbnail_image_uploader:
     class: 'PrestaShop\PrestaShop\Adapter\Image\Uploader\CategoryMenuThumbnailUploader'
     arguments:
-      - '@prestashop.adapter.cache_clearer'
+      - '@prestashop.adapter.cache.clearer.smarty_cache_clearer'
 
   prestashop.adapter.image.uploader.employee_image_uploader:
     class: 'PrestaShop\PrestaShop\Adapter\Image\Uploader\EmployeeImageUploader'

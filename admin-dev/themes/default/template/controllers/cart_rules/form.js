@@ -315,7 +315,12 @@ $('#customerFilter')
       parse(data) {
         const mytab = new Array();
 
-        for (let i = 0; i < data.length; i++) mytab[mytab.length] = {data: data[i], value: `${data[i].cname} (${data[i].email})`};
+        for (let i = 0; i < data.length; i++) {
+          mytab[mytab.length] = {
+            data: data[i],
+            value: (data[i].shop_name ? `${data[i].cname} (${data[i].email}) [${data[i].shop_name}]` : `${data[i].cname} (${data[i].email})`),
+          };
+        }
 
         return mytab;
       },

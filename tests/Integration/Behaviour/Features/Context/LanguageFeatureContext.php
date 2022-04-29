@@ -29,6 +29,7 @@ namespace Tests\Integration\Behaviour\Features\Context;
 use Configuration;
 use Db;
 use Language;
+use PHPUnit\Framework\Assert;
 use PrestaShopBundle\Install\DatabaseDump;
 use RuntimeException;
 
@@ -39,7 +40,7 @@ class LanguageFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public static function restoreLanguagesTablesBeforeFeature(): void
     {
-        static::restoreLanguagesTables();
+        self::restoreLanguagesTables();
     }
 
     /**
@@ -47,7 +48,7 @@ class LanguageFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public static function restoreLanguagesTablesAfterFeature(): void
     {
-        static::restoreLanguagesTables();
+        self::restoreLanguagesTables();
     }
 
     private static function restoreLanguagesTables(): void
@@ -76,7 +77,7 @@ class LanguageFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function restoreLanguageTablesOnDemand(): void
     {
-        static::restoreLanguagesTables();
+        self::restoreLanguagesTables();
     }
 
     /**
@@ -141,5 +142,19 @@ class LanguageFeatureContext extends AbstractPrestaShopFeatureContext
         if ($language->locale !== $locale) {
             throw new RuntimeException(sprintf('Currency "%s" has "%s" iso code, but "%s" was expected.', $reference, $language->locale, $locale));
         }
+    }
+
+    /**
+     *  @Given /^the robots.txt file has(n't|) a rule where the directory "([^"]*)" is allowed$/
+     */
+    public function robotsTxtAllowsDirectory(string $isAllowedString, string $directory): void
+    {
+        $isAllowed = $isAllowedString === '';
+        $robotsTxtFile = file_get_contents(_PS_ROOT_DIR_ . '/robots.txt');
+
+        Assert::assertSame(
+            $isAllowed,
+            strpos($robotsTxtFile, 'Disallow: ' . $directory . "\n") !== false
+        );
     }
 }

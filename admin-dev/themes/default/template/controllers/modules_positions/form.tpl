@@ -23,10 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *}
 
-{**
- * @deprecated since 1.7.6, to be removed in the next minor
- *}
-
 <div class="leadin">{block name="leadin"}{/block}</div>
 
 <form action="{$url_submit|escape:'html':'UTF-8'}" id="{$table}_form" method="post" class="form-horizontal">

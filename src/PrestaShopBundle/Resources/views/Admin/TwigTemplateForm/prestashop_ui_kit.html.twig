@@ -60,7 +60,7 @@
 {%- endblock form_label %}
 
 {% block form_label_class -%}
-  form-control-label
+  form-control-label{% if form.vars.attr.disabled is defined and form.vars.attr.disabled %} disabled{% endif %}
 {%- endblock form_label_class %}
 
 {# Rows #}
@@ -73,13 +73,13 @@
     {% endif %}
 
     {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
-    {% set multistoreCheckboxName = multistore_field_prefix ~ form.vars.name %}
     {% set disabledField = false %}
     {% if form.vars.attr.disabled is defined and form.vars.attr.disabled %}
       {% set disabledField = true %}
     {% endif %}
 
     <div class="{{ block('form_row_class') }}{{ block('widget_type_class') }}{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}{% if (attr.visible is defined and not attr.visible) %} d-none{% endif %}">
+      {% set multistoreCheckboxName = multistore_field_prefix ~ form.vars.name %}
       {% if attribute(form.parent, multistoreCheckboxName) is defined %}
         {{ form_errors(attribute(form.parent, multistoreCheckboxName)) }}
         {{ form_widget(attribute(form.parent, multistoreCheckboxName)) }}

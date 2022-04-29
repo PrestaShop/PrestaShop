@@ -37,8 +37,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\DuplicateFe
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidAssociatedFeatureException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForAssociation;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductFilters;
@@ -107,12 +108,7 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request): Response
     {
-        if (!$this->isProductPageV2Enabled()) {
-            $this->addFlashMessageProductV2IsDisabled();
-
-            return $this->redirectToRoute('admin_product_new');
-        }
-        if ($this->get('prestashop.adapter.multistore_feature')->isUsed()) {
+        if (!$this->get('prestashop.adapter.shop.context')->isSingleShopContext()) {
             return $this->renderDisableMultistorePage();
         }
 
@@ -145,22 +141,20 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function editAction(Request $request, int $productId): Response
     {
-        if (!$this->isProductPageV2Enabled()) {
-            $this->addFlashMessageProductV2IsDisabled();
-
-            return $this->redirectToRoute('admin_product_form', ['id' => $productId]);
-        }
-
-        if ($this->get('prestashop.adapter.multistore_feature')->isUsed()) {
+        if (!$this->get('prestashop.adapter.shop.context')->isSingleShopContext()) {
             return $this->renderDisableMultistorePage($productId);
         }
 
-        $productForm = $this->getEditProductFormBuilder()->getFormFor($productId, [], [
-            'product_id' => $productId,
-            // @todo: patch/partial update doesn't work good for now (especially multiple empty values) so we use POST for now
-            // 'method' => Request::METHOD_PATCH,
-            'method' => Request::METHOD_POST,
-        ]);
+        try {
+            $productForm = $this->getEditProductFormBuilder()->getFormFor($productId, [], [
+                'product_id' => $productId,
+                // @todo: patch/partial update doesn't work good for now (especially multiple empty values) so we use POST for now
+                // 'method' => Request::METHOD_PATCH,
+                'method' => Request::METHOD_POST,
+            ]);
+        } catch (ShopAssociationNotFound $e) {
+            return $this->renderMissingAssociation($productId);
+        }
 
         try {
             $productForm->handleRequest($request);
@@ -358,18 +352,25 @@ class ProductController extends FrameworkBundleAdminController
      */
     private function renderEditProductForm(FormInterface $productForm, int $productId): Response
     {
-        $shopContext = $this->get('prestashop.adapter.shop.context');
-        $isMultiShopContext = count($shopContext->getContextListShopID()) > 1;
+        $configuration = $this->get('prestashop.adapter.legacy.configuration');
         $categoryTreeFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.category_tree_selector_form_builder');
+
+        $moduleDataProvider = $this->get('prestashop.adapter.data_provider.module');
+        $statsModule = $moduleDataProvider->findByName('statsproduct');
+        $statsLink = null;
+        if (!empty($statsModule['active'])) {
+            $statsLink = $this->getAdminLink('AdminStats', ['module' => 'statsproduct', 'id_product' => $productId]);
+        }
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/edit.html.twig', [
             'categoryTreeSelectorForm' => $categoryTreeFormBuilder->getForm()->createView(),
             'showContentHeader' => false,
             'productForm' => $productForm->createView(),
-            'statsLink' => $this->getAdminLink('AdminStats', ['module' => 'statsproduct', 'id_product' => $productId]),
+            'statsLink' => $statsLink,
             'helpLink' => $this->generateSidebarLink('AdminProducts'),
-            'isMultiShopContext' => $isMultiShopContext,
             'editable' => $this->isGranted(PageVoter::UPDATE, self::PRODUCT_CONTROLLER_PERMISSION),
+            'taxEnabled' => (bool) $configuration->get('PS_TAX'),
+            'stockEnabled' => (bool) $configuration->get('PS_STOCK_MANAGEMENT'),
         ]);
     }
 
@@ -446,37 +447,33 @@ class ProductController extends FrameworkBundleAdminController
                 'The selected value belongs to another feature.',
                 'Admin.Notifications.Error'
             ),
+            SpecificPriceConstraintException::class => [
+                SpecificPriceConstraintException::DUPLICATE_PRIORITY => $this->trans(
+                    'The selected condition must be different in each field to set an order of priority.',
+                    'Admin.Notifications.Error'
+                ),
+            ],
         ];
     }
 
     /**
-     * @return bool
+     * @param int $productId
+     *
+     * @return Response
      */
-    private function isProductPageV2Enabled(): bool
+    private function renderMissingAssociation(int $productId): Response
     {
-        $productPageV2FeatureFlag = $this->get('prestashop.core.feature_flags.modifier')
-            ->getOneFeatureFlagByName(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
-
-        if (null === $productPageV2FeatureFlag) {
-            return false;
-        }
-
-        return $productPageV2FeatureFlag->isEnabled();
-    }
-
-    private function addFlashMessageProductV2IsDisabled(): void
-    {
-        $this->addFlash(
-            'warning',
-            $this->trans(
-                'The experimental product page is not enabled. To enable it, go to the %sExperimental Features%s page.',
-                'Admin.Catalog.Notification',
-                [
-                    sprintf('<a href="%s">', $this->get('router')->generate('admin_feature_flags_index')),
-                    '</a>',
-                ]
-            )
-        );
+        //@todo this error message should be improved to indicate which shop can/should be used for this product and/or how to associate it to the current context
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/disabled.html.twig', [
+            'errorMessage' => $this->trans(
+                'This product is not associated with the store selected in the multistore header, please select another one.',
+                'Admin.Notifications.Info'
+            ),
+            'standardPageUrl' => $this->generateUrl(
+                !empty($productId) ? 'admin_product_form' : 'admin_product_new',
+                !empty($productId) ? ['id' => $productId] : []
+            ),
+        ]);
     }
 
     /**
@@ -488,7 +485,7 @@ class ProductController extends FrameworkBundleAdminController
     {
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/disabled.html.twig', [
             'errorMessage' => $this->trans(
-                'This page is not yet compatible with the multistore feature. To access the page, please [1]disable the multistore feature[/1].',
+                'This page is only compatible in a single store context. To access the page, please select a store or [1]disable the multistore feature[/1].',
                 'Admin.Notifications.Info',
                 [
                     '[1]' => sprintf('<a href="%s">', $this->get('router')->generate('admin_preferences')),

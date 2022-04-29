@@ -28,8 +28,9 @@ namespace PrestaShopBundle\Command;
 
 use Employee;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManager;
+use PrestaShop\PrestaShop\Core\Module\ModuleManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Input\InputArgument;
@@ -44,8 +45,8 @@ class ModuleCommand extends Command
         'uninstall',
         'enable',
         'disable',
-        'enable_mobile',
-        'disable_mobile',
+        'enableMobile',
+        'disableMobile',
         'reset',
         'upgrade',
         'configure',
@@ -190,7 +191,7 @@ class ModuleCommand extends Command
                 $this->translator->trans(
                     '%action% action on module %module% succeeded.',
                     [
-                        '%action%' => ucfirst(str_replace('_', ' ', $action)),
+                        '%action%' => ucfirst(AdminModuleDataProvider::ACTIONS_TRANSLATION_LABELS[$action]),
                         '%module%' => $moduleName, ],
                     'Admin.Modules.Notification'
                 )

@@ -51,7 +51,7 @@ class ClassLang
     /**
      * @param string $className
      *
-     * @return bool
+     * @return bool|object
      */
     public function getClassLang($className)
     {

@@ -129,7 +129,7 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
             $data['has_enabled_gravatar'] ?? false
         ));
 
-        /** @var UploadedFile $uploadedAvatar */
+        /** @var UploadedFile|null $uploadedAvatar */
         $uploadedAvatar = $data['avatarUrl'] ?? null;
         if (!empty($uploadedAvatar) && $uploadedAvatar instanceof UploadedFile) {
             $this->imageUploader->upload($employeeId->getValue(), $uploadedAvatar);

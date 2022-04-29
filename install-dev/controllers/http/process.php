@@ -34,7 +34,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
     public $process_steps = [];
     public $previous_button = false;
 
-    public function init()
+    public function init(): void
     {
         $this->model_install = new Install();
         $this->model_install->setTranslator($this->translator);
@@ -43,14 +43,14 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
     /**
      * @see HttpConfigureInterface::processNextStep()
      */
-    public function processNextStep()
+    public function processNextStep(): void
     {
     }
 
     /**
      * @see HttpConfigureInterface::validate()
      */
-    public function validate()
+    public function validate(): bool
     {
         return false;
     }
@@ -73,7 +73,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
         Context::getContext()->smarty = $smarty;
     }
 
-    public function process()
+    public function process(): void
     {
         /* avoid exceptions on re-installation */
         $this->clearConfigXML() && $this->clearConfigThemes();
@@ -83,7 +83,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
         }
 
         try {
-            $validateFixturesInstallation = $this->session->install_type == 'full';
+            $validateFixturesInstallation = $this->session->content_install_fixtures;
             $fixturesInstalled = !empty($this->session->process_validated['installFixtures']);
 
             if (Tools::getValue('generateSettingsFile')) {
@@ -96,22 +96,20 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
                 $this->processPopulateDatabase();
             } elseif (Tools::getValue('configureShop') && !empty($this->session->process_validated['populateDatabase'])) {
                 Language::getRtlStylesheetProcessor()
-                    ->setIsInstall(true)
                     ->setLanguageCode($this->session->lang)
                     ->setProcessFOThemes(['classic'])
                     ->process();
                 $this->processConfigureShop();
-            } elseif (Tools::getValue('installModules') && (!empty($this->session->process_validated['configureShop']) || $this->session->install_type != 'full')) {
-                $this->processInstallModules();
-            } elseif (Tools::getValue('installTheme') && !empty($this->session->process_validated['installModules'])) {
+            } elseif (Tools::getValue('installTheme') && !empty($this->session->process_validated['configureShop'])) {
                 $this->processInstallTheme();
-            } elseif (Tools::getValue('installFixtures') && !empty($this->session->process_validated['installTheme'])) {
+            } elseif (Tools::getValue('installModules') && (!empty($this->session->process_validated['installTheme']) || !$validateFixturesInstallation)) {
+                $this->processInstallModules();
+            } elseif (Tools::getValue('installFixtures') && !empty($this->session->process_validated['installModules'])) {
                 $this->processInstallFixtures();
             } elseif (Tools::getValue('postInstall') && (!$validateFixturesInstallation || $fixturesInstalled)) {
                 $this->processPostInstall();
             }
         } catch (\Exception $e) {
-            /** @phpstan-ignore-next-line */
             if (_PS_MODE_DEV_) {
                 // display stack trace
                 $message = (string) $e;
@@ -239,10 +237,11 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
     {
         $this->initializeContext();
 
-        $result = $this->model_install->installModules();
+        $result = $this->model_install->installModules($this->session->content_modules);
         if (!$result || $this->model_install->getErrors()) {
             $this->ajaxJsonAnswer(false, $this->model_install->getErrors());
         }
+
         $this->session->process_validated = array_merge($this->session->process_validated, ['installModules' => true]);
         $this->ajaxJsonAnswer(true);
     }
@@ -289,7 +288,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
     {
         $this->initializeContext();
         Search::indexation(true);
-        $this->model_install->installTheme();
+        $this->model_install->installTheme($this->session->content_theme);
         if ($this->model_install->getErrors()) {
             $this->ajaxJsonAnswer(false, $this->model_install->getErrors());
         }
@@ -300,7 +299,7 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
     /**
      * @see HttpConfigureInterface::display()
      */
-    public function display()
+    public function display(): void
     {
         $memoryLimit = Tools::getMemoryLimit();
         // We fill the process step used for Ajax queries
@@ -311,10 +310,10 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
         $this->process_steps[] = ['key' => 'populateDatabase', 'lang' => $this->translator->trans('Populate database tables', [], 'Install')];
         $this->process_steps[] = ['key' => 'configureShop', 'lang' => $this->translator->trans('Configure shop information', [], 'Install')];
 
-        $this->process_steps[] = ['key' => 'installModules', 'lang' => $this->translator->trans('Install modules', [], 'Install')];
         $this->process_steps[] = ['key' => 'installTheme', 'lang' => $this->translator->trans('Install theme', [], 'Install')];
+        $this->process_steps[] = ['key' => 'installModules', 'lang' => $this->translator->trans('Install modules', [], 'Install')];
 
-        if ($this->session->install_type == 'full') {
+        if ($this->session->content_install_fixtures) {
             $fixtures_step = ['key' => 'installFixtures', 'lang' => $this->translator->trans('Install demonstration data', [], 'Install')];
             if ($this->hasLargeFixtures()) {
                 $fixtures_step['subtasks'] = [];

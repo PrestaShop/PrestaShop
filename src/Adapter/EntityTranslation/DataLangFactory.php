@@ -119,7 +119,7 @@ class DataLangFactory
     {
         $length = strlen($this->dbPrefix);
         if (substr($tableName, 0, $length) === $this->dbPrefix) {
-            $tableName = substr($tableName, $length - 1) ?? '';
+            $tableName = substr($tableName, $length) ?: '';
         }
 
         return $tableName;

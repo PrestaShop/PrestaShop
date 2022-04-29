@@ -29,6 +29,7 @@ use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 
 class SearchControllerCore extends ProductListingFrontController
 {
+    /** @var string */
     public $php_self = 'search';
     public $instant_search;
     public $ajax_search;
@@ -59,6 +60,11 @@ class SearchControllerCore extends ProductListingFrontController
                 'subcategories' => [],
             ]
         );
+    }
+
+    public function getCanonicalURL(): string
+    {
+        return $this->buildPaginatedUrl($this->context->link->getPageLink('search', null, null, ['s' => $this->search_string]));
     }
 
     /**

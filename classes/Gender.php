@@ -31,6 +31,10 @@
  */
 class GenderCore extends ObjectModel
 {
+    public const TYPE_MALE = '0';
+    public const TYPE_FEMALE = '1';
+    public const TYPE_OTHER = '2';
+
     public $id;
     public $id_gender;
     public $name;

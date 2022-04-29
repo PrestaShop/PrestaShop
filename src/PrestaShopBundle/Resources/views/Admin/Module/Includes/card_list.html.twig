@@ -87,11 +87,6 @@
             {% if module.attributes.description|length > 0 and module.attributes.description|length < module.attributes.fullDescription|length %}
               ...
             {% endif %}
-            <span>
-              {% if module.attributes.id != "0" %}
-                <a class="module-read-more-list-btn url" href="{{ path('admin_module_cart', {"moduleId": module.attributes.id }) }}" data-target="#module-modal-read-more-{{module.attributes.name }}{{ additionalModalSuffix|default('') }}">{{ 'Read More'|trans({}, 'Admin.Modules.Feature') }}</a>
-              {% endif %}
-            </span>
           {% endblock %}
         </div>
         <div class="col-lg-3 text-md-right">
@@ -107,7 +102,6 @@
             {% include '@PrestaShop/Admin/Module/Includes/action_menu.html.twig' with { 'module': module } %}
           {% endblock %}
         </div>
-        {% include '@PrestaShop/Admin/Module/Includes/modal_read_more.html.twig' with { 'module': module, 'additionalModalSuffix': additionalModalSuffix|default('') } %}
         {% include '@PrestaShop/Admin/Module/Includes/modal_confirm.html.twig' with { 'module': module } %}
       </div>
     </div>

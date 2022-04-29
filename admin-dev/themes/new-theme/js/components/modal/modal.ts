@@ -47,7 +47,7 @@ export type ModalParams = {
   closable?: boolean;
   modalTitle?: string
   dialogStyle?: CssProps;
-  closeCallback?: () => boolean;
+  closeCallback?: () => void;
 }
 export type InputModalParams = Partial<ModalParams>;
 
@@ -82,7 +82,6 @@ export class ModalContainer implements ModalContainerType {
     const params: ModalParams = {
       id: 'confirm-modal',
       closable: false,
-      closeCallback: () => true,
       ...inputParams,
     };
 
@@ -221,6 +220,11 @@ export class Modal implements ModalType {
 
   hide(): void {
     this.$modal.modal('hide');
+    // Sometimes modal animation is still in progress and hiding fails, so we attach event listener for that case.
+    this.$modal.on('shown.bs.modal', () => {
+      this.$modal.modal('hide');
+      this.$modal.off('shown.bs.modal');
+    });
   }
 }
 

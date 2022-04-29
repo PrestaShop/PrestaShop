@@ -1,4 +1,7 @@
 <?php
+
+use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Update\SpecificPricePriorityUpdater;
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -289,13 +292,19 @@ class SpecificPriceCore extends ObjectModel
         $key_cache = __FUNCTION__ . '-' . $field_name . '-' . $threshold;
         $specific_list = [];
         if (!array_key_exists($key_cache, self::$_filterOutCache)) {
-            $query_count = 'SELECT COUNT(*) FROM (SELECT DISTINCT `' . $name . '` FROM `' . _DB_PREFIX_ . 'specific_price` WHERE `' . $name . '` != 0 GROUP BY id_product ) AS counted';
-            $specific_count = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query_count);
-            if ($specific_count == 0) {
+            // Check if a specific price with this key exists
+            $query = 'SELECT 1 FROM `' . _DB_PREFIX_ . 'specific_price` WHERE `' . $name . '` != 0';
+            $has_product_specific_price = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+            if ($has_product_specific_price == 0) {
                 self::$_no_specific_values[$field_name] = true;
 
                 return $query_extra;
             }
+            // Fetch the approximate count of specific price. explain can be 100x faster than count.
+            $query_count = 'EXPLAIN SELECT COUNT(DISTINCT `' . $name . '`) FROM `' . _DB_PREFIX_ . 'specific_price` WHERE `' . $name . '` != 0';
+            $specific_count_result = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow($query_count);
+            $specific_count = $specific_count_result['rows'];
+
             if ($specific_count < $threshold) {
                 $query = 'SELECT DISTINCT `' . $name . '` FROM `' . _DB_PREFIX_ . 'specific_price` WHERE `' . $name . '` != 0';
                 $tmp_specific_list = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
@@ -570,8 +579,25 @@ class SpecificPriceCore extends ObjectModel
         return self::$_specificPriceCache[$key];
     }
 
+    /**
+     * @deprecated since 8.0 and will be removed in next major version.
+     * @see SpecificPricePriorityUpdater::updateDefaultPriorities()
+     *
+     * @param array $priorities
+     *
+     * @return bool
+     */
     public static function setPriorities($priorities)
     {
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 8.0. Use %s instead.',
+                __METHOD__,
+                SpecificPricePriorityUpdater::class . '::updateDefaultPriorities()'
+            ),
+            E_USER_DEPRECATED
+        );
+
         $value = '';
         if (is_array($priorities)) {
             foreach ($priorities as $priority) {

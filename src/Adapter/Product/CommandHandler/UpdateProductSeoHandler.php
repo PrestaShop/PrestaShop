@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductSeoPropertiesFiller;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductSeoHandlerInterface;
@@ -41,7 +41,7 @@ use Product;
 class UpdateProductSeoHandler implements UpdateProductSeoHandlerInterface
 {
     /**
-     * @var ProductRepository
+     * @var ProductMultiShopRepository
      */
     private $productRepository;
 
@@ -51,11 +51,11 @@ class UpdateProductSeoHandler implements UpdateProductSeoHandlerInterface
     private $productSeoPropertiesFiller;
 
     /**
-     * @param ProductRepository $productRepository
+     * @param ProductMultiShopRepository $productRepository
      * @param ProductSeoPropertiesFiller $productSeoPropertiesFiller
      */
     public function __construct(
-        ProductRepository $productRepository,
+        ProductMultiShopRepository $productRepository,
         ProductSeoPropertiesFiller $productSeoPropertiesFiller
     ) {
         $this->productRepository = $productRepository;
@@ -67,10 +67,18 @@ class UpdateProductSeoHandler implements UpdateProductSeoHandlerInterface
      */
     public function handle(UpdateProductSeoCommand $command): void
     {
-        $product = $this->productRepository->get($command->getProductId());
+        $product = $this->productRepository->getByShopConstraint(
+            $command->getProductId(),
+            $command->getShopConstraint()
+        );
         $updatableProperties = $this->fillUpdatableProperties($product, $command);
 
-        $this->productRepository->partialUpdate($product, $updatableProperties, CannotUpdateProductException::FAILED_UPDATE_SEO);
+        $this->productRepository->partialUpdate(
+            $product,
+            $updatableProperties,
+            $command->getShopConstraint(),
+            CannotUpdateProductException::FAILED_UPDATE_SEO
+        );
     }
 
     /**

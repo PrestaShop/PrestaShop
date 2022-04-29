@@ -27,8 +27,11 @@ use PrestaShop\PrestaShop\Core\Util\InternationalizedDomainNameConverter;
 
 class PasswordControllerCore extends FrontController
 {
+    /** @var string */
     public $php_self = 'password';
+    /** @var bool */
     public $auth = false;
+    /** @var bool */
     public $ssl = true;
 
     /**

@@ -27,10 +27,8 @@
 namespace Tests\Unit\Core\ConstraintValidator;
 
 use Generator;
-use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
-use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
 class TypedRegexValidatorTest extends ConstraintValidatorTestCase
@@ -255,7 +253,7 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
 
     public function testItSucceedsForIsbnTypeWhenValidCharactersGiven(): void
     {
-        $this->validator->validate('-1780', new TypedRegex('isbn'));
+        $this->validator->validate('0-8044-2957-X', new TypedRegex('isbn'));
 
         $this->assertNoViolation();
     }
@@ -603,22 +601,7 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
      */
     protected function createValidator(): TypedRegexValidator
     {
-        return new TypedRegexValidator($this->createCharacterCleanersMock());
-    }
-
-    /**
-     * @return MockObject|CharacterCleaner
-     */
-    private function createCharacterCleanersMock()
-    {
-        $toolsMock = $this->getMockBuilder(CharacterCleaner::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $toolsMock
-            ->method('cleanNonUnicodeSupport')
-            ->will($this->returnArgument(0));
-
-        return $toolsMock;
+        return new TypedRegexValidator();
     }
 
     /**

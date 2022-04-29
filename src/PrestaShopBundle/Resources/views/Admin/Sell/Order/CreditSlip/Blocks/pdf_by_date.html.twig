@@ -36,8 +36,8 @@
     <i class="material-icons">date_range</i> {{ 'By date'|trans }}
   </h3>
 
-  <div class="card-block row">
-    <div class="card-text">
+  <div class="card-body">
+    <div class="form-wrapper">
       {% block credit_slip_pdf_by_date_form %}
         {{ form_widget(pdfByDateForm) }}
       {% endblock %}

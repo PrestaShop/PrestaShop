@@ -9,9 +9,7 @@ if (!defined('_PS_ADMIN_DIR_')) {
 require_once _PS_ADMIN_DIR_.'/../config/config.inc.php';
 require_once _PS_ADMIN_DIR_.'/init.php';
 
-if (function_exists('mb_internal_encoding')) {
-    mb_internal_encoding('UTF-8');
-}
+mb_internal_encoding('UTF-8');
 
 $products_accesses = Profile::getProfileAccess(Context::getContext()->employee->id_profile, Tab::getIdFromClassName('AdminProducts'));
 $cms_accesses = Profile::getProfileAccess(Context::getContext()->employee->id_profile, Tab::getIdFromClassName('AdminCmsContent'));
@@ -119,15 +117,6 @@ $mime_file = array('application/pdf');
 $mime_video = array('video/mpeg', 'video/mp4', 'video/x-msvideo', 'audio/x-ms-wma', 'video/x-flv', 'video/webm');
 
 $mime = array_merge($mime_img, $mime_file, $mime_video);
-
-/******************
- * AVIARY config
-*******************/
-$aviary_active=false;
-$aviary_key="dvh8qudbp6yx2bnp";
-$aviary_secret="m6xaym5q42rpw433";
-$aviary_version=3;
-$aviary_language='en';
 
 //The filter and sorter are managed through both javascript and php scripts because if you have a lot of
 //file in a folder the javascript script can't sort all or filter all, so the filemanager switch to php script.

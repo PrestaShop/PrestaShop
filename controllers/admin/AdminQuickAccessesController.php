@@ -162,7 +162,7 @@ class AdminQuickAccessesControllerCore extends AdminController
 
     public function addQuickLink()
     {
-        if (!isset($this->className) || empty($this->className)) {
+        if (empty($this->className)) {
             return false;
         }
         $this->validateRules();
@@ -179,7 +179,7 @@ class AdminQuickAccessesControllerCore extends AdminController
             if (method_exists($this->object, 'add') && !$this->object->add()) {
                 $this->errors[] = $this->trans('An error occurred while creating an object.', [], 'Admin.Notifications.Error') .
                     ' <b>' . $this->table . ' (' . Db::getInstance()->getMsgError() . ')</b>';
-            } elseif (($_POST[$this->identifier] = $this->object->id) && $this->postImage($this->object->id) && !count($this->errors) && $this->_redirect) {
+            } elseif (($_POST[$this->identifier] = $this->object->id) && $this->postImage($this->object->id) && empty($this->errors) && $this->_redirect) {
                 // voluntary do affectation here
                 PrestaShopLogger::addLog($this->trans('%class_name% addition', ['%class_name%' => $this->className], 'Admin.Advparameters.Feature'), 1, null, $this->className, (int) $this->object->id, true, (int) $this->context->employee->id);
                 $this->afterAdd($this->object);

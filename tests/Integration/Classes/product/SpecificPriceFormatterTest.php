@@ -42,11 +42,6 @@ use Symfony\Component\Translation\Translator;
 
 class SpecificPriceFormatterTest extends KernelTestCase
 {
-    /**
-     * @var Context
-     */
-    private $context;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -57,7 +52,6 @@ class SpecificPriceFormatterTest extends KernelTestCase
         global $kernel;
         $kernel = self::$kernel;
 
-        $this->context = Context::getContext();
         Context::setInstanceForTesting($this->getMockContext());
 
         foreach (['us', 'fr'] as $country) {

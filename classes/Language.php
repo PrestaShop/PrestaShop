@@ -41,8 +41,8 @@ use Symfony\Component\Intl\Intl;
 class LanguageCore extends ObjectModel implements LanguageInterface
 {
     const ALL_LANGUAGES_FILE = '/app/Resources/all_languages.json';
-    const SF_LANGUAGE_PACK_URL = 'https://i18n.prestashop.com/translations/%version%/%locale%/%locale%.zip';
-    const EMAILS_LANGUAGE_PACK_URL = 'https://i18n.prestashop.com/mails/%version%/%locale%/%locale%.zip';
+    const SF_LANGUAGE_PACK_URL = 'https://i18n.prestashop-project.org/translations/%version%/%locale%/%locale%.zip';
+    const EMAILS_LANGUAGE_PACK_URL = 'https://i18n.prestashop-project.org/mails/%version%/%locale%/%locale%.zip';
     public const PACK_TYPE_EMAILS = 'emails';
     public const PACK_TYPE_SYMFONY = 'sf';
 
@@ -255,7 +255,6 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 
         if ($this->is_rtl) {
             static::getRtlStylesheetProcessor()
-                ->setIsInstall(defined('PS_INSTALLATION_IN_PROGRESS'))
                 ->setProcessBOTheme(true)
                 ->setProcessDefaultModules(true)
                 ->process();
@@ -517,7 +516,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         foreach ($shops as $shop) {
             // retrieve default language to duplicate database rows
             // this language is used later to untranslate/retranslate rows
-            $shopDefaultLangId = Configuration::get('PS_LANG_DEFAULT', null, $shop->id_shop_group, $shop->id);
+            $shopDefaultLangId = (int) Configuration::get('PS_LANG_DEFAULT', null, $shop->id_shop_group, $shop->id);
 
             foreach ($langTables as $name) {
                 $return &= $this->duplicateRowsFromDefaultShopLang($name, $shopDefaultLangId, $shop->id);
@@ -794,7 +793,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     {
         if (static::$_cache_all_language_json === null) {
             static::$_cache_all_language_json = [];
-            $allLanguages = static::loadAllLanguagesDetails();
+            $allLanguages = self::loadAllLanguagesDetails();
 
             foreach ($allLanguages as $isoCode => $langDetails) {
                 static::$_cache_all_language_json[$langDetails['locale']] = $langDetails;
@@ -873,7 +872,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     {
         $iso = (string) $iso; // $iso often comes from xml and is a SimpleXMLElement
 
-        $allLanguages = static::loadAllLanguagesDetails();
+        $allLanguages = self::loadAllLanguagesDetails();
 
         return isset($allLanguages[$iso]) ? $allLanguages[$iso] : false;
     }
@@ -979,7 +978,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             return false;
         }
 
-        return new Language($id_lang);
+        return new Language((int) $id_lang);
     }
 
     /**
@@ -1233,7 +1232,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      */
     public static function downloadXLFLanguagePack($locale, &$errors = [], $type = self::PACK_TYPE_SYMFONY)
     {
-        $file = static::getPathToCachedTranslationPack($locale, $type);
+        $file = self::getPathToCachedTranslationPack($locale, $type);
         $url = (self::PACK_TYPE_EMAILS === $type) ? self::EMAILS_LANGUAGE_PACK_URL : self::SF_LANGUAGE_PACK_URL;
         $url = str_replace(
             [
@@ -1283,7 +1282,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         }
 
         $zipArchive = new ZipArchive();
-        $zipArchive->open(static::getPathToCachedTranslationPack($locale));
+        $zipArchive->open(self::getPathToCachedTranslationPack($locale));
         $zipArchive->extractTo(self::SF_TRANSLATIONS_DIR);
         $zipArchive->close();
 
@@ -1369,10 +1368,10 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         static::updateMultilangTable($iso);
 
         // update localized information in currencies
-        static::updateCurrenciesCldr(new static($langId));
+        self::updateCurrenciesCldr(new static($langId));
 
         // generate mail templates in the installed language
-        static::generateEmailsLanguagePack($lang_pack, $errors, true);
+        self::generateEmailsLanguagePack($lang_pack, $errors, true);
 
         return true;
     }
@@ -1405,7 +1404,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         }
 
         // generate mail templates in the installed language
-        static::generateEmailsLanguagePack($lang_pack, $errors, true);
+        self::generateEmailsLanguagePack($lang_pack, $errors, true);
 
         return true;
     }
@@ -1454,7 +1453,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             }
 
             Language::updateMultilangTable($iso);
-            static::generateEmailsLanguagePack($lang_pack, $errors, false);
+            self::generateEmailsLanguagePack($lang_pack, $errors, false);
         }
 
         return true;
@@ -1514,7 +1513,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 
         if (!empty($langId)) {
             $lang = new static($langId);
-
+            /** @var Language $lang */
             $rows = Db::getInstance()->executeS('SHOW TABLES LIKE \'' . str_replace('_', '\\_', _DB_PREFIX_) . '%\_lang\' ');
             if (!empty($rows)) {
                 // get all values
@@ -1593,7 +1592,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      *
      * @param string $table
      * @param string $className
-     * @param static $lang
+     * @param LanguageCore $lang
      *
      * @throws PrestaShopDatabaseException
      */
@@ -1613,8 +1612,9 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 
         if (!empty($keys) && !empty($fieldsToUpdate)) {
             $shops = Shop::getShopsCollection(false);
+            /** @var array<Shop> $shops */
             foreach ($shops as $shop) {
-                static::updateMultilangFromClassForShop($classObject, $lang, $shop);
+                self::updateMultilangFromClassForShop($classObject, $lang, $shop);
             }
         }
     }
@@ -1623,7 +1623,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      * untranslate then re-translate duplicated rows in tables with pattern xxx_lang.
      *
      * @param DataLangCore $classObject
-     * @param static $lang
+     * @param LanguageCore $lang
      * @param Shop $shop
      *
      * @throws \PrestaShopDatabaseException
@@ -1631,7 +1631,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      */
     private static function updateMultilangFromClassForShop(DataLangCore $classObject, self $lang, Shop $shop)
     {
-        $shopDefaultLangId = Configuration::get('PS_LANG_DEFAULT', null, $shop->id_shop_group, $shop->id);
+        $shopDefaultLangId = (int) Configuration::get('PS_LANG_DEFAULT', null, $shop->id_shop_group, $shop->id);
         $shopDefaultLanguage = new Language($shopDefaultLangId);
 
         $sfContainer = SymfonyContainer::getInstance();
@@ -1666,9 +1666,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
         return new RtlStylesheetProcessor(
             $adminDir,
             $themesDir,
-            [
-                _PS_MODULE_DIR_ . 'cronjobs',
-            ]
+            []
         );
     }
 
@@ -1682,7 +1680,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      */
     public static function translationPackIsInCache(string $locale, string $type = self::PACK_TYPE_SYMFONY): bool
     {
-        return file_exists(static::getPathToCachedTranslationPack($locale, $type));
+        return file_exists(self::getPathToCachedTranslationPack($locale, $type));
     }
 
     /**

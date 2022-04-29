@@ -38,11 +38,6 @@ use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 class OptionalFeaturesConfiguration implements DataConfigurationInterface
 {
     /**
-     * @var Configuration
-     */
-    private $configuration;
-
-    /**
      * @var CombinationFeature
      */
     private $combinationFeature;
@@ -58,12 +53,10 @@ class OptionalFeaturesConfiguration implements DataConfigurationInterface
     private $groupFeature;
 
     public function __construct(
-        Configuration $configuration,
         CombinationFeature $combinationFeature,
         FeatureFeature $featureFeature,
         GroupFeature $groupFeature
     ) {
-        $this->configuration = $configuration;
         $this->combinationFeature = $combinationFeature;
         $this->featureFeature = $featureFeature;
         $this->groupFeature = $groupFeature;

@@ -460,7 +460,7 @@ class AdminModuleController {
 
     self.updateModuleSorting();
 
-    if (self.isModulesPage()) {
+    if (self.isModulesPage() && !self.isReadMoreModalOpened()) {
       $(self.recentlyUsedSelector)
         .find('.module-item')
         .remove();
@@ -890,8 +890,8 @@ class AdminModuleController {
       'bulk-uninstall': 'uninstall',
       'bulk-disable': 'disable',
       'bulk-enable': 'enable',
-      'bulk-disable-mobile': 'disable_mobile',
-      'bulk-enable-mobile': 'enable_mobile',
+      'bulk-disable-mobile': 'disableMobile',
+      'bulk-enable-mobile': 'enableMobile',
       'bulk-reset': 'reset',
     };
 
@@ -1217,6 +1217,10 @@ class AdminModuleController {
 
   isModulesPage() {
     return $(this.upgradeContainer).length === 0 && $(this.notificationContainer).length === 0;
+  }
+
+  isReadMoreModalOpened() {
+    return $('.modal-read-more').is(':visible');
   }
 }
 

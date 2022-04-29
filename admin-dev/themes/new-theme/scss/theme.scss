@@ -30,7 +30,7 @@
 @import "components/layout/non_responsive";
 @import "components/layout/header-multistore";
 @import "components/layout/header-search";
-@import "components/layout/light_display";
+@import "components/alert";
 @import "components/cards";
 @import "components/layout/kpi";
 @import "components/category_tree";
@@ -65,6 +65,7 @@
 @import "components/modal";
 @import "components/entity_search";
 @import "components/delta_quantity";
+@import "components/disabling_switch";
 
 // Pages specifics SCSS files
 @import "pages/invoices";
@@ -83,6 +84,7 @@
 @import "pages/improve";
 @import "pages/payment";
 @import "pages/translation_page";
+@import "pages/product_preferences";
 
 // Main Layout
 @import "pages/modules";

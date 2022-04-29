@@ -22,25 +22,19 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-{% block form_help %}
-  {% if help %}
-    {% include '@Common/HelpBox/helpbox.html.twig' with { "placement" : "top", "content": help|raw } %}
-  {% endif %}
-{% endblock form_help %}
 
-{# We override this block just to insert the references in the same row as the name input field #}
-{% block _product_header_name_widget %}
-  {{- form_widget(form) -}}
-  {{ _self.displayReferences(form.parent.parent.specifications.references) }}
-{% endblock %}
+{% use '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/product.html.twig' with product_type_row as base_product_type_row %}
 
-{% macro displayReferences(referencesForm) %}
-  <div class="references-display">
-    {% for child in referencesForm.children %}
-      {% if child.vars.value is not empty %}
-        <label>{{ child.vars.label }}</label>
-        <span>{{ child.vars.value }}</span>
+{% block product_type_row %}
+  <div class="product-type-preview">
+    {% for group_label, choice in choices %}
+      {% if choice is selectedchoice(value) %}
+        <i class="material-icons product-type-preview-icon">{{ choice.attr['icon'] }}</i>
+        <span class="product-type-preview-label">{{ choice.label }}</span>
       {% endif %}
     {% endfor %}
+    <div id="product-type-selector-modal-content" class="d-none">
+      {{ block('base_product_type_row') }}
+    </div>
   </div>
-{% endmacro %}
+{% endblock %}

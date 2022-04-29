@@ -26,12 +26,10 @@
 use Composer\CaBundle\CaBundle;
 use PHPSQLParser\PHPSQLParser;
 use PrestaShop\PrestaShop\Adapter\ContainerFinder;
-use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem as PsFileSystem;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
-use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
 use PrestaShop\PrestaShop\Core\Util\ColorBrightnessCalculator;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
@@ -111,7 +109,7 @@ class ToolsCore
 
                 break;
             case static::PASSWORDGEN_FLAG_RANDOM:
-                $num_bytes = ceil($length * 0.75);
+                $num_bytes = (int) ceil($length * 0.75);
                 $bytes = self::getBytes($num_bytes);
 
                 return substr(rtrim(base64_encode($bytes), '='), 0, $length);
@@ -195,11 +193,11 @@ class ToolsCore
             $link = Context::getContext()->link;
         }
 
-        if (strpos($url, 'http://') === false && strpos($url, 'https://') === false && $link) {
+        if (!preg_match('@^https?://@i', $url) && $link) {
             if (strpos($url, $base_uri) === 0) {
                 $url = substr($url, strlen($base_uri));
             }
-            if (strpos($url, 'index.php?controller=') !== false && strpos($url, 'index.php/') == 0) {
+            if (strpos($url, 'index.php?controller=') === 0) {
                 $url = substr($url, strlen('index.php?controller='));
                 if (Configuration::get('PS_REWRITING_SETTINGS')) {
                     $url = Tools::strReplaceFirst('&', '?', $url);
@@ -234,24 +232,13 @@ class ToolsCore
      * Warning: uses exit
      *
      * @param string $url Desired URL
+     *
+     * @deprecated since PrestaShop 8.0.0
      */
     public static function redirectLink($url)
     {
-        if (!preg_match('@^https?://@i', $url)) {
-            if (strpos($url, __PS_BASE_URI__) !== false && strpos($url, __PS_BASE_URI__) == 0) {
-                $url = substr($url, strlen(__PS_BASE_URI__));
-            }
-            if (strpos($url, 'index.php?controller=') !== false && strpos($url, 'index.php/') == 0) {
-                $url = substr($url, strlen('index.php?controller='));
-            }
-            $explode = explode('?', $url);
-            $url = Context::getContext()->link->getPageLink($explode[0]);
-            if (isset($explode[1])) {
-                $url .= '?' . $explode[1];
-            }
-        }
-        header('Location: ' . $url);
-        exit;
+        Tools::displayAsDeprecated('Use Tools::redirect() instead');
+        static::redirect($url);
     }
 
     /**
@@ -706,7 +693,7 @@ class ToolsCore
             $currency = Currency::getCurrencyInstance((int) $cookie->id_currency);
         }
         if (!Validate::isLoadedObject($currency) || (bool) $currency->deleted || !(bool) $currency->active) {
-            $currency = Currency::getCurrencyInstance(Configuration::get('PS_CURRENCY_DEFAULT'));
+            $currency = Currency::getCurrencyInstance((int) Configuration::get('PS_CURRENCY_DEFAULT'));
         }
 
         $cookie->id_currency = (int) $currency->id;
@@ -723,22 +710,6 @@ class ToolsCore
         }
 
         return $currency;
-    }
-
-    /**
-     * Return the CLDR associated with the context or given language_code.
-     *
-     * @see Tools::getContextLocale
-     * @deprecated since PrestaShop 1.7.6.0
-     *
-     * @param Context|null $context
-     * @param null $language_code
-     *
-     * @throws PrestaShopException
-     */
-    public static function getCldr(Context $context = null, $language_code = null)
-    {
-        throw new PrestaShopException('This CLDR library has been removed. See Tools::getContextLocale instead.');
     }
 
     /**
@@ -893,38 +864,6 @@ class ToolsCore
     }
 
     /**
-     * Implement array_replace for PHP <= 5.2.
-     *
-     * @return array|mixed|null
-     *
-     * @deprecated since version 1.7.4.0, to be removed.
-     */
-    public static function array_replace()
-    {
-        Tools::displayAsDeprecated('Use PHP\'s array_replace() instead');
-        if (!function_exists('array_replace')) {
-            $args = func_get_args();
-            $num_args = func_num_args();
-            $res = [];
-            for ($i = 0; $i < $num_args; ++$i) {
-                if (is_array($args[$i])) {
-                    foreach ($args[$i] as $key => $val) {
-                        $res[$key] = $val;
-                    }
-                } else {
-                    trigger_error(__FUNCTION__ . '(): Argument #' . ($i + 1) . ' is not an array', E_USER_WARNING);
-
-                    return null;
-                }
-            }
-
-            return $res;
-        } else {
-            return call_user_func_array('array_replace', func_get_args());
-        }
-    }
-
-    /**
      * Convert amount from a currency to an other currency automatically.
      *
      * @param float $amount
@@ -938,11 +877,11 @@ class ToolsCore
         }
 
         if ($currency_from === null) {
-            $currency_from = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+            $currency_from = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
         }
 
         if ($currency_to === null) {
-            $currency_to = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+            $currency_to = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
         }
 
         if ($currency_from->id == Configuration::get('PS_CURRENCY_DEFAULT')) {
@@ -968,28 +907,19 @@ class ToolsCore
      */
     public static function dateFormat($params, &$smarty)
     {
-        return Tools::displayDate($params['date'], null, (isset($params['full']) ? $params['full'] : false));
+        return Tools::displayDate($params['date'], (isset($params['full']) ? $params['full'] : false));
     }
 
     /**
      * Display date regarding to language preferences.
      *
      * @param string $date Date to display format UNIX
-     * @param int $id_lang Language id DEPRECATED
      * @param bool $full With time or not (optional)
-     * @param string $separator DEPRECATED
      *
      * @return string Date
      */
-    public static function displayDate($date, $id_lang = null, $full = false, $separator = null)
+    public static function displayDate($date, $full = false)
     {
-        if ($id_lang !== null) {
-            Tools::displayParameterAsDeprecated('id_lang');
-        }
-        if ($separator !== null) {
-            Tools::displayParameterAsDeprecated('separator');
-        }
-
         if (!$date || !($time = strtotime($date))) {
             return $date;
         }
@@ -1189,7 +1119,6 @@ class ToolsCore
                 ->trans('Fatal error', [], 'Admin.Notifications.Error');
         }
 
-        /* @phpstan-ignore-next-line */
         if (_PS_MODE_DEV_) {
             throw new PrestaShopException($errorMessage);
         }
@@ -1451,11 +1380,6 @@ class ToolsCore
     {
         static $array_str = [];
         static $allow_accented_chars = null;
-        static $has_mb_strtolower = null;
-
-        if ($has_mb_strtolower === null) {
-            $has_mb_strtolower = function_exists('mb_strtolower');
-        }
 
         if (!is_string($str)) {
             return false;
@@ -1474,10 +1398,8 @@ class ToolsCore
         }
 
         $return_str = trim($str);
+        $return_str = mb_strtolower($return_str, 'UTF-8');
 
-        if ($has_mb_strtolower) {
-            $return_str = mb_strtolower($return_str, 'utf-8');
-        }
         if (!$allow_accented_chars) {
             $return_str = Tools::replaceAccentedChars($return_str);
         }
@@ -1491,12 +1413,6 @@ class ToolsCore
 
         $return_str = preg_replace('/[\s\'\:\/\[\]\-]+/', ' ', $return_str);
         $return_str = str_replace([' ', '/'], '-', $return_str);
-
-        // If it was not possible to lowercase the string with mb_strtolower, we do it after the transformations.
-        // This way we lose fewer special chars.
-        if (!$has_mb_strtolower) {
-            $return_str = Tools::strtolower($return_str);
-        }
 
         $array_str[$str] = $return_str;
 
@@ -1512,100 +1428,13 @@ class ToolsCore
      */
     public static function replaceAccentedChars($str)
     {
-        /* One source among others:
-            http://www.tachyonsoft.com/uc0000.htm
-            http://www.tachyonsoft.com/uc0001.htm
-            http://www.tachyonsoft.com/uc0004.htm
-        */
-        $patterns = [
-            /* Lowercase */
-            /* a  */ '/[\x{00E0}\x{00E1}\x{00E2}\x{00E3}\x{00E4}\x{00E5}\x{0101}\x{0103}\x{0105}\x{0430}\x{00C0}-\x{00C3}\x{1EA0}-\x{1EB7}]/u',
-            /* b  */ '/[\x{0431}]/u',
-            /* c  */ '/[\x{00E7}\x{0107}\x{0109}\x{010D}\x{0446}]/u',
-            /* d  */ '/[\x{010F}\x{0111}\x{0434}\x{0110}\x{00F0}]/u',
-            /* e  */ '/[\x{00E8}\x{00E9}\x{00EA}\x{00EB}\x{0113}\x{0115}\x{0117}\x{0119}\x{011B}\x{0435}\x{044D}\x{00C8}-\x{00CA}\x{1EB8}-\x{1EC7}]/u',
-            /* f  */ '/[\x{0444}]/u',
-            /* g  */ '/[\x{011F}\x{0121}\x{0123}\x{0433}\x{0491}]/u',
-            /* h  */ '/[\x{0125}\x{0127}]/u',
-            /* i  */ '/[\x{00EC}\x{00ED}\x{00EE}\x{00EF}\x{0129}\x{012B}\x{012D}\x{012F}\x{0131}\x{0438}\x{0456}\x{00CC}\x{00CD}\x{1EC8}-\x{1ECB}\x{0128}]/u',
-            /* j  */ '/[\x{0135}\x{0439}]/u',
-            /* k  */ '/[\x{0137}\x{0138}\x{043A}]/u',
-            /* l  */ '/[\x{013A}\x{013C}\x{013E}\x{0140}\x{0142}\x{043B}]/u',
-            /* m  */ '/[\x{043C}]/u',
-            /* n  */ '/[\x{00F1}\x{0144}\x{0146}\x{0148}\x{0149}\x{014B}\x{043D}]/u',
-            /* o  */ '/[\x{00F2}\x{00F3}\x{00F4}\x{00F5}\x{00F6}\x{00F8}\x{014D}\x{014F}\x{0151}\x{043E}\x{00D2}-\x{00D5}\x{01A0}\x{01A1}\x{1ECC}-\x{1EE3}]/u',
-            /* p  */ '/[\x{043F}]/u',
-            /* r  */ '/[\x{0155}\x{0157}\x{0159}\x{0440}]/u',
-            /* s  */ '/[\x{015B}\x{015D}\x{015F}\x{0161}\x{0441}]/u',
-            /* ss */ '/[\x{00DF}]/u',
-            /* t  */ '/[\x{0163}\x{0165}\x{0167}\x{0442}]/u',
-            /* u  */ '/[\x{00F9}\x{00FA}\x{00FB}\x{00FC}\x{0169}\x{016B}\x{016D}\x{016F}\x{0171}\x{0173}\x{0443}\x{00D9}-\x{00DA}\x{0168}\x{01AF}\x{01B0}\x{1EE4}-\x{1EF1}]/u',
-            /* v  */ '/[\x{0432}]/u',
-            /* w  */ '/[\x{0175}]/u',
-            /* y  */ '/[\x{00FF}\x{0177}\x{00FD}\x{044B}\x{1EF2}-\x{1EF9}\x{00DD}]/u',
-            /* z  */ '/[\x{017A}\x{017C}\x{017E}\x{0437}]/u',
-            /* ae */ '/[\x{00E6}]/u',
-            /* ch */ '/[\x{0447}]/u',
-            /* kh */ '/[\x{0445}]/u',
-            /* oe */ '/[\x{0153}]/u',
-            /* sh */ '/[\x{0448}]/u',
-            /* shh*/ '/[\x{0449}]/u',
-            /* ya */ '/[\x{044F}]/u',
-            /* ye */ '/[\x{0454}]/u',
-            /* yi */ '/[\x{0457}]/u',
-            /* yo */ '/[\x{0451}]/u',
-            /* yu */ '/[\x{044E}]/u',
-            /* zh */ '/[\x{0436}]/u',
+        static $transliterator;
 
-            /* Uppercase */
-            /* A  */ '/[\x{0100}\x{0102}\x{0104}\x{00C0}\x{00C1}\x{00C2}\x{00C3}\x{00C4}\x{00C5}\x{0410}]/u',
-            /* B  */ '/[\x{0411}]/u',
-            /* C  */ '/[\x{00C7}\x{0106}\x{0108}\x{010A}\x{010C}\x{0426}]/u',
-            /* D  */ '/[\x{010E}\x{0110}\x{0414}\x{00D0}]/u',
-            /* E  */ '/[\x{00C8}\x{00C9}\x{00CA}\x{00CB}\x{0112}\x{0114}\x{0116}\x{0118}\x{011A}\x{0415}\x{042D}]/u',
-            /* F  */ '/[\x{0424}]/u',
-            /* G  */ '/[\x{011C}\x{011E}\x{0120}\x{0122}\x{0413}\x{0490}]/u',
-            /* H  */ '/[\x{0124}\x{0126}]/u',
-            /* I  */ '/[\x{0128}\x{012A}\x{012C}\x{012E}\x{0130}\x{0418}\x{0406}]/u',
-            /* J  */ '/[\x{0134}\x{0419}]/u',
-            /* K  */ '/[\x{0136}\x{041A}]/u',
-            /* L  */ '/[\x{0139}\x{013B}\x{013D}\x{0139}\x{0141}\x{041B}]/u',
-            /* M  */ '/[\x{041C}]/u',
-            /* N  */ '/[\x{00D1}\x{0143}\x{0145}\x{0147}\x{014A}\x{041D}]/u',
-            /* O  */ '/[\x{00D3}\x{014C}\x{014E}\x{0150}\x{041E}]/u',
-            /* P  */ '/[\x{041F}]/u',
-            /* R  */ '/[\x{0154}\x{0156}\x{0158}\x{0420}]/u',
-            /* S  */ '/[\x{015A}\x{015C}\x{015E}\x{0160}\x{0421}]/u',
-            /* T  */ '/[\x{0162}\x{0164}\x{0166}\x{0422}]/u',
-            /* U  */ '/[\x{00D9}\x{00DA}\x{00DB}\x{00DC}\x{0168}\x{016A}\x{016C}\x{016E}\x{0170}\x{0172}\x{0423}]/u',
-            /* V  */ '/[\x{0412}]/u',
-            /* W  */ '/[\x{0174}]/u',
-            /* Y  */ '/[\x{0176}\x{042B}]/u',
-            /* Z  */ '/[\x{0179}\x{017B}\x{017D}\x{0417}]/u',
-            /* AE */ '/[\x{00C6}]/u',
-            /* CH */ '/[\x{0427}]/u',
-            /* KH */ '/[\x{0425}]/u',
-            /* OE */ '/[\x{0152}]/u',
-            /* SH */ '/[\x{0428}]/u',
-            /* SHH*/ '/[\x{0429}]/u',
-            /* YA */ '/[\x{042F}]/u',
-            /* YE */ '/[\x{0404}]/u',
-            /* YI */ '/[\x{0407}]/u',
-            /* YO */ '/[\x{0401}]/u',
-            /* YU */ '/[\x{042E}]/u',
-            /* ZH */ '/[\x{0416}]/u',
-        ];
+        if (!$transliterator) {
+            $transliterator = Transliterator::create('Any-Latin; Latin-ASCII');
+        }
 
-        // ö to oe
-        // å to aa
-        // ä to ae
-
-        $replacements = [
-            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'r', 's', 'ss', 't', 'u', 'v', 'w', 'y', 'z', 'ae', 'ch', 'kh', 'oe', 'sh', 'shh', 'ya', 'ye', 'yi', 'yo', 'yu', 'zh',
-            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'R', 'S', 'T', 'U', 'V', 'W', 'Y', 'Z', 'AE', 'CH', 'KH', 'OE', 'SH', 'SHH', 'YA', 'YE', 'YI', 'YO', 'YU', 'ZH',
-        ];
-
-        return preg_replace($patterns, $replacements, $str);
+        return $transliterator->transliterate($str);
     }
 
     /**
@@ -1779,7 +1608,7 @@ class ToolsCore
     {
         $tab = [];
         for ($i = 1; $i != 13; ++$i) {
-            $tab[$i] = date('F', mktime(0, 0, 0, $i, date('m'), date('Y')));
+            $tab[$i] = date('F', mktime(0, 0, 0, $i, (int) date('m'), (int) date('Y')));
         }
 
         return $tab;
@@ -1815,11 +1644,8 @@ class ToolsCore
         if (is_array($str)) {
             return false;
         }
-        if (function_exists('mb_strtolower')) {
-            return mb_strtolower($str, 'utf-8');
-        }
 
-        return strtolower($str);
+        return mb_strtolower($str, 'UTF-8');
     }
 
     public static function strlen($str, $encoding = 'UTF-8')
@@ -1827,12 +1653,10 @@ class ToolsCore
         if (is_array($str)) {
             return false;
         }
-        $str = html_entity_decode($str, ENT_COMPAT, 'UTF-8');
-        if (function_exists('mb_strlen')) {
-            return mb_strlen($str, $encoding);
-        }
 
-        return strlen($str);
+        $str = html_entity_decode($str, ENT_COMPAT, 'UTF-8');
+
+        return mb_strlen($str, $encoding);
     }
 
     /**
@@ -1854,41 +1678,27 @@ class ToolsCore
         if (is_array($str)) {
             return false;
         }
-        if (function_exists('mb_strtoupper')) {
-            return mb_strtoupper($str, 'utf-8');
-        }
 
-        return strtoupper($str);
+        return mb_strtoupper($str, 'utf-8');
     }
 
-    public static function substr($str, $start, $length = false, $encoding = 'utf-8')
+    public static function substr($str, $start, $length = false, $encoding = 'UTF-8')
     {
         if (is_array($str)) {
             return false;
         }
-        if (function_exists('mb_substr')) {
-            return mb_substr($str, (int) $start, ($length === false ? Tools::strlen($str) : (int) $length), $encoding);
-        }
 
-        return substr($str, $start, ($length === false ? Tools::strlen($str) : (int) $length));
+        return mb_substr($str, (int) $start, ($length === false ? null : (int) $length), $encoding);
     }
 
     public static function strpos($str, $find, $offset = 0, $encoding = 'UTF-8')
     {
-        if (function_exists('mb_strpos')) {
-            return mb_strpos($str, $find, $offset, $encoding);
-        }
-
-        return strpos($str, $find, $offset);
+        return mb_strpos($str, $find, $offset, $encoding);
     }
 
-    public static function strrpos($str, $find, $offset = 0, $encoding = 'utf-8')
+    public static function strrpos($str, $find, $offset = 0, $encoding = 'UTF-8')
     {
-        if (function_exists('mb_strrpos')) {
-            return mb_strrpos($str, $find, $offset, $encoding);
-        }
-
-        return strrpos($str, $find, $offset);
+        return mb_strrpos($str, $find, $offset, $encoding);
     }
 
     public static function ucfirst($str)
@@ -1898,17 +1708,13 @@ class ToolsCore
 
     public static function ucwords($str)
     {
-        if (function_exists('mb_convert_case')) {
-            return mb_convert_case($str, MB_CASE_TITLE);
-        }
-
-        return ucwords(Tools::strtolower($str));
+        return mb_convert_case($str, MB_CASE_TITLE);
     }
 
     public static function orderbyPrice(&$array, $order_way)
     {
         foreach ($array as &$row) {
-            $row['price_tmp'] = Product::getPriceStatic($row['id_product'], true, ((isset($row['id_product_attribute']) && !empty($row['id_product_attribute'])) ? (int) $row['id_product_attribute'] : null), 2);
+            $row['price_tmp'] = (float) Product::getPriceStatic($row['id_product'], true, ((isset($row['id_product_attribute']) && !empty($row['id_product_attribute'])) ? (int) $row['id_product_attribute'] : null), 2);
         }
         unset($row);
 
@@ -1974,7 +1780,7 @@ class ToolsCore
     /**
      * @param int|float $value
      * @param int|float $places
-     * @param int $mode
+     * @param int<2,5> $mode (PS_ROUND_HALF_UP|PS_ROUND_HALF_DOWN|PS_ROUND_HALF_EVEN|PS_ROUND_HALF_ODD)
      *
      * @return false|float
      */
@@ -2213,7 +2019,6 @@ class ToolsCore
 
             $content = curl_exec($curl);
 
-            /* @phpstan-ignore-next-line */
             if (false === $content && _PS_MODE_DEV_) {
                 $errorMessage = sprintf('file_get_contents_curl failed to download %s : (error code %d) %s',
                     $url,
@@ -2486,7 +2291,9 @@ class ToolsCore
      */
     public static function getMediaServer(string $filename): string
     {
-        if (self::hasMediaServer() && ($id_media_server = (abs(crc32($filename)) % self::$_cache_nb_media_servers + 1))) {
+        if (self::hasMediaServer()) {
+            $id_media_server = abs(crc32($filename)) % self::$_cache_nb_media_servers + 1;
+
             return constant('_MEDIA_SERVER_' . $id_media_server . '_');
         }
 
@@ -2884,36 +2691,35 @@ FileETag none
                     foreach ($robots_content['Directories'] as $dir) {
                         fwrite($write_fd, 'Disallow: ' . $uri['physical'] . $dir . PHP_EOL);
                     }
-                }
-
-                // Disallow multilang directories
-                if (!empty($languagesIsoIds)) {
-                    foreach ($languagesIsoIds as $language) {
-                        foreach ($robots_content['Directories'] as $dir) {
-                            fwrite(
-                                $write_fd,
-                                sprintf(
-                                    'Disallow: /%s/%s%s',
-                                    $language['iso_code'],
-                                    $dir,
-                                    PHP_EOL
-                                )
-                            );
+                    // Disallow multilang directories
+                    if (is_array($languagesIsoIds) && count($languagesIsoIds) > 1) {
+                        foreach ($languagesIsoIds as $language) {
+                            foreach ($robots_content['Directories'] as $dir) {
+                                fwrite(
+                                    $write_fd,
+                                    sprintf(
+                                        'Disallow: %s%s/%s%s',
+                                        $uri['physical'],
+                                        $language['iso_code'],
+                                        $dir,
+                                        PHP_EOL
+                                    )
+                                );
+                            }
                         }
                     }
-                }
-            }
-        }
-
-        // Files
-        if (count($robots_content['Files'])) {
-            fwrite($write_fd, "# Files\n");
-            foreach ($robots_content['Files'] as $iso_code => $files) {
-                foreach ($files as $file) {
-                    if (!empty($languagesIsoIds)) {
-                        fwrite($write_fd, 'Disallow: /*' . $iso_code . '/' . $file . PHP_EOL);
-                    } else {
-                        fwrite($write_fd, 'Disallow: /' . $file . PHP_EOL);
+                    // Files
+                    if (count($robots_content['Files'])) {
+                        fwrite($write_fd, "# Files\n");
+                        foreach ($robots_content['Files'] as $iso_code => $files) {
+                            foreach ($files as $file) {
+                                if (count($languagesIsoIds) > 1) {
+                                    fwrite($write_fd, 'Disallow: /*' . $iso_code . '/' . $file . PHP_EOL);
+                                } else {
+                                    fwrite($write_fd, 'Disallow: ' . $uri['physical'] . $file . PHP_EOL);
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -2958,6 +2764,9 @@ FileETag none
             '*/modules/*.js',
             '*/modules/*.png',
             '*/modules/*.jpg',
+            '*/modules/*.gif',
+            '*/modules/*.svg',
+            '*/modules/*.webp',
             '/js/jquery/*',
         ];
 
@@ -3158,7 +2967,6 @@ exit;
 
     protected static function throwDeprecated($error, $message, $class)
     {
-        /* @phpstan-ignore-next-line */
         if (_PS_DISPLAY_COMPATIBILITY_WARNING_) {
             @trigger_error($error, E_USER_DEPRECATED);
             PrestaShopLogger::addLog($message, 3, $class);
@@ -3264,16 +3072,6 @@ exit;
     }
 
     /**
-     * @deprecated Deprecated since 1.7.0
-     *
-     * @return bool
-     */
-    public static function getSafeModeStatus()
-    {
-        return false;
-    }
-
-    /**
      * Extract a zip file to the given directory
      *
      * @param string $from_file
@@ -3349,7 +3147,7 @@ exit;
                         $order_by_prefix = 'p.';
                     } elseif ($value == 'name') {
                         $order_by_prefix = 'pl.';
-                    } elseif ($value == 'manufacturer_name' && $prefix) {
+                    } elseif ($value == 'manufacturer_name') {
                         $order_by_prefix = 'm.';
                         $value = 'name';
                     } elseif ($value == 'position' || empty($value)) {
@@ -3404,17 +3202,6 @@ exit;
     }
 
     /**
-     * @deprecated as of 1.5 use Controller::getController('PageNotFoundController')->run();
-     */
-    public static function display404Error()
-    {
-        header('HTTP/1.1 404 Not Found');
-        header('Status: 404 Not Found');
-        include __DIR__ . '/../404.php';
-        die;
-    }
-
-    /**
      * Concat $begin and $end, add ? or & between strings.
      *
      * @since 1.5.0
@@ -3439,7 +3226,6 @@ exit;
      */
     public static function dieOrLog($msg, $die = true)
     {
-        /* @phpstan-ignore-next-line */
         if ($die || (defined('_PS_MODE_DEV_') && _PS_MODE_DEV_)) {
             header('HTTP/1.1 500 Internal Server Error', true, 500);
             die($msg);
@@ -3464,7 +3250,7 @@ exit;
      * Clear cache for Smarty.
      *
      * @param Smarty $smarty
-     * @param bool $tpl
+     * @param bool|string $tpl
      * @param string $cache_id
      * @param string $compile_id
      *
@@ -3895,7 +3681,7 @@ exit;
     /**
      * Delete unicode class from regular expression patterns.
      *
-     * @deprecated Use PrestaShop\PrestaShop\Core\String\CharacterCleaner::cleanNonUnicodeSupport() instead
+     * @deprecated Since 8.0.0 and will be removed in the next major.
      *
      * @param string $pattern
      *
@@ -3905,68 +3691,15 @@ exit;
      */
     public static function cleanNonUnicodeSupport($pattern)
     {
-        $context = Context::getContext();
-        $containerFinder = new ContainerFinder($context);
-        try {
-            $container = $containerFinder->getContainer();
-            $characterCleaner = $container->get('prestashop.core.string.character_cleaner');
-        } catch (ContainerNotFoundException $e) {
-            // Used when the container is not generated
-            $characterCleaner = new CharacterCleaner();
-        }
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 8.0.0. Its use is not required.',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
+        );
 
-        return $characterCleaner->cleanNonUnicodeSupport($pattern);
-    }
-
-    protected static $is_addons_up = true;
-
-    public static function addonsRequest($request, $params = [])
-    {
-        if (!self::$is_addons_up) {
-            return false;
-        }
-
-        $post_query_data = [
-            'version' => isset($params['version']) ? $params['version'] : _PS_VERSION_,
-            'iso_lang' => Tools::strtolower(isset($params['iso_lang']) ? $params['iso_lang'] : Context::getContext()->language->iso_code),
-            'iso_code' => Tools::strtolower(isset($params['iso_country']) ? $params['iso_country'] : Country::getIsoById(Configuration::get('PS_COUNTRY_DEFAULT'))),
-            'shop_url' => isset($params['shop_url']) ? $params['shop_url'] : Tools::getShopDomain(),
-            'mail' => isset($params['email']) ? $params['email'] : Configuration::get('PS_SHOP_EMAIL'),
-            'format' => isset($params['format']) ? $params['format'] : 'xml',
-        ];
-        if (isset($params['source'])) {
-            $post_query_data['source'] = $params['source'];
-        }
-
-        $post_data = http_build_query($post_query_data);
-
-        $end_point = 'api.addons.prestashop.com';
-
-        switch ($request) {
-            case 'module':
-                $post_data .= '&method=module&id_module=' . urlencode($params['id_module']);
-
-                break;
-            default:
-                return false;
-        }
-
-        $context = stream_context_create([
-            'http' => [
-                'method' => 'POST',
-                'content' => $post_data,
-                'header' => 'Content-type: application/x-www-form-urlencoded',
-                'timeout' => 5,
-            ],
-        ]);
-
-        if ($content = Tools::file_get_contents('https://' . $end_point, false, $context)) {
-            return $content;
-        }
-
-        self::$is_addons_up = false;
-
-        return false;
+        return $pattern;
     }
 
     /**
@@ -4259,35 +3992,14 @@ exit;
      *
      * @param array $base the array in which elements are replaced
      * @param array $replacements the array from which elements will be extracted
+     *
+     * @deprecated since version 8.0.0, to be removed.
      */
     public static function arrayReplaceRecursive($base, $replacements)
     {
-        if (function_exists('array_replace_recursive')) {
-            return array_replace_recursive($base, $replacements);
-        }
+        Tools::displayAsDeprecated('Use PHP\'s array_replace_recursive() instead');
 
-        foreach (array_slice(func_get_args(), 1) as $replacements) {
-            $bref_stack = [&$base];
-            $head_stack = [$replacements];
-
-            do {
-                end($bref_stack);
-
-                $bref = &$bref_stack[key($bref_stack)];
-                $head = array_pop($head_stack);
-                unset($bref_stack[key($bref_stack)]);
-                foreach (array_keys($head) as $key) {
-                    if (is_array($bref[$key]) && is_array($head[$key])) {
-                        $bref_stack[] = &$bref[$key];
-                        $head_stack[] = $head[$key];
-                    } else {
-                        $bref[$key] = $head[$key];
-                    }
-                }
-            } while (count($head_stack));
-        }
-
-        return $base;
+        return array_replace_recursive($base, $replacements);
     }
 
     /**
@@ -4425,16 +4137,9 @@ exit;
  *
  * @return int
  */
-/* Externalized because of a bug in PHP 5.1.6 when inside an object */
 function cmpPriceAsc($a, $b)
 {
-    if ((float) $a['price_tmp'] < (float) $b['price_tmp']) {
-        return -1;
-    } elseif ((float) $a['price_tmp'] > (float) $b['price_tmp']) {
-        return 1;
-    }
-
-    return 0;
+    return $a['price_tmp'] <=> $b['price_tmp'];
 }
 
 /**
@@ -4445,11 +4150,5 @@ function cmpPriceAsc($a, $b)
  */
 function cmpPriceDesc($a, $b)
 {
-    if ((float) $a['price_tmp'] < (float) $b['price_tmp']) {
-        return 1;
-    } elseif ((float) $a['price_tmp'] > (float) $b['price_tmp']) {
-        return -1;
-    }
-
-    return 0;
+    return $b['price_tmp'] <=> $a['price_tmp'];
 }

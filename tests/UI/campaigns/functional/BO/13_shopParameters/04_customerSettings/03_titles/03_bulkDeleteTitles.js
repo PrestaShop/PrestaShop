@@ -8,7 +8,7 @@ const testContext = require('@utils/testContext');
 const files = require('@utils/files');
 
 // Common tests login BO
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');

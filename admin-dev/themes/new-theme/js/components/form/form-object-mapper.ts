@@ -41,10 +41,8 @@ export type FormUpdateEvent = {
  * mapping. Each field from the model is mapped to a form input, or several, each input is watched
  * to keep the model consistent.
  *
- * The model mapping used for this component is an object
- * which uses the modelKey as a key (it represents
- * the property path in the object, separated by a dot) and
- * the input names as value (they follow Symfony
+ * The model mapping used for this component is an object which uses the modelKey as a key (it represents
+ * the property path in the object, separated by a dot) and the input names as value (they follow Symfony
  * convention naming using brackets). Here is an example of mapping:
  *
  * const modelMapping = {
@@ -97,7 +95,7 @@ export default class FormObjectMapper {
   watchedProperties: Record<string, Array<(event: FormUpdateEvent) => void>>;
 
   /**
-   * @param {jQuery} $form - Form element to attach the mapper to
+   * @param {JQuery} $form - Form element to attach the mapper to
    * @param {Object} modelMapping - Structure mapping a model to form names
    * @param {EventEmitter} eventEmitter
    * @param {Object} [config] - Event names
@@ -172,7 +170,7 @@ export default class FormObjectMapper {
    *
    * @param {string} modelKey
    *
-   * @returns {undefined|jQuery}
+   * @returns {undefined|JQuery}
    */
   getInputsFor(modelKey: string): JQuery<HTMLElement> | undefined {
     if (
@@ -189,7 +187,7 @@ export default class FormObjectMapper {
     }
 
     // We must loop manually to keep the order in configuration,
-    // if we use jQuery multiple selectors the collection
+    // if we use JQuery multiple selectors the collection
     // will be filled respecting the order in the DOM
     const inputs: Array<HTMLElement> = [];
     const domForm = this.$form.get(0);
@@ -268,7 +266,6 @@ export default class FormObjectMapper {
    * @param {string} modelKey
    *
    * @returns {*|{}|undefined} Returns any element from the model, undefined if not found
-   * @private
    */
   private getValue(modelKey: string): string | number | string[] | undefined {
     const modelKeys = modelKey.split('.');
@@ -278,8 +275,6 @@ export default class FormObjectMapper {
 
   /**
    * Watches if changes happens from the form or via an event.
-   *
-   * @private
    */
   private watchUpdates(): void {
     // Only watch change event, not keyup event, this reduces the number of computing while typing and it prevents a
@@ -289,7 +284,7 @@ export default class FormObjectMapper {
     this.$form.on(
       'change dp.change',
       ':input',
-      (event: JQueryEventObject) => this.inputUpdated(event),
+      (event: JQuery.TriggeredEvent) => this.inputUpdated(event),
     );
     this.eventEmitter.on(this.updateModelEventName, () => this.updateFullObject(),
     );
@@ -298,11 +293,9 @@ export default class FormObjectMapper {
   /**
    * Triggered when a form input has been changed.
    *
-   * @param {jQuery.Event} event
-   *
-   * @private
+   * @param {JQuery.TriggeredEvent} event
    */
-  private inputUpdated(event: JQueryEventObject): void {
+  private inputUpdated(event: JQuery.TriggeredEvent): void {
     const target = <HTMLInputElement>event.currentTarget;
 
     // All inputs changes are watched, but not all of them are part of the mapping so we ignore them
@@ -310,7 +303,7 @@ export default class FormObjectMapper {
       return;
     }
 
-    const updatedValue = $(target).val();
+    const updatedValue = this.getInputValue($(target));
     const updatedModelKey = this.formMapping[target.name];
 
     // Update the mapped input fields
@@ -322,17 +315,28 @@ export default class FormObjectMapper {
   }
 
   /**
+   * @param {jQuery} $input
+   *
+   * @returns {*}
+   */
+  private getInputValue($input: JQuery): string | number | string[] | boolean | undefined {
+    if ($input.is(':checkbox')) {
+      return $input.is(':checked');
+    }
+
+    return $input.val();
+  }
+
+  /**
    * Update all the inputs mapped to a model key
    *
    * @param {string} modelKey
    * @param {*|{}} value
    * @param {string|undefined} sourceInputName Source of the change (no need to update it)
-   *
-   * @private
    */
   private updateInputValue(
     modelKey: string,
-    value: string | number | string[] | undefined,
+    value: string | number | string[] | boolean | undefined,
     sourceInputName?: string,
   ): void {
     const modelInputs = this.fullModelMapping[modelKey];
@@ -356,12 +360,10 @@ export default class FormObjectMapper {
    *
    * @param {string} inputName
    * @param {*|{}} value
-   *
-   * @private
    */
   private updateInputByName(
     inputName: string,
-    value: string | number | string[] | undefined,
+    value: string | number | string[] | boolean | undefined,
   ): void {
     const $input: JQuery = $(`[name="${inputName}"]`, this.$form);
 
@@ -371,15 +373,41 @@ export default class FormObjectMapper {
       return;
     }
 
-    if (!this.hasSameValue($input.val(), value)) {
-      $input.val(<string>value);
+    if (!this.hasSameValue(this.getInputValue($input), value)) {
+      if ($input.is(':checkbox')) {
+        $input.val(value ? 1 : 0);
+        $input.prop('checked', !!value);
+      } else {
+        $input.val(<string>value);
+      }
 
       if ($input.data('toggle') === 'select2') {
         // This is required for select2, because only changing the val doesn't update
         // the wrapping component
         $input.trigger('change');
       }
+
+      this.triggerChangeEvent(inputName);
     }
+  }
+
+  /**
+   * Simulate change event programmatically, this is required because when changing the value of an input via js no
+   * change event is triggered, so if you added a listener for this event it won't trigger and your app will not
+   * behave as expected.
+   *
+   * @param inputName
+   */
+  private triggerChangeEvent(inputName: string): void {
+    const input: HTMLInputElement = <HTMLInputElement>document.querySelector(`[name="${inputName}"]`);
+
+    if (!input) {
+      return;
+    }
+
+    const event = document.createEvent('HTMLEvents');
+    event.initEvent('change', false, true);
+    input.dispatchEvent(event);
   }
 
   /**
@@ -390,13 +418,19 @@ export default class FormObjectMapper {
    * @private
    */
   private hasSameValue(
-    inputValue: string | number | string[] | undefined,
-    referenceValue: string | number | string[] | undefined,
+    inputValue: string | number | boolean | string[] | undefined,
+    referenceValue: string | number | boolean | string[] | undefined,
   ): boolean {
     /*
      * We need a custom checking method for equality, we don't use strict equality on purpose because it would result
-     * into a potential infinite loop if type doesn't match, which can easily happen with a number value in a text input.
-     *
+     * into a potential infinite loop if type doesn't match, which can easily happen when checking values with different
+     * type but same values in essence.
+     */
+    if (typeof inputValue === 'boolean' || typeof referenceValue === 'boolean') {
+      return <boolean>inputValue === <boolean>referenceValue;
+    }
+
+    /*
      * And we also try to see if both values have the same Number value, this avoids forcing a number input value when
      * it's not written exactly the same way (like pending zeros). When checking a number we use the numberCommaTransform
      * as numbers can be written with comma separator depending on the language.
@@ -415,11 +449,12 @@ export default class FormObjectMapper {
    * emit an event for external components that may need the update.
    *
    * This method is called when this component initializes or when triggered by an external event.
-   *
-   * @private
    */
-  private updateFullObject(): void {
-    const serializedForm = this.$form.serializeJSON();
+  private updateFullObject():void {
+    const serializedForm = this.$form.serializeJSON({
+      checkboxUncheckedValue: '0',
+    });
+
     this.model = {};
     Object.keys(this.modelMapping).forEach((modelKey) => {
       const formMapping = this.modelMapping[modelKey];
@@ -437,12 +472,10 @@ export default class FormObjectMapper {
    *
    * @param {string} modelKey
    * @param {*|{}} value
-   *
-   * @private
    */
   private updateObjectByKey(
     modelKey: string,
-    value: string | number | string[] | undefined,
+    value: string | number | string[] | boolean | undefined,
   ): void {
     const modelKeys = modelKey.split('.');
     const previousValue = $.serializeJSON.deepGet(this.model, modelKeys);
@@ -483,8 +516,6 @@ export default class FormObjectMapper {
   /**
    * Reverse the initial mapping Model->Form to the opposite Form->Model
    * This simplifies the sync in when data updates.
-   *
-   * @private
    */
   private initFormMapping(): void {
     Object.keys(this.fullModelMapping).forEach((modelKey) => {
@@ -503,8 +534,6 @@ export default class FormObjectMapper {
   /**
    * @param {string} formName
    * @param {string} modelMapping
-   *
-   * @private
    */
   private addFormMapping(formName: string, modelMapping: string): void {
     if (Object.prototype.hasOwnProperty.call(this.formMapping, formName)) {

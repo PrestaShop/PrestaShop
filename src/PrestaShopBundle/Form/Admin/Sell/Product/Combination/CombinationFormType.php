@@ -28,12 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
-use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Sell\Product\Options\SuppliersType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Specification\ReferencesType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -45,11 +43,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 class CombinationFormType extends TranslatorAwareType
 {
     /**
-     * @var ConfigurableFormChoiceProviderInterface
-     */
-    private $imagesChoiceProvider;
-
-    /**
      * @var EventSubscriberInterface
      */
     private $combinationListener;
@@ -57,17 +50,14 @@ class CombinationFormType extends TranslatorAwareType
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param ConfigurableFormChoiceProviderInterface $imagesChoiceProvider
      * @param EventSubscriberInterface $combinationListener
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        ConfigurableFormChoiceProviderInterface $imagesChoiceProvider,
         EventSubscriberInterface $combinationListener
     ) {
         parent::__construct($translator, $locales);
-        $this->imagesChoiceProvider = $imagesChoiceProvider;
         $this->combinationListener = $combinationListener;
     }
 
@@ -85,15 +75,9 @@ class CombinationFormType extends TranslatorAwareType
             ->add('suppliers', SuppliersType::class, [
                 'alert_message' => $this->trans('This interface allows you to specify the suppliers of the current combination.', 'Admin.Catalog.Help'),
             ])
-            ->add('images', ChoiceType::class, [
-                'label' => $this->trans('Images', 'Admin.Global'),
-                'label_tag_name' => 'h2',
-                'choices' => $this->imagesChoiceProvider->getChoices(['product_id' => $options['product_id']]),
-                'choice_attr' => function ($choice, $key) {
-                    return ['data-image-url' => $key];
-                },
-                'multiple' => true,
-                'expanded' => true,
+            ->add('images', CombinationImagesChoiceType::class, [
+                'product_id' => $options['product_id'],
+                'label_tag_name' => 'h3',
             ])
         ;
 

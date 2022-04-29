@@ -40,7 +40,9 @@ class AdminModulesControllerCore extends AdminController
     ];
 
     protected $list_modules_categories = [];
+    /** @var array */
     protected $list_partners_modules = [];
+    /** @var array */
     protected $list_natives_modules = [];
 
     protected $nb_modules_total = 0;
@@ -289,7 +291,7 @@ class AdminModulesControllerCore extends AdminController
     protected function extractArchive($file, $redirect = true)
     {
         $zip_folders = [];
-        $tmp_folder = _PS_MODULE_DIR_ . md5(time());
+        $tmp_folder = _PS_MODULE_DIR_ . md5((string) time());
 
         $success = false;
         if (substr($file, -4) == '.zip') {
@@ -603,7 +605,6 @@ class AdminModulesControllerCore extends AdminController
     {
         $return = false;
         $installed_modules = [];
-        $module_upgraded = [];
         $key = '';
 
         foreach ($this->map as $key => $method) {
@@ -618,7 +619,8 @@ class AdminModulesControllerCore extends AdminController
                 return;
             }
 
-            if (($modules = Tools::getValue($key)) && $key != 'updateAll') {
+            $modules = Tools::getValue($key);
+            if ($key != 'updateAll') {
                 if (strpos($modules, '|')) {
                     $modules_list_save = $modules;
                     $modules = explode('|', $modules);
@@ -627,7 +629,7 @@ class AdminModulesControllerCore extends AdminController
                 if (!is_array($modules)) {
                     $modules = (array) $modules;
                 }
-            } elseif ($key == 'updateAll') {
+            } else {
                 $allModules = Module::getModulesOnDisk(true, $this->context->employee->id);
 
                 $modules = [];
@@ -640,160 +642,158 @@ class AdminModulesControllerCore extends AdminController
             }
 
             $module_errors = [];
-            if (isset($modules)) {
-                foreach ($modules as $name) {
-                    $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
-                    $moduleManager = $moduleManagerBuilder->build();
+            foreach ($modules as $name) {
+                $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
+                $moduleManager = $moduleManagerBuilder->build();
 
-                    // Check potential error
-                    if (!($module = Module::getInstanceByName(urldecode($name)))) {
-                        $this->errors[] = $this->trans('Module not found');
-                    } elseif (($this->context->mode >= Context::MODE_HOST_CONTRIB) && in_array($module->name, Module::$hosted_modules_blacklist)) {
-                        $this->errors[] = $this->trans('You do not have permission to access this module.', [], 'Admin.Modules.Notification');
-                    } elseif ($key == 'install' && !$this->access('add')) {
-                        $this->errors[] = $this->trans('You do not have permission to install this module.', [], 'Admin.Modules.Notification');
-                    } elseif ($key == 'delete' && (!$this->access('delete') || !$module->getPermission('configure'))) {
-                        $this->errors[] = $this->trans('You do not have permission to delete this module.', [], 'Admin.Modules.Notification');
-                    } elseif ($key == 'configure' && (!$this->access('edit') || !$module->getPermission('configure') || !$moduleManager->isInstalled(urldecode($name)))) {
-                        $this->errors[] = $this->trans('You do not have permission to configure this module.', [], 'Admin.Modules.Notification');
-                    } elseif ($key == 'install' && $moduleManager->isInstalled($module->name)) {
-                        $this->errors[] = $this->trans('This module is already installed: %s.', [$module->name], 'Admin.Modules.Notification');
-                    } elseif ($key == 'uninstall' && !$moduleManager->isInstalled($module->name)) {
-                        $this->errors[] = $this->trans('This module has already been uninstalled: %s.', [$module->name], 'Admin.Modules.Notification');
-                    } elseif ($key == 'update' && !$moduleManager->isInstalled($module->name)) {
-                        $this->errors[] = $this->trans('This module needs to be installed in order to be updated: %s.', [$module->name], 'Admin.Modules.Notification');
-                    } else {
-                        // If we install a module, force temporary global context for multishop
-                        if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && $method != 'getContent') {
-                            $shop_id = (int) Context::getContext()->shop->id;
-                            Context::getContext()->tmpOldShop = clone Context::getContext()->shop;
-                            if ($shop_id) {
-                                Context::getContext()->shop = new Shop($shop_id);
-                            }
+                // Check potential error
+                if (!($module = Module::getInstanceByName(urldecode($name)))) {
+                    $this->errors[] = $this->trans('Module not found');
+                } elseif (($this->context->mode >= Context::MODE_HOST_CONTRIB) && in_array($module->name, Module::$hosted_modules_blacklist)) {
+                    $this->errors[] = $this->trans('You do not have permission to access this module.', [], 'Admin.Modules.Notification');
+                } elseif ($key == 'install' && !$this->access('add')) {
+                    $this->errors[] = $this->trans('You do not have permission to install this module.', [], 'Admin.Modules.Notification');
+                } elseif ($key == 'delete' && (!$this->access('delete') || !$module->getPermission('configure'))) {
+                    $this->errors[] = $this->trans('You do not have permission to delete this module.', [], 'Admin.Modules.Notification');
+                } elseif ($key == 'configure' && (!$this->access('edit') || !$module->getPermission('configure') || !$moduleManager->isInstalled(urldecode($name)))) {
+                    $this->errors[] = $this->trans('You do not have permission to configure this module.', [], 'Admin.Modules.Notification');
+                } elseif ($key == 'install' && $moduleManager->isInstalled($module->name)) {
+                    $this->errors[] = $this->trans('This module is already installed: %s.', [$module->name], 'Admin.Modules.Notification');
+                } elseif ($key == 'uninstall' && !$moduleManager->isInstalled($module->name)) {
+                    $this->errors[] = $this->trans('This module has already been uninstalled: %s.', [$module->name], 'Admin.Modules.Notification');
+                } elseif ($key == 'update' && !$moduleManager->isInstalled($module->name)) {
+                    $this->errors[] = $this->trans('This module needs to be installed in order to be updated: %s.', [$module->name], 'Admin.Modules.Notification');
+                } else {
+                    // If we install a module, force temporary global context for multishop
+                    if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && $method != 'getContent') {
+                        $shop_id = (int) Context::getContext()->shop->id;
+                        Context::getContext()->tmpOldShop = clone Context::getContext()->shop;
+                        if ($shop_id) {
+                            Context::getContext()->shop = new Shop($shop_id);
+                        }
+                    }
+
+                    //retrocompatibility
+                    if (Tools::getValue('controller') != '') {
+                        $_POST['tab'] = Tools::safeOutput(Tools::getValue('controller'));
+                    }
+
+                    $echo = '';
+                    if ($key != 'update' && $key != 'updateAll') {
+                        // We check if method of module exists
+                        if (!method_exists($module, $method)) {
+                            throw new PrestaShopException('Method of module cannot be found');
                         }
 
-                        //retrocompatibility
-                        if (Tools::getValue('controller') != '') {
-                            $_POST['tab'] = Tools::safeOutput(Tools::getValue('controller'));
+                        if ($key == 'uninstall' && !Module::getPermissionStatic($module->id, 'uninstall')) {
+                            $this->errors[] = $this->trans('You do not have permission to uninstall this module.', [], 'Admin.Modules.Notification');
                         }
 
-                        $echo = '';
-                        if ($key != 'update' && $key != 'updateAll') {
-                            // We check if method of module exists
-                            if (!method_exists($module, $method)) {
-                                throw new PrestaShopException('Method of module cannot be found');
-                            }
+                        if (count($this->errors)) {
+                            continue;
+                        }
+                        // Get the return value of current method
+                        $echo = $module->{$method}();
 
-                            if ($key == 'uninstall' && !Module::getPermissionStatic($module->id, 'uninstall')) {
-                                $this->errors[] = $this->trans('You do not have permission to uninstall this module.', [], 'Admin.Modules.Notification');
-                            }
+                        // After a successful install of a single module that has a configuration method, to the configuration page
+                        if ($key == 'install' && $echo === true && strpos(Tools::getValue('install'), '|') === false && method_exists($module, 'getContent')) {
+                            Tools::redirectAdmin(self::$currentIndex . '&token=' . $this->token . '&configure=' . $module->name . '&conf=12');
+                        }
+                    }
 
-                            if (count($this->errors)) {
-                                continue;
-                            }
-                            // Get the return value of current method
-                            $echo = $module->{$method}();
-
-                            // After a successful install of a single module that has a configuration method, to the configuration page
-                            if ($key == 'install' && $echo === true && strpos(Tools::getValue('install'), '|') === false && method_exists($module, 'getContent')) {
-                                Tools::redirectAdmin(self::$currentIndex . '&token=' . $this->token . '&configure=' . $module->name . '&conf=12');
-                            }
+                    // If the method called is "configure" (getContent method), we show the html code of configure page
+                    if ($key == 'configure' && $moduleManager->isInstalled($module->name)) {
+                        $this->bootstrap = (bool) $module->bootstrap;
+                        if (isset($module->multishop_context)) {
+                            $this->multishop_context = $module->multishop_context;
                         }
 
-                        // If the method called is "configure" (getContent method), we show the html code of configure page
-                        if ($key == 'configure' && $moduleManager->isInstalled($module->name)) {
-                            $this->bootstrap = (isset($module->bootstrap) && $module->bootstrap);
-                            if (isset($module->multishop_context)) {
-                                $this->multishop_context = $module->multishop_context;
-                            }
+                        $back_link = self::$currentIndex . '&token=' . $this->token . '&tab_module=' . $module->tab . '&module_name=' . $module->name;
+                        $hook_link = 'index.php?tab=AdminModulesPositions&token=' . Tools::getAdminTokenLite('AdminModulesPositions') . '&show_modules=' . (int) $module->id;
+                        $trad_link = 'index.php?tab=AdminTranslations&token=' . Tools::getAdminTokenLite('AdminTranslations') . '&type=modules&lang=';
+                        $rtl_link = 'index.php?tab=AdminModules&token=' . Tools::getAdminTokenLite('AdminModules') . '&configure=' . $module->name . '&generate_rtl=1';
+                        $disable_link = $this->context->link->getAdminLink('AdminModules') . '&module_name=' . $module->name . '&enable=0&tab_module=' . $module->tab;
+                        $uninstall_link = $this->context->link->getAdminLink('AdminModules') . '&module_name=' . $module->name . '&uninstall=' . $module->name . '&tab_module=' . $module->tab;
+                        $reset_link = $this->context->link->getAdminLink('AdminModules') . '&module_name=' . $module->name . '&reset&tab_module=' . $module->tab;
 
-                            $back_link = self::$currentIndex . '&token=' . $this->token . '&tab_module=' . $module->tab . '&module_name=' . $module->name;
-                            $hook_link = 'index.php?tab=AdminModulesPositions&token=' . Tools::getAdminTokenLite('AdminModulesPositions') . '&show_modules=' . (int) $module->id;
-                            $trad_link = 'index.php?tab=AdminTranslations&token=' . Tools::getAdminTokenLite('AdminTranslations') . '&type=modules&lang=';
-                            $rtl_link = 'index.php?tab=AdminModules&token=' . Tools::getAdminTokenLite('AdminModules') . '&configure=' . $module->name . '&generate_rtl=1';
-                            $disable_link = $this->context->link->getAdminLink('AdminModules') . '&module_name=' . $module->name . '&enable=0&tab_module=' . $module->tab;
-                            $uninstall_link = $this->context->link->getAdminLink('AdminModules') . '&module_name=' . $module->name . '&uninstall=' . $module->name . '&tab_module=' . $module->tab;
-                            $reset_link = $this->context->link->getAdminLink('AdminModules') . '&module_name=' . $module->name . '&reset&tab_module=' . $module->tab;
+                        $is_reset_ready = false;
+                        if (method_exists($module, 'reset')) {
+                            $is_reset_ready = true;
+                        }
 
-                            $is_reset_ready = false;
-                            if (method_exists($module, 'reset')) {
-                                $is_reset_ready = true;
-                            }
+                        $this->context->smarty->assign(
+                            [
+                                'module_name' => $module->name,
+                                'module_display_name' => $module->displayName,
+                                'back_link' => $back_link,
+                                'module_hook_link' => $hook_link,
+                                'module_disable_link' => $disable_link,
+                                'module_uninstall_link' => $uninstall_link,
+                                'module_reset_link' => $reset_link,
+                                'trad_link' => $trad_link,
+                                'module_rtl_link' => ($this->context->language->is_rtl ? $rtl_link : null),
+                                'module_languages' => Language::getLanguages(false),
+                                'theme_language_dir' => _THEME_LANG_DIR_,
+                                'page_header_toolbar_title' => $this->page_header_toolbar_title,
+                                'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
+                                'add_permission' => $this->access('add'),
+                                'is_reset_ready' => $is_reset_ready,
+                            ]
+                        );
 
-                            $this->context->smarty->assign(
-                                [
-                                    'module_name' => $module->name,
-                                    'module_display_name' => $module->displayName,
-                                    'back_link' => $back_link,
-                                    'module_hook_link' => $hook_link,
-                                    'module_disable_link' => $disable_link,
-                                    'module_uninstall_link' => $uninstall_link,
-                                    'module_reset_link' => $reset_link,
-                                    'trad_link' => $trad_link,
-                                    'module_rtl_link' => ($this->context->language->is_rtl ? $rtl_link : null),
-                                    'module_languages' => Language::getLanguages(false),
-                                    'theme_language_dir' => _THEME_LANG_DIR_,
-                                    'page_header_toolbar_title' => $this->page_header_toolbar_title,
-                                    'page_header_toolbar_btn' => $this->page_header_toolbar_btn,
-                                    'add_permission' => $this->access('add'),
-                                    'is_reset_ready' => $is_reset_ready,
-                                ]
-                            );
-
-                            // Display checkbox in toolbar if multishop
-                            if (Shop::isFeatureActive()) {
-                                if (Shop::getContext() == Shop::CONTEXT_SHOP) {
-                                    $shop_context = 'shop <strong>' . $this->context->shop->name . '</strong>';
-                                } elseif (Shop::getContext() == Shop::CONTEXT_GROUP) {
-                                    $shop_group = new ShopGroup((int) Shop::getContextShopGroupID());
-                                    $shop_context = 'all shops of group shop <strong>' . $shop_group->name . '</strong>';
-                                } else {
-                                    $shop_context = 'all shops';
-                                }
-
-                                $this->context->smarty->assign([
-                                    'module' => $module,
-                                    'display_multishop_checkbox' => true,
-                                    'current_url' => $this->getCurrentUrl('enable'),
-                                    'shop_context' => $shop_context,
-                                ]);
+                        // Display checkbox in toolbar if multishop
+                        if (Shop::isFeatureActive()) {
+                            if (Shop::getContext() == Shop::CONTEXT_SHOP) {
+                                $shop_context = 'shop <strong>' . $this->context->shop->name . '</strong>';
+                            } elseif (Shop::getContext() == Shop::CONTEXT_GROUP) {
+                                $shop_group = new ShopGroup((int) Shop::getContextShopGroupID());
+                                $shop_context = 'all shops of group shop <strong>' . $shop_group->name . '</strong>';
+                            } else {
+                                $shop_context = 'all shops';
                             }
 
                             $this->context->smarty->assign([
-                                'is_multishop' => Shop::isFeatureActive(),
-                                'multishop_context' => Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP | Shop::CONTEXT_SHOP,
+                                'module' => $module,
+                                'display_multishop_checkbox' => true,
+                                'current_url' => $this->getCurrentUrl('enable'),
+                                'shop_context' => $shop_context,
                             ]);
-
-                            if (Shop::isFeatureActive() && isset(Context::getContext()->tmpOldShop)) {
-                                Context::getContext()->shop = clone Context::getContext()->tmpOldShop;
-                                unset(Context::getContext()->tmpOldShop);
-                            }
-
-                            // Display module configuration
-                            $header = $this->context->smarty->fetch('controllers/modules/configure.tpl');
-                            $configuration_bar = $this->context->smarty->fetch('controllers/modules/configuration_bar.tpl');
-
-                            $output = $header . $echo;
-
-                            $this->context->smarty->assign('module_content', $output . $configuration_bar);
-                        } elseif ($echo === true) {
-                            $return = 13;
-                            if ($method == 'install') {
-                                $return = 12;
-                                $installed_modules[] = $module->id;
-                            }
-                        } elseif ($echo === false) {
-                            $module_errors[] = ['name' => $name, 'message' => $module->getErrors()];
                         }
 
-                        if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && isset(Context::getContext()->tmpOldShop)) {
+                        $this->context->smarty->assign([
+                            'is_multishop' => Shop::isFeatureActive(),
+                            'multishop_context' => Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP | Shop::CONTEXT_SHOP,
+                        ]);
+
+                        if (Shop::isFeatureActive() && isset(Context::getContext()->tmpOldShop)) {
                             Context::getContext()->shop = clone Context::getContext()->tmpOldShop;
                             unset(Context::getContext()->tmpOldShop);
                         }
+
+                        // Display module configuration
+                        $header = $this->context->smarty->fetch('controllers/modules/configure.tpl');
+                        $configuration_bar = $this->context->smarty->fetch('controllers/modules/configuration_bar.tpl');
+
+                        $output = $header . $echo;
+
+                        $this->context->smarty->assign('module_content', $output . $configuration_bar);
+                    } elseif ($echo === true) {
+                        $return = 13;
+                        if ($method == 'install') {
+                            $return = 12;
+                            $installed_modules[] = $module->id;
+                        }
+                    } elseif ($echo === false) {
+                        $module_errors[] = ['name' => $name, 'message' => $module->getErrors()];
                     }
-                    if ($key != 'configure' && Tools::getIsset('bpay')) {
-                        Tools::redirectAdmin('index.php?tab=AdminPayment&token=' . Tools::getAdminToken('AdminPayment' . (int) Tab::getIdFromClassName('AdminPayment') . (int) $this->id_employee));
+
+                    if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_ALL && isset(Context::getContext()->tmpOldShop)) {
+                        Context::getContext()->shop = clone Context::getContext()->tmpOldShop;
+                        unset(Context::getContext()->tmpOldShop);
                     }
+                }
+                if ($key != 'configure' && Tools::getIsset('bpay')) {
+                    Tools::redirectAdmin('index.php?tab=AdminPayment&token=' . Tools::getAdminToken('AdminPayment' . (int) Tab::getIdFromClassName('AdminPayment') . (int) $this->id_employee));
                 }
             }
 
@@ -824,24 +824,18 @@ class AdminModulesControllerCore extends AdminController
         }
 
         if (Tools::getValue('update') || Tools::getValue('updateAll')) {
-            $updated = '&updated=1';
-
-            $module_upgraded = implode('|', $module_upgraded);
-
             if ($key == 'updateAll') {
                 Tools::redirectAdmin(self::$currentIndex . '&token=' . $this->token . '&allUpdated=1');
-            } elseif ($module_upgraded != '') {
-                Tools::redirectAdmin(self::$currentIndex . '&token=' . $this->token . '&updated=1&module_name=' . $module_upgraded);
             } elseif (isset($modules_list_save)) {
                 Tools::redirectAdmin(self::$currentIndex . '&token=' . $this->token . '&updated=1&module_name=' . $modules_list_save);
             } elseif (isset($module)) {
-                Tools::redirectAdmin(self::$currentIndex . '&token=' . $this->token . $updated . '&tab_module=' . $module->tab . '&module_name=' . $module->name . '&anchor=' . ucfirst($module->name) . (isset($modules_list_save) ? '&modules_list=' . $modules_list_save : ''));
+                Tools::redirectAdmin(self::$currentIndex . '&token=' . $this->token . '&updated=1&tab_module=' . $module->tab . '&module_name=' . $module->name . '&anchor=' . ucfirst($module->name) . (isset($modules_list_save) ? '&modules_list=' . $modules_list_save : ''));
             }
         }
     }
 
     /**
-     * @param string|null $tab_modules_list
+     * @param array|null $tab_modules_list
      * @param false $install_source_tracking
      *
      * @return array<string, array<Module>>
@@ -932,7 +926,6 @@ class AdminModulesControllerCore extends AdminController
                 ->setProcessPaths([
                     _PS_MODULE_DIR_ . Tools::getValue('configure'),
                 ])
-                ->setRegenerate(true)
                 ->process();
             Tools::redirectAdmin('index.php?controller=adminmodules&configure=' . Tools::getValue('configure') . '&token=' . Tools::getValue('token') . '&conf=6');
         }
@@ -1057,11 +1050,9 @@ class AdminModulesControllerCore extends AdminController
             // Filter on module category
             $category_filtered = [];
             $filter_categories = explode('|', Configuration::get('PS_SHOW_CAT_MODULES_' . (int) $this->id_employee));
-            if (count($filter_categories) > 0) {
-                foreach ($filter_categories as $fc) {
-                    if (!empty($fc)) {
-                        $category_filtered[$fc] = 1;
-                    }
+            foreach ($filter_categories as $fc) {
+                if (!empty($fc)) {
+                    $category_filtered[$fc] = 1;
                 }
             }
             if (count($category_filtered) > 0 && !isset($category_filtered[$module->tab])) {
@@ -1104,10 +1095,22 @@ class AdminModulesControllerCore extends AdminController
 
         // Filter on country
         $show_country_modules = $this->filter_configuration['PS_SHOW_COUNTRY_MODULES_' . (int) $this->id_employee];
-        if ($show_country_modules && (isset($module->limited_countries) && !empty($module->limited_countries)
-                && ((is_array($module->limited_countries) && count($module->limited_countries)
-                && !in_array(strtolower($this->iso_default_country), $module->limited_countries))
-                || (!is_array($module->limited_countries) && strtolower($this->iso_default_country) != (string) ($module->limited_countries))))) {
+        if ($show_country_modules
+            && (
+                isset($module->limited_countries)
+                && !empty($module->limited_countries)
+                && (
+                    (
+                        is_array($module->limited_countries)
+                        && !in_array(strtolower($this->iso_default_country), $module->limited_countries)
+                    )
+                    || (
+                        !is_array($module->limited_countries)
+                        && strtolower($this->iso_default_country) != (string) $module->limited_countries
+                    )
+                )
+            )
+        ) {
             return true;
         }
 

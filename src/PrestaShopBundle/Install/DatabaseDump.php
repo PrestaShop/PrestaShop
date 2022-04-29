@@ -372,7 +372,7 @@ class DatabaseDump
     }
 
     /**
-     * Restore a list of tables in the database which name match th regexp
+     * Restore a list of tables in the database which name match the regexp
      *
      * @param string $regexp
      */

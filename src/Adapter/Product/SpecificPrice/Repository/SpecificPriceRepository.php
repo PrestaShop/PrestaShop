@@ -30,16 +30,18 @@ namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
-use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Validate\SpecificPriceValidator;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\CannotAddSpecificPriceException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\CannotUpdateSpecificPriceException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 use PrestaShopException;
 use SpecificPrice;
 
@@ -64,18 +66,26 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
     private $dbPrefix;
 
     /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
+    /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param SpecificPriceValidator $specificPriceValidator
+     * @param ConfigurationInterface $configuration
      */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
-        SpecificPriceValidator $specificPriceValidator
+        SpecificPriceValidator $specificPriceValidator,
+        ConfigurationInterface $configuration
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
         $this->specificPriceValidator = $specificPriceValidator;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -236,6 +246,49 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
         }
 
         return new SpecificPriceId($id);
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return PriorityList|null
+     */
+    public function findPrioritiesForProduct(ProductId $productId): ?PriorityList
+    {
+        $qb = $this->connection->createQueryBuilder()
+            ->select('spp.priority')
+            ->from($this->dbPrefix . 'specific_price_priority', 'spp')
+            ->where('spp.id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+        ;
+
+        $result = $qb->execute()->fetchOne();
+
+        if (!$result) {
+            return null;
+        }
+
+        return new PriorityList(explode(';', $result));
+    }
+
+    /**
+     * @return PriorityList
+     *
+     * @throws CoreException
+     */
+    public function getDefaultPriorities(): PriorityList
+    {
+        try {
+            $priorities = explode(';', $this->configuration->get('PS_SPECIFIC_PRICE_PRIORITIES'));
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                'Something went wrong when trying to get default priorities of specific prices',
+                0,
+                $e->getPrevious()
+            );
+        }
+
+        return new PriorityList($priorities);
     }
 
     /**

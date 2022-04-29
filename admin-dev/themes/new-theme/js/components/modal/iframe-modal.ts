@@ -25,27 +25,47 @@
 
 /* eslint max-classes-per-file: ["error", 2] */
 
+import ResizeObserver from 'resize-observer-polyfill';
 import {
   ModalContainerType, ModalContainer, ModalType, ModalParams, Modal,
 } from '@components/modal/modal';
+import IframeEvent from '@components/modal/iframe-event';
+import {isUndefined} from '@PSTypes/typeguard';
 
 export interface IframeModalContainerType extends ModalContainerType {
   iframe: HTMLIFrameElement;
   loader: HTMLElement;
   spinner: HTMLElement;
+  closeButton?: HTMLElement;
+  confirmButton?: HTMLButtonElement;
 }
 export interface IframeModalType extends ModalType {
   modal: IframeModalContainerType;
   render: (content: string, hideIframe?: boolean) => void;
 }
 export type IframeCallbackFunction = (iframe:HTMLIFrameElement, event: Event) => void;
+export type IframeEventCallbackFunction = (event: IframeEvent) => void;
 export type IframeModalParams = ModalParams & {
-  modalTitle?: string;
+  // Callback method executed each time the iframe loads an url
   onLoaded?: IframeCallbackFunction,
+  // Callback method executed each time the iframe is about to unload its content
   onUnload?: IframeCallbackFunction,
+  // The iframe can launch IframeEvent to communicate with its parent via this callback
+  onIframeEvent?: IframeEventCallbackFunction,
+  // Initial url of the iframe
   iframeUrl: string;
+  // When true the iframe height is computed based on its content
   autoSize: boolean;
+  // By default the body of the iframe is used as a reference of its content's size but this option can customize it
   autoSizeContainer: string;
+  // Optional, when set a close button is added in the modal's footer
+  closeButtonLabel?: string;
+  // Optional, when set a confirm button is added in the modal's footer
+  confirmButtonLabel?: string;
+  // Callback when the confirm button is clicked
+  confirmCallback?: (event: Event) => void;
+  // By default the iframe closes when confirm button is clicked, this options overrides this behaviour
+  closeOnConfirm: boolean;
 }
 export type InputIframeModalParams = Partial<IframeModalParams> & {
   iframeUrl: string; // iframeUrl is mandatory in input
@@ -68,6 +88,12 @@ export class IframeModalContainer extends ModalContainer implements IframeModalC
 
   spinner!: HTMLElement;
 
+  footer?: HTMLElement;
+
+  closeButton?: HTMLElement;
+
+  confirmButton?: HTMLButtonElement;
+
   /* This constructor is important to force the input type but ESLint is not happy about it*/
   /* eslint-disable no-useless-constructor */
   constructor(params: IframeModalParams) {
@@ -83,9 +109,11 @@ export class IframeModalContainer extends ModalContainer implements IframeModalC
 
     this.iframe = document.createElement('iframe');
     this.iframe.frameBorder = '0';
-    this.iframe.scrolling = 'auto';
+    this.iframe.scrolling = 'no';
     this.iframe.width = '100%';
-    this.iframe.height = '100%';
+    if (!params.autoSize) {
+      this.iframe.height = '100%';
+    }
 
     this.loader = document.createElement('div');
     this.loader.classList.add('modal-iframe-loader');
@@ -95,6 +123,37 @@ export class IframeModalContainer extends ModalContainer implements IframeModalC
 
     this.loader.appendChild(this.spinner);
     this.body.append(this.loader, this.iframe);
+
+    // Modal footer element
+    if (!isUndefined(params.closeButtonLabel) || !isUndefined(params.confirmButtonLabel)) {
+      this.footer = document.createElement('div');
+      this.footer.classList.add('modal-footer');
+
+      // Modal close button element
+      if (!isUndefined(params.closeButtonLabel)) {
+        this.closeButton = document.createElement('button');
+        this.closeButton.setAttribute('type', 'button');
+        this.closeButton.classList.add('btn', 'btn-outline-secondary', 'btn-lg');
+        this.closeButton.dataset.dismiss = 'modal';
+        this.closeButton.innerHTML = params.closeButtonLabel;
+        this.footer.append(this.closeButton);
+      }
+
+      // Modal confirm button element
+      if (!isUndefined(params.confirmButtonLabel)) {
+        this.confirmButton = document.createElement('button');
+        this.confirmButton.setAttribute('type', 'button');
+        this.confirmButton.classList.add('btn', 'btn-primary', 'btn-lg', 'btn-confirm-submit');
+        if (params.closeOnConfirm) {
+          this.confirmButton.dataset.dismiss = 'modal';
+        }
+        this.confirmButton.innerHTML = params.confirmButtonLabel;
+        this.footer.append(this.confirmButton);
+      }
+
+      // Appending element to the modal
+      this.content.append(this.footer);
+    }
   }
 }
 
@@ -110,6 +169,8 @@ export class IframeModal extends Modal implements IframeModalType {
 
   protected autoSizeContainer!: string;
 
+  protected resizeObserver?: ResizeObserver | null;
+
   constructor(
     inputParams: InputIframeModalParams,
   ) {
@@ -118,6 +179,7 @@ export class IframeModal extends Modal implements IframeModalType {
       closable: false,
       autoSize: true,
       autoSizeContainer: 'body',
+      closeOnConfirm: true,
       ...inputParams,
     };
     super(params);
@@ -130,14 +192,14 @@ export class IframeModal extends Modal implements IframeModalType {
 
     this.autoSize = params.autoSize;
     this.autoSizeContainer = params.autoSizeContainer;
-    this.modal.iframe.addEventListener('load', (loadedEvent) => {
+    this.modal.iframe.addEventListener('load', (loadedEvent: Event) => {
       this.hideLoading();
       if (params.onLoaded) {
         params.onLoaded(this.modal.iframe, loadedEvent);
       }
 
       if (this.modal.iframe.contentWindow) {
-        this.modal.iframe.contentWindow.addEventListener('beforeunload', (unloadEvent) => {
+        this.modal.iframe.contentWindow.addEventListener('beforeunload', (unloadEvent: BeforeUnloadEvent) => {
           if (params.onUnload) {
             params.onUnload(this.modal.iframe, unloadEvent);
           }
@@ -145,13 +207,23 @@ export class IframeModal extends Modal implements IframeModalType {
         });
 
         // Auto resize the iframe container
-        this.autoResize();
+        this.initAutoResize();
       }
     });
 
     this.$modal.on('shown.bs.modal', () => {
       this.modal.iframe.src = params.iframeUrl;
     });
+
+    window.addEventListener(IframeEvent.parentWindowEvent, ((event: IframeEvent) => {
+      if (params.onIframeEvent) {
+        params.onIframeEvent(event);
+      }
+    }) as EventListener);
+
+    if (this.modal.confirmButton && params.confirmCallback) {
+      this.modal.confirmButton.addEventListener('click', params.confirmCallback);
+    }
   }
 
   render(content: string, hideIframe: boolean = true): void {
@@ -174,24 +246,56 @@ export class IframeModal extends Modal implements IframeModalType {
     this.modal.loader.classList.add('d-none');
   }
 
+  hide(): void {
+    super.hide();
+    this.cleanResizeObserver();
+  }
+
   hideIframe(): void {
     this.modal.iframe.classList.add('d-none');
   }
 
-  private autoResize(): void {
+  private getResizableContainer(): HTMLElement | null {
     if (this.autoSize && this.modal.iframe.contentWindow) {
-      const iframeContainer = this.modal.iframe.contentWindow.document.querySelector(this.autoSizeContainer);
+      return this.modal.iframe.contentWindow.document.querySelector(this.autoSizeContainer);
+    }
 
-      if (iframeContainer) {
-        const iframeScrollHeight = iframeContainer.scrollHeight;
-        const contentHeight = this.getOuterHeight(this.modal.header)
-          + this.getOuterHeight(this.modal.message)
-          + iframeScrollHeight;
+    return null;
+  }
 
-        // Avoid applying height of 0 (on first load for example)
-        if (contentHeight) {
-          this.modal.dialog.style.height = `${contentHeight}px`;
-        }
+  private initAutoResize(): void {
+    const iframeContainer: HTMLElement | null = this.getResizableContainer();
+
+    if (iframeContainer) {
+      this.cleanResizeObserver();
+      this.resizeObserver = new ResizeObserver(() => {
+        this.autoResize();
+      });
+
+      this.resizeObserver.observe(iframeContainer);
+    }
+    this.autoResize();
+  }
+
+  private cleanResizeObserver(): void {
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+      this.resizeObserver = null;
+    }
+  }
+
+  private autoResize(): void {
+    const iframeContainer: HTMLElement | null = this.getResizableContainer();
+
+    if (iframeContainer) {
+      const iframeScrollHeight = iframeContainer.scrollHeight;
+      const contentHeight = this.getOuterHeight(this.modal.message)
+        + iframeScrollHeight;
+
+      // Avoid applying height of 0 (on first load for example)
+      if (contentHeight) {
+        // We force the iframe to its real height and it's the container that handles the overflow with scrollbars
+        this.modal.iframe.style.height = `${contentHeight}px`;
       }
     }
   }

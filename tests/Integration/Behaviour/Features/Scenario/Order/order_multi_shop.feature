@@ -292,7 +292,7 @@ Feature: Order from Back Office (BO)
   Scenario: In All Shop Context, Update product in order
     # Create Shop Group & Shops
     When I add a shop group "shopGroup1" with name "Shop Group 1"
-    And I add a shop "shop2" with name "Shop 2" and color "blue" for the group "Shop Group 1"
+    And I add a shop "shop2" with name "Shop 2" and color "blue" for the group "shopGroup1"
     And I copy "country" shop data from "test_shop" to "Shop 2"
     And I copy "currency" shop data from "test_shop" to "Shop 2"
     Then I should have 2 shop groups

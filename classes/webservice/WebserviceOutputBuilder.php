@@ -38,7 +38,7 @@ class WebserviceOutputBuilderCore
     protected $wsUrl;
     protected $output;
 
-    /** @var WebserviceOutputInterface|WebserviceOutputXML|WebserviceOutputJSON */
+    /** @var WebserviceOutputInterface|WebserviceOutputXML|WebserviceOutputJSON|null */
     public $objectRender;
     protected $wsResource;
     protected $depth = 0;
@@ -412,8 +412,6 @@ class WebserviceOutputBuilderCore
                     } else {
                         $output .= $this->renderEntity($object, $depth);
                     }
-                } elseif ($key == 'empty' && $this->objectRender->getContentType() == 'application/json') {
-                    $output .= $this->renderEntity($object, $depth);
                 }
             }
         } else {

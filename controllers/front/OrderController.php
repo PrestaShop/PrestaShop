@@ -32,8 +32,11 @@ use PrestaShopBundle\Translation\TranslatorComponent;
 
 class OrderControllerCore extends FrontController
 {
+    /** @var bool */
     public $ssl = true;
+    /** @var string */
     public $php_self = 'order';
+    /** @var string */
     public $page_name = 'checkout';
     public $checkoutWarning = false;
 
@@ -239,6 +242,24 @@ class OrderControllerCore extends FrontController
         ]));
     }
 
+    public function displayAjaxCheckCartStillOrderable(): void
+    {
+        $responseData = [
+            'errors' => false,
+            'cartUrl' => '',
+        ];
+
+        if ($this->context->cart->isAllProductsInStock() !== true ||
+            $this->context->cart->checkAllProductsAreStillAvailableInThisState() !== true ||
+            $this->context->cart->checkAllProductsHaveMinimalQuantities() !== true) {
+            $responseData['errors'] = true;
+            $responseData['cartUrl'] = $this->context->link->getPageLink('cart', null, null, ['action' => 'show']);
+        }
+
+        header('Content-Type: application/json');
+        $this->ajaxRender(json_encode($responseData));
+    }
+
     public function initContent()
     {
         if (Configuration::isCatalogMode()) {
@@ -252,15 +273,24 @@ class OrderControllerCore extends FrontController
 
         $presentedCart = $this->cart_presenter->present($this->context->cart, true);
 
+        $shouldRedirectToCart = false;
+
+        // Check the cart meets minimal order amount treshold
+        // Check that the cart is not empty
         if (count($presentedCart['products']) <= 0 || $presentedCart['minimalPurchaseRequired']) {
-            // if there is no product in current cart, redirect to cart page
-            $cartLink = $this->context->link->getPageLink('cart');
-            $this->redirectWithNotifications($cartLink);
+            $shouldRedirectToCart = true;
         }
 
-        $product = $this->context->cart->checkQuantities(true);
-        if (is_array($product)) {
-            // if there is an issue with product quantities, redirect to cart page
+        // Check that products are still orderable, at any point in checkout
+        if ($this->context->cart->isAllProductsInStock() !== true ||
+            $this->context->cart->checkAllProductsAreStillAvailableInThisState() !== true ||
+            $this->context->cart->checkAllProductsHaveMinimalQuantities() !== true) {
+            $shouldRedirectToCart = true;
+        }
+
+        // If there was a problem, we redirect the user to cart, CartController deals with display of detailed errors
+        // We don't redirect in case of ajax requests, so we can get our response
+        if ($shouldRedirectToCart === true && !$this->ajax) {
             $cartLink = $this->context->link->getPageLink('cart', null, null, ['action' => 'show']);
             $this->redirectWithNotifications($cartLink);
         }
@@ -283,9 +313,6 @@ class OrderControllerCore extends FrontController
         $this->context->smarty->assign([
             'checkout_process' => new RenderableProxy($this->checkoutProcess),
             'cart' => $presentedCart,
-        ]);
-
-        $this->context->smarty->assign([
             'display_transaction_updated_info' => Tools::getIsset('updatedTransaction'),
             'tos_cms' => $this->getDefaultTermsAndConditions(),
         ]);

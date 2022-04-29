@@ -28,7 +28,9 @@ use PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderPresenter;
 
 class OrderConfirmationControllerCore extends FrontController
 {
+    /** @var bool */
     public $ssl = true;
+    /** @var string */
     public $php_self = 'order-confirmation';
     /** @var int Cart ID */
     public $id_cart;
@@ -49,6 +51,15 @@ class OrderConfirmationControllerCore extends FrontController
      */
     public function init()
     {
+        // Test below to prevent unnecessary logs from "parent::init()"
+        $this->id_cart = (int) Tools::getValue('id_cart', 0);
+        if (!empty($this->context->cookie->id_cart) && $this->context->cookie->id_cart == $this->id_cart) {
+            $cart = new Cart($this->id_cart);
+            if ($cart->orderExists()) {
+                unset($this->context->cookie->id_cart);
+            }
+        }
+
         parent::init();
 
         // If we are coming to this page to finish free order we do extra checks and validations
@@ -63,7 +74,6 @@ class OrderConfirmationControllerCore extends FrontController
          *
          * It's not implemented yet, however.
          */
-        $this->id_cart = (int) (Tools::getValue('id_cart', 0));
         $this->id_order = Order::getIdByCartId((int) ($this->id_cart));
         $this->secure_key = Tools::getValue('key', false);
         $this->order = new Order((int) ($this->id_order));
@@ -218,7 +228,7 @@ class OrderConfirmationControllerCore extends FrontController
         $order = new PaymentFree();
         $order->validateOrder(
             $cart->id,
-            Configuration::get('PS_OS_PAYMENT'),
+            (int) Configuration::get('PS_OS_PAYMENT'),
             0,
             $this->trans('Free order', [], 'Admin.Orderscustomers.Feature'),
             null,

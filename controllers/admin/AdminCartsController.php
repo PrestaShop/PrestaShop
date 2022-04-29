@@ -63,7 +63,7 @@ class AdminCartsControllerCore extends AdminController
 		LEFT JOIN ' . _DB_PREFIX_ . 'carrier ca ON (ca.id_carrier = a.id_carrier)
 		LEFT JOIN ' . _DB_PREFIX_ . 'orders o ON (o.id_cart = a.id_cart)
 		LEFT JOIN (
-            SELECT `id_guest`
+            SELECT DISTINCT `id_guest`
             FROM `' . _DB_PREFIX_ . 'connections`
             WHERE
                 TIME_TO_SEC(TIMEDIFF(\'' . pSQL(date('Y-m-d H:i:00', time())) . '\', `date_add`)) < 1800
@@ -102,7 +102,6 @@ class AdminCartsControllerCore extends AdminController
             'carrier' => [
                 'title' => $this->trans('Carrier', [], 'Admin.Shipping.Feature'),
                 'align' => 'text-left',
-                'callback' => 'replaceZeroByShopName',
                 'filter_key' => 'ca!name',
             ],
             'date_add' => [
@@ -433,7 +432,7 @@ class AdminCartsControllerCore extends AdminController
                         if (!($tmp_name = tempnam(_PS_TMP_IMG_DIR_, 'PS')) || !move_uploaded_file($_FILES[$field_id]['tmp_name'], $tmp_name)) {
                             $errors[] = $this->trans('An error occurred during the image upload process.', [], 'Admin.Catalog.Notification');
                         }
-                        $file_name = md5(uniqid(mt_rand(0, mt_getrandmax()), true));
+                        $file_name = md5(uniqid((string) mt_rand(0, mt_getrandmax()), true));
                         if (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_ . $file_name)) {
                             continue;
                         } elseif (!ImageManager::resize($tmp_name, _PS_UPLOAD_DIR_ . $file_name . '_small', (int) Configuration::get('PS_PRODUCT_PICTURE_WIDTH'), (int) Configuration::get('PS_PRODUCT_PICTURE_HEIGHT'))) {
@@ -465,7 +464,7 @@ class AdminCartsControllerCore extends AdminController
             $id_product = (int) Tools::getValue('id_product');
             if ($this->context->cart->OrderExists()) {
                 $errors[] = $this->trans('An order has already been placed with this cart.', [], 'Admin.Catalog.Notification');
-            } elseif (!$id_product || !($product = new Product((int) $id_product, true, $this->context->language->id))) {
+            } elseif (!$id_product || !Validate::isLoadedObject($product = new Product((int) $id_product, true, $this->context->language->id))) {
                 $errors[] = $this->trans('Invalid product', [], 'Admin.Catalog.Notification');
             } elseif (!$qty || $qty == 0) {
                 $errors[] = $this->trans('Invalid quantity', [], 'Admin.Catalog.Notification');
@@ -517,10 +516,12 @@ class AdminCartsControllerCore extends AdminController
             if ($delivery_option !== false) {
                 $this->context->cart->setDeliveryOption([$this->context->cart->id_address_delivery => $delivery_option]);
             }
-            if (Validate::isBool(($recyclable = (int) Tools::getValue('recyclable')))) {
+            $recyclable = (int) Tools::getValue('recyclable');
+            if (Validate::isBool($recyclable)) {
                 $this->context->cart->recyclable = $recyclable;
             }
-            if (Validate::isBool(($gift = (int) Tools::getValue('gift')))) {
+            $gift = (int) Tools::getValue('gift');
+            if (Validate::isBool($gift)) {
                 $this->context->cart->gift = $gift;
             }
             if (Validate::isMessage(($gift_message = pSQL(Tools::getValue('gift_message'))))) {
@@ -672,13 +673,13 @@ class AdminCartsControllerCore extends AdminController
     {
         if ($this->access('edit')) {
             if (($id_address_delivery = (int) Tools::getValue('id_address_delivery')) &&
-                ($address_delivery = new Address((int) $id_address_delivery)) &&
+                Validate::isLoadedObject($address_delivery = new Address((int) $id_address_delivery)) &&
                 $address_delivery->id_customer == $this->context->cart->id_customer) {
                 $this->context->cart->id_address_delivery = (int) $address_delivery->id;
             }
 
             if (($id_address_invoice = (int) Tools::getValue('id_address_invoice')) &&
-                ($address_invoice = new Address((int) $id_address_invoice)) &&
+                Validate::isLoadedObject($address_invoice = new Address((int) $id_address_invoice)) &&
                 $address_invoice->id_customer = $this->context->cart->id_customer) {
                 $this->context->cart->id_address_invoice = (int) $address_invoice->id;
             }
@@ -916,11 +917,6 @@ class AdminCartsControllerCore extends AdminController
         $context->customer = new Customer((int) $context->cart->id_customer);
 
         return Cart::getTotalCart($id_cart, true, Cart::BOTH_WITHOUT_SHIPPING);
-    }
-
-    public static function replaceZeroByShopName($echo, $tr)
-    {
-        return $echo == '0' ? Carrier::getCarrierNameFromShopName() : $echo;
     }
 
     public function displayDeleteLink($token, $id, $name = null)

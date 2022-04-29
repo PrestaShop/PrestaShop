@@ -35,8 +35,10 @@ class ModuleFrontControllerCore extends FrontController
     public function __construct()
     {
         $this->module = Module::getInstanceByName(Tools::getValue('module'));
-        if (!$this->module->active) {
+        if (!($this->module instanceof Module) || !$this->module->active) {
             Tools::redirect('index');
+
+            return;
         }
 
         $this->page_name = 'module-' . $this->module->name . '-' . Dispatcher::getInstance()->getController();
@@ -92,10 +94,6 @@ class ModuleFrontControllerCore extends FrontController
      */
     protected function l($string, $specific = false, $class = null, $addslashes = false, $htmlentities = true)
     {
-        if (isset($this->module) && is_a($this->module, 'Module')) {
-            return $this->module->l($string, $specific);
-        } else {
-            return $string;
-        }
+        return $this->module->l($string, $specific);
     }
 }

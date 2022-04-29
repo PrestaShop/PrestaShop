@@ -136,7 +136,6 @@ class MediaCore
             try {
                 $jsContent = JSMin::minify($jsContent);
             } catch (Exception $e) {
-                /* @phpstan-ignore-next-line */
                 if (_PS_MODE_DEV_) {
                     echo $e->getMessage();
                 }
@@ -227,7 +226,7 @@ class MediaCore
      * @param string $cssMediaType
      * @param bool $needRtl
      *
-     * @return string
+     * @return bool|array<string, string>
      */
     public static function getCSSPath($cssUri, $cssMediaType = 'all', $needRtl = true)
     {
@@ -249,7 +248,7 @@ class MediaCore
      * @param array|string|null $mediaUri
      * @param string|null $cssMediaType
      *
-     * @return array|bool|mixed|string
+     * @return bool|string|array<string, string>
      */
     public static function getMediaPath($mediaUri, $cssMediaType = null)
     {
@@ -258,12 +257,12 @@ class MediaCore
         }
 
         $urlData = parse_url($mediaUri);
-        if (!is_array($urlData)) {
+        if (!is_array($urlData) || !array_key_exists('path', $urlData)) {
             return false;
         }
 
         if (!array_key_exists('host', $urlData)) {
-            $mediaUri = '/' . ltrim(str_replace(str_replace(['/', '\\'], DIRECTORY_SEPARATOR, _PS_ROOT_DIR_), __PS_BASE_URI__, $mediaUri), '/\\');
+            $mediaUri = '/' . ltrim(str_replace(str_replace(['/', '\\'], DIRECTORY_SEPARATOR, _PS_ROOT_DIR_), __PS_BASE_URI__, $urlData['path']), '/\\');
             // remove PS_BASE_URI on _PS_ROOT_DIR_ for the following
             $fileUri = _PS_ROOT_DIR_ . Tools::str_replace_once(__PS_BASE_URI__, DIRECTORY_SEPARATOR, $mediaUri);
             if (!file_exists($fileUri) || !@filemtime($fileUri) || @filesize($fileUri) === 0) {
@@ -271,6 +270,9 @@ class MediaCore
             }
 
             $mediaUri = str_replace('//', '/', $mediaUri);
+            if (array_key_exists('query', $urlData)) {
+                $mediaUri .= '?' . $urlData['query'];
+            }
         }
 
         if ($cssMediaType) {
@@ -300,10 +302,10 @@ class MediaCore
         if (isset(Media::$jquery_ui_dependencies[$component]) && Media::$jquery_ui_dependencies[$component]['theme'] && $checkDependencies) {
             $themeCss = Media::getCSSPath($folder . 'themes/' . $theme . '/jquery.ui.theme.css');
             $compCss = Media::getCSSPath($folder . 'themes/' . $theme . '/jquery.' . $component . '.css');
-            if (!empty($themeCss) || $themeCss) {
+            if (!empty($themeCss)) {
                 $uiPath['css'] = array_merge($uiPath['css'], $themeCss);
             }
-            if (!empty($compCss) || $compCss) {
+            if (!empty($compCss)) {
                 $uiPath['css'] = array_merge($uiPath['css'], $compCss);
             }
         }
@@ -314,7 +316,7 @@ class MediaCore
                     $depCss = Media::getCSSPath($folder . 'themes/' . $theme . '/jquery.' . $dependency . '.css');
                 }
 
-                if (isset($depCss) && (!empty($depCss) || $depCss)) {
+                if (isset($depCss) && !empty($depCss)) {
                     $uiPath['css'] = array_merge($uiPath['css'], $depCss);
                 }
             }
@@ -358,7 +360,7 @@ class MediaCore
      * @param mixed $name
      * @param string|null $folder
      *
-     * @return bool|array<string, bool|string>
+     * @return bool|array{js: string, css: array<string, string>}
      */
     public static function getJqueryPluginPath($name, $folder = null)
     {
@@ -389,7 +391,7 @@ class MediaCore
      * @param mixed $name
      * @param string|null $folder
      *
-     * @return bool|string
+     * @return bool|array<string, string>
      */
     public static function getJqueryPluginCSSPath($name, $folder = null)
     {
@@ -792,7 +794,12 @@ class MediaCore
         $inline = isset($matches[2]) ? trim($matches[2]) : '';
 
         /* This is an inline script, add its content to inline scripts stack then remove it from content */
-        if (!empty($inline) && preg_match(Media::$pattern_js, $original) !== false && !preg_match('/' . Media::$pattern_keepinline . '/', $original) && Media::$inline_script[] = $inline) {
+        if (!empty($inline)
+            && preg_match(Media::$pattern_js, $original) !== false
+            && !preg_match('/' . Media::$pattern_keepinline . '/', $original)
+        ) {
+            Media::$inline_script[] = $inline;
+
             return '';
         }
         /* This is an external script, if it already belongs to js_files then remove it from content */

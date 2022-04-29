@@ -47,6 +47,7 @@ GitHub contributors:
 - Alphacom IT Solutions - Macedonia
 - amatosg
 - Amazzing
+- Amoifr
 - Anas Mammeri
 - anat
 - Anatole
@@ -176,6 +177,7 @@ GitHub contributors:
 - David Gasperoni
 - David G. Casini
 - David Gonzalez
+- David Oury
 - David Sivocha
 - David-Julian BUCH
 - Davide
@@ -456,6 +458,7 @@ GitHub contributors:
 - Magicalname
 - mahdi
 - Mahdi Shad
+- Mahmoud Parvazi
 - Mainmich
 - makk1ntosh
 - makoso
@@ -825,9 +828,11 @@ GitHub contributors:
 - vinzter
 - Vitaly Kondratiev
 - vitekj
+- vladikk007
 - Vladimir
 - vmamykin
 - Wayann
+- Web Helpers Pau
 - Web Premiere
 - web-plus
 - webbax

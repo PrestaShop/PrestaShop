@@ -32,6 +32,8 @@ use PrestaShop\PrestaShop\Core\Session\SessionInterface;
  * @property int $id_customer
  * @property int $id_employee
  * @property int $id_lang
+ * @property int $id_guest
+ * @property int|null $id_connections
  * @property bool $is_guest
  * @property bool $logged
  * @property string $passwd
@@ -131,9 +133,13 @@ class CookieCore
      */
     protected function getDomain($shared_urls = null)
     {
-        $r = '!(?:(\w+)://)?(?:(\w+)\:(\w+)@)?([^/:]+)?(?:\:(\d*))?([^#?]+)?(?:\?([^#]+))?(?:#(.+$))?!i';
+        $httpHost = Tools::getHttpHost(false, false);
+        if (!$httpHost) {
+            return false;
+        }
 
-        if (!preg_match($r, Tools::getHttpHost(false, false), $out) || !isset($out[4])) {
+        $r = '!(?:(\w+)://)?(?:(\w+)\:(\w+)@)?([^/:]+)?(?:\:(\d*))?([^#?]+)?(?:\?([^#]+))?(?:#(.+$))?!i';
+        if (!preg_match($r, $httpHost, $out)) {
             return false;
         }
 
@@ -142,7 +148,7 @@ class CookieCore
             '{2}((25[0-5]|2[0-4][0-9]|[1]{1}[0-9]{2}|[1-9]{1}[0-9]|[0-9]){1}))$/', $out[4])) {
             return false;
         }
-        if (!strstr(Tools::getHttpHost(false, false), '.')) {
+        if (!strstr($httpHost, '.')) {
             return false;
         }
 
@@ -375,10 +381,10 @@ class CookieCore
             [
                 'expires' => $time,
                 'path' => $this->_path,
-                'domain' => $this->_domain,
+                'domain' => (string) $this->_domain,
                 'secure' => $this->_secure,
                 'httponly' => true,
-                'samesite' => $this->_sameSite,
+                'samesite' => in_array((string) $this->_sameSite, static::SAMESITE_AVAILABLE_VALUES) ? (string) $this->_sameSite : static::SAMESITE_NONE,
             ]
         );
     }
@@ -552,6 +558,9 @@ class CookieCore
         }
 
         if (isset($session) && Validate::isLoadedObject($session)) {
+            // Update session date_upd
+            $session->save();
+
             return $session;
         }
 

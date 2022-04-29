@@ -501,7 +501,7 @@ final class CategoryImportHandler extends AbstractImportHandler
                     [
                         !empty($categoryName) ? $this->tools->sanitize($categoryName) : 'No Name',
                         !empty($categoryId) ? $this->tools->sanitize((string) $categoryId) : 'No ID',
-                        $runtimeConfig->shouldValidateData() ? 'validated' : 'saved',
+                        'saved',
                     ],
                     'Admin.Advparameters.Notification'
                 )
@@ -528,7 +528,11 @@ final class CategoryImportHandler extends AbstractImportHandler
                 }
 
                 // Get shops for each attributes
-                $shopData = explode($importConfig->getMultipleValueSeparator(), $shopData);
+                $multipleValueSeparator = $importConfig->getMultipleValueSeparator();
+                if (empty($multipleValueSeparator)) {
+                    return;
+                }
+                $shopData = explode($multipleValueSeparator, $shopData);
 
                 foreach ($shopData as $shop) {
                     if (!empty($shop)) {

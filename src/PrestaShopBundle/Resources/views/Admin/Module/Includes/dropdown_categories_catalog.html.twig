@@ -33,14 +33,13 @@
     </div>
 
     <div class="ps-dropdown-menu dropdown-menu module-category-selector items-list js-items-list" aria-labelledby="{{refMenu}}">
-        <a class="dropdown-item module-category-reset">
+        <a class="dropdown-item module-category-menu module-category-reset">
           {{ 'All categories'|trans({}, 'Admin.Modules.Feature') }}
         </a>
 
         {% for subMenu in menu.subMenu %}
           <a 
-            class="dropdown-item" 
-            class="module-category-menu"
+            class="dropdown-item module-category-menu"
             {% if subMenu.tab %}data-category-tab="{{subMenu.tab}}"{% endif %}
             data-category-ref="{{subMenu.refMenu}}"
             data-category-display-name="{{subMenu.name}}"

@@ -82,7 +82,7 @@ class WarehouseProductLocationCore extends ObjectModel
      * @param int $id_product_attribute product attribute ID
      * @param int $id_warehouse warehouse ID
      *
-     * @return string $location Location of the product
+     * @return string|false $location Location of the product
      */
     public static function getProductLocation($id_product, $id_product_attribute, $id_warehouse)
     {

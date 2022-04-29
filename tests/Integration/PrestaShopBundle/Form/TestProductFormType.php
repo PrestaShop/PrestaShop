@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace Tests\Integration\PrestaShopBundle\Form;
 
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
+use PrestaShopBundle\Form\Admin\Type\UnavailableType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -48,15 +49,24 @@ class TestProductFormType extends CommonAbstractType
             ->add('stock', FormType::class)
             ->add('shipping', FormType::class)
             ->add('options', FormType::class)
+            ->add('pricing', FormType::class)
         ;
 
-        $stock = $builder->get('stock');
-        $stock->add('pack_stock_type', ChoiceType::class);
-        $stock->add('virtual_product_file', FormType::class);
-        $stock->add('quantities', FormType::class);
-        $quantities = $stock->get('quantities');
-        $quantities->add('stock_movements', FormType::class);
+        $stockForm = $builder->get('stock');
+        $stockForm->add('pack_stock_type', ChoiceType::class);
+        $stockForm->add('virtual_product_file', FormType::class);
+        $stockForm->add('quantities', FormType::class);
 
-        $builder->get('options')->add('suppliers', ChoiceType::class);
+        $quantitiesForm = $stockForm->get('quantities');
+        $quantitiesForm->add('stock_movements', FormType::class);
+
+        $optionsForm = $builder->get('options');
+        $optionsForm->add('suppliers', ChoiceType::class);
+
+        $pricingForm = $builder->get('pricing');
+        $pricingForm->add('retail_price', FormType::class);
+
+        $retailPricingForm = $pricingForm->get('retail_price');
+        $retailPricingForm->add('ecotax', UnavailableType::class);
     }
 }

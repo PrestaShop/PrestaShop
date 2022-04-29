@@ -29,6 +29,9 @@ use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 
 class SupplierControllerCore extends ProductListingFrontController
 {
+    /**
+     * @var string
+     */
     public $php_self = 'supplier';
 
     /** @var Supplier */
@@ -42,6 +45,15 @@ class SupplierControllerCore extends ProductListingFrontController
         } elseif ($canonicalURL) {
             parent::canonicalRedirection($canonicalURL);
         }
+    }
+
+    public function getCanonicalURL(): string
+    {
+        if (Validate::isLoadedObject($this->supplier)) {
+            return $this->buildPaginatedUrl($this->context->link->getSupplierLink($this->supplier));
+        }
+
+        return $this->context->link->getPageLink('supplier');
     }
 
     /**

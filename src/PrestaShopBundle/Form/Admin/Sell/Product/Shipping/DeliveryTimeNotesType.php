@@ -52,6 +52,7 @@ class DeliveryTimeNotesType extends TranslatorAwareType
                     ],
                 ],
                 'help' => $this->trans('Leave empty to disable', 'Admin.Catalog.Help'),
+                'modify_all_shops' => true,
             ])
             ->add('out_of_stock', TranslatableType::class, [
                 'locales' => $this->locales,
@@ -66,6 +67,7 @@ class DeliveryTimeNotesType extends TranslatorAwareType
                     ],
                 ],
                 'help' => $this->trans('Leave empty to disable', 'Admin.Catalog.Help'),
+                'modify_all_shops' => true,
             ])
         ;
     }
