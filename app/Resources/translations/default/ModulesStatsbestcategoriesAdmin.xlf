@@ -42,6 +42,11 @@
         <target>Display final level categories only (that have no child categories)</target>
         <note>Line: 135</note>
       </trans-unit>
+      <trans-unit id="efd1f3467075b955ccc919213a3e3fc2">
+        <source>Enrich your stats, add a list of the best selling categories to the dashboard.</source>
+        <target>Enrich your stats, add a list of the best selling categories to the dashboard.</target>
+        <note>Line: 90</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -5,7 +5,7 @@
       <trans-unit id="e265492707dd0595fd1f399bb8a2690e">
         <source>: </source>
         <target>:</target>
-        <note>Line: 1225</note>
+        <note>Line: 1228</note>
       </trans-unit>
     </body>
   </file>
@@ -46,7 +46,7 @@
       <trans-unit id="cf3bae95c5f6023d5a10fe415b205a45">
         <source>Credit slip</source>
         <target>Credit slip</target>
-        <note>Line: 84</note>
+        <note>Line: 86</note>
       </trans-unit>
     </body>
   </file>
@@ -220,22 +220,22 @@
       <trans-unit id="068f80c7519d0528fb08e82137a72131">
         <source>Products</source>
         <target>Products</target>
-        <note>Line: 59</note>
+        <note>Line: 62</note>
       </trans-unit>
       <trans-unit id="ea9cf7e47ff33b2be14e6dd07cbcefc6">
         <source>Shipping</source>
         <target>Shipping</target>
-        <note>Line: 61</note>
+        <note>Line: 64</note>
       </trans-unit>
       <trans-unit id="e92cfa244b5eb9025d07522080468445">
         <source>Ecotax</source>
         <target>Ecotax</target>
-        <note>Line: 63</note>
+        <note>Line: 66</note>
       </trans-unit>
       <trans-unit id="ba794350deb07c0c96fe73bd12239059">
         <source>Wrapping</source>
         <target>Wrapping</target>
-        <note>Line: 65</note>
+        <note>Line: 68</note>
       </trans-unit>
       <trans-unit id="8fe77c2601e54f1aaef28cfde997bbad">
         <source>Tax Rate</source>
@@ -245,7 +245,7 @@
       <trans-unit id="baf5d10866a7a240830dcf34f29d2d11">
         <source>No taxes</source>
         <target>No taxes</target>
-        <note>Line: 93</note>
+        <note>Line: 96</note>
       </trans-unit>
     </body>
   </file>

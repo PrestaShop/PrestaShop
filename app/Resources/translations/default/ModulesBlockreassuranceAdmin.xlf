@@ -40,7 +40,7 @@
       <trans-unit id="bb8956c67b82c7444a80c6b2433dd8b4">
         <source>Are you sure you want to uninstall this module?</source>
         <target>Are you sure you want to uninstall this module?</target>
-        <note>Line: 134
+        <note>Line: 128
 Comment: Confirm uninstall</note>
       </trans-unit>
       <trans-unit id="b910df7ea2e47820d60286ba15a8b9d0">
@@ -56,37 +56,52 @@ Comment: Confirm uninstall</note>
       <trans-unit id="a596edf2f0e5ae9c2372c93e1c8fcc24">
         <source>Block updated</source>
         <target>Block updated</target>
-        <note>Line: 540</note>
+        <note>Line: 512</note>
       </trans-unit>
       <trans-unit id="f2f5589389027c1c6d63d2cec51afde5">
         <source>Oops... looks like an error occurred</source>
         <target>Oops... looks like an error occurred</target>
-        <note>Line: 541</note>
+        <note>Line: 513</note>
       </trans-unit>
       <trans-unit id="da755c5b9609e21d2f7c0e542fa02cf0">
         <source>Configuration updated successfully!</source>
         <target>Configuration updated successfully!</target>
-        <note>Line: 543</note>
+        <note>Line: 515</note>
       </trans-unit>
       <trans-unit id="81f6a0f1aaedeb8d2c35617f53c90aaa">
         <source>Position changed successfully!</source>
         <target>Position changed successfully!</target>
-        <note>Line: 544</note>
+        <note>Line: 516</note>
       </trans-unit>
       <trans-unit id="939d7906a02e747900bc9a6e06109e06">
         <source>An error occurred when switching position</source>
         <target>An error occurred when switching position</target>
-        <note>Line: 545</note>
+        <note>Line: 517</note>
       </trans-unit>
       <trans-unit id="70b2e27535936ea2fa3ce0c4304c79e8">
         <source>Customer Reassurance</source>
         <target>Customer Reassurance</target>
-        <note>Line: 115</note>
+        <note>Line: 109</note>
       </trans-unit>
       <trans-unit id="061843bf9a4b68c61f7e089864b1fe9e">
         <source>An error occurred when removing block</source>
         <target>An error occurred when removing block</target>
-        <note>Line: 547</note>
+        <note>Line: 519</note>
+      </trans-unit>
+      <trans-unit id="192332ef84898cf4767aba2dcff943bb">
+        <source>Connect with your visitors and reassure them about secure payment, free shipping or returns.</source>
+        <target>Connect with your visitors and reassure them about secure payment, free shipping or returns.</target>
+        <note>Line: 110</note>
+      </trans-unit>
+      <trans-unit id="d03fb13005d37ac587f1cb34820d5a96">
+        <source><![CDATA[There was an error during the installation. Please <a href="https://github.com/PrestaShop/PrestaShop/issues">open an issue</a> on the PrestaShop project.]]></source>
+        <target><![CDATA[There was an error during the installation. Please <a href="https://github.com/PrestaShop/PrestaShop/issues">open an issue</a> on the PrestaShop project.]]></target>
+        <note>Line: 201</note>
+      </trans-unit>
+      <trans-unit id="4d4c97ef363b13e25f8e13042493f1fe">
+        <source><![CDATA[There was an error during the uninstallation. Please <a href="https://github.com/PrestaShop/PrestaShop/issues">open an issue</a> on the PrestaShop project.]]></source>
+        <target><![CDATA[There was an error during the uninstallation. Please <a href="https://github.com/PrestaShop/PrestaShop/issues">open an issue</a> on the PrestaShop project.]]></target>
+        <note>Line: 231</note>
       </trans-unit>
     </body>
   </file>

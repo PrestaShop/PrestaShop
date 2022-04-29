@@ -207,7 +207,7 @@ File: themes/StarterTheme/templates/checkout/_partials/steps/payment.tpl:115</no
       <trans-unit id="c91e4ee170226d66e90f99ba917e4c20">
         <source>Quick view</source>
         <target>Quick view</target>
-        <note>Line: 104</note>
+        <note>Line: 57</note>
       </trans-unit>
     </body>
   </file>
