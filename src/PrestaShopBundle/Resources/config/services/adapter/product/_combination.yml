@@ -92,6 +92,12 @@ services:
       - '@prestashop.adapter.product.combination.validate.combination_validator'
       - '@prestashop.core.grid.query_builder.product_combination'
 
+  prestashop.adapter.product.combination.repository.combination_multi_shop_repository:
+    class: PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationMultiShopRepository
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+
   prestashop.adapter.product.combination.update.combination_stock_updater:
     class: PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater
     arguments:
@@ -115,7 +121,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationDeleter
     arguments:
       - '@prestashop.adapter.product.repository.product_repository'
-      - '@prestashop.adapter.product.combination.repository.combination_repository'
+      - '@prestashop.adapter.product.combination.repository.combination_multi_shop_repository'
       - '@prestashop.adapter.product.combination.update.default_combination_updater'
 
   prestashop.adapter.product.combination.update.combination_images_updater:
