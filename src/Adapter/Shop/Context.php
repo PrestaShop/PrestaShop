@@ -160,7 +160,6 @@ class Context implements MultistoreContextCheckerInterface, ShopContextInterface
 
     /**
      * Update Multishop context to global context
-     *
      */
     public function setAllContext()
     {
