@@ -69,6 +69,14 @@
             </div>
               {{ form_widget(categories) }}
           </div>
+          {% if selected_category is defined and selected_category is not null %}
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              onclick="productCategoryFilterReset($('div#product_catalog_category_tree_filter'));">
+              {{ 'Reset categories filter'|trans({}, 'Admin.Actions') }}
+            </button>
+          {% endif %}
         </div>
       {% endblock %}
 
