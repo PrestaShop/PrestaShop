@@ -33,7 +33,7 @@ use Customer;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
-use PrestaShopBundle\Install\DatabaseDump;
+use Tests\Resources\DatabaseDump;
 use Tools;
 
 class CartRuleTest extends TestCase

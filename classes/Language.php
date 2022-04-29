@@ -142,6 +142,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 
     public static function resetStaticCache()
     {
+        parent::resetStaticCache();
         static::$loaded_classes = [];
         static::resetCache();
     }

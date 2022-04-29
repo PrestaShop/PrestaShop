@@ -34,18 +34,19 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintExcepti
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
-use PrestaShopBundle\Install\DatabaseDump;
 use Product;
 use RuntimeException;
-use Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext;
 use Tests\Integration\Behaviour\Features\Transform\LocalizedArrayTransformContext;
+use Tests\Resources\DatabaseDump;
+use Tests\Resources\LanguageResetter;
+use Tests\Resources\ProductResetter;
 
 class CommonProductFeatureContext extends AbstractProductFeatureContext
 {
     /**
-     * @todo: since product suite is the only one that has been properly optimized for now it is less resilient then
+     * @todo: since product suite is the only one that has been properly optimized for now it is less resilient than
      *        other suites which simply restore all tables. Each suite should be responsible for cleaning up its mess
-     *        but since it's not the case for now product suite needs to restore the DB itself.
+     *        but since it's not the case for now product suite needs to restore the full DB itself.
      *
      * @BeforeSuite
      */
@@ -59,8 +60,8 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
      */
     public static function restoreProductTablesAfterSuite(): void
     {
-        self::restoreProductTables();
-        LanguageFeatureContext::restoreLanguagesTablesAfterFeature();
+        ProductResetter::resetProducts();
+        LanguageResetter::resetLanguages();
     }
 
     /**
@@ -68,51 +69,7 @@ class CommonProductFeatureContext extends AbstractProductFeatureContext
      */
     public static function restoreProductTablesBeforeFeature(): void
     {
-        self::restoreProductTables();
-    }
-
-    private static function restoreProductTables(): void
-    {
-        DatabaseDump::restoreTables([
-            // Product data
-            'product',
-            'product_attachment',
-            'product_attribute',
-            'product_attribute_combination',
-            'product_attribute_image',
-            'product_attribute_shop',
-            'product_carrier',
-            'product_country_tax',
-            'product_download',
-            'product_group_reduction_cache',
-            'product_lang',
-            'product_sale',
-            'product_shop',
-            'product_supplier',
-            'product_tag',
-            // Related products
-            'accessory',
-            // Packs
-            'pack',
-            // Customizations
-            'customization',
-            'customization_field',
-            'customization_field_lang',
-            'customized_data',
-            // Specific prices
-            'specific_price',
-            // Stock
-            'stock_available',
-            'stock_mvt',
-            // Images
-            'image',
-            'image_lang',
-            'image_shop',
-            // Miscellaneous relationships
-            'category_product',
-            'feature_product',
-            'warehouse_product_location',
-        ]);
+        ProductResetter::resetProducts();
     }
 
     /**

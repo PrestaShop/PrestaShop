@@ -1843,12 +1843,12 @@ class OrderController extends FrameworkBundleAdminController
             ]);
         } catch (ProductSearchEmptyPhraseException $e) {
             return $this->json(
-                [$e, 'message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
+                ['message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
                 Response::HTTP_BAD_REQUEST
             );
         } catch (Exception $e) {
             return $this->json(
-                [$e, 'message' => $this->getErrorMessageForException($e, [])],
+                ['message' => $this->getErrorMessageForException($e, [])],
                 Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
@@ -1894,7 +1894,14 @@ class OrderController extends FrameworkBundleAdminController
         }
 
         return [
-            CannotEditDeliveredOrderProductException::class => $this->trans('You cannot edit the cart once the order delivered.', 'Admin.Orderscustomers.Notification'),
+            ProductSearchEmptyPhraseException::class => $this->trans(
+                'Product search phrase must not be an empty string.',
+                'Admin.Orderscustomers.Notification'
+            ),
+            CannotEditDeliveredOrderProductException::class => $this->trans(
+                'You cannot edit the cart once the order delivered.',
+                'Admin.Orderscustomers.Notification'
+            ),
             OrderNotFoundException::class => $e instanceof OrderNotFoundException ?
                 $this->trans(
                     'Order #%d cannot be loaded.',

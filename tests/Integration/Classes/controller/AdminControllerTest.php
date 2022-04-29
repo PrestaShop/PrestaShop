@@ -36,6 +36,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\EntityMapper;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
+use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container as LegacyContainer;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\LocaleRepository;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
@@ -47,35 +48,43 @@ use Shop;
 use Smarty;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Translation\Translator;
+use Tests\Integration\Utility\ContextMockerTrait;
 use Tools;
 
 class AdminControllerTest extends TestCase
 {
+    use ContextMockerTrait;
+
     /**
-     * @var Context|null
+     * @var Container|null
      */
-    private $context;
+    private $savedContainer;
+
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+        self::declareRequiredConstants();
+        self::requireAliasesFunctions();
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+        Tools::resetRequest();
+    }
 
     protected function setUp(): void
     {
-        $this->declareRequiredConstants();
-        $this->requireAliasesFunctions();
+        self::mockContext();
+        $this->adaptMockContext(self::getMockedContext());
 
-        $this->context = Context::getContext();
-        Context::setInstanceForTesting($this->getMockContext());
-
+        $this->savedContainer = ServiceLocator::getContainer();
         ServiceLocator::setServiceContainerInstance($this->getMockLegacyContainer());
     }
 
     protected function tearDown(): void
     {
-        Context::setInstanceForTesting($this->context);
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        Tools::resetRequest();
+        ServiceLocator::setServiceContainerInstance($this->savedContainer);
     }
 
     /**
@@ -143,7 +152,7 @@ class AdminControllerTest extends TestCase
         ];
     }
 
-    private function declareRequiredConstants(): void
+    private static function declareRequiredConstants(): void
     {
         $configuration = require_once _PS_CACHE_DIR_ . 'appParameters.php';
 
@@ -181,11 +190,6 @@ class AdminControllerTest extends TestCase
         }
     }
 
-    private function getMockTranslator(): Translator
-    {
-        return $this->getMockBuilder(Translator::class)->disableOriginalConstructor()->getMock();
-    }
-
     private function getMockSmarty(): Smarty
     {
         $mockSmarty = $this->getMockBuilder(Smarty::class)->getMock();
@@ -210,7 +214,7 @@ class AdminControllerTest extends TestCase
         return $mockEmployee;
     }
 
-    private function requireAliasesFunctions(): void
+    private static function requireAliasesFunctions(): void
     {
         require_once dirname(__DIR__, 4) . '/config/alias.php';
     }
@@ -256,18 +260,9 @@ class AdminControllerTest extends TestCase
         return $mockContainerBuilder;
     }
 
-    private function getMockContext(): Context
+    private function adaptMockContext(Context $mockContext): Context
     {
-        $mockContext = $this->getMockBuilder(Context::class)->getMock();
-
-        $mockContext->method('getTranslator')->willReturn(
-            $this->getMockTranslator()
-        );
-        $mockContext->method('getDevice')->willReturn(null);
-        $mockContext->method('getCurrentLocale')->willReturn(
-            $this->getMockLocale()
-        );
-
+        $mockContext->currentLocale = $this->getMockLocale();
         $mockContext->smarty = $this->getMockSmarty();
         $mockContext->employee = $this->getMockEmployee();
         $mockContext->language = $this->getMockLanguage();

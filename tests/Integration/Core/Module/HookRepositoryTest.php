@@ -26,45 +26,30 @@
 
 namespace Tests\Integration\Core\Module;
 
-use Context;
 use Db;
 use PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider;
 use PrestaShop\PrestaShop\Core\Module\HookRepository;
-use Shop;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Tests\Integration\Utility\ContextMockerTrait;
 
 class HookRepositoryTest extends KernelTestCase
 {
+    use ContextMockerTrait;
+
     /**
      * @var HookRepository
      */
     private $hookRepository;
 
-    /**
-     * @var Context
-     */
-    protected $context;
-
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->context = Context::getContext();
-        Context::setInstanceForTesting($this->getMockContext());
-
         $this->hookRepository = new HookRepository(
             new HookInformationProvider(),
-            Context::getContext()->shop,
+            self::getContext()->shop,
             Db::getInstance()
         );
-    }
-
-    protected function getMockContext(): Context
-    {
-        $mockContext = $this->getMockBuilder(Context::class)->getMock();
-        $mockContext->shop = $this->getMockBuilder(Shop::class)->getMock();
-
-        return $mockContext;
     }
 
     public function testPersistAndRetrieve(): void

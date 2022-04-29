@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Command\EditRootCategoryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CannotEditRootCategoryException;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundException;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Tests\Resources\DatabaseDump;
 
 class EditRootCategoryHandlerTest extends KernelTestCase
 {
@@ -43,6 +44,29 @@ class EditRootCategoryHandlerTest extends KernelTestCase
      * @var int
      */
     private $rootCategory;
+
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+        static::resetDatabase();
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+        static::resetDatabase();
+    }
+
+    protected static function resetDatabase(): void
+    {
+        DatabaseDump::restoreTables([
+            'category',
+            'category_lang',
+            'category_group',
+            'category_shop',
+            'layered_category',
+        ]);
+    }
 
     protected function setUp(): void
     {

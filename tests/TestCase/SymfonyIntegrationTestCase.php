@@ -26,10 +26,10 @@
 
 namespace Tests\TestCase;
 
-use PrestaShopBundle\Install\DatabaseDump;
 use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Tests\Integration\Utility\ContextMocker;
+use Tests\Resources\DatabaseDump;
 
 class SymfonyIntegrationTestCase extends WebTestCase
 {
@@ -74,6 +74,6 @@ class SymfonyIntegrationTestCase extends WebTestCase
 
     private static function restoreTestDB(): void
     {
-        DatabaseDump::restoreDb();
+        DatabaseDump::restoreAllTables();
     }
 }

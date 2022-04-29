@@ -37,13 +37,13 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\SearchShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Query\SearchShops;
 use PrestaShop\PrestaShop\Core\Domain\Shop\QueryResult\FoundShop;
 use PrestaShop\PrestaShop\Core\Domain\Shop\QueryResult\FoundShopGroup;
-use PrestaShopBundle\Install\DatabaseDump;
 use RuntimeException;
 use Shop;
 use ShopGroup;
 use ShopUrl;
 use Tests\Integration\Behaviour\Features\Context\Domain\AbstractDomainFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
+use Tests\Resources\DatabaseDump;
 
 class ShopFeatureContext extends AbstractDomainFeatureContext
 {

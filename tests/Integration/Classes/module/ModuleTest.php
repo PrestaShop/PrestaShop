@@ -30,9 +30,23 @@ use Cache;
 use Module;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use Tests\Integration\Utility\ContextMockerTrait;
 
+/**
+ * These tests install and uninstalls modules causing the cache to be cleared. So it's better to run it isolated.
+ *
+ * @group isolatedProcess
+ */
 class ModuleTest extends TestCase
 {
+    use ContextMockerTrait;
+
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+        static::mockContext();
+    }
+
     /**
      * @return array a list of modules to control override features
      */
@@ -83,7 +97,6 @@ class ModuleTest extends TestCase
      */
     public function testGetRightListForModule(): void
     {
-        define('STDIN', true);
         ModuleManagerBuilder::getInstance()->build()->install('bankwire');
         $module = Module::getInstanceByName('bankwire');
         Cache::clean('hook_alias');

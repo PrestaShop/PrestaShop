@@ -43,9 +43,12 @@ use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Translation\Translator;
+use Tests\Integration\Utility\ContextMockerTrait;
 
 class FrameworkBundleAdminControllerTest extends WebTestCase
 {
+    use ContextMockerTrait;
+
     /**
      * @var Client
      */
@@ -64,6 +67,7 @@ class FrameworkBundleAdminControllerTest extends WebTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        self::mockContext();
 
         // Symfony
         self::bootKernel();

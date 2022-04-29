@@ -26,28 +26,33 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\Classes;
+namespace Tests\Resources;
 
-use PHPUnit\Framework\TestCase;
-use Product;
-use Tests\Integration\Utility\ContextMockerTrait;
+use Currency;
 
-class ProductTest extends TestCase
+class LocalizationPackResetter
 {
-    use ContextMockerTrait;
-
-    protected function setUp(): void
+    public static function resetLocalizationPacks(): void
     {
-        parent::setUp();
-        self::mockContext();
-    }
-
-    public function testSaveActiveRecordStyle(): void
-    {
-        $product = new Product(null, false, 1);
-        $product->name = 'A Product';
-        $product->price = 42.42;
-        $product->link_rewrite = 'a-product';
-        $this->assertTrue($product->save());
+        DatabaseDump::restoreTables([
+            'country',
+            'country_lang',
+            'country_shop',
+            'state',
+            'zone',
+            'zone_shop',
+            'tax',
+            'tax_lang',
+            'tax_rule',
+            'tax_rules_group',
+            'tax_rules_group_shop',
+            'currency',
+            'currency_lang',
+            'currency_shop',
+            'module_currency',
+        ]);
+        Currency::resetStaticCache();
+        LanguageResetter::resetLanguages();
+        ConfigurationResetter::resetConfiguration();
     }
 }

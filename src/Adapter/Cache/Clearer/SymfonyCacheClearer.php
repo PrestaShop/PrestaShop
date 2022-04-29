@@ -41,6 +41,8 @@ use Tools;
  */
 final class SymfonyCacheClearer implements CacheClearerInterface
 {
+    private $shutdownRegistered = false;
+
     /**
      * {@inheritdoc}
      */
@@ -55,6 +57,11 @@ final class SymfonyCacheClearer implements CacheClearerInterface
             return;
         }
 
+        if ($this->shutdownRegistered) {
+            return;
+        }
+
+        $this->shutdownRegistered = true;
         register_shutdown_function(function () use ($kernel) {
             // The cache may have been removed by Tools::clearSf2Cache, it happens during install
             // process, in which case we don't run the cache:clear command because it is not only
