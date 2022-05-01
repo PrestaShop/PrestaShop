@@ -43,7 +43,7 @@ class ApiNode
     /** @var string|null */
     private $name = null;
 
-    /** @var string|null */
+    /** @var mixed */
     private $value = null;
 
     /** @var array */
@@ -134,9 +134,9 @@ class ApiNode
     }
 
     /**
-     * @return string|null
+     * @return mixed
      */
-    public function getValue(): ?string
+    public function getValue()
     {
         return $this->value;
     }
@@ -182,11 +182,11 @@ class ApiNode
     }
 
     /**
-     * @param string|null $value
+     * @param mixed $value
      *
      * @return self
      */
-    public function setValue(?string $value): self
+    public function setValue($value): self
     {
         $this->value = $value;
 
