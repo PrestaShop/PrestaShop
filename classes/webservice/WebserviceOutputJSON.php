@@ -82,12 +82,22 @@ class WebserviceOutputJSONCore implements WebserviceOutputInterface
 
                 return $out;
             case ApiNode::TYPE_PARENT:
-                $out = [];
-                foreach ($apiNode->getNodes() as $node) {
-                    $out[$node->getName()] = $this->toJsonArray($node);
+                if (empty($apiNode->getNodes())) {
+                    $out = [];
+                    foreach ($apiNode->getAttributes() as $attributeName => $attributeValue) {
+                        if(strpos($attributeName, "xlink:") === 0){ //do not display xlink:href xml templates uris in JSON output
+                            continue;
+                        }
+                        $out[$attributeName] = $attributeValue;
+                    }
+                    return $out;
+                } else {
+                    $out = [];
+                    foreach ($apiNode->getNodes() as $node) {
+                        $out[$node->getName()] = $this->toJsonArray($node);
+                    }
+                    return $out;
                 }
-
-                return $out;
             default:    //unreachable
                 return '';
         }
