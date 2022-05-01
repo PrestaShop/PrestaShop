@@ -168,7 +168,7 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 return file_get_contents($this->imgToDisplay);
             }
         }
-        
+
         return '';
     }
 
