@@ -96,7 +96,7 @@ class CsvResponse extends StreamedResponse
      *
      * @return bool
      */
-    public function getIncludeHeaderRow()
+    public function isHeaderRowIncluded(): bool
     {
         return $this->includeHeaderRow;
     }
