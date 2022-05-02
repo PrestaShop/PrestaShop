@@ -90,7 +90,7 @@ class CsvResponse extends StreamedResponse
         $this->setFileName('export_' . date('Y-m-d_His') . '.csv');
         $this->headers->set('Content-Type', 'text/csv; charset=utf-8');
     }
-    
+
     /**
      * Returns true, if the header line should be exported.
      *
