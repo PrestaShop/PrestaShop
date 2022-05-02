@@ -1153,7 +1153,7 @@ abstract class PaymentModuleCore extends Module
                 );
             }
             $remainingValue = $cartRuleReductionAmountConverted - $values[$cartRule->reduction_tax ? 'tax_incl' : 'tax_excl'];
-            $remainingValue = Tools::ps_round($remainingValue, _PS_PRICE_COMPUTE_PRECISION_);
+            $remainingValue = Tools::ps_round($remainingValue, Context::getContext()->getComputingPrecision());
             if (count($order_list) == 1 && $remainingValue > 0 && $cartRule->partial_use == 1 && $cartRuleReductionAmountConverted > 0) {
                 // Create a new voucher from the original
                 $voucher = new CartRule((int) $cartRule->id); // We need to instantiate the CartRule without lang parameter to allow saving it
