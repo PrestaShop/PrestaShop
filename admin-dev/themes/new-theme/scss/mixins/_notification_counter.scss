@@ -7,7 +7,7 @@
   font-size: 0.625rem;
   line-height: 0.75rem;
   color: $white;
-  background: #f1b746;
+  background: map-get($alerts-second-colors, "danger");
   border: 0.125rem solid $white;
   @include border-radius(1rem);
 }
