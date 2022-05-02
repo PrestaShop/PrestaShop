@@ -87,7 +87,14 @@ class Password
         $length = mb_strlen($password, 'UTF-8');
 
         if ($this->minLength > $length || $length > $this->maxLength) {
-            throw new EmployeeConstraintException(sprintf('Employee password length must be between %s and %s', $this->minLength, $this->maxLength), EmployeeConstraintException::INVALID_PASSWORD);
+            throw new EmployeeConstraintException(
+                sprintf(
+                    'Employee password length must be between %d and %d',
+                    $this->minLength,
+                    $this->maxLength
+                ),
+                EmployeeConstraintException::INVALID_PASSWORD
+            );
         }
     }
 
