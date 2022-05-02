@@ -224,28 +224,6 @@ class SpecificPriceType extends TranslatorAwareType
                 'placeholder' => false,
                 'required' => false,
             ])
-            ->add('buttons', ButtonCollectionType::class, [
-                'buttons' => [
-                    'cancel' => [
-                        'type' => ButtonType::class,
-                        'group' => 'left',
-                        'options' => [
-                            'label' => $this->trans('Cancel', 'Admin.Global'),
-                            'attr' => [
-                                'class' => 'btn-secondary',
-                            ],
-                        ],
-                    ],
-                    'submit' => [
-                        'type' => SubmitType::class,
-                        'group' => 'right',
-                        'options' => [
-                            'label' => $this->trans('Save', 'Admin.Global'),
-                        ],
-                    ],
-                ],
-                'alignment' => 'justify',
-            ])
         ;
 
         if ($this->isMultishopEnabled) {

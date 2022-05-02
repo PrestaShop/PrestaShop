@@ -64,7 +64,7 @@ export default class SpecificPricesManager {
   }
 
   private initComponents() {
-    this.initSpecificPriceModal(this.productId, SpecificPriceMap.formModal, this.eventEmitter);
+    this.initSpecificPriceModal();
     new FormFieldDisabler({
       disablingInputSelector: PriorityMap.priorityTypeCheckboxesSelector,
       matchingValue: '0',
@@ -98,6 +98,8 @@ export default class SpecificPricesManager {
       formSelector: 'form[name="specific_price"]',
       formUrl,
       closable: true,
+      closeButtonLabel: 'close',
+      confirmButtonLabel: 'save',
       onFormLoaded: (form: HTMLElement, formData: JQuery.NameValuePair[] | null, dataAttributes: DOMStringMap | null): void => {
         // alert('form loaded');
       },
