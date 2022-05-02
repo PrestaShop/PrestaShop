@@ -34,10 +34,10 @@ use PrestaShop\PrestaShop\Core\Language\Pack\Loader\RemoteLanguagePackLoader;
 
 final class RemoteLanguagePackLoaderTest extends TestCase
 {
-    public function testGetLanguagePackUrl()
+    public function testGetLanguagePackUrl(): void
     {
         $version = '8.0.0';
-        $basePath = 'http://i18n.mekey.com';
+        $basePath = 'http://i18n.domain.tld';
         $packLoader = new RemoteLanguagePackLoader(Version::buildFromString($version), $basePath);
 
         $locale = 'fr-FR';
@@ -48,10 +48,10 @@ final class RemoteLanguagePackLoaderTest extends TestCase
         $this->assertTrue(filter_var($languagePackLangLocaleUrl, FILTER_VALIDATE_URL) !== false);
     }
 
-    public function testGetLanguagePackListUrl()
+    public function testGetLanguagePackListUrl(): void
     {
         $version = '8.0.0';
-        $basePath = 'http://i18n.mekey.com';
+        $basePath = 'http://i18n.domain.tld';
         $packLoader = new RemoteLanguagePackLoader(Version::buildFromString($version), $basePath);
 
         $languagePackLangListUrl = $packLoader->getLanguagePackListUrl();
@@ -61,7 +61,7 @@ final class RemoteLanguagePackLoaderTest extends TestCase
         $this->assertTrue(filter_var($languagePackLangListUrl, FILTER_VALIDATE_URL) !== false, "Invalid URL found for {$languagePackLangListUrl}");
     }
 
-    public function testGetLanguagePackUrlWithoutBasePath()
+    public function testGetLanguagePackUrlWithoutBasePath(): void
     {
         $version = '8.0.0';
         $packLoader = new RemoteLanguagePackLoader(Version::buildFromString($version));

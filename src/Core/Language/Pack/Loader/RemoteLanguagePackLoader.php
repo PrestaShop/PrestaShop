@@ -68,7 +68,7 @@ final class RemoteLanguagePackLoader implements LanguagePackLoaderInterface
      *
      * @return string requested URL
      */
-    public function getLanguagePackUrl(string $locale = null): string
+    public function getLanguagePackUrl(string $locale): string
     {
         $stringVersion = $this->version->getSemVersion();
 
@@ -91,8 +91,14 @@ final class RemoteLanguagePackLoader implements LanguagePackLoaderInterface
     public function getLanguagePackList()
     {
         $normalizedLink = $this->getLanguagePackListUrl();
+        // TODO : Don't trust network, remove direct `file_get_contents` call.
+        //        cf. https://github.com/PrestaShop/PrestaShop/issues/28766
         $jsonResponse = file_get_contents($normalizedLink);
-        $result = json_decode($jsonResponse, true) ?? [];
+
+        $result = [];
+        if ($jsonResponse) {
+            $result = json_decode($jsonResponse, true);
+        }
 
         return $result;
     }

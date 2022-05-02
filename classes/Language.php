@@ -604,9 +604,10 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             $result = Db::getInstance()->executeS('SHOW TABLES FROM `' . _DB_NAME_ . '`');
             $tableNameKey = 'Tables_in_' . _DB_NAME_;
 
+            $languageId = $this->getId();
             foreach ($result as $row) {
                 if (isset($row[$tableNameKey]) && !empty($row[$tableNameKey]) && preg_match('/_lang$/', $row[$tableNameKey])) {
-                    if (!Db::getInstance()->execute('DELETE FROM `' . $row[$tableNameKey] . '` WHERE `id_lang` = ' . $this->getId())) {
+                    if (!Db::getInstance()->execute('DELETE FROM `' . $row[$tableNameKey] . '` WHERE `id_lang` = ' . $languageId)) {
                         return false;
                     }
                 }
@@ -1190,10 +1191,25 @@ class LanguageCore extends ObjectModel implements LanguageInterface
     }
 
     /**
-     * @param mixed $version Unused parameter @deprecated since 8.0.0 and will be removed in next major version.
+     * Downloads, then installs/updates a language pack
+     *
+     * @param string $iso 2-letter language code
+     * @param mixed $version [deprecated since 8.0.0 - has no effect]
+     * @param array $params Optional parameters (@see self::checkAndAddLanguage()) - only used if $install is true
+     * @param bool $install [default=true] If false, update an existing language pack
      */
     public static function downloadAndInstallLanguagePack($iso, $version = null, $params = null, $install = true)
     {
+        if ($version !== null) {
+            @trigger_error(
+                sprintf(
+                    '$version parameter is unused in %s since 8.0.0. and has no effect.',
+                    __METHOD__
+                ),
+                E_USER_DEPRECATED
+            );
+        }
+
         if (!Validate::isLanguageIsoCode((string) $iso)) {
             return false;
         }
@@ -1216,6 +1232,16 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      */
     public static function downloadLanguagePack($iso, $version = null, &$errors = [])
     {
+        if ($version !== null) {
+            @trigger_error(
+                sprintf(
+                    '$version parameter is unused in %s since 8.0.0.',
+                    __METHOD__
+                ),
+                E_USER_DEPRECATED
+            );
+        }
+
         $iso = (string) $iso; // $iso often comes from xml and is a SimpleXMLElement
 
         $lang_pack = static::getLangDetails($iso);
@@ -1247,8 +1273,8 @@ class LanguageCore extends ObjectModel implements LanguageInterface
             return false;
         }
 
-        $language_pack_loader = new RemoteLanguagePackLoader(Version::buildFromString(_PS_VERSION_));
-        $url = $language_pack_loader->getLanguagePackUrl($locale);
+        $languagePackLoader = new RemoteLanguagePackLoader(Version::buildFromString(_PS_VERSION_));
+        $url = $languagePackLoader->getLanguagePackUrl($locale);
 
         $content = Tools::file_get_contents($url, false, null, static::PACK_DOWNLOAD_TIMEOUT);
 
