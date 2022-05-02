@@ -94,7 +94,7 @@ class CsvResponse extends StreamedResponse
     /**
      * Returns true, if the header line should be exported.
      *
-     * @return boolean
+     * @return bool
      */
     public function getIncludeHeaderRow()
     {
