@@ -4158,20 +4158,23 @@
         },
         {
             "name": "prestashop/blockreassurance",
-            "version": "v5.1.1",
+            "version": "v5.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/blockreassurance.git",
-                "reference": "7ec28ecf52fcc0ca9787a81edb00f9e7e85d4400"
+                "reference": "c33ba8e4eee14bb45675816155814ae7106d0981"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/blockreassurance/zipball/7ec28ecf52fcc0ca9787a81edb00f9e7e85d4400",
-                "reference": "7ec28ecf52fcc0ca9787a81edb00f9e7e85d4400",
+                "url": "https://api.github.com/repos/PrestaShop/blockreassurance/zipball/c33ba8e4eee14bb45675816155814ae7106d0981",
+                "reference": "c33ba8e4eee14bb45675816155814ae7106d0981",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.6.0"
+                "doctrine/cache": "^1.6",
+                "guzzlehttp/cache-subscriber": "^0.2.0",
+                "php": ">=5.6.0",
+                "symfony/css-selector": "^3.4 || ^4.4 || ^5.0"
             },
             "require-dev": {
                 "prestashop/php-dev-tools": "^3.4"
@@ -4200,9 +4203,9 @@
             "description": "PrestaShop module blockreassurance",
             "homepage": "https://github.com/PrestaShop/blockreassurance",
             "support": {
-                "source": "https://github.com/PrestaShop/blockreassurance/tree/v5.1.1"
+                "source": "https://github.com/PrestaShop/blockreassurance/tree/v5.1.0"
             },
-            "time": "2022-04-08T15:28:20+00:00"
+            "time": "2022-02-14T15:11:34+00:00"
         },
         {
             "name": "prestashop/blockwishlist",
