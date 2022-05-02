@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\Exception
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Exception\AttributeGroupConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\GroupedAttributeIds;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 /**
  * Generates attribute combinations for product
@@ -49,15 +50,22 @@ class GenerateProductCombinationsCommand
     private $groupedAttributeIdsList;
 
     /**
+     * @var ShopId
+     */
+    private $shopId;
+
+    /**
      * @param int $productId
      * @param array<int, array<int>> $groupedAttributeIds key-value pairs where key is the attribute group id and value is the list of that group attribute ids
      */
     public function __construct(
         int $productId,
-        array $groupedAttributeIds
+        array $groupedAttributeIds,
+        int $shopId
     ) {
         $this->setGroupedAttributeIdsList($groupedAttributeIds);
         $this->productId = new ProductId($productId);
+        $this->shopId = new ShopId($shopId);
     }
 
     /**
@@ -74,6 +82,14 @@ class GenerateProductCombinationsCommand
     public function getGroupedAttributeIdsList(): array
     {
         return $this->groupedAttributeIdsList;
+    }
+
+    /**
+     * @return ShopId
+     */
+    public function getShopId(): ShopId
+    {
+        return $this->shopId;
     }
 
     /**
