@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Repository;
 
 use Combination;
 use Doctrine\DBAL\Connection;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotBulkDeleteCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotDeleteCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
@@ -70,6 +71,27 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param bool $isDefault
+     * @param ShopId $shopId
+     *
+     * @return Combination
+     *
+     * @throws CannotAddCombinationException
+     */
+    public function create(ProductId $productId, bool $isDefault, ShopId $shopId): Combination
+    {
+        $combination = new Combination(null, null, $shopId->getValue());
+        $combination->id_product = $productId->getValue();
+        $combination->default_on = $isDefault;
+        $combination->id_shop_list = [];
+
+        $this->addObjectModel($combination, CannotAddCombinationException::class);
+
+        return $combination;
     }
 
     /**

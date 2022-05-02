@@ -51,7 +51,8 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
         try {
             $this->getCommandBus()->handle(new GenerateProductCombinationsCommand(
                 $this->getSharedStorage()->get($productReference),
-                $groupedAttributeIds
+                $groupedAttributeIds,
+                $this->getDefaultShopId()
             ));
         } catch (InvalidProductTypeException $e) {
             $this->setLastException($e);

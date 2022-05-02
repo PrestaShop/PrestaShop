@@ -46,6 +46,9 @@ class DeleteCombinationCommand
     /**
      * @param int $combinationId
      * @param ShopConstraint $shopConstraint
+     * @todo: shopId instead of ShopConstraint looks better here,
+     *        it would already suggest that only single shop is handled at a time
+     *        and it would probably be easier & cleaner
      */
     public function __construct(
         int $combinationId,
