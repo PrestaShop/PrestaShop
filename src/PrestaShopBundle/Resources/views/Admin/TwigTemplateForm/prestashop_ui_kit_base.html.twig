@@ -538,14 +538,16 @@
 
 {% block date_range_widget %}
   {% apply spaceless %}
-    {{ form_widget(form.from) }}
-    {{ form_errors(form.from) }}
-    {{ form_widget(form.to) }}
-    {{ form_errors(form.to) }}
-    {% if form.unlimited is defined %}
-      {{ form_widget(form.unlimited) }}
-      {{ form_errors(form.unlimited) }}
-    {% endif %}
+    <div class="date-range">
+      {{ form_widget(form.from, { 'attr': {'class': 'from'} }) }}
+      {{ form_errors(form.from) }}
+      {{ form_widget(form.to) }}
+      {{ form_errors(form.to) }}
+      {% if form.unlimited is defined %}
+        {{ form_widget(form.unlimited) }}
+        {{ form_errors(form.unlimited) }}
+      {% endif %}
+    </div>
   {% endapply %}
 {% endblock date_range_widget %}
 

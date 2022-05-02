@@ -25,6 +25,17 @@
 
 import ChoiceTable from '@js/components/choice-table';
 import ChoiceTree from '@js/components/form/choice-tree';
+import MultipleChoiceTable from '@js/components/multiple-choice-table';
+import GeneratableInput from '@js/components/generatable-input';
+import CountryStateSelectionToggler from '@components/country-state-selection-toggler';
+import CountryDniRequiredToggler from '@components/country-dni-required-toggler';
+import TextWithLengthCounter from '@components/form/text-with-length-counter';
+import PreviewOpener from '@components/form/preview-opener';
+import MultistoreConfigField from '@js/components/form/multistore-config-field';
+import DateRange from '@js/components/form/date-range';
+import {EventEmitter} from '@components/event-emitter';
+import Grid from '@components/grid/grid';
+import Router from '@components/router';
 import ColorPicker from '@js/app/utils/colorpicker';
 import CountryDniRequiredToggler from '@components/country-dni-required-toggler';
 import CountryStateSelectionToggler from '@components/country-state-selection-toggler';
@@ -136,6 +147,7 @@ const initPrestashopComponents = () => {
     EventEmitter,
     FormFieldDisabler,
     GeneratableInput,
+    DateRange,
     Grid,
     GridExtensions,
     IframeClient,

@@ -44,6 +44,7 @@ class DateRangeType extends AbstractType
                 'required' => false,
                 'attr' => [
                     'placeholder' => 'To',
+                    'class' => 'to',
                 ],
                 'translation_domain' => 'Admin.Global',
                 'date_format' => $options['date_format'],
@@ -84,6 +85,7 @@ class DateRangeType extends AbstractType
             'required' => false,
             'attr' => [
                 'placeholder' => 'From',
+                'class' => 'from',
             ],
             'translation_domain' => 'Admin.Global',
             'date_format' => $options['date_format'],

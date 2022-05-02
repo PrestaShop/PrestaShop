@@ -22,9 +22,11 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import {getSpecificPrices} from '@pages/product/services/specific-price-service';
+import {getSpecificPrices, deleteSpecificPrice} from '@pages/product/services/specific-price-service';
 import {EventEmitter} from 'events';
 import ProductMap from '@pages/product/product-map';
+import ConfirmModal from '@components/modal/confirm-modal';
+import ProductEventMap from "@pages/product/product-event-map";
 
 const SpecificPriceMap = ProductMap.specificPrice;
 
@@ -93,6 +95,7 @@ export default class SpecificPriceList {
         }
 
         tbody.append(trClone);
+        this.addEventListenerForDeleteBtn(deleteBtn);
       });
     });
   }
@@ -103,5 +106,44 @@ export default class SpecificPriceList {
 
   private selectListField(templateTrClone: HTMLElement, selector: string): HTMLElement {
     return templateTrClone.querySelector(selector) as HTMLElement;
+  }
+
+  private addEventListenerForDeleteBtn(deleteBtn: HTMLElement): void {
+    deleteBtn.addEventListener('click', (e) => {
+      if (
+        e.currentTarget === null
+        || !(e.currentTarget instanceof HTMLElement)
+        || typeof e.currentTarget.dataset.specificPriceId !== 'string'
+      ) {
+        return;
+      }
+
+      this.deleteSpecificPrice(e.currentTarget.dataset.specificPriceId);
+    });
+  }
+
+  private deleteSpecificPrice(specificPriceId: string): void {
+    const modal = new (ConfirmModal as any)(
+      {
+        id: 'modal-confirm-delete-combination',
+        confirmTitle: 'this is the title',
+        confirmMessage: 'Are you sure you want to delete this specific price?',
+        confirmButtonLabel: 'Delete',
+        closeButtonLabel: 'Cancel',
+        confirmButtonClass: 'btn-danger',
+        closable: true,
+      },
+      async () => {
+        const response = await deleteSpecificPrice(specificPriceId);
+        $.growl({message: response.message});
+        this.eventEmitter.emit(ProductEventMap.specificPrice.specificPriceUpdated);
+        /*const response = await this.combinationsService.deleteCombination(
+          this.findCombinationId(button),
+        );
+        $.growl({message: response.message});
+        this.eventEmitter.emit(CombinationEvents.refreshCombinationList);*/
+      },
+    );
+    modal.show();
   }
 }

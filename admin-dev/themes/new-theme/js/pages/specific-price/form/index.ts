@@ -27,11 +27,15 @@ import PriceInputToggle from '@pages/specific-price/form/price-input-toggle';
 import CurrencySymbolUpdater from '@components/form/currency-symbol-updater';
 import SpecificPriceMap from '@pages/specific-price/specific-price-map';
 import ReductionTaxFieldToggle from '@components/form/reduction-tax-field-toggle';
+import IncludeTaxFieldToggle from '@components/form/include-tax-field-toggle';
+import DateRange from '@components/form/date-range';
 
 const {$} = window;
 
 $(() => {
   new PriceInputToggle();
+  new IncludeTaxFieldToggle(SpecificPriceMap.reductionTypeSelect, SpecificPriceMap.includeTaxInputContainer);
+  new DateRange('#specific_price');
   new CurrencySymbolUpdater(
     SpecificPriceMap.currencyId,
     ((symbol: string): void => {

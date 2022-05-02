@@ -93,29 +93,19 @@ export default class SpecificPricesManager {
   }
 
   private renderSpecificPriceModal(formUrl: string) {
-    console.log(formUrl);
     const iframeModal = new FormIframeModal({
       id: 'modal-create-specific-price',
       formSelector: 'form[name="specific_price"]',
       formUrl,
       closable: true,
-      // We override the body selector so that the modal keeps the size of the initial create form even after submit
-      autoSizeContainer: '.create-product-form',
-      /*onFormLoaded: (form: HTMLElement, formData: JQuery.NameValuePair[] | null, dataAttributes: DOMStringMap | null): void => {
-        if (dataAttributes) {
-          if (dataAttributes.modalTitle) {
-            iframeModal.setTitle(dataAttributes.modalTitle);
-          }
-
-          if (dataAttributes.productId) {
-            const editUrl = this.router.generate('admin_products_v2_edit', {productId: dataAttributes.productId});
-            // Keep showing loading until the page is refreshed
-            iframeModal.showLoading();
-            window.location.href = editUrl;
-          }
-        }
-      },*/
+      onFormLoaded: (form: HTMLElement, formData: JQuery.NameValuePair[] | null, dataAttributes: DOMStringMap | null): void => {
+        // alert('form loaded');
+      },
     });
     iframeModal.show();
+  }
+
+  private async deleteSpecificPrice() {
+    alert('toto');
   }
 }

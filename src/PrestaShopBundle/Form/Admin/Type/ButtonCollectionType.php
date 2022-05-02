@@ -57,6 +57,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class ButtonCollectionType extends AbstractType
 {
+    private const BUTTON_ALIGNMENT_VALUES = [
+        'right' => 'flex-end',
+        'left' => 'flex-start',
+        'justify' => 'space-between',
+        'center' => 'center',
+    ];
+
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         foreach ($options['buttons'] as $buttonOptions) {
@@ -68,7 +76,7 @@ class ButtonCollectionType extends AbstractType
     {
         parent::buildView($view, $form, $options);
         $view->vars['button_groups'] = $options['button_groups'];
-        $view->vars['justify_content'] = $options['justify_content'];
+        $view->vars['justify_content'] = self::BUTTON_ALIGNMENT_VALUES[$options['alignment']] ?? '';
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -77,7 +85,7 @@ class ButtonCollectionType extends AbstractType
             ->setDefaults([
                 'label' => false,
                 'buttons' => [],
-                'justify_content' => 'space-between',
+                'alignment' => 'justify',
                 // Internal option automatically built based on the group option of each button
                 'button_groups' => [],
             ])
@@ -119,11 +127,13 @@ class ButtonCollectionType extends AbstractType
             ->setDefault('name', '')
             ->setDefault('options', [])
             ->setDefault('group', 'default')
+            ->setDefault('alignment', '')
             ->setRequired('type')
             ->setAllowedTypes('options', 'array')
             ->setAllowedTypes('name', 'string')
             ->setAllowedTypes('type', 'string')
             ->setAllowedTypes('group', 'string')
+            ->setAllowedTypes('alignment', 'string')
             ->setNormalizer('type', function (Options $options, $value) {
                 if (!class_exists($value)) {
                     throw new InvalidArgumentException('Invalid button type provided, expected a FQCN string.');
