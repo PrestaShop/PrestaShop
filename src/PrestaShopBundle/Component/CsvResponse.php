@@ -68,9 +68,9 @@ class CsvResponse extends StreamedResponse
     private $limit = 1000;
 
     /**
-     * @var bool exportHeader
+     * @var bool includeHeaderRow
      */
-    private $exportHeader = true;
+    private $includeHeaderRow = true;
 
     /**
      * Constructor.
@@ -89,6 +89,16 @@ class CsvResponse extends StreamedResponse
 
         $this->setFileName('export_' . date('Y-m-d_His') . '.csv');
         $this->headers->set('Content-Type', 'text/csv; charset=utf-8');
+    }
+    
+    /**
+     * Returns true, if the header line should be exported.
+     *
+     * @return boolean
+     */
+    public function getIncludeHeaderRow()
+    {
+        return $this->includeHeaderRow;
     }
 
     /**
@@ -172,13 +182,13 @@ class CsvResponse extends StreamedResponse
     }
 
     /**
-     * @param bool $exportHeader
+     * @param bool $includeHeaderRow
      *
      * @return $this
      */
-    public function setExportHeader(bool $exportHeader): self
+    public function setIncludeHeaderRow(bool $includeHeaderRow): self
     {
-        $this->exportHeader = $exportHeader;
+        $this->includeHeaderRow = $includeHeaderRow;
 
         return $this;
     }
@@ -214,7 +224,7 @@ class CsvResponse extends StreamedResponse
     {
         $handle = tmpfile();
 
-        if ($this->exportHeader) {
+        if ($this->includeHeaderRow) {
             fputcsv($handle, $this->headersData, ';');
         }
 
@@ -232,7 +242,7 @@ class CsvResponse extends StreamedResponse
     {
         $handle = tmpfile();
 
-        if ($this->exportHeader) {
+        if ($this->includeHeaderRow) {
             fputcsv($handle, $this->headersData, ';');
         }
 
