@@ -195,8 +195,10 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
             ->select('pas.id_product_attribute, pas.default_on')
             ->from($this->dbPrefix . 'product_attribute_shop', 'pas')
             ->where('pas.id_shop = :shopId')
+            ->andWhere('pas.id_product = :productId')
             ->andWhere('pas.default_on = 1')
             ->setParameter('shopId', $shopId->getValue())
+            ->setParameter('productId', $productId->getValue())
         ;
 
         $result = $qb->execute()->fetchAssociative();
@@ -208,6 +210,37 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
         $combinationId = (int) $result['id_product_attribute'];
 
         return $this->getCombinationByShopId(new CombinationId($combinationId), $shopId);
+    }
+
+    public function findFirstCombinationId(ProductId $productId, ShopConstraint $shopConstraint): ?CombinationId
+    {
+        if ($shopConstraint->getShopGroupId()) {
+            throw new InvalidShopConstraintException('Combination has no features related with shop group use single shop and all shops constraints');
+        }
+
+        if ($shopConstraint->getShopId()) {
+            $shopId = $shopConstraint->getShopId();
+        } else {
+            $shopId = $this->getProductDefaultShopId($productId);
+        }
+
+        $qb = $this->connection->createQueryBuilder()
+            ->select('pas.id_product_attribute')
+            ->from($this->dbPrefix . 'product_attribute_shop', 'pas')
+            ->where('pas.id_shop = :shopId')
+            ->andWhere('pas.id_product = :productId')
+            ->orderBy('id_product_attribute', 'ASC')
+            ->setParameter('shopId', $shopId->getValue())
+            ->setParameter('productId', $productId->getValue())
+        ;
+
+        $result = $qb->execute()->fetchAssociative();
+
+        if (!$result) {
+            return null;
+        }
+
+        return new CombinationId((int) $result['id_product_attribute']);
     }
 
     /**

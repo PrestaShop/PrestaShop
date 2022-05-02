@@ -30,6 +30,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\Combinatio
 use Behat\Gherkin\Node\TableNode;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\BulkDeleteCombinationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\DeleteCombinationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class DeleteCombinationFeatureContext extends AbstractCombinationFeatureContext
 {
@@ -38,10 +39,11 @@ class DeleteCombinationFeatureContext extends AbstractCombinationFeatureContext
      *
      * @param string $combinationReference
      */
-    public function deleteCombination(string $combinationReference): void
+    public function deleteCombinationInDefaultShop(string $combinationReference): void
     {
         $this->getCommandBus()->handle(new DeleteCombinationCommand(
-            (int) $this->getSharedStorage()->get($combinationReference)
+            (int) $this->getSharedStorage()->get($combinationReference),
+            ShopConstraint::shop($this->getDefaultShopId())
         ));
     }
 
@@ -51,7 +53,7 @@ class DeleteCombinationFeatureContext extends AbstractCombinationFeatureContext
      * @param string $productRefeence
      * @param TableNode $tableNode
      */
-    public function bulkDeleteCombinations(string $productRefeence, TableNode $tableNode): void
+    public function bulkDeleteCombinationsInDefaultShop(string $productRefeence, TableNode $tableNode): void
     {
         $productId = $this->getSharedStorage()->get($productRefeence);
         $combinationIds = [];
@@ -60,6 +62,10 @@ class DeleteCombinationFeatureContext extends AbstractCombinationFeatureContext
             $combinationIds[] = $this->getSharedStorage()->get($combinationIdReference);
         }
 
-        $this->getCommandBus()->handle(new BulkDeleteCombinationCommand($productId, $combinationIds));
+        $this->getCommandBus()->handle(new BulkDeleteCombinationCommand(
+            $productId,
+            $combinationIds,
+            ShopConstraint::shop($this->getDefaultShopId()))
+        );
     }
 }

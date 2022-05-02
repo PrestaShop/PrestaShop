@@ -121,6 +121,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationDeleter
     arguments:
       - '@prestashop.adapter.product.repository.product_repository'
+      - '@prestashop.adapter.product.combination.repository.combination_repository'
       - '@prestashop.adapter.product.combination.repository.combination_multi_shop_repository'
       - '@prestashop.adapter.product.combination.update.default_combination_updater'
 
