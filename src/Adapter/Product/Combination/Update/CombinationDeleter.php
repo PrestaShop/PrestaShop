@@ -134,6 +134,15 @@ class CombinationDeleter
         $defaultCombination = $this->combinationMultiShopRepository->findDefaultCombination($productId, $shopConstraint);
         if (null !== $defaultCombination) {
             $this->defaultCombinationUpdater->setDefaultCombination(new CombinationId((int) $defaultCombination->id));
+
+            return;
         }
+
+        $firstCombinationId = $this->combinationMultiShopRepository->findFirstCombinationId($productId, $shopConstraint);
+        if (!$firstCombinationId) {
+            return;
+        }
+
+        $this->defaultCombinationUpdater->setDefaultCombination($firstCombinationId);
     }
 }
