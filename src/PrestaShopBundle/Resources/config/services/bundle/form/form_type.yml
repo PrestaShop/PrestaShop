@@ -1577,8 +1577,8 @@ services:
       - '@router'
       - '@prestashop.adapter.product.specific_price.repository.specific_price_repository'
     public: true
-      tags:
-          - { name: form.type }
+    tags:
+        - { name: form.type }
 
   form.type.sell.product.pricing.specific_price_priority_type:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\Pricing\SpecificPricePriorityType'
