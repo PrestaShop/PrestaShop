@@ -221,7 +221,13 @@ if (defined('_PS_ADMIN_DIR_')) {
 if (isset($cookie->id_lang) && $cookie->id_lang) {
     $language = new Language($cookie->id_lang);
 }
-if (!isset($language) || !Validate::isLoadedObject($language) || !$language->isAssociatedToShop()) {
+
+$isNotValidLanguage = !isset($language) || !Validate::isLoadedObject($language);
+// `true` if language is defined from multishop or backoffice session
+$isLanguageDefinedFromCustomSession = (isset($language) && $language->isAssociatedToShop()) || isset($employee);
+
+$useDefaultLanguage = $isNotValidLanguage || !$isLanguageDefinedFromCustomSession;
+if ($useDefaultLanguage) {
     $language = new Language(Configuration::get('PS_LANG_DEFAULT'));
 }
 
