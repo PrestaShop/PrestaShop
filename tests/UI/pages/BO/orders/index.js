@@ -236,7 +236,7 @@ class Order extends BOBasePage {
   /**
    * Get number of orders in page
    * @param page {Page} Browser tab
-   * @returns {Promise<*>}
+   * @returns {Promise<number>}
    */
   async getNumberOfOrdersInPage(page) {
     return (await page.$$(`${this.tableBody} tr`)).length;
