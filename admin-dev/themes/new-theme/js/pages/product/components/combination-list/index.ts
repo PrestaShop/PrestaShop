@@ -93,7 +93,7 @@ export default class CombinationsList {
 
   private productAttributeGroups: Array<AttributeGroup>;
 
-  constructor(productId: number, productFormModel: ProductFormModel) {
+  constructor(productId: number, productFormModel: ProductFormModel, shopId: number) {
     this.productId = productId;
     this.productFormModel = productFormModel;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
@@ -108,7 +108,7 @@ export default class CombinationsList {
 
     this.initialized = false;
     this.combinationsService = new CombinationsService();
-    this.paginatedCombinationsService = new PaginatedCombinationsService(productId);
+    this.paginatedCombinationsService = new PaginatedCombinationsService(productId, shopId);
     this.productAttributeGroups = [];
 
     new RowDeleteHandler(this.eventEmitter, this.combinationsService);
