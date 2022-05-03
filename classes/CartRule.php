@@ -1019,7 +1019,7 @@ class CartRuleCore extends ObjectModel
                             foreach ($cart_products as $cart_product) {
                                 if (in_array($cart_product['id_product'], $product_rule['values'])) {
                                     $count_matching_products += $cart_product['quantity'];
-                                    if ($alreadyInCart && $this->gift_product == $cart_product['id_product']) {
+                                    if ($alreadyInCart && $this->gift_product == $cart_product['id_product'] && ($cart_product['id_product_attribute'] == $this->gift_product_attribute || !(int) $this->gift_product_attribute)) {
                                         --$count_matching_products;
                                     }
                                     $matching_products_list[] = $cart_product['id_product'] . '-0';
