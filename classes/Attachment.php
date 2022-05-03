@@ -62,7 +62,7 @@ class AttachmentCore extends ObjectModel
     ];
 
     protected $webserviceParameters = [
-        'objectNodeNames' => 'attachments',
+        'objectsNodeName' => 'attachments',
         'hidden_fields' => [],
         'fields' => [
             'file' => [],
