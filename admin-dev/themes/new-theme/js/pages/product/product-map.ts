@@ -26,7 +26,8 @@
 const combinationListFormId = '#combination_list';
 const attachmentsBlockId = '#product_specifications_attachments';
 // It does not include "#" so it can be selected by getElementById
-const isSelectedCombinationInputClass = 'combination-is-selected';
+const isSelectedCombinationClass = 'combination-is-selected';
+const bulkCombinationSelectAllId = 'bulk-select-all-in-page';
 const progressModalId = 'bulk-combination-progress-modal';
 
 export default {
@@ -105,7 +106,7 @@ export default {
       'form[name="combination_form"] input, form[name="combination_form"] textarea, form[name="combination_form"] select',
     editCombinationButtons: '.edit-combination-item',
     tableRow: {
-      isSelectedCombination: `.${isSelectedCombinationInputClass}`,
+      isSelectedCombination: `.${isSelectedCombinationClass}`,
       combinationImg: '.combination-image',
       deltaQuantityWrapper: '.delta-quantity',
       deltaQuantityInput: (rowIndex: number): string => `${combinationListFormId}_combinations_${rowIndex}_delta_quantity_delta`,
@@ -129,8 +130,10 @@ export default {
       finalPrice: '.combination-final-price',
       finalPricePreview: '.text-preview',
       modifiedFieldClass: 'combination-value-changed',
+      invalidClass: 'is-invalid',
       editionModeClass: 'edition-mode',
-      fieldInputs: `:input:not(#${bulkCombinationSelectAllInPageId}):not(.${isSelectedCombinationInputClass})`,
+      fieldInputs: `.combination-list-row :input:not(#${bulkCombinationSelectAllId}):not(.${isSelectedCombinationClass})`,
+      errorAlerts: '.combination-list-row .alert-danger',
       footer: {
         cancel: '#cancel-combinations-edition',
         reset: '#reset-combinations-edition',
@@ -151,7 +154,9 @@ export default {
     bulkDeleteBtn: '#combination-bulk-delete-btn',
     bulkActionBtn: '.bulk-action-btn',
     bulkActionsDropdownBtn: '#combination-bulk-actions-btn',
-    bulkSelectAllInPage: '#bulk-select-all-in-page',
+    bulkActionsBtn: '#combination-bulk-actions-btn',
+    bulkSelectAllInPage: `#${bulkCombinationSelectAllId}`,
+    bulkSelectAllInPageId: bulkCombinationSelectAllId,
     bulkProgressModalId: progressModalId,
     bulkFormModalId: 'bulk-combination-form-modal',
   },

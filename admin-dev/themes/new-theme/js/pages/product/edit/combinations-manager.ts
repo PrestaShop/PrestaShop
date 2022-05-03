@@ -41,6 +41,7 @@ import BulkDeleteHandler from '@pages/product/combination/bulk-delete-handler';
 import BulkChoicesSelector from '@pages/product/combination/bulk-choices-selector';
 import ProductFormModel from '@pages/product/edit/product-form-model';
 import {notifyFormErrors} from '@components/form/form-notification';
+import {isUndefined} from '@PSTypes/typeguard';
 
 import ChangeEvent = JQuery.ChangeEvent;
 
@@ -87,6 +88,8 @@ export default class CombinationsManager {
 
   editionMode: boolean = false;
 
+  savedInputValues: Record<string, any>;
+
   constructor(productId: number, productFormModel: ProductFormModel) {
     this.productId = productId;
     this.productFormModel = productFormModel;
@@ -105,6 +108,7 @@ export default class CombinationsManager {
     this.combinationsService = new CombinationsService();
     this.paginatedCombinationsService = new PaginatedCombinationsService(productId);
     this.productAttributeGroups = [];
+    this.savedInputValues = {};
 
     const bulkChoicesSelector = new BulkChoicesSelector(this.externalCombinationTab);
     new BulkFormHandler(productId, bulkChoicesSelector);
@@ -288,15 +292,16 @@ export default class CombinationsManager {
 
     // Preset initial data attribute after each list rendering
     this.eventEmitter.on(CombinationEvents.listRendered, () => {
+      // Reset saved values we only keep the last one rendered
+      this.savedInputValues = {};
+
       $(ProductMap.combinations.list.fieldInputs, this.$combinationsFormContainer).each((index, input) => {
         const $input = $(input);
+        const inputValue = $input.val();
 
-        if (typeof $input.val() !== 'undefined') {
-          // @ts-ignore
-          $input.data('initialValue', $input.val());
-          $input.on('change', () => {
-            $input.toggleClass(ProductMap.combinations.list.modifiedFieldClass, $input.val() !== $input.data('initialValue'));
-          });
+        if (!isUndefined(inputValue) && !isUndefined($input.prop('name'))) {
+          this.savedInputValues[$input.prop('name')] = inputValue;
+          this.watchInputChange($input, inputValue);
         }
       });
     });
@@ -341,6 +346,14 @@ export default class CombinationsManager {
     });
 
     this.eventEmitter.on(CombinationEvents.bulkUpdateFinished, () => this.refreshPage());
+  }
+
+  private watchInputChange($input: JQuery, initialValue: string | number | string[]): void {
+    $input.data('initialValue', initialValue);
+    $input.toggleClass(ProductMap.combinations.list.modifiedFieldClass, $input.val() !== initialValue);
+    $input.on('change', () => {
+      $input.toggleClass(ProductMap.combinations.list.modifiedFieldClass, $input.val() !== $input.data('initialValue'));
+    });
   }
 
   private updateByPriceImpactTaxExcluded($priceImpactTaxExcluded: JQuery): void {
@@ -531,9 +544,15 @@ export default class CombinationsManager {
         && $input.val() !== $input.data('initialValue')
       ) {
         $input.val($input.data('initialValue')).trigger('change');
+        // Remove modified class to reset display UX
         $input.removeClass(ProductMap.combinations.list.modifiedFieldClass);
+        // Remove invalid class in case the field is an output with form errors
+        $input.removeClass(ProductMap.combinations.list.invalidClass);
       }
     });
+
+    // Clean all the alerts that may come from an output with form errors
+    $(CombinationsMap.list.errorAlerts, this.$combinationsFormContainer).remove();
   }
 
   private cancelEdition(): void {
@@ -552,7 +571,14 @@ export default class CombinationsManager {
       if (jsonResponse.errors) {
         // If formContent is available we can replace the content to display the inline errors
         if (jsonResponse.formContent) {
+          // Replace form content with output from response
           this.$combinationsFormContainer.html(jsonResponse.formContent);
+
+          // Now re-watch the new inputs and set their initial value
+          Object.keys(this.savedInputValues).forEach((inputName: string) => {
+            const $input = $(`[name="${inputName}"]`, this.$combinationsFormContainer);
+            this.watchInputChange($input, this.savedInputValues[inputName]);
+          });
         } else {
           notifyFormErrors(jsonResponse);
         }
