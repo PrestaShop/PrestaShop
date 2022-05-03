@@ -572,7 +572,8 @@ class ProductCore extends ObjectModel
             'add' => 'addWs',
             'update' => 'updateWs',
         ],
-        'objectNodeNames' => 'products',
+        'objectNodeName' => 'product',
+        'objectsNodeName' => 'products',
         'fields' => [
             'id_manufacturer' => [
                 'xlink_resource' => 'manufacturers',
