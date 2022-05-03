@@ -30,9 +30,13 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationCommandsBuilderInterface;
-use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataFormatter\BulkCombinationFormDataFormatter;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataFormatter\CombinationListFormDataFormatter;
 
-class BulkCombinationFormDataHandler implements FormDataHandlerInterface
+/**
+ * This handler is used for ajax request performed from the combination list, it handles a list of combinations
+ * whihc are (potentially) only a subset of all the product's combinations (since the list is paginated).
+ */
+class CombinationListFormDataHandler implements FormDataHandlerInterface
 {
     /**
      * @var CommandBusInterface
@@ -40,50 +44,52 @@ class BulkCombinationFormDataHandler implements FormDataHandlerInterface
     private $commandBus;
 
     /**
+     * @var CombinationListFormDataFormatter
+     */
+    private $combinationListFormDataFormatter;
+
+    /**
      * @var CombinationCommandsBuilderInterface
      */
     private $commandsBuilder;
 
     /**
-     * @var BulkCombinationFormDataFormatter
-     */
-    private $bulkCombinationFormDataFormatter;
-
-    /**
      * @param CommandBusInterface $commandBus
-     * @param BulkCombinationFormDataFormatter $bulkCombinationFormDataFormatter
+     * @param CombinationListFormDataFormatter $combinationListFormDataFormatter
      * @param CombinationCommandsBuilderInterface $commandsBuilder
      */
     public function __construct(
         CommandBusInterface $commandBus,
-        BulkCombinationFormDataFormatter $bulkCombinationFormDataFormatter,
+        CombinationListFormDataFormatter $combinationListFormDataFormatter,
         CombinationCommandsBuilderInterface $commandsBuilder
     ) {
         $this->commandBus = $commandBus;
+        $this->combinationListFormDataFormatter = $combinationListFormDataFormatter;
         $this->commandsBuilder = $commandsBuilder;
-        $this->bulkCombinationFormDataFormatter = $bulkCombinationFormDataFormatter;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function create(array $data)
     {
-        // not used for creation
-        return null;
+        // Does not handle creation. Combinations are created using different approach
+        return 0;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function update($id, array $data): void
+    public function update($productId, array $data)
     {
         // @todo: a hook system should be integrated in this handler for extendability
-        $formattedData = $this->bulkCombinationFormDataFormatter->format($data);
-        $commands = $this->commandsBuilder->buildCommands(new CombinationId($id), $formattedData);
+        foreach ($data as $combinationItemData) {
+            $combinationData = $this->combinationListFormDataFormatter->format($combinationItemData);
+            $commands = $this->commandsBuilder->buildCommands(new CombinationId((int) $combinationItemData['combination_id']), $combinationData);
 
-        foreach ($commands as $command) {
-            $this->commandBus->handle($command);
+            foreach ($commands as $command) {
+                $this->commandBus->handle($command);
+            }
         }
     }
 }
