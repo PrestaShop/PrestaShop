@@ -122,12 +122,14 @@ class CommonPage {
    * @returns {Promise<boolean>} True if visible, false if not
    */
   async elementVisible(page, selector, timeout = 10000) {
-    try {
-      await this.waitForVisibleSelector(page, selector, timeout);
-      return true;
-    } catch (error) {
-      return false;
+    let visible = false;
+    let retries = 0;
+    while (!visible || retries < (timeout / 10)) {
+      visible = await page.isVisible(selector);
+      retries += 1;
+      await page.waitForTimeout(10);
     }
+    return visible;
   }
 
   /**
@@ -138,12 +140,14 @@ class CommonPage {
    * @returns {Promise<boolean>} True if not visible, false if visible
    */
   async elementNotVisible(page, selector, timeout = 10000) {
-    try {
-      await this.waitForHiddenSelector(page, selector, timeout);
-      return true;
-    } catch (error) {
-      return false;
+    let retries = 0;
+    let notFound = false;
+    while (!notFound || retries < (timeout / 10)) {
+      notFound = await page.isHidden(selector);
+      retries += 1;
+      await page.waitForTimeout(10);
     }
+    return notFound;
   }
 
   /**
