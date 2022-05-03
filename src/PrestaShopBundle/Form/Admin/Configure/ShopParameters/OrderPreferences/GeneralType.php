@@ -136,6 +136,10 @@ class GeneralType extends TranslatorAwareType
                 'placeholder' => $this->trans('None', 'Admin.Global'),
                 'choices' => $this->tosCmsChoices,
                 'multistore_configuration_key' => 'PS_CONDITIONS_CMS_ID',
+                'attr' => [
+                    'data-toggle' => 'select2',
+                    'data-minimumResultsForSearch' => '7',
+                ],
             ]);
     }
 
