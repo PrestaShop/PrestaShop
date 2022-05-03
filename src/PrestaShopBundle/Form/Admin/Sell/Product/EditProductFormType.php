@@ -63,20 +63,28 @@ class EditProductFormType extends TranslatorAwareType
     private $toolbarButtonsProvider;
 
     /**
+     * @var int
+     */
+    private $shopId;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param EventSubscriberInterface $productTypeListener
      * @param ToolbarButtonsProviderInterface $toolbarButtonsProvider
+     * @param int $shopId
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         EventSubscriberInterface $productTypeListener,
-        ToolbarButtonsProviderInterface $toolbarButtonsProvider
+        ToolbarButtonsProviderInterface $toolbarButtonsProvider,
+        int $shopId
     ) {
         parent::__construct($translator, $locales);
         $this->productTypeListener = $productTypeListener;
         $this->toolbarButtonsProvider = $toolbarButtonsProvider;
+        $this->shopId = $shopId;
     }
 
     /**
@@ -133,6 +141,7 @@ class EditProductFormType extends TranslatorAwareType
         $formVars = [
             'product_type' => $options['product_type'],
             'product_id' => $options['product_id'],
+            'shop_id' => $this->shopId,
         ];
 
         $view->vars = array_replace($view->vars, $formVars);

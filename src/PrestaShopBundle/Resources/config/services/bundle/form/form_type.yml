@@ -1334,6 +1334,7 @@ services:
     arguments:
       - '@form.type.sell.product.event_listener.product_type_listener'
       - '@form.type.sell.product.toolbar_buttons_provider'
+      - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
     tags:
       - { name: form.type }
 

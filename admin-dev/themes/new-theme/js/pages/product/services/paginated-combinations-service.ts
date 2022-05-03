@@ -31,6 +31,8 @@ const {$} = window;
 export default class PaginatedCombinationsService implements PaginationServiceType {
   productId: number;
 
+  shopId: number;
+
   router: Router;
 
   filters: Record<string, any>;
@@ -43,8 +45,9 @@ export default class PaginatedCombinationsService implements PaginationServiceTy
 
   orderWay: string | null;
 
-  constructor(productId: number) {
+  constructor(productId: number, shopId: number) {
     this.productId = productId;
+    this.shopId = shopId;
     this.router = new Router();
     this.filters = {};
     this.offset = 0;
@@ -56,7 +59,8 @@ export default class PaginatedCombinationsService implements PaginationServiceTy
   fetch(offset: number, limit: number): JQuery.jqXHR<any> {
     this.offset = offset;
     this.limit = limit;
-    const filterId = this.getFilterId();
+
+    const filterId = `product_combinations_${this.productId}_${this.shopId}`;
     const requestParams: Record<string, any> = {};
     // Required for route generation
     requestParams.productId = this.productId;

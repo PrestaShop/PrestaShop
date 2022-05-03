@@ -65,6 +65,7 @@ $(() => {
 
   const $productForm = $(ProductMap.productForm);
   const productId = parseInt($productForm.data('productId'), 10);
+  const shopId = parseInt($productForm.data('shopId'), 10);
   const productType = $productForm.data('productType');
 
   // Responsive navigation tabs
@@ -78,7 +79,7 @@ $(() => {
   if (productType === ProductConst.PRODUCT_TYPE.COMBINATIONS) {
     // Combinations manager must be initialized BEFORE nav handler, or it won't trigger the pagination if the tab is
     // selected on load
-    new CombinationsList(productId, productFormModel);
+    new CombinationsList(productId, productFormModel, shopId);
   }
 
   new NavbarHandler($(ProductMap.navigationBar));

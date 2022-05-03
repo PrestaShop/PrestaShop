@@ -36,6 +36,8 @@
 <div class="product-page-v2">
   {% set productType = productForm.vars.product_type %}
   {% set productId = productForm.vars.product_id %}
+  {% set shopId = productForm.vars.shop_id %}
+  {% set extraModulesHooks = renderhooksarray('displayAdminProductsExtra', { 'id_product': productId }) %}
 
   <div class="header-toolbar d-print-none">
     {{ multistoreHeader() }}
@@ -44,6 +46,7 @@
   {{ form_start(productForm, {'attr': {
     'class': 'form-horizontal product-page justify-content-md-center product-form', 'novalidate': 'novalidate',
     'data-product-id': productId,
+    'data-shop-id': shopId,
     'data-product-type': productType
   }}) }}
 
