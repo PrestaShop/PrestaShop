@@ -25,28 +25,45 @@
  */
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder;
+namespace Tests\Resources\Translator;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CombinationAttributeInformation;
+use Symfony\Component\Translation\TranslatorInterface;
 
-interface CombinationNameBuilderInterface
+class DummyTranslator implements TranslatorInterface
 {
     /**
-     * Build combination name from related attributes and attribute group names
-     *
-     * @param CombinationAttributeInformation[] $attributesInfo
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function buildName(array $attributesInfo): string;
+    public function transChoice($id, $number, array $parameters = [], $domain = null, $locale = null): string
+    {
+        return 'not implemented yet';
+    }
 
     /**
-     * Build combination full name from related product and attributes and attribute group names
-     *
-     * @param string $productName
-     * @param CombinationAttributeInformation[] $attributesInfo
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function buildFullName(string $productName, array $attributesInfo): string;
+    public function setLocale($locale)
+    {
+        // not implemented yet
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLocale()
+    {
+        return 'not implemented yet';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function trans($id, array $parameters = [], $domain = null, $locale = null)
+    {
+        return str_replace(
+            array_keys($parameters),
+            array_values($parameters),
+            $id
+        );
+    }
 }
