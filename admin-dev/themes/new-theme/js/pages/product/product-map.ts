@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const combinationListId = '#combination_list';
+const combinationListFormId = '#combination_list';
 const attachmentsBlockId = '#product_specifications_attachments';
 // It does not include "#" so it can be selected by getElementById
 const isSelectedCombinationInputClass = 'combination-is-selected';
@@ -79,11 +79,11 @@ export default {
     preloader: '#combinations-preloader',
     emptyState: '#combinations-empty-state',
     combinationsPaginatedList: '#combinations-paginated-list',
-    combinationsListContainer: `${combinationListId}`,
+    combinationsFormContainer: '#combinations-list-form-container',
     combinationsFiltersContainer: '#combinations_filters',
     combinationsGeneratorContainer: '#product_combinations_generator',
-    combinationsTable: `${combinationListId}`,
-    combinationsTableBody: `${combinationListId} tbody`,
+    combinationsTable: `${combinationListFormId}`,
+    combinationsTableBody: `${combinationListFormId} tbody`,
     combinationIdInputsSelector: '.combination-id-input',
     deleteCombinationSelector: '.delete-combination-item',
     combinationName: 'form .card-header span',
@@ -108,19 +108,20 @@ export default {
       isSelectedCombination: `.${isSelectedCombinationInputClass}`,
       combinationImg: '.combination-image',
       deltaQuantityWrapper: '.delta-quantity',
-      deltaQuantityInput: (rowIndex: number): string => `${combinationListId}_combinations_${rowIndex}_delta_quantity_delta`,
-      combinationCheckbox: (rowIndex: number): string => `${combinationListId}_combinations_${rowIndex}_is_selected`,
-      combinationIdInput: (rowIndex: number): string => `${combinationListId}_combinations_${rowIndex}_combination_id`,
-      combinationNameInput: (rowIndex: number): string => `${combinationListId}_combinations_${rowIndex}_name`,
-      referenceInput: (rowIndex: number): string => `${combinationListId}_combinations_${rowIndex}_reference_value`,
-      impactOnPriceInput: (rowIndex: number): string => `${combinationListId}_combinations_${rowIndex}_impact_on_price_value`,
-      finalPriceTeInput: (rowIndex: number): string => `${combinationListId}_combinations_${rowIndex}_final_price_te`,
-      quantityInput: (rowIndex: number): string => `${combinationListId}_combinations_${rowIndex}_delta_quantity_quantity`,
-      isDefaultInput: (rowIndex: number): string => `${combinationListId}_combinations_${rowIndex}_is_default`,
-      editButton: (rowIndex: number): string => `${combinationListId}_combinations_${rowIndex}_edit`,
-      deleteButton: (rowIndex: number): string => `${combinationListId}_combinations_${rowIndex}_delete`,
+      deltaQuantityInput: (rowIndex: number): string => `${combinationListFormId}_combinations_${rowIndex}_delta_quantity_delta`,
+      combinationCheckbox: (rowIndex: number): string => `${combinationListFormId}_combinations_${rowIndex}_is_selected`,
+      combinationIdInput: (rowIndex: number): string => `${combinationListFormId}_combinations_${rowIndex}_combination_id`,
+      combinationNameInput: (rowIndex: number): string => `${combinationListFormId}_combinations_${rowIndex}_name`,
+      referenceInput: (rowIndex: number): string => `${combinationListFormId}_combinations_${rowIndex}_reference_value`,
+      impactOnPriceInput: (rowIndex: number): string => `${combinationListFormId}_combinations_${rowIndex}_impact_on_price_value`,
+      finalPriceTeInput: (rowIndex: number): string => `${combinationListFormId}_combinations_${rowIndex}_final_price_te`,
+      quantityInput: (rowIndex: number): string => `${combinationListFormId}_combinations_${rowIndex}_delta_quantity_quantity`,
+      isDefaultInput: (rowIndex: number): string => `${combinationListFormId}_combinations_${rowIndex}_is_default`,
+      editButton: (rowIndex: number): string => `${combinationListFormId}_combinations_${rowIndex}_edit`,
+      deleteButton: (rowIndex: number): string => `${combinationListFormId}_combinations_${rowIndex}_delete`,
     },
     list: {
+      form: 'form[name="combination_list"]',
       combinationRow: '.combination-list-row',
       priceImpactTaxExcluded: '.combination-impact-on-price-tax-excluded',
       priceImpactTaxIncluded: '.combination-impact-on-price-tax-included',

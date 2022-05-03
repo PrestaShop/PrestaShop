@@ -188,7 +188,7 @@
         editCombinationUrl: '',
         loadingCombinationForm: false,
         submittingCombinationForm: false,
-        combinationList: <JQuery>$(ProductMap.combinations.combinationsListContainer),
+        combinationList: <JQuery>$(ProductMap.combinations.combinationsFormContainer),
         hasSubmittedCombinations: false,
         combinationsHistory: [],
         showConfirm: false,
@@ -212,7 +212,7 @@
       },
     },
     mounted() {
-      this.combinationList = $(ProductMap.combinations.combinationsListContainer);
+      this.combinationList = $(ProductMap.combinations.combinationsFormContainer);
       this.combinationsService = new CombinationsService();
       this.initCombinationIds();
       this.watchEditButtons();
