@@ -47,6 +47,11 @@ class ProductCombinationFilters extends Filters
     private $productId;
 
     /**
+     * @var int
+     */
+    private $shopId;
+
+    /**
      * {@inheritDoc}
      */
     public function __construct(array $filters = [], $filterId = '')
@@ -56,13 +61,18 @@ class ProductCombinationFilters extends Filters
             throw new InvalidArgumentException(sprintf('%s filters expect a product_id filter', static::class));
         }
 
+        if (!isset($filters['filters']['shop_id'])) {
+            throw new InvalidArgumentException(sprintf('%s filters expect a shop_id filter', static::class));
+        }
+
         $this->needsToBePersisted = false;
         $this->productId = (int) $filters['filters']['product_id'];
+        $this->shopId = (int) $filters['filters']['shop_id'];
 
         // Since each combination lists depends on its associated product, the filterId must depends on it so that each
         // has an independent filter saved in database (@see PersistFiltersBuilder and @see RepositoryFiltersBuilder)
         // It will also need to be used as parameter prefix in the request to be correctly fetched by RequestFiltersBuilder
-        $this->filterId = static::generateFilterId($this->productId);
+        $this->filterId = static::generateFilterId($this->productId, $this->shopId);
     }
 
     /**
@@ -71,6 +81,14 @@ class ProductCombinationFilters extends Filters
     public function getProductId(): int
     {
         return $this->productId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getShopId(): int
+    {
+        return $this->shopId;
     }
 
     /**
@@ -89,11 +107,12 @@ class ProductCombinationFilters extends Filters
 
     /**
      * @param int $productId
+     * @param int $shopId
      *
      * @return string
      */
-    public static function generateFilterId(int $productId): string
+    public static function generateFilterId(int $productId, int $shopId): string
     {
-        return self::FILTER_PREFIX . $productId;
+        return self::FILTER_PREFIX . $productId . '_' . $shopId;
     }
 }

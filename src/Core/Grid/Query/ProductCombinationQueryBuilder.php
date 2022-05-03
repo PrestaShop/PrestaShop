@@ -110,11 +110,20 @@ final class ProductCombinationQueryBuilder extends AbstractDoctrineQueryBuilder
     {
         $filters = $productCombinationFilters->getFilters();
         $productId = $productCombinationFilters->getProductId();
+        $shopId = $productCombinationFilters->getShopId();
 
         $qb = $this->connection->createQueryBuilder();
         $qb->from($this->dbPrefix . 'product_attribute', 'pa')
-            ->where('pa.id_product = :productId')
+            ->leftJoin(
+                'pa',
+                $this->dbPrefix . 'product_attribute_shop',
+                'pas',
+                'pa.id_product_attribute = pas.id_product_attribute'
+            )
+            ->where('pas.id_product = :productId')
+            ->andWhere('pas.id_shop = :shopId')
             ->setParameter('productId', $productId)
+            ->setParameter('shopId', $shopId)
         ;
 
         // filter by attributes
