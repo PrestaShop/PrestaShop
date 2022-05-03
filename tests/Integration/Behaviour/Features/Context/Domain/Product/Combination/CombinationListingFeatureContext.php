@@ -96,7 +96,7 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
      *
      * @return ProductCombinationFilters
      */
-    private function buildProductCombinationFilters(int $productId, TableNode $tableNode): ProductCombinationFilters
+    private function buildProductCombinationFiltersForDefaultShop(int $productId, TableNode $tableNode): ProductCombinationFilters
     {
         $dataRows = $tableNode->getRowsHash();
         $defaults = ProductCombinationFilters::getDefaults();
@@ -109,6 +109,8 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
 
         $filters = $defaults['filters'];
         $filters['product_id'] = $productId;
+        $filters['shop_id'] = $this->getDefaultShopId();
+
         foreach ($dataRows as $criteriaField => $criteriaValue) {
             $attributeGroupMatch = preg_match('/attributes\[(.*?)\]/', $criteriaField, $matches) ? $matches[1] : null;
             if (null !== $attributeGroupMatch) {
@@ -141,7 +143,11 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
      */
     public function storeSearchCriteria(string $productReference, TableNode $tableNode): void
     {
-        $combinationFilters = $this->buildProductCombinationFilters((int) $this->getSharedStorage()->get($productReference), $tableNode);
+        $combinationFilters = $this->buildProductCombinationFiltersForDefaultShop(
+            (int) $this->getSharedStorage()->get($productReference),
+            $tableNode
+        );
+
         $this->getSharedStorage()->set($this->getSearchCriteriaKey($productReference), $combinationFilters);
     }
 
@@ -180,7 +186,7 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
             $combinationFilters = ProductCombinationFilters::buildDefaults();
         }
 
-        $combinationsList = $this->getCombinationsList($productReference, $combinationFilters);
+        $combinationsList = $this->getCombinationsListForDefaultShop($productReference, $combinationFilters);
 
         Assert::assertEquals(
             count($dataRows),

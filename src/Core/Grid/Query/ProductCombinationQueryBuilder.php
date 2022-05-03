@@ -114,7 +114,7 @@ final class ProductCombinationQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $qb = $this->connection->createQueryBuilder();
         $qb->from($this->dbPrefix . 'product_attribute', 'pa')
-            ->leftJoin(
+            ->innerJoin(
                 'pa',
                 $this->dbPrefix . 'product_attribute_shop',
                 'pas',
@@ -149,7 +149,7 @@ final class ProductCombinationQueryBuilder extends AbstractDoctrineQueryBuilder
         }
 
         if (null === $productCombinationFilters->getOrderBy()) {
-            $qb->addOrderBy('id_product_attribute', 'asc');
+            $qb->addOrderBy('pa.id_product_attribute', 'asc');
         } elseif ('quantity' === $productCombinationFilters->getOrderBy()) {
             $qb
                 ->addSelect('sa.quantity AS quantity')
