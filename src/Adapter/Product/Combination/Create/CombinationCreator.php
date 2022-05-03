@@ -92,6 +92,7 @@ class CombinationCreator
      * @param ProductId $productId
      * @param GroupedAttributeIds[] $groupedAttributeIdsList
      * @param ShopId $shopId
+     *
      * @return CombinationId[]
      *
      * @throws CoreException

@@ -332,6 +332,7 @@ class CombinationController extends FrameworkBundleAdminController
         $combinationsList = $this->getQueryBus()->handle(new GetEditableCombinationsList(
             $productId,
             $this->getContextLangId(),
+            $this->getContextShopId(),
             $combinationFilters->getLimit(),
             $combinationFilters->getOffset(),
             $combinationFilters->getOrderBy(),

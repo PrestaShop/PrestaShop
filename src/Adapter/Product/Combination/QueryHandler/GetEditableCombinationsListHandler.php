@@ -110,6 +110,8 @@ final class GetEditableCombinationsListHandler implements GetEditableCombination
     {
         $filters = $query->getFilters();
         $filters['product_id'] = $query->getProductId()->getValue();
+        $filters['shop_id'] = $query->getShopId()->getValue();
+
         $searchCriteria = new ProductCombinationFilters([
             'limit' => $query->getLimit(),
             'offset' => $query->getOffset(),

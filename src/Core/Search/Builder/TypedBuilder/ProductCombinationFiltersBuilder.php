@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Search\Builder\TypedBuilder;
 
+use Context;
 use PrestaShop\PrestaShop\Core\Search\Builder\AbstractFiltersBuilder;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
@@ -64,8 +65,10 @@ class ProductCombinationFiltersBuilder extends AbstractFiltersBuilder implements
         }
 
         $productId = $this->getProductId();
-        $filterId = ProductCombinationFilters::generateFilterId($productId);
+        $shopId = (int) Context::getContext()->shop->id;
+        $filterId = ProductCombinationFilters::generateFilterId($productId, $shopId);
         $filterParameters['filters']['product_id'] = $productId;
+        $filterParameters['filters']['shop_id'] = $shopId;
 
         return new ProductCombinationFilters($filterParameters, $filterId);
     }
