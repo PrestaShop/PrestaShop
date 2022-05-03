@@ -296,6 +296,7 @@ class Customers extends BOBasePage {
       firstName: await this.getTextColumnFromTableCustomers(page, row, 'firstname'),
       lastName: await this.getTextColumnFromTableCustomers(page, row, 'lastname'),
       email: await this.getTextColumnFromTableCustomers(page, row, 'email'),
+      group: await this.getTextColumnFromTableCustomers(page, row, 'default_group'),
       sales: await this.getTextColumnFromTableCustomers(page, row, 'total_spent'),
       status: await this.getCustomerStatus(page, row),
       newsletter: await this.getNewsletterStatus(page, row),
@@ -518,7 +519,8 @@ class Customers extends BOBasePage {
       + `${customer.socialTitle};`
       + `${customer.firstName};`
       + `${customer.lastName};`
-      + `${customer.email};;`
+      + `${customer.email};`
+      + `${customer.group};;`
       + `${customer.sales !== '--' ? customer.sales : ''};`
       + `${customer.status ? 1 : 0};`
       + `${customer.newsletter ? 1 : 0};`
