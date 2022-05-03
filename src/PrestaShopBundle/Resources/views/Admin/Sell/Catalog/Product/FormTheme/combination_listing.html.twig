@@ -29,8 +29,14 @@
     {# Special case to keep both inputs in the same cell #}
     {% for child in form.children %}
       <td>
-        {{ form_widget(child, {value: placeholder_data[child.vars.name]}) }}
-{#        {{ form_errors(child) }}#}
+        {# When value is null we are displaying the prototype #}
+        {% if value is null %}
+          {% set widgetAttr = {value: placeholder_data[child.vars.name]} %}
+        {% else %}
+          {% set widgetAttr = {} %}
+        {% endif %}
+        {{ form_widget(child, widgetAttr) }}
+        {{ form_errors(child) }}
       </td>
     {% endfor %}
   </tr>
@@ -38,52 +44,40 @@
 
 {%- block combination_list_row -%}
   {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
-
   {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
   {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' combinations-table grid-table table grid-ordering-column')|trim }) -%}
   <table {{ block('widget_attributes') }}>
+    {# Early render of the _token so that it is not included in the tbody which will be emptied by the JS #}
+    {% if form._token %}
+      {{ form_widget(form._token) }}
+    {% endif %}
     <thead class="thead-default">
-    <tr class="column-headers">
-      <th scope="col" id="id-header">
-        <div class="md-checkbox md-checkbox-inline">
-          <label>
-            <input type="checkbox" id="bulk-select-all-in-page">
-            <i class="md-checkbox-control"></i>
-          </label>
-        </div>
-      </th>
+      <tr class="column-headers">
+        <th scope="col" id="id-header">
+          <div class="md-checkbox md-checkbox-inline">
+            <label>
+              <input type="checkbox" id="bulk-select-all-in-page">
+              <i class="md-checkbox-control"></i>
+            </label>
+          </div>
+        </th>
 
-      {% for child in prototype.children %}
-        {% if child.vars.name != 'is_selected' %}
-          <th scope="col">
-            {% if child.vars.attr['data-order-by'] is defined %}
-              {{ ps.sortable_column_header(child.vars.label, child.vars.attr['data-order-by']) }}
-            {% else %}
-              {{ child.vars.label }}
-            {% endif %}
-          </th>
-        {% endif %}
-      {% endfor %}
-    </tr>
+        {% for child in prototype.children %}
+          {# Exception: is_selected header has already been rendered manually #}
+          {% if child.vars.name != 'is_selected' %}
+            <th scope="col">
+              {% if child.vars.attr['data-order-by'] is defined %}
+                {{ ps.sortable_column_header(child.vars.label, child.vars.attr['data-order-by']) }}
+              {% else %}
+                {{ child.vars.label }}
+              {% endif %}
+            </th>
+          {% endif %}
+        {% endfor %}
+      </tr>
     </thead>
     <tbody>
     {{- block('form_rows') -}}
     </tbody>
   </table>
-  <div id="combinations-list-footer">
-    <span>
-      {{ 'Edition mode'|trans({}, 'Admin.Actions') }}
-    </span>
-    <div id="combinations-list-footer-buttons">
-      <button id="cancel-combinations-edition" class="btn btn-secondary">
-        {{ 'Cancel'|trans({}, 'Admin.Actions') }}
-      </button>
-      <button id="reset-combinations-edition" class="btn btn-secondary">
-        {{ 'Reset values'|trans({}, 'Admin.Actions') }}
-      </button>
-      <button id="save-combinations-edition" class="btn btn-primary">
-        {{ 'Save list'|trans({}, 'Admin.Catalog.Feature') }}
-      </button>
-    </div>
-  </div>
 {%- endblock -%}

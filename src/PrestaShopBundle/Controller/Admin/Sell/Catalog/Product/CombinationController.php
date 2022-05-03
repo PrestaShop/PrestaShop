@@ -177,7 +177,7 @@ class CombinationController extends FrameworkBundleAdminController
      * Renders combinations list prototype (which contains form inputs submittable by ajax)
      * It can only be embedded into another view (does not have a route), it is included in this template:
      *
-     * src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/Tabs/combinations.html.twig
+     * src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/Combination/external_tab.html.twig
      *
      * @param int $productId
      *
@@ -322,23 +322,30 @@ class CombinationController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
-     * @param int $combinationId
+     * @param int $productId
      * @param Request $request
      *
      * @return JsonResponse
      */
-    public function updateCombinationFromListingAction(int $combinationId, Request $request): JsonResponse
+    public function updateCombinationFromListingAction(int $productId, Request $request): JsonResponse
     {
-        $form = $this->getCombinationItemFormBuilder()->getFormFor($combinationId, [], [
+        $combinationsListForm = $this->getCombinationListFormBuilder()->getForm([], [
             'method' => Request::METHOD_PATCH,
         ]);
-        $form->handleRequest($request);
 
         try {
-            $result = $this->getCombinationItemFormHandler()->handleFor($combinationId, $form);
+            $combinationsListForm->handleRequest($request);
+            $result = $this->getCombinationListFormHandler()->handleFor($productId, $combinationsListForm);
 
-            if (!$result->isValid()) {
-                return $this->json(['errors' => $this->getFormErrorsForJS($form)], Response::HTTP_BAD_REQUEST);
+            if (!$result->isSubmitted()) {
+                return $this->json(['errors' => $this->getFormErrorsForJS($combinationsListForm)], Response::HTTP_BAD_REQUEST);
+            } elseif (!$result->isValid()) {
+                return $this->json([
+                    'errors' => $this->getFormErrorsForJS($combinationsListForm),
+                    'formContent' => $this->renderView('@PrestaShop/Admin/Sell/Catalog/Product/Combination/combination_list_form.html.twig', [
+                        'combinationsForm' => $combinationsListForm->createView(),
+                    ]),
+                ], Response::HTTP_BAD_REQUEST);
             }
         } catch (Exception $e) {
             return $this->json(
@@ -466,9 +473,9 @@ class CombinationController extends FrameworkBundleAdminController
     /**
      * @return FormHandlerInterface
      */
-    private function getCombinationItemFormHandler(): FormHandlerInterface
+    private function getCombinationListFormHandler(): FormHandlerInterface
     {
-        return $this->get('prestashop.core.form.identifiable_object.combination_item_form_handler');
+        return $this->get('prestashop.core.form.identifiable_object.combination_list_form_handler');
     }
 
     /**
@@ -509,14 +516,6 @@ class CombinationController extends FrameworkBundleAdminController
     private function getCombinationListFormBuilder(): FormBuilderInterface
     {
         return $this->get('prestashop.core.form.identifiable_object.builder.combination_list_form_builder');
-    }
-
-    /**
-     * @return FormBuilderInterface
-     */
-    private function getCombinationItemFormBuilder(): FormBuilderInterface
-    {
-        return $this->get('prestashop.core.form.identifiable_object.builder.combination_item_form_builder');
     }
 
     /**

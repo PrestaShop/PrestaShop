@@ -1491,6 +1491,11 @@ $product-page-padding-bottom: 80px !default;
 
   #combinations-paginated-list {
     &.edition-mode {
+      #combinations-list-form-container {
+        background-color: rgba(37, 185, 215, 0.1);
+        @include border-radius(0.5rem 0.5rem 0 0);
+      }
+
       #combinations-pagination {
         display: none;
       }
@@ -1518,8 +1523,6 @@ $product-page-padding-bottom: 80px !default;
 
       .combinations-table {
         margin-bottom: 0;
-        background-color: rgba(37, 185, 215, 0.1);
-        @include border-radius(0.5rem 0.5rem 0 0);
 
         .combination-value-changed {
           background: #F4FCFD;
