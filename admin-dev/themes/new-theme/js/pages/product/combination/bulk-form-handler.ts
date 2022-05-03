@@ -29,6 +29,7 @@ import ProductEvents from '@pages/product/product-event-map';
 import CombinationsService from '@pages/product/services/combinations-service';
 import {EventEmitter} from 'events';
 import BulkChoicesSelector from '@pages/product/combination/bulk-choices-selector';
+import {notifyFormErrors} from '@components/form/form-notification';
 
 const CombinationMap = ProductMap.combinations;
 const CombinationEvents = ProductEvents.combinations;
@@ -161,13 +162,7 @@ export default class BulkFormHandler {
         const jsonResponse = await response.json();
 
         if (jsonResponse.errors) {
-          Object.keys(jsonResponse.errors).forEach((field: string) => {
-            if (Object.prototype.hasOwnProperty.call(jsonResponse.errors, field)) {
-              const fieldErrors: string[] = jsonResponse.errors[field];
-              const errors: string = fieldErrors.join(' ');
-              $.growl.error({message: `${field}: ${errors}`});
-            }
-          });
+          notifyFormErrors(jsonResponse);
         }
       } catch (error) {
         console.log(error);
