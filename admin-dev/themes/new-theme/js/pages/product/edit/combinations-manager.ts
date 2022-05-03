@@ -23,6 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import BigNumber from 'bignumber.js';
 import ProductMap from '@pages/product/product-map';
 import CombinationsGridRenderer from '@pages/product/edit/combinations-grid-renderer';
 import CombinationsService from '@pages/product/services/combinations-service';
@@ -39,9 +40,9 @@ import PaginatedCombinationsService from '@pages/product/services/paginated-comb
 import BulkDeleteHandler from '@pages/product/combination/bulk-delete-handler';
 import BulkChoicesSelector from '@pages/product/combination/bulk-choices-selector';
 import ProductFormModel from '@pages/product/edit/product-form-model';
+import {notifyFormErrors} from '@components/form/form-notification';
 
 import ChangeEvent = JQuery.ChangeEvent;
-import BigNumber from "@node_modules/bignumber.js";
 
 const {$} = window;
 const CombinationEvents = ProductEventMap.combinations;
@@ -56,7 +57,7 @@ export default class CombinationsManager {
 
   $productForm: JQuery;
 
-  $combinationsContainer: JQuery;
+  $combinationsFormContainer: JQuery;
 
   $preloader: JQuery;
 
@@ -91,7 +92,7 @@ export default class CombinationsManager {
     this.productFormModel = productFormModel;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.$productForm = $(ProductMap.productForm);
-    this.$combinationsContainer = $(CombinationsMap.combinationsListContainer);
+    this.$combinationsFormContainer = $(CombinationsMap.combinationsFormContainer);
     this.externalCombinationTab = document.querySelector<HTMLDivElement>(CombinationsMap.externalCombinationTab)!;
 
     this.$preloader = $(CombinationsMap.preloader);
@@ -226,7 +227,7 @@ export default class CombinationsManager {
       0,
     );
 
-    this.$combinationsContainer.on(
+    this.$combinationsFormContainer.on(
       'click',
       CombinationsMap.deleteCombinationSelector,
       async (e) => {
@@ -234,7 +235,7 @@ export default class CombinationsManager {
       },
     );
 
-    this.$combinationsContainer.on('change', CombinationsMap.list.fieldInputs, (event: ChangeEvent) => {
+    this.$combinationsFormContainer.on('change', CombinationsMap.list.fieldInputs, (event: ChangeEvent) => {
       const $input = $(event.currentTarget);
 
       if (
@@ -246,11 +247,11 @@ export default class CombinationsManager {
       }
     });
 
-    this.$combinationsContainer.on('change', ProductMap.combinations.list.priceImpactTaxExcluded, (event: ChangeEvent) => {
+    this.$combinationsFormContainer.on('change', ProductMap.combinations.list.priceImpactTaxExcluded, (event: ChangeEvent) => {
       this.updateByPriceImpactTaxExcluded($(event.currentTarget));
     });
 
-    this.$combinationsContainer.on('change', ProductMap.combinations.list.priceImpactTaxIncluded, (event: ChangeEvent) => {
+    this.$combinationsFormContainer.on('change', ProductMap.combinations.list.priceImpactTaxIncluded, (event: ChangeEvent) => {
       this.updateByPriceImpactTaxIncluded($(event.currentTarget));
     });
 
@@ -287,7 +288,7 @@ export default class CombinationsManager {
 
     // Preset initial data attribute after each list rendering
     this.eventEmitter.on(CombinationEvents.listRendered, () => {
-      $(ProductMap.combinations.list.fieldInputs, this.$combinationsContainer).each((index, input) => {
+      $(ProductMap.combinations.list.fieldInputs, this.$combinationsFormContainer).each((index, input) => {
         const $input = $(input);
 
         if (typeof $input.val() !== 'undefined') {
@@ -405,7 +406,7 @@ export default class CombinationsManager {
    * @private
    */
   private initSortingColumns(): void {
-    this.$combinationsContainer.on(
+    this.$combinationsFormContainer.on(
       'click',
       CombinationsMap.sortableColumns,
       (event) => {
@@ -431,19 +432,19 @@ export default class CombinationsManager {
         // Reset all columns, we need to force the attributes for CSS matching
         $(
           CombinationsMap.sortableColumns,
-          this.$combinationsContainer,
+          this.$combinationsFormContainer,
         ).removeData('sortIsCurrent');
         $(
           CombinationsMap.sortableColumns,
-          this.$combinationsContainer,
+          this.$combinationsFormContainer,
         ).removeData('sortDirection');
         $(
           CombinationsMap.sortableColumns,
-          this.$combinationsContainer,
+          this.$combinationsFormContainer,
         ).removeAttr('data-sort-is-current');
         $(
           CombinationsMap.sortableColumns,
-          this.$combinationsContainer,
+          this.$combinationsFormContainer,
         ).removeAttr('data-sort-direction');
 
         // Set correct data in current column, we need to force the attributes for CSS matching
@@ -496,10 +497,6 @@ export default class CombinationsManager {
     }
   }
 
-  private getCombinationToken(): string {
-    return $(CombinationsMap.combinationsListContainer).data('combinationToken');
-  }
-
   /**
    * @param {HTMLElement} input of the same table row
    *
@@ -525,7 +522,7 @@ export default class CombinationsManager {
   }
 
   private resetEdition(): void {
-    $(CombinationsMap.list.fieldInputs, this.$combinationsContainer).each((index, input) => {
+    $(CombinationsMap.list.fieldInputs, this.$combinationsFormContainer).each((index, input) => {
       const $input = $(input);
 
       if (
@@ -544,7 +541,27 @@ export default class CombinationsManager {
     this.disableEditionMode();
   }
 
-  private saveEdition(): void {
+  private async saveEdition(): Promise<void> {
+    if (this.combinationsRenderer) {
+      this.combinationsRenderer.toggleLoading(true);
+      const formData = this.combinationsRenderer.getFormData();
 
+      const response = await this.combinationsService.updateCombinationList(this.productId, formData);
+      const jsonResponse = await response.json();
+
+      if (jsonResponse.errors) {
+        // If formContent is available we can replace the content to display the inline errors
+        if (jsonResponse.formContent) {
+          this.$combinationsFormContainer.html(jsonResponse.formContent);
+        } else {
+          notifyFormErrors(jsonResponse);
+        }
+        this.combinationsRenderer.toggleLoading(false);
+      } else if (jsonResponse.message) {
+        $.growl({message: jsonResponse.message});
+        this.disableEditionMode();
+        this.eventEmitter.emit(CombinationEvents.refreshCombinationList);
+      }
+    }
   }
 }

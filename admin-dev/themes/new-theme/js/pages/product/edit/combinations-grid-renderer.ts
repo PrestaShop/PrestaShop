@@ -27,9 +27,6 @@ import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
 import {EventEmitter} from 'events';
 import ProductFormModel from '@pages/product/edit/product-form-model';
-import BigNumber from 'bignumber.js';
-
-import ChangeEvent = JQuery.ChangeEvent;
 
 const {$} = window;
 
@@ -73,6 +70,16 @@ export default class CombinationsGridRenderer {
    */
   toggleLoading(loading: boolean): void {
     this.$loadingSpinner.toggle(loading);
+  }
+
+  getFormData(): FormData {
+    const combinationListForm = document.querySelector<HTMLFormElement>(ProductMap.combinations.list.form);
+
+    if (!combinationListForm) {
+      return new FormData();
+    }
+
+    return new FormData(combinationListForm);
   }
 
   /**
