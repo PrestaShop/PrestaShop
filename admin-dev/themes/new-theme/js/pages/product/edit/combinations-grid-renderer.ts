@@ -36,10 +36,6 @@ const {$} = window;
 export default class CombinationsGridRenderer {
   eventEmitter: EventEmitter;
 
-  $combinationsTable: JQuery;
-
-  $combinationsTableBody: JQuery;
-
   $loadingSpinner: JQuery;
 
   prototypeTemplate: string;
@@ -51,11 +47,12 @@ export default class CombinationsGridRenderer {
   constructor(productFormModel: ProductFormModel) {
     this.productFormModel = productFormModel;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
-    this.$combinationsTable = $(ProductMap.combinations.combinationsTable);
-    this.$combinationsTableBody = $(ProductMap.combinations.combinationsTableBody);
     this.$loadingSpinner = $(ProductMap.combinations.loadingSpinner);
-    this.prototypeTemplate = this.$combinationsTable.data('prototype');
-    this.prototypeName = this.$combinationsTable.data('prototypeName');
+
+    // We can't keep a reference on the table (or its content) since it can be updated via ajax, we always get it just in time
+    const $combinationsTable = $(ProductMap.combinations.combinationsTable);
+    this.prototypeTemplate = $combinationsTable.data('prototype');
+    this.prototypeName = $combinationsTable.data('prototypeName');
   }
 
   /**
@@ -88,8 +85,11 @@ export default class CombinationsGridRenderer {
    * @private
    */
   private renderCombinations(combinations: Array<Record<string, any>>): void {
-    this.$combinationsTableBody.empty();
-    this.$combinationsTable.find(ProductMap.combinations.bulkSelectAllInPage).prop('checked', false);
+    const $combinationsTable = $(ProductMap.combinations.combinationsTable);
+    const $combinationsTableBody = $(ProductMap.combinations.combinationsTableBody);
+
+    $combinationsTableBody.empty();
+    $combinationsTable.find(ProductMap.combinations.bulkSelectAllInPage).prop('checked', false);
 
     let rowIndex = 0;
     combinations.forEach((combination: Record<string, any>) => {
@@ -97,7 +97,7 @@ export default class CombinationsGridRenderer {
       // JS event to allow external module to change the row, add listeners, ... before it is added
       this.eventEmitter.emit(ProductEventMap.combinations.buildCombinationRow, {combination, $row});
 
-      this.$combinationsTableBody.append($row);
+      $combinationsTableBody.append($row);
       rowIndex += 1;
     });
 

@@ -259,6 +259,12 @@ export default class CombinationsManager {
       this.updateByPriceImpactTaxIncluded($(event.currentTarget));
     });
 
+    this.$combinationsFormContainer.on('click', ProductMap.combinations.list.isDefault, (event) => {
+      const clickedDefaultId = event.currentTarget.id;
+      $(`${ProductMap.combinations.list.isDefault}:not(#${clickedDefaultId})`).prop('checked', false).val(0);
+      $(`#${clickedDefaultId}`).prop('checked', true).val(1);
+    });
+
     $(CombinationsMap.list.footer.cancel).on('click', () => {
       this.cancelEdition();
     });
@@ -281,12 +287,6 @@ export default class CombinationsManager {
       if (combination.is_default) {
         $(ProductMap.combinations.list.isDefault, $row).prop('checked', true);
       }
-      $(ProductMap.combinations.list.isDefault, $row).on('click', (event) => {
-        const clickedDefaultId = event.currentTarget.id;
-        $(`${ProductMap.combinations.list.isDefault}:not(#${clickedDefaultId})`).prop('checked', false).val(0);
-        $(`#${clickedDefaultId}`).prop('checked', true).val(1);
-      });
-
       this.updateByPriceImpactTaxExcluded($(ProductMap.combinations.list.priceImpactTaxExcluded, $row));
     });
 
