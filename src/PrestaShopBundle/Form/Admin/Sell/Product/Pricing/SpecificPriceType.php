@@ -129,15 +129,9 @@ class SpecificPriceType extends TranslatorAwareType
             ->add('product_id', HiddenType::class)
             ->add('groups', GroupPriceType::class, [
                 'label' => $this->trans('Apply to', 'Admin.Global'),
-                'required' => false
+                'required' => false,
+                'is_multishop_enabled' => $this->isMultishopEnabled
             ]);
-            if ($this->isMultishopEnabled) {
-                $builder->add('shop_id', ChoiceType::class, [
-                    'required' => false,
-                    'placeholder' => false,
-                    'choices' => $this->shopByIdChoiceProvider->getChoices(),
-                ]);
-            }
         $builder->add('customer', EntitySearchInputType::class, [
                 'label' => $this->trans('Apply to all customers', 'Admin.Global'),
                 'layout' => EntitySearchInputType::LIST_LAYOUT,

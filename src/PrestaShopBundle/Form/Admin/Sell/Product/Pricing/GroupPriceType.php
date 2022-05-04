@@ -91,6 +91,14 @@ class GroupPriceType extends TranslatorAwareType
                 'choices' => $this->groupByIdChoiceProvider->getChoices(),
             ])
         ;
+
+        if ($options['is_multishop_enabled']) {
+            $builder->add('shop_id', ChoiceType::class, [
+                'required' => false,
+                'placeholder' => false,
+                'choices' => $this->shopByIdChoiceProvider->getChoices(),
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -98,6 +106,7 @@ class GroupPriceType extends TranslatorAwareType
         parent::configureOptions($resolver);
         $resolver->setDefaults([
             'columns_number' => 4,
+            'is_multishop_enabled' => false,
         ]);
     }
 
