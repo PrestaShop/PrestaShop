@@ -40,7 +40,7 @@ import PaginatedCombinationsService from '@pages/product/services/paginated-comb
 import BulkDeleteHandler from '@pages/product/combination/bulk-delete-handler';
 import BulkChoicesSelector from '@pages/product/combination/bulk-choices-selector';
 import ProductFormModel from '@pages/product/edit/product-form-model';
-import {notifyFormErrors} from '@components/form/form-notification';
+import {notifyFormErrors} from '@components/form/helpers';
 import {isUndefined} from '@PSTypes/typeguard';
 
 import ChangeEvent = JQuery.ChangeEvent;
@@ -368,12 +368,11 @@ export default class CombinationsManager {
     const $row = $priceImpactTaxExcluded.parents(ProductMap.combinations.list.combinationRow);
     const $priceImpactTaxIncluded = $(ProductMap.combinations.list.priceImpactTaxIncluded, $row);
 
-    if (typeof $row === 'undefined' || typeof $priceImpactTaxIncluded === 'undefined') {
+    if (isUndefined($row) || isUndefined($priceImpactTaxIncluded)) {
       return;
     }
 
-    // @ts-ignore
-    const priceImpactTaxExcluded: BigNumber = new BigNumber($priceImpactTaxExcluded.val());
+    const priceImpactTaxExcluded: BigNumber = new BigNumber(Number($priceImpactTaxExcluded.val()));
 
     if (priceImpactTaxExcluded.isNaN()) {
       return;
@@ -388,12 +387,11 @@ export default class CombinationsManager {
     const $row = $priceImpactTaxIncluded.parents(ProductMap.combinations.list.combinationRow);
     const $priceImpactTaxExcluded = $(ProductMap.combinations.list.priceImpactTaxExcluded, $row);
 
-    if (typeof $row === 'undefined' || typeof $priceImpactTaxExcluded === 'undefined') {
+    if (isUndefined($row) || isUndefined($priceImpactTaxExcluded)) {
       return;
     }
 
-    // @ts-ignore
-    const priceImpactTaxIncluded: BigNumber = new BigNumber($priceImpactTaxIncluded.val());
+    const priceImpactTaxIncluded: BigNumber = new BigNumber(Number($priceImpactTaxIncluded.val()));
 
     if (priceImpactTaxIncluded.isNaN()) {
       return;
@@ -527,11 +525,11 @@ export default class CombinationsManager {
    *
    * @private
    */
-  private findCombinationId(input: HTMLElement): any {
-    return $(input)
+  private findCombinationId(input: HTMLElement): number {
+    return Number($(input)
       .closest('tr')
       .find(CombinationsMap.combinationIdInputsSelector)
-      .val();
+      .val());
   }
 
   private enableEditionMode(): void {

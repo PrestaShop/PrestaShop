@@ -29,7 +29,7 @@ import ProductEvents from '@pages/product/product-event-map';
 import CombinationsService from '@pages/product/services/combinations-service';
 import {EventEmitter} from 'events';
 import BulkChoicesSelector from '@pages/product/combination/bulk-choices-selector';
-import {notifyFormErrors} from '@components/form/form-notification';
+import {notifyFormErrors} from '@components/form/helpers';
 
 const CombinationMap = ProductMap.combinations;
 const CombinationEvents = ProductEvents.combinations;
