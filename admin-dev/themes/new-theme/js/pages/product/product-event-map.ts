@@ -63,5 +63,6 @@ export default {
   },
   specificPrice: {
     specificPriceUpdated: 'specificPriceUpdated',
+    specificPriceCreated: 'specificPriceCreated',
   },
 };

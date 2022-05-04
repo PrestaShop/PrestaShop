@@ -60,6 +60,7 @@ export default class SpecificPricesManager {
 
   private initListeners(): void {
     this.eventEmitter.on(ProductEventMap.specificPrice.specificPriceUpdated, () => this.specificPriceList.renderList());
+    this.eventEmitter.on(ProductEventMap.specificPrice.specificPriceCreated, () => this.specificPriceList.renderList());
   }
 
   private initComponents() {
@@ -100,6 +101,11 @@ export default class SpecificPricesManager {
       closeButtonLabel: 'close',
       confirmButtonLabel: 'save',
       closeOnConfirm: false,
+      onFormLoaded: (form: HTMLElement, formData: JQuery.NameValuePair[] | null, dataAttributes: DOMStringMap | null): void => {
+        if (dataAttributes && dataAttributes.alertsSuccess === '1') {
+          this.eventEmitter.emit(ProductEventMap.specificPrice.specificPriceCreated);
+        }
+      },
       confirmCallback: (iframe: HTMLIFrameElement): void => {
         if (!iframe.contentWindow) {
           return;
@@ -114,9 +120,5 @@ export default class SpecificPricesManager {
       },
     });
     iframeModal.show();
-  }
-
-  private async deleteSpecificPrice() {
-    alert('toto');
   }
 }
