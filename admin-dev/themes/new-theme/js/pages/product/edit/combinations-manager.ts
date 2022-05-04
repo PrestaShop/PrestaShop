@@ -380,6 +380,7 @@ export default class CombinationsManager {
     }
 
     $priceImpactTaxIncluded.val(this.productFormModel.addTax(priceImpactTaxExcluded));
+    $priceImpactTaxIncluded.addClass(ProductMap.combinations.list.modifiedFieldClass);
     this.updateFinalPrice(priceImpactTaxExcluded, $row);
   }
 
@@ -399,6 +400,7 @@ export default class CombinationsManager {
     }
 
     $priceImpactTaxExcluded.val(this.productFormModel.removeTax(priceImpactTaxIncluded));
+    $priceImpactTaxExcluded.addClass(ProductMap.combinations.list.modifiedFieldClass);
     const taxRatio = this.productFormModel.getTaxRatio();
 
     if (taxRatio.isNaN()) {

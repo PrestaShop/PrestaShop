@@ -1461,6 +1461,23 @@ $product-page-padding-bottom: 80px !default;
             justify-content: center;
           }
         }
+
+        .alert > * {
+          padding: 0;
+        }
+
+        .alert-danger {
+          padding: 0.5rem;
+          margin: 0.2rem 0 0;
+
+          &::before {
+            content: "";
+          }
+
+          .close {
+            margin: 0;
+          }
+        }
       }
     }
 
