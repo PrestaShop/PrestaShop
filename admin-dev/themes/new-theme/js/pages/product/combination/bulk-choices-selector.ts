@@ -67,11 +67,11 @@ export default class BulkChoicesSelector {
       if (e.target.id === CombinationMap.bulkSelectAllInPageId) {
         this.checkAll(e.target.checked);
       }
-      this.toggleAvailability();
+      this.updateBulkButtonsState();
     });
   }
 
-  public toggleAvailability(): void {
+  public updateBulkButtonsState(): void {
     const selectAllCheckbox = document.getElementById(CombinationMap.bulkSelectAllInPageId);
     const dropdownBtn = this.tabContainer.querySelector<HTMLInputElement>(CombinationMap.bulkActionsDropdownBtn);
     const selectedCombinationsCount = this.getSelectedCheckboxes().length;
@@ -97,6 +97,6 @@ export default class BulkChoicesSelector {
 
   private init() {
     this.listenCheckboxesChange();
-    this.eventEmitter.on(CombinationEvents.listRendered, () => this.toggleAvailability());
+    this.eventEmitter.on(CombinationEvents.listRendered, () => this.updateBulkButtonsState());
   }
 }
