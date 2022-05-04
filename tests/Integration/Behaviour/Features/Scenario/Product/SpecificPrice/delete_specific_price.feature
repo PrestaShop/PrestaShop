@@ -7,7 +7,7 @@ Feature: Delete a product specific price from Back Office (BO)
   As a BO user
   I need to be able to delete a product specific price from BO
 
-  Background:
+  Scenario: I delete a specific price
     Given shop "testShop" with name "test_shop" exists
     And there is a currency named "usd" with iso code "USD" and exchange rate of 0.92
     And country "UnitedStates" with iso code "US" exists
@@ -21,8 +21,6 @@ Feature: Delete a product specific price from Back Office (BO)
       | includes tax    | true   |
       | fixed price     | 30     |
       | from quantity   | 1      |
-
-  Scenario: I delete a specific price
     When I add a specific price price2 to product product1 with following details:
       | reduction type  | percentage          |
       | reduction value | 12.56               |
