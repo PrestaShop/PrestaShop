@@ -28,6 +28,7 @@ namespace Tests\Integration\Adapter;
 
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Shop;
 use Tests\TestCase\ContextStateTestCase;
 
@@ -53,6 +54,11 @@ class ContextStateManagerTest extends ContextStateTestCase
      */
     protected $shop2;
 
+    /**
+     * @var Shop
+     */
+    protected $shop3;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -71,6 +77,12 @@ class ContextStateManagerTest extends ContextStateTestCase
         $this->shop2->id_category = 2;
         $this->shop2->id_shop_group = 1;
         $this->shop2->add();
+
+        $this->shop3 = new Shop();
+        $this->shop3->name = 'Name 4';
+        $this->shop3->id_category = 2;
+        $this->shop3->id_shop_group = 2;
+        $this->shop3->add();
     }
 
     protected function tearDown(): void
@@ -204,5 +216,51 @@ class ContextStateManagerTest extends ContextStateTestCase
         $this->assertEquals($this->basicShop->id_shop_group, Shop::getContextShopGroupID());
         $this->assertEquals(Shop::CONTEXT_GROUP, Shop::getContext());
         $this->assertNull($contextStateManager->getContextFieldsStack());
+    }
+
+    public function testShopContextState(): void
+    {
+        $this->legacyContext->getContext()->shop = $this->basicShop;
+
+        Shop::setContext(Shop::CONTEXT_SHOP, $this->basicShop->id);
+        $this->assertEquals($this->basicShop->id, $this->legacyContext->getContext()->shop->id);
+        $this->assertEquals($this->basicShop->id, Shop::getContextShopID());
+        $this->assertEquals($this->basicShop->id_shop_group, Shop::getContextShopGroupID());
+        $this->assertEquals(Shop::CONTEXT_SHOP, Shop::getContext());
+
+        $contextStateManager = new ContextStateManager($this->legacyContext);
+        $this->assertNull($contextStateManager->getContextFieldsStack());
+
+        $contextStateManager->setShopContext(ShopConstraint::shop($this->shop2->id));
+        $this->assertEquals($this->shop2->id, $this->legacyContext->getContext()->shop->id);
+        $this->assertEquals($this->shop2->id, Shop::getContextShopID());
+        $this->assertEquals($this->shop2->id_shop_group, Shop::getContextShopGroupID());
+        $this->assertEquals(Shop::CONTEXT_SHOP, Shop::getContext());
+        $this->assertCount(1, $contextStateManager->getContextFieldsStack());
+
+        $contextStateManager->setShopContext(ShopConstraint::shopGroup($this->shop3->id_shop_group));
+        // current shop itself doesn't change, (just the context) so we expect previous shop id here
+        $this->assertEquals($this->shop2->id, $this->legacyContext->getContext()->shop->id);
+        $this->assertNull(Shop::getContextShopID());
+        $this->assertEquals($this->shop3->id_shop_group, Shop::getContextShopGroupID());
+        $this->assertEquals(Shop::CONTEXT_GROUP, Shop::getContext());
+        $this->assertCount(1, $contextStateManager->getContextFieldsStack());
+
+        $contextStateManager->setShopContext(ShopConstraint::allShops());
+        // current shop itself doesn't change (just the context), so we expect previous shop id here
+        $this->assertEquals($this->shop2->id, $this->legacyContext->getContext()->shop->id);
+        $this->assertNull(Shop::getContextShopID());
+        $this->assertNull(Shop::getContextShopGroupID());
+        $this->assertEquals(Shop::CONTEXT_ALL, Shop::getContext());
+        $this->assertCount(1, $contextStateManager->getContextFieldsStack());
+
+        //@todo: I don't understand why this passes.
+        //      Shouldn't it restore context one step back? to the "allShops" and not all the way back to basic shop?
+        //      Also why there are no calls of "saveCurrentContext" it seemed to be important, I don't know what to expect.
+        $contextStateManager->restorePreviousContext();
+        $this->assertEquals($this->basicShop->id, $this->legacyContext->getContext()->shop->id);
+        $this->assertEquals($this->basicShop->id, Shop::getContextShopID());
+        $this->assertEquals($this->basicShop->id_shop_group, Shop::getContextShopGroupID());
+        $this->assertEquals(Shop::CONTEXT_SHOP, Shop::getContext());
     }
 }
