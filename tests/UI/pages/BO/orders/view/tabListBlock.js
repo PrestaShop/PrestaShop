@@ -59,6 +59,7 @@ class TabListBlock extends ViewOrderBasePage.constructor {
     this.trackingNumberInput = `${this.updateOrderShippingModalDialog} #update_order_shipping_tracking_number`;
     this.carrierSelect = '#select2-update_order_shipping_new_carrier_id-container';
     this.carriersSelectResult = '#select2-update_order_shipping_new_carrier_id-results';
+    this.carrierToSelect = id => `${this.carriersSelectResult} li:nth-child(${id})`;
     this.updateCarrierButton = `${this.updateOrderShippingModalDialog} button.btn-primary`;
     this.giftMessage = '#gift-message';
 
@@ -439,7 +440,7 @@ class TabListBlock extends ViewOrderBasePage.constructor {
   async setShippingDetails(page, shippingData) {
     await this.setValue(page, this.trackingNumberInput, shippingData.trackingNumber);
     await page.click(this.carrierSelect);
-    await this.waitForSelectorAndClick(page, `${this.carriersSelectResult} li:nth-child(${shippingData.carrierID})`);
+    await this.waitForSelectorAndClick(page, this.carrierToSelect(shippingData.carrierID));
     await this.clickAndWaitForNavigation(page, this.updateCarrierButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
