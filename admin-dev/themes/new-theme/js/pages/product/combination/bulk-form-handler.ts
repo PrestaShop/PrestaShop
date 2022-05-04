@@ -58,27 +58,26 @@ export default class BulkFormHandler {
   }
 
   private init(): void {
-    //@todo; what does this mean? why there are 2 almost same looking selectors?
-    const bulkFormBtn = document.querySelector<HTMLButtonElement>(CombinationMap.bulkCombinationFormBtn);
-    const bulkCombinationsBtn = this.tabContainer.querySelector<HTMLButtonElement>(CombinationMap.bulkCombinationFormBtn);
+    const bulkEditionFormBtn = this.tabContainer.querySelector<HTMLButtonElement>(CombinationMap.bulkCombinationFormBtn);
 
-    // @todo: This is hard-coded but when the other bulk actions will be added this needs to be more generic via
-    //        the use of data attributes:
-    //           data-bulk-url: is the url to call for each selected IDs, by default only the ID is necessary in the data
-    //           data-form-url: indicates that a form must be opened, upon submit the data is used to be sent to the bulk-url
-    if (bulkCombinationsBtn && bulkFormBtn) {
-      const {modalConfirmLabel, modalCancelLabel} = bulkCombinationsBtn.dataset;
-      const {formUrl} = bulkFormBtn.dataset;
-
-      if (formUrl) {
-        bulkFormBtn.addEventListener('click', () => this.showFormModal(
-          formUrl,
-          bulkCombinationsBtn.innerHTML,
-          modalConfirmLabel || 'Confirm',
-          modalCancelLabel || 'Cancel',
-        ));
-      }
+    if (!(bulkEditionFormBtn instanceof HTMLButtonElement)) {
+      console.error(`${CombinationMap.bulkCombinationFormBtn} was expected to be HTMLButtonElement`);
+      return;
     }
+    const {modalConfirmLabel, modalCancelLabel} = bulkEditionFormBtn.dataset;
+    const {formUrl} = bulkEditionFormBtn.dataset;
+
+    if (typeof formUrl !== 'string') {
+      console.error('Mandatory attribute "data-form-url" is missing');
+      return;
+    }
+
+    bulkEditionFormBtn.addEventListener('click', () => this.showFormModal(
+      formUrl,
+      bulkEditionFormBtn.innerHTML,
+      modalConfirmLabel || 'Confirm',
+      modalCancelLabel || 'Cancel',
+    ));
   }
 
   private showFormModal(formUrl: string, modalTitle: string, confirmButtonLabel: string, closeButtonLabel: string): void {
