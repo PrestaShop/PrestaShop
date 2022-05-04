@@ -131,15 +131,23 @@ class SpecificPriceType extends TranslatorAwareType
             ->add('groups', GroupPriceType::class, [
                 'label' => $this->trans('Apply to', 'Admin.Global'),
                 'required' => false
-            ])
-            ->add('customer', EntitySearchInputType::class, [
-                'label' => $this->trans('Customer', 'Admin.Global'),
+            ]);
+            if ($this->isMultishopEnabled) {
+                $builder->add('shop_id', ChoiceType::class, [
+                    'required' => false,
+                    'placeholder' => false,
+                    'choices' => $this->shopByIdChoiceProvider->getChoices(),
+                ]);
+            }
+        $builder->add('customer', EntitySearchInputType::class, [
+                'label' => $this->trans('Apply to all customers', 'Admin.Global'),
                 'layout' => EntitySearchInputType::LIST_LAYOUT,
                 'entry_type' => SearchedCustomerType::class,
                 'entry_options' => [
                     'block_prefix' => 'searched_customer',
                 ],
                 'limit' => 1,
+                'disabling_switch' => true,
                 'remote_url' => $this->urlGenerator->generate('admin_customers_search', ['customer_search' => '__QUERY__']),
                 'placeholder' => $this->trans('All Customers', 'Admin.Global'),
                 'suggestion_field' => 'fullname_and_email',
@@ -226,13 +234,7 @@ class SpecificPriceType extends TranslatorAwareType
             ])
         ;
 
-        if ($this->isMultishopEnabled) {
-            $builder->add('shop_id', ChoiceType::class, [
-                'required' => false,
-                'placeholder' => false,
-                'choices' => $this->shopByIdChoiceProvider->getChoices(),
-            ]);
-        }
+
     }
 
     public function configureOptions(OptionsResolver $resolver)
