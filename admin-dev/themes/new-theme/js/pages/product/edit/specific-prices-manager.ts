@@ -54,7 +54,6 @@ export default class SpecificPricesManager {
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.specificPriceList = new SpecificPriceList(productId);
     this.initComponents();
-    this.initSpecificPriceModal();
     this.specificPriceList.renderList();
     this.initListeners();
   }
@@ -100,8 +99,18 @@ export default class SpecificPricesManager {
       closable: true,
       closeButtonLabel: 'close',
       confirmButtonLabel: 'save',
-      onFormLoaded: (form: HTMLElement, formData: JQuery.NameValuePair[] | null, dataAttributes: DOMStringMap | null): void => {
-        // alert('form loaded');
+      closeOnConfirm: false,
+      confirmCallback: (iframe: HTMLIFrameElement): void => {
+        if (!iframe.contentWindow) {
+          return;
+        }
+        const form = iframe.contentWindow.document.querySelector<HTMLFormElement>('form[name="specific_price"]');
+
+        if (!form) {
+          return;
+        }
+
+        form.submit();
       },
     });
     iframeModal.show();
