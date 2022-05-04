@@ -93,7 +93,12 @@ const discountFreeShipping = {
   type: 'Free shipping',
 };
 
-const shippingDetailsData = {trackingNumber: '0523698', carrier: Carriers.myCarrier.name, shippingCost: '€8.40'};
+const shippingDetailsData = {
+  trackingNumber: '0523698',
+  carrier: Carriers.myCarrier.name,
+  carrierID: Carriers.myCarrier.id,
+  shippingCost: '€8.40',
+};
 /*
 Pre-condition :
 - Create order by default customer

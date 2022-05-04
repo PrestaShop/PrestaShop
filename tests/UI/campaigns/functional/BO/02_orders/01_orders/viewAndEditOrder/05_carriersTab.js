@@ -28,7 +28,12 @@ let browserContext;
 let page;
 const today = getDateFormat('mm/dd/yyyy');
 
-const shippingDetailsData = {trackingNumber: '0523698', carrier: Carriers.myCarrier.name, shippingCost: '€8.40'};
+const shippingDetailsData = {
+  trackingNumber: '0523698',
+  carrier: Carriers.myCarrier.name,
+  carrierID: Carriers.myCarrier.id,
+  shippingCost: '€8.40',
+};
 
 // New order by customer data
 const orderByCustomerData = {

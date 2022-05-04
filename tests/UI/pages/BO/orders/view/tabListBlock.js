@@ -57,7 +57,8 @@ class TabListBlock extends ViewOrderBasePage.constructor {
     this.updateOrderShippingModal = '#updateOrderShippingModal';
     this.updateOrderShippingModalDialog = `${this.updateOrderShippingModal} div.modal-dialog`;
     this.trackingNumberInput = `${this.updateOrderShippingModalDialog} #update_order_shipping_tracking_number`;
-    this.carrierSelect = `${this.updateOrderShippingModalDialog} #update_order_shipping_new_carrier_id`;
+    this.carrierSelect = '#select2-update_order_shipping_new_carrier_id-container';
+    this.carriersSelectResult = '#select2-update_order_shipping_new_carrier_id-results';
     this.updateCarrierButton = `${this.updateOrderShippingModalDialog} button.btn-primary`;
     this.giftMessage = '#gift-message';
 
@@ -432,12 +433,13 @@ class TabListBlock extends ViewOrderBasePage.constructor {
   /**
    * Set shipping details
    * @param page {Page} Browser tab
-   * @param shippingData {{carrier: string, shippingCost: string, trackingNumber: string}} Data to set on shipping form
+   * @param shippingData {{trackingNumber: string, carrier: string, carrierID: number}} Data to set on shipping form
    * @returns {Promise<string>}
    */
   async setShippingDetails(page, shippingData) {
     await this.setValue(page, this.trackingNumberInput, shippingData.trackingNumber);
-    await this.setValue(page, this.carrierSelect, shippingData.carrier);
+    await page.click(this.carrierSelect);
+    await this.waitForSelectorAndClick(page, `${this.carriersSelectResult} li:nth-child(${shippingData.carrierID})`);
     await this.clickAndWaitForNavigation(page, this.updateCarrierButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);

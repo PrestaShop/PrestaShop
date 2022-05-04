@@ -128,11 +128,6 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
       },
       {
         args: {
-          testIdentifier: 'filterShop', filterType: 'input', filterBy: 's!name', filterValue: global.INSTALL.SHOP_NAME,
-        },
-      },
-      {
-        args: {
           testIdentifier: 'filterCurrency',
           filterType: 'input',
           filterBy: 'cul!name',
@@ -273,16 +268,6 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
       },
       {
         args: {
-          testIdentifier: 'sortByShopAsc', sortBy: 's!name', sortDirection: 'up',
-        },
-      },
-      {
-        args: {
-          testIdentifier: 'sortByShopDesc', sortBy: 's!name', sortDirection: 'down',
-        },
-      },
-      {
-        args: {
           testIdentifier: 'sortByCurrencyAsc', sortBy: 'cul!name', sortDirection: 'up',
         },
       },
@@ -313,12 +298,12 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
       },
       {
         args: {
-          testIdentifier: 'sortByFromQuantityAsc', sortBy: 'from_quantity', sortDirection: 'up',
+          testIdentifier: 'sortByFromQuantityAsc', sortBy: 'from_quantity', sortDirection: 'up', isFloat: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByFromQuantityDesc', sortBy: 'from_quantity', sortDirection: 'down',
+          testIdentifier: 'sortByFromQuantityDesc', sortBy: 'from_quantity', sortDirection: 'down', isFloat: true,
         },
       },
       {
@@ -333,32 +318,32 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
       },
       {
         args: {
-          testIdentifier: 'sortByReductionAsc', sortBy: 'reduction', sortDirection: 'up',
+          testIdentifier: 'sortByReductionAsc', sortBy: 'reduction', sortDirection: 'up', isFloat: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByReductionDesc', sortBy: 'reduction', sortDirection: 'down',
+          testIdentifier: 'sortByReductionDesc', sortBy: 'reduction', sortDirection: 'down', isFloat: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByDateFromAsc', sortBy: 'from', sortDirection: 'up',
+          testIdentifier: 'sortByDateFromAsc', sortBy: 'from', sortDirection: 'up', isDate: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByDateFromDesc', sortBy: 'from', sortDirection: 'down',
+          testIdentifier: 'sortByDateFromDesc', sortBy: 'from', sortDirection: 'down', isDate: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByDateToAsc', sortBy: 'to', sortDirection: 'up',
+          testIdentifier: 'sortByDateToAsc', sortBy: 'to', sortDirection: 'up', isDate: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByDateToDesc', sortBy: 'to', sortDirection: 'down',
+          testIdentifier: 'sortByDateToDesc', sortBy: 'to', sortDirection: 'down', isDate: true,
         },
       },
       {
@@ -383,7 +368,7 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
           sortedTable = await sortedTable.map(text => parseFloat(text));
         }
 
-        const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
+        const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat, test.args.isDate);
 
         if (test.args.sortDirection === 'up') {
           await expect(sortedTable).to.deep.equal(expectedResult);
