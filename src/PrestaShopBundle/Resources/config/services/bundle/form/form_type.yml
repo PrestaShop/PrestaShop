@@ -1589,7 +1589,7 @@ services:
       - { name: form.type }
 
   form.type.sell.product.pricing.group_price_type:
-    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Pricing\GroupPriceType'
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Pricing\ApplicableGroupsType'
     parent: 'form.type.translatable.aware'
     arguments:
       - '@prestashop.core.form.choice_provider.currency_by_id'

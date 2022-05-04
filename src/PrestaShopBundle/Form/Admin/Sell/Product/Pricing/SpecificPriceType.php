@@ -51,9 +51,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\ButtonType;
-use PrestaShopBundle\Form\Admin\Sell\Product\Pricing\GroupPriceType;
+use PrestaShopBundle\Form\Admin\Sell\Product\Pricing\ApplicableGroupsType;
 
 class SpecificPriceType extends TranslatorAwareType
 {
@@ -127,7 +125,7 @@ class SpecificPriceType extends TranslatorAwareType
 
         $builder
             ->add('product_id', HiddenType::class)
-            ->add('groups', GroupPriceType::class, [
+            ->add('groups', ApplicableGroupsType::class, [
                 'label' => $this->trans('Apply to', 'Admin.Global'),
                 'required' => false,
                 'is_multishop_enabled' => $this->isMultishopEnabled

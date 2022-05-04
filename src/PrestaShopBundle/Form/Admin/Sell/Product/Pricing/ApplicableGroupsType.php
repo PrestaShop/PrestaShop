@@ -32,12 +32,11 @@ use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class GroupPriceType extends TranslatorAwareType
+class ApplicableGroupsType extends TranslatorAwareType
 {
     /**
      * @var FormChoiceProviderInterface|FormChoiceAttributeProviderInterface
