@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Attribute\QueryResu
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetAttributeGroupList;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\Query\GetProductAttributeGroups;
 use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryResult\AttributeGroup;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\BulkDeleteCombinationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\DeleteCombinationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationException;
@@ -277,6 +278,36 @@ class CombinationController extends FrameworkBundleAdminController
     {
         try {
             $this->getCommandBus()->handle(new DeleteCombinationCommand($combinationId));
+        } catch (Exception $e) {
+            return $this->json([
+                'error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        return $this->json([
+            'message' => $this->trans('Successful deletion', 'Admin.Notifications.Success'),
+        ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @param int $productId
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function bulkDeleteAction(int $productId, Request $request): JsonResponse
+    {
+        $combinationIds = $request->request->get('combinationIds');
+        if (!$combinationIds) {
+            return $this->json([
+                'error' => $this->getFallbackErrorMessage('', 0, 'Missing combinationIds in request body'),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteCombinationCommand($productId, json_decode($combinationIds)));
         } catch (Exception $e) {
             return $this->json([
                 'error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),

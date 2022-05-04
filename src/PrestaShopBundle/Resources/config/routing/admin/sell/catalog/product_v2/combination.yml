@@ -71,6 +71,17 @@ admin_products_combinations_delete_combination:
   requirements:
     combinationId: \d+
 
+admin_products_combinations_bulk_delete:
+  path: /{productId}/combinations/bulk-delete
+  methods: [ POST ]
+  options:
+    expose: true
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\CombinationController::bulkDeleteAction
+    _legacy_controller: AdminProducts
+  requirements:
+    productId: \d+
+
 admin_products_attribute_groups:
   path: /{productId}/attribute-groups
   methods: [ GET ]

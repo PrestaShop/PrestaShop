@@ -28,7 +28,7 @@ import ProductMap from '@pages/product/product-map';
 import ProductEvents from '@pages/product/product-event-map';
 import CombinationsService from '@pages/product/services/combinations-service';
 import {EventEmitter} from 'events';
-import {isChecked} from '@PSTypes/typeguard';
+import BulkChoicesSelector from '@pages/product/combination/bulk-choices-selector';
 
 const CombinationMap = ProductMap.combinations;
 const CombinationEvents = ProductEvents.combinations;
@@ -43,45 +43,45 @@ export default class BulkFormHandler {
 
   private eventEmitter: EventEmitter;
 
-  private tabContainer!: HTMLDivElement;
+  private tabContainer: HTMLDivElement;
 
-  constructor(productId: number) {
+  private bulkChoicesSelector: BulkChoicesSelector;
+
+  constructor(productId: number, bulkChoicesSelector: BulkChoicesSelector) {
     this.productId = productId;
+    this.bulkChoicesSelector = bulkChoicesSelector;
     this.combinationsService = new CombinationsService();
     this.eventEmitter = window.prestashop.instance.eventEmitter;
-
     this.tabContainer = document.querySelector<HTMLDivElement>(CombinationMap.externalCombinationTab)!;
+
     this.init();
   }
 
   private init(): void {
-    this.listenCheckboxesChange();
-    this.eventEmitter.on(CombinationEvents.listRendered, () => this.toggleBulkActions());
+    const bulkEditionFormBtn = this.tabContainer.querySelector<HTMLButtonElement>(CombinationMap.bulkCombinationFormBtn);
 
-    const bulkFormBtn = document.querySelector<HTMLButtonElement>(CombinationMap.bulkCombinationFormBtn);
-    const bulkCombinationsBtn = this.tabContainer.querySelector<HTMLButtonElement>(CombinationMap.bulkCombinationFormBtn);
-
-    // @todo: This is hard-coded but when the other bulk actions will be added this needs to be more generic via
-    //        the use of data attributes:
-    //           data-bulk-url: is the url to call for each selected IDs, by default only the ID is necessary in the data
-    //           data-form-url: indicates that a form must be opened, upon submit the data is used to be sent to the bulk-url
-    if (bulkCombinationsBtn && bulkFormBtn) {
-      const {modalConfirmLabel, modalCancelLabel} = bulkCombinationsBtn.dataset;
-      const {formUrl} = bulkFormBtn.dataset;
-
-      if (formUrl) {
-        bulkFormBtn.addEventListener('click', () => this.showFormModal(
-          formUrl,
-          bulkCombinationsBtn.innerHTML,
-          modalConfirmLabel || 'Confirm',
-          modalCancelLabel || 'Cancel',
-        ));
-      }
+    if (!(bulkEditionFormBtn instanceof HTMLButtonElement)) {
+      console.error(`${CombinationMap.bulkCombinationFormBtn} was expected to be HTMLButtonElement`);
+      return;
     }
+    const {modalConfirmLabel, modalCancelLabel} = bulkEditionFormBtn.dataset;
+    const {formUrl} = bulkEditionFormBtn.dataset;
+
+    if (typeof formUrl !== 'string') {
+      console.error('Mandatory attribute "data-form-url" is missing');
+      return;
+    }
+
+    bulkEditionFormBtn.addEventListener('click', () => this.showFormModal(
+      formUrl,
+      bulkEditionFormBtn.innerHTML,
+      modalConfirmLabel || 'Confirm',
+      modalCancelLabel || 'Cancel',
+    ));
   }
 
   private showFormModal(formUrl: string, modalTitle: string, confirmButtonLabel: string, closeButtonLabel: string): void {
-    const selectedCombinationsCount = this.getSelectedCheckboxes().length;
+    const selectedCombinationsCount = this.bulkChoicesSelector.getSelectedCheckboxes().length;
 
     let initialSerializedData: string;
     const iframeModal = new IframeModal({
@@ -138,51 +138,10 @@ export default class BulkFormHandler {
     return null;
   }
 
-  /**
-   * Delegated event listener on tabContainer, because every checkbox is re-rendered with dynamic pagination
-   */
-  private listenCheckboxesChange(): void {
-    this.tabContainer.addEventListener('change', (e) => {
-      if (!(e.target instanceof HTMLInputElement)) {
-        return;
-      }
-
-      if (e.target.id === CombinationMap.bulkSelectAllInPageId) {
-        this.checkAll(e.target.checked);
-      }
-      this.toggleBulkActions();
-    });
-  }
-
-  private checkAll(checked: boolean) {
-    const allCheckboxes = this.tabContainer.querySelectorAll<HTMLInputElement>(CombinationMap.tableRow.isSelectedCombination);
-
-    allCheckboxes.forEach((checkbox: HTMLInputElement) => {
-      // eslint-disable-next-line no-param-reassign
-      checkbox.checked = checked;
-    });
-  }
-
-  private toggleBulkActions(): void {
-    const selectAllCheckbox = document.getElementById(CombinationMap.bulkSelectAllInPageId);
-    const btn = this.tabContainer.querySelector<HTMLInputElement>(CombinationMap.bulkActionsBtn);
-    const selectedCombinationsCount = this.getSelectedCheckboxes().length;
-    const enable = isChecked(selectAllCheckbox) || selectedCombinationsCount !== 0;
-
-    const bulkCombinationsBtn = this.tabContainer.querySelector<HTMLButtonElement>(CombinationMap.bulkCombinationFormBtn);
-    const bulkCombinationsLabel = bulkCombinationsBtn?.dataset.btnLabel || 'Edit %combinations_number% combinations';
-
-    if (bulkCombinationsBtn) {
-      bulkCombinationsBtn.innerHTML = bulkCombinationsLabel.replace(/%combinations_number%/, String(selectedCombinationsCount));
-    }
-
-    btn?.toggleAttribute('disabled', !enable);
-  }
-
   private async submitForm(form: HTMLFormElement): Promise<void> {
     const progressModal = this.showProgressModal();
 
-    const checkboxes = this.getSelectedCheckboxes();
+    const checkboxes = this.bulkChoicesSelector.getSelectedCheckboxes();
     const progressModalElement = document.getElementById(CombinationMap.bulkProgressModalId);
 
     let progress = 1;
@@ -241,9 +200,5 @@ export default class BulkFormHandler {
     modal.show();
 
     return modal;
-  }
-
-  private getSelectedCheckboxes(): NodeListOf<HTMLInputElement> {
-    return this.tabContainer.querySelectorAll<HTMLInputElement>(`${CombinationMap.tableRow.isSelectedCombination}:checked`);
   }
 }

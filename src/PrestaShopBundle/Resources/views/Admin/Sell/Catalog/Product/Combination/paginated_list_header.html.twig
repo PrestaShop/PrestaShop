@@ -44,13 +44,23 @@
     </button>
     <div class="dropdown-menu" style="">
       <button
-        id="combination-bulk-form-btn" class="dropdown-item" type="button"
+        id="combination-bulk-form-btn" class="dropdown-item bulk-action-btn" type="button"
         data-btn-label="{{ 'Edit %combinations_number% combinations'|trans({}, 'Admin.Catalog.Feature') }}"
         data-form-url="{{ url('admin_products_combinations_bulk_combination_form', { 'productId': productId }) }}"
         data-modal-confirm-label="{{ 'Apply to %combinations_number% combinations'|trans({}, 'Admin.Catalog.Feature') }}"
         data-modal-cancel-label="{{ 'Cancel'|trans({}, 'Admin.Actions') }}"
       >
       {{ 'Edit %combinations_number% combinations'|trans({'%s': ''}, 'Admin.Catalog.Feature') }}
+      </button>
+      <button
+        id="combination-bulk-delete-btn" class="dropdown-item bulk-action-btn" type="button"
+        data-btn-label="{{ 'Delete %combinations_number% combinations'|trans({}, 'Admin.Catalog.Feature') }}"
+        data-form-url="{{ url('admin_products_combinations_bulk_delete', { 'productId': productId }) }}"
+        data-modal-message="{{ 'Are you sure you want to delete selected combinations?'|trans({}, 'Admin.Catalog.Feature') }}"
+        data-modal-confirm-label="{{ 'Delete %combinations_number% combinations'|trans({}, 'Admin.Catalog.Feature') }}"
+        data-modal-cancel-label="{{ 'Cancel'|trans({}, 'Admin.Actions') }}"
+      >
+        {{ 'Delete %combinations_number% combinations'|trans({'%s': ''}, 'Admin.Catalog.Feature') }}
       </button>
     </div>
   </div>

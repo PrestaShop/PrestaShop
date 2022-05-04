@@ -27,7 +27,6 @@ const combinationListId = '#combination_list';
 const attachmentsBlockId = '#product_specifications_attachments';
 // It does not include "#" so it can be selected by getElementById
 const isSelectedCombinationInputClass = 'combination-is-selected';
-const bulkCombinationSelectAllInPageId = 'bulk-select-all-in-page';
 const progressModalId = 'bulk-combination-progress-modal';
 
 export default {
@@ -133,9 +132,10 @@ export default {
     searchInput: '#product-combinations-generate .attributes-search',
     generateCombinationsButton: '.generate-combinations-button',
     bulkCombinationFormBtn: '#combination-bulk-form-btn',
-    bulkActionsBtn: '#combination-bulk-actions-btn',
-    bulkSelectAllInPage: `#${bulkCombinationSelectAllInPageId}`,
-    bulkSelectAllInPageId: bulkCombinationSelectAllInPageId,
+    bulkDeleteBtn: '#combination-bulk-delete-btn',
+    bulkActionBtn: '.bulk-action-btn',
+    bulkActionsDropdownBtn: '#combination-bulk-actions-btn',
+    bulkSelectAllInPage: '#bulk-select-all-in-page',
     bulkProgressModalId: progressModalId,
     bulkFormModalId: 'bulk-combination-form-modal',
   },
