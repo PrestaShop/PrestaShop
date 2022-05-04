@@ -68,6 +68,13 @@ class Order extends BOBasePage {
     this.updateOrdersStatusModal = '#changeOrdersStatusModal';
     this.updateOrdersStatusModalSelect = '#change_orders_status_new_order_status_id';
     this.updateOrdersStatusModalButton = `${this.updateOrdersStatusModal} .modal-footer .js-submit-modal-form-btn`;
+
+    // Pagination selectors
+    this.paginationBlock = '.pagination-block';
+    this.paginationLimitSelect = '#paginator_select_page_limit';
+    this.paginationLabel = `${this.gridPanel} .col-form-label`;
+    this.paginationNextLink = `${this.gridPanel} #pagination_next_url`;
+    this.paginationPreviousLink = `${this.gridPanel} .pagination .previous a.page-link`;
   }
 
   /*
@@ -183,11 +190,15 @@ class Order extends BOBasePage {
    * @param page {Page} Browser tab
    * @param columnName {string} Column name on table
    * @param row {number} Order row in table
-   * @returns {Promise<string>}
+   * @returns {Promise<string|number>}
    */
   async getTextColumn(page, columnName, row) {
     if (columnName === 'osname') {
       return this.getTextContent(page, this.updateStatusInTableButton(row));
+    }
+
+    if (columnName === 'id_order') {
+      return this.getNumberFromText(page, this.tableColumn(row, 'id_order'));
     }
 
     return this.getTextContent(page, this.tableColumn(row, columnName));
@@ -224,17 +235,30 @@ class Order extends BOBasePage {
   }
 
   /**
+   * Get number of orders in page
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getNumberOfOrdersInPage(page) {
+    return (await page.$$(`${this.tableBody} tr`)).length;
+  }
+
+  /**
    * Get column content in all rows
    * @param page {Page} Browser tab
    * @param column {string} Column name on table
    * @returns {Promise<Array<string>>}
    */
   async getAllRowsColumnContent(page, column) {
-    const rowsNumber = await this.getNumberOfElementInGrid(page);
+    let rowContent;
+    const rowsNumber = await this.getNumberOfOrdersInPage(page);
     const allRowsContentTable = [];
-
     for (let i = 1; i <= rowsNumber; i++) {
-      const rowContent = await this.getTextColumn(page, column, i);
+      if (column === 'total_paid_tax_incl') {
+        rowContent = await this.getOrderATIPrice(page, i);
+      } else {
+        rowContent = await this.getTextColumn(page, column, i);
+      }
       allRowsContentTable.push(rowContent);
     }
 
@@ -272,10 +296,7 @@ class Order extends BOBasePage {
       page.click(this.updateStatusInTableButton(row)),
       this.waitForVisibleSelector(page, `${this.updateStatusInTableDropdown(row)}.show`),
     ]);
-    await this.clickAndWaitForNavigation(
-      page,
-      this.updateStatusInTableDropdownChoice(row, status.id),
-    );
+    await this.clickAndWaitForNavigation(page, this.updateStatusInTableDropdownChoice(row, status.id));
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 
@@ -317,7 +338,7 @@ class Order extends BOBasePage {
    * Get order total price
    * @param page {Page} Browser tab
    * @param row {number} Order row on table
-   * @returns {number}
+   * @returns {Promise<number>}
    */
   async getOrderATIPrice(page, row) {
     // Delete the first character (currency symbol) before getting price ATI
@@ -435,6 +456,53 @@ class Order extends BOBasePage {
     }
 
     await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
+  }
+
+  /* Pagination methods */
+  /**
+   * Get pagination label
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
+  getPaginationLabel(page) {
+    return this.getTextContent(page, this.paginationLabel);
+  }
+
+  /**
+   * Select pagination limit
+   * @param page {Page} Browser tab
+   * @param number {number} Value of pagination limit to select
+   * @returns {Promise<string>}
+   */
+  async selectPaginationLimit(page, number) {
+    await Promise.all([
+      this.selectByVisibleText(page, this.paginationLimitSelect, number),
+      page.waitForNavigation({waitUntil: 'networkidle'}),
+    ]);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on next
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async paginationNext(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationNextLink);
+
+    return this.getPaginationLabel(page);
+  }
+
+  /**
+   * Click on previous
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async paginationPrevious(page) {
+    await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
+
+    return this.getPaginationLabel(page);
   }
 }
 

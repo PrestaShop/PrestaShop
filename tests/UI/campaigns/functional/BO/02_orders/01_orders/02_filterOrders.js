@@ -157,7 +157,7 @@ describe('BO - Orders : Filter the Orders table', async () => {
 
       for (let row = 1; row <= numberOfOrdersAfterFilter; row++) {
         const textColumn = await ordersPage.getTextColumn(page, test.args.filterBy, row);
-        await expect(textColumn).to.contains(test.args.filterValue);
+        await expect(textColumn).to.equal(test.args.filterValue);
       }
     });
 
