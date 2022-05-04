@@ -295,6 +295,7 @@ export default {
     form: 'form[name="specific_price"]',
     listContainer: '#specific-price-list-container',
     listRowTemplate: '#specific-price-tr-template',
+    deletionModalId: 'modal-confirm-delete-combination',
     listFields: {
       specificPriceId: '.specific-price-id',
       combination: '.combination',
