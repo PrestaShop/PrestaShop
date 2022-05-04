@@ -189,8 +189,7 @@ class SpecificPriceContext extends AbstractProductFeatureContext
     {
         $specificPriceId = $this->getSharedStorage()->get($specificPriceReference);
         try {
-            $command = $this->createDeleteSpecificPriceCommand($specificPriceId);
-            $this->getCommandBus()->handle($command);
+            $this->getCommandBus()->handle(new DeleteProductSpecificPriceCommand($specificPriceId));
         } catch (DomainException $e) {
             $this->setLastException($e);
         }
