@@ -35,6 +35,7 @@ const {$} = window;
  */
 export default class AjaxBulkActionExtension {
   stopProcess = false;
+  router = new Router();
   /**
    * Extend grid with bulk action submitting
    *
@@ -60,7 +61,7 @@ export default class AjaxBulkActionExtension {
 
     const modal = new ProgressModal(
       {
-        cancelCallback: () => {stopProcess = true; console.log(stopProcess)},
+        cancelCallback: () => {stopProcess = true;},
         modalTitle,
         total
       }
@@ -76,7 +77,6 @@ export default class AjaxBulkActionExtension {
       }
       // eslint-disable-next-line no-await-in-loop
       const data = await this.callAjaxAction(ajaxButton, checkbox, modal, doneCount);
-      console.log(stopProcess);
       doneCount++;
       if (data.success) {
         modal.updateCount(doneCount);
@@ -85,14 +85,13 @@ export default class AjaxBulkActionExtension {
         modal.addError(data.message);
       }
     }
+    modal.stopProcessing();
   }
 
   private callAjaxAction($ajaxButton: JQuery<Element>, checkbox: Element, modal: ProgressModal, doneCount: number): JQuery.jqXHR
   {
-    const router = new Router();
-    console.log(router.generate($ajaxButton.data('ajax-url')));
     return $.ajax({
-      url: router.generate($ajaxButton.data('ajax-url')),
+      url: this.router.generate($ajaxButton.data('ajax-url')),
       type: 'POST',
       data: { id: checkbox.getAttribute('value') },
         success(data) {

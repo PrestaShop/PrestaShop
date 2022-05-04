@@ -107,7 +107,7 @@ export class ProgressModalContainer {
 
   progressPercentage!: HTMLElement;
 
-  errorCount!: HTMLElement;
+  lastError!: HTMLElement;
 
   constructor(params: ProgressModalParams) {
     this.buildModalContainer(params);
@@ -125,8 +125,27 @@ export class ProgressModalContainer {
     // Modal header element
     this.header = document.createElement('div');
     this.header.classList.add('modal-header');
+    this.switchToErrorButton = document.createElement('div');
+    this.switchToErrorButton.classList.add(
+      'switch-to-errors-button',
+      'alert',
+      'alert-warning'
+    );
 
-    params.modalTitle = params.modalTitle.replace('%d', params.total.toString());
+    let errorLogString = 'View %d error logs';
+    this.switchToErrorButton.innerHTML = errorLogString.replace('%d', '0');
+
+    if (params.modalTitle) {
+      this.title = document.createElement('h4');
+      this.title.classList.add('modal-title');
+      this.title.innerHTML = params.modalTitle.replace('%d', '');
+    }
+
+    if (this.title) {
+      this.header.append(this.title);
+    }
+    this.header.append(this.switchToErrorButton);
+
 
     this.progressPercentage = document.createElement('div');
     this.progressPercentage.classList.add(
@@ -138,26 +157,24 @@ export class ProgressModalContainer {
     this.body = document.createElement('div');
     this.body.classList.add('modal-body', 'text-left', 'font-weight-normal');
 
+    if (this.title) {
+      let progressBarTitle = document.createElement('span');
+
+      progressBarTitle.innerHTML = '<span class="material-icons">warning</span>' + params.modalTitle.replace('%d', params.total.toString());
+      this.body.append(progressBarTitle);
+    }
     this.body.append(this.progressPercentage);
     this.body.append(this.buildProgressBar());
 
-    this.switchToErrorButton = document.createElement('div');
-    this.switchToErrorButton.classList.add(
-      'switch-to-errors-button',
+    this.lastError = document.createElement('div');
+    this.lastError.classList.add(
       'alert',
-      'alert-warning'
-    );
-
-    this.errorCount = document.createElement('span');
-    this.errorCount.classList.add(
-      'modal-error-count'
+      'alert-warning',
+      'd-print-none',
+      'd-none'
     )
-    this.errorCount.innerHTML = '0';
 
-    let errorLogString = 'View %d error logs';
-    this.switchToErrorButton.innerHTML = errorLogString.replace('%d', this.errorCount.outerHTML);
-
-    this.header.append(this.switchToErrorButton);
+    this.body.append(this.lastError);
 
     let errorContainer = document.createElement('div');
     errorContainer.classList.add('modal-error-container-single');
@@ -168,26 +185,13 @@ export class ProgressModalContainer {
 
     this.stopProcessingButton = document.createElement('button');
     this.stopProcessingButton.setAttribute('type', 'button');
-    this.stopProcessingButton.classList.add('btn', 'btn-outline-secondary', 'btn-lg', 'stop-processing');
+    this.stopProcessingButton.classList.add('btn', 'btn-primary', 'btn-lg', 'stop-processing');
     this.stopProcessingButton.innerHTML = 'Stop processing';
 
     // Appending element to the modal
     this.footer.append(this.stopProcessingButton, ...params.customButtons);
-    this.content.append(this.footer);
 
-
-    // Modal title element
-    if (params.modalTitle) {
-      this.title = document.createElement('h4');
-      this.title.classList.add('modal-title');
-      this.title.innerHTML = params.modalTitle;
-    }
-
-    // Constructing the modal
-    if (this.title) {
-      this.header.appendChild(this.title);
-    }
-    this.content.append(this.header, this.body);
+    this.content.append(this.header, this.body, this.footer);
   }
 
   private buildProgressBar(): HTMLElement
@@ -292,14 +296,13 @@ export class ProgressModalErrorContainer {
 
     this.footer.append(this.switchButton);
     this.footer.append(this.downloadErrorsButton);
-    this.body.append(this.footer);
-
+    this.content.append(this.footer);
 
     // Modal title element
     if (params.modalTitle) {
       this.title = document.createElement('h4');
       this.title.classList.add('modal-title');
-      this.title.innerHTML = params.modalTitle;
+      this.title.innerHTML = ' errors occured. You can download the logs for future reference.';
     }
 
     // Constructing the modal
@@ -324,6 +327,7 @@ export class ProgressModal extends Modal implements ProgressModalType {
   cancelCallback !: () => void;
   progressModal !: ProgressModalContainer;
   errorModal !: ProgressModalErrorContainer;
+  processStopped !: boolean;
   constructor(
     inputParams: InputProgressModalParams
   ) {
@@ -339,6 +343,7 @@ export class ProgressModal extends Modal implements ProgressModalType {
     super(params);
     this.total = params.total;
     this.errors = [];
+    this.processStopped = false;
   }
 
   protected initContainer(params: ProgressModalParams): void {
@@ -361,7 +366,7 @@ export class ProgressModal extends Modal implements ProgressModalType {
   {
     let progressBarDone = doneCount * 100 / this.total;
     this.progressModal.progressDone.style.width = progressBarDone+'%';
-    this.progressModal.progressPercentage.innerHTML = progressBarDone+'%';
+    this.progressModal.progressPercentage.innerHTML = progressBarDone.toFixed()+'%';
   }
 
   public addError(error: string)
@@ -370,7 +375,10 @@ export class ProgressModal extends Modal implements ProgressModalType {
     let errorContent = document.createElement('p');
     errorContent.append(error);
     this.errorModal.errorContainer.append(errorContent);
-    this.progressModal.errorCount.innerHTML = this.errors.length.toString();
+    let errorLogString = 'View %d error logs';
+    this.progressModal.switchToErrorButton.innerHTML = errorLogString.replace('%d', this.errors.length.toString());
+    this.progressModal.lastError.classList.remove('d-none');
+    this.progressModal.lastError.innerHTML = error;
   }
 
   /** Return 401 on error */
@@ -400,8 +408,25 @@ export class ProgressModal extends Modal implements ProgressModalType {
     this.progressModal.stopProcessingButton.addEventListener('click', () => {
       if (params.cancelCallback) {
         params.cancelCallback();
+        this.stopProcessing();
       }
     });
+  }
+
+  public stopProcessing()
+  {
+    if (this.processStopped) {
+      return
+    }
+
+    this.progressModal.stopProcessingButton.remove();
+    let closeButton = document.createElement('button');
+    closeButton.setAttribute('type', 'button');
+    closeButton.classList.add('btn', 'btn-primary', 'btn-lg', 'stop-processing');
+    closeButton.innerHTML = 'Close';
+    closeButton.dataset.dismiss = 'modal';
+    this.progressModal.footer.append(closeButton);
+    this.processStopped = true;
   }
 }
 
