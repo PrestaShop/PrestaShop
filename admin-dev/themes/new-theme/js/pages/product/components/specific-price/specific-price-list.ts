@@ -26,7 +26,7 @@ import {getSpecificPrices, deleteSpecificPrice} from '@pages/product/services/sp
 import {EventEmitter} from 'events';
 import ProductMap from '@pages/product/product-map';
 import ConfirmModal from '@components/modal/confirm-modal';
-import ProductEventMap from "@pages/product/product-event-map";
+import ProductEventMap from '@pages/product/product-event-map';
 
 const SpecificPriceMap = ProductMap.specificPrice;
 
@@ -118,30 +118,28 @@ export default class SpecificPriceList {
         return;
       }
 
-      this.deleteSpecificPrice(e.currentTarget.dataset.specificPriceId);
+      this.deleteSpecificPrice(e.currentTarget.dataset);
     });
   }
 
-  private deleteSpecificPrice(specificPriceId: string): void {
+  private deleteSpecificPrice(deleteBtnDataset: DOMStringMap): void {
     const modal = new (ConfirmModal as any)(
       {
-        id: 'modal-confirm-delete-combination',
-        confirmTitle: 'this is the title',
-        confirmMessage: 'Are you sure you want to delete this specific price?',
-        confirmButtonLabel: 'Delete',
-        closeButtonLabel: 'Cancel',
-        confirmButtonClass: 'btn-danger',
+        id: ProductMap.specificPrice.deletionModalId,
+        confirmTitle: deleteBtnDataset.confirmTitle,
+        confirmMessage: deleteBtnDataset.confirmMessage,
+        confirmButtonLabel: deleteBtnDataset.confirmBtnLabel,
+        closeButtonLabel: deleteBtnDataset.cancelBtnLabel,
+        confirmButtonClass: deleteBtnDataset.confirmBtnClass,
         closable: true,
       },
       async () => {
-        const response = await deleteSpecificPrice(specificPriceId);
+        if (!deleteBtnDataset.specificPriceId) {
+          return;
+        }
+        const response = await deleteSpecificPrice(deleteBtnDataset.specificPriceId);
         $.growl({message: response.message});
         this.eventEmitter.emit(ProductEventMap.specificPrice.specificPriceUpdated);
-        /*const response = await this.combinationsService.deleteCombination(
-          this.findCombinationId(button),
-        );
-        $.growl({message: response.message});
-        this.eventEmitter.emit(CombinationEvents.refreshCombinationList);*/
       },
     );
     modal.show();
