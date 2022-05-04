@@ -60,7 +60,7 @@ export default class BulkChoicesSelector {
    */
   public listenCheckboxesChange(): void {
     this.tabContainer.addEventListener('change', (e) => {
-      if (!(e.target instanceof HTMLInputElement)) {
+      if (!(e.target instanceof HTMLInputElement) || !e.target.matches(CombinationMap.tableRow.isSelectedCombination)) {
         return;
       }
 

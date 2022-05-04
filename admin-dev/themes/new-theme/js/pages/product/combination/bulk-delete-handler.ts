@@ -11,20 +11,17 @@ const CombinationEvents = ProductEvents.combinations;
 export default class BulkDeleteHandler {
   readonly productId: number;
 
-  readonly tabContainer!: HTMLDivElement;
-
   private eventEmitter: EventEmitter;
 
   private combinationsService: CombinationsService;
 
   private bulkChoicesSelector: BulkChoicesSelector;
 
-  constructor(productId: number) {
+  constructor(productId: number, bulkChoicesSelector: BulkChoicesSelector) {
     this.productId = productId;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.combinationsService = new CombinationsService();
-    this.tabContainer = document.querySelector<HTMLDivElement>(CombinationMap.externalCombinationTab)!;
-    this.bulkChoicesSelector = new BulkChoicesSelector(this.tabContainer);
+    this.bulkChoicesSelector = bulkChoicesSelector;
 
     this.init();
   }

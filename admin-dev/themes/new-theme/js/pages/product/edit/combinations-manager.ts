@@ -39,6 +39,7 @@ import SubmittableDeltaQuantityInput from '@components/form/submittable-delta-qu
 import BulkFormHandler from '@pages/product/combination/bulk-form-handler';
 import PaginatedCombinationsService from '@pages/product/services/paginated-combinations-service';
 import BulkDeleteHandler from '@pages/product/combination/bulk-delete-handler';
+import BulkChoicesSelector from '@pages/product/combination/bulk-choices-selector';
 
 const {$} = window;
 const CombinationEvents = ProductEventMap.combinations;
@@ -49,11 +50,11 @@ export default class CombinationsManager {
 
   eventEmitter: EventEmitter;
 
+  externalCombinationTab: HTMLDivElement;
+
   $productForm: JQuery;
 
   $combinationsContainer: JQuery;
-
-  $externalCombinationTab: JQuery;
 
   $preloader: JQuery;
 
@@ -88,7 +89,7 @@ export default class CombinationsManager {
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.$productForm = $(ProductMap.productForm);
     this.$combinationsContainer = $(CombinationsMap.combinationsListContainer);
-    this.$externalCombinationTab = $(CombinationsMap.externalCombinationTab);
+    this.externalCombinationTab = document.querySelector<HTMLDivElement>(CombinationsMap.externalCombinationTab)!;
 
     this.$preloader = $(CombinationsMap.preloader);
     this.$paginatedList = $(CombinationsMap.combinationsPaginatedList);
@@ -100,8 +101,10 @@ export default class CombinationsManager {
     this.combinationsService = new CombinationsService();
     this.paginatedCombinationsService = new PaginatedCombinationsService(productId);
     this.productAttributeGroups = [];
-    new BulkFormHandler(productId);
-    new BulkDeleteHandler(productId);
+
+    const bulkChoicesSelector = new BulkChoicesSelector(this.externalCombinationTab);
+    new BulkFormHandler(productId, bulkChoicesSelector);
+    new BulkDeleteHandler(productId, bulkChoicesSelector);
 
     this.init();
   }
@@ -123,7 +126,7 @@ export default class CombinationsManager {
    * @private
    */
   private showCombinationTab(): void {
-    this.$externalCombinationTab.removeClass('d-none');
+    this.externalCombinationTab.classList.remove('d-none');
     this.firstInit();
   }
 
@@ -131,7 +134,7 @@ export default class CombinationsManager {
    * @private
    */
   private hideCombinationTab(): void {
-    this.$externalCombinationTab.addClass('d-none');
+    this.externalCombinationTab.classList.add('d-none');
   }
 
   /**
