@@ -405,12 +405,28 @@ services:
   form.type.product_preferences.general:
     class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\GeneralType'
     parent: 'form.type.translatable.aware'
+    arguments:
+      - '@prestashop.adapter.legacy.context'
     public: true
     tags:
       - { name: form.type }
 
   form.type.product_preferences.stock:
     class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\StockType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+
+  form.type.product_preferences.page:
+    class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\PageType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+
+  form.type.product_preferences.pagination:
+    class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\PaginationType'
     parent: 'form.type.translatable.aware'
     public: true
     tags:
