@@ -63,7 +63,9 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
             (string) $data['reduction']['value'],
             (bool) $data['include_tax'],
             $fixedPrice,
-            (int) $data['from_quantity']
+            (int) $data['from_quantity'],
+            DateTime::buildNullableDateTime($data['date_range']['from']),
+            DateTime::buildNullableDateTime($data['date_range']['to'])
         );
 
         $this->fillRelations($command, $data);
@@ -110,17 +112,17 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
      */
     private function fillRelations($command, array $data): void
     {
-        if (array_key_exists('currency_id', $data)) {
-            $command->setCurrencyId((int) $data['currency_id']);
+        if (isset($data['groups']['currency_id'])) {
+            $command->setCurrencyId((int) $data['groups']['currency_id']);
         }
-        if (array_key_exists('group_id', $data)) {
-            $command->setGroupId((int) $data['group_id']);
+        if (isset($data['groups']['group_id'])) {
+            $command->setGroupId((int) $data['groups']['group_id']);
         }
         if (array_key_exists('combination_id', $data)) {
             $command->setCombinationId((int) $data['combination_id']);
         }
-        if (array_key_exists('country_id', $data)) {
-            $command->setCountryId((int) $data['country_id']);
+        if (isset($data['groups']['country_id'])) {
+            $command->setCountryId((int) $data['groups']['country_id']);
         }
         if (array_key_exists('shop_id', $data)) {
             $command->setShopId((int) $data['shop_id']);

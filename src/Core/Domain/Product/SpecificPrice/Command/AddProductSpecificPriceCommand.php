@@ -148,7 +148,9 @@ class AddProductSpecificPriceCommand
         string $reductionValue,
         bool $includeTax,
         string $fixedPrice,
-        int $fromQuantity
+        int $fromQuantity,
+        DateTimeInterface $dateTimeFrom,
+        DateTimeInterface $dateTimeTo
     ) {
         $this->productId = new ProductId($productId);
         $this->reduction = new Reduction($reductionType, $reductionValue);
@@ -159,9 +161,9 @@ class AddProductSpecificPriceCommand
         $this->combinationId = new NoCombinationId();
         $this->currencyId = new NoCurrencyId();
         $this->groupId = new NoGroupId();
-        $this->dateTimeFrom = new NullDateTime();
-        $this->dateTimeTo = new NullDateTime();
         $this->countryId = new NoCountryId();
+        $this->dateTimeFrom = $dateTimeFrom;
+        $this->dateTimeTo = $dateTimeFrom;
     }
 
     /**
