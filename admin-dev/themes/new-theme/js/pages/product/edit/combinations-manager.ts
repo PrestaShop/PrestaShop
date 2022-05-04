@@ -90,6 +90,14 @@ export default class CombinationsManager {
 
   savedInputValues: Record<string, any>;
 
+  editionDisabledElements: string[] = [
+    CombinationsMap.bulkActionsBtn,
+    CombinationsMap.tableRow.isSelectedCombination,
+    ProductMap.combinations.bulkSelectAllInPage,
+    ProductMap.combinations.filtersDropdown,
+    ProductMap.combinations.generateCombinationsButton,
+  ];
+
   constructor(productId: number, productFormModel: ProductFormModel) {
     this.productId = productId;
     this.productFormModel = productFormModel;
@@ -527,11 +535,24 @@ export default class CombinationsManager {
   private enableEditionMode(): void {
     this.editionMode = true;
     this.$paginatedList.addClass(CombinationsMap.list.editionModeClass);
+
+    // Disabled elements (bulk actions, filters, ...)
+    this.editionDisabledElements.forEach((disabledSelector: string) => {
+      const $disabledElement = this.$paginatedList.find(disabledSelector);
+      $disabledElement.data('initialDisabled', $disabledElement.is(':disabled'));
+      $disabledElement.prop('disabled', true);
+    });
   }
 
   private disableEditionMode(): void {
-    this.editionMode = false;
     this.$paginatedList.removeClass(CombinationsMap.list.editionModeClass);
+
+    // Re-enabled disabled elements
+    this.editionDisabledElements.forEach((disabledSelector: string) => {
+      const $disabledElement = this.$paginatedList.find(disabledSelector);
+      $disabledElement.prop('disabled', $disabledElement.data('initialDisabled'));
+    });
+    this.editionMode = false;
   }
 
   private resetEdition(): void {

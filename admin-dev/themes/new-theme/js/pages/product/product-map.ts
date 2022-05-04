@@ -82,6 +82,7 @@ export default {
     combinationsPaginatedList: '#combinations-paginated-list',
     combinationsFormContainer: '#combinations-list-form-container',
     combinationsFiltersContainer: '#combinations_filters',
+    filtersDropdown: '.combinations-filters-dropdown button',
     combinationsGeneratorContainer: '#product_combinations_generator',
     combinationsTable: `${combinationListFormId}`,
     combinationsTableBody: `${combinationListFormId} tbody`,
