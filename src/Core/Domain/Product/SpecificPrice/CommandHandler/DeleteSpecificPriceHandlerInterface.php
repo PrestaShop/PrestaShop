@@ -28,17 +28,17 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\DeleteProductSpecificPriceCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\DeleteSpecificPriceCommand;
 
 /**
- * Interface for handling DeleteProductSpecificPriceCommand command
+ * Interface for handling DeleteSpecificPriceCommand command
  */
-interface DeleteProductSpecificPriceHandlerInterface
+interface DeleteSpecificPriceHandlerInterface
 {
     /**
-     * @param DeleteProductSpecificPriceCommand $command
+     * @param DeleteSpecificPriceCommand $command
      *
      * @return void
      */
-    public function handle(DeleteProductSpecificPriceCommand $command): void;
+    public function handle(DeleteSpecificPriceCommand $command): void;
 }

@@ -41,7 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\AddProductSpecificPriceCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\DeleteProductSpecificPriceCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\DeleteSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\EditProductSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceException;
@@ -189,7 +189,7 @@ class SpecificPriceContext extends AbstractProductFeatureContext
     {
         $specificPriceId = $this->getSharedStorage()->get($specificPriceReference);
         try {
-            $this->getCommandBus()->handle(new DeleteProductSpecificPriceCommand($specificPriceId));
+            $this->getCommandBus()->handle(new DeleteSpecificPriceCommand($specificPriceId));
         } catch (DomainException $e) {
             $this->setLastException($e);
         }
@@ -516,11 +516,11 @@ class SpecificPriceContext extends AbstractProductFeatureContext
     /**
      * @param int $specificPriceId
      *
-     * @return DeleteProductSpecificPriceCommand
+     * @return DeleteSpecificPriceCommand
      */
-    private function createDeleteSpecificPriceCommand(int $specificPriceId): DeleteProductSpecificPriceCommand
+    private function createDeleteSpecificPriceCommand(int $specificPriceId): DeleteSpecificPriceCommand
     {
-        return new DeleteProductSpecificPriceCommand($specificPriceId);
+        return new DeleteSpecificPriceCommand($specificPriceId);
     }
 
     /**

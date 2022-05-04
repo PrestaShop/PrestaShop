@@ -29,13 +29,13 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\DeleteProductSpecificPriceCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler\DeleteProductSpecificPriceHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\DeleteSpecificPriceCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler\DeleteSpecificPriceHandlerInterface;
 
 /**
- * Handles DeleteProductSpecificPriceCommand using legacy object model
+ * Handles DeleteSpecificPriceCommand using legacy object model
  */
-class DeleteProductSpecificPriceHandler implements DeleteProductSpecificPriceHandlerInterface
+class DeleteSpecificPriceHandler implements DeleteSpecificPriceHandlerInterface
 {
     /**
      * @var SpecificPriceRepository
@@ -50,7 +50,7 @@ class DeleteProductSpecificPriceHandler implements DeleteProductSpecificPriceHan
         $this->specificPriceRepository = $specificPriceRepository;
     }
 
-    public function handle(DeleteProductSpecificPriceCommand $command): void
+    public function handle(DeleteSpecificPriceCommand $command): void
     {
         $this->specificPriceRepository->delete($command->getSpecificPriceId());
     }

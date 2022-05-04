@@ -30,7 +30,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 use DateTimeInterface;
 use Exception;
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\DeleteProductSpecificPriceCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\DeleteSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceList;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceList;
@@ -137,7 +137,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
     public function deleteAction(Request $request, int $specificPriceId): JsonResponse
     {
         try {
-            $this->getCommandBus()->handle(new DeleteProductSpecificPriceCommand($specificPriceId));
+            $this->getCommandBus()->handle(new DeleteSpecificPriceCommand($specificPriceId));
         } catch (Exception $e) {
             return $this->json([
                 'error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),

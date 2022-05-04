@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\Specific
 /**
  * Delete specific price to a Product
  */
-class DeleteProductSpecificPriceCommand
+class DeleteSpecificPriceCommand
 {
     /**
      * @var SpecificPriceId
@@ -41,7 +41,7 @@ class DeleteProductSpecificPriceCommand
     private $specificPriceId;
 
     /**
-     * DeleteProductSpecificPriceCommand constructor.
+     * DeleteSpecificPriceCommand constructor.
      *
      * @param int $specificPriceId
      */

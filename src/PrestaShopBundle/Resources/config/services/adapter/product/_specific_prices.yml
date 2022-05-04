@@ -37,13 +37,13 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\EditProductSpecificPriceCommand
 
-  prestashop.adapter.product.specific_price.command_handler.delete_product_specific_price:
-    class: PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\CommandHandler\DeleteProductSpecificPriceHandler
+  prestashop.adapter.product.specific_price.command_handler.delete_specific_price:
+    class: PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\CommandHandler\DeleteSpecificPriceHandler
     arguments:
       - '@prestashop.adapter.product.specific_price.repository.specific_price_repository'
     tags:
       - name: tactician.handler
-        command: PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\DeleteProductSpecificPriceCommand
+        command: PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\DeleteSpecificPriceCommand
 
   prestashop.adapter.product.specific_price.command_handler.set_specific_price_priority_for_product_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\CommandHandler\SetSpecificPricePriorityForProductHandler
