@@ -61,7 +61,6 @@ class ConfigurationVariablesLoaderTest extends TestCase
                     'secret' => 'this1s4paSspHraS3',
                     'ps_caching' => 'CacheMemcache',
                     'ps_cache_enable' => 'true',
-                    'ps_creation_date' => '2021-01-17',
                     'use_debug_toolbar' => 'true',
                 ],
             ],
@@ -95,7 +94,6 @@ class ConfigurationVariablesLoaderTest extends TestCase
                     'secret' => 'this1s4paSspHraS3',
                     'ps_caching' => 'CacheMemcache',
                     'ps_cache_enable' => 'true',
-                    'ps_creation_date' => '2021-01-17',
                     'use_debug_toolbar' => 'true',
                 ],
             ], $configurationVariablesLoader->loadEnvironmentVariables(['parameters' => []]));
@@ -114,7 +112,6 @@ PS_MAILER_HOST=127.0.0.1
 PS_MAILER_USER=toto
 PS_LOCALE=fr-FR
 PS_CACHE_ENABLE=false
-PS_CREATION_DATE=2021-01-01
 ');
 
         $configurationVariablesLoader = new ConfigurationVariablesLoader($envFile);
@@ -134,7 +131,6 @@ PS_CREATION_DATE=2021-01-01
                     'mailer_host' => '127.0.0.1',
                     'mailer_user' => 'toto',
                     'ps_cache_enable' => 'false',
-                    'ps_creation_date' => '2021-01-01',
                 ],
             ],
             $configurationVariablesLoader->loadEnvironmentVariables(
@@ -170,7 +166,6 @@ PS_LOCALE=ar-AR
 PS_SECRET=this1s4paSspHraS3
 PS_CACHING=CacheMemcache
 PS_CACHE_ENABLE=true
-PS_CREATION_DATE=2021-01-17
 PS_USE_DEBUG_TOOLBAR=true
 ');
     }

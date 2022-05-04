@@ -51,7 +51,6 @@ class ConfigurationVariablesLoader
         'secret' => 'PS_SECRET',
         'ps_caching' => 'PS_CACHING',
         'ps_cache_enable' => 'PS_CACHE_ENABLE',
-        'ps_creation_date' => 'PS_CREATION_DATE',
         'use_debug_toolbar' => 'PS_USE_DEBUG_TOOLBAR',
     ];
 
@@ -66,7 +65,7 @@ class ConfigurationVariablesLoader
             $parameters['parameters'] = [];
         }
 
-        foreach (static::PARAMETERS_WITH_ENV_VARS as $parameterKey => $envVarKey) {
+        foreach (self::PARAMETERS_WITH_ENV_VARS as $parameterKey => $envVarKey) {
             if (array_key_exists($envVarKey, $_ENV)) {
                 $parameters['parameters'][$parameterKey] = $_ENV[$envVarKey];
             }
