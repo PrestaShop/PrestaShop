@@ -60,19 +60,29 @@ export default class BulkChoicesSelector {
    */
   public listenCheckboxesChange(): void {
     this.tabContainer.addEventListener('change', (e) => {
-      if (!(e.target instanceof HTMLInputElement) || !e.target.matches(CombinationMap.tableRow.isSelectedCombination)) {
+      const checkbox = e.target;
+
+      if (!(checkbox instanceof HTMLInputElement)) {
         return;
       }
 
-      if (e.target.id === CombinationMap.bulkSelectAllInPageId) {
-        this.checkAll(e.target.checked);
+      const isAllInPageSelector = checkbox.matches(CombinationMap.bulkSelectAllInPage);
+
+      // don't proceed if its not one of the expected checkboxes
+      if (!isAllInPageSelector && !checkbox.matches(CombinationMap.tableRow.isSelectedCombination)) {
+        return;
       }
+
+      if (isAllInPageSelector) {
+        this.checkAll(checkbox.checked);
+      }
+
       this.updateBulkButtonsState();
     });
   }
 
   public updateBulkButtonsState(): void {
-    const selectAllCheckbox = document.getElementById(CombinationMap.bulkSelectAllInPageId);
+    const selectAllCheckbox = document.querySelector(CombinationMap.bulkSelectAllInPage);
     const dropdownBtn = this.tabContainer.querySelector<HTMLInputElement>(CombinationMap.bulkActionsDropdownBtn);
     const selectedCombinationsCount = this.getSelectedCheckboxes().length;
     const enable = isChecked(selectAllCheckbox) || selectedCombinationsCount !== 0;
