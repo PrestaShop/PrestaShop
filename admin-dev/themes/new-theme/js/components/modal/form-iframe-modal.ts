@@ -30,9 +30,14 @@ import IframeModal, {
 
 export type FormIframeModalType = IframeModalType
 export type FormIframeCallbackFunction = (
-  form: HTMLElement,
+  form: HTMLFormElement,
   formData: JQuery.NameValuePair[] | null,
   dataAttributes: DOMStringMap | null,
+  event: Event,
+) => void;
+export type ConfirmCallbackFunction = (
+  form: HTMLFormElement,
+  iframe: HTMLIFrameElement,
   event: Event
 ) => void;
 export type FormIframeModalParams = IframeModalParams & {
@@ -41,6 +46,7 @@ export type FormIframeModalParams = IframeModalParams & {
   cancelButtonSelector: string;
   modalTitle?: string;
   onFormLoaded?: FormIframeCallbackFunction,
+  confirmCallback?: ConfirmCallbackFunction,
 }
 export type InputFormIframeModalParams = Partial<FormIframeModalParams> & {
   formUrl: string; // formUrl is mandatory in params
@@ -57,26 +63,39 @@ export class FormIframeModal extends IframeModal implements FormIframeModalType 
 
   private readonly formSelector: string;
 
+  private readonly confirmCallback?: ConfirmCallbackFunction;
+
   constructor(
     params: InputFormIframeModalParams,
   ) {
     const iframeParams: InputIframeModalParams = {
       iframeUrl: params.formUrl,
       onLoaded: (iframe: HTMLIFrameElement, event: Event) => this.onIframeLoaded(iframe, event),
+      confirmCallback: (iframe: HTMLIFrameElement, event: Event) => this.onConfirmCallback(iframe, event),
       ...params,
     };
+
     super(iframeParams);
 
     this.onFormLoaded = params.onFormLoaded;
     this.cancelButtonSelector = params.cancelButtonSelector || '.cancel-btn';
     this.formSelector = params.formSelector || 'form';
+    this.confirmCallback = params.confirmCallback;
+  }
+
+  private getForm(iframe: HTMLIFrameElement): HTMLFormElement | null {
+    if (!iframe.contentWindow) {
+      return null;
+    }
+    return iframe.contentWindow.document.querySelector<HTMLFormElement>(this.formSelector);
   }
 
   private onIframeLoaded(iframe: HTMLIFrameElement, event: Event): void {
-    if (!iframe.contentWindow) {
+    if (!this.onFormLoaded) {
       return;
     }
-    const iframeForm: HTMLElement | null = iframe.contentWindow.document.querySelector(this.formSelector);
+
+    const iframeForm: HTMLFormElement | null = this.getForm(iframe);
 
     if (!iframeForm) {
       return;
@@ -90,10 +109,6 @@ export class FormIframeModal extends IframeModal implements FormIframeModalType 
       });
     });
 
-    if (!this.onFormLoaded) {
-      return;
-    }
-
     let dataAttributes: DOMStringMap | null = null;
     const formData: JQuery.NameValuePair[] | null = $(iframeForm).serializeArray();
 
@@ -102,5 +117,19 @@ export class FormIframeModal extends IframeModal implements FormIframeModalType 
     }
 
     this.onFormLoaded(iframeForm, formData, dataAttributes, event);
+  }
+
+  private onConfirmCallback(iframe: HTMLIFrameElement, event: Event): void {
+    if (!this.confirmCallback) {
+      return;
+    }
+
+    const iframeForm: HTMLFormElement | null = this.getForm(iframe);
+
+    if (!iframeForm) {
+      return;
+    }
+
+    this.confirmCallback(iframeForm, iframe, event);
   }
 }

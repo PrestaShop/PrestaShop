@@ -63,7 +63,7 @@ export type IframeModalParams = ModalParams & {
   // Optional, when set a confirm button is added in the modal's footer
   confirmButtonLabel?: string;
   // Callback when the confirm button is clicked
-  confirmCallback?: (event: Event) => void;
+  confirmCallback?: (iframe: HTMLIFrameElement, event: Event) => void;
   // By default the iframe closes when confirm button is clicked, this options overrides this behaviour
   closeOnConfirm: boolean;
 }
@@ -222,7 +222,11 @@ export class IframeModal extends Modal implements IframeModalType {
     }) as EventListener);
 
     if (this.modal.confirmButton && params.confirmCallback) {
-      this.modal.confirmButton.addEventListener('click', params.confirmCallback);
+      this.modal.confirmButton.addEventListener('click', (event) => {
+        if (params.confirmCallback) {
+          params.confirmCallback(this.modal.iframe, event);
+        }
+      });
     }
   }
 
