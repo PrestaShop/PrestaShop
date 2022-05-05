@@ -48,21 +48,33 @@ export default class AjaxBulkActionExtension {
         let checkboxes = $('.js-bulk-action-checkbox:checked');
 
         const ajaxButton = $(event.currentTarget);
-        const modalTitle = ajaxButton.data('modalTitle');
-
-        this.submitForm(ajaxButton, checkboxes, modalTitle);
+        this.submitForm(ajaxButton, checkboxes);
     });
   }
 
-  private async submitForm(ajaxButton: JQuery<Element>, checkboxes: JQuery<Element>, modalTitle: string)
+  private async submitForm(ajaxButton: JQuery<Element>, checkboxes: JQuery<Element>)
   {
     let total = checkboxes.length;
     let stopProcess = false;
-
+    const modalTitle = ajaxButton.data('modalTitle');
+    const modalClose = ajaxButton.data('modalClose');
+    const modalStopProcessing = ajaxButton.data('modalStopProcessing');
+    const modalErrorsOccurred = ajaxButton.data('modalErrorsOccurred');
+    const modalBackToProcessing = ajaxButton.data('modalBackToProcessing');
+    const modalDownloadErrorLog = ajaxButton.data('modalDownloadErrorLog');
+    const modalViewErrorLog = ajaxButton.data('modalViewErrorLog');
+    const modalViewErrorLogTitle = ajaxButton.data('modalViewErrorLogTitle');
     const modal = new ProgressModal(
       {
         cancelCallback: () => {stopProcess = true;},
         modalTitle,
+        modalClose,
+        modalStopProcessing,
+        modalErrorsOccurred,
+        modalBackToProcessing,
+        modalDownloadErrorLog,
+        modalViewErrorLog,
+        modalViewErrorLogTitle,
         total
       }
     );

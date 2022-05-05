@@ -413,10 +413,13 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setOptions([
                         'ajax_route' => 'admin_products_v2_activate_ajax',
                         'modal_title' => $this->trans('Activating %d products', [], 'Admin.Actions'),
-                        'modal_close_button_label' => $this->trans('Close', [], 'Admin.Actions'),
-                        'modal_progress_title' => $this->trans('Activating...', [], 'Admin.Actions'),
-                        'modal_failure_title' => $this->trans('Failed to activate:', [], 'Admin.Actions'),
-                        'modal_description' => $this->trans('Product activation is in progress, please don\'t close the window', [], 'Admin.Actions')
+                        'modal_close' => $this->trans('Close', [], 'Admin.Actions'),
+                        'modal_stop_processing' => $this->trans('Stop processing', [], 'Admin.Actions'),
+                        'modal_errors_occurred' => $this->trans('%d errors occurred. You can download the logs for future reference.', [], 'Admin.Actions'),
+                        'modal_back_to_processing' => $this->trans('Back to processing', [], 'Admin.Actions'),
+                        'modal_download_error_log' => $this->trans('Download error log', [], 'Admin.Actions'),
+                        'modal_view_error_log' => $this->trans('View %d error logs', [], 'Admin.Actions'),
+                        'modal_error_log_title' => $this->trans('Error log', [], 'Admin.Actions'),
                     ])
             )
             ->add(

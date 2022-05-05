@@ -54,18 +54,24 @@ final class AjaxBulkAction extends AbstractBulkAction
                 'ajax_route' => '',
                 'class' => '',
                 'modal_title' => 'Completing action',
-                'modal_progress_title' => 'Processing...',
-                'modal_failure_title' => 'Failed to process:',
-                'modal_description' => 'Action in progress',
-                'modal_close_button_label' => 'Close',
+                'modal_close' => 'Close',
+                'modal_stop_processing' => 'Stop processing',
+                'modal_errors_occurred' => '%d errors occurred. You can download the logs for future reference.',
+                'modal_back_to_processing' => 'Back to processing',
+                'modal_download_error_log' => 'Download error log',
+                'modal_view_error_log' => 'View %d error logs',
+                'modal_error_log_title' => 'Error log',
                 'route_params' => [],
             ])
             ->setAllowedTypes('class', 'string')
             ->setAllowedTypes('modal_title', 'string')
-            ->setAllowedTypes('modal_progress_title', 'string')
-            ->setAllowedTypes('modal_failure_title', 'string')
-            ->setAllowedTypes('modal_description', 'string')
-            ->setAllowedTypes('modal_close_button_label', 'string')
+            ->setAllowedTypes('modal_close', 'string')
+            ->setAllowedTypes('modal_stop_processing', 'string')
+            ->setAllowedTypes('modal_errors_occurred', 'string')
+            ->setAllowedTypes('modal_back_to_processing', 'string')
+            ->setAllowedTypes('modal_download_error_log', 'string')
+            ->setAllowedTypes('modal_view_error_log', 'string')
+            ->setAllowedTypes('modal_error_log_title', 'string')
             ->setAllowedTypes('ajax_route', 'string')
             ->setAllowedTypes('attributes', 'array')
             ->setAllowedTypes('attributes', 'array');

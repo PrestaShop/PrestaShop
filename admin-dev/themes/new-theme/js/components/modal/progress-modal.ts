@@ -37,12 +37,26 @@ export interface ProgressModalType extends ModalType {
 }
 export type ProgressModalParams = ModalParams & {
   modalTitle: string;
+  modalClose: string;
+  modalStopProcessing: string;
+  modalErrorsOccurred: string;
+  modalBackToProcessing: string;
+  modalDownloadErrorLog: string;
+  modalViewErrorLog: string;
+  modalViewErrorLogTitle: string;
   total: number;
   customButtons: Array<HTMLButtonElement | HTMLAnchorElement>;
   cancelCallback?: () => void;
 }
 export type InputProgressModalParams = Partial<ProgressModalParams> & {
   modalTitle: string;
+  modalClose: string;
+  modalStopProcessing: string;
+  modalErrorsOccurred: string;
+  modalBackToProcessing: string;
+  modalDownloadErrorLog: string;
+  modalViewErrorLog: string;
+  modalViewErrorLogTitle: string;
 };
 
 export class ProgressModalParentContainer implements ProgressModalParentContainerType{
@@ -143,8 +157,7 @@ export class ProgressModalContainer {
       'alert-warning'
     );
 
-    let errorLogString = 'View %d error logs';
-    this.switchToErrorButton.innerHTML = errorLogString.replace('%d', '0');
+    this.switchToErrorButton.innerHTML = params.modalViewErrorLog.replace('%d', '0');
     this.header.append(this.switchToErrorButton);
 
     // Modal body element
@@ -193,7 +206,7 @@ export class ProgressModalContainer {
     this.stopProcessingButton = document.createElement('button');
     this.stopProcessingButton.setAttribute('type', 'button');
     this.stopProcessingButton.classList.add('btn', 'btn-primary', 'btn-lg', componentMap.progressModal.stopProcessingButton);
-    this.stopProcessingButton.innerHTML = 'Stop processing';
+    this.stopProcessingButton.innerHTML = params.modalStopProcessing;
 
     // Appending element to the modal
     this.footer.append(this.stopProcessingButton, ...params.customButtons);
@@ -282,7 +295,7 @@ export class ProgressModalErrorContainer {
     this.body = document.createElement('div');
 
     let errorTitle = document.createElement('span');
-    let errorsString = '%d errors occurred. You can download the logs for future reference.';
+    let errorsString = params.modalErrorsOccurred;
     errorTitle.innerHTML = errorsString.replace('%d', '0');
     this.body.append(errorTitle);
     this.errorContainer = document.createElement('div');
@@ -301,7 +314,7 @@ export class ProgressModalErrorContainer {
       'btn',
       'btn-secondary'
     );
-    this.switchButton.innerHTML = 'Back to processing';
+    this.switchButton.innerHTML = params.modalBackToProcessing;
 
     this.downloadErrorsButton = document.createElement('div');
     this.downloadErrorsButton.classList.add(
@@ -309,7 +322,7 @@ export class ProgressModalErrorContainer {
       'btn',
       'btn-secondary'
     );
-    this.downloadErrorsButton.innerHTML = 'Download error log';
+    this.downloadErrorsButton.innerHTML = params.modalDownloadErrorLog;
 
     this.footer.append(this.switchButton);
     this.footer.append(this.downloadErrorsButton);
@@ -333,6 +346,7 @@ export class ProgressModal extends Modal implements ProgressModalType {
   progressModal !: ProgressModalContainer;
   errorModal !: ProgressModalErrorContainer;
   processStopped !: boolean;
+  params: InputProgressModalParams
   constructor(
     inputParams: InputProgressModalParams
   ) {
@@ -349,6 +363,7 @@ export class ProgressModal extends Modal implements ProgressModalType {
     this.total = params.total;
     this.errors = [];
     this.processStopped = false;
+    this.params = params;
   }
 
   protected initContainer(params: ProgressModalParams): void {
@@ -384,8 +399,7 @@ export class ProgressModal extends Modal implements ProgressModalType {
     errorContent.append(this.getErrorIcon());
     errorContent.append(error);
     this.errorModal.errorContainer.append(errorContent);
-    let errorLogString = 'View %d error logs';
-    this.progressModal.switchToErrorButton.innerHTML = errorLogString.replace('%d', this.errors.length.toString());
+    this.progressModal.switchToErrorButton.innerHTML = this.params.modalViewErrorLog.replace('%d', this.errors.length.toString());
     this.progressModal.lastError.classList.remove('d-none');
     this.progressModal.lastError.innerHTML = error;
     if (!this.processStopped) {
@@ -450,13 +464,14 @@ export class ProgressModal extends Modal implements ProgressModalType {
     this.processStopped = true;
   }
 
+  /** @todo add additional button and hide instead of replacing */
   private replaceStopProcessButton()
   {
     this.progressModal.stopProcessingButton.remove();
     let closeButton = document.createElement('button');
     closeButton.setAttribute('type', 'button');
     closeButton.classList.add('btn', 'btn-primary', 'btn-lg', 'stop-processing');
-    closeButton.innerHTML = 'Close';
+    closeButton.innerHTML = this.params.modalClose;
     closeButton.dataset.dismiss = 'modal';
     this.progressModal.footer.append(closeButton);
   }
