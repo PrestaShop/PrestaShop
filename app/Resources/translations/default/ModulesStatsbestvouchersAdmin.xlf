@@ -22,6 +22,11 @@
         <target>Adds a list of the best vouchers to the Stats dashboard.</target>
         <note>Line: 84</note>
       </trans-unit>
+      <trans-unit id="aaac029ef7cd30ab8a75a3c3d737c27b">
+        <source>Enrich your stats, add a list of the most used vouchers to the dashboard.</source>
+        <target>Enrich your stats, add a list of the most used vouchers to the dashboard.</target>
+        <note>Line: 84</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

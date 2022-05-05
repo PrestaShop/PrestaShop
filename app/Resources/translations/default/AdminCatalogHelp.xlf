@@ -338,22 +338,22 @@ File: admin-dev/themes/default/template/controllers/categories/helpers/form/form
       <trans-unit id="7bb36e0f484d91aeba5d83fe2af63d28">
         <source>Search for a product</source>
         <target>Search for a product</target>
-        <note>Line: 203</note>
+        <note>Line: 209</note>
       </trans-unit>
       <trans-unit id="9242ed633bcac07574f63fba6e184fd8">
         <source>Enter your product name</source>
         <target>Enter your product name</target>
-        <note>Line: 225</note>
+        <note>Line: 231</note>
       </trans-unit>
       <trans-unit id="7f6c27a96363effdda77216cf1251400">
         <source><![CDATA[The summary is a short sentence describing your product.<br />It will appears at the top of your shop's product page, in product lists, and in search engines' results page (so it's important for SEO). To give more details about your product, use the "Description" tab.]]></source>
         <target><![CDATA[The summary is a short sentence describing your product.<br />It will appears at the top of your shop's product page, in product lists, and in search engines' results page (so it's important for SEO). To give more details about your product, use the "Description" tab.]]></target>
-        <note>Line: 256</note>
+        <note>Line: 262</note>
       </trans-unit>
       <trans-unit id="1fbfcc9642d39544207c67f66ec3bc00">
         <source>Search and add a related product</source>
         <target>Search and add a related product</target>
-        <note>Line: 346</note>
+        <note>Line: 352</note>
       </trans-unit>
     </body>
   </file>
@@ -610,7 +610,7 @@ File: admin-dev/themes/default/template/controllers/categories/helpers/form/form
       <trans-unit id="53f3eb21de0c7a8c909a86be984996f6">
         <source>Does this combination have a different price? Is it cheaper or more expensive than the default retail price?</source>
         <target>Does this combination have a different price? Is it cheaper or more expensive than the default retail price?</target>
-        <note>Line: 150</note>
+        <note>Line: 162</note>
       </trans-unit>
     </body>
   </file>
@@ -733,37 +733,37 @@ File: admin-dev/themes/default/template/controllers/categories/helpers/form/form
       <trans-unit id="5f4efe2735311bfd3e5784705fb0110f">
         <source>Number of days this file can be accessed by customers. Set to zero for unlimited access.</source>
         <target>Number of days this file can be accessed by customers. Set to zero for unlimited access.</target>
-        <note>Line: 141</note>
+        <note>Line: 152</note>
       </trans-unit>
       <trans-unit id="dbcf3c5f67528da5cf59dc0c042748da">
         <source>Upload a file from your computer (%maxUploadSize% max.)</source>
         <target>Upload a file from your computer (%maxUploadSize% max.)</target>
-        <note>Line: 100</note>
+        <note>Line: 103</note>
       </trans-unit>
       <trans-unit id="c312034c9f17a264365e734de442ca0a">
         <source>The full filename with its extension (e.g. Book.pdf)</source>
         <target>The full filename with its extension (e.g. Book.pdf)</target>
-        <note>Line: 114</note>
+        <note>Line: 119</note>
       </trans-unit>
       <trans-unit id="48da1c11d36bd8b34f13821e996c7f97">
         <source>Number of downloads allowed per customer. Set to 0 for unlimited downloads.</source>
         <target>Number of downloads allowed per customer. Set to 0 for unlimited downloads.</target>
-        <note>Line: 123</note>
+        <note>Line: 130</note>
       </trans-unit>
       <trans-unit id="f049153f2c655d6d1ebd123f04b432cf">
         <source>If set, the file will not be downloadable after this date. Leave blank if you do not wish to attach an expiration date.</source>
         <target>If set, the file will not be downloadable after this date. Leave blank if you do not wish to attach an expiration date.</target>
-        <note>Line: 132</note>
+        <note>Line: 141</note>
       </trans-unit>
       <trans-unit id="ea8d1b4f32f86030683d8f9252c0a3e1">
         <source>The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity.</source>
         <target>The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity.</target>
-        <note>Line: 47</note>
+        <note>Line: 48</note>
       </trans-unit>
       <trans-unit id="1914ce33841a6e52c0577751d9004159">
         <source><![CDATA[The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]]]></source>
         <target><![CDATA[The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]]]></target>
-        <note>Line: 74</note>
+        <note>Line: 76</note>
       </trans-unit>
     </body>
   </file>

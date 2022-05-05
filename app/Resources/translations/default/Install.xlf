@@ -561,6 +561,11 @@ Comment: We fill the process step used for Ajax queries</note>
         <target>Drop existing tables</target>
         <note>Line: 60</note>
       </trans-unit>
+      <trans-unit id="c2cbf6c68a479e769d358263c2660496">
+        <source><![CDATA[To use PrestaShop, you must <a href="https://docs.prestashop-project.org/1.7-documentation/getting-started/installing-prestashop#creating-a-database-for-your-shop" target="_blank">create a database</a> to collect all of your store's data-related activities.]]></source>
+        <target><![CDATA[To use PrestaShop, you must <a href="https://docs.prestashop-project.org/1.7-documentation/getting-started/installing-prestashop#creating-a-database-for-your-shop" target="_blank">create a database</a> to collect all of your store's data-related activities.]]></target>
+        <note>Line: 32</note>
+      </trans-unit>
     </body>
   </file>
   <file original="install-dev/theme/views/footer.php" source-language="en-US" target-language="en" datatype="plaintext">
