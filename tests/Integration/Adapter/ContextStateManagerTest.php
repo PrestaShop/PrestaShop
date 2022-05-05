@@ -254,9 +254,6 @@ class ContextStateManagerTest extends ContextStateTestCase
         $this->assertEquals(Shop::CONTEXT_ALL, Shop::getContext());
         $this->assertCount(1, $contextStateManager->getContextFieldsStack());
 
-        //@todo: I don't understand why this passes.
-        //      Shouldn't it restore context one step back? to the "allShops" and not all the way back to basic shop?
-        //      Also why there are no calls of "saveCurrentContext" it seemed to be important, I don't know what to expect.
         $contextStateManager->restorePreviousContext();
         $this->assertEquals($this->basicShop->id, $this->legacyContext->getContext()->shop->id);
         $this->assertEquals($this->basicShop->id, Shop::getContextShopID());
