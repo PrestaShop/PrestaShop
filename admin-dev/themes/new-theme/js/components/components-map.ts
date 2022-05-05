@@ -112,4 +112,14 @@ export default {
     endDate: '.date-range-end-date',
     unlimitedCheckbox: '.date-range-unlimited',
   },
+  progressModal: {
+    switchToErrorButton: 'switch-to-errors-button',
+    progressPercent: 'progress-percent',
+    stopProcessingButton: 'stop-processing',
+    modalSingleErrorContainer: 'modal-error-container-single',
+    modalErrorContainer: 'progress-modal-error-container',
+    switchToProgressButton: 'switch-to-progress-button',
+    downloadErrorLogButton: 'download-error-log',
+    progressBarDone: 'modal_progressbar_done'
+  }
 };

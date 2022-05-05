@@ -278,3 +278,24 @@ $line-height-computed: floor($font-size-base * $line-height-base);
 #progress-modal-container .modal-footer{
   justify-content: space-between;
 }
+
+.progress-warning-icon{
+  color: map-get($alerts-second-colors, 'warning');
+}
+
+.progress-complete-icon{
+  color: map-get($alerts-second-colors, 'success');
+}
+
+.progress-stop-icon{
+  color: map-get($alerts-second-colors, 'danger');
+}
+
+.progress-headline{
+  margin-bottom: 5px;
+}
+
+.progress-headline .material-icons{
+  margin-right: 8px;
+  margin-bottom: 3px;
+}

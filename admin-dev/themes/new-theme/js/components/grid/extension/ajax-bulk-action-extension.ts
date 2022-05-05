@@ -85,7 +85,7 @@ export default class AjaxBulkActionExtension {
         modal.addError(data.message);
       }
     }
-    modal.stopProcessing();
+    modal.finishProcess();
   }
 
   private callAjaxAction($ajaxButton: JQuery<Element>, checkbox: Element, modal: ProgressModal, doneCount: number): JQuery.jqXHR
