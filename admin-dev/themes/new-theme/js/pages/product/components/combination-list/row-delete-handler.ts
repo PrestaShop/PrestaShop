@@ -33,6 +33,9 @@ const {$} = window;
 const CombinationsMap = ProductMap.combinations;
 const CombinationEvents = ProductEventMap.combinations;
 
+/**
+ * This components handles the row deletion of the combination list.
+ */
 export default class RowDeleteHandler {
   private eventEmitter: EventEmitter;
 

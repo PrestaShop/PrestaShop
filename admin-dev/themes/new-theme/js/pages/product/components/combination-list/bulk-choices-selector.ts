@@ -31,6 +31,10 @@ import {isChecked} from '@PSTypes/typeguard';
 const CombinationMap = ProductMap.combinations;
 const CombinationEvents = ProductEvents.combinations;
 
+/**
+ * This component watches the changes on row checkboxes and the select all one thus allowing the components that need
+ * the selected rows to interrogate this component via getSelectedCheckboxes.
+ */
 export default class BulkChoicesSelector {
   private eventEmitter: EventEmitter;
 
@@ -46,19 +50,15 @@ export default class BulkChoicesSelector {
     return this.tabContainer.querySelectorAll<HTMLInputElement>(`${CombinationMap.tableRow.isSelectedCombination}:checked`);
   }
 
-  public checkAll(checked: boolean): void {
-    const allCheckboxes = this.tabContainer.querySelectorAll<HTMLInputElement>(CombinationMap.tableRow.isSelectedCombination);
-
-    allCheckboxes.forEach((checkbox: HTMLInputElement) => {
-      // eslint-disable-next-line no-param-reassign
-      checkbox.checked = checked;
-    });
+  private init() {
+    this.listenCheckboxesChange();
+    this.eventEmitter.on(CombinationEvents.listRendered, () => this.updateBulkButtonsState());
   }
 
   /**
    * Delegated event listener on tabContainer, because every checkbox is re-rendered with dynamic pagination
    */
-  public listenCheckboxesChange(): void {
+  private listenCheckboxesChange(): void {
     this.tabContainer.addEventListener('change', (e) => {
       const checkbox = e.target;
 
@@ -81,7 +81,7 @@ export default class BulkChoicesSelector {
     });
   }
 
-  public updateBulkButtonsState(): void {
+  private updateBulkButtonsState(): void {
     const selectAllCheckbox = document.querySelector(CombinationMap.bulkSelectAll);
     const dropdownBtn = this.tabContainer.querySelector<HTMLInputElement>(CombinationMap.bulkActionsDropdownBtn);
     const selectedCombinationsCount = this.getSelectedCheckboxes().length;
@@ -105,8 +105,12 @@ export default class BulkChoicesSelector {
     dropdownBtn?.toggleAttribute('disabled', !enable);
   }
 
-  private init() {
-    this.listenCheckboxesChange();
-    this.eventEmitter.on(CombinationEvents.listRendered, () => this.updateBulkButtonsState());
+  private checkAll(checked: boolean): void {
+    const allCheckboxes = this.tabContainer.querySelectorAll<HTMLInputElement>(CombinationMap.tableRow.isSelectedCombination);
+
+    allCheckboxes.forEach((checkbox: HTMLInputElement) => {
+      // eslint-disable-next-line no-param-reassign
+      checkbox.checked = checked;
+    });
   }
 }

@@ -33,14 +33,17 @@ import {EventEmitter} from 'events';
 const CombinationMap = ProductMap.combinations;
 const CombinationEvents = ProductEvents.combinations;
 
+/**
+ * This components handles the bulk deletion of the combination list.
+ */
 export default class BulkDeleteHandler {
-  readonly productId: number;
+  private readonly productId: number;
 
-  private eventEmitter: EventEmitter;
+  private readonly eventEmitter: EventEmitter;
 
-  private combinationsService: CombinationsService;
+  private readonly combinationsService: CombinationsService;
 
-  private bulkChoicesSelector: BulkChoicesSelector;
+  private readonly bulkChoicesSelector: BulkChoicesSelector;
 
   constructor(
     productId: number,
@@ -94,6 +97,9 @@ export default class BulkDeleteHandler {
     });
   }
 
+  /**
+   * @todo: the bulk delete action should be displayed with a progress modal once it is ready.
+   */
   private bulkDelete(): JQuery.jqXHR {
     const combinationIds: number[] = [];
     this.bulkChoicesSelector.getSelectedCheckboxes().forEach((checkbox: HTMLInputElement) => {

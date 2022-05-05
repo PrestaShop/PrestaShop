@@ -33,7 +33,7 @@ import initFilters, {FiltersVueApp} from '@pages/product/components/filters';
 import {EventEmitter} from 'events';
 import initCombinationGenerator from '@pages/product/components/generator';
 import {getProductAttributeGroups} from '@pages/product/services/attribute-groups';
-import BulkFormHandler from '@pages/product/components/combination-list/bulk-form-handler';
+import BulkEditionHandler from '@pages/product/components/combination-list/bulk-edition-handler';
 import PaginatedCombinationsService from '@pages/product/services/paginated-combinations-service';
 import BulkDeleteHandler from '@pages/product/components/combination-list/bulk-delete-handler';
 import BulkChoicesSelector from '@pages/product/components/combination-list/bulk-choices-selector';
@@ -46,6 +46,11 @@ const {$} = window;
 const CombinationEvents = ProductEventMap.combinations;
 const CombinationsMap = ProductMap.combinations;
 
+/**
+ * This is the main class driving the combinations list, it orchestrates the initialisation of the several components
+ * and it also handles their interaction so that each component remains as independent as possible. Most of the interactions
+ * are driven via the event system.
+ */
 export default class CombinationsList {
   private readonly productId: number;
 
@@ -104,7 +109,7 @@ export default class CombinationsList {
 
     const bulkChoicesSelector = new BulkChoicesSelector(this.eventEmitter, this.externalCombinationTab);
 
-    new BulkFormHandler(productId, this.eventEmitter, bulkChoicesSelector, this.combinationsService);
+    new BulkEditionHandler(productId, this.eventEmitter, bulkChoicesSelector, this.combinationsService);
     new BulkDeleteHandler(productId, this.eventEmitter, bulkChoicesSelector, this.combinationsService);
     new RowDeleteHandler(this.eventEmitter, this.combinationsService);
 
@@ -122,130 +127,6 @@ export default class CombinationsList {
 
     // Finally watch events related to combination listing
     this.watchEvents();
-  }
-
-  /**
-   * @private
-   */
-  private showCombinationTab(): void {
-    this.externalCombinationTab.classList.remove('d-none');
-    this.firstInit();
-  }
-
-  /**
-   * @private
-   */
-  private hideCombinationTab(): void {
-    this.externalCombinationTab.classList.add('d-none');
-  }
-
-  /**
-   * @private
-   */
-  private firstInit(): void {
-    if (this.initialized) {
-      return;
-    }
-
-    this.initialized = true;
-
-    this.combinationGeneratorApp = initCombinationGenerator(
-      CombinationsMap.combinationsGeneratorContainer,
-      this.eventEmitter,
-      this.productId,
-    );
-    this.combinationModalApp = initCombinationModal(
-      CombinationsMap.editModal,
-      this.productId,
-      this.eventEmitter,
-    );
-    this.filtersApp = initFilters(
-      CombinationsMap.combinationsFiltersContainer,
-      this.eventEmitter,
-      this.productAttributeGroups,
-    );
-    this.initPaginatedList();
-
-    this.refreshCombinationList(true);
-  }
-
-  /**
-   * @param {boolean} firstTime
-   * @returns {Promise<void>}
-   *
-   * @private
-   */
-  private async refreshCombinationList(firstTime: boolean): Promise<void> {
-    // Preloader is only shown on first load
-    this.$preloader.toggleClass('d-none', !firstTime);
-    this.$paginatedList.toggleClass('d-none', firstTime);
-    this.$emptyState.addClass('d-none');
-
-    // Wait for product attributes to adapt rendering depending on their number
-    this.productAttributeGroups = await getProductAttributeGroups(this.productId);
-
-    if (this.filtersApp) {
-      this.filtersApp.filters = this.productAttributeGroups;
-    }
-
-    // We trigger the clearFilters which will be handled by the filters app, after clean the component will trigger
-    // the updateAttributeGroups event which is caught by this manager which will in turn refresh the list to first page
-    this.eventEmitter.emit(CombinationEvents.clearFilters);
-    this.$preloader.addClass('d-none');
-
-    const hasCombinations = this.productAttributeGroups && this.productAttributeGroups.length;
-    this.$paginatedList.toggleClass('d-none', !hasCombinations);
-
-    if (!hasCombinations && this.renderer) {
-      // Empty list
-      this.renderer.render({combinations: []});
-      this.$emptyState.removeClass('d-none');
-    }
-  }
-
-  /**
-   * @private
-   */
-  private refreshPage(): void {
-    if (this.paginator) {
-      this.paginator.paginate(this.paginator.getCurrentPage());
-    }
-  }
-
-  /**
-   * @private
-   */
-  private initPaginatedList(): void {
-    this.renderer = new CombinationsListRenderer(
-      this.eventEmitter,
-      this.productFormModel,
-      (sortColumn: string, sorOrder: string) => this.sortList(sortColumn, sorOrder),
-    );
-
-    this.paginator = new DynamicPaginator(
-      CombinationsMap.paginationContainer,
-      this.paginatedCombinationsService,
-      this.renderer,
-      0,
-    );
-
-    this.editor = new CombinationsListEditor(
-      this.productId,
-      this.eventEmitter,
-      this.renderer,
-      this.combinationsService,
-    );
-  }
-
-  private sortList(sortColumn: string, sortOrder: string): void {
-    if (this.editor?.editionEnabled) {
-      return;
-    }
-
-    this.paginatedCombinationsService.setOrderBy(sortColumn, sortOrder);
-    if (this.paginator) {
-      this.paginator.paginate(1);
-    }
   }
 
   private watchEvents(): void {
@@ -285,5 +166,105 @@ export default class CombinationsList {
     });
 
     this.eventEmitter.on(CombinationEvents.bulkUpdateFinished, () => this.refreshPage());
+  }
+
+  private showCombinationTab(): void {
+    this.externalCombinationTab.classList.remove('d-none');
+    this.initializeComponents();
+  }
+
+  private hideCombinationTab(): void {
+    this.externalCombinationTab.classList.add('d-none');
+  }
+
+  private initializeComponents(): void {
+    if (this.initialized) {
+      return;
+    }
+
+    this.initialized = true;
+
+    // External vue components
+    this.combinationGeneratorApp = initCombinationGenerator(
+      CombinationsMap.combinationsGeneratorContainer,
+      this.eventEmitter,
+      this.productId,
+    );
+    this.combinationModalApp = initCombinationModal(
+      CombinationsMap.editModal,
+      this.productId,
+      this.eventEmitter,
+    );
+    this.filtersApp = initFilters(
+      CombinationsMap.combinationsFiltersContainer,
+      this.eventEmitter,
+      this.productAttributeGroups,
+    );
+
+    // List related components
+    this.renderer = new CombinationsListRenderer(
+      this.eventEmitter,
+      this.productFormModel,
+      (sortColumn: string, sorOrder: string) => this.sortList(sortColumn, sorOrder),
+    );
+    this.paginator = new DynamicPaginator(
+      CombinationsMap.paginationContainer,
+      this.paginatedCombinationsService,
+      this.renderer,
+      0,
+    );
+    this.editor = new CombinationsListEditor(
+      this.productId,
+      this.eventEmitter,
+      this.renderer,
+      this.combinationsService,
+    );
+
+    this.refreshCombinationList(true);
+  }
+
+  private async refreshCombinationList(firstTime: boolean): Promise<void> {
+    // Preloader is only shown on first load
+    this.$preloader.toggleClass('d-none', !firstTime);
+    this.$paginatedList.toggleClass('d-none', firstTime);
+    this.$emptyState.addClass('d-none');
+
+    // Wait for product attributes to adapt rendering depending on their number
+    this.productAttributeGroups = await getProductAttributeGroups(this.productId);
+
+    if (this.filtersApp) {
+      this.filtersApp.filters = this.productAttributeGroups;
+    }
+
+    // We trigger the clearFilters which will be handled by the filters app, after clean the component will trigger
+    // the updateAttributeGroups event which is caught by this manager which will in turn refresh the list to first page
+    this.eventEmitter.emit(CombinationEvents.clearFilters);
+    this.$preloader.addClass('d-none');
+
+    const hasCombinations = this.productAttributeGroups && this.productAttributeGroups.length;
+    this.$paginatedList.toggleClass('d-none', !hasCombinations);
+
+    if (!hasCombinations && this.renderer) {
+      // Empty list
+      this.renderer.render({combinations: []});
+      this.$emptyState.removeClass('d-none');
+    }
+  }
+
+  private refreshPage(): void {
+    if (this.paginator) {
+      this.paginator.paginate(this.paginator.getCurrentPage());
+    }
+  }
+
+  private sortList(sortColumn: string, sortOrder: string): void {
+    if (this.editor?.editionEnabled) {
+      return;
+    }
+
+    this.paginatedCombinationsService.setOrderBy(sortColumn, sortOrder);
+    if (this.paginator) {
+      this.paginator.paginate(1);
+    }
   }
 }

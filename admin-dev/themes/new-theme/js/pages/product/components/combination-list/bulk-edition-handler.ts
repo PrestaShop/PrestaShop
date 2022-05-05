@@ -35,9 +35,9 @@ const CombinationMap = ProductMap.combinations;
 const CombinationEvents = ProductEvents.combinations;
 
 /**
- * This components handles the bulk actions of the combination list.
+ * This components handles the bulk edition of the combination list.
  */
-export default class BulkFormHandler {
+export default class BulkEditionHandler {
   readonly productId: number;
 
   private combinationsService: CombinationsService;

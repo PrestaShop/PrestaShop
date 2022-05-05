@@ -38,7 +38,9 @@ const CombinationsMap = ProductMap.combinations;
 export type SortGridCallback = (sortColumn: string, sortOrder: string) => void;
 
 /**
- * Renders the list of combinations in product edit page
+ * Renders the list of combinations in product edit page, it is also responsible for automatic updates
+ * of the list fields (like price editions). It handles the sort controls although it is not responsible for
+ * the sort query, the query is performed externally via the sortListCallback.
  */
 export default class CombinationsListRenderer {
   private readonly eventEmitter: EventEmitter;

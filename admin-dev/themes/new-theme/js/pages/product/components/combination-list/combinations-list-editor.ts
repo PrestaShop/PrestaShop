@@ -36,6 +36,14 @@ const {$} = window;
 const CombinationEvents = ProductEventMap.combinations;
 const CombinationsMap = ProductMap.combinations;
 
+/**
+ * This component handles the edition mode  of the list, it watches any modification in the field to enable
+ * the edition mode. It is also responsible for handling the update query of modified fields.
+ *
+ * If the query fails because of form errors the controller returns the form content in HTML which is used
+ * to replace the list content, this leaves the validation process to the controller allows displaying inline
+ * form errors.
+ */
 export default class CombinationsListEditor {
   private readonly productId: number;
 
