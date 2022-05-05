@@ -55,6 +55,8 @@ export default class CombinationsListRenderer {
 
   private readonly $combinationsListContainer: JQuery;
 
+  private sortingEnabled = true;
+
   constructor(
     eventEmitter: EventEmitter,
     productFormModel: ProductFormModel,
@@ -88,6 +90,10 @@ export default class CombinationsListRenderer {
     this.$loadingSpinner.toggle(loading);
   }
 
+  toggleSorting(sortingEnabled: boolean): void {
+    this.sortingEnabled = sortingEnabled;
+  }
+
   private initListeners(): void {
     this.$combinationsListContainer.on('change', CombinationsMap.list.priceImpactTaxExcluded, (event: ChangeEvent) => {
       this.updateByPriceImpactTaxExcluded($(event.currentTarget));
@@ -111,6 +117,10 @@ export default class CombinationsListRenderer {
       'click',
       CombinationsMap.sortableColumns,
       (event) => {
+        if (!this.sortingEnabled) {
+          return;
+        }
+
         const $sortableColumn = $(event.currentTarget);
         const columnName = $sortableColumn.data('sortColName');
 

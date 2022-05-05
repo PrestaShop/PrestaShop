@@ -167,6 +167,7 @@ export default class CombinationsListEditor {
         $disabledElement.prop('disabled', true);
       });
     });
+    this.renderer.toggleSorting(false);
   }
 
   private disableEditionMode(): void {
@@ -184,6 +185,7 @@ export default class CombinationsListEditor {
         $disabledElement.prop('disabled', $disabledElement.data('previousDisabled'));
       });
     });
+    this.renderer.toggleSorting(true);
     this.editionMode = false;
   }
 
