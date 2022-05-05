@@ -4868,7 +4868,7 @@ class AdminControllerCore extends Controller
         return array_merge(
             $buttonProperties,
             [
-                'name' => $buttonProperties['class'] ?? $actionBarButton->getClass(),
+                'name' => str_replace(' ', '-', $buttonProperties['class'] ?? $actionBarButton->getClass()),
                 'desc' => $buttonProperties['desc'] ?? $actionBarButton->getContent(),
                 'class' => ($buttonProperties['class'] ?? $actionBarButton->getClass()) . ' btn-primary',
                 'imgclass' => $buttonProperties['class'] ?? $actionBarButton->getClass(),
