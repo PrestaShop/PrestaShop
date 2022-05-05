@@ -22,27 +22,20 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import Vue from 'vue';
-import {Attribute, AttributeGroup} from '@pages/product/types';
 
-export default Vue.extend({
-  methods: {
-    /**
-     * The selected attribute is provided as a parameter instead od using this reference because it helps the
-     * observer work better whe this.selectedAttributeGroups is explicitly used as an argument.
-     *
-     * @param {Object} attribute
-     * @param {Object} attributeGroup
-     * @param {Object} attributeGroups
-     *
-     * @returns {boolean}
-     */
-    isSelected(attribute: Attribute, attributeGroup: AttributeGroup, attributeGroups: Record<string, AttributeGroup>): boolean {
-      if (!Object.prototype.hasOwnProperty.call(attributeGroups, attributeGroup.id)) {
-        return false;
-      }
+export interface AttributeGroup {
+  id: number;
+  name: string;
+  publicName: string;
+  attributes: Array<Attribute>;
+}
 
-      return attributeGroups[attributeGroup.id].attributes.includes(attribute);
-    },
-  },
-});
+/* eslint-disable camelcase */
+export interface Attribute {
+  id: number;
+  color: string;
+  group_id: number;
+  group_name: string;
+  name: string;
+}
+/* eslint-enable camelcase */

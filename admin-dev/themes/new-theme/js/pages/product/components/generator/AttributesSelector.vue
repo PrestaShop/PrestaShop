@@ -128,6 +128,7 @@
   import Bloodhound from 'typeahead.js';
   import AutoCompleteSearch, {AutoCompleteSearchConfig} from '@components/auto-complete-search';
   import Tokenizers from '@components/bloodhound/tokenizers';
+  import {Attribute, AttributeGroup} from '@pages/product/types';
 
   const {$} = window;
 
@@ -140,23 +141,6 @@
     hasGeneratedCombinations: boolean;
     checkboxList: Array<Record<string, any>>;
   }
-
-  export interface AttributeGroup {
-    id: number;
-    name: string;
-    publicName: string;
-    attributes: Array<Attribute>;
-  }
-
-  /* eslint-disable camelcase */
-  export interface Attribute {
-    id: number;
-    color: string;
-    group_id: number;
-    group_name: string;
-    name: string;
-  }
-  /* eslint-enable camelcase */
 
   export type AttributesSelectorType = VueConstructor<Vue & InstanceType<typeof isSelected>>
 

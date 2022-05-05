@@ -79,12 +79,12 @@
 
 <script lang="ts">
   import CombinationsService from '@pages/product/services/combinations-service';
-  import AttributesSelector, {Attribute, AttributeGroup}
-    from '@pages/product/components/generator/AttributesSelector.vue';
+  import AttributesSelector from '@pages/product/components/generator/AttributesSelector.vue';
   import isSelected from '@pages/product/mixins/is-attribute-selected';
   import {getAllAttributeGroups} from '@pages/product/services/attribute-groups';
   import Modal from '@vue/components/Modal.vue';
   import ProductEventMap from '@pages/product/product-event-map';
+  import {Attribute, AttributeGroup} from '@pages/product/types';
 
   const {$} = window;
 
