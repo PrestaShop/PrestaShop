@@ -201,10 +201,6 @@ class Order extends BOBasePage {
       return this.getNumberFromText(page, this.tableColumn(row, 'id_order'));
     }
 
-    if (columnName === 'id_order') {
-      return this.getNumberFromText(page, this.tableColumn(row, 'id_order'));
-    }
-
     return this.getTextContent(page, this.tableColumn(row, columnName));
   }
 
