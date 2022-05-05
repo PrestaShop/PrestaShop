@@ -26,7 +26,7 @@ const {DefaultCustomer} = require('@data/demo/customer');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_orders_orders_checkInvoiceDownloadedFromList';
+const baseContext = 'functional_BO_orders_orders_changeStatus';
 
 // Import expect from chai
 const {expect} = require('chai');
