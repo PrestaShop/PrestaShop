@@ -24,6 +24,14 @@ module.exports = {
       invoice: true,
       emailTemplate: 'shipped',
     },
+    delivered: {
+      id: 5,
+      status: 'Delivered',
+      sendEmailToCustomer: false,
+      delivery: true,
+      invoice: true,
+      emailTemplate: '',
+    },
     canceled: {
       id: 6,
       status: 'Canceled',
