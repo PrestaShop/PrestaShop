@@ -93,7 +93,7 @@ export default class CombinationsManager {
   editionDisabledElements: string[] = [
     CombinationsMap.bulkActionsBtn,
     CombinationsMap.tableRow.isSelectedCombination,
-    ProductMap.combinations.bulkSelectAllInPage,
+    ProductMap.combinations.bulkSelectAll,
     ProductMap.combinations.filtersDropdown,
     ProductMap.combinations.generateCombinationsButton,
   ];

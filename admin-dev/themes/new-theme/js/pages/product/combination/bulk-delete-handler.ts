@@ -41,7 +41,7 @@ export default class BulkDeleteHandler {
         const confirmLabel = bulkDeleteBtn.dataset.modalConfirmLabel
           ?.replace(/%combinations_number%/, String(selectedCombinationsCount));
 
-        const modal = new (ConfirmModal as any)(
+        const modal = new ConfirmModal(
           {
             id: 'modal-confirm-delete-combinations',
             confirmTitle: bulkDeleteBtn.innerHTML,
@@ -58,9 +58,7 @@ export default class BulkDeleteHandler {
         );
         modal.show();
       } catch (error) {
-        const errorMessage = error.responseJSON
-          ? error.responseJSON.error
-          : error;
+        const errorMessage = error.response?.JSON ?? error;
         $.growl.error({message: errorMessage});
       }
     });

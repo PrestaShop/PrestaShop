@@ -66,14 +66,14 @@ export default class BulkChoicesSelector {
         return;
       }
 
-      const isAllInPageSelector = checkbox.matches(CombinationMap.bulkSelectAllInPage);
+      const isBulkSelectAll = checkbox.matches(CombinationMap.bulkSelectAll);
 
       // don't proceed if its not one of the expected checkboxes
-      if (!isAllInPageSelector && !checkbox.matches(CombinationMap.tableRow.isSelectedCombination)) {
+      if (!isBulkSelectAll && !checkbox.matches(CombinationMap.tableRow.isSelectedCombination)) {
         return;
       }
 
-      if (isAllInPageSelector) {
+      if (isBulkSelectAll) {
         this.checkAll(checkbox.checked);
       }
 
@@ -82,7 +82,7 @@ export default class BulkChoicesSelector {
   }
 
   public updateBulkButtonsState(): void {
-    const selectAllCheckbox = document.querySelector(CombinationMap.bulkSelectAllInPage);
+    const selectAllCheckbox = document.querySelector(CombinationMap.bulkSelectAll);
     const dropdownBtn = this.tabContainer.querySelector<HTMLInputElement>(CombinationMap.bulkActionsDropdownBtn);
     const selectedCombinationsCount = this.getSelectedCheckboxes().length;
     const enable = isChecked(selectAllCheckbox) || selectedCombinationsCount !== 0;

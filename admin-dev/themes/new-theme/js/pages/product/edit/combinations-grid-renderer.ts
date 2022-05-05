@@ -89,7 +89,7 @@ export default class CombinationsGridRenderer {
     const $combinationsTableBody = $(ProductMap.combinations.combinationsTableBody);
 
     $combinationsTableBody.empty();
-    $combinationsTable.find(ProductMap.combinations.bulkSelectAllInPage).prop('checked', false);
+    $combinationsTable.find(ProductMap.combinations.bulkSelectAll).prop('checked', false);
 
     let rowIndex = 0;
     combinations.forEach((combination: Record<string, any>) => {
