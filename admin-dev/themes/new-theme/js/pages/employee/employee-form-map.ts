@@ -29,6 +29,7 @@
 export default {
   shopChoiceTree: '#employee_shop_association',
   profileSelect: '#employee_profile',
+  passwordInput: '#employee_password',
   defaultPageSelect: '#employee_default_page',
   addonsConnectForm: '#addons-connect-form',
   addonsLoginButton: '#addons_login_btn',

@@ -27,6 +27,7 @@ import ChoiceTree from '../../components/form/choice-tree';
 import AddonsConnector from '../../components/addons-connector';
 import ChangePasswordControl from '../../components/form/change-password-control';
 import employeeFormMap from './employee-form-map';
+import ChangePasswordHandler from '../../components/change-password-handler';
 
 /**
  * Class responsible for javascript actions in employee add/edit page.
@@ -63,6 +64,11 @@ export default class EmployeeForm {
       employeeFormMap.generatedPasswordDisplayInput,
       employeeFormMap.passwordStrengthFeedbackContainer,
     );
+
+    const passwordHandler = new ChangePasswordHandler(
+      employeeFormMap.passwordStrengthFeedbackContainer,
+    );
+    passwordHandler.watchPasswordStrength($(employeeFormMap.passwordInput));
 
     this.initEvents();
     this.toggleShopTree();

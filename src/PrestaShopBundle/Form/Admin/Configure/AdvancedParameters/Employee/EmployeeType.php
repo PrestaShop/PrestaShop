@@ -116,6 +116,7 @@ final class EmployeeType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $minScore = $this->configuration->get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_SCORE);
         $maxLength = $this->configuration->get(PasswordPolicyConfiguration::CONFIGURATION_MAXIMUM_LENGTH);
         $minLength = $this->configuration->get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH);
 
@@ -157,6 +158,11 @@ final class EmployeeType extends AbstractType
         } else {
             $builder->add('password', PasswordType::class, [
                 'required' => !$options['is_for_editing'],
+                'attr' => [
+                    'data-minscore' => $minScore,
+                    'data-minlength' => $minLength,
+                    'data-maxlength' => $maxLength,
+                ],
                 'constraints' => [
                     new Length(
                         [
