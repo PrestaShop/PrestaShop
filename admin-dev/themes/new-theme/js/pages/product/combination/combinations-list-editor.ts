@@ -50,11 +50,12 @@ export default class CombinationsListEditor {
   private readonly $paginatedList: JQuery;
 
   private readonly editionDisabledElements: string[] = [
-    CombinationsMap.bulkActionsBtn,
+    CombinationsMap.bulkActionsDropdownBtn,
     CombinationsMap.tableRow.isSelectedCombination,
-    ProductMap.combinations.bulkSelectAll,
-    ProductMap.combinations.filtersDropdown,
-    ProductMap.combinations.generateCombinationsButton,
+    CombinationsMap.bulkSelectAll,
+    CombinationsMap.filtersSelectorButtons,
+    CombinationsMap.generateCombinationsButton,
+    CombinationsMap.list.rowActionButtons,
   ];
 
   private readonly combinationsService: CombinationsService;
@@ -171,9 +172,12 @@ export default class CombinationsListEditor {
 
     // Disabled elements (bulk actions, filters, ...)
     this.editionDisabledElements.forEach((disabledSelector: string) => {
-      const $disabledElement = this.$paginatedList.find(disabledSelector);
-      $disabledElement.data('initialDisabled', $disabledElement.is(':disabled'));
-      $disabledElement.prop('disabled', true);
+      const $disabledElements = this.$paginatedList.find(disabledSelector);
+      $disabledElements.each((index: number, disabledElement: HTMLElement): void => {
+        const $disabledElement = $(disabledElement);
+        $disabledElement.data('initialDisabled', $disabledElement.is(':disabled'));
+        $disabledElement.prop('disabled', true);
+      });
     });
   }
 
@@ -182,8 +186,11 @@ export default class CombinationsListEditor {
 
     // Re-enabled disabled elements
     this.editionDisabledElements.forEach((disabledSelector: string) => {
-      const $disabledElement = this.$paginatedList.find(disabledSelector);
-      $disabledElement.prop('disabled', $disabledElement.data('initialDisabled'));
+      const $disabledElements = this.$paginatedList.find(disabledSelector);
+      $disabledElements.each((index: number, disabledElement: HTMLElement): void => {
+        const $disabledElement = $(disabledElement);
+        $disabledElement.prop('disabled', $disabledElement.data('initialDisabled'));
+      });
     });
     this.editionMode = false;
   }
