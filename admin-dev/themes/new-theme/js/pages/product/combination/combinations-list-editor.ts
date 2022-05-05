@@ -86,21 +86,6 @@ export default class CombinationsListEditor {
     return this.editionMode;
   }
 
-  closeEdition(): void {
-    this.disableEditionMode();
-  }
-
-  updateForm(formContent: string): void {
-    // Replace form content with output from response
-    this.$combinationsFormContainer.html(formContent);
-
-    // Now re-watch the new inputs and set their initial value
-    Object.keys(this.savedInputValues).forEach((inputName: string) => {
-      const $input = $(`[name="${inputName}"]`, this.$combinationsFormContainer);
-      this.watchInputChange($input, this.savedInputValues[inputName]);
-    });
-  }
-
   private init(): void {
     // Preset initial data attribute after each list rendering
     this.eventEmitter.on(CombinationEvents.listRendered, () => {
@@ -118,18 +103,6 @@ export default class CombinationsListEditor {
       });
     });
 
-    this.$combinationsFormContainer.on('change', CombinationsMap.list.fieldInputs, (event: ChangeEvent) => {
-      const $input = $(event.currentTarget);
-
-      if (
-        typeof $input.val() !== 'undefined'
-        && typeof $input.data('initialValue') !== 'undefined'
-        && $input.val() !== $input.data('initialValue')
-      ) {
-        this.enableEditionMode();
-      }
-    });
-
     $(CombinationsMap.list.footer.cancel).on('click', () => {
       this.cancelEdition();
     });
@@ -145,51 +118,70 @@ export default class CombinationsListEditor {
 
   private watchInputChange($input: JQuery, initialValue: string | number | string[]): void {
     $input.data('initialValue', initialValue);
-    this.toggleChangedStatus($input, initialValue);
+    $input.data('initialChecked', $input.is(':checked'));
+    this.updateInput($input, initialValue, $input.is(':checked'));
 
     $input.on('change', () => {
-      this.toggleChangedStatus($input, $input.data('initialValue'));
+      this.updateInput($input, $input.data('initialValue'), $input.data('initialChecked'));
     });
   }
 
-  private toggleChangedStatus($input: JQuery, initialValue: string | number | string[]): void {
+  private updateInput($input: JQuery, initialValue: string | number | string[] | undefined, initialChecked: boolean): void {
+    const inputChecked = $input.is(':checked');
+    const inputValue = $input.val();
     let valueModified;
-    const initialNumberValue = new BigNumber(Number(initialValue));
-    const inputNumberValue = new BigNumber(Number($input.val()));
 
-    if (!initialNumberValue.isNaN() && !inputNumberValue.isNaN()) {
-      valueModified = !initialNumberValue.isEqualTo(inputNumberValue);
-    } else {
-      valueModified = initialValue !== $input.val();
+    if (!isUndefined(inputChecked) && !isUndefined(initialChecked) && inputChecked !== initialChecked) {
+      valueModified = true;
+    } else if (!isUndefined(initialValue) && !isUndefined(inputValue)) {
+      const initialNumberValue = new BigNumber(Number(initialValue));
+      const inputNumberValue = new BigNumber(Number($input.val()));
+
+      if (!initialNumberValue.isNaN() && !inputNumberValue.isNaN()) {
+        valueModified = !initialNumberValue.isEqualTo(inputNumberValue);
+      } else {
+        valueModified = initialValue !== $input.val();
+      }
     }
-
     $input.toggleClass(ProductMap.combinations.list.modifiedFieldClass, valueModified);
+
+    if (valueModified) {
+      this.enableEditionMode();
+    }
   }
 
   private enableEditionMode(): void {
+    if (this.editionMode) {
+      return;
+    }
+
     this.editionMode = true;
     this.$paginatedList.addClass(CombinationsMap.list.editionModeClass);
 
     // Disabled elements (bulk actions, filters, ...)
     this.editionDisabledElements.forEach((disabledSelector: string) => {
-      const $disabledElements = this.$paginatedList.find(disabledSelector);
+      const $disabledElements = $(disabledSelector);
       $disabledElements.each((index: number, disabledElement: HTMLElement): void => {
         const $disabledElement = $(disabledElement);
-        $disabledElement.data('initialDisabled', $disabledElement.is(':disabled'));
+        $disabledElement.data('previousDisabled', $disabledElement.is(':disabled'));
         $disabledElement.prop('disabled', true);
       });
     });
   }
 
   private disableEditionMode(): void {
+    if (!this.editionMode) {
+      return;
+    }
+
     this.$paginatedList.removeClass(CombinationsMap.list.editionModeClass);
 
     // Re-enabled disabled elements
     this.editionDisabledElements.forEach((disabledSelector: string) => {
-      const $disabledElements = this.$paginatedList.find(disabledSelector);
+      const $disabledElements = $(disabledSelector);
       $disabledElements.each((index: number, disabledElement: HTMLElement): void => {
         const $disabledElement = $(disabledElement);
-        $disabledElement.prop('disabled', $disabledElement.data('initialDisabled'));
+        $disabledElement.prop('disabled', $disabledElement.data('previousDisabled'));
       });
     });
     this.editionMode = false;
@@ -198,18 +190,21 @@ export default class CombinationsListEditor {
   private resetEdition(): void {
     $(CombinationsMap.list.fieldInputs, this.$combinationsFormContainer).each((index, input) => {
       const $input = $(input);
+      const inputInitialValue = $input.data('initialValue');
+      const inputInitialChecked = $input.data('initialChecked');
 
-      if (
-        typeof $input.val() !== 'undefined'
-        && typeof $input.data('initialValue') !== 'undefined'
-        && $input.val() !== $input.data('initialValue')
-      ) {
-        $input.val($input.data('initialValue')).trigger('change');
-        // Remove modified class to reset display UX
-        $input.removeClass(ProductMap.combinations.list.modifiedFieldClass);
-        // Remove invalid class in case the field is an output with form errors
-        $input.removeClass(ProductMap.combinations.list.invalidClass);
+      if (!isUndefined(inputInitialValue)) {
+        $input.val(inputInitialValue).trigger('change');
       }
+
+      if (!isUndefined(inputInitialChecked)) {
+        $input.prop('checked', inputInitialChecked);
+      }
+
+      // Remove modified class to reset display UX
+      $input.removeClass(ProductMap.combinations.list.modifiedFieldClass);
+      // Remove invalid class in case the field is an output with form errors
+      $input.removeClass(ProductMap.combinations.list.invalidClass);
     });
 
     // Clean all the alerts that may come from an output with form errors
@@ -238,7 +233,7 @@ export default class CombinationsListEditor {
     } else if (jsonResponse.message) {
       $.growl({message: jsonResponse.message});
       this.disableEditionMode();
-      this.eventEmitter.emit(CombinationEvents.refreshCombinationList);
+      this.eventEmitter.emit(CombinationEvents.refreshPage);
     }
   }
 
@@ -250,5 +245,16 @@ export default class CombinationsListEditor {
     }
 
     return new FormData(combinationListForm);
+  }
+
+  private updateForm(formContent: string): void {
+    // Replace form content with output from response
+    this.$combinationsFormContainer.html(formContent);
+
+    // Now re-watch the new inputs and set their initial value
+    Object.keys(this.savedInputValues).forEach((inputName: string) => {
+      const $input = $(`[name="${inputName}"]`, this.$combinationsFormContainer);
+      this.watchInputChange($input, this.savedInputValues[inputName]);
+    });
   }
 }
