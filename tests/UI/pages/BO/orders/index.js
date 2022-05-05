@@ -196,8 +196,9 @@ class Order extends BOBasePage {
     if (columnName === 'osname') {
       return this.getTextContent(page, this.updateStatusInTableButton(row));
     }
+
     if (columnName === 'id_order') {
-      return this.getNumberFromText(page, this.tableColumn(row, columnName));
+      return this.getNumberFromText(page, this.tableColumn(row, 'id_order'));
     }
 
     if (columnName === 'id_order') {
@@ -226,7 +227,7 @@ class Order extends BOBasePage {
    */
   async getOrderFromTable(page, row) {
     return {
-      id: parseInt(await this.getTextColumn(page, 'id_order', row), 10),
+      id: parseFloat(await this.getTextColumn(page, 'id_order', row)),
       reference: await this.getTextColumn(page, 'reference', row),
       newClient: await this.getTextColumn(page, 'new', row),
       delivery: await this.getTextColumn(page, 'country_name', row),
