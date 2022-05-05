@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import BigNumber from 'bignumber.js';
 import ProductMap from '@pages/product/product-map';
 import CombinationsGridRenderer from '@pages/product/edit/combinations-grid-renderer';
 import CombinationsService from '@pages/product/services/combinations-service';
@@ -40,10 +39,7 @@ import PaginatedCombinationsService from '@pages/product/services/paginated-comb
 import BulkDeleteHandler from '@pages/product/combination/bulk-delete-handler';
 import BulkChoicesSelector from '@pages/product/combination/bulk-choices-selector';
 import ProductFormModel from '@pages/product/edit/product-form-model';
-import {notifyFormErrors} from '@components/form/helpers';
-import {isUndefined} from '@PSTypes/typeguard';
-
-import ChangeEvent = JQuery.ChangeEvent;
+import CombinationsListEditor from '@pages/product/edit/combinations-list-editor';
 
 const {$} = window;
 const CombinationEvents = ProductEventMap.combinations;
@@ -86,17 +82,7 @@ export default class CombinationsManager {
 
   productFormModel: ProductFormModel;
 
-  editionMode: boolean = false;
-
-  savedInputValues: Record<string, any>;
-
-  editionDisabledElements: string[] = [
-    CombinationsMap.bulkActionsBtn,
-    CombinationsMap.tableRow.isSelectedCombination,
-    ProductMap.combinations.bulkSelectAll,
-    ProductMap.combinations.filtersDropdown,
-    ProductMap.combinations.generateCombinationsButton,
-  ];
+  combinationsEditor?: CombinationsListEditor;
 
   constructor(productId: number, productFormModel: ProductFormModel) {
     this.productId = productId;
@@ -116,7 +102,6 @@ export default class CombinationsManager {
     this.combinationsService = new CombinationsService();
     this.paginatedCombinationsService = new PaginatedCombinationsService(productId);
     this.productAttributeGroups = [];
-    this.savedInputValues = {};
 
     const bulkChoicesSelector = new BulkChoicesSelector(this.externalCombinationTab);
     new BulkFormHandler(productId, bulkChoicesSelector);
@@ -202,8 +187,8 @@ export default class CombinationsManager {
       this.filtersApp.filters = this.productAttributeGroups;
     }
 
-    // When attributes are refreshed we show first page (the component will trigger a updateAttributeGroups event
-    // which will itself be caught by this manager which will in turn refresh to first page)
+    // We trigger the clearFilters which will be handled by the filters app, after clean the component will trigger
+    // the updateAttributeGroups event which is caught by this manager which will in turn refresh the list to first page
     this.eventEmitter.emit(CombinationEvents.clearFilters);
     this.$preloader.addClass('d-none');
 
@@ -230,8 +215,12 @@ export default class CombinationsManager {
    * @private
    */
   private initPaginatedList(): void {
-    this.combinationsRenderer = new CombinationsGridRenderer(this.productFormModel);
-    // Initial page is zero, we will load the first page after several other init functions
+    this.combinationsRenderer = new CombinationsGridRenderer(
+      this.eventEmitter,
+      this.productFormModel,
+      (sortColumn: string, sorOrder: string) => this.sortList(sortColumn, sorOrder),
+    );
+
     this.paginator = new DynamicPaginator(
       CombinationsMap.paginationContainer,
       this.paginatedCombinationsService,
@@ -247,73 +236,25 @@ export default class CombinationsManager {
       },
     );
 
-    this.$combinationsFormContainer.on('change', CombinationsMap.list.fieldInputs, (event: ChangeEvent) => {
-      const $input = $(event.currentTarget);
+    this.combinationsEditor = new CombinationsListEditor(
+      this.productId,
+      this.eventEmitter,
+      this.combinationsRenderer,
+    );
+  }
 
-      if (
-        typeof $input.val() !== 'undefined'
-        && typeof $input.data('initialValue') !== 'undefined'
-        && $input.val() !== $input.data('initialValue')
-      ) {
-        this.enableEditionMode();
-      }
-    });
+  private sortList(sortColumn: string, sortOrder: string): void {
+    if (this.combinationsEditor?.editionEnabled) {
+      return;
+    }
 
-    this.$combinationsFormContainer.on('change', ProductMap.combinations.list.priceImpactTaxExcluded, (event: ChangeEvent) => {
-      this.updateByPriceImpactTaxExcluded($(event.currentTarget));
-    });
-
-    this.$combinationsFormContainer.on('change', ProductMap.combinations.list.priceImpactTaxIncluded, (event: ChangeEvent) => {
-      this.updateByPriceImpactTaxIncluded($(event.currentTarget));
-    });
-
-    this.$combinationsFormContainer.on('click', ProductMap.combinations.list.isDefault, (event) => {
-      const clickedDefaultId = event.currentTarget.id;
-      $(`${ProductMap.combinations.list.isDefault}:not(#${clickedDefaultId})`).prop('checked', false).val(0);
-      $(`#${clickedDefaultId}`).prop('checked', true).val(1);
-    });
-
-    $(CombinationsMap.list.footer.cancel).on('click', () => {
-      this.cancelEdition();
-    });
-
-    $(CombinationsMap.list.footer.reset).on('click', () => {
-      this.resetEdition();
-    });
-
-    $(CombinationsMap.list.footer.save).on('click', () => {
-      this.saveEdition();
-    });
-
-    this.initSortingColumns();
+    this.paginatedCombinationsService.setOrderBy(sortColumn, sortOrder);
+    if (this.paginator) {
+      this.paginator.paginate(1);
+    }
   }
 
   private watchEvents(): void {
-    // Build combination row
-    this.eventEmitter.on(CombinationEvents.buildCombinationRow, ({combination, $row}) => {
-      // Init first default, and handle radio behaviour amongst lines
-      if (combination.is_default) {
-        $(ProductMap.combinations.list.isDefault, $row).prop('checked', true);
-      }
-      this.updateByPriceImpactTaxExcluded($(ProductMap.combinations.list.priceImpactTaxExcluded, $row));
-    });
-
-    // Preset initial data attribute after each list rendering
-    this.eventEmitter.on(CombinationEvents.listRendered, () => {
-      // Reset saved values we only keep the last one rendered
-      this.savedInputValues = {};
-
-      $(ProductMap.combinations.list.fieldInputs, this.$combinationsFormContainer).each((index, input) => {
-        const $input = $(input);
-        const inputValue = $input.val();
-
-        if (!isUndefined(inputValue) && !isUndefined($input.prop('name'))) {
-          this.savedInputValues[$input.prop('name')] = inputValue;
-          this.watchInputChange($input, inputValue);
-        }
-      });
-    });
-
     this.eventEmitter.on(CombinationEvents.refreshCombinationList, () => this.refreshCombinationList(false));
     this.eventEmitter.on(CombinationEvents.refreshPage, () => this.refreshPage());
     /* eslint-disable */
@@ -354,133 +295,6 @@ export default class CombinationsManager {
     });
 
     this.eventEmitter.on(CombinationEvents.bulkUpdateFinished, () => this.refreshPage());
-  }
-
-  private watchInputChange($input: JQuery, initialValue: string | number | string[]): void {
-    $input.data('initialValue', initialValue);
-    $input.toggleClass(ProductMap.combinations.list.modifiedFieldClass, $input.val() !== initialValue);
-    $input.on('change', () => {
-      $input.toggleClass(ProductMap.combinations.list.modifiedFieldClass, $input.val() !== $input.data('initialValue'));
-    });
-  }
-
-  private updateByPriceImpactTaxExcluded($priceImpactTaxExcluded: JQuery): void {
-    const $row = $priceImpactTaxExcluded.parents(ProductMap.combinations.list.combinationRow);
-    const $priceImpactTaxIncluded = $(ProductMap.combinations.list.priceImpactTaxIncluded, $row);
-
-    if (isUndefined($row) || isUndefined($priceImpactTaxIncluded)) {
-      return;
-    }
-
-    const priceImpactTaxExcluded: BigNumber = new BigNumber(Number($priceImpactTaxExcluded.val()));
-
-    if (priceImpactTaxExcluded.isNaN()) {
-      return;
-    }
-
-    $priceImpactTaxIncluded.val(this.productFormModel.addTax(priceImpactTaxExcluded));
-    $priceImpactTaxIncluded.addClass(ProductMap.combinations.list.modifiedFieldClass);
-    this.updateFinalPrice(priceImpactTaxExcluded, $row);
-  }
-
-  private updateByPriceImpactTaxIncluded($priceImpactTaxIncluded: JQuery): void {
-    const $row = $priceImpactTaxIncluded.parents(ProductMap.combinations.list.combinationRow);
-    const $priceImpactTaxExcluded = $(ProductMap.combinations.list.priceImpactTaxExcluded, $row);
-
-    if (isUndefined($row) || isUndefined($priceImpactTaxExcluded)) {
-      return;
-    }
-
-    const priceImpactTaxIncluded: BigNumber = new BigNumber(Number($priceImpactTaxIncluded.val()));
-
-    if (priceImpactTaxIncluded.isNaN()) {
-      return;
-    }
-
-    $priceImpactTaxExcluded.val(this.productFormModel.removeTax(priceImpactTaxIncluded));
-    $priceImpactTaxExcluded.addClass(ProductMap.combinations.list.modifiedFieldClass);
-    const taxRatio = this.productFormModel.getTaxRatio();
-
-    if (taxRatio.isNaN()) {
-      return;
-    }
-
-    this.updateFinalPrice(priceImpactTaxIncluded.dividedBy(taxRatio), $row);
-  }
-
-  private updateFinalPrice(priceImpactTaxExcluded: BigNumber, $row: JQuery) {
-    const productPrice = this.productFormModel.getPriceTaxExcluded();
-    const $finalPrice = $(ProductMap.combinations.list.finalPrice, $row);
-    const $finalPricePreview = $finalPrice.siblings(ProductMap.combinations.list.finalPricePreview);
-    const finalPrice = this.productFormModel.displayPrice(productPrice.plus(priceImpactTaxExcluded));
-
-    if (typeof $finalPrice !== 'undefined') {
-      $finalPrice.val(finalPrice);
-    }
-
-    if (typeof $finalPricePreview !== 'undefined') {
-      $finalPricePreview.html(finalPrice);
-    }
-  }
-
-  /**
-   * @private
-   */
-  private initSortingColumns(): void {
-    this.$combinationsFormContainer.on(
-      'click',
-      CombinationsMap.sortableColumns,
-      (event) => {
-        if (this.editionMode) {
-          return;
-        }
-
-        const $sortableColumn = $(event.currentTarget);
-        const columnName = $sortableColumn.data('sortColName');
-
-        if (!columnName) {
-          return;
-        }
-
-        let direction = $sortableColumn.data('sortDirection');
-
-        if (!direction || direction === 'desc') {
-          direction = 'asc';
-        } else {
-          direction = 'desc';
-        }
-
-        // Reset all columns, we need to force the attributes for CSS matching
-        $(
-          CombinationsMap.sortableColumns,
-          this.$combinationsFormContainer,
-        ).removeData('sortIsCurrent');
-        $(
-          CombinationsMap.sortableColumns,
-          this.$combinationsFormContainer,
-        ).removeData('sortDirection');
-        $(
-          CombinationsMap.sortableColumns,
-          this.$combinationsFormContainer,
-        ).removeAttr('data-sort-is-current');
-        $(
-          CombinationsMap.sortableColumns,
-          this.$combinationsFormContainer,
-        ).removeAttr('data-sort-direction');
-
-        // Set correct data in current column, we need to force the attributes for CSS matching
-        $sortableColumn.data('sortIsCurrent', 'true');
-        $sortableColumn.data('sortDirection', direction);
-        $sortableColumn.attr('data-sort-is-current', 'true');
-        $sortableColumn.attr('data-sort-direction', direction);
-
-        // Finally update list
-        this.paginatedCombinationsService.setOrderBy(columnName, direction);
-        if (this.paginator) {
-          this.paginator.paginate(1);
-        }
-      },
-    );
   }
 
   /**
@@ -530,85 +344,5 @@ export default class CombinationsManager {
       .closest('tr')
       .find(CombinationsMap.combinationIdInputsSelector)
       .val());
-  }
-
-  private enableEditionMode(): void {
-    this.editionMode = true;
-    this.$paginatedList.addClass(CombinationsMap.list.editionModeClass);
-
-    // Disabled elements (bulk actions, filters, ...)
-    this.editionDisabledElements.forEach((disabledSelector: string) => {
-      const $disabledElement = this.$paginatedList.find(disabledSelector);
-      $disabledElement.data('initialDisabled', $disabledElement.is(':disabled'));
-      $disabledElement.prop('disabled', true);
-    });
-  }
-
-  private disableEditionMode(): void {
-    this.$paginatedList.removeClass(CombinationsMap.list.editionModeClass);
-
-    // Re-enabled disabled elements
-    this.editionDisabledElements.forEach((disabledSelector: string) => {
-      const $disabledElement = this.$paginatedList.find(disabledSelector);
-      $disabledElement.prop('disabled', $disabledElement.data('initialDisabled'));
-    });
-    this.editionMode = false;
-  }
-
-  private resetEdition(): void {
-    $(CombinationsMap.list.fieldInputs, this.$combinationsFormContainer).each((index, input) => {
-      const $input = $(input);
-
-      if (
-        typeof $input.val() !== 'undefined'
-        && typeof $input.data('initialValue') !== 'undefined'
-        && $input.val() !== $input.data('initialValue')
-      ) {
-        $input.val($input.data('initialValue')).trigger('change');
-        // Remove modified class to reset display UX
-        $input.removeClass(ProductMap.combinations.list.modifiedFieldClass);
-        // Remove invalid class in case the field is an output with form errors
-        $input.removeClass(ProductMap.combinations.list.invalidClass);
-      }
-    });
-
-    // Clean all the alerts that may come from an output with form errors
-    $(CombinationsMap.list.errorAlerts, this.$combinationsFormContainer).remove();
-  }
-
-  private cancelEdition(): void {
-    this.resetEdition();
-    this.disableEditionMode();
-  }
-
-  private async saveEdition(): Promise<void> {
-    if (this.combinationsRenderer) {
-      this.combinationsRenderer.toggleLoading(true);
-      const formData = this.combinationsRenderer.getFormData();
-
-      const response = await this.combinationsService.updateCombinationList(this.productId, formData);
-      const jsonResponse = await response.json();
-
-      if (jsonResponse.errors) {
-        // If formContent is available we can replace the content to display the inline errors
-        if (jsonResponse.formContent) {
-          // Replace form content with output from response
-          this.$combinationsFormContainer.html(jsonResponse.formContent);
-
-          // Now re-watch the new inputs and set their initial value
-          Object.keys(this.savedInputValues).forEach((inputName: string) => {
-            const $input = $(`[name="${inputName}"]`, this.$combinationsFormContainer);
-            this.watchInputChange($input, this.savedInputValues[inputName]);
-          });
-        } else {
-          notifyFormErrors(jsonResponse);
-        }
-        this.combinationsRenderer.toggleLoading(false);
-      } else if (jsonResponse.message) {
-        $.growl({message: jsonResponse.message});
-        this.disableEditionMode();
-        this.eventEmitter.emit(CombinationEvents.refreshCombinationList);
-      }
-    }
   }
 }
