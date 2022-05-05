@@ -5,12 +5,17 @@
       <trans-unit id="641254d77e7a473aa5910574f3f9453c">
         <source>Wishlist</source>
         <target>Wishlist</target>
-        <note>Line: 78</note>
+        <note>Line: 81</note>
       </trans-unit>
       <trans-unit id="df5e3f6daca5e1aa63c0ad63caf9be06">
         <source>Adds a block containing the customer's wishlists.</source>
         <target>Adds a block containing the customer's wishlists.</target>
         <note>Line: 79</note>
+      </trans-unit>
+      <trans-unit id="38293ed85898c2774399fe6761edf452">
+        <source>Allow customers to create wishlists to save their favorite products for later.</source>
+        <target>Allow customers to create wishlists to save their favorite products for later.</target>
+        <note>Line: 82</note>
       </trans-unit>
     </body>
   </file>

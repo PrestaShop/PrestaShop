@@ -108,7 +108,7 @@
       <trans-unit id="20015706a8cbd457cbb6ea3e7d5dc9b3">
         <source>Configuration updated</source>
         <target>Configuration updated</target>
-        <note>Line: 435</note>
+        <note>Line: 440</note>
       </trans-unit>
     </body>
   </file>
@@ -117,7 +117,7 @@
       <trans-unit id="7173e38e8a10ed379625687638ddfe74">
         <source>Successful deletion</source>
         <target>Successful deletion</target>
-        <note>Line: 566</note>
+        <note>Line: 579</note>
       </trans-unit>
     </body>
   </file>
@@ -197,7 +197,7 @@
       <trans-unit id="893a9104a7f0ebd94a7f4171d1996c7d">
         <source>The image was successfully deleted.</source>
         <target>The image was successfully deleted.</target>
-        <note>Line: 471</note>
+        <note>Line: 472</note>
       </trans-unit>
     </body>
   </file>
@@ -206,7 +206,7 @@
       <trans-unit id="cc6450370541d1ecfdbdada739732ec1">
         <source>Update successful.</source>
         <target>Update successful.</target>
-        <note>Line: 978</note>
+        <note>Line: 984</note>
       </trans-unit>
     </body>
   </file>
@@ -215,7 +215,7 @@
       <trans-unit id="4a6c326f3ec43e638da38a44a21b5eb7">
         <source>Comment successfully added.</source>
         <target>Comment successfully added.</target>
-        <note>Line: 1276</note>
+        <note>Line: 1294</note>
       </trans-unit>
     </body>
   </file>
@@ -233,7 +233,7 @@
       <trans-unit id="f38f5974cdc23279ffe6d203641a8bdf">
         <source>Settings updated.</source>
         <target>Settings updated.</target>
-        <note>Line: 342</note>
+        <note>Line: 344</note>
       </trans-unit>
     </body>
   </file>
@@ -242,22 +242,22 @@
       <trans-unit id="9cdbb80d4545ac63312bd530784829a3">
         <source>The product was successfully added.</source>
         <target>The product was successfully added.</target>
-        <note>Line: 123</note>
+        <note>Line: 124</note>
       </trans-unit>
       <trans-unit id="dc6df66ef8a64a3bf228c70e64269a8e">
         <source>The product was successfully removed.</source>
         <target>The product was successfully removed.</target>
-        <note>Line: 124</note>
+        <note>Line: 125</note>
       </trans-unit>
       <trans-unit id="abb8738509cd73014d30de00b1b16ebe">
         <source>[1] products were successfully added.</source>
         <target>[1] products were successfully added.</target>
-        <note>Line: 125</note>
+        <note>Line: 126</note>
       </trans-unit>
       <trans-unit id="b34a5361f169c417578d4bfcf924aff6">
         <source>[1] products were successfully removed.</source>
         <target>[1] products were successfully removed.</target>
-        <note>Line: 126</note>
+        <note>Line: 127</note>
       </trans-unit>
     </body>
   </file>
