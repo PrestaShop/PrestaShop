@@ -299,3 +299,13 @@ $line-height-computed: floor($font-size-base * $line-height-base);
   margin-right: 8px;
   margin-bottom: 3px;
 }
+
+.progress-modal-error{
+  border-bottom: 1px solid #dbe6e9;
+  padding-left: 0.5rem;
+  padding-bottom: 1rem;
+  padding-top: 1rem;
+  .progress-warning-icon{
+    margin-bottom: 0.5rem;
+  }
+}

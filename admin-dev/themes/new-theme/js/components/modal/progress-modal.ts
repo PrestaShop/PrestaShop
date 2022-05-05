@@ -128,6 +128,14 @@ export class ProgressModalContainer {
     // Modal header element
     this.header = document.createElement('div');
     this.header.classList.add('modal-header');
+
+    if (params.modalTitle) {
+      this.title = document.createElement('h4');
+      this.title.classList.add('modal-title');
+      this.title.innerHTML = params.modalTitle.replace('%d', '');
+      this.header.append(this.title);
+    }
+
     this.switchToErrorButton = document.createElement('div');
     this.switchToErrorButton.classList.add(
       componentMap.progressModal.switchToErrorButton,
@@ -137,18 +145,11 @@ export class ProgressModalContainer {
 
     let errorLogString = 'View %d error logs';
     this.switchToErrorButton.innerHTML = errorLogString.replace('%d', '0');
-
-    if (params.modalTitle) {
-      this.title = document.createElement('h4');
-      this.title.classList.add('modal-title');
-      this.title.innerHTML = params.modalTitle.replace('%d', '');
-    }
-
-    if (this.title) {
-      this.header.append(this.title);
-    }
     this.header.append(this.switchToErrorButton);
 
+    // Modal body element
+    this.body = document.createElement('div');
+    this.body.classList.add('modal-body', 'text-left', 'font-weight-normal');
 
     this.progressPercentage = document.createElement('div');
     this.progressPercentage.classList.add(
@@ -156,19 +157,17 @@ export class ProgressModalContainer {
       componentMap.progressModal.progressPercent,
     );
     this.progressPercentage.append('0%');
-
-    this.body = document.createElement('div');
-    this.body.classList.add('modal-body', 'text-left', 'font-weight-normal');
-
     this.progressIconContainer = document.createElement('span');
     let progressBarHeadline = document.createElement('div');
     progressBarHeadline.classList.add('progress-headline')
     progressBarHeadline.append(this.progressIconContainer);
-    if (this.title) {
+
+    if (params.modalTitle) {
       let progressBarTitle = document.createElement('span');
       progressBarTitle.innerHTML = params.modalTitle.replace('%d', params.total.toString());
       progressBarHeadline.append(progressBarTitle);
     }
+
     progressBarHeadline.append(this.progressPercentage);
     this.body.append(progressBarHeadline);
     this.body.append(this.buildProgressBar());
@@ -186,6 +185,7 @@ export class ProgressModalContainer {
     let errorContainer = document.createElement('div');
     errorContainer.classList.add(componentMap.progressModal.modalSingleErrorContainer);
     this.body.append(errorContainer);
+
     // Modal footer element
     this.footer = document.createElement('div');
     this.footer.classList.add('modal-footer');
@@ -271,14 +271,24 @@ export class ProgressModalErrorContainer {
     // Modal header element
     this.header = document.createElement('div');
     this.header.classList.add('modal-header');
+    // Modal title element
+    if (params.modalTitle) {
+      this.title = document.createElement('h4');
+      this.title.classList.add('modal-title');
+      this.title.innerHTML = 'Error log';
+      this.header.appendChild(this.title);
+    }
+
     this.body = document.createElement('div');
 
+    let errorTitle = document.createElement('span');
+    let errorsString = '%d errors occurred. You can download the logs for future reference.';
+    errorTitle.innerHTML = errorsString.replace('%d', '0');
+    this.body.append(errorTitle);
     this.errorContainer = document.createElement('div');
     this.errorContainer.classList.add(componentMap.progressModal.modalErrorContainer);
     this.errorContainer.classList.add
     (
-      'alert',
-      'alert-warning',
       'd-print-none'
     );
     this.body.append(this.errorContainer);
@@ -303,20 +313,8 @@ export class ProgressModalErrorContainer {
 
     this.footer.append(this.switchButton);
     this.footer.append(this.downloadErrorsButton);
-    this.content.append(this.footer);
 
-    // Modal title element
-    if (params.modalTitle) {
-      this.title = document.createElement('h4');
-      this.title.classList.add('modal-title');
-      this.title.innerHTML = ' errors occurred. You can download the logs for future reference.';
-    }
-
-    // Constructing the modal
-    if (this.title) {
-      this.header.appendChild(this.title);
-    }
-    this.content.append(this.header, this.body);
+    this.content.append(this.header, this.body, this.footer);
   }
 }
 
@@ -380,6 +378,10 @@ export class ProgressModal extends Modal implements ProgressModalType {
   {
     this.errors.push(error);
     let errorContent = document.createElement('p');
+    errorContent.classList.add(
+      'progress-modal-error',
+    );
+    errorContent.append(this.getErrorIcon());
     errorContent.append(error);
     this.errorModal.errorContainer.append(errorContent);
     let errorLogString = 'View %d error logs';
