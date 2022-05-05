@@ -4849,7 +4849,8 @@ class AdminControllerCore extends Controller
         $toolbarButtons = [];
 
         foreach ($toolbarButtonsCollection as $toolbarActionButton) {
-            $toolbarButtons[] = $this->transformActionBarButtonToToolbarButton($toolbarActionButton);
+            $toolbarActionButtonProperties = $this->transformActionBarButtonToToolbarButton($toolbarActionButton);
+            $toolbarButtons[$toolbarActionButtonProperties['name']] = $toolbarActionButtonProperties;
         }
 
         $this->page_header_toolbar_btn = $toolbarButtons;
@@ -4867,6 +4868,7 @@ class AdminControllerCore extends Controller
         return array_merge(
             $buttonProperties,
             [
+                'name' => $buttonProperties['class'] ?? $actionBarButton->getClass(),
                 'desc' => $buttonProperties['desc'] ?? $actionBarButton->getContent(),
                 'class' => ($buttonProperties['class'] ?? $actionBarButton->getClass()) . ' btn-primary',
                 'imgclass' => $buttonProperties['class'] ?? $actionBarButton->getClass(),
