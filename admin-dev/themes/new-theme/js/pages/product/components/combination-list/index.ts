@@ -102,9 +102,10 @@ export default class CombinationsList {
     this.paginatedCombinationsService = new PaginatedCombinationsService(productId);
     this.productAttributeGroups = [];
 
-    const bulkChoicesSelector = new BulkChoicesSelector(this.externalCombinationTab);
-    new BulkFormHandler(productId, bulkChoicesSelector);
-    new BulkDeleteHandler(productId, bulkChoicesSelector);
+    const bulkChoicesSelector = new BulkChoicesSelector(this.eventEmitter, this.externalCombinationTab);
+
+    new BulkFormHandler(productId, this.eventEmitter, bulkChoicesSelector, this.combinationsService);
+    new BulkDeleteHandler(productId, this.eventEmitter, bulkChoicesSelector, this.combinationsService);
 
     this.init();
   }
@@ -257,13 +258,13 @@ export default class CombinationsList {
   private watchEvents(): void {
     this.eventEmitter.on(CombinationEvents.refreshCombinationList, () => this.refreshCombinationList(false));
     this.eventEmitter.on(CombinationEvents.refreshPage, () => this.refreshPage());
-    /* eslint-disable */
+
     this.eventEmitter.on(
       CombinationEvents.updateAttributeGroups,
-      attributeGroups => {
+      (attributeGroups) => {
         const currentFilters = this.paginatedCombinationsService.getFilters();
         currentFilters.attributes = {};
-        Object.keys(attributeGroups).forEach(attributeGroupId => {
+        Object.keys(attributeGroups).forEach((attributeGroupId) => {
           currentFilters.attributes[attributeGroupId] = [];
           const attributes = attributeGroups[attributeGroupId];
           attributes.forEach((attribute: Record<string, any>) => {
@@ -272,25 +273,24 @@ export default class CombinationsList {
         });
 
         this.paginatedCombinationsService.setFilters(currentFilters);
-        if(this.paginator) {
+
+        if (this.paginator) {
           this.paginator.paginate(1);
         }
-      }
+      },
     );
 
     this.eventEmitter.on(CombinationEvents.combinationGeneratorReady, () => {
-      const $generateButtons = $(
-        CombinationsMap.generateCombinationsButton
-      );
+      const $generateButtons = $(CombinationsMap.generateCombinationsButton);
       $generateButtons.prop('disabled', false);
       $('body').on(
         'click',
         CombinationsMap.generateCombinationsButton,
-        event => {
+        (event) => {
           // Stop event or it will be caught by click-outside directive and automatically close the modal
           event.stopImmediatePropagation();
           this.eventEmitter.emit(CombinationEvents.openCombinationsGenerator);
-        }
+        },
       );
     });
 

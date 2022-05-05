@@ -36,8 +36,8 @@ export default class BulkChoicesSelector {
 
   private tabContainer: HTMLDivElement;
 
-  constructor(tabContainer: HTMLDivElement) {
-    this.eventEmitter = window.prestashop.instance.eventEmitter;
+  constructor(eventEmitter: EventEmitter, tabContainer: HTMLDivElement) {
+    this.eventEmitter = eventEmitter;
     this.tabContainer = tabContainer;
     this.init();
   }

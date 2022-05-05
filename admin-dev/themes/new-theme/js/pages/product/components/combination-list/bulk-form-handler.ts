@@ -48,11 +48,16 @@ export default class BulkFormHandler {
 
   private bulkChoicesSelector: BulkChoicesSelector;
 
-  constructor(productId: number, bulkChoicesSelector: BulkChoicesSelector) {
+  constructor(
+    productId: number,
+    eventEmitter: EventEmitter,
+    bulkChoicesSelector: BulkChoicesSelector,
+    combinationsService: CombinationsService,
+  ) {
     this.productId = productId;
+    this.eventEmitter = eventEmitter;
     this.bulkChoicesSelector = bulkChoicesSelector;
-    this.combinationsService = new CombinationsService();
-    this.eventEmitter = window.prestashop.instance.eventEmitter;
+    this.combinationsService = combinationsService;
     this.tabContainer = document.querySelector<HTMLDivElement>(CombinationMap.externalCombinationTab)!;
 
     this.init();
