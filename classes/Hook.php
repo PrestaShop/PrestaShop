@@ -24,6 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -527,8 +528,26 @@ class HookCore extends ObjectModel
             if (!Validate::isHookName($hook_name)) {
                 throw new PrestaShopException('Invalid hook name');
             }
-            if (!isset($module_instance->id) || !is_numeric($module_instance->id)) {
+            if (!($module_instance instanceof Module)
+                || !isset($module_instance->id)
+                || !is_numeric($module_instance->id)
+            ) {
                 return false;
+            }
+
+            // Check that hook listener is implemented by the module
+            if (!static::isHookCallableOn($module_instance, $hook_name) && !($module_instance instanceof WidgetInterface)) {
+                $message = sprintf(
+                    'Hook with the name %s has been registered by %s, but the corresponding method %s has not been defined in the Module class.',
+                    $hook_name,
+                    get_class($module_instance),
+                    self::getMethodName($hook_name)
+                );
+                if (_PS_MODE_DEV_) {
+                    throw new PrestaShopModuleException($message);
+                }
+                $logger = new LegacyLogger();
+                $logger->warning($message);
             }
 
             Hook::exec(
