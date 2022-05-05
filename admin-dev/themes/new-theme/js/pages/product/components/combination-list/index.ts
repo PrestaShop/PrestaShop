@@ -30,7 +30,6 @@ import DynamicPaginator from '@components/pagination/dynamic-paginator';
 import ProductEventMap from '@pages/product/product-event-map';
 import initCombinationModal from '@pages/product/components/combination-modal';
 import initFilters, {FiltersVueApp} from '@pages/product/components/filters';
-import ConfirmModal from '@components/modal';
 import {EventEmitter} from 'events';
 import initCombinationGenerator from '@pages/product/components/generator';
 import {getProductAttributeGroups} from '@pages/product/services/attribute-groups';
@@ -41,6 +40,7 @@ import BulkChoicesSelector from '@pages/product/components/combination-list/bulk
 import ProductFormModel from '@pages/product/edit/product-form-model';
 import CombinationsListEditor from '@pages/product/components/combination-list/combinations-list-editor';
 import Vue from '@node_modules/vue';
+import RowDeleteHandler from '@pages/product/components/combination-list/row-delete-handler';
 
 const {$} = window;
 const CombinationEvents = ProductEventMap.combinations;
@@ -106,6 +106,7 @@ export default class CombinationsList {
 
     new BulkFormHandler(productId, this.eventEmitter, bulkChoicesSelector, this.combinationsService);
     new BulkDeleteHandler(productId, this.eventEmitter, bulkChoicesSelector, this.combinationsService);
+    new RowDeleteHandler(this.eventEmitter, this.combinationsService);
 
     this.init();
   }
@@ -228,14 +229,6 @@ export default class CombinationsList {
       0,
     );
 
-    this.$combinationsFormContainer.on(
-      'click',
-      CombinationsMap.deleteCombinationSelector,
-      async (e) => {
-        await this.deleteCombination(e.currentTarget);
-      },
-    );
-
     this.editor = new CombinationsListEditor(
       this.productId,
       this.eventEmitter,
@@ -259,26 +252,23 @@ export default class CombinationsList {
     this.eventEmitter.on(CombinationEvents.refreshCombinationList, () => this.refreshCombinationList(false));
     this.eventEmitter.on(CombinationEvents.refreshPage, () => this.refreshPage());
 
-    this.eventEmitter.on(
-      CombinationEvents.updateAttributeGroups,
-      (attributeGroups) => {
-        const currentFilters = this.paginatedCombinationsService.getFilters();
-        currentFilters.attributes = {};
-        Object.keys(attributeGroups).forEach((attributeGroupId) => {
-          currentFilters.attributes[attributeGroupId] = [];
-          const attributes = attributeGroups[attributeGroupId];
-          attributes.forEach((attribute: Record<string, any>) => {
-            currentFilters.attributes[attributeGroupId].push(attribute.id);
-          });
+    this.eventEmitter.on(CombinationEvents.updateAttributeGroups, (attributeGroups) => {
+      const currentFilters = this.paginatedCombinationsService.getFilters();
+      currentFilters.attributes = {};
+      Object.keys(attributeGroups).forEach((attributeGroupId) => {
+        currentFilters.attributes[attributeGroupId] = [];
+        const attributes = attributeGroups[attributeGroupId];
+        attributes.forEach((attribute: Record<string, any>) => {
+          currentFilters.attributes[attributeGroupId].push(attribute.id);
         });
+      });
 
-        this.paginatedCombinationsService.setFilters(currentFilters);
+      this.paginatedCombinationsService.setFilters(currentFilters);
 
-        if (this.paginator) {
-          this.paginator.paginate(1);
-        }
-      },
-    );
+      if (this.paginator) {
+        this.paginator.paginate(1);
+      }
+    });
 
     this.eventEmitter.on(CombinationEvents.combinationGeneratorReady, () => {
       const $generateButtons = $(CombinationsMap.generateCombinationsButton);
@@ -295,54 +285,5 @@ export default class CombinationsList {
     });
 
     this.eventEmitter.on(CombinationEvents.bulkUpdateFinished, () => this.refreshPage());
-  }
-
-  /**
-   * @param {HTMLElement} button
-   *
-   * @private
-   */
-  private async deleteCombination(button: HTMLButtonElement): Promise<void> {
-    try {
-      const $deleteButton = $(button);
-      const modal = new (ConfirmModal as any)(
-        {
-          id: 'modal-confirm-delete-combination',
-          confirmTitle: $deleteButton.data('modal-title'),
-          confirmMessage: $deleteButton.data('modal-message'),
-          confirmButtonLabel: $deleteButton.data('modal-apply'),
-          closeButtonLabel: $deleteButton.data('modal-cancel'),
-          confirmButtonClass: 'btn-danger',
-          closable: true,
-        },
-        async () => {
-          const response = await this.combinationsService.deleteCombination(
-            this.findCombinationId(button),
-          );
-          $.growl({message: response.message});
-          this.eventEmitter.emit(CombinationEvents.refreshCombinationList);
-        },
-      );
-      modal.show();
-    } catch (error) {
-      const errorMessage = error.responseJSON
-        ? error.responseJSON.error
-        : error;
-      $.growl.error({message: errorMessage});
-    }
-  }
-
-  /**
-   * @param {HTMLElement} input of the same table row
-   *
-   * @returns {Number}
-   *
-   * @private
-   */
-  private findCombinationId(input: HTMLElement): number {
-    return Number($(input)
-      .closest('tr')
-      .find(CombinationsMap.combinationIdInputsSelector)
-      .val());
   }
 }

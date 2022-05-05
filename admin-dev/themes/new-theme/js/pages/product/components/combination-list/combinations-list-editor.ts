@@ -32,8 +32,6 @@ import BigNumber from '@node_modules/bignumber.js';
 import {notifyFormErrors} from '@components/form/helpers';
 import CombinationsService from '@pages/product/services/combinations-service';
 
-import ChangeEvent = JQuery.ChangeEvent;
-
 const {$} = window;
 const CombinationEvents = ProductEventMap.combinations;
 const CombinationsMap = ProductMap.combinations;
