@@ -34,7 +34,6 @@ use Behat\Gherkin\Node\StepNode;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
 use Configuration;
-use Context as PrestashopContext;
 use Currency;
 use Exception;
 use Language;

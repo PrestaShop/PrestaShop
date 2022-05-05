@@ -119,7 +119,7 @@ final class GetCategoriesTreeHandler implements GetCategoriesTreeHandlerInterfac
                 );
             }
 
-            $displayName = $this->displayNameBuilder->build(
+            $displayName = $this->displayNameBuilder->buildWithBreadcrumbs(
                 new CategoryId($categoryId),
                 $categoryName,
                 $shopId,

@@ -53,19 +53,12 @@ class CategoryDisplayNameBuilder
     }
 
     /**
-     *  If there are multiple categories with identical names, we want to be able to tell them apart,
-     *  so we use breadcrumb path instead of category name.
-     *  However, whole breadcrumb path would probably be too long, therefore not UX friendly.
-     *  Calculating "optimal" breadcrumb length seems too complex compared to the value it could bring.
-     *  So, we show one parent name and category name, as it is simple and should cover most cases.
-     *
-     * e.g. "Clothes > Women"
+     * @see buildDisplayName
      *
      * @param CategoryId $categoryId
      * @param string $categoryName
      * @param ShopId $shopId
      * @param LanguageId $languageId
-     * @param array|null $breadcrumbParts
      * @param bool $useCache
      *
      * @return string
@@ -75,23 +68,34 @@ class CategoryDisplayNameBuilder
         string $categoryName,
         ShopId $shopId,
         LanguageId $languageId,
-        ?array $breadcrumbParts = null,
         bool $useCache = true
     ): string {
-        $duplicateNames = $this->getDuplicateNames($shopId, $languageId, $useCache);
+        return $this->buildDisplayName($categoryId, $categoryName, $shopId, $languageId, null, $useCache);
+    }
 
-        if (!in_array($categoryName, $duplicateNames, true)) {
-            return $categoryName;
-        }
-
-        if (null === $breadcrumbParts) {
-            $breadcrumbParts = $this->categoryRepository->getBreadcrumbParts(
-                $categoryId,
-                $languageId
-            );
-        }
-
-        return implode(' > ', array_slice($breadcrumbParts, -2, 2));
+    /**
+     * @see buildDisplayName
+     *
+     * In some cases we already have breadcrumbs before calling this method, so we allow providing them here for optimization purposes
+     *
+     * @param CategoryId $categoryId
+     * @param string $categoryName
+     * @param ShopId $shopId
+     * @param LanguageId $languageId
+     * @param string[] $breadcrumbParts
+     * @param bool $useCache
+     *
+     * @return string
+     */
+    public function buildWithBreadcrumbs(
+        CategoryId $categoryId,
+        string $categoryName,
+        ShopId $shopId,
+        LanguageId $languageId,
+        array $breadcrumbParts,
+        bool $useCache = true
+    ): string {
+        return $this->buildDisplayName($categoryId, $categoryName, $shopId, $languageId, $breadcrumbParts, $useCache);
     }
 
     /**
@@ -133,5 +137,47 @@ class CategoryDisplayNameBuilder
         Cache::store($cacheKey, $duplicateNames);
 
         return $duplicateNames;
+    }
+
+    /**
+     *  If there are multiple categories with identical names, we want to be able to tell them apart,
+     *  so we use breadcrumb path instead of category name.
+     *  However, whole breadcrumb path would probably be too long, therefore not UX friendly.
+     *  Calculating "optimal" breadcrumb length seems too complex compared to the value it could bring.
+     *  So, we show one parent name and category name, as it is simple and should cover most cases.
+     *
+     * e.g. "Clothes > Women"
+     *
+     * @param CategoryId $categoryId
+     * @param string $categoryName
+     * @param ShopId $shopId
+     * @param LanguageId $languageId
+     * @param array|null $breadcrumbParts
+     * @param bool $useCache
+     *
+     * @return string
+     */
+    private function buildDisplayName(
+        CategoryId $categoryId,
+        string $categoryName,
+        ShopId $shopId,
+        LanguageId $languageId,
+        ?array $breadcrumbParts = null,
+        bool $useCache = true
+    ): string {
+        $duplicateNames = $this->getDuplicateNames($shopId, $languageId, $useCache);
+
+        if (!in_array($categoryName, $duplicateNames, true)) {
+            return $categoryName;
+        }
+
+        if (null === $breadcrumbParts) {
+            $breadcrumbParts = $this->categoryRepository->getBreadcrumbParts(
+                $categoryId,
+                $languageId
+            );
+        }
+
+        return implode(' > ', array_slice($breadcrumbParts, -2, 2));
     }
 }
