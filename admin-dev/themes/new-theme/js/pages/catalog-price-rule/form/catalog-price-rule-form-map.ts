@@ -30,6 +30,10 @@ export default {
   // mapping for price-field-availability-handler
   initialPrice: '#catalog_price_rule_leave_initial_price',
   price: '#catalog_price_rule_price',
+  currencyId: '#catalog_price_rule_id_currency',
+  reductionTypeSelect: '#catalog_price_rule_reduction_type',
+  reductionTypeAmountSymbol: '.js-reduction-row .input-group .input-group-append .input-group-text, '
+    + '.js-reduction-row .input-group .input-group-prepend .input-group-text',
 
   // mapping for include-tax-field-visibility-handler
   reductionType: '.js-reduction-type-source',

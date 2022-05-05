@@ -76,6 +76,11 @@ class SpecificPriceForListing
     /**
      * @var string|null
      */
+    private $currencyISOCode;
+
+    /**
+     * @var string|null
+     */
     private $countryName;
 
     /**
@@ -114,7 +119,8 @@ class SpecificPriceForListing
      * @param DateTimeInterface $dateTimeTo
      * @param string|null $combinationName
      * @param string|null $shop
-     * @param string|null $currency
+     * @param string|null $currencyName
+     * @param string|null $currencyISOCode
      * @param string|null $country
      * @param string|null $group
      * @param string|null $customer
@@ -130,7 +136,8 @@ class SpecificPriceForListing
         DateTimeInterface $dateTimeTo,
         ?string $combinationName,
         ?string $shop,
-        ?string $currency,
+        ?string $currencyName,
+        ?string $currencyISOCode,
         ?string $country,
         ?string $group,
         ?string $customer
@@ -145,7 +152,8 @@ class SpecificPriceForListing
         $this->dateTimeTo = $dateTimeTo;
         $this->combinationName = $combinationName;
         $this->shopName = $shop;
-        $this->currencyName = $currency;
+        $this->currencyName = $currencyName;
+        $this->currencyISOCode = $currencyISOCode;
         $this->countryName = $country;
         $this->groupName = $group;
         $this->customerName = $customer;
@@ -221,6 +229,14 @@ class SpecificPriceForListing
     public function getCurrencyName(): ?string
     {
         return $this->currencyName;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCurrencyISOCode(): ?string
+    {
+        return $this->currencyISOCode;
     }
 
     /**

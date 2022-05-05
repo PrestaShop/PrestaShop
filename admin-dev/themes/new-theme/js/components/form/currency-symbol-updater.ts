@@ -23,31 +23,40 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const {$} = window;
-
 /**
- * Shows/hides 'include_tax' field depending from 'reduction_type' field value
+ * Change symbol when the currency select is changed
  */
-export default class IncludeTaxFieldToggle {
-  $reductionTypeSelector: JQuery;
+export default class CurrencySymbolUpdater {
+  currencySymbolSelect: string;
 
-  $taxInclusionInputs: JQuery;
+  callbackChange: (symbol: string) => void;
 
-  constructor(reductionTypeSelector: string, taxInclusionInputs: string) {
-    this.$reductionTypeSelector = $(reductionTypeSelector);
-    this.$taxInclusionInputs = $(taxInclusionInputs);
-    this.handle();
-    this.$reductionTypeSelector.on('change', () => this.handle());
+  constructor(
+    currencySymbolSelect: string,
+    callbackChange: (symbol: string) => void,
+  ) {
+    this.currencySymbolSelect = currencySymbolSelect;
+    this.callbackChange = callbackChange;
+
+    this.init();
   }
 
-  /**
-   * When source value is 'percentage', target field is shown, else hidden
-   */
-  private handle(): void {
-    if (this.$reductionTypeSelector.val() === 'percentage') {
-      this.$taxInclusionInputs.fadeOut();
-    } else {
-      this.$taxInclusionInputs.fadeIn();
+  private init(): void {
+    const selectCurrency = document.querySelector<HTMLSelectElement>(this.currencySymbolSelect);
+
+    if (selectCurrency) {
+      this.callbackChange(this.getSymbol(selectCurrency));
+
+      selectCurrency.addEventListener('change', () => this.callbackChange(this.getSymbol(selectCurrency)));
     }
+  }
+
+  private getSymbol(select: HTMLSelectElement): string {
+    const selectItem = select.item(select.selectedIndex);
+
+    if (!selectItem) {
+      return '';
+    }
+    return selectItem.getAttribute('symbol') ?? '';
   }
 }

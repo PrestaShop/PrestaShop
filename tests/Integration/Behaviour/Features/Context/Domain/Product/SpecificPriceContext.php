@@ -104,7 +104,7 @@ class SpecificPriceContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Transform table:id reference,combination,reduction type,reduction value,includes tax,fixed price,from quantity,shop,currency,country,group,customer,from,to
+     * @Transform table:id reference,combination,reduction type,reduction value,includes tax,fixed price,from quantity,shop,currency,currencyISOCode,country,group,customer,from,to
      *
      * @param TableNode $tableNode
      *
@@ -129,6 +129,7 @@ class SpecificPriceContext extends AbstractProductFeatureContext
                 $dataRow['combination'] ?: null,
                 $dataRow['shop'] ?: null,
                 $dataRow['currency'] ?: null,
+                $dataRow['currencyISOCode'] ?: null,
                 $dataRow['country'] ?: null,
                 $dataRow['group'] ?: null,
                 $dataRow['customer'] ?: null
@@ -289,7 +290,7 @@ class SpecificPriceContext extends AbstractProductFeatureContext
 
             $scalarPropertyNames = [
                 'specificPriceId', 'reductionType', 'includesTax',
-                'fromQuantity', 'shopName', 'currencyName', 'countryName',
+                'fromQuantity', 'shopName', 'currencyName', 'currencyISOCode', 'countryName',
                 'groupName', 'customerName', 'combinationName',
             ];
 

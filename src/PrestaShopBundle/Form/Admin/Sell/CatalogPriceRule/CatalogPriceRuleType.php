@@ -64,6 +64,11 @@ class CatalogPriceRuleType extends AbstractType
     /**
      * @var array
      */
+    private $currencyByIdChoicesAttributes;
+
+    /**
+     * @var array
+     */
     private $countryByIdChoices;
 
     /**
@@ -89,6 +94,7 @@ class CatalogPriceRuleType extends AbstractType
      * @param array $groupByIdChoices
      * @param array $shopByIdChoices
      * @param array $taxInclusionChoices
+     * @param array $currencyByIdChoicesAttributes
      */
     public function __construct(
         TranslatorInterface $translator,
@@ -97,11 +103,13 @@ class CatalogPriceRuleType extends AbstractType
         array $countryByIdChoices,
         array $groupByIdChoices,
         array $shopByIdChoices,
-        array $taxInclusionChoices
+        array $taxInclusionChoices,
+        array $currencyByIdChoicesAttributes
     ) {
         $this->translator = $translator;
         $this->isMultishopEnabled = $isMultishopEnabled;
         $this->currencyByIdChoices = $currencyByIdChoices;
+        $this->currencyByIdChoicesAttributes = $currencyByIdChoicesAttributes;
         $this->countryByIdChoices = $countryByIdChoices;
         $this->groupByIdChoices = $groupByIdChoices;
         $this->shopByIdChoices = $shopByIdChoices;
@@ -123,6 +131,7 @@ class CatalogPriceRuleType extends AbstractType
                 'required' => false,
                 'placeholder' => false,
                 'choices' => $this->getModifiedCurrencyChoices(),
+                'choice_attr' => $this->currencyByIdChoicesAttributes,
             ])
             ->add('id_country', ChoiceType::class, [
                 'required' => false,

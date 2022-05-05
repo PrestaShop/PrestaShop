@@ -24,9 +24,14 @@
  */
 
 export default {
+  currencyId: '#specific_price_currency_id',
   customerSearchContainer: '#specific_price_customer',
   priceInput: '#specific_price_fixed_price',
+  priceSymbol: '.js-fixed_price-row .input-group.money-type .input-group-append .input-group-text, '
+    + '.js-fixed_price-row .input-group.money-type .input-group-prepend .input-group-text',
   leaveInitialPriceCheckbox: '#specific_price_leave_initial_price',
   reductionTypeSelect: '#specific_price_reduction_type',
+  reductionTypeAmountSymbol: '#specific_price_reduction .input-group .input-group-append .input-group-text, '
+    + '#specific_price_reduction .input-group .input-group-prepend .input-group-text',
   includeTaxInputContainer: '.js-include-tax-row',
 };
