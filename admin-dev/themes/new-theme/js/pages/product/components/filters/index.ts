@@ -28,11 +28,12 @@ import EventEmitter from '@components/event-emitter';
 import Filters from '@pages/product/components/filters/Filters.vue';
 import VueI18n from 'vue-i18n';
 import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
+import {AttributeGroup} from '@pages/product/types';
 
 Vue.use(VueI18n);
 
 export interface FiltersVueApp extends Vue {
-  filters: Array<Record<string, any>>,
+  filters: Array<AttributeGroup>,
 };
 
 /**

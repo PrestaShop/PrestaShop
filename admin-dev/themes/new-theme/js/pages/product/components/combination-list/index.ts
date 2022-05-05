@@ -41,6 +41,7 @@ import ProductFormModel from '@pages/product/edit/product-form-model';
 import CombinationsListEditor from '@pages/product/components/combination-list/combinations-list-editor';
 import Vue from '@node_modules/vue';
 import RowDeleteHandler from '@pages/product/components/combination-list/row-delete-handler';
+import {AttributeGroup} from '@pages/product/types';
 
 const {$} = window;
 const CombinationEvents = ProductEventMap.combinations;
@@ -88,7 +89,7 @@ export default class CombinationsList {
 
   private initialized: boolean;
 
-  private productAttributeGroups: Array<Record<string, any>>;
+  private productAttributeGroups: Array<AttributeGroup>;
 
   constructor(productId: number, productFormModel: ProductFormModel) {
     this.productId = productId;
