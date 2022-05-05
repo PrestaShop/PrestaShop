@@ -29,7 +29,7 @@ import ProductConst from '@pages/product/constants';
 
 import AttachmentsManager from '@pages/product/edit/attachments-manager';
 import CategoriesManager from '@pages/product/components/categories/categories-manager';
-import CombinationsManager from '@pages/product/combination/combinations-manager';
+import CombinationsList from '@pages/product/combination/combinations-list';
 import CustomizationsManager from '@pages/product/edit/customizations-manager';
 import FeatureValuesManager from '@pages/product/edit/feature-values-manager';
 import ProductFooterManager from '@pages/product/edit/product-footer-manager';
@@ -75,7 +75,7 @@ $(() => {
   if (productType === ProductConst.PRODUCT_TYPE.COMBINATIONS) {
     // Combinations manager must be initialized BEFORE nav handler, or it won't trigger the pagination if the tab is
     // selected on load
-    new CombinationsManager(productId, productFormModel);
+    new CombinationsList(productId, productFormModel);
   }
 
   new NavbarHandler($(ProductMap.navigationBar));

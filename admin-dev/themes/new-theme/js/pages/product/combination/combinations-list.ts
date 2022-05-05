@@ -24,12 +24,12 @@
  */
 
 import ProductMap from '@pages/product/product-map';
-import CombinationsGridRenderer from '@pages/product/combination/combinations-grid-renderer';
+import CombinationsListRenderer from '@pages/product/combination/combinations-list-renderer';
 import CombinationsService from '@pages/product/services/combinations-service';
 import DynamicPaginator from '@components/pagination/dynamic-paginator';
 import ProductEventMap from '@pages/product/product-event-map';
 import initCombinationModal from '@pages/product/components/combination-modal';
-import initFilters from '@pages/product/components/filters';
+import initFilters, {FiltersVueApp} from '@pages/product/components/filters';
 import ConfirmModal from '@components/modal';
 import {EventEmitter} from 'events';
 import initCombinationGenerator from '@pages/product/components/generator';
@@ -40,49 +40,50 @@ import BulkDeleteHandler from '@pages/product/combination/bulk-delete-handler';
 import BulkChoicesSelector from '@pages/product/combination/bulk-choices-selector';
 import ProductFormModel from '@pages/product/edit/product-form-model';
 import CombinationsListEditor from '@pages/product/combination/combinations-list-editor';
+import Vue from '@node_modules/vue';
 
 const {$} = window;
 const CombinationEvents = ProductEventMap.combinations;
 const CombinationsMap = ProductMap.combinations;
 
-export default class CombinationsManager {
-  productId: number;
+export default class CombinationsList {
+  private readonly productId: number;
 
-  eventEmitter: EventEmitter;
+  private readonly eventEmitter: EventEmitter;
 
-  externalCombinationTab: HTMLDivElement;
+  private readonly externalCombinationTab: HTMLDivElement;
 
-  $productForm: JQuery;
+  private readonly $productForm: JQuery;
 
-  $combinationsFormContainer: JQuery;
+  private readonly $combinationsFormContainer: JQuery;
 
-  $preloader: JQuery;
+  private readonly $preloader: JQuery;
 
-  $paginatedList: JQuery;
+  private readonly $paginatedList: JQuery;
 
-  $emptyState: JQuery;
+  private readonly $emptyState: JQuery;
 
-  paginator?: DynamicPaginator;
+  private readonly combinationsService: CombinationsService;
 
-  combinationsRenderer?: CombinationsGridRenderer;
+  private readonly paginatedCombinationsService: PaginatedCombinationsService;
 
-  filtersApp?: Record<string, any>;
+  private readonly productFormModel: ProductFormModel;
 
-  combinationModalApp: Record<string, any> | null;
+  private filtersApp?: FiltersVueApp;
 
-  combinationGeneratorApp!: Record<string, any>;
+  private combinationModalApp?: Vue;
 
-  initialized: boolean;
+  private combinationGeneratorApp?: Vue;
 
-  combinationsService: CombinationsService;
+  private paginator?: DynamicPaginator;
 
-  paginatedCombinationsService: PaginatedCombinationsService;
+  private renderer?: CombinationsListRenderer;
 
-  productAttributeGroups: Array<Record<string, any>>;
+  private editor?: CombinationsListEditor;
 
-  productFormModel: ProductFormModel;
+  private initialized: boolean;
 
-  combinationsEditor?: CombinationsListEditor;
+  private productAttributeGroups: Array<Record<string, any>>;
 
   constructor(productId: number, productFormModel: ProductFormModel) {
     this.productId = productId;
@@ -95,8 +96,6 @@ export default class CombinationsManager {
     this.$preloader = $(CombinationsMap.preloader);
     this.$paginatedList = $(CombinationsMap.combinationsPaginatedList);
     this.$emptyState = $(CombinationsMap.emptyState);
-
-    this.combinationModalApp = null;
 
     this.initialized = false;
     this.combinationsService = new CombinationsService();
@@ -195,9 +194,9 @@ export default class CombinationsManager {
     const hasCombinations = this.productAttributeGroups && this.productAttributeGroups.length;
     this.$paginatedList.toggleClass('d-none', !hasCombinations);
 
-    if (!hasCombinations && this.combinationsRenderer) {
+    if (!hasCombinations && this.renderer) {
       // Empty list
-      this.combinationsRenderer.render({combinations: []});
+      this.renderer.render({combinations: []});
       this.$emptyState.removeClass('d-none');
     }
   }
@@ -215,7 +214,7 @@ export default class CombinationsManager {
    * @private
    */
   private initPaginatedList(): void {
-    this.combinationsRenderer = new CombinationsGridRenderer(
+    this.renderer = new CombinationsListRenderer(
       this.eventEmitter,
       this.productFormModel,
       (sortColumn: string, sorOrder: string) => this.sortList(sortColumn, sorOrder),
@@ -224,7 +223,7 @@ export default class CombinationsManager {
     this.paginator = new DynamicPaginator(
       CombinationsMap.paginationContainer,
       this.paginatedCombinationsService,
-      this.combinationsRenderer,
+      this.renderer,
       0,
     );
 
@@ -236,15 +235,16 @@ export default class CombinationsManager {
       },
     );
 
-    this.combinationsEditor = new CombinationsListEditor(
+    this.editor = new CombinationsListEditor(
       this.productId,
       this.eventEmitter,
-      this.combinationsRenderer,
+      this.renderer,
+      this.combinationsService,
     );
   }
 
   private sortList(sortColumn: string, sortOrder: string): void {
-    if (this.combinationsEditor?.editionEnabled) {
+    if (this.editor?.editionEnabled) {
       return;
     }
 

@@ -42,13 +42,9 @@ export default function initCombinationModal(
   combinationModalSelector: string,
   productId: number,
   eventEmitter: typeof EventEmitter,
-): Vue | null {
+): Vue {
   const container = <HTMLElement> document.querySelector(combinationModalSelector);
   const {emptyImage} = container.dataset;
-
-  if (!container) {
-    return null;
-  }
 
   const translations = JSON.parse(<string>container.dataset.translations);
   const i18n = new VueI18n({

@@ -25,7 +25,7 @@
 
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
-import CombinationsGridRenderer from '@pages/product/combination/combinations-grid-renderer';
+import CombinationsListRenderer from '@pages/product/combination/combinations-list-renderer';
 import {EventEmitter} from 'events';
 import {isUndefined} from '@PSTypes/typeguard';
 import BigNumber from '@node_modules/bignumber.js';
@@ -41,17 +41,15 @@ const CombinationsMap = ProductMap.combinations;
 export default class CombinationsListEditor {
   private readonly productId: number;
 
-  private eventEmitter: EventEmitter;
+  private readonly eventEmitter: EventEmitter;
 
-  private combinationsRenderer: CombinationsGridRenderer;
+  private readonly renderer: CombinationsListRenderer;
 
   private readonly $combinationsFormContainer: JQuery;
 
-  private $paginatedList: JQuery;
+  private readonly $paginatedList: JQuery;
 
-  private savedInputValues: Record<string, any>;
-
-  private editionDisabledElements: string[] = [
+  private readonly editionDisabledElements: string[] = [
     CombinationsMap.bulkActionsBtn,
     CombinationsMap.tableRow.isSelectedCombination,
     ProductMap.combinations.bulkSelectAll,
@@ -59,19 +57,22 @@ export default class CombinationsListEditor {
     ProductMap.combinations.generateCombinationsButton,
   ];
 
+  private readonly combinationsService: CombinationsService;
+
   private editionMode: boolean = false;
 
-  private combinationsService: CombinationsService;
+  private savedInputValues: Record<string, any>;
 
   constructor(
     productId: number,
     eventEmitter: EventEmitter,
-    combinationsRenderer: CombinationsGridRenderer,
+    combinationsRenderer: CombinationsListRenderer,
+    combinationsService: CombinationsService,
   ) {
     this.productId = productId;
     this.eventEmitter = eventEmitter;
-    this.combinationsRenderer = combinationsRenderer;
-    this.combinationsService = new CombinationsService();
+    this.renderer = combinationsRenderer;
+    this.combinationsService = combinationsService;
 
     this.$combinationsFormContainer = $(CombinationsMap.combinationsFormContainer);
     this.$paginatedList = $(CombinationsMap.combinationsPaginatedList);
@@ -214,7 +215,7 @@ export default class CombinationsListEditor {
   }
 
   private async saveEdition(): Promise<void> {
-    this.combinationsRenderer.toggleLoading(true);
+    this.renderer.toggleLoading(true);
 
     const response = await this.combinationsService.updateCombinationList(this.productId, this.getFormData());
     const jsonResponse = await response.json();
@@ -226,7 +227,7 @@ export default class CombinationsListEditor {
       } else {
         notifyFormErrors(jsonResponse);
       }
-      this.combinationsRenderer.toggleLoading(false);
+      this.renderer.toggleLoading(false);
     } else if (jsonResponse.message) {
       $.growl({message: jsonResponse.message});
       this.disableEditionMode();

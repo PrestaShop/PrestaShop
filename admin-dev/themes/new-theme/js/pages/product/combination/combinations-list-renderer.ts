@@ -40,7 +40,7 @@ export type SortGridCallback = (sortColumn: string, sortOrder: string) => void;
 /**
  * Renders the list of combinations in product edit page
  */
-export default class CombinationsGridRenderer {
+export default class CombinationsListRenderer {
   private readonly eventEmitter: EventEmitter;
 
   private readonly productFormModel: ProductFormModel;

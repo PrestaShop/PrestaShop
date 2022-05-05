@@ -31,6 +31,10 @@ import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
 
 Vue.use(VueI18n);
 
+export interface FiltersVueApp extends Vue {
+  filters: Array<Record<string, any>>,
+};
+
 /**
  * @param {string} combinationsFiltersSelector
  * @param {EventEmitter} eventEmitter
@@ -41,7 +45,7 @@ export default function initCombinationsFilters(
   combinationsFiltersSelector: string,
   eventEmitter: typeof EventEmitter,
   filters: Record<string, any>,
-): Vue {
+): FiltersVueApp {
   const container = <HTMLElement> document.querySelector(combinationsFiltersSelector);
 
   const translations = JSON.parse(<string>container.dataset.translations);
