@@ -24,7 +24,7 @@
  */
 
 import ProductMap from '@pages/product/product-map';
-import CombinationsListRenderer from '@pages/product/combination/combinations-list-renderer';
+import CombinationsListRenderer from '@pages/product/components/combination-list/combinations-list-renderer';
 import CombinationsService from '@pages/product/services/combinations-service';
 import DynamicPaginator from '@components/pagination/dynamic-paginator';
 import ProductEventMap from '@pages/product/product-event-map';
@@ -34,12 +34,12 @@ import ConfirmModal from '@components/modal';
 import {EventEmitter} from 'events';
 import initCombinationGenerator from '@pages/product/components/generator';
 import {getProductAttributeGroups} from '@pages/product/services/attribute-groups';
-import BulkFormHandler from '@pages/product/combination/bulk-form-handler';
+import BulkFormHandler from '@pages/product/components/combination-list/bulk-form-handler';
 import PaginatedCombinationsService from '@pages/product/services/paginated-combinations-service';
-import BulkDeleteHandler from '@pages/product/combination/bulk-delete-handler';
-import BulkChoicesSelector from '@pages/product/combination/bulk-choices-selector';
+import BulkDeleteHandler from '@pages/product/components/combination-list/bulk-delete-handler';
+import BulkChoicesSelector from '@pages/product/components/combination-list/bulk-choices-selector';
 import ProductFormModel from '@pages/product/edit/product-form-model';
-import CombinationsListEditor from '@pages/product/combination/combinations-list-editor';
+import CombinationsListEditor from '@pages/product/components/combination-list/combinations-list-editor';
 import Vue from '@node_modules/vue';
 
 const {$} = window;

@@ -2,7 +2,7 @@ import {ConfirmModal} from '@components/modal';
 import ProductMap from '@pages/product/product-map';
 import ProductEvents from '@pages/product/product-event-map';
 import CombinationsService from '@pages/product/services/combinations-service';
-import BulkChoicesSelector from '@pages/product/combination/bulk-choices-selector';
+import BulkChoicesSelector from '@pages/product/components/combination-list/bulk-choices-selector';
 import {EventEmitter} from 'events';
 
 const CombinationMap = ProductMap.combinations;
