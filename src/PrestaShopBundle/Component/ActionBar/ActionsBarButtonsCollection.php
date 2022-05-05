@@ -24,13 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Controller\Admin\Sell\Order;
+namespace PrestaShopBundle\Component\ActionBar;
 
-use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonInterface as CoreActionsBarButtonInterface;
+use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonsCollection as CoreActionsBarButtonsCollection;
 
 /**
- * @deprecated since 8.0 and will be removed in next major. Use PrestaShop\PrestaShop\Core\ActionBar\ActionsBarButtonInterface instead
+ * @deprecated since 8.0 and will be removed in next major. Use PrestaShop\PrestaShop\Core\ActionBar\ActionsBarButtonsCollection instead
  */
-interface ActionsBarButtonInterface extends CoreActionsBarButtonInterface
+class ActionsBarButtonsCollection extends CoreActionsBarButtonsCollection
 {
 }
