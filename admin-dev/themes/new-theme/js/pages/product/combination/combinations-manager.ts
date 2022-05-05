@@ -24,7 +24,7 @@
  */
 
 import ProductMap from '@pages/product/product-map';
-import CombinationsGridRenderer from '@pages/product/edit/combinations-grid-renderer';
+import CombinationsGridRenderer from '@pages/product/combination/combinations-grid-renderer';
 import CombinationsService from '@pages/product/services/combinations-service';
 import DynamicPaginator from '@components/pagination/dynamic-paginator';
 import ProductEventMap from '@pages/product/product-event-map';
@@ -39,7 +39,7 @@ import PaginatedCombinationsService from '@pages/product/services/paginated-comb
 import BulkDeleteHandler from '@pages/product/combination/bulk-delete-handler';
 import BulkChoicesSelector from '@pages/product/combination/bulk-choices-selector';
 import ProductFormModel from '@pages/product/edit/product-form-model';
-import CombinationsListEditor from '@pages/product/edit/combinations-list-editor';
+import CombinationsListEditor from '@pages/product/combination/combinations-list-editor';
 
 const {$} = window;
 const CombinationEvents = ProductEventMap.combinations;

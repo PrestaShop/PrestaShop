@@ -25,7 +25,7 @@
 
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
-import CombinationsGridRenderer from '@pages/product/edit/combinations-grid-renderer';
+import CombinationsGridRenderer from '@pages/product/combination/combinations-grid-renderer';
 import {EventEmitter} from 'events';
 import {isUndefined} from '@PSTypes/typeguard';
 import BigNumber from '@node_modules/bignumber.js';

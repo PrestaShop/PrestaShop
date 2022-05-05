@@ -29,7 +29,7 @@ import ProductConst from '@pages/product/constants';
 
 import AttachmentsManager from '@pages/product/edit/attachments-manager';
 import CategoriesManager from '@pages/product/components/categories/categories-manager';
-import CombinationsManager from '@pages/product/edit/combinations-manager';
+import CombinationsManager from '@pages/product/combination/combinations-manager';
 import CustomizationsManager from '@pages/product/edit/customizations-manager';
 import FeatureValuesManager from '@pages/product/edit/feature-values-manager';
 import ProductFooterManager from '@pages/product/edit/product-footer-manager';
