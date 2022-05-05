@@ -66,7 +66,12 @@ const orderByCustomerData = {
   paymentMethod: PaymentMethods.wirePayment.moduleName,
 };
 
-const carrierDataToSelect = {trackingNumber: '', carrier: Carriers.myCarrier.name, shippingCost: '€8.40'};
+const carrierDataToSelect = {
+  trackingNumber: '',
+  carrier: Carriers.myCarrier.name,
+  carrierID: Carriers.myCarrier.id,
+  shippingCost: '€8.40',
+};
 
 /*
 Pre-condition:

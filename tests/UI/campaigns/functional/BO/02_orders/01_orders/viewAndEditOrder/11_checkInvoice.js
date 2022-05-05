@@ -1325,7 +1325,11 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         it('should update the carrier', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'updateCarrier', baseContext);
 
-          const shippingDetailsData = {trackingNumber: '', carrier: Carriers.myCarrier.name};
+          const shippingDetailsData = {
+            trackingNumber: '',
+            carrier: Carriers.myCarrier.name,
+            carrierID: 1,
+          };
 
           const textResult = await orderPageTabListBlock.setShippingDetails(page, shippingDetailsData);
           await expect(textResult).to.equal(orderPageTabListBlock.successfulUpdateMessage);
