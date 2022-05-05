@@ -60,7 +60,7 @@ final class GenerateProductCombinationsHandler implements GenerateProductCombina
         $this->productSupplierUpdater = $productSupplierUpdater;
     }
 
-    /**t
+    /**
      * {@inheritdoc}
      */
     public function handle(GenerateProductCombinationsCommand $command): array
