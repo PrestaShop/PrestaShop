@@ -110,21 +110,21 @@ class SpecificPriceType extends TranslatorAwareType
             ->add('groups', ApplicableGroupsType::class, [
                 'label' => $this->trans('Apply to', 'Admin.Global'),
                 'required' => false,
-            ]);
-        $builder->add('customer', EntitySearchInputType::class, [
-            'label' => $this->trans('Apply to all customers', 'Admin.Global'),
-            'layout' => EntitySearchInputType::LIST_LAYOUT,
-            'entry_type' => SearchedCustomerType::class,
-            'entry_options' => [
-                'block_prefix' => 'searched_customer',
-            ],
-            'limit' => 1,
-            'disabling_switch' => true,
-            'remote_url' => $this->urlGenerator->generate('admin_customers_search', ['customer_search' => '__QUERY__']),
-            'placeholder' => $this->trans('All Customers', 'Admin.Global'),
-            'suggestion_field' => 'fullname_and_email',
-            'required' => false,
-        ])
+            ])
+            ->add('customer', EntitySearchInputType::class, [
+                'label' => $this->trans('Apply to all customers', 'Admin.Global'),
+                'layout' => EntitySearchInputType::LIST_LAYOUT,
+                'entry_type' => SearchedCustomerType::class,
+                'entry_options' => [
+                    'block_prefix' => 'searched_customer',
+                ],
+                'limit' => 1,
+                'disabling_switch' => true,
+                'remote_url' => $this->urlGenerator->generate('admin_customers_search', ['customer_search' => '__QUERY__']),
+                'placeholder' => $this->trans('All Customers', 'Admin.Global'),
+                'suggestion_field' => 'fullname_and_email',
+                'required' => false,
+            ])
             ->add('combination_id', ChoiceType::class, [
                 'label' => $this->trans('Combination', 'Admin.Global'),
                 'placeholder' => $this->trans('All combinations', 'Admin.Global'),

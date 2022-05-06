@@ -28,12 +28,12 @@ import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
 import {EventEmitter} from 'events';
 import SpecificPriceList from '@pages/product/components/specific-price/specific-price-list';
-import Vue from 'vue';
-import VueI18n from 'vue-i18n';
 import Router from '@components/router';
 import FormFieldDisabler from '@components/form/form-field-disabler';
+import {isUndefined} from '@PSTypes/typeguard';
 
-Vue.use(VueI18n);
+import ClickEvent = JQuery.ClickEvent;
+
 const SpecificPriceMap = ProductMap.specificPrice;
 const PriorityMap = SpecificPriceMap.priority;
 
@@ -42,7 +42,9 @@ export default class SpecificPricesManager {
 
   productId: number;
 
-  specificPriceList: SpecificPriceList;
+  listContainer: HTMLElement;
+
+  specificPriceList!: SpecificPriceList;
 
   router: Router;
 
@@ -52,10 +54,12 @@ export default class SpecificPricesManager {
     this.router = new Router();
     this.productId = productId;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
-    this.specificPriceList = new SpecificPriceList(productId);
+    this.listContainer = document.querySelector<HTMLElement>(SpecificPriceMap.listContainer)!;
+
     this.initComponents();
-    this.specificPriceList.renderList();
     this.initListeners();
+
+    this.specificPriceList.renderList();
   }
 
   private initListeners(): void {
@@ -63,7 +67,11 @@ export default class SpecificPricesManager {
   }
 
   private initComponents() {
+    this.specificPriceList = new SpecificPriceList(this.productId);
+
     this.initSpecificPriceModal();
+
+    // Enable/disabled the priority selectors depending on the priority type selected (global or custom)
     new FormFieldDisabler({
       disablingInputSelector: PriorityMap.priorityTypeCheckboxesSelector,
       matchingValue: '0',
@@ -72,6 +80,29 @@ export default class SpecificPricesManager {
   }
 
   private initSpecificPriceModal() {
+    // Delegate listener for each edit buttons in the list (even future added ones)
+    $(this.listContainer).on('click', SpecificPriceMap.listFields.editBtn, (event: ClickEvent) => {
+      if (!(event.currentTarget instanceof HTMLElement)) {
+        return;
+      }
+
+      const {specificPriceId} = event.currentTarget.dataset;
+
+      if (isUndefined(specificPriceId)) {
+        return;
+      }
+
+      const url = this.router.generate(
+        'admin_products_specific_prices_edit',
+        {
+          specificPriceId,
+          liteDisplaying: 1,
+        },
+      );
+      this.renderSpecificPriceModal(url);
+    });
+
+    // Creation modal on single add button
     const addButton = document.querySelector(SpecificPriceMap.addSpecificPriceBtn);
 
     if (addButton === null) {
