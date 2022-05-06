@@ -62,29 +62,25 @@ export default class RowDeleteHandler {
   private async deleteCombination(button: HTMLButtonElement): Promise<void> {
     try {
       const $deleteButton = $(button);
-      const modal = new (ConfirmModal as any)(
-        {
-          id: 'modal-confirm-delete-combination',
-          confirmTitle: $deleteButton.data('modal-title'),
-          confirmMessage: $deleteButton.data('modal-message'),
-          confirmButtonLabel: $deleteButton.data('modal-apply'),
-          closeButtonLabel: $deleteButton.data('modal-cancel'),
-          confirmButtonClass: 'btn-danger',
-          closable: true,
-        },
-        async () => {
-          const response = await this.combinationsService.deleteCombination(
-            this.findCombinationId(button),
-          );
-          $.growl({message: response.message});
-          this.eventEmitter.emit(CombinationEvents.refreshCombinationList);
-        },
-      );
+      const modal = new ConfirmModal({
+        id: 'modal-confirm-delete-combination',
+        confirmTitle: $deleteButton.data('modal-title'),
+        confirmMessage: $deleteButton.data('modal-message'),
+        confirmButtonLabel: $deleteButton.data('modal-apply'),
+        closeButtonLabel: $deleteButton.data('modal-cancel'),
+        confirmButtonClass: 'btn-danger',
+        closable: true,
+      },
+      async () => {
+        const response = await this.combinationsService.deleteCombination(
+          this.findCombinationId(button),
+        );
+        $.growl({message: response.message});
+        this.eventEmitter.emit(CombinationEvents.refreshCombinationList);
+      });
       modal.show();
     } catch (error) {
-      const errorMessage = error.responseJSON
-        ? error.responseJSON.error
-        : error;
+      const errorMessage = error.response?.JSON ?? error;
       $.growl.error({message: errorMessage});
     }
   }
