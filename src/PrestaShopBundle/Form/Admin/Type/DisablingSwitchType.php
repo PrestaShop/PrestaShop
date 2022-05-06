@@ -48,14 +48,18 @@ class DisablingSwitchType extends SwitchType
             // The set default options from parent type
             ->setDefaults([
                 'target_selector' => '',
+                'disable_on_match' => true,
                 'show_choices' => false,
                 'label' => false,
                 'required' => false,
                 'row_attr' => [
                     'class' => 'ps-disabling-switch',
                 ],
+                'switch_event' => null,
             ])
+            ->setAllowedTypes('disable_on_match', 'bool')
             ->setAllowedTypes('target_selector', 'string')
+            ->setAllowedTypes('switch_event', ['string', 'null'])
         ;
     }
 
@@ -67,6 +71,12 @@ class DisablingSwitchType extends SwitchType
         parent::buildView($view, $form, $options);
         $view->vars['attr']['data-target-selector'] = $options['target_selector'];
         $view->vars['attr']['data-matching-value'] = '0';
+        $view->vars['attr']['data-disable-on-match'] = (int) $options['disable_on_match'];
+
+        // Optional event to trigger on switch
+        if (!empty($options['switch_event'])) {
+            $view->vars['attr']['data-switch-event'] = $options['switch_event'];
+        }
     }
 
     public function getParent(): string

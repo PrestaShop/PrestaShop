@@ -51,7 +51,9 @@ class DisablingSwitchExtension extends AbstractTypeExtension
     public const FIELD_PREFIX = 'disabling_switch_';
 
     public const SWITCH_OPTION = 'disabling_switch';
+    public const SWITCH_EVENT_OPTION = 'disabling_switch_event';
     public const DISABLED_VALUE_OPTION = 'disabled_value';
+    public const SWITCH_STATE_ON_DISABLE_OPTION = 'switch_state_on_disable';
 
     /**
      * @var EventSubscriberInterface
@@ -125,9 +127,16 @@ class DisablingSwitchExtension extends AbstractTypeExtension
                 //          return empty($data['reduction_type']) || empty($data['reduction_value']);
                 //      },
                 self::DISABLED_VALUE_OPTION => null,
+                // You can define an JS event triggered on witch changes
+                self::SWITCH_EVENT_OPTION => null,
+                // Define the state of the switch component when value is disabled (by default on off)
+                self::SWITCH_STATE_ON_DISABLE_OPTION => 'off',
             ])
             ->setAllowedTypes(self::SWITCH_OPTION, 'bool')
             ->setAllowedTypes(self::DISABLED_VALUE_OPTION, ['null', 'string', 'int', 'array', 'object', 'bool', 'float', 'callback', Closure::class])
+            ->setAllowedTypes(self::SWITCH_EVENT_OPTION, ['string', 'null'])
+            ->setAllowedTypes(self::SWITCH_STATE_ON_DISABLE_OPTION, 'string')
+            ->setAllowedValues(self::SWITCH_STATE_ON_DISABLE_OPTION, ['off', 'on'])
         ;
     }
 }
