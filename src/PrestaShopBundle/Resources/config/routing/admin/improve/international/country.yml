@@ -1,0 +1,16 @@
+#todo uncomment all legacy links when page is finished.
+admin_countries_index:
+  path: /
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\CountryController::indexAction'
+    _legacy_controller: AdminCountries
+#    _legacy_link: AdminCountries
+
+admin_countries_search:
+  path: /
+  methods: POST
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\CountryController::searchAction'
+    _legacy_controller: AdminCountries
+#    _legacy_link: AdminCountries:submitFiltercountry

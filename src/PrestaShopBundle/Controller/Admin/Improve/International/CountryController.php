@@ -1,0 +1,84 @@
+<?php
+/**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ */
+
+namespace PrestaShopBundle\Controller\Admin\Improve\International;
+
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CountryGridDefinitionFactory;
+use PrestaShop\PrestaShop\Core\Search\Filters\CountryFilters;
+use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+/**
+ * CountryController is responsible for handling "Improve > International > Locations > Countries"
+ */
+class CountryController extends FrameworkBundleAdminController
+{
+    /**
+     * Show countries listing page
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     * @param CountryFilters $filters
+     *
+     * @return Response
+     */
+    public function indexAction(Request $request, CountryFilters $filters): Response
+    {
+        $countryGridFactory = $this->get('prestashop.core.grid.factory.country');
+        $countryGrid = $countryGridFactory->getGrid($filters);
+
+        return $this->render('@PrestaShop/Admin/Improve/International/Country/index.html.twig', [
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'countryGrid' => $this->presentGrid($countryGrid),
+            'enableSidebar' => true,
+        ]);
+    }
+
+    /**
+     * Provides filters functionality.
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function searchAction(Request $request): RedirectResponse
+    {
+        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
+
+        return $responseBuilder->buildSearchResponse(
+            $this->get('prestashop.core.grid.definition.factory.country'),
+            $request,
+            CountryGridDefinitionFactory::GRID_ID,
+            'admin_countries_index'
+        );
+    }
+}
