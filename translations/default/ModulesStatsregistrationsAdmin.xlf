@@ -77,6 +77,11 @@
         <target>CSV Export</target>
         <note>Line: 156</note>
       </trans-unit>
+      <trans-unit id="a286f4eaef73a0b4f955c42b84472444">
+        <source>The total number of accounts created is not in itself important information. However, it is beneficial to analyze the number created over time. This will indicate whether or not things are on the right track.</source>
+        <target>The total number of accounts created is not in itself important information. However, it is beneficial to analyze the number created over time. This will indicate whether or not things are on the right track.</target>
+        <note>Line: 135</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

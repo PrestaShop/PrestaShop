@@ -5,7 +5,7 @@
       <trans-unit id="93ba210a7ea13de4214e57bf9d3f0096">
         <source>Deleted account</source>
         <target>Deleted account</target>
-        <note>Line: 75</note>
+        <note>Line: 81</note>
       </trans-unit>
     </body>
   </file>
@@ -24,22 +24,27 @@
       <trans-unit id="95ba76c5c7b555be8efe6a3da26f0e4e">
         <source>Title cannot be empty</source>
         <target>Title cannot be empty</target>
-        <note>Line: 169</note>
+        <note>Line: 171</note>
       </trans-unit>
       <trans-unit id="6860ebb8b4811bad4d66ee12171d9919">
         <source>Title cannot be more than %s characters</source>
         <target>Title cannot be more than %s characters</target>
-        <note>Line: 171</note>
+        <note>Line: 173</note>
       </trans-unit>
       <trans-unit id="eb51e9ce995a1a8ca09f3a4369bb8720">
         <source>Customer name cannot be empty</source>
         <target>Customer name cannot be empty</target>
-        <note>Line: 176</note>
+        <note>Line: 178</note>
       </trans-unit>
       <trans-unit id="8928e4374410046ab21285fc9090ee19">
         <source>Customer name cannot be more than %s characters</source>
         <target>Customer name cannot be more than %s characters</target>
-        <note>Line: 178</note>
+        <note>Line: 180</note>
+      </trans-unit>
+      <trans-unit id="36099157e1c501c87a728ab61b8d4444">
+        <source>Criterions not available</source>
+        <target>Criterions not available</target>
+        <note>Line: 207</note>
       </trans-unit>
     </body>
   </file>
@@ -147,37 +152,37 @@
       <trans-unit id="70397c4b252a5168c5ec003931cea215">
         <source>Required fields</source>
         <target>Required fields</target>
-        <note>Line: 120</note>
+        <note>Line: 126</note>
       </trans-unit>
       <trans-unit id="ea4788705e6873b424c65e91c2846b19">
         <source>Cancel</source>
         <target>Cancel</target>
-        <note>Line: 124</note>
+        <note>Line: 130</note>
       </trans-unit>
       <trans-unit id="94966d90747b97d1f0f206c98a8b1ac3">
         <source>Send</source>
         <target>Send</target>
-        <note>Line: 127</note>
+        <note>Line: 133</note>
       </trans-unit>
       <trans-unit id="b20968d9aecd2d075519992e9e2f1ffe">
         <source>Your comment has been submitted and will be available once approved by a moderator.</source>
         <target>Your comment has been submitted and will be available once approved by a moderator.</target>
-        <note>Line: 139</note>
+        <note>Line: 145</note>
       </trans-unit>
       <trans-unit id="9a2ccd41653469a8bd94fbb84b271a14">
         <source>Your comment has been added!</source>
         <target>Your comment has been added!</target>
-        <note>Line: 141</note>
+        <note>Line: 147</note>
       </trans-unit>
       <trans-unit id="b0e34b92ce3d4073d645119d68c5d551">
         <source>Review sent</source>
         <target>Review sent</target>
-        <note>Line: 145</note>
+        <note>Line: 151</note>
       </trans-unit>
       <trans-unit id="ffe435d2d09dddbaa6927987bc8466a7">
         <source>Your review cannot be sent</source>
         <target>Your review cannot be sent</target>
-        <note>Line: 152</note>
+        <note>Line: 158</note>
       </trans-unit>
     </body>
   </file>

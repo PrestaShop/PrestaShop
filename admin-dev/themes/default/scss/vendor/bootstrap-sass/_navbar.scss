@@ -60,7 +60,7 @@
     overflow-y: auto;
   }
 
-  @media (min-width: $grid-float-breakpoint) {
+  @media (min-width: ($grid-float-breakpoint + 1)) {
     width: auto;
     border-top: 0;
     box-shadow: none;

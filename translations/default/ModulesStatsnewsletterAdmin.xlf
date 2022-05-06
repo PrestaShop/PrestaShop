@@ -37,6 +37,11 @@
         <target>Newsletter statistics</target>
         <note>Line: 122</note>
       </trans-unit>
+      <trans-unit id="e4a878baf1fa9c172209ad7face7b695">
+        <source>Enrich your stats, display a graph showing newsletter registrations.</source>
+        <target>Enrich your stats, display a graph showing newsletter registrations.</target>
+        <note>Line: 57</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

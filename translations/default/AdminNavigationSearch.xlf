@@ -122,6 +122,11 @@
         <target>Go to the Forum</target>
         <note>Line: 197</note>
       </trans-unit>
+      <trans-unit id="6a435abbb99489f782df19d1c41d7c1b">
+        <source>Search docs.prestashop-project.org</source>
+        <target>Search docs.prestashop-project.org</target>
+        <note>Line: 184</note>
+      </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Translation/Api/InternationalApi.php" source-language="en-US" target-language="en" datatype="plaintext">

@@ -850,12 +850,12 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="dff4bf10409100d989495c6d5486035e">
         <source>Lastname</source>
         <target>Lastname</target>
-        <note>Line: 256</note>
+        <note>Line: 284</note>
       </trans-unit>
       <trans-unit id="04176f095283bc729f1e3926967e7034">
         <source>Firstname</source>
         <target>Firstname</target>
-        <note>Line: 260</note>
+        <note>Line: 288</note>
       </trans-unit>
     </body>
   </file>
@@ -887,7 +887,7 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="97e7c9a7d06eac006a28bf05467fcc8b">
         <source>Link</source>
         <target>Link</target>
-        <note>Line: 1369</note>
+        <note>Line: 1409</note>
       </trans-unit>
     </body>
   </file>
@@ -896,12 +896,12 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="bc910f8bdf70f29374f496f05be0330c">
         <source>First Name</source>
         <target>First Name</target>
-        <note>Line: 67</note>
+        <note>Line: 66</note>
       </trans-unit>
       <trans-unit id="77587239bf4c54ea493c7033e1dbf636">
         <source>Last Name</source>
         <target>Last Name</target>
-        <note>Line: 61</note>
+        <note>Line: 60</note>
       </trans-unit>
     </body>
   </file>
@@ -929,7 +929,7 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="156e5c5872c9af24a5c982da07a883c2">
         <source>Products bought:</source>
         <target>Products bought:</target>
-        <note>Line: 203</note>
+        <note>Line: 208</note>
       </trans-unit>
     </body>
   </file>
@@ -965,7 +965,7 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="d7778d0c64b6ba21494c97f77a66885a">
         <source>Filter</source>
         <target>Filter</target>
-        <note>Line: 112</note>
+        <note>Line: 126</note>
       </trans-unit>
     </body>
   </file>
@@ -1090,37 +1090,37 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
       <trans-unit id="9c7f56d70e922a61254366964c01c64a">
         <source>All currencies</source>
         <target>All currencies</target>
-        <note>Line: 502</note>
+        <note>Line: 515</note>
       </trans-unit>
       <trans-unit id="c3987e4cac14a8456515f0d200da04ee">
         <source>All countries</source>
         <target>All countries</target>
-        <note>Line: 503</note>
+        <note>Line: 516</note>
       </trans-unit>
       <trans-unit id="e4c4c68c7515704a91d90207067dcbbe">
         <source>All groups</source>
         <target>All groups</target>
-        <note>Line: 504</note>
+        <note>Line: 517</note>
       </trans-unit>
       <trans-unit id="7e3a51a56ddd2846e21c33f05e0aea6f">
         <source>All customers</source>
         <target>All customers</target>
-        <note>Line: 505</note>
+        <note>Line: 518</note>
       </trans-unit>
       <trans-unit id="58ef6750a23ba432fc1377b7de085d9f">
         <source>Tax excl.</source>
         <target>Tax excl.</target>
-        <note>Line: 453</note>
+        <note>Line: 466</note>
       </trans-unit>
       <trans-unit id="94dfb2009644e42ef41f47aece4c0350">
         <source>Tax incl.</source>
         <target>Tax incl.</target>
-        <note>Line: 451</note>
+        <note>Line: 464</note>
       </trans-unit>
       <trans-unit id="545f6c2f382c04810103b3e5e6f7d841">
         <source>Unlimited</source>
         <target>Unlimited</target>
-        <note>Line: 460</note>
+        <note>Line: 473</note>
       </trans-unit>
     </body>
   </file>
@@ -1216,15 +1216,6 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
         <source>Filename</source>
         <target>Filename</target>
         <note>Line: 91</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/Core/Grid/Definition/Factory/BulkDeleteActionTrait.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="dc69fe17b788b1acf7bd938e5f0ae4d5">
-        <source>Are you sure you want to delete the selected item(s)?</source>
-        <target>Are you sure you want to delete the selected item(s)?</target>
-        <note>Line: 49</note>
       </trans-unit>
     </body>
   </file>
@@ -1907,6 +1898,15 @@ File: modules/ps_buybuttonlite/ps_buybuttonlite.php:168</note>
         <source>Period</source>
         <target>Period</target>
         <note>Line: 159</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/product.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="dc69fe17b788b1acf7bd938e5f0ae4d5">
+        <source>Are you sure you want to delete the selected item(s)?</source>
+        <target>Are you sure you want to delete the selected item(s)?</target>
+        <note>Line: 361</note>
       </trans-unit>
     </body>
   </file>

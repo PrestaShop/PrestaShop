@@ -27,6 +27,11 @@
         <target>Percentage of orders listed by carrier.</target>
         <note>Line: 126</note>
       </trans-unit>
+      <trans-unit id="d2297e4ef285a4dd7c1a60873bfcea38">
+        <source>Enrich your stats, add a pie chart illustrating your carriers’ distribution.</source>
+        <target>Enrich your stats, add a pie chart illustrating your carriers’ distribution.</target>
+        <note>Line: 47</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

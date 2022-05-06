@@ -330,7 +330,7 @@
       <trans-unit id="bdbbfbe4e0997752ebe7eba30877aedd">
         <source>Return to your account</source>
         <target>Return to your account</target>
-        <note>Line: 45</note>
+        <note>Line: 42</note>
       </trans-unit>
     </body>
   </file>
@@ -349,7 +349,7 @@
       <trans-unit id="33bfdda4430b887fee39c911b6400fac">
         <source>Return to wishlists</source>
         <target>Return to wishlists</target>
-        <note>Line: 48</note>
+        <note>Line: 46</note>
       </trans-unit>
       <trans-unit id="8de56fbeeb825a9f65910ee399469698">
         <source>Last added</source>
