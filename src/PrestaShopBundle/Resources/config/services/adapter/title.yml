@@ -8,3 +8,15 @@ services:
       - '@prestashop.core.image.parser.image_tag_source_parser'
       - '@prestashop.adapter.image_manager'
       - !php/const _PS_GENDERS_DIR_
+
+  prestashop.adapter.title.command_handler.delete_title_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Title\CommandHandler\DeleteTitleHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Title\Command\DeleteTitleCommand'
+
+  prestashop.adapter.title.command_handler.bulk_delete_title_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\Title\CommandHandler\BulkDeleteTitleHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Title\Command\BulkDeleteTitleCommand'
