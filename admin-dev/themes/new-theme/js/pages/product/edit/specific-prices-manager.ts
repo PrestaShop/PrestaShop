@@ -69,7 +69,7 @@ export default class SpecificPricesManager {
   private initComponents() {
     this.specificPriceList = new SpecificPriceList(this.productId);
 
-    this.initSpecificPriceModal();
+    this.initSpecificPriceModals();
 
     // Enable/disabled the priority selectors depending on the priority type selected (global or custom)
     new FormFieldDisabler({
@@ -79,14 +79,15 @@ export default class SpecificPricesManager {
     });
   }
 
-  private initSpecificPriceModal() {
+  private initSpecificPriceModals() {
     // Delegate listener for each edit buttons in the list (even future added ones)
     $(this.listContainer).on('click', SpecificPriceMap.listFields.editBtn, (event: ClickEvent) => {
       if (!(event.currentTarget instanceof HTMLElement)) {
         return;
       }
 
-      const {specificPriceId} = event.currentTarget.dataset;
+      const editButton = event.currentTarget;
+      const {specificPriceId} = editButton.dataset;
 
       if (isUndefined(specificPriceId)) {
         return;
@@ -99,11 +100,16 @@ export default class SpecificPricesManager {
           liteDisplaying: 1,
         },
       );
-      this.renderSpecificPriceModal(url);
+      this.renderSpecificPriceModal(
+        url,
+        editButton.dataset.modalTitle || 'Edit specific price',
+        editButton.dataset.confirmButtonLabel || 'Save and publish',
+        editButton.dataset.cancelButtonLabel || 'Cancel',
+      );
     });
 
     // Creation modal on single add button
-    const addButton = document.querySelector(SpecificPriceMap.addSpecificPriceBtn);
+    const addButton = document.querySelector<HTMLElement>(SpecificPriceMap.addSpecificPriceBtn);
 
     if (addButton === null) {
       return;
@@ -118,18 +124,29 @@ export default class SpecificPricesManager {
           liteDisplaying: 1,
         },
       );
-      this.renderSpecificPriceModal(url);
+      this.renderSpecificPriceModal(
+        url,
+        addButton.dataset.modalTitle || 'Add new specific price',
+        addButton.dataset.confirmButtonLabel || 'Save and publish',
+        addButton.dataset.cancelButtonLabel || 'Cancel',
+      );
     });
   }
 
-  private renderSpecificPriceModal(formUrl: string) {
+  private renderSpecificPriceModal(
+    formUrl: string,
+    modalTitle: string,
+    confirmButtonLabel: string,
+    closeButtonLabel: string,
+  ) {
     const iframeModal = new FormIframeModal({
       id: 'modal-create-specific-price',
       formSelector: 'form[name="specific_price"]',
       formUrl,
       closable: true,
-      closeButtonLabel: 'close',
-      confirmButtonLabel: 'save',
+      modalTitle,
+      closeButtonLabel,
+      confirmButtonLabel,
       closeOnConfirm: false,
       onFormLoaded: (form: HTMLElement, formData: JQuery.NameValuePair[] | null, dataAttributes: DOMStringMap | null): void => {
         if (dataAttributes && dataAttributes.alertsSuccess === '1') {

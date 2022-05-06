@@ -291,7 +291,6 @@ export default {
     modalTemplate: '#specific-price-modal-template',
     modalContentId: 'specific-price-modal',
     addSpecificPriceBtn: '.js-add-specific-price-btn',
-    formModal: '#specific-price-form-modal',
     form: 'form[name="specific_price"]',
     listContainer: '#specific-price-list-container',
     listRowTemplate: '#specific-price-tr-template',

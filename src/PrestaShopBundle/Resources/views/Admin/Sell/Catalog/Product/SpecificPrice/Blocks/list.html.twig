@@ -73,8 +73,8 @@
           class="js-delete-specific-price-btn btn tooltip-link"
           data-confirm-title="{{ 'Specific price deletion'| trans({}, 'Admin.Global') }}"
           data-confirm-message="{{ 'Are you sure you want to delete this specific price?'| trans({}, 'Admin.Global') }}"
-          data-confirm-btn-label="{{ 'Delete'| trans({}, 'Admin.Global') }}"
-          data-cancel-btn-label="{{ 'Cancel'| trans({}, 'Admin.Global') }}"
+          data-confirm-btn-label="{{ 'Delete'| trans({}, 'Admin.Actions') }}"
+          data-cancel-btn-label="{{ 'Cancel'| trans({}, 'Admin.Actions') }}"
           data-confirm-btn-class="btn-danger"
         ><i class="material-icons">delete</i>
         </button>
@@ -83,7 +83,12 @@
         <button
           type="button"
           title="{{ 'Edit'|trans({}, 'Admin.Actions') }}"
-          class="js-edit-specific-price-btn btn tooltip-link"><i class="material-icons">edit</i>
+          class="js-edit-specific-price-btn btn tooltip-link"
+          data-modal-title="{{ 'Edit specific price'| trans({}, 'Admin.Global') }}"
+          data-confirm-button-label="{{ 'Save and publish'| trans({}, 'Admin.Actions') }}"
+          data-cancel-button-label="{{ 'Cancel'| trans({}, 'Admin.Actions') }}"
+        >
+          <i class="material-icons">edit</i>
         </button>
       </td>
     </tr>
