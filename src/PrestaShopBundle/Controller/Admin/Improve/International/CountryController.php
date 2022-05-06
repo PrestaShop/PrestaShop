@@ -30,6 +30,8 @@ namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use Exception;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CountryGridDefinitionFactory;
+use Exception;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CountryGridDefinitionFactory;
 use Context;
 use PrestaShop\PrestaShop\Core\Search\Filters\CountryFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -131,7 +133,6 @@ class CountryController extends FrameworkBundleAdminController
 
 
     public function editAction(int $countryId, Request $request): Response
-    public function editAction(int $countryId, Request $request): void
     {
         //todo: complete edit action migration to symfony
         return $this->redirect(
