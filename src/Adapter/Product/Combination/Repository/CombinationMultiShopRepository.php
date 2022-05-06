@@ -32,6 +32,7 @@ use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotBulkDeleteCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotDeleteCombinationException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
@@ -92,6 +93,25 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
         $this->addObjectModel($combination, CannotAddCombinationException::class);
 
         return $combination;
+    }
+
+    /**
+     * @todo: This is for generating combination when it already exists in other shop. (so it doesnt create additional one with different id)
+     *        needs more attention, we should probably reset everything and only leave id,
+     *        while now it will probably copy values from context shop combination (or wherever it was loaded from)
+     *        Also maybe this should be left internally in "create" method?
+     */
+    public function addToShop(CombinationId $combinationId, ShopId $shopId): void
+    {
+        /** @var Combination $combination */
+        $combination = $this->getObjectModel(
+            $combinationId->getValue(),
+            Combination::class,
+            CombinationNotFoundException::class
+        );
+
+        //@todo: dedicated exception and/or code
+        $this->updateObjectModelForShops($combination, [$shopId->getValue()], CombinationException::class);
     }
 
     /**
@@ -266,15 +286,27 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
     }
 
     /**
-     * @param CombinationId $combinationId
+     * Check if combination is associated with certain shop
      *
-     * @return Combination
+     * @param CombinationId $combinationId
+     * @param ShopId $shopId
+     *
+     * @return bool
      */
-    private function getCombinationByDefaultShop(CombinationId $combinationId): Combination
+    public function isAssociatedWithShop(CombinationId $combinationId, ShopId $shopId): bool
     {
-        $defaultShopId = $this->getDefaultShopIdForCombination($combinationId);
+        $qb = $this->connection->createQueryBuilder()
+            ->select('pas.id_product_attribute')
+            ->from($this->dbPrefix . 'product_attribute_shop', 'pas')
+            ->where('pas.id_product_attribute = :combinationId')
+            ->andWhere('pas.id_shop = :shopId')
+            ->setParameter('combinationId', $combinationId->getValue())
+            ->setParameter('shopId', $shopId->getValue())
+        ;
 
-        return $this->getCombinationByShopId($combinationId, $defaultShopId);
+        $result = $qb->execute()->fetchAssociative();
+
+        return isset($result['id_product_attribute']);
     }
 
     /**
@@ -285,7 +317,7 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
      *
      * @throws CoreException
      */
-    private function getCombinationByShopId(CombinationId $combinationId, ShopId $shopId): Combination
+    public function getCombinationByShopId(CombinationId $combinationId, ShopId $shopId): Combination
     {
         /** @var Combination $combination */
         $combination = $this->getObjectModelForShop(
@@ -326,5 +358,17 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
         }
 
         return new ShopId((int) $result['id_shop_default']);
+    }
+
+    /**
+     * @param CombinationId $combinationId
+     *
+     * @return Combination
+     */
+    private function getCombinationByDefaultShop(CombinationId $combinationId): Combination
+    {
+        $defaultShopId = $this->getDefaultShopIdForCombination($combinationId);
+
+        return $this->getCombinationByShopId($combinationId, $defaultShopId);
     }
 }

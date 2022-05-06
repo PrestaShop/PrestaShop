@@ -43,20 +43,25 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
      * @param string $productReference
      * @param TableNode $table
      */
-    public function generateCombinations(string $productReference, TableNode $table): void
+    public function generateCombinationsForDefaultShop(string $productReference, TableNode $table): void
     {
-        $tableData = $table->getRowsHash();
-        $groupedAttributeIds = $this->parseGroupedAttributeIds($tableData);
+        $this->generateCombinations($productReference, $table, $this->getDefaultShopId());
+    }
 
-        try {
-            $this->getCommandBus()->handle(new GenerateProductCombinationsCommand(
-                $this->getSharedStorage()->get($productReference),
-                $groupedAttributeIds,
-                $this->getDefaultShopId()
-            ));
-        } catch (InvalidProductTypeException $e) {
-            $this->setLastException($e);
-        }
+    /**
+     * @When I generate combinations in shop ":shopReference" for product :productReference using following attributes:
+     *
+     * @param string $shopReference
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function generateCombinationsForShop(string $shopReference, string $productReference, TableNode $table): void
+    {
+        $this->generateCombinations(
+            $productReference,
+            $table,
+            $this->getSharedStorage()->get($shopReference)
+        );
     }
 
     /**
@@ -145,5 +150,26 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
         }
 
         return $groupedAttributeIds;
+    }
+
+    /**
+     * @param string $productReference
+     * @param TableNode $table
+     * @param int $shopId
+     */
+    private function generateCombinations(string $productReference, TableNode $table, int $shopId): void
+    {
+        $tableData = $table->getRowsHash();
+        $groupedAttributeIds = $this->parseGroupedAttributeIds($tableData);
+
+        try {
+            $this->getCommandBus()->handle(new GenerateProductCombinationsCommand(
+                $this->getSharedStorage()->get($productReference),
+                $groupedAttributeIds,
+                $shopId
+            ));
+        } catch (InvalidProductTypeException $e) {
+            $this->setLastException($e);
+        }
     }
 }

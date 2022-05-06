@@ -86,7 +86,7 @@ class AbstractMultiShopObjectModelRepository extends AbstractObjectModelReposito
 
     /**
      * @param ObjectModel $objectModel
-     * @param array $shopIds
+     * @param int[] $shopIds
      * @param string $exceptionClass
      * @param int $errorCode
      *
