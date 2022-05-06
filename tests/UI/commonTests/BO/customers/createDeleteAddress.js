@@ -83,4 +83,73 @@ function createAddressTest(addressData, baseContext = 'commonTests-createAddress
   });
 }
 
-module.exports = {createAddressTest};
+/**
+ * Function to bulk delete addresses
+ * @param filterBy {string} Value to filter by
+ * @param value {string} Value to set in filter input to delete
+ * @param baseContext {string} String to identify the test
+ */
+function bulkDeleteAddressesTest(filterBy, value, baseContext = 'commonTests-deleteAddressesByBulkActionsTest') {
+  describe('POST-TEST: Delete addresses by bulk actions', async () => {
+    // before and after functions
+    before(async function () {
+      browserContext = await helper.createBrowserContext(this.browser);
+      page = await helper.newTab(browserContext);
+    });
+
+    after(async () => {
+      await helper.closeBrowserContext(browserContext);
+    });
+
+    it('should login in BO', async function () {
+      await loginCommon.loginBO(this, page);
+    });
+
+    it('should go to \'Customers > Addresses\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.customersParentLink,
+        dashboardPage.addressesLink,
+      );
+
+      await addressesPage.closeSfToolBar(page);
+
+      const pageTitle = await addressesPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addressesPage.pageTitle);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
+
+      numberOfAddresses = await addressesPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfAddresses).to.be.above(0);
+    });
+
+    it(`should filter list by '${filterBy}'`, async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkEdit', baseContext);
+
+      await addressesPage.filterAddresses(page, 'input', filterBy, value);
+
+      const address = await addressesPage.getTextColumnFromTableAddresses(page, 1, filterBy);
+      await expect(address).to.contains(value);
+    });
+
+    it('should delete addresses with bulk actions and check result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteAddresses', baseContext);
+
+      const deleteTextResult = await addressesPage.deleteAddressesBulkActions(page);
+      await expect(deleteTextResult).to.be.equal(addressesPage.successfulDeleteMessage);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterBulkDelete', baseContext);
+
+      const numberOfAddressesAfterReset = await addressesPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfAddressesAfterReset).to.be.above(0);
+    });
+  });
+}
+
+module.exports = {createAddressTest, bulkDeleteAddressesTest};
