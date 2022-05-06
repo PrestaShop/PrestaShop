@@ -77,6 +77,7 @@ class DateRangeType extends AbstractType
 
     /**
      * @param array $options
+     *
      * @return array
      */
     private function getFromFieldOptions(array $options): array

@@ -128,6 +128,7 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
 
     /**
      * @param SpecificPriceId $specificPriceId
+     *
      * @return void
      */
     public function delete(SpecificPriceId $specificPriceId): void

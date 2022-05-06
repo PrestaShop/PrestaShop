@@ -53,18 +53,31 @@ class ApplicableGroupsType extends TranslatorAwareType
      */
     private $groupByIdChoiceProvider;
 
+    /**
+     * @var FormChoiceProviderInterface
+     */
+    private $shopByIdChoiceProvider;
+
+    /**
+     * @var bool
+     */
+    private $isMultiShopEnabled;
+
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         $currencyByIdChoiceProvider,
         FormChoiceProviderInterface $countryByIdChoiceProvider,
-        FormChoiceProviderInterface $groupByIdChoiceProvider
-    )
-    {
+        FormChoiceProviderInterface $groupByIdChoiceProvider,
+        FormChoiceProviderInterface $shopByIdChoiceProvider,
+        bool $isMultiShopEnabled
+    ) {
         parent::__construct($translator, $locales);
         $this->currencyByIdChoiceProvider = $currencyByIdChoiceProvider;
         $this->countryByIdChoiceProvider = $countryByIdChoiceProvider;
         $this->groupByIdChoiceProvider = $groupByIdChoiceProvider;
+        $this->shopByIdChoiceProvider = $shopByIdChoiceProvider;
+        $this->isMultiShopEnabled = $isMultiShopEnabled;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -91,7 +104,7 @@ class ApplicableGroupsType extends TranslatorAwareType
             ])
         ;
 
-        if ($options['is_multishop_enabled']) {
+        if ($this->isMultiShopEnabled) {
             $builder->add('shop_id', ChoiceType::class, [
                 'required' => false,
                 'placeholder' => false,
@@ -105,8 +118,6 @@ class ApplicableGroupsType extends TranslatorAwareType
         parent::configureOptions($resolver);
         $resolver->setDefaults([
             'columns_number' => 4,
-            'is_multishop_enabled' => false,
         ]);
     }
-
 }

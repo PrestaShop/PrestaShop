@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\Reduction;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceException;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction as ReductionVO;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
-use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Sell\Customer\SearchedCustomerType;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
@@ -51,7 +50,6 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
-use PrestaShopBundle\Form\Admin\Sell\Product\Pricing\ApplicableGroupsType;
 
 class SpecificPriceType extends TranslatorAwareType
 {
@@ -59,11 +57,6 @@ class SpecificPriceType extends TranslatorAwareType
      * @var string
      */
     private $defaultCurrencyIso;
-
-    /**
-     * @var FormChoiceProviderInterface
-     */
-    private $shopByIdChoiceProvider;
 
     /**
      * @var FormChoiceProviderInterface
@@ -81,37 +74,26 @@ class SpecificPriceType extends TranslatorAwareType
     private $urlGenerator;
 
     /**
-     * @var bool
-     */
-    private $isMultishopEnabled;
-
-    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param string $defaultCurrencyIso
-     * @param FormChoiceProviderInterface $shopByIdChoiceProvider
      * @param FormChoiceProviderInterface $taxInclusionChoiceProvider
-     * @param ConfigurableFormChoiceProviderInterface $configurableFormChoiceProvider
+     * @param ConfigurableFormChoiceProviderInterface $combinationIdChoiceProvider
      * @param UrlGeneratorInterface $urlGenerator
-     * @param bool $isMultishopEnabled
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         string $defaultCurrencyIso,
-        FormChoiceProviderInterface $shopByIdChoiceProvider,
         FormChoiceProviderInterface $taxInclusionChoiceProvider,
-        ConfigurableFormChoiceProviderInterface $configurableFormChoiceProvider,
-        UrlGeneratorInterface $urlGenerator,
-        bool $isMultishopEnabled
+        ConfigurableFormChoiceProviderInterface $combinationIdChoiceProvider,
+        UrlGeneratorInterface $urlGenerator
     ) {
         parent::__construct($translator, $locales);
-        $this->shopByIdChoiceProvider = $shopByIdChoiceProvider;
-        $this->taxInclusionChoiceProvider = $taxInclusionChoiceProvider;
         $this->defaultCurrencyIso = $defaultCurrencyIso;
-        $this->combinationIdChoiceProvider = $configurableFormChoiceProvider;
+        $this->taxInclusionChoiceProvider = $taxInclusionChoiceProvider;
+        $this->combinationIdChoiceProvider = $combinationIdChoiceProvider;
         $this->urlGenerator = $urlGenerator;
-        $this->isMultishopEnabled = $isMultishopEnabled;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -128,22 +110,21 @@ class SpecificPriceType extends TranslatorAwareType
             ->add('groups', ApplicableGroupsType::class, [
                 'label' => $this->trans('Apply to', 'Admin.Global'),
                 'required' => false,
-                'is_multishop_enabled' => $this->isMultishopEnabled
             ]);
         $builder->add('customer', EntitySearchInputType::class, [
-                'label' => $this->trans('Apply to all customers', 'Admin.Global'),
-                'layout' => EntitySearchInputType::LIST_LAYOUT,
-                'entry_type' => SearchedCustomerType::class,
-                'entry_options' => [
-                    'block_prefix' => 'searched_customer',
-                ],
-                'limit' => 1,
-                'disabling_switch' => true,
-                'remote_url' => $this->urlGenerator->generate('admin_customers_search', ['customer_search' => '__QUERY__']),
-                'placeholder' => $this->trans('All Customers', 'Admin.Global'),
-                'suggestion_field' => 'fullname_and_email',
-                'required' => false,
-            ])
+            'label' => $this->trans('Apply to all customers', 'Admin.Global'),
+            'layout' => EntitySearchInputType::LIST_LAYOUT,
+            'entry_type' => SearchedCustomerType::class,
+            'entry_options' => [
+                'block_prefix' => 'searched_customer',
+            ],
+            'limit' => 1,
+            'disabling_switch' => true,
+            'remote_url' => $this->urlGenerator->generate('admin_customers_search', ['customer_search' => '__QUERY__']),
+            'placeholder' => $this->trans('All Customers', 'Admin.Global'),
+            'suggestion_field' => 'fullname_and_email',
+            'required' => false,
+        ])
             ->add('combination_id', ChoiceType::class, [
                 'label' => $this->trans('Combination', 'Admin.Global'),
                 'placeholder' => $this->trans('All combinations', 'Admin.Global'),
@@ -195,7 +176,7 @@ class SpecificPriceType extends TranslatorAwareType
                         ),
                     ]),
                 ],
-                'columns_number' => 2
+                'columns_number' => 2,
             ])
             ->add('reduction', ReductionType::class, [
                 'label' => $this->trans('Reduction', 'Admin.Catalog.Feature'),
@@ -224,8 +205,6 @@ class SpecificPriceType extends TranslatorAwareType
                 'required' => false,
             ])
         ;
-
-
     }
 
     public function configureOptions(OptionsResolver $resolver)
