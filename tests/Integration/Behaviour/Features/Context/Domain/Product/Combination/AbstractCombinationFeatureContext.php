@@ -39,16 +39,17 @@ abstract class AbstractCombinationFeatureContext extends AbstractProductFeatureC
 {
     /**
      * @param string $productReference
+     * @param int $shopId
      * @param ProductCombinationFilters|null $combinationFilters
      *
      * @return CombinationListForEditing
      */
-    protected function getCombinationsListForDefaultShop(string $productReference, ?ProductCombinationFilters $combinationFilters = null): CombinationListForEditing
+    protected function getCombinationsList(string $productReference, int $shopId, ?ProductCombinationFilters $combinationFilters = null): CombinationListForEditing
     {
         return $this->getQueryBus()->handle(new GetEditableCombinationsList(
             $this->getSharedStorage()->get($productReference),
             $this->getDefaultLangId(),
-            $this->getDefaultShopId(),
+            $shopId,
             $combinationFilters ? $combinationFilters->getLimit() : null,
             $combinationFilters ? $combinationFilters->getOffset() : null,
             $combinationFilters ? $combinationFilters->getOrderBy() : null,

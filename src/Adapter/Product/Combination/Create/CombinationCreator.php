@@ -138,27 +138,29 @@ class CombinationCreator
     /**
      * @param Product $product
      * @param Traversable $generatedCombinations
+     * @param ShopId $shopId
      *
      * @return CombinationId[]
-     *
-     * @throws CoreException
      */
     private function addCombinations(Product $product, Traversable $generatedCombinations, ShopId $shopId): array
     {
         $product->setAvailableDate();
         $productId = new ProductId((int) $product->id);
-        $alreadyHasCombinations = $hasDefault = (bool) $this->combinationMultiShopRepository->findDefaultCombination(
-            $productId,
-            ShopConstraint::shop($shopId->getValue())
-        );
-
+        $alreadyHasCombinations = $hasDefault = $this->combinationRepository->findDefaultCombination($productId);
         $addedCombinationIds = [];
         foreach ($generatedCombinations as $generatedCombination) {
+            $associatedWithAttributes = false;
             // Product already has combinations so we need to filter existing ones
             if ($alreadyHasCombinations) {
                 $attributeIds = array_values($generatedCombination);
-                $matchingCombinations = $this->combinationRepository->getCombinationIdsByAttributes($productId, $attributeIds);
-                if (!empty($matchingCombinations)) {
+                $matchingCombinationId = $this->combinationRepository->findCombinationIdByAttributes($productId, $attributeIds);
+                $associatedWithShop = $this->combinationMultiShopRepository->isAssociatedWithShop($matchingCombinationId, $shopId);
+                if ($matchingCombinationId && $associatedWithShop) {
+                    continue;
+                }
+
+                if ($matchingCombinationId && !$associatedWithShop) {
+                    $this->combinationMultiShopRepository->addToShop($matchingCombinationId, $shopId);
                     continue;
                 }
             }
@@ -174,19 +176,21 @@ class CombinationCreator
      * @param ProductId $productId
      * @param int[] $generatedCombination
      * @param bool $isDefault
+     * @param ShopId $shopId
      *
      * @return CombinationId
-     *
-     * @throws CoreException
      */
-    private function persistCombination(ProductId $productId, array $generatedCombination, bool $isDefault, ShopId $shopId): CombinationId
-    {
+    private function persistCombination(
+        ProductId $productId,
+        array $generatedCombination,
+        bool $isDefault,
+        ShopId $shopId
+    ): CombinationId {
         $combination = $this->combinationMultiShopRepository->create($productId, $isDefault, $shopId);
         $combinationId = new CombinationId((int) $combination->id);
 
         //@todo: Use DB transaction instead if they are accepted (PR #21740)
         try {
-            //@todo: handle shopId. product_attribute_combination doesnt have shop association, what happens if that combination already exist in another shop?
             $this->combinationRepository->saveProductAttributeAssociation($combinationId, $generatedCombination);
         } catch (CoreException $e) {
             $this->combinationMultiShopRepository->delete($combinationId, ShopConstraint::shop($shopId->getValue()));

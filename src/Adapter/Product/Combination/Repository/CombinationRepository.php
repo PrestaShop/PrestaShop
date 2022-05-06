@@ -323,21 +323,40 @@ class CombinationRepository extends AbstractObjectModelRepository
      */
     public function findDefaultCombination(ProductId $productId): ?Combination
     {
-        try {
-            $id = (int) Product::getDefaultAttribute($productId->getValue(), 0, true);
-        } catch (PrestaShopException $e) {
-            throw new CoreException('Error occurred while trying to get product default combination', 0, $e);
+        $qb = $this->connection->createQueryBuilder()
+            ->select('pa.id_product_attribute, pa.default_on')
+            ->from($this->dbPrefix . 'product_attribute', 'pa')
+            ->andWhere('pa.id_product = :productId')
+            ->andWhere('pa.default_on = 1')
+            ->setParameter('productId', $productId->getValue())
+        ;
+
+        $result = $qb->execute()->fetchAssociative();
+
+        if (!isset($result['id_product_attribute'])) {
+            return null;
         }
 
-        return $id ? $this->get(new CombinationId($id)) : null;
+        return $this->get(new CombinationId((int) $result['id_product_attribute']));
+        //@todo: is there a point using this complex legacy method? It uses context shops association,
+//               but it seems default attribute should stay same between all shops?
+//              (or else how do we sync product_attribute_shop and product_attribute.default_on?)
+//        try {
+//            $id = (int) Product::getDefaultAttribute($productId->getValue(), 0, true);
+//        } catch (PrestaShopException $e) {
+//            throw new CoreException('Error occurred while trying to get product default combination', 0, $e);
+//        }
+//
+//        return $id ? $this->get(new CombinationId($id)) : null;
     }
 
     /**
+     * @param ProductId $productId
      * @param int[] $attributeIds
      *
-     * @return CombinationId[]
+     * @return CombinationId
      */
-    public function getCombinationIdsByAttributes(ProductId $productId, array $attributeIds): array
+    public function findCombinationIdByAttributes(ProductId $productId, array $attributeIds): ?CombinationId
     {
         sort($attributeIds);
         $qb = $this->connection->createQueryBuilder();
@@ -357,13 +376,12 @@ class CombinationRepository extends AbstractObjectModelRepository
             ->setParameter('attributeIds', implode('-', $attributeIds))
             ->addGroupBy('pa.id_product_attribute')
         ;
-        $result = $qb->execute()->fetchAll();
+        $result = $qb->execute()->fetchAssociative();
+
         if (empty($result)) {
-            return [];
+            return null;
         }
 
-        return array_map(function (array $combination) {
-            return new CombinationId((int) $combination['id_product_attribute']);
-        }, $result);
+        return new CombinationId((int) $result['id_product_attribute']);
     }
 }

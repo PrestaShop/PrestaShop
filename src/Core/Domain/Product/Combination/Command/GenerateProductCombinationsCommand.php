@@ -57,6 +57,7 @@ class GenerateProductCombinationsCommand
     /**
      * @param int $productId
      * @param array<int, array<int>> $groupedAttributeIds key-value pairs where key is the attribute group id and value is the list of that group attribute ids
+     * @param int $shopId
      */
     public function __construct(
         int $productId,
