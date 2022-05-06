@@ -127,6 +127,10 @@ export const updateOrder = ({commit}: {commit: Commit}, order: Record<string, an
   commit(types.UPDATE_ORDER, order);
 };
 
+export const updateSort = ({commit}: {commit: Commit}, sort: string): void => {
+  commit(types.UPDATE_SORT, sort);
+};
+
 export const updatePageIndex = ({commit}: {commit: Commit}, pageIndex: number): void => {
   commit(types.SET_PAGE_INDEX, pageIndex);
 };
