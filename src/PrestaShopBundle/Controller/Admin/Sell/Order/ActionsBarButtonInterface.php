@@ -24,17 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Component\ActionBar;
+namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
-use PrestaShop\PrestaShop\Core\Data\AbstractTypedCollection;
+use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonInterface as CoreActionsBarButtonInterface;
 
-class ActionsBarButtonsCollection extends AbstractTypedCollection
+/**
+ * @deprecated since 8.0 and will be removed in next major. Use PrestaShop\PrestaShop\Core\ActionBar\ActionsBarButtonInterface instead
+ */
+interface ActionsBarButtonInterface extends CoreActionsBarButtonInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    protected function getType()
-    {
-        return ActionsBarButtonInterface::class;
-    }
 }

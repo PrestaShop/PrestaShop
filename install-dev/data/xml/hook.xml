@@ -3610,6 +3610,11 @@
       <title>BO themes list extra content</title>
       <description>This hook displays content after the themes list in the back office</description>
     </hook>
+    <hook id="actionGetAdminToolbarButtons">
+      <name>actionGetAdminToolbarButtons</name>
+      <title>Allows to add buttons in any toolbar in the back office</title>
+      <description>This hook allows you to define descriptions of buttons to add in any toolbar of the back office</description>
+    </hook>
     <hook id="displayEmptyModuleCategoryExtraMessage">
       <name>displayEmptyModuleCategoryExtraMessage</name>
       <title>Extra message to display for an empty modules category</title>

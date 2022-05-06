@@ -24,58 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Component\ActionBar;
+namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
-class ActionsBarButton implements ActionsBarButtonInterface
+use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonsCollection as CoreActionsBarButtonsCollection;
+
+/**
+ * @deprecated since 8.0 and will be removed in next major. Use PrestaShop\PrestaShop\Core\ActionBar\ActionsBarButtonsCollection instead
+ */
+class ActionsBarButtonsCollection extends CoreActionsBarButtonsCollection
 {
-    /**
-     * @var string
-     */
-    protected $class;
-
-    /**
-     * @var string[]
-     */
-    protected $properties;
-
-    /**
-     * @var string
-     */
-    protected $content;
-
-    /**
-     * @param string $class
-     * @param string[] $properties
-     * @param string $content
-     */
-    public function __construct(string $class = '', array $properties = [], string $content = '')
-    {
-        $this->class = $class;
-        $this->properties = $properties;
-        $this->content = $content;
-    }
-
-    /**
-     * @return string
-     */
-    public function getClass(): string
-    {
-        return $this->class;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getProperties(): array
-    {
-        return $this->properties;
-    }
-
-    /**
-     * @return string
-     */
-    public function getContent(): string
-    {
-        return $this->content;
-    }
 }
