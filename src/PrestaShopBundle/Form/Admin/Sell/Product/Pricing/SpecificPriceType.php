@@ -108,7 +108,7 @@ class SpecificPriceType extends TranslatorAwareType
         $builder
             ->add('product_id', HiddenType::class)
             ->add('groups', ApplicableGroupsType::class, [
-                'label' => $this->trans('Apply to', 'Admin.Global'),
+                'label' => $this->trans('Apply to:', 'Admin.Global'),
                 'required' => false,
             ])
             ->add('customer', EntitySearchInputType::class, [
@@ -118,8 +118,14 @@ class SpecificPriceType extends TranslatorAwareType
                 'entry_options' => [
                     'block_prefix' => 'searched_customer',
                 ],
+                'allow_delete' => false,
                 'limit' => 1,
                 'disabling_switch' => true,
+                'disabling_switch_event' => 'switchSpecificPriceCustomer',
+                'switch_state_on_disable' => 'on',
+                'disabled_value' => function ($data) {
+                    return empty($data[0]['id_customer']);
+                },
                 'remote_url' => $this->urlGenerator->generate('admin_customers_search', ['customer_search' => '__QUERY__']),
                 'placeholder' => $this->trans('All Customers', 'Admin.Global'),
                 'suggestion_field' => 'fullname_and_email',
@@ -210,6 +216,10 @@ class SpecificPriceType extends TranslatorAwareType
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-        $resolver->setDefault('label', false);
+        $resolver->setDefaults([
+            'label' => $this->trans('Conditions', 'Admin.Catalog.Feature'),
+            'label_tag_name' => 'h3',
+            'required' => false,
+        ]);
     }
 }

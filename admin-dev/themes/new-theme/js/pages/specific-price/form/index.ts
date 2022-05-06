@@ -32,6 +32,16 @@ import DateRange from '@components/form/date-range';
 const {$} = window;
 
 $(() => {
+  window.prestashop.component.initComponents([
+    'EventEmitter',
+    'DisablingSwitch',
+  ]);
+
+  const {eventEmitter} = window.prestashop.instance;
+  eventEmitter.on('switchSpecificPriceCustomer', (event: any) => {
+    $(SpecificPriceMap.customerItem).toggleClass('disabled', event.disable);
+  });
+
   new PriceInputToggle();
   new DateRange('#specific_price');
   new CurrencySymbolUpdater(

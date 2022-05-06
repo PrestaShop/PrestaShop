@@ -34,4 +34,5 @@ export default {
   reductionTypeAmountSymbol: '#specific_price_reduction .input-group .input-group-append .input-group-text, '
     + '#specific_price_reduction .input-group .input-group-prepend .input-group-text',
   includeTaxInputContainer: '.js-include-tax-row',
+  customerItem: '#specific_price_customer_list .entity-item',
 };
