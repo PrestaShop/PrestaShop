@@ -423,10 +423,17 @@ class WebserviceController extends FrameworkBundleAdminController
     private function checkWebserviceEndpoint(string $url): bool
     {
         $client = new Client();
-        $response = $client->request('GET', $url, [
-            'http_errors' => false,
-            'allow_redirects' => true,
-        ]);
+
+        try {
+            $response = $client->request('GET', $url, [
+                'http_errors' => false,
+                'allow_redirects' => true,
+            ]);
+        } catch (Exception $e) {
+            $this->addFlash('error', $e->getMessage());
+
+            return false;
+        }
 
         if ($response->getStatusCode() >= Response::HTTP_OK && $response->getStatusCode() < Response::HTTP_MULTIPLE_CHOICES) {
             return true;
