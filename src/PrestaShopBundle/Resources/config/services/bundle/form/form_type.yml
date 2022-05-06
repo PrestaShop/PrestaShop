@@ -2003,6 +2003,15 @@ services:
     tags:
       - name: form.type
 
+  form.type.improve.international.locations.country_type:
+    class: 'PrestaShopBundle\Form\Admin\Improve\International\Locations\CountryType'
+    public: true
+    arguments:
+      - '@translator'
+      - '@=service("prestashop.adapter.multistore_feature").isActive()'
+    tags:
+      - name: form.type
+
   prestashop.bundle.form.admin.configure.advanced_parameters.feature_flag.feature_flag_list_type:
     class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagListType'
     parent: 'form.type.translatable.aware'
