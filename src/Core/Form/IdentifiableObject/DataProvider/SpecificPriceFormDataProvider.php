@@ -63,12 +63,15 @@ class SpecificPriceFormDataProvider implements FormDataProviderInterface
 
         $data = [
             'product_id' => $specificPriceForEditing->getProductId(),
+            'groups' => [
+                'currency_id' => $specificPriceForEditing->getCurrencyId(),
+                'country_id' => $specificPriceForEditing->getCountryId(),
+                'group_id' => $specificPriceForEditing->getGroupId(),
+                'shop_id' => $specificPriceForEditing->getShopId(),
+            ],
             'combination_id' => $specificPriceForEditing->getCombinationId(),
-            'currency_id' => $specificPriceForEditing->getCurrencyId(),
-            'country_id' => $specificPriceForEditing->getCountryId(),
-            'group_id' => $specificPriceForEditing->getGroupId(),
             'from_quantity' => $specificPriceForEditing->getFromQuantity(),
-            'fixed_price' => (string) $fixedPrice,
+            'fixed_price' => (float) (string) $fixedPrice,
             'leave_initial_price' => InitialPrice::isInitialPriceValue((string) $fixedPrice),
             'date_range' => [
                 'from' => $specificPriceForEditing->getDateTimeFrom()->format(DateTime::DEFAULT_DATETIME_FORMAT),
@@ -76,7 +79,7 @@ class SpecificPriceFormDataProvider implements FormDataProviderInterface
             ],
             'reduction' => [
                 'type' => $specificPriceForEditing->getReductionType(),
-                'value' => (string) $specificPriceForEditing->getReductionAmount(),
+                'value' => (float) (string) $specificPriceForEditing->getReductionAmount(),
             ],
             'include_tax' => $specificPriceForEditing->includesTax(),
         ];

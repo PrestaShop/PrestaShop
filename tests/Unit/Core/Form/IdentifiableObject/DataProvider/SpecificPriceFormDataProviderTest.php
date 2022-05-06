@@ -97,12 +97,15 @@ class SpecificPriceFormDataProviderTest extends TestCase
             ),
             [
                 'product_id' => 10,
+                'groups' => [
+                    'currency_id' => 6,
+                    'country_id' => 7,
+                    'group_id' => 8,
+                    'shop_id' => 5,
+                ],
                 'combination_id' => 999,
-                'currency_id' => 6,
-                'country_id' => 7,
-                'group_id' => 8,
                 'from_quantity' => 1,
-                'fixed_price' => '-1',
+                'fixed_price' => -1.0,
                 'leave_initial_price' => true,
                 'date_range' => [
                     'from' => '2021-10-20 01:00:00',
@@ -110,7 +113,7 @@ class SpecificPriceFormDataProviderTest extends TestCase
                 ],
                 'reduction' => [
                     'type' => 'amount',
-                    'value' => '50',
+                    'value' => 50.0,
                 ],
                 'include_tax' => false,
                 'customer' => [
@@ -142,12 +145,15 @@ class SpecificPriceFormDataProviderTest extends TestCase
             ),
             [
                 'product_id' => 11,
+                'groups' => [
+                    'currency_id' => null,
+                    'country_id' => null,
+                    'group_id' => null,
+                    'shop_id' => null,
+                ],
                 'combination_id' => null,
-                'currency_id' => null,
-                'country_id' => null,
-                'group_id' => null,
                 'from_quantity' => 10,
-                'fixed_price' => '100',
+                'fixed_price' => 100.0,
                 'leave_initial_price' => false,
                 'date_range' => [
                     'from' => '2021-11-20 01:00:00',
@@ -155,7 +161,7 @@ class SpecificPriceFormDataProviderTest extends TestCase
                 ],
                 'reduction' => [
                     'type' => 'percentage',
-                    'value' => '20',
+                    'value' => 20.0,
                 ],
                 'include_tax' => true,
             ],
