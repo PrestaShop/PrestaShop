@@ -140,7 +140,7 @@ export default class SpecificPricesManager {
     closeButtonLabel: string,
   ) {
     const iframeModal = new FormIframeModal({
-      id: 'modal-create-specific-price',
+      id: 'modal-specific-price-form',
       formSelector: 'form[name="specific_price"]',
       formUrl,
       closable: true,

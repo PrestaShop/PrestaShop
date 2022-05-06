@@ -25,18 +25,6 @@
 
 {% extends '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
 
-{% block specific_price_widget %}
-  <div class="card">
-    <h3 class="card-header">
-      <i class="material-icons">attach_money</i>
-      {{ 'Specific prices'|trans({}, 'Admin.Catalog.Feature') }}
-    </h3>
-    <div class="card-body">
-      {{ block('form_widget') }}
-    </div>
-  </div>
-{% endblock specific_price_widget %}
-
 {% block searched_customer_row %}
   <li class="media entity-item" id="{{ form.vars.name }}">
     <div class="media-body media-middle">
