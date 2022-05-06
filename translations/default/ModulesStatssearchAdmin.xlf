@@ -47,6 +47,11 @@
         <target>Others</target>
         <note>Line: 165</note>
       </trans-unit>
+      <trans-unit id="2c5ae599abe1d523b46b791c955a9888">
+        <source>Enrich your stats, add a tab showing what keywords have been searched by your visitors.</source>
+        <target>Enrich your stats, add a tab showing what keywords have been searched by your visitors.</target>
+        <note>Line: 58</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

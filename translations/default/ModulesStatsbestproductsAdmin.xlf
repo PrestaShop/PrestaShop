@@ -32,6 +32,11 @@
         <target>Adds a list of the best-selling products to the Stats dashboard.</target>
         <note>Line: 114</note>
       </trans-unit>
+      <trans-unit id="27c423a9423760b083519223b600f24a">
+        <source>Enrich your stats with a small list of your best-sellers to better know your customers.</source>
+        <target>Enrich your stats with a small list of your best-sellers to better know your customers.</target>
+        <note>Line: 114</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -24,27 +24,27 @@
       <trans-unit id="3a1048f8aa3a9f6b604fcf7982811752">
         <source>Warning: the secure key is empty, check your payment account before validation</source>
         <target>Warning: the secure key is empty, check your payment account before validation</target>
-        <note>Line: 398</note>
+        <note>Line: 400</note>
       </trans-unit>
       <trans-unit id="0791970c961c09eb8caaa61aba6a3ca4">
         <source>An error occurred while saving message</source>
         <target>An error occurred while saving message</target>
-        <note>Line: 534</note>
+        <note>Line: 536</note>
       </trans-unit>
       <trans-unit id="ed13b3693357ebed3751cb71cb639e65">
         <source>No carrier</source>
         <target>No carrier</target>
-        <note>Line: 653</note>
+        <note>Line: 655</note>
       </trans-unit>
       <trans-unit id="b08d3867be98e6fff3233cd40ab8134a">
         <source>Order creation failed</source>
         <target>Order creation failed</target>
-        <note>Line: 719</note>
+        <note>Line: 721</note>
       </trans-unit>
       <trans-unit id="43423b4056880b08f2c9aa50d8670531">
         <source>Cart cannot be loaded or an order has already been placed using this cart</source>
         <target>Cart cannot be loaded or an order has already been placed using this cart</target>
-        <note>Line: 736</note>
+        <note>Line: 738</note>
       </trans-unit>
     </body>
   </file>

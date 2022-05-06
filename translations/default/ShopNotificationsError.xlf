@@ -25,77 +25,77 @@
       <trans-unit id="6da9714ab9db11108de5b4a82bf7f59e">
         <source>You cannot use this voucher anymore (usage limit reached)</source>
         <target>You cannot use this voucher anymore (usage limit reached)</target>
-        <note>Line: 718</note>
+        <note>Line: 731</note>
       </trans-unit>
       <trans-unit id="097d067ff8635d1496467ce7dd236c07">
         <source>You cannot use this voucher</source>
         <target>You cannot use this voucher</target>
-        <note>Line: 808</note>
+        <note>Line: 821</note>
       </trans-unit>
       <trans-unit id="02b1546a6a121a54540f3755758a976b">
         <source>You must choose a delivery address before applying this voucher to your order</source>
         <target>You must choose a delivery address before applying this voucher to your order</target>
-        <note>Line: 737</note>
+        <note>Line: 750</note>
       </trans-unit>
       <trans-unit id="fd6034a1544218709264bfa5c70ffb69">
         <source>You cannot use this voucher in your country of delivery</source>
         <target>You cannot use this voucher in your country of delivery</target>
-        <note>Line: 745</note>
+        <note>Line: 758</note>
       </trans-unit>
       <trans-unit id="eb4a4722b2130dad0a240b2d49742be8">
         <source>You must choose a carrier before applying this voucher to your order</source>
         <target>You must choose a carrier before applying this voucher to your order</target>
-        <note>Line: 752</note>
+        <note>Line: 765</note>
       </trans-unit>
       <trans-unit id="1a7bdc2c01aaa7757d475e204f2bc6f9">
         <source>You cannot use this voucher with this carrier</source>
         <target>You cannot use this voucher with this carrier</target>
-        <note>Line: 761</note>
+        <note>Line: 774</note>
       </trans-unit>
       <trans-unit id="40869c38d826da9c21cc0359f905e5b3">
         <source>You cannot use this voucher on products on sale</source>
         <target>You cannot use this voucher on products on sale</target>
-        <note>Line: 776</note>
+        <note>Line: 789</note>
       </trans-unit>
       <trans-unit id="3fb396b59440efc171f576e02ecfa88a">
         <source>Please log in first</source>
         <target>Please log in first</target>
-        <note>Line: 805</note>
+        <note>Line: 818</note>
       </trans-unit>
       <trans-unit id="dc0c81278849e0f6a297e93c935e465d">
         <source>You have not reached the minimum amount required to use this voucher</source>
         <target>You have not reached the minimum amount required to use this voucher</target>
-        <note>Line: 850</note>
+        <note>Line: 863</note>
       </trans-unit>
       <trans-unit id="d0f1560c5d1b13b1e64fa87a301dd83b">
         <source>This voucher is already in your cart</source>
         <target>This voucher is already in your cart</target>
-        <note>Line: 868</note>
+        <note>Line: 881</note>
       </trans-unit>
       <trans-unit id="4837d38bc896f38c39d6f7024e466967">
         <source>This voucher is not combinable with an other voucher already in your cart: %s</source>
         <target>This voucher is not combinable with an other voucher already in your cart: %s</target>
-        <note>Line: 886</note>
+        <note>Line: 899</note>
       </trans-unit>
       <trans-unit id="e199546c0a1d80f1bf116b131ee02e22">
         <source>Cart is empty</source>
         <target>Cart is empty</target>
-        <note>Line: 897</note>
+        <note>Line: 910</note>
       </trans-unit>
       <trans-unit id="f6b43936fe8476614100c342b9c4750d">
         <source>You cannot use this voucher in an empty cart</source>
         <target>You cannot use this voucher in an empty cart</target>
-        <note>Line: 968</note>
+        <note>Line: 981</note>
       </trans-unit>
       <trans-unit id="f9330b1b2afa3c4dbc8e31e14a0b150a">
         <source>You cannot use this voucher with these products</source>
         <target>You cannot use this voucher with these products</target>
-        <note>Line: 1137</note>
+        <note>Line: 1150</note>
       </trans-unit>
       <trans-unit id="1a0c8c4e381164295f1e06d777411d11">
         <source>You cannot use this voucher because it has manually been removed.</source>
         <target>You cannot use this voucher because it has manually been removed.</target>
-        <note>Line: 909</note>
+        <note>Line: 922</note>
       </trans-unit>
     </body>
   </file>
@@ -513,7 +513,7 @@
       <trans-unit id="dd6b089a49908d671c3e9cc8dc5899ae">
         <source>Invalid message</source>
         <target>Invalid message</target>
-        <note>Line: 911</note>
+        <note>Line: 912</note>
       </trans-unit>
       <trans-unit id="91e6cde963af2000218553722fc7a093">
         <source>This product is no longer available.</source>
@@ -533,7 +533,7 @@
       <trans-unit id="7cc92687130ea12abb80556681538001">
         <source>An error occurred during the image upload process.</source>
         <target>An error occurred during the image upload process.</target>
-        <note>Line: 883</note>
+        <note>Line: 884</note>
       </trans-unit>
     </body>
   </file>
@@ -593,7 +593,7 @@ File: modules/trackingfront/trackingfront.php:99</note>
       <trans-unit id="a923575984949608ce04c4984806ec2a">
         <source>There are not enough products in stock</source>
         <target>There are not enough products in stock</target>
-        <note>Line: 912</note>
+        <note>Line: 916</note>
       </trans-unit>
     </body>
   </file>
