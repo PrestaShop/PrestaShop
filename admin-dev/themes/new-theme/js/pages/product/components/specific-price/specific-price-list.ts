@@ -139,7 +139,7 @@ export default class SpecificPriceList {
         }
         const response = await deleteSpecificPrice(deleteBtnDataset.specificPriceId);
         $.growl({message: response.message});
-        this.eventEmitter.emit(ProductEventMap.specificPrice.specificPriceUpdated);
+        this.eventEmitter.emit(ProductEventMap.specificPrice.listUpdated);
       },
     );
     modal.show();

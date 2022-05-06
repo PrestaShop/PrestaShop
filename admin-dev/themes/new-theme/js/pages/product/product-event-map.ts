@@ -62,7 +62,6 @@ export default {
     categoriesUpdated: 'categoriesUpdated',
   },
   specificPrice: {
-    specificPriceUpdated: 'specificPriceUpdated',
-    specificPriceCreated: 'specificPriceCreated',
+    listUpdated: 'specificPricesListUpdated',
   },
 };

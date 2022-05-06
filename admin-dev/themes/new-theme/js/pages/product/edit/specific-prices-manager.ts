@@ -59,8 +59,7 @@ export default class SpecificPricesManager {
   }
 
   private initListeners(): void {
-    this.eventEmitter.on(ProductEventMap.specificPrice.specificPriceUpdated, () => this.specificPriceList.renderList());
-    this.eventEmitter.on(ProductEventMap.specificPrice.specificPriceCreated, () => this.specificPriceList.renderList());
+    this.eventEmitter.on(ProductEventMap.specificPrice.listUpdated, () => this.specificPriceList.renderList());
   }
 
   private initComponents() {
@@ -103,19 +102,10 @@ export default class SpecificPricesManager {
       closeOnConfirm: false,
       onFormLoaded: (form: HTMLElement, formData: JQuery.NameValuePair[] | null, dataAttributes: DOMStringMap | null): void => {
         if (dataAttributes && dataAttributes.alertsSuccess === '1') {
-          this.eventEmitter.emit(ProductEventMap.specificPrice.specificPriceCreated);
+          this.eventEmitter.emit(ProductEventMap.specificPrice.listUpdated);
         }
       },
-      confirmCallback: (iframe: HTMLIFrameElement): void => {
-        if (!iframe.contentWindow) {
-          return;
-        }
-        const form = iframe.contentWindow.document.querySelector<HTMLFormElement>('form[name="specific_price"]');
-
-        if (!form) {
-          return;
-        }
-
+      formConfirmCallback: (form: HTMLFormElement): void => {
         form.submit();
       },
     });

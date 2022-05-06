@@ -23,17 +23,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const {$} = window;
-
 export default class DateRange {
   constructor(containerSelector: string) {
     this.initListeners(containerSelector);
   }
 
   initListeners(containerSelector: string): void {
-    const checkbox = document.querySelector(containerSelector + ' #specific_price_date_range_unlimited') as HTMLInputElement;
-    const startDateField = document.querySelector(containerSelector + ' #specific_price_date_range_from') as HTMLInputElement;
-    const endDateField = document.querySelector(containerSelector + ' #specific_price_date_range_to') as HTMLInputElement;
+    const checkbox = document.querySelector(`${containerSelector} #specific_price_date_range_unlimited`) as HTMLInputElement;
+    const startDateField = document.querySelector(`${containerSelector} #specific_price_date_range_from`) as HTMLInputElement;
+    const endDateField = document.querySelector(`${containerSelector} #specific_price_date_range_to`) as HTMLInputElement;
 
     if (checkbox === null || startDateField === null || endDateField === null) return;
 

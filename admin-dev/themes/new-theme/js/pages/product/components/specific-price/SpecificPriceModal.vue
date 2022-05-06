@@ -168,7 +168,7 @@
 
         if (successAlertsCount !== 0) {
           if (this.isOpen) {
-            this.eventEmitter.emit(ProductEventMap.specificPrice.specificPriceUpdated);
+            this.eventEmitter.emit(ProductEventMap.specificPrice.listUpdated);
           }
           this.closeModal();
         }

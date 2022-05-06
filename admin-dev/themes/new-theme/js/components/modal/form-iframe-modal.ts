@@ -35,18 +35,20 @@ export type FormIframeCallbackFunction = (
   dataAttributes: DOMStringMap | null,
   event: Event,
 ) => void;
-export type ConfirmCallbackFunction = (
+
+export type FormIframeConfirmCallback = (
   form: HTMLFormElement,
   iframe: HTMLIFrameElement,
   event: Event
 ) => void;
+
 export type FormIframeModalParams = IframeModalParams & {
   formUrl: string;
   formSelector: string;
   cancelButtonSelector: string;
   modalTitle?: string;
   onFormLoaded?: FormIframeCallbackFunction,
-  confirmCallback?: ConfirmCallbackFunction,
+  formConfirmCallback?: FormIframeConfirmCallback,
 }
 export type InputFormIframeModalParams = Partial<FormIframeModalParams> & {
   formUrl: string; // formUrl is mandatory in params
@@ -63,7 +65,7 @@ export class FormIframeModal extends IframeModal implements FormIframeModalType 
 
   private readonly formSelector: string;
 
-  private readonly confirmCallback?: ConfirmCallbackFunction;
+  private readonly formConfirmCallback?: FormIframeConfirmCallback;
 
   constructor(
     params: InputFormIframeModalParams,
@@ -80,14 +82,7 @@ export class FormIframeModal extends IframeModal implements FormIframeModalType 
     this.onFormLoaded = params.onFormLoaded;
     this.cancelButtonSelector = params.cancelButtonSelector || '.cancel-btn';
     this.formSelector = params.formSelector || 'form';
-    this.confirmCallback = params.confirmCallback;
-  }
-
-  private getForm(iframe: HTMLIFrameElement): HTMLFormElement | null {
-    if (!iframe.contentWindow) {
-      return null;
-    }
-    return iframe.contentWindow.document.querySelector<HTMLFormElement>(this.formSelector);
+    this.formConfirmCallback = params.formConfirmCallback;
   }
 
   private onIframeLoaded(iframe: HTMLIFrameElement, event: Event): void {
@@ -120,7 +115,7 @@ export class FormIframeModal extends IframeModal implements FormIframeModalType 
   }
 
   private onConfirmCallback(iframe: HTMLIFrameElement, event: Event): void {
-    if (!this.confirmCallback) {
+    if (!this.formConfirmCallback) {
       return;
     }
 
@@ -130,6 +125,14 @@ export class FormIframeModal extends IframeModal implements FormIframeModalType 
       return;
     }
 
-    this.confirmCallback(iframeForm, iframe, event);
+    this.formConfirmCallback(iframeForm, iframe, event);
+  }
+
+  private getForm(iframe: HTMLIFrameElement): HTMLFormElement | null {
+    if (!iframe.contentWindow) {
+      return null;
+    }
+
+    return iframe.contentWindow.document.querySelector<HTMLFormElement>(this.formSelector);
   }
 }
