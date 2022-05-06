@@ -108,15 +108,8 @@ class CartControllerCore extends FrontController
         if (!Tools::getValue('ajax')) {
             $this->checkCartProductsMinimalQuantities();
         }
-        $presenter = new CartPresenter();
-        $presented_cart = $presenter->present($this->context->cart, $shouldSeparateGifts = true);
 
-        $this->context->smarty->assign([
-            'cart' => $presented_cart,
-            'static_token' => Tools::getToken(false),
-        ]);
-
-        if (count($presented_cart['products']) > 0) {
+        if ($this->context->cart->hasProducts()) {
             $this->setTemplate('checkout/cart');
         } else {
             $this->context->smarty->assign([
