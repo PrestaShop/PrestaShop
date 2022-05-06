@@ -28,6 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
+use PrestaShop\PrestaShop\Core\Domain\Title\Command\BulkDeleteTitleCommand;
+use PrestaShop\PrestaShop\Core\Domain\Title\Command\DeleteTitleCommand;
+use PrestaShop\PrestaShop\Core\Domain\Title\Exception\TitleException;
+use PrestaShop\PrestaShop\Core\Domain\Title\Exception\TitleNotFoundException;
 use PrestaShop\PrestaShop\Core\Search\Filters\TitleFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -35,6 +39,7 @@ use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 /**
  * Controller responsible of "Configure > Shop Parameters > Customer Settings > Titles" page.
@@ -127,17 +132,17 @@ class TitleController extends FrameworkBundleAdminController
      */
     public function deleteAction(int $titleId): RedirectResponse
     {
-        return $this->redirect(
-            $this->getContext()->link->getAdminLink(
-                'AdminGenders',
-                true,
-                [],
-                [
-                    'deletegender' => '',
-                    'id_gender' => $titleId,
-                ]
-            )
-        );
+        try {
+            $this->getCommandBus()->handle(new DeleteTitleCommand($titleId));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+            );
+        } catch (TitleException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+        }
+
+        return $this->redirectToRoute('admin_title_index');
     }
 
     /**
@@ -148,8 +153,55 @@ class TitleController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function bulkDeleteAction(): RedirectResponse
+    public function bulkDeleteAction(Request $request): RedirectResponse
     {
+        $titleIds = $this->getBulkTitlesFromRequest($request);
+
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteTitleCommand($titleIds));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+            );
+        } catch (TitleException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
         return $this->redirectToRoute('admin_title_index');
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function getBulkTitlesFromRequest(Request $request): array
+    {
+        $titleIds = $request->request->get('title_title_bulk');
+
+        if (!is_array($titleIds)) {
+            return [];
+        }
+
+        foreach ($titleIds as $i => $titleId) {
+            $titleIds[$i] = (int) $titleId;
+        }
+
+        return $titleIds;
+    }
+
+    /**
+     * @param Throwable|null $e
+     *
+     * @return array
+     */
+    private function getErrorMessages(?Throwable $e = null): array
+    {
+        return [
+            TitleNotFoundException::class => $this->trans(
+                'The object cannot be loaded (or found).',
+                'Admin.Notifications.Error'
+            ),
+        ];
     }
 }
