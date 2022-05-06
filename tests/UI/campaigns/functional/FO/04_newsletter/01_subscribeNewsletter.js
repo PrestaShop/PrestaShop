@@ -35,6 +35,8 @@ const moduleInformation = {
   name: 'Newsletter subscription',
 };
 
+const moduleName = 'Newsletter subscription';
+
 /*
 Go to the FO homepage
 Fill the subscribe newsletter field and subscribe

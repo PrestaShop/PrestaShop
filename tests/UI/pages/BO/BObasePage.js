@@ -164,10 +164,6 @@ class BOBasePage extends CommonPage {
     // Deprecated tab used for regression test
     this.menuTabLink = '#subtab-AdminTabs';
 
-    // welcome module
-    this.onboardingCloseButton = 'button.onboarding-button-shut-down';
-    this.onboardingStopButton = 'a.onboarding-button-stop';
-
     // Growls
     this.growlDiv = '#growls';
     this.growlDefaultDiv = '#growls-default';
@@ -287,26 +283,6 @@ class BOBasePage extends CommonPage {
     }
     await this.waitForVisibleSelector(page, this.userProfileLogoutLink);
     await this.clickAndWaitForNavigation(page, this.userProfileLogoutLink);
-  }
-
-  /**
-   * Close the onboarding modal if exists
-   * @param page {Page} Browser tab
-   * @param timeout {number} Timeout to wait for selector by milliseconds
-   * @returns {Promise<void>}
-   */
-  async closeOnboardingModal(page, timeout = 1000) {
-    if (await this.elementVisible(page, this.onboardingCloseButton, timeout)) {
-      // Close popup
-      await page.click(this.onboardingCloseButton);
-      await this.waitForHiddenSelector(page, this.onboardingCloseButton);
-
-      // Close menu block
-      if (await this.elementVisible(page, this.onboardingStopButton, timeout)) {
-        await page.click(this.onboardingStopButton);
-        await this.waitForHiddenSelector(page, this.onboardingStopButton);
-      }
-    }
   }
 
   /**
