@@ -41,6 +41,7 @@ export type FormFieldDisablerParams = {
   disablingInputSelector: string,
   matchingValue: string | null,
   targetSelector: string | null,
+  switchEvent: string | null,
   disableOnMatch: boolean,
 }
 export type InputFormFieldDisablerParams = Partial<FormFieldDisablerParams> & {
@@ -61,6 +62,7 @@ export default class FormFieldDisabler {
       matchingValue: '0',
       disableOnMatch: true,
       targetSelector: null,
+      switchEvent: null,
       ...inputParams,
     };
 
@@ -87,7 +89,14 @@ export default class FormFieldDisabler {
 
     const matchingValue = inputElement.dataset.matchingValue || this.params.matchingValue;
     const targetSelector = inputElement.dataset.targetSelector || this.params.targetSelector;
-    const disableOnMatch: boolean = inputElement.dataset.disableOnMatch === '1' || this.params.disableOnMatch;
+    const switchEvent = inputElement.dataset.switchEvent || this.params.switchEvent;
+    let disableOnMatch: boolean;
+
+    if (!isUndefined(inputElement.dataset.disableOnMatch)) {
+      disableOnMatch = inputElement.dataset.disableOnMatch === '1';
+    } else {
+      disableOnMatch = this.params.disableOnMatch;
+    }
 
     if (matchingValue === null) {
       console.error('No matching value defined for inputElement', inputElement);
@@ -106,7 +115,7 @@ export default class FormFieldDisabler {
       disabledState = !disableOnMatch;
     }
 
-    this.toggle(targetSelector, disabledState);
+    this.toggle(targetSelector, disabledState, switchEvent);
   }
 
   private getInputValue(inputElement: HTMLInputElement): string | undefined {
@@ -129,7 +138,14 @@ export default class FormFieldDisabler {
     }
   }
 
-  private toggle(targetSelector: string, disable: boolean): void {
+  private toggle(targetSelector: string, disable: boolean, switchEvent: string | null): void {
+    if (switchEvent) {
+      // Init the component in case it was not done
+      window.prestashop.component.initComponents(['EventEmitter']);
+      const {eventEmitter} = window.prestashop.instance;
+      eventEmitter.emit(switchEvent, {targetSelector, disable});
+    }
+
     const elementsToToggle: NodeListOf<Element> = document.querySelectorAll(targetSelector);
 
     if (elementsToToggle.length === 0) {
