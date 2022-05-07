@@ -24,6 +24,55 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Release Notes for PrestaShop 1.7
 
 ####################################
+#   v1.7.8.6 - (2022-05-07)
+####################################
+- Back Office:
+  - Bug fix:
+    - #28301: Discount is not visible on customer group form (by @Amit-Kumar-Tiwari-Webkul)
+    - #28185: Revert a change that caused a problem with bulk actions on the lists (by @kpodemski)
+    - #27162: Increase maximum country state name length from 32 to 80 characters (by @rickygzz)
+    - #27806: Change the way that smarty is escaped to avoid exception when parsing (by @Amoifr)
+    - #27615: Fix header on default pages on mobile (by @NeOMakinG)
+    - #28031: Handle empty outstanding_allow_amount field (by @atomiix)
+    - #28076: Remove unwanted char (by @PierreRambaud)
+- Front Office:
+  - Improvement:
+    - #28101: Remove .browserslistrc file on themes folder (by @micka-fdz)
+  - Bug fix:
+    - #28240: Added hooks for blockwishlist in classic theme (by @Progi1984)
+    - #28117: Update function getCustomerOrders to avoid error (by @NicolasCador)
+    - #28028: Remove duplicate error messages in account and address creation (by @atomiix)
+    - #28112: Out of stock label displayed even stock management disabled (by @Amit-Kumar-Tiwari-Webkul)
+    - #27922: Avoid Notice: Trying to access array offset on value of type bool (by @danidomen)
+- Core:
+  - Improvement:
+    - #28362: Request prestashop/blockreassurance 5.1.0 for 1.7.8.6 (by @matks)
+    - #28347: Bump modules (`blockwishlist` to 2.1.0, `ps_facetedsearch` to 3.8.0, `ps_imageslider` to 3.1.1) (by @Progi1984)
+    - #28259: Upgrade prestashop modules (by @matks)
+    - #28052: Fixed incompatibility of private property in PS 1.7.8.0 (by @matks)
+  - Bug fix:
+    - #28271: Add 1.7.8.6 SQL script (by @matks)
+    - #28083: Remove useless sensio/distribution-bundle composer scripts (by @atomiix)
+    - #26824: Avoid using _PS_PRICE_COMPUTE_PRECISION_ (by @mpaolino)
+  - Refactoring:
+    - #28171: Add missing translation domains in AdminController (by @lmeyer1)
+- Installer:
+  - Bug fix:
+    - #26951: Fix Dockerfile for local image generation in branch 1.7.8.x under Linux (by @mpaolino)
+- Web Services:
+  - Bug fix:
+    - #27555: Fix update attachment webservice (by @rsoulard-prolaser)
+- Localization:
+  - Improvement:
+    - #28377: Update latests wordings for 178 (by @jolelievre)
+- Tests:
+  - Improvement:
+    - #28044: Pin setup-gcloud to v0 instead of master (backport of #27974) (by @matks)
+  - Refactoring:
+    - #28346: Fix nightly 27-04-2022 - Fix random error on maintenance test (by @nesrineabdmouleh)
+    - #27935: Fix nightly - Add iteration to search newsletter module from module catalog page (by @nesrineabdmouleh)
+
+####################################
 #   v1.7.8.5 - (2022-03-15)
 ####################################
 - Back Office:
