@@ -115,8 +115,6 @@ class SpecificPriceType extends TranslatorAwareType
             throw new SpecificPriceException('product_id is required to add/edit specific price.');
         }
 
-        $specificPriceStartDate = new \DateTime('now');
-
         $builder
             ->add('product_id', HiddenType::class)
             ->add('groups', ApplicableGroupsType::class, [
@@ -172,8 +170,8 @@ class SpecificPriceType extends TranslatorAwareType
             ])
             ->add('date_range', DateRangeType::class, [
                 'label' => $this->trans('Duration', 'Admin.Catalog.Feature'),
+                'label_tag_name' => 'h4',
                 'required' => false,
-                'start_date' => $specificPriceStartDate->format('Y-m-d'),
                 'has_unlimited_checkbox' => true,
                 'constraints' => [
                     new DateRange([
@@ -232,7 +230,7 @@ class SpecificPriceType extends TranslatorAwareType
             ])
         ;
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event): void {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event): void {
             $data = $event->getData();
             $productId = $data['product_id'];
         });

@@ -27,7 +27,6 @@ import PriceInputToggle from '@pages/specific-price/form/price-input-toggle';
 import CurrencySymbolUpdater from '@components/form/currency-symbol-updater';
 import SpecificPriceMap from '@pages/specific-price/specific-price-map';
 import ReductionTaxFieldToggle from '@components/form/reduction-tax-field-toggle';
-import DateRange from '@components/form/date-range';
 
 const {$} = window;
 
@@ -35,6 +34,7 @@ $(() => {
   window.prestashop.component.initComponents([
     'EventEmitter',
     'DisablingSwitch',
+    'DateRange',
   ]);
 
   const {eventEmitter} = window.prestashop.instance;
@@ -43,7 +43,6 @@ $(() => {
   });
 
   new PriceInputToggle();
-  new DateRange('#specific_price');
   new CurrencySymbolUpdater(
     SpecificPriceMap.currencyId,
     ((symbol: string): void => {
