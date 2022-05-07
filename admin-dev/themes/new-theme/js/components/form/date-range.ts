@@ -23,42 +23,38 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import ComponentsMap from '@components/components-map';
+
+import ChangeEvent = JQuery.ChangeEvent;
+import TriggeredEvent = JQuery.TriggeredEvent;
+
 export default class DateRange {
-  constructor(containerSelector: string) {
-    this.initListeners(containerSelector);
+  constructor() {
+    this.initListeners();
   }
 
-  initListeners(containerSelector: string): void {
-    const checkbox = document.querySelector(`${containerSelector} #specific_price_date_range_unlimited`) as HTMLInputElement;
-    const startDateField = document.querySelector(`${containerSelector} #specific_price_date_range_from`) as HTMLInputElement;
-    const endDateField = document.querySelector(`${containerSelector} #specific_price_date_range_to`) as HTMLInputElement;
-
-    if (checkbox === null || startDateField === null || endDateField === null) return;
-
-    checkbox.addEventListener('change', (e) => {
-      if (e.currentTarget === null) return;
-
+  initListeners(): void {
+    $(document).on('change', ComponentsMap.dateRange.unlimitedCheckbox, (e: ChangeEvent) => {
+      const $dateRangeContainer = $(e.currentTarget).parents(ComponentsMap.dateRange.container);
+      const $endDate = $(ComponentsMap.dateRange.endDate, $dateRangeContainer);
       const {checked} = e.currentTarget as HTMLInputElement;
 
-      if (endDateField === null || startDateField === null) return;
-
       if (checked) {
-        endDateField.value = '';
-        endDateField.disabled = true;
+        $endDate.val('');
+        $endDate.prop('disabled', true);
       } else {
-        endDateField.value = startDateField.value;
-        endDateField.disabled = false;
+        if ($endDate.val() === '') {
+          $endDate.val($endDate.data('defaultValue'));
+        }
+        $endDate.prop('disabled', false);
       }
     });
 
-    endDateField.addEventListener('click', (e) => {
-      if (e.currentTarget === null) return;
-
-      const {value} = e.currentTarget as HTMLInputElement;
-
-      if (value === '') {
-        checkbox.checked = false;
-      }
+    $(document).on('change dp.change', ComponentsMap.dateRange.endDate, (e: TriggeredEvent) => {
+      const $endDate = $(e.currentTarget);
+      const $dateRangeContainer = $endDate.parents(ComponentsMap.dateRange.container);
+      const $unlimited = $(ComponentsMap.dateRange.unlimitedCheckbox, $dateRangeContainer);
+      $unlimited.prop('checked', $endDate.val() === '');
     });
   }
 }

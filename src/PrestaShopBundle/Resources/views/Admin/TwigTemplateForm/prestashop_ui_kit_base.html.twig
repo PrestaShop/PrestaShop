@@ -523,9 +523,9 @@
 
 {% block date_picker_widget %}
   {% apply spaceless %}
-    {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' datepicker')|trim)}) %}
+    {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' form-control datepicker')|trim)}) %}
     <div class="input-group datepicker">
-      <input type="text" class="form-control" data-format="{{ date_format }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+      <input type="text" data-format="{{ date_format }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
       <div class="input-group-append">
         <div class="input-group-text">
           <i class="material-icons">date_range</i>
@@ -538,15 +538,17 @@
 
 {% block date_range_widget %}
   {% apply spaceless %}
-    <div class="date-range">
-      {{ form_widget(form.from, { 'attr': {'class': 'from'} }) }}
-      {{ form_errors(form.from) }}
-      {{ form_widget(form.to) }}
-      {{ form_errors(form.to) }}
-      {% if form.unlimited is defined %}
-        {{ form_widget(form.unlimited) }}
-        {{ form_errors(form.unlimited) }}
-      {% endif %}
+    <div class="input-group date-range row">
+      <div class="col">
+        {{ form_row(form.from) }}
+      </div>
+      <div class="col">
+        {{ form_row(form.to) }}
+        {% if form.unlimited is defined %}
+          {{ form_widget(form.unlimited) }}
+          {{ form_errors(form.unlimited) }}
+        {% endif %}
+      </div>
     </div>
   {% endapply %}
 {% endblock date_range_widget %}

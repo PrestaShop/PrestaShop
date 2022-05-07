@@ -19,6 +19,14 @@ services:
     tags:
       - { name: form.type }
 
+  form.type.date_range:
+    class: PrestaShopBundle\Form\Admin\Type\DateRangeType
+    arguments:
+      - "@translator"
+      - "@form.form_cloner"
+    tags:
+      - { name: form.type }
+
   form.type.product.simple_category:
     class: PrestaShopBundle\Form\Admin\Category\SimpleCategory
     arguments:
