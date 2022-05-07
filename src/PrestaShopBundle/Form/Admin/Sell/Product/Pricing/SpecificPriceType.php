@@ -27,9 +27,12 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DateRange;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\Reduction;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction as ReductionVO;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
@@ -44,6 +47,8 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -74,6 +79,11 @@ class SpecificPriceType extends TranslatorAwareType
     private $urlGenerator;
 
     /**
+     * @var ProductRepository
+     */
+    private $productRepository;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param string $defaultCurrencyIso
@@ -87,13 +97,15 @@ class SpecificPriceType extends TranslatorAwareType
         string $defaultCurrencyIso,
         FormChoiceProviderInterface $taxInclusionChoiceProvider,
         ConfigurableFormChoiceProviderInterface $combinationIdChoiceProvider,
-        UrlGeneratorInterface $urlGenerator
+        UrlGeneratorInterface $urlGenerator,
+        ProductRepository $productRepository
     ) {
         parent::__construct($translator, $locales);
         $this->defaultCurrencyIso = $defaultCurrencyIso;
         $this->taxInclusionChoiceProvider = $taxInclusionChoiceProvider;
         $this->combinationIdChoiceProvider = $combinationIdChoiceProvider;
         $this->urlGenerator = $urlGenerator;
+        $this->productRepository = $productRepository;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -131,12 +143,20 @@ class SpecificPriceType extends TranslatorAwareType
                 'suggestion_field' => 'fullname_and_email',
                 'required' => false,
             ])
-            ->add('combination_id', ChoiceType::class, [
+        ;
+
+        $productId = new ProductId((int) $builder->getData()['product_id']);
+        $productType = $this->productRepository->getProductType($productId);
+        if ($productType->getValue() === ProductType::TYPE_COMBINATIONS) {
+            $builder->add('combination_id', ChoiceType::class, [
                 'label' => $this->trans('Combination', 'Admin.Global'),
                 'placeholder' => $this->trans('All combinations', 'Admin.Global'),
                 'choices' => $this->combinationIdChoiceProvider->getChoices(['product_id' => $builder->getData()['product_id']]),
                 'required' => false,
-            ])
+            ]);
+        }
+
+        $builder
             ->add('from_quantity', NumberType::class, [
                 'label' => $this->trans('Minimum number of units purchased', 'Admin.Catalog.Feature'),
                 'scale' => 0,
@@ -149,6 +169,21 @@ class SpecificPriceType extends TranslatorAwareType
                         ),
                     ]),
                 ],
+            ])
+            ->add('date_range', DateRangeType::class, [
+                'label' => $this->trans('Duration', 'Admin.Catalog.Feature'),
+                'required' => false,
+                'start_date' => $specificPriceStartDate->format('Y-m-d'),
+                'has_unlimited_checkbox' => true,
+                'constraints' => [
+                    new DateRange([
+                        'message' => $this->trans(
+                            'The selected date range is not valid.',
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                ],
+                'columns_number' => 2,
             ])
             ->add('fixed_price', MoneyType::class, [
                 'required' => false,
@@ -168,21 +203,6 @@ class SpecificPriceType extends TranslatorAwareType
                 'label' => $this->trans('Apply a discount to the initial price', 'Admin.Catalog.Feature'),
                 'help' => 'For customers meeting the conditions, the initial price will be crossed out and the discount will be highlighted.',
                 'required' => false,
-            ])
-            ->add('date_range', DateRangeType::class, [
-                'label' => $this->trans('Duration', 'Admin.Catalog.Feature'),
-                'required' => false,
-                'start_date' => $specificPriceStartDate->format('Y-m-d'),
-                'has_unlimited_checkbox' => true,
-                'constraints' => [
-                    new DateRange([
-                        'message' => $this->trans(
-                            'The selected date range is not valid.',
-                            'Admin.Notifications.Error'
-                        ),
-                    ]),
-                ],
-                'columns_number' => 2,
             ])
             ->add('reduction', ReductionType::class, [
                 'label' => $this->trans('Reduction', 'Admin.Catalog.Feature'),
@@ -211,6 +231,11 @@ class SpecificPriceType extends TranslatorAwareType
                 'required' => false,
             ])
         ;
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event): void {
+            $data = $event->getData();
+            $productId = $data['product_id'];
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -218,7 +243,7 @@ class SpecificPriceType extends TranslatorAwareType
         parent::configureOptions($resolver);
         $resolver->setDefaults([
             'label' => $this->trans('Conditions', 'Admin.Catalog.Feature'),
-            'label_tag_name' => 'h3',
+            'label_tag_name' => 'h4',
             'required' => false,
         ]);
     }
