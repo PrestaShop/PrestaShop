@@ -431,7 +431,9 @@ class SpecificPriceContext extends AbstractProductFeatureContext
             $dataRows['reduction value'],
             PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['includes tax']),
             $dataRows['fixed price'],
-            (int) $dataRows['from quantity']
+            (int) $dataRows['from quantity'],
+            DateTimeUtil::buildNullableDateTime($dataRows['from'] ?? null),
+            DateTimeUtil::buildNullableDateTime($dataRows['to'] ?? null)
         );
 
         if (!empty($dataRows['combination'])) {

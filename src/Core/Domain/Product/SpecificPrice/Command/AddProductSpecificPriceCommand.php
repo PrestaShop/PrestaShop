@@ -138,6 +138,8 @@ class AddProductSpecificPriceCommand
      * @param bool $includeTax
      * @param string $fixedPrice
      * @param int $fromQuantity
+     * @param DateTimeInterface $dateTimeFrom
+     * @param DateTimeInterface $dateTimeTo
      *
      * @throws DomainConstraintException
      * @throws ProductConstraintException
@@ -163,7 +165,7 @@ class AddProductSpecificPriceCommand
         $this->groupId = new NoGroupId();
         $this->countryId = new NoCountryId();
         $this->dateTimeFrom = $dateTimeFrom;
-        $this->dateTimeTo = $dateTimeFrom;
+        $this->dateTimeTo = $dateTimeTo;
     }
 
     /**
