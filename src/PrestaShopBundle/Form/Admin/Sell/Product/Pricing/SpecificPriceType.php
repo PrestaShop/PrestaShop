@@ -29,45 +29,25 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DateRange;
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\Reduction;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction as ReductionVO;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Sell\Customer\SearchedCustomerType;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
-use PrestaShopBundle\Form\Admin\Type\ReductionType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Type;
 
 class SpecificPriceType extends TranslatorAwareType
 {
-    /**
-     * @var string
-     */
-    private $defaultCurrencyIso;
-
-    /**
-     * @var FormChoiceProviderInterface
-     */
-    private $taxInclusionChoiceProvider;
-
     /**
      * @var ConfigurableFormChoiceProviderInterface
      */
@@ -86,23 +66,18 @@ class SpecificPriceType extends TranslatorAwareType
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param string $defaultCurrencyIso
-     * @param FormChoiceProviderInterface $taxInclusionChoiceProvider
      * @param ConfigurableFormChoiceProviderInterface $combinationIdChoiceProvider
      * @param UrlGeneratorInterface $urlGenerator
+     * @param ProductRepository $productRepository
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        string $defaultCurrencyIso,
-        FormChoiceProviderInterface $taxInclusionChoiceProvider,
         ConfigurableFormChoiceProviderInterface $combinationIdChoiceProvider,
         UrlGeneratorInterface $urlGenerator,
         ProductRepository $productRepository
     ) {
         parent::__construct($translator, $locales);
-        $this->defaultCurrencyIso = $defaultCurrencyIso;
-        $this->taxInclusionChoiceProvider = $taxInclusionChoiceProvider;
         $this->combinationIdChoiceProvider = $combinationIdChoiceProvider;
         $this->urlGenerator = $urlGenerator;
         $this->productRepository = $productRepository;
@@ -183,57 +158,8 @@ class SpecificPriceType extends TranslatorAwareType
                 ],
                 'columns_number' => 2,
             ])
-            ->add('fixed_price', MoneyType::class, [
-                'required' => false,
-                'label' => $this->trans('Set specific price (tax excl.)', 'Admin.Catalog.Feature'),
-                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
-                'row_attr' => [
-                    'class' => 'js-fixed_price-row',
-                ],
-                'currency' => $this->defaultCurrencyIso,
-                'constraints' => [
-                    new NotBlank(),
-                    new Type(['type' => 'float']),
-                ],
-                'default_empty_data' => 0.0,
-            ])
-            ->add('leave_initial_price', CheckboxType::class, [
-                'label' => $this->trans('Apply a discount to the initial price', 'Admin.Catalog.Feature'),
-                'help' => 'For customers meeting the conditions, the initial price will be crossed out and the discount will be highlighted.',
-                'required' => false,
-            ])
-            ->add('reduction', ReductionType::class, [
-                'label' => $this->trans('Reduction', 'Admin.Catalog.Feature'),
-                'required' => false,
-                'constraints' => [
-                    new Reduction([
-                        'invalidPercentageValueMessage' => $this->trans(
-                            'Reduction value "%value%" is invalid. Allowed values from 0 to %max%',
-                            'Admin.Notifications.Error',
-                            ['%max%' => ReductionVO::MAX_ALLOWED_PERCENTAGE . '%']
-                        ),
-                        'invalidAmountValueMessage' => $this->trans(
-                            'Reduction value "%value%" is invalid. Value cannot be negative',
-                            'Admin.Notifications.Error'
-                        ),
-                    ]),
-                ],
-            ])
-            ->add('include_tax', ChoiceType::class, [
-                'row_attr' => [
-                    'class' => 'js-include-tax-row',
-                ],
-                'label' => $this->trans('Reduction with or without taxes', 'Admin.Catalog.Feature'),
-                'choices' => $this->taxInclusionChoiceProvider->getChoices(),
-                'placeholder' => false,
-                'required' => false,
-            ])
+            ->add('impact', SpecificPriceImpactType::class)
         ;
-
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event): void {
-            $data = $event->getData();
-            $productId = $data['product_id'];
-        });
     }
 
     public function configureOptions(OptionsResolver $resolver)
