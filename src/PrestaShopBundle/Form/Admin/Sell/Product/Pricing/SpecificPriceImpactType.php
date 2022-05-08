@@ -38,6 +38,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\PositiveOrZero;
 use Symfony\Component\Validator\Constraints\Type;
 
@@ -97,6 +98,7 @@ class SpecificPriceImpactType extends TranslatorAwareType
                 ],
                 'currency' => $this->defaultCurrencyIso,
                 'constraints' => [
+                    new NotBlank(['groups' => [self::FIXED_PRICE_GROUP]]),
                     new Type(['type' => 'float', 'groups' => [self::FIXED_PRICE_GROUP]]),
                     new PositiveOrZero(['groups' => [self::FIXED_PRICE_GROUP]]),
                 ],
@@ -142,16 +144,28 @@ class SpecificPriceImpactType extends TranslatorAwareType
      * Check if fixed price is being setup, the fixed price is based on fixed_price_tax_excluded so if it is absent
      * or if its value equals -1 no fixed price is defined.
      *
+     * However, the most trustable value is the one from the checkbox, so it is used as priority.
+     *
      * @param array|null $impactData
      *
      * @return bool
      */
     private function isUsingFixedPrice(?array $impactData): bool
     {
-        if (!isset($impactData['fixed_price_tax_excluded'])) {
+        if (array_key_exists('disabling_switch_fixed_price_tax_excluded', $impactData)) {
+            return $impactData['disabling_switch_fixed_price_tax_excluded'] === true;
+        }
+
+        // Use array_key_exists because fixed_price_tax_excluded can be present but null, it doesn't mean it is not
+        // used it is just empty
+        if (!array_key_exists('fixed_price_tax_excluded', $impactData)) {
             return false;
         }
 
-        return !InitialPrice::isInitialPriceValue((string) $impactData['fixed_price_tax_excluded']);
+        // Use 0 as fallback in case the value is null, because empty string throws an exception in DecimalNumber used
+        // in InitialPrice::isInitialPriceValue
+        $fixedPrice = $impactData['fixed_price_tax_excluded'] ?? 0;
+
+        return !InitialPrice::isInitialPriceValue((string) $fixedPrice);
     }
 }
