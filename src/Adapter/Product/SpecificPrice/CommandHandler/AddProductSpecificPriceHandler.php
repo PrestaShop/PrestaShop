@@ -28,11 +28,13 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\CommandHandler;
 
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\AddProductSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler\AddProductSpecificPriceHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShopException;
 use SpecificPrice;
@@ -81,7 +83,14 @@ class AddProductSpecificPriceHandler implements AddProductSpecificPriceHandlerIn
 
         $specificPrice->id_product = $command->getProductId()->getValue();
         $specificPrice->reduction_type = $command->getReduction()->getType();
-        $specificPrice->reduction = (string) $command->getReduction()->getValue();
+
+        $reductionValue = $command->getReduction()->getValue();
+        // VO stores percent expressed based on 100, while the DB stored the float value (VO: 57.5 - DB: 0.575)
+        if ($command->getReduction()->getType() === Reduction::TYPE_PERCENTAGE) {
+            $reductionValue = $reductionValue->dividedBy(new DecimalNumber('100'));
+        }
+        $specificPrice->reduction = (string) $reductionValue;
+
         $specificPrice->reduction_tax = $command->includesTax();
         $specificPrice->price = (string) $command->getFixedPrice()->getValue();
         $specificPrice->from_quantity = $command->getFromQuantity();
