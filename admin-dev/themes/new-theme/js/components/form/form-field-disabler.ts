@@ -142,10 +142,13 @@ export default class FormFieldDisabler {
 
   private toggle(targetSelector: string, disable: boolean, switchEvent: string | null): void {
     if (switchEvent) {
-      // Init the component in case it was not done
-      window.prestashop.component.initComponents(['EventEmitter']);
       const {eventEmitter} = window.prestashop.instance;
-      eventEmitter.emit(switchEvent, {targetSelector, disable});
+
+      if (!eventEmitter) {
+        console.error('Trying to use EventEmitter without having initialised the component before.');
+      } else {
+        eventEmitter.emit(switchEvent, {targetSelector, disable});
+      }
     }
 
     const elementsToToggle: NodeListOf<Element> = document.querySelectorAll(targetSelector);
