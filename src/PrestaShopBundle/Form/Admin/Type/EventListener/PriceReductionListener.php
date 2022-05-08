@@ -63,6 +63,7 @@ class PriceReductionListener implements EventSubscriberInterface
             $options = $valueField->getConfig()->getOptions();
             // Change MoneyType into a PercentType
             $form->add('value', PercentType::class, [
+                'type' => 'integer',
                 'scale' => $options['scale'],
                 'attr' => [
                     // We still need the data attribute available to handle switching in JS

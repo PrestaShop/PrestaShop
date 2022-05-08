@@ -79,18 +79,13 @@ class SpecificPriceImpactType extends TranslatorAwareType
                             'Reduction value "%value%" is invalid. Value cannot be negative',
                             'Admin.Notifications.Error'
                         ),
-                        // 'groups' => [self::REDUCTION_GROUP],
+                        'groups' => [self::REDUCTION_GROUP],
                     ]),
                 ],
                 'disabling_switch' => true,
                 'disabled_value' => function ($data, FormInterface $form): bool {
                     return $this->shouldBeDisabled($form);
                 },
-                /*'validation_groups' => function (FormInterface $form): array {
-                    $shouldBeDisabled = $this->shouldBeDisabled($form);
-
-                    return $shouldBeDisabled ? [] : [self::REDUCTION_GROUP];
-                },*/
             ])
             ->add('fixed_price_tax_excluded', MoneyType::class, [
                 'required' => false,
@@ -109,33 +104,8 @@ class SpecificPriceImpactType extends TranslatorAwareType
                 'disabled_value' => function ($data, FormInterface $form): bool {
                     return $this->shouldBeDisabled($form);
                 },
-                'validation_groups' => function (FormInterface $form): array {
-                    $shouldBeDisabled = $this->shouldBeDisabled($form);
-
-                    return $shouldBeDisabled ? [] : [self::FIXED_PRICE_GROUP];
-                },
             ])
         ;
-    }
-
-    private function shouldBeDisabled(FormInterface $form): bool
-    {
-        $formName = $form->getName();
-        $impactForm = $form->getParent();
-        $impactData = $impactForm->getData();
-
-        if (!isset($impactData['fixed_price_tax_excluded'])) {
-            $useFixedPrice = true;
-        } else {
-            $useFixedPrice = !InitialPrice::isInitialPriceValue((string) $impactData['fixed_price_tax_excluded']);
-        }
-
-        // The field van either be reduction or fixed_price_tax_excluded, whe fixed price is used the reduction is disabled
-        if ($formName === 'reduction') {
-            return $useFixedPrice;
-        }
-
-        return !$useFixedPrice;
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -145,6 +115,43 @@ class SpecificPriceImpactType extends TranslatorAwareType
             'label' => $this->trans('Impact on price', 'Admin.Catalog.Feature'),
             'label_subtitle' => $this->trans('At least one of the following must be activated', 'Admin.Catalog.Feature'),
             'label_tag_name' => 'h4',
+            'validation_groups' => function (FormInterface $form): array {
+                $useFixedPrice = $this->isUsingFixedPrice($form->getData());
+
+                return $useFixedPrice ? [self::FIXED_PRICE_GROUP] : [self::REDUCTION_GROUP];
+            },
         ]);
+    }
+
+    private function shouldBeDisabled(FormInterface $form): bool
+    {
+        $formName = $form->getName();
+        $impactForm = $form->getParent();
+        $impactData = $impactForm->getData();
+        $useFixedPrice = $this->isUsingFixedPrice($impactData);
+
+        // The field van either be reduction or fixed_price_tax_excluded, whe fixed price is used the reduction is disabled
+        if ($formName === 'reduction') {
+            return $useFixedPrice;
+        }
+
+        return !$useFixedPrice;
+    }
+
+    /**
+     * Check if fixed price is being setup, the fixed price is based on fixed_price_tax_excluded so if it is absent
+     * or if its value equals -1 no fixed price is defined.
+     *
+     * @param array|null $impactData
+     *
+     * @return bool
+     */
+    private function isUsingFixedPrice(?array $impactData): bool
+    {
+        if (!isset($impactData['fixed_price_tax_excluded'])) {
+            return false;
+        }
+
+        return !InitialPrice::isInitialPriceValue((string) $impactData['fixed_price_tax_excluded']);
     }
 }
