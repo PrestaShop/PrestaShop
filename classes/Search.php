@@ -133,19 +133,19 @@ class SearchCore
     public static function extractKeyWords($string, $id_lang, $indexation = false, $iso_code = false)
     {
         if (!stripos($string, '&')) {
-            $sanitizedString = Search::sanitize($string, $id_lang, false, $iso_code);
+            $sanitizedString = Search::sanitize($string, $id_lang, false, Context::getContext()->language->iso_code);
         } else {
             $preWords = explode('&', $string);
             $sanitizedWords = [];
             $sanitizedString = '';
 
-            for ($i = 0; $i < count($preWords); ++$i) {
-                $wd = Search::sanitize($preWords[$i], $id_lang, false, $iso_code);
+            for ($i = 0; $i < count($preWords); $i++) {
+                $wd = Search::sanitize($preWords[$i], $id_lang, false, Context::getContext()->language->iso_code);
                 array_push($sanitizedWords, $wd);
                 $sanitizedString .= $i < (count($preWords) - 1) ? $preWords[$i] . '&' : $preWords[$i];
             }
-        }
 
+        }
         $words = explode(' ', $sanitizedString);
         if (strpos($string, '-') !== false) {
             $sanitizedString = Search::sanitize($string, $id_lang, $indexation, $iso_code, true);
@@ -178,7 +178,11 @@ class SearchCore
         $string = html_entity_decode($string, ENT_NOQUOTES, 'utf-8');
 
         $string = preg_replace('/([' . PREG_CLASS_NUMBERS . ']+)[' . PREG_CLASS_PUNCTUATION . ']+(?=[' . PREG_CLASS_NUMBERS . '])/u', '\1', $string);
+        if (stripos($string, "'")) {
+            $string = preg_replace('/[^A-Za-z0-9\s,.!?+\-\'\"]+/', ' ', $string);
+        } else {
         $string = preg_replace('/[' . PREG_CLASS_SEARCH_EXCLUDE . ']+/u', ' ', $string);
+        }
 
         if ($indexation) {
             if (!$keepHyphens) {
