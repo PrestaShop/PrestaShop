@@ -603,6 +603,14 @@
   {{- block('form_help') -}}
 {% endblock switch_widget %}
 
+{%- block row_attributes -%}
+  {% set rowAttributes  = row_attr|default({})%}
+  {%- for attrname, attrvalue in rowAttributes -%}
+    {{- " " -}}
+    {{- attrname }}="{{ attrvalue }}"
+  {%- endfor -%}
+{%- endblock -%}
+
 {% block _form_step6_attachments_widget %}
   <div class="js-options-no-attachments {{ form|length > 0 ? 'hide' : '' }}">
     <small>{{ 'There is no attachment yet.'|trans({}, 'Admin.Catalog.Notification') }}</small>
@@ -1398,5 +1406,19 @@
 
     {# Display rest of children that may have not been rendered because they were not compound forms, like token hidden field for example #}
     {{ form_rest(form) }}
+  </div>
+{%- endblock -%}
+
+{%- block price_reduction_widget -%}
+  {% set attr = attr|merge({class: (attr.class|default('') ~ ' reduction-widget row')|trim}) %}
+  <div {{ block('widget_attributes') }}>
+    {% for child in form.children %}
+      {% with {row_attr: child.vars.row_attr|merge({class: (child.vars.row_attr.class|default('') ~ ' col col-md-3')|trim})} %}
+      <div {{ block('row_attributes') }}>
+      {% endwith %}
+        {{ form_widget(child) }}
+        {{ form_errors(child) }}
+      </div>
+    {% endfor -%}
   </div>
 {%- endblock -%}

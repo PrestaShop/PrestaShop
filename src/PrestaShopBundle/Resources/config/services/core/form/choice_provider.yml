@@ -221,11 +221,6 @@ services:
     arguments:
       - '@translator'
 
-  prestashop.core.form.choice_provider.price_reduction_type:
-    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\PriceReductionTypeChoiceProvider'
-    arguments:
-      - '@translator'
-
   prestashop.core.form.choice_provider.address_required_fields:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\AddressRequiredFieldsChoiceProvider'
 
