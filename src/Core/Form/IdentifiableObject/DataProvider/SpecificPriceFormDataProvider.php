@@ -71,17 +71,18 @@ class SpecificPriceFormDataProvider implements FormDataProviderInterface
             ],
             'combination_id' => $specificPriceForEditing->getCombinationId(),
             'from_quantity' => $specificPriceForEditing->getFromQuantity(),
-            'fixed_price' => (float) (string) $fixedPrice,
-            'leave_initial_price' => InitialPrice::isInitialPriceValue((string) $fixedPrice),
             'date_range' => [
                 'from' => $specificPriceForEditing->getDateTimeFrom()->format(DateTime::DEFAULT_DATETIME_FORMAT),
                 'to' => $specificPriceForEditing->getDateTimeTo()->format(DateTime::DEFAULT_DATETIME_FORMAT),
             ],
-            'reduction' => [
-                'type' => $specificPriceForEditing->getReductionType(),
-                'value' => (float) (string) $specificPriceForEditing->getReductionAmount(),
+            'impact' => [
+                'reduction' => [
+                    'type' => $specificPriceForEditing->getReductionType(),
+                    'value' => (float) (string) $specificPriceForEditing->getReductionAmount(),
+                    'include_tax' => $specificPriceForEditing->includesTax(),
+                ],
+                'fixed_price_tax_excluded' => (float) (string) $fixedPrice,
             ],
-            'include_tax' => $specificPriceForEditing->includesTax(),
         ];
 
         if ($customerInfo = $specificPriceForEditing->getCustomerInfo()) {
@@ -107,12 +108,15 @@ class SpecificPriceFormDataProvider implements FormDataProviderInterface
     public function getDefaultData(): array
     {
         return [
-            'reduction' => [
-                'type' => Reduction::TYPE_AMOUNT,
-                'value' => 0,
-            ],
-            'leave_initial_price' => false,
             'from_quantity' => 1,
+            'impact' => [
+                'reduction' => [
+                    'type' => Reduction::TYPE_AMOUNT,
+                    'value' => 0,
+                    'include_tax' => true,
+                ],
+                'fixed_price_tax_excluded' => (float) InitialPrice::INITIAL_PRICE_VALUE,
+            ],
         ];
     }
 }

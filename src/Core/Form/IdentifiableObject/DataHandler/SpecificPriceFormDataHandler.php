@@ -52,16 +52,16 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
 
     public function create(array $data): int
     {
-        $fixedPrice = isset($data['leave_initial_price']) && $data['leave_initial_price'] ?
-            InitialPrice::INITIAL_PRICE_VALUE :
-            (string) $data['fixed_price']
+        $fixedPrice = isset($data['impact']['fixed_price_tax_excluded']) && !InitialPrice::isInitialPriceValue($data['impact']['fixed_price_tax_excluded']) ?
+            (string) $data['impact']['fixed_price_tax_excluded'] :
+            InitialPrice::INITIAL_PRICE_VALUE
         ;
 
         $command = new AddProductSpecificPriceCommand(
             (int) $data['product_id'],
-            $data['reduction']['type'],
-            (string) $data['reduction']['value'],
-            (bool) $data['include_tax'],
+            $data['impact']['reduction']['type'],
+            (string) $data['impact']['reduction']['value'],
+            (bool) $data['impact']['reduction']['include_tax'],
             $fixedPrice,
             (int) $data['from_quantity'],
             DateTime::buildNullableDateTime($data['date_range']['from']),
@@ -81,12 +81,6 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
         $command = new EditProductSpecificPriceCommand((int) $id);
         $this->fillRelations($command, $data);
 
-        if (isset($data['leave_initial_price']) && $data['leave_initial_price']) {
-            $command->setFixedPrice(InitialPrice::INITIAL_PRICE_VALUE);
-        } elseif (isset($data['fixed_price'])) {
-            $command->setFixedPrice((string) $data['fixed_price']);
-        }
-
         if (isset($data['from_quantity'])) {
             $command->setFromQuantity((int) $data['from_quantity']);
         }
@@ -96,11 +90,21 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
         if (isset($data['date_range']) && array_key_exists('to', $data['date_range'])) {
             $command->setDateTimeTo(DateTime::buildNullableDateTime($data['date_range']['to']));
         }
-        if (isset($data['reduction']['type'])) {
-            $command->setReduction((string) $data['reduction']['type'], (string) $data['reduction']['value']);
+
+        // It switch input is true it means the price field is enabled
+        if (isset($data['impact']['disabling_switch_fixed_price_tax_excluded'])) {
+            if (!empty($data['impact']['disabling_switch_fixed_price_tax_excluded'])) {
+                $command->setFixedPrice((string) $data['impact']['fixed_price_tax_excluded']);
+            } else {
+                $command->setFixedPrice(InitialPrice::INITIAL_PRICE_VALUE);
+            }
         }
-        if (isset($data['include_tax'])) {
-            $command->setIncludesTax((bool) $data['include_tax']);
+
+        if (isset($data['impact']['reduction']['type'], $data['impact']['reduction']['value'])) {
+            $command->setReduction((string) $data['impact']['reduction']['type'], (string) $data['impact']['reduction']['value']);
+        }
+        if (isset($data['impact']['reduction']['include_tax'])) {
+            $command->setIncludesTax((bool) $data['impact']['reduction']['include_tax']);
         }
 
         $this->commandBus->handle($command);

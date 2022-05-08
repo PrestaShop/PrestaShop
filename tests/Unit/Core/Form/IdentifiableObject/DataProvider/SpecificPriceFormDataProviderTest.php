@@ -48,12 +48,15 @@ class SpecificPriceFormDataProviderTest extends TestCase
         $provider = new SpecificPriceFormDataProvider($queryBusMock);
 
         $expectedDefaultData = [
-            'reduction' => [
-                'value' => 0,
-                'type' => Reduction::TYPE_AMOUNT,
-            ],
-            'leave_initial_price' => false,
             'from_quantity' => 1,
+            'impact' => [
+                'reduction' => [
+                    'value' => 0,
+                    'type' => Reduction::TYPE_AMOUNT,
+                    'include_tax' => true,
+                ],
+                'fixed_price_tax_excluded' => (float) InitialPrice::INITIAL_PRICE_VALUE,
+            ],
         ];
 
         $this->assertEquals($expectedDefaultData, $provider->getDefaultData());
@@ -105,17 +108,18 @@ class SpecificPriceFormDataProviderTest extends TestCase
                 ],
                 'combination_id' => 999,
                 'from_quantity' => 1,
-                'fixed_price' => -1.0,
-                'leave_initial_price' => true,
                 'date_range' => [
                     'from' => '2021-10-20 01:00:00',
                     'to' => '2021-10-20 08:00:00',
                 ],
-                'reduction' => [
-                    'type' => 'amount',
-                    'value' => 50.0,
+                'impact' => [
+                    'reduction' => [
+                        'type' => 'amount',
+                        'value' => 50.0,
+                        'include_tax' => false,
+                    ],
+                    'fixed_price_tax_excluded' => -1.0,
                 ],
-                'include_tax' => false,
                 'customer' => [
                     [
                         'id_customer' => 1,
@@ -153,17 +157,18 @@ class SpecificPriceFormDataProviderTest extends TestCase
                 ],
                 'combination_id' => null,
                 'from_quantity' => 10,
-                'fixed_price' => 100.0,
-                'leave_initial_price' => false,
                 'date_range' => [
                     'from' => '2021-11-20 01:00:00',
                     'to' => '2021-11-21 01:00:00',
                 ],
-                'reduction' => [
-                    'type' => 'percentage',
-                    'value' => 20.0,
+                'impact' => [
+                    'reduction' => [
+                        'type' => 'percentage',
+                        'value' => 20.0,
+                        'include_tax' => true,
+                    ],
+                    'fixed_price_tax_excluded' => 100.0,
                 ],
-                'include_tax' => true,
             ],
         ];
     }
