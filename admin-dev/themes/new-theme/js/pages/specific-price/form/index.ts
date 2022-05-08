@@ -38,9 +38,6 @@ $(() => {
   ]);
 
   const {eventEmitter} = window.prestashop.instance;
-  eventEmitter.on('switchSpecificPriceCustomer', (event: any) => {
-    $(SpecificPriceMap.customerItem).toggleClass('disabled', event.disable);
-  });
 
   new PriceInputToggle();
   new CurrencySymbolUpdater(
@@ -51,7 +48,7 @@ $(() => {
       }
 
       // Specific Price
-      const priceSymbols = document.querySelectorAll(SpecificPriceMap.priceSymbol);
+      const priceSymbols = document.querySelectorAll(SpecificPriceMap.fixedPriceSymbol);
 
       if (priceSymbols.length) {
         priceSymbols.forEach((value: Element) => {
@@ -63,14 +60,29 @@ $(() => {
       // Reduction Amount
       const reductionTypeSelect = document.querySelector<HTMLSelectElement>(SpecificPriceMap.reductionTypeSelect);
 
-      if (reductionTypeSelect?.options[reductionTypeSelect.selectedIndex].value === 'amount') {
-        const reductionTypeAmountSymbols = document.querySelectorAll(SpecificPriceMap.reductionTypeAmountSymbol);
+      if (reductionTypeSelect) {
+        // Update the amount option innerHTML
+        for (let i = 0; i < reductionTypeSelect.options.length; i += 1) {
+          const reductionOption = reductionTypeSelect.options[i];
 
-        if (reductionTypeAmountSymbols.length) {
-          reductionTypeAmountSymbols.forEach((value: Element) => {
-            const elt = value;
-            elt.innerHTML = symbol;
-          });
+          if (reductionOption.value === 'amount') {
+            reductionOption.innerHTML = symbol;
+          }
+        }
+
+
+        const selectedReduction = reductionTypeSelect.options[reductionTypeSelect.selectedIndex].value;
+
+        // If amount reduction type is selected update the reduction value symbol
+        if (selectedReduction === 'amount') {
+          const reductionTypeAmountSymbols = document.querySelectorAll(SpecificPriceMap.reductionTypeAmountSymbol);
+
+          if (reductionTypeAmountSymbols.length) {
+            reductionTypeAmountSymbols.forEach((value: Element) => {
+              const elt = value;
+              elt.innerHTML = symbol;
+            });
+          }
         }
       }
     }),
@@ -81,6 +93,7 @@ $(() => {
     SpecificPriceMap.currencyId,
     SpecificPriceMap.reductionTypeAmountSymbol,
   );
+
   new EntitySearchInput($(SpecificPriceMap.customerSearchContainer), {
     responseTransformer: (response: any) => {
       if (!response || response.customers.length === 0) {
@@ -89,5 +102,9 @@ $(() => {
 
       return Object.values(response.customers);
     },
+  });
+  // When customer search is disabled we also disable the selected item (if present)
+  eventEmitter.on('switchSpecificPriceCustomer', (event: any) => {
+    $(SpecificPriceMap.customerItem).toggleClass('disabled', event.disable);
   });
 });
