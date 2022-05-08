@@ -23,9 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import EntitySearchInput from '@components/entity-search-input';
-import PriceInputToggle from '@pages/specific-price/form/price-input-toggle';
 import CurrencySymbolUpdater from '@components/form/currency-symbol-updater';
 import SpecificPriceMap from '@pages/specific-price/specific-price-map';
+import SpecificPriceEventMap from '@pages/specific-price/specific-price-event-map';
 import ReductionTaxFieldToggle from '@components/form/reduction-tax-field-toggle';
 
 const {$} = window;
@@ -39,7 +39,6 @@ $(() => {
 
   const {eventEmitter} = window.prestashop.instance;
 
-  new PriceInputToggle();
   new CurrencySymbolUpdater(
     SpecificPriceMap.currencyId,
     ((symbol: string): void => {
@@ -103,8 +102,39 @@ $(() => {
       return Object.values(response.customers);
     },
   });
+
   // When customer search is disabled we also disable the selected item (if present)
-  eventEmitter.on('switchSpecificPriceCustomer', (event: any) => {
+  eventEmitter.on(SpecificPriceEventMap.switchCustomer, (event: any) => {
     $(SpecificPriceMap.customerItem).toggleClass('disabled', event.disable);
   });
+
+  // Handle switch between reduction or fixed price
+  eventEmitter.on(SpecificPriceEventMap.switchFixedPrice, (event: any) => {
+    switchReductionMode(!event.disable);
+  });
+  eventEmitter.on(SpecificPriceEventMap.switchReduction, (event: any) => {
+    switchReductionMode(event.disable);
+  });
+
+  function switchReductionMode(useFixedPrice: boolean): void {
+    if (useFixedPrice) {
+      toggleSwitch(SpecificPriceMap.switchFixedName, true);
+      toggleSwitch(SpecificPriceMap.switchReductionName, false);
+    } else {
+      toggleSwitch(SpecificPriceMap.switchFixedName, false);
+      toggleSwitch(SpecificPriceMap.switchReductionName, true);
+    }
+  }
+
+  function toggleSwitch(switchName: string, checked: boolean): void {
+    const $switchOn = $(`[name="${switchName}"][value="1"]`);
+    const $switchOff = $(`[name="${switchName}"][value="0"]`);
+
+    if ($switchOn.is(':checked') !== checked) {
+      $switchOn.prop('checked', checked);
+    }
+    if ($switchOff.is(':checked') === checked) {
+      $switchOff.prop('checked', !checked);
+    }
+  }
 });

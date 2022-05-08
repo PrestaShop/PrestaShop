@@ -84,6 +84,7 @@ class SpecificPriceImpactType extends TranslatorAwareType
                     ]),
                 ],
                 'disabling_switch' => true,
+                'disabling_switch_event' => 'switchReductionSpecificPrice',
                 'disabled_value' => function ($data, FormInterface $form): bool {
                     return $this->shouldBeDisabled($form);
                 },
@@ -103,6 +104,7 @@ class SpecificPriceImpactType extends TranslatorAwareType
                     new PositiveOrZero(['groups' => [self::FIXED_PRICE_GROUP]]),
                 ],
                 'disabling_switch' => true,
+                'disabling_switch_event' => 'switchFixedSpecificPrice',
                 'disabled_value' => function ($data, FormInterface $form): bool {
                     return $this->shouldBeDisabled($form);
                 },

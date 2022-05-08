@@ -35,4 +35,6 @@ export default {
     + '.price-reduction-value .input-group .input-group-prepend .input-group-text',
   includeTaxInputContainer: '.js-include-tax-row',
   customerItem: '#specific_price_customer_list .entity-item',
+  switchReductionName: 'specific_price[impact][disabling_switch_reduction]',
+  switchFixedName: 'specific_price[impact][disabling_switch_fixed_price_tax_excluded]',
 };

@@ -25,6 +25,8 @@
 
 import {isUndefined} from '@PSTypes/typeguard';
 
+const {$} = window;
+
 /**
  * @param {string} disablingInputSelector - selector of input (e.g. checkbox or radio)
  *                 which on change enables/disables the element selected by targetSelector.
@@ -74,7 +76,7 @@ export default class FormFieldDisabler {
     disablingInputs.forEach((input: HTMLInputElement) => {
       this.updateTargetState(input);
 
-      input.addEventListener('change', () => {
+      $(input).on('change', () => {
         this.updateTargetState(input);
       });
     });
