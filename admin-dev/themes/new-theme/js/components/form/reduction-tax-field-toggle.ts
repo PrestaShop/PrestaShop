@@ -77,6 +77,7 @@ export default class ReductionTaxFieldToggle {
 
   private getSymbol(defaultValue: string): string {
     const select = document.querySelector<HTMLSelectElement>(this.currencySymbolSelect);
+
     if (!select) {
       return defaultValue;
     }
