@@ -32,10 +32,10 @@ export default {
   price: '#catalog_price_rule_price',
   currencyId: '#catalog_price_rule_id_currency',
   reductionTypeSelect: '#catalog_price_rule_reduction_type',
-  reductionTypeAmountSymbol: '.js-reduction-row .input-group .input-group-append .input-group-text, '
-    + '.js-reduction-row .input-group .input-group-prepend .input-group-text',
+  reductionTypeAmountSymbol: '.price-reduction-value .input-group .input-group-append .input-group-text, '
+    + '.price-reduction-value .input-group .input-group-prepend .input-group-text',
 
   // mapping for include-tax-field-visibility-handler
   reductionType: '.js-reduction-type-source',
-  includeTax: '.js-include-tax-target',
+  includeTax: '.js-include-tax-row',
 };
