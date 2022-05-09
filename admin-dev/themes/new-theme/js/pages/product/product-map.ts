@@ -23,10 +23,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-const combinationListId = '#combination_list';
+const combinationListFormId = '#combination_list';
 const attachmentsBlockId = '#product_specifications_attachments';
 // It does not include "#" so it can be selected by getElementById
-const isSelectedCombinationInputClass = 'combination-is-selected';
+const isSelectedCombinationClass = 'combination-is-selected';
+const bulkCombinationSelectAllId = 'bulk-select-all-in-page';
 const progressModalId = 'bulk-combination-progress-modal';
 
 export default {
@@ -79,13 +80,13 @@ export default {
     preloader: '#combinations-preloader',
     emptyState: '#combinations-empty-state',
     combinationsPaginatedList: '#combinations-paginated-list',
-    combinationsListContainer: `${combinationListId}`,
+    combinationsFormContainer: '#combinations-list-form-container',
     combinationsFiltersContainer: '#combinations_filters',
+    filtersSelectorButtons: '.combinations-filters-dropdown button',
     combinationsGeneratorContainer: '#product_combinations_generator',
-    combinationsTable: `${combinationListId} table`,
-    combinationsTableBody: `${combinationListId} table tbody`,
+    combinationsTable: `${combinationListFormId}`,
+    combinationsTableBody: `${combinationListFormId} tbody`,
     combinationIdInputsSelector: '.combination-id-input',
-    isDefaultInputsSelector: '.combination-is-default-input',
     deleteCombinationSelector: '.delete-combination-item',
     combinationName: 'form .card-header span',
     paginationContainer: '#combinations-pagination',
@@ -106,20 +107,40 @@ export default {
       'form[name="combination_form"] input, form[name="combination_form"] textarea, form[name="combination_form"] select',
     editCombinationButtons: '.edit-combination-item',
     tableRow: {
-      isSelectedCombination: `.${isSelectedCombinationInputClass}`,
+      isSelectedCombination: `.${isSelectedCombinationClass}`,
       combinationImg: '.combination-image',
       deltaQuantityWrapper: '.delta-quantity',
-      deltaQuantityInput: (rowIndex: number): string => `${combinationListId}_combinations_${rowIndex}_delta_quantity_delta`,
-      combinationCheckbox: (rowIndex: number): string => `${combinationListId}_combinations_${rowIndex}_is_selected`,
-      combinationIdInput: (rowIndex: number): string => `${combinationListId}_combinations_${rowIndex}_combination_id`,
-      combinationNameInput: (rowIndex: number): string => `${combinationListId}_combinations_${rowIndex}_name`,
-      referenceInput: (rowIndex: number): string => `${combinationListId}_combinations_${rowIndex}_reference_value`,
-      impactOnPriceInput: (rowIndex: number): string => `${combinationListId}_combinations_${rowIndex}_impact_on_price_value`,
-      finalPriceTeInput: (rowIndex: number): string => `${combinationListId}_combinations_${rowIndex}_final_price_te`,
-      quantityInput: (rowIndex: number): string => `${combinationListId}_combinations_${rowIndex}_delta_quantity_quantity`,
-      isDefaultInput: (rowIndex: number): string => `${combinationListId}_combinations_${rowIndex}_is_default`,
-      editButton: (rowIndex: number): string => `${combinationListId}_combinations_${rowIndex}_edit`,
-      deleteButton: (rowIndex: number): string => `${combinationListId}_combinations_${rowIndex}_delete`,
+      deltaQuantityInput: (rowIndex: number): string => `${combinationListFormId}_combinations_${rowIndex}_delta_quantity_delta`,
+      combinationCheckbox: (rowIndex: number): string => `${combinationListFormId}_combinations_${rowIndex}_is_selected`,
+      combinationIdInput: (rowIndex: number): string => `${combinationListFormId}_combinations_${rowIndex}_combination_id`,
+      combinationNameInput: (rowIndex: number): string => `${combinationListFormId}_combinations_${rowIndex}_name`,
+      referenceInput: (rowIndex: number): string => `${combinationListFormId}_combinations_${rowIndex}_reference_value`,
+      impactOnPriceInput: (rowIndex: number): string => `${combinationListFormId}_combinations_${rowIndex}_impact_on_price_value`,
+      finalPriceTeInput: (rowIndex: number): string => `${combinationListFormId}_combinations_${rowIndex}_final_price_te`,
+      quantityInput: (rowIndex: number): string => `${combinationListFormId}_combinations_${rowIndex}_delta_quantity_quantity`,
+      isDefaultInput: (rowIndex: number): string => `${combinationListFormId}_combinations_${rowIndex}_is_default`,
+      editButton: (rowIndex: number): string => `${combinationListFormId}_combinations_${rowIndex}_edit`,
+      deleteButton: (rowIndex: number): string => `${combinationListFormId}_combinations_${rowIndex}_delete`,
+    },
+    list: {
+      form: 'form[name="combination_list"]',
+      combinationRow: '.combination-list-row',
+      priceImpactTaxExcluded: '.combination-impact-on-price-tax-excluded',
+      priceImpactTaxIncluded: '.combination-impact-on-price-tax-included',
+      isDefault: '.combination-is-default-input',
+      finalPrice: '.combination-final-price',
+      finalPricePreview: '.text-preview',
+      modifiedFieldClass: 'combination-value-changed',
+      invalidClass: 'is-invalid',
+      editionModeClass: 'edition-mode',
+      fieldInputs: `.combination-list-row :input:not(#${bulkCombinationSelectAllId}):not(.${isSelectedCombinationClass})`,
+      errorAlerts: '.combination-list-row .alert-danger',
+      rowActionButtons: '.combination-row-actions button',
+      footer: {
+        cancel: '#cancel-combinations-edition',
+        reset: '#reset-combinations-edition',
+        save: '#save-combinations-edition',
+      },
     },
     editModal: '#combination-edit-modal',
     images: {
@@ -135,7 +156,8 @@ export default {
     bulkDeleteBtn: '#combination-bulk-delete-btn',
     bulkActionBtn: '.bulk-action-btn',
     bulkActionsDropdownBtn: '#combination-bulk-actions-btn',
-    bulkSelectAllInPage: '#bulk-select-all-in-page',
+    bulkSelectAll: `#${bulkCombinationSelectAllId}`,
+    bulkSelectAllId: bulkCombinationSelectAllId,
     bulkProgressModalId: progressModalId,
     bulkFormModalId: 'bulk-combination-form-modal',
   },

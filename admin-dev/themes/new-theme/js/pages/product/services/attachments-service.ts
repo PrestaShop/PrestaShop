@@ -33,7 +33,7 @@ const {$} = window;
  *
  * @returns {Promise<*|jQuery>}
  */
-export const getAttachmentInfo = async (attachmentId) => $.get(
+export const getAttachmentInfo = async (attachmentId: number): Promise<Record<string, any>> => $.get(
   router.generate('admin_attachments_attachment_info', {attachmentId}),
 );
 

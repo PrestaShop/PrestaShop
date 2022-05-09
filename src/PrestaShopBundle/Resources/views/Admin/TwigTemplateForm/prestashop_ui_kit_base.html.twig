@@ -1080,7 +1080,7 @@
 
 {% block text_with_length_counter_widget %}
   <div class="input-group js-text-with-length-counter">
-    {% set current_length = form.vars.max_length - form.vars.value|length %}
+    {% set current_length = form.vars.max_length - value|length %}
 
     {% if form.vars.position == 'before' %}
       <div class="input-group-prepend">
@@ -1261,7 +1261,7 @@
     {% endif %}
 
     {# This just outputs the value #}
-    {{ form.vars.value|e('html') }}
+    {{ value|e('html') }}
 
     {# Allows to insert content as suffix, like an icon #}
     {% if suffix is defined %}
@@ -1273,13 +1273,14 @@
 {% block image_preview_widget %}
   {# This is the hidden input #}
   {{- block('form_widget_simple') -}}
-  <img src="{{ form.vars.value }}" alt="{{ ('Image preview for ' ~ form.vars.name)|trim }}" class="{{ form.vars.image_class }}" />
+  <img src="{{ value }}" alt="{{ ('Image preview for ' ~ form.vars.name)|trim }}" class="{{ form.vars.image_class }}" />
 {% endblock %}
 
 {% block delta_quantity_widget %}
-  {%- set attr = attr|merge({class: (attr.class|default('') ~ ' delta-quantity')|trim, 'data-initial-quantity': form.quantity.vars.value}) -%}
+  {% set quantity = value.quantity|default(form.quantity.vars.value) %}
+  {% set attr = attr|merge({class: (attr.class|default('') ~ ' delta-quantity')|trim, 'data-initial-quantity': quantity}) %}
   <div {{ block('widget_container_attributes') }}>
-    {{ form_widget(form.quantity) }}
+    {{ form_widget(form.quantity, {value: quantity}) }}
     {{ form_row(form.delta) }}
   </div>
 {% endblock %}
@@ -1288,10 +1289,10 @@
   {%- set attr = attr|merge({class: (attr.class|default('') ~ ' delta-quantity-quantity')|trim}) -%}
   <div {{ block('widget_container_attributes') }}>
     {{- block('form_widget_simple') -}}
-    <span class="initial-quantity">{{ form.vars.value }}</span>
+    <span class="initial-quantity">{{ value }}</span>
     <span class="quantity-update">
       <i class="material-icons">trending_flat</i>
-      <span class="new-quantity">{{ form.vars.value }}</span>
+      <span class="new-quantity">{{ value }}</span>
     </span>
   </div>
 {% endblock %}
@@ -1344,8 +1345,8 @@
   <div {{ block('widget_attributes') }}>
     {%- set attr = form.vars.attr|merge({
       'class': (form.vars.attr.class|default('') ~ ' submittable-input')|trim,
-      'data-initial-value': form.vars.value,
-      'value': form.vars.value,
+      'data-initial-value': value,
+      'value': value,
     }) -%}
 
     {{ form_widget(form, {'attr': attr}) }}
@@ -1391,3 +1392,20 @@
     {{ form_rest(form) }}
   </div>
 {%- endblock -%}
+
+{% block button_collection_row %}
+  {%- set attr = attr|merge({
+    class: (attr.class|default('') ~ ' form-group btn-collection btn-toolbar')|trim,
+    role: 'group',
+    style: 'justify-content: ' ~ justify_content
+  }) -%}
+  <div {{ block('widget_attributes') }}>
+    {% for group, buttons in button_groups %}
+      <div class="btn-group group-{{ group }}">
+        {% for button in buttons %}
+          {{- form_widget(attribute(form, button)) -}}
+        {% endfor %}
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}

@@ -4,3 +4,6 @@ services:
 
   prestashop.core.form.data_formatter.bulk_combination_form_data_formatter:
     class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataFormatter\BulkCombinationFormDataFormatter
+
+  prestashop.core.form.data_formatter.combination_list_form_data_formatter:
+    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataFormatter\CombinationListFormDataFormatter

@@ -215,11 +215,11 @@ services:
       - 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\BulkCombinationType'
       - '@prestashop.core.form.identifiable_object.data_provider.bulk_combination_form_data_provider'
 
-  prestashop.core.form.identifiable_object.builder.combination_item_form_builder:
+  prestashop.core.form.identifiable_object.builder.combination_list_form_builder:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilder'
     factory: [ '@prestashop.core.form.builder.form_builder_factory', 'create' ]
     arguments:
-      - 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationItemType'
+      - 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationListType'
       - '@prestashop.core.form.identifiable_object.data_provider.empty_form_data_provider'
 
   prestashop.core.form.identifiable_object.builder.product_image_form_builder:

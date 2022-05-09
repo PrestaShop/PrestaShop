@@ -22,15 +22,8 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * #}
-{# Combination filters for paginated list #}
-<div id="combinations_filters"
-     data-translations="{{ {
-       'filters.label': 'Filter by:'|trans({}, 'Admin.Actions'),
-       'filters.clear': 'Clear filter|Clear %filtersNb% filters'|trans({}, 'Admin.Actions'),
-     }|json_encode }}"
-></div>
 
-<div id="combination-actions">
+<div id="combination-list-actions">
   <div class="btn-group">
     {# button disabled by default, because js toggles its availability based on selected combinations #}
     <button class="btn btn-outline-secondary dropdown-toggle"
@@ -50,7 +43,7 @@
         data-modal-confirm-label="{{ 'Apply to %combinations_number% combinations'|trans({}, 'Admin.Catalog.Feature') }}"
         data-modal-cancel-label="{{ 'Cancel'|trans({}, 'Admin.Actions') }}"
       >
-      {{ 'Edit %combinations_number% combinations'|trans({'%s': ''}, 'Admin.Catalog.Feature') }}
+        {{ 'Edit %combinations_number% combinations'|trans({'%s': ''}, 'Admin.Catalog.Feature') }}
       </button>
       <button
         id="combination-bulk-delete-btn" class="dropdown-item bulk-action-btn" type="button"
@@ -64,8 +57,19 @@
       </button>
     </div>
   </div>
+
+  <button id="generate-combinations-button" class="btn btn-primary generate-combinations-button" disabled="disabled">
+    {{ 'Generate combinations'|trans({}, 'Admin.Catalog.Feature') }}
+  </button>
 </div>
 
+{# Combination filters for paginated list #}
+<div id="combinations_filters"
+  data-translations="{{ {
+   'filters.label': 'Filter by:'|trans({}, 'Admin.Actions'),
+   'filters.clear': 'Clear filter|Clear %filtersNb% filters'|trans({}, 'Admin.Actions'),
+  }|json_encode }}"
+></div>
 <div id="combination-edit-modal"
      data-empty-image="{{ asset('themes/new-theme/img/empty_state/combinations_history.png') }}"
      data-translations="{{ {

@@ -28,8 +28,13 @@ import EventEmitter from '@components/event-emitter';
 import Filters from '@pages/product/components/filters/Filters.vue';
 import VueI18n from 'vue-i18n';
 import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
+import {AttributeGroup} from '@pages/product/types';
 
 Vue.use(VueI18n);
+
+export interface FiltersVueApp extends Vue {
+  filters: Array<AttributeGroup>,
+};
 
 /**
  * @param {string} combinationsFiltersSelector
@@ -41,7 +46,7 @@ export default function initCombinationsFilters(
   combinationsFiltersSelector: string,
   eventEmitter: typeof EventEmitter,
   filters: Record<string, any>,
-): Vue {
+): FiltersVueApp {
   const container = <HTMLElement> document.querySelector(combinationsFiltersSelector);
 
   const translations = JSON.parse(<string>container.dataset.translations);

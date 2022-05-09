@@ -49,7 +49,6 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterf
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationListType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -178,7 +177,7 @@ class CombinationController extends FrameworkBundleAdminController
      * Renders combinations list prototype (which contains form inputs submittable by ajax)
      * It can only be embedded into another view (does not have a route), it is included in this template:
      *
-     * src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/Tabs/combinations.html.twig
+     * src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/Combination/external_tab.html.twig
      *
      * @param int $productId
      *
@@ -186,12 +185,13 @@ class CombinationController extends FrameworkBundleAdminController
      */
     public function paginatedListAction(int $productId): Response
     {
+        $combinationsForm = $this->getCombinationListFormBuilder()->getForm();
+
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/Combination/paginated_list.html.twig', [
             'productId' => $productId,
             'combinationLimitChoices' => self::COMBINATIONS_PAGINATION_OPTIONS,
             'combinationsLimit' => ProductCombinationFilters::LIST_LIMIT,
-            'combinationsForm' => $this->createForm(CombinationListType::class)->createView(),
-            'combinationItemForm' => $this->getCombinationItemFormBuilder()->getForm()->createView(),
+            'combinationsForm' => $combinationsForm->createView(),
         ]);
     }
 
@@ -322,23 +322,30 @@ class CombinationController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
-     * @param int $combinationId
+     * @param int $productId
      * @param Request $request
      *
      * @return JsonResponse
      */
-    public function updateCombinationFromListingAction(int $combinationId, Request $request): JsonResponse
+    public function updateCombinationFromListingAction(int $productId, Request $request): JsonResponse
     {
-        $form = $this->getCombinationItemFormBuilder()->getFormFor($combinationId, [], [
+        $combinationsListForm = $this->getCombinationListFormBuilder()->getForm([], [
             'method' => Request::METHOD_PATCH,
         ]);
-        $form->handleRequest($request);
 
         try {
-            $result = $this->getCombinationItemFormHandler()->handleFor($combinationId, $form);
+            $combinationsListForm->handleRequest($request);
+            $result = $this->getCombinationListFormHandler()->handleFor($productId, $combinationsListForm);
 
-            if (!$result->isValid()) {
-                return $this->json(['errors' => $this->getFormErrorsForJS($form)], Response::HTTP_BAD_REQUEST);
+            if (!$result->isSubmitted()) {
+                return $this->json(['errors' => $this->getFormErrorsForJS($combinationsListForm)], Response::HTTP_BAD_REQUEST);
+            } elseif (!$result->isValid()) {
+                return $this->json([
+                    'errors' => $this->getFormErrorsForJS($combinationsListForm),
+                    'formContent' => $this->renderView('@PrestaShop/Admin/Sell/Catalog/Product/Combination/combination_list_form.html.twig', [
+                        'combinationsForm' => $combinationsListForm->createView(),
+                    ]),
+                ], Response::HTTP_BAD_REQUEST);
             }
         } catch (Exception $e) {
             return $this->json(
@@ -439,14 +446,14 @@ class CombinationController extends FrameworkBundleAdminController
         $fallbackImageUrl = $this->getFallbackImageUrl();
         foreach ($combinationListForEditing->getCombinations() as $combination) {
             $data['combinations'][] = [
-                'id' => $combination->getCombinationId(),
-                'isSelected' => false,
+                'combination_id' => $combination->getCombinationId(),
+                'is_selected' => false,
                 'name' => $combination->getCombinationName(),
                 'reference' => $combination->getReference(),
-                'impactOnPrice' => (string) $combination->getImpactOnPrice(),
+                'impact_on_price_te' => (string) $combination->getImpactOnPrice(),
                 'quantity' => $combination->getQuantity(),
-                'isDefault' => $combination->isDefault(),
-                'imageUrl' => $combination->getImageUrl() ?: $fallbackImageUrl,
+                'is_default' => $combination->isDefault(),
+                'image_url' => $combination->getImageUrl() ?: $fallbackImageUrl,
             ];
         }
 
@@ -466,9 +473,9 @@ class CombinationController extends FrameworkBundleAdminController
     /**
      * @return FormHandlerInterface
      */
-    private function getCombinationItemFormHandler(): FormHandlerInterface
+    private function getCombinationListFormHandler(): FormHandlerInterface
     {
-        return $this->get('prestashop.core.form.identifiable_object.combination_item_form_handler');
+        return $this->get('prestashop.core.form.identifiable_object.combination_list_form_handler');
     }
 
     /**
@@ -506,9 +513,9 @@ class CombinationController extends FrameworkBundleAdminController
     /**
      * @return FormBuilderInterface
      */
-    private function getCombinationItemFormBuilder(): FormBuilderInterface
+    private function getCombinationListFormBuilder(): FormBuilderInterface
     {
-        return $this->get('prestashop.core.form.identifiable_object.builder.combination_item_form_builder');
+        return $this->get('prestashop.core.form.identifiable_object.builder.combination_list_form_builder');
     }
 
     /**

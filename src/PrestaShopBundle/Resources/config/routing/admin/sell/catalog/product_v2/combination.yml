@@ -18,7 +18,7 @@ admin_products_combinations_ids:
     _legacy_controller: AdminProducts
 
 admin_products_combinations_update_combination_from_listing:
-  path: /combinations/{combinationId}/update-combination-from-listing
+  path: /combinations/{productId}/update-combination-from-listing
   methods: [ PATCH ]
   options:
     expose: true

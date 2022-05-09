@@ -28,15 +28,16 @@ import ProductMap from '@pages/product/product-map';
 import ProductEvents from '@pages/product/product-event-map';
 import CombinationsService from '@pages/product/services/combinations-service';
 import {EventEmitter} from 'events';
-import BulkChoicesSelector from '@pages/product/combination/bulk-choices-selector';
+import BulkChoicesSelector from '@pages/product/components/combination-list/bulk-choices-selector';
+import {notifyFormErrors} from '@components/form/helpers';
 
 const CombinationMap = ProductMap.combinations;
 const CombinationEvents = ProductEvents.combinations;
 
 /**
- * This components handles the bulk actions of the combination list.
+ * This components handles the bulk edition of the combination list.
  */
-export default class BulkFormHandler {
+export default class BulkEditionHandler {
   readonly productId: number;
 
   private combinationsService: CombinationsService;
@@ -47,11 +48,16 @@ export default class BulkFormHandler {
 
   private bulkChoicesSelector: BulkChoicesSelector;
 
-  constructor(productId: number, bulkChoicesSelector: BulkChoicesSelector) {
+  constructor(
+    productId: number,
+    eventEmitter: EventEmitter,
+    bulkChoicesSelector: BulkChoicesSelector,
+    combinationsService: CombinationsService,
+  ) {
     this.productId = productId;
+    this.eventEmitter = eventEmitter;
     this.bulkChoicesSelector = bulkChoicesSelector;
-    this.combinationsService = new CombinationsService();
-    this.eventEmitter = window.prestashop.instance.eventEmitter;
+    this.combinationsService = combinationsService;
     this.tabContainer = document.querySelector<HTMLDivElement>(CombinationMap.externalCombinationTab)!;
 
     this.init();
@@ -161,13 +167,7 @@ export default class BulkFormHandler {
         const jsonResponse = await response.json();
 
         if (jsonResponse.errors) {
-          Object.keys(jsonResponse.errors).forEach((field: string) => {
-            if (Object.prototype.hasOwnProperty.call(jsonResponse.errors, field)) {
-              const fieldErrors: string[] = jsonResponse.errors[field];
-              const errors: string = fieldErrors.join(' ');
-              $.growl.error({message: `${field}: ${errors}`});
-            }
-          });
+          notifyFormErrors(jsonResponse);
         }
       } catch (error) {
         console.log(error);

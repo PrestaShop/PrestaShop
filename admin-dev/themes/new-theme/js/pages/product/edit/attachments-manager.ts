@@ -80,7 +80,7 @@ export default class AttachmentsManager {
             iframeModal.showLoading();
             iframeModal.hide();
 
-            getAttachmentInfo(dataAttributes.attachmentId).then((response) => {
+            getAttachmentInfo(Number(dataAttributes.attachmentId)).then((response) => {
               this.entitySearchInput.addItem(response.attachmentInfo);
             });
           }

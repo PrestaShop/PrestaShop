@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -22,27 +23,33 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import Vue from 'vue';
-import {Attribute, AttributeGroup} from '@pages/product/types';
 
-export default Vue.extend({
-  methods: {
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataFormatter;
+
+/**
+ * This class transforms the data from list form into data adapted to the combination form structure,
+ * since the forms are not constructed the same way the goal is to rebuild the same data values with the
+ * right property path. When the data is not detected it is not included in the formatted data.
+ */
+class CombinationListFormDataFormatter extends AbstractFormDataFormatter
+{
     /**
-     * The selected attribute is provided as a parameter instead od using this reference because it helps the
-     * observer work better whe this.selectedAttributeGroups is explicitly used as an argument.
+     * @param array<string, mixed> $formData
      *
-     * @param {Object} attribute
-     * @param {Object} attributeGroup
-     * @param {Object} attributeGroups
-     *
-     * @returns {boolean}
+     * @return array<string, mixed>
      */
-    isSelected(attribute: Attribute, attributeGroup: AttributeGroup, attributeGroups: Record<string, AttributeGroup>): boolean {
-      if (!Object.prototype.hasOwnProperty.call(attributeGroups, attributeGroup.id)) {
-        return false;
-      }
+    public function format(array $formData): array
+    {
+        $pathAssociations = [
+            '[reference]' => '[references][reference]',
+            '[impact_on_price_te]' => '[price_impact][price_tax_excluded]',
+            '[impact_on_price_ti]' => '[price_impact][price_tax_included]',
+            '[delta_quantity][delta]' => '[stock][quantities][delta_quantity][delta]',
+            '[is_default]' => '[is_default]',
+        ];
 
-      return attributeGroups[attributeGroup.id].attributes.includes(attribute);
-    },
-  },
-});
+        return $this->formatByPath($formData, $pathAssociations);
+    }
+}

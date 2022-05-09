@@ -51,6 +51,7 @@ export default {
     clearFilters: 'clearFilters',
     selectCombination: 'selectCombination',
     listRendered: 'combinationsListRendered',
+    buildCombinationRow: 'buildCombinationRow',
     bulkUpdateFinished: 'combinationsBulkUpdateFinished',
   },
   categories: {

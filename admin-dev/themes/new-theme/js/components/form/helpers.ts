@@ -22,27 +22,29 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import Vue from 'vue';
-import {Attribute, AttributeGroup} from '@pages/product/types';
 
-export default Vue.extend({
-  methods: {
-    /**
-     * The selected attribute is provided as a parameter instead od using this reference because it helps the
-     * observer work better whe this.selectedAttributeGroups is explicitly used as an argument.
-     *
-     * @param {Object} attribute
-     * @param {Object} attributeGroup
-     * @param {Object} attributeGroups
-     *
-     * @returns {boolean}
-     */
-    isSelected(attribute: Attribute, attributeGroup: AttributeGroup, attributeGroups: Record<string, AttributeGroup>): boolean {
-      if (!Object.prototype.hasOwnProperty.call(attributeGroups, attributeGroup.id)) {
-        return false;
-      }
+/**
+ * Used to display errors fetched from PrestaSHop API in a JSON format.
+ * The expected format looks like this:
+ * {
+ *   errors: {
+ *     price: 'Invalid negative value',
+ *     name: 'Forbidden blank value',
+ *   },
+ * }
+ *
+ * @param jsonResponse
+ */
+export function notifyFormErrors(jsonResponse: any): void {
+  Object.keys(jsonResponse.errors).forEach((field: string) => {
+    if (Object.prototype.hasOwnProperty.call(jsonResponse.errors, field)) {
+      const fieldErrors: string[] = jsonResponse.errors[field];
+      const errors: string = fieldErrors.join(' ');
+      $.growl.error({message: `${field}: ${errors}`});
+    }
+  });
+};
 
-      return attributeGroups[attributeGroup.id].attributes.includes(attribute);
-    },
-  },
-});
+export default {
+  notifyFormErrors,
+};

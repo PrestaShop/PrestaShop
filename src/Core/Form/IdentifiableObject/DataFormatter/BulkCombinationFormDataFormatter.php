@@ -27,15 +27,12 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataFormatter;
 
-use Symfony\Component\PropertyAccess\Exception\AccessException;
-use Symfony\Component\PropertyAccess\PropertyAccess;
-
 /**
  * This class transforms the data from bulk form into data adapted to the combination form structure,
  * since the forms are not constructed the same way the goal is to rebuild the same data values with the
  * right property path. When the data is not detected it is not included in the formatted data.
  */
-class BulkCombinationFormDataFormatter
+class BulkCombinationFormDataFormatter extends AbstractFormDataFormatter
 {
     /**
      * @param array<string, mixed> $formData
@@ -65,24 +62,7 @@ class BulkCombinationFormDataFormatter
             '[stock][low_stock_alert]' => '[stock][options][low_stock_alert]',
             '[stock][available_date]' => '[stock][available_date]',
         ];
-        $formattedData = [];
-
-        $propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()
-            ->enableExceptionOnInvalidIndex()
-            ->enableExceptionOnInvalidPropertyPath()
-            ->disableMagicCall()
-            ->getPropertyAccessor()
-        ;
-        foreach ($pathAssociations as $bulkFormPath => $editFormPath) {
-            try {
-                $bulkValue = $propertyAccessor->getValue($formData, $bulkFormPath);
-                $propertyAccessor->setValue($formattedData, $editFormPath, $bulkValue);
-            } catch (AccessException $e) {
-                // When the bulk data is not found it means the field was disabled, which is the expected behaviour
-                // as the bulk request is a partial request not every data is expected And when it's not present
-                // it means there is no modification to do so this field is simply ignored
-            }
-        }
+        $formattedData = $this->formatByPath($formData, $pathAssociations);
 
         // We only update images if disabling_switch_images value is truthy
         if (!empty($formData['images']['disabling_switch_images'])) {

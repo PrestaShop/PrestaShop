@@ -24,90 +24,57 @@
  *#}
 {% extends '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
-{%- block combination_list_row -%}
-  <div {{ block('widget_attributes') }}>
-    {{- block('form_rows') -}}
-  </div>
-{%- endblock -%}
-
 {%- block combination_item_row -%}
-  <tr id="combination-list-row-{{ form.vars.name }}" class="combination">
-    <td>
-      {{ form_widget(form.is_selected) }}
-      {{ form_widget(form.combination_id) }}
-    </td>
-    <td>
-      <img class="combination-image" src="" alt="">
-    </td>
-    <td>
-      {{ form_widget(form.name) }}
-    </td>
-    <td>
-      {{ form_widget(form.reference) }}
-    </td>
-    <td>
-      {{ form_widget(form.impact_on_price) }}
-    </td>
-    <td>
-      {{ form_widget(form.final_price_te) }}
-    </td>
-    <td>
-      {{ form_widget(form.delta_quantity) }}
-      {{ form_errors(form.delta_quantity) }}
-    </td>
-    <td>
-      {{ form_widget(form.is_default) }}
-      {{ form_errors(form.is_default) }}
-    </td>
-    <td>
-      <div class="combination-actions">
-        {{ form_widget(form.edit) }}
-        {{ form_widget(form.delete) }}
-      </div>
-    </td>
+  <tr id="combination-list-row-{{ form.vars.name }}" class="combination combination-list-row">
+    {# Special case to keep both inputs in the same cell #}
+    {% for child in form.children %}
+      <td>
+        {# When value is null we are displaying the prototype #}
+        {% if value is null %}
+          {% set widgetAttr = {value: placeholder_data[child.vars.name]} %}
+        {% else %}
+          {% set widgetAttr = {} %}
+        {% endif %}
+        {{ form_widget(child, widgetAttr) }}
+        {{ form_errors(child) }}
+      </td>
+    {% endfor %}
   </tr>
 {%- endblock -%}
 
-{%- block collection_row -%}
+{%- block combination_list_row -%}
   {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
-
   {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
-  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' grid-table table grid-ordering-column')|trim }) -%}
+  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' combinations-table grid-table table grid-ordering-column')|trim }) -%}
   <table {{ block('widget_attributes') }}>
+    {# Early render of the _token so that it is not included in the tbody which will be emptied by the JS #}
+    {% if form._token %}
+      {{ form_widget(form._token) }}
+    {% endif %}
     <thead class="thead-default">
-    <tr class="column-headers">
-      <th scope="col" id="id-header">
-        <div class="md-checkbox md-checkbox-inline">
-          <label>
-            <input type="checkbox" id="bulk-select-all-in-page">
-            <i class="md-checkbox-control"></i>
-          </label>
-        </div>
-        {{ ps.sortable_column_header('ID'|trans({}, 'Admin.Global'), 'id_product_attribute') }}
-      </th>
-      <th scope="col"></th>
-      <th scope="col">
-        {{ 'Combination'|trans({}, 'Admin.Global') }}
-      </th>
-      <th scope="col">
-        {{ ps.sortable_column_header('Reference'|trans({}, 'Admin.Global'), 'reference') }}
-      </th>
-      <th scope="col">
-        {{ ps.sortable_column_header('Impact on price (tax excl.)'|trans({}, 'Admin.Catalog.Feature'), 'price') }}
-      </th>
-      <th scope="col">
-        {{ 'Final price (tax excl.)'|trans({}, 'Admin.Catalog.Feature') }}
-      </th>
-      <th scope="col">
-        {{ ps.sortable_column_header('Quantity'|trans({}, 'Admin.Global'), 'quantity') }}
-      </th>
-      <th scope="col">
-        {{ ps.sortable_column_header('Default combination'|trans({}, 'Admin.Catalog.Feature'), 'default_on') }}
-      </th>
-      <th scope="col">
-        {{ 'Actions'|trans({}, 'Admin.Global') }}
-      </th>
-    </tr>
+      <tr class="column-headers">
+        <th scope="col" id="id-header">
+          <div class="md-checkbox md-checkbox-inline">
+            <label>
+              <input type="checkbox" id="bulk-select-all-in-page">
+              <i class="md-checkbox-control"></i>
+            </label>
+          </div>
+        </th>
+
+        {% for child in prototype.children %}
+          {# Exception: is_selected header has already been rendered manually #}
+          {% if child.vars.name != 'is_selected' %}
+            <th scope="col">
+              {% if child.vars.attr['data-order-by'] is defined %}
+                {{ ps.sortable_column_header(child.vars.label, child.vars.attr['data-order-by']) }}
+              {% else %}
+                {{ child.vars.label }}
+              {% endif %}
+            </th>
+          {% endif %}
+        {% endfor %}
+      </tr>
     </thead>
     <tbody>
     {{- block('form_rows') -}}

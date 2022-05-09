@@ -61,14 +61,19 @@ export default class CombinationsService {
     });
   }
 
-  updateListedCombination(combinationId: number, data: Record<string, any>): JQuery.jqXHR<any> {
-    return $.ajax({
-      url: this.router.generate('admin_products_combinations_update_combination_from_listing', {
-        combinationId,
-      }),
-      data,
-      type: 'PATCH',
-    });
+  updateCombinationList(productId: number, formData: FormData): Promise<Response> {
+    formData.append('_method', 'PATCH');
+
+    return fetch(
+      this.router.generate('admin_products_combinations_update_combination_from_listing', {productId}),
+      {
+        method: 'POST',
+        body: formData,
+        headers: {
+          _method: 'PATCH',
+        },
+      },
+    );
   }
 
   /**
