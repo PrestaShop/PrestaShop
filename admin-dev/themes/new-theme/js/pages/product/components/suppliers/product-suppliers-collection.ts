@@ -137,7 +137,7 @@ export default class ProductSuppliersCollection {
     // Finally toggle component visibility
     this.toggleRowVisibility();
 
-    this.$productsTable.on('change', 'input', (event: ChangeEvent) => {
+    this.$productsTable.on('change', ':input', (event: ChangeEvent) => {
       this.memorizeCurrentSuppliers();
 
       // Trigger default product supplier changed if it's the correct one
