@@ -88,11 +88,11 @@ export default class CombinationsListRenderer {
   /**
    * @param {Boolean} loading
    */
-  toggleLoading(loading: boolean): void {
+  setLoading(loading: boolean): void {
     this.$loadingSpinner.toggle(loading);
   }
 
-  toggleSorting(sortingEnabled: boolean): void {
+  setSorting(sortingEnabled: boolean): void {
     this.sortingEnabled = sortingEnabled;
   }
 

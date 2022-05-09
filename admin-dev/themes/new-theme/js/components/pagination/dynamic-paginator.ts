@@ -120,7 +120,7 @@ export default class DynamicPaginator {
    */
   async paginate(page: number): Promise<void> {
     this.currentPage = page > 0 ? page : 1;
-    this.renderer.toggleLoading(true);
+    this.renderer.setLoading(true);
     const limit = this.getLimit();
 
     const data: FetchResponse = await this.paginationService.fetch(
@@ -145,7 +145,7 @@ export default class DynamicPaginator {
     );
 
     this.renderer.render(data);
-    this.renderer.toggleLoading(false);
+    this.renderer.setLoading(false);
 
     window.prestaShopUiKit.initToolTips();
   }

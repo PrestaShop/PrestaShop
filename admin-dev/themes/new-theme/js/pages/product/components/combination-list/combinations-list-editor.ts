@@ -173,7 +173,7 @@ export default class CombinationsListEditor {
         $disabledElement.prop('disabled', true);
       });
     });
-    this.renderer.toggleSorting(false);
+    this.renderer.setSorting(false);
   }
 
   private disableEditionMode(): void {
@@ -191,7 +191,7 @@ export default class CombinationsListEditor {
         $disabledElement.prop('disabled', $disabledElement.data('previousDisabled'));
       });
     });
-    this.renderer.toggleSorting(true);
+    this.renderer.setSorting(true);
     this.editionMode = false;
   }
 
@@ -225,7 +225,7 @@ export default class CombinationsListEditor {
   }
 
   private async saveEdition(): Promise<void> {
-    this.renderer.toggleLoading(true);
+    this.renderer.setLoading(true);
 
     const response = await this.combinationsService.updateCombinationList(this.productId, this.getFormData());
     const jsonResponse = await response.json();
@@ -237,7 +237,7 @@ export default class CombinationsListEditor {
       } else {
         notifyFormErrors(jsonResponse);
       }
-      this.renderer.toggleLoading(false);
+      this.renderer.setLoading(false);
     } else if (jsonResponse.message) {
       $.growl({message: jsonResponse.message});
       this.disableEditionMode();
