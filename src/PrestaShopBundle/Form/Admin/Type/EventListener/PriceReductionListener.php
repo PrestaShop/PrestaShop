@@ -69,6 +69,10 @@ class PriceReductionListener implements EventSubscriberInterface
                     // We still need the data attribute available to handle switching in JS
                     'data-currency' => $options['attr']['data-currency'],
                 ],
+                'row_attr' => [
+                    // Do not forget the row class which is important for JS
+                    'class' => 'price-reduction-value',
+                ],
             ]);
         }
     }

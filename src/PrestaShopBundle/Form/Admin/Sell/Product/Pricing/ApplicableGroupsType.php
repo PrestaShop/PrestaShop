@@ -59,6 +59,11 @@ class ApplicableGroupsType extends TranslatorAwareType
     private $shopByIdChoiceProvider;
 
     /**
+     * @var string
+     */
+    private $defaultCurrencySymbol;
+
+    /**
      * @var bool
      */
     private $isMultiShopEnabled;
@@ -70,6 +75,7 @@ class ApplicableGroupsType extends TranslatorAwareType
         FormChoiceProviderInterface $countryByIdChoiceProvider,
         FormChoiceProviderInterface $groupByIdChoiceProvider,
         FormChoiceProviderInterface $shopByIdChoiceProvider,
+        string $defaultCurrencySymbol,
         bool $isMultiShopEnabled
     ) {
         parent::__construct($translator, $locales);
@@ -77,6 +83,7 @@ class ApplicableGroupsType extends TranslatorAwareType
         $this->countryByIdChoiceProvider = $countryByIdChoiceProvider;
         $this->groupByIdChoiceProvider = $groupByIdChoiceProvider;
         $this->shopByIdChoiceProvider = $shopByIdChoiceProvider;
+        $this->defaultCurrencySymbol = $defaultCurrencySymbol;
         $this->isMultiShopEnabled = $isMultiShopEnabled;
     }
 
@@ -89,6 +96,9 @@ class ApplicableGroupsType extends TranslatorAwareType
                 'choices' => $this->currencyByIdChoiceProvider->getChoices(),
                 'choice_attr' => $this->currencyByIdChoiceProvider->getChoicesAttributes(),
                 'required' => false,
+                'attr' => [
+                    'data-default-currency-symbol' => $this->defaultCurrencySymbol,
+                ],
             ])
             ->add('country_id', ChoiceType::class, [
                 'label' => $this->trans('Country', 'Admin.Global'),

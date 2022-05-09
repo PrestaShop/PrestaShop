@@ -140,7 +140,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new DeleteSpecificPriceCommand($specificPriceId));
         } catch (Exception $e) {
             return $this->json([
-                'error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
+                'error' => $this->getErrorMessageForException($e, $this->getErrorMessages()),
             ], Response::HTTP_BAD_REQUEST);
         }
 

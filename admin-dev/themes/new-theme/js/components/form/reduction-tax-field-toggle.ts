@@ -77,16 +77,16 @@ export default class ReductionTaxFieldToggle {
 
   private getSymbol(defaultValue: string): string {
     const select = document.querySelector<HTMLSelectElement>(this.currencySymbolSelect);
-
     if (!select) {
       return defaultValue;
     }
 
+    const defaultCurrencySymbol: string = select.dataset.defaultCurrencySymbol || '';
     const selectItem = select.item(select.selectedIndex);
 
     if (!selectItem) {
-      return defaultValue;
+      return defaultCurrencySymbol;
     }
-    return selectItem.getAttribute('symbol') ?? defaultValue;
+    return selectItem.getAttribute('symbol') ?? defaultCurrencySymbol;
   }
 }

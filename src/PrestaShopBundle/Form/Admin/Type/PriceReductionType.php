@@ -89,12 +89,12 @@ class PriceReductionType extends CommonAbstractType
                 'choices' => $reductionTypeChoices,
             ])
             ->add('include_tax', ChoiceType::class, [
-                'row_attr' => [
-                    'class' => 'js-include-tax-row',
-                ],
                 'choices' => $this->taxInclusionChoiceProvider->getChoices(),
                 'placeholder' => false,
                 'required' => false,
+                'row_attr' => [
+                    'class' => 'js-include-tax-row',
+                ],
             ])
         ;
 
