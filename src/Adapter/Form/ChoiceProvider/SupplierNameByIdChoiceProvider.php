@@ -43,7 +43,9 @@ final class SupplierNameByIdChoiceProvider implements FormChoiceProviderInterfac
     {
         $choices = [];
         foreach (Supplier::getSuppliers(false, 0, false) as $supplier) {
-            $choices[$supplier['name']] = (int) $supplier['id_supplier'];
+            // Integrate the ID in the name so that suppliers with identical names don't override themselves
+            $name = sprintf('%d - %s', $supplier['id_supplier'], $supplier['name']);
+            $choices[$name] = (int) $supplier['id_supplier'];
         }
 
         return $choices;
