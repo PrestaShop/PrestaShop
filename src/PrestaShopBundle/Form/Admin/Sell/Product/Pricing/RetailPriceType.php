@@ -32,9 +32,11 @@ use Currency;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use PrestaShopBundle\Form\Admin\Type\UnavailableType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\PositiveOrZero;
@@ -53,27 +55,48 @@ class RetailPriceType extends TranslatorAwareType
     private $defaultCurrency;
 
     /**
+     * @var array
+     */
+    private $taxRuleGroupChoices;
+
+    /**
+     * @var array
+     */
+    private $taxRuleGroupChoicesAttributes;
+
+    /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    /**
+     * @var bool
+     */
+    private $taxEnabled;
+
+    /**
      * @var bool
      */
     private $isEcotaxEnabled;
 
-    /**
-     * @param TranslatorInterface $translator
-     * @param array $locales
-     * @param Locale $contextLocale
-     * @param Currency $defaultCurrency
-     * @param bool $isEcotaxEnabled
-     */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         Locale $contextLocale,
         Currency $defaultCurrency,
+        array $taxRuleGroupChoices,
+        array $taxRuleGroupChoicesAttributes,
+        RouterInterface $router,
+        bool $taxEnabled,
         bool $isEcotaxEnabled
     ) {
         parent::__construct($translator, $locales);
         $this->contextLocale = $contextLocale;
         $this->defaultCurrency = $defaultCurrency;
+        $this->taxRuleGroupChoices = $taxRuleGroupChoices;
+        $this->taxRuleGroupChoicesAttributes = $taxRuleGroupChoicesAttributes;
+        $this->router = $router;
+        $this->taxEnabled = $taxEnabled;
         $this->isEcotaxEnabled = $isEcotaxEnabled;
     }
 
@@ -98,6 +121,26 @@ class RetailPriceType extends TranslatorAwareType
                     new PositiveOrZero(),
                 ],
                 'default_empty_data' => 0.0,
+                'modify_all_shops' => true,
+            ])
+            ->add('tax_rules_group_id', ChoiceType::class, [
+                'choices' => $this->taxRuleGroupChoices,
+                'required' => false,
+                // placeholder false is important to avoid empty option in select input despite required being false
+                'placeholder' => false,
+                'choice_attr' => $this->taxRuleGroupChoicesAttributes,
+                'attr' => [
+                    'data-toggle' => 'select2',
+                    'data-minimumResultsForSearch' => '7',
+                    'data-tax-enabled' => $this->taxEnabled,
+                ],
+                'label' => $this->trans('Tax rule', 'Admin.Catalog.Feature'),
+                'help' => !$this->taxEnabled ? $this->trans('Tax feature is disabled, it will not affect price tax included.', 'Admin.Catalog.Feature') : '',
+                'external_link' => [
+                    'text' => $this->trans('[1]Manage tax rules[/1]', 'Admin.Catalog.Feature'),
+                    'href' => $this->router->generate('admin_taxes_index'),
+                    'align' => 'right',
+                ],
                 'modify_all_shops' => true,
             ])
             ->add('price_tax_included', MoneyType::class, [

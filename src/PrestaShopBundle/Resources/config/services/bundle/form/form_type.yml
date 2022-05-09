@@ -1514,11 +1514,7 @@ services:
     parent: 'form.type.translatable.aware'
     public: true
     arguments:
-      - '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider").getChoices()'
-      - '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider").getChoicesAttributes()'
       - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
-      - '@router'
-      - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_TAX')"
     tags:
       - { name: form.type }
 
@@ -1529,6 +1525,10 @@ services:
     arguments:
       - '@prestashop.core.localization.locale.context_locale'
       - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
+      - '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider").getChoices()'
+      - '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider").getChoicesAttributes()'
+      - '@router'
+      - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_TAX')"
       - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_USE_ECOTAX')"
     tags:
       - { name: form.type }
