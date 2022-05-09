@@ -348,8 +348,8 @@ class ProductFormDataProviderTest extends TestCase
         ];
         $expectedOutputData['pricing']['retail_price']['price_tax_excluded'] = 42.00;
         $expectedOutputData['pricing']['retail_price']['price_tax_included'] = 50.40;
+        $expectedOutputData['pricing']['retail_price']['tax_rules_group_id'] = 49;
         $expectedOutputData['pricing']['retail_price']['ecotax'] = 69.51;
-        $expectedOutputData['pricing']['tax_rules_group_id'] = 49;
         $expectedOutputData['pricing']['on_sale'] = true;
         $expectedOutputData['pricing']['wholesale_price'] = 66.56;
         $expectedOutputData['pricing']['unit_price']['price_tax_excluded'] = 6.656;
@@ -1381,9 +1381,9 @@ class ProductFormDataProviderTest extends TestCase
                 'retail_price' => [
                     'price_tax_excluded' => 19.86,
                     'price_tax_included' => 23.832,
+                    'tax_rules_group_id' => 1,
                     'ecotax' => 19.86,
                 ],
-                'tax_rules_group_id' => 1,
                 'on_sale' => false,
                 'wholesale_price' => 19.86,
                 'unit_price' => [
