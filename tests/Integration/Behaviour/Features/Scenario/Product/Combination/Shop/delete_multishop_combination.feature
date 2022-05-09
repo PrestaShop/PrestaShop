@@ -34,10 +34,7 @@ Feature: Delete combination from Back Office (BO) in multiple shops
     And I generate combinations in shop "shop1" for product product1 using following attributes:
       | Size  | [S,M]              |
       | Color | [White,Black,Blue] |
-    And I generate combinations in shop "shop2" for product product1 using following attributes:
-      | Size  | [S,M]              |
-      | Color | [White,Black,Blue] |
-    And product "product1" should have following combinations for shops "shop1,shop2":
+    Then product "product1" should have following combinations for shops "shop1":
       | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
       | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
       | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
@@ -45,6 +42,23 @@ Feature: Delete combination from Back Office (BO) in multiple shops
       | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
       | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
       | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
+    And I update combination "product1SWhite" from list with following values:
+      | reference       | S_White |
+      | impact on price | 5       |
+    Then product "product1" should have following combinations for shops "shop1":
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SWhite | Size - S, Color - White | S_White   | [Size:S,Color:White] | 5               | 0        | true       |
+      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
+      | product1SBlue  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | false      |
+      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
+    When I generate combinations in shop "shop2" for product product1 using following attributes:
+      | Size  | [S]     |
+      | Color | [White] |
+    Then product "product1" should have following combinations for shops "shop2":
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
 #    And I copy product product1 from shop shop1 to shop shop2
 #    Then product "product1" localized "name" for shops "shop1,shop2" should be:
 #      | locale | value       |
