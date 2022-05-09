@@ -4815,10 +4815,10 @@ class AdminControllerCore extends Controller
         $controllerButtons = $this->page_header_toolbar_btn;
         if (!empty($controllerButtons)) {
             // Build ActionsBarButton based on array setting from the controller and add it to collection
-            foreach ($controllerButtons as $controllerButton) {
+            foreach ($controllerButtons as $controllerButtonIndex => $controllerButton) {
                 $toolbarButtonsCollection->add(
                     new ActionsBarButton(
-                        $controllerButton['class'] ?? '',
+                        $controllerButton['class'] ?? $controllerButtonIndex,
                         $controllerButton,
                         $controllerButton['desc'] ?? ''
                     )
