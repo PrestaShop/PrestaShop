@@ -679,6 +679,41 @@ class AddOrder extends BOBasePage {
     await this.selectByVisibleText(page, this.invoiceAddressSelect, invoiceAddress);
   }
 
+  /**
+   * Choose delivery address
+   * @param page {Page} Browser tab
+   * @param deliveryAddress {string} Delivery address to choose
+   * @returns {Promise<string>}
+   */
+  async chooseDeliveryAddress(page, deliveryAddress) {
+    await this.selectByVisibleText(page, this.deliveryAddressSelect, deliveryAddress);
+    await page.waitForResponse(response => response.url().includes('/addresses'));
+
+    return this.getTextContent(page, '#delivery-address-details');
+  }
+
+  /**
+   * Click on edit delivery address
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async clickOnEditDeliveryAddressButton(page) {
+    await this.waitForSelectorAndClick(page, '#js-delivery-address-edit-btn');
+
+    return this.elementVisible(page, this.iframe, 2000);
+  }
+
+  /**
+   * Get edit address Iframe
+   * @param page {Page} Browser tab
+   * @param cartID {number} Cart id number
+   * @param addressID {number} Address id to edit
+   * @returns {Promise<*>}
+   */
+  async getEditAddressIframe(page, cartID, addressID) {
+    return page.frame({url: new RegExp(`/delivery/edit?addressId=${addressID}`, 'gmi')});
+  }
+
   /* Shipping methods */
 
   /**
