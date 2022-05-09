@@ -148,7 +148,7 @@ export default class SpecificPricesManager {
       closeButtonLabel,
       confirmButtonLabel,
       closeOnConfirm: false,
-      onFormLoaded: (form: HTMLElement, formData: JQuery.NameValuePair[] | null, dataAttributes: DOMStringMap | null): void => {
+      onFormLoaded: (form: HTMLFormElement, formData: FormData, dataAttributes: DOMStringMap | null): void => {
         if (dataAttributes && dataAttributes.alertsSuccess === '1') {
           this.eventEmitter.emit(ProductEventMap.specificPrice.listUpdated);
         }

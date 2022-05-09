@@ -70,7 +70,7 @@ export default class AttachmentsManager {
         formSelector: 'form[name="attachment"]',
         formUrl: $(event.target).prop('href'),
         closable: true,
-        onFormLoaded: (form: HTMLElement, formData: JQuery.NameValuePair[] | null, dataAttributes: DOMStringMap | null): void => {
+        onFormLoaded: (form: HTMLElement, formData: FormData, dataAttributes: DOMStringMap | null): void => {
           if (dataAttributes && dataAttributes.attachmentId) {
             const successMessage = this.$addAttachmentBtn.data('successCreateMessage');
             $.growl({

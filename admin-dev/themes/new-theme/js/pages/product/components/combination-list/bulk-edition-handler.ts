@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import {ConfirmModal, IframeModal} from '@components/modal';
+import {ConfirmModal, FormIframeModal} from '@components/modal';
 import ProductMap from '@pages/product/product-map';
 import ProductEvents from '@pages/product/product-event-map';
 import CombinationsService from '@pages/product/services/combinations-service';
@@ -95,18 +95,17 @@ export default class BulkEditionHandler {
     const selectedCombinationIds = await this.bulkChoicesSelector.getSelectedIds();
     const selectedCombinationsCount = selectedCombinationIds.length;
     let initialSerializedData: string;
-    const iframeModal = new IframeModal({
+    const iframeModal = new FormIframeModal({
       id: CombinationMap.bulkFormModalId,
       modalTitle,
-      iframeUrl: formUrl,
+      formUrl,
       autoSizeContainer: 'form[name="bulk_combination"]',
       closable: true,
       confirmButtonLabel: confirmButtonLabel.replace(/%combinations_number%/, String(selectedCombinationsCount)),
       closeButtonLabel,
-      onLoaded: (iframe: HTMLIFrameElement) => {
+      onFormLoaded: (form: HTMLFormElement) => {
         // Disable submit button as long as the form data has not changed
         iframeModal.modal.confirmButton?.setAttribute('disabled', 'disabled');
-        const form: HTMLFormElement | null = this.getIframeForm(iframe);
 
         if (form) {
           initialSerializedData = this.serializeForm(form);
@@ -121,15 +120,8 @@ export default class BulkEditionHandler {
           });
         }
       },
-      confirmCallback: () => {
-        if (iframeModal.modal.iframe.contentWindow) {
-          // eslint-disable-next-line max-len
-          const form: HTMLFormElement | null = iframeModal.modal.iframe.contentWindow.document.querySelector<HTMLFormElement>('form[name="bulk_combination"]');
-
-          if (form) {
-            this.submitForm(form);
-          }
-        }
+      formConfirmCallback: (form: HTMLFormElement) => {
+        this.submitForm(form);
       },
     });
 
@@ -139,14 +131,6 @@ export default class BulkEditionHandler {
   private serializeForm(form: HTMLFormElement): string {
     // @ts-ignore
     return new URLSearchParams(new FormData(form)).toString();
-  }
-
-  private getIframeForm(iframe: HTMLIFrameElement): HTMLFormElement | null {
-    if (iframe.contentWindow) {
-      return iframe.contentWindow.document.querySelector<HTMLFormElement>('form[name="bulk_combination"]');
-    }
-
-    return null;
   }
 
   private async submitForm(form: HTMLFormElement): Promise<void> {

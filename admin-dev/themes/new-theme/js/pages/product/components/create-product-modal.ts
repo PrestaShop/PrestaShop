@@ -47,7 +47,7 @@ export default class CreateProductModal {
         closable: true,
         // We override the body selector so that the modal keeps the size of the initial create form even after submit
         autoSizeContainer: '.create-product-form',
-        onFormLoaded: (form: HTMLElement, formData: JQuery.NameValuePair[] | null, dataAttributes: DOMStringMap | null): void => {
+        onFormLoaded: (form: HTMLElement, formData: FormData, dataAttributes: DOMStringMap | null): void => {
           if (dataAttributes) {
             if (dataAttributes.modalTitle) {
               iframeModal.setTitle(dataAttributes.modalTitle);
