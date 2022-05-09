@@ -97,18 +97,22 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
 
     /**
      * @todo: This is for generating combination when it already exists in other shop. (so it doesnt create additional one with different id)
-     *        needs more attention, we should probably reset everything and only leave id,
-     *        while now it will probably copy values from context shop combination (or wherever it was loaded from)
      *        Also maybe this should be left internally in "create" method?
      */
     public function addToShop(CombinationId $combinationId, ShopId $shopId): void
     {
-        /** @var Combination $combination */
-        $combination = $this->getObjectModel(
+        /** @var Combination $combinationFromOtherShop */
+        $combinationFromOtherShop = $this->getObjectModel(
             $combinationId->getValue(),
             Combination::class,
             CombinationNotFoundException::class
         );
+
+        $combination = new Combination(null, null, $shopId->getValue());
+        $combination->force_id = true;
+        $combination->id = $combinationFromOtherShop->id;
+        $combination->id_product = $combinationFromOtherShop->id_product;
+        //@todo: implement default combination handling
 
         //@todo: dedicated exception and/or code
         $this->updateObjectModelForShops($combination, [$shopId->getValue()], CombinationException::class);
