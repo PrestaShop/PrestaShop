@@ -1409,6 +1409,23 @@
   </div>
 {%- endblock -%}
 
+{% block button_collection_row %}
+  {%- set attr = attr|merge({
+    class: (attr.class|default('') ~ ' form-group btn-collection btn-toolbar')|trim,
+    role: 'group',
+    style: 'justify-content: ' ~ justify_content
+  }) -%}
+  <div {{ block('widget_attributes') }}>
+    {% for group, buttons in button_groups %}
+      <div class="btn-group group-{{ group }}">
+        {% for button in buttons %}
+          {{- form_widget(attribute(form, button)) -}}
+        {% endfor %}
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}
+
 {%- block price_reduction_widget -%}
   {% set attr = attr|merge({class: (attr.class|default('') ~ ' reduction-widget row')|trim}) %}
   <div {{ block('widget_attributes') }}>
