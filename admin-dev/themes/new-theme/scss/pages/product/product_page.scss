@@ -1478,6 +1478,20 @@ $product-page-padding-bottom: 80px !default;
   }
 }
 
+.light_display_layout form.specific-price-product-form {
+  padding-top: 2rem;
+}
+
+.specific-price-product-form {
+  input[type="text"]:not(.entity-search-input) {
+    max-width: 210px;
+  }
+
+  .entity-search-widget {
+    max-width: 420px;
+  }
+}
+
 .bulk-combination-form {
   padding: 0 1.625rem 1.625rem;
 

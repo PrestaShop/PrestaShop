@@ -52,7 +52,7 @@ export default class CurrencySymbolUpdater {
   }
 
   private getSymbol(select: HTMLSelectElement): string {
-    const defaultCurrencySymbol: string = select.dataset.defaultCurrencySymbol || '';
+    const defaultCurrencySymbol: string = select.dataset.defaultCurrencySymbol ?? '';
     const selectItem = select.item(select.selectedIndex);
 
     if (!selectItem) {

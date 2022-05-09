@@ -89,16 +89,10 @@ export default class FormFieldDisabler {
       return;
     }
 
-    const matchingValue = inputElement.dataset.matchingValue || this.params.matchingValue;
-    const targetSelector = inputElement.dataset.targetSelector || this.params.targetSelector;
-    const switchEvent = inputElement.dataset.switchEvent || this.params.switchEvent;
-    let disableOnMatch: boolean;
-
-    if (!isUndefined(inputElement.dataset.disableOnMatch)) {
-      disableOnMatch = inputElement.dataset.disableOnMatch === '1';
-    } else {
-      disableOnMatch = this.params.disableOnMatch;
-    }
+    const matchingValue = inputElement.dataset.matchingValue ?? this.params.matchingValue;
+    const targetSelector = inputElement.dataset.targetSelector ?? this.params.targetSelector;
+    const switchEvent = inputElement.dataset.switchEvent ?? this.params.switchEvent;
+    const disableOnMatch = inputElement.dataset?.disableOnMatch === '1' ?? this.params.disableOnMatch;
 
     if (matchingValue === null) {
       console.error('No matching value defined for inputElement', inputElement);

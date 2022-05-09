@@ -27,6 +27,7 @@ import {EventEmitter} from 'events';
 import ProductMap from '@pages/product/product-map';
 import ConfirmModal from '@components/modal/confirm-modal';
 import ProductEventMap from '@pages/product/product-event-map';
+import {isUndefined} from '@PSTypes/typeguard';
 
 const SpecificPriceMap = ProductMap.specificPrice;
 
@@ -110,11 +111,7 @@ export default class SpecificPriceList {
 
   private addEventListenerForDeleteBtn(deleteBtn: HTMLElement): void {
     deleteBtn.addEventListener('click', (e) => {
-      if (
-        e.currentTarget === null
-        || !(e.currentTarget instanceof HTMLElement)
-        || typeof e.currentTarget.dataset.specificPriceId !== 'string'
-      ) {
+      if (!(e.currentTarget instanceof HTMLElement) || isUndefined(e.currentTarget.dataset.specificPriceId)) {
         return;
       }
 
@@ -123,7 +120,7 @@ export default class SpecificPriceList {
   }
 
   private deleteSpecificPrice(deleteBtnDataset: DOMStringMap): void {
-    const modal = new (ConfirmModal as any)(
+    const modal = new ConfirmModal(
       {
         id: ProductMap.specificPrice.deletionModalId,
         confirmTitle: deleteBtnDataset.confirmTitle,
