@@ -25,7 +25,7 @@ class Attributes extends BOBasePage {
 
     // Header selectors
     this.addNewAttributeLink = '#page-header-desc-attribute_group-new_attribute_group';
-    this.addNewValueLink = '#page-header-desc-attribute_group-new_value';
+    this.addNewValueLink = '// a[data-role="page-header-desc-attribute_group"]';
     this.featuresSubtabLink = '#subtab-AdminFeatures';
 
     // Form selectors

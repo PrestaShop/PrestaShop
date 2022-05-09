@@ -21,7 +21,7 @@ class Carriers extends BOBasePage {
     this.growlMessageBlock = '#growls .growl-message:last-of-type';
 
     // Header links
-    this.addNewCarrierLink = '#page-header-desc-carrier-new_carrier';
+    this.addNewCarrierLink = 'a[data-role="page-header-desc-carrier"]';
 
     // Form selectors
     this.gridForm = '#form-carrier';
