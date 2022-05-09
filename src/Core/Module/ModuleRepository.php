@@ -175,19 +175,37 @@ class ModuleRepository implements ModuleRepositoryInterface
         return $this->adminModuleDataProvider->setActionUrls($collection);
     }
 
-    public function clearCache(?string $moduleName = null): bool
+    public function clearCache(?string $moduleName = null, bool $allShops = false): bool
     {
         $this->installedModules = null;
-        if ($moduleName !== null && $this->cacheProvider->contains($this->getCacheKey($moduleName))) {
-            return $this->cacheProvider->delete($this->getCacheKey($moduleName));
+        if ($moduleName !== null) {
+            if ($allShops) {
+                foreach (Shop::getShops(true, null, true) as $shopId) {
+                    $cacheKey = $this->getCacheKey($moduleName, $shopId);
+                    if ($this->cacheProvider->contains($cacheKey)) {
+                        if (!$this->cacheProvider->delete($cacheKey)) {
+                            return false;
+                        }
+                    }
+                }
+
+                return true;
+            } else {
+                $cacheKey = $this->getCacheKey($moduleName);
+                if ($this->cacheProvider->contains($cacheKey)) {
+                    return $this->cacheProvider->delete($cacheKey);
+                }
+            }
         }
 
         return $this->cacheProvider->deleteAll();
     }
 
-    private function getCacheKey(string $moduleName): string
+    private function getCacheKey(string $moduleName, ?int $shopId = null): string
     {
-        return $moduleName . implode('-', Shop::getContextListShopID());
+        $shop = $shopId ? [$shopId] : Shop::getContextListShopID();
+
+        return $moduleName . implode('-', $shop);
     }
 
     private function getModuleAttributes(string $moduleName, bool $isValid): array
