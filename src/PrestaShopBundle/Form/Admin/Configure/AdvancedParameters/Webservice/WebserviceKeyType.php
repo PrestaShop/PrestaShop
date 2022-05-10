@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Webservice;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Webservice\ValueObject\Key;
 use PrestaShopBundle\Form\Admin\Type\GeneratableTextType;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialMultipleChoiceTableType;
@@ -112,8 +113,8 @@ class WebserviceKeyType extends TranslatorAwareType
                             'Admin.Advparameters.Notification'
                         ),
                     ]),
-                    new Regex([
-                        'pattern' => '/^[a-zA-Z0-9@\#\?\-\_]+$/i',
+                    new TypedRegex([
+                        'type' => TypedRegex::TYPE_WEBSERVICE_KEY,
                         'message' => $this->trans(
                             'Only letters, numbers, and the following special characters are allowed: %allowed_characters%',
                             'Admin.Advparameters.Notification',
