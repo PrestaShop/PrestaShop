@@ -36,6 +36,7 @@ Vue.use(Vuex);
 
 const state = {
   order: '',
+  sort: 'desc',
   pageIndex: 1,
   totalPages: 0,
   productsPerPage: 30,
