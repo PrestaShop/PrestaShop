@@ -382,6 +382,7 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
             )
             ->where('ps.id_product = :productId')
             ->addOrderBy('s.name', 'ASC')
+            ->addOrderBy('s.id_supplier', 'ASC')
             ->setParameter('productId', $productId->getValue())
         ;
 
