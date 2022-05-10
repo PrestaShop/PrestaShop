@@ -1505,6 +1505,10 @@ $product-page-padding-bottom: 80px !default;
         display: inline-block;
       }
 
+      .dropdown-menu .md-checkbox {
+        display: block;
+      }
+
       .ps-sortable-column {
         display: inline-block;
       }
