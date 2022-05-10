@@ -236,16 +236,20 @@ export default class FormObjectMapper {
    * additionally any callback assigned
    * to this specific value is also called, the parameter is the same event.
    *
-   * @param {string} modelKey
+   * @param {string | string[]} modelKeys
    * @param {function} callback
    */
-  watch(modelKey: string, callback: (event: FormUpdateEvent) => void): void {
-    if (
-      !Object.prototype.hasOwnProperty.call(this.watchedProperties, modelKey)
-    ) {
-      this.watchedProperties[modelKey] = [];
-    }
-    this.watchedProperties[modelKey].push(callback);
+  watch(modelKeys: string | string[], callback: (event: FormUpdateEvent) => void): void {
+    const watchedKeys: string[] = Array.isArray(modelKeys) ? modelKeys : [modelKeys];
+
+    watchedKeys.forEach((modelKey: string) => {
+      if (
+        !Object.prototype.hasOwnProperty.call(this.watchedProperties, modelKey)
+      ) {
+        this.watchedProperties[modelKey] = [];
+      }
+      this.watchedProperties[modelKey].push(callback);
+    });
   }
 
   /**
