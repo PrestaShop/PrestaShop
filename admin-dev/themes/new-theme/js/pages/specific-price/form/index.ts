@@ -117,13 +117,8 @@ $(() => {
   });
 
   function switchReductionMode(useFixedPrice: boolean): void {
-    if (useFixedPrice) {
-      toggleSwitch(SpecificPriceMap.switchFixedName, true);
-      toggleSwitch(SpecificPriceMap.switchReductionName, false);
-    } else {
-      toggleSwitch(SpecificPriceMap.switchFixedName, false);
-      toggleSwitch(SpecificPriceMap.switchReductionName, true);
-    }
+    toggleSwitch(SpecificPriceMap.switchFixedName, useFixedPrice);
+    toggleSwitch(SpecificPriceMap.switchReductionName, !useFixedPrice);
   }
 
   function toggleSwitch(switchName: string, checked: boolean): void {
