@@ -68,9 +68,9 @@ class PricingType extends TranslatorAwareType
             ->add('retail_price', RetailPriceType::class)
             ->add('wholesale_price', MoneyType::class, [
                 'required' => false,
-                'label' => $this->trans('Cost price (tax excl.)', 'Admin.Catalog.Feature'),
+                'label' => $this->trans('Cost price', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h3',
-                'label_help_box' => $this->trans('The cost price is the price you paid for the product. Do not include the tax. It should be lower than the retail price: the difference between the two will be your margin.', 'Admin.Catalog.Help'),
+                'label_subtitle' => $this->trans('Cost price (tax excl.)', 'Admin.Catalog.Feature'),
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
                 'currency' => $this->defaultCurrency->iso_code,
                 'modify_all_shops' => true,

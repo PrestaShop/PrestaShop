@@ -114,6 +114,9 @@ class RetailPriceType extends TranslatorAwareType
                     'data-display-price-precision' => self::PRESTASHOP_DECIMALS,
                     'data-price-specification' => json_encode($this->contextLocale->getPriceSpecification($this->defaultCurrency->iso_code)->toArray()),
                 ],
+                'row_attr' => [
+                    'class' => 'retail-price-tax-excluded',
+                ],
                 'currency' => $this->defaultCurrency->iso_code,
                 'constraints' => [
                     new NotBlank(),
@@ -134,6 +137,9 @@ class RetailPriceType extends TranslatorAwareType
                     'data-minimumResultsForSearch' => '7',
                     'data-tax-enabled' => $this->taxEnabled,
                 ],
+                'row_attr' => [
+                    'class' => 'retail-price-tax-rules-group-id',
+                ],
                 'label' => $this->trans('Tax rule', 'Admin.Catalog.Feature'),
                 'help' => !$this->taxEnabled ? $this->trans('Tax feature is disabled, it will not affect price tax included.', 'Admin.Catalog.Feature') : '',
                 'external_link' => [
@@ -146,7 +152,12 @@ class RetailPriceType extends TranslatorAwareType
             ->add('price_tax_included', MoneyType::class, [
                 'required' => false,
                 'label' => $this->trans('Retail price (tax incl.)', 'Admin.Catalog.Feature'),
-                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
+                'attr' => [
+                    'data-display-price-precision' => self::PRESTASHOP_DECIMALS,
+                ],
+                'row_attr' => [
+                    'class' => 'retail-price-tax-included',
+                ],
                 'currency' => $this->defaultCurrency->iso_code,
                 'constraints' => [
                     new NotBlank(),
@@ -181,9 +192,10 @@ class RetailPriceType extends TranslatorAwareType
         $resolver->setDefaults([
             'label' => $this->trans('Retail price', 'Admin.Catalog.Feature'),
             'label_tag_name' => 'h3',
-            'label_help_box' => $this->trans('This is the net sales price for your customers. The retail price (tax incl.) will automatically be calculated using the selected tax rate.', 'Admin.Catalog.Help'),
             'required' => false,
-            'columns_number' => 4,
+            'attr' => [
+                'class' => 'retail-price-widget',
+            ],
         ]);
     }
 }

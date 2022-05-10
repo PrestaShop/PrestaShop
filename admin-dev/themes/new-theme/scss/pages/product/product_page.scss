@@ -1319,6 +1319,54 @@ $product-page-padding-bottom: 80px !default;
       width: auto;
     }
   }
+
+  .retail-price-widget {
+    display: flex;
+    flex-direction: row;
+
+    .form-group {
+      margin-bottom: 0;
+    }
+
+    .retail-price-tax-rules-group-id {
+      margin-left: 3rem;
+
+      .select2-container {
+        position: relative;
+
+        .select2-selection {
+          height: auto;
+          padding: 0.5rem 2.2rem 0.5rem 1rem;
+
+          .select2-selection__rendered {
+            line-height: 1.5;
+          }
+        }
+
+        &::before {
+          position: absolute;
+          left: -2rem;
+          font-size: 1.5rem;
+          content: "+";
+        }
+      }
+    }
+
+    .retail-price-tax-included {
+      margin-left: 3rem;
+
+      .input-group {
+        position: relative;
+
+        &::before {
+          position: absolute;
+          left: -2rem;
+          font-size: 1.5rem;
+          content: "=";
+        }
+      }
+    }
+  }
 }
 
 // Some of the following styles target product page v2 components, but since the are new and only used in the new
