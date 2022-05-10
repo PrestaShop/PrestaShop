@@ -56,6 +56,8 @@ class CombinationItemType extends TranslatorAwareType
                 'label' => false,
                 'attr' => [
                     'class' => 'combination-is-selected',
+                    // Force placeholder in value so that the JS replaces it at the same time as the combination_id field
+                    'value' => '__combination_id__',
                 ],
             ])
             ->add('image_url', ImagePreviewType::class, [
