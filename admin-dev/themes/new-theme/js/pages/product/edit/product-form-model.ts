@@ -31,13 +31,13 @@ import ProductEventMap from '@pages/product/product-event-map';
 import {NumberFormatter} from '@app/cldr';
 
 export default class ProductFormModel {
-  eventEmitter: EventEmitter;
+  private eventEmitter: EventEmitter;
 
-  mapper: FormObjectMapper;
+  private mapper: FormObjectMapper;
 
-  precision: number;
+  private precision: number;
 
-  numberFormatter: NumberFormatter;
+  private numberFormatter: NumberFormatter;
 
   constructor($form: JQuery, eventEmitter: EventEmitter) {
     this.eventEmitter = eventEmitter;
@@ -56,52 +56,34 @@ export default class ProductFormModel {
 
     // For now we get precision only in the component, but maybe it would deserve a more global configuration
     // BigNumber.set({DECIMAL_PLACES: someConfig}) But where can we define/inject this global config?
-    const $priceTaxExcludedInput = this.mapper.getInputsFor('product.price.priceTaxExcluded');
+    const $priceTaxExcludedInput: JQuery<HTMLElement> | undefined = this.mapper.getInputsFor('price.priceTaxExcluded');
     this.precision = <number>$priceTaxExcludedInput?.data('displayPricePrecision');
 
     this.numberFormatter = NumberFormatter.build($priceTaxExcludedInput?.data('priceSpecification'));
 
     // Listens to event for product modification (registered after the model is constructed, because events are
     // triggered during the initial parsing but don't need them at first).
-    this.eventEmitter.on(ProductEventMap.updatedProductField, (event) => this.productFieldUpdated(event));
+    this.eventEmitter.on(ProductEventMap.updatedProductField, (event: FormUpdateEvent) => this.productFieldUpdated(event));
   }
 
-  /**
-   * @returns {Object}
-   *
-   * @private
-   */
-  getProduct(): Record<string, any> {
-    return this.mapper.getModel().product;
+  getProduct(): any {
+    return this.mapper.getModel();
   }
 
-  getBigNumber(productModelKey: string): BigNumber {
-    return this.mapper.getBigNumber(`product.${productModelKey}`);
+  getBigNumber(modelKey: string): BigNumber {
+    return this.mapper.getBigNumber(`${modelKey}`);
   }
 
-  /**
-   * @param {string | string[]} productModelKeys
-   * @param {function} callback
-   *
-   * @private
-   */
-  watch(productModelKeys: string | string[], callback: (event: FormUpdateEvent) => void): void {
-    const watchedKeys: string[] = Array.isArray(productModelKeys) ? productModelKeys : [productModelKeys];
-    const modelKeys: string[] = watchedKeys.map((productModelKey: string) => `product.${productModelKey}`);
-
+  watch(modelKeys: string | string[], callback: (event: FormUpdateEvent) => void): void {
     this.mapper.watch(modelKeys, callback);
   }
 
-  /**
-   * @param {string} productModelKey
-   * @param {*} value
-   */
-  set(productModelKey: string, value: any): void {
-    this.mapper.set(`product.${productModelKey}`, value);
+  set(modelKey: string, value: string | number | string[] | undefined): void {
+    this.mapper.set(modelKey, value);
   }
 
   getTaxRatio(): BigNumber {
-    const $taxRulesGroupIdInput = this.mapper.getInputsFor('product.price.taxRulesGroupId');
+    const $taxRulesGroupIdInput: JQuery<HTMLElement> | undefined = this.mapper.getInputsFor('price.taxRulesGroupId');
 
     if (!$taxRulesGroupIdInput) {
       console.error('Could not find tax rules input');
@@ -128,18 +110,13 @@ export default class ProductFormModel {
   }
 
   getPriceTaxExcluded(): BigNumber {
-    return this.mapper.getBigNumber('product.price.priceTaxExcluded');
+    return this.mapper.getBigNumber('price.priceTaxExcluded');
   }
 
   displayPrice(price: BigNumber): string {
     return this.numberFormatter.format(price.toNumber());
   }
 
-  /**
-   * @param {BigNumber} price
-   *
-   * @returns {string}
-   */
   removeTax(price: BigNumber): string {
     const taxRatio = this.getTaxRatio();
 
@@ -150,11 +127,6 @@ export default class ProductFormModel {
     return price.dividedBy(taxRatio).toFixed(this.precision);
   }
 
-  /**
-   * @param {BigNumber} price
-   *
-   * @returns {string}
-   */
   addTax(price: BigNumber): string {
     const taxRatio = this.getTaxRatio();
 
@@ -167,10 +139,6 @@ export default class ProductFormModel {
 
   /**
    * Handles modifications that have happened in the product
-   *
-   * @param {Object} event
-   *
-   * @private
    */
   private productFieldUpdated(event: FormUpdateEvent): void {
     this.updateProductPrices(event);
@@ -178,17 +146,14 @@ export default class ProductFormModel {
 
   /**
    * Specific handler for modifications related to the product price
-   *
-   * @param {Object} event
-   * @private
    */
-  private updateProductPrices(event: FormUpdateEvent) {
+  private updateProductPrices(event: FormUpdateEvent): void {
     const pricesFields = [
-      'product.price.priceTaxIncluded',
-      'product.price.priceTaxExcluded',
-      'product.price.taxRulesGroupId',
-      'product.price.unitPriceTaxIncluded',
-      'product.price.unitPriceTaxExcluded',
+      'price.priceTaxIncluded',
+      'price.priceTaxExcluded',
+      'price.taxRulesGroupId',
+      'price.unitPriceTaxIncluded',
+      'price.unitPriceTaxExcluded',
     ];
 
     if (!pricesFields.includes(event.modelKey)) {
@@ -203,33 +168,33 @@ export default class ProductFormModel {
 
     // eslint-disable-next-line default-case
     switch (event.modelKey) {
-      case 'product.price.priceTaxIncluded': {
-        const priceTaxIncluded = this.mapper.getBigNumber('product.price.priceTaxIncluded');
-        this.mapper.set('product.price.priceTaxExcluded', this.removeTax(priceTaxIncluded));
+      case 'price.priceTaxIncluded': {
+        const priceTaxIncluded = this.mapper.getBigNumber('price.priceTaxIncluded');
+        this.mapper.set('price.priceTaxExcluded', this.removeTax(priceTaxIncluded));
         break;
       }
-      case 'product.price.priceTaxExcluded': {
-        const priceTaxExcluded = this.mapper.getBigNumber('product.price.priceTaxExcluded');
-        this.mapper.set('product.price.priceTaxIncluded', this.addTax(priceTaxExcluded));
-        break;
-      }
-
-      case 'product.price.unitPriceTaxIncluded': {
-        const unitPriceTaxIncluded = this.mapper.getBigNumber('product.price.unitPriceTaxIncluded');
-        this.mapper.set('product.price.unitPriceTaxExcluded', this.removeTax(unitPriceTaxIncluded));
-        break;
-      }
-      case 'product.price.unitPriceTaxExcluded': {
-        const unitPriceTaxExcluded = this.mapper.getBigNumber('product.price.unitPriceTaxExcluded');
-        this.mapper.set('product.price.unitPriceTaxIncluded', this.addTax(unitPriceTaxExcluded));
+      case 'price.priceTaxExcluded': {
+        const priceTaxExcluded = this.mapper.getBigNumber('price.priceTaxExcluded');
+        this.mapper.set('price.priceTaxIncluded', this.addTax(priceTaxExcluded));
         break;
       }
 
-      case 'product.price.taxRulesGroupId': {
-        const priceTaxExcluded = this.mapper.getBigNumber('product.price.priceTaxExcluded');
-        this.mapper.set('product.price.priceTaxIncluded', this.addTax(priceTaxExcluded));
-        const unitPriceTaxExcluded = this.mapper.getBigNumber('product.price.unitPriceTaxExcluded');
-        this.mapper.set('product.price.unitPriceTaxIncluded', this.addTax(unitPriceTaxExcluded));
+      case 'price.unitPriceTaxIncluded': {
+        const unitPriceTaxIncluded = this.mapper.getBigNumber('price.unitPriceTaxIncluded');
+        this.mapper.set('price.unitPriceTaxExcluded', this.removeTax(unitPriceTaxIncluded));
+        break;
+      }
+      case 'price.unitPriceTaxExcluded': {
+        const unitPriceTaxExcluded = this.mapper.getBigNumber('price.unitPriceTaxExcluded');
+        this.mapper.set('price.unitPriceTaxIncluded', this.addTax(unitPriceTaxExcluded));
+        break;
+      }
+
+      case 'price.taxRulesGroupId': {
+        const priceTaxExcluded = this.mapper.getBigNumber('price.priceTaxExcluded');
+        this.mapper.set('price.priceTaxIncluded', this.addTax(priceTaxExcluded));
+        const unitPriceTaxExcluded = this.mapper.getBigNumber('price.unitPriceTaxExcluded');
+        this.mapper.set('price.unitPriceTaxIncluded', this.addTax(unitPriceTaxExcluded));
         break;
       }
     }

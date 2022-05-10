@@ -24,25 +24,25 @@
  */
 
 export default {
-  'product.stock.quantity': 'product[stock][quantities][quantity]',
-  'product.price.priceTaxExcluded': 'product[pricing][retail_price][price_tax_excluded]',
-  'product.price.overrideAllPriceTaxExcluded': [
+  'price.priceTaxExcluded': 'product[pricing][retail_price][price_tax_excluded]',
+  'price.overrideAllPriceTaxExcluded': [
     'product[pricing][retail_price][modify_all_shops_price_tax_excluded]',
     'product[pricing][retail_price][modify_all_shops_price_tax_included]',
   ],
-  'product.price.priceTaxIncluded': 'product[pricing][retail_price][price_tax_included]',
-  'product.price.taxRulesGroupId': 'product[pricing][retail_price][tax_rules_group_id]',
-  'product.price.wholesalePrice': 'product[pricing][wholesale_price]',
-  'product.price.unitPriceTaxExcluded': 'product[pricing][unit_price][price_tax_excluded]',
-  'product.price.unitPriceTaxIncluded': 'product[pricing][unit_price][price_tax_included]',
-  'product.price.unity': 'product[pricing][unit_price][unity]',
-  'product.price.overrideAllUnitPriceTaxExcluded': [
+  'price.priceTaxIncluded': 'product[pricing][retail_price][price_tax_included]',
+  'price.taxRulesGroupId': 'product[pricing][retail_price][tax_rules_group_id]',
+  'price.wholesalePrice': 'product[pricing][wholesale_price]',
+  'price.unitPriceTaxExcluded': 'product[pricing][unit_price][price_tax_excluded]',
+  'price.unitPriceTaxIncluded': 'product[pricing][unit_price][price_tax_included]',
+  'price.unity': 'product[pricing][unit_price][unity]',
+  'price.overrideAllUnitPriceTaxExcluded': [
     'product[pricing][unit_price][modify_all_shops_price_tax_excluded]',
     'product[pricing][unit_price][modify_all_shops_price_tax_included]',
   ],
-  'product.stock.hasVirtualProductFile': 'product[stock][virtual_product_file][has_file]',
-  'product.seo.overrideAllRedirectOption': [
+  'stock.hasVirtualProductFile': 'product[stock][virtual_product_file][has_file]',
+  'seo.overrideAllRedirectOption': [
     'product[seo][redirect_option][modify_all_shops_type]',
     'product[seo][redirect_option][modify_all_shops_target]',
   ],
+  'suppliers.defaultSupplierId': 'product[options][suppliers][default_supplier_id]',
 };

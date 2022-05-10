@@ -29,15 +29,19 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
 
 use Combination;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\UpdateCombinationPricesHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierAssociation;
 
 /**
  * Handles @see UpdateCombinationPricesCommand using legacy object model
  */
-final class UpdateCombinationPricesHandler implements UpdateCombinationPricesHandlerInterface
+class UpdateCombinationPricesHandler implements UpdateCombinationPricesHandlerInterface
 {
     /**
      * @var CombinationRepository
@@ -45,11 +49,20 @@ final class UpdateCombinationPricesHandler implements UpdateCombinationPricesHan
     private $combinationRepository;
 
     /**
-     * @param CombinationRepository $combinationRepository
+     * @var ProductSupplierRepository
      */
-    public function __construct(CombinationRepository $combinationRepository)
-    {
+    private $productSupplierRepository;
+
+    /**
+     * @param CombinationRepository $combinationRepository
+     * @param ProductSupplierRepository $productSupplierRepository
+     */
+    public function __construct(
+        CombinationRepository $combinationRepository,
+        ProductSupplierRepository $productSupplierRepository
+    ) {
         $this->combinationRepository = $combinationRepository;
+        $this->productSupplierRepository = $productSupplierRepository;
     }
 
     /**
@@ -60,6 +73,31 @@ final class UpdateCombinationPricesHandler implements UpdateCombinationPricesHan
         $combination = $this->combinationRepository->get($command->getCombinationId());
         $updatableProperties = $this->fillUpdatableProperties($combination, $command);
         $this->combinationRepository->partialUpdate($combination, $updatableProperties, CannotUpdateCombinationException::FAILED_UPDATE_PRICES);
+        if (null !== $command->getWholesalePrice()) {
+            $this->updateDefaultSupplier($command->getCombinationId(), $command->getWholesalePrice());
+        }
+    }
+
+    private function updateDefaultSupplier(CombinationId $combinationId, DecimalNumber $wholesalePrice): void
+    {
+        $productId = $this->combinationRepository->getProductId($combinationId);
+        $defaultSupplierId = $this->productSupplierRepository->getDefaultSupplierId($productId);
+        if (null === $defaultSupplierId) {
+            return;
+        }
+
+        $defaultProductSupplierId = $this->productSupplierRepository->getIdByAssociation(new ProductSupplierAssociation(
+            $productId->getValue(),
+            $combinationId->getValue(),
+            $defaultSupplierId->getValue()
+        ));
+        if (!$defaultProductSupplierId) {
+            return;
+        }
+
+        $defaultProductSupplier = $this->productSupplierRepository->get($defaultProductSupplierId);
+        $defaultProductSupplier->product_supplier_price_te = (float) (string) $wholesalePrice;
+        $this->productSupplierRepository->update($defaultProductSupplier);
     }
 
     /**

@@ -185,8 +185,9 @@ export default {
     windowFileManager: '.dropzone-window-filemanager',
   },
   suppliers: {
-    productSuppliers: '#product_options_suppliers',
-    combinationSuppliers: '#combination_form_suppliers',
+    productSuppliers: '#product_options_product_suppliers',
+    supplierIdsInput: '#product_options_suppliers_supplier_ids',
+    defaultSupplierInput: '#product_options_suppliers_default_supplier_id',
   },
   seo: {
     container: '#product_seo_serp',

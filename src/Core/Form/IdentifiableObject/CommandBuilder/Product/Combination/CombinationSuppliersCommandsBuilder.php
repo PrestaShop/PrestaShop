@@ -28,9 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveAllAssociatedCombinationSuppliersCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationDefaultSupplierCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationSuppliersCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 
 class CombinationSuppliersCommandsBuilder implements CombinationCommandsBuilderInterface
@@ -40,52 +38,35 @@ class CombinationSuppliersCommandsBuilder implements CombinationCommandsBuilderI
      */
     public function buildCommands(CombinationId $combinationId, array $formData): array
     {
-        if (!isset($formData['suppliers']['product_suppliers']) && !isset($formData['suppliers']['default_supplier_id'])) {
+        if (empty($formData['product_suppliers'])) {
             return [];
         }
 
-        $productSuppliersData = $formData['suppliers']['product_suppliers'];
-        if (empty($productSuppliersData)) {
-            return [new RemoveAllAssociatedCombinationSuppliersCommand($combinationId->getValue())];
-        }
-
+        $productSuppliersData = $formData['product_suppliers'];
         $productSuppliers = [];
         foreach ($productSuppliersData as $productSupplierDatum) {
-            $supplierId = (int) $productSupplierDatum['supplier_id'];
-
             $productSuppliers[] = $this->formatProductSupplier(
-                $supplierId,
                 $productSupplierDatum
             );
         }
 
-        $commands = [
-            new SetCombinationSuppliersCommand(
+        return [
+            new UpdateCombinationSuppliersCommand(
                 $combinationId->getValue(),
                 $productSuppliers
             ),
         ];
-
-        if (!empty($formData['suppliers']['default_supplier_id'])) {
-            $commands[] = new SetCombinationDefaultSupplierCommand(
-                $combinationId->getValue(),
-                (int) $formData['suppliers']['default_supplier_id']
-            );
-        }
-
-        return $commands;
     }
 
     /**
-     * @param int $supplierId
      * @param array $productSupplierData
      *
      * @return array<string, mixed>
      */
-    private function formatProductSupplier(int $supplierId, array $productSupplierData): array
+    private function formatProductSupplier(array $productSupplierData): array
     {
         return [
-            'supplier_id' => $supplierId,
+            'supplier_id' => (int) $productSupplierData['supplier_id'],
             'currency_id' => (int) $productSupplierData['currency_id'],
             'reference' => (string) $productSupplierData['reference'],
             'price_tax_excluded' => (string) $productSupplierData['price_tax_excluded'],

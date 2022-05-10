@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -24,17 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler;
-
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveAllAssociatedCombinationSuppliersCommand;
-
-/**
- * Defines contract to handle @see RemoveAllAssociatedCombinationSuppliersCommand
- */
-interface RemoveAllAssociatedCombinationSuppliersHandlerInterface
-{
-    /**
-     * @param RemoveAllAssociatedCombinationSuppliersCommand $command
-     */
-    public function handle(RemoveAllAssociatedCombinationSuppliersCommand $command): void;
-}
+export default {
+  'price.priceTaxExcluded': 'combination_form[price_impact][price_tax_excluded]',
+  'price.wholesalePrice': 'combination_form[price_impact][wholesale_price]',
+  'suppliers.defaultSupplierId': 'combination_form[default_supplier_id]',
+};

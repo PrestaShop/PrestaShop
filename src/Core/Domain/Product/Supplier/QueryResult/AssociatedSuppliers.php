@@ -29,61 +29,43 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult;
 
 /**
- * Transfers supplier information for product-supplier relation
+ * Transfers product associated suppliers minimal data, only the list of suppliers IDs and the default one.
  */
-class ProductSupplierInfo
+class AssociatedSuppliers
 {
-    /**
-     * @var string
-     */
-    private $supplierName;
-
     /**
      * @var int
      */
-    private $supplierId;
+    private $defaultSupplierId;
 
     /**
-     * @var ProductSupplierForEditing
+     * @var int[]
      */
-    private $productSupplierForEditing;
+    private $supplierIds;
 
     /**
-     * @param string $supplierName
-     * @param int $supplierId
-     * @param ProductSupplierForEditing $productSupplierForEditing
+     * @param int $defaultSupplierId
+     * @param int[] $supplierIds
      */
-    public function __construct(
-        string $supplierName,
-        int $supplierId,
-        ProductSupplierForEditing $productSupplierForEditing
-    ) {
-        $this->supplierName = $supplierName;
-        $this->supplierId = $supplierId;
-        $this->productSupplierForEditing = $productSupplierForEditing;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSupplierName(): string
+    public function __construct(int $defaultSupplierId, array $supplierIds)
     {
-        return $this->supplierName;
+        $this->defaultSupplierId = $defaultSupplierId;
+        $this->supplierIds = $supplierIds;
     }
 
     /**
      * @return int
      */
-    public function getSupplierId(): int
+    public function getDefaultSupplierId(): int
     {
-        return $this->supplierId;
+        return $this->defaultSupplierId;
     }
 
     /**
-     * @return ProductSupplierForEditing
+     * @return int[]
      */
-    public function getProductSupplierForEditing(): ProductSupplierForEditing
+    public function getSupplierIds(): array
     {
-        return $this->productSupplierForEditing;
+        return $this->supplierIds;
     }
 }

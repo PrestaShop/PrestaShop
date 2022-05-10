@@ -24,48 +24,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\UpdateProductSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierAssociation;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
-use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
-
-class SetCombinationDefaultSupplierCommand
+/**
+ * Defines contract to handle @see UpdateProductSuppliersCommand
+ */
+interface UpdateProductSuppliersHandlerInterface
 {
     /**
-     * @var CombinationId
+     * @param UpdateProductSuppliersCommand $command
+     *
+     * @return ProductSupplierAssociation[] new product suppliers ids list
      */
-    private $combinationId;
-
-    /**
-     * @var SupplierId
-     */
-    private $defaultSupplierId;
-
-    /**
-     * @param int $combinationId
-     * @param int $defaultSupplierId
-     */
-    public function __construct(int $combinationId, int $defaultSupplierId)
-    {
-        $this->combinationId = new CombinationId($combinationId);
-        $this->defaultSupplierId = new SupplierId($defaultSupplierId);
-    }
-
-    /**
-     * @return CombinationId
-     */
-    public function getCombinationId(): CombinationId
-    {
-        return $this->combinationId;
-    }
-
-    /**
-     * @return SupplierId
-     */
-    public function getDefaultSupplierId(): SupplierId
-    {
-        return $this->defaultSupplierId;
-    }
+    public function handle(UpdateProductSuppliersCommand $command): array;
 }

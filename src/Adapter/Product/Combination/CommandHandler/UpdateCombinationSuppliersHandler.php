@@ -31,11 +31,10 @@ use PrestaShop\PrestaShop\Adapter\Product\AbstractProductSupplierHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationSuppliersCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\SetCombinationSuppliersHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\UpdateCombinationSuppliersHandlerInterface;
 
-final class SetCombinationSuppliersHandler extends AbstractProductSupplierHandler implements SetCombinationSuppliersHandlerInterface
+class UpdateCombinationSuppliersHandler extends AbstractProductSupplierHandler implements UpdateCombinationSuppliersHandlerInterface
 {
     /**
      * @var CombinationRepository
@@ -65,18 +64,17 @@ final class SetCombinationSuppliersHandler extends AbstractProductSupplierHandle
     /**
      * {@inheritdoc}
      */
-    public function handle(SetCombinationSuppliersCommand $command): array
+    public function handle(UpdateCombinationSuppliersCommand $command): array
     {
         $combinationId = $command->getCombinationId();
-        $combination = $this->combinationRepository->get($combinationId);
-        $productId = new ProductId((int) $combination->id_product);
+        $productId = $this->combinationRepository->getProductId($combinationId);
 
         $productSuppliers = [];
         foreach ($command->getCombinationSuppliers() as $productSupplierDTO) {
-            $productSuppliers[] = $this->loadEntityFromDTO($productId, $productSupplierDTO, $combinationId);
+            $productSuppliers[] = $this->loadEntityFromDTO($productSupplierDTO);
         }
 
-        return $this->productSupplierUpdater->setCombinationSuppliers(
+        return $this->productSupplierUpdater->updateSuppliersForCombination(
             $productId,
             $combinationId,
             $productSuppliers

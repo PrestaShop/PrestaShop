@@ -23,38 +23,36 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query;
 
-use PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\RemoveAllAssociatedCombinationSuppliersCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\RemoveAllAssociatedCombinationSuppliersHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
- * Removes product suppliers associated to a certain combination using legacy object model
+ * Provides the list of suppliers associated to a product, and its default supllier.
  */
-final class RemoveAllAssociatedCombinationSuppliersHandler implements RemoveAllAssociatedCombinationSuppliersHandlerInterface
+class GetAssociatedSuppliers
 {
     /**
-     * @var ProductSupplierUpdater
+     * @var ProductId
      */
-    private $productSupplierUpdater;
+    private $productId;
 
     /**
-     * @param ProductSupplierUpdater $productSupplierUpdater
+     * @param int $productId
      */
-    public function __construct(
-        ProductSupplierUpdater $productSupplierUpdater
-    ) {
-        $this->productSupplierUpdater = $productSupplierUpdater;
+    public function __construct(int $productId)
+    {
+        $this->productId = new ProductId($productId);
     }
 
     /**
-     * {@inheritdoc}
+     * @return ProductId
      */
-    public function handle(RemoveAllAssociatedCombinationSuppliersCommand $command): void
+    public function getProductId(): ProductId
     {
-        $this->productSupplierUpdater->removeAllForCombination($command->getCombinationId());
+        return $this->productId;
     }
 }

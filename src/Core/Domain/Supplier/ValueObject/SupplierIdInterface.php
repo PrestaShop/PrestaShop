@@ -24,20 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationSuppliersCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
+namespace PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject;
 
 /**
- * Defines contract to handle @see SetCombinationSuppliersCommand
+ * Defines contract for supplier identity value
  */
-interface SetCombinationSuppliersHandlerInterface
+interface SupplierIdInterface
 {
     /**
-     * @param SetCombinationSuppliersCommand $command
-     *
-     * @return ProductSupplierId[] new product combination suppliers ids list
+     * @return int
      */
-    public function handle(SetCombinationSuppliersCommand $command): array;
+    public function getValue(): int;
 }

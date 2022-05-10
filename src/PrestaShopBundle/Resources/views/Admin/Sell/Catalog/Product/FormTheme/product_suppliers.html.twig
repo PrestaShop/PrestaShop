@@ -24,7 +24,7 @@
  *#}
 
 {%- block product_supplier_row -%}
-  <tr class="product_supplier_row" id="product_supplier_row_{{ form.vars.name }}">
+  <tr class="product_supplier_row" id="product_supplier_row_{{ form.vars.name }}" data-supplier-index="{{ form.vars.name }}">
   {% for child in form.children %}
     {% set childType = child.vars.block_prefixes.1 %}
     {% if childType != 'hidden' %}
@@ -48,7 +48,7 @@
 {%- endblock product_supplier_row -%}
 
 {# Override suppliers collection template to remove the label and init the table #}
-{%- block collection_row -%}
+{%- block product_supplier_collection_row -%}
   <div class="form-group product-suppliers-collection-row">
     {{ form_label(form) }}
     {{- block('form_alert') -}}

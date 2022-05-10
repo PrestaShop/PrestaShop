@@ -24,20 +24,16 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetProductSuppliersCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierId;
+namespace PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject;
 
-/**
- * Defines contract to handle @see SetProductSuppliersCommand
- */
-interface SetProductSuppliersHandlerInterface
+class NoSupplierId implements SupplierIdInterface
 {
-    /**
-     * @param SetProductSuppliersCommand $command
-     *
-     * @return ProductSupplierId[] new product suppliers ids list
-     */
-    public function handle(SetProductSuppliersCommand $command): array;
+    public const NO_SUPPLIER_ID = 0;
+
+    public function getValue(): int
+    {
+        return static::NO_SUPPLIER_ID;
+    }
 }

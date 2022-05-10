@@ -26,21 +26,17 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
+namespace PrestaShop\PrestaShop\Adapter\Product\Supplier\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductSupplierUpdater;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationDefaultSupplierCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\SetCombinationDefaultSupplierHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler\SetSuppliersHandlerInterface;
 
-class SetCombinationDefaultSupplierHandler implements SetCombinationDefaultSupplierHandlerInterface
+/**
+ * Handles @see SetSuppliersCommand using legacy object model
+ */
+class SetSuppliersHandler implements SetSuppliersHandlerInterface
 {
-    /**
-     * @var CombinationRepository
-     */
-    private $combinationRepository;
-
     /**
      * @var ProductSupplierUpdater
      */
@@ -50,24 +46,16 @@ class SetCombinationDefaultSupplierHandler implements SetCombinationDefaultSuppl
      * @param ProductSupplierUpdater $productSupplierUpdater
      */
     public function __construct(
-        CombinationRepository $combinationRepository,
         ProductSupplierUpdater $productSupplierUpdater
     ) {
-        $this->combinationRepository = $combinationRepository;
         $this->productSupplierUpdater = $productSupplierUpdater;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function handle(SetCombinationDefaultSupplierCommand $command): void
+    public function handle(SetSuppliersCommand $command): array
     {
-        $combination = $this->combinationRepository->get($command->getCombinationId());
-
-        $this->productSupplierUpdater->updateCombinationDefaultSupplier(
-            new ProductId((int) $combination->id_product),
-            $command->getDefaultSupplierId(),
-            $command->getCombinationId()
-        );
+        return $this->productSupplierUpdater->associateSuppliers($command->getProductId(), $command->getSupplierIds());
     }
 }

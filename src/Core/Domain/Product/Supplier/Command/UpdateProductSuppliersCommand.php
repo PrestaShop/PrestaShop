@@ -28,14 +28,16 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplier;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\NoCombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ProductSupplierUpdate;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use RuntimeException;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
 /**
  * Updates product suppliers
  */
-class SetProductSuppliersCommand
+class UpdateProductSuppliersCommand
 {
     /**
      * @var ProductId
@@ -43,7 +45,7 @@ class SetProductSuppliersCommand
     private $productId;
 
     /**
-     * @var ProductSupplier[]
+     * @var ProductSupplierUpdate[]
      */
     private $productSuppliers;
 
@@ -51,11 +53,11 @@ class SetProductSuppliersCommand
      * @param int $productId
      * @param array<int, array<string, mixed>> $productSuppliers
      *
-     * @see SetProductSuppliersCommand::setProductSuppliers() for $productSuppliers structure
+     * @see UpdateProductSuppliersCommand::setProductSuppliers() for $productSuppliers structure
      */
     public function __construct(int $productId, array $productSuppliers)
     {
-        $this->setProductSuppliers($productSuppliers);
+        $this->setProductSuppliers($productSuppliers, $productId);
         $this->productId = new ProductId($productId);
     }
 
@@ -68,7 +70,7 @@ class SetProductSuppliersCommand
     }
 
     /**
-     * @return ProductSupplier[]
+     * @return ProductSupplierUpdate[]
      */
     public function getProductSuppliers(): array
     {
@@ -77,11 +79,12 @@ class SetProductSuppliersCommand
 
     /**
      * @param array<int, array<string, mixed>> $productSuppliers
+     * @param int $productId
      */
-    private function setProductSuppliers(array $productSuppliers): void
+    private function setProductSuppliers(array $productSuppliers, int $productId): void
     {
         if (empty($productSuppliers)) {
-            throw new RuntimeException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 'Empty array of product suppliers provided in %s. To remove all product suppliers use %s.',
                 self::class,
                 RemoveAllAssociatedProductSuppliersCommand::class
@@ -89,12 +92,16 @@ class SetProductSuppliersCommand
         }
 
         foreach ($productSuppliers as $productSupplier) {
-            $this->productSuppliers[] = new ProductSupplier(
-                $productSupplier['supplier_id'],
+            $this->productSuppliers[] = new ProductSupplierUpdate(
+                new ProductSupplierAssociation(
+                    $productId,
+                    NoCombinationId::NO_COMBINATION_ID,
+                    $productSupplier['supplier_id'],
+                    !empty($productSupplier['product_supplier_id']) ? $productSupplier['product_supplier_id'] : null
+                ),
                 $productSupplier['currency_id'],
                 $productSupplier['reference'],
-                $productSupplier['price_tax_excluded'],
-                $productSupplier['product_supplier_id'] ?? null
+                $productSupplier['price_tax_excluded']
             );
         }
     }

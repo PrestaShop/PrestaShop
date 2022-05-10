@@ -50,6 +50,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstrai
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductTaxRulesGroupSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
@@ -468,5 +469,26 @@ class ProductRepository extends AbstractObjectModelRepository
         }
 
         return $product;
+    }
+
+    public function getProductType(ProductId $productId): ProductType
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->addSelect('p.product_type')
+            ->from($this->dbPrefix . 'product', 'p')
+            ->where('p.id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+        ;
+
+        $result = $qb->execute()->fetchAssociative();
+        if (empty($result)) {
+            throw new ProductNotFoundException(sprintf(
+        'Cannot find product type for product %d because it does not exist',
+                $productId->getValue()
+            ));
+        }
+
+        return new ProductType($result['product_type']);
     }
 }

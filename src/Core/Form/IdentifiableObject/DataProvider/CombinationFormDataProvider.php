@@ -32,9 +32,9 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierInfo;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetAssociatedSuppliers;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\AssociatedSuppliers;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 
 /**
@@ -65,16 +65,16 @@ class CombinationFormDataProvider implements FormDataProviderInterface
         /** @var CombinationForEditing $combinationForEditing */
         $combinationForEditing = $this->queryBus->handle(new GetCombinationForEditing($combinationId));
 
-        return [
+        $suppliersData = $this->extractSuppliersData($combinationForEditing);
+
+        return array_merge([
             'id' => $combinationId,
             'product_id' => $combinationForEditing->getProductId(),
             'name' => $combinationForEditing->getName(),
             'stock' => $this->extractStockData($combinationForEditing),
             'price_impact' => $this->extractPriceImpactData($combinationForEditing),
             'references' => $this->extractReferencesData($combinationForEditing),
-            'suppliers' => $this->extractSuppliersData($combinationForEditing),
-            'images' => $combinationForEditing->getImageIds(),
-        ];
+        ], $suppliersData, ['images' => $combinationForEditing->getImageIds()]);
     }
 
     /**
@@ -144,33 +144,30 @@ class CombinationFormDataProvider implements FormDataProviderInterface
     /**
      * @param CombinationForEditing $combinationForEditing
      *
-     * @return array<string, int|array<int, int|array<string, string|int>>>
+     * @return array<string, array<int, array<string, int|string|null>>|int>
      */
     private function extractSuppliersData(CombinationForEditing $combinationForEditing): array
     {
-        /** @var ProductSupplierOptions $productSupplierOptions */
-        $productSupplierOptions = $this->queryBus->handle(new GetProductSupplierOptions($combinationForEditing->getProductId()));
-
-        /** @var ProductSupplierInfo[] $combinationSupplierInfos */
-        $combinationSupplierInfos = $this->queryBus->handle(new GetCombinationSuppliers($combinationForEditing->getCombinationId()));
-
-        if (empty($combinationSupplierInfos)) {
-            return [];
-        }
-
-        $defaultSupplierId = $productSupplierOptions->getDefaultSupplierId();
+        /** @var AssociatedSuppliers $associatedSuppliers */
+        $associatedSuppliers = $this->queryBus->handle(new GetAssociatedSuppliers($combinationForEditing->getProductId()));
         $suppliersData = [
-            'default_supplier_id' => $defaultSupplierId,
+            'default_supplier_id' => $associatedSuppliers->getDefaultSupplierId(),
+            'product_suppliers' => [],
         ];
 
-        foreach ($combinationSupplierInfos as $supplierOption) {
-            $supplierForEditing = $supplierOption->getProductSupplierForEditing();
-            $supplierId = $supplierOption->getSupplierId();
+        /** @var ProductSupplierForEditing[] $combinationProductSuppliers */
+        $combinationProductSuppliers = $this->queryBus->handle(new GetCombinationSuppliers($combinationForEditing->getCombinationId()));
 
-            $suppliersData['supplier_ids'][] = $supplierId;
+        if (empty($combinationProductSuppliers)) {
+            return $suppliersData;
+        }
+
+        foreach ($combinationProductSuppliers as $supplierForEditing) {
+            $supplierId = $supplierForEditing->getSupplierId();
+
             $suppliersData['product_suppliers'][$supplierId] = [
                 'supplier_id' => $supplierId,
-                'supplier_name' => $supplierOption->getSupplierName(),
+                'supplier_name' => $supplierForEditing->getSupplierName(),
                 'product_supplier_id' => $supplierForEditing->getProductSupplierId(),
                 'price_tax_excluded' => $supplierForEditing->getPriceTaxExcluded(),
                 'reference' => $supplierForEditing->getReference(),

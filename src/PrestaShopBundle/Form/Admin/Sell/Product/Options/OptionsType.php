@@ -44,6 +44,7 @@ class OptionsType extends TranslatorAwareType
         $builder
             ->add('visibility', VisibilityType::class)
             ->add('suppliers', SuppliersType::class)
+            ->add('product_suppliers', ProductSupplierCollectionType::class)
         ;
     }
 

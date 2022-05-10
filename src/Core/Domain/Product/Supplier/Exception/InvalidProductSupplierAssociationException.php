@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -23,28 +24,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import ProductSuppliersManager from '@pages/product/edit/product-suppliers-manager';
-import ImageSelector from '@pages/product/combination/image-selector';
-import ProductMap from '@pages/product/product-map';
-import ProductFormModel from '@pages/product/edit/product-form-model';
+declare(strict_types=1);
 
-const {$} = window;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Exception;
 
-$(() => {
-  window.prestashop.component.initComponents([
-    'TranslatableField',
-    'TinyMCEEditor',
-    'TranslatableInput',
-    'EventEmitter',
-    'TextWithLengthCounter',
-    'DeltaQuantityInput',
-  ]);
-
-  const $productForm = $(<HTMLElement>window.parent.document.querySelector(ProductMap.productForm));
-  const {eventEmitter} = window.prestashop.instance;
-  // Init product model along with input watching and syncing
-  const productFormModel = new ProductFormModel($productForm, eventEmitter);
-
-  new ProductSuppliersManager(ProductMap.suppliers.combinationSuppliers, false, productFormModel);
-  new ImageSelector();
-});
+class InvalidProductSupplierAssociationException extends ProductSupplierException
+{
+}

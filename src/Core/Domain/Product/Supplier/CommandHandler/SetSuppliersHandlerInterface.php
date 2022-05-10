@@ -23,39 +23,21 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\RemoveAllAssociatedCombinationSuppliersHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Command\SetSuppliersCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject\ProductSupplierAssociation;
 
 /**
- * Removes associated product suppliers related to certain combination
- *
- * @see RemoveAllAssociatedCombinationSuppliersHandlerInterface
+ * Defines contract to handle @see SetSuppliersCommand
  */
-class RemoveAllAssociatedCombinationSuppliersCommand
+interface SetSuppliersHandlerInterface
 {
     /**
-     * @var CombinationId
+     * @param SetSuppliersCommand $command
+     *
+     * @return ProductSupplierAssociation[]
      */
-    private $combinationId;
-
-    /**
-     * @param int $combinationId
-     */
-    public function __construct(
-        int $combinationId
-    ) {
-        $this->combinationId = new CombinationId($combinationId);
-    }
-
-    /**
-     * @return CombinationId
-     */
-    public function getCombinationId(): CombinationId
-    {
-        return $this->combinationId;
-    }
+    public function handle(SetSuppliersCommand $command): array;
 }

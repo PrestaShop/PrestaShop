@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,21 +22,36 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-{% form_theme suppliersForm '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/suppliers.html.twig' %}
+declare(strict_types=1);
 
-{% block form_product_suppliers %}
-  <div class="product-suppliers-block">
-    <div class="row">
-      <div class="col">
-        {{ form_row(suppliersForm.supplier_ids) }}
-      </div>
-      <div class="col">
-        {{ form_row(suppliersForm.default_supplier_id) }}
-      </div>
-    </div>
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\ValueObject;
 
-    {{ form_row(suppliersForm.product_suppliers) }}
-  </div>
-{% endblock %}
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationIdInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
+use Stringable;
+
+interface SupplierAssociationInterface extends Stringable
+{
+    /**
+     * @return ProductId|null
+     */
+    public function getProductId(): ?ProductId;
+
+    /**
+     * @return CombinationIdInterface
+     */
+    public function getCombinationId(): CombinationIdInterface;
+
+    /**
+     * @return SupplierId
+     */
+    public function getSupplierId(): SupplierId;
+
+    /**
+     * @return ProductSupplierId|null
+     */
+    public function getProductSupplierId(): ?ProductSupplierId;
+}

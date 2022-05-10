@@ -93,11 +93,11 @@ Feature: Update product tags from Back Office (BO)
     And I search for products on front office with sentence "temps" with locale "fr-FR" I should find nothing
     Given I enable product "productTags"
     When I search for products on front office with sentence "time" with locale "en-US" I should find:
-      | product_id | name             |
-      | productTags   | Mechanical watch |
+      | product_id  | name             |
+      | productTags | Mechanical watch |
     And I search for products on front office with sentence "temps" with locale "fr-FR" I should find:
-      | product_id | name             |
-      | productTags   | montre mécanique |
+      | product_id  | name             |
+      | productTags | montre mécanique |
     # Now update the tags the search returns different results
     When I update product "productTags" tags with following values:
       | tags[en-US] | running |
@@ -109,11 +109,11 @@ Feature: Update product tags from Back Office (BO)
     When I search for products on front office with sentence "time" with locale "en-US" I should find nothing
     And I search for products on front office with sentence "temps" with locale "fr-FR" I should find nothing
     When I search for products on front office with sentence "running" with locale "en-US" I should find:
-      | product_id | name             |
-      | productTags   | Mechanical watch |
+      | product_id  | name             |
+      | productTags | Mechanical watch |
     And I search for products on front office with sentence "course" with locale "fr-FR" I should find:
-      | product_id | name             |
-      | productTags   | montre mécanique |
+      | product_id  | name             |
+      | productTags | montre mécanique |
     When I disable product "productTags"
     When I search for products on front office with sentence "running" with locale "en-US" I should find nothing
     And I search for products on front office with sentence "course" with locale "fr-FR" I should find nothing
@@ -134,11 +134,11 @@ Feature: Update product tags from Back Office (BO)
       | en-US  | time  |
       | fr-FR  | temps |
     When I search for products on front office with sentence "time" with locale "en-US" I should find:
-      | product_id | name             |
-      | productTags   | Mechanical watch |
+      | product_id  | name             |
+      | productTags | Mechanical watch |
     And I search for products on front office with sentence "temps" with locale "fr-FR" I should find:
-      | product_id | name             |
-      | productTags   | montre mécanique |
+      | product_id  | name             |
+      | productTags | montre mécanique |
     # Remove tags by setting no value for each language
     When I update product "productTags" tags with following values:
       | tags[en-US] | |
@@ -165,8 +165,8 @@ Feature: Update product tags from Back Office (BO)
       | product_id | name             |
       | productTags   | Mechanical watch |
     And I search for products on front office with sentence "temps" with locale "fr-FR" I should find:
-      | product_id | name             |
-      | productTags   | montre mécanique |
+      | product_id  | name             |
+      | productTags | montre mécanique |
     # Remove tags by removing them all
     When I remove all product "productTags" tags
     When I search for products on front office with sentence "time" with locale "en-US" I should find nothing

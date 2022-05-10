@@ -24,17 +24,22 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetCombinationDefaultSupplierCommand;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetAssociatedSuppliers;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\AssociatedSuppliers;
 
 /**
- * Defines contract to handle @see RemoveAllAssociatedCombinationSuppliersCommand
+ * Defines contract to handle @see GetAssociatedSuppliers
  */
-interface SetCombinationDefaultSupplierHandlerInterface
+interface GetAssociatedSuppliersHandlerInterface
 {
     /**
-     * @param SetCombinationDefaultSupplierCommand $command
+     * @param GetAssociatedSuppliers $query
+     *
+     * @return AssociatedSuppliers
      */
-    public function handle(SetCombinationDefaultSupplierCommand $command): void;
+    public function handle(GetAssociatedSuppliers $query): AssociatedSuppliers;
 }

@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
-use PrestaShopBundle\Form\Admin\Sell\Product\Options\SuppliersType;
+use PrestaShopBundle\Form\Admin\Sell\Product\Options\ProductSupplierCollectionType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Specification\ReferencesType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -72,7 +72,8 @@ class CombinationFormType extends TranslatorAwareType
             ->add('stock', CombinationStockType::class)
             ->add('price_impact', CombinationPriceImpactType::class)
             ->add('references', ReferencesType::class)
-            ->add('suppliers', SuppliersType::class, [
+            ->add('default_supplier_id', HiddenType::class)
+            ->add('product_suppliers', ProductSupplierCollectionType::class, [
                 'alert_message' => $this->trans('This interface allows you to specify the suppliers of the current combination.', 'Admin.Catalog.Help'),
             ])
             ->add('images', CombinationImagesChoiceType::class, [
