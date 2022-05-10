@@ -80,13 +80,16 @@ export default class ProductFormModel {
   }
 
   /**
-   * @param {string} productModelKey
+   * @param {string | string[]} productModelKeys
    * @param {function} callback
    *
    * @private
    */
-  watch(productModelKey: string, callback: (event: FormUpdateEvent) => void): void {
-    this.mapper.watch(`product.${productModelKey}`, callback);
+  watch(productModelKeys: string | string[], callback: (event: FormUpdateEvent) => void): void {
+    const watchedKeys: string[] = Array.isArray(productModelKeys) ? productModelKeys : [productModelKeys];
+    const modelKeys: string[] = watchedKeys.map((productModelKey: string) => `product.${productModelKey}`);
+
+    this.mapper.watch(modelKeys, callback);
   }
 
   /**

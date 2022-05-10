@@ -69,3 +69,18 @@
     {{ form_widget(form) }}
   </div>
 {% endblock %}
+
+{% block price_summary_widget %}
+  <div {{ block('widget_attributes') }}>
+    <div class="price-summary-block">
+      <div class="price-summary-value price-tax-excluded-value"></div>
+      <div class="price-summary-value price-tax-included-value"></div>
+      <div class="price-summary-value unit-price-value"></div>
+    </div>
+    <div class="price-summary-block">
+      <div class="price-summary-value margin-value"></div>
+      <div class="price-summary-value margin-rate-value"></div>
+      <div class="price-summary-value wholesale-price-value"></div>
+    </div>
+  </div>
+{% endblock %}

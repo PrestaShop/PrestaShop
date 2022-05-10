@@ -26,6 +26,9 @@
 import BigNumber from 'bignumber.js';
 import EventEmitter from '@components/event-emitter';
 import {transform as numberCommaTransform} from '@js/app/utils/number-comma-transformer';
+import {isUndefined} from '@PSTypes/typeguard';
+
+import NameValuePair = JQuery.NameValuePair;
 
 const {$} = window;
 
@@ -233,16 +236,20 @@ export default class FormObjectMapper {
    * additionally any callback assigned
    * to this specific value is also called, the parameter is the same event.
    *
-   * @param {string} modelKey
+   * @param {string | string[]} modelKeys
    * @param {function} callback
    */
-  watch(modelKey: string, callback: (event: FormUpdateEvent) => void): void {
-    if (
-      !Object.prototype.hasOwnProperty.call(this.watchedProperties, modelKey)
-    ) {
-      this.watchedProperties[modelKey] = [];
-    }
-    this.watchedProperties[modelKey].push(callback);
+  watch(modelKeys: string | string[], callback: (event: FormUpdateEvent) => void): void {
+    const watchedKeys: string[] = Array.isArray(modelKeys) ? modelKeys : [modelKeys];
+
+    watchedKeys.forEach((modelKey: string) => {
+      if (
+        !Object.prototype.hasOwnProperty.call(this.watchedProperties, modelKey)
+      ) {
+        this.watchedProperties[modelKey] = [];
+      }
+      this.watchedProperties[modelKey].push(callback);
+    });
   }
 
   /**
@@ -253,7 +260,9 @@ export default class FormObjectMapper {
    * @param modelKey
    */
   getBigNumber(modelKey: string): BigNumber {
-    return new BigNumber(numberCommaTransform(this.getValue(modelKey)));
+    const numberValue = this.getValue(modelKey);
+
+    return new BigNumber(isUndefined(numberValue) ? NaN : numberCommaTransform(numberValue));
   }
 
   /**
@@ -451,15 +460,21 @@ export default class FormObjectMapper {
    * This method is called when this component initializes or when triggered by an external event.
    */
   private updateFullObject():void {
-    const serializedForm = this.$form.serializeJSON({
-      checkboxUncheckedValue: '0',
+    // Temporarily enable all inputs or they will not be serialized
+    const $disabledInputs: JQuery<HTMLElement> = this.$form.find(':input:disabled').removeAttr('disabled');
+    const serializedFormArray = this.$form.serializeArray();
+    // Restore initial disabled state
+    $disabledInputs.prop('disabled', true);
+
+    const serializedFormMap: Record<string, any> = {};
+    serializedFormArray.forEach((value: NameValuePair) => {
+      serializedFormMap[value.name] = value.value;
     });
 
     this.model = {};
     Object.keys(this.modelMapping).forEach((modelKey) => {
       const formMapping = this.modelMapping[modelKey];
-      const formKeys = $.serializeJSON.splitInputNameIntoKeysArray(formMapping);
-      const formValue = $.serializeJSON.deepGet(serializedForm, formKeys);
+      const formValue = serializedFormMap[formMapping];
 
       this.updateObjectByKey(modelKey, formValue);
     });

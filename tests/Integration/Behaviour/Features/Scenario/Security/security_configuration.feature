@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s security
-@reset-database-before-feature
+@restore-all-tables-before-feature
 Feature: Security configuration form
   PrestaShop allows BO users to manage Security configuration
   As a BO user
@@ -30,10 +30,12 @@ Feature: Security configuration form
 
   Scenario: Clear outdated employee sessions
     Given a session for the employee is created 1 hour ago
-    And a session for the employee is created 20 hours ago
-    And a session for the employee is created 2 hours ago
+    And a session for the employee is created 2 hour ago
+    # these ones will be cleared
+    And a session for the employee is created 5 hours ago
+    And a session for the employee is created 10 hours ago
     # Means one hour
-    And shop configuration for "PS_COOKIE_LIFETIME_BO" is set to 1
-    Then there is 3 employee sessions left
+    And shop configuration for "PS_COOKIE_LIFETIME_BO" is set to 3
+    Then there is 4 employee sessions left
     When I clear outdated employee sessions
     Then there is 2 employee session left

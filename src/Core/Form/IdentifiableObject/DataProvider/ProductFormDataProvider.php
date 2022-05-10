@@ -377,9 +377,9 @@ class ProductFormDataProvider implements FormDataProviderInterface
             'retail_price' => [
                 'price_tax_excluded' => (float) (string) $productForEditing->getPricesInformation()->getPrice(),
                 'price_tax_included' => (float) (string) $productForEditing->getPricesInformation()->getPriceTaxIncluded(),
+                'tax_rules_group_id' => $productForEditing->getPricesInformation()->getTaxRulesGroupId(),
                 'ecotax' => (float) (string) $productForEditing->getPricesInformation()->getEcotax(),
             ],
-            'tax_rules_group_id' => $productForEditing->getPricesInformation()->getTaxRulesGroupId(),
             'on_sale' => $productForEditing->getPricesInformation()->isOnSale(),
             'wholesale_price' => (float) (string) $productForEditing->getPricesInformation()->getWholesalePrice(),
             'unit_price' => [
