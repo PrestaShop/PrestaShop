@@ -109,6 +109,8 @@ class StylesheetGenerator
     {
         return
             strpos($file, '/node_modules/') === false
+            // rtl.css contains RTL override rules
+            && strpos($file, 'rtl.css') === false
             // does not end with .rtlfix
             && substr(rtrim($file, '.' . $this->fileType), -4) !== $this->rtlSuffix
             // RTL file does not exist or we are regenerating them
