@@ -600,8 +600,8 @@ class HelperListCore extends Helper
             'confirm' => Tools::safeOutput(self::$cache_lang['DeleteItem'] . $name),
         ];
 
-        if (!empty($this->specificConfirmDelete)) {
-            $data['confirm'] = '\r' . $this->specificConfirmDelete;
+        if ($this->specificConfirmDelete !== false) {
+            $data['confirm'] = null !== $this->specificConfirmDelete ? '\r' . $this->specificConfirmDelete : Tools::safeOutput(self::$cache_lang['DeleteItem'] . $name);
         }
 
         $tpl->assign(array_merge($this->tpl_delete_link_vars, $data));
