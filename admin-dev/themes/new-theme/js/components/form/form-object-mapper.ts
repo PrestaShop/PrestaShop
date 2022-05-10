@@ -263,10 +263,10 @@ export default class FormObjectMapper {
    *
    * @param modelKey
    */
-  getBigNumber(modelKey: string): BigNumber {
+  getBigNumber(modelKey: string): BigNumber | undefined {
     const numberValue = this.getValue(modelKey);
 
-    return new BigNumber(isUndefined(numberValue) ? NaN : numberCommaTransform(numberValue));
+    return isUndefined(numberValue) ? undefined : new BigNumber(numberCommaTransform(numberValue));
   }
 
   /**

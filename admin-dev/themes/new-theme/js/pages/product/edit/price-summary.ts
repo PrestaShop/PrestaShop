@@ -101,16 +101,16 @@ export default class PriceSummary {
     this.updateField(this.priceTaxIncluded, this.getLabelWithPrice(this.priceTaxIncludedLabel, 'price.priceTaxIncluded'));
     this.updateField(this.wholesalePrice, this.getLabelWithPrice(this.wholesalePriceLabel, 'price.wholesalePrice'));
 
-    const wholesalePrice = this.productFormModel.getBigNumber('price.wholesalePrice');
-    const price:BigNumber = this.productFormModel.getBigNumber('price.priceTaxExcluded');
+    const wholesalePrice = this.productFormModel.getBigNumber('price.wholesalePrice') ?? new BigNumber(0);
+    const price:BigNumber = this.productFormModel.getBigNumber('price.priceTaxExcluded') ?? new BigNumber(0);
     const margin:BigNumber = price.minus(wholesalePrice);
     this.updateField(this.margin, this.marginLabel.replace('%price%', this.productFormModel.displayPrice(margin)));
 
-    const marginRate:BigNumber = margin.dividedBy(price).times(new BigNumber('100'));
+    const marginRate:BigNumber = price.isZero() ? new BigNumber('-100') : margin.dividedBy(price).times(new BigNumber('100'));
     this.updateField(this.marginRate, this.marginRateLabel.replace('%margin_rate%', marginRate.toFixed(2)));
 
     // Unit price is composed of two fields and it is shown only when values are not empty
-    const unitPrice = this.productFormModel.getBigNumber('price.wholesalePrice');
+    const unitPrice = this.productFormModel.getBigNumber('price.wholesalePrice') ?? new BigNumber(0);
     const {unity} = this.productFormModel.getProduct().price;
 
     if (unity !== '' && !unitPrice.isZero()) {
@@ -132,7 +132,7 @@ export default class PriceSummary {
   }
 
   private getLabelWithPrice(label: string, priceModelKey: string): string {
-    const price: BigNumber = this.productFormModel.getBigNumber(priceModelKey);
+    const price: BigNumber = this.productFormModel.getBigNumber(priceModelKey) ?? new BigNumber(0);
 
     return label.replace('%price%', this.productFormModel.displayPrice(price));
   }

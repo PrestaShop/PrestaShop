@@ -70,7 +70,7 @@ export default class ProductFormModel {
     return this.mapper.getModel();
   }
 
-  getBigNumber(modelKey: string): BigNumber {
+  getBigNumber(modelKey: string): BigNumber | undefined {
     return this.mapper.getBigNumber(`${modelKey}`);
   }
 
@@ -90,27 +90,30 @@ export default class ProductFormModel {
       return new BigNumber(NaN);
     }
 
-    const $selectedTaxOption = $(':selected', $taxRulesGroupIdInput);
     const isTaxEnabled = $taxRulesGroupIdInput.data('taxEnabled');
 
-    let taxRate = new BigNumber(0);
-
-    if (isTaxEnabled) {
-      try {
-        taxRate = new BigNumber($selectedTaxOption.data('taxRate'));
-      } catch (error) {
-        taxRate = new BigNumber(NaN);
-      }
-      if (taxRate.isNaN()) {
-        taxRate = new BigNumber(0);
-      }
+    if (!isTaxEnabled) {
+      return new BigNumber(1);
     }
 
-    return taxRate.dividedBy(100).plus(1);
+    const $selectedTaxOption = $(':selected', $taxRulesGroupIdInput);
+
+    return this.getTaxRatioFromInput($selectedTaxOption);
+  }
+
+  getEcoTaxRatio(): BigNumber {
+    const $ecotaxTaxExcluded = this.mapper.getInputsFor('price.ecotaxTaxExcluded');
+
+    // If no ecotax field found return 1 this way it has no impact in computing
+    if (!$ecotaxTaxExcluded) {
+      return new BigNumber(1);
+    }
+
+    return this.getTaxRatioFromInput($ecotaxTaxExcluded);
   }
 
   getPriceTaxExcluded(): BigNumber {
-    return this.mapper.getBigNumber('price.priceTaxExcluded');
+    return this.mapper.getBigNumber('price.priceTaxExcluded') ?? new BigNumber(0);
   }
 
   displayPrice(price: BigNumber): string {
@@ -154,6 +157,8 @@ export default class ProductFormModel {
       'price.taxRulesGroupId',
       'price.unitPriceTaxIncluded',
       'price.unitPriceTaxExcluded',
+      'price.ecotaxTaxIncluded',
+      'price.ecotaxTaxExcluded',
     ];
 
     if (!pricesFields.includes(event.modelKey)) {
@@ -166,37 +171,75 @@ export default class ProductFormModel {
       return;
     }
 
+    const priceTaxIncluded = this.mapper.getBigNumber('price.priceTaxIncluded') ?? new BigNumber(0);
+    const ecoTaxRatio = this.getEcoTaxRatio();
+    const ecotaxTaxIncluded = this.mapper.getBigNumber('price.ecotaxTaxIncluded') ?? new BigNumber(0);
+
     // eslint-disable-next-line default-case
     switch (event.modelKey) {
+      // Regular retail price
       case 'price.priceTaxIncluded': {
-        const priceTaxIncluded = this.mapper.getBigNumber('price.priceTaxIncluded');
-        this.mapper.set('price.priceTaxExcluded', this.removeTax(priceTaxIncluded));
+        this.mapper.set('price.priceTaxExcluded', this.removeTax(priceTaxIncluded.minus(ecotaxTaxIncluded)));
         break;
       }
       case 'price.priceTaxExcluded': {
-        const priceTaxExcluded = this.mapper.getBigNumber('price.priceTaxExcluded');
-        this.mapper.set('price.priceTaxIncluded', this.addTax(priceTaxExcluded));
+        const priceTaxExcluded = this.mapper.getBigNumber('price.priceTaxExcluded') ?? new BigNumber(0);
+        this.mapper.set(
+          'price.priceTaxIncluded',
+          priceTaxExcluded.times(taxRatio).plus(ecotaxTaxIncluded).toFixed(this.precision),
+        );
         break;
       }
 
+      // Ecotax values
+      case 'price.ecotaxTaxIncluded': {
+        this.mapper.set(
+          'price.ecotaxTaxExcluded',
+          ecotaxTaxIncluded.dividedBy(ecoTaxRatio).toFixed(this.precision),
+        );
+        break;
+      }
+      case 'price.ecotaxTaxExcluded': {
+        const ecotaxTaxExcluded = this.mapper.getBigNumber('price.ecotaxTaxExcluded') ?? new BigNumber(0);
+        const newEcotaxTaxIncluded = ecotaxTaxExcluded.times(ecoTaxRatio);
+        this.mapper.set('price.ecotaxTaxIncluded', newEcotaxTaxIncluded.toFixed(this.precision));
+        this.mapper.set('price.priceTaxExcluded', this.removeTax(priceTaxIncluded.minus(newEcotaxTaxIncluded)));
+        break;
+      }
+
+      // Unit price
       case 'price.unitPriceTaxIncluded': {
-        const unitPriceTaxIncluded = this.mapper.getBigNumber('price.unitPriceTaxIncluded');
+        const unitPriceTaxIncluded = this.mapper.getBigNumber('price.unitPriceTaxIncluded') ?? new BigNumber(0);
         this.mapper.set('price.unitPriceTaxExcluded', this.removeTax(unitPriceTaxIncluded));
         break;
       }
       case 'price.unitPriceTaxExcluded': {
-        const unitPriceTaxExcluded = this.mapper.getBigNumber('price.unitPriceTaxExcluded');
+        const unitPriceTaxExcluded = this.mapper.getBigNumber('price.unitPriceTaxExcluded') ?? new BigNumber(0);
         this.mapper.set('price.unitPriceTaxIncluded', this.addTax(unitPriceTaxExcluded));
         break;
       }
 
       case 'price.taxRulesGroupId': {
-        const priceTaxExcluded = this.mapper.getBigNumber('price.priceTaxExcluded');
+        const priceTaxExcluded = this.mapper.getBigNumber('price.priceTaxExcluded') ?? new BigNumber(0);
         this.mapper.set('price.priceTaxIncluded', this.addTax(priceTaxExcluded));
-        const unitPriceTaxExcluded = this.mapper.getBigNumber('price.unitPriceTaxExcluded');
+        const unitPriceTaxExcluded = this.mapper.getBigNumber('price.unitPriceTaxExcluded') ?? new BigNumber(0);
         this.mapper.set('price.unitPriceTaxIncluded', this.addTax(unitPriceTaxExcluded));
         break;
       }
     }
+  }
+
+  private getTaxRatioFromInput($taxInput: JQuery): BigNumber {
+    let taxRate;
+    try {
+      taxRate = new BigNumber($taxInput.data('taxRate'));
+    } catch (error) {
+      taxRate = new BigNumber(NaN);
+    }
+    if (taxRate.isNaN()) {
+      taxRate = new BigNumber(0);
+    }
+
+    return taxRate.dividedBy(100).plus(1);
   }
 }
