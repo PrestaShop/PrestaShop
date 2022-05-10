@@ -6,3 +6,4 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Category\NameBuilder\CategoryDisplayNameBuilder'
     arguments:
       - '@prestashop.adapter.category.repository.category_repository'
+      - ' > '

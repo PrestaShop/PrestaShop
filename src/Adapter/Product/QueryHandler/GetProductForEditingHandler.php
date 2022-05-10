@@ -286,10 +286,10 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
         foreach ($categoryNames as $categoryId => $localizedNames) {
             $categoryName = $categoryNames[$categoryId][$languageId->getValue()];
             $displayName = $this->categoryDisplayNameBuilder->build(
-                new CategoryId($categoryId),
                 $categoryName,
                 $shopId,
-                $languageId
+                $languageId,
+                new CategoryId($categoryId)
             );
             $categoriesInformation[] = new CategoryInformation(
                 $categoryId,

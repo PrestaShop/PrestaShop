@@ -132,10 +132,10 @@ class ProductDefaultCategoryChoiceProvider implements ConfigurableFormChoiceProv
     private function getDisplayName(CategoryId $categoryId, string $categoryName): string
     {
         return $this->categoryDisplayNameBuilder->build(
-            $categoryId,
             $categoryName,
             $this->shopId,
-            $this->languageId
+            $this->languageId,
+            $categoryId
         );
     }
 
