@@ -28,6 +28,9 @@ import PaginationServiceType from '@PSTypes/services';
 
 const {$} = window;
 
+/**
+ * @todo: rename to FilterableCombinationsService?
+ */
 export default class PaginatedCombinationsService implements PaginationServiceType {
   productId: number;
 
@@ -66,6 +69,19 @@ export default class PaginatedCombinationsService implements PaginationServiceTy
     }
 
     return $.get(this.router.generate('admin_products_combinations', requestParams));
+  }
+
+  //@todo: duplicate from combination-service, except that passes filters
+  getCombinationIds(): JQuery.jqXHR<any> {
+    const requestParams: Record<string, any> = {};
+    requestParams[`product_combinations_${this.productId}`] = {
+      filters: this.filters,
+    };
+
+    return $.get(
+      this.router.generate('admin_products_combinations_ids', {productId: this.productId}),
+      requestParams,
+    );
   }
 
   setOrderBy(orderBy: string, orderWay: string): void {

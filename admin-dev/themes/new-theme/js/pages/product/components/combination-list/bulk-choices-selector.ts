@@ -27,6 +27,7 @@ import ProductMap from '@pages/product/product-map';
 import ProductEvents from '@pages/product/product-event-map';
 import {EventEmitter} from 'events';
 import {isChecked} from '@PSTypes/typeguard';
+import PaginatedCombinationsService from '@pages/product/services/paginated-combinations-service';
 
 const CombinationMap = ProductMap.combinations;
 const CombinationEvents = ProductEvents.combinations;
@@ -40,31 +41,41 @@ export default class BulkChoicesSelector {
 
   private tabContainer: HTMLDivElement;
 
-  constructor(eventEmitter: EventEmitter, tabContainer: HTMLDivElement) {
+  private paginatedCombinationsService: PaginatedCombinationsService
+
+  constructor(
+    eventEmitter: EventEmitter,
+    tabContainer: HTMLDivElement,
+    paginatedCombinationsService: PaginatedCombinationsService,
+  ) {
     this.eventEmitter = eventEmitter;
     this.tabContainer = tabContainer;
+    this.paginatedCombinationsService = paginatedCombinationsService;
     this.init();
   }
 
-  //@todo: may become private
+  //@todo: may become private or unused
   public getSelectedCheckboxes(): NodeListOf<HTMLInputElement> {
     return this.tabContainer.querySelectorAll<HTMLInputElement>(`${CombinationMap.tableRow.isSelectedCombination}:checked`);
   }
 
   //@todo: could as well return count?
-  public getSelectedIds(): number[] {
+  public async getSelectedIds(): Promise<number[]> {
     const allSelected = this.tabContainer.querySelector<HTMLInputElement>(`${CombinationMap.bulkSelectAll}:checked`);
 
     if (allSelected) {
-      // call api to get selected ids by filters
-      return [1, 2, 3];
+      //@todo: hardcoded productId
+      const response: JQuery.jqXHR = await this.paginatedCombinationsService.getCombinationIds();
+      debugger;
+      return response.responseJSON;
     }
+
     const combinationIds: number[] = [];
     this.getSelectedCheckboxes().forEach((checkbox: HTMLInputElement) => {
       combinationIds.push(Number(checkbox.value));
     });
 
-    return combinationIds;
+    return new Promise(() => combinationIds);
   }
 
   private init() {
@@ -92,7 +103,7 @@ export default class BulkChoicesSelector {
 
       if (isBulkSelectAll) {
         const bulkSelectAllCheckboxes = this.tabContainer.querySelectorAll(CombinationMap.bulkSelectAllCheckboxes);
-        //@todo: this loop allows only checking one checkbox at a time, but it seems to complicated
+        //@todo: this loop allows only checking one checkbox at a time, but it seems too complicated
         //       need to check refactoring options, html could probably handle this by its own
         bulkSelectAllCheckboxes.forEach((input) => {
           if (checkbox.id !== input.id) {

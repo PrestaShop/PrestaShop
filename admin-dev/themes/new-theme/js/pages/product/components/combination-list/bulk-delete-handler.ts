@@ -59,7 +59,7 @@ export default class BulkDeleteHandler {
     this.init();
   }
 
-  private init(): void {
+  private async init(): Promise<void> {
     const bulkDeleteBtn = document.querySelector<HTMLButtonElement>(CombinationMap.bulkDeleteBtn);
 
     if (!(bulkDeleteBtn instanceof HTMLButtonElement)) {
@@ -69,33 +69,34 @@ export default class BulkDeleteHandler {
     }
 
     bulkDeleteBtn.addEventListener('click', () => {
-      try {
-        const selectedCombinationIds = this.bulkChoicesSelector.getSelectedIds();
-        const selectedCombinationsCount = selectedCombinationIds.length;
-        const confirmLabel = bulkDeleteBtn.dataset.modalConfirmLabel
-          ?.replace(/%combinations_number%/, String(selectedCombinationsCount));
+      this.bulkChoicesSelector.getSelectedIds().then((selectedCombinationIds) => {
+        try {
+          const selectedCombinationsCount = selectedCombinationIds.length;
+          const confirmLabel = bulkDeleteBtn.dataset.modalConfirmLabel
+            ?.replace(/%combinations_number%/, String(selectedCombinationsCount));
 
-        const modal = new ConfirmModal(
-          {
-            id: 'modal-confirm-delete-combinations',
-            confirmTitle: bulkDeleteBtn.innerHTML,
-            confirmMessage: bulkDeleteBtn.dataset.modalMessage,
-            confirmButtonLabel: confirmLabel,
-            closeButtonLabel: bulkDeleteBtn.dataset.modalCancelLabel,
-            closable: true,
-          },
-          async () => {
-            await this.bulkDelete(selectedCombinationIds);
-            //@todo: hardcoded success. Pass translated message to modal data attribute?
-            $.growl({message: 'Success'});
-            this.eventEmitter.emit(CombinationEvents.refreshCombinationList);
-          },
-        );
-        modal.show();
-      } catch (error) {
-        const errorMessage = error.response?.JSON ?? error;
-        $.growl.error({message: errorMessage});
-      }
+          const modal = new ConfirmModal(
+            {
+              id: 'modal-confirm-delete-combinations',
+              confirmTitle: bulkDeleteBtn.innerHTML,
+              confirmMessage: bulkDeleteBtn.dataset.modalMessage,
+              confirmButtonLabel: confirmLabel,
+              closeButtonLabel: bulkDeleteBtn.dataset.modalCancelLabel,
+              closable: true,
+            },
+            async () => {
+              await this.bulkDelete(selectedCombinationIds);
+              //@todo: hardcoded success. Pass translated message to modal data attribute?
+              $.growl({message: 'Success'});
+              this.eventEmitter.emit(CombinationEvents.refreshCombinationList);
+            },
+          );
+          modal.show();
+        } catch (error) {
+          const errorMessage = error.response?.JSON ?? error;
+          $.growl.error({message: errorMessage});
+        }
+      });
     });
   }
 

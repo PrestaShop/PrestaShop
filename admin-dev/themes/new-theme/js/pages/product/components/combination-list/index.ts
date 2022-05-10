@@ -108,7 +108,11 @@ export default class CombinationsList {
     this.paginatedCombinationsService = new PaginatedCombinationsService(productId);
     this.productAttributeGroups = [];
 
-    const bulkChoicesSelector = new BulkChoicesSelector(this.eventEmitter, this.externalCombinationTab);
+    const bulkChoicesSelector = new BulkChoicesSelector(
+      this.eventEmitter,
+      this.externalCombinationTab,
+      this.paginatedCombinationsService,
+    );
 
     new BulkEditionHandler(productId, this.eventEmitter, bulkChoicesSelector, this.combinationsService);
     new BulkDeleteHandler(productId, this.eventEmitter, bulkChoicesSelector, this.combinationsService);

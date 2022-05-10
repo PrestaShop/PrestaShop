@@ -40,7 +40,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationN
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Grid\Query\ProductCombinationQueryBuilder;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 use PrestaShopException;
 use Product;
 
@@ -70,21 +72,29 @@ class CombinationRepository extends AbstractObjectModelRepository
     private $combinationValidator;
 
     /**
+     * @var ProductCombinationQueryBuilder
+     */
+    private $combinationQueryBuilder;
+
+    /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param AttributeRepository $attributeRepository
      * @param CombinationValidator $combinationValidator
+     * @param ProductCombinationQueryBuilder $combinationQueryBuilder
      */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
         AttributeRepository $attributeRepository,
-        CombinationValidator $combinationValidator
+        CombinationValidator $combinationValidator,
+        ProductCombinationQueryBuilder $combinationQueryBuilder
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
         $this->attributeRepository = $attributeRepository;
         $this->combinationValidator = $combinationValidator;
+        $this->combinationQueryBuilder = $combinationQueryBuilder;
     }
 
     /**
@@ -208,16 +218,23 @@ class CombinationRepository extends AbstractObjectModelRepository
      *
      * @return CombinationId[]
      */
-    public function getCombinationIdsByProductId(ProductId $productId): array
+    public function getCombinationIdsByProductId(ProductId $productId, ?ProductCombinationFilters $filters = null): array
     {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select('pa.id_product_attribute')
-            ->from($this->dbPrefix . 'product_attribute', 'pa')
-            ->andWhere('pa.id_product = :productId')
-            ->setParameter('productId', $productId->getValue())
-            ->addOrderBy('pa.id_product_attribute', 'ASC')
-        ;
+        if ($filters) {
+            $qb = $this->combinationQueryBuilder->getSearchQueryBuilder($filters)
+                ->select('pa.id_product_attribute')
+            ;
+        } else {
+            $qb = $this->connection->createQueryBuilder();
+            $qb
+                ->select('pa.id_product_attribute')
+                ->from($this->dbPrefix . 'product_attribute', 'pa')
+                ->andWhere('pa.id_product = :productId')
+                ->setParameter('productId', $productId->getValue())
+                ->addOrderBy('pa.id_product_attribute', 'ASC')
+            ;
+        }
+
         $combinationIds = $qb->execute()->fetchAll();
 
         return array_map(
