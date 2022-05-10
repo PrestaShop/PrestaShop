@@ -401,15 +401,23 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
      */
     public function hasDuplicateSuppliersName(): bool
     {
+        // We need to fetch all names and perform the check programmatically because MySQL is case-insensitive
         $qb = $this->connection->createQueryBuilder();
-        $qb->select('COUNT(s.name) AS nameCount')
+        $qb->select('name')
             ->from($this->dbPrefix . 'supplier', 's')
-            ->addOrderBy('nameCount', 'DESC')
         ;
 
-        $result = $qb->execute()->fetchAssociative();
+        $suppliers = $qb->execute()->fetchAllAssociative();
+        $names = [];
+        foreach ($suppliers as $supplier) {
+            if (in_array($supplier['name'], $names)) {
+                return true;
+            }
 
-        return (int) $result['nameCount'] > 1;
+            $names[] = $supplier['name'];
+        }
+
+        return false;
     }
 
     /**
