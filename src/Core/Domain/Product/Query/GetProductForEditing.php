@@ -46,7 +46,8 @@ class GetProductForEditing
     private $shopConstraint;
 
     /**
-     * @var LanguageId
+     * @var LanguageId some data from this class is only used for reading and is not expected to be edited, so it
+     *                 is provided only in the language of the user interface, which is defined by this parameter
      */
     private $displayLanguageId;
 

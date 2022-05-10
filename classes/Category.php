@@ -1398,7 +1398,7 @@ class CategoryCore extends ObjectModel
     /**
      * {@inheritdoc}
      */
-    public static function resetStaticCache()
+    public static function resetStaticCache(): void
     {
         parent::resetStaticCache();
         Cache::clean('Category::*');

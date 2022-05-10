@@ -160,11 +160,11 @@ class CategoryRepository extends AbstractObjectModelRepository
     public function getDuplicateNames(ShopId $shopId, LanguageId $languageId): array
     {
         $qb = $this->connection->createQueryBuilder()
-            ->select('cl.name, COUNT(cl.name) AS nameCount')
+            ->select('cl.name')
             ->from($this->dbPrefix . 'category_lang', 'cl')
             ->where('id_lang = :langId')
             ->andWhere('id_shop = :shopId')
-            ->having('nameCount > 1')
+            ->having('COUNT(cl.name) > 1')
             ->setParameter('langId', $languageId->getValue())
             ->setParameter('shopId', $shopId->getValue())
             ->groupBy('cl.name')
@@ -187,29 +187,6 @@ class CategoryRepository extends AbstractObjectModelRepository
      * @return string[]
      */
     public function getBreadcrumbParts(CategoryId $categoryId, LanguageId $languageId): array
-    {
-        return $this->fetchBreadcrumbs($categoryId, $languageId);
-    }
-
-    /**
-     * @param CategoryId $categoryId
-     * @param LanguageId $languageId
-     * @param string $separator
-     *
-     * @return string
-     */
-    public function getBreadcrumb(CategoryId $categoryId, LanguageId $languageId, string $separator = ' > '): string
-    {
-        return implode($separator, $this->fetchBreadcrumbs($categoryId, $languageId));
-    }
-
-    /**
-     * @param CategoryId $categoryId
-     * @param LanguageId $languageId
-     *
-     * @return string[]
-     */
-    private function fetchBreadcrumbs(CategoryId $categoryId, LanguageId $languageId): array
     {
         $categoryQb = $this->connection->createQueryBuilder();
         $categoryQb
@@ -248,12 +225,24 @@ class CategoryRepository extends AbstractObjectModelRepository
 
         $results = $qb->execute()->fetchAllAssociative();
 
-        $parentNames = [];
-        foreach ($results as $category) {
-            $parentNames[] = $category['name'];
+        if ($results) {
+            $parentNames = array_column($results, 'name');
         }
+
         $parentNames[] = $categoryName;
 
         return $parentNames;
+    }
+
+    /**
+     * @param CategoryId $categoryId
+     * @param LanguageId $languageId
+     * @param string $separator
+     *
+     * @return string
+     */
+    public function getBreadcrumb(CategoryId $categoryId, LanguageId $languageId, string $separator = ' > '): string
+    {
+        return implode($separator, $this->getBreadcrumbParts($categoryId, $languageId));
     }
 }

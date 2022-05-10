@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Core\Category\NameBuilder\CategoryDisplayNameBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoriesTree;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryHandler\GetCategoriesTreeHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\CategoryForTree;
-use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
@@ -120,7 +119,6 @@ final class GetCategoriesTreeHandler implements GetCategoriesTreeHandlerInterfac
             }
 
             $displayName = $this->displayNameBuilder->buildWithBreadcrumbs(
-                new CategoryId($categoryId),
                 $categoryName,
                 $shopId,
                 $langId,
