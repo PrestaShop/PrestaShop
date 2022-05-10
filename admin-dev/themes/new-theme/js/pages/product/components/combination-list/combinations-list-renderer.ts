@@ -187,7 +187,7 @@ export default class CombinationsListRenderer {
     const $combinationsTableBody = $(CombinationsMap.combinationsTableBody);
 
     $combinationsTableBody.empty();
-    $combinationsTable.find(CombinationsMap.bulkSelectAll).prop('checked', false);
+    $combinationsTable.find(CombinationsMap.bulkSelectAllInPage).prop('checked', false);
 
     let rowIndex = 0;
     combinations.forEach((combination: Record<string, any>) => {

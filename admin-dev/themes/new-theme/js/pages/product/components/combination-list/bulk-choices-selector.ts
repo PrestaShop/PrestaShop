@@ -46,8 +46,25 @@ export default class BulkChoicesSelector {
     this.init();
   }
 
+  //@todo: may become private
   public getSelectedCheckboxes(): NodeListOf<HTMLInputElement> {
     return this.tabContainer.querySelectorAll<HTMLInputElement>(`${CombinationMap.tableRow.isSelectedCombination}:checked`);
+  }
+
+  //@todo: could as well return count?
+  public getSelectedIds(): number[] {
+    const allSelected = this.tabContainer.querySelector<HTMLInputElement>(`${CombinationMap.bulkSelectAll}:checked`);
+
+    if (allSelected) {
+      // call api to get selected ids by filters
+      return [1, 2, 3];
+    }
+    const combinationIds: number[] = [];
+    this.getSelectedCheckboxes().forEach((checkbox: HTMLInputElement) => {
+      combinationIds.push(Number(checkbox.value));
+    });
+
+    return combinationIds;
   }
 
   private init() {
@@ -66,7 +83,7 @@ export default class BulkChoicesSelector {
         return;
       }
 
-      const isBulkSelectAll = checkbox.matches(CombinationMap.bulkSelectAll);
+      const isBulkSelectAll = checkbox.matches(`${CombinationMap.bulkSelectAllInPage},${CombinationMap.bulkSelectAll}`);
 
       // don't proceed if its not one of the expected checkboxes
       if (!isBulkSelectAll && !checkbox.matches(CombinationMap.tableRow.isSelectedCombination)) {
@@ -82,7 +99,7 @@ export default class BulkChoicesSelector {
   }
 
   private updateBulkButtonsState(): void {
-    const selectAllCheckbox = document.querySelector(CombinationMap.bulkSelectAll);
+    const selectAllCheckbox = document.querySelector(CombinationMap.bulkSelectAllInPage);
     const dropdownBtn = this.tabContainer.querySelector<HTMLInputElement>(CombinationMap.bulkActionsDropdownBtn);
     const selectedCombinationsCount = this.getSelectedCheckboxes().length;
     const enable = isChecked(selectAllCheckbox) || selectedCombinationsCount !== 0;

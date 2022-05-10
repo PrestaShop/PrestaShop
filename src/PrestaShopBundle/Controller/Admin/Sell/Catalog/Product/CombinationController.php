@@ -290,6 +290,8 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
+     * @todo: this might not be needed anymore
+     *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param int $productId

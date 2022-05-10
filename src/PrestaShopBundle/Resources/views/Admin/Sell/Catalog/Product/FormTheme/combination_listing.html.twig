@@ -1,4 +1,4 @@
-{#**
+{# **
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,7 +21,7 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ * #}
 {% extends '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
 {%- block combination_item_row -%}
@@ -52,29 +52,55 @@
       {{ form_widget(form._token) }}
     {% endif %}
     <thead class="thead-default">
-      <tr class="column-headers">
-        <th scope="col" id="id-header">
-          <div class="md-checkbox md-checkbox-inline">
+    <tr class="column-headers">
+      <th scope="col" id="id-header">
+        <div class="dropdown">
+{#          #}
+          <div class="md-checkbox md-checkbox-inline dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <label>
-              <input type="checkbox" id="bulk-select-all-in-page">
+              <input type="checkbox" id="bulk-select-all-display">
               <i class="md-checkbox-control"></i>
             </label>
           </div>
-        </th>
 
-        {% for child in prototype.children %}
-          {# Exception: is_selected header has already been rendered manually #}
-          {% if child.vars.name != 'is_selected' %}
-            <th scope="col">
-              {% if child.vars.attr['data-order-by'] is defined %}
-                {{ ps.sortable_column_header(child.vars.label, child.vars.attr['data-order-by']) }}
-              {% else %}
-                {{ child.vars.label }}
-              {% endif %}
-            </th>
-          {% endif %}
-        {% endfor %}
-      </tr>
+          <div aria-labelledby="form_invoice_prefix" class="dropdown-menu">
+            <div class="md-checkbox">
+              <label class="dropdown-item">
+                <div class="md-checkbox-container">
+                  <input type="checkbox" id="bulk-select-all-in-page">
+                  <i class="md-checkbox-control"></i>
+{#                  @todo: hardcoded#}
+                  Select results on this page
+                </div>
+              </label>
+            </div>
+            <div class="md-checkbox">
+              <label class="dropdown-item">
+                <div class="md-checkbox-container">
+                  <input type="checkbox" id="bulk-select-all">
+                  <i class="md-checkbox-control"></i>
+                  {#                  @todo: hardcoded#}
+                  Select all results
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+      </th>
+
+      {% for child in prototype.children %}
+        {# Exception: is_selected header has already been rendered manually #}
+        {% if child.vars.name != 'is_selected' %}
+          <th scope="col">
+            {% if child.vars.attr['data-order-by'] is defined %}
+              {{ ps.sortable_column_header(child.vars.label, child.vars.attr['data-order-by']) }}
+            {% else %}
+              {{ child.vars.label }}
+            {% endif %}
+          </th>
+        {% endif %}
+      {% endfor %}
+    </tr>
     </thead>
     <tbody>
     {{- block('form_rows') -}}
