@@ -61,15 +61,22 @@ abstract class AbstractProductSupplierHandler
      */
     protected function getProductSuppliersInfo(ProductId $productId, ?CombinationId $combinationId = null): array
     {
+        $hasDuplicatedSupplierNames = $this->productSupplierRepository->hasDuplicateSuppliersName();
         $productSuppliersInfo = $this->productSupplierRepository->getProductSuppliersInfo($productId, $combinationId);
 
         $productSuppliers = [];
         foreach ($productSuppliersInfo as $productSupplierInfo) {
+            // Integrate the ID in the name so that suppliers with identical names are less confusing
+            $supplierName = $productSupplierInfo['name'];
+            if ($hasDuplicatedSupplierNames) {
+                $supplierName = sprintf('%d - %s', (int) $productSupplierInfo['id_supplier'], $supplierName);
+            }
+
             $productSuppliers[] = new ProductSupplierForEditing(
                 (int) $productSupplierInfo['id_product_supplier'],
                 (int) $productSupplierInfo['id_product'],
                 (int) $productSupplierInfo['id_supplier'],
-                $productSupplierInfo['name'],
+                $supplierName,
                 $productSupplierInfo['product_supplier_reference'],
                 $productSupplierInfo['product_supplier_price_te'],
                 (int) $productSupplierInfo['id_currency'],

@@ -395,6 +395,24 @@ class ProductSupplierRepository extends AbstractObjectModelRepository
     }
 
     /**
+     * Returns true if some suppliers have identical names, in which case we integrate the ID into the name to avoid confusion.
+     *
+     * @return bool
+     */
+    public function hasDuplicateSuppliersName(): bool
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('COUNT(s.name) AS nameCount')
+            ->from($this->dbPrefix . 'supplier', 's')
+            ->addOrderBy('nameCount', 'DESC')
+        ;
+
+        $result = $qb->execute()->fetchAssociative();
+
+        return (int) $result['nameCount'] > 1;
+    }
+
+    /**
      * Returns the list of ProductSupplierId which don't match the expected suppliers.
      *
      * @param ProductId $productId
