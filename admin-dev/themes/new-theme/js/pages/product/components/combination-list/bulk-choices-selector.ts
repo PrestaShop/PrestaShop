@@ -83,7 +83,7 @@ export default class BulkChoicesSelector {
         return;
       }
 
-      const isBulkSelectAll = checkbox.matches(`${CombinationMap.bulkSelectAllInPage},${CombinationMap.bulkSelectAll}`);
+      const isBulkSelectAll = checkbox.matches(`${CombinationMap.bulkSelectAllCheckboxes}`);
 
       // don't proceed if its not one of the expected checkboxes
       if (!isBulkSelectAll && !checkbox.matches(CombinationMap.tableRow.isSelectedCombination)) {
@@ -91,6 +91,17 @@ export default class BulkChoicesSelector {
       }
 
       if (isBulkSelectAll) {
+        const bulkSelectAllCheckboxes = this.tabContainer.querySelectorAll(CombinationMap.bulkSelectAllCheckboxes);
+        //@todo: this loop allows only checking one checkbox at a time, but it seems to complicated
+        //       need to check refactoring options, html could probably handle this by its own
+        bulkSelectAllCheckboxes.forEach((input) => {
+          if (checkbox.id !== input.id) {
+            if (input instanceof HTMLInputElement) {
+              // eslint-disable-next-line no-param-reassign
+              input.checked = false;
+            }
+          }
+        });
         this.checkAll(checkbox.checked);
       }
 
@@ -123,6 +134,12 @@ export default class BulkChoicesSelector {
   }
 
   private checkAll(checked: boolean): void {
+    const allDisplayCheckbox = this.tabContainer.querySelector<HTMLInputElement>(CombinationMap.bulkSelectAllDisplay);
+
+    if (allDisplayCheckbox instanceof HTMLInputElement) {
+      allDisplayCheckbox.checked = checked;
+    }
+
     const allCheckboxes = this.tabContainer.querySelectorAll<HTMLInputElement>(CombinationMap.tableRow.isSelectedCombination);
 
     allCheckboxes.forEach((checkbox: HTMLInputElement) => {
