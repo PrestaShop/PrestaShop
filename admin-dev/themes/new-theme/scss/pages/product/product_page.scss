@@ -1361,6 +1361,43 @@ $product-page-padding-bottom: 80px !default;
         }
       }
     }
+
+    .ecotax-tax-excluded {
+      margin-left: 3rem;
+
+      .input-group {
+        position: relative;
+
+        &::before {
+          position: absolute;
+          left: -2rem;
+          font-size: 1.5rem;
+          content: "+";
+        }
+      }
+    }
+
+    .ecotax-tax-included {
+      margin-left: 2rem;
+
+      .input-group {
+        position: relative;
+
+        &::before {
+          position: absolute;
+          left: -1rem;
+          font-size: 1.5rem;
+          content: "(";
+        }
+
+        &::after {
+          position: absolute;
+          right: -1rem;
+          font-size: 1.5rem;
+          content: ")";
+        }
+      }
+    }
   }
 
   .price-summary-widget {

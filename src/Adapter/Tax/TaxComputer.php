@@ -84,12 +84,14 @@ class TaxComputer
     }
 
     /**
+     * Returns the tax rate for a group and a specific country. The value is the decimal rate (usually a float between 0 and 1)
+     *
      * @param TaxRulesGroupId $taxRulesGroupId
      * @param CountryId $countryId
      *
      * @return DecimalNumber
      */
-    private function getTaxRatio(TaxRulesGroupId $taxRulesGroupId, CountryId $countryId): DecimalNumber
+    public function getTaxRate(TaxRulesGroupId $taxRulesGroupId, CountryId $countryId): DecimalNumber
     {
         $taxRulesGroup = $this->taxRulesGroupRepository->getTaxRulesGroupDetails($taxRulesGroupId);
         if (!empty($taxRulesGroup['rates'])) {
@@ -99,6 +101,19 @@ class TaxComputer
             $countryTaxRate = 0;
         }
 
-        return new DecimalNumber((string) (1 + ($countryTaxRate / 100)));
+        return new DecimalNumber((string) ($countryTaxRate / 100));
+    }
+
+    /**
+     * @param TaxRulesGroupId $taxRulesGroupId
+     * @param CountryId $countryId
+     *
+     * @return DecimalNumber
+     */
+    private function getTaxRatio(TaxRulesGroupId $taxRulesGroupId, CountryId $countryId): DecimalNumber
+    {
+        $taxRate = $this->getTaxRate($taxRulesGroupId, $countryId);
+
+        return $taxRate->plus(new DecimalNumber('1'));
     }
 }

@@ -29,9 +29,12 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
 use Currency;
+use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use PrestaShopBundle\Form\Admin\Type\UnavailableType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -79,6 +82,21 @@ class RetailPriceType extends TranslatorAwareType
      */
     private $isEcotaxEnabled;
 
+    /**
+     * @var int
+     */
+    private $ecoTaxGroupId;
+
+    /**
+     * @var TaxComputer
+     */
+    private $taxComputer;
+
+    /**
+     * @var int
+     */
+    private $contextCountryId;
+
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
@@ -88,7 +106,10 @@ class RetailPriceType extends TranslatorAwareType
         array $taxRuleGroupChoicesAttributes,
         RouterInterface $router,
         bool $taxEnabled,
-        bool $isEcotaxEnabled
+        bool $isEcotaxEnabled,
+        int $ecoTaxGroupId,
+        TaxComputer $taxComputer,
+        int $contextCountryId
     ) {
         parent::__construct($translator, $locales);
         $this->contextLocale = $contextLocale;
@@ -98,6 +119,9 @@ class RetailPriceType extends TranslatorAwareType
         $this->router = $router;
         $this->taxEnabled = $taxEnabled;
         $this->isEcotaxEnabled = $isEcotaxEnabled;
+        $this->ecoTaxGroupId = $ecoTaxGroupId;
+        $this->taxComputer = $taxComputer;
+        $this->contextCountryId = $contextCountryId;
     }
 
     /**
@@ -105,6 +129,9 @@ class RetailPriceType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $ecotaxRate = $this->taxComputer->getTaxRate(new TaxRulesGroupId($this->ecoTaxGroupId), new CountryId($this->contextCountryId));
+        $taxPercent = $ecotaxRate->times(new DecimalNumber('100'))->round(2);
+
         $builder
             // @todo we should have DecimalType and MoneyDecimalType it was moved in a separate PR #22162
             ->add('price_tax_excluded', MoneyType::class, [
@@ -149,6 +176,27 @@ class RetailPriceType extends TranslatorAwareType
                 ],
                 'modify_all_shops' => true,
             ])
+        ;
+
+        if ($this->isEcotaxEnabled) {
+            $builder->add('ecotax_tax_excluded', MoneyType::class, [
+                'label' => $this->trans('Ecotax (tax excl.)', 'Admin.Catalog.Feature'),
+                'constraints' => [
+                    new NotBlank(),
+                    new Type(['type' => 'float']),
+                    new PositiveOrZero(),
+                ],
+                'modify_all_shops' => true,
+                'attr' => [
+                    'data-ecotax-rate' => (string) $ecotaxRate,
+                ],
+                'row_attr' => [
+                    'class' => 'ecotax-tax-excluded',
+                ],
+            ]);
+        }
+
+        $builder
             ->add('price_tax_included', MoneyType::class, [
                 'required' => false,
                 'label' => $this->trans('Retail price (tax incl.)', 'Admin.Catalog.Feature'),
@@ -170,14 +218,21 @@ class RetailPriceType extends TranslatorAwareType
         ;
 
         if ($this->isEcotaxEnabled) {
-            $builder->add('ecotax', UnavailableType::class, [
+            $builder->add('ecotax_tax_included', MoneyType::class, [
                 'label' => $this->trans('Ecotax (tax incl.)', 'Admin.Catalog.Feature'),
+                'help' => $this->trans('Ecotax rate %rate%%', 'Admin.Catalog.Feature', ['%rate%' => $taxPercent]),
                 'constraints' => [
                     new NotBlank(),
                     new Type(['type' => 'float']),
                     new PositiveOrZero(),
                 ],
                 'modify_all_shops' => true,
+                'attr' => [
+                    'data-ecotax-rate' => (string) $ecotaxRate,
+                ],
+                'row_attr' => [
+                    'class' => 'ecotax-tax-included',
+                ],
             ]);
         }
     }
