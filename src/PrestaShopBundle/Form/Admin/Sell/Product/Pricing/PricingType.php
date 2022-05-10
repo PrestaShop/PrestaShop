@@ -81,6 +81,7 @@ class PricingType extends TranslatorAwareType
                 ],
             ])
             ->add('unit_price', UnitPriceType::class)
+            ->add('summary', PriceSummaryType::class)
             ->add('on_sale', CheckboxType::class, [
                 'required' => false,
                 'label' => $this->trans(

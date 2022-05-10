@@ -1367,6 +1367,29 @@ $product-page-padding-bottom: 80px !default;
       }
     }
   }
+
+  .price-summary-widget {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+
+    .price-summary-block {
+      padding: 1rem 2rem;
+      @include border-radius(0.5rem);
+      font-size: 1rem;
+      font-weight: 700;
+      color: #363a41;
+      background-color: #eaebec;
+
+      .price-summary-value {
+        margin-bottom: 0.8rem;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
 }
 
 // Some of the following styles target product page v2 components, but since the are new and only used in the new

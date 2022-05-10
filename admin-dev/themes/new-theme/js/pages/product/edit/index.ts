@@ -45,6 +45,7 @@ import CreateProductModal from '@pages/product/components/create-product-modal';
 import SpecificPricesManager from '@pages/product/edit/specific-prices-manager';
 import initDropzone from '@pages/product/components/dropzone';
 import initTabs from '@pages/product/components/nav-tabs';
+import PriceSummary from '@pages/product/edit/price-summary';
 
 const {$} = window;
 
@@ -70,7 +71,7 @@ $(() => {
   const {eventEmitter} = window.prestashop.instance;
 
   // Init product model along with input watching and syncing
-  const productFormModel = new ProductFormModel($productForm, eventEmitter);
+  const productFormModel: ProductFormModel = new ProductFormModel($productForm, eventEmitter);
 
   if (productType === ProductConst.PRODUCT_TYPE.COMBINATIONS) {
     // Combinations manager must be initialized BEFORE nav handler, or it won't trigger the pagination if the tab is
@@ -88,6 +89,7 @@ $(() => {
   new ProductModulesManager();
   new RelatedProductsManager(eventEmitter);
   new CreateProductModal();
+  new PriceSummary(productFormModel);
 
   const $productFormSubmitButton = $(ProductMap.productFormSubmitButton);
   new ProductPartialUpdater(

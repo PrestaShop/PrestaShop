@@ -1542,6 +1542,13 @@ services:
     tags:
       - { name: form.type }
 
+  form.type.sell.product.pricing.price_summary_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Pricing\PriceSummaryType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+
   form.type.sell.product.pricing.specific_prices_type:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\Pricing\SpecificPricesType'
     parent: 'form.type.translatable.aware'

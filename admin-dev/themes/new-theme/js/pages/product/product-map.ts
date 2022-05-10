@@ -272,6 +272,15 @@ export default {
   relatedProducts: {
     searchInput: '#product_description_related_products',
   },
+  priceSummary: {
+    container: '.price-summary-widget',
+    priceTaxExcluded: '.price-tax-excluded-value',
+    priceTaxIncluded: '.price-tax-included-value',
+    unitPrice: '.unit-price-value',
+    margin: '.margin-value',
+    marginRate: '.margin-rate-value',
+    wholesalePrice: '.wholesale-price-value',
+  },
   specificPrice: {
     container: '#specific-prices-container',
     modalTemplate: '#specific-price-modal-template',
