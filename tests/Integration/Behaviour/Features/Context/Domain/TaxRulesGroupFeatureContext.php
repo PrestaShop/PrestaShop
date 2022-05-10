@@ -62,6 +62,17 @@ class TaxRulesGroupFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @Given I identify tax rules group named :name as :taxRuleGroupReference
+     *
+     * @param string $name
+     */
+    public function identifyTaxRulesGroup(string $name, string $taxRuleGroupReference)
+    {
+        $taxRulesGroup = self::getTaxRulesGroupByName($name);
+        $this->getSharedStorage()->set($taxRuleGroupReference, $taxRulesGroup->id);
+    }
+
+    /**
      * @Then I should get error that tax rules group does not exist
      */
     public function assertLastErrorIsTaxRulesGroupNotFound(): void

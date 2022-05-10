@@ -35,8 +35,11 @@ abstract class AbstractConfigurationFeatureContext implements BehatContext
 
     protected function setConfiguration($index, $value)
     {
-        $this->previousConfiguration[$index] = Configuration::get($index);
-        Configuration::set($index, $value);
+        if (!isset($this->previousConfiguration[$index])) {
+            $this->previousConfiguration[$index] = Configuration::get($index);
+        }
+        Configuration::updateGlobalValue($index, $value);
+        Configuration::resetStaticCache();
     }
 
     /**
@@ -48,8 +51,9 @@ abstract class AbstractConfigurationFeatureContext implements BehatContext
     {
         // delete products
         foreach ($this->previousConfiguration as $index => $value) {
-            Configuration::set($index, $value);
+            Configuration::updateGlobalValue($index, $value);
         }
+        Configuration::resetStaticCache();
         $this->previousConfiguration = [];
     }
 }
