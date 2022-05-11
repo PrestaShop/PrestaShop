@@ -26,7 +26,6 @@
 import ProductMap from '@pages/product/product-map';
 import ProductEvents from '@pages/product/product-event-map';
 import {EventEmitter} from 'events';
-import {isChecked} from '@PSTypes/typeguard';
 import PaginatedCombinationsService from '@pages/product/services/paginated-combinations-service';
 
 const CombinationMap = ProductMap.combinations;
@@ -43,6 +42,10 @@ export default class BulkChoicesSelector {
 
   private paginatedCombinationsService: PaginatedCombinationsService
 
+  private allCombinationsCount: number;
+
+  private paginatedCombinationsCount: number;
+
   constructor(
     eventEmitter: EventEmitter,
     tabContainer: HTMLDivElement,
@@ -51,6 +54,8 @@ export default class BulkChoicesSelector {
     this.eventEmitter = eventEmitter;
     this.tabContainer = tabContainer;
     this.paginatedCombinationsService = paginatedCombinationsService;
+    this.allCombinationsCount = 0;
+    this.paginatedCombinationsCount = 0;
     this.init();
   }
 
@@ -64,10 +69,9 @@ export default class BulkChoicesSelector {
     const allSelected = this.tabContainer.querySelector<HTMLInputElement>(`${CombinationMap.bulkSelectAll}:checked`);
 
     if (allSelected) {
-      //@todo: hardcoded productId
-      const response: JQuery.jqXHR = await this.paginatedCombinationsService.getCombinationIds();
-      debugger;
-      return response.responseJSON;
+      const response: JQuery.jqXHR = await this.paginatedCombinationsService.getCombinationIds(false);
+
+      return response;
     }
 
     const combinationIds: number[] = [];
@@ -75,24 +79,27 @@ export default class BulkChoicesSelector {
       combinationIds.push(Number(checkbox.value));
     });
 
-    return new Promise(() => combinationIds);
+    return combinationIds;
   }
 
   private init() {
-    this.listenCheckboxesChange();
-    this.eventEmitter.on(CombinationEvents.listRendered, () => this.updateBulkButtonsState());
+    this.eventEmitter.on(CombinationEvents.listRendered, () => {
+      this.resetCheckAll();
+      this.updateBulkButtonsState();
+      this.refreshSelectableCombinationsCount().then(() => {
+        this.listenCheckboxesChange();
+        const bulkSelectedAll = this.tabContainer
+          .querySelector<HTMLInputElement>(`${CombinationMap.bulkSelectAllCheckboxes}:checked`);
+        this.checkAll(!!bulkSelectedAll);
+        this.updateBulkSelectAllState();
+      });
+    });
   }
 
   /**
    * Delegated event listener on tabContainer, because every checkbox is re-rendered with dynamic pagination
    */
   private listenCheckboxesChange(): void {
-    this.eventEmitter.on(CombinationEvents.listRendered, () => {
-      const bulkSelectedAll = this.tabContainer
-        .querySelector<HTMLInputElement>(`${CombinationMap.bulkSelectAllCheckboxes}:checked`);
-      this.checkAll(!!bulkSelectedAll);
-    });
-
     this.tabContainer.addEventListener('change', (e) => {
       const checkbox = e.target;
 
@@ -120,6 +127,8 @@ export default class BulkChoicesSelector {
           }
         });
         this.checkAll(checkbox.checked);
+      } else {
+        this.resetCheckAll();
       }
 
       this.updateBulkButtonsState();
@@ -127,27 +136,26 @@ export default class BulkChoicesSelector {
   }
 
   private updateBulkButtonsState(): void {
-    const selectAllCheckbox = document.querySelector(CombinationMap.bulkSelectAllInPage);
     const dropdownBtn = this.tabContainer.querySelector<HTMLInputElement>(CombinationMap.bulkActionsDropdownBtn);
-    const selectedCombinationsCount = this.getSelectedCheckboxes().length;
-    const enable = isChecked(selectAllCheckbox) || selectedCombinationsCount !== 0;
+    this.getSelectedIds().then((combinationIds) => {
+      const selectedCombinationsCount = combinationIds.length;
+      const bulkActionButtons = this.tabContainer.querySelectorAll<HTMLButtonElement>(CombinationMap.bulkActionBtn);
 
-    const bulkActionButtons = this.tabContainer.querySelectorAll<HTMLButtonElement>(CombinationMap.bulkActionBtn);
+      bulkActionButtons.forEach((button: HTMLButtonElement) => {
+        const label = button.dataset.btnLabel;
 
-    bulkActionButtons.forEach((button: HTMLButtonElement) => {
-      const label = button.dataset.btnLabel;
+        if (!label) {
+          console.error('Attribute "data-btn-label" is not defined for combinations bulk action button');
+          return;
+        }
 
-      if (!label) {
-        console.error('Attribute "data-btn-label" is not defined for combinations bulk action button');
-        return;
-      }
+        // eslint-disable-next-line no-param-reassign
+        button.innerHTML = label.replace(/%combinations_number%/, String(selectedCombinationsCount));
+        button?.toggleAttribute('disabled', !selectedCombinationsCount);
+      });
 
-      // eslint-disable-next-line no-param-reassign
-      button.innerHTML = label.replace(/%combinations_number%/, String(selectedCombinationsCount));
-      button?.toggleAttribute('disabled', !enable);
+      dropdownBtn?.toggleAttribute('disabled', !selectedCombinationsCount);
     });
-
-    dropdownBtn?.toggleAttribute('disabled', !enable);
   }
 
   private checkAll(checked: boolean): void {
@@ -162,6 +170,69 @@ export default class BulkChoicesSelector {
     allCheckboxes.forEach((checkbox: HTMLInputElement) => {
       // eslint-disable-next-line no-param-reassign
       checkbox.checked = checked;
+    });
+  }
+
+  /**
+   * Uncheck the "select all" checkboxes, so component acts as a simple manual selection
+   * (e.g. when user "selects all", but then unchecks one of checkboxes)
+   *
+   * @private
+   */
+  private resetCheckAll(): void {
+    const allDisplayCheckbox = this.tabContainer.querySelector<HTMLInputElement>(CombinationMap.bulkSelectAllDisplay);
+
+    if (allDisplayCheckbox instanceof HTMLInputElement) {
+      allDisplayCheckbox.checked = false;
+    }
+
+    const bulkSelectAllCheckboxes = this.tabContainer.querySelectorAll<HTMLInputElement>(CombinationMap.bulkSelectAllCheckboxes);
+
+    bulkSelectAllCheckboxes.forEach((checkbox: HTMLInputElement) => {
+      // eslint-disable-next-line no-param-reassign
+      checkbox.checked = false;
+    });
+  }
+
+  private updateBulkSelectAllState(): void {
+    const bulkSelectAllInputs = this.tabContainer
+      .querySelectorAll(CombinationMap.bulkSelectAllCheckboxes);
+
+    bulkSelectAllInputs.forEach((input) => {
+      if (!input) {
+        console.error(`Input ${CombinationMap.bulkSelectAll} not found`);
+        return;
+      }
+
+      const labelElement = input.parentNode?.querySelector<HTMLLabelElement>(`label[for=${input.id}]`);
+
+      if (!labelElement) {
+        console.error('Missing <label> for bulk all selection checkbox');
+        return;
+      }
+
+      const {label} = labelElement.dataset;
+
+      if (!label) {
+        console.error(`Attribute "data-label" is not defined on one of ${CombinationMap.bulkSelectAllCheckboxes}`);
+        return;
+      }
+
+      labelElement.innerHTML = label.replace(
+        /%combinations_number%/,
+        String(input.matches(CombinationMap.bulkSelectAll) ? this.allCombinationsCount : this.paginatedCombinationsCount),
+      );
+    });
+  }
+
+  private async refreshSelectableCombinationsCount(): Promise<void> {
+    //@todo: endpoint could return count to make it more performant (especially when selecting across all pages)
+    await this.paginatedCombinationsService.getCombinationIds(false).then((combinationIds) => {
+      this.allCombinationsCount = combinationIds.length;
+    });
+
+    await this.paginatedCombinationsService.getCombinationIds(true).then((combinationIds) => {
+      this.paginatedCombinationsCount = combinationIds.length;
     });
   }
 }
