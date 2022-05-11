@@ -72,7 +72,7 @@ class DateRangeType extends AbstractType
                 'required' => false,
                 'label' => $this->translator->trans('Start date', [], 'Admin.Global'),
                 'attr' => [
-                    'placeholder' => $this->translator->trans('From', [], 'Admin.Global'),
+                    'placeholder' => $this->translator->trans('YY-MM-DD', [], 'Admin.Global'),
                     'class' => 'from date-range-start-date',
                 ],
                 'date_format' => $options['date_format'],
@@ -80,7 +80,7 @@ class DateRangeType extends AbstractType
             ->add('to', DatePickerType::class, [
                 'required' => false,
                 'attr' => [
-                    'placeholder' => $this->translator->trans('To', [], 'Admin.Global'),
+                    'placeholder' => $this->translator->trans('YY-MM-DD', [], 'Admin.Global'),
                     'class' => 'to date-range-end-date',
                     'data-default-value' => $now->format('Y-m-d'),
                 ],
