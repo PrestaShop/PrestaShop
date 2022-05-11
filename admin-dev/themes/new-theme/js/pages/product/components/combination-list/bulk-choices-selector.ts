@@ -59,12 +59,6 @@ export default class BulkChoicesSelector {
     this.init();
   }
 
-  //@todo: may become private or unused
-  public getSelectedCheckboxes(): NodeListOf<HTMLInputElement> {
-    return this.tabContainer.querySelectorAll<HTMLInputElement>(`${CombinationMap.tableRow.isSelectedCombination}:checked`);
-  }
-
-  //@todo: could as well return count?
   public async getSelectedIds(): Promise<number[]> {
     const allSelected = this.tabContainer.querySelector<HTMLInputElement>(`${CombinationMap.bulkSelectAll}:checked`);
 
@@ -75,7 +69,10 @@ export default class BulkChoicesSelector {
     }
 
     const combinationIds: number[] = [];
-    this.getSelectedCheckboxes().forEach((checkbox: HTMLInputElement) => {
+    const selectedCheckboxes = this.tabContainer
+      .querySelectorAll<HTMLInputElement>(`${CombinationMap.tableRow.isSelectedCombination}:checked`);
+
+    selectedCheckboxes.forEach((checkbox: HTMLInputElement) => {
       combinationIds.push(Number(checkbox.value));
     });
 
