@@ -692,6 +692,11 @@ class AddOrder extends BOBasePage {
     return this.getTextContent(page, '#delivery-address-details');
   }
 
+  async getDeliveryAddressDetails(page) {
+    await page.waitForTimeout(2000);
+    return this.getTextContent(page, '#delivery-address-details');
+  }
+
   /**
    * Click on edit delivery address
    * @param page {Page} Browser tab
@@ -706,12 +711,10 @@ class AddOrder extends BOBasePage {
   /**
    * Get edit address Iframe
    * @param page {Page} Browser tab
-   * @param cartID {number} Cart id number
-   * @param addressID {number} Address id to edit
    * @returns {Promise<*>}
    */
-  async getEditAddressIframe(page, cartID, addressID) {
-    return page.frame({url: new RegExp(`/delivery/edit?addressId=${addressID}`, 'gmi')});
+  async getEditAddressIframe(page) {
+    return page.frame({url: new RegExp('sell/addresses/cart/', 'gmi')});
   }
 
   /* Shipping methods */

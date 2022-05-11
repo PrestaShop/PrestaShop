@@ -55,74 +55,78 @@ describe('BO - Orders - Create order : Choose address', async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  // Pre-condition: Delete non ordered shopping carts
-  describe('PRE-TEST: Get the last shopping cart ID', async () => {
+  /* // Pre-condition: Delete non ordered shopping carts
+   describe('PRE-TEST: Get the last shopping cart ID', async () => {
+     it('should login in BO', async function () {
+       await loginCommon.loginBO(this, page);
+     });
+
+     it('should go to \'Orders > Shopping carts\' page', async function () {
+       await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartsPage1', baseContext);
+
+       await dashboardPage.goToSubMenu(
+         page,
+         dashboardPage.ordersParentLink,
+         dashboardPage.shoppingCartsLink,
+       );
+
+       const pageTitle = await shoppingCartsPage.getPageTitle(page);
+       await expect(pageTitle).to.contains(shoppingCartsPage.pageTitle);
+     });
+
+     it('should reset all filters and get number of shopping carts', async function () {
+       await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst1', baseContext);
+
+       numberOfShoppingCarts = await shoppingCartsPage.resetAndGetNumberOfLines(page);
+       await expect(numberOfShoppingCarts).to.be.above(0);
+     });
+
+     it('should search the non ordered shopping carts', async function () {
+       await testContext.addContextItem(this, 'testIdentifier', 'searchNonOrderedShoppingCarts1', baseContext);
+
+       await shoppingCartsPage.filterTable(page, 'input', 'status', 'Non ordered');
+
+       numberOfNonOrderedShoppingCarts = await shoppingCartsPage.getNumberOfElementInGrid(page);
+       await expect(numberOfNonOrderedShoppingCarts).to.be.at.most(numberOfShoppingCarts);
+
+       numberOfShoppingCarts -= numberOfNonOrderedShoppingCarts;
+
+       for (let row = 1; row <= numberOfNonOrderedShoppingCarts; row++) {
+         const textColumn = await shoppingCartsPage.getTextColumn(page, row, 'c!lastname');
+         await expect(textColumn).to.contains('Non ordered');
+       }
+     });
+
+     it('should delete the non ordered shopping carts if exist', async function () {
+       await testContext.addContextItem(this, 'testIdentifier', 'deleteNonOrderedShoppingCartsIfExists1', baseContext);
+
+       if (numberOfNonOrderedShoppingCarts > 0) {
+         const deleteTextResult = await shoppingCartsPage.bulkDeleteShoppingCarts(page);
+         await expect(deleteTextResult).to.be.contains(shoppingCartsPage.successfulMultiDeleteMessage);
+       }
+     });
+
+     it('should reset all filters', async function () {
+       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDeleteNonOrderedCarts1', baseContext);
+
+       const numberOfShoppingCartsAfterReset = await shoppingCartsPage.resetAndGetNumberOfLines(page);
+       await expect(numberOfShoppingCartsAfterReset).to.be.above(0);
+     });
+
+     it('should get the last shopping cart ID', async function () {
+       await testContext.addContextItem(this, 'testIdentifier', 'getIdOfLastShoppingCart1', baseContext);
+
+       lastShoppingCartId = await shoppingCartsPage.getTextColumn(page, 1, 'id_cart');
+       await expect(parseInt(lastShoppingCartId, 10)).to.be.above(0);
+     });
+   });
+ */
+  // 1 - Go to create order page
+  describe('Go to create order page', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
 
-    it('should go to \'Orders > Shopping carts\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartsPage1', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.ordersParentLink,
-        dashboardPage.shoppingCartsLink,
-      );
-
-      const pageTitle = await shoppingCartsPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(shoppingCartsPage.pageTitle);
-    });
-
-    it('should reset all filters and get number of shopping carts', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFiltersFirst1', baseContext);
-
-      numberOfShoppingCarts = await shoppingCartsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfShoppingCarts).to.be.above(0);
-    });
-
-    it('should search the non ordered shopping carts', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'searchNonOrderedShoppingCarts1', baseContext);
-
-      await shoppingCartsPage.filterTable(page, 'input', 'status', 'Non ordered');
-
-      numberOfNonOrderedShoppingCarts = await shoppingCartsPage.getNumberOfElementInGrid(page);
-      await expect(numberOfNonOrderedShoppingCarts).to.be.at.most(numberOfShoppingCarts);
-
-      numberOfShoppingCarts -= numberOfNonOrderedShoppingCarts;
-
-      for (let row = 1; row <= numberOfNonOrderedShoppingCarts; row++) {
-        const textColumn = await shoppingCartsPage.getTextColumn(page, row, 'c!lastname');
-        await expect(textColumn).to.contains('Non ordered');
-      }
-    });
-
-    it('should delete the non ordered shopping carts if exist', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'deleteNonOrderedShoppingCartsIfExists1', baseContext);
-
-      if (numberOfNonOrderedShoppingCarts > 0) {
-        const deleteTextResult = await shoppingCartsPage.bulkDeleteShoppingCarts(page);
-        await expect(deleteTextResult).to.be.contains(shoppingCartsPage.successfulMultiDeleteMessage);
-      }
-    });
-
-    it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDeleteNonOrderedCarts1', baseContext);
-
-      const numberOfShoppingCartsAfterReset = await shoppingCartsPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfShoppingCartsAfterReset).to.be.above(0);
-    });
-
-    it('should get the last shopping cart ID', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'getIdOfLastShoppingCart1', baseContext);
-
-      lastShoppingCartId = await shoppingCartsPage.getTextColumn(page, 1, 'id_cart');
-      await expect(parseInt(lastShoppingCartId, 10)).to.be.above(0);
-    });
-  });
-
-  // 1 - Go to create order page
-  describe('Go to create order page', async () => {
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
@@ -174,13 +178,17 @@ describe('BO - Orders - Create order : Choose address', async () => {
       await expect(isIframeVisible, 'Edit address iframe is not visible!').to.be.true;
     });
 
-    it('should edit the address', async function () {
+    it('should edit the address and check it', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'editAddress', baseContext);
 
-      editAddressIframe = await addOrderPage.getEditAddressIframe(page, lastShoppingCartId + 1, 7);
+      editAddressIframe = await addOrderPage.getEditAddressIframe(page);
 
-      const textResult = await editAddressPage.createEditAddress(editAddressIframe, addressToEditData);
-      await expect(textResult).to.equal(editAddressPage.successfulCreationMessage);
+      await editAddressPage.createEditAddress(editAddressIframe, addressToEditData, true, false);
+
+      const editedAddress = await addOrderPage.getDeliveryAddressDetails(page);
+      await expect(editedAddress).to.be.equal(`${addressToEditData.firstName} ${addressToEditData.lastName}${addressToEditData.company}`
+        + `${addressToEditData.address} ${addressToEditData.secondAddress}${addressToEditData.city}, ${addressToEditData.city} `
+        + `${addressToEditData.postalCode}${addressToEditData.country}${addressToEditData.phone}`);
     });
   });
 });

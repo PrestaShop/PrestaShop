@@ -21,7 +21,8 @@ module.exports = {
     phone: '0102030405',
   },
   third: {
-    id: 7,
+    id: 5,
+    alias: 'My address',
     firstName: 'John',
     lastName: 'DOE',
     company: 'My Company',
