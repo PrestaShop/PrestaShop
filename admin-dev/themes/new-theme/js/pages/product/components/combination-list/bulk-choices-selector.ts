@@ -135,27 +135,27 @@ export default class BulkChoicesSelector {
     });
   }
 
-  private updateBulkButtonsState(): void {
+  private async updateBulkButtonsState(): Promise<void> {
     const dropdownBtn = this.tabContainer.querySelector<HTMLInputElement>(CombinationMap.bulkActionsDropdownBtn);
-    this.getSelectedIds().then((combinationIds) => {
-      const selectedCombinationsCount = combinationIds.length;
-      const bulkActionButtons = this.tabContainer.querySelectorAll<HTMLButtonElement>(CombinationMap.bulkActionBtn);
+    const selectedCombinationIds = await this.getSelectedIds();
 
-      bulkActionButtons.forEach((button: HTMLButtonElement) => {
-        const label = button.dataset.btnLabel;
+    const selectedCombinationsCount = selectedCombinationIds.length;
+    const bulkActionButtons = this.tabContainer.querySelectorAll<HTMLButtonElement>(CombinationMap.bulkActionBtn);
 
-        if (!label) {
-          console.error('Attribute "data-btn-label" is not defined for combinations bulk action button');
-          return;
-        }
+    bulkActionButtons.forEach((button: HTMLButtonElement) => {
+      const label = button.dataset.btnLabel;
 
-        // eslint-disable-next-line no-param-reassign
-        button.innerHTML = label.replace(/%combinations_number%/, String(selectedCombinationsCount));
-        button?.toggleAttribute('disabled', !selectedCombinationsCount);
-      });
+      if (!label) {
+        console.error('Attribute "data-btn-label" is not defined for combinations bulk action button');
+        return;
+      }
 
-      dropdownBtn?.toggleAttribute('disabled', !selectedCombinationsCount);
+      // eslint-disable-next-line no-param-reassign
+      button.innerHTML = label.replace(/%combinations_number%/, String(selectedCombinationsCount));
+      button?.toggleAttribute('disabled', !selectedCombinationsCount);
     });
+
+    dropdownBtn?.toggleAttribute('disabled', !selectedCombinationsCount);
   }
 
   private checkAll(checked: boolean): void {
