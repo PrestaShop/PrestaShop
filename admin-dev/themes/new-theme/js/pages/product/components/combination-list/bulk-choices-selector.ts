@@ -87,6 +87,12 @@ export default class BulkChoicesSelector {
    * Delegated event listener on tabContainer, because every checkbox is re-rendered with dynamic pagination
    */
   private listenCheckboxesChange(): void {
+    this.eventEmitter.on(CombinationEvents.listRendered, () => {
+      const bulkSelectedAll = this.tabContainer
+        .querySelector<HTMLInputElement>(`${CombinationMap.bulkSelectAllCheckboxes}:checked`);
+      this.checkAll(!!bulkSelectedAll);
+    });
+
     this.tabContainer.addEventListener('change', (e) => {
       const checkbox = e.target;
 

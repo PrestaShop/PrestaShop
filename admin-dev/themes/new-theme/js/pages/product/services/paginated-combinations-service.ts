@@ -51,7 +51,7 @@ export default class PaginatedCombinationsService implements PaginationServiceTy
   }
 
   fetch(offset: number, limit: number): JQuery.jqXHR<any> {
-    const filterId = `product_combinations_${this.productId}`;
+    const filterId = this.getFilterId();
     const requestParams: Record<string, any> = {};
     // Required for route generation
     requestParams.productId = this.productId;
@@ -73,14 +73,12 @@ export default class PaginatedCombinationsService implements PaginationServiceTy
 
   //@todo: duplicate from combination-service, except that passes filters
   getCombinationIds(): JQuery.jqXHR<any> {
-    const requestParams: Record<string, any> = {};
-    requestParams[`product_combinations_${this.productId}`] = {
-      filters: this.filters,
-    };
-
     return $.get(
-      this.router.generate('admin_products_combinations_ids', {productId: this.productId}),
-      requestParams,
+      this.router.generate('admin_products_combinations_ids', {productId: this.productId}), {
+        [this.getFilterId()]: {
+          filters: this.filters,
+        },
+      },
     );
   }
 
@@ -95,5 +93,9 @@ export default class PaginatedCombinationsService implements PaginationServiceTy
 
   setFilters(filters: Record<string, any>): void {
     this.filters = filters;
+  }
+
+  private getFilterId(): string {
+    return `product_combinations_${this.productId}`;
   }
 }
