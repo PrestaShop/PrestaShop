@@ -48,7 +48,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopIdInterface;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 
-class EditProductSpecificPriceCommand
+class EditSpecificPriceCommand
 {
     /**
      * @var SpecificPriceId
@@ -153,7 +153,7 @@ class EditProductSpecificPriceCommand
      * @param string $reductionType
      * @param string $reductionValue
      *
-     * @return EditProductSpecificPriceCommand
+     * @return EditSpecificPriceCommand
      */
     public function setReduction(string $reductionType, string $reductionValue): self
     {
@@ -173,7 +173,7 @@ class EditProductSpecificPriceCommand
     /**
      * @param bool $includesTax
      *
-     * @return EditProductSpecificPriceCommand
+     * @return EditSpecificPriceCommand
      */
     public function setIncludesTax(bool $includesTax): self
     {
@@ -193,7 +193,7 @@ class EditProductSpecificPriceCommand
     /**
      * @param string $fixedPrice
      *
-     * @return EditProductSpecificPriceCommand
+     * @return EditSpecificPriceCommand
      */
     public function setFixedPrice(string $fixedPrice): self
     {
@@ -217,7 +217,7 @@ class EditProductSpecificPriceCommand
     /**
      * @param int $fromQuantity
      *
-     * @return EditProductSpecificPriceCommand
+     * @return EditSpecificPriceCommand
      */
     public function setFromQuantity(int $fromQuantity): self
     {
@@ -237,7 +237,7 @@ class EditProductSpecificPriceCommand
     /**
      * @param int $shopId
      *
-     * @return EditProductSpecificPriceCommand
+     * @return EditSpecificPriceCommand
      */
     public function setShopId(int $shopId): self
     {
@@ -257,7 +257,7 @@ class EditProductSpecificPriceCommand
     /**
      * @param int $combinationId
      *
-     * @return EditProductSpecificPriceCommand
+     * @return EditSpecificPriceCommand
      */
     public function setCombinationId(int $combinationId): self
     {
@@ -277,7 +277,7 @@ class EditProductSpecificPriceCommand
     /**
      * @param int $currencyId
      *
-     * @return EditProductSpecificPriceCommand
+     * @return EditSpecificPriceCommand
      */
     public function setCurrencyId(int $currencyId): self
     {
@@ -297,7 +297,7 @@ class EditProductSpecificPriceCommand
     /**
      * @param int $countryId
      *
-     * @return EditProductSpecificPriceCommand
+     * @return EditSpecificPriceCommand
      */
     public function setCountryId(int $countryId): self
     {
@@ -317,7 +317,7 @@ class EditProductSpecificPriceCommand
     /**
      * @param int $groupId
      *
-     * @return EditProductSpecificPriceCommand
+     * @return EditSpecificPriceCommand
      */
     public function setGroupId(int $groupId): self
     {
@@ -337,7 +337,7 @@ class EditProductSpecificPriceCommand
     /**
      * @param int $customerId
      *
-     * @return EditProductSpecificPriceCommand
+     * @return EditSpecificPriceCommand
      */
     public function setCustomerId(int $customerId): self
     {
@@ -357,7 +357,7 @@ class EditProductSpecificPriceCommand
     /**
      * @param DateTimeInterface $dateTimeFrom
      *
-     * @return EditProductSpecificPriceCommand
+     * @return EditSpecificPriceCommand
      */
     public function setDateTimeFrom(DateTimeInterface $dateTimeFrom): self
     {
@@ -377,7 +377,7 @@ class EditProductSpecificPriceCommand
     /**
      * @param DateTimeInterface $dateTimeTo
      *
-     * @return EditProductSpecificPriceCommand
+     * @return EditSpecificPriceCommand
      */
     public function setDateTimeTo(DateTimeInterface $dateTimeTo): self
     {

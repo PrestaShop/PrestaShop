@@ -29,16 +29,16 @@ namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\CommandHandler;
 
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\EditProductSpecificPriceCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler\EditProductSpecificPriceHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\EditSpecificPriceCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler\EditSpecificPriceHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use SpecificPrice;
 
 /**
- * Handles @see EditProductSpecificPriceCommand using legacy object model
+ * Handles @see EditSpecificPriceCommand using legacy object model
  */
-class EditProductSpecificPriceHandler implements EditProductSpecificPriceHandlerInterface
+class EditSpecificPriceHandler implements EditSpecificPriceHandlerInterface
 {
     /**
      * @var SpecificPriceRepository
@@ -57,7 +57,7 @@ class EditProductSpecificPriceHandler implements EditProductSpecificPriceHandler
     /**
      * {@inheritDoc}
      */
-    public function handle(EditProductSpecificPriceCommand $command): void
+    public function handle(EditSpecificPriceCommand $command): void
     {
         $specificPrice = $this->specificPriceRepository->get($command->getSpecificPriceId());
 
@@ -68,12 +68,12 @@ class EditProductSpecificPriceHandler implements EditProductSpecificPriceHandler
     }
 
     /**
-     * @param EditProductSpecificPriceCommand $command
+     * @param EditSpecificPriceCommand $command
      * @param SpecificPrice $specificPrice
      *
      * @return string[]
      */
-    private function fillUpdatableProperties(EditProductSpecificPriceCommand $command, SpecificPrice $specificPrice): array
+    private function fillUpdatableProperties(EditSpecificPriceCommand $command, SpecificPrice $specificPrice): array
     {
         $updatableProperties = [];
 

@@ -24,22 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
-
 namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\AddProductSpecificPriceCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\EditSpecificPriceCommand;
 
 /**
- * Interface for handling AddProductSpecificPriceCommand command
+ * Defines contract to handle @see EditSpecificPriceCommand
  */
-interface AddProductSpecificPriceHandlerInterface
+interface EditSpecificPriceHandlerInterface
 {
     /**
-     * @param AddProductSpecificPriceCommand $command
-     *
-     * @return SpecificPriceId
+     * @param EditSpecificPriceCommand $command
      */
-    public function handle(AddProductSpecificPriceCommand $command): SpecificPriceId;
+    public function handle(EditSpecificPriceCommand $command): void;
 }

@@ -58,7 +58,7 @@ use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 /**
  * Add specific price to a Product
  */
-class AddProductSpecificPriceCommand
+class AddSpecificPriceCommand
 {
     /**
      * @var ProductId
@@ -222,7 +222,7 @@ class AddProductSpecificPriceCommand
      * @see DateTime
      * @see NullDateTime
      *
-     * @return AddProductSpecificPriceCommand
+     * @return AddSpecificPriceCommand
      */
     public function setDateTimeFrom(DateTimeInterface $dateTimeFrom): self
     {
@@ -245,7 +245,7 @@ class AddProductSpecificPriceCommand
      * @see DateTime
      * @see NullDateTime
      *
-     * @return AddProductSpecificPriceCommand
+     * @return AddSpecificPriceCommand
      */
     public function setDateTimeTo(DateTimeInterface $dateTimeTo): self
     {

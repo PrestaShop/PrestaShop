@@ -30,8 +30,8 @@ namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\CommandHandler;
 
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\AddProductSpecificPriceCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler\AddProductSpecificPriceHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\AddSpecificPriceCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler\AddSpecificPriceHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
@@ -42,7 +42,7 @@ use SpecificPrice;
 /**
  * Handles AddProductSpecificPriceCommand using legacy object model
  */
-class AddProductSpecificPriceHandler implements AddProductSpecificPriceHandlerInterface
+class AddSpecificPriceHandler implements AddSpecificPriceHandlerInterface
 {
     /**
      * @var SpecificPriceRepository
@@ -60,7 +60,7 @@ class AddProductSpecificPriceHandler implements AddProductSpecificPriceHandlerIn
     /**
      * {@inheritdoc}
      */
-    public function handle(AddProductSpecificPriceCommand $command): SpecificPriceId
+    public function handle(AddSpecificPriceCommand $command): SpecificPriceId
     {
         $specificPrice = $this->createSpecificPriceFromCommand($command);
 
@@ -70,14 +70,14 @@ class AddProductSpecificPriceHandler implements AddProductSpecificPriceHandlerIn
     /**
      * Creates legacy SpecificPrice object from command
      *
-     * @param AddProductSpecificPriceCommand $command
+     * @param AddSpecificPriceCommand $command
      *
      * @return SpecificPrice
      *
      * @throws PrestaShopException
      * @throws SpecificPriceConstraintException
      */
-    private function createSpecificPriceFromCommand(AddProductSpecificPriceCommand $command): SpecificPrice
+    private function createSpecificPriceFromCommand(AddSpecificPriceCommand $command): SpecificPrice
     {
         $specificPrice = new SpecificPrice();
 

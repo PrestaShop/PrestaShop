@@ -40,9 +40,9 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\AddProductSpecificPriceCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\AddSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\DeleteSpecificPriceCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\EditProductSpecificPriceCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\EditSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceForEditing;
@@ -417,15 +417,15 @@ class SpecificPriceContext extends AbstractProductFeatureContext
      * @param int $productId
      * @param TableNode $tableNode
      *
-     * @return AddProductSpecificPriceCommand
+     * @return AddSpecificPriceCommand
      *
      * @throws DomainConstraintException
      * @throws ProductConstraintException
      */
-    private function createAddSpecificPriceCommand(int $productId, TableNode $tableNode): AddProductSpecificPriceCommand
+    private function createAddSpecificPriceCommand(int $productId, TableNode $tableNode): AddSpecificPriceCommand
     {
         $dataRows = $tableNode->getRowsHash();
-        $addCommand = new AddProductSpecificPriceCommand(
+        $addCommand = new AddSpecificPriceCommand(
             $productId,
             $dataRows['reduction type'],
             $dataRows['reduction value'],
@@ -468,12 +468,12 @@ class SpecificPriceContext extends AbstractProductFeatureContext
      * @param int $specificPriceId
      * @param TableNode $tableNode
      *
-     * @return EditProductSpecificPriceCommand
+     * @return EditSpecificPriceCommand
      */
-    private function createEditSpecificPriceCommand(int $specificPriceId, TableNode $tableNode): EditProductSpecificPriceCommand
+    private function createEditSpecificPriceCommand(int $specificPriceId, TableNode $tableNode): EditSpecificPriceCommand
     {
         $dataRows = $tableNode->getRowsHash();
-        $editCommand = new EditProductSpecificPriceCommand($specificPriceId);
+        $editCommand = new EditSpecificPriceCommand($specificPriceId);
 
         if (isset($dataRows['reduction type'], $dataRows['reduction value'])) {
             $editCommand->setReduction($dataRows['reduction type'], (string) $dataRows['reduction value']);

@@ -28,8 +28,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\AddProductSpecificPriceCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\EditProductSpecificPriceCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\AddSpecificPriceCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\EditSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\InitialPrice;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
@@ -57,7 +57,7 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
             InitialPrice::INITIAL_PRICE_VALUE
         ;
 
-        $command = new AddProductSpecificPriceCommand(
+        $command = new AddSpecificPriceCommand(
             (int) $data['product_id'],
             $data['impact']['reduction']['type'],
             (string) $data['impact']['reduction']['value'],
@@ -78,7 +78,7 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
 
     public function update($id, array $data): void
     {
-        $command = new EditProductSpecificPriceCommand((int) $id);
+        $command = new EditSpecificPriceCommand((int) $id);
         $this->fillRelations($command, $data);
 
         if (isset($data['from_quantity'])) {
@@ -111,7 +111,7 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
     }
 
     /**
-     * @param AddProductSpecificPriceCommand|EditProductSpecificPriceCommand $command
+     * @param AddSpecificPriceCommand|EditSpecificPriceCommand $command
      * @param array<string, mixed> $data
      */
     private function fillRelations($command, array $data): void
