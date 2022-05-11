@@ -120,7 +120,7 @@ describe('BO - orders : Update order status', async () => {
           await expect(orderStatus, 'Order status was not updated').to.equal(test.args.orderStatus.status);
         });
 
-        if (test.args.orderStatus.status === 'Payment accepted') {
+        if (test.args.orderStatus.status === Statuses.paymentAccepted.status) {
           it('should download invoice', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'downloadInvoice', baseContext);
 
@@ -158,7 +158,7 @@ describe('BO - orders : Update order status', async () => {
           });
         }
 
-        if (test.args.orderStatus.status === 'Delivered') {
+        if (test.args.orderStatus.status === Statuses.delivered.status) {
           it('should download delivery slip', async function () {
             await testContext.addContextItem(this, 'testIdentifier', 'downloadDeliverySlip', baseContext);
 
@@ -243,7 +243,7 @@ describe('BO - orders : Update order status', async () => {
           await expect(orderStatusFO, 'Order status is not correct').to.equal(test.args.orderStatus.status);
         });
 
-        if (test.args.orderStatus.status === 'Payment accepted') {
+        if (test.args.orderStatus.status === Statuses.paymentAccepted.status) {
           it('should check if the last invoice is visible', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkLastInvoice${index}`, baseContext);
 
