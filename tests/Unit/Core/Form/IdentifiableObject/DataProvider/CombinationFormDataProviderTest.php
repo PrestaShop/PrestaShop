@@ -161,7 +161,11 @@ class CombinationFormDataProviderTest extends TestCase
             'ecotax_tax_included' => new DecimalNumber('12.00'),
             'wholesale_price' => new DecimalNumber('69.00'),
             'combination_weight' => new DecimalNumber('1.45'),
+            'product_tax_rate' => new DecimalNumber('0.05'),
+            'product_price' => new DecimalNumber('69.00'),
+            'product_ecotax' => new DecimalNumber('5.00'),
         ];
+
         $expectedOutputData['price_impact']['price_tax_excluded'] = 47.00;
         $expectedOutputData['price_impact']['price_tax_included'] = 56.40;
         $expectedOutputData['price_impact']['unit_price_tax_excluded'] = 0.50;
@@ -170,6 +174,9 @@ class CombinationFormDataProviderTest extends TestCase
         $expectedOutputData['price_impact']['ecotax_tax_included'] = 12.00;
         $expectedOutputData['price_impact']['wholesale_price'] = 69.00;
         $expectedOutputData['price_impact']['weight'] = 1.45;
+        $expectedOutputData['price_impact']['product_tax_rate'] = 0.05;
+        $expectedOutputData['price_impact']['product_price_tax_excluded'] = 69.00;
+        $expectedOutputData['price_impact']['product_ecotax_tax_excluded'] = 5.00;
 
         $datasets[] = [
             $combinationData,
@@ -401,7 +408,10 @@ class CombinationFormDataProviderTest extends TestCase
             $combination['unit_price_tax_included'] ?? new DecimalNumber('72.00'),
             $combination['ecotax_tax_excluded'] ?? new DecimalNumber('42.00'),
             $combination['ecotax_tax_included'] ?? new DecimalNumber('51.00'),
-            $combination['wholesale_price'] ?? new DecimalNumber('99.00')
+            $combination['wholesale_price'] ?? new DecimalNumber('99.00'),
+            $combination['product_tax_rate'] ?? new DecimalNumber('0.20'),
+            $combination['product_price'] ?? new DecimalNumber('42.00'),
+            $combination['product_ecotax'] ?? new DecimalNumber('4.00')
         );
     }
 
@@ -514,6 +524,9 @@ class CombinationFormDataProviderTest extends TestCase
                 'ecotax_tax_included' => 51.00,
                 'wholesale_price' => 99.00,
                 'weight' => 42.00,
+                'product_tax_rate' => 0.20,
+                'product_price_tax_excluded' => 42.00,
+                'product_ecotax_tax_excluded' => 4.00,
             ],
             'references' => [
                 'reference' => 'reference',

@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -162,6 +163,11 @@ class CombinationPriceImpactType extends TranslatorAwareType
                     ],
                     'column_breaker' => true,
                 ])
+                ->add('product_ecotax_tax_excluded', HiddenType::class, [
+                    'attr' => [
+                        'class' => 'product-ecotax-tax-excluded',
+                    ],
+                ])
             ;
         }
 
@@ -231,6 +237,16 @@ class CombinationPriceImpactType extends TranslatorAwareType
                     new NotBlank(),
                     new Type(['type' => 'float']),
                     new PositiveOrZero(),
+                ],
+            ])
+            ->add('product_price_tax_excluded', HiddenType::class, [
+                'attr' => [
+                    'class' => 'product-price-tax-excluded',
+                ],
+            ])
+            ->add('product_tax_rate', HiddenType::class, [
+                'attr' => [
+                    'class' => 'product-tax-rate',
                 ],
             ])
         ;
