@@ -69,7 +69,7 @@ export default class BulkChoicesSelector {
     const allSelected = this.tabContainer.querySelector<HTMLInputElement>(`${CombinationMap.bulkSelectAll}:checked`);
 
     if (allSelected) {
-      const response: JQuery.jqXHR = await this.paginatedCombinationsService.getCombinationIds(false);
+      const response: JQuery.jqXHR = await this.paginatedCombinationsService.getCombinationIds();
 
       return response;
     }
@@ -227,12 +227,13 @@ export default class BulkChoicesSelector {
 
   private async refreshSelectableCombinationsCount(): Promise<void> {
     //@todo: endpoint could return count to make it more performant (especially when selecting across all pages)
-    await this.paginatedCombinationsService.getCombinationIds(false).then((combinationIds) => {
+    await this.paginatedCombinationsService.getCombinationIds().then((combinationIds) => {
       this.allCombinationsCount = combinationIds.length;
     });
 
-    await this.paginatedCombinationsService.getCombinationIds(true).then((combinationIds) => {
-      this.paginatedCombinationsCount = combinationIds.length;
-    });
+    const selectableCheckboxes = this.tabContainer
+      .querySelectorAll<HTMLInputElement>(`${CombinationMap.tableRow.isSelectedCombination}`);
+
+    this.paginatedCombinationsCount = selectableCheckboxes.length;
   }
 }

@@ -28,9 +28,6 @@ import PaginationServiceType from '@PSTypes/services';
 
 const {$} = window;
 
-/**
- * @todo: rename to FilterableCombinationsService?
- */
 export default class PaginatedCombinationsService implements PaginationServiceType {
   productId: number;
 
@@ -80,21 +77,17 @@ export default class PaginatedCombinationsService implements PaginationServiceTy
   }
 
   //@todo: duplicate from combination-service, except that passes filters
-  getCombinationIds(paginated: boolean): JQuery.jqXHR<any> {
-    const filterId = this.getFilterId();
-    const requestParams: Record<string, any> = {};
-
-    requestParams[filterId] = {};
-    requestParams[filterId].filters = this.filters;
-
-    if (!paginated) {
-      requestParams[filterId].offset = null;
-      requestParams[filterId].limit = null;
-    }
-
+  getCombinationIds(): JQuery.jqXHR<any> {
     return $.get(
       this.router.generate('admin_products_combinations_ids', {productId: this.productId}),
-      requestParams,
+      {
+        [this.getFilterId()]: {
+          filters: this.filters,
+          // It is important that we reset offset and limit, because we want to get all results without pagination
+          offset: null,
+          limit: null,
+        },
+      },
     );
   }
 
