@@ -153,18 +153,22 @@ class CombinationFormDataProviderTest extends TestCase
 
         $expectedOutputData = $this->getDefaultOutputData();
         $combinationData = [
-            'wholesale_price' => new DecimalNumber('69.00'),
             'price_impact_tax_excluded' => new DecimalNumber('47.00'),
             'price_impact_tax_included' => new DecimalNumber('56.40'),
-            'eco_tax' => new DecimalNumber('11.00'),
-            'unit_price_impact' => new DecimalNumber('0.50'),
+            'unit_price_tax_excluded' => new DecimalNumber('0.50'),
+            'unit_price_tax_included' => new DecimalNumber('0.70'),
+            'ecotax_tax_excluded' => new DecimalNumber('11.00'),
+            'ecotax_tax_included' => new DecimalNumber('12.00'),
+            'wholesale_price' => new DecimalNumber('69.00'),
             'combination_weight' => new DecimalNumber('1.45'),
         ];
-        $expectedOutputData['price_impact']['wholesale_price'] = 69.00;
         $expectedOutputData['price_impact']['price_tax_excluded'] = 47.00;
         $expectedOutputData['price_impact']['price_tax_included'] = 56.40;
-        $expectedOutputData['price_impact']['ecotax'] = 11.00;
-        $expectedOutputData['price_impact']['unit_price'] = 0.50;
+        $expectedOutputData['price_impact']['unit_price_tax_excluded'] = 0.50;
+        $expectedOutputData['price_impact']['unit_price_tax_included'] = 0.70;
+        $expectedOutputData['price_impact']['ecotax_tax_excluded'] = 11.00;
+        $expectedOutputData['price_impact']['ecotax_tax_included'] = 12.00;
+        $expectedOutputData['price_impact']['wholesale_price'] = 69.00;
         $expectedOutputData['price_impact']['weight'] = 1.45;
 
         $datasets[] = [
@@ -391,10 +395,12 @@ class CombinationFormDataProviderTest extends TestCase
     private function createPrices(array $combination): CombinationPrices
     {
         return new CombinationPrices(
-            $combination['eco_tax'] ?? new DecimalNumber('42.00'),
             $combination['price_impact_tax_excluded'] ?? new DecimalNumber('51.00'),
             $combination['price_impact_tax_included'] ?? new DecimalNumber('61.20'),
-            $combination['unit_price_impact'] ?? new DecimalNumber('69.00'),
+            $combination['unit_price_tax_excluded'] ?? new DecimalNumber('69.00'),
+            $combination['unit_price_tax_included'] ?? new DecimalNumber('72.00'),
+            $combination['ecotax_tax_excluded'] ?? new DecimalNumber('42.00'),
+            $combination['ecotax_tax_included'] ?? new DecimalNumber('51.00'),
             $combination['wholesale_price'] ?? new DecimalNumber('99.00')
         );
     }
@@ -500,11 +506,13 @@ class CombinationFormDataProviderTest extends TestCase
                 'available_date' => '',
             ],
             'price_impact' => [
-                'wholesale_price' => 99.00,
                 'price_tax_excluded' => 51.00,
                 'price_tax_included' => 61.20,
-                'ecotax' => 42.00,
-                'unit_price' => 69.00,
+                'unit_price_tax_excluded' => 69.00,
+                'unit_price_tax_included' => 72.00,
+                'ecotax_tax_excluded' => 42.00,
+                'ecotax_tax_included' => 51.00,
+                'wholesale_price' => 99.00,
                 'weight' => 42.00,
             ],
             'references' => [
