@@ -63,7 +63,17 @@ export default class ProductFormModel {
 
     // Listens to event for product modification (registered after the model is constructed, because events are
     // triggered during the initial parsing but don't need them at first).
-    this.eventEmitter.on(ProductEventMap.updatedProductField, (event: FormUpdateEvent) => this.productFieldUpdated(event));
+
+    const pricesFields = [
+      'price.priceTaxIncluded',
+      'price.priceTaxExcluded',
+      'price.taxRulesGroupId',
+      'price.unitPriceTaxIncluded',
+      'price.unitPriceTaxExcluded',
+      'price.ecotaxTaxIncluded',
+      'price.ecotaxTaxExcluded',
+    ];
+    this.mapper.watch(pricesFields, (event: FormUpdateEvent) => this.updateProductPrices(event));
   }
 
   getProduct(): any {
@@ -141,49 +151,27 @@ export default class ProductFormModel {
   }
 
   /**
-   * Handles modifications that have happened in the product
-   */
-  private productFieldUpdated(event: FormUpdateEvent): void {
-    this.updateProductPrices(event);
-  }
-
-  /**
    * Specific handler for modifications related to the product price
    */
   private updateProductPrices(event: FormUpdateEvent): void {
-    const pricesFields = [
-      'price.priceTaxIncluded',
-      'price.priceTaxExcluded',
-      'price.taxRulesGroupId',
-      'price.unitPriceTaxIncluded',
-      'price.unitPriceTaxExcluded',
-      'price.ecotaxTaxIncluded',
-      'price.ecotaxTaxExcluded',
-    ];
-
-    if (!pricesFields.includes(event.modelKey)) {
-      return;
-    }
-
     const taxRatio = this.getTaxRatio();
 
     if (taxRatio.isNaN()) {
       return;
     }
 
-    const priceTaxIncluded = this.mapper.getBigNumber('price.priceTaxIncluded') ?? new BigNumber(0);
-    const ecoTaxRatio = this.getEcoTaxRatio();
-    const ecotaxTaxIncluded = this.mapper.getBigNumber('price.ecotaxTaxIncluded') ?? new BigNumber(0);
-
     // eslint-disable-next-line default-case
     switch (event.modelKey) {
       // Regular retail price
       case 'price.priceTaxIncluded': {
+        const priceTaxIncluded = this.mapper.getBigNumber('price.priceTaxIncluded') ?? new BigNumber(0);
+        const ecotaxTaxIncluded = this.mapper.getBigNumber('price.ecotaxTaxIncluded') ?? new BigNumber(0);
         this.mapper.set('price.priceTaxExcluded', this.removeTax(priceTaxIncluded.minus(ecotaxTaxIncluded)));
         break;
       }
       case 'price.priceTaxExcluded': {
         const priceTaxExcluded = this.mapper.getBigNumber('price.priceTaxExcluded') ?? new BigNumber(0);
+        const ecotaxTaxIncluded = this.mapper.getBigNumber('price.ecotaxTaxIncluded') ?? new BigNumber(0);
         this.mapper.set(
           'price.priceTaxIncluded',
           priceTaxExcluded.times(taxRatio).plus(ecotaxTaxIncluded).toFixed(this.precision),
@@ -193,6 +181,9 @@ export default class ProductFormModel {
 
       // Ecotax values
       case 'price.ecotaxTaxIncluded': {
+        // Only this update is needed here, the rest will be updated via the trigger for price.ecotaxTaxExcluded
+        const ecoTaxRatio = this.getEcoTaxRatio();
+        const ecotaxTaxIncluded = this.mapper.getBigNumber('price.ecotaxTaxIncluded') ?? new BigNumber(0);
         this.mapper.set(
           'price.ecotaxTaxExcluded',
           ecotaxTaxIncluded.dividedBy(ecoTaxRatio).toFixed(this.precision),
@@ -200,6 +191,8 @@ export default class ProductFormModel {
         break;
       }
       case 'price.ecotaxTaxExcluded': {
+        const ecoTaxRatio = this.getEcoTaxRatio();
+        const priceTaxIncluded = this.mapper.getBigNumber('price.priceTaxIncluded') ?? new BigNumber(0);
         const ecotaxTaxExcluded = this.mapper.getBigNumber('price.ecotaxTaxExcluded') ?? new BigNumber(0);
         const newEcotaxTaxIncluded = ecotaxTaxExcluded.times(ecoTaxRatio);
         this.mapper.set('price.ecotaxTaxIncluded', newEcotaxTaxIncluded.toFixed(this.precision));
@@ -221,7 +214,11 @@ export default class ProductFormModel {
 
       case 'price.taxRulesGroupId': {
         const priceTaxExcluded = this.mapper.getBigNumber('price.priceTaxExcluded') ?? new BigNumber(0);
-        this.mapper.set('price.priceTaxIncluded', this.addTax(priceTaxExcluded));
+        const ecotaxTaxIncluded = this.mapper.getBigNumber('price.ecotaxTaxIncluded') ?? new BigNumber(0);
+        this.mapper.set(
+          'price.priceTaxIncluded',
+          priceTaxExcluded.times(taxRatio).plus(ecotaxTaxIncluded).toFixed(this.precision),
+        );
         const unitPriceTaxExcluded = this.mapper.getBigNumber('price.unitPriceTaxExcluded') ?? new BigNumber(0);
         this.mapper.set('price.unitPriceTaxIncluded', this.addTax(unitPriceTaxExcluded));
         break;
