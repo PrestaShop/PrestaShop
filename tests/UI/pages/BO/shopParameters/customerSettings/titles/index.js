@@ -19,7 +19,7 @@ class Titles extends BOBasePage {
     this.alertSuccessBlockParagraph = '.alert-success';
 
     // Header selectors
-    this.newTitleLink = 'a[data-role="page-header-desc-gender"]';
+    this.newTitleLink = 'a[data-role=page-header-desc-gender-link]';
 
     // Form selectors
     this.gridForm = '#form-gender';

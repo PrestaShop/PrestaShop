@@ -19,7 +19,7 @@ class Countries extends BOBasePage {
 
     // Selectors
     // Header selectors
-    this.addNewCountryButton = 'a[data-role="page-header-desc-country"]';
+    this.addNewCountryButton = 'a[data-role=page-header-desc-country-link]';
 
     // Form selectors
     this.gridForm = '#form-country';

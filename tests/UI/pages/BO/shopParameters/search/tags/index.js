@@ -18,7 +18,7 @@ class Tags extends BOBasePage {
 
     // Selectors
     // Header links
-    this.addNewTagLink = 'a[data-role="page-header-desc-tag"]';
+    this.addNewTagLink = 'a[data-role=page-header-desc-tag-link]';
 
     // Form selectors
     this.gridForm = '#form-tag';

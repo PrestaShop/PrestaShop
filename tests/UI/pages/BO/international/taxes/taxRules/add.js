@@ -19,7 +19,7 @@ class AddTaxRules extends BOBasePage {
 
     // Selectors
     // Header buttons
-    this.addNewTaxRuleButton = 'a[data-role="page-header-desc-tax_rule"]';
+    this.addNewTaxRuleButton = 'a[data-role=page-header-desc-tax_rule-link]';
 
     // New tax rule group form
     this.taxRuleGroupForm = '#tax_rules_group_form';
