@@ -210,6 +210,9 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
         $taxEnabled = (bool) $this->configuration->get('PS_TAX', null, ShopConstraint::allShops());
         $ecoTaxGroupId = (int) $this->configuration->get('PS_ECOTAX_TAX_RULES_GROUP_ID', null, ShopConstraint::allShops());
         $defaultCountryId = (int) $this->configuration->get('PS_COUNTRY_DEFAULT', null, ShopConstraint::allShops());
+        $defaultCountryId = new CountryId($defaultCountryId);
+
+        $productTaxRulesGroupId = new TaxRulesGroupId((int) $product->id_tax_rules_group);
 
         $impactPriceTaxExcluded = $this->numberExtractor->extract($combination, 'price');
         $impactUnitPriceTaxExcluded = $this->numberExtractor->extract($combination, 'unit_price_impact');
@@ -218,20 +221,20 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
         if ($taxEnabled) {
             $impactPriceTaxIncluded = $this->taxComputer->computePriceWithTaxes(
                 $impactPriceTaxExcluded,
-                new TaxRulesGroupId((int) $product->id_tax_rules_group),
-                new CountryId($defaultCountryId)
+                $productTaxRulesGroupId,
+                $defaultCountryId
             );
 
             $impactUnitPriceTaxIncluded = $this->taxComputer->computePriceWithTaxes(
                 $impactUnitPriceTaxExcluded,
-                new TaxRulesGroupId((int) $product->id_tax_rules_group),
-                new CountryId($defaultCountryId)
+                $productTaxRulesGroupId,
+                $defaultCountryId
             );
 
             $ecotaxTaxIncluded = $this->taxComputer->computePriceWithTaxes(
                 $ecotaxTaxExcluded,
                 new TaxRulesGroupId($ecoTaxGroupId),
-                new CountryId($defaultCountryId)
+                $defaultCountryId
             );
         } else {
             $impactPriceTaxIncluded = $impactPriceTaxExcluded;
@@ -246,7 +249,10 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
             $impactUnitPriceTaxIncluded,
             $ecotaxTaxExcluded,
             $ecotaxTaxIncluded,
-            $this->numberExtractor->extract($combination, 'wholesale_price')
+            $this->numberExtractor->extract($combination, 'wholesale_price'),
+            $this->taxComputer->getTaxRate($productTaxRulesGroupId, $defaultCountryId),
+            $this->numberExtractor->extract($product, 'price'),
+            $this->numberExtractor->extract($product, 'ecotax')
         );
     }
 

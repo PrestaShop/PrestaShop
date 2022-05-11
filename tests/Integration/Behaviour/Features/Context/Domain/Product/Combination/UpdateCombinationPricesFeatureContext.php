@@ -54,7 +54,10 @@ class UpdateCombinationPricesFeatureContext extends AbstractCombinationFeatureCo
             new DecimalNUmber($dataRows['impact on unit price with taxes']),
             new DecimalNumber($dataRows['eco tax']),
             new DecimalNumber($dataRows['eco tax with taxes']),
-            new DecimalNUmber($dataRows['wholesale price'])
+            new DecimalNUmber($dataRows['wholesale price']),
+            new DecimalNUmber($dataRows['product tax rate']),
+            new DecimalNUmber($dataRows['product price']),
+            new DecimalNUmber($dataRows['product ecotax'])
         );
     }
 
@@ -139,6 +142,33 @@ class UpdateCombinationPricesFeatureContext extends AbstractCombinationFeatureCo
                 'Unexpected combination wholesale price. Expected "%s", got "%s"',
                 (string) $expectedPrices->getWholesalePrice(),
                 (string) $actualPrices->getWholesalePrice()
+            )
+        );
+
+        Assert::assertTrue(
+            $expectedPrices->getProductTaxRate()->equals($actualPrices->getProductTaxRate()),
+            sprintf(
+                'Unexpected combination product tax rate. Expected "%s", got "%s"',
+                (string) $expectedPrices->getProductTaxRate(),
+                (string) $actualPrices->getProductTaxRate()
+            )
+        );
+
+        Assert::assertTrue(
+            $expectedPrices->getProductPrice()->equals($actualPrices->getProductPrice()),
+            sprintf(
+                'Unexpected combination product price. Expected "%s", got "%s"',
+                (string) $expectedPrices->getProductPrice(),
+                (string) $actualPrices->getProductPrice()
+            )
+        );
+
+        Assert::assertTrue(
+            $expectedPrices->getProductEcotax()->equals($actualPrices->getProductEcotax()),
+            sprintf(
+                'Unexpected combination wholesale price. Expected "%s", got "%s"',
+                (string) $expectedPrices->getProductEcotax(),
+                (string) $actualPrices->getProductEcotax()
             )
         );
     }

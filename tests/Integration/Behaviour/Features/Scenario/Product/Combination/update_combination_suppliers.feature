@@ -312,6 +312,9 @@ Feature: Update product combination suppliers in Back Office (BO)
       | eco tax                         | 0     |
       | eco tax with taxes              | 0     |
       | wholesale price                 | 0     |
+      | product tax rate                | 0     |
+      | product price                   | 0     |
+      | product ecotax                  | 0     |
     And product product2 should have following prices information:
       | wholesale_price | 70 |
     When I associate suppliers to product "product2"
@@ -355,6 +358,9 @@ Feature: Update product combination suppliers in Back Office (BO)
       | eco tax                         | 0     |
       | eco tax with taxes              | 0     |
       | wholesale price                 | 69    |
+      | product tax rate                | 0     |
+      | product price                   | 0     |
+      | product ecotax                  | 0     |
     And combination "product2SBlack" should have following prices:
       | combination price detail        | value |
       | impact on price                 | 0     |
@@ -364,6 +370,9 @@ Feature: Update product combination suppliers in Back Office (BO)
       | eco tax                         | 0     |
       | eco tax with taxes              | 0     |
       | wholesale price                 | 49    |
+      | product tax rate                | 0     |
+      | product price                   | 0     |
+      | product ecotax                  | 0     |
     And combination "product2MWhite" should have following prices:
       | combination price detail        | value |
       | impact on price                 | 0     |
@@ -373,6 +382,9 @@ Feature: Update product combination suppliers in Back Office (BO)
       | eco tax                         | 0     |
       | eco tax with taxes              | 0     |
       | wholesale price                 | 0     |
+      | product tax rate                | 0     |
+      | product price                   | 0     |
+      | product ecotax                  | 0     |
     And combination "product2MBlack" should have following prices:
       | combination price detail        | value |
       | impact on price                 | 0     |
@@ -382,6 +394,9 @@ Feature: Update product combination suppliers in Back Office (BO)
       | eco tax                         | 0     |
       | eco tax with taxes              | 0     |
       | wholesale price                 | 0     |
+      | product tax rate                | 0     |
+      | product price                   | 0     |
+      | product ecotax                  | 0     |
     And product product2 should have following prices information:
       | wholesale_price | 70 |
     # Change the default supplier the wholesale price should also be updated
@@ -398,6 +413,9 @@ Feature: Update product combination suppliers in Back Office (BO)
       | eco tax                         | 0     |
       | eco tax with taxes              | 0     |
       | wholesale price                 | 51    |
+      | product tax rate                | 0     |
+      | product price                   | 0     |
+      | product ecotax                  | 0     |
     And combination "product2SBlack" should have following prices:
       | combination price detail        | value |
       | impact on price                 | 0     |
@@ -407,6 +425,9 @@ Feature: Update product combination suppliers in Back Office (BO)
       | eco tax                         | 0     |
       | eco tax with taxes              | 0     |
       | wholesale price                 | 44    |
+      | product tax rate                | 0     |
+      | product price                   | 0     |
+      | product ecotax                  | 0     |
     And combination "product2MWhite" should have following prices:
       | combination price detail        | value |
       | impact on price                 | 0     |
@@ -416,6 +437,9 @@ Feature: Update product combination suppliers in Back Office (BO)
       | eco tax                         | 0     |
       | eco tax with taxes              | 0     |
       | wholesale price                 | 0     |
+      | product tax rate                | 0     |
+      | product price                   | 0     |
+      | product ecotax                  | 0     |
     And combination "product2MBlack" should have following prices:
       | combination price detail        | value |
       | impact on price                 | 0     |
@@ -425,6 +449,9 @@ Feature: Update product combination suppliers in Back Office (BO)
       | eco tax                         | 0     |
       | eco tax with taxes              | 0     |
       | wholesale price                 | 0     |
+      | product tax rate                | 0     |
+      | product price                   | 0     |
+      | product ecotax                  | 0     |
     And product product2 should have following prices information:
       | wholesale_price | 70 |
 
@@ -455,6 +482,9 @@ Feature: Update product combination suppliers in Back Office (BO)
       | eco tax                         | 0     |
       | eco tax with taxes              | 0     |
       | wholesale price                 | 0     |
+      | product tax rate                | 0     |
+      | product price                   | 0     |
+      | product ecotax                  | 0     |
     When I associate suppliers to product "product3"
       | supplier  | combination_suppliers                  |
       | supplier2 | product3SWhite:product3SWhiteSupplier2 |
@@ -483,6 +513,9 @@ Feature: Update product combination suppliers in Back Office (BO)
       | eco tax                         | 0     |
       | eco tax with taxes              | 0     |
       | wholesale price                 | 20    |
+      | product tax rate                | 0     |
+      | product price                   | 0     |
+      | product ecotax                  | 0     |
     And combination "product3SWhite" should have following suppliers:
       | product_supplier        | supplier  | reference | currency | price_tax_excluded |
       | product3SWhiteSupplier1 | supplier1 |           | USD      | 0                  |
@@ -502,6 +535,9 @@ Feature: Update product combination suppliers in Back Office (BO)
       | eco tax                         | 0     |
       | eco tax with taxes              | 0     |
       | wholesale price                 | 0     |
+      | product tax rate                | 0     |
+      | product price                   | 0     |
+      | product ecotax                  | 0     |
     And product product3 should have following prices information:
       | wholesale_price | 70 |
     When I update combination "product3SWhite" prices with following details:

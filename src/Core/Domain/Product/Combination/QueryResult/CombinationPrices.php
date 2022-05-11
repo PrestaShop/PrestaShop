@@ -70,6 +70,21 @@ class CombinationPrices
      */
     private $wholesalePrice;
 
+    /**
+     * @var DecimalNumber
+     */
+    private $productTaxRate;
+
+    /**
+     * @var DecimalNumber
+     */
+    private $productPrice;
+
+    /**
+     * @var DecimalNumber
+     */
+    private $productEcotax;
+
     public function __construct(
         DecimalNumber $impactOnPrice,
         DecimalNumber $impactOnPriceTaxIncluded,
@@ -77,7 +92,10 @@ class CombinationPrices
         DecimalNumber $impactOnUnitPriceTaxIncluded,
         DecimalNumber $ecotax,
         DecimalNumber $ecotaxTaxIncluded,
-        DecimalNumber $wholesalePrice
+        DecimalNumber $wholesalePrice,
+        DecimalNumber $productTaxRate,
+        DecimalNumber $productPrice,
+        DecimalNumber $productEcotax
     ) {
         $this->impactOnPrice = $impactOnPrice;
         $this->impactOnPriceTaxIncluded = $impactOnPriceTaxIncluded;
@@ -86,6 +104,9 @@ class CombinationPrices
         $this->ecotax = $ecotax;
         $this->ecotaxTaxIncluded = $ecotaxTaxIncluded;
         $this->wholesalePrice = $wholesalePrice;
+        $this->productTaxRate = $productTaxRate;
+        $this->productPrice = $productPrice;
+        $this->productEcotax = $productEcotax;
     }
 
     /**
@@ -142,5 +163,29 @@ class CombinationPrices
     public function getWholesalePrice(): DecimalNumber
     {
         return $this->wholesalePrice;
+    }
+
+    /**
+     * @return DecimalNumber
+     */
+    public function getProductTaxRate(): DecimalNumber
+    {
+        return $this->productTaxRate;
+    }
+
+    /**
+     * @return DecimalNumber
+     */
+    public function getProductPrice(): DecimalNumber
+    {
+        return $this->productPrice;
+    }
+
+    /**
+     * @return DecimalNumber
+     */
+    public function getProductEcotax(): DecimalNumber
+    {
+        return $this->productEcotax;
     }
 }
