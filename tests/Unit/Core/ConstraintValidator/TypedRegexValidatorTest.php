@@ -321,7 +321,7 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
 
     public function testItSucceedsForWebserviceKeyTypeWhenValidCharactersGiven(): void
     {
-        $this->validator->validate('22XRNQR7X4RLAGCBSSNQIVPXQ271ZIKE', new TypedRegex(['type' => 'webservice_key']));
+        $this->validator->validate('22XRNQR7X4RLAGCBSSNQIVPXQ271ZIKE', new TypedRegex(['type' => TypedRegex::TYPE_WEBSERVICE_KEY]));
 
         $this->assertNoViolation();
     }
@@ -333,7 +333,7 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
      */
     public function testItFailsForWebserviceKeyTypeWhenInvalidCharactersGiven(string $invalidChar): void
     {
-        $this->assertViolationIsRaised(new TypedRegex(['type' => 'webservice_key']), $invalidChar);
+        $this->assertViolationIsRaised(new TypedRegex(['type' => TypedRegex::TYPE_WEBSERVICE_KEY]), $invalidChar);
     }
 
     /**
