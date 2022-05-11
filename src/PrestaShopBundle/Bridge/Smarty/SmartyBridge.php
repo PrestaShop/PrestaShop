@@ -64,32 +64,32 @@ class SmartyBridge
     /**
      * @var BreadcrumbsAndTitleConfigurator
      */
-    private $breadcrumbsAndTitleHydrator;
+    private $breadcrumbsAndTitleConfigurator;
 
     /**
      * @var FooterConfigurator
      */
-    private $footerHydrator;
+    private $footerConfigurator;
 
     /**
      * @var HeaderConfigurator
      */
-    private $headerHydrator;
+    private $headerConfigurator;
 
     /**
      * @var ModalConfigurator
      */
-    private $modalHydrator;
+    private $modalConfigurator;
 
     /**
      * @var NotificationsConfigurator
      */
-    private $notificationHydrator;
+    private $notificationsConfigurator;
 
     /**
      * @var ToolbarFlagsConfigurator
      */
-    private $toolbarFlagsHydrator;
+    private $toolbarFlagsConfigurator;
 
     /**
      * @var Configuration
@@ -98,54 +98,63 @@ class SmartyBridge
 
     /**
      * @param LegacyContext $legacyContext
-     * @param BreadcrumbsAndTitleConfigurator $breadcrumbsAndTitleHydrator
-     * @param FooterConfigurator $footerHydrator
-     * @param HeaderConfigurator $headerHydrator
-     * @param ModalConfigurator $modalHydrator
-     * @param NotificationsConfigurator $notificationHydrator
-     * @param ToolbarFlagsConfigurator $toolbarFlagsHydrator
+     * @param BreadcrumbsAndTitleConfigurator $breadcrumbsAndTitleConfigurator
+     * @param FooterConfigurator $footerConfigurator
+     * @param HeaderConfigurator $headerConfigurator
+     * @param ModalConfigurator $modalConfigurator
+     * @param NotificationsConfigurator $notificationsConfigurator
+     * @param ToolbarFlagsConfigurator $toolbarFlagsConfigurator
      * @param Configuration $configuration
      */
     public function __construct(
         LegacyContext $legacyContext,
-        BreadcrumbsAndTitleConfigurator $breadcrumbsAndTitleHydrator,
-        FooterConfigurator $footerHydrator,
-        HeaderConfigurator $headerHydrator,
-        ModalConfigurator $modalHydrator,
-        NotificationsConfigurator $notificationHydrator,
-        ToolbarFlagsConfigurator $toolbarFlagsHydrator,
+        BreadcrumbsAndTitleConfigurator $breadcrumbsAndTitleConfigurator,
+        FooterConfigurator $footerConfigurator,
+        HeaderConfigurator $headerConfigurator,
+        ModalConfigurator $modalConfigurator,
+        NotificationsConfigurator $notificationsConfigurator,
+        ToolbarFlagsConfigurator $toolbarFlagsConfigurator,
         Configuration $configuration
     ) {
         $this->smarty = $legacyContext->getSmarty();
         $this->link = $legacyContext->getContext()->link;
         $this->cookie = $legacyContext->getContext()->cookie;
-        $this->breadcrumbsAndTitleHydrator = $breadcrumbsAndTitleHydrator;
-        $this->footerHydrator = $footerHydrator;
-        $this->headerHydrator = $headerHydrator;
-        $this->modalHydrator = $modalHydrator;
-        $this->notificationHydrator = $notificationHydrator;
-        $this->toolbarFlagsHydrator = $toolbarFlagsHydrator;
+        $this->breadcrumbsAndTitleConfigurator = $breadcrumbsAndTitleConfigurator;
+        $this->footerConfigurator = $footerConfigurator;
+        $this->headerConfigurator = $headerConfigurator;
+        $this->modalConfigurator = $modalConfigurator;
+        $this->notificationsConfigurator = $notificationsConfigurator;
+        $this->toolbarFlagsConfigurator = $toolbarFlagsConfigurator;
         $this->configuration = $configuration;
     }
 
     /**
      * @param string $content
      * @param ControllerConfiguration $controllerConfiguration
-     * @param string $template
+     * @param Response|null $response
      *
      * @return Response
      */
-    public function render(string $content, ControllerConfiguration $controllerConfiguration, $template = self::LAYOUT): Response
-    {
-        $this->breadcrumbsAndTitleHydrator->hydrate($controllerConfiguration);
-        $this->modalHydrator->hydrate($controllerConfiguration);
-        $this->notificationHydrator->hydrate($controllerConfiguration);
-        $this->toolbarFlagsHydrator->hydrate($controllerConfiguration);
-        $this->headerHydrator->hydrate($controllerConfiguration);
-        $this->footerHydrator->hydrate($controllerConfiguration);
+    public function render(
+        string $content,
+        ControllerConfiguration $controllerConfiguration,
+        Response $response = null
+    ): Response {
+        $this->breadcrumbsAndTitleConfigurator->configure($controllerConfiguration);
+        $this->modalConfigurator->configure($controllerConfiguration);
+        $this->notificationsConfigurator->configure($controllerConfiguration);
+        $this->toolbarFlagsConfigurator->configure($controllerConfiguration);
+        $this->headerConfigurator->configure($controllerConfiguration);
+        $this->footerConfigurator->configure($controllerConfiguration);
         $this->smarty->assign($controllerConfiguration->templatesVars);
 
-        return new Response($this->display($controllerConfiguration, $content, $template));
+        if ($response === null) {
+            $response = new Response();
+        }
+
+        $response->headers->set('Cache-Control', 'no-store, no-cache');
+
+        return $response->setContent($this->display($controllerConfiguration, $content, self::LAYOUT));
     }
 
     /**

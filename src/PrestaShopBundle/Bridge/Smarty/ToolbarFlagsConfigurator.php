@@ -31,7 +31,6 @@ namespace PrestaShopBundle\Bridge\Smarty;
 use Cookie;
 use Language;
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 use Symfony\Component\Routing\RouterInterface;
 use Tools;
@@ -45,11 +44,6 @@ class ToolbarFlagsConfigurator implements ConfiguratorInterface
     private const HELP_URL = 'https://help.prestashop.com/';
 
     /**
-     * @var Cookie
-     */
-    private $cookie;
-
-    /**
      * @var RouterInterface
      */
     private $router;
@@ -61,13 +55,11 @@ class ToolbarFlagsConfigurator implements ConfiguratorInterface
 
     /**
      * @param RouterInterface $router
-     * @param LegacyContext $legacyContext
      * @param Configuration $configuration
      */
-    public function __construct(RouterInterface $router, LegacyContext $legacyContext, Configuration $configuration)
+    public function __construct(RouterInterface $router, Configuration $configuration)
     {
         $this->router = $router;
-        $this->cookie = $legacyContext->getContext()->cookie;
         $this->configuration = $configuration;
     }
 
@@ -76,7 +68,7 @@ class ToolbarFlagsConfigurator implements ConfiguratorInterface
      *
      * @return void
      */
-    public function hydrate(ControllerConfiguration $controllerConfiguration): void
+    public function configure(ControllerConfiguration $controllerConfiguration): void
     {
         $this->initToolbar($controllerConfiguration);
         $this->initPageHeaderToolbar($controllerConfiguration);

@@ -56,7 +56,7 @@ class FooterConfigurator implements ConfiguratorInterface
      *
      * @return void
      */
-    public function hydrate(ControllerConfiguration $controllerConfiguration): void
+    public function configure(ControllerConfiguration $controllerConfiguration): void
     {
         $controllerConfiguration->templatesVars['css_files'] = $controllerConfiguration->cssFiles;
         $controllerConfiguration->templatesVars['js_files'] = array_unique($controllerConfiguration->jsFiles);

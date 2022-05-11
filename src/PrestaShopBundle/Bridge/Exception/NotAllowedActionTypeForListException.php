@@ -26,25 +26,11 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Bridge\Smarty;
-
-use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
+namespace PrestaShopBundle\Bridge\Exception;
 
 /**
- * This class hydrates modals information needed for legacy modals.
+ * Is thrown when a bad type is used to add an action to the list.
  */
-class ModalConfigurator implements ConfiguratorInterface
+class NotAllowedActionTypeForListException extends BridgeException
 {
-    /**
-     * @param ControllerConfiguration $controllerConfiguration
-     *
-     * @return void
-     */
-    public function configure(ControllerConfiguration $controllerConfiguration): void
-    {
-        $controllerConfiguration->templatesVars['img_base_path'] = __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/';
-        $controllerConfiguration->templatesVars['check_url_fopen'] = (ini_get('allow_url_fopen') ? 'ok' : 'ko');
-        $controllerConfiguration->templatesVars['check_openssl'] = (extension_loaded('openssl') ? 'ok' : 'ko');
-        $controllerConfiguration->templatesVars['add_permission'] = 1;
-    }
 }

@@ -29,8 +29,8 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Bridge\Exception;
 
 /**
- * Is thrown when a bad type is used to add an action.
+ * Is thrown when a bad type is used to add a generic action.
  */
-class ActionTypeDoesntExistException extends BridgeException
+class NotAllowedGenericActionTypeException extends BridgeException
 {
 }

@@ -684,7 +684,7 @@ class HelperListCore extends Helper
             $table_dnd = true;
         }
 
-        $prefix = isset($this->controller_name) ? str_replace(['admin', 'controller'], '', Tools::strtolower($this->controller_name)) : '';
+        $prefix = str_replace(['admin', 'controller'], '', Tools::strtolower($this->controller_name));
         $ajax = false;
         foreach ($this->fields_list as $key => $params) {
             if (!isset($params['type'])) {

@@ -29,8 +29,10 @@ namespace PrestaShopBundle\Bridge\AdminController;
 /**
  * This interface will be shared with legacy and expose legacy methods needed for modules.
  */
-interface ControllerBridgeInterface
+interface LegacyControllerBridgeInterface
 {
+    const DEFAULT_THEME = 'default';
+
     /**
      * Sets default media list for this controller.
      *
@@ -83,4 +85,18 @@ interface ControllerBridgeInterface
      * @return void
      */
     public function addJqueryUI($component, $theme = 'base', $checkDependencies = true): void;
+
+    /**
+     * Get table name.
+     *
+     * @return string
+     */
+    public function getTable(): string;
+
+    /**
+     * Get legacy class object name.
+     *
+     * @return string
+     */
+    public function getClassName(): string;
 }

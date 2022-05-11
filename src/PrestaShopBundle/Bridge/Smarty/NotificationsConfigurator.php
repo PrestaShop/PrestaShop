@@ -59,7 +59,7 @@ class NotificationsConfigurator implements ConfiguratorInterface
      *
      * @return void
      */
-    public function hydrate(ControllerConfiguration $controllerConfiguration)
+    public function configure(ControllerConfiguration $controllerConfiguration)
     {
         $accesses = Profile::getProfileAccesses($controllerConfiguration->user->getData()->id_profile, 'class_name');
 

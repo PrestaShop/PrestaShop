@@ -37,49 +37,49 @@ use PrestaShopBundle\Security\Admin\Employee;
 class ControllerConfiguration
 {
     /**
-     * @var int
+     * @var int|null
      */
     public $id;
 
     /**
-     * @var string
+     * @var string|null
      */
     public $controllerName;
 
     /**
-     * @var string
+     * @var string|null
      */
     public $controllerNameLegacy;
 
     /**
-     * @var string
+     * @var string|null
      */
     public $currentIndex;
 
     /**
-     * @var string
+     * @var string|null
      */
     public $positionIdentifier;
 
     /**
-     * @var string
+     * @var string|null
      */
     public $table;
 
     /**
-     * @var string
+     * @var string|null
      */
     public $token;
 
     /**
-     * @var Employee
+     * @var Employee|null
      */
     public $user;
 
     /**
      * @var array
      */
-    public $metaTitle;
+    public $metaTitle = [];
 
     /**
      * @var array
@@ -147,7 +147,7 @@ class ControllerConfiguration
     public $jsFiles = [];
 
     /**
-     * @var string
+     * @var string|null
      */
     public $folderTemplate;
 

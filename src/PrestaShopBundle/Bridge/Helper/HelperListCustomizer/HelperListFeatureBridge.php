@@ -36,18 +36,13 @@ use PrestaShopBundle\Bridge\Helper\HelperListConfiguration;
 /**
  * This class customize the result of the list for the feature controller.
  */
-class HelperListFeatureBridgeCustomizer extends HelperListBridge
+class HelperListFeatureBridge extends HelperListBridge
 {
-    public function getList(
+    public function generateListQuery(
         HelperListConfiguration $helperListConfiguration,
-        int $idLang,
-        $orderBy = null,
-        $orderWay = null,
-        $start = 0,
-        $limit = null,
-        $idLangShop = false
+        int $idLang
     ): void {
-        parent::getList($helperListConfiguration, $idLang, $orderBy, $orderWay, $start, $limit, $idLangShop);
+        parent::generateListQuery($helperListConfiguration, $idLang);
 
         $nbItems = count($helperListConfiguration->list);
         for ($i = 0; $i < $nbItems; ++$i) {

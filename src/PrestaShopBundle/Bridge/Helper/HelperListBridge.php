@@ -59,7 +59,7 @@ class HelperListBridge
     /**
      * @var HelperListConfigurator
      */
-    private $helperListVarsAssigner;
+    private $helperListConfigurator;
 
     /**
      * @var HookDispatcherInterface
@@ -87,30 +87,30 @@ class HelperListBridge
     ) {
         $this->context = $legacyContext->getContext();
         $this->userProvider = $userProvider;
-        $this->helperListVarsAssigner = $helperListVarsAssigner;
+        $this->helperListConfigurator = $helperListVarsAssigner;
         $this->hookDispatcher = $hookDispatcher;
         $this->configuration = $configuration;
     }
 
     /**
-     * Render html for list using HelperList helper.
+     * Generate the html for list using HelperList helper.
      *
      * @param HelperListConfiguration $helperListConfiguration
      *
      * @return string|null
      */
-    public function renderList(
+    public function generateList(
         HelperListConfiguration $helperListConfiguration
     ): ?string {
         if (!($helperListConfiguration->fieldsList && is_array($helperListConfiguration->fieldsList))) {
             return null;
         }
 
-        $this->getList($helperListConfiguration, $this->context->language->id);
+        $this->generateListQuery($helperListConfiguration, $this->context->language->id);
 
         $helper = new HelperList();
 
-        $this->helperListVarsAssigner->setHelperDisplay($helperListConfiguration, $helper);
+        $this->helperListConfigurator->setHelperDisplay($helperListConfiguration, $helper);
         $helper->_default_pagination = $helperListConfiguration->defaultPagination;
         $helper->_pagination = $helperListConfiguration->pagination;
         $helper->tpl_delete_link_vars = $helperListConfiguration->deleteLinksVariableTemplate;
@@ -130,22 +130,12 @@ class HelperListBridge
     /**
      * @param HelperListConfiguration $helperListConfiguration
      * @param int $idLang
-     * @param string $orderBy
-     * @param string $orderWay
-     * @param int $start
-     * @param string $limit
-     * @param int|bool $idLangShop
      *
      * @return void
      */
-    public function getList(
+    protected function generateListQuery(
         HelperListConfiguration $helperListConfiguration,
-        int $idLang,
-        $orderBy = null,
-        $orderWay = null,
-        $start = 0,
-        $limit = null,
-        $idLangShop = false
+        int $idLang
     ): void {
         if ($helperListConfiguration->table == 'feature_value') {
             $helperListConfiguration->where .= ' AND (a.custom = 0 OR a.custom IS NULL)';
@@ -165,20 +155,14 @@ class HelperListBridge
             throw new PrestaShopException(sprintf('Table name %s is invalid:', $helperListConfiguration->table));
         }
 
-        /* Check params validity */
-        if (!is_numeric($start) || !Validate::isUnsignedId($idLang)) {
-            throw new PrestaShopException('get list params is not valid');
-        }
-
-        $limit = $this->checkSqlLimit($helperListConfiguration, $limit);
+        $limit = $this->checkSqlLimit($helperListConfiguration);
 
         /* Determine offset from current page */
         $start = 0;
         if ((int) Tools::getValue('submitFilter' . $helperListConfiguration->listId)) {
             $start = ((int) Tools::getValue('submitFilter' . $helperListConfiguration->listId) - 1) * $limit;
         } elseif (
-            empty($start)
-            && isset($this->context->cookie->{$helperListConfiguration->listId . '_start'})
+            isset($this->context->cookie->{$helperListConfiguration->listId . '_start'})
             && Tools::isSubmit('export' . $helperListConfiguration->table)
         ) {
             $start = $this->context->cookie->{$helperListConfiguration->listId . '_start'};
@@ -199,22 +183,19 @@ class HelperListBridge
 
         if ($helperListConfiguration->multishopContext && Shop::isTableAssociated($helperListConfiguration->table) && !empty($helperListConfiguration->className)) {
             if (Shop::getContext() != Shop::CONTEXT_ALL || !$this->userProvider->getUser()->getData()->isSuperAdmin()) {
-                $test_join = !preg_match('#`?' . preg_quote(_DB_PREFIX_ . $helperListConfiguration->table . '_shop') . '`? *sa#', $helperListConfiguration->join);
-                if (Shop::isFeatureActive() && $test_join && Shop::isTableAssociated($helperListConfiguration->table)) {
-                    $helperListConfiguration->where .= ' AND EXISTS (
-                            SELECT 1
-                            FROM `' . _DB_PREFIX_ . $helperListConfiguration->table . '_shop` sa
-                            WHERE a.`' . bqSQL($helperListConfiguration->identifier) . '` = sa.`' . bqSQL($helperListConfiguration->identifier) . '`
-                             AND sa.id_shop IN (' . implode(', ', Shop::getContextListShopID()) . ')
-                        )';
-                }
+                $helperListConfiguration->where .= ' AND EXISTS (
+                        SELECT 1
+                        FROM `' . _DB_PREFIX_ . $helperListConfiguration->table . '_shop` sa
+                        WHERE a.`' . bqSQL($helperListConfiguration->identifier) . '` = sa.`' . bqSQL($helperListConfiguration->identifier) . '`
+                         AND sa.id_shop IN (' . implode(', ', Shop::getContextListShopID()) . ')
+                    )';
             }
         }
 
         $fromClause = $this->getFromClause($helperListConfiguration);
-        $joinClause = $this->getJoinClause($helperListConfiguration, $idLang, $idLangShop);
+        $joinClause = $this->getJoinClause($helperListConfiguration, $idLang);
         $whereClause = $this->getWhereClause($helperListConfiguration);
-        $orderByClause = $this->getOrderByClause($helperListConfiguration, $orderBy, $orderWay);
+        $orderByClause = $this->getOrderByClause($helperListConfiguration, $helperListConfiguration->orderBy, $helperListConfiguration->orderWay);
 
         $shouldLimitSqlResults = $this->shouldLimitSqlResults($limit);
 
@@ -223,7 +204,7 @@ class HelperListBridge
 
             if ($helperListConfiguration->explicitSelect) {
                 foreach ($helperListConfiguration->fieldsList as $key => $array_value) {
-                    if (isset($helperListConfiguration->select) && preg_match('/[\s]`?' . preg_quote($key, '/') . '`?\s*,/', $helperListConfiguration->select)) {
+                    if (preg_match('/[\s]`?' . preg_quote($key, '/') . '`?\s*,/', $helperListConfiguration->select)) {
                         continue;
                     }
 
@@ -240,11 +221,11 @@ class HelperListBridge
                 $helperListConfiguration->listsql .= ($helperListConfiguration->isJoinLanguageTableAuto ? 'b.*,' : '') . ' a.*';
             }
 
-            $helperListConfiguration->listsql .= "\n" . (isset($helperListConfiguration->select) ? ', ' . rtrim($helperListConfiguration->select, ', ') : '') . $select_shop;
+            $helperListConfiguration->listsql .= "\n" . ', ' . rtrim($helperListConfiguration->select, ', ') . $select_shop;
 
             $limitClause = ' ' . (($shouldLimitSqlResults) ? ' LIMIT ' . (int) $start . ', ' . (int) $limit : '');
 
-            if ($helperListConfiguration->useFoundRows || isset($helperListConfiguration->filterHaving) || isset($helperListConfiguration->having)) {
+            if ($helperListConfiguration->useFoundRows) {
                 $helperListConfiguration->listsql = 'SELECT SQL_CALC_FOUND_ROWS ' .
                     $helperListConfiguration->listsql .
                     $fromClause .
@@ -297,11 +278,11 @@ class HelperListBridge
 
     /**
      * @param HelperListConfiguration $helperListConfiguration
-     * @param string $limit
+     * @param string|null $limit
      *
      * @return int
      */
-    private function checkSqlLimit(HelperListConfiguration $helperListConfiguration, $limit): int
+    private function checkSqlLimit(HelperListConfiguration $helperListConfiguration, ?string $limit = null): int
     {
         if (empty($limit)) {
             if (
@@ -343,11 +324,11 @@ class HelperListBridge
     /**
      * @param HelperListConfiguration $helperListConfiguration
      * @param int $idLang
-     * @param int $idLangShop
+     * @param int|bool $idLangShop
      *
      * @return string
      */
-    private function getJoinClause(HelperListConfiguration $helperListConfiguration, $idLang, $idLangShop)
+    private function getJoinClause(HelperListConfiguration $helperListConfiguration, $idLang, $idLangShop = false)
     {
         $shopJoinClause = '';
         if ($helperListConfiguration->shopLinkType) {
@@ -356,7 +337,7 @@ class HelperListBridge
         }
 
         return "\n" . $this->getLanguageJoinClause($helperListConfiguration, $idLang, $idLangShop) .
-            "\n" . (isset($helperListConfiguration->join) ? $helperListConfiguration->join . ' ' : '') .
+            "\n" . $helperListConfiguration->join . ' ' .
             "\n" . $shopJoinClause;
     }
 
@@ -402,10 +383,10 @@ class HelperListBridge
             $whereShop = Shop::addSqlRestriction(false, 'a');
         }
 
-        return ' WHERE 1 ' . (isset($helperListConfiguration->where) ? $helperListConfiguration->where . ' ' : '') .
+        return ' WHERE 1 ' . $helperListConfiguration->where . ' ' .
             ($helperListConfiguration->deleted ? 'AND a.`deleted` = 0 ' : '') .
-            (isset($helperListConfiguration->filter) ? $helperListConfiguration->filter : '') . $whereShop . "\n" .
-            (isset($helperListConfiguration->group) ? $helperListConfiguration->group . ' ' : '') . "\n" .
+            $helperListConfiguration->filter . $whereShop . "\n" .
+            $helperListConfiguration->group . ' ' . "\n" .
             $this->getHavingClause();
     }
 

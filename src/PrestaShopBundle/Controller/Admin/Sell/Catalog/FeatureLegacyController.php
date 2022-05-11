@@ -37,11 +37,12 @@ use PrestaShopBundle\Bridge\AdminController\Action\ListBulkAction;
 use PrestaShopBundle\Bridge\AdminController\Action\ListHeaderToolbarAction;
 use PrestaShopBundle\Bridge\AdminController\Action\ListRowAction;
 use PrestaShopBundle\Bridge\AdminController\AdminControllerTrait;
-use PrestaShopBundle\Bridge\AdminController\ControllerBridgeInterface;
+use PrestaShopBundle\Bridge\AdminController\LegacyControllerBridgeInterface;
 use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 use PrestaShopBundle\Bridge\AdminController\Field\Field;
+use PrestaShopBundle\Bridge\AdminController\LegacyListControllerBridgeInterface;
 use PrestaShopBundle\Bridge\Helper\HelperListConfiguration;
-use PrestaShopBundle\Bridge\Helper\HelperListCustomizer\HelperListFeatureBridgeCustomizer;
+use PrestaShopBundle\Bridge\Helper\HelperListCustomizer\HelperListFeatureBridge;
 use PrestaShopBundle\Bridge\Smarty\SmartyTrait;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -52,19 +53,14 @@ use Tools;
 /**
  * Controller responsible for "Sell > Catalog > Attributes & Features > Features" page
  */
-class FeatureController extends FrameworkBundleAdminController implements ControllerBridgeInterface
+class FeatureLegacyController extends FrameworkBundleAdminController implements LegacyControllerBridgeInterface, LegacyListControllerBridgeInterface
 {
     use AdminControllerTrait;
     use SmartyTrait;
 
-    public const DEFAULT_THEME = 'default';
-    public const POSITION_IDENTIFIER = 'id_feature';
-    public const TABLE = 'feature';
-    public const LIST_ID = 'feature';
-    public const CLASS_NAME = 'Feature';
-    public const IDENTIFIER = 'id_feature';
-
     /**
+     * This parameter is needed by legacy hook, so we can't remove it.
+     *
      * @var string
      */
     public $php_self;
@@ -75,17 +71,49 @@ class FeatureController extends FrameworkBundleAdminController implements Contro
     public $controllerConfiguration;
 
     /**
+     * @inheritdoc
+     */
+    public function getTable(): string
+    {
+        return 'feature';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getClassName(): string
+    {
+        return 'Feature';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getIdentifier(): string
+    {
+        return 'id_feature';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getPositionIdentifier(): string
+    {
+        return 'id_feature';
+    }
+
+    /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      */
     public function indexAction(Request $request)
     {
         $this->buildGenericAction();
         $helperListConfiguration = $this->get('prestashop.core.bridge.helper_list_configuration_factory')->create(
-            self::TABLE,
-            self::CLASS_NAME,
+            $this->getTable(),
+            $this->getClassName(),
             $this->controllerConfiguration,
-            self::IDENTIFIER,
-            self::POSITION_IDENTIFIER,
+            $this->getIdentifier(),
+            $this->getPositionIdentifier(),
             'position',
             true
         );
@@ -93,19 +121,18 @@ class FeatureController extends FrameworkBundleAdminController implements Contro
         $this->buildActionList($helperListConfiguration);
 
         if ($request->request->has('submitResetfeature')) {
-            $this->getResetFiltersProcessor()->resetFilters($helperListConfiguration, $request);
+            $this->getResetFiltersHelper()->resetFilters($helperListConfiguration, $request);
         }
 
-        $this->getFiltersProcessor()->processFilter(
+        $this->getFiltersHelper()->processFilter(
             $request,
             $helperListConfiguration
         );
 
         return $this->renderSmarty(
-            $this->getHelperListBridge()->renderList(
+            $this->getHelperListBridge()->generateList(
                 $helperListConfiguration
-            ),
-            $this->controllerConfiguration
+            )
         );
     }
 
@@ -204,9 +231,9 @@ class FeatureController extends FrameworkBundleAdminController implements Contro
         ]);
     }
 
-    public function getHelperListBridge(): HelperListFeatureBridgeCustomizer
+    public function getHelperListBridge(): HelperListFeatureBridge
     {
-        return $this->get('prestashop.core.bridge.helper_list_feature_customizer');
+        return $this->get('prestashop.core.bridge.helper_list_feature');
     }
 
     private function buildGenericAction(): void

@@ -31,7 +31,7 @@ namespace PrestaShopBundle\Bridge\AdminController\Listener;
 use Context;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository;
-use PrestaShopBundle\Bridge\AdminController\ControllerBridgeInterface;
+use PrestaShopBundle\Bridge\AdminController\LegacyControllerBridgeInterface;
 use PrestaShopBundle\Bridge\AdminController\ControllerConfigurationFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
@@ -96,6 +96,10 @@ class InitControllerListener
         $controller = $event->getController()[0];
         $controllerNameLegacy = $event->getRequest()->attributes->get('_legacy_controller');
 
+        if (!is_string(get_class($controller))) {
+            return;
+        }
+
         $controller->php_self = get_class($controller);
         $this->context->controller = $controller;
         $this->context->smarty->assign('link', $this->context->link);
@@ -110,7 +114,7 @@ class InitControllerListener
             ),
             get_class($controller),
             $controllerNameLegacy,
-            get_class($controller)::TABLE
+            $controller->getTable()
         );
 
         $this->setCurrentIndex($controller);
@@ -128,7 +132,7 @@ class InitControllerListener
             return false;
         }
 
-        if (!$event->getController()[0] instanceof ControllerBridgeInterface) {
+        if (!$event->getController()[0] instanceof LegacyControllerBridgeInterface) {
             return false;
         }
 
@@ -136,11 +140,11 @@ class InitControllerListener
     }
 
     /**
-     * @param ControllerBridgeInterface $controller
+     * @param LegacyControllerBridgeInterface $controller
      *
      * @return void
      */
-    private function setCurrentIndex(ControllerBridgeInterface $controller): void
+    private function setCurrentIndex(LegacyControllerBridgeInterface $controller): void
     {
         if (!property_exists($controller, 'controllerConfiguration')) {
             throw new \Exception(sprintf('Child class %s failed to define controllerConfiguration property', get_called_class()));
@@ -155,12 +159,12 @@ class InitControllerListener
     }
 
     /**
-     * @param ControllerBridgeInterface $controller
+     * @param LegacyControllerBridgeInterface $controller
      * @param Request $request
      *
      * @return void
      */
-    private function initToken(ControllerBridgeInterface $controller, Request $request)
+    private function initToken(LegacyControllerBridgeInterface $controller, Request $request)
     {
         if (!property_exists($controller, 'controllerConfiguration')) {
             throw new \Exception(sprintf('Child class %s failed to define controllerConfiguration property', get_called_class()));

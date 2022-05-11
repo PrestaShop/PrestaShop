@@ -47,7 +47,7 @@ class HelperListConfiguration
     public $table;
 
     /**
-     * @var string
+     * @var string|null
      */
     public $listId;
 
@@ -74,12 +74,12 @@ class HelperListConfiguration
     /**
      * @var string
      */
-    public $select;
+    public $select = '';
 
     /**
      * @var string
      */
-    public $where;
+    public $where = '';
 
     /**
      * @var string
@@ -89,7 +89,7 @@ class HelperListConfiguration
     /**
      * @var string
      */
-    public $group;
+    public $group = '';
 
     /**
      * @var string
@@ -114,17 +114,17 @@ class HelperListConfiguration
     /**
      * @var string
      */
-    public $having;
+    public $having = '';
 
     /**
      * @var string
      */
-    public $filterHaving;
+    public $filterHaving = '';
 
     /**
-     * @var array
+     * @var string
      */
-    public $filter;
+    public $filter = '';
 
     /**
      * @var bool

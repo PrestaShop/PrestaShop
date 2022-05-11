@@ -78,7 +78,7 @@ class FiltersHelper
 
         $prefix = FilterPrefix::getByClassName($helperListConfiguration->controllerNameLegacy);
 
-        if (isset($helperListConfiguration->listId)) {
+        if (!empty($helperListConfiguration->listId)) {
             foreach ($request->request->all() as $key => $value) {
                 if ($value === '') {
                     unset($this->context->cookie->{$prefix . $key});
@@ -184,7 +184,7 @@ class FiltersHelper
      */
     private function filterToField(HelperListConfiguration $helperListConfiguration, $key, $filter)
     {
-        if (!isset($helperListConfiguration->fieldsList)) {
+        if (empty($helperListConfiguration->fieldsList)) {
             return false;
         }
 

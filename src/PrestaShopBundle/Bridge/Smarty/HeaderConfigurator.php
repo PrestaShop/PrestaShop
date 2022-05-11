@@ -145,10 +145,8 @@ class HeaderConfigurator implements ConfiguratorInterface
      *
      * @return void
      */
-    public function hydrate(ControllerConfiguration $controllerConfiguration): void
+    public function configure(ControllerConfiguration $controllerConfiguration): void
     {
-        header('Cache-Control: no-store, no-cache');
-
         $controllerConfiguration->templatesVars['table'] = $controllerConfiguration->table;
         $controllerConfiguration->templatesVars['current'] = $this->router->generate('admin_features_index');
         $controllerConfiguration->templatesVars['token'] = $controllerConfiguration->token;

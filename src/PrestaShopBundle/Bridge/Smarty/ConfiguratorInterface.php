@@ -38,5 +38,5 @@ interface ConfiguratorInterface
      *
      * @return void
      */
-    public function hydrate(ControllerConfiguration $controllerConfiguration);
+    public function configure(ControllerConfiguration $controllerConfiguration);
 }

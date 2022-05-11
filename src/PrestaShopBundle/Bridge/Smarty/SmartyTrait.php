@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Bridge\Smarty;
 
 use Media;
-use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 use Symfony\Component\HttpFoundation\Response;
 use Tools;
 
@@ -44,15 +43,15 @@ trait SmartyTrait
 {
     /**
      * @param string $content
-     * @param ControllerConfiguration $controllerConfiguration
+     * @param Response|null $response
      *
      * @return Response
      */
-    public function renderSmarty(string $content, ControllerConfiguration $controllerConfiguration): Response
+    public function renderSmarty(string $content, Response $response = null, bool $isNewTheme = false): Response
     {
-        $this->setMedia();
+        $this->setMedia($isNewTheme);
 
-        return $this->get('prestashop.core.bridge.smarty_bridge')->render($content, $controllerConfiguration);
+        return $this->get('prestashop.core.bridge.smarty_bridge')->render($content, $this->controllerConfiguration, $response);
     }
 
     /**

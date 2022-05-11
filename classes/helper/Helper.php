@@ -57,7 +57,7 @@ class HelperCore
     /**
      * @var string
      */
-    public $controller_name;
+    public $controller_name = '';
 
     public function __construct()
     {

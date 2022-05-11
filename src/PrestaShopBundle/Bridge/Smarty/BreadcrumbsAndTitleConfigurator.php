@@ -66,7 +66,7 @@ class BreadcrumbsAndTitleConfigurator implements ConfiguratorInterface
      *
      * @param ControllerConfiguration $controllerConfiguration
      */
-    public function hydrate(ControllerConfiguration $controllerConfiguration): void
+    public function configure(ControllerConfiguration $controllerConfiguration): void
     {
         $tabs = [];
         $tabs = Tab::recursiveTab($controllerConfiguration->id, $tabs);
@@ -83,7 +83,7 @@ class BreadcrumbsAndTitleConfigurator implements ConfiguratorInterface
         $controllerConfiguration->templatesVars['quick_access_current_link_name'] = Tools::safeOutput($breadcrumbs['tab']['name'] . (isset($breadcrumbs['action']) ? ' - ' . $breadcrumbs['action']['name'] : ''));
         $controllerConfiguration->templatesVars['quick_access_current_link_icon'] = $breadcrumbs['container']['icon'];
 
-        $navigationPipe = ($this->configuration->get('PS_NAVIGATION_PIPE') ? $this->configuration->get('PS_NAVIGATION_PIPE') : '>');
+        $navigationPipe = $this->configuration->get('PS_NAVIGATION_PIPE') ?: '>';;
         $controllerConfiguration->templatesVars['navigationPipe'] = $navigationPipe;
     }
 

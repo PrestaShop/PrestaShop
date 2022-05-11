@@ -34,7 +34,8 @@ use PrestaShopBundle\Bridge\AdminController\Action\ListBulkAction;
 use PrestaShopBundle\Bridge\AdminController\Action\ListHeaderToolbarAction;
 use PrestaShopBundle\Bridge\AdminController\Action\ListRowAction;
 use PrestaShopBundle\Bridge\AdminController\Field\FieldInterface;
-use PrestaShopBundle\Bridge\Exception\ActionTypeDoesntExistException;
+use PrestaShopBundle\Bridge\Exception\NotAllowedGenericActionTypeException;
+use PrestaShopBundle\Bridge\Exception\NotAllowedActionTypeForListException;
 use PrestaShopBundle\Bridge\Helper\FiltersHelper;
 use PrestaShopBundle\Bridge\Helper\HelperListBridge;
 use PrestaShopBundle\Bridge\Helper\HelperListConfiguration;
@@ -56,7 +57,7 @@ trait AdminControllerTrait
     /**
      * @return ResetFiltersHelper
      */
-    public function getResetFiltersProcessor(): ResetFiltersHelper
+    public function getResetFiltersHelper(): ResetFiltersHelper
     {
         return $this->get('prestashop.core.bridge.processor.reset_filters_helper');
     }
@@ -64,7 +65,7 @@ trait AdminControllerTrait
     /**
      * @return FiltersHelper
      */
-    public function getFiltersProcessor(): FiltersHelper
+    public function getFiltersHelper(): FiltersHelper
     {
         return $this->get('prestashop.core.bridge.processor.filters_helper');
     }
@@ -92,7 +93,7 @@ trait AdminControllerTrait
             return;
         }
 
-        throw new ActionTypeDoesntExistException(sprintf('This action %s doesn\'t exist', get_class($action)));
+        throw new NotAllowedGenericActionTypeException(sprintf('This action %s doesn\'t exist', get_class($action)));
     }
 
     /**
@@ -123,7 +124,7 @@ trait AdminControllerTrait
             return;
         }
 
-        throw new ActionTypeDoesntExistException(sprintf('This action %s doesn\'t exist', get_class($action)));
+        throw new NotAllowedActionTypeForListException(sprintf('This action %s doesn\'t exist', get_class($action)));
     }
 
     /**
