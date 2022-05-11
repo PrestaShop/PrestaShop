@@ -184,7 +184,7 @@ class CombinationRepository extends AbstractObjectModelRepository
      */
     public function deleteByProductId(ProductId $productId): void
     {
-        $combinationIds = $this->getCombinationIdsByProductId($productId);
+        $combinationIds = $this->getCombinationIds($productId);
 
         $this->bulkDelete($combinationIds);
     }
@@ -215,10 +215,11 @@ class CombinationRepository extends AbstractObjectModelRepository
 
     /**
      * @param ProductId $productId
+     * @param ProductCombinationFilters|null $filters
      *
      * @return CombinationId[]
      */
-    public function getCombinationIdsByProductId(ProductId $productId, ?ProductCombinationFilters $filters = null): array
+    public function getCombinationIds(ProductId $productId, ?ProductCombinationFilters $filters = null): array
     {
         if ($filters) {
             $qb = $this->combinationQueryBuilder->getSearchQueryBuilder($filters)
@@ -235,7 +236,7 @@ class CombinationRepository extends AbstractObjectModelRepository
             ;
         }
 
-        $combinationIds = $qb->execute()->fetchAll();
+        $combinationIds = $qb->execute()->fetchAllAssociative();
 
         return array_map(
             function (array $combination) { return new CombinationId((int) $combination['id_product_attribute']); },

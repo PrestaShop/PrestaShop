@@ -247,21 +247,19 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @todo: is it worth implementing new separate action to get ids with filters?
-     *
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
      * @param int $productId
-     * @param ProductCombinationFilters|null $filters
+     * @param ProductCombinationFilters $filters
      *
      * @return JsonResponse
      */
-    public function getListIdsAction(int $productId, ?ProductCombinationFilters $filters = null): JsonResponse
+    public function getCombinationIdsAction(int $productId, ProductCombinationFilters $filters): JsonResponse
     {
         /** @var CombinationRepository $repository */
         $repository = $this->get('prestashop.adapter.product.combination.repository.combination_repository');
 
-        $combinationIds = $repository->getCombinationIdsByProductId(new ProductId($productId), $filters);
+        $combinationIds = $repository->getCombinationIds(new ProductId($productId), $filters);
         $data = [];
         foreach ($combinationIds as $combinationId) {
             $data[] = $combinationId->getValue();
