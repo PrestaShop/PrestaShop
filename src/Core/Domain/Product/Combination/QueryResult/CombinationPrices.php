@@ -38,11 +38,6 @@ class CombinationPrices
     /**
      * @var DecimalNumber
      */
-    private $ecoTax;
-
-    /**
-     * @var DecimalNumber
-     */
     private $impactOnPrice;
 
     /**
@@ -58,35 +53,39 @@ class CombinationPrices
     /**
      * @var DecimalNumber
      */
-    private $wholesalePrice;
+    private $impactOnUnitPriceTaxIncluded;
 
     /**
-     * @param DecimalNumber $ecoTax
-     * @param DecimalNumber $impactOnPrice
-     * @param DecimalNumber $impactOnPriceTaxIncluded
-     * @param DecimalNumber $impactOnUnitPrice
-     * @param DecimalNumber $wholesalePrice
+     * @var DecimalNumber
      */
+    private $ecotax;
+
+    /**
+     * @var DecimalNumber
+     */
+    private $ecotaxTaxIncluded;
+
+    /**
+     * @var DecimalNumber
+     */
+    private $wholesalePrice;
+
     public function __construct(
-        DecimalNumber $ecoTax,
         DecimalNumber $impactOnPrice,
         DecimalNumber $impactOnPriceTaxIncluded,
         DecimalNumber $impactOnUnitPrice,
+        DecimalNumber $impactOnUnitPriceTaxIncluded,
+        DecimalNumber $ecotax,
+        DecimalNumber $ecotaxTaxIncluded,
         DecimalNumber $wholesalePrice
     ) {
-        $this->ecoTax = $ecoTax;
         $this->impactOnPrice = $impactOnPrice;
         $this->impactOnPriceTaxIncluded = $impactOnPriceTaxIncluded;
         $this->impactOnUnitPrice = $impactOnUnitPrice;
+        $this->impactOnUnitPriceTaxIncluded = $impactOnUnitPriceTaxIncluded;
+        $this->ecotax = $ecotax;
+        $this->ecotaxTaxIncluded = $ecotaxTaxIncluded;
         $this->wholesalePrice = $wholesalePrice;
-    }
-
-    /**
-     * @return DecimalNumber
-     */
-    public function getEcoTax(): DecimalNumber
-    {
-        return $this->ecoTax;
     }
 
     /**
@@ -111,6 +110,30 @@ class CombinationPrices
     public function getImpactOnUnitPrice(): DecimalNumber
     {
         return $this->impactOnUnitPrice;
+    }
+
+    /**
+     * @return DecimalNumber
+     */
+    public function getImpactOnUnitPriceTaxIncluded(): DecimalNumber
+    {
+        return $this->impactOnUnitPriceTaxIncluded;
+    }
+
+    /**
+     * @return DecimalNumber
+     */
+    public function getEcotax(): DecimalNumber
+    {
+        return $this->ecotax;
+    }
+
+    /**
+     * @return DecimalNumber
+     */
+    public function getEcotaxTaxIncluded(): DecimalNumber
+    {
+        return $this->ecotaxTaxIncluded;
     }
 
     /**

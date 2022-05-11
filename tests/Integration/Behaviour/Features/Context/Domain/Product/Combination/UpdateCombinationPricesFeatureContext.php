@@ -48,10 +48,12 @@ class UpdateCombinationPricesFeatureContext extends AbstractCombinationFeatureCo
         $dataRows = $tableNode->getRowsHash();
 
         return new CombinationPrices(
-            new DecimalNumber($dataRows['eco tax']),
             new DecimalNumber($dataRows['impact on price']),
             new DecimalNumber($dataRows['impact on price with taxes']),
             new DecimalNUmber($dataRows['impact on unit price']),
+            new DecimalNUmber($dataRows['impact on unit price with taxes']),
+            new DecimalNumber($dataRows['eco tax']),
+            new DecimalNumber($dataRows['eco tax with taxes']),
             new DecimalNUmber($dataRows['wholesale price'])
         );
     }
@@ -81,6 +83,40 @@ class UpdateCombinationPricesFeatureContext extends AbstractCombinationFeatureCo
         $actualPrices = $this->getCombinationForEditing($combinationReference)->getPrices();
 
         Assert::assertTrue(
+            $expectedPrices->getImpactOnPrice()->equals($actualPrices->getImpactOnPrice()),
+            sprintf(
+                'Unexpected combination impact on price. Expected "%s", got "%s"',
+                (string) $expectedPrices->getImpactOnPrice(),
+                (string) $actualPrices->getImpactOnPrice()
+            )
+        );
+        Assert::assertTrue(
+            $expectedPrices->getImpactOnPriceTaxIncluded()->equals($actualPrices->getImpactOnPriceTaxIncluded()),
+            sprintf(
+                'Unexpected combination impact on price with taxes. Expected "%s", got "%s"',
+                (string) $expectedPrices->getImpactOnPriceTaxIncluded(),
+                (string) $actualPrices->getImpactOnPriceTaxIncluded()
+            )
+        );
+
+        Assert::assertTrue(
+            $expectedPrices->getEcotax()->equals($actualPrices->getEcotax()),
+            sprintf(
+                'Unexpected combination eco tax. Expected "%s", got "%s"',
+                (string) $expectedPrices->getEcotax(),
+                (string) $actualPrices->getEcotax()
+            )
+        );
+        Assert::assertTrue(
+            $expectedPrices->getEcotaxTaxIncluded()->equals($actualPrices->getEcotaxTaxIncluded()),
+            sprintf(
+                'Unexpected combination eco tax with taxes. Expected "%s", got "%s"',
+                (string) $expectedPrices->getEcotaxTaxIncluded(),
+                (string) $actualPrices->getEcotaxTaxIncluded()
+            )
+        );
+
+        Assert::assertTrue(
             $expectedPrices->getImpactOnUnitPrice()->equals($actualPrices->getImpactOnUnitPrice()),
             sprintf(
                 'Unexpected combination impact on unit price. Expected "%s", got "%s"',
@@ -89,21 +125,14 @@ class UpdateCombinationPricesFeatureContext extends AbstractCombinationFeatureCo
             )
         );
         Assert::assertTrue(
-            $expectedPrices->getEcoTax()->equals($actualPrices->getEcoTax()),
+            $expectedPrices->getImpactOnPriceTaxIncluded()->equals($actualPrices->getImpactOnPriceTaxIncluded()),
             sprintf(
-                'Unexpected combination eco tax. Expected "%s", got "%s"',
-                (string) $expectedPrices->getEcoTax(),
-                (string) $actualPrices->getEcoTax()
+                'Unexpected combination impact on unit price with taxes. Expected "%s", got "%s"',
+                (string) $expectedPrices->getImpactOnPriceTaxIncluded(),
+                (string) $actualPrices->getImpactOnPriceTaxIncluded()
             )
         );
-        Assert::assertTrue(
-            $expectedPrices->getImpactOnPrice()->equals($actualPrices->getImpactOnPrice()),
-            sprintf(
-                'Unexpected combination impact on price. Expected "%s", got "%s"',
-                (string) $expectedPrices->getImpactOnPrice(),
-                (string) $actualPrices->getImpactOnPrice()
-            )
-        );
+
         Assert::assertTrue(
             $expectedPrices->getWholesalePrice()->equals($actualPrices->getWholesalePrice()),
             sprintf(
