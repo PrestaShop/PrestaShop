@@ -29,6 +29,10 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
 use Currency;
+use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
@@ -53,20 +57,42 @@ class CombinationPriceImpactType extends TranslatorAwareType
     private $weightUnit;
 
     /**
-     * @param TranslatorInterface $translator
-     * @param array $locales
-     * @param Currency $defaultCurrency
-     * @param string $weightUnit
+     * @var bool
      */
+    private $isEcotaxEnabled;
+
+    /**
+     * @var int
+     */
+    private $ecoTaxGroupId;
+
+    /**
+     * @var TaxComputer
+     */
+    private $taxComputer;
+
+    /**
+     * @var int
+     */
+    private $contextCountryId;
+
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         Currency $defaultCurrency,
-        string $weightUnit
+        string $weightUnit,
+        bool $isEcotaxEnabled,
+        int $ecoTaxGroupId,
+        TaxComputer $taxComputer,
+        int $contextCountryId
     ) {
         parent::__construct($translator, $locales);
         $this->defaultCurrency = $defaultCurrency;
         $this->weightUnit = $weightUnit;
+        $this->isEcotaxEnabled = $isEcotaxEnabled;
+        $this->ecoTaxGroupId = $ecoTaxGroupId;
+        $this->taxComputer = $taxComputer;
+        $this->contextCountryId = $contextCountryId;
     }
 
     /**
@@ -97,6 +123,49 @@ class CombinationPriceImpactType extends TranslatorAwareType
                 ],
                 'column_breaker' => true,
             ])
+        ;
+
+        if ($this->isEcotaxEnabled) {
+            $ecotaxRate = $this->taxComputer->getTaxRate(new TaxRulesGroupId($this->ecoTaxGroupId), new CountryId($this->contextCountryId));
+            $ecoTaxPercent = $ecotaxRate->times(new DecimalNumber('100'));
+
+            $builder
+                ->add('ecotax_tax_excluded', MoneyType::class, [
+                    'label' => $this->trans('Ecotax (tax excl.)', 'Admin.Catalog.Feature'),
+                    'constraints' => [
+                        new NotBlank(),
+                        new Type(['type' => 'float']),
+                        new PositiveOrZero(),
+                    ],
+                    'modify_all_shops' => true,
+                    'attr' => [
+                        'data-tax-rate' => (string) $ecoTaxPercent,
+                    ],
+                    'row_attr' => [
+                        'class' => 'ecotax-tax-excluded',
+                    ],
+                ])
+                ->add('ecotax_tax_included', MoneyType::class, [
+                    'label' => $this->trans('Ecotax (tax incl.)', 'Admin.Catalog.Feature'),
+                    'help' => $this->trans('Ecotax rate %rate%%', 'Admin.Catalog.Feature', ['%rate%' => $ecoTaxPercent->round(2)]),
+                    'constraints' => [
+                        new NotBlank(),
+                        new Type(['type' => 'float']),
+                        new PositiveOrZero(),
+                    ],
+                    'modify_all_shops' => true,
+                    'attr' => [
+                        'data-tax-rate' => (string) $ecoTaxPercent,
+                    ],
+                    'row_attr' => [
+                        'class' => 'ecotax-tax-included',
+                    ],
+                    'column_breaker' => true,
+                ])
+            ;
+        }
+
+        $builder
             ->add('final_price_tax_excluded', TextPreviewType::class, [
                 'required' => false,
                 'label' => $this->trans('Final retail price (tax excl.)', 'Admin.Catalog.Feature'),
@@ -112,7 +181,7 @@ class CombinationPriceImpactType extends TranslatorAwareType
                 ],
                 'column_breaker' => true,
             ])
-            ->add('unit_price', MoneyType::class, [
+            ->add('unit_price_tax_excluded', MoneyType::class, [
                 'required' => false,
                 'label' => $this->trans('Impact on price per unit (tax excl.)', 'Admin.Catalog.Feature'),
                 'label_help_box' => $this->trans('If the price per unit of this combination is different from the initial price per unit, enter the value of the impact (negative or positive).', 'Admin.Catalog.Feature'),
@@ -133,17 +202,7 @@ class CombinationPriceImpactType extends TranslatorAwareType
                     new NotBlank(),
                     new Type(['type' => 'float']),
                 ],
-            ])
-            ->add('wholesale_price', MoneyType::class, [
-                'required' => false,
-                'label' => $this->trans('Cost price (tax excl.)', 'Admin.Catalog.Feature'),
-                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
-                'currency' => $this->defaultCurrency->iso_code,
-                'constraints' => [
-                    new NotBlank(),
-                    new Type(['type' => 'float']),
-                    new PositiveOrZero(),
-                ],
+                'column_breaker' => true,
             ])
             ->add('weight', NumberType::class, [
                 'required' => false,
@@ -158,6 +217,19 @@ class CombinationPriceImpactType extends TranslatorAwareType
                             'Admin.Notifications.Error'
                         ),
                     ]),
+                    new PositiveOrZero(),
+                ],
+                'column_breaker' => true,
+            ])
+            ->add('wholesale_price', MoneyType::class, [
+                'required' => false,
+                'label' => $this->trans('Cost price (tax excl.)', 'Admin.Catalog.Feature'),
+                'label_tag_name' => 'h3',
+                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
+                'currency' => $this->defaultCurrency->iso_code,
+                'constraints' => [
+                    new NotBlank(),
+                    new Type(['type' => 'float']),
                     new PositiveOrZero(),
                 ],
             ])
