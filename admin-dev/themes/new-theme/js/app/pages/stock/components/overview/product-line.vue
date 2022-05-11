@@ -24,7 +24,7 @@
  *-->
 <template>
   <tr :class="{'low-stock':lowStock}">
-    <td data-role="product_id">
+    <td data-role="product-id">
       <div class="d-flex align-items-left">
         <PSCheckbox
           :id="id"
@@ -39,7 +39,7 @@
         </p>
       </div>
     </td>
-    <td data-role="product_name">
+    <td data-role="product-name">
       <div class="d-flex align-items-center">
         <PSMedia
           class="d-flex align-items-center ml-2"
@@ -57,13 +57,13 @@
     <td data-role="product-reference">
       {{ reference }}
     </td>
-    <td data-role="product_supplier_name">
+    <td data-role="product-supplier-name">
       {{ product.supplier_name }}
     </td>
     <td
       v-if="product.active"
       class="text-sm-center"
-      data-role="product_active"
+      data-role="product-active"
     >
       <i class="material-icons enable">check</i>
     </td>
@@ -76,7 +76,7 @@
     <td
       class="text-sm-center"
       :class="{'stock-warning':lowStock}"
-      data-role="physical_quantity"
+      data-role="physical-quantity"
     >
       {{ physical }}
       <span
@@ -91,14 +91,14 @@
     <td
       class="text-sm-center"
       :class="{'stock-warning':lowStock}"
-      data-role="reserved_quantity"
+      data-role="reserved-quantity"
     >
       {{ product.product_reserved_quantity }}
     </td>
     <td
       class="text-sm-center"
       :class="{'stock-warning':lowStock}"
-      data-role="available_quantity"
+      data-role="available-quantity"
     >
       {{ product.product_available_quantity }}
       <span
@@ -118,7 +118,7 @@
         :title="lowStockLevel"
       >!</span>
     </td>
-    <td class="qty-spinner text-right" data-role="update_quantity">
+    <td class="qty-spinner text-right" data-role="update-quantity">
       <Spinner
         :product="product"
         @updateProductQty="updateProductQty"
