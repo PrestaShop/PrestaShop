@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\AddSpecificP
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\EditSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\InitialPrice;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 
 class SpecificPriceFormDataHandler implements FormDataHandlerInterface
@@ -52,15 +53,15 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
 
     public function create(array $data): int
     {
-        $fixedPrice = isset($data['impact']['fixed_price_tax_excluded']) && !InitialPrice::isInitialPriceValue($data['impact']['fixed_price_tax_excluded']) ?
+        $fixedPrice = isset($data['impact']['fixed_price_tax_excluded']) && !InitialPrice::isInitialPriceValue((string) $data['impact']['fixed_price_tax_excluded']) ?
             (string) $data['impact']['fixed_price_tax_excluded'] :
             InitialPrice::INITIAL_PRICE_VALUE
         ;
 
         $command = new AddSpecificPriceCommand(
             (int) $data['product_id'],
-            $data['impact']['reduction']['type'],
-            (string) $data['impact']['reduction']['value'],
+            $data['impact']['reduction']['type'] ?? Reduction::TYPE_AMOUNT,
+            (string) ($data['impact']['reduction']['value'] ?? 0),
             (bool) $data['impact']['reduction']['include_tax'],
             $fixedPrice,
             (int) $data['from_quantity'],
