@@ -221,7 +221,7 @@ class HelperListBridge
                 $helperListConfiguration->listsql .= ($helperListConfiguration->isJoinLanguageTableAuto ? 'b.*,' : '') . ' a.*';
             }
 
-            $helperListConfiguration->listsql .= "\n" . ', ' . rtrim($helperListConfiguration->select, ', ') . $select_shop;
+            $helperListConfiguration->listsql .= "\n" . (!empty($helperListConfiguration->select) ? ', ' . rtrim($helperListConfiguration->select, ', ') : '') . $select_shop;
 
             $limitClause = ' ' . (($shouldLimitSqlResults) ? ' LIMIT ' . (int) $start . ', ' . (int) $limit : '');
 

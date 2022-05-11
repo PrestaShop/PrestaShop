@@ -37,9 +37,9 @@ use PrestaShopBundle\Bridge\AdminController\Action\ListBulkAction;
 use PrestaShopBundle\Bridge\AdminController\Action\ListHeaderToolbarAction;
 use PrestaShopBundle\Bridge\AdminController\Action\ListRowAction;
 use PrestaShopBundle\Bridge\AdminController\AdminControllerTrait;
-use PrestaShopBundle\Bridge\AdminController\LegacyControllerBridgeInterface;
 use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 use PrestaShopBundle\Bridge\AdminController\Field\Field;
+use PrestaShopBundle\Bridge\AdminController\LegacyControllerBridgeInterface;
 use PrestaShopBundle\Bridge\AdminController\LegacyListControllerBridgeInterface;
 use PrestaShopBundle\Bridge\Helper\HelperListConfiguration;
 use PrestaShopBundle\Bridge\Helper\HelperListCustomizer\HelperListFeatureBridge;
@@ -53,7 +53,7 @@ use Tools;
 /**
  * Controller responsible for "Sell > Catalog > Attributes & Features > Features" page
  */
-class FeatureLegacyController extends FrameworkBundleAdminController implements LegacyControllerBridgeInterface, LegacyListControllerBridgeInterface
+class FeatureController extends FrameworkBundleAdminController implements LegacyControllerBridgeInterface, LegacyListControllerBridgeInterface
 {
     use AdminControllerTrait;
     use SmartyTrait;
@@ -71,7 +71,7 @@ class FeatureLegacyController extends FrameworkBundleAdminController implements 
     public $controllerConfiguration;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getTable(): string
     {
@@ -79,7 +79,7 @@ class FeatureLegacyController extends FrameworkBundleAdminController implements 
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getClassName(): string
     {
@@ -87,7 +87,7 @@ class FeatureLegacyController extends FrameworkBundleAdminController implements 
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getIdentifier(): string
     {
@@ -95,7 +95,7 @@ class FeatureLegacyController extends FrameworkBundleAdminController implements 
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getPositionIdentifier(): string
     {

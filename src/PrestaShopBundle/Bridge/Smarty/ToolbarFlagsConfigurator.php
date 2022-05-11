@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Bridge\Smarty;
 
-use Cookie;
 use Language;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
