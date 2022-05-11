@@ -27,6 +27,7 @@ import ProductMap from '@pages/product/product-map';
 import ProductEvents from '@pages/product/product-event-map';
 import {EventEmitter} from 'events';
 import PaginatedCombinationsService from '@pages/product/services/paginated-combinations-service';
+import DynamicPaginator from '@components/pagination/dynamic-paginator';
 
 const CombinationMap = ProductMap.combinations;
 const CombinationEvents = ProductEvents.combinations;
@@ -46,16 +47,21 @@ export default class BulkChoicesSelector {
 
   private paginatedCombinationsCount: number;
 
+  paginator: DynamicPaginator;
+
   constructor(
     eventEmitter: EventEmitter,
     tabContainer: HTMLDivElement,
     paginatedCombinationsService: PaginatedCombinationsService,
+    paginator: DynamicPaginator,
   ) {
     this.eventEmitter = eventEmitter;
     this.tabContainer = tabContainer;
     this.paginatedCombinationsService = paginatedCombinationsService;
     this.allCombinationsCount = 0;
     this.paginatedCombinationsCount = 0;
+    this.paginator = paginator;
+
     this.init();
   }
 
@@ -223,14 +229,7 @@ export default class BulkChoicesSelector {
   }
 
   private async refreshSelectableCombinationsCount(): Promise<void> {
-    //@todo: endpoint could return count to make it more performant (especially when selecting across all pages)
-    await this.paginatedCombinationsService.getCombinationIds().then((combinationIds) => {
-      this.allCombinationsCount = combinationIds.length;
-    });
-
-    const selectableCheckboxes = this.tabContainer
-      .querySelectorAll<HTMLInputElement>(`${CombinationMap.tableRow.isSelectedCombination}`);
-
-    this.paginatedCombinationsCount = selectableCheckboxes.length;
+    this.allCombinationsCount = this.paginator.getTotal();
+    this.paginatedCombinationsCount = this.paginator.getTotalInPage();
   }
 }

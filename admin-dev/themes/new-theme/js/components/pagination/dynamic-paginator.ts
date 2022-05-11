@@ -88,6 +88,10 @@ export default class DynamicPaginator {
 
   private pagesCount: number;
 
+  private total: number;
+
+  private totalInPage: number;
+
   /**
    * @param {String} containerSelector
    * @param {Object} paginationService
@@ -108,6 +112,8 @@ export default class DynamicPaginator {
     this.selectorsMap = {};
     this.setSelectorsMap(selectorsMap);
     this.pagesCount = 0;
+    this.total = 0;
+    this.totalInPage = 0;
     this.init();
     this.currentPage = startingPage;
     if (startingPage > 0) {
@@ -132,6 +138,8 @@ export default class DynamicPaginator {
     this.countPages(<number>data.total);
     this.refreshButtonsData(page);
     this.refreshInfoLabel(page, <number>data.total);
+    this.total = data.total;
+    this.setTotalInPage(page, limit, data.total);
 
     this.toggleTargetAvailability(this.selectorsMap.firstPageItem, page > 1);
     this.toggleTargetAvailability(this.selectorsMap.previousPageItem, page > 1);
@@ -156,6 +164,14 @@ export default class DynamicPaginator {
 
   getPagesCount(): number {
     return this.pagesCount;
+  }
+
+  getTotal(): number {
+    return this.total;
+  }
+
+  getTotalInPage(): number {
+    return this.totalInPage;
   }
 
   /**
@@ -226,12 +242,10 @@ export default class DynamicPaginator {
       this.selectorsMap.paginationInfoLabel,
     );
     const limit = this.getLimit();
-    const from = page === 1 ? 1 : Math.round((page - 1) * limit);
-    const to = page === this.pagesCount ? total : Math.round(page * limit);
     const modifiedInfoText = infoLabel
       .data('pagination-info')
-      .replace(/%from%/g, from)
-      .replace(/%to%/g, to)
+      .replace(/%from%/g, this.calculateFrom(page, limit))
+      .replace(/%to%/g, this.calculateTo(page, limit, total))
       .replace(/%total%/g, total)
       .replace(/%current_page%/g, page)
       .replace(/%page_count%/g, this.pagesCount);
@@ -324,5 +338,19 @@ export default class DynamicPaginator {
       //override with custom selectors if any provided
       ...selectorsMap,
     };
+  }
+
+  private calculateFrom(page: number, limit: number): number {
+    // increment by 1 because offset, starts from 0, but lowest "from" can be 1
+    return page === 1 ? 1 : Math.round((page - 1) * limit + 1);
+  }
+
+  private calculateTo(page: number, limit:number, total: number) {
+    return page === this.pagesCount ? total : Math.round(page * limit);
+  }
+
+  private setTotalInPage(page: number, limit: number, total: number): void {
+    // increment by 1 to include the first "from" result to total count
+    this.totalInPage = this.calculateTo(page, limit, total) - this.calculateFrom(page, limit) + 1;
   }
 }
