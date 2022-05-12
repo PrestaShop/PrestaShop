@@ -169,18 +169,18 @@ export default class BulkChoicesSelector {
     const selectedCombinationsCount = combinationIds.length;
 
     inputs.forEach((input: HTMLInputElement) => {
-      const labelElement = this.tabContainer.querySelector<HTMLLabelElement>(`label[for=${input.id}]`);
+      const label = this.tabContainer.querySelector<HTMLLabelElement>(`label[for=${input.id}]`);
       const span = this.tabContainer.querySelector<HTMLSpanElement>(`label[for=${input.id}] span`);
 
-      if (!labelElement || !span) {
+      if (!label || !span) {
         // eslint-disable-next-line max-len
         console.error(`Each ${CombinationMap.commonBulkAllSelector} is expected to have a dedicated <label> containing a <span>`);
         return;
       }
 
-      const {label} = labelElement.dataset;
+      let labelText = label.dataset.label;
 
-      if (!label) {
+      if (!labelText) {
         console.error(`Each label for ${CombinationMap.commonBulkAllSelector} is expected to have "data-label" attribute`);
         return;
       }
@@ -194,11 +194,12 @@ export default class BulkChoicesSelector {
       } else if (selectedCombinationsCount) {
         span.classList.toggle('d-none', false);
         combinationsCount = selectedCombinationsCount;
+        labelText = labelText.replace(/%total_combinations%/, String(this.paginator.getTotal()));
       } else {
         span.classList.toggle('d-none', true);
       }
 
-      span.innerHTML = label.replace(/%combinations_number%/, String(combinationsCount));
+      span.innerHTML = labelText.replace(/%combinations_number%/, String(combinationsCount));
     });
   }
 
