@@ -40,4 +40,17 @@ final class DisabledProductGridDefinitionFactory extends AbstractProductGridDefi
     {
         return $this->trans('List of disabled products', [], 'Admin.Catalog.Feature');
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getColumns()
+    {
+        return parent::getColumns()->remove('active');
+    }
+
+    protected function getFilters()
+    {
+        return parent::getFilters()->remove('active');
+    }
 }
