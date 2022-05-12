@@ -405,8 +405,8 @@ class CartControllerCore extends FrontController
                 'The product [1]%product%[/1] is no longer available.',
                 [
                     '%product%' => $product->name . (isset($productAttributes) ? ' ' . $productAttributes : ''),
-                    '[1]' => '<b>',
-                    '[/1]' => '</b>',
+                    '[1]' => '<strong>',
+                    '[/1]' => '</strong>',
                 ],
                 'Shop.Notifications.Error'
             );
@@ -454,8 +454,8 @@ class CartControllerCore extends FrontController
                 'The product [1]%product%[/1] is no longer available in this quantity.',
                 [
                     '%product%' => $product->name . (isset($productAttributes) ? ' ' . $productAttributes : ''),
-                    '[1]' => '<b>',
-                    '[/1]' => '</b>',
+                    '[1]' => '<strong>',
+                    '[/1]' => '</strong>',
                 ],
                 'Shop.Notifications.Error'
             );
@@ -471,8 +471,8 @@ class CartControllerCore extends FrontController
                     [
                         '%product%' => $product->name,
                         '%quantity%' => $product->minimal_quantity,
-                        '[1]' => '<b>',
-                        '[/1]' => '</b>',
+                        '[1]' => '<strong>',
+                        '[/1]' => '</strong>',
                     ],
                     'Shop.Notifications.Error'
                 );
@@ -487,8 +487,8 @@ class CartControllerCore extends FrontController
                     [
                         '%product%' => $product->name . (isset($productAttributes) ? ' ' . $productAttributes : ''),
                         '%quantity%' => $combination->minimal_quantity,
-                        '[1]' => '<b>',
-                        '[/1]' => '</b>',
+                        '[1]' => '<strong>',
+                        '[/1]' => '</strong>',
                     ],
                     'Shop.Notifications.Error'
                 );
@@ -546,8 +546,8 @@ class CartControllerCore extends FrontController
                     'You already have the maximum quantity available for the product [1]%product%[/1].',
                     [
                         '%product%' => $product->name . (isset($productAttributes) ? ' ' . $productAttributes : ''),
-                        '[1]' => '<b>',
-                        '[/1]' => '</b>',
+                        '[1]' => '<strong>',
+                        '[/1]' => '</strong>',
                     ],
                     'Shop.Notifications.Error'
                 );
@@ -557,8 +557,8 @@ class CartControllerCore extends FrontController
                     'The product [1]%product%[/1] is no longer available in this quantity.',
                     [
                         '%product%' => $product->name . (isset($productAttributes) ? ' ' . $productAttributes : ''),
-                        '[1]' => '<b>',
-                        '[/1]' => '</b>',
+                        '[1]' => '<strong>',
+                        '[/1]' => '</strong>',
                     ],
                     'Shop.Notifications.Error'
                 );
@@ -661,8 +661,8 @@ class CartControllerCore extends FrontController
                    'The product [1]%product%[/1] in your cart is now a product with attributes. Please delete it and choose one of its combinations to proceed with your order.',
                     [
                         '%product%' => $product['name'],
-                        '[1]' => '<b>',
-                        '[/1]' => '</b>',
+                        '[1]' => '<strong>',
+                        '[/1]' => '</strong>',
                     ],
                     'Shop.Notifications.Error'
                 );
@@ -680,8 +680,8 @@ class CartControllerCore extends FrontController
                 'The product [1]%product%[/1] in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.',
                 [
                     '%product%' => $product['name'] . (isset($product['attributes']) ? ' ' . $product['attributes'] : ''),
-                    '[1]' => '<b>',
-                    '[/1]' => '</b>',
+                    '[1]' => '<strong>',
+                    '[/1]' => '</strong>',
                 ],
                 'Shop.Notifications.Error'
             );
@@ -691,8 +691,8 @@ class CartControllerCore extends FrontController
             'The product [1]%product%[/1] is no longer available.',
             [
                 '%product%' => $product['name'] . (isset($product['attributes']) ? ' ' . $product['attributes'] : ''),
-                '[1]' => '<b>',
-                '[/1]' => '</b>',
+                '[1]' => '<strong>',
+                '[/1]' => '</strong>',
             ],
             'Shop.Notifications.Error'
         );
@@ -713,8 +713,8 @@ class CartControllerCore extends FrontController
                     [
                         '%product%' => $product['name'] . (isset($product['attributes']) ? ' ' . $product['attributes'] : ''),
                         '%quantity%' => $product['minimal_quantity'],
-                        '[1]' => '<b>',
-                        '[/1]' => '</b>',
+                        '[1]' => '<strong>',
+                        '[/1]' => '</strong>',
                     ],
                     'Shop.Notifications.Error'
                 );
