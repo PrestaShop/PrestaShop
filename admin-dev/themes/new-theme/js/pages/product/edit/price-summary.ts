@@ -97,10 +97,19 @@ export default class PriceSummary {
   }
 
   private updateSummary(): void {
-    this.updateField(this.priceTaxExcluded, this.getLabelWithPrice(this.priceTaxExcludedLabel, 'price.priceTaxExcluded'));
-    this.updateField(this.priceTaxIncluded, this.getLabelWithPrice(this.priceTaxIncludedLabel, 'price.priceTaxIncluded'));
-    this.updateField(this.wholesalePrice, this.getLabelWithPrice(this.wholesalePriceLabel, 'price.wholesalePrice'));
+    this.updateField(this.priceTaxIncluded, this.fillLabelWithPrice(this.priceTaxIncludedLabel, 'price.priceTaxIncluded'));
+    this.updateField(this.wholesalePrice, this.fillLabelWithPrice(this.wholesalePriceLabel, 'price.wholesalePrice'));
 
+    // Final price tax excluded is composed with price tax excluded and ecotax part
+    const priceTaxExcluded: BigNumber = this.productFormModel.getBigNumber('price.priceTaxExcluded') ?? new BigNumber(0);
+    const ecotaxTaxExcluded: BigNumber = this.productFormModel.getBigNumber('price.ecotaxTaxExcluded') ?? new BigNumber(0);
+    const finalPriceTaxExcluded: BigNumber = priceTaxExcluded.plus(ecotaxTaxExcluded);
+    this.updateField(
+      this.priceTaxExcluded,
+      this.priceTaxExcludedLabel.replace('%price%', this.productFormModel.displayPrice(finalPriceTaxExcluded)),
+    );
+
+    // Compute margin based on wholesale price
     const wholesalePrice = this.productFormModel.getBigNumber('price.wholesalePrice') ?? new BigNumber(0);
     const price:BigNumber = this.productFormModel.getBigNumber('price.priceTaxExcluded') ?? new BigNumber(0);
     const margin:BigNumber = price.minus(wholesalePrice);
@@ -114,7 +123,7 @@ export default class PriceSummary {
     const {unity} = this.productFormModel.getProduct().price;
 
     if (unity !== '' && !unitPrice.isZero()) {
-      const unitPriceLabel = this.getLabelWithPrice(this.unitPriceLabel, 'price.unitPriceTaxExcluded');
+      const unitPriceLabel = this.fillLabelWithPrice(this.unitPriceLabel, 'price.unitPriceTaxExcluded');
       this.updateField(this.unitPrice, unitPriceLabel.replace('%unity%', unity));
       this.unitPrice?.classList.remove('d-none');
     } else {
@@ -131,7 +140,7 @@ export default class PriceSummary {
     summaryField.innerHTML = content;
   }
 
-  private getLabelWithPrice(label: string, priceModelKey: string): string {
+  private fillLabelWithPrice(label: string, priceModelKey: string): string {
     const price: BigNumber = this.productFormModel.getBigNumber(priceModelKey) ?? new BigNumber(0);
 
     return label.replace('%price%', this.productFormModel.displayPrice(price));

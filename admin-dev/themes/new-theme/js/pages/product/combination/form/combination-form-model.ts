@@ -179,8 +179,13 @@ export default class CombinationFormModel {
     const combinationEcotaxTaxExcluded: BigNumber = this.getEcotaxTaxExcluded();
     const combinationEcotaxTaxIncluded = combinationEcotaxTaxExcluded.times(ecotaxRatio);
 
-    const finalPriceTaxExcluded: BigNumber = productPriceTaxExcluded.plus(impactTaxExcluded);
-    const finalPriceTaxIncluded: BigNumber = finalPriceTaxExcluded.times(taxRatio).plus(combinationEcotaxTaxIncluded);
+    // Combination price it the initial product price plus the impact from combination
+    const combinationPriceTaxExcluded = productPriceTaxExcluded.plus(impactTaxExcluded);
+
+    // Final display price (without) taxes also includes the ecotax (without taxes)
+    const finalPriceTaxExcluded: BigNumber = combinationPriceTaxExcluded.plus(combinationEcotaxTaxExcluded);
+    // Final display price is the combination price (with taxes) plus the ecotax (with its own tax)
+    const finalPriceTaxIncluded: BigNumber = combinationPriceTaxExcluded.times(taxRatio).plus(combinationEcotaxTaxIncluded);
     this.mapper.set('price.finalPriceTaxExcluded', finalPriceTaxExcluded.toFixed(this.precision));
     this.mapper.set('price.finalPriceTaxIncluded', finalPriceTaxIncluded.toFixed(this.precision));
 
