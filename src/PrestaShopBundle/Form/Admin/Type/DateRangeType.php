@@ -110,7 +110,7 @@ class DateRangeType extends AbstractType
         $form = $event->getForm();
         if (DateTimeUtil::isNull($data['to'] ?? null)) {
             $data['unlimited'] = true;
-            $data['to'] = DateTimeUtil::NULL_DATETIME;
+            $data['to'] = null;
             $event->setData($data);
 
             // Force disable state on end date field only on first rendering not submit
