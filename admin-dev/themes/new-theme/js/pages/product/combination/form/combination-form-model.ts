@@ -64,10 +64,10 @@ export default class CombinationFormModel {
     const pricesFields = [
       'impact.priceTaxExcluded',
       'impact.priceTaxIncluded',
-      'impact.ecotaxTaxExcluded',
-      'impact.ecotaxTaxIncluded',
       'impact.unitPriceTaxExcluded',
       'impact.unitPriceTaxIncluded',
+      'price.ecotaxTaxExcluded',
+      'price.ecotaxTaxIncluded',
     ];
     this.mapper.watch(pricesFields, (event: FormUpdateEvent) => this.updateCombinationPrices(event));
     this.updateFinalPrices();
@@ -101,50 +101,51 @@ export default class CombinationFormModel {
       // Regular retail price
       case 'impact.priceTaxIncluded': {
         const priceTaxIncluded = this.mapper.getBigNumber('impact.priceTaxIncluded') ?? new BigNumber(0);
-        const ecotaxTaxIncluded = this.mapper.getBigNumber('impact.ecotaxTaxIncluded') ?? new BigNumber(0);
-        this.mapper.set('impact.priceTaxExcluded', this.removeTax(priceTaxIncluded.minus(ecotaxTaxIncluded)));
+        this.mapper.set('impact.priceTaxExcluded', priceTaxIncluded.dividedBy(taxRatio).toFixed(this.precision));
         break;
       }
       case 'impact.priceTaxExcluded': {
         const priceTaxExcluded = this.mapper.getBigNumber('impact.priceTaxExcluded') ?? new BigNumber(0);
-        const ecotaxTaxIncluded = this.mapper.getBigNumber('impact.ecotaxTaxIncluded') ?? new BigNumber(0);
-        this.mapper.set(
-          'impact.priceTaxIncluded',
-          priceTaxExcluded.times(taxRatio).plus(ecotaxTaxIncluded).toFixed(this.precision),
-        );
+        this.mapper.set('impact.priceTaxIncluded', priceTaxExcluded.times(taxRatio).toFixed(this.precision));
         break;
       }
 
       // Ecotax values
-      case 'impact.ecotaxTaxIncluded': {
-        // Only this update is needed here, the rest will be updated via the trigger for impact.ecotaxTaxExcluded
+      case 'price.ecotaxTaxIncluded': {
+        // Only this update is needed here, the rest will be updated via the trigger for price.ecotaxTaxExcluded
         const ecoTaxRatio = this.getEcoTaxRatio();
-        const ecotaxTaxIncluded = this.mapper.getBigNumber('impact.ecotaxTaxIncluded') ?? new BigNumber(0);
-        this.mapper.set(
-          'impact.ecotaxTaxExcluded',
-          ecotaxTaxIncluded.dividedBy(ecoTaxRatio).toFixed(this.precision),
-        );
+        const combinationEcotaxTaxIncluded = this.mapper.getBigNumber('price.ecotaxTaxIncluded') ?? new BigNumber(0);
+        this.mapper.set('price.ecotaxTaxExcluded', combinationEcotaxTaxIncluded.dividedBy(ecoTaxRatio).toFixed(this.precision));
+
         break;
       }
-      case 'impact.ecotaxTaxExcluded': {
+      case 'price.ecotaxTaxExcluded': {
+        // We first update the impact price before the final price is updated because it is important in the computing
+        // since updateFinalPrices is called after eahc input update it would be triggered too soon if we start by updating
+        // price.ecotaxTaxIncluded
         const ecoTaxRatio = this.getEcoTaxRatio();
-        const priceTaxIncluded = this.mapper.getBigNumber('impact.priceTaxIncluded') ?? new BigNumber(0);
-        const ecotaxTaxExcluded = this.mapper.getBigNumber('impact.ecotaxTaxExcluded') ?? new BigNumber(0);
-        const newEcotaxTaxIncluded = ecotaxTaxExcluded.times(ecoTaxRatio);
-        this.mapper.set('impact.ecotaxTaxIncluded', newEcotaxTaxIncluded.toFixed(this.precision));
-        this.mapper.set('impact.priceTaxExcluded', this.removeTax(priceTaxIncluded.minus(newEcotaxTaxIncluded)));
+        const combinationEcotaxTaxExcluded = this.mapper.getBigNumber('price.ecotaxTaxExcluded') ?? new BigNumber(0);
+        const combinationEcotaxTaxIncluded = combinationEcotaxTaxExcluded.times(ecoTaxRatio);
+
+        // We use this method which returns the product ecotax in case the combination one is not defined
+        const ecotaxTaxIncluded = this.getEcotaxTaxIncluded(combinationEcotaxTaxIncluded);
+        this.updateImpactForEcotax(ecotaxTaxIncluded);
+
+        // Finally, we can update the price.ecotaxTaxIncluded
+        this.mapper.set('price.ecotaxTaxIncluded', combinationEcotaxTaxIncluded.toFixed(this.precision));
+
         break;
       }
 
       // Unit price
       case 'impact.unitPriceTaxIncluded': {
         const unitPriceTaxIncluded = this.mapper.getBigNumber('impact.unitPriceTaxIncluded') ?? new BigNumber(0);
-        this.mapper.set('impact.unitPriceTaxExcluded', this.removeTax(unitPriceTaxIncluded));
+        this.mapper.set('impact.unitPriceTaxExcluded', unitPriceTaxIncluded.dividedBy(taxRatio).toFixed(this.precision));
         break;
       }
       case 'impact.unitPriceTaxExcluded': {
         const unitPriceTaxExcluded = this.mapper.getBigNumber('impact.unitPriceTaxExcluded') ?? new BigNumber(0);
-        this.mapper.set('impact.unitPriceTaxIncluded', this.addTax(unitPriceTaxExcluded));
+        this.mapper.set('impact.unitPriceTaxIncluded', unitPriceTaxExcluded.times(taxRatio).toFixed(this.precision));
         break;
       }
     }
@@ -152,23 +153,69 @@ export default class CombinationFormModel {
     this.updateFinalPrices();
   }
 
+  /**
+   * We compute the value impact price (with taxes) is supposed to have so that the current final price is not modified despite the change of ecotax
+   */
+  private updateImpactForEcotax(ecotaxTaxIncluded: BigNumber): void {
+    const taxRatio: BigNumber = this.getTaxRatio();
+    const currentFinalPriceTaxIncluded = this.mapper.getBigNumber('price.finalPriceTaxIncluded') ?? new BigNumber(0);
+    const productPriceTaxExcluded: BigNumber = this.mapper.getBigNumber('product.priceTaxExcluded') ?? new BigNumber(0);
+    const productPriceTaxIncluded: BigNumber = productPriceTaxExcluded.times(taxRatio);
+
+    const impactPriceTaxIncluded: BigNumber = currentFinalPriceTaxIncluded
+      .minus(ecotaxTaxIncluded)
+      .minus(productPriceTaxIncluded);
+
+    // Finally update the impact on price (without taxes)
+    this.mapper.set('impact.priceTaxExcluded', impactPriceTaxIncluded.dividedBy(taxRatio).toFixed(this.precision));
+  }
+
   private updateFinalPrices(): void {
     const taxRatio: BigNumber = this.getTaxRatio();
-    const productPriceTaxExcluded: BigNumber = this.mapper.getBigNumber('product.priceTaxExcluded') ?? new BigNumber(0);
-    const combinationImpactTaxExcluded: BigNumber = this.mapper.getBigNumber('impact.priceTaxExcluded') ?? new BigNumber(0);
-    const finalPriceTaxExcluded: BigNumber = productPriceTaxExcluded.plus(combinationImpactTaxExcluded);
-    const finalPriceTaxIncluded: BigNumber = finalPriceTaxExcluded.times(taxRatio);
+    const ecotaxRatio = this.getEcoTaxRatio();
 
-    const $finalPriceTaxExcluded = this.mapper.getInputsFor('price.finalPriceTaxExcluded')?.siblings('.final-price-preview');
-    const $finalPriceTaxIncluded = this.mapper.getInputsFor('price.finalPriceTaxIncluded')?.siblings('.final-price-preview');
+    const productPriceTaxExcluded: BigNumber = this.mapper.getBigNumber('product.priceTaxExcluded') ?? new BigNumber(0);
+    const impactTaxExcluded: BigNumber = this.mapper.getBigNumber('impact.priceTaxExcluded') ?? new BigNumber(0);
+    const combinationEcotaxTaxExcluded: BigNumber = this.getEcotaxTaxExcluded();
+    const combinationEcotaxTaxIncluded = combinationEcotaxTaxExcluded.times(ecotaxRatio);
+
+    const finalPriceTaxExcluded: BigNumber = productPriceTaxExcluded.plus(impactTaxExcluded);
+    const finalPriceTaxIncluded: BigNumber = finalPriceTaxExcluded.times(taxRatio).plus(combinationEcotaxTaxIncluded);
+    this.mapper.set('price.finalPriceTaxExcluded', finalPriceTaxExcluded.toFixed(this.precision));
+    this.mapper.set('price.finalPriceTaxIncluded', finalPriceTaxIncluded.toFixed(this.precision));
+
+    const $finalPriceTaxExcluded = this.mapper.getInputsFor('price.finalPriceTaxExcluded');
+    const $finalPriceTaxIncluded = this.mapper.getInputsFor('price.finalPriceTaxIncluded');
 
     if ($finalPriceTaxExcluded) {
-      $finalPriceTaxExcluded.text(this.displayPrice(finalPriceTaxExcluded));
+      $finalPriceTaxExcluded.siblings('.final-price-preview').text(this.displayPrice(finalPriceTaxExcluded));
     }
 
     if ($finalPriceTaxIncluded) {
-      $finalPriceTaxIncluded.text(this.displayPrice(finalPriceTaxIncluded));
+      $finalPriceTaxIncluded.siblings('.final-price-preview').text(this.displayPrice(finalPriceTaxIncluded));
     }
+  }
+
+  private getEcotaxTaxExcluded(): BigNumber {
+    const combinationEcotaxTaxExcluded: BigNumber = this.mapper.getBigNumber('price.ecotaxTaxExcluded') ?? new BigNumber(0);
+
+    // If no ecotax is defined for combination we use the one from product for computing
+    if (combinationEcotaxTaxExcluded.isNegative() || combinationEcotaxTaxExcluded.isZero()) {
+      return this.mapper.getBigNumber('product.ecotaxTaxExcluded') ?? new BigNumber(0);
+    }
+
+    return combinationEcotaxTaxExcluded;
+  }
+
+  private getEcotaxTaxIncluded(combinationEcotaxTaxIncluded: BigNumber): BigNumber {
+    if (!combinationEcotaxTaxIncluded.isNegative() && !combinationEcotaxTaxIncluded.isZero()) {
+      return combinationEcotaxTaxIncluded;
+    }
+
+    const ecotaxTaxExcluded = this.mapper.getBigNumber('product.ecotaxTaxExcluded') ?? new BigNumber(0);
+    const ecotaxRatio = this.getEcoTaxRatio();
+
+    return ecotaxTaxExcluded.times(ecotaxRatio);
   }
 
   private getTaxRatio(): BigNumber {
@@ -178,7 +225,7 @@ export default class CombinationFormModel {
   }
 
   private getEcoTaxRatio(): BigNumber {
-    const $ecotaxTaxExcluded = this.mapper.getInputsFor('impact.ecotaxTaxExcluded');
+    const $ecotaxTaxExcluded = this.mapper.getInputsFor('price.ecotaxTaxExcluded');
 
     // If no ecotax field found return 1 this way it has no impact in computing
     if (!$ecotaxTaxExcluded) {
@@ -196,25 +243,5 @@ export default class CombinationFormModel {
     }
 
     return taxRate.plus(1);
-  }
-
-  private removeTax(price: BigNumber): string {
-    const taxRatio = this.getTaxRatio();
-
-    if (taxRatio.isNaN()) {
-      return price.toFixed(this.precision);
-    }
-
-    return price.dividedBy(taxRatio).toFixed(this.precision);
-  }
-
-  private addTax(price: BigNumber): string {
-    const taxRatio = this.getTaxRatio();
-
-    if (taxRatio.isNaN()) {
-      return price.toFixed(this.precision);
-    }
-
-    return price.times(taxRatio).toFixed(this.precision);
   }
 }

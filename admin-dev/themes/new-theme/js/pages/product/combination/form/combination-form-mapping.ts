@@ -26,10 +26,10 @@
 export default {
   'impact.priceTaxExcluded': 'combination_form[price_impact][price_tax_excluded]',
   'impact.priceTaxIncluded': 'combination_form[price_impact][price_tax_included]',
-  'impact.ecotaxTaxExcluded': 'combination_form[price_impact][ecotax_tax_excluded]',
-  'impact.ecotaxTaxIncluded': 'combination_form[price_impact][ecotax_tax_included]',
   'impact.unitPriceTaxExcluded': 'combination_form[price_impact][unit_price_tax_excluded]',
   'impact.unitPriceTaxIncluded': 'combination_form[price_impact][unit_price_tax_included]',
+  'price.ecotaxTaxExcluded': 'combination_form[price_impact][ecotax_tax_excluded]',
+  'price.ecotaxTaxIncluded': 'combination_form[price_impact][ecotax_tax_included]',
   'price.wholesalePrice': 'combination_form[price_impact][wholesale_price]',
   'price.finalPriceTaxExcluded': 'combination_form[price_impact][final_price_tax_excluded]',
   'price.finalPriceTaxIncluded': 'combination_form[price_impact][final_price_tax_included]',
