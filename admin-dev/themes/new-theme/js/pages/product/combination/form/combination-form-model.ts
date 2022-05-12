@@ -28,6 +28,7 @@ import CombinationFormMapping from '@pages/product/combination/form/combination-
 import CombinationEventMap from '@pages/product/combination/form/combination-event-map';
 import {EventEmitter} from 'events';
 import BigNumber from '@node_modules/bignumber.js';
+import {NumberFormatter} from '@app/cldr';
 
 export default class CombinationFormModel {
   private eventEmitter: EventEmitter;
@@ -35,6 +36,8 @@ export default class CombinationFormModel {
   private mapper: ObjectFormMapper;
 
   private precision: number;
+
+  private numberFormatter: NumberFormatter;
 
   constructor($form: JQuery, eventEmitter: EventEmitter) {
     this.eventEmitter = eventEmitter;
@@ -55,6 +58,8 @@ export default class CombinationFormModel {
     const $priceTaxExcludedInput = this.mapper.getInputsFor('impact.priceTaxExcluded');
     // @ts-ignore
     this.precision = $priceTaxExcludedInput.data('displayPricePrecision');
+
+    this.numberFormatter = NumberFormatter.build($priceTaxExcludedInput?.data('priceSpecification'));
 
     const pricesFields = [
       'impact.priceTaxExcluded',
@@ -78,6 +83,10 @@ export default class CombinationFormModel {
 
   set(modelKey: string, value: string | number | string[] | undefined): void {
     this.mapper.set(modelKey, value);
+  }
+
+  displayPrice(price: BigNumber): string {
+    return this.numberFormatter.format(price.toNumber());
   }
 
   private updateCombinationPrices(event: FormUpdateEvent): void {
@@ -154,11 +163,11 @@ export default class CombinationFormModel {
     const $finalPriceTaxIncluded = this.mapper.getInputsFor('price.finalPriceTaxIncluded')?.siblings('.final-price-preview');
 
     if ($finalPriceTaxExcluded) {
-      $finalPriceTaxExcluded.text(finalPriceTaxExcluded.toFixed(2));
+      $finalPriceTaxExcluded.text(this.displayPrice(finalPriceTaxExcluded));
     }
 
     if ($finalPriceTaxIncluded) {
-      $finalPriceTaxIncluded.text(finalPriceTaxIncluded.toFixed(2));
+      $finalPriceTaxIncluded.text(this.displayPrice(finalPriceTaxIncluded));
     }
   }
 

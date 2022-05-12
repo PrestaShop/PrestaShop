@@ -33,6 +33,7 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -77,6 +78,11 @@ class CombinationPriceImpactType extends TranslatorAwareType
      */
     private $contextCountryId;
 
+    /**
+     * @var Locale
+     */
+    private $contextLocale;
+
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
@@ -85,7 +91,8 @@ class CombinationPriceImpactType extends TranslatorAwareType
         bool $isEcotaxEnabled,
         int $ecoTaxGroupId,
         TaxComputer $taxComputer,
-        int $contextCountryId
+        int $contextCountryId,
+        Locale $contextLocale
     ) {
         parent::__construct($translator, $locales);
         $this->defaultCurrency = $defaultCurrency;
@@ -94,6 +101,7 @@ class CombinationPriceImpactType extends TranslatorAwareType
         $this->ecoTaxGroupId = $ecoTaxGroupId;
         $this->taxComputer = $taxComputer;
         $this->contextCountryId = $contextCountryId;
+        $this->contextLocale = $contextLocale;
     }
 
     /**
@@ -106,7 +114,10 @@ class CombinationPriceImpactType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('Impact on price (tax excl.)', 'Admin.Catalog.Feature'),
                 'label_help_box' => $this->trans('If the price of this combination is different from the initial retail price, enter the value of the impact (negative or positive).', 'Admin.Catalog.Help'),
-                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
+                'attr' => [
+                    'data-display-price-precision' => self::PRESTASHOP_DECIMALS,
+                    'data-price-specification' => json_encode($this->contextLocale->getPriceSpecification($this->defaultCurrency->iso_code)->toArray()),
+                ],
                 'currency' => $this->defaultCurrency->iso_code,
                 'constraints' => [
                     new NotBlank(),
