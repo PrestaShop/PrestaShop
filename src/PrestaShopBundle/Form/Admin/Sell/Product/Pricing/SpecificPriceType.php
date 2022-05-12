@@ -97,7 +97,7 @@ class SpecificPriceType extends TranslatorAwareType
                 'required' => false,
             ])
             ->add('customer', EntitySearchInputType::class, [
-                'label' => $this->trans('Search customer', 'Admin.Global'),
+                'label' => $this->trans('All Customers', 'Admin.Global'),
                 'layout' => EntitySearchInputType::LIST_LAYOUT,
                 'entry_type' => SearchedCustomerType::class,
                 'entry_options' => [
@@ -112,7 +112,7 @@ class SpecificPriceType extends TranslatorAwareType
                     return empty($data[0]['id_customer']);
                 },
                 'remote_url' => $this->urlGenerator->generate('admin_customers_search', ['customer_search' => '__QUERY__']),
-                'placeholder' => $this->trans('All Customers', 'Admin.Global'),
+                'placeholder' => $this->trans('Search customer', 'Admin.Global'),
                 'suggestion_field' => 'fullname_and_email',
                 'required' => false,
             ])
