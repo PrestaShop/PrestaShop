@@ -28,11 +28,13 @@ import VueI18n from 'vue-i18n';
 import EventEmitter from '@components/event-emitter';
 import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
 import CombinationModal from '@pages/product/components/combination-modal/CombinationModal.vue';
+import PaginatedCombinationsService from '@pages/product/services/paginated-combinations-service';
 
 Vue.use(VueI18n);
 
 /**
  * @param {string} combinationModalSelector
+ * @param {PaginatedCombinationsService} paginatedCombinationsService
  * @param {int} productId
  * @param {Object} eventEmitter
  *
@@ -40,6 +42,7 @@ Vue.use(VueI18n);
  */
 export default function initCombinationModal(
   combinationModalSelector: string,
+  paginatedCombinationsService: PaginatedCombinationsService,
   productId: number,
   eventEmitter: typeof EventEmitter,
 ): Vue {
@@ -56,10 +59,12 @@ export default function initCombinationModal(
   return new Vue({
     el: combinationModalSelector,
     template:
-      '<combination-modal :productId=productId :emptyImageUrl="emptyImage" :eventEmitter=eventEmitter />',
+    // eslint-disable-next-line max-len
+      '<combination-modal :productId=productId :emptyImageUrl="emptyImage" :eventEmitter=eventEmitter :paginated-combinations-service="paginatedCombinationsService"/>',
     components: {CombinationModal},
     i18n,
     data: {
+      paginatedCombinationsService,
       productId,
       eventEmitter,
       emptyImage,

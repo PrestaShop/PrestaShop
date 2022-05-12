@@ -76,7 +76,6 @@ export default class PaginatedCombinationsService implements PaginationServiceTy
     return $.get(this.router.generate('admin_products_combinations', requestParams));
   }
 
-  //@todo: duplicate from combination-service, except that passes filters
   getCombinationIds(): JQuery.jqXHR<any> {
     return $.get(
       this.router.generate('admin_products_combinations_ids', {productId: this.productId}),

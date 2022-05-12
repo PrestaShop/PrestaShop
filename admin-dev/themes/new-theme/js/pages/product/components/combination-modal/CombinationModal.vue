@@ -138,12 +138,12 @@
 </template>
 
 <script lang="ts">
-  import CombinationsService from '@pages/product/services/combinations-service';
   import ProductMap from '@pages/product/product-map';
   import ProductEventMap from '@pages/product/product-event-map';
   import Modal from '@vue/components/Modal.vue';
   import Router from '@components/router';
   import Vue from 'vue';
+  import PaginatedCombinationsService from '@pages/product/services/paginated-combinations-service';
   import History from './History.vue';
 
   export interface Combination {
@@ -151,7 +151,6 @@
   }
 
   interface CombinationModalStates {
-    combinationsService: null | CombinationsService,
     combinationIds: Array<number>,
     selectedCombinationId: number | null,
     selectedCombinationName: string | null,
@@ -179,7 +178,6 @@
     components: {Modal, History},
     data(): CombinationModalStates {
       return {
-        combinationsService: null,
         combinationIds: [],
         selectedCombinationId: null,
         selectedCombinationName: null,
@@ -198,6 +196,10 @@
       };
     },
     props: {
+      paginatedCombinationsService: {
+        type: PaginatedCombinationsService,
+        required: true,
+      },
       productId: {
         type: Number,
         required: true,
@@ -213,7 +215,6 @@
     },
     mounted() {
       this.combinationList = $(ProductMap.combinations.combinationsFormContainer);
-      this.combinationsService = new CombinationsService();
       this.initCombinationIds();
       this.watchEditButtons();
       this.eventEmitter.on(CombinationEvents.refreshCombinationList, () => this.initCombinationIds(),
@@ -235,7 +236,7 @@
         );
       },
       async initCombinationIds() {
-        this.combinationIds = await this.combinationsService?.getCombinationIds(this.productId);
+        this.combinationIds = await this.paginatedCombinationsService.getCombinationIds();
       },
       frameLoading(): void {
         this.applyIframeStyling();
