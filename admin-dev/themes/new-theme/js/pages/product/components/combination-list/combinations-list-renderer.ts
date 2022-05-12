@@ -183,11 +183,9 @@ export default class CombinationsListRenderer {
    * @private
    */
   private renderCombinations(combinations: Array<Record<string, any>>): void {
-    const $combinationsTable = this.getCombinationsTable();
     const $combinationsTableBody = $(CombinationsMap.combinationsTableBody);
 
     $combinationsTableBody.empty();
-    $combinationsTable.find(CombinationsMap.bulkSelectAllInPage).prop('checked', false);
 
     let rowIndex = 0;
     combinations.forEach((combination: Record<string, any>) => {

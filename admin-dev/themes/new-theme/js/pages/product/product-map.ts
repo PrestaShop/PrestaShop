@@ -159,7 +159,7 @@ export default {
     //@todo: rename? its the checkbox that displays status of bulk selection (if one of options is checked: all or all in page)
     bulkSelectAllDisplay: '#bulk-select-all-display',
     bulkSelectAll: '#bulk-select-all',
-    bulkSelectAllCheckboxes: '.bulk-select-all',
+    commonBulkAllSelector: '.bulk-select-all',
     bulkSelectAllInPage: `#${bulkCombinationSelectAllInPageId}`,
     bulkSelectAllInPageId: bulkCombinationSelectAllInPageId,
     bulkProgressModalId: progressModalId,
