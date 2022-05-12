@@ -128,7 +128,7 @@ class CombinationPriceImpactType extends TranslatorAwareType
 
         if ($this->isEcotaxEnabled) {
             $ecotaxRate = $this->taxComputer->getTaxRate(new TaxRulesGroupId($this->ecoTaxGroupId), new CountryId($this->contextCountryId));
-            $ecoTaxPercent = $ecotaxRate->times(new DecimalNumber('100'));
+            $ecoTaxPercent = $ecotaxRate->times(new DecimalNumber('100'))->round(2);
 
             $builder
                 ->add('ecotax_tax_excluded', MoneyType::class, [
@@ -140,7 +140,7 @@ class CombinationPriceImpactType extends TranslatorAwareType
                     ],
                     'modify_all_shops' => true,
                     'attr' => [
-                        'data-tax-rate' => (string) $ecoTaxPercent,
+                        'data-tax-rate' => (string) $ecotaxRate,
                     ],
                     'row_attr' => [
                         'class' => 'ecotax-tax-excluded',
@@ -148,7 +148,7 @@ class CombinationPriceImpactType extends TranslatorAwareType
                 ])
                 ->add('ecotax_tax_included', MoneyType::class, [
                     'label' => $this->trans('Ecotax (tax incl.)', 'Admin.Catalog.Feature'),
-                    'help' => $this->trans('Ecotax rate %rate%%', 'Admin.Catalog.Feature', ['%rate%' => $ecoTaxPercent->round(2)]),
+                    'help' => $this->trans('Ecotax rate %rate%%', 'Admin.Catalog.Feature', ['%rate%' => $ecoTaxPercent]),
                     'constraints' => [
                         new NotBlank(),
                         new Type(['type' => 'float']),
@@ -156,7 +156,7 @@ class CombinationPriceImpactType extends TranslatorAwareType
                     ],
                     'modify_all_shops' => true,
                     'attr' => [
-                        'data-tax-rate' => (string) $ecoTaxPercent,
+                        'data-tax-rate' => (string) $ecotaxRate,
                     ],
                     'row_attr' => [
                         'class' => 'ecotax-tax-included',
@@ -175,6 +175,7 @@ class CombinationPriceImpactType extends TranslatorAwareType
             ->add('final_price_tax_excluded', TextPreviewType::class, [
                 'required' => false,
                 'label' => $this->trans('Final retail price (tax excl.)', 'Admin.Catalog.Feature'),
+                'preview_class' => 'final-price-preview',
                 'attr' => [
                     'class' => 'final-retail-price final-retail-price-tax-excluded',
                 ],
@@ -182,6 +183,7 @@ class CombinationPriceImpactType extends TranslatorAwareType
             ->add('final_price_tax_included', TextPreviewType::class, [
                 'required' => false,
                 'label' => $this->trans('Final retail price (tax incl.)', 'Admin.Catalog.Feature'),
+                'preview_class' => 'final-price-preview',
                 'attr' => [
                     'class' => 'final-retail-price final-retail-price-tax-included',
                 ],

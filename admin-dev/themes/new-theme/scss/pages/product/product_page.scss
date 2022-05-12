@@ -1783,6 +1783,17 @@ $product-page-padding-bottom: 80px !default;
     cursor: not-allowed;
     opacity: 0.4;
   }
+
+  .final-price-preview {
+    display: block;
+    @include border-radius(0.5rem);
+    font-size: 1rem;
+    font-weight: 700;
+    color: #363a41;
+    background-color: #eaebec;
+    padding: 0.25rem 0.625rem;
+    width: auto;
+  }
 }
 
 .product-page,
