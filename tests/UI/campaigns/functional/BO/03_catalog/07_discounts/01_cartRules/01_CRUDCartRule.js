@@ -46,7 +46,7 @@ const editCartRuleData = new CartRuleFaker(
   },
 );
 
-describe('CRUD cart rule', async () => {
+describe('BO - Catalog - Discounts : CRUD cart rule', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

@@ -19,7 +19,7 @@ class ImageSettings extends BOBasePage {
     this.alertSuccessBlockParagraph = '.alert-success';
 
     // Header selectors
-    this.newImageTypeLink = '#page-header-desc-image_type-new_image_type';
+    this.newImageTypeLink = 'a[data-role=page-header-desc-image_type-link]';
 
     // Form selectors
     this.gridForm = '#form-image_type';

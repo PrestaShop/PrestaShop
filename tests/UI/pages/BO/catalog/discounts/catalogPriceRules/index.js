@@ -17,7 +17,7 @@ class CatalogPriceRules extends BOBasePage {
     this.pageTitle = 'Catalog Price Rules •';
 
     // Selectors header
-    this.addNewCatalogPriceRuleButton = '#page-header-desc-specific_price_rule-new_specific_price_rule';
+    this.addNewCatalogPriceRuleButton = 'a[data-role=page-header-desc-specific_price_rule-link]';
 
     // Form selectors
     this.gridForm = '#form-specific_price_rule';

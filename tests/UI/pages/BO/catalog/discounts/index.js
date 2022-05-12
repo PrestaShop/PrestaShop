@@ -17,7 +17,7 @@ class CartRules extends BOBasePage {
     this.pageTitle = 'Cart Rules •';
 
     // Selectors
-    this.addNewCartRuleButton = '#page-header-desc-cart_rule-new_cart_rule';
+    this.addNewCartRuleButton = 'a[data-role=page-header-desc-cart_rule-link]';
     this.catalogPriceRulesTab = '#subtab-AdminSpecificPriceRule';
 
     // Form selectors
