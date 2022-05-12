@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
+use PrestaShop\PrestaShop\Adapter\Shop\Url\ProductPreviewProvider;
 use PrestaShop\PrestaShop\Adapter\Shop\Url\ProductProvider;
 use PrestaShopBundle\Form\Admin\Type\IconButtonType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -51,19 +52,27 @@ class FooterType extends TranslatorAwareType
     private $router;
 
     /**
+     * @var ProductPreviewProvider
+     */
+    protected $productPreviewUrlProvider;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param ProductProvider $productUrlProvider
+     * @param ProductPreviewProvider $productPreviewUrlProvider
      * @param RouterInterface $router
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         ProductProvider $productUrlProvider,
+        ProductPreviewProvider $productPreviewUrlProvider,
         RouterInterface $router
     ) {
         parent::__construct($translator, $locales);
         $this->productUrlProvider = $productUrlProvider;
+        $this->productPreviewUrlProvider = $productPreviewUrlProvider;
         $this->router = $router;
     }
 
@@ -78,7 +87,7 @@ class FooterType extends TranslatorAwareType
             'id' => $productId,
         ]) : null;
         $seoUrl = $productId ? $this->productUrlProvider->getUrl($productId, '{friendly-url}') : null;
-        $standardPageUrl = $productId ? $this->router->generate('admin_product_form', ['id' => $productId]) : $this->router->generate('admin_product_new');
+        $productPreviewUrl = $this->productPreviewUrlProvider->getUrl($productId, $options['active']);
         $duplicateUrl = $productId ? $this->router->generate('admin_product_unit_action', [
             'action' => 'duplicate',
             'id' => $productId,
@@ -120,15 +129,6 @@ class FooterType extends TranslatorAwareType
                     'disabled' => empty($productId),
                 ],
             ])
-            ->add('preview', IconButtonType::class, [
-                'label' => $this->trans('Preview', 'Admin.Actions'),
-                'icon' => 'remove_red_eye',
-                'attr' => [
-                    'class' => 'btn-outline-secondary preview-url-button',
-                    'data-seo-url' => $seoUrl,
-                    'disabled' => empty($productId),
-                ],
-            ])
             ->add('new_product', IconButtonType::class, [
                 'label' => $this->trans('New product', 'Admin.Catalog.Feature'),
                 'type' => 'link',
@@ -140,6 +140,18 @@ class FooterType extends TranslatorAwareType
                 ],
             ])
             // These two inputs are displayed separately
+            ->add('preview', IconButtonType::class, [
+                'label' => $this->trans('Preview', 'Admin.Actions'),
+                'icon' => 'remove_red_eye',
+                'type' => 'link',
+                'attr' => [
+                    'target' => '_blank',
+                    'href' => $productPreviewUrl,
+                    'class' => 'btn-outline-secondary preview-url-button',
+                    'data-seo-url' => $seoUrl,
+                    'disabled' => empty($productId),
+                ],
+            ])
             ->add('active', SwitchType::class, [
                 'label' => false,
                 'choices' => [
