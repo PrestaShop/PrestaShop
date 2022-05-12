@@ -31,6 +31,7 @@ use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShopBundle\Form\FormCloner;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Event\PreSetDataEvent;
+use Symfony\Component\Form\Event\PreSubmitEvent;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -118,6 +119,11 @@ class DateRangeType extends AbstractType
                     'disabled' => true,
                 ]));
             }
+        } elseif ($event instanceof PreSubmitEvent) {
+            // Re-enable state on end date field on submit in case it was previously disabled on pre-set data event
+            $form->add($this->formCloner->cloneForm($form->get('to'), [
+                'disabled' => false,
+            ]));
         }
     }
 
