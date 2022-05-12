@@ -177,17 +177,23 @@ export default class BulkChoicesSelector {
         return;
       }
 
-      const labelElement = input.parentNode?.querySelector<HTMLLabelElement>(`label[for=${input.id}]`);
+      const labelElement = this.tabContainer.querySelector<HTMLLabelElement>(`label[for=${input.id}]`);
 
       if (!labelElement) {
-        console.error(`All ${CombinationMap.commonBulkAllSelector} expected to have dedicated <label> elements`);
+        console.error(`Each ${CombinationMap.commonBulkAllSelector} is expected to have dedicated a <label> element`);
+        return;
+      }
+      const span = labelElement.querySelector<HTMLSpanElement>('span');
+
+      if (!span) {
+        console.error(`Each label for ${CombinationMap.commonBulkAllSelector} is expected to have a <span> element`);
         return;
       }
 
       const {label} = labelElement.dataset;
 
       if (!label) {
-        console.error(`All ${CombinationMap.commonBulkAllSelector} expected to have "data-label" attribute`);
+        console.error(`Each label for ${CombinationMap.commonBulkAllSelector} is expected to have "data-label" attribute`);
         return;
       }
 
@@ -203,14 +209,14 @@ export default class BulkChoicesSelector {
         const selectedCombinationsCount = combinationIds.length;
 
         if (selectedCombinationsCount) {
-          labelElement.classList.toggle('d-none', false);
+          span.classList.toggle('d-none', false);
           combinationsCount = selectedCombinationsCount;
         } else {
-          labelElement.classList.toggle('d-none', true);
+          span.classList.toggle('d-none', true);
         }
       }
 
-      labelElement.innerHTML = label.replace(/%combinations_number%/, String(combinationsCount));
+      span.innerHTML = label.replace(/%combinations_number%/, String(combinationsCount));
     }
   }
 

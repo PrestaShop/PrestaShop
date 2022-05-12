@@ -61,30 +61,31 @@
                   aria-haspopup="true"
                   aria-expanded="false"
           >
-            <label for="bulk-all-preview" data-label="(%combinations_number%)"></label>
+            <label for="bulk-all-preview" data-label="(%combinations_number%)"><span></span></label>
             <input type="checkbox" id="bulk-all-preview" class="bulk-select-all">
             <i class="md-checkbox-control"></i>
           </button>
 
           <div class="dropdown-menu">
-            <div class="md-checkbox dropdown-item">
-              <label
-                for="bulk-select-all-in-page"
-                data-label="{{'Select results on this page (%combinations_number%)'|trans({}, 'Admin.Actions')}}"
-              >
-              </label>
+            <label
+              class="md-checkbox dropdown-item"
+              for="bulk-select-all-in-page"
+              data-label="{{'Select results on this page (%combinations_number%)'|trans({}, 'Admin.Actions')}}"
+            >
+              <span></span>
               <input type="checkbox" id="bulk-select-all-in-page" class="bulk-select-all">
               <i class="md-checkbox-control"></i>
-            </div>
-            <div class="md-checkbox dropdown-item">
-              <label
-                for="bulk-select-all"
-                data-label="{{'Select all results (%combinations_number%)'|trans({}, 'Admin.Actions')}}"
-              >
-              </label>
+            </label>
+
+            <label
+              class="md-checkbox dropdown-item"
+              for="bulk-select-all"
+              data-label="{{'Select all results (%combinations_number%)'|trans({}, 'Admin.Actions')}}"
+            >
+              <span></span>
               <input type="checkbox" id="bulk-select-all" class="bulk-select-all">
               <i class="md-checkbox-control"></i>
-            </div>
+            </label>
           </div>
         </div>
       </th>
