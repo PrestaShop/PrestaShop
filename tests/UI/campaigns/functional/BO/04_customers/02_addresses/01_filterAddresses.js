@@ -106,7 +106,7 @@ describe('BO - Customers - Addresses : Filter Addresses table', async () => {
             testIdentifier: 'filterPostCode',
             filterType: 'input',
             filterBy: 'postcode',
-            filterValue: Address.second.zipCode,
+            filterValue: Address.second.postalCode,
           },
       },
       {

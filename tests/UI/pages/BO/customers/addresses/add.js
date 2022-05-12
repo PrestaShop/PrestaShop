@@ -31,6 +31,7 @@ class AddAddress extends BOBasePage {
     this.customerAddressCityInput = '#customer_address_city';
     this.customerAddressCountrySelect = '#customer_address_id_country';
     this.customerAddressCountryOption = `${this.customerAddressCountrySelect} option`;
+    this.customerAddressStateSelect = '#select2-customer_address_id_state-container';
     this.customerAddressPhoneInput = '#customer_address_phone';
     this.customerAddressOtherInput = '#customer_address_other';
     this.saveAddressButton = '#save-button';
@@ -64,6 +65,11 @@ class AddAddress extends BOBasePage {
     await this.selectByVisibleText(page, this.customerAddressCountrySelect, addressData.country);
     await this.setValue(page, this.customerAddressPhoneInput, addressData.phone);
     await this.setValue(page, this.customerAddressOtherInput, addressData.other);
+    if (await this.elementVisible(page, '#select2-customer_address_id_state-container', 1000)) {
+      await page.click('#select2-customer_address_id_state-container');
+      await this.setValue(page, '.select2-search__field', addressData.state);
+      await this.waitForSelectorAndClick(page, '.select2-results__option.select2-results__option--highlighted');
+    }
 
     if (waitForNavigation) {
       // Save and return successful message

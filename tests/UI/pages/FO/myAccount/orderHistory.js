@@ -111,6 +111,16 @@ class OrderHistory extends FOBasePage {
     await this.clickAndWaitForNavigation(page, this.detailsLink(orderRow));
   }
 
+  /**
+   * Go to order details page
+   * @param page {Page} Browser tab
+   * @param orderID {number} Order ID
+   * @returns {Promise<void>}
+   */
+  async goToOrderDetailsPage(page, orderID = 1) {
+    await this.clickAndWaitForNavigation(page, this.orderDetailsLink(orderID));
+  }
+
   // Methods for box messages
   /**
    * Is box messages section visible

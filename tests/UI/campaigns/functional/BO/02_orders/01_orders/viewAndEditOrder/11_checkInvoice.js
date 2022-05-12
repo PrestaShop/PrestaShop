@@ -305,7 +305,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'changeBillingAddress1', baseContext);
 
         const addressToSelect = `${Address.third.id}- ${Address.third.address} ${Address.third.secondAddress} `
-          + `${Address.third.zipCode} ${Address.third.city}`;
+          + `${Address.third.postalCode} ${Address.third.city}`;
 
         const alertMessage = await orderPageCustomerBlock.selectAnotherInvoiceAddress(page, addressToSelect);
         expect(alertMessage).to.contains(orderPageCustomerBlock.successfulUpdateMessage);
@@ -373,7 +373,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
             + `${Address.second.company},`
             + `${Address.second.address},`
             + `${Address.second.secondAddress},`
-            + `${Address.second.zipCode} ${Address.second.city},`
+            + `${Address.second.postalCode} ${Address.second.city},`
             + `${Address.second.country},`
             + `${Address.second.phone}`,
           );
@@ -389,7 +389,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
             + `${Address.third.firstName} ${Address.third.lastName},`
             + `${Address.third.company},`
             + `${Address.third.address} ${Address.third.secondAddress},`
-            + `${Address.third.city}, ${Address.third.state} ${Address.third.zipCode},`
+            + `${Address.third.city}, ${Address.third.state} ${Address.third.postalCode},`
             + `${Address.third.country},`
             + `${Address.third.phone}`,
           );
@@ -606,7 +606,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
             + `${Address.second.company},`
             + `${Address.second.address},`
             + `${Address.second.secondAddress},`
-            + `${Address.second.zipCode} ${Address.second.city},`
+            + `${Address.second.postalCode} ${Address.second.city},`
             + `${Address.second.country},`
             + `${Address.second.phone}`,
           );
@@ -623,7 +623,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
             + `${Address.second.company},`
             + `${Address.second.address},`
             + `${Address.second.secondAddress},`
-            + `${Address.second.zipCode} ${Address.second.city},`
+            + `${Address.second.postalCode} ${Address.second.city},`
             + `${Address.second.country},`
             + `${Address.second.phone}`,
           );
@@ -800,7 +800,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
             + `${Address.second.company},`
             + `${Address.second.address},`
             + `${Address.second.secondAddress},`
-            + `${Address.second.zipCode} ${Address.second.city},`
+            + `${Address.second.postalCode} ${Address.second.city},`
             + `${Address.second.country},`
             + `${Address.second.phone}`,
           );
@@ -817,7 +817,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
             + `${Address.second.company},`
             + `${Address.second.address},`
             + `${Address.second.secondAddress},`
-            + `${Address.second.zipCode} ${Address.second.city},`
+            + `${Address.second.postalCode} ${Address.second.city},`
             + `${Address.second.country},`
             + `${Address.second.phone}`,
           );
@@ -1038,7 +1038,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
             + `${Address.second.company},`
             + `${Address.second.address},`
             + `${Address.second.secondAddress},`
-            + `${Address.second.zipCode} ${Address.second.city},`
+            + `${Address.second.postalCode} ${Address.second.city},`
             + `${Address.second.country},`
             + `${Address.second.phone}`,
           );
@@ -1055,7 +1055,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
             + `${Address.second.company},`
             + `${Address.second.address},`
             + `${Address.second.secondAddress},`
-            + `${Address.second.zipCode} ${Address.second.city},`
+            + `${Address.second.postalCode} ${Address.second.city},`
             + `${Address.second.country},`
             + `${Address.second.phone}`,
           );
@@ -1178,7 +1178,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'changeBillingAddress2', baseContext);
 
           const addressToSelect = `${Address.third.id}- ${Address.third.address} ${Address.third.secondAddress} `
-            + `${Address.third.zipCode} ${Address.third.city}`;
+            + `${Address.third.postalCode} ${Address.third.city}`;
 
           const alertMessage = await orderPageCustomerBlock.selectAnotherShippingAddress(page, addressToSelect);
           expect(alertMessage).to.contains(orderPageCustomerBlock.successfulUpdateMessage);
@@ -1202,7 +1202,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
             + `${Address.third.firstName} ${Address.third.lastName},`
             + `${Address.third.company},`
             + `${Address.third.address} ${Address.third.secondAddress},`
-            + `${Address.third.city}, ${Address.third.state} ${Address.third.zipCode},`
+            + `${Address.third.city}, ${Address.third.state} ${Address.third.postalCode},`
             + `${Address.third.country},`
             + `${Address.third.phone}`,
           );
@@ -1213,7 +1213,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'changeBillingAddress3', baseContext);
 
           const addressToSelect = `${Address.third.id}- ${Address.third.address} ${Address.third.secondAddress} `
-            + `${Address.third.zipCode} ${Address.third.city}`;
+            + `${Address.third.postalCode} ${Address.third.city}`;
 
           const alertMessage = await orderPageCustomerBlock.selectAnotherInvoiceAddress(page, addressToSelect);
           expect(alertMessage).to.contains(orderPageCustomerBlock.successfulUpdateMessage);
@@ -1237,7 +1237,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
             + `${Address.third.firstName} ${Address.third.lastName},`
             + `${Address.third.company},`
             + `${Address.third.address} ${Address.third.secondAddress},`
-            + `${Address.third.city}, ${Address.third.state} ${Address.third.zipCode},`
+            + `${Address.third.city}, ${Address.third.state} ${Address.third.postalCode},`
             + `${Address.third.country},`
             + `${Address.third.phone}`,
           );

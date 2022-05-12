@@ -49,7 +49,7 @@ class OrderDetails extends FOBasePage {
   /**
    * Is orderReturn form visible
    * @param page {Page} Browser tab
-   * @returns {boolean}
+   * @returns {Promise<boolean>}
    */
   isOrderReturnFormVisible(page) {
     return this.elementVisible(page, this.orderReturnForm, 1000);
@@ -109,6 +109,24 @@ class OrderDetails extends FOBasePage {
    */
   async clickOnReorderLink(page) {
     await this.clickAndWaitForNavigation(page, this.reorderLink);
+  }
+
+  /**
+   * Get delivery address
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getDeliveryAddress(page) {
+    return this.getTextContent(page, '#delivery-address');
+  }
+
+  /**
+   * Get Invoice address
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getInvoiceAddress(page) {
+    return this.getTextContent(page, '#invoice-address');
   }
 }
 

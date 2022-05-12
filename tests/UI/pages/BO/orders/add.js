@@ -679,6 +679,12 @@ class AddOrder extends BOBasePage {
     await this.selectByVisibleText(page, this.invoiceAddressSelect, invoiceAddress);
   }
 
+  async getDeliveryAddressDetails(page) {
+    await page.waitForTimeout(2000);
+
+    return this.getTextContent(page, '#delivery-address-details');
+  }
+
   /**
    * Choose delivery address
    * @param page {Page} Browser tab
@@ -687,14 +693,20 @@ class AddOrder extends BOBasePage {
    */
   async chooseDeliveryAddress(page, deliveryAddress) {
     await this.selectByVisibleText(page, this.deliveryAddressSelect, deliveryAddress);
-    await page.waitForResponse(response => response.url().includes('/addresses'));
 
-    return this.getTextContent(page, '#delivery-address-details');
+    return this.getDeliveryAddressDetails(page);
   }
 
-  async getDeliveryAddressDetails(page) {
+  async getInvoiceAddressDetails(page) {
     await page.waitForTimeout(2000);
-    return this.getTextContent(page, '#delivery-address-details');
+
+    return this.getTextContent(page, '#invoice-address-details');
+  }
+
+  async chooseInvoiceAddress(page, deliveryAddress) {
+    await this.selectByVisibleText(page, '#invoice-address-select', deliveryAddress);
+
+    return this.getInvoiceAddressDetails(page);
   }
 
   /**
@@ -708,6 +720,12 @@ class AddOrder extends BOBasePage {
     return this.elementVisible(page, this.iframe, 2000);
   }
 
+  async clickOnEditInvoiceAddressButton(page) {
+    await this.waitForSelectorAndClick(page, '#js-invoice-address-edit-btn');
+
+    return this.elementVisible(page, this.iframe, 2000);
+  }
+
   /**
    * Get edit address Iframe
    * @param page {Page} Browser tab
@@ -715,6 +733,26 @@ class AddOrder extends BOBasePage {
    */
   async getEditAddressIframe(page) {
     return page.frame({url: new RegExp('sell/addresses/cart/', 'gmi')});
+  }
+
+  /**
+   * Click on add new address
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async clickOnAddNewAddressButton(page) {
+    await this.waitForSelectorAndClick(page, '#js-add-address-btn');
+
+    return this.elementVisible(page, this.iframe, 2000);
+  }
+
+  /**
+   * Get add address Iframe
+   * @param page {Page} Browser tab
+   * @returns {Promise<*>}
+   */
+  async getAddAddressIframe(page) {
+    return page.frame({url: new RegExp('sell/addresses/new?', 'gmi')});
   }
 
   /* Shipping methods */
