@@ -38,9 +38,11 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\PositiveOrZero;
 use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class SpecificPriceImpactType extends TranslatorAwareType
 {
@@ -72,21 +74,20 @@ class SpecificPriceImpactType extends TranslatorAwareType
                 'constraints' => [
                     new Reduction([
                         'invalidPercentageValueMessage' => $this->trans(
-                            'Reduction value "%value%" is invalid. Allowed values from 0 to %max%',
+                            'Reduction value "%value%" is invalid. Value must be more than zero and maximum %max%.',
                             'Admin.Notifications.Error',
                             ['%max%' => ReductionVO::MAX_ALLOWED_PERCENTAGE . '%']
                         ),
                         'invalidAmountValueMessage' => $this->trans(
-                            'Reduction value "%value%" is invalid. Value must be a positive number',
+                            'Reduction value "%value%" is invalid. Value must be more than zero.',
                             'Admin.Notifications.Error'
                         ),
                         'groups' => [self::REDUCTION_GROUP],
                     ]),
                 ],
                 'disabling_switch' => true,
-                'disabling_switch_event' => 'switchReductionSpecificPrice',
                 'disabled_value' => function ($data, FormInterface $form): bool {
-                    return $this->shouldBeDisabled($form);
+                    return $this->shouldReductionBeDisabled($form);
                 },
             ])
             ->add('fixed_price_tax_excluded', MoneyType::class, [
@@ -104,9 +105,8 @@ class SpecificPriceImpactType extends TranslatorAwareType
                     new PositiveOrZero(['groups' => [self::FIXED_PRICE_GROUP]]),
                 ],
                 'disabling_switch' => true,
-                'disabling_switch_event' => 'switchFixedSpecificPrice',
                 'disabled_value' => function ($data, FormInterface $form): bool {
-                    return $this->shouldBeDisabled($form);
+                    return $this->shouldFixedPriceBeDisabled($form);
                 },
             ])
         ;
@@ -119,34 +119,53 @@ class SpecificPriceImpactType extends TranslatorAwareType
             'label' => $this->trans('Impact on price', 'Admin.Catalog.Feature'),
             'label_subtitle' => $this->trans('At least one of the following must be activated', 'Admin.Catalog.Feature'),
             'label_tag_name' => 'h4',
+            'error_bubbling' => false,
             'validation_groups' => function (FormInterface $form): array {
-                $useFixedPrice = $this->isUsingFixedPrice($form->getData());
+                $validationGroups = ['Default'];
+                if ($this->isUsingFixedPrice($form->getData())) {
+                    $validationGroups[] = self::FIXED_PRICE_GROUP;
+                }
+                if ($this->isUsingReduction($form->getData())) {
+                    $validationGroups[] = self::REDUCTION_GROUP;
+                }
 
-                return $useFixedPrice ? [self::FIXED_PRICE_GROUP] : [self::REDUCTION_GROUP];
+                return $validationGroups;
             },
+            'constraints' => [
+                new Callback([
+                    'callback' => function (?array $impactData, ExecutionContextInterface $context) {
+                        $this->validatePriceIsDefined($impactData, $context);
+                    },
+                ]),
+            ],
         ]);
     }
 
-    private function shouldBeDisabled(FormInterface $form): bool
+    private function validatePriceIsDefined(?array $impactData, ExecutionContextInterface $context): void
     {
-        $formName = $form->getName();
+        $isUsingFixedPrice = $this->isUsingFixedPrice($impactData);
+        $isUsingReduction = $this->isUsingReduction($impactData);
+        if (!$isUsingFixedPrice && !$isUsingReduction) {
+            $context
+                ->buildViolation($this->trans('You must select at least one impact on price.', 'Admin.Catalog.Feature'))
+                ->addViolation()
+            ;
+        }
+    }
+
+    private function shouldFixedPriceBeDisabled(FormInterface $form): bool
+    {
         $impactForm = $form->getParent();
         $impactData = $impactForm->getData();
-        $useFixedPrice = $this->isUsingFixedPrice($impactData);
 
-        // The field van either be reduction or fixed_price_tax_excluded, whe fixed price is used the reduction is disabled
-        if ($formName === 'reduction') {
-            return $useFixedPrice;
-        }
-
-        return !$useFixedPrice;
+        return !$this->isUsingFixedPrice($impactData);
     }
 
     /**
      * Check if fixed price is being setup, the fixed price is based on fixed_price_tax_excluded so if it is absent
      * or if its value equals -1 no fixed price is defined.
      *
-     * However, the most trustable value is the one from the checkbox, so it is used as priority.
+     * However, the most trustable value is the one from the checkbox, so it is used as priority when present.
      *
      * @param array|null $impactData
      *
@@ -169,5 +188,33 @@ class SpecificPriceImpactType extends TranslatorAwareType
         $fixedPrice = $impactData['fixed_price_tax_excluded'] ?? 0;
 
         return !InitialPrice::isInitialPriceValue((string) $fixedPrice);
+    }
+
+    private function shouldReductionBeDisabled(FormInterface $form): bool
+    {
+        $impactForm = $form->getParent();
+        $impactData = $impactForm->getData();
+        $isUsingReduction = $this->isUsingReduction($impactData);
+
+        return !$isUsingReduction;
+    }
+
+    /**
+     * Check if reduction is being setup, the reduction is based on reduction value so if it is absent
+     * or if its value equals 0 no reduction is defined.
+     *
+     * However, the most trustable value is the one from the checkbox, so it is used as priority when present.
+     *
+     * @param array|null $impactData
+     *
+     * @return bool
+     */
+    private function isUsingReduction(?array $impactData): bool
+    {
+        if (array_key_exists('disabling_switch_reduction', $impactData)) {
+            return $impactData['disabling_switch_reduction'] === true;
+        }
+
+        return !empty($impactData['reduction']['value']);
     }
 }

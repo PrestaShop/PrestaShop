@@ -25,6 +25,4 @@
 
 export default {
   switchCustomer: 'switchSpecificPriceCustomer',
-  switchFixedPrice: 'switchFixedSpecificPrice',
-  switchReduction: 'switchReductionSpecificPrice',
 };

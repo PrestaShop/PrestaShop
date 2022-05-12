@@ -93,19 +93,23 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
         }
 
         // It switch input is true it means the price field is enabled
-        if (isset($data['impact']['disabling_switch_fixed_price_tax_excluded'])) {
-            if (!empty($data['impact']['disabling_switch_fixed_price_tax_excluded'])) {
-                $command->setFixedPrice((string) $data['impact']['fixed_price_tax_excluded']);
-            } else {
-                $command->setFixedPrice(InitialPrice::INITIAL_PRICE_VALUE);
-            }
+        if (!empty($data['impact']['disabling_switch_fixed_price_tax_excluded'])) {
+            $command->setFixedPrice((string) $data['impact']['fixed_price_tax_excluded']);
+        } else {
+            $command->setFixedPrice(InitialPrice::INITIAL_PRICE_VALUE);
         }
 
-        if (isset($data['impact']['reduction']['type'], $data['impact']['reduction']['value'])) {
-            $command->setReduction((string) $data['impact']['reduction']['type'], (string) $data['impact']['reduction']['value']);
-        }
-        if (isset($data['impact']['reduction']['include_tax'])) {
-            $command->setIncludesTax((bool) $data['impact']['reduction']['include_tax']);
+        // It switch input is true it means the price field is enabled
+        if (!empty($data['impact']['disabling_switch_reduction'])) {
+            if (isset($data['impact']['reduction']['type'], $data['impact']['reduction']['value'])) {
+                $command->setReduction((string) $data['impact']['reduction']['type'], (string) $data['impact']['reduction']['value']);
+            }
+            if (isset($data['impact']['reduction']['include_tax'])) {
+                $command->setIncludesTax((bool) $data['impact']['reduction']['include_tax']);
+            }
+        } else {
+            // When reduction is disabled we force its value to zero
+            $command->setReduction(Reduction::TYPE_AMOUNT, '0');
         }
 
         $this->commandBus->handle($command);

@@ -34,3 +34,9 @@
     {{ form_widget(form.id_customer) }}
   </li>
 {% endblock %}
+
+{% block specific_price_impact_row %}
+  {{ form_label(form) }}
+  {{ form_errors(form) }}
+  {{ form_widget(form) }}
+{% endblock %}

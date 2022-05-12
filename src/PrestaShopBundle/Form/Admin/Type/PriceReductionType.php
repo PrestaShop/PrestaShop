@@ -82,6 +82,7 @@ class PriceReductionType extends CommonAbstractType
                 'row_attr' => [
                     'class' => 'price-reduction-value',
                 ],
+                'default_empty_data' => 0,
             ])
             ->add('type', ChoiceType::class, [
                 'placeholder' => false,

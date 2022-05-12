@@ -107,29 +107,4 @@ $(() => {
   eventEmitter.on(SpecificPriceEventMap.switchCustomer, (event: any) => {
     $(SpecificPriceMap.customerItem).toggleClass('disabled', event.disable);
   });
-
-  // Handle switch between reduction or fixed price
-  eventEmitter.on(SpecificPriceEventMap.switchFixedPrice, (event: any) => {
-    switchReductionMode(!event.disable);
-  });
-  eventEmitter.on(SpecificPriceEventMap.switchReduction, (event: any) => {
-    switchReductionMode(event.disable);
-  });
-
-  function switchReductionMode(useFixedPrice: boolean): void {
-    toggleSwitch(SpecificPriceMap.switchFixedName, useFixedPrice);
-    toggleSwitch(SpecificPriceMap.switchReductionName, !useFixedPrice);
-  }
-
-  function toggleSwitch(switchName: string, checked: boolean): void {
-    const $switchOn = $(`[name="${switchName}"][value="1"]`);
-    const $switchOff = $(`[name="${switchName}"][value="0"]`);
-
-    if ($switchOn.is(':checked') !== checked) {
-      $switchOn.prop('checked', checked);
-    }
-    if ($switchOff.is(':checked') === checked) {
-      $switchOff.prop('checked', !checked);
-    }
-  }
 });
