@@ -54,45 +54,36 @@
     <thead class="thead-default">
     <tr class="column-headers">
       <th scope="col" id="id-header">
-        <div class="dropdown">
+        <div class="dropdown" id="bulk-all-selection-dropdown">
           <button type="button"
                   class="md-checkbox dropdown-toggle"
                   data-toggle="dropdown"
                   aria-haspopup="true"
                   aria-expanded="false"
           >
-            <label>
-              <input type="checkbox" id="bulk-all-preview" class="bulk-select-all">
-              <i class="md-checkbox-control"></i>
-            </label>
+            <label for="bulk-all-preview" data-label="(%combinations_number%)"></label>
+            <input type="checkbox" id="bulk-all-preview" class="bulk-select-all">
+            <i class="md-checkbox-control"></i>
           </button>
 
           <div class="dropdown-menu">
-            <div class="md-checkbox">
-              <label class="dropdown-item">
-                <div class="md-checkbox-container">
-                  <label
-                    for="bulk-select-all-in-page"
-                    data-label="{{'Select results on this page (%combinations_number%)'|trans({}, 'Admin.Actions')}}"
-                  >
-                  </label>
-                  <input type="checkbox" id="bulk-select-all-in-page" class="bulk-select-all">
-                  <i class="md-checkbox-control"></i>
-                </div>
+            <div class="md-checkbox dropdown-item">
+              <label
+                for="bulk-select-all-in-page"
+                data-label="{{'Select results on this page (%combinations_number%)'|trans({}, 'Admin.Actions')}}"
+              >
               </label>
+              <input type="checkbox" id="bulk-select-all-in-page" class="bulk-select-all">
+              <i class="md-checkbox-control"></i>
             </div>
-            <div class="md-checkbox">
-              <label class="dropdown-item">
-                <div class="md-checkbox-container">
-                  <label
-                    for="bulk-select-all"
-                    data-label="{{'Select all results (%combinations_number%)'|trans({}, 'Admin.Actions')}}"
-                  >
-                  </label>
-                  <input type="checkbox" id="bulk-select-all" class="bulk-select-all">
-                  <i class="md-checkbox-control"></i>
-                </div>
+            <div class="md-checkbox dropdown-item">
+              <label
+                for="bulk-select-all"
+                data-label="{{'Select all results (%combinations_number%)'|trans({}, 'Admin.Actions')}}"
+              >
               </label>
+              <input type="checkbox" id="bulk-select-all" class="bulk-select-all">
+              <i class="md-checkbox-control"></i>
             </div>
           </div>
         </div>

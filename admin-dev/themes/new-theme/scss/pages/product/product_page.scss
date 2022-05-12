@@ -1575,6 +1575,19 @@ $product-page-padding-bottom: 80px !default;
         margin-left: auto;
       }
     }
+
+    #bulk-all-selection-dropdown {
+      cursor: pointer;
+
+      label {
+        cursor: pointer;
+      }
+
+      .dropdown-toggle {
+        background-color: inherit;
+        border:none;
+      }
+    }
   }
 
   #combinations-list-footer {

@@ -28,6 +28,7 @@ import ProductEvents from '@pages/product/product-event-map';
 import {EventEmitter} from 'events';
 import PaginatedCombinationsService from '@pages/product/services/paginated-combinations-service';
 import DynamicPaginator from '@components/pagination/dynamic-paginator';
+import bulk from '@app/pages/permission/components/bulk.vue';
 
 const CombinationMap = ProductMap.combinations;
 const CombinationEvents = ProductEvents.combinations;
@@ -136,6 +137,7 @@ export default class BulkChoicesSelector {
         this.uncheckBulkAllSelection();
       }
 
+      this.updateBulkAllSelectionLabels();
       this.updateBulkActionButtons();
     });
   }
@@ -163,35 +165,53 @@ export default class BulkChoicesSelector {
     dropdownBtn?.toggleAttribute('disabled', !selectedCombinationsCount);
   }
 
-  private updateBulkAllSelectionLabels(): void {
-    const bulkSelectAllInputs = this.tabContainer
-      .querySelectorAll(`${CombinationMap.bulkSelectAll}, ${CombinationMap.bulkSelectAllInPage}`);
+  private async updateBulkAllSelectionLabels(): Promise<void> {
+    const bulkSelectAllInputs = this.tabContainer.querySelectorAll(CombinationMap.commonBulkAllSelector);
+    const inputs = Object.values(bulkSelectAllInputs);
 
-    bulkSelectAllInputs.forEach((input) => {
+    for (let i = 0; i < inputs.length; i += 1) {
+      const input = inputs[i];
+
       if (!(input instanceof HTMLInputElement)) {
-        console.error(`Input ${CombinationMap.bulkSelectAll} not found`);
+        console.error(`All ${CombinationMap.commonBulkAllSelector} expected to be <input> elements`);
         return;
       }
 
       const labelElement = input.parentNode?.querySelector<HTMLLabelElement>(`label[for=${input.id}]`);
 
       if (!labelElement) {
-        console.error('Missing <label> for bulk all selection input');
+        console.error(`All ${CombinationMap.commonBulkAllSelector} expected to have dedicated <label> elements`);
         return;
       }
 
       const {label} = labelElement.dataset;
 
       if (!label) {
-        console.error('Attribute "data-label" is not defined on bulk selection label');
+        console.error(`All ${CombinationMap.commonBulkAllSelector} expected to have "data-label" attribute`);
         return;
       }
 
-      labelElement.innerHTML = label.replace(
-        /%combinations_number%/,
-        String(input.matches(CombinationMap.bulkSelectAll) ? this.paginator.getTotal() : this.paginator.getTotalInPage()),
-      );
-    });
+      let combinationsCount = 0;
+
+      if (input.matches(CombinationMap.bulkSelectAll)) {
+        combinationsCount = this.paginator.getTotal();
+      } else if (input.matches(CombinationMap.bulkSelectAllInPage)) {
+        combinationsCount = this.paginator.getTotalInPage();
+      } else {
+        // eslint-disable-next-line no-await-in-loop
+        const combinationIds = await this.getSelectedIds();
+        const selectedCombinationsCount = combinationIds.length;
+
+        if (selectedCombinationsCount) {
+          labelElement.classList.toggle('d-none', false);
+          combinationsCount = selectedCombinationsCount;
+        } else {
+          labelElement.classList.toggle('d-none', true);
+        }
+      }
+
+      labelElement.innerHTML = label.replace(/%combinations_number%/, String(combinationsCount));
+    }
   }
 
   private checkAllCombinations(checked: boolean): void {
