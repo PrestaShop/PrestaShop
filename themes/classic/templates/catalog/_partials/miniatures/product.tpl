@@ -32,8 +32,7 @@
             <a href="{$product.url}" class="thumbnail product-thumbnail">
               <img
                 src="{$product.cover.bySize.home_default.url}"
-                alt="{if !empty($product.cover.legend)}{$product.cover.legend}{else}{$product.name|truncate:30:'...'}{/if}"
-                loading="lazy"
+                alt="{if !empty($product.cover.legend)}{$product.cover.legend}{else}{$product.name|truncate:30:'...'}{/if}"                
                 data-full-size-image-url="{$product.cover.large.url}"
                 width="{$product.cover.bySize.home_default.width}"
                 height="{$product.cover.bySize.home_default.height}"
