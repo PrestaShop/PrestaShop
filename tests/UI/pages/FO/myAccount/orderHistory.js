@@ -26,6 +26,7 @@ class OrderHistory extends FOBasePage {
     this.orderTableColumn = (row, column) => `${this.ordersTableRow(row)} td:nth-child(${column})`;
     this.reorderLink = row => `${this.ordersTableRow(row)} a.reorder-link`;
     this.detailsLink = row => `${this.ordersTableRow(row)} a.view-order-details-link`;
+    this.orderTableColumnInvoice = row => `${this.orderTableColumn(row, 6)} a[data-role="invoice"]`;
     // Messages block
     this.boxMessagesSection = '.box.messages';
     this.messageRow = row => `${this.boxMessagesSection} div:nth-child(${row}).message.row`;
@@ -78,6 +79,26 @@ class OrderHistory extends FOBasePage {
    */
   getOrderStatus(page, orderRow = 1) {
     return this.getTextContent(page, `${this.orderTableColumn(orderRow, 5)} span`);
+  }
+
+  /**
+   * Is invoice visible on order history table row
+   * @param page {Page} Browser tab
+   * @param orderRow {number} Row number in orders table
+   * @returns {Promise<boolean>}
+   */
+  isInvoiceVisible(page, orderRow = 1) {
+    return this.elementVisible(page, this.orderTableColumnInvoice(orderRow));
+  }
+
+  /**
+   * Get order id from invoice href
+   * @param page {Page} Browser tab
+   * @param orderRow {number} Row number in orders table
+   * @returns {Promise<string>}
+   */
+  getOrderIdFromInvoiceHref(page, orderRow = 1) {
+    return this.getAttributeContent(page, this.orderTableColumnInvoice(orderRow), 'href');
   }
 
   /**
