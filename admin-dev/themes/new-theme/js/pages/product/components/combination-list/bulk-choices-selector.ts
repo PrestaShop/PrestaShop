@@ -195,7 +195,7 @@ export default class BulkChoicesSelector {
   }
 
   private checkAllCombinations(checked: boolean): void {
-    const allDisplayCheckbox = this.tabContainer.querySelector<HTMLInputElement>(CombinationMap.bulkSelectAllDisplay);
+    const allDisplayCheckbox = this.tabContainer.querySelector<HTMLInputElement>(CombinationMap.bulkAllPreviewInput);
 
     if (allDisplayCheckbox instanceof HTMLInputElement) {
       allDisplayCheckbox.checked = checked;
