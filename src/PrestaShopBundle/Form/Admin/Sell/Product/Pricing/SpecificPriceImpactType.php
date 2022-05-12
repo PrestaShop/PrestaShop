@@ -77,7 +77,7 @@ class SpecificPriceImpactType extends TranslatorAwareType
                             ['%max%' => ReductionVO::MAX_ALLOWED_PERCENTAGE . '%']
                         ),
                         'invalidAmountValueMessage' => $this->trans(
-                            'Reduction value "%value%" is invalid. Value cannot be negative',
+                            'Reduction value "%value%" is invalid. Value must be a positive number',
                             'Admin.Notifications.Error'
                         ),
                         'groups' => [self::REDUCTION_GROUP],

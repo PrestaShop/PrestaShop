@@ -66,7 +66,7 @@ final class ReductionValidator extends ConstraintValidator
         }
 
         if (Reduction::TYPE_AMOUNT === $value['type']) {
-            if (!$this->assertIsValidAmount($value['value'])) {
+            if (!is_float($value['value']) || !$this->assertIsValidAmount($value['value'])) {
                 $this->buildViolation(
                     $constraint->invalidAmountValueMessage,
                     ['%value%' => $value['value']],
@@ -74,7 +74,7 @@ final class ReductionValidator extends ConstraintValidator
                 );
             }
         } elseif (Reduction::TYPE_PERCENTAGE === $value['type']) {
-            if (!$this->assertIsValidPercentage($value['value'])) {
+            if (!is_float($value['value']) || !$this->assertIsValidPercentage($value['value'])) {
                 $this->buildViolation(
                     $constraint->invalidPercentageValueMessage,
                     [

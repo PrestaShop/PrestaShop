@@ -89,11 +89,21 @@ class ApplicableGroupsType extends TranslatorAwareType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $currencies = array_merge([
+            $this->trans('All currencies', 'Admin.Global') => 0,
+        ], $this->currencyByIdChoiceProvider->getChoices());
+        $countries = array_merge([
+            $this->trans('All countries', 'Admin.Global') => 0,
+        ], $this->countryByIdChoiceProvider->getChoices());
+        $groups = array_merge([
+            $this->trans('All countries', 'Admin.Global') => 0,
+        ], $this->groupByIdChoiceProvider->getChoices());
+
         $builder
             ->add('currency_id', ChoiceType::class, [
                 'label' => $this->trans('Currency', 'Admin.Global'),
-                'placeholder' => $this->trans('All currencies', 'Admin.Global'),
-                'choices' => $this->currencyByIdChoiceProvider->getChoices(),
+                'placeholder' => false,
+                'choices' => $currencies,
                 'choice_attr' => $this->currencyByIdChoiceProvider->getChoicesAttributes(),
                 'required' => false,
                 'attr' => [
@@ -102,15 +112,15 @@ class ApplicableGroupsType extends TranslatorAwareType
             ])
             ->add('country_id', ChoiceType::class, [
                 'label' => $this->trans('Country', 'Admin.Global'),
-                'placeholder' => $this->trans('All countries', 'Admin.Global'),
-                'choices' => $this->countryByIdChoiceProvider->getChoices(),
+                'placeholder' => false,
+                'choices' => $countries,
                 'required' => false,
             ])
             ->add('group_id', ChoiceType::class, [
                 'label' => $this->trans('Group', 'Admin.Global'),
                 'required' => false,
-                'placeholder' => $this->trans('All groups', 'Admin.Global'),
-                'choices' => $this->groupByIdChoiceProvider->getChoices(),
+                'placeholder' => false,
+                'choices' => $groups,
             ])
         ;
 
