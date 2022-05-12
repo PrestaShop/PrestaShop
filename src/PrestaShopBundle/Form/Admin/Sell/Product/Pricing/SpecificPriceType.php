@@ -97,7 +97,7 @@ class SpecificPriceType extends TranslatorAwareType
                 'required' => false,
             ])
             ->add('customer', EntitySearchInputType::class, [
-                'label' => $this->trans('All Customers', 'Admin.Global'),
+                'label' => $this->trans('Apply to all customers', 'Admin.Global'),
                 'layout' => EntitySearchInputType::LIST_LAYOUT,
                 'entry_type' => SearchedCustomerType::class,
                 'entry_options' => [
