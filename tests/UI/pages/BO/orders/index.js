@@ -117,9 +117,10 @@ class Order extends BOBasePage {
    * @returns {Promise<void>}
    */
   async filterOrders(page, filterType, filterBy, value = '') {
+    await this.resetFilter(page);
     switch (filterType) {
       case 'input':
-        await this.setValue(page, this.filterColumn(filterBy), value.toString());
+        await this.setValue(page, this.filterColumn(filterBy), value);
         break;
       case 'select':
         await this.selectByVisibleText(page, this.filterColumn(filterBy), value);

@@ -32,6 +32,8 @@ class AddAddress extends BOBasePage {
     this.customerAddressCountrySelect = '#customer_address_id_country';
     this.customerAddressCountryOption = `${this.customerAddressCountrySelect} option`;
     this.customerAddressStateSelect = '#select2-customer_address_id_state-container';
+    this.searchStateInput = '.select2-search__field';
+    this.searchResultState = '.select2-results__option.select2-results__option--highlighted';
     this.customerAddressPhoneInput = '#customer_address_phone';
     this.customerAddressOtherInput = '#customer_address_other';
     this.saveAddressButton = '#save-button';
@@ -46,6 +48,7 @@ class AddAddress extends BOBasePage {
    * @param page {Page} Browser tab
    * @param addressData {AddressData} Data to set on new address form
    * @param save {boolean} True if we need to save the new address, false if not
+   * @param waitForNavigation {boolean} True if we need to wait for navigation after save, false if not
    * @returns {Promise<?string>}
    */
   async createEditAddress(page, addressData, save = true, waitForNavigation = true) {
@@ -65,10 +68,11 @@ class AddAddress extends BOBasePage {
     await this.selectByVisibleText(page, this.customerAddressCountrySelect, addressData.country);
     await this.setValue(page, this.customerAddressPhoneInput, addressData.phone);
     await this.setValue(page, this.customerAddressOtherInput, addressData.other);
-    if (await this.elementVisible(page, '#select2-customer_address_id_state-container', 1000)) {
-      await page.click('#select2-customer_address_id_state-container');
-      await this.setValue(page, '.select2-search__field', addressData.state);
-      await this.waitForSelectorAndClick(page, '.select2-results__option.select2-results__option--highlighted');
+
+    if (await this.elementVisible(page, this.customerAddressStateSelect, 1000)) {
+      await page.click(this.customerAddressStateSelect);
+      await this.setValue(page, this.searchStateInput, addressData.state);
+      await this.waitForSelectorAndClick(page, this.searchResultState);
     }
 
     if (waitForNavigation) {

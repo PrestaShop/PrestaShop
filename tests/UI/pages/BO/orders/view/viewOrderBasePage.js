@@ -34,11 +34,12 @@ class ViewOrderBasePage extends BOBasePage {
 
     // Header selectors
     this.alertBlock = 'div.alert[role=\'alert\'] div.alert-text';
-    this.orderReference = '.title-content strong[data-role=\'order-reference\']';
+    this.orderID = '.title-content strong[data-role=order-id]';
+    this.orderReference = '.title-content strong[data-role=order-reference]';
     this.orderStatusesSelect = '#update_order_status_action_input';
     this.updateStatusButton = '#update_order_status_action_btn';
-    this.viewInvoiceButton = 'form.order-actions-invoice a[data-role=\'view-invoice\']';
-    this.viewDeliverySlipButton = 'form.order-actions-delivery a[data-role=\'view-delivery-slip\']';
+    this.viewInvoiceButton = 'form.order-actions-invoice a[data-role=view-invoice]';
+    this.viewDeliverySlipButton = 'form.order-actions-delivery a[data-role=view-delivery-slip]';
     this.partialRefundButton = 'button.partial-refund-display';
     this.returnProductsButton = '#order-view-page button.return-product-display';
   }
@@ -46,6 +47,15 @@ class ViewOrderBasePage extends BOBasePage {
   /*
   Methods
    */
+  /**
+   * Get order ID
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getOrderID(page) {
+    return this.getNumberFromText(page, this.orderID);
+  }
+
   /**
    * Get order reference
    * @param page {Page} Browser tab
