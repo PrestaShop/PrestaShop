@@ -64,7 +64,6 @@ class LegacyUrlListener
             return;
         }
 
-        //Add comment
-        $event->setResponse(new RedirectResponse($convertedUrl, 308));
+        $event->setResponse(new RedirectResponse($convertedUrl));
     }
 }
