@@ -237,6 +237,6 @@ export default class ProductFormModel {
       taxRate = new BigNumber(0);
     }
 
-    return taxRate.dividedBy(100).plus(1);
+    return taxRate.plus(1);
   }
 }

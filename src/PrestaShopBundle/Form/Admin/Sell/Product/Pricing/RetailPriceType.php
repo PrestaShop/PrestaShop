@@ -33,6 +33,9 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\FormOptionsProviderInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -58,14 +61,9 @@ class RetailPriceType extends TranslatorAwareType
     private $defaultCurrency;
 
     /**
-     * @var array
+     * @var FormChoiceProviderInterface|FormChoiceAttributeProviderInterface
      */
-    private $taxRuleGroupChoices;
-
-    /**
-     * @var array
-     */
-    private $taxRuleGroupChoicesAttributes;
+    private $taxRuleGroupChoicesProvider;
 
     /**
      * @var RouterInterface
@@ -102,8 +100,7 @@ class RetailPriceType extends TranslatorAwareType
         array $locales,
         Locale $contextLocale,
         Currency $defaultCurrency,
-        array $taxRuleGroupChoices,
-        array $taxRuleGroupChoicesAttributes,
+        $taxRuleGroupChoicesProvider,
         RouterInterface $router,
         bool $taxEnabled,
         bool $isEcotaxEnabled,
@@ -114,8 +111,7 @@ class RetailPriceType extends TranslatorAwareType
         parent::__construct($translator, $locales);
         $this->contextLocale = $contextLocale;
         $this->defaultCurrency = $defaultCurrency;
-        $this->taxRuleGroupChoices = $taxRuleGroupChoices;
-        $this->taxRuleGroupChoicesAttributes = $taxRuleGroupChoicesAttributes;
+        $this->taxRuleGroupChoicesProvider = $taxRuleGroupChoicesProvider;
         $this->router = $router;
         $this->taxEnabled = $taxEnabled;
         $this->isEcotaxEnabled = $isEcotaxEnabled;
@@ -130,7 +126,7 @@ class RetailPriceType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $ecotaxRate = $this->taxComputer->getTaxRate(new TaxRulesGroupId($this->ecoTaxGroupId), new CountryId($this->contextCountryId));
-        $ecoTaxPercent = $ecotaxRate->times(new DecimalNumber('100'));
+        $ecoTaxPercent = $ecotaxRate->times(new DecimalNumber('100'))->round(2);
 
         $builder
             // @todo we should have DecimalType and MoneyDecimalType it was moved in a separate PR #22162
@@ -154,11 +150,11 @@ class RetailPriceType extends TranslatorAwareType
                 'modify_all_shops' => true,
             ])
             ->add('tax_rules_group_id', ChoiceType::class, [
-                'choices' => $this->taxRuleGroupChoices,
+                'choices' => $this->taxRuleGroupChoicesProvider->getChoices(),
                 'required' => false,
                 // placeholder false is important to avoid empty option in select input despite required being false
                 'placeholder' => false,
-                'choice_attr' => $this->taxRuleGroupChoicesAttributes,
+                'choice_attr' => $this->taxRuleGroupChoicesProvider->getChoicesAttributes(),
                 'attr' => [
                     'data-toggle' => 'select2',
                     'data-minimumResultsForSearch' => '7',
@@ -188,7 +184,7 @@ class RetailPriceType extends TranslatorAwareType
                 ],
                 'modify_all_shops' => true,
                 'attr' => [
-                    'data-tax-rate' => (string) $ecoTaxPercent,
+                    'data-tax-rate' => (string) $ecotaxRate,
                 ],
                 'row_attr' => [
                     'class' => 'ecotax-tax-excluded',
@@ -220,7 +216,7 @@ class RetailPriceType extends TranslatorAwareType
         if ($this->isEcotaxEnabled) {
             $builder->add('ecotax_tax_included', MoneyType::class, [
                 'label' => $this->trans('Ecotax (tax incl.)', 'Admin.Catalog.Feature'),
-                'help' => $this->trans('Ecotax rate %rate%%', 'Admin.Catalog.Feature', ['%rate%' => $ecoTaxPercent->round(2)]),
+                'help' => $this->trans('Ecotax rate %rate%%', 'Admin.Catalog.Feature', ['%rate%' => $ecoTaxPercent]),
                 'constraints' => [
                     new NotBlank(),
                     new Type(['type' => 'float']),
@@ -228,7 +224,7 @@ class RetailPriceType extends TranslatorAwareType
                 ],
                 'modify_all_shops' => true,
                 'attr' => [
-                    'data-tax-rate' => (string) $ecoTaxPercent,
+                    'data-tax-rate' => (string) $ecotaxRate,
                 ],
                 'row_attr' => [
                     'class' => 'ecotax-tax-included',

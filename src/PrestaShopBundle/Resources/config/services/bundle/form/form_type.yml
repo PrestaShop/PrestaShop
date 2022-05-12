@@ -1548,8 +1548,7 @@ services:
     arguments:
       - '@prestashop.core.localization.locale.context_locale'
       - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
-      - '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider").getChoices()'
-      - '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider").getChoicesAttributes()'
+      - '@prestashop.core.form.choice_provider.tax_rule_group_choice_provider'
       - '@router'
       - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_TAX')"
       - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_USE_ECOTAX')"
