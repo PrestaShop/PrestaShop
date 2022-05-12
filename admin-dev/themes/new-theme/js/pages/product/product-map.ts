@@ -27,6 +27,7 @@ const combinationListFormId = '#combination_list';
 const attachmentsBlockId = '#product_specifications_attachments';
 // It does not include "#" so it can be selected by getElementById
 const isSelectedCombinationClass = 'combination-is-selected';
+const commonBulkSelectAllClass = 'bulk-select-all';
 const bulkCombinationSelectAllInPageId = 'bulk-select-all-in-page';
 const progressModalId = 'bulk-combination-progress-modal';
 
@@ -133,7 +134,7 @@ export default {
       modifiedFieldClass: 'combination-value-changed',
       invalidClass: 'is-invalid',
       editionModeClass: 'edition-mode',
-      fieldInputs: `.combination-list-row :input:not(#${bulkCombinationSelectAllInPageId}):not(.${isSelectedCombinationClass})`,
+      fieldInputs: `.combination-list-row :input:not(.${commonBulkSelectAllClass}):not(.${isSelectedCombinationClass})`,
       errorAlerts: '.combination-list-row .alert-danger',
       rowActionButtons: '.combination-row-actions button',
       footer: {
@@ -159,7 +160,7 @@ export default {
     //@todo: rename? its the checkbox that displays status of bulk selection (if one of options is checked: all or all in page)
     bulkSelectAllDisplay: '#bulk-select-all-display',
     bulkSelectAll: '#bulk-select-all',
-    commonBulkAllSelector: '.bulk-select-all',
+    commonBulkAllSelector: `.${commonBulkSelectAllClass}`,
     bulkSelectAllInPage: `#${bulkCombinationSelectAllInPageId}`,
     bulkSelectAllInPageId: bulkCombinationSelectAllInPageId,
     bulkProgressModalId: progressModalId,
