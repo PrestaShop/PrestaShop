@@ -28,7 +28,6 @@ import ProductEvents from '@pages/product/product-event-map';
 import {EventEmitter} from 'events';
 import PaginatedCombinationsService from '@pages/product/services/paginated-combinations-service';
 import DynamicPaginator from '@components/pagination/dynamic-paginator';
-import bulk from '@app/pages/permission/components/bulk.vue';
 
 const CombinationMap = ProductMap.combinations;
 const CombinationEvents = ProductEvents.combinations;
@@ -69,15 +68,10 @@ export default class BulkChoicesSelector {
       return response;
     }
 
-    const combinationIds: number[] = [];
     const selectedCheckboxes = this.tabContainer
       .querySelectorAll<HTMLInputElement>(`${CombinationMap.tableRow.isSelectedCombination}:checked`);
 
-    selectedCheckboxes.forEach((checkbox: HTMLInputElement) => {
-      combinationIds.push(Number(checkbox.value));
-    });
-
-    return combinationIds;
+    return Array.from(selectedCheckboxes).map((checkbox: HTMLInputElement) => Number(checkbox.value));
   }
 
   /**
@@ -98,6 +92,8 @@ export default class BulkChoicesSelector {
   private init() {
     this.eventEmitter.on(CombinationEvents.listRendered, () => {
       this.listenCheckboxesChange();
+      // It is important to uncheck the bulk checkboxes before we call the update functions
+      // because they are based on the state of the checkboxes
       this.uncheckBulkAllSelection();
       this.updateBulkAllSelectionLabels();
       this.updateBulkActionButtons();
@@ -123,11 +119,12 @@ export default class BulkChoicesSelector {
       }
 
       if (isBulkSelectAll) {
-        const bulkSelectAllCheckboxes = this.tabContainer.querySelectorAll(CombinationMap.commonBulkAllSelector);
+        const bulkSelectAllCheckboxes = this.tabContainer
+          .querySelectorAll<HTMLInputElement>(CombinationMap.commonBulkAllSelector);
         // this makes sure that only one checkbox is checked at a time.
         // Radio buttons are not an option, because we also need to uncheck the box once user clicks on the checked one.
-        bulkSelectAllCheckboxes.forEach((input) => {
-          if (checkbox.id !== input.id && input instanceof HTMLInputElement) {
+        bulkSelectAllCheckboxes.forEach((input: HTMLInputElement) => {
+          if (checkbox.id !== input.id) {
             // eslint-disable-next-line no-param-reassign
             input.checked = false;
           }
@@ -159,34 +156,25 @@ export default class BulkChoicesSelector {
 
       // eslint-disable-next-line no-param-reassign
       button.innerHTML = label.replace(/%combinations_number%/, String(selectedCombinationsCount));
-      button?.toggleAttribute('disabled', !selectedCombinationsCount);
+      button.toggleAttribute('disabled', !selectedCombinationsCount);
     });
 
     dropdownBtn?.toggleAttribute('disabled', !selectedCombinationsCount);
   }
 
   private async updateBulkAllSelectionLabels(): Promise<void> {
-    const bulkSelectAllInputs = this.tabContainer.querySelectorAll(CombinationMap.commonBulkAllSelector);
-    const inputs = Object.values(bulkSelectAllInputs);
+    const bulkSelectAllInputs = this.tabContainer.querySelectorAll<HTMLInputElement>(CombinationMap.commonBulkAllSelector);
+    const inputs = Array.from(bulkSelectAllInputs);
+    const combinationIds = await this.getSelectedIds();
+    const selectedCombinationsCount = combinationIds.length;
 
-    for (let i = 0; i < inputs.length; i += 1) {
-      const input = inputs[i];
-
-      if (!(input instanceof HTMLInputElement)) {
-        console.error(`All ${CombinationMap.commonBulkAllSelector} expected to be <input> elements`);
-        return;
-      }
-
+    inputs.forEach((input: HTMLInputElement) => {
       const labelElement = this.tabContainer.querySelector<HTMLLabelElement>(`label[for=${input.id}]`);
+      const span = this.tabContainer.querySelector<HTMLSpanElement>(`label[for=${input.id}] span`);
 
-      if (!labelElement) {
-        console.error(`Each ${CombinationMap.commonBulkAllSelector} is expected to have dedicated a <label> element`);
-        return;
-      }
-      const span = labelElement.querySelector<HTMLSpanElement>('span');
-
-      if (!span) {
-        console.error(`Each label for ${CombinationMap.commonBulkAllSelector} is expected to have a <span> element`);
+      if (!labelElement || !span) {
+        // eslint-disable-next-line max-len
+        console.error(`Each ${CombinationMap.commonBulkAllSelector} is expected to have a dedicated <label> containing a <span>`);
         return;
       }
 
@@ -203,21 +191,15 @@ export default class BulkChoicesSelector {
         combinationsCount = this.paginator.getTotal();
       } else if (input.matches(CombinationMap.bulkSelectAllInPage)) {
         combinationsCount = this.paginator.getTotalInPage();
+      } else if (selectedCombinationsCount) {
+        span.classList.toggle('d-none', false);
+        combinationsCount = selectedCombinationsCount;
       } else {
-        // eslint-disable-next-line no-await-in-loop
-        const combinationIds = await this.getSelectedIds();
-        const selectedCombinationsCount = combinationIds.length;
-
-        if (selectedCombinationsCount) {
-          span.classList.toggle('d-none', false);
-          combinationsCount = selectedCombinationsCount;
-        } else {
-          span.classList.toggle('d-none', true);
-        }
+        span.classList.toggle('d-none', true);
       }
 
       span.innerHTML = label.replace(/%combinations_number%/, String(combinationsCount));
-    }
+    });
   }
 
   private checkAllCombinations(checked: boolean): void {
