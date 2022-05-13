@@ -68,35 +68,35 @@ export default class BulkDeleteHandler {
       return;
     }
 
-    bulkDeleteBtn.addEventListener('click', () => {
-      this.bulkChoicesSelector.getSelectedIds().then((selectedCombinationIds) => {
-        try {
-          const selectedCombinationsCount = selectedCombinationIds.length;
-          const confirmLabel = bulkDeleteBtn.dataset.modalConfirmLabel
-            ?.replace(/%combinations_number%/, String(selectedCombinationsCount));
+    bulkDeleteBtn.addEventListener('click', async () => {
+      const selectedCombinationIds = await this.bulkChoicesSelector.getSelectedIds();
 
-          const modal = new ConfirmModal(
-            {
-              id: 'modal-confirm-delete-combinations',
-              confirmTitle: bulkDeleteBtn.innerHTML,
-              confirmMessage: bulkDeleteBtn.dataset.modalMessage,
-              confirmButtonLabel: confirmLabel,
-              closeButtonLabel: bulkDeleteBtn.dataset.modalCancelLabel,
-              closable: true,
-            },
-            async () => {
-              await this.bulkDelete(selectedCombinationIds);
-              //@todo: hardcoded success for now, but it should still be removed when new modal is implemented in #26004.
-              $.growl({message: 'Success'});
-              this.eventEmitter.emit(CombinationEvents.refreshCombinationList);
-            },
-          );
-          modal.show();
-        } catch (error) {
-          const errorMessage = error.response?.JSON ?? error;
-          $.growl.error({message: errorMessage});
-        }
-      });
+      try {
+        const selectedCombinationsCount = selectedCombinationIds.length;
+        const confirmLabel = bulkDeleteBtn.dataset.modalConfirmLabel
+          ?.replace(/%combinations_number%/, String(selectedCombinationsCount));
+
+        const modal = new ConfirmModal(
+          {
+            id: 'modal-confirm-delete-combinations',
+            confirmTitle: bulkDeleteBtn.innerHTML,
+            confirmMessage: bulkDeleteBtn.dataset.modalMessage,
+            confirmButtonLabel: confirmLabel,
+            closeButtonLabel: bulkDeleteBtn.dataset.modalCancelLabel,
+            closable: true,
+          },
+          async () => {
+            await this.bulkDelete(selectedCombinationIds);
+            //@todo: hardcoded success for now, but it should still be removed when new modal is implemented in #26004.
+            $.growl({message: 'Success'});
+            this.eventEmitter.emit(CombinationEvents.bulkDeleteFinished);
+          },
+        );
+        modal.show();
+      } catch (error) {
+        const errorMessage = error.response?.JSON ?? error;
+        $.growl.error({message: errorMessage});
+      }
     });
   }
 

@@ -53,6 +53,8 @@ export default {
     listRendered: 'combinationsListRendered',
     buildCombinationRow: 'buildCombinationRow',
     bulkUpdateFinished: 'combinationsBulkUpdateFinished',
+    bulkDeleteFinished: 'combinationsBulkDeleteFinished',
+    combinationDeleted: 'combinationDeleted',
   },
   categories: {
     applyCategoryTreeChanges: 'applyCategoryTreeChanges',

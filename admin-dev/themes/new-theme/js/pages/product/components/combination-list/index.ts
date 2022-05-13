@@ -162,6 +162,8 @@ export default class CombinationsList {
       );
     });
 
+    this.eventEmitter.on(CombinationEvents.combinationDeleted, () => this.refreshPage());
+    this.eventEmitter.on(CombinationEvents.bulkDeleteFinished, () => this.refreshPage());
     this.eventEmitter.on(CombinationEvents.bulkUpdateFinished, () => this.refreshPage());
   }
 
