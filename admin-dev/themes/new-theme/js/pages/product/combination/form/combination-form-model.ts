@@ -121,7 +121,7 @@ export default class CombinationFormModel {
       }
       case 'price.ecotaxTaxExcluded': {
         // We first update the impact price before the final price is updated because it is important in the computing
-        // since updateFinalPrices is called after eahc input update it would be triggered too soon if we start by updating
+        // since updateFinalPrices is called after each input update it would be triggered too soon if we start by updating
         // price.ecotaxTaxIncluded
         const ecoTaxRatio = this.getEcoTaxRatio();
         const combinationEcotaxTaxExcluded = this.mapper.getBigNumber('price.ecotaxTaxExcluded') ?? new BigNumber(0);
