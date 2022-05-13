@@ -291,7 +291,8 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @todo: this might not be needed anymore
+     * @todo: this has left unused after some changes, but it may be needed for bulk deletion by chunks
+     *        (remove this code if its still unused after issue #28491 is closed)
      *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *

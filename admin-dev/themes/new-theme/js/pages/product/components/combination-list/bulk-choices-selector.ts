@@ -90,13 +90,16 @@ export default class BulkChoicesSelector {
   }
 
   private init() {
-    this.eventEmitter.on(CombinationEvents.listRendered, () => {
+    this.eventEmitter.on(CombinationEvents.listRendered, async () => {
       this.listenCheckboxesChange();
       // It is important to uncheck the bulk checkboxes before we call the update functions
       // because they are based on the state of the checkboxes
       this.uncheckBulkAllSelection();
-      this.updateBulkAllSelectionLabels();
-      this.updateBulkActionButtons();
+
+      const selectedCombinationsCount = await this.countSelectedIds();
+
+      this.updateBulkAllSelectionLabels(selectedCombinationsCount);
+      this.updateBulkActionButtons(selectedCombinationsCount);
     });
   }
 
@@ -104,7 +107,7 @@ export default class BulkChoicesSelector {
    * Delegated event listener on tabContainer, because every checkbox is re-rendered with dynamic pagination
    */
   private listenCheckboxesChange(): void {
-    this.tabContainer.addEventListener('change', (e) => {
+    this.tabContainer.addEventListener('change', async (e) => {
       const checkbox = e.target;
 
       if (!(checkbox instanceof HTMLInputElement)) {
@@ -134,16 +137,15 @@ export default class BulkChoicesSelector {
         this.uncheckBulkAllSelection();
       }
 
-      this.updateBulkAllSelectionLabels();
-      this.updateBulkActionButtons();
+      const selectedCombinationsCount = await this.countSelectedIds();
+
+      this.updateBulkAllSelectionLabels(selectedCombinationsCount);
+      this.updateBulkActionButtons(selectedCombinationsCount);
     });
   }
 
-  private async updateBulkActionButtons(): Promise<void> {
+  private updateBulkActionButtons(selectedCombinationsCount: number): void {
     const dropdownBtn = this.tabContainer.querySelector<HTMLInputElement>(CombinationMap.bulkActionsDropdownBtn);
-    const selectedCombinationIds = await this.getSelectedIds();
-
-    const selectedCombinationsCount = selectedCombinationIds.length;
     const bulkActionButtons = this.tabContainer.querySelectorAll<HTMLButtonElement>(CombinationMap.bulkActionBtn);
 
     bulkActionButtons.forEach((button: HTMLButtonElement) => {
@@ -162,11 +164,9 @@ export default class BulkChoicesSelector {
     dropdownBtn?.toggleAttribute('disabled', !selectedCombinationsCount);
   }
 
-  private async updateBulkAllSelectionLabels(): Promise<void> {
+  private updateBulkAllSelectionLabels(selectedCombinationsCount: number): void {
     const bulkSelectAllInputs = this.tabContainer.querySelectorAll<HTMLInputElement>(CombinationMap.commonBulkAllSelector);
     const inputs = Array.from(bulkSelectAllInputs);
-    const combinationIds = await this.getSelectedIds();
-    const selectedCombinationsCount = combinationIds.length;
 
     inputs.forEach((input: HTMLInputElement) => {
       const label = this.tabContainer.querySelector<HTMLLabelElement>(`label[for=${input.id}]`);
@@ -216,5 +216,9 @@ export default class BulkChoicesSelector {
       // eslint-disable-next-line no-param-reassign
       checkbox.checked = checked;
     });
+  }
+
+  private async countSelectedIds(): Promise<number> {
+    return (await this.getSelectedIds()).length;
   }
 }
