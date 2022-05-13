@@ -41,7 +41,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Callback;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\PositiveOrZero;
+use Symfony\Component\Validator\Constraints\Positive;
 use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
@@ -103,7 +103,7 @@ class SpecificPriceImpactType extends TranslatorAwareType
                 'constraints' => [
                     new NotBlank(['groups' => [self::FIXED_PRICE_GROUP]]),
                     new Type(['type' => 'float', 'groups' => [self::FIXED_PRICE_GROUP]]),
-                    new PositiveOrZero(['groups' => [self::FIXED_PRICE_GROUP]]),
+                    new Positive(['groups' => [self::FIXED_PRICE_GROUP]]),
                 ],
                 'disabling_switch' => true,
                 'disabled_value' => function ($data, FormInterface $form): bool {
