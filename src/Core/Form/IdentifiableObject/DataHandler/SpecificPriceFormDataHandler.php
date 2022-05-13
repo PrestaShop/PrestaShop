@@ -133,8 +133,8 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
         if (isset($data['groups']['country_id'])) {
             $command->setCountryId((int) $data['groups']['country_id']);
         }
-        if (array_key_exists('shop_id', $data)) {
-            $command->setShopId((int) $data['shop_id']);
+        if (array_key_exists('shop_id', $data['groups'])) {
+            $command->setShopId((int) $data['groups']['shop_id']);
         }
         if (isset($data['customer'])) {
             $command->setCustomerId($this->getCustomerId($data));

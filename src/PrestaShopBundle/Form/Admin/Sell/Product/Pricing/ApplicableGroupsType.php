@@ -125,11 +125,14 @@ class ApplicableGroupsType extends TranslatorAwareType
         ;
 
         if ($this->isMultiShopEnabled) {
+            $shops = array_merge([
+                $this->trans('All shops', 'Admin.Global') => 0,
+            ], $this->shopByIdChoiceProvider->getChoices());
             $builder->add('shop_id', ChoiceType::class, [
                 'label' => false,
                 'required' => false,
                 'placeholder' => false,
-                'choices' => $this->shopByIdChoiceProvider->getChoices(),
+                'choices' => $shops,
             ]);
         }
     }
