@@ -75,7 +75,7 @@ admin_products_v2_duplicate:
   path: /{productId}/duplicate
   methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:duplicate
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::duplicateAction
     _legacy_controller: AdminProducts
     _legacy_link:
       - AdminProducts:duplicate
@@ -84,22 +84,11 @@ admin_products_v2_duplicate:
   requirements:
     productId: \d+
 
-admin_products_v2_activate_ajax:
-  path: /activate_ajax
-  methods: [ POST ]
-  options:
-    expose: true
-  defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:activateAjax
-    _legacy_controller: AdminProducts
-    _legacy_link:
-      - AdminProducts:statusproduct
-
 admin_products_v2_preview:
   path: /{productId}/preview
   methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:preview
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::previewAction
     _legacy_controller: AdminProducts
     _legacy_link:
       - AdminProducts:preview
@@ -113,7 +102,7 @@ admin_products_v2_toggle_status:
   path: /{productId}/toggle_status
   methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:toggleStatus
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::toggleStatusAction
     _legacy_controller: AdminProducts
     _legacy_link:
       - AdminProducts:statusproduct
@@ -126,7 +115,7 @@ admin_products_v2_update_position:
   path: /update_position
   methods: [ POST ]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:updatePosition
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::updatePositionAction
     _legacy_controller: AdminProducts
     _legacy_link:
       - AdminProducts:positionproduct
@@ -139,33 +128,33 @@ admin_products_v2_bulk_enable:
   path: /bulk-enable
   methods: [ POST, DELETE ]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:bulkEnable
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkEnableAction
     _legacy_controller: AdminProducts
     _legacy_link:
       - AdminProducts:submitBulkdisableSelectionproduct
-    _legacy_parameters:
-      id_product: productId
   requirements:
     productId: \d+
+  options:
+    expose: true
 
 admin_products_v2_bulk_disable:
   path: /bulk-disable
   methods: [ POST, DELETE ]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:bulkDisable
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkDisableAction
     _legacy_controller: AdminProducts
     _legacy_link:
       - AdminProducts:submitBulkenableSelectionproduct
-    _legacy_parameters:
-      id_product: productId
   requirements:
     productId: \d+
+  options:
+    expose: true
 
 admin_products_v2_bulk_duplicate:
   path: /bulk-duplicate
   methods: [ POST, DELETE ]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:bulkDuplicate
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkDuplicateAction
     _legacy_controller: AdminProducts
     _legacy_link:
       - AdminProducts:submitBulkduplicateSelectionproduct
@@ -178,7 +167,7 @@ admin_products_v2_bulk_delete:
   path: /bulk-delete
   methods: [ POST, DELETE ]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:bulkDelete
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkDeleteAction
     _legacy_controller: AdminProducts
     _legacy_link:
       - AdminProducts:submitBulkdeleteproduct

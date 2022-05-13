@@ -30,7 +30,6 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkUpdateProductStatusCommand;
@@ -47,9 +46,10 @@ use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidAsso
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForAssociation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
@@ -286,7 +286,7 @@ class ProductController extends FrameworkBundleAdminController
         /** @todo this is temprorary to test errors */
         $response = [
             'success' => false,
-            'message' => $this->trans('Test Error.', 'Admin.Notifications.Success')
+            'message' => $this->trans('Test Error.', 'Admin.Notifications.Success'),
         ];
 
         return new JsonResponse($response);
@@ -296,14 +296,15 @@ class ProductController extends FrameworkBundleAdminController
             );
             $response = [
                 'success' => true,
-                'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
+                'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'),
             ];
         } catch (ProductException $e) {
             $response = [
                 'success' => false,
-                'message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))
+                'message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
             ];
         }
+
         return new JsonResponse($response);
     }
 
@@ -319,11 +320,17 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function toggleStatusAction(int $productId): RedirectResponse
     {
+        $shopId = $this->get('prestashop.adapter.shop.context')->getContextShopID();
+        if (empty($shopId)) {
+            $shopId = $this->get('prestashop.adapter.legacy.configuration')->getInt('PS_SHOP_DEFAULT');
+        }
+        /** @var ProductForEditing $editableProduct */
+        $editableProduct = $this->getQueryBus()->handle(new GetProductForEditing((int) $productId, ShopConstraint::shop($shopId)));
+        $productStatus = !$editableProduct->isActive();
+
         try {
-            /** @var ProductForEditing $editableProduct */
-            $editableProduct = $this->getQueryBus()->handle(new GetProductForEditing((int) $productId));
             $this->getCommandBus()->handle(
-                new UpdateProductStatusCommand((int) $productId, !$editableProduct->isActive())
+                new UpdateProductStatusCommand((int) $productId, $productStatus)
             );
             $this->addFlash(
                 'success',
@@ -415,9 +422,9 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return RedirectResponse
+     * @return JsonResponse
      */
-    public function bulkEnableAction(Request $request): RedirectResponse
+    public function bulkEnableAction(Request $request): JsonResponse
     {
         try {
             $this->getCommandBus()->handle(
@@ -426,15 +433,11 @@ class ProductController extends FrameworkBundleAdminController
                     true
                 )
             );
-            $this->addFlash(
-                'success',
-                $this->trans('Products successfully activated.', 'Admin.Catalog.Notification')
-            );
         } catch (Exception $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            return $this->json(['error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))]);
         }
 
-        return $this->redirectToRoute('admin_products_v2_index');
+        return $this->json(['success' => true]);
     }
 
     /**
@@ -448,9 +451,9 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return RedirectResponse
+     * @return JsonResponse
      */
-    public function bulkDisableAction(Request $request): RedirectResponse
+    public function bulkDisableAction(Request $request): JsonResponse
     {
         try {
             $this->getCommandBus()->handle(
@@ -459,15 +462,11 @@ class ProductController extends FrameworkBundleAdminController
                     false
                 )
             );
-            $this->addFlash(
-                'success',
-                $this->trans('Products successfully deactivated.', 'Admin.Catalog.Notification')
-            );
         } catch (Exception $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            return $this->json(['error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))]);
         }
 
-        return $this->redirectToRoute('admin_products_v2_index');
+        return $this->json(['success' => true]);
     }
 
     /**
@@ -510,6 +509,10 @@ class ProductController extends FrameworkBundleAdminController
     private function getProductIdsFromRequest(Request $request): array
     {
         $productIds = $request->request->get('product_bulk');
+
+        if (is_numeric($productIds)) {
+            return [(int) $productIds];
+        }
 
         if (!is_array($productIds)) {
             return [];
