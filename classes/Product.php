@@ -3022,7 +3022,7 @@ class ProductCore extends ObjectModel
                     FROM `' . _DB_PREFIX_ . 'product` p
                     ' . Shop::addSqlAssociation('product', 'p') . '
                     WHERE product_shop.`active` = 1
-                    AND product_shop.`date_add` > "' . date('Y-m-d', strtotime('-' . $nb_days_new_product . ' DAY')) . '"
+                    AND DATEDIFF(product_shop.`date_add`, DATE_SUB("' . $now . '", INTERVAL ' . $nb_days_new_product . ' DAY)) > 0
                     ' . ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '') . '
                     ' . $sql_groups;
 
@@ -3057,7 +3057,12 @@ class ProductCore extends ObjectModel
         if ($front) {
             $sql->where('product_shop.`visibility` IN ("both", "catalog")');
         }
-        $sql->where('product_shop.`date_add` > "' . date('Y-m-d', strtotime('-' . $nb_days_new_product . ' DAY')) . '"');
+        $sql->where('DATEDIFF(product_shop.`date_add`,
+            DATE_SUB(
+                "' . $now . '",
+                INTERVAL ' . $nb_days_new_product . ' DAY
+            )
+        ) > 0');
         if (Group::isFeatureActive()) {
             $groups = FrontController::getCurrentCustomerGroups();
             $sql->where('EXISTS(SELECT 1 FROM `' . _DB_PREFIX_ . 'category_product` cp
