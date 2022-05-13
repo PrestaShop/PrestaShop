@@ -355,6 +355,15 @@ describe('BO - Orders : Create Order - Select Previous Carts', async () => {
       await expect(pageTitle).to.contains(stocksPage.pageTitle);
     });
 
+    it(`should filter by product '${Products.demo_1.name}'`, async function(){
+      await testContext.addContextItem(this, 'testIdentifier', 'filterByProduct', baseContext);
+
+      await stocksPage.simpleFilter(page, Products.demo_1.name);
+
+      const numberOfProductsAfterFilter = await stocksPage.getNumberOfProductsFromList(page);
+      await expect(numberOfProductsAfterFilter).to.be.at.least(1);
+    });
+
     it('should get the Available stock of the ordered product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'getAvailableStockOfOrderedProduct', baseContext);
 
@@ -366,7 +375,7 @@ describe('BO - Orders : Create Order - Select Previous Carts', async () => {
   // 5 - Check the Carts table
   describe('Check the Carts table', async () => {
     it('should go to \'Orders > Orders\' page', async function () {
-      await testContext.addContextItem(this, 'testidentifier', 'goToOrdersPage2', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage2', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,

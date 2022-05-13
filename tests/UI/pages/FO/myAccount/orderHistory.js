@@ -26,7 +26,7 @@ class OrderHistory extends FOBasePage {
     this.orderTableColumn = (row, column) => `${this.ordersTableRow(row)} td:nth-child(${column})`;
     this.reorderLink = row => `${this.ordersTableRow(row)} a.reorder-link`;
     this.detailsLink = row => `${this.ordersTableRow(row)} a.view-order-details-link`;
-    this.orderTableColumnInvoice = row => `${this.orderTableColumn(row, 6)} a[data-role="invoice"]`;
+    this.orderTableColumnInvoice = row => `${this.orderTableColumn(row, 6)} a`;
     // Messages block
     this.boxMessagesSection = '.box.messages';
     this.messageRow = row => `${this.boxMessagesSection} div:nth-child(${row}).message.row`;
@@ -88,7 +88,7 @@ class OrderHistory extends FOBasePage {
    * @returns {Promise<boolean>}
    */
   isInvoiceVisible(page, orderRow = 1) {
-    return this.elementVisible(page, this.orderTableColumnInvoice(orderRow));
+    return this.elementVisible(page, this.orderTableColumnInvoice(orderRow), 1000);
   }
 
   /**

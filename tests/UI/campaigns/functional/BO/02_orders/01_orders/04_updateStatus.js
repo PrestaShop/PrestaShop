@@ -236,7 +236,7 @@ describe('BO - orders : Update order status', async () => {
           await expect(pageTitle, 'Fail to open order history page').to.contains(foOrderHistoryPage.pageTitle);
         });
 
-        it('should check last the order status', async function () {
+        it('should check the last order status', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkLastOrderStatus${index}`, baseContext);
 
           const orderStatusFO = await foOrderHistoryPage.getOrderStatus(page, 1);
