@@ -76,7 +76,7 @@ export default class RowDeleteHandler {
           this.findCombinationId(button),
         );
         $.growl({message: response.message});
-        this.eventEmitter.emit(CombinationEvents.refreshCombinationList);
+        this.eventEmitter.emit(CombinationEvents.combinationDeleted);
       });
       modal.show();
     } catch (error) {

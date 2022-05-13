@@ -26,7 +26,8 @@
 import ProductMap from '@pages/product/product-map';
 import ProductEvents from '@pages/product/product-event-map';
 import {EventEmitter} from 'events';
-import {isChecked} from '@PSTypes/typeguard';
+import PaginatedCombinationsService from '@pages/product/services/paginated-combinations-service';
+import DynamicPaginator from '@components/pagination/dynamic-paginator';
 
 const CombinationMap = ProductMap.combinations;
 const CombinationEvents = ProductEvents.combinations;
@@ -40,33 +41,80 @@ export default class BulkChoicesSelector {
 
   private tabContainer: HTMLDivElement;
 
-  constructor(eventEmitter: EventEmitter, tabContainer: HTMLDivElement) {
+  private paginatedCombinationsService: PaginatedCombinationsService
+
+  private paginator: DynamicPaginator;
+
+  constructor(
+    eventEmitter: EventEmitter,
+    tabContainer: HTMLDivElement,
+    paginatedCombinationsService: PaginatedCombinationsService,
+    paginator: DynamicPaginator,
+  ) {
     this.eventEmitter = eventEmitter;
     this.tabContainer = tabContainer;
+    this.paginatedCombinationsService = paginatedCombinationsService;
+    this.paginator = paginator;
+
     this.init();
   }
 
-  public getSelectedCheckboxes(): NodeListOf<HTMLInputElement> {
-    return this.tabContainer.querySelectorAll<HTMLInputElement>(`${CombinationMap.tableRow.isSelectedCombination}:checked`);
+  public async getSelectedIds(): Promise<number[]> {
+    const allSelected = this.tabContainer.querySelector<HTMLInputElement>(`${CombinationMap.bulkSelectAll}:checked`);
+
+    if (allSelected) {
+      const response: JQuery.jqXHR = await this.paginatedCombinationsService.getCombinationIds();
+
+      return response;
+    }
+
+    const selectedCheckboxes = this.tabContainer
+      .querySelectorAll<HTMLInputElement>(`${CombinationMap.tableRow.isSelectedCombination}:checked`);
+
+    return Array.from(selectedCheckboxes).map((checkbox: HTMLInputElement) => Number(checkbox.value));
+  }
+
+  /**
+   * Uncheck the "select all" checkboxes, so component acts as a simple manual selection
+   * Does not uncheck all combinations (just bulk selections)!
+   *
+   * (e.g. when user "selects all", but then unchecks one of checkboxes)
+   */
+  public uncheckBulkAllSelection(): void {
+    const bulkSelectAllCheckboxes = this.tabContainer.querySelectorAll<HTMLInputElement>(CombinationMap.commonBulkAllSelector);
+
+    bulkSelectAllCheckboxes.forEach((checkbox: HTMLInputElement) => {
+      // eslint-disable-next-line no-param-reassign
+      checkbox.checked = false;
+    });
   }
 
   private init() {
-    this.listenCheckboxesChange();
-    this.eventEmitter.on(CombinationEvents.listRendered, () => this.updateBulkButtonsState());
+    this.eventEmitter.on(CombinationEvents.listRendered, async () => {
+      this.listenCheckboxesChange();
+      // It is important to uncheck the bulk checkboxes before we call the update functions
+      // because they are based on the state of the checkboxes
+      this.uncheckBulkAllSelection();
+
+      const selectedCombinationsCount = await this.countSelectedIds();
+
+      this.updateBulkAllSelectionLabels(selectedCombinationsCount);
+      this.updateBulkActionButtons(selectedCombinationsCount);
+    });
   }
 
   /**
    * Delegated event listener on tabContainer, because every checkbox is re-rendered with dynamic pagination
    */
   private listenCheckboxesChange(): void {
-    this.tabContainer.addEventListener('change', (e) => {
+    this.tabContainer.addEventListener('change', async (e) => {
       const checkbox = e.target;
 
       if (!(checkbox instanceof HTMLInputElement)) {
         return;
       }
 
-      const isBulkSelectAll = checkbox.matches(CombinationMap.bulkSelectAll);
+      const isBulkSelectAll = checkbox.matches(`${CombinationMap.bulkSelectAll}, ${CombinationMap.bulkSelectAllInPage}`);
 
       // don't proceed if its not one of the expected checkboxes
       if (!isBulkSelectAll && !checkbox.matches(CombinationMap.tableRow.isSelectedCombination)) {
@@ -74,19 +122,30 @@ export default class BulkChoicesSelector {
       }
 
       if (isBulkSelectAll) {
-        this.checkAll(checkbox.checked);
+        const bulkSelectAllCheckboxes = this.tabContainer
+          .querySelectorAll<HTMLInputElement>(CombinationMap.commonBulkAllSelector);
+        // this makes sure that only one checkbox is checked at a time.
+        // Radio buttons are not an option, because we also need to uncheck the box once user clicks on the checked one.
+        bulkSelectAllCheckboxes.forEach((input: HTMLInputElement) => {
+          if (checkbox.id !== input.id) {
+            // eslint-disable-next-line no-param-reassign
+            input.checked = false;
+          }
+        });
+        this.checkAllCombinations(checkbox.checked);
+      } else {
+        this.uncheckBulkAllSelection();
       }
 
-      this.updateBulkButtonsState();
+      const selectedCombinationsCount = await this.countSelectedIds();
+
+      this.updateBulkAllSelectionLabels(selectedCombinationsCount);
+      this.updateBulkActionButtons(selectedCombinationsCount);
     });
   }
 
-  private updateBulkButtonsState(): void {
-    const selectAllCheckbox = document.querySelector(CombinationMap.bulkSelectAll);
+  private updateBulkActionButtons(selectedCombinationsCount: number): void {
     const dropdownBtn = this.tabContainer.querySelector<HTMLInputElement>(CombinationMap.bulkActionsDropdownBtn);
-    const selectedCombinationsCount = this.getSelectedCheckboxes().length;
-    const enable = isChecked(selectAllCheckbox) || selectedCombinationsCount !== 0;
-
     const bulkActionButtons = this.tabContainer.querySelectorAll<HTMLButtonElement>(CombinationMap.bulkActionBtn);
 
     bulkActionButtons.forEach((button: HTMLButtonElement) => {
@@ -99,18 +158,67 @@ export default class BulkChoicesSelector {
 
       // eslint-disable-next-line no-param-reassign
       button.innerHTML = label.replace(/%combinations_number%/, String(selectedCombinationsCount));
-      button?.toggleAttribute('disabled', !enable);
+      button.toggleAttribute('disabled', !selectedCombinationsCount);
     });
 
-    dropdownBtn?.toggleAttribute('disabled', !enable);
+    dropdownBtn?.toggleAttribute('disabled', !selectedCombinationsCount);
   }
 
-  private checkAll(checked: boolean): void {
+  private updateBulkAllSelectionLabels(selectedCombinationsCount: number): void {
+    const bulkSelectAllInputs = this.tabContainer.querySelectorAll<HTMLInputElement>(CombinationMap.commonBulkAllSelector);
+    const inputs = Array.from(bulkSelectAllInputs);
+
+    inputs.forEach((input: HTMLInputElement) => {
+      const label = this.tabContainer.querySelector<HTMLLabelElement>(`label[for=${input.id}]`);
+      const span = this.tabContainer.querySelector<HTMLSpanElement>(`label[for=${input.id}] span`);
+
+      if (!label || !span) {
+        // eslint-disable-next-line max-len
+        console.error(`Each ${CombinationMap.commonBulkAllSelector} is expected to have a dedicated <label> containing a <span>`);
+        return;
+      }
+
+      let labelText = label.dataset.label;
+
+      if (!labelText) {
+        console.error(`Each label for ${CombinationMap.commonBulkAllSelector} is expected to have "data-label" attribute`);
+        return;
+      }
+
+      let combinationsCount = 0;
+
+      if (input.matches(CombinationMap.bulkSelectAll)) {
+        combinationsCount = this.paginator.getTotal();
+      } else if (input.matches(CombinationMap.bulkSelectAllInPage)) {
+        combinationsCount = this.paginator.getTotalInPage();
+      } else if (selectedCombinationsCount) {
+        span.classList.toggle('d-none', false);
+        combinationsCount = selectedCombinationsCount;
+        labelText = labelText.replace(/%total_combinations%/, String(this.paginator.getTotal()));
+      } else {
+        span.classList.toggle('d-none', true);
+      }
+
+      span.innerHTML = labelText.replace(/%combinations_number%/, String(combinationsCount));
+    });
+  }
+
+  private checkAllCombinations(checked: boolean): void {
+    const allDisplayCheckbox = this.tabContainer.querySelector<HTMLInputElement>(CombinationMap.bulkAllPreviewInput);
+
+    if (allDisplayCheckbox instanceof HTMLInputElement) {
+      allDisplayCheckbox.checked = checked;
+    }
+
     const allCheckboxes = this.tabContainer.querySelectorAll<HTMLInputElement>(CombinationMap.tableRow.isSelectedCombination);
 
     allCheckboxes.forEach((checkbox: HTMLInputElement) => {
       // eslint-disable-next-line no-param-reassign
       checkbox.checked = checked;
     });
+  }
+
+  private async countSelectedIds(): Promise<number> {
+    return (await this.getSelectedIds()).length;
   }
 }

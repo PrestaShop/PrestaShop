@@ -86,9 +86,14 @@ export default class BulkEditionHandler {
     ));
   }
 
-  private showFormModal(formUrl: string, modalTitle: string, confirmButtonLabel: string, closeButtonLabel: string): void {
-    const selectedCombinationsCount = this.bulkChoicesSelector.getSelectedCheckboxes().length;
-
+  private async showFormModal(
+    formUrl: string,
+    modalTitle: string,
+    confirmButtonLabel: string,
+    closeButtonLabel: string,
+  ): Promise<void> {
+    const selectedCombinationIds = await this.bulkChoicesSelector.getSelectedIds();
+    const selectedCombinationsCount = selectedCombinationIds.length;
     let initialSerializedData: string;
     const iframeModal = new IframeModal({
       id: CombinationMap.bulkFormModalId,
@@ -146,21 +151,20 @@ export default class BulkEditionHandler {
 
   private async submitForm(form: HTMLFormElement): Promise<void> {
     const progressModal = this.showProgressModal();
-
-    const checkboxes = this.bulkChoicesSelector.getSelectedCheckboxes();
+    const selectedIds = await this.bulkChoicesSelector.getSelectedIds();
     const progressModalElement = document.getElementById(CombinationMap.bulkProgressModalId);
 
     let progress = 1;
 
-    for (let i = 0; i < checkboxes.length; i += 1) {
-      const checkbox = checkboxes[i];
+    for (let i = 0; i < selectedIds.length; i += 1) {
+      const combinationId = selectedIds[i];
 
       // @todo when the ProgressModal will be integrated this will update it after each request
       try {
         // eslint-disable-next-line no-await-in-loop
         const response: Response = await this.combinationsService.bulkUpdate(
           this.productId,
-          Number(checkbox.value),
+          combinationId,
           new FormData(form),
         );
         // eslint-disable-next-line no-await-in-loop

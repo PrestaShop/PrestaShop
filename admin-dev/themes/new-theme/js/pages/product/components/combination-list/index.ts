@@ -108,10 +108,6 @@ export default class CombinationsList {
     this.paginatedCombinationsService = new PaginatedCombinationsService(productId);
     this.productAttributeGroups = [];
 
-    const bulkChoicesSelector = new BulkChoicesSelector(this.eventEmitter, this.externalCombinationTab);
-
-    new BulkEditionHandler(productId, this.eventEmitter, bulkChoicesSelector, this.combinationsService);
-    new BulkDeleteHandler(productId, this.eventEmitter, bulkChoicesSelector, this.combinationsService);
     new RowDeleteHandler(this.eventEmitter, this.combinationsService);
 
     this.init();
@@ -166,6 +162,8 @@ export default class CombinationsList {
       );
     });
 
+    this.eventEmitter.on(CombinationEvents.combinationDeleted, () => this.refreshPage());
+    this.eventEmitter.on(CombinationEvents.bulkDeleteFinished, () => this.refreshPage());
     this.eventEmitter.on(CombinationEvents.bulkUpdateFinished, () => this.refreshPage());
   }
 
@@ -193,6 +191,7 @@ export default class CombinationsList {
     );
     this.combinationModalApp = initCombinationModal(
       CombinationsMap.editModal,
+      this.paginatedCombinationsService,
       this.productId,
       this.eventEmitter,
     );
@@ -220,6 +219,15 @@ export default class CombinationsList {
       this.renderer,
       this.combinationsService,
     );
+    const bulkChoicesSelector = new BulkChoicesSelector(
+      this.eventEmitter,
+      this.externalCombinationTab,
+      this.paginatedCombinationsService,
+      this.paginator,
+    );
+
+    new BulkEditionHandler(this.productId, this.eventEmitter, bulkChoicesSelector, this.combinationsService);
+    new BulkDeleteHandler(this.productId, this.eventEmitter, bulkChoicesSelector, this.combinationsService);
 
     this.refreshCombinationList(true);
   }

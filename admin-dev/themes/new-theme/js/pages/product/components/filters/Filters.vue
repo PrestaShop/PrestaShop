@@ -115,6 +115,12 @@
         this.selectedFilters[parentId] = this.selectedFilters[parentId].filter(
           (e: Record<string, any>) => filter.id !== e.id,
         );
+
+        if (this.selectedFilters[parentId].length === 0) {
+          // remove parent array if it became empty after filters removal
+          this.selectedFilters.splice(parentId, 1);
+        }
+
         this.updateFilters();
       },
       clearAll(): void {

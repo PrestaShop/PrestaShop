@@ -1505,6 +1505,11 @@ $product-page-padding-bottom: 80px !default;
         display: inline-block;
       }
 
+      .dropdown-menu .md-checkbox {
+        display: block;
+        padding-left: 38px;
+      }
+
       .ps-sortable-column {
         display: inline-block;
       }
@@ -1569,6 +1574,19 @@ $product-page-padding-bottom: 80px !default;
         margin-top: -1.25rem;
         margin-right: auto;
         margin-left: auto;
+      }
+    }
+
+    #bulk-all-selection-dropdown {
+      cursor: pointer;
+
+      label {
+        cursor: pointer;
+      }
+
+      .dropdown-toggle {
+        background-color: inherit;
+        border: none;
       }
     }
   }

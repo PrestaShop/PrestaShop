@@ -250,15 +250,16 @@ class CombinationController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
      * @param int $productId
+     * @param ProductCombinationFilters $filters
      *
      * @return JsonResponse
      */
-    public function getListIdsAction(int $productId): JsonResponse
+    public function getCombinationIdsAction(int $productId, ProductCombinationFilters $filters): JsonResponse
     {
         /** @var CombinationRepository $repository */
         $repository = $this->get('prestashop.adapter.product.combination.repository.combination_repository');
 
-        $combinationIds = $repository->getCombinationIdsByProductId(new ProductId($productId));
+        $combinationIds = $repository->getCombinationIds(new ProductId($productId), $filters);
         $data = [];
         foreach ($combinationIds as $combinationId) {
             $data[] = $combinationId->getValue();
@@ -290,6 +291,9 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
+     * @todo: this has left unused after some changes, but it may be needed for bulk deletion by chunks
+     *        (remove this code if its still unused after issue #28491 is closed)
+     *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param int $productId

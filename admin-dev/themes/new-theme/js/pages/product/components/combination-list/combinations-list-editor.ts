@@ -58,7 +58,7 @@ export default class CombinationsListEditor {
   private readonly editionDisabledElements: string[] = [
     CombinationsMap.bulkActionsDropdownBtn,
     CombinationsMap.tableRow.isSelectedCombination,
-    CombinationsMap.bulkSelectAll,
+    CombinationsMap.bulkSelectAllInPage,
     CombinationsMap.filtersSelectorButtons,
     CombinationsMap.generateCombinationsButton,
     CombinationsMap.list.rowActionButtons,

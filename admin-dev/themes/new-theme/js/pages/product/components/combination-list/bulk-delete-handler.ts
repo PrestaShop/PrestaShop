@@ -59,7 +59,7 @@ export default class BulkDeleteHandler {
     this.init();
   }
 
-  private init(): void {
+  private async init(): Promise<void> {
     const bulkDeleteBtn = document.querySelector<HTMLButtonElement>(CombinationMap.bulkDeleteBtn);
 
     if (!(bulkDeleteBtn instanceof HTMLButtonElement)) {
@@ -68,9 +68,11 @@ export default class BulkDeleteHandler {
       return;
     }
 
-    bulkDeleteBtn.addEventListener('click', () => {
+    bulkDeleteBtn.addEventListener('click', async () => {
+      const selectedCombinationIds = await this.bulkChoicesSelector.getSelectedIds();
+
       try {
-        const selectedCombinationsCount = this.bulkChoicesSelector.getSelectedCheckboxes().length;
+        const selectedCombinationsCount = selectedCombinationIds.length;
         const confirmLabel = bulkDeleteBtn.dataset.modalConfirmLabel
           ?.replace(/%combinations_number%/, String(selectedCombinationsCount));
 
@@ -84,9 +86,10 @@ export default class BulkDeleteHandler {
             closable: true,
           },
           async () => {
-            const response = await this.bulkDelete();
-            $.growl({message: response.message});
-            this.eventEmitter.emit(CombinationEvents.refreshCombinationList);
+            await this.bulkDelete(selectedCombinationIds);
+            //@todo: hardcoded success for now, but it should still be removed when new modal is implemented in #26004.
+            $.growl({message: 'Success'});
+            this.eventEmitter.emit(CombinationEvents.bulkDeleteFinished);
           },
         );
         modal.show();
@@ -100,12 +103,46 @@ export default class BulkDeleteHandler {
   /**
    * @todo: the bulk delete action should be displayed with a progress modal once it is ready.
    */
-  private bulkDelete(): JQuery.jqXHR {
-    const combinationIds: number[] = [];
-    this.bulkChoicesSelector.getSelectedCheckboxes().forEach((checkbox: HTMLInputElement) => {
-      combinationIds.push(Number(checkbox.value));
-    });
+  private async bulkDelete(combinationIds: number[]): Promise<void> {
+    const progressModal = this.showProgressModal();
+    const progressModalElement = document.getElementById(CombinationMap.bulkProgressModalId);
 
-    return this.combinationsService.bulkDeleteCombinations(this.productId, combinationIds);
+    let progress = 1;
+
+    //@todo: is there better loop option to avoid disabling eslint?
+    // eslint-disable-next-line no-restricted-syntax
+    for (const combinationId of combinationIds) {
+      try {
+        // eslint-disable-next-line no-await-in-loop
+        await this.combinationsService.deleteCombination(combinationId);
+      } catch (error) {
+        console.error(error);
+      }
+
+      //@todo: also related with temporary progress modal. Needs to be fixed according to new progress modal once its merged in #26004.
+      const progressContent = progressModalElement?.querySelector<HTMLParagraphElement>('.progress-increment');
+
+      if (progressContent) {
+        progressContent.innerHTML = String(progress);
+      }
+      progress += 1;
+    }
+
+    progressModal.hide();
+  }
+
+  private showProgressModal(): ConfirmModal {
+    //@todo: Replace with new progress modal when introduced in #26004.
+    const modal = new ConfirmModal(
+      {
+        id: CombinationMap.bulkProgressModalId,
+        confirmMessage: '<div>Updating combinations: <p class="progress-increment"></p></div>',
+      },
+      () => null,
+    );
+
+    modal.show();
+
+    return modal;
   }
 }

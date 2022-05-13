@@ -27,7 +27,8 @@ const combinationListFormId = '#combination_list';
 const attachmentsBlockId = '#product_specifications_attachments';
 // It does not include "#" so it can be selected by getElementById
 const isSelectedCombinationClass = 'combination-is-selected';
-const bulkCombinationSelectAllId = 'bulk-select-all-in-page';
+const commonBulkSelectAllClass = 'bulk-select-all';
+const bulkCombinationSelectAllInPageId = 'bulk-select-all-in-page';
 const progressModalId = 'bulk-combination-progress-modal';
 
 export default {
@@ -133,7 +134,7 @@ export default {
       modifiedFieldClass: 'combination-value-changed',
       invalidClass: 'is-invalid',
       editionModeClass: 'edition-mode',
-      fieldInputs: `.combination-list-row :input:not(#${bulkCombinationSelectAllId}):not(.${isSelectedCombinationClass})`,
+      fieldInputs: `.combination-list-row :input:not(.${commonBulkSelectAllClass}):not(.${isSelectedCombinationClass})`,
       errorAlerts: '.combination-list-row .alert-danger',
       rowActionButtons: '.combination-row-actions button',
       footer: {
@@ -156,8 +157,11 @@ export default {
     bulkDeleteBtn: '#combination-bulk-delete-btn',
     bulkActionBtn: '.bulk-action-btn',
     bulkActionsDropdownBtn: '#combination-bulk-actions-btn',
-    bulkSelectAll: `#${bulkCombinationSelectAllId}`,
-    bulkSelectAllId: bulkCombinationSelectAllId,
+    bulkAllPreviewInput: '#bulk-all-preview',
+    bulkSelectAll: '#bulk-select-all',
+    commonBulkAllSelector: `.${commonBulkSelectAllClass}`,
+    bulkSelectAllInPage: `#${bulkCombinationSelectAllInPageId}`,
+    bulkSelectAllInPageId: bulkCombinationSelectAllInPageId,
     bulkProgressModalId: progressModalId,
     bulkFormModalId: 'bulk-combination-form-modal',
   },

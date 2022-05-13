@@ -86,6 +86,7 @@ services:
       - '%database_prefix%'
       - '@prestashop.adapter.attribute.repository.attribute_repository'
       - '@prestashop.adapter.product.combination.validate.combination_validator'
+      - '@prestashop.core.grid.query_builder.product_combination'
 
   prestashop.adapter.product.combination.update.combination_stock_updater:
     class: PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater
