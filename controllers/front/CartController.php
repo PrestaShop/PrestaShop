@@ -685,11 +685,11 @@ class CartControllerCore extends FrontController
      * @param string $sentence Sentence that contains "[1]%product%[/1]" (and "[1]%quantity%[/1]" in some)
      * @param string $product_name The product name
      * @param string|null $attributes The string of attributes
-     * @param mixed|null $quantity The quantity param (present in some sentences)
+     * @param int|null $quantity The quantity param (present in some sentences)
      *
      * @return string
      */
-    private function translateProductNameWithAttributes(string $sentence, string $product_name, string $attributes = null, $quantity = null)
+    private function translateProductNameWithAttributes(string $sentence, string $product_name, string $attributes = null, int $quantity = null): string
     {
         return $this->trans(
             $sentence,
