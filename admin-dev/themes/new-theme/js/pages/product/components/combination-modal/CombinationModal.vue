@@ -213,8 +213,8 @@
       this.combinationList = $(ProductMap.combinations.combinationsFormContainer);
       this.initCombinationIds();
       this.watchEditButtons();
-      this.eventEmitter.on(CombinationEvents.refreshCombinationList, () => this.initCombinationIds(),
-      );
+      this.eventEmitter.on(CombinationEvents.refreshCombinationList, () => this.initCombinationIds());
+      this.eventEmitter.on(CombinationEvents.listRendered, () => this.initCombinationIds());
     },
     methods: {
       watchEditButtons(): void {
