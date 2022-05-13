@@ -70,7 +70,7 @@ export class ConfirmModalContainer extends ModalContainer implements ConfirmModa
     super(params);
   }
 
-  buildModalContainer(params: ConfirmModalParams): void {
+  protected buildModalContainer(params: ConfirmModalParams): void {
     super.buildModalContainer(params);
 
     // Modal message element

@@ -102,7 +102,7 @@ export class IframeModalContainer extends ModalContainer implements IframeModalC
     super(params);
   }
 
-  buildModalContainer(params: IframeModalParams): void {
+  protected buildModalContainer(params: IframeModalParams): void {
     super.buildModalContainer(params);
     this.container.classList.add('modal-iframe');
 

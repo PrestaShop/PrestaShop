@@ -68,3 +68,43 @@ $component-name: modal;
     @include border-radius(0 0 6px 6px);
   }
 }
+
+.#{$component-name}-progress {
+  .#{$component-name}-dialog {
+    width: 90%;
+    max-width: 800px;
+    max-height: 80vh;
+  }
+
+  .#{$component-name}-header {
+    padding: 1.5rem;
+  }
+
+  .#{$component-name}-content {
+    padding: 0;
+  }
+
+  .#{$component-name}-footer {
+    background: rgba(234, 235, 236, 0.3);
+    padding: 1rem 1.5rem;
+  }
+
+  .#{$component-name}-body {
+    max-height: 60vh;
+    padding: 0 1.5rem 1rem;
+    overflow: auto;
+
+    .progress-headline {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .progress-icon {
+      .spinner {
+        width: 1.25rem;
+        height: 1.25rem;
+        margin-right: 1rem;
+      }
+    }
+  }
+}

@@ -113,13 +113,18 @@ export default {
     unlimitedCheckbox: '.date-range-unlimited',
   },
   progressModal: {
-    switchToErrorButton: 'switch-to-errors-button',
-    progressPercent: 'progress-percent',
-    stopProcessingButton: 'stop-processing',
-    modalSingleErrorContainer: 'modal-error-container-single',
-    modalErrorContainer: 'progress-modal-error-container',
-    switchToProgressButton: 'switch-to-progress-button',
-    downloadErrorLogButton: 'download-error-log',
-    progressBarDone: 'modal_progressbar_done'
-  }
+    classes: {
+      switchToErrorButton: 'switch-to-errors-button',
+      progressPercent: 'progress-percent',
+      stopProcessing: 'stop-processing',
+      progressHeadline: 'progress-headline',
+      progressMessage: 'progress-message',
+      progressIcon: 'progress-icon',
+      errorMessage: 'progress-error-message',
+      errorContainer: 'progress-error-container',
+      switchToProgressButton: 'switch-to-progress-button',
+      downloadErrorLogButton: 'download-error-log',
+      progressBarDone: 'modal_progressbar_done',
+    },
+  },
 };
