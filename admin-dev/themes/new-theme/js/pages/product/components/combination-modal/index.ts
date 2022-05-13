@@ -60,12 +60,11 @@ export default function initCombinationModal(
     el: combinationModalSelector,
     template:
     // eslint-disable-next-line max-len
-      '<combination-modal :productId=productId :emptyImageUrl="emptyImage" :eventEmitter=eventEmitter :paginated-combinations-service="paginatedCombinationsService"/>',
+      '<combination-modal :emptyImageUrl="emptyImage" :eventEmitter=eventEmitter :paginated-combinations-service="paginatedCombinationsService"/>',
     components: {CombinationModal},
     i18n,
     data: {
       paginatedCombinationsService,
-      productId,
       eventEmitter,
       emptyImage,
     },

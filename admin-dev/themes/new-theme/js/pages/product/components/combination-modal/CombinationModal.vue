@@ -200,10 +200,6 @@
         type: PaginatedCombinationsService,
         required: true,
       },
-      productId: {
-        type: Number,
-        required: true,
-      },
       eventEmitter: {
         type: Object,
         required: true,

@@ -86,7 +86,7 @@ export default class BulkDeleteHandler {
             },
             async () => {
               await this.bulkDelete(selectedCombinationIds);
-              //@todo: hardcoded success. Pass translated message to modal data attribute?
+              //@todo: hardcoded success for now, but it should still be removed when new modal is implemented in #26004.
               $.growl({message: 'Success'});
               this.eventEmitter.emit(CombinationEvents.refreshCombinationList);
             },
