@@ -27,17 +27,23 @@
         class="dropdown-item js-bulk-action-ajax-btn {{ action.options.class }}"
         type="button"
         data-ajax-url="{{ action.options.ajax_route }}"
-        data-modal-title="{{ action.options.modal_title }}"
-        data-modal-close="{{ action.options.modal_close }}"
-        data-modal-stop-processing="{{ action.options.modal_stop_processing }}"
-        data-modal-errors-occurred="{{ action.options.modal_errors_occurred }}"
-        data-modal-back-to-processing="{{ action.options.modal_back_to_processing }}"
-        data-modal-download-error-log="{{ action.options.modal_download_error_log }}"
-        data-modal-view-error-log="{{ action.options.modal_view_error_log }}"
-        data-modal-error-log-title="{{ action.options.modal_error_log_title }}"
-{% for attribute, value in action.options.attributes %}
+        data-route-params="{{ action.options.route_params|json_encode }}"
+        data-request-param-name="{{ action.options.request_param_name }}"
+        data-progress-title="{{ action.options.modal_progress_title }}"
+        data-progress-message="{{ action.options.modal_progress_message }}"
+        data-close-label="{{ action.options.modal_close }}"
+        data-stop-processing="{{ action.options.modal_stop_processing }}"
+        data-errors-message="{{ action.options.modal_errors_message }}"
+        data-back-to-processing="{{ action.options.modal_back_to_processing }}"
+        data-download-error-log="{{ action.options.modal_download_error_log }}"
+        data-view-error-log="{{ action.options.modal_view_error_log }}"
+        data-view-error-title="{{ action.options.modal_error_title }}"
+        {% for attribute, value in action.options.attributes %}
         {{ attribute }}="{{ value }}"
         {% endfor %}
 >
+  {% if action.icon is not empty %}
+    <i class="material-icons">{{ action.icon }}</i>
+  {% endif %}
   {{ action.name }}
 </button>

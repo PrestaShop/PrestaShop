@@ -52,28 +52,35 @@ final class AjaxBulkAction extends AbstractBulkAction
             ->setDefaults([
                 'attributes' => [],
                 'ajax_route' => '',
+                'route_params' => [],
+                'request_param_name' => '',
                 'class' => '',
-                'modal_title' => 'Completing action',
+                // Modal params
+                'modal_progress_title' => 'Completing %total% actions',
+                'modal_progress_message' => 'Processing %done% / %total% elements.',
                 'modal_close' => 'Close',
                 'modal_stop_processing' => 'Stop processing',
-                'modal_errors_occurred' => '%d errors occurred. You can download the logs for future reference.',
+                'modal_errors_message' => '%error_count% errors occurred. You can download the logs for future reference.',
                 'modal_back_to_processing' => 'Back to processing',
                 'modal_download_error_log' => 'Download error log',
-                'modal_view_error_log' => 'View %d error logs',
-                'modal_error_log_title' => 'Error log',
-                'route_params' => [],
+                'modal_view_error_log' => 'View %error_count% error logs',
+                'modal_error_title' => 'Error log',
             ])
             ->setAllowedTypes('class', 'string')
-            ->setAllowedTypes('modal_title', 'string')
+            ->setAllowedTypes('ajax_route', 'string')
+            ->setAllowedTypes('attributes', 'array')
+            ->setAllowedTypes('route_params', 'array')
+            ->setAllowedTypes('request_param_name', 'string')
+            // Modal params
+            ->setAllowedTypes('modal_progress_title', 'string')
+            ->setAllowedTypes('modal_progress_message', 'string')
             ->setAllowedTypes('modal_close', 'string')
             ->setAllowedTypes('modal_stop_processing', 'string')
-            ->setAllowedTypes('modal_errors_occurred', 'string')
+            ->setAllowedTypes('modal_errors_message', 'string')
             ->setAllowedTypes('modal_back_to_processing', 'string')
             ->setAllowedTypes('modal_download_error_log', 'string')
             ->setAllowedTypes('modal_view_error_log', 'string')
-            ->setAllowedTypes('modal_error_log_title', 'string')
-            ->setAllowedTypes('ajax_route', 'string')
-            ->setAllowedTypes('attributes', 'array')
-            ->setAllowedTypes('attributes', 'array');
+            ->setAllowedTypes('modal_error_title', 'string')
+        ;
     }
 }

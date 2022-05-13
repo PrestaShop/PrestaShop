@@ -28,14 +28,16 @@ import ProgressModal from '@components/modal/progress-modal';
 import GridMap from '@components/grid/grid-map';
 import Router from '@components/router';
 
+import ClickEvent = JQuery.ClickEvent;
+
 const {$} = window;
 
 /**
  * Handles submit of grid actions
  */
 export default class AjaxBulkActionExtension {
-  stopProcess = false;
-  router = new Router();
+  private router = new Router();
+
   /**
    * Extend grid with bulk action submitting
    *
@@ -44,71 +46,88 @@ export default class AjaxBulkActionExtension {
   extend(grid: Grid): void {
     grid
       .getContainer()
-      .on('click', GridMap.bulks.ajaxAction, (event: JQueryEventObject) => {
-        let checkboxes = $('.js-bulk-action-checkbox:checked');
-
-        const ajaxButton = $(event.currentTarget);
-        this.submitForm(ajaxButton, checkboxes);
-    });
+      .on('click', GridMap.bulks.ajaxAction, (event: ClickEvent) => {
+        this.submitForm($<HTMLInputElement>(event.currentTarget), $<HTMLInputElement>(GridMap.bulks.checkedCheckbox));
+      });
   }
 
-  private async submitForm(ajaxButton: JQuery<Element>, checkboxes: JQuery<Element>)
-  {
-    let total = checkboxes.length;
+  private async submitForm($ajaxButton: JQuery<HTMLInputElement>, checkboxes: JQuery<HTMLInputElement>): Promise<void> {
     let stopProcess = false;
-    const modalTitle = ajaxButton.data('modalTitle');
-    const modalClose = ajaxButton.data('modalClose');
-    const modalStopProcessing = ajaxButton.data('modalStopProcessing');
-    const modalErrorsOccurred = ajaxButton.data('modalErrorsOccurred');
-    const modalBackToProcessing = ajaxButton.data('modalBackToProcessing');
-    const modalDownloadErrorLog = ajaxButton.data('modalDownloadErrorLog');
-    const modalViewErrorLog = ajaxButton.data('modalViewErrorLog');
-    const modalViewErrorLogTitle = ajaxButton.data('modalViewErrorLogTitle');
-    const modal = new ProgressModal(
-      {
-        cancelCallback: () => {stopProcess = true;},
-        modalTitle,
-        modalClose,
-        modalStopProcessing,
-        modalErrorsOccurred,
-        modalBackToProcessing,
-        modalDownloadErrorLog,
-        modalViewErrorLog,
-        modalViewErrorLogTitle,
-        total
-      }
-    );
+    const progressionTitle = $ajaxButton.data('progressTitle');
+    const progressionMessage = $ajaxButton.data('progressMessage');
+    const closeLabel = $ajaxButton.data('closeLabel');
+    const stopProcessingLabel = $ajaxButton.data('stopProcessing');
+    const errorsMessage = $ajaxButton.data('errorsMessage');
+    const backToProcessingLabel = $ajaxButton.data('backToProcessing');
+    const downloadErrorLogLabel = $ajaxButton.data('downloadErrorLog');
+    const viewErrorLogLabel = $ajaxButton.data('viewErrorLog');
+    const viewErrorTitle = $ajaxButton.data('viewErrorTitle');
+
+    const modal = new ProgressModal({
+      cancelCallback: () => {
+        stopProcess = true;
+      },
+      closeCallback: () => {
+        window.location.reload();
+      },
+      progressionTitle,
+      progressionMessage,
+      closeLabel,
+      stopProcessingLabel,
+      errorsMessage,
+      backToProcessingLabel,
+      downloadErrorLogLabel,
+      viewErrorLogLabel,
+      viewErrorTitle,
+      total: checkboxes.length,
+    });
 
     modal.show();
     let doneCount = 0;
 
     for (let i = 0; i < checkboxes.length; i += 1) {
       const checkbox = checkboxes[i];
+
       if (stopProcess) {
-        return false;
+        break;
       }
-      // eslint-disable-next-line no-await-in-loop
-      const data = await this.callAjaxAction(ajaxButton, checkbox, modal, doneCount);
-      doneCount++;
-      if (data.success) {
-        modal.updateCount(doneCount);
-      } else {
-        modal.updateCount(doneCount);
-        modal.addError(data.message);
+
+      let data;
+      try {
+        // eslint-disable-next-line no-await-in-loop
+        data = await this.callAjaxAction($ajaxButton, checkbox);
+      } catch (e) {
+        console.error(e);
+        data = {error: `Something went wrong with ID ${checkbox.value}`};
+      }
+
+      doneCount += 1;
+      modal.updateCount(doneCount);
+      console.log('data', data);
+      if (!data.success) {
+        modal.addError(data.error ?? data.message);
       }
     }
-    modal.finishProcess();
+
+    modal.completeProcess();
   }
 
-  private callAjaxAction($ajaxButton: JQuery<Element>, checkbox: Element, modal: ProgressModal, doneCount: number): JQuery.jqXHR
-  {
+  private callAjaxAction($ajaxButton: JQuery<HTMLInputElement>, checkbox: HTMLInputElement): JQuery.jqXHR {
+    const requestParamName: string | undefined = $ajaxButton.data('requestParamName');
+    const routeParams: Record<string, any> = $ajaxButton.data('routeParams') ?? {};
+    const data: Record<string, any> = {};
+    console.log('requestParamName', requestParamName);
+    if (requestParamName) {
+      data[requestParamName] = checkbox.value;
+    }
+
     return $.ajax({
-      url: this.router.generate($ajaxButton.data('ajax-url')),
+      url: this.router.generate($ajaxButton.data('ajax-url'), routeParams),
       type: 'POST',
-      data: { id: checkbox.getAttribute('value') },
-        success(data) {
-          return data;
-        }
+      data,
+      success(successData:any) {
+        return successData;
+      },
     });
   }
 }
