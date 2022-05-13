@@ -696,8 +696,8 @@ class CartControllerCore extends FrontController
             [
                 '%product%' => $product_name . (isset($attributes) && !empty($attributes) ? ' (' . $attributes . ')' : ''),
                 '%quantity%' => $quantity ?? '',
-                '[1]' => '<b>',
-                '[/1]' => '</b>',
+                '[1]' => '<strong>',
+                '[/1]' => '</strong>',
             ],
             'Shop.Notifications.Error'
         );
