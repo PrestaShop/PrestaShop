@@ -226,7 +226,7 @@ export default class CombinationFormModel {
   private getTaxRatio(): BigNumber {
     const taxRate: BigNumber = this.mapper.getBigNumber('product.taxRate') ?? new BigNumber(0);
 
-    return taxRate.plus(1);
+    return taxRate.dividedBy(100).plus(1);
   }
 
   private getEcoTaxRatio(): BigNumber {
@@ -247,6 +247,6 @@ export default class CombinationFormModel {
       taxRate = new BigNumber(0);
     }
 
-    return taxRate.plus(1);
+    return taxRate.dividedBy(100).plus(1);
   }
 }

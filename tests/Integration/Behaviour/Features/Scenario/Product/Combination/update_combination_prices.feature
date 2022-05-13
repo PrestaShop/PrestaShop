@@ -51,7 +51,7 @@ Feature: Update product combination prices in Back Office (BO)
       | eco tax                         | 0     |
       | eco tax with taxes              | 0     |
       | wholesale price                 | 0     |
-      | product tax rate                | 0.04  |
+      | product tax rate                | 4.00  |
       | product price                   | 51.49 |
       | product ecotax                  | 17.78 |
     When I update combination "product1SWhite" prices with following details:
@@ -68,7 +68,7 @@ Feature: Update product combination prices in Back Office (BO)
       | eco tax                         | 0.5   |
       | eco tax with taxes              | 0.5   |
       | wholesale price                 | 20    |
-      | product tax rate                | 0.04  |
+      | product tax rate                | 4.00  |
       | product price                   | 51.49 |
       | product ecotax                  | 17.78 |
     # Enable ecotax
@@ -83,7 +83,7 @@ Feature: Update product combination prices in Back Office (BO)
       | eco tax                         | 0.5    |
       | eco tax with taxes              | 0.5265 |
       | wholesale price                 | 20     |
-      | product tax rate                | 0.04   |
+      | product tax rate                | 4.00   |
       | product price                   | 51.49  |
       | product ecotax                  | 17.78  |
     # Reset price
@@ -98,7 +98,7 @@ Feature: Update product combination prices in Back Office (BO)
       | eco tax                         | 0.5    |
       | eco tax with taxes              | 0.5265 |
       | wholesale price                 | 20     |
-      | product tax rate                | 0.04   |
+      | product tax rate                | 4.00   |
       | product price                   | 51.49  |
       | product ecotax                  | 17.78  |
     # Reset all

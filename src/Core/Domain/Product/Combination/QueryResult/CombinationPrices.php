@@ -71,6 +71,8 @@ class CombinationPrices
     private $wholesalePrice;
 
     /**
+     * Value between 0 and 100.
+     *
      * @var DecimalNumber
      */
     private $productTaxRate;

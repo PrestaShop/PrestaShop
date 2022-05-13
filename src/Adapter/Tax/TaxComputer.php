@@ -101,7 +101,7 @@ class TaxComputer
             $countryTaxRate = 0;
         }
 
-        return new DecimalNumber((string) ($countryTaxRate / 100));
+        return new DecimalNumber((string) $countryTaxRate);
     }
 
     /**
@@ -114,6 +114,6 @@ class TaxComputer
     {
         $taxRate = $this->getTaxRate($taxRulesGroupId, $countryId);
 
-        return $taxRate->plus(new DecimalNumber('1'));
+        return $taxRate->dividedBy(new DecimalNumber('100'))->plus(new DecimalNumber('1'));
     }
 }

@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
 use Currency;
-use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
@@ -125,7 +124,6 @@ class RetailPriceType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $ecotaxRate = $this->taxComputer->getTaxRate(new TaxRulesGroupId($this->ecoTaxGroupId), new CountryId($this->contextCountryId));
-        $ecoTaxPercent = $ecotaxRate->times(new DecimalNumber('100'))->round(2);
 
         $builder
             // @todo we should have DecimalType and MoneyDecimalType it was moved in a separate PR #22162
@@ -215,7 +213,7 @@ class RetailPriceType extends TranslatorAwareType
         if ($this->isEcotaxEnabled) {
             $builder->add('ecotax_tax_included', MoneyType::class, [
                 'label' => $this->trans('Ecotax (tax incl.)', 'Admin.Catalog.Feature'),
-                'help' => $this->trans('Ecotax rate %rate%%', 'Admin.Catalog.Feature', ['%rate%' => $ecoTaxPercent]),
+                'help' => $this->trans('Ecotax rate %rate%%', 'Admin.Catalog.Feature', ['%rate%' => $ecotaxRate->round(2)]),
                 'constraints' => [
                     new NotBlank(),
                     new Type(['type' => 'float']),

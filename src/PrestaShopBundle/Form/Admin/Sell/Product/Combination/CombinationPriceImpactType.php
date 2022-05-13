@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
 use Currency;
-use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
@@ -139,7 +138,6 @@ class CombinationPriceImpactType extends TranslatorAwareType
 
         if ($this->isEcotaxEnabled) {
             $ecotaxRate = $this->taxComputer->getTaxRate(new TaxRulesGroupId($this->ecoTaxGroupId), new CountryId($this->contextCountryId));
-            $ecoTaxPercent = $ecotaxRate->times(new DecimalNumber('100'))->round(2);
 
             $builder
                 ->add('ecotax_tax_excluded', MoneyType::class, [
@@ -159,7 +157,7 @@ class CombinationPriceImpactType extends TranslatorAwareType
                 ])
                 ->add('ecotax_tax_included', MoneyType::class, [
                     'label' => $this->trans('Ecotax (tax incl.)', 'Admin.Catalog.Feature'),
-                    'help' => $this->trans('Ecotax rate %rate%%', 'Admin.Catalog.Feature', ['%rate%' => $ecoTaxPercent]),
+                    'help' => $this->trans('Ecotax rate %rate%%', 'Admin.Catalog.Feature', ['%rate%' => $ecotaxRate->round(2)]),
                     'constraints' => [
                         new NotBlank(),
                         new Type(['type' => 'float']),
