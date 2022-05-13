@@ -70,7 +70,7 @@ Scenario:
 - Complete the order from a cart
  */
 
-describe('BO - Orders : Create Order - Select Previous Carts', async () => {
+describe('BO - Orders - Create Order : Select Previous Carts', async () => {
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
