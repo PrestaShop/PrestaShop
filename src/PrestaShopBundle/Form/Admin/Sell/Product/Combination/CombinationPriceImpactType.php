@@ -114,7 +114,7 @@ class CombinationPriceImpactType extends TranslatorAwareType
                 'label' => $this->trans('Impact on price (tax excl.)', 'Admin.Catalog.Feature'),
                 'label_help_box' => $this->trans('If the price of this combination is different from the initial retail price, enter the value of the impact (negative or positive).', 'Admin.Catalog.Help'),
                 'attr' => [
-                    'data-display-price-precision' => self::PRESTASHOP_DECIMALS,
+                    'data-display-price-precision' => static::PRESTASHOP_DECIMALS,
                     'data-price-specification' => json_encode($this->contextLocale->getPriceSpecification($this->defaultCurrency->iso_code)->toArray()),
                 ],
                 'currency' => $this->defaultCurrency->iso_code,
@@ -126,7 +126,7 @@ class CombinationPriceImpactType extends TranslatorAwareType
             ->add('price_tax_included', MoneyType::class, [
                 'required' => false,
                 'label' => $this->trans('Impact on price (tax incl.)', 'Admin.Catalog.Feature'),
-                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
+                'attr' => ['data-display-price-precision' => static::PRESTASHOP_DECIMALS],
                 'currency' => $this->defaultCurrency->iso_code,
                 'constraints' => [
                     new NotBlank(),
@@ -202,7 +202,7 @@ class CombinationPriceImpactType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('Impact on price per unit (tax excl.)', 'Admin.Catalog.Feature'),
                 'label_help_box' => $this->trans('If the price per unit of this combination is different from the initial price per unit, enter the value of the impact (negative or positive).', 'Admin.Catalog.Feature'),
-                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
+                'attr' => ['data-display-price-precision' => static::PRESTASHOP_DECIMALS],
                 'currency' => $this->defaultCurrency->iso_code,
                 'constraints' => [
                     new NotBlank(),
@@ -213,7 +213,7 @@ class CombinationPriceImpactType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('Impact on price per unit (tax incl.)', 'Admin.Catalog.Feature'),
                 'label_help_box' => $this->trans('If the price per unit of this combination is different from the initial price per unit, enter the value of the impact (negative or positive).', 'Admin.Catalog.Feature'),
-                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
+                'attr' => ['data-display-price-precision' => static::PRESTASHOP_DECIMALS],
                 'currency' => $this->defaultCurrency->iso_code,
                 'constraints' => [
                     new NotBlank(),
@@ -242,7 +242,7 @@ class CombinationPriceImpactType extends TranslatorAwareType
                 'required' => false,
                 'label' => $this->trans('Cost price (tax excl.)', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h3',
-                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
+                'attr' => ['data-display-price-precision' => static::PRESTASHOP_DECIMALS],
                 'currency' => $this->defaultCurrency->iso_code,
                 'constraints' => [
                     new NotBlank(),

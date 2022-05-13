@@ -40,7 +40,7 @@ class TaxComputer
      * The conversion between tax rate as percent to tax ratio as float value can make us lose some precision,
      * so we increase the default precision (6) to avoid losing two digits by diving by 100 (two decimal factors).
      */
-    private const DIVISION_PRECISION = Division::DEFAULT_PRECISION + 2;
+    protected const DIVISION_PRECISION = Division::DEFAULT_PRECISION + 2;
 
     /**
      * @var TaxRulesGroupRepository
@@ -117,7 +117,7 @@ class TaxComputer
      *
      * @return DecimalNumber
      */
-    private function getTaxRatio(TaxRulesGroupId $taxRulesGroupId, CountryId $countryId): DecimalNumber
+    protected function getTaxRatio(TaxRulesGroupId $taxRulesGroupId, CountryId $countryId): DecimalNumber
     {
         $countryTaxRate = $this->getTaxRate($taxRulesGroupId, $countryId);
 

@@ -56,7 +56,7 @@ class TaxRulesGroupFeatureContext extends AbstractDomainFeatureContext
      *
      * @param string $name
      */
-    public function assertTaxRuleGroupExists(string $name)
+    public function assertTaxRuleGroupExists(string $name): void
     {
         self::getTaxRulesGroupByName($name);
     }
@@ -66,7 +66,7 @@ class TaxRulesGroupFeatureContext extends AbstractDomainFeatureContext
      *
      * @param string $name
      */
-    public function identifyTaxRulesGroup(string $name, string $taxRuleGroupReference)
+    public function identifyTaxRulesGroup(string $name, string $taxRuleGroupReference): void
     {
         $taxRulesGroup = self::getTaxRulesGroupByName($name);
         $this->getSharedStorage()->set($taxRuleGroupReference, $taxRulesGroup->id);
