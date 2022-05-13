@@ -29,12 +29,19 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Tax;
 
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\Decimal\Operation\Division;
 use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 
 class TaxComputer
 {
+    /**
+     * The conversion between tax rate as percent to tax ratio as float value can make us lose some precision,
+     * so we increase the default precision (6) to avoid losing two digits by diving by 100 (two decimal factors).
+     */
+    private const DIVISION_PRECISION = Division::DEFAULT_PRECISION + 2;
+
     /**
      * @var TaxRulesGroupRepository
      */
@@ -112,8 +119,8 @@ class TaxComputer
      */
     private function getTaxRatio(TaxRulesGroupId $taxRulesGroupId, CountryId $countryId): DecimalNumber
     {
-        $taxRate = $this->getTaxRate($taxRulesGroupId, $countryId);
+        $countryTaxRate = $this->getTaxRate($taxRulesGroupId, $countryId);
 
-        return $taxRate->dividedBy(new DecimalNumber('100'))->plus(new DecimalNumber('1'));
+        return $countryTaxRate->dividedBy(new DecimalNumber('100'), self::DIVISION_PRECISION)->plus(new DecimalNumber('1'));
     }
 }
