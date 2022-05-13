@@ -96,12 +96,12 @@ class ApplicableGroupsType extends TranslatorAwareType
             $this->trans('All countries', 'Admin.Global') => 0,
         ], $this->countryByIdChoiceProvider->getChoices());
         $groups = array_merge([
-            $this->trans('All countries', 'Admin.Global') => 0,
+            $this->trans('All groups', 'Admin.Global') => 0,
         ], $this->groupByIdChoiceProvider->getChoices());
 
         $builder
             ->add('currency_id', ChoiceType::class, [
-                'label' => $this->trans('Currency', 'Admin.Global'),
+                'label' => false,
                 'placeholder' => false,
                 'choices' => $currencies,
                 'choice_attr' => $this->currencyByIdChoiceProvider->getChoicesAttributes(),
@@ -111,13 +111,13 @@ class ApplicableGroupsType extends TranslatorAwareType
                 ],
             ])
             ->add('country_id', ChoiceType::class, [
-                'label' => $this->trans('Country', 'Admin.Global'),
+                'label' => false,
                 'placeholder' => false,
                 'choices' => $countries,
                 'required' => false,
             ])
             ->add('group_id', ChoiceType::class, [
-                'label' => $this->trans('Group', 'Admin.Global'),
+                'label' => false,
                 'required' => false,
                 'placeholder' => false,
                 'choices' => $groups,
@@ -126,6 +126,7 @@ class ApplicableGroupsType extends TranslatorAwareType
 
         if ($this->isMultiShopEnabled) {
             $builder->add('shop_id', ChoiceType::class, [
+                'label' => false,
                 'required' => false,
                 'placeholder' => false,
                 'choices' => $this->shopByIdChoiceProvider->getChoices(),
