@@ -29,11 +29,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\ProductStatusUpdater;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductStatusHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 
 /**
  * @internal
@@ -45,8 +42,8 @@ class UpdateProductStatusHandler implements UpdateProductStatusHandlerInterface
      */
     private $productStatusUpdater;
 
-    public function __construct(ProductStatusUpdater $productStatusUpdater) {
-
+    public function __construct(ProductStatusUpdater $productStatusUpdater)
+    {
         $this->productStatusUpdater = $productStatusUpdater;
     }
 

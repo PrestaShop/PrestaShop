@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\AbstractBulkAction;
-use PrestaShop\PrestaShop\Core\Grid\Action\ModalOptions;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**

@@ -30,7 +30,6 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
@@ -69,10 +68,11 @@ class DuplicateProductFeatureContext extends AbstractProductFeatureContext
             $newProductIds = $this->getCommandBus()->handle(new BulkDuplicateProductCommand($productIds));
         } catch (ProductException $e) {
             $this->setLastException($e);
+
             return;
         }
 
-        foreach($newProductIds as $newProductId) {
+        foreach ($newProductIds as $newProductId) {
             foreach ($productsList->getColumnsHash() as $productInfo) {
                 $oldProduct = $this->getProductForEditing($productInfo['reference']);
                 $newProduct = $this->getQueryBus()->handle(new GetProductForEditing($newProductId->getValue()));

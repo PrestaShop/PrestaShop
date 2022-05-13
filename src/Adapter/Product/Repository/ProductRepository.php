@@ -29,8 +29,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Driver\Exception;
+use Doctrine\DBAL\Query\QueryBuilder;
 use ObjectModel;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Manufacturer\Repository\ManufacturerRepository;

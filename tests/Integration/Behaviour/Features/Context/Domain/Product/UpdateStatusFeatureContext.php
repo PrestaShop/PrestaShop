@@ -32,8 +32,8 @@ use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkUpdateProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext;
 
 class UpdateStatusFeatureContext extends AbstractProductFeatureContext
@@ -43,7 +43,6 @@ class UpdateStatusFeatureContext extends AbstractProductFeatureContext
      *
      * @param bool $status
      * @param TableNode $productsList
-     *
      */
     public function bulkUpdateStatus(bool $status, TableNode $productsList): void
     {
@@ -59,6 +58,7 @@ class UpdateStatusFeatureContext extends AbstractProductFeatureContext
             ));
         } catch (ProductException $e) {
             $this->setLastException($e);
+
             return;
         }
     }

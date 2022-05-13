@@ -42,17 +42,18 @@ class BulkUpdateProductStatusHandler implements BulkUpdateProductStatusHandlerIn
      */
     private $productStatusUpdater;
 
-    public function __construct(ProductStatusUpdater $productStatusUpdater) {
-
+    public function __construct(ProductStatusUpdater $productStatusUpdater)
+    {
         $this->productStatusUpdater = $productStatusUpdater;
     }
+
     /**
      * {@inheritdoc}
      */
     public function handle(BulkUpdateProductStatusCommand $command): void
     {
         foreach ($command->getProductIds() as $productId) {
-          $this->productStatusUpdater->updateStatus($productId, $command->getNewStatus());
+            $this->productStatusUpdater->updateStatus($productId, $command->getNewStatus());
         }
     }
 }

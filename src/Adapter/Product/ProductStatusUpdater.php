@@ -1,6 +1,5 @@
 <?php
 
-
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
