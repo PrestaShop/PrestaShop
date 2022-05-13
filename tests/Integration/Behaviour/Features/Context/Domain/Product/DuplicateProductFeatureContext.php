@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductComman
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class DuplicateProductFeatureContext extends AbstractProductFeatureContext
 {
@@ -75,7 +76,7 @@ class DuplicateProductFeatureContext extends AbstractProductFeatureContext
         foreach ($newProductIds as $newProductId) {
             foreach ($productsList->getColumnsHash() as $productInfo) {
                 $oldProduct = $this->getProductForEditing($productInfo['reference']);
-                $newProduct = $this->getQueryBus()->handle(new GetProductForEditing($newProductId->getValue()));
+                $newProduct = $this->getQueryBus()->handle(new GetProductForEditing($newProductId->getValue(), ShopConstraint::shop($this->getDefaultShopId())));
                 if ($oldProduct->getDetails()->getReference() === $newProduct->getDetails()->getReference()) {
                     $this->getSharedStorage()->set($productInfo['copy_reference'], $newProductId->getValue());
                 }
