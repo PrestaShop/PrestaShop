@@ -67,6 +67,7 @@ export default class SpecificPriceList {
         const currencyField = this.selectListField(trClone, listFields.currency);
         const countryField = this.selectListField(trClone, listFields.country);
         const groupField = this.selectListField(trClone, listFields.group);
+        const shopField = this.selectListField(trClone, listFields.shop);
         const customerField = this.selectListField(trClone, listFields.customer);
         const priceField = this.selectListField(trClone, listFields.price);
         const impactField = this.selectListField(trClone, listFields.impact);
@@ -81,6 +82,7 @@ export default class SpecificPriceList {
         currencyField.textContent = specificPrice.currency;
         countryField.textContent = specificPrice.country;
         groupField.textContent = specificPrice.group;
+        shopField.textContent = specificPrice.shop;
         customerField.textContent = specificPrice.customer;
         priceField.textContent = specificPrice.price;
         impactField.textContent = specificPrice.impact;

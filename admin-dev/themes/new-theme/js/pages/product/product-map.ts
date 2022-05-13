@@ -301,6 +301,7 @@ export default {
       currency: '.currency',
       country: '.country',
       group: '.group',
+      shop: '.shop',
       customer: '.customer',
       price: '.price',
       impact: '.impact',
