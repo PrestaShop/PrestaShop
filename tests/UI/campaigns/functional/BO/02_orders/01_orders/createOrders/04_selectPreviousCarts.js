@@ -355,7 +355,7 @@ describe('BO - Orders : Create Order - Select Previous Carts', async () => {
       await expect(pageTitle).to.contains(stocksPage.pageTitle);
     });
 
-    it(`should filter by product '${Products.demo_1.name}'`, async function(){
+    it(`should filter by product '${Products.demo_1.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByProduct', baseContext);
 
       await stocksPage.simpleFilter(page, Products.demo_1.name);
