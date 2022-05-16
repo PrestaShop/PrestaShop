@@ -117,6 +117,9 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
         if (in_array('all', $steps)) {
             $steps = ['database', 'modules', 'theme', 'fixtures', 'postInstall'];
         }
+        if (!file_exists(PS_INSTALLATION_LOCK_FILE)) {
+            file_put_contents(PS_INSTALLATION_LOCK_FILE, '1');
+        }
 
         if (in_array('database', $steps)) {
             if (!$this->processGenerateSettingsFile()) {

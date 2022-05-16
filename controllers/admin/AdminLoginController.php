@@ -102,7 +102,12 @@ class AdminLoginControllerCore extends AdminController
             $this->context->smarty->assign('wrong_install_name', true);
         }
 
-        if (basename(_PS_ADMIN_DIR_) == 'admin' && file_exists(_PS_ADMIN_DIR_ . '/../admin/')) {
+        if (
+            // The install is well finished
+            !file_exists(_PS_ROOT_DIR_ . '/var/.install.prestashop')
+            && basename(_PS_ADMIN_DIR_) == 'admin'
+            && file_exists(_PS_ADMIN_DIR_ . '/../admin/')
+        ) {
             $rand = sprintf(
                 'admin%03d%s/',
                 mt_rand(0, 999),
