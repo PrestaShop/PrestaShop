@@ -165,6 +165,8 @@ export class ProgressView implements ViewContainerType {
 
   progressMessage: HTMLElement;
 
+  progressPercent: HTMLElement;
+
   progressIcon: HTMLElement;
 
   constructor(params: ProgressModalParams) {
@@ -208,14 +210,20 @@ export class ProgressView implements ViewContainerType {
     this.progressMessage = document.createElement('div');
     this.progressMessage.classList.add(ComponentsMap.progressModal.classes.progressMessage);
     this.progressMessage.innerHTML = params.progressionMessage.replace('%done%', '0').replace('%total%', String(params.total));
+
     this.progressIcon = document.createElement('span');
     this.progressIcon.classList.add(ComponentsMap.progressModal.classes.progressIcon);
     const spinner = document.createElement('div');
     spinner.classList.add('spinner');
     this.progressIcon.appendChild(spinner);
 
+    this.progressPercent = document.createElement('span');
+    this.progressPercent.classList.add(ComponentsMap.progressModal.classes.progressPercent);
+    this.progressPercent.innerHTML = '0%';
+
     progressHeadline.append(this.progressIcon);
     progressHeadline.append(this.progressMessage);
+    progressHeadline.append(this.progressPercent);
     this.body.append(progressHeadline);
 
     // Then  add progress bar
@@ -236,7 +244,7 @@ export class ProgressView implements ViewContainerType {
 
     this.closeModalButton = document.createElement('button');
     this.closeModalButton.setAttribute('type', 'button');
-    this.closeModalButton.classList.add('btn', 'btn-secondary', 'btn-lg', 'close-modal', 'd-none');
+    this.closeModalButton.classList.add('btn', 'btn-primary', 'btn-lg', 'close-modal', 'd-none');
     this.closeModalButton.innerHTML = params.closeLabel;
     this.closeModalButton.dataset.dismiss = 'modal';
 
@@ -262,6 +270,7 @@ export class ProgressView implements ViewContainerType {
     );
     this.progressDone.setAttribute('style', 'width: 0%');
     this.progressDone.setAttribute('role', 'progressbar');
+    this.progressDone.setAttribute('aria-valuemax', '100');
     this.progressDone.id = ComponentsMap.progressModal.classes.progressBarDone;
     progressBar.append(this.progressDone);
 
@@ -342,7 +351,13 @@ export class ErrorView implements ViewContainerType {
       'btn',
       'btn-secondary',
     );
-    this.downloadErrorsButton.innerHTML = params.downloadErrorLogLabel;
+    const downloadIcon = document.createElement('span');
+    downloadIcon.classList.add(
+      'material-icons',
+      'progress-download-icon',
+    );
+    downloadIcon.innerHTML = 'file_download';
+    this.downloadErrorsButton.innerHTML = `${downloadIcon.outerHTML} ${params.downloadErrorLogLabel}`;
 
     this.footer.append(this.switchButton);
     this.footer.append(this.downloadErrorsButton);
@@ -406,9 +421,12 @@ export class ProgressModal extends Modal implements ProgressModalType {
 
     const percentDone = (this.doneCount * 100) / this.total;
     this.modal.progressView.progressDone.style.width = `${String(percentDone)}%`;
+    // This attribute is used in CSS rules for low values
+    this.modal.progressView.progressDone.setAttribute('aria-valuenow', percentDone.toFixed());
     this.modal.progressView.progressMessage.innerHTML = this.params.progressionMessage
       .replace('%done%', String(this.doneCount))
       .replace('%total%', String(this.params.total));
+    this.modal.progressView.progressPercent.innerHTML = `${String(percentDone.toFixed())}%`;
   }
 
   public addError(error: string): void {
@@ -424,7 +442,10 @@ export class ProgressModal extends Modal implements ProgressModalType {
       '%error_count%',
       this.errors.length.toString(),
     );
-    this.modal.errorView.errorMessage.innerHTML = this.params.errorsMessage.replace('%error_count%', '0');
+    this.modal.errorView.errorMessage.innerHTML = this.params.errorsMessage.replace(
+      '%error_count%',
+      this.errors.length.toFixed(),
+    );
     this.modal.progressView.lastError.classList.remove('d-none');
     this.modal.progressView.lastError.innerHTML = error;
 
