@@ -67,6 +67,7 @@ class AdminSearchControllerCoreTest extends TestCase
                     'query' => '',
                     'show_toolbar' => true,
                     'nb_results' => 0,
+                    'alternativeSearchPanels' => [],
                 ],
             ],
             [
@@ -82,6 +83,7 @@ class AdminSearchControllerCoreTest extends TestCase
                             ],
                         ],
                     ],
+                    'alternativeSearchPanels' => [],
                 ],
             ],
         ];
