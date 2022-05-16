@@ -36,6 +36,7 @@ const {$} = window;
 const CombinationsMap = ProductMap.combinations;
 
 export type SortGridCallback = (sortColumn: string, sortOrder: string) => void;
+export type EmptyStateCallback = (isEmpty: boolean) => void;
 
 /**
  * Renders the list of combinations in product edit page, it is also responsible for automatic updates
@@ -49,6 +50,8 @@ export default class CombinationsListRenderer {
 
   private readonly sortListCallback: SortGridCallback;
 
+  private readonly emptyStateCallback: EmptyStateCallback;
+
   private readonly $loadingSpinner: JQuery;
 
   private readonly prototypeTemplate: string;
@@ -57,18 +60,26 @@ export default class CombinationsListRenderer {
 
   private readonly $combinationsListContainer: JQuery;
 
+  private readonly $emptyState: JQuery
+
+  private readonly $emptyFiltersState: JQuery;
+
   private sortingEnabled = true;
 
   constructor(
     eventEmitter: EventEmitter,
     productFormModel: ProductFormModel,
     sortListCallback: SortGridCallback,
+    emptyStateCallback: EmptyStateCallback,
   ) {
     this.eventEmitter = eventEmitter;
     this.productFormModel = productFormModel;
     this.sortListCallback = sortListCallback;
+    this.emptyStateCallback = emptyStateCallback;
     this.$loadingSpinner = $(ProductMap.combinations.loadingSpinner);
     this.$combinationsListContainer = $(ProductMap.combinations.combinationsFormContainer);
+    this.$emptyState = $(CombinationsMap.emptyState);
+    this.$emptyFiltersState = $(CombinationsMap.emptyFiltersState);
 
     // We can't keep a reference on the table (or its content) since it can be updated via ajax, we always get it just in time
     const $combinationsTable = this.getCombinationsTable();
@@ -186,6 +197,10 @@ export default class CombinationsListRenderer {
     const $combinationsTableBody = $(CombinationsMap.combinationsTableBody);
 
     $combinationsTableBody.empty();
+    this.emptyStateCallback(combinations.length === 0);
+
+    // this.getCombinationsTable().removeClass('d-none');
+    // $(CombinationsMap.combinationsPaginatedList).removeClass('d-none');
 
     let rowIndex = 0;
     combinations.forEach((combination: Record<string, any>) => {
@@ -204,7 +219,9 @@ export default class CombinationsListRenderer {
       rowIndex += 1;
     });
 
-    this.eventEmitter.emit(ProductEventMap.combinations.listRendered);
+    const rowsCount = rowIndex === 0 ? 0 : rowIndex += 1;
+
+    this.eventEmitter.emit(ProductEventMap.combinations.listRendered, {rowsCount});
   }
 
   private getPrototypeRow(rowIndex: number, combination: Record<string, any>): string {

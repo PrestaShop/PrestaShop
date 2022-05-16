@@ -80,6 +80,7 @@ export default {
     externalCombinationTab: '#external-combination-tab',
     preloader: '#combinations-preloader',
     emptyState: '#combinations-empty-state',
+    emptyFiltersState: '#combinations-empty-filters-state',
     combinationsPaginatedList: '#combinations-paginated-list',
     combinationsFormContainer: '#combinations-list-form-container',
     combinationsFiltersContainer: '#combinations_filters',
