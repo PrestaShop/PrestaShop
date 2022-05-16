@@ -52,7 +52,9 @@ export default class AjaxBulkActionExtension {
   }
 
   private async submitForm($ajaxButton: JQuery<HTMLInputElement>, checkboxes: JQuery<HTMLInputElement>): Promise<void> {
-    let stopProcess = false;
+    const bulkChunkSize = $ajaxButton.data('bulkChunkSize') ?? 10;
+    const reloadAfterBulk = $ajaxButton.data('reloadAfterBulk') ?? true;
+
     const progressionTitle = $ajaxButton.data('progressTitle');
     const progressionMessage = $ajaxButton.data('progressMessage');
     const closeLabel = $ajaxButton.data('closeLabel');
@@ -63,12 +65,17 @@ export default class AjaxBulkActionExtension {
     const viewErrorLogLabel = $ajaxButton.data('viewErrorLog');
     const viewErrorTitle = $ajaxButton.data('viewErrorTitle');
 
+    const abortController = new AbortController();
+
     const modal = new ProgressModal({
       cancelCallback: () => {
         stopProcess = true;
+        abortController.abort();
       },
       closeCallback: () => {
-        window.location.reload();
+        if (reloadAfterBulk) {
+          window.location.reload();
+        }
       },
       progressionTitle,
       progressionMessage,
@@ -81,53 +88,78 @@ export default class AjaxBulkActionExtension {
       viewErrorTitle,
       total: checkboxes.length,
     });
-
     modal.show();
-    let doneCount = 0;
 
-    for (let i = 0; i < checkboxes.length; i += 1) {
-      const checkbox = checkboxes[i];
+    const selectedIds: string[] = checkboxes.get().map((checkbox: HTMLInputElement) => checkbox.value);
+
+    let stopProcess = false;
+    let doneCount = 0;
+    while (selectedIds.length) {
+      const chunkIds: string[] = selectedIds.splice(0, bulkChunkSize);
 
       if (stopProcess) {
         break;
       }
 
-      let data;
+      let data: Record<string, any>;
       try {
         // eslint-disable-next-line no-await-in-loop
-        data = await this.callAjaxAction($ajaxButton, checkbox);
+        const response = await this.callAjaxAction($ajaxButton, chunkIds, abortController.signal);
+        // eslint-disable-next-line no-await-in-loop
+        data = await response.json();
       } catch (e) {
-        console.error(e);
-        data = {error: `Something went wrong with ID ${checkbox.value}`};
+        data = {error: `Something went wrong with IDs ${chunkIds.join(', ')}: ${e.message ?? ''}`};
       }
 
-      doneCount += 1;
+      doneCount += chunkIds.length;
       modal.updateCount(doneCount);
-      console.log('data', data);
+
       if (!data.success) {
-        modal.addError(data.error ?? data.message);
+        if (data.errors && Array.isArray(data.errors)) {
+          data.errors.forEach((error:string) => {
+            modal.addError(error);
+          });
+        } else {
+          modal.addError(data.errors ?? data.error ?? data.message);
+        }
       }
     }
 
     modal.completeProcess();
   }
 
-  private callAjaxAction($ajaxButton: JQuery<HTMLInputElement>, checkbox: HTMLInputElement): JQuery.jqXHR {
+  private callAjaxAction($ajaxButton: JQuery<HTMLInputElement>, chunkIds: string[], abortSignal: AbortSignal): Promise<Response> {
     const requestParamName: string | undefined = $ajaxButton.data('requestParamName');
     const routeParams: Record<string, any> = $ajaxButton.data('routeParams') ?? {};
-    const data: Record<string, any> = {};
-    console.log('requestParamName', requestParamName);
+    const routeMethod: string = $ajaxButton.data('routeMethod') ?? 'POST';
+    const formData: FormData = new FormData();
+
     if (requestParamName) {
-      data[requestParamName] = checkbox.value;
+      chunkIds.forEach((chunkId: string, index: number) => {
+        formData.append(`${requestParamName}[${index}]`, chunkId);
+      });
     }
 
-    return $.ajax({
-      url: this.router.generate($ajaxButton.data('ajax-url'), routeParams),
-      type: 'POST',
-      data,
-      success(successData:any) {
-        return successData;
+    let requestMethod: string;
+
+    // For PATCH and DELETE request we use a POST request but we use the _method for Symfony to handle it
+    switch (routeMethod.toUpperCase()) {
+      case 'PATCH':
+      case 'DELETE':
+        requestMethod = 'POST';
+        break;
+      default:
+        requestMethod = routeMethod;
+        break;
+    }
+
+    return fetch(this.router.generate($ajaxButton.data('ajax-url'), routeParams), {
+      method: requestMethod,
+      body: formData,
+      headers: {
+        _method: routeMethod,
       },
+      signal: abortSignal,
     });
   }
 }
