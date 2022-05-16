@@ -35,11 +35,16 @@
         <div class="spinner spinner-primary"></div>
       </div>
 
+      {#**
+        * This div contains the whole list with the input fields, it should contain nothing more because the whole
+        * content may be replaced when invalid form values are detected by the update list API in edition mode.
+      *#}
       <div id="combinations-list-form-container">
         {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Combination/combination_list_form.html.twig', {'combinationsForm': combinationsForm}) }}
-        {# Empty state when product has no combinations by specified filters #}
-        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Combination/empty_filters_state.html.twig') }}
       </div>
+
+      {# Empty state when product has no combinations by specified filters #}
+      {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Combination/empty_filters_state.html.twig') }}
 
       <div id="combinations-list-footer">
         <span>
