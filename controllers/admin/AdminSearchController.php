@@ -23,6 +23,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+use PrestaShop\PrestaShop\Core\Search\AlternativeSearchPanel;
+
 class AdminSearchControllerCore extends AdminController
 {
     const TOKEN_CHECK_START_POS = 34;
@@ -469,6 +472,24 @@ class AdminSearchControllerCore extends AdminController
             if ($this->isCountableAndNotEmpty($this->_list, 'modules')) {
                 $this->tpl_view_vars['modules'] = $this->_list['modules'];
             }
+
+            $alternativeSearchPanels = [];
+            $alternativeSearchPanelsFromModules = Hook::exec(
+                'actionGetAlternativeSearchPanels',
+                [],
+                null,
+                true
+            );
+
+            foreach ($alternativeSearchPanelsFromModules as $alternativeSearchPanelsFromModule) {
+                foreach ($alternativeSearchPanelsFromModule as $alternativeSearchPanel) {
+                    if ($alternativeSearchPanel instanceof AlternativeSearchPanel) {
+                        $alternativeSearchPanels[] = $alternativeSearchPanel;
+                    }
+                }
+            }
+
+            $this->tpl_view_vars['alternativeSearchPanels'] = $alternativeSearchPanels;
 
             return parent::renderView();
         }

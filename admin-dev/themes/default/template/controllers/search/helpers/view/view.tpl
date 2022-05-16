@@ -151,16 +151,24 @@ $(function() {
 
 {/if}
 <div class="row">
-    <div class="col-lg-6">
+    <div class="col-lg-{if $alternativeSearchPanels|@count == 0}6{else}4{/if}">
         <div class="panel">
             <h3>{l s='Search doc.prestashop.com' d='Admin.Navigation.Search'}</h3>
             <a href="https://doc.prestashop.com/dosearchsite.action?spaceSearch=true&amp;queryString={$query}&amp;utm_source=back-office&amp;utm_medium=search&amp;utm_campaign=back-office-{$lang_iso|upper}&amp;utm_content=download" class="btn btn-default _blank">{l s='Go to the documentation' d='Admin.Navigation.Search'}</a>
         </div>
     </div>
-    <div class="col-lg-6">
+    <div class="col-lg-{if $alternativeSearchPanels|@count == 0}6{else}4{/if}">
         <div class="panel">
             <h3>{l s='Search prestashop.com forum' d='Admin.Navigation.Search'}</h3>
             <a href="https://www.google.fr/search?q=site%3Aprestashop.com%2Fforums%2F+{$query}" class="btn btn-default _blank">{l s='Go to the Forum' d='Admin.Navigation.Search'}</a>
         </div>
     </div>
+    {foreach $alternativeSearchPanels key=key item=alternativeSearchPanel}
+        <div class="col-lg-4">
+            <div class="panel">
+                <h3>{$alternativeSearchPanel->getTitle()}</h3>
+                <a href="{$alternativeSearchPanel->getLink()}" class="btn btn-default _blank">{$alternativeSearchPanel->getButtonLabel()}</a>
+            </div>
+        </div>
+    {/foreach}
 </div>
