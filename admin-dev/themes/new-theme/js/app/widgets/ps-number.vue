@@ -35,8 +35,9 @@
       :value="value"
       placeholder="0"
       @keyup="onKeyup($event)"
+      @keydown="onKeydown($event)"
       @focus="focusIn"
-      @blur.native="focusOut($event)"
+      @blur="focusOut($event)"
     >
     <div
       class="ps-number-spinner d-flex"
@@ -79,6 +80,9 @@
     methods: {
       onKeyup($event: JQueryEventObject): void {
         this.$emit('keyup', $event);
+      },
+      onKeydown($event: JQueryEventObject): void {
+        this.$emit('keydown', $event);
       },
       focusIn(): void {
         this.$emit('focus');

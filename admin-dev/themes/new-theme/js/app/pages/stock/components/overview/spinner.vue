@@ -41,6 +41,7 @@
       :value="getQuantity()"
       @change="onChange"
       @keyup="onKeyup($event)"
+      @keydown="onKeydown($event)"
       @focus="focusIn"
       @blur="focusOut($event)"
     />
@@ -96,6 +97,11 @@
         this.isEnabled = false;
         this.value = '';
         this.product.qty = null;
+      },
+      onKeydown(event: KeyboardEvent): void {
+        if (event.key === '.' || event.key === ',') {
+          event.preventDefault();
+        }
       },
       onKeyup(event: Event): void {
         const val = (<HTMLInputElement>event.target).value;
