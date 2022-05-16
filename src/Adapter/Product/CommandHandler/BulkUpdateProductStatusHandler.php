@@ -31,6 +31,8 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Product\ProductStatusUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkUpdateProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\BulkUpdateProductStatusHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkUpdateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 
 /**
  * Handles command which deletes addresses in bulk action
@@ -52,8 +54,20 @@ class BulkUpdateProductStatusHandler implements BulkUpdateProductStatusHandlerIn
      */
     public function handle(BulkUpdateProductStatusCommand $command): void
     {
+        $bulkException = null;
         foreach ($command->getProductIds() as $productId) {
-            $this->productStatusUpdater->updateStatus($productId, $command->getNewStatus());
+            try {
+                $this->productStatusUpdater->updateStatus($productId, $command->getNewStatus());
+            } catch (ProductException $e) {
+                if (null === $bulkException) {
+                    $bulkException = new CannotBulkUpdateProductException();
+                }
+                $bulkException->addException($productId, $e);
+            }
+        }
+
+        if (null !== $bulkException) {
+            throw $bulkException;
         }
     }
 }
