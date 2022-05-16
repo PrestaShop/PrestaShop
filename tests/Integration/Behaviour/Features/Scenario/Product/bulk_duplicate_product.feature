@@ -1,8 +1,9 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags duplicate-product
-@reset-database-before-feature
-@duplicate-product
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags bulk-duplicate-product
+@restore-products-before-feature
 @reset-downloads-after-feature
 @clear-cache-after-feature
+@bulk-product
+@bulk-duplicate-product
 Feature: Duplicate product from Back Office (BO).
   As an employee I want to be able to duplicate product
 
@@ -91,9 +92,12 @@ Feature: Duplicate product from Back Office (BO).
       | delivery time out of stock notes[en-US] | product out of stock |
       | delivery time out of stock notes[fr-FR] | En rupture de stock  |
       | carriers                                | [carrier1,carrier2]  |
-    When I set product product1 suppliers:
-      | reference         | supplier reference | product supplier reference     | currency | price tax excluded |
-      | product1supplier1 | supplier1          | my first supplier for product1 | USD      | 10                 |
+    When I associate suppliers to product "product1"
+      | supplier  | product_supplier  |
+      | supplier1 | product1supplier1 |
+    And I update product product1 suppliers:
+      | product_supplier  | supplier  | reference                      | currency | price_tax_excluded |
+      | product1supplier1 | supplier1 | my first supplier for product1 | USD      | 10                 |
     And I set following related products to product product1:
       | product2 |
     And I update product product1 with following customization fields:
@@ -166,9 +170,12 @@ Feature: Duplicate product from Back Office (BO).
       | delivery time out of stock notes[en-US] | product out of stock |
       | delivery time out of stock notes[fr-FR] | En rupture de stock  |
       | carriers                                | [carrier1,carrier2]  |
-    When I set product product2 suppliers:
-      | reference         | supplier reference | product supplier reference     | currency | price tax excluded |
-      | product2supplier1 | supplier1          | my first supplier for product2 | USD      | 10                 |
+    When I associate suppliers to product "product2"
+      | supplier  | product_supplier  |
+      | supplier1 | product2supplier1 |
+    And I update product product2 suppliers:
+      | product_supplier  | supplier  | reference                      | currency | price_tax_excluded |
+      | product2supplier1 | supplier1 | my first supplier for product2 | USD      | 10                 |
     And I set following related products to product product2:
       | product1 |
     And I update product product2 with following customization fields:
@@ -182,14 +189,13 @@ Feature: Duplicate product from Back Office (BO).
       | redirect_type   | 301-product |
       | redirect_target | product1    |
 
-  Scenario: I duplicate product
+  Scenario: I duplicate products
 #todo: add specific prices & priorities, test combinations, packs
     When I bulk duplicate following products:
       | reference | copy_reference   |
       | product1  | copy_of_product1 |
       | product2  | copy_of_product2 |
-
-    And product "copy_of_product1" should be disabled
+    Then product "copy_of_product1" should be disabled
     And product "copy_of_product1" type should be standard
     And product "copy_of_product1" localized "name" should be:
       | locale | value                       |
@@ -229,8 +235,8 @@ Feature: Duplicate product from Back Office (BO).
       | en-US  | glasses,readingglasses,women     |
       | fr-FR  | lunettes,lunettespourlire,femmes |
     And product copy_of_product2 should have following suppliers:
-      | product supplier reference     | currency | price tax excluded |
-      | my first supplier for product2 | USD      | 10                 |
+      | supplier  | reference                      | currency | price_tax_excluded |
+      | supplier1 | my first supplier for product2 | USD      | 10                 |
     And product copy_of_product1 should have following prices information:
       | price            | 100.00          |
       | ecotax           | 0               |
@@ -268,7 +274,8 @@ Feature: Duplicate product from Back Office (BO).
       | delivery time out of stock notes[fr-FR] | En rupture de stock  |
       | carriers                                | [carrier1,carrier2]  |
     And product copy_of_product1 should have following related products:
-      | product2 |
+      | product  | name            | reference | image url                                             |
+      | product2 | Reading glasses | ref2      | http://myshop.com/img/p/{no_picture}-home_default.jpg |
     And product copy_of_product1 should have following attachments associated:
       | attachment reference | title                       | description                           | file name    | type      | size  |
       | att1                 | en-US:puffin;fr-Fr:macareux | en-US:puffin photo nr1;fr-Fr:macareux | app_icon.png | image/png | 19187 |
@@ -316,8 +323,8 @@ Feature: Duplicate product from Back Office (BO).
       | en-US  | smart,glasses,sunglasses,men |
       | fr-FR  | lunettes,bien,soleil         |
     And product copy_of_product1 should have following suppliers:
-      | product supplier reference     | currency | price tax excluded |
-      | my first supplier for product1 | USD      | 10                 |
+      | supplier  | reference                      | currency | price_tax_excluded |
+      | supplier1 | my first supplier for product1 | USD      | 10                 |
     And product copy_of_product2 should have following prices information:
       | price            | 200.00          |
       | ecotax           | 0               |
@@ -355,4 +362,5 @@ Feature: Duplicate product from Back Office (BO).
       | delivery time out of stock notes[fr-FR] | En rupture de stock  |
       | carriers                                | [carrier1,carrier2]  |
     And product copy_of_product2 should have following related products:
-      | product1 |
+      | product  | name             | reference | image url                                             |
+      | product1 | smart sunglasses | ref1      | http://myshop.com/img/p/{no_picture}-home_default.jpg |

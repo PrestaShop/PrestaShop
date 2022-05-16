@@ -1,7 +1,7 @@
-# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-status
-@reset-database-before-feature
+# ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-position
+@restore-products-before-feature
 @clear-cache-before-feature
-@update-status
+@update-position
 Feature: Update product position from BO (Back Office)
   As an employee I must be able to update product position
 
@@ -32,16 +32,17 @@ Feature: Update product position from BO (Back Office)
       | id reference           | name[en-US]            | is default |
       | category_for_positions | Category for positions | false      |
       | home                   | Home                   | default    |
-    And products should have the following positions in category "category_for_positions":
+    And products in category category_for_positions should have the following positions:
       | position | product_reference |
       | 1        | product1          |
       | 2        | product2          |
+
   Scenario: I update standard product position
     When I update product position in category "category_for_positions" with following values:
       | row_id | old_position | new_position | product_reference|
       | 1        | 1          | 2            | product1         |
       | 2        | 2          | 1            | product2         |
-    Then products should have the following positions in category "category_for_positions":
+    Then products in category category_for_positions should have the following positions:
       | position | product_reference |
       | 2        | product1          |
       | 1        | product2          |

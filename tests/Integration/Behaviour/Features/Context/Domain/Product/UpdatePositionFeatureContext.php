@@ -29,11 +29,9 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
-use Doctrine\DBAL\Driver\Exception;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPositionCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionException;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
@@ -41,7 +39,7 @@ use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 class UpdatePositionFeatureContext extends AbstractProductFeatureContext
 {
     /**
-     * @When I update product position in category :category with following values:
+     * @When I update product position in category :categoryReference with following values:
      *
      * @param string $categoryReference
      * @param TableNode $table
@@ -67,15 +65,12 @@ class UpdatePositionFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Then products should have the following positions in category :category:
+     * @Then products in category :categoryReference should have the following positions:
      *
+     * @param string $categoryReference
      * @param TableNode $tableNode
-     *
-     * @throws Exception
-     * @throws \Doctrine\DBAL\Exception
-     * @throws ProductConstraintException
      */
-    public function assertPositionInformation(TableNode $tableNode, string $categoryReference): void
+    public function assertPositionInformation(string $categoryReference, TableNode $tableNode): void
     {
         $products = $this->localizeByColumns($tableNode);
         $productRepository = CommonFeatureContext::getContainer()->get('prestashop.adapter.product.repository.product_repository');
