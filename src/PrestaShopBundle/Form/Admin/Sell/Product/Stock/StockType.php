@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Stock;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -88,6 +89,9 @@ class StockType extends TranslatorAwareType
                 ],
                 'remote_url' => $this->router->generate('admin_products_v2_search_combinations', [
                     'languageCode' => $this->employeeIsoCode,
+                    'filters' => [
+                        'filteredTypes' => [ProductType::TYPE_PACK],
+                    ],
                     'query' => '__QUERY__',
                 ]),
                 'attr' => [
