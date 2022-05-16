@@ -368,7 +368,8 @@ class AdminSearchControllerCore extends AdminController
 
     public function renderView()
     {
-        $this->tpl_view_vars['query'] = Tools::safeOutput($this->query);
+        $searchedExpression = Tools::safeOutput($this->query);
+        $this->tpl_view_vars['query'] = $searchedExpression;
         $this->tpl_view_vars['show_toolbar'] = true;
 
         if (count($this->errors)) {
@@ -476,7 +477,9 @@ class AdminSearchControllerCore extends AdminController
             $alternativeSearchPanels = [];
             $alternativeSearchPanelsFromModules = Hook::exec(
                 'actionGetAlternativeSearchPanels',
-                [],
+                [
+                    'bo_query' => $searchedExpression,
+                ],
                 null,
                 true
             );
