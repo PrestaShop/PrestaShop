@@ -29,6 +29,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Exception;
+use Doctrine\DBAL\Exception as ExceptionAlias;
 use Doctrine\DBAL\Query\QueryBuilder;
 use ObjectModel;
 use PrestaShop\Decimal\DecimalNumber;
@@ -227,11 +229,11 @@ class ProductRepository extends AbstractObjectModelRepository
 
         if (!$results || (int) $results['product_count'] !== count($ids)) {
             throw new ProductNotFoundException(
-                    sprintf(
-                        'Some of these products do not exist: %s',
-                        implode(',', $ids)
-                    )
-                );
+                sprintf(
+                    'Some of these products do not exist: %s',
+                    implode(',', $ids)
+                )
+            );
         }
     }
 
@@ -341,7 +343,12 @@ class ProductRepository extends AbstractObjectModelRepository
      */
     public function searchProducts(string $searchPhrase, LanguageId $languageId, ShopId $shopId, ?int $limit = null): array
     {
-        $qb = $this->getSearchQueryBuilder($searchPhrase, $languageId, $shopId, $limit);
+        $qb = $this->getSearchQueryBuilder(
+            $searchPhrase,
+            $languageId,
+            $shopId,
+            [],
+            $limit);
         $qb
             ->addSelect('p.id_product, pl.name, p.reference, i.id_image')
             ->addGroupBy('p.id_product')
@@ -356,13 +363,28 @@ class ProductRepository extends AbstractObjectModelRepository
      * @param string $searchPhrase
      * @param LanguageId $languageId
      * @param ShopId $shopId
+     * @param array $filters
      * @param int|null $limit
      *
      * @return array<int, array<string, int|string>>
+     *
+     * @throws Exception
+     * @throws ExceptionAlias
      */
-    public function searchCombinations(string $searchPhrase, LanguageId $languageId, ShopId $shopId, ?int $limit = null): array
-    {
-        $qb = $this->getSearchQueryBuilder($searchPhrase, $languageId, $shopId, $limit);
+    public function searchCombinations(
+        string $searchPhrase,
+        LanguageId $languageId,
+        ShopId $shopId,
+        array $filters = [],
+        ?int $limit = null
+    ): array {
+        $qb = $this->getSearchQueryBuilder(
+            $searchPhrase,
+            $languageId,
+            $shopId,
+            $filters,
+            $limit
+        );
         $qb
             ->addSelect('p.id_product, pa.id_product_attribute, pl.name, i.id_image')
             ->addSelect('p.reference as product_reference')
@@ -382,12 +404,18 @@ class ProductRepository extends AbstractObjectModelRepository
      * @param string $searchPhrase
      * @param LanguageId $languageId
      * @param ShopId $shopId
+     * @param array $filters
      * @param int|null $limit
      *
      * @return QueryBuilder
      */
-    private function getSearchQueryBuilder(string $searchPhrase, LanguageId $languageId, ShopId $shopId, ?int $limit): QueryBuilder
-    {
+    protected function getSearchQueryBuilder(
+        string $searchPhrase,
+        LanguageId $languageId,
+        ShopId $shopId,
+        array $filters = [],
+        ?int $limit = null
+    ): QueryBuilder {
         $qb = $this->connection->createQueryBuilder();
         $qb
             ->addSelect('p.id_product, pl.name, p.reference, i.id_image')
@@ -423,6 +451,19 @@ class ProductRepository extends AbstractObjectModelRepository
             $qb->expr()->like('pa.ean13', $dbSearchPhrase),
             $qb->expr()->like('pa.supplier_reference', $dbSearchPhrase)
         ));
+
+        if (!empty($filters)) {
+            foreach ($filters as $type => $filter) {
+                switch ($type) {
+                    case 'filteredType':
+                        $qb->andWhere('p.product_type not in(:filter)')
+                            ->setParameter('filter', implode(', ', $filter));
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
 
         if (!empty($limit)) {
             $qb->setMaxResults($limit);

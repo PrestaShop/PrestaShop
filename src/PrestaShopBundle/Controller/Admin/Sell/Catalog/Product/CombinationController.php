@@ -140,6 +140,7 @@ class CombinationController extends FrameworkBundleAdminController
                 $request->get('query', ''),
                 $language->getId(),
                 (int) $shopId,
+                $request->get('filters', []),
                 (int) $request->get('limit', 20)
             ));
         } catch (ProductConstraintException $e) {

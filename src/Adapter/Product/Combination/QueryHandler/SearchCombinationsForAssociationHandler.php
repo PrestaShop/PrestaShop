@@ -89,6 +89,7 @@ class SearchCombinationsForAssociationHandler implements SearchCombinationsForAs
             $query->getPhrase(),
             $query->getLanguageId(),
             $query->getShopId(),
+            $query->getFilters(),
             $query->getLimit()
         );
 
