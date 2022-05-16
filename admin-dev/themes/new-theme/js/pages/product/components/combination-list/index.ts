@@ -69,6 +69,8 @@ export default class CombinationsList {
 
   private readonly $emptyState: JQuery;
 
+  private readonly $emptyFiltersState: JQuery;
+
   private readonly combinationsService: CombinationsService;
 
   private readonly paginatedCombinationsService: PaginatedCombinationsService;
@@ -102,6 +104,7 @@ export default class CombinationsList {
     this.$preloader = $(CombinationsMap.preloader);
     this.$paginatedList = $(CombinationsMap.combinationsPaginatedList);
     this.$emptyState = $(CombinationsMap.emptyState);
+    this.$emptyFiltersState = $(CombinationsMap.emptyFiltersState);
 
     this.initialized = false;
     this.combinationsService = new CombinationsService();
@@ -206,6 +209,7 @@ export default class CombinationsList {
       this.eventEmitter,
       this.productFormModel,
       (sortColumn: string, sorOrder: string) => this.sortList(sortColumn, sorOrder),
+      (isEmpty: boolean) => this.emptyStateCallback(isEmpty),
     );
     this.paginator = new DynamicPaginator(
       CombinationsMap.paginationContainer,
@@ -235,8 +239,6 @@ export default class CombinationsList {
   private async refreshCombinationList(firstTime: boolean): Promise<void> {
     // Preloader is only shown on first load
     this.$preloader.toggleClass('d-none', !firstTime);
-    this.$paginatedList.toggleClass('d-none', firstTime);
-    this.$emptyState.addClass('d-none');
 
     // Wait for product attributes to adapt rendering depending on their number
     this.productAttributeGroups = await getProductAttributeGroups(this.productId);
@@ -249,15 +251,6 @@ export default class CombinationsList {
     // the updateAttributeGroups event which is caught by this manager which will in turn refresh the list to first page
     this.eventEmitter.emit(CombinationEvents.clearFilters);
     this.$preloader.addClass('d-none');
-
-    const hasCombinations = this.productAttributeGroups && this.productAttributeGroups.length;
-    this.$paginatedList.toggleClass('d-none', !hasCombinations);
-
-    if (!hasCombinations && this.renderer) {
-      // Empty list
-      this.renderer.render({combinations: []});
-      this.$emptyState.removeClass('d-none');
-    }
   }
 
   private refreshPage(): void {
@@ -274,6 +267,26 @@ export default class CombinationsList {
     this.paginatedCombinationsService.setOrderBy(sortColumn, sortOrder);
     if (this.paginator) {
       this.paginator.paginate(1);
+    }
+  }
+
+  private emptyStateCallback(isEmpty: boolean): void {
+    const hasFilters = Object.keys(this.paginatedCombinationsService.getFilters().attributes).length !== 0;
+    const $combinationsTable = $(CombinationsMap.combinationsTable);
+
+    if (isEmpty) {
+      // Toggle empty state. There are 2 different empty states:
+      //   1. when product has no combinations at all
+      //   2. when combinations are not found by certain filters
+      this.$emptyState.toggleClass('d-none', hasFilters);
+      this.$paginatedList.toggleClass('d-none', !hasFilters);
+      this.$emptyFiltersState.toggleClass('d-none', !hasFilters);
+    } else {
+      // reset everything if combinations list is not empty
+      this.$paginatedList.removeClass('d-none');
+      this.$emptyState.addClass('d-none');
+      this.$emptyFiltersState.addClass('d-none');
+      $combinationsTable.removeClass('d-none');
     }
   }
 }

@@ -36,6 +36,7 @@ const {$} = window;
 const CombinationsMap = ProductMap.combinations;
 
 export type SortGridCallback = (sortColumn: string, sortOrder: string) => void;
+export type EmptyStateCallback = (isEmpty: boolean) => void;
 
 /**
  * Renders the list of combinations in product edit page, it is also responsible for automatic updates
@@ -48,6 +49,8 @@ export default class CombinationsListRenderer {
   private readonly productFormModel: ProductFormModel;
 
   private readonly sortListCallback: SortGridCallback;
+
+  private readonly emptyStateCallback: EmptyStateCallback;
 
   private readonly $loadingSpinner: JQuery;
 
@@ -63,10 +66,12 @@ export default class CombinationsListRenderer {
     eventEmitter: EventEmitter,
     productFormModel: ProductFormModel,
     sortListCallback: SortGridCallback,
+    emptyStateCallback: EmptyStateCallback,
   ) {
     this.eventEmitter = eventEmitter;
     this.productFormModel = productFormModel;
     this.sortListCallback = sortListCallback;
+    this.emptyStateCallback = emptyStateCallback;
     this.$loadingSpinner = $(ProductMap.combinations.loadingSpinner);
     this.$combinationsListContainer = $(ProductMap.combinations.combinationsFormContainer);
 
@@ -186,6 +191,7 @@ export default class CombinationsListRenderer {
     const $combinationsTableBody = $(CombinationsMap.combinationsTableBody);
 
     $combinationsTableBody.empty();
+    this.emptyStateCallback(combinations.length === 0);
 
     let rowIndex = 0;
     combinations.forEach((combination: Record<string, any>) => {
