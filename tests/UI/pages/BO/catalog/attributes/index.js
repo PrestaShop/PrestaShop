@@ -403,7 +403,7 @@ class Attributes extends BOBasePage {
   async openHelpSideBar(page) {
     await page.click(this.helpCardLink);
 
-    return this.elementVisible(page, this.helpContainterBlock, 2000);
+    return this.elementVisible(page, this.helpContainterBlock, 4000);
   }
 
   /**
