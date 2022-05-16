@@ -151,8 +151,13 @@ export default class DynamicPaginator {
       this.selectorsMap.lastPageItem,
       page < this.pagesCount,
     );
+    this.toggleTargetAvailability(
+      this.selectorsMap.jumpToPageInput,
+      !(this.getCurrentPage() === 1 && this.getPagesCount() === 1),
+    );
 
     this.renderer.render(data);
+    this.$paginationContainer.toggleClass('d-none', this.getTotal() <= this.getMinLimit());
     this.renderer.setLoading(false);
 
     window.prestaShopUiKit.initToolTips();
@@ -265,11 +270,8 @@ export default class DynamicPaginator {
   ): void {
     const target = this.$paginationContainer.find(targetSelector);
 
-    if (enable) {
-      target.removeClass('disabled');
-    } else {
-      target.addClass('disabled');
-    }
+    target.toggleClass('disabled', !enable);
+    target.prop('disabled', !enable);
   }
 
   /**
@@ -295,6 +297,27 @@ export default class DynamicPaginator {
     return <number>(
       this.$paginationContainer.find(this.selectorsMap.limitSelect).val()
     );
+  }
+
+  /**
+   * @returns {Number}
+   *
+   * @private
+   */
+  private getMinLimit(): number {
+    const limitSelections = this.$paginationContainer.find(`${this.selectorsMap.limitSelect} option`).get();
+
+    const limitValues = limitSelections.map((option:HTMLElement) => {
+      if (!(option instanceof HTMLOptionElement)) {
+        console.error('Only <option> elements are expected in <select> for list limit choices');
+
+        return 0;
+      }
+
+      return Number(option.value);
+    });
+
+    return Math.min(...limitValues);
   }
 
   /**
