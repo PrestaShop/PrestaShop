@@ -199,9 +199,6 @@ export default class CombinationsListRenderer {
     $combinationsTableBody.empty();
     this.emptyStateCallback(combinations.length === 0);
 
-    // this.getCombinationsTable().removeClass('d-none');
-    // $(CombinationsMap.combinationsPaginatedList).removeClass('d-none');
-
     let rowIndex = 0;
     combinations.forEach((combination: Record<string, any>) => {
       const $row = $(this.getPrototypeRow(rowIndex, combination));
@@ -219,9 +216,7 @@ export default class CombinationsListRenderer {
       rowIndex += 1;
     });
 
-    const rowsCount = rowIndex === 0 ? 0 : rowIndex += 1;
-
-    this.eventEmitter.emit(ProductEventMap.combinations.listRendered, {rowsCount});
+    this.eventEmitter.emit(ProductEventMap.combinations.listRendered);
   }
 
   private getPrototypeRow(rowIndex: number, combination: Record<string, any>): string {
