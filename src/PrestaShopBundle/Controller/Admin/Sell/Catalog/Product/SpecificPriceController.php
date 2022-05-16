@@ -205,7 +205,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
                 'currency' => $specificPrice->getCurrencyName() ?? $this->trans('All currencies', 'Admin.Global'),
                 'country' => $specificPrice->getCountryName() ?? $this->trans('All countries', 'Admin.Global'),
                 'group' => $specificPrice->getGroupName() ?? $this->trans('All groups', 'Admin.Global'),
-                'shop' => $specificPrice->getShopName() ?? $this->trans('All shops', 'Admin.Global'),
+                'shop' => $specificPrice->getShopName() ?? $this->trans('All stores', 'Admin.Global'),
                 'customer' => $specificPrice->getCustomerName() ?? $this->trans('All customers', 'Admin.Global'),
                 'price' => $this->formatPrice(
                     $specificPrice->getFixedPrice(),
