@@ -213,7 +213,7 @@ class ModuleRepository implements ModuleRepositoryInterface
      *
      * @return string
      */
-    private function getCacheKey(string $moduleName, ?int $shopId = null): string
+    protected function getCacheKey(string $moduleName, ?int $shopId = null): string
     {
         $shop = $shopId ? [$shopId] : Shop::getContextListShopID();
 
