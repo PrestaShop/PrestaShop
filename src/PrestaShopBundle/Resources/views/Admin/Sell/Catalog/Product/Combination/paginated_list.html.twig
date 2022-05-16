@@ -31,15 +31,14 @@
     }) }}
 
     <div class="justify-content-center" id="combinations-list">
-      {# Empty state when product has no combinations by specified filters #}
-      {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Combination/empty_filters_state.html.twig') }}
-
       <div class="spinner-product-combinations-container" id="productCombinationsLoading">
         <div class="spinner spinner-primary"></div>
       </div>
 
       <div id="combinations-list-form-container">
         {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Combination/combination_list_form.html.twig', {'combinationsForm': combinationsForm}) }}
+        {# Empty state when product has no combinations by specified filters #}
+        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Combination/empty_filters_state.html.twig') }}
       </div>
 
       <div id="combinations-list-footer">

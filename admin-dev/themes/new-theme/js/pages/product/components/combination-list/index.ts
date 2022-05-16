@@ -282,15 +282,12 @@ export default class CombinationsList {
       this.$emptyState.toggleClass('d-none', hasFilters);
       this.$paginatedList.toggleClass('d-none', !hasFilters);
       this.$emptyFiltersState.toggleClass('d-none', !hasFilters);
-      $combinationsTable.toggleClass('d-none', hasFilters);
-      $paginationContainer.toggleClass('d-none', hasFilters);
     } else {
       // reset everything if combinations list is not empty
       this.$paginatedList.removeClass('d-none');
       this.$emptyState.addClass('d-none');
       this.$emptyFiltersState.addClass('d-none');
       $combinationsTable.removeClass('d-none');
-      $paginationContainer.removeClass('d-none');
     }
   }
 }
