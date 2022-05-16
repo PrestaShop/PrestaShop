@@ -273,7 +273,6 @@ export default class CombinationsList {
   private emptyStateCallback(isEmpty: boolean): void {
     const hasFilters = Object.keys(this.paginatedCombinationsService.getFilters().attributes).length !== 0;
     const $combinationsTable = $(CombinationsMap.combinationsTable);
-    const $paginationContainer = $(CombinationsMap.paginationContainer);
 
     if (isEmpty) {
       // Toggle empty state. There are 2 different empty states:

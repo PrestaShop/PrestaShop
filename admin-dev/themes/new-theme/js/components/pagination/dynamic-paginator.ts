@@ -153,7 +153,7 @@ export default class DynamicPaginator {
     );
     this.toggleTargetAvailability(
       this.selectorsMap.jumpToPageInput,
-      !(this.getCurrentPage() === 1 && this.getPagesCount() === 1),
+      this.getPagesCount() > 1,
     );
 
     this.renderer.render(data);

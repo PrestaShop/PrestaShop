@@ -60,10 +60,6 @@ export default class CombinationsListRenderer {
 
   private readonly $combinationsListContainer: JQuery;
 
-  private readonly $emptyState: JQuery
-
-  private readonly $emptyFiltersState: JQuery;
-
   private sortingEnabled = true;
 
   constructor(
@@ -78,8 +74,6 @@ export default class CombinationsListRenderer {
     this.emptyStateCallback = emptyStateCallback;
     this.$loadingSpinner = $(ProductMap.combinations.loadingSpinner);
     this.$combinationsListContainer = $(ProductMap.combinations.combinationsFormContainer);
-    this.$emptyState = $(CombinationsMap.emptyState);
-    this.$emptyFiltersState = $(CombinationsMap.emptyFiltersState);
 
     // We can't keep a reference on the table (or its content) since it can be updated via ajax, we always get it just in time
     const $combinationsTable = this.getCombinationsTable();
