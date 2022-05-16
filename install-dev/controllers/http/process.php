@@ -80,6 +80,8 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
 
         if (!$this->session->process_validated) {
             $this->session->process_validated = [];
+
+            file_put_contents(PS_INSTALLATION_LOCK_FILE, '1');
         }
 
         try {

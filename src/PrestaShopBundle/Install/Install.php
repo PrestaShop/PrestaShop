@@ -1006,7 +1006,7 @@ class Install extends AbstractInstall
             return $module->get('name');
         }, iterator_to_array($moduleCollection));
 
-        return $this->executeAction(
+        if (!$this->executeAction(
             $modules,
             'postInstall',
             $this->translator->trans(
@@ -1014,7 +1014,11 @@ class Install extends AbstractInstall
                 ['%module%' => '%module%'],
                 'Install'
             )
-        );
+        )) {
+            return false;
+        }
+
+        return Tools::deleteFile(PS_INSTALLATION_LOCK_FILE);
     }
 
     protected function executeAction(array $modules, string $action, string $errorMessage): bool

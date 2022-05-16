@@ -142,6 +142,7 @@ require_once _PS_CORE_DIR_.'/config/defines_uri.inc.php';
 
 // Generate common constants
 define('PS_INSTALLATION_IN_PROGRESS', true);
+define('PS_INSTALLATION_LOCK_FILE',  _PS_CORE_DIR_ . '/var/.install.prestashop');
 define('_PS_INSTALL_PATH_', dirname(__FILE__).'/');
 define('_PS_INSTALL_DATA_PATH_', _PS_INSTALL_PATH_.'data/');
 define('_PS_INSTALL_CONTROLLERS_PATH_', _PS_INSTALL_PATH_.'controllers/');
