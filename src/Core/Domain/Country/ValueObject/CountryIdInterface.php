@@ -24,46 +24,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
-
-namespace PrestaShop\PrestaShop\Core\Domain\State\Command;
-
-use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\NoStateId;
-use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
+namespace PrestaShop\PrestaShop\Core\Domain\Country\ValueObject;
 
 /**
- * Deletes states on bulk action
+ * Provides country id value
  */
-class BulkDeleteStateCommand
+interface CountryIdInterface
 {
-    /**
-     * @var array<int, StateId>
-     */
-    private $stateIds;
-
-    /**
-     * @param array<int, int> $stateIds
-     */
-    public function __construct(array $stateIds)
-    {
-        $this->setStateIds($stateIds);
-    }
-
-    /**
-     * @return array<int, StateId>
-     */
-    public function getStateIds(): array
-    {
-        return $this->stateIds;
-    }
-
-    /**
-     * @param array<int, int> $stateIds
-     */
-    private function setStateIds(array $stateIds): void
-    {
-        foreach ($stateIds as $stateId) {
-            $this->stateIds[] = $stateId !== NoStateId::NO_STATE_ID_VALUE ? new StateId((int) $stateId) : new NoStateId();
-        }
-    }
+    public function getValue(): int;
 }

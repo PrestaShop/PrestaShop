@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\State\Exception;
 
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateIdInterface;
 use Throwable;
 
 /**
@@ -47,12 +48,12 @@ class DeleteStateException extends StateException
     public const FAILED_BULK_DELETE = 2;
 
     /**
-     * @param StateId $stateId
+     * @param StateIdInterface $stateId
      * @param Throwable|null $previous
      *
      * @return static
      */
-    public static function createDeleteFailure(StateId $stateId, Throwable $previous = null): self
+    public static function createDeleteFailure(StateIdInterface $stateId, Throwable $previous = null): self
     {
         return new static(
             sprintf('Cannot delete state with id "%d"', $stateId->getValue()),

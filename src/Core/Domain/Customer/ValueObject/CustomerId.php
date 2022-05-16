@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintExcep
 /**
  * Defines Customer ID with it's constraints
  */
-class CustomerId
+class CustomerId implements CustomerIdInterface
 {
     /**
      * @var int
@@ -46,7 +46,6 @@ class CustomerId
     public function __construct(int $customerId)
     {
         $this->assertIntegerIsGreaterThanZero($customerId);
-
         $this->customerId = $customerId;
     }
 
@@ -63,7 +62,7 @@ class CustomerId
      */
     private function assertIntegerIsGreaterThanZero(int $customerId): void
     {
-        if (0 > $customerId) {
+        if (0 >= $customerId) {
             throw new CustomerConstraintException(
                 sprintf('Customer id %s is invalid.', $customerId),
                 CustomerConstraintException::INVALID_ID
