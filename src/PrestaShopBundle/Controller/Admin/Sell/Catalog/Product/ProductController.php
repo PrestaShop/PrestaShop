@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPositionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\BulkProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductPositionException;
@@ -397,7 +398,11 @@ class ProductController extends FrameworkBundleAdminController
                 )
             );
         } catch (Exception $e) {
-            return $this->json(['error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))]);
+            if ($e instanceof BulkProductException) {
+                return $this->jsonBulkErrors($e);
+            } else {
+                return $this->json(['error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))], Response::HTTP_BAD_REQUEST);
+            }
         }
 
         return $this->json(['success' => true]);
@@ -683,6 +688,30 @@ class ProductController extends FrameworkBundleAdminController
     private function getProductFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.core.form.identifiable_object.product_form_handler');
+    }
+
+    /**
+     * Format the bulk exception into an array of errors returned in a JsonResponse.
+     *
+     * @param BulkProductException $bulkProductException
+     *
+     * @return JsonResponse
+     */
+    private function jsonBulkErrors(BulkProductException $bulkProductException): JsonResponse
+    {
+        $errors = [];
+        foreach ($bulkProductException->getBulkExceptions() as $productId => $productException) {
+            $errors[] = $this->trans(
+                'Error for product %product_id%: %error_message%',
+                'Admin.Notification.Error',
+                [
+                    '%product_id%' => $productId,
+                    '%error_message%' => $this->getErrorMessageForException($productException, $this->getErrorMessages($productException)),
+                ]
+            );
+        }
+
+        return $this->json(['errors' => $errors], Response::HTTP_BAD_REQUEST);
     }
 
     /**
