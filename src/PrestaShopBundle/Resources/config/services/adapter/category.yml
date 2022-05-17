@@ -130,6 +130,7 @@ services:
       - '@prestashop.core.category.name_builder.category_display_name_builder'
       - '@prestashop.adapter.context_state_manager'
       - '@prestashop.adapter.shop.repository.shop_repository'
+      - "@=service('prestashop.adapter.legacy.configuration').get('PS_ROOT_CATEGORY')"
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoriesTree

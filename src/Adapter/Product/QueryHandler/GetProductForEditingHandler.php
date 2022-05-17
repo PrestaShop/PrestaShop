@@ -266,19 +266,17 @@ class GetProductForEditingHandler implements GetProductForEditingHandlerInterfac
 
     /**
      * @param Product $product
+     * @param LanguageId $languageId
      *
      * @return CategoriesInformation
      */
     private function getCategoriesInformation(Product $product, LanguageId $languageId): CategoriesInformation
     {
         $shopId = new ShopId($product->getShopId());
-        $categoryIdValues = $product->getCategories();
-        $defaultCategoryId = (int) $product->id_category_default;
+        $productId = new ProductId((int) $product->id);
 
-        $categoryIds = [];
-        foreach ($categoryIdValues as $categoryIdValue) {
-            $categoryIds[] = new CategoryId((int) $categoryIdValue);
-        }
+        $categoryIds = $this->categoryRepository->getProductCategoryIds($productId, $shopId);
+        $defaultCategoryId = (int) $product->id_category_default;
 
         $categoryNames = $this->categoryRepository->getLocalizedNames($categoryIds);
 
