@@ -123,7 +123,7 @@ export default class CategoriesManager {
     categories.forEach((category) => {
       const optionElement = document.createElement('option');
       optionElement.value = String(category.id);
-      optionElement.innerHTML = category.name;
+      optionElement.innerHTML = category.displayName;
       optionElement.selected = category.id === defaultCategoryId;
 
       selectElement.append(optionElement);
