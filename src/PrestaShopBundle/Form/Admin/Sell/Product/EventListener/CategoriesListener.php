@@ -78,7 +78,7 @@ class CategoriesListener implements EventSubscriberInterface
     {
         $choices = [];
         foreach ($data['product_categories'] as $category) {
-            $choices[$category['name']] = $category['id'];
+            $choices[$category['display_name']] = $category['id'];
         }
 
         return $choices;
