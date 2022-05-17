@@ -49,6 +49,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForAssociation
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Exception\ProductException;
@@ -211,6 +212,8 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
+     *
      * @param Request $request
      * @param int $productId
      *
@@ -232,6 +235,8 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message="You do not have permission to create this.")
+     *
      * @param int $productId
      *
      * @return Response
@@ -239,16 +244,19 @@ class ProductController extends FrameworkBundleAdminController
     public function duplicateAction(int $productId): Response
     {
         try {
-            $this->getCommandBus()->handle(new DuplicateProductCommand($productId));
+            /** @var ProductId $newProductId */
+            $newProductId = $this->getCommandBus()->handle(new DuplicateProductCommand($productId));
             $this->addFlash(
                 'success',
                 $this->trans('Successful duplication', 'Admin.Notifications.Success')
             );
         } catch (ProductException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+
+            return $this->redirectToRoute('admin_products_v2_index');
         }
 
-        return $this->redirectToRoute('admin_products_v2_index');
+        return $this->redirectToRoute('admin_products_v2_edit', ['productId' => $newProductId->getValue()]);
     }
 
     /**
@@ -506,6 +514,8 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="You do not have permission to read this.")
+     *
      * Download the content of the virtual product.
      *
      * @param int $virtualProductFileId
