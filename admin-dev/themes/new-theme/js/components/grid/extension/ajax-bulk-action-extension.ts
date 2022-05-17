@@ -58,7 +58,7 @@ export default class AjaxBulkActionExtension {
     const progressionTitle = $ajaxButton.data('progressTitle');
     const progressionMessage = $ajaxButton.data('progressMessage');
     const closeLabel = $ajaxButton.data('closeLabel');
-    const stopProcessingLabel = $ajaxButton.data('stopProcessing');
+    const abortProcessingLabel = $ajaxButton.data('stopProcessing');
     const errorsMessage = $ajaxButton.data('errorsMessage');
     const backToProcessingLabel = $ajaxButton.data('backToProcessing');
     const downloadErrorLogLabel = $ajaxButton.data('downloadErrorLog');
@@ -68,7 +68,7 @@ export default class AjaxBulkActionExtension {
     const abortController = new AbortController();
 
     const modal = new ProgressModal({
-      cancelCallback: () => {
+      abortCallback: () => {
         stopProcess = true;
         abortController.abort();
       },
@@ -80,7 +80,7 @@ export default class AjaxBulkActionExtension {
       progressionTitle,
       progressionMessage,
       closeLabel,
-      stopProcessingLabel,
+      abortProcessingLabel,
       errorsMessage,
       backToProcessingLabel,
       downloadErrorLogLabel,
@@ -112,7 +112,7 @@ export default class AjaxBulkActionExtension {
       }
 
       doneCount += chunkIds.length;
-      modal.updateCount(doneCount);
+      modal.updateProgress(doneCount);
 
       if (!data.success) {
         if (data.errors && Array.isArray(data.errors)) {
@@ -125,20 +125,18 @@ export default class AjaxBulkActionExtension {
       }
     }
 
-    modal.completeProcess();
+    modal.completeProgress();
   }
 
   private callAjaxAction($ajaxButton: JQuery<HTMLInputElement>, chunkIds: string[], abortSignal: AbortSignal): Promise<Response> {
-    const requestParamName: string | undefined = $ajaxButton.data('requestParamName');
+    const requestParamName: string = $ajaxButton.data('requestParamName') ?? 'bulk_ids';
     const routeParams: Record<string, any> = $ajaxButton.data('routeParams') ?? {};
     const routeMethod: string = $ajaxButton.data('routeMethod') ?? 'POST';
-    const formData: FormData = new FormData();
 
-    if (requestParamName) {
-      chunkIds.forEach((chunkId: string, index: number) => {
-        formData.append(`${requestParamName}[${index}]`, chunkId);
-      });
-    }
+    const formData: FormData = new FormData();
+    chunkIds.forEach((chunkId: string, index: number) => {
+      formData.append(`${requestParamName}[${index}]`, chunkId);
+    });
 
     let requestMethod: string;
 

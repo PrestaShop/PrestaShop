@@ -50,10 +50,13 @@ final class AjaxBulkAction extends AbstractBulkAction
         $resolver
             ->setDefaults([
                 'attributes' => [],
+                'class' => '',
+                // Request params
                 'ajax_route' => '',
                 'route_params' => [],
-                'request_param_name' => '',
-                'class' => '',
+                'request_param_name' => 'bulk_ids',
+                'bulk_chunk_size' => 10,
+                'reload_after_bulk' => true,
                 // Modal params
                 'modal_progress_title' => 'Completing %total% actions',
                 'modal_progress_message' => 'Processing %done% / %total% elements.',
@@ -66,10 +69,13 @@ final class AjaxBulkAction extends AbstractBulkAction
                 'modal_error_title' => 'Error log',
             ])
             ->setAllowedTypes('class', 'string')
-            ->setAllowedTypes('ajax_route', 'string')
             ->setAllowedTypes('attributes', 'array')
+            // Request params
+            ->setAllowedTypes('ajax_route', 'string')
             ->setAllowedTypes('route_params', 'array')
             ->setAllowedTypes('request_param_name', 'string')
+            ->setAllowedTypes('bulk_chunk_size', 'int')
+            ->setAllowedTypes('reload_after_bulk', 'bool')
             // Modal params
             ->setAllowedTypes('modal_progress_title', 'string')
             ->setAllowedTypes('modal_progress_message', 'string')

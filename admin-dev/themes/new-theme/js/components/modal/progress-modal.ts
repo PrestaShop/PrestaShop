@@ -38,22 +38,65 @@ export interface ProgressModalType extends ModalCoreType {
   modal: ProgressModalContainerType;
 }
 export type ProgressModalParams = Omit<ModalParams, 'modalTitle'> & {
+  /**
+   * Progression view title (optional) ex: 'Completing %total% actions'
+   */
   progressionTitle?: string;
+  /**
+   * Progression message in progress view Default: 'Processing %done% / %total% elements.'
+   */
   progressionMessage: string;
+  /**
+   * Close button label Default: 'Close'
+   */
   closeLabel: string;
-  stopProcessingLabel: string;
+  /**
+   * Abort process button label Default: 'Stop processing'
+   */
+  abortProcessingLabel: string;
+  /**
+   * Errors message in error view, Default: '%error_count% errors occurred. You can download the logs for future reference.'
+   */
   errorsMessage: string;
+  /**
+   * Back to processing button label Default: 'Back to processing'
+   */
   backToProcessingLabel: string;
+  /**
+   * Download error log label Default: 'Download error log'
+   */
   downloadErrorLogLabel: string;
+  /**
+   * View error log label Default: 'View %error_count% error logs'
+   */
   viewErrorLogLabel: string;
+  /**
+   * Error view title Default: 'Error log'
+   */
   viewErrorTitle: string;
+  /**
+   * Total number of elements to process (mandatory)
+   */
   total: number;
+  /**
+   * Additional buttons to display in the progress view footer (optional)
+   */
   customButtons: Array<HTMLButtonElement | HTMLAnchorElement>;
-  cancelCallback?: () => void;
+  /**
+   * Abort callback triggered when the user stops/abort the bulk progress (optional)
+   */
+  abortCallback?: () => void;
 }
 export type InputProgressModalParams = Partial<ProgressModalParams> & {
+  /**
+   * Total must be provided in input params, the other field are either optional or have default values.
+   */
   total: number;
 };
+
+/**
+ * Common interface for all views
+ */
 export type ViewContainerType = {
   content: HTMLElement;
   body: HTMLElement;
@@ -61,6 +104,8 @@ export type ViewContainerType = {
   header: HTMLElement;
   title?: HTMLElement;
 };
+
+const ProgressModalMap = ComponentsMap.progressModal;
 
 export class ProgressModalContainer extends ModalContainer implements ProgressModalContainerType {
   static readonly PROGRESS_VIEW: string = 'progress_view';
@@ -71,7 +116,7 @@ export class ProgressModalContainer extends ModalContainer implements ProgressMo
 
   errorView!: ErrorView;
 
-  private currentView!: string;
+  protected currentView!: string;
 
   /* This constructor is important to force the input type but ESLint is not happy about it*/
   /* eslint-disable no-useless-constructor */
@@ -84,7 +129,7 @@ export class ProgressModalContainer extends ModalContainer implements ProgressMo
    */
   protected buildModalContainer(params: ProgressModalParams): void {
     this.container = document.createElement('div');
-    this.container.classList.add('modal', 'fade', 'modal-progress');
+    this.container.classList.add('modal', 'fade', ProgressModalMap.classes.modal);
     this.container.id = params.id;
 
     // Modal dialog element
@@ -121,7 +166,7 @@ export class ProgressModalContainer extends ModalContainer implements ProgressMo
     this.currentView = view;
   }
 
-  private toggleView(viewContainer: ViewContainerType): void {
+  protected toggleView(viewContainer: ViewContainerType): void {
     if (this.dialog.contains(this.progressView.content)) {
       this.dialog.removeChild(this.progressView.content);
     }
@@ -153,7 +198,7 @@ export class ProgressView implements ViewContainerType {
 
   body: HTMLElement;
 
-  stopProcessingButton: HTMLElement;
+  abortProcessingButton: HTMLElement;
 
   closeModalButton: HTMLElement;
 
@@ -191,7 +236,7 @@ export class ProgressView implements ViewContainerType {
 
     this.switchToErrorButton = document.createElement('div');
     this.switchToErrorButton.classList.add(
-      ComponentsMap.progressModal.classes.switchToErrorButton,
+      ProgressModalMap.classes.switchToErrorButton,
       'alert',
       'alert-warning',
       'd-none',
@@ -206,19 +251,21 @@ export class ProgressView implements ViewContainerType {
 
     // Progress headline with icon and progression message embedded in a parent div
     const progressHeadline = document.createElement('div');
-    progressHeadline.classList.add(ComponentsMap.progressModal.classes.progressHeadline);
+    progressHeadline.classList.add(ProgressModalMap.classes.progressHeadline);
     this.progressMessage = document.createElement('div');
-    this.progressMessage.classList.add(ComponentsMap.progressModal.classes.progressMessage);
-    this.progressMessage.innerHTML = params.progressionMessage.replace('%done%', '0').replace('%total%', String(params.total));
+    this.progressMessage.classList.add(ProgressModalMap.classes.progressMessage);
+    this.progressMessage.innerHTML = params.progressionMessage
+      .replace('%done%', '0')
+      .replace('%total%', String(params.total));
 
     this.progressIcon = document.createElement('span');
-    this.progressIcon.classList.add(ComponentsMap.progressModal.classes.progressIcon);
+    this.progressIcon.classList.add(ProgressModalMap.classes.progressIcon);
     const spinner = document.createElement('div');
     spinner.classList.add('spinner');
     this.progressIcon.appendChild(spinner);
 
     this.progressPercent = document.createElement('span');
-    this.progressPercent.classList.add(ComponentsMap.progressModal.classes.progressPercent);
+    this.progressPercent.classList.add(ProgressModalMap.classes.progressPercent);
     this.progressPercent.innerHTML = '0%';
 
     progressHeadline.append(this.progressIcon);
@@ -237,24 +284,24 @@ export class ProgressView implements ViewContainerType {
     this.footer = document.createElement('div');
     this.footer.classList.add('modal-footer');
 
-    this.stopProcessingButton = document.createElement('button');
-    this.stopProcessingButton.setAttribute('type', 'button');
-    this.stopProcessingButton.classList.add('btn', 'btn-secondary', 'btn-lg', ComponentsMap.progressModal.classes.stopProcessing);
-    this.stopProcessingButton.innerHTML = params.stopProcessingLabel;
+    this.abortProcessingButton = document.createElement('button');
+    this.abortProcessingButton.setAttribute('type', 'button');
+    this.abortProcessingButton.classList.add('btn', 'btn-secondary', 'btn-lg', ProgressModalMap.classes.stopProcessing);
+    this.abortProcessingButton.innerHTML = params.abortProcessingLabel;
 
     this.closeModalButton = document.createElement('button');
     this.closeModalButton.setAttribute('type', 'button');
-    this.closeModalButton.classList.add('btn', 'btn-primary', 'btn-lg', 'close-modal', 'd-none');
+    this.closeModalButton.classList.add('btn', 'btn-primary', 'btn-lg', ProgressModalMap.classes.closeModalButton, 'd-none');
     this.closeModalButton.innerHTML = params.closeLabel;
     this.closeModalButton.dataset.dismiss = 'modal';
 
     // Appending element to the modal
-    this.footer.append(this.stopProcessingButton, this.closeModalButton, ...params.customButtons);
+    this.footer.append(this.abortProcessingButton, this.closeModalButton, ...params.customButtons);
 
     this.content.append(this.header, this.body, this.footer);
   }
 
-  private buildProgressBar(): HTMLElement {
+  protected buildProgressBar(): HTMLElement {
     const progressBar = document.createElement('div');
     progressBar.setAttribute('style', 'display: block; width: 100%');
 
@@ -271,7 +318,7 @@ export class ProgressView implements ViewContainerType {
     this.progressDone.setAttribute('style', 'width: 0%');
     this.progressDone.setAttribute('role', 'progressbar');
     this.progressDone.setAttribute('aria-valuemax', '100');
-    this.progressDone.id = ComponentsMap.progressModal.classes.progressBarDone;
+    this.progressDone.id = ProgressModalMap.classes.progressBarDone;
     progressBar.append(this.progressDone);
 
     return progressBar;
@@ -293,14 +340,12 @@ export class ErrorView implements ViewContainerType {
 
   errorMessage: HTMLElement;
 
-  switchButton: HTMLElement;
+  switchToProgressButton: HTMLElement;
 
   downloadErrorsButton: HTMLElement;
 
   errorContainer: HTMLElement;
 
-  /* This constructor is important to force the input type but ESLint is not happy about it*/
-  /* eslint-disable no-useless-constructor */
   constructor(params: ProgressModalParams) {
     this.content = document.createElement('div');
     this.content.classList.add('modal-content');
@@ -323,13 +368,13 @@ export class ErrorView implements ViewContainerType {
     this.body.classList.add('modal-body', 'text-left', 'font-weight-normal');
 
     this.errorMessage = document.createElement('div');
-    this.errorMessage.classList.add(ComponentsMap.progressModal.classes.errorMessage);
+    this.errorMessage.classList.add(ProgressModalMap.classes.errorMessage);
     this.errorMessage.innerHTML = params.errorsMessage.replace('%error_count%', '0');
     this.body.append(this.errorMessage);
 
     this.errorContainer = document.createElement('div');
-    this.errorContainer.classList.add(ComponentsMap.progressModal.classes.errorContainer);
     this.errorContainer.classList.add(
+      ProgressModalMap.classes.errorContainer,
       'd-print-none',
     );
     this.body.append(this.errorContainer);
@@ -337,29 +382,24 @@ export class ErrorView implements ViewContainerType {
     this.footer = document.createElement('div');
     this.footer.classList.add('modal-footer');
 
-    this.switchButton = document.createElement('div');
-    this.switchButton.classList.add(
-      ComponentsMap.progressModal.classes.switchToProgressButton,
+    this.switchToProgressButton = document.createElement('div');
+    this.switchToProgressButton.classList.add(
+      ProgressModalMap.classes.switchToProgressButton,
       'btn',
       'btn-secondary',
     );
-    this.switchButton.innerHTML = params.backToProcessingLabel;
+    this.switchToProgressButton.innerHTML = params.backToProcessingLabel;
 
     this.downloadErrorsButton = document.createElement('div');
     this.downloadErrorsButton.classList.add(
-      ComponentsMap.progressModal.classes.downloadErrorLogButton,
+      ProgressModalMap.classes.downloadErrorLogButton,
       'btn',
       'btn-secondary',
     );
-    const downloadIcon = document.createElement('span');
-    downloadIcon.classList.add(
-      'material-icons',
-      'progress-download-icon',
-    );
-    downloadIcon.innerHTML = 'file_download';
+    const downloadIcon = ProgressModal.getProgressIcon('download');
     this.downloadErrorsButton.innerHTML = `${downloadIcon.outerHTML} ${params.downloadErrorLogLabel}`;
 
-    this.footer.append(this.switchButton);
+    this.footer.append(this.switchToProgressButton);
     this.footer.append(this.downloadErrorsButton);
 
     this.content.append(this.header, this.body, this.footer);
@@ -370,20 +410,19 @@ export class ErrorView implements ViewContainerType {
  * ConfirmModal component
  *
  * @param {InputConfirmModalParams} params
- * @param {Function} cancelCallback @deprecated You should rely on the closeCallback param
  */
 export class ProgressModal extends Modal implements ProgressModalType {
   modal!: ProgressModalContainerType;
 
-  doneCount: number;
+  protected doneCount: number;
 
-  total !: number;
+  protected total: number;
 
-  errors !: Array<string>;
+  protected errors: Array<string>;
 
-  processStopped !: boolean;
+  protected progressStopped: boolean;
 
-  params: ProgressModalParams;
+  protected params: ProgressModalParams;
 
   constructor(inputParams: InputProgressModalParams) {
     const params: ProgressModalParams = {
@@ -393,7 +432,7 @@ export class ProgressModal extends Modal implements ProgressModalType {
       dialogStyle: {},
       progressionMessage: 'Processing %done% / %total% elements.',
       closeLabel: 'Close',
-      stopProcessingLabel: 'Stop processing',
+      abortProcessingLabel: 'Stop processing',
       errorsMessage: '%error_count% errors occurred. You can download the logs for future reference.',
       backToProcessingLabel: 'Back to processing',
       downloadErrorLogLabel: 'Download error log',
@@ -406,7 +445,7 @@ export class ProgressModal extends Modal implements ProgressModalType {
     this.doneCount = 0;
     this.total = params.total;
     this.errors = [];
-    this.processStopped = false;
+    this.progressStopped = false;
     this.params = params;
   }
 
@@ -416,7 +455,7 @@ export class ProgressModal extends Modal implements ProgressModalType {
     this.initListeners(params);
   }
 
-  public updateCount(doneCount: number): void {
+  public updateProgress(doneCount: number): void {
     this.doneCount = doneCount;
 
     const percentDone = (this.doneCount * 100) / this.total;
@@ -433,7 +472,7 @@ export class ProgressModal extends Modal implements ProgressModalType {
     this.errors.push(error);
 
     const errorContent = document.createElement('p');
-    errorContent.classList.add('progress-modal-error');
+    errorContent.classList.add(ProgressModalMap.classes.progressModalError);
     errorContent.append(this.getWarningIcon());
     errorContent.append(error);
 
@@ -452,8 +491,25 @@ export class ProgressModal extends Modal implements ProgressModalType {
     this.modal.progressView.switchToErrorButton.classList.remove('d-none');
   }
 
-  /** Return 401 on error */
-  private initListeners(params: ProgressModalParams): void {
+  public completeProgress(): void {
+    this.stopProgress(this.errors.length > 0 ? this.getWarningIcon() : this.getCompleteIcon());
+  }
+
+  public interruptProgress(): void {
+    this.stopProgress(this.getStopIcon());
+  }
+
+  protected stopProgress(progressIcon: HTMLElement): void {
+    if (this.progressStopped) {
+      return;
+    }
+
+    this.replaceStopProcessButton();
+    this.modal.progressView.progressIcon.innerHTML = progressIcon.outerHTML;
+    this.progressStopped = true;
+  }
+
+  protected initListeners(params: ProgressModalParams): void {
     this.modal.errorView.downloadErrorsButton.addEventListener('click', () => {
       let csvContent = 'data:text/csv;charset=utf-8,';
       this.errors.forEach((error) => {
@@ -466,7 +522,7 @@ export class ProgressModal extends Modal implements ProgressModalType {
       link.click();
     });
 
-    this.modal.errorView.switchButton.addEventListener('click', () => {
+    this.modal.errorView.switchToProgressButton.addEventListener('click', () => {
       this.modal.switchView(ProgressModalContainer.PROGRESS_VIEW);
     });
 
@@ -474,10 +530,10 @@ export class ProgressModal extends Modal implements ProgressModalType {
       this.modal.switchView(ProgressModalContainer.ERROR_VIEW);
     });
 
-    this.modal.progressView.stopProcessingButton.addEventListener('click', () => {
-      this.interruptProcess();
-      if (params.cancelCallback) {
-        params.cancelCallback();
+    this.modal.progressView.abortProcessingButton.addEventListener('click', () => {
+      this.interruptProgress();
+      if (params.abortCallback) {
+        params.abortCallback();
       }
     });
 
@@ -488,42 +544,24 @@ export class ProgressModal extends Modal implements ProgressModalType {
     });
   }
 
-  public completeProcess(): void {
-    this.stopProcess(this.errors.length > 0 ? this.getWarningIcon() : this.getCompleteIcon());
-  }
-
-  public interruptProcess(): void {
-    this.stopProcess(this.getStopIcon());
-  }
-
-  private stopProcess(progressIcon: HTMLElement): void {
-    if (this.processStopped) {
-      return;
-    }
-
-    this.replaceStopProcessButton();
-    this.modal.progressView.progressIcon.innerHTML = progressIcon.outerHTML;
-    this.processStopped = true;
-  }
-
-  private replaceStopProcessButton() {
-    this.modal.progressView.stopProcessingButton.classList.add('d-none');
+  protected replaceStopProcessButton(): void {
+    this.modal.progressView.abortProcessingButton.classList.add('d-none');
     this.modal.progressView.closeModalButton.classList.remove('d-none');
   }
 
-  private getWarningIcon(): HTMLElement {
-    return this.getProgressIcon('warning');
+  protected getWarningIcon(): HTMLElement {
+    return ProgressModal.getProgressIcon('warning');
   }
 
-  private getCompleteIcon(): HTMLElement {
-    return this.getProgressIcon('complete');
+  protected getCompleteIcon(): HTMLElement {
+    return ProgressModal.getProgressIcon('complete');
   }
 
-  private getStopIcon(): HTMLElement {
-    return this.getProgressIcon('stop');
+  protected getStopIcon(): HTMLElement {
+    return ProgressModal.getProgressIcon('stop');
   }
 
-  private getProgressIcon(progressStatus: string): HTMLElement {
+  public static getProgressIcon(progressStatus: string): HTMLElement {
     let iconContent: string;
 
     switch (progressStatus) {
@@ -533,6 +571,9 @@ export class ProgressModal extends Modal implements ProgressModalType {
       case 'stop':
         iconContent = 'close';
         break;
+      case 'download':
+        iconContent = 'file_download';
+        break;
       default:
         iconContent = progressStatus;
         break;
@@ -541,7 +582,7 @@ export class ProgressModal extends Modal implements ProgressModalType {
     const progressIcon = document.createElement('span');
     progressIcon.classList.add(
       'material-icons',
-      `progress-${progressStatus}-icon`,
+      ProgressModalMap.classes.progressStatusIcon(progressStatus),
     );
     progressIcon.innerHTML = iconContent;
 

@@ -114,6 +114,7 @@ export default {
   },
   progressModal: {
     classes: {
+      modal: 'modal-progress',
       switchToErrorButton: 'switch-to-errors-button',
       progressPercent: 'progress-percent',
       stopProcessing: 'stop-processing',
@@ -125,6 +126,9 @@ export default {
       switchToProgressButton: 'switch-to-progress-button',
       downloadErrorLogButton: 'download-error-log',
       progressBarDone: 'modal_progressbar_done',
+      closeModalButton: 'close-modal-button',
+      progressModalError: 'progress-modal-error',
+      progressStatusIcon: (status: string): string => `progress-${status}-icon`,
     },
   },
 };
