@@ -597,10 +597,11 @@ class HelperListCore extends Helper
             $this->identifier => $id,
             'href' => $href,
             'action' => self::$cache_lang['Delete'],
+            'confirm' => Tools::safeOutput(self::$cache_lang['DeleteItem'] . $name),
         ];
 
-        if ($this->specificConfirmDelete !== false) {
-            $data['confirm'] = null !== $this->specificConfirmDelete ? '\r' . $this->specificConfirmDelete : Tools::safeOutput(self::$cache_lang['DeleteItem'] . $name);
+        if (!empty($this->specificConfirmDelete)) {
+            $data['confirm'] = '\r' . $this->specificConfirmDelete;
         }
 
         $tpl->assign(array_merge($this->tpl_delete_link_vars, $data));
