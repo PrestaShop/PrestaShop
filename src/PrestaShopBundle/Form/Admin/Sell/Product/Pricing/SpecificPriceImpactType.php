@@ -31,9 +31,9 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\Reduction;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\InitialPrice;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction as ReductionVO;
+use PrestaShopBundle\Form\Admin\Sell\Product\DataTransformer\SpecificPriceFixedPriceTransformer;
 use PrestaShopBundle\Form\Admin\Type\PriceReductionType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
@@ -112,22 +112,7 @@ class SpecificPriceImpactType extends TranslatorAwareType
             ])
         ;
 
-        $builder->get('fixed_price_tax_excluded')->addViewTransformer(new CallbackTransformer(
-            function ($fixedPrice) {
-                if (InitialPrice::isInitialPriceValue((string) $fixedPrice)) {
-                    return '';
-                }
-
-                return $fixedPrice;
-            },
-            function ($fixedPrice) {
-                if ($fixedPrice === '') {
-                    return InitialPrice::INITIAL_PRICE_VALUE;
-                }
-
-                return $fixedPrice;
-            }
-        ));
+        $builder->get('fixed_price_tax_excluded')->addViewTransformer(new SpecificPriceFixedPriceTransformer());
     }
 
     public function configureOptions(OptionsResolver $resolver)
