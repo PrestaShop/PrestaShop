@@ -28,6 +28,7 @@
 import {
   ModalContainerType, ModalContainer, ModalType, ModalParams, Modal,
 } from '@components/modal/modal';
+import {isUndefined} from '@PSTypes/typeguard';
 
 export interface ConfirmModalContainerType extends ModalContainerType {
   message: HTMLElement;
@@ -118,9 +119,23 @@ export class ConfirmModal extends Modal implements ConfirmModalType {
 
   constructor(
     inputParams: InputConfirmModalParams,
-    confirmCallback: (event: Event) => void,
+    confirmCallback?: (event: Event) => void,
     cancelCallback?: () => void,
   ) {
+    let confirmModalCallback: (event: Event) => void;
+
+    if (!isUndefined(inputParams.confirmCallback)) {
+      confirmModalCallback = inputParams.confirmCallback;
+    } else if (!isUndefined(confirmCallback)) {
+      confirmModalCallback = confirmCallback;
+    } else {
+      // We kept the parameters for backward compatibility, this forces us to keep the param confirmCallback as optional
+      // but when we remove deprecation it will become mandatory, a confirm callback should always be specified
+      confirmModalCallback = (): void => {
+        console.error('No confirm callback provided for ConfirmModal component.');
+      };
+    }
+
     const params: ConfirmModalParams = {
       id: 'confirm-modal',
       confirmMessage: 'Are you sure?',
@@ -131,8 +146,8 @@ export class ConfirmModal extends Modal implements ConfirmModalType {
       closable: false,
       modalTitle: inputParams.confirmTitle,
       dialogStyle: {},
-      confirmCallback,
-      closeCallback: cancelCallback,
+      confirmCallback: confirmModalCallback,
+      closeCallback: inputParams.closeCallback ?? cancelCallback,
       ...inputParams,
     };
 

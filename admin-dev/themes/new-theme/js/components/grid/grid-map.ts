@@ -62,6 +62,8 @@ export default {
     submitModalFormBtn: '.js-submit-modal-form-btn',
     bulkInputsBlock: (id: string): string => `#${id}`,
     tokenInput: (id: string): string => `input[name="${id}[_token]"]`,
+    ajaxBulkActionConfirmModal: (id: string, bulkAction: string): string => `${id}-ajax-${bulkAction}-confirm-modal`,
+    ajaxBulkActionProgressModal: (id: string, bulkAction: string): string => `${id}-ajax-${bulkAction}-progress-modal`,
   },
   position: (id: string): string => `.js-${id}-position:first`,
   confirmModal: (id: string): string => `${id}-grid-confirm-modal`,

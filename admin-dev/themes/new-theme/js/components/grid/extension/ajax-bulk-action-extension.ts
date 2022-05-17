@@ -25,6 +25,7 @@
 
 import {Grid} from '@PSTypes/grid';
 import ProgressModal from '@components/modal/progress-modal';
+import ConfirmModal from '@components/modal/confirm-modal';
 import GridMap from '@components/grid/grid-map';
 import Router from '@components/router';
 
@@ -47,14 +48,44 @@ export default class AjaxBulkActionExtension {
     grid
       .getContainer()
       .on('click', GridMap.bulks.ajaxAction, (event: ClickEvent) => {
-        this.submitForm($<HTMLInputElement>(event.currentTarget), $<HTMLInputElement>(GridMap.bulks.checkedCheckbox));
+        const $ajaxButton: JQuery<HTMLInputElement> = $<HTMLInputElement>(event.currentTarget);
+        const $checkboxes: JQuery<HTMLInputElement> = $<HTMLInputElement>(GridMap.bulks.checkedCheckbox);
+        const selectedIds: string[] = $checkboxes.get().map((checkbox: HTMLInputElement) => checkbox.value);
+
+        if (selectedIds.length === 0) {
+          return;
+        }
+
+        const confirmBulkAction = $ajaxButton.data('confirmBulkAction') ?? true;
+
+        if (confirmBulkAction) {
+          const progressionTitle = $ajaxButton.data('progressTitle');
+          const closeButtonLabel = $ajaxButton.data('cancelLabel') || 'Cancel';
+          const confirmTitle = $ajaxButton.data('confirmTitle') || 'Apply modifications';
+          const bulkAction = $ajaxButton.data('bulkAction') ?? 'bulk-action';
+
+          const confirmModal = new ConfirmModal({
+            id: GridMap.actions.ajaxBulkActionConfirmModal(grid.id, bulkAction),
+            modalTitle: confirmTitle,
+            closeButtonLabel,
+            confirmMessage: progressionTitle.replace('%total%', selectedIds.length),
+            confirmButtonLabel: confirmTitle,
+            confirmCallback: () => {
+              this.submitForm(grid, $<HTMLInputElement>(event.currentTarget), selectedIds);
+            },
+          });
+          confirmModal.show();
+        } else {
+          this.submitForm(grid, $<HTMLInputElement>(event.currentTarget), selectedIds);
+        }
       });
   }
 
-  private async submitForm($ajaxButton: JQuery<HTMLInputElement>, checkboxes: JQuery<HTMLInputElement>): Promise<void> {
+  private async submitForm(grid: Grid, $ajaxButton: JQuery<HTMLInputElement>, selectedIds: string[]): Promise<void> {
     const bulkChunkSize = $ajaxButton.data('bulkChunkSize') ?? 10;
     const reloadAfterBulk = $ajaxButton.data('reloadAfterBulk') ?? true;
 
+    const bulkAction = $ajaxButton.data('bulkAction') ?? 'bulk-action';
     const progressionTitle = $ajaxButton.data('progressTitle');
     const progressionMessage = $ajaxButton.data('progressMessage');
     const closeLabel = $ajaxButton.data('closeLabel');
@@ -68,6 +99,7 @@ export default class AjaxBulkActionExtension {
     const abortController = new AbortController();
 
     const modal = new ProgressModal({
+      id: GridMap.actions.ajaxBulkActionProgressModal(grid.id, bulkAction),
       abortCallback: () => {
         stopProcess = true;
         abortController.abort();
@@ -86,11 +118,9 @@ export default class AjaxBulkActionExtension {
       downloadErrorLogLabel,
       viewErrorLogLabel,
       viewErrorTitle,
-      total: checkboxes.length,
+      total: selectedIds.length,
     });
     modal.show();
-
-    const selectedIds: string[] = checkboxes.get().map((checkbox: HTMLInputElement) => checkbox.value);
 
     let stopProcess = false;
     let doneCount = 0;

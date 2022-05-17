@@ -408,6 +408,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add($this->buildAjaxBulkAction(
                 'enable_selection_ajax',
                 'admin_products_v2_bulk_enable',
+                $this->trans('Activate selection', [], 'Admin.Actions'),
                 $this->trans('Activating %total% products', [], 'Admin.Actions'),
                 $this->trans('Activating %done% / %total% products', [], 'Admin.Actions'),
                 'radio_button_checked',
@@ -416,6 +417,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
             ->add($this->buildAjaxBulkAction(
                 'disable_selection_ajax',
                 'admin_products_v2_bulk_disable',
+                $this->trans('Deactivate selection', [], 'Admin.Actions'),
                 $this->trans('Deactivating %total% products', [], 'Admin.Actions'),
                 $this->trans('Deactivating %done% / %total% products', [], 'Admin.Actions'),
                 'radio_button_unchecked',
@@ -427,6 +429,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function buildAjaxBulkAction(
         string $actionId,
         string $ajaxRoute,
+        string $actionLabel,
         string $progressTitle,
         string $progressMessage,
         string $icon = '',
@@ -434,11 +437,14 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
     ): AjaxBulkAction {
         $ajaxBulkAction = new AjaxBulkAction($actionId);
         $ajaxBulkAction
-            ->setName($this->trans('Activate selection', [], 'Admin.Actions'))
+            ->setName($actionLabel)
             ->setOptions([
                 'ajax_route' => $ajaxRoute,
                 'route_params' => $routeParams,
                 'request_param_name' => 'product_bulk',
+                'confirm_bulk_action' => true,
+                'modal_confirm_title' => $actionLabel,
+                'modal_cancel' => $this->trans('Cancel', [], 'Admin.Actions'),
                 'modal_progress_title' => $progressTitle,
                 'modal_progress_message' => $progressMessage,
                 'modal_close' => $this->trans('Close', [], 'Admin.Actions'),

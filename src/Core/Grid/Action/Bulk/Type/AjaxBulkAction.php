@@ -58,6 +58,9 @@ final class AjaxBulkAction extends AbstractBulkAction
                 'bulk_chunk_size' => 10,
                 'reload_after_bulk' => true,
                 // Modal params
+                'confirm_bulk_action' => true,
+                'modal_confirm_title' => 'Apply bulk modifications',
+                'modal_cancel' => 'Cancel',
                 'modal_progress_title' => 'Completing %total% actions',
                 'modal_progress_message' => 'Processing %done% / %total% elements.',
                 'modal_close' => 'Close',
@@ -77,6 +80,9 @@ final class AjaxBulkAction extends AbstractBulkAction
             ->setAllowedTypes('bulk_chunk_size', 'int')
             ->setAllowedTypes('reload_after_bulk', 'bool')
             // Modal params
+            ->setAllowedTypes('confirm_bulk_action', 'bool')
+            ->setAllowedTypes('modal_confirm_title', 'string')
+            ->setAllowedTypes('modal_cancel', 'string')
             ->setAllowedTypes('modal_progress_title', 'string')
             ->setAllowedTypes('modal_progress_message', 'string')
             ->setAllowedTypes('modal_close', 'string')
