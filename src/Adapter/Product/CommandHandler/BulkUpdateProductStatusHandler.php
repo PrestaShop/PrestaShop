@@ -31,13 +31,14 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Product\ProductStatusUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkUpdateProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\BulkUpdateProductStatusHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\BulkProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkUpdateProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
  * Handles command which deletes addresses in bulk action
  */
-class BulkUpdateProductStatusHandler implements BulkUpdateProductStatusHandlerInterface
+class BulkUpdateProductStatusHandler extends AbstractBulkHandler implements BulkUpdateProductStatusHandlerInterface
 {
     /**
      * @var ProductStatusUpdater
@@ -54,20 +55,22 @@ class BulkUpdateProductStatusHandler implements BulkUpdateProductStatusHandlerIn
      */
     public function handle(BulkUpdateProductStatusCommand $command): void
     {
-        $bulkException = null;
-        foreach ($command->getProductIds() as $productId) {
-            try {
-                $this->productStatusUpdater->updateStatus($productId, $command->getNewStatus());
-            } catch (ProductException $e) {
-                if (null === $bulkException) {
-                    $bulkException = new CannotBulkUpdateProductException();
-                }
-                $bulkException->addException($productId, $e);
-            }
-        }
+        $this->handleBulkAction($command->getProductIds(), $command);
+    }
 
-        if (null !== $bulkException) {
-            throw $bulkException;
-        }
+    /**
+     * @param ProductId $productId
+     * @param BulkUpdateProductStatusCommand $command
+     *
+     * @return void
+     */
+    protected function handleSingleAction(ProductId $productId, $command)
+    {
+        $this->productStatusUpdater->updateStatus($productId, $command->getNewStatus());
+    }
+
+    protected function buildBulkException(): BulkProductException
+    {
+        return new CannotBulkUpdateProductException();
     }
 }

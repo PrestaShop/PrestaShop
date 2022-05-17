@@ -31,11 +31,14 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Product\ProductDuplicator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\BulkDuplicateProductHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\BulkProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDuplicateProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
  * Handles command which deletes addresses in bulk action
  */
-class BulkDuplicateProductHandler implements BulkDuplicateProductHandlerInterface
+class BulkDuplicateProductHandler extends AbstractBulkHandler implements BulkDuplicateProductHandlerInterface
 {
     /**
      * @var ProductDuplicator
@@ -55,11 +58,22 @@ class BulkDuplicateProductHandler implements BulkDuplicateProductHandlerInterfac
      */
     public function handle(BulkDuplicateProductCommand $command): array
     {
-        $newProducts = [];
-        foreach ($command->getProductIds() as $productId) {
-            $newProducts[] = $this->productDuplicator->duplicate($productId);
-        }
+        return $this->handleBulkAction($command->getProductIds());
+    }
 
-        return $newProducts;
+    /**
+     * @param ProductId $productId
+     * @param null $command
+     *
+     * @return ProductId
+     */
+    protected function handleSingleAction(ProductId $productId, $command = null)
+    {
+        return $this->productDuplicator->duplicate($productId);
+    }
+
+    protected function buildBulkException(): BulkProductException
+    {
+        return new CannotBulkDuplicateProductException();
     }
 }
