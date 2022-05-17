@@ -66,6 +66,8 @@ export type IframeModalParams = ModalParams & {
   confirmCallback?: (iframe: HTMLIFrameElement, event: Event) => void;
   // By default the iframe closes when confirm button is clicked, this options overrides this behaviour
   closeOnConfirm: boolean;
+  // When the iframe is refreshed auto scroll up the body container (true by default)
+  autoScrollUp: boolean;
 }
 export type InputIframeModalParams = Partial<IframeModalParams> & {
   iframeUrl: string; // iframeUrl is mandatory in input
@@ -180,6 +182,7 @@ export class IframeModal extends Modal implements IframeModalType {
       autoSize: true,
       autoSizeContainer: 'body',
       closeOnConfirm: true,
+      autoScrollUp: true,
       ...inputParams,
     };
     super(params);
@@ -193,6 +196,8 @@ export class IframeModal extends Modal implements IframeModalType {
     this.autoSize = params.autoSize;
     this.autoSizeContainer = params.autoSizeContainer;
     this.modal.iframe.addEventListener('load', (loadedEvent: Event) => {
+      // Scroll the body container back to the top after iframe loaded
+      this.modal.body.scroll(0, 0);
       this.hideLoading();
       if (params.onLoaded) {
         params.onLoaded(this.modal.iframe, loadedEvent);
@@ -243,10 +248,18 @@ export class IframeModal extends Modal implements IframeModalType {
   }
 
   showLoading(): void {
+    const bodyHeight = this.getOuterHeight(this.modal.body);
+    const bodyWidth = this.getOuterWidth(this.modal.body);
+    this.modal.loader.style.height = `${bodyHeight}px`;
+    this.modal.loader.style.width = `${bodyWidth}px`;
     this.modal.loader.classList.remove('d-none');
+    this.modal.iframe.classList.remove('invisible');
+    this.modal.iframe.classList.add('invisible');
   }
 
   hideLoading(): void {
+    this.modal.iframe.classList.remove('invisible');
+    this.modal.iframe.classList.add('visible');
     this.modal.loader.classList.add('d-none');
   }
 
@@ -316,6 +329,20 @@ export class IframeModal extends Modal implements IframeModalType {
     height += parseInt(style.marginTop, 10) + parseInt(style.marginBottom, 10);
 
     return height;
+  }
+
+  private getOuterWidth(element: HTMLElement): number {
+    // If the element height is 0 it is likely empty or hidden, then no need to compute the margin
+    if (!element.offsetWidth) {
+      return 0;
+    }
+
+    let width = element.offsetWidth;
+    const style: CSSStyleDeclaration = getComputedStyle(element);
+
+    width += parseInt(style.marginLeft, 10) + parseInt(style.marginRight, 10);
+
+    return width;
   }
 }
 
