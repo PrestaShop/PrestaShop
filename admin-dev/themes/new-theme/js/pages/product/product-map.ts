@@ -271,6 +271,8 @@ export default {
     tagCategoryIdInput: '.category-id-input',
     tagItem: '.tag-item',
     categoryNamePreview: '.category-name-preview',
+    // eslint-disable-next-line max-len
+    namePreviewInput: '.category-name-preview-input',
     categoryNameInput: '.category-name-input',
     searchInput: '#ps-select-product-category',
     fieldset: '.tree-fieldset',

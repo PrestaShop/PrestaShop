@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Category\NameBuilder\CategoryDisplayNameBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoriesTree;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryHandler\GetCategoriesTreeHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\CategoryForTree;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
@@ -58,18 +59,26 @@ final class GetCategoriesTreeHandler implements GetCategoriesTreeHandlerInterfac
     private $shopRepository;
 
     /**
+     * @var int
+     */
+    private $rootCategoryId;
+
+    /**
      * @param CategoryDisplayNameBuilder $displayNameBuilder
      * @param ContextStateManager $contextStateManager
      * @param ShopRepository $shopRepository
+     * @param int $rootCategoryId
      */
     public function __construct(
         CategoryDisplayNameBuilder $displayNameBuilder,
         ContextStateManager $contextStateManager,
-        ShopRepository $shopRepository
+        ShopRepository $shopRepository,
+        int $rootCategoryId
     ) {
         $this->displayNameBuilder = $displayNameBuilder;
         $this->contextStateManager = $contextStateManager;
         $this->shopRepository = $shopRepository;
+        $this->rootCategoryId = $rootCategoryId;
     }
 
     /**
@@ -84,7 +93,8 @@ final class GetCategoriesTreeHandler implements GetCategoriesTreeHandlerInterfac
         ;
 
         try {
-            $nestedCategories = Category::getNestedCategories(null, $langId->getValue(), false);
+            $nestedCategories = Category::getNestedCategories($this->rootCategoryId, $langId->getValue(), false);
+            $nestedCategories = $nestedCategories[$this->rootCategoryId]['children'] ?? [];
         } finally {
             $this->contextStateManager->restorePreviousContext();
         }
@@ -96,15 +106,15 @@ final class GetCategoriesTreeHandler implements GetCategoriesTreeHandlerInterfac
      * @param array<string, array<string, mixed>> $categories
      * @param ShopId $shopId
      * @param LanguageId $langId
-     * @param array<int, array<string, mixed>> $parents
      *
      * @return CategoryForTree[]
      */
-    private function buildCategoriesTree(array $categories, ShopId $shopId, LanguageId $langId, array $parents = []): array
+    private function buildCategoriesTree(array $categories, ShopId $shopId, LanguageId $langId): array
     {
         $categoriesTree = [];
         foreach ($categories as $category) {
             $categoryId = (int) $category['id_category'];
+
             $categoryName = $category['name'];
             $categoryActive = (bool) $category['active'];
             $categoryChildren = [];
@@ -113,16 +123,15 @@ final class GetCategoriesTreeHandler implements GetCategoriesTreeHandlerInterfac
                 $categoryChildren = $this->buildCategoriesTree(
                     $category['children'],
                     $shopId,
-                    $langId,
-                    array_merge($parents, [$category])
+                    $langId
                 );
             }
 
-            $displayName = $this->displayNameBuilder->buildWithBreadcrumbs(
+            $displayName = $this->displayNameBuilder->build(
                 $categoryName,
                 $shopId,
                 $langId,
-                $this->getBreadcrumbParts($categoryName, $parents)
+                new CategoryId($categoryId)
             );
 
             $categoriesTree[] = new CategoryForTree(
@@ -135,22 +144,5 @@ final class GetCategoriesTreeHandler implements GetCategoriesTreeHandlerInterfac
         }
 
         return $categoriesTree;
-    }
-
-    /**
-     * @param string $categoryName
-     * @param array<int, array<string, mixed>> $parentCategories
-     *
-     * @return string[]
-     */
-    private function getBreadcrumbParts(string $categoryName, array $parentCategories): array
-    {
-        $breadcrumbs = [];
-        foreach ($parentCategories as $parent) {
-            $breadcrumbs[] = $parent['name'];
-        }
-        $breadcrumbs[] = $categoryName;
-
-        return $breadcrumbs;
     }
 }

@@ -81,8 +81,17 @@ export default class TagsRenderer {
         if (namePreviewElement) {
           namePreviewElement.innerHTML = category.displayName;
 
-          const nameInput = frag.querySelector(ProductCategoryMap.categoryNameInput) as HTMLInputElement;
+          const nameInput = frag.querySelector<HTMLInputElement>(ProductCategoryMap.categoryNameInput)!;
+          const namePreviewInput = frag.querySelector<HTMLInputElement>(ProductCategoryMap.namePreviewInput)!;
+
+          if (!nameInput || !namePreviewInput) {
+            // eslint-disable-next-line max-len
+            console.error(`Missing ${ProductCategoryMap.categoryNameInput} or ${ProductCategoryMap.namePreviewInput} preview input`);
+            return;
+          }
+
           nameInput.value = category.name;
+          namePreviewInput.value = category.displayName;
         }
 
         this.container.append(frag);
