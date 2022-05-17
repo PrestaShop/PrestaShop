@@ -232,32 +232,11 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param Request $request
      * @param int $productId
      *
      * @return Response
      */
-    public function previewAction(Request $request, int $productId): Response
-    {
-        try {
-            $productUrlProvider = $this->get('prestashop.adapter.shop.url.product_provider');
-            $url = $productUrlProvider->getUrl($productId, '{friendly-url}');
-        } catch (ProductException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
-
-            return $this->redirectToRoute('admin_products_v2_index');
-        }
-
-        return $this->redirect($url);
-    }
-
-    /**
-     * @param Request $request
-     * @param int $productId
-     *
-     * @return Response
-     */
-    public function duplicateAction(Request $request, int $productId): Response
+    public function duplicateAction(int $productId): Response
     {
         try {
             $this->getCommandBus()->handle(new DuplicateProductCommand($productId));
@@ -280,10 +259,17 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @param int $productId
      *
-     * @return RedirectResponse
+     * @return JsonResponse
      */
-    public function toggleStatusAction(int $productId): RedirectResponse
+    public function toggleStatusAction(int $productId): JsonResponse
     {
+        if ($this->isDemoModeEnabled()) {
+            return $this->json([
+                'status' => false,
+                'message' => $this->getDemoModeErrorMessage(),
+            ]);
+        }
+
         $shopId = $this->get('prestashop.adapter.shop.context')->getContextShopID();
         if (empty($shopId)) {
             $shopId = $this->get('prestashop.adapter.legacy.configuration')->getInt('PS_SHOP_DEFAULT');
@@ -296,15 +282,17 @@ class ProductController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(
                 new UpdateProductStatusCommand((int) $productId, $productStatus)
             );
-            $this->addFlash(
-                'success',
-                $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success')
-            );
         } catch (ProductException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            return $this->json([
+                'status' => false,
+                'message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
+            ]);
         }
 
-        return $this->redirectToRoute('admin_products_v2_index');
+        return $this->json([
+            'status' => true,
+            'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'),
+        ]);
     }
 
     /**

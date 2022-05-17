@@ -84,20 +84,6 @@ admin_products_v2_duplicate:
   requirements:
     productId: \d+
 
-admin_products_v2_preview:
-  path: /{productId}/preview
-  methods: [ POST ]
-  defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::previewAction
-    _legacy_controller: AdminProducts
-    _legacy_link:
-      - AdminProducts:preview
-    _legacy_parameters:
-      id_product: productId
-  requirements:
-    productId: \d+
-
-
 admin_products_v2_toggle_status:
   path: /{productId}/toggle_status
   methods: [ POST ]
