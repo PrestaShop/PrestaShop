@@ -7065,13 +7065,13 @@ class ProductCore extends ObjectModel
     /**
      * Webservice getter : get virtual field id_default_image in category.
      *
-     * @return int|string
+     * @return int|string|null
      */
     public function getCoverWs()
     {
         $result = $this->getCover($this->id);
 
-        return $result['id_image'];
+        return $result ? $result['id_image'] : null;
     }
 
     /**
