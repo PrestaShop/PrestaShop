@@ -174,12 +174,25 @@ export default class CombinationFormModel {
     const taxRatio: BigNumber = this.getTaxRatio();
     const ecotaxRatio = this.getEcoTaxRatio();
 
-    const productPriceTaxExcluded: BigNumber = this.mapper.getBigNumber('product.priceTaxExcluded') ?? new BigNumber(0);
-    const impactTaxExcluded: BigNumber = this.mapper.getBigNumber('impact.priceTaxExcluded') ?? new BigNumber(0);
-    const combinationEcotaxTaxExcluded: BigNumber = this.getEcotaxTaxExcluded();
-    const combinationEcotaxTaxIncluded = combinationEcotaxTaxExcluded.times(ecotaxRatio);
+    let productPriceTaxExcluded: BigNumber = this.mapper.getBigNumber('product.priceTaxExcluded') ?? new BigNumber(0);
+    let impactTaxExcluded: BigNumber = this.mapper.getBigNumber('impact.priceTaxExcluded') ?? new BigNumber(0);
+    let combinationEcotaxTaxExcluded: BigNumber = this.getEcotaxTaxExcluded();
 
-    // Combination price it the initial product price plus the impact from combination
+    // Make sure no value is NaN
+    if (productPriceTaxExcluded.isNaN()) {
+      productPriceTaxExcluded = new BigNumber(0);
+    }
+
+    if (impactTaxExcluded.isNaN()) {
+      impactTaxExcluded = new BigNumber(0);
+    }
+
+    if (combinationEcotaxTaxExcluded.isNaN()) {
+      combinationEcotaxTaxExcluded = new BigNumber(0);
+    }
+
+    const combinationEcotaxTaxIncluded = combinationEcotaxTaxExcluded.times(ecotaxRatio);
+    // Combination price is the initial product price plus the impact from combination
     const combinationPriceTaxExcluded = productPriceTaxExcluded.plus(impactTaxExcluded);
 
     // Final display price (without) taxes also includes the ecotax (without taxes)
@@ -224,7 +237,11 @@ export default class CombinationFormModel {
   }
 
   private getTaxRatio(): BigNumber {
-    const taxRate: BigNumber = this.mapper.getBigNumber('product.taxRate') ?? new BigNumber(0);
+    let taxRate: BigNumber = this.mapper.getBigNumber('product.taxRate') ?? new BigNumber(0);
+
+    if (taxRate.isNaN()) {
+      taxRate = new BigNumber(0);
+    }
 
     return taxRate.dividedBy(100).plus(1);
   }

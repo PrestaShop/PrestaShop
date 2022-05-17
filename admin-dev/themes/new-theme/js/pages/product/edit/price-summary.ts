@@ -101,8 +101,8 @@ export default class PriceSummary {
     this.updateField(this.wholesalePrice, this.fillLabelWithPrice(this.wholesalePriceLabel, 'price.wholesalePrice'));
 
     // Final price tax excluded is composed with price tax excluded and ecotax part
-    const priceTaxExcluded: BigNumber = this.productFormModel.getBigNumber('price.priceTaxExcluded') ?? new BigNumber(0);
-    const ecotaxTaxExcluded: BigNumber = this.productFormModel.getBigNumber('price.ecotaxTaxExcluded') ?? new BigNumber(0);
+    const priceTaxExcluded: BigNumber = this.getBigNumber('price.priceTaxExcluded');
+    const ecotaxTaxExcluded: BigNumber = this.getBigNumber('price.ecotaxTaxExcluded');
     const finalPriceTaxExcluded: BigNumber = priceTaxExcluded.plus(ecotaxTaxExcluded);
     this.updateField(
       this.priceTaxExcluded,
@@ -110,8 +110,8 @@ export default class PriceSummary {
     );
 
     // Compute margin based on wholesale price
-    const wholesalePrice = this.productFormModel.getBigNumber('price.wholesalePrice') ?? new BigNumber(0);
-    const price:BigNumber = this.productFormModel.getBigNumber('price.priceTaxExcluded') ?? new BigNumber(0);
+    const wholesalePrice = this.getBigNumber('price.wholesalePrice');
+    const price:BigNumber = this.getBigNumber('price.priceTaxExcluded');
     const margin:BigNumber = price.minus(wholesalePrice);
     this.updateField(this.margin, this.marginLabel.replace('%price%', this.productFormModel.displayPrice(margin)));
 
@@ -119,7 +119,7 @@ export default class PriceSummary {
     this.updateField(this.marginRate, this.marginRateLabel.replace('%margin_rate%', marginRate.toFixed(2)));
 
     // Unit price is composed of two fields and it is shown only when values are not empty
-    const unitPrice = this.productFormModel.getBigNumber('price.wholesalePrice') ?? new BigNumber(0);
+    const unitPrice = this.getBigNumber('price.wholesalePrice');
     const {unity} = this.productFormModel.getProduct().price;
 
     if (unity !== '' && !unitPrice.isZero()) {
@@ -141,7 +141,7 @@ export default class PriceSummary {
   }
 
   private fillLabelWithPrice(label: string, priceModelKey: string): string {
-    const price: BigNumber = this.productFormModel.getBigNumber(priceModelKey) ?? new BigNumber(0);
+    const price: BigNumber = this.getBigNumber(priceModelKey);
 
     return label.replace('%price%', this.productFormModel.displayPrice(price));
   }
@@ -160,5 +160,16 @@ export default class PriceSummary {
     }
 
     return this.summaryContainer.dataset[labelName] ?? defaultLabel;
+  }
+
+  private getBigNumber(modelKey: string): BigNumber {
+    const bigNumber = this.productFormModel.getBigNumber(modelKey) ?? new BigNumber(0);
+
+    // Value can be NaN if input value is invalid (like empty string or .)
+    if (bigNumber.isNaN()) {
+      return new BigNumber(0);
+    }
+
+    return bigNumber;
   }
 };
