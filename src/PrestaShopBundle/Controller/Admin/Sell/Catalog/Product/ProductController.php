@@ -352,9 +352,9 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return RedirectResponse
+     * @return JsonResponse
      */
-    public function bulkDeleteAction(Request $request): RedirectResponse
+    public function bulkDeleteAction(Request $request): JsonResponse
     {
         try {
             $this->getCommandBus()->handle(new BulkDeleteProductCommand(
@@ -365,10 +365,14 @@ class ProductController extends FrameworkBundleAdminController
                 $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            if ($e instanceof BulkProductException) {
+                return $this->jsonBulkErrors($e);
+            } else {
+                return $this->json(['error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))], Response::HTTP_BAD_REQUEST);
+            }
         }
 
-        return $this->redirectToRoute('admin_products_v2_index');
+        return $this->json(['success' => true]);
     }
 
     /**
@@ -427,7 +431,11 @@ class ProductController extends FrameworkBundleAdminController
                 )
             );
         } catch (Exception $e) {
-            return $this->json(['error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))]);
+            if ($e instanceof BulkProductException) {
+                return $this->jsonBulkErrors($e);
+            } else {
+                return $this->json(['error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))], Response::HTTP_BAD_REQUEST);
+            }
         }
 
         return $this->json(['success' => true]);
@@ -444,9 +452,9 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @param Request $request
      *
-     * @return RedirectResponse
+     * @return JsonResponse
      */
-    public function bulkDuplicateAction(Request $request): RedirectResponse
+    public function bulkDuplicateAction(Request $request): JsonResponse
     {
         try {
             $this->getCommandBus()->handle(
@@ -454,15 +462,15 @@ class ProductController extends FrameworkBundleAdminController
                     $this->getProductIdsFromRequest($request)
                 )
             );
-            $this->addFlash(
-                'success',
-                $this->trans('Product(s) successfully duplicated.', 'Admin.Catalog.Notification')
-            );
         } catch (Exception $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            if ($e instanceof BulkProductException) {
+                return $this->jsonBulkErrors($e);
+            } else {
+                return $this->json(['error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))], Response::HTTP_BAD_REQUEST);
+            }
         }
 
-        return $this->redirectToRoute('admin_products_v2_index');
+        return $this->json(['success' => true]);
     }
 
     /**
