@@ -33,8 +33,7 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 class DuplicateProductFeatureContext extends AbstractProductFeatureContext
 {
@@ -73,11 +72,14 @@ class DuplicateProductFeatureContext extends AbstractProductFeatureContext
             return;
         }
 
-        foreach ($newProductIds as $newProductId) {
+        /**
+         * @var int $oldProductId
+         * @var ProductId $newProductId
+         */
+        foreach ($newProductIds as $oldProductId => $newProductId) {
             foreach ($productsList->getColumnsHash() as $productInfo) {
-                $oldProduct = $this->getProductForEditing($productInfo['reference']);
-                $newProduct = $this->getQueryBus()->handle(new GetProductForEditing($newProductId->getValue(), ShopConstraint::shop($this->getDefaultShopId())));
-                if ($oldProduct->getDetails()->getReference() === $newProduct->getDetails()->getReference()) {
+                $productReferenceId = $this->getSharedStorage()->get($productInfo['reference']);
+                if ($productReferenceId === $oldProductId) {
                     $this->getSharedStorage()->set($productInfo['copy_reference'], $newProductId->getValue());
                 }
             }

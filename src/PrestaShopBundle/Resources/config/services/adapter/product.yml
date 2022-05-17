@@ -344,7 +344,7 @@ services:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductCommand
 
-  prestashop.adapter.product.command_handler.bulk_toggle_product_status_handle:
+  prestashop.adapter.product.command_handler.bulk_toggle_product_status_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\BulkUpdateProductStatusHandler
     tags:
       - name: tactician.handler

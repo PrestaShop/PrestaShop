@@ -33,5 +33,4 @@ use Exception;
  */
 class UpdateProductException extends Exception
 {
-    public const FAILED_BULK_UPDATE_STATUS = 10;
 }

@@ -112,7 +112,7 @@ admin_products_v2_update_position:
 
 admin_products_v2_bulk_enable:
   path: /bulk-enable
-  methods: [ POST, DELETE ]
+  methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkEnableAction
     _legacy_controller: AdminProducts
@@ -125,7 +125,7 @@ admin_products_v2_bulk_enable:
 
 admin_products_v2_bulk_disable:
   path: /bulk-disable
-  methods: [ POST, DELETE ]
+  methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkDisableAction
     _legacy_controller: AdminProducts
@@ -138,7 +138,7 @@ admin_products_v2_bulk_disable:
 
 admin_products_v2_bulk_duplicate:
   path: /bulk-duplicate
-  methods: [ POST, DELETE ]
+  methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkDuplicateAction
     _legacy_controller: AdminProducts
