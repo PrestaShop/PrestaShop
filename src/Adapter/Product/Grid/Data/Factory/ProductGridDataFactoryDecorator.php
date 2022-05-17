@@ -83,6 +83,21 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
      */
     private $translator;
 
+    /**
+     * @var bool
+     */
+    private $taxEnabled;
+
+    /**
+     * @var bool
+     */
+    private $isEcotaxEnabled;
+
+    /**
+     * @var int
+     */
+    private $ecoTaxGroupId;
+
     public function __construct(
         GridDataFactoryInterface $productGridDataFactory,
         Repository $localeRepository,
@@ -91,7 +106,10 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
         TaxComputer $taxComputer,
         int $countryId,
         ProductImagePathFactory $productImagePathFactory,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        bool $taxEnabled,
+        bool $isEcotaxEnabled,
+        int $ecoTaxGroupId
     ) {
         $this->productGridDataFactory = $productGridDataFactory;
 
@@ -104,6 +122,9 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
         $this->countryId = $countryId;
         $this->productImagePathFactory = $productImagePathFactory;
         $this->translator = $translator;
+        $this->taxEnabled = $taxEnabled;
+        $this->isEcotaxEnabled = $isEcotaxEnabled;
+        $this->ecoTaxGroupId = $ecoTaxGroupId;
     }
 
     /**
@@ -136,23 +157,47 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
             if (empty($product['name'])) {
                 $products[$i]['name'] = $this->translator->trans('N/A', [], 'Admin.Global');
             }
-            $products[$i]['price_tax_excluded'] = $this->locale->formatPrice(
-                $products[$i]['price_tax_excluded'],
-                $currency->iso_code
-            );
 
-            $products[$i]['price_tax_included'] = $this->locale->formatPrice(
-                (string) $this->taxComputer->computePriceWithTaxes(
-                    new DecimalNumber($product['price_tax_excluded']),
-                    new TaxRulesGroupId((int) $product['id_tax_rules_group']),
-                    new CountryId($this->countryId)
-                ),
-                $currency->iso_code
-            );
             $products[$i]['image'] = '';
             if ($product['id_image']) {
                 $products[$i]['image'] = $this->productImagePathFactory->getPathByType(new ImageId((int) $product['id_image']), ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT);
             }
+
+            $productTaxRulesGroupId = new TaxRulesGroupId((int) ($products[$i]['id_tax_rules_group'] ?? 0));
+            $priceTaxExcluded = new DecimalNumber((string) ($products[$i]['price_tax_excluded'] ?? 0));
+            $ecotaxTaxExcluded = new DecimalNumber((string) ($products[$i]['ecotax_tax_excluded'] ?? 0));
+            $countryId = new CountryId($this->countryId);
+
+            if ($this->taxEnabled) {
+                $priceTaxIncluded = $this->taxComputer->computePriceWithTaxes(
+                    $priceTaxExcluded,
+                    $productTaxRulesGroupId,
+                    $countryId
+                );
+                $ecotaxTaxIncluded = $this->taxComputer->computePriceWithTaxes(
+                    $ecotaxTaxExcluded,
+                    new TaxRulesGroupId($this->ecoTaxGroupId),
+                    $countryId
+                );
+
+                if ($this->isEcotaxEnabled) {
+                    // We assume the list should display the final price tax excluded, not the actual value of the price tax excluded
+                    $priceTaxExcluded = $priceTaxExcluded->plus($ecotaxTaxExcluded);
+                    $priceTaxIncluded = $priceTaxIncluded->plus($ecotaxTaxIncluded);
+                }
+            } else {
+                $priceTaxIncluded = $priceTaxExcluded;
+            }
+
+            $products[$i]['price_tax_excluded'] = $this->locale->formatPrice(
+                (string) $priceTaxExcluded,
+                $currency->iso_code
+            );
+
+            $products[$i]['price_tax_included'] = $this->locale->formatPrice(
+                (string) $priceTaxIncluded,
+                $currency->iso_code
+            );
         }
 
         return $products;
