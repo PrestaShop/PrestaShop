@@ -41,7 +41,6 @@ use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDuplicateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
@@ -334,32 +333,6 @@ class ProductRepository extends AbstractObjectModelRepository
     public function delete(ProductId $productId): void
     {
         $this->deleteObjectModel($this->get($productId), CannotDeleteProductException::class);
-    }
-
-    /**
-     * @param array $productIds
-     *
-     * @throws CannotBulkDeleteProductException
-     */
-    public function bulkDelete(array $productIds): void
-    {
-        $failedIds = [];
-        foreach ($productIds as $productId) {
-            try {
-                $this->delete($productId);
-            } catch (CannotDeleteProductException $e) {
-                $failedIds[] = $productId->getValue();
-            }
-        }
-
-        if (empty($failedIds)) {
-            return;
-        }
-
-        throw new CannotBulkDeleteProductException(
-            $failedIds,
-            sprintf('Failed to delete following products: "%s"', implode(', ', $failedIds))
-        );
     }
 
     /**

@@ -84,5 +84,5 @@ abstract class AbstractBulkHandler
      *
      * @return mixed
      */
-    abstract protected function handleSingleAction(ProductId $productId, $command);
+    abstract protected function handleSingleAction(ProductId $productId, $command = null);
 }

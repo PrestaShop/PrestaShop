@@ -64,7 +64,7 @@ class BulkUpdateProductStatusHandler extends AbstractBulkHandler implements Bulk
      *
      * @return void
      */
-    protected function handleSingleAction(ProductId $productId, $command)
+    protected function handleSingleAction(ProductId $productId, $command = null)
     {
         $this->productStatusUpdater->updateStatus($productId, $command->getNewStatus());
     }
