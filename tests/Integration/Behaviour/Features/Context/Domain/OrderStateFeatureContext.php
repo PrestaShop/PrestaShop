@@ -137,6 +137,11 @@ class OrderStateFeatureContext extends AbstractDomainFeatureContext
         if (isset($data['isDelivery'])) {
             $editableOrderState->setDelivery((bool) $data['isDelivery']);
         }
+        if (isset($data['template'])) {
+            $editableOrderState->setTemplate([
+                $this->defaultLangId => $data['template'],
+            ]);
+        }
 
         try {
             $this->getCommandBus()->handle($editableOrderState);
@@ -196,10 +201,15 @@ class OrderStateFeatureContext extends AbstractDomainFeatureContext
         $data = $table->getRowsHash();
 
         $localizedNames = $editableOrderState->getLocalizedNames();
+        $localizedTemplates = $editableOrderState->getLocalizedTemplates();
         Assert::assertIsArray($localizedNames);
         Assert::assertArrayHasKey($this->defaultLangId, $localizedNames);
         Assert::assertEquals($data['name'], $localizedNames[$this->defaultLangId]);
         Assert::assertEquals($data['color'], $editableOrderState->getColor());
+        Assert::assertEquals((bool) $data['hasSendMail'], $editableOrderState->isSendEmailEnabled());
+        Assert::assertIsArray($localizedTemplates);
+        Assert::assertArrayHasKey($this->defaultLangId, $localizedTemplates);
+        Assert::assertEquals($data['template'], $localizedTemplates[$this->defaultLangId]);
     }
 
     /**

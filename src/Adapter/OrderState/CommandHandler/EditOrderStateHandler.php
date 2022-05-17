@@ -127,6 +127,10 @@ final class EditOrderStateHandler extends AbstractOrderStateHandler implements E
 
         if (null !== $command->isSendEmailEnabled()) {
             $orderState->send_email = $command->isSendEmailEnabled();
+
+            if ($orderState->send_email && null !== $command->getTemplate()) {
+                $orderState->template = $command->getTemplate();
+            }
         }
 
         if (null !== $command->isPdfInvoice()) {
@@ -147,10 +151,6 @@ final class EditOrderStateHandler extends AbstractOrderStateHandler implements E
 
         if (null !== $command->isDelivery()) {
             $orderState->delivery = $command->isDelivery();
-        }
-
-        if (null !== $command->getTemplate()) {
-            $orderState->template = $command->getTemplate();
         }
     }
 }
