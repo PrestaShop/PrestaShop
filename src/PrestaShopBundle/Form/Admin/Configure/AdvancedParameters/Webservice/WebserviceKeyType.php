@@ -115,7 +115,7 @@ class WebserviceKeyType extends TranslatorAwareType
                     new TypedRegex([
                         'type' => TypedRegex::TYPE_WEBSERVICE_KEY,
                         'message' => $this->trans(
-                            'Only non-accented letters, numbers, and the following special characters are allowed: %allowed_characters%',
+                            'Only non-accented characters, numbers, and the following special characters are allowed: %allowed_characters%',
                             'Admin.Advparameters.Notification',
                             [
                                 '%allowed_characters%' => '@ ? # - _',
