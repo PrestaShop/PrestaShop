@@ -25,7 +25,7 @@ const {themeCustomization} = require('@data/demo/modules');
 // Import test context
 const testContext = require('@utils/testContext');
 
-const baseContext = 'functional_BO_design_themeAndLogo_advancedCustomization';
+const baseContext = 'functional_BO_design_themeAndLogo_advancedCustomization_advancedCustomization';
 
 let browserContext;
 let page;
@@ -94,7 +94,7 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
 
   // 1 - Download a child theme and check the theme is well uploaded
   describe('BO - Design - Theme & Logo - Advanced Customization : Download a child theme and upload it', async () => {
-    it('should login go to \'Design > Theme & Logo\' page', async function () {
+    it('should go to \'Design > Theme & Logo\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToThemeAndLogoPage_1', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -157,6 +157,9 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
 
       const generatedFilePath = await files.getFilePathAutomaticallyGenerated(themesPath, renamedFilePath);
       await files.deleteFile(generatedFilePath);
+
+      const doesFileExist = await files.doesFileExist(generatedFilePath);
+      await expect(doesFileExist).to.be.false;
     });
 
     it('should remove the zip file of the child theme from the temporary path', async function () {
@@ -164,11 +167,14 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
         .addContextItem(this, 'testIdentifier', 'removeChildThemeFromTemporaryPath', baseContext);
 
       await files.deleteFile(renamedFilePath);
+
+      const doesFileExist = await files.doesFileExist(renamedFilePath);
+      await expect(doesFileExist).to.be.false;
     });
   });
 
   // 2 - Use the child theme
-  describe('BO - Design - Theme & Logo - Advanced Customization : Use the child theme', async () => {
+  describe('Use the child theme', async () => {
     it('should login go to \'Design > Theme & Logo\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToThemeAndLogoPage_2', baseContext);
 
@@ -263,15 +269,6 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
 
       const ParentChildPage = await parentChildThemePage.getPageTitle(page);
       await expect(ParentChildPage).to.be.equal(parentChildThemePage.pageTitle);
-    });
-
-    it('should close the current page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'closeCurrentPage', baseContext);
-
-      page = await homePage.closePage(browserContext, page, 0);
-
-      const pageTitle = await advancedCustomizationPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(advancedCustomizationPage.pageTitle);
     });
   });
 });
