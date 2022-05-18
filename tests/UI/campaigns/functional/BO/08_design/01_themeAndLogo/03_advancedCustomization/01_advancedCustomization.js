@@ -175,7 +175,7 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
 
   // 2 - Use the child theme
   describe('Use the child theme', async () => {
-    it('should login go to \'Design > Theme & Logo\' page', async function () {
+    it('should go to \'Design > Theme & Logo\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToThemeAndLogoPage_2', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -219,22 +219,7 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
   });
 
   // 3 - Use the classic theme and remove the child theme
-  describe('BO - Design - Theme & Logo - Advanced Customization : Remove the child theme', async () => {
-    it('should login go to \'Design > Theme & Logo\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToThemeAndLogoPage_3', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.designParentLink,
-        dashboardPage.themeAndLogoParentLink,
-      );
-
-      await themeAndLogoPage.closeSfToolBar(page);
-
-      const pageTitle = await themeAndLogoPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(themeAndLogoPage.pageTitle);
-    });
-
+  describe('Remove the child theme', async () => {
     it('should use the classic theme', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'useClassicTheme', baseContext);
 
@@ -251,7 +236,7 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
   });
 
   // 4 - Click on the link How to use parents/child themes
-  describe('BO - Design - Theme & Logo - Advanced Customization : How to use parents/child themes', async () => {
+  describe('How to use parents/child themes', async () => {
     it('should go to \'Advanced Customization\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAdvancedCustomizationPage_2', baseContext);
 
