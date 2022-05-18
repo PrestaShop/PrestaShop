@@ -139,3 +139,8 @@ services:
     class: 'PrestaShopBundle\Twig\Extension\EntitySearchExtension'
     tags:
       - { name: twig.extension }
+
+  prestashop.bundle.twig.extension.form_extension:
+    class: 'PrestaShopBundle\Twig\Extension\FormExtension'
+    tags:
+      - { name: twig.extension }

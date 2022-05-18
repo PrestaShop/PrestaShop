@@ -58,7 +58,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterf
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Entity\ProductDownload;
-use PrestaShopBundle\Form\Admin\Product\ProductCategories;
+use PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoryFilterType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Security\Voter\PageVoter;
@@ -108,16 +108,17 @@ class ProductController extends FrameworkBundleAdminController
         $productGrid = $productGridFactory->getGrid($filters);
         $categoryName = null;
 
+        $filteredCategoryId = null;
         if (isset($filters->getFilters()['id_category'])) {
-            $idFilteredCategory = (int) $filters->getFilters()['id_category'];
-            $category = $this->getCommandBus()->handle(new GetCategoryForEditing($idFilteredCategory));
+            $filteredCategoryId = (int) $filters->getFilters()['id_category'];
+            $category = $this->getCommandBus()->handle(new GetCategoryForEditing($filteredCategoryId));
             $categoryName = $category->getName()[$this->getContextLangId()] ?? null;
         }
 
-        $categoriesForm = $this->createForm(ProductCategories::class);
+        $categoriesForm = $this->createForm(CategoryFilterType::class);
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/index.html.twig', [
-            'categories' => $categoriesForm->createView(),
+            'categoryFilterForm' => $categoriesForm->createView(),
             'selectedCategoryName' => $categoryName,
             'productGrid' => $this->presentGrid($productGrid),
             'enableSidebar' => true,

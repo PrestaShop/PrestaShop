@@ -45,6 +45,15 @@ ul.category-tree {
     display: block;
     padding-right: 1.563rem;
 
+    .form-check-label {
+      position: absolute;
+      top: 0;
+      right: 0.4em;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+
     .category {
       position: absolute;
       top: 0.4em; // relative to the current font size, so "em" and not "rem"

@@ -91,3 +91,82 @@
   </div>
 </div>
 {% endblock %}
+
+{% block category_filter_row %}
+  <div id="product_catalog_category_tree_filter" class="d-inline-block dropdown dropdown-clickable mr-2 mb-2">
+    <button
+      class="btn btn-outline-secondary dropdown-toggle"
+      type="button"
+      data-toggle="dropdown"
+      aria-haspopup="true"
+      aria-expanded="false"
+    >
+      {{ 'Filter by categories'|trans({}, 'Admin.Actions') }}
+      {# Display selected category #}
+    </button>
+    <div id="tree-categories" class="dropdown-menu">
+      <div class="categories-tree-actions">
+        <a
+          href="#"
+          id="product_catalog_category_tree_filter_expand"
+        >
+          <i class="material-icons">expand_more</i>
+          {{ 'Expand'|trans({}, 'Admin.Actions') }}
+        </a>
+        <a
+          href="#"
+          id="product_catalog_category_tree_filter_collapse"
+        >
+          <i class="material-icons">expand_less</i>
+          {{ 'Collapse'|trans({}, 'Admin.Actions') }}
+        </a>
+        <a
+          href="#"
+          id="product_catalog_category_tree_filter_reset"
+        >
+          <i class="material-icons">radio_button_unchecked</i>
+          {{ 'Unselect'|trans({}, 'Admin.Actions') }}
+        </a>
+      </div>
+      {{ form_widget(form) }}
+    </div>
+  </div>
+{% endblock %}
+
+{% block category_filter_widget -%}
+  <div {{ block('widget_container_attributes') }}>
+    <ul class="category-tree">
+      {% dump(choices) %}
+      {% dump(nested_tree) %}
+
+      {%- for child in form %}
+        {% dump(child) %}
+      {% endfor %}
+      {%- for child in nested_tree %}
+        {{ block('category_filter_item_widget') }}
+      {% endfor -%}
+    </ul>
+  </div>
+{%- endblock %}
+
+{% block category_filter_item_widget -%}
+  {% set choice = choices|findchoice(child.id_category) %}
+  <li>
+    <div class="form-check form-check-radio form-radio radio category-label">
+      {{ child.name }}
+      <label class="form-check-label">
+        <input type="radio" name="{{ form.vars.id }}" value="{{ child.id_category }}" {% if choice is selectedchoice(child.id_category) %}checked="checked"{% endif %}>
+        <i class="form-check-round"></i>
+      </label>
+    </div>
+
+    {% if child.children is defined %}
+      <ul {% if (form.vars.expanded == false) %}style="display: none"{% endif %}>
+        {% for item in child.children %}
+          {% set child = item %}
+          {{ block('category_filter_item_widget') }}
+        {% endfor -%}
+      </ul>
+    {% endif %}
+  </li>
+{%- endblock %}

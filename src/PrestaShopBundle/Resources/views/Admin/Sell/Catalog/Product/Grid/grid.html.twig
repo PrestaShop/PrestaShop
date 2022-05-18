@@ -25,7 +25,9 @@
 
 {% extends '@PrestaShop/Admin/Common/Grid/grid.html.twig' %}
 
+{% form_theme categoryFilterForm '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/categories.html.twig' %}
+
 {% block grid_bulk_actions_block %}
-  {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Grid/category_filter.html.twig') }}
+  {{ form_row(categoryFilterForm) }}
   {{ parent() }}
 {% endblock %}
