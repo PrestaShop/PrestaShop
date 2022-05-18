@@ -91,7 +91,7 @@ class CategoryFilterType extends AbstractType
 
         $resolver->setDefaults([
             'label' => $this->translator->trans('Categories', [], 'Admin.Catalog.Feature'),
-            'choices' => [$flattenedTree],
+            'choices' => $flattenedTree,
             'nested_tree' => $nestedTree,
             'multiple' => false,
             'expanded' => false,

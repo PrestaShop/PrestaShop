@@ -81,7 +81,8 @@ ul.category-tree {
 }
 
 // category tree on the catalog page
-#tree-categories {
+#tree-categories,
+.category-filter-menu {
   padding: 0.625rem;
 
   .categories-tree-actions {

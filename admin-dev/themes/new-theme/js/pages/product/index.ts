@@ -23,12 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-// This had to be commented because of TS2451: Cannot redeclare block-scoped variable '$'.
-// But in other index.ts there is no such issue
-// const {$} = window;
-import categoryTree from '@pages/product/components/category-tree-search';
-
 import CreateProductModal from '@pages/product/components/create-product-modal';
+import CategoryTreeFilter from '@pages/product/components/categories/category-tree-filter';
+
+const {$} = window;
 
 $(() => {
   const grid = new window.prestashop.component.Grid('product');
@@ -47,31 +45,5 @@ $(() => {
   new CreateProductModal();
   grid.addExtension(new window.prestashop.component.GridExtensions.PositionExtension(grid));
 
-  /*
-   * Tree behavior: collapse/expand system and radio button change event.
-   */
-  categoryTree('div#product_catalog_category_tree_filter');
-
-  $('#product_catalog_category_tree_filter_reset').on('click', () => {
-    categoryTree('#product_categories', 'unselect');
-    $('form#product_filter_form input[name="product[id_category]"]').val('');
-    $('form#product_filter_form').submit();
-  });
-
-  $('#product_catalog_category_tree_filter_expand').on('click', () => {
-    categoryTree('#product_categories', 'unfold');
-  });
-
-  $('#product_catalog_category_tree_filter_collapse').on('click', () => {
-    categoryTree('#product_categories', 'fold');
-  });
-
-  $('div#product_catalog_category_tree_filter div.radio > label > input:radio').on('change', function () {
-    if ($(this).is(':checked')) {
-      // @ts-ignore
-      const categoryId = $(this).val().toString();
-      $('form#product_filter_form input[name="product[id_category]"]').val(categoryId);
-      $('form#product_filter_form').submit();
-    }
-  });
+  new CategoryTreeFilter();
 });

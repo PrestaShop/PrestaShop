@@ -115,7 +115,7 @@ class ProductController extends FrameworkBundleAdminController
             $categoryName = $category->getName()[$this->getContextLangId()] ?? null;
         }
 
-        $categoriesForm = $this->createForm(CategoryFilterType::class);
+        $categoriesForm = $this->createForm(CategoryFilterType::class, $filteredCategoryId);
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/index.html.twig', [
             'categoryFilterForm' => $categoriesForm->createView(),
