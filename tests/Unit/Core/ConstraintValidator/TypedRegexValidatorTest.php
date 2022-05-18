@@ -319,6 +319,23 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
         $this->assertViolationIsRaised(new TypedRegex(['type' => 'module_name']), $invalidChar);
     }
 
+    public function testItSucceedsForWebserviceKeyTypeWhenValidCharactersGiven(): void
+    {
+        $this->validator->validate('22XRNQR7X4RLAGCBSSNQIVPXQ271ZIKE', new TypedRegex(['type' => TypedRegex::TYPE_WEBSERVICE_KEY]));
+
+        $this->assertNoViolation();
+    }
+
+    /**
+     * @dataProvider getInvalidCharactersForWebserviceKey
+     *
+     * @param string $invalidChar
+     */
+    public function testItFailsForWebserviceKeyTypeWhenInvalidCharactersGiven(string $invalidChar): void
+    {
+        $this->assertViolationIsRaised(new TypedRegex(['type' => TypedRegex::TYPE_WEBSERVICE_KEY]), $invalidChar);
+    }
+
     /**
      * @return string[][]
      */
@@ -594,6 +611,42 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
         yield ['<'];
         yield ['>'];
         yield ['|'];
+    }
+
+    /**
+     * @return Generator
+     */
+    public function getInvalidCharactersForWebServiceKey(): Generator
+    {
+        yield ['~'];
+        yield ['ˇ'];
+        yield ['"'];
+        yield ['€'];
+        yield ['$'];
+        yield ['£'];
+        yield ['%'];
+        yield ['&'];
+        yield ['§'];
+        yield ['/'];
+        yield ['('];
+        yield [')'];
+        yield ['='];
+        yield ['`'];
+        yield ['\\'];
+        yield ['\''];
+        yield ['}'];
+        yield [']'];
+        yield ['['];
+        yield ['{'];
+        yield ['*'];
+        yield ['.'];
+        yield [','];
+        yield [':'];
+        yield [';'];
+        yield ['<'];
+        yield ['>'];
+        yield ['|'];
+        yield [' '];
     }
 
     /**
