@@ -47,7 +47,7 @@ use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-final class CountryGridDefinitionFactory extends AbstractGridDefinitionFactory
+class CountryGridDefinitionFactory extends AbstractGridDefinitionFactory
 {
     use BulkDeleteActionTrait;
     use DeleteActionTrait;
@@ -67,7 +67,7 @@ final class CountryGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getName(): string
     {
-        return $this->trans('Country', [], 'Admin.International.Feature');
+        return $this->trans('Country', [], 'Admin.Global');
     }
 
     /**
@@ -98,14 +98,14 @@ final class CountryGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add(
                 (new DataColumn('iso_code'))
-                    ->setName($this->trans('ISO Code', [], 'Admin.Global'))
+                    ->setName($this->trans('ISO Code', [], 'Admin.International.Feature'))
                     ->setOptions([
                         'field' => 'iso_code',
                     ])
             )
             ->add(
                 (new DataColumn('call_prefix'))
-                    ->setName($this->trans('Call prefix', [], 'Admin.Global'))
+                    ->setName($this->trans('Call prefix', [], 'Admin.International.Feature'))
                     ->setOptions([
                         'field' => 'call_prefix',
                     ])

@@ -24,6 +24,8 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CountryGridDefinitionFactory;
@@ -32,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Search\Filters;
 /**
  * Default Countries list filters
  */
-final class CountryFilters extends Filters
+class CountryFilters extends Filters
 {
     /**
      * @var string

@@ -11,6 +11,8 @@ admin_countries_search:
   path: /
   methods: POST
   defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\CountryController::searchAction'
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.country
+    redirectRoute: admin_countries_index
     _legacy_controller: AdminCountries
 #    _legacy_link: AdminCountries:submitFiltercountry

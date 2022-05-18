@@ -24,13 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CountryGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CountryFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -59,26 +59,5 @@ class CountryController extends FrameworkBundleAdminController
             'countryGrid' => $this->presentGrid($countryGrid),
             'enableSidebar' => true,
         ]);
-    }
-
-    /**
-     * Provides filters functionality.
-     *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
-     *
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
-    public function searchAction(Request $request): RedirectResponse
-    {
-        $responseBuilder = $this->get('prestashop.bundle.grid.response_builder');
-
-        return $responseBuilder->buildSearchResponse(
-            $this->get('prestashop.core.grid.definition.factory.country'),
-            $request,
-            CountryGridDefinitionFactory::GRID_ID,
-            'admin_countries_index'
-        );
     }
 }

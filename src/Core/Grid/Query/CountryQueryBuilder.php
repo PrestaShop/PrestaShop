@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 /**
  * Builds search and count query builders for zone grid.
  */
-final class CountryQueryBuilder extends AbstractDoctrineQueryBuilder
+class CountryQueryBuilder extends AbstractDoctrineQueryBuilder
 {
     /**
      * @var DoctrineSearchCriteriaApplicatorInterface
@@ -51,7 +51,7 @@ final class CountryQueryBuilder extends AbstractDoctrineQueryBuilder
      * @param Connection $connection
      * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
-     * @param array $contextShopIds
+     * @param int[] $contextShopIds
      */
     public function __construct(
         Connection $connection,
@@ -70,7 +70,7 @@ final class CountryQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria)
-            ->select('c.*, cl.name, z.name as zone_name')
+            ->select('c.id_country, c.iso_code, c.call_prefix, c.active, cl.name, z.name as zone_name')
             ->groupBy('c.id_country');
 
         $this->searchCriteriaApplicator

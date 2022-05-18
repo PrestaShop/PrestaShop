@@ -79,26 +79,34 @@ class CountryControllerTest extends FormGridControllerTestCase
     protected function generateCreateUrl(): string
     {
         // TODO: Implement generateCreateUrl() method.
+        return 'Not implemented yet';
     }
 
     protected function getCreateSubmitButtonSelector(): string
     {
         // TODO: Implement getCreateSubmitButtonSelector() method.
+        return 'Not implemented yet';
     }
 
     protected function getFormHandlerChecker(): FormHandlerChecker
     {
         // TODO: Implement getFormHandlerChecker() method.
+        /** @var FormHandlerChecker $checker */
+        $checker = $this->client->getContainer()->get('prestashop.core.form.identifiable_object.country_form_handler');
+
+        return $checker;
     }
 
     protected function generateEditUrl(array $routeParams): string
     {
         // TODO: Implement generateEditUrl() method.
+        return 'Not implemented yet';
     }
 
     protected function getEditSubmitButtonSelector(): string
     {
         // TODO: Implement getEditSubmitButtonSelector() method.
+        return 'Not implemented yet';
     }
 
     protected function getFilterSearchButtonSelector(): string
