@@ -17,7 +17,7 @@ class AdvancedCustomization extends themeAndLogoBasePage {
     this.pageTitle = 'Advanced Customization •';
     this.downloadThemeButton = '#download_child_theme';
     this.uploadChildThemeModal = '#upload-child-modal';
-    this.uploadChildThemeButton = `#psthemecusto a[data-target= '${this.uploadChildThemeModal}']`;
+    this.uploadChildThemeButton = '#psthemecusto a[data-target=\'#upload-child-modal\']';
     this.modalDialogUploadChildTheme = `${this.uploadChildThemeModal} div[role='document']`;
     this.modalCloseButton = `${this.uploadChildThemeModal} .close`;
     this.childThemeImportDropZone = '#importDropzone';
