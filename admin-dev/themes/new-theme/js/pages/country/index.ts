@@ -36,21 +36,21 @@ import FormSubmitButton from '@components/form-submit-button';
 import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
 import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
 
-const {$} = window.$;
+const {$} = window;
 
 $(() => {
-    const countryGrid = new Grid('country');
+  const countryGrid = new Grid('country');
 
-    countryGrid.addExtension(new FiltersResetExtension());
-    countryGrid.addExtension(new SortingExtension());
-    countryGrid.addExtension(new ExportToSqlManagerExtension());
-    countryGrid.addExtension(new ReloadListExtension());
-    countryGrid.addExtension(new BulkActionCheckboxExtension());
-    countryGrid.addExtension(new SubmitBulkExtension());
-    countryGrid.addExtension(new SubmitRowActionExtension());
-    countryGrid.addExtension(new LinkRowActionExtension());
-    countryGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
-    countryGrid.addExtension(new ColumnTogglingExtension());
+  countryGrid.addExtension(new FiltersResetExtension());
+  countryGrid.addExtension(new SortingExtension());
+  countryGrid.addExtension(new ExportToSqlManagerExtension());
+  countryGrid.addExtension(new ReloadListExtension());
+  countryGrid.addExtension(new BulkActionCheckboxExtension());
+  countryGrid.addExtension(new SubmitBulkExtension());
+  countryGrid.addExtension(new SubmitRowActionExtension());
+  countryGrid.addExtension(new LinkRowActionExtension());
+  countryGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
+  countryGrid.addExtension(new ColumnTogglingExtension());
 
-    new FormSubmitButton();
+  new FormSubmitButton();
 });
