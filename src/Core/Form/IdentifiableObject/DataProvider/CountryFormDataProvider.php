@@ -96,8 +96,11 @@ final class CountryFormDataProvider implements FormDataProviderInterface
     public function getDefaultData(): array
     {
         $data = [
-            'name' => '',
+            'need_zip_code' => false,
             'enabled' => true,
+            'contains_states' => false,
+            'need_identification_number' => false,
+            'display_tax_label' => true,
         ];
 
         if ($this->multistoreEnabled) {

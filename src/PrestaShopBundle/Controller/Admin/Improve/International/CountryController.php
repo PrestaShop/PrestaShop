@@ -145,4 +145,16 @@ class CountryController extends FrameworkBundleAdminController
             )
         );
     }
+    /**
+     * Returns country error messages mapping.
+     *
+     * @param Exception $e
+     *
+     * @return array
+     */
+    private function getErrorMessages(Exception $e): array
+    {
+        return [
+        ];
+    }
 }
