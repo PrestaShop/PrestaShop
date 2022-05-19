@@ -31,52 +31,12 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\Combinatio
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CombinationAttributeInformation;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationFromListingCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\EditableCombinationForListing;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
 {
-    /**
-     * @When I update combination :combinationReference from list with following values:
-     *
-     * @param string $combinationReference
-     * @param TableNode $tableNode
-     */
-    public function updateCombinationFromListing(string $combinationReference, TableNode $tableNode): void
-    {
-        try {
-            $command = new UpdateCombinationFromListingCommand($this->getSharedStorage()->get($combinationReference));
-            $this->fillCommand($command, $tableNode->getRowsHash());
-
-            $this->getCommandBus()->handle($command);
-        } catch (ProductStockConstraintException $e) {
-            $this->setLastException($e);
-        }
-    }
-
-    /**
-     * @param UpdateCombinationFromListingCommand $command
-     * @param array<string, string> $dataRows
-     */
-    private function fillCommand(UpdateCombinationFromListingCommand $command, array $dataRows): void
-    {
-        if (isset($dataRows['impact on price'])) {
-            $command->setImpactOnPrice($dataRows['impact on price']);
-        }
-        if (isset($dataRows['delta quantity'])) {
-            $command->setDeltaQuantity((int) $dataRows['delta quantity']);
-        }
-        if (isset($dataRows['is default'])) {
-            $command->setDefault(PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['is default']));
-        }
-        if (isset($dataRows['reference'])) {
-            $command->setReference($dataRows['reference']);
-        }
-    }
-
     /**
      * @Then I should see following combinations in paginated list of product ":productReference":
      * @Then I should see following combinations in filtered list of product ":productReference":
