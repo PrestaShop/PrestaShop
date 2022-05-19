@@ -73,7 +73,7 @@ final class DoctrinePositionUpdateHandler implements PositionUpdateHandlerInterf
 
         if (null !== $parentId && null !== $positionDefinition->getParentIdField()) {
             $qb
-                ->andWhere('t.' . $positionDefinition->getParentIdField() . ' = :parentId')
+                ->andWhere('t.`' . $positionDefinition->getParentIdField() . '` = :parentId')
                 ->setParameter('parentId', $parentId);
         }
 
@@ -106,7 +106,7 @@ final class DoctrinePositionUpdateHandler implements PositionUpdateHandlerInterf
 
                 if (null !== $parentId && null !== $positionDefinition->getParentIdField()) {
                     $qb
-                        ->andWhere($positionDefinition->getParentIdField() . ' = :parentId')
+                        ->andWhere('`' . $positionDefinition->getParentIdField() . '` = :parentId')
                         ->setParameter('parentId', $parentId);
                 }
 

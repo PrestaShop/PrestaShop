@@ -31,7 +31,9 @@ namespace PrestaShop\PrestaShop\Core\Grid\Filter;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 /**
- * Class Filter defines single filter for grid.
+ * This allows to store a filter parameter in a hidden input which can be prefilled
+ * to provide some context or updated dynamically via js for filter component outside
+ * the grid headers filters.
  */
 class HiddenFilter implements FilterInterface
 {
