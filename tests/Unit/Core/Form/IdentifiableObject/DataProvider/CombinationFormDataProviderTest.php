@@ -50,6 +50,7 @@ use RuntimeException;
 class CombinationFormDataProviderTest extends TestCase
 {
     private const DEFAULT_NAME = 'Combination products';
+    private const IS_DEFAULT = false;
     private const COMBINATION_ID = 42;
     private const PRODUCT_ID = 69;
     private const DEFAULT_QUANTITY = 51;
@@ -81,6 +82,7 @@ class CombinationFormDataProviderTest extends TestCase
     public function getExpectedData(): Generator
     {
         $datasetsByType = [
+            $this->getDatasetsForIsDefault(),
             $this->getDatasetsForStock(),
             $this->getDatasetsForPriceImpact(),
             $this->getDatasetsForDetails(),
@@ -294,6 +296,29 @@ class CombinationFormDataProviderTest extends TestCase
         return $datasets;
     }
 
+    private function getDatasetsForIsDefault(): array
+    {
+        $datasets = [];
+
+        $expectedOutputData = $this->getDefaultOutputData();
+        $combinationData = ['is_default' => false];
+
+        $datasets[] = [
+            $combinationData,
+            $expectedOutputData,
+        ];
+
+        $expectedOutputData['is_default'] = true;
+        $combinationData = ['is_default' => true];
+
+        $datasets[] = [
+            $combinationData,
+            $expectedOutputData,
+        ];
+
+        return $datasets;
+    }
+
     /**
      * @param array $combinationData
      *
@@ -353,7 +378,8 @@ class CombinationFormDataProviderTest extends TestCase
             $this->createDetails($combination),
             $this->createPrices($combination),
             $this->createStock($combination),
-            $combination['image_ids'] ?? []
+            $combination['image_ids'] ?? [],
+            $combination['is_default'] ?? self::IS_DEFAULT
         );
     }
 
@@ -457,6 +483,7 @@ class CombinationFormDataProviderTest extends TestCase
             'id' => self::COMBINATION_ID,
             'product_id' => self::PRODUCT_ID,
             'name' => self::DEFAULT_NAME,
+            'is_default' => self::IS_DEFAULT,
             'stock' => [
                 'quantities' => [
                     'delta_quantity' => [

@@ -185,7 +185,7 @@ class CombinationFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData(): array
     {
-        // Not supposed to happen, Combinations are created vie Generator
+        // Not supposed to happen, Combinations are created via Generator
 
         return [];
     }
