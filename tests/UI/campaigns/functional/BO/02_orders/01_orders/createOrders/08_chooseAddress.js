@@ -170,7 +170,7 @@ describe('BO - Orders - Create order : Choose address', async () => {
   });
 
   // 2 - Create second order
-  describe('Create first order and choose the created address in PRE-TEST', async () => {
+  describe('Create second order and choose the created address in PRE-TEST', async () => {
     it('should go to \'Orders > Orders\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage2', baseContext);
 
