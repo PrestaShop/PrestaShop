@@ -26,15 +26,15 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPositionCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductsPositionsCommand;
 
 /**
- * Defines contract to handle @see UpdateProductPositionCommand
+ * Defines contract to handle @see UpdateProductsPositionsCommand
  */
-interface UpdateProductPositionHandlerInterface
+interface UpdateProductsPositionsHandlerInterface
 {
     /**
-     * @param UpdateProductPositionCommand $command
+     * @param UpdateProductsPositionsCommand $command
      */
-    public function handle(UpdateProductPositionCommand $command): void;
+    public function handle(UpdateProductsPositionsCommand $command): void;
 }

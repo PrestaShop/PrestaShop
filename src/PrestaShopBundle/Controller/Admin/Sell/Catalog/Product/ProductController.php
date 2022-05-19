@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductComman
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkUpdateProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPositionCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductsPositionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\BulkProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
@@ -320,15 +320,14 @@ class ProductController extends FrameworkBundleAdminController
     {
         try {
             $this->getCommandBus()->handle(
-                new UpdateProductPositionCommand(
+                new UpdateProductsPositionsCommand(
                     $request->request->get('positions'),
                     $request->query->getInt('id_category')
                 )
             );
             $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
         } catch (CannotUpdateProductPositionException $e) {
-            $errors = $e->getErrors();
-            $this->flashErrors($errors);
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
 
             return $this->redirectToRoute('admin_products_v2_index');
         }
@@ -353,7 +352,7 @@ class ProductController extends FrameworkBundleAdminController
     {
         try {
             $this->getCommandBus()->handle(new BulkDeleteProductCommand(
-                    $this->getProductIdsFromRequest($request))
+                $this->getProductIdsFromRequest($request))
             );
             $this->addFlash(
                 'success',

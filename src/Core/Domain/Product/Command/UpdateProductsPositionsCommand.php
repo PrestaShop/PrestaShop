@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Position\ValueObject\RowPosition;
 /**
  * Updates product details
  */
-class UpdateProductPositionCommand
+class UpdateProductsPositionsCommand
 {
     /**
      * @var array

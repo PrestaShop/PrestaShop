@@ -30,6 +30,9 @@ namespace PrestaShop\PrestaShop\Core\Domain\Position\Exception;
 
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 
+/**
+ * Exception thrown when invalid data is used to create a RowPosition value object.
+ */
 class PositionConstraintException extends DomainException
 {
     public const INVALID_ROW_ID = 10;

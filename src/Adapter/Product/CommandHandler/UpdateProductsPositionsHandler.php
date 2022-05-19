@@ -29,8 +29,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Position\ValueObject\RowPosition;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPositionCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductPositionHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductsPositionsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductsPositionsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductPositionException;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionDataException;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionUpdateException;
@@ -41,7 +41,7 @@ use PrestaShop\PrestaShop\Core\Grid\Position\PositionUpdateFactoryInterface;
 /**
  * Updates category position using legacy object model
  */
-class UpdateProductPositionHandler implements UpdateProductPositionHandlerInterface
+class UpdateProductsPositionsHandler implements UpdateProductsPositionsHandlerInterface
 {
     /**
      * @var PositionDefinition
@@ -71,7 +71,7 @@ class UpdateProductPositionHandler implements UpdateProductPositionHandlerInterf
     /**
      * {@inheritdoc}
      */
-    public function handle(UpdateProductPositionCommand $command): void
+    public function handle(UpdateProductsPositionsCommand $command): void
     {
         $positionsData = [
             'positions' => $this->convertPositions($command->getPositions()),
@@ -82,9 +82,7 @@ class UpdateProductPositionHandler implements UpdateProductPositionHandlerInterf
             $positionUpdate = $this->positionUpdateFactory->buildPositionUpdate($positionsData, $this->positionDefinition);
             $this->positionUpdater->update($positionUpdate);
         } catch (PositionUpdateException | PositionDataException $e) {
-            $exception = new CannotUpdateProductPositionException($e->getMessage());
-            $exception->setErrors([$e->toArray()]);
-            throw $exception;
+            throw new CannotUpdateProductPositionException($e->getMessage(), 0, $e);
         }
     }
 

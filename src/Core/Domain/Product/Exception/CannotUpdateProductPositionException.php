@@ -28,26 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
 
+/**
+ * This exception is thrown when updating the position of products failed.
+ */
 class CannotUpdateProductPositionException extends ProductException
 {
-    /**
-     * @var array
-     */
-    private $errors;
-
-    /**
-     * @param array $errors
-     */
-    public function setErrors(array $errors): void
-    {
-        $this->errors = $errors;
-    }
-
-    /**
-     * @return array
-     */
-    public function getErrors(): array
-    {
-        return $this->errors;
-    }
 }

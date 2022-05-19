@@ -145,9 +145,6 @@ class ProductRepository extends AbstractObjectModelRepository
      * @param CategoryId $categoryId
      *
      * @return int|null
-     *
-     * @throws Exception
-     * @throws \Doctrine\DBAL\Exception
      */
     public function getPositionInCategory(ProductId $productId, CategoryId $categoryId): ?int
     {

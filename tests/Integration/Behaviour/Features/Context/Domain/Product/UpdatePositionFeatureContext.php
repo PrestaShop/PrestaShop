@@ -31,7 +31,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPositionCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductsPositionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Grid\Position\Exception\PositionException;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
@@ -57,7 +57,7 @@ class UpdatePositionFeatureContext extends AbstractProductFeatureContext
             ];
         }
         try {
-            $command = new UpdateProductPositionCommand($positions, $this->getSharedStorage()->get($categoryReference));
+            $command = new UpdateProductsPositionsCommand($positions, $this->getSharedStorage()->get($categoryReference));
             $this->getCommandBus()->handle($command);
         } catch (PositionException $e) {
             $this->setLastException($e);
