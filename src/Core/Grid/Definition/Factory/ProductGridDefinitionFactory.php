@@ -186,7 +186,6 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                 (new PositionColumn('position'))
                     ->setName($this->trans('Position', [], 'Admin.Global'))
                     ->setOptions([
-                        'increment_position' => false,
                         'id_field' => 'id_product',
                         'position_field' => 'position',
                         'update_method' => 'POST',
@@ -196,6 +195,9 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                         ],
                         // Only display this column when list is filtered by category
                         'required_filter' => 'id_category',
+                        // Positions are already 1-indexed so no need to offset the display
+                        // @see prestashop.core.grid.product.position_definition where $firstPosition is already set to 1
+                        'display_offset' => 0,
                     ])
             )
             ->add((new ActionColumn('actions'))
