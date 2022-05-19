@@ -85,11 +85,18 @@ class GenerateCombinationFeatureContext extends AbstractCombinationFeatureContex
      * @param string $productReference
      * @param string $combinationReference
      */
-    public function assertCachedDefaultCombination(string $productReference, string $combinationReference): void
+    public function assertDefaultCombination(string $productReference, string $combinationReference): void
     {
+        $combinationId = $this->getSharedStorage()->get($combinationReference);
+
         $this->assertCachedDefaultCombinationId(
             $productReference,
-            $this->getSharedStorage()->get($combinationReference)
+            $combinationId
+        );
+
+        Assert::assertTrue(
+            $this->getCombinationForEditing($combinationReference)->isDefault(),
+            sprintf('Unexpected default combination in CombinationForEditing for "%s"', $combinationReference)
         );
     }
 
