@@ -131,12 +131,11 @@ export default class CategoriesManager {
   }
 
   private listenDefaultCategorySelect(): void {
-    this.defaultCategoryInput.addEventListener('change', (e) => {
+    $(`#${this.defaultCategoryInput.id}`).on('change', (e) => {
       const currentTarget = e.currentTarget as HTMLInputElement;
       const newDefaultCategoryId = Number(currentTarget.value);
       const categories = this.collectCategories()
         .map((category) => ({...category, isDefault: category.id === newDefaultCategoryId}));
-
       this.tagsRenderer.render(categories, this.getDefaultCategoryId());
     });
   }
