@@ -48,7 +48,7 @@ class CountryControllerTest extends FormGridControllerTestCase
      *
      * @param int $initialEntityCount
      */
-    public function testCreate(int $initialEntityCount)
+    public function testCreate(int $initialEntityCount): void
     {
         $this->markTestSkipped('Not implemented');
         // TODO: Implement when create action is created
@@ -59,7 +59,7 @@ class CountryControllerTest extends FormGridControllerTestCase
      *
      * @param int $countryId
      */
-    public function testEdit(int $countryId)
+    public function testEdit(int $countryId): void
     {
         $this->markTestSkipped('Not implemented');
         // TODO: Implement when edit action is created
@@ -70,7 +70,7 @@ class CountryControllerTest extends FormGridControllerTestCase
      *
      * @param int $countryId
      */
-    public function testFilters(int $countryId)
+    public function testFilters(int $countryId): void
     {
         $this->markTestSkipped('Not implemented');
         // TODO: Implement when testEdit is finished

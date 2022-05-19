@@ -37,15 +37,11 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
  */
 class CountryQueryBuilder extends AbstractDoctrineQueryBuilder
 {
-    /**
-     * @var DoctrineSearchCriteriaApplicatorInterface
-     */
-    private $searchCriteriaApplicator;
+    /** @var DoctrineSearchCriteriaApplicatorInterface  */
+    protected $searchCriteriaApplicator;
 
-    /**
-     * @var int[]
-     */
-    private $contextShopIds;
+    /** @var int[]  */
+    protected $contextShopIds;
 
     /**
      * @param Connection $connection
@@ -93,7 +89,7 @@ class CountryQueryBuilder extends AbstractDoctrineQueryBuilder
      *
      * @return QueryBuilder
      */
-    private function getQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
+    protected function getQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $qb = $this->connection->createQueryBuilder()
             ->from($this->dbPrefix . 'country', 'c')
@@ -127,7 +123,7 @@ class CountryQueryBuilder extends AbstractDoctrineQueryBuilder
      * @param QueryBuilder $builder
      * @param SearchCriteriaInterface $criteria
      */
-    private function applyFilters(QueryBuilder $builder, SearchCriteriaInterface $criteria): void
+    protected function applyFilters(QueryBuilder $builder, SearchCriteriaInterface $criteria): void
     {
         $allowedFilters = ['id_country', 'name', 'iso_code', 'call_prefix', 'zone_name', 'active'];
 
