@@ -79,6 +79,7 @@ class BOBasePage extends CommonPage {
     this.customersParentLink = 'li#subtab-AdminParentCustomer';
     this.customersLink = '#subtab-AdminCustomers';
     this.addressesLink = '#subtab-AdminAddresses';
+    this.outstandingLink = '#subtab-AdminOutstanding';
 
     // Customer Service
     this.customerServiceParentLink = '#subtab-AdminParentCustomerThreads';
