@@ -32,7 +32,7 @@ use Link;
 use PrestaShop\PrestaShop\Core\Shop\Url\UrlProviderInterface;
 use Tools;
 
-class ProductPreview implements UrlProviderInterface
+class ProductPreviewProvider implements UrlProviderInterface
 {
     /**
      * @var Link
