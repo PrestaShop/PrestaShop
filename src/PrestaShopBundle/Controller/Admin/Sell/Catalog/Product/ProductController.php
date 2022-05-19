@@ -43,14 +43,13 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductPosit
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\DuplicateFeatureValueAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidAssociatedFeatureException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductIsEnabled;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
@@ -273,17 +272,12 @@ class ProductController extends FrameworkBundleAdminController
             ]);
         }
 
-        $shopId = $this->get('prestashop.adapter.shop.context')->getContextShopID();
-        if (empty($shopId)) {
-            $shopId = $this->get('prestashop.adapter.legacy.configuration')->getInt('PS_SHOP_DEFAULT');
-        }
-        /** @var ProductForEditing $editableProduct */
-        $editableProduct = $this->getQueryBus()->handle(new GetProductForEditing((int) $productId, ShopConstraint::shop($shopId)));
-        $productStatus = !$editableProduct->isActive();
+        /** @var bool $isEnabled */
+        $isEnabled = $this->getQueryBus()->handle(new GetProductIsEnabled((int) $productId));
 
         try {
             $this->getCommandBus()->handle(
-                new UpdateProductStatusCommand((int) $productId, $productStatus)
+                new UpdateProductStatusCommand((int) $productId, !$isEnabled)
             );
         } catch (ProductException $e) {
             return $this->json([
