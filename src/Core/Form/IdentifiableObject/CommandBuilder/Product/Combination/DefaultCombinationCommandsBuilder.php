@@ -37,7 +37,7 @@ class DefaultCombinationCommandsBuilder implements CombinationCommandsBuilderInt
      */
     public function buildCommands(CombinationId $combinationId, array $formData): array
     {
-        if (!isset($formData['is_default'])) {
+        if (empty($formData['is_default'])) {
             return [];
         }
 
