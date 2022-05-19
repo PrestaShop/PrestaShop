@@ -41,32 +41,32 @@ class ApplicableGroupsType extends TranslatorAwareType
     /**
      * @var FormChoiceProviderInterface|FormChoiceAttributeProviderInterface
      */
-    private $currencyByIdChoiceProvider;
+    protected $currencyByIdChoiceProvider;
 
     /**
      * @var FormChoiceProviderInterface
      */
-    private $countryByIdChoiceProvider;
+    protected $countryByIdChoiceProvider;
 
     /**
      * @var FormChoiceProviderInterface
      */
-    private $groupByIdChoiceProvider;
+    protected $groupByIdChoiceProvider;
 
     /**
      * @var FormChoiceProviderInterface
      */
-    private $shopByIdChoiceProvider;
+    protected $shopByIdChoiceProvider;
 
     /**
      * @var string
      */
-    private $defaultCurrencySymbol;
+    protected $defaultCurrencySymbol;
 
     /**
      * @var bool
      */
-    private $isMultiShopEnabled;
+    protected $isMultiShopEnabled;
 
     public function __construct(
         TranslatorInterface $translator,

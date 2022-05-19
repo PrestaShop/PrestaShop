@@ -73,7 +73,7 @@ class EditSpecificPriceHandler implements EditSpecificPriceHandlerInterface
      *
      * @return string[]
      */
-    private function fillUpdatableProperties(EditSpecificPriceCommand $command, SpecificPrice $specificPrice): array
+    protected function fillUpdatableProperties(EditSpecificPriceCommand $command, SpecificPrice $specificPrice): array
     {
         $updatableProperties = [];
 

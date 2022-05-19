@@ -38,7 +38,7 @@ class DeleteSpecificPriceCommand
     /**
      * @var SpecificPriceId
      */
-    private $specificPriceId;
+    protected $specificPriceId;
 
     /**
      * DeleteSpecificPriceCommand constructor.
