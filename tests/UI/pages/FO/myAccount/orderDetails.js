@@ -40,6 +40,10 @@ class OrderDetails extends FOBasePage {
     this.productIdSelect = '[name=id_product]';
     this.messageTextarea = '[name=msgText]';
     this.submitMessageButton = '[name=submitMessage]';
+
+    // Order addresses block
+    this.deliveryAddressBox = '#delivery-address';
+    this.invoiceAddressBox = '#invoice-address';
   }
 
   /*
@@ -117,7 +121,7 @@ class OrderDetails extends FOBasePage {
    * @returns {Promise<string>}
    */
   async getDeliveryAddress(page) {
-    return this.getTextContent(page, '#delivery-address');
+    return this.getTextContent(page, this.deliveryAddressBox);
   }
 
   /**
@@ -126,7 +130,7 @@ class OrderDetails extends FOBasePage {
    * @returns {Promise<string>}
    */
   async getInvoiceAddress(page) {
-    return this.getTextContent(page, '#invoice-address');
+    return this.getTextContent(page, this.invoiceAddressBox);
   }
 }
 
