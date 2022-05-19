@@ -194,6 +194,8 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'record_route_params' => [
                             'id_category' => 'id_category',
                         ],
+                        // Only display this column when list is filtered by category
+                        'required_filter' => 'id_category',
                     ])
             )
             ->add((new ActionColumn('actions'))

@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use Exception;
-use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkUpdateProductStatusCommand;
@@ -106,20 +105,15 @@ class ProductController extends FrameworkBundleAdminController
     {
         $productGridFactory = $this->get('prestashop.core.grid.factory.product');
         $productGrid = $productGridFactory->getGrid($filters);
-        $categoryName = null;
 
         $filteredCategoryId = null;
         if (isset($filters->getFilters()['id_category'])) {
             $filteredCategoryId = (int) $filters->getFilters()['id_category'];
-            $category = $this->getCommandBus()->handle(new GetCategoryForEditing($filteredCategoryId));
-            $categoryName = $category->getName()[$this->getContextLangId()] ?? null;
         }
-
         $categoriesForm = $this->createForm(CategoryFilterType::class, $filteredCategoryId);
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/index.html.twig', [
             'categoryFilterForm' => $categoriesForm->createView(),
-            'selectedCategoryName' => $categoryName,
             'productGrid' => $this->presentGrid($productGrid),
             'enableSidebar' => true,
             'layoutHeaderToolbarBtn' => $this->getProductToolbarButtons(),
