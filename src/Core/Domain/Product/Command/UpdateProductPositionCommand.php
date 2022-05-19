@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
+use PrestaShop\PrestaShop\Core\Domain\Position\ValueObject\RowPosition;
 
 /**
  * Updates product details
@@ -54,11 +55,11 @@ class UpdateProductPositionCommand
     public function __construct(array $positions, int $categoryId)
     {
         $this->categoryId = new CategoryId($categoryId);
-        $this->positions = $positions;
+        $this->setPositions($positions);
     }
 
     /**
-     * @return array
+     * @return RowPosition[]
      */
     public function getPositions(): array
     {
@@ -71,5 +72,17 @@ class UpdateProductPositionCommand
     public function getCategoryId(): CategoryId
     {
         return $this->categoryId;
+    }
+
+    private function setPositions(array $positions): void
+    {
+        $this->positions = [];
+        foreach ($positions as $position) {
+            $this->positions[] = new RowPosition(
+                (int) ($position['rowId'] ?? -1),
+                (int) ($position['oldPosition'] ?? -1),
+                (int) ($position['newPosition'] ?? -1)
+            );
+        }
     }
 }

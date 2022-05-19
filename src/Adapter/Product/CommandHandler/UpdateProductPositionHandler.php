@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
+use PrestaShop\PrestaShop\Core\Domain\Position\ValueObject\RowPosition;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPositionCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductPositionHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductPositionException;
@@ -73,7 +74,7 @@ class UpdateProductPositionHandler implements UpdateProductPositionHandlerInterf
     public function handle(UpdateProductPositionCommand $command): void
     {
         $positionsData = [
-            'positions' => $command->getPositions(),
+            'positions' => $this->convertPositions($command->getPositions()),
             'parentId' => $command->getCategoryId()->getValue(),
         ];
 
@@ -85,5 +86,16 @@ class UpdateProductPositionHandler implements UpdateProductPositionHandlerInterf
             $exception->setErrors([$e->toArray()]);
             throw $exception;
         }
+    }
+
+    private function convertPositions(array $positions): array
+    {
+        return array_map(function (RowPosition $rowPosition): array {
+            return [
+                'rowId' => $rowPosition->getRowId(),
+                'oldPosition' => $rowPosition->getOldPosition(),
+                'newPosition' => $rowPosition->getNewPosition(),
+            ];
+        }, $positions);
     }
 }
