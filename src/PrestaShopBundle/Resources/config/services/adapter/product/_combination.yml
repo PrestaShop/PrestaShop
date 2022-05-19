@@ -181,3 +181,11 @@ services:
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\BulkDeleteCombinationCommand
+
+  prestashop.adapter.product.combination.command_handler.set_default_combination_handler:
+    class: PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler\SetDefaultCombinationHandler
+    arguments:
+      - '@prestashop.adapter.product.combination.update.default_combination_updater'
+    tags:
+      - name: tactician.handler
+        command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetDefaultCombinationCommand
