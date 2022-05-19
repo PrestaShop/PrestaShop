@@ -41,3 +41,39 @@ Feature: Update product price fields from Back Office (BO).
       | price_tax_included      | 62.49048 |
       | ecotax                  | 8.56     |
       | ecotax_tax_included     | 9.01368  |
+
+  Scenario: I set ecotax value on a product with price tax excluded still zero and I update unit price
+    Given shop configuration for "PS_ECOTAX_TAX_RULES_GROUP_ID" is set to none
+    Given I add product "ecoUnitProduct" with following information:
+      | name[en-US] | beer machine |
+      | type        | standard     |
+    When I update product "ecoUnitProduct" prices with following information:
+      | price              | 0.00           |
+      | ecotax             | 1.00           |
+    Then product ecoUnitProduct should have following prices information:
+      | price               | 0.00 |
+      # (0.00 + 4% = 0.00) + (1.00 + 0%)
+      | price_tax_included  | 1.00 |
+      | ecotax              | 1.00 |
+      | ecotax_tax_included | 1.00 |
+      | unit_price          | 0.0  |
+      | unit_price_ratio    | 0.0  |
+    And shop configuration for "PS_ECOTAX_TAX_RULES_GROUP_ID" is set to us-ks-tax-rate
+    Then product ecoUnitProduct should have following prices information:
+      | price               | 0.00  |
+      # (0.00 + 4% = 0.00) + (1.00 + 5.3%)
+      | price_tax_included  | 1.053 |
+      | ecotax              | 1.00  |
+      | ecotax_tax_included | 1.053 |
+      | unit_price          | 0.0   |
+      | unit_price_ratio    | 0.0   |
+    When I update product "ecoUnitProduct" prices with following information:
+      | unit_price | 10 |
+    Then product ecoUnitProduct should have following prices information:
+      | price               | 0.00  |
+      # (0.00 + 4% = 0.00) + (1.00 + 0%)
+      | price_tax_included  | 1.053 |
+      | ecotax              | 1.00  |
+      | ecotax_tax_included | 1.053 |
+      | unit_price          | 10.0  |
+      | unit_price_ratio    | 0.1   |

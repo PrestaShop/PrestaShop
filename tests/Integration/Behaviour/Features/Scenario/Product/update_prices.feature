@@ -154,6 +154,21 @@ Feature: Update product price fields from Back Office (BO).
       | unit_price_ratio        | 0     |
       | unity                   |       |
 
+  Scenario: I update product unit price and then set product price to 0
+    When I update product "product1" prices with following information:
+      | price      | 50  |
+      | unit_price | 25  |
+    Then product product1 should have following prices information:
+      | price            | 50  |
+      | unit_price       | 25  |
+      | unit_price_ratio | 2.0 |
+    When I update product "product1" prices with following information:
+      | price      | 0  |
+    Then product product1 should have following prices information:
+      | price            | 0.0 |
+      | unit_price       | 0.0 |
+      | unit_price_ratio | 0.0 |
+
   Scenario: I update product unit price along with product price
     When I update product "product1" prices with following information:
       | price           | 20              |

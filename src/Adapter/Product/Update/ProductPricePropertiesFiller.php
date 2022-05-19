@@ -43,12 +43,20 @@ class ProductPricePropertiesFiller
     private $numberExtractor;
 
     /**
+     * @var bool
+     */
+    private $ecotaxEnabled;
+
+    /**
      * @param NumberExtractor $numberExtractor
+     * @param bool $ecotaxEnabled
      */
     public function __construct(
-        NumberExtractor $numberExtractor
+        NumberExtractor $numberExtractor,
+        bool $ecotaxEnabled
     ) {
         $this->numberExtractor = $numberExtractor;
+        $this->ecotaxEnabled = $ecotaxEnabled;
     }
 
     /**
@@ -62,22 +70,48 @@ class ProductPricePropertiesFiller
      *
      * @return string[] updatable properties
      */
-    public function fillWithPrices(Product $product, ?DecimalNumber $price, ?DecimalNumber $unitPrice, ?DecimalNumber $wholesalePrice): array
-    {
+    public function fillWithPrices(
+        Product $product,
+        ?DecimalNumber $price,
+        ?DecimalNumber $unitPrice,
+        ?DecimalNumber $wholesalePrice,
+        ?DecimalNumber $ecotax
+    ): array {
         $updatableProperties = [];
         if (null !== $wholesalePrice) {
             $product->wholesale_price = (float) (string) $wholesalePrice;
             $updatableProperties[] = 'wholesale_price';
         }
 
+        $impactUnitPrice = false;
         if (null !== $price) {
             $product->price = (float) (string) $price;
             $updatableProperties[] = 'price';
+            $impactUnitPrice = true;
         }
 
-        if (null !== $unitPrice) {
-            // When product price is zero unit price must be 0 as well
-            if ($product->price == 0) {
+        if (null !== $ecotax) {
+            $product->ecotax = (float) (string) $ecotax;
+            $updatableProperties[] = 'ecotax';
+            $impactUnitPrice = true;
+        }
+
+        $productPrice = null;
+        if (null !== $unitPrice || $impactUnitPrice) {
+            if (null === $price) {
+                $price = $this->numberExtractor->extract($product, 'price');
+            }
+
+            // We need to add the ecotax part (when it's enabled)
+            if (!$this->ecotaxEnabled) {
+                $ecotax = new DecimalNumber('0');
+            } elseif (null === $ecotax) {
+                $ecotax = $this->numberExtractor->extract($product, 'ecotax');
+            }
+
+            // When product price is zero unit price must be 0 as well (we must not forget the ecotax part)
+            $productPrice = $price->plus($ecotax);
+            if ($productPrice->equalsZero()) {
                 $unitPrice = new DecimalNumber('0');
             }
 
@@ -87,8 +121,8 @@ class ProductPricePropertiesFiller
 
         // When price or unit price is changed the ratio must be updated, but only the object field
         // we don't ask to update this property since it will be updated via an SQL query by the Product class
-        if (null !== $unitPrice || null !== $price) {
-            $this->fillUnitPriceRatio($product, $price, $unitPrice);
+        if (null !== $unitPrice || null !== $price || null !== $productPrice) {
+            $this->fillUnitPriceRatio($product, $productPrice ?: $price, $unitPrice);
         }
 
         return $updatableProperties;
@@ -109,6 +143,8 @@ class ProductPricePropertiesFiller
             $unitPrice = $this->numberExtractor->extract($product, 'unit_price');
         }
 
+        // Reminder: regardless of what we compute here a final update is also performed in Product::updateUnitRatio
+        // this part is more destined to keep the field consistent in the $product object
         $this->setUnitPriceRatio($product, $price, $unitPrice);
     }
 
