@@ -5070,41 +5070,6 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * Execute hook displayCarrierList (extraCarrier) and merge them into the $array.
-     *
-     * @deprecated since 1.7.6.0.
-     * @see https://github.com/PrestaShop/PrestaShop/issues/10979
-     *
-     * @param array $array
-     */
-    public static function addExtraCarriers(&$array)
-    {
-        @trigger_error(
-            __FUNCTION__ . 'is deprecated since version 1.7.6.0 and will be removed in the next major version.',
-            E_USER_DEPRECATED
-        );
-
-        $first = true;
-        $hook_extracarrier_addr = [];
-        foreach (Context::getContext()->cart->getAddressCollection() as $address) {
-            $hook = Hook::exec('displayCarrierList', ['address' => $address]);
-            $hook_extracarrier_addr[$address->id] = $hook;
-
-            if ($first) {
-                $array = array_merge(
-                    $array,
-                    ['HOOK_EXTRACARRIER' => $hook]
-                );
-                $first = false;
-            }
-            $array = array_merge(
-                $array,
-                ['HOOK_EXTRACARRIER_ADDR' => $hook_extracarrier_addr]
-            );
-        }
-    }
-
-    /**
      * Get all the IDs of the delivery Addresses without Carriers.
      *
      * @param bool $return_collection Returns sa collection
