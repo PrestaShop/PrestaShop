@@ -71,6 +71,7 @@ class CombinationFormDataProvider implements FormDataProviderInterface
             'id' => $combinationId,
             'product_id' => $combinationForEditing->getProductId(),
             'name' => $combinationForEditing->getName(),
+            'is_default' => $combinationForEditing->isDefault(),
             'stock' => $this->extractStockData($combinationForEditing),
             'price_impact' => $this->extractPriceImpactData($combinationForEditing),
             'references' => $this->extractReferencesData($combinationForEditing),

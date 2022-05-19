@@ -150,6 +150,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
     {
         $combination = $this->combinationRepository->get($query->getCombinationId());
         $productId = new ProductId((int) $combination->id_product);
+        $defaultCombinationId = $this->combinationRepository->getDefaultCombinationId($productId);
         $product = $this->productRepository->get($productId);
 
         return new CombinationForEditing(
@@ -159,7 +160,8 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
             $this->getDetails($combination),
             $this->getPrices($combination, $product),
             $this->getStock($combination),
-            $this->getImages($combination)
+            $this->getImages($combination),
+            $defaultCombinationId && $defaultCombinationId->getValue() === (int) $combination->id
         );
     }
 
