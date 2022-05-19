@@ -28,10 +28,11 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\AddProductSpecificPriceCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\EditProductSpecificPriceCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\AddSpecificPriceCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\EditSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\InitialPrice;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 
 class SpecificPriceFormDataHandler implements FormDataHandlerInterface
@@ -52,18 +53,20 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
 
     public function create(array $data): int
     {
-        $fixedPrice = isset($data['leave_initial_price']) && $data['leave_initial_price'] ?
-            InitialPrice::INITIAL_PRICE_VALUE :
-            (string) $data['fixed_price']
+        $fixedPrice = isset($data['impact']['fixed_price_tax_excluded']) && !InitialPrice::isInitialPriceValue((string) $data['impact']['fixed_price_tax_excluded']) ?
+            (string) $data['impact']['fixed_price_tax_excluded'] :
+            InitialPrice::INITIAL_PRICE_VALUE
         ;
 
-        $command = new AddProductSpecificPriceCommand(
+        $command = new AddSpecificPriceCommand(
             (int) $data['product_id'],
-            $data['reduction']['type'],
-            (string) $data['reduction']['value'],
-            (bool) $data['include_tax'],
+            $data['impact']['reduction']['type'] ?? Reduction::TYPE_AMOUNT,
+            (string) ($data['impact']['reduction']['value'] ?? 0),
+            (bool) $data['impact']['reduction']['include_tax'],
             $fixedPrice,
-            (int) $data['from_quantity']
+            (int) $data['from_quantity'],
+            DateTime::buildNullableDateTime($data['date_range']['from']),
+            DateTime::buildNullableDateTime($data['date_range']['to'])
         );
 
         $this->fillRelations($command, $data);
@@ -76,14 +79,8 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
 
     public function update($id, array $data): void
     {
-        $command = new EditProductSpecificPriceCommand((int) $id);
+        $command = new EditSpecificPriceCommand((int) $id);
         $this->fillRelations($command, $data);
-
-        if (isset($data['leave_initial_price']) && $data['leave_initial_price']) {
-            $command->setFixedPrice(InitialPrice::INITIAL_PRICE_VALUE);
-        } elseif (isset($data['fixed_price'])) {
-            $command->setFixedPrice((string) $data['fixed_price']);
-        }
 
         if (isset($data['from_quantity'])) {
             $command->setFromQuantity((int) $data['from_quantity']);
@@ -94,36 +91,50 @@ class SpecificPriceFormDataHandler implements FormDataHandlerInterface
         if (isset($data['date_range']) && array_key_exists('to', $data['date_range'])) {
             $command->setDateTimeTo(DateTime::buildNullableDateTime($data['date_range']['to']));
         }
-        if (isset($data['reduction']['type'])) {
-            $command->setReduction((string) $data['reduction']['type'], (string) $data['reduction']['value']);
+
+        // It switch input is true it means the price field is enabled
+        if (!empty($data['impact']['disabling_switch_fixed_price_tax_excluded'])) {
+            $command->setFixedPrice((string) $data['impact']['fixed_price_tax_excluded']);
+        } else {
+            $command->setFixedPrice(InitialPrice::INITIAL_PRICE_VALUE);
         }
-        if (isset($data['include_tax'])) {
-            $command->setIncludesTax((bool) $data['include_tax']);
+
+        // It switch input is true it means the price field is enabled
+        if (!empty($data['impact']['disabling_switch_reduction'])) {
+            if (isset($data['impact']['reduction']['type'], $data['impact']['reduction']['value'])) {
+                $command->setReduction((string) $data['impact']['reduction']['type'], (string) $data['impact']['reduction']['value']);
+            }
+            if (isset($data['impact']['reduction']['include_tax'])) {
+                $command->setIncludesTax((bool) $data['impact']['reduction']['include_tax']);
+            }
+        } else {
+            // When reduction is disabled we force its value to zero
+            $command->setReduction(Reduction::TYPE_AMOUNT, '0');
         }
 
         $this->commandBus->handle($command);
     }
 
     /**
-     * @param AddProductSpecificPriceCommand|EditProductSpecificPriceCommand $command
+     * @param AddSpecificPriceCommand|EditSpecificPriceCommand $command
      * @param array<string, mixed> $data
      */
     private function fillRelations($command, array $data): void
     {
-        if (array_key_exists('currency_id', $data)) {
-            $command->setCurrencyId((int) $data['currency_id']);
+        if (isset($data['groups']['currency_id'])) {
+            $command->setCurrencyId((int) $data['groups']['currency_id']);
         }
-        if (array_key_exists('group_id', $data)) {
-            $command->setGroupId((int) $data['group_id']);
+        if (isset($data['groups']['group_id'])) {
+            $command->setGroupId((int) $data['groups']['group_id']);
         }
         if (array_key_exists('combination_id', $data)) {
             $command->setCombinationId((int) $data['combination_id']);
         }
-        if (array_key_exists('country_id', $data)) {
-            $command->setCountryId((int) $data['country_id']);
+        if (isset($data['groups']['country_id'])) {
+            $command->setCountryId((int) $data['groups']['country_id']);
         }
-        if (array_key_exists('shop_id', $data)) {
-            $command->setShopId((int) $data['shop_id']);
+        if (array_key_exists('shop_id', $data['groups'])) {
+            $command->setShopId((int) $data['groups']['shop_id']);
         }
         if (isset($data['customer'])) {
             $command->setCustomerId($this->getCustomerId($data));

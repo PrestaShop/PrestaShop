@@ -32,6 +32,14 @@ export const getSpecificPrices = async (productId: number): Promise<Record<strin
   router.generate('admin_products_specific_prices_list', {productId}),
 );
 
+export const deleteSpecificPrice = async (specificPriceId: string): Promise<JQuery.jqXHR> => $.ajax({
+  url: router.generate('admin_products_specific_prices_delete', {
+    specificPriceId,
+  }),
+  type: 'DELETE',
+});
+
 export default {
   getSpecificPrices,
+  deleteSpecificPrice,
 };

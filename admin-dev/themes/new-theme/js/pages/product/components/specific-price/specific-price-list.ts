@@ -22,9 +22,12 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import {getSpecificPrices} from '@pages/product/services/specific-price-service';
+import {getSpecificPrices, deleteSpecificPrice} from '@pages/product/services/specific-price-service';
 import {EventEmitter} from 'events';
 import ProductMap from '@pages/product/product-map';
+import ConfirmModal from '@components/modal/confirm-modal';
+import ProductEventMap from '@pages/product/product-event-map';
+import {isUndefined} from '@PSTypes/typeguard';
 
 const SpecificPriceMap = ProductMap.specificPrice;
 
@@ -64,6 +67,7 @@ export default class SpecificPriceList {
         const currencyField = this.selectListField(trClone, listFields.currency);
         const countryField = this.selectListField(trClone, listFields.country);
         const groupField = this.selectListField(trClone, listFields.group);
+        const shopField = this.selectListField(trClone, listFields.shop);
         const customerField = this.selectListField(trClone, listFields.customer);
         const priceField = this.selectListField(trClone, listFields.price);
         const impactField = this.selectListField(trClone, listFields.impact);
@@ -78,6 +82,7 @@ export default class SpecificPriceList {
         currencyField.textContent = specificPrice.currency;
         countryField.textContent = specificPrice.country;
         groupField.textContent = specificPrice.group;
+        shopField.textContent = specificPrice.shop;
         customerField.textContent = specificPrice.customer;
         priceField.textContent = specificPrice.price;
         impactField.textContent = specificPrice.impact;
@@ -93,6 +98,7 @@ export default class SpecificPriceList {
         }
 
         tbody.append(trClone);
+        this.addEventListenerForDeleteBtn(deleteBtn);
       });
     });
   }
@@ -103,5 +109,38 @@ export default class SpecificPriceList {
 
   private selectListField(templateTrClone: HTMLElement, selector: string): HTMLElement {
     return templateTrClone.querySelector(selector) as HTMLElement;
+  }
+
+  private addEventListenerForDeleteBtn(deleteBtn: HTMLElement): void {
+    deleteBtn.addEventListener('click', (e) => {
+      if (!(e.currentTarget instanceof HTMLElement) || isUndefined(e.currentTarget.dataset.specificPriceId)) {
+        return;
+      }
+
+      this.deleteSpecificPrice(e.currentTarget.dataset);
+    });
+  }
+
+  private deleteSpecificPrice(deleteBtnDataset: DOMStringMap): void {
+    const modal = new ConfirmModal(
+      {
+        id: ProductMap.specificPrice.deletionModalId,
+        confirmTitle: deleteBtnDataset.confirmTitle,
+        confirmMessage: deleteBtnDataset.confirmMessage,
+        confirmButtonLabel: deleteBtnDataset.confirmBtnLabel,
+        closeButtonLabel: deleteBtnDataset.cancelBtnLabel,
+        confirmButtonClass: deleteBtnDataset.confirmBtnClass,
+        closable: true,
+      },
+      async () => {
+        if (!deleteBtnDataset.specificPriceId) {
+          return;
+        }
+        const response = await deleteSpecificPrice(deleteBtnDataset.specificPriceId);
+        $.growl({message: response.message});
+        this.eventEmitter.emit(ProductEventMap.specificPrice.listUpdated);
+      },
+    );
+    modal.show();
   }
 }

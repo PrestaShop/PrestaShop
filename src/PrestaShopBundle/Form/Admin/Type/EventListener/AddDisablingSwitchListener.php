@@ -122,11 +122,22 @@ class AddDisablingSwitchListener implements EventSubscriberInterface
         }
 
         // If field should be disabled then the toggle value should be 0
-        $disabledData = $shouldBeDisabled ? self::DISABLED_VALUE : self::ENABLED_VALUE;
+        $switchStateOnDisable = $form->getConfig()->getOption(DisablingSwitchExtension::SWITCH_STATE_ON_DISABLE_OPTION);
+
+        // Define how the component behaves when it is in the disabled state (display off or on)
+        $disableOnMatch = $switchStateOnDisable === 'off';
+        if ($disableOnMatch) {
+            $disabledData = $shouldBeDisabled ? self::DISABLED_VALUE : self::ENABLED_VALUE;
+        } else {
+            $disabledData = $shouldBeDisabled ? self::ENABLED_VALUE : self::DISABLED_VALUE;
+        }
+
         $disablingSwitchOptions = [
             // All associated form fields have been added with a data attribute which allows to target them all
             'target_selector' => sprintf('[%s="%s"]', self::TOGGLE_DATA_ATTRIBUTE, $disablingFieldName),
+            'switch_event' => $form->getConfig()->getOption(DisablingSwitchExtension::SWITCH_EVENT_OPTION),
             'data' => $disabledData,
+            'disable_on_match' => $disableOnMatch,
         ];
 
         $parent->add(

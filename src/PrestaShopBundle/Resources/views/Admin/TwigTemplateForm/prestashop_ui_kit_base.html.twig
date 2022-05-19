@@ -523,9 +523,9 @@
 
 {% block date_picker_widget %}
   {% apply spaceless %}
-    {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' datepicker')|trim)}) %}
+    {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' form-control datepicker')|trim)}) %}
     <div class="input-group datepicker">
-      <input type="text" class="form-control" data-format="{{ date_format }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+      <input type="text" data-format="{{ date_format }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
       <div class="input-group-append">
         <div class="input-group-text">
           <i class="material-icons">date_range</i>
@@ -538,10 +538,18 @@
 
 {% block date_range_widget %}
   {% apply spaceless %}
-    {{ form_widget(form.from) }}
-    {{ form_errors(form.from) }}
-    {{ form_widget(form.to) }}
-    {{ form_errors(form.to) }}
+    <div class="input-group date-range row">
+      <div class="col col-md-4">
+        {{ form_row(form.from) }}
+      </div>
+      <div class="col col-md-4">
+        {{ form_row(form.to) }}
+        {% if form.unlimited is defined %}
+          {{ form_widget(form.unlimited) }}
+          {{ form_errors(form.unlimited) }}
+        {% endif %}
+      </div>
+    </div>
   {% endapply %}
 {% endblock date_range_widget %}
 
@@ -594,6 +602,14 @@
   {% endapply %}
   {{- block('form_help') -}}
 {% endblock switch_widget %}
+
+{%- block row_attributes -%}
+  {% set rowAttributes  = row_attr|default({})%}
+  {%- for attrname, attrvalue in rowAttributes -%}
+    {{- " " -}}
+    {{- attrname }}="{{ attrvalue }}"
+  {%- endfor -%}
+{%- endblock -%}
 
 {% block _form_step6_attachments_widget %}
   <div class="js-options-no-attachments {{ form|length > 0 ? 'hide' : '' }}">
@@ -1409,3 +1425,17 @@
     {% endfor %}
   </div>
 {% endblock %}
+
+{%- block price_reduction_widget -%}
+  {% set attr = attr|merge({class: (attr.class|default('') ~ ' reduction-widget row')|trim}) %}
+  <div {{ block('widget_attributes') }}>
+    {% for child in form.children %}
+      {% with {row_attr: child.vars.row_attr|merge({class: (child.vars.row_attr.class|default('') ~ ' col col-md-3')|trim})} %}
+      <div {{ block('row_attributes') }}>
+      {% endwith %}
+        {{ form_widget(child) }}
+        {{ form_errors(child) }}
+      </div>
+    {% endfor -%}
+  </div>
+{%- endblock -%}

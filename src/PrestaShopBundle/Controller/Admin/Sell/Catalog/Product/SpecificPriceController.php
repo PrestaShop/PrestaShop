@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 use DateTimeInterface;
 use Exception;
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\DeleteSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceList;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceList;
@@ -79,7 +80,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
                 $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_products_specific_prices_edit', [
-                    'lightDisplay' => $request->query->has('liteDisplaying'),
+                    'liteDisplaying' => $request->query->has('liteDisplaying'),
                     // This action is only used inside a dedicated modal so we always enforce the lite display in the redirection url
                     'specificPriceId' => $result->getIdentifiableObjectId(),
                 ]);
@@ -90,7 +91,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/SpecificPrice/create.html.twig', [
             'specificPriceForm' => $form->createView(),
-            'lightDisplay' => $request->query->has('liteDisplaying'),
+            'liteDisplaying' => $request->query->has('liteDisplaying'),
         ]);
     }
 
@@ -112,7 +113,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
 
                 return $this->redirectToRoute('admin_products_specific_prices_edit', [
                     'specificPriceId' => $specificPriceId,
-                    'lightDisplay' => $request->query->has('liteDisplaying'),
+                    'liteDisplaying' => $request->query->has('liteDisplaying'),
                 ]);
             }
         } catch (Exception $e) {
@@ -121,7 +122,30 @@ class SpecificPriceController extends FrameworkBundleAdminController
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/SpecificPrice/edit.html.twig', [
             'specificPriceForm' => $form->createView(),
-            'lightDisplay' => $request->query->has('liteDisplaying'),
+            'liteDisplaying' => $request->query->has('liteDisplaying'),
+        ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     * @param int $specificPriceId
+     *
+     * @return JsonResponse
+     */
+    public function deleteAction(Request $request, int $specificPriceId): JsonResponse
+    {
+        try {
+            $this->getCommandBus()->handle(new DeleteSpecificPriceCommand($specificPriceId));
+        } catch (Exception $e) {
+            return $this->json([
+                'error' => $this->getErrorMessageForException($e, $this->getErrorMessages()),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        return $this->json([
+            'message' => $this->trans('Successful deletion', 'Admin.Notifications.Success'),
         ]);
     }
 
@@ -181,6 +205,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
                 'currency' => $specificPrice->getCurrencyName() ?? $this->trans('All currencies', 'Admin.Global'),
                 'country' => $specificPrice->getCountryName() ?? $this->trans('All countries', 'Admin.Global'),
                 'group' => $specificPrice->getGroupName() ?? $this->trans('All groups', 'Admin.Global'),
+                'shop' => $specificPrice->getShopName() ?? $this->trans('All stores', 'Admin.Global'),
                 'customer' => $specificPrice->getCustomerName() ?? $this->trans('All customers', 'Admin.Global'),
                 'price' => $this->formatPrice(
                     $specificPrice->getFixedPrice(),

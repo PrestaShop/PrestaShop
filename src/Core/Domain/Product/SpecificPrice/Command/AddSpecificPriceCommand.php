@@ -58,7 +58,7 @@ use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 /**
  * Add specific price to a Product
  */
-class AddProductSpecificPriceCommand
+class AddSpecificPriceCommand
 {
     /**
      * @var ProductId
@@ -138,6 +138,8 @@ class AddProductSpecificPriceCommand
      * @param bool $includeTax
      * @param string $fixedPrice
      * @param int $fromQuantity
+     * @param DateTimeInterface $dateTimeFrom
+     * @param DateTimeInterface $dateTimeTo
      *
      * @throws DomainConstraintException
      * @throws ProductConstraintException
@@ -148,7 +150,9 @@ class AddProductSpecificPriceCommand
         string $reductionValue,
         bool $includeTax,
         string $fixedPrice,
-        int $fromQuantity
+        int $fromQuantity,
+        DateTimeInterface $dateTimeFrom,
+        DateTimeInterface $dateTimeTo
     ) {
         $this->productId = new ProductId($productId);
         $this->reduction = new Reduction($reductionType, $reductionValue);
@@ -159,9 +163,9 @@ class AddProductSpecificPriceCommand
         $this->combinationId = new NoCombinationId();
         $this->currencyId = new NoCurrencyId();
         $this->groupId = new NoGroupId();
-        $this->dateTimeFrom = new NullDateTime();
-        $this->dateTimeTo = new NullDateTime();
         $this->countryId = new NoCountryId();
+        $this->dateTimeFrom = $dateTimeFrom;
+        $this->dateTimeTo = $dateTimeTo;
     }
 
     /**
@@ -218,7 +222,7 @@ class AddProductSpecificPriceCommand
      * @see DateTime
      * @see NullDateTime
      *
-     * @return AddProductSpecificPriceCommand
+     * @return AddSpecificPriceCommand
      */
     public function setDateTimeFrom(DateTimeInterface $dateTimeFrom): self
     {
@@ -241,7 +245,7 @@ class AddProductSpecificPriceCommand
      * @see DateTime
      * @see NullDateTime
      *
-     * @return AddProductSpecificPriceCommand
+     * @return AddSpecificPriceCommand
      */
     public function setDateTimeTo(DateTimeInterface $dateTimeTo): self
     {

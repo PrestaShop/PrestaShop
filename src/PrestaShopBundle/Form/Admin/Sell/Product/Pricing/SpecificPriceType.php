@@ -27,63 +27,27 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DateRange;
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\Reduction;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceException;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction as ReductionVO;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
-use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Sell\Customer\SearchedCustomerType;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
-use PrestaShopBundle\Form\Admin\Type\ReductionType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Type;
 
 class SpecificPriceType extends TranslatorAwareType
 {
-    /**
-     * @var string
-     */
-    private $defaultCurrencyIso;
-
-    /**
-     * @var FormChoiceProviderInterface|FormChoiceAttributeProviderInterface
-     */
-    private $currencyByIdChoiceProvider;
-
-    /**
-     * @var FormChoiceProviderInterface
-     */
-    private $countryByIdChoiceProvider;
-
-    /**
-     * @var FormChoiceProviderInterface
-     */
-    private $groupByIdChoiceProvider;
-
-    /**
-     * @var FormChoiceProviderInterface
-     */
-    private $shopByIdChoiceProvider;
-
-    /**
-     * @var FormChoiceProviderInterface
-     */
-    private $taxInclusionChoiceProvider;
-
     /**
      * @var ConfigurableFormChoiceProviderInterface
      */
@@ -95,46 +59,28 @@ class SpecificPriceType extends TranslatorAwareType
     private $urlGenerator;
 
     /**
-     * @var bool
+     * @var ProductRepository
      */
-    private $isMultishopEnabled;
+    private $productRepository;
 
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param string $defaultCurrencyIso
-     * @param FormChoiceProviderInterface|FormChoiceAttributeProviderInterface $currencyByIdChoiceProvider
-     * @param FormChoiceProviderInterface $countryByIdChoiceProvider
-     * @param FormChoiceProviderInterface $groupByIdChoiceProvider
-     * @param FormChoiceProviderInterface $shopByIdChoiceProvider
-     * @param FormChoiceProviderInterface $taxInclusionChoiceProvider
-     * @param ConfigurableFormChoiceProviderInterface $configurableFormChoiceProvider
+     * @param ConfigurableFormChoiceProviderInterface $combinationIdChoiceProvider
      * @param UrlGeneratorInterface $urlGenerator
-     * @param bool $isMultishopEnabled
+     * @param ProductRepository $productRepository
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        string $defaultCurrencyIso,
-        $currencyByIdChoiceProvider,
-        FormChoiceProviderInterface $countryByIdChoiceProvider,
-        FormChoiceProviderInterface $groupByIdChoiceProvider,
-        FormChoiceProviderInterface $shopByIdChoiceProvider,
-        FormChoiceProviderInterface $taxInclusionChoiceProvider,
-        ConfigurableFormChoiceProviderInterface $configurableFormChoiceProvider,
+        ConfigurableFormChoiceProviderInterface $combinationIdChoiceProvider,
         UrlGeneratorInterface $urlGenerator,
-        bool $isMultishopEnabled
+        ProductRepository $productRepository
     ) {
         parent::__construct($translator, $locales);
-        $this->currencyByIdChoiceProvider = $currencyByIdChoiceProvider;
-        $this->countryByIdChoiceProvider = $countryByIdChoiceProvider;
-        $this->groupByIdChoiceProvider = $groupByIdChoiceProvider;
-        $this->shopByIdChoiceProvider = $shopByIdChoiceProvider;
-        $this->taxInclusionChoiceProvider = $taxInclusionChoiceProvider;
-        $this->defaultCurrencyIso = $defaultCurrencyIso;
-        $this->combinationIdChoiceProvider = $configurableFormChoiceProvider;
+        $this->combinationIdChoiceProvider = $combinationIdChoiceProvider;
         $this->urlGenerator = $urlGenerator;
-        $this->isMultishopEnabled = $isMultishopEnabled;
+        $this->productRepository = $productRepository;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -146,44 +92,44 @@ class SpecificPriceType extends TranslatorAwareType
 
         $builder
             ->add('product_id', HiddenType::class)
-            ->add('currency_id', ChoiceType::class, [
-                'label' => $this->trans('Currency', 'Admin.Global'),
-                'placeholder' => $this->trans('All currencies', 'Admin.Global'),
-                'choices' => $this->currencyByIdChoiceProvider->getChoices(),
-                'choice_attr' => $this->currencyByIdChoiceProvider->getChoicesAttributes(),
+            ->add('groups', ApplicableGroupsType::class, [
+                'label' => $this->trans('Apply to:', 'Admin.Global'),
                 'required' => false,
-            ])
-            ->add('country_id', ChoiceType::class, [
-                'label' => $this->trans('Country', 'Admin.Global'),
-                'placeholder' => $this->trans('All countries', 'Admin.Global'),
-                'choices' => $this->countryByIdChoiceProvider->getChoices(),
-                'required' => false,
-            ])
-            ->add('group_id', ChoiceType::class, [
-                'label' => $this->trans('Group', 'Admin.Global'),
-                'required' => false,
-                'placeholder' => $this->trans('All groups', 'Admin.Global'),
-                'choices' => $this->groupByIdChoiceProvider->getChoices(),
             ])
             ->add('customer', EntitySearchInputType::class, [
-                'label' => $this->trans('Customer', 'Admin.Global'),
+                'label' => $this->trans('Apply to all customers', 'Admin.Global'),
                 'layout' => EntitySearchInputType::LIST_LAYOUT,
                 'entry_type' => SearchedCustomerType::class,
                 'entry_options' => [
                     'block_prefix' => 'searched_customer',
                 ],
+                'allow_delete' => false,
                 'limit' => 1,
+                'disabling_switch' => true,
+                'disabling_switch_event' => 'switchSpecificPriceCustomer',
+                'switch_state_on_disable' => 'on',
+                'disabled_value' => function ($data) {
+                    return empty($data[0]['id_customer']);
+                },
                 'remote_url' => $this->urlGenerator->generate('admin_customers_search', ['customer_search' => '__QUERY__']),
-                'placeholder' => $this->trans('All Customers', 'Admin.Global'),
+                'placeholder' => $this->trans('Search customer', 'Admin.Global'),
                 'suggestion_field' => 'fullname_and_email',
                 'required' => false,
             ])
-            ->add('combination_id', ChoiceType::class, [
+        ;
+
+        $productId = new ProductId((int) $builder->getData()['product_id']);
+        $productType = $this->productRepository->getProductType($productId);
+        if ($productType->getValue() === ProductType::TYPE_COMBINATIONS) {
+            $builder->add('combination_id', ChoiceType::class, [
                 'label' => $this->trans('Combination', 'Admin.Global'),
                 'placeholder' => $this->trans('All combinations', 'Admin.Global'),
                 'choices' => $this->combinationIdChoiceProvider->getChoices(['product_id' => $builder->getData()['product_id']]),
                 'required' => false,
-            ])
+            ]);
+        }
+
+        $builder
             ->add('from_quantity', NumberType::class, [
                 'label' => $this->trans('Minimum number of units purchased', 'Admin.Catalog.Feature'),
                 'scale' => 0,
@@ -197,28 +143,11 @@ class SpecificPriceType extends TranslatorAwareType
                     ]),
                 ],
             ])
-            ->add('fixed_price', MoneyType::class, [
-                'required' => false,
-                'label' => $this->trans('Set specific price (tax excl.)', 'Admin.Catalog.Feature'),
-                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
-                'row_attr' => [
-                    'class' => 'js-fixed_price-row',
-                ],
-                'currency' => $this->defaultCurrencyIso,
-                'constraints' => [
-                    new NotBlank(),
-                    new Type(['type' => 'float']),
-                ],
-                'default_empty_data' => 0.0,
-            ])
-            ->add('leave_initial_price', CheckboxType::class, [
-                'label' => $this->trans('Apply a discount to the initial price', 'Admin.Catalog.Feature'),
-                'help' => 'For customers meeting the conditions, the initial price will be crossed out and the discount will be highlighted.',
-                'required' => false,
-            ])
             ->add('date_range', DateRangeType::class, [
                 'label' => $this->trans('Duration', 'Admin.Catalog.Feature'),
+                'label_tag_name' => 'h4',
                 'required' => false,
+                'has_unlimited_checkbox' => true,
                 'constraints' => [
                     new DateRange([
                         'message' => $this->trans(
@@ -227,47 +156,19 @@ class SpecificPriceType extends TranslatorAwareType
                         ),
                     ]),
                 ],
+                'columns_number' => 2,
             ])
-            ->add('reduction', ReductionType::class, [
-                'label' => $this->trans('Reduction', 'Admin.Catalog.Feature'),
-                'required' => false,
-                'constraints' => [
-                    new Reduction([
-                        'invalidPercentageValueMessage' => $this->trans(
-                            'Reduction value "%value%" is invalid. Allowed values from 0 to %max%',
-                            'Admin.Notifications.Error',
-                            ['%max%' => ReductionVO::MAX_ALLOWED_PERCENTAGE . '%']
-                        ),
-                        'invalidAmountValueMessage' => $this->trans(
-                            'Reduction value "%value%" is invalid. Value cannot be negative',
-                            'Admin.Notifications.Error'
-                        ),
-                    ]),
-                ],
-            ])
-            ->add('include_tax', ChoiceType::class, [
-                'row_attr' => [
-                    'class' => 'js-include-tax-row',
-                ],
-                'label' => $this->trans('Reduction with or without taxes', 'Admin.Catalog.Feature'),
-                'choices' => $this->taxInclusionChoiceProvider->getChoices(),
-                'placeholder' => false,
-                'required' => false,
-            ])
+            ->add('impact', SpecificPriceImpactType::class)
         ;
-
-        if ($this->isMultishopEnabled) {
-            $builder->add('shop_id', ChoiceType::class, [
-                'required' => false,
-                'placeholder' => false,
-                'choices' => $this->shopByIdChoiceProvider->getChoices(),
-            ]);
-        }
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-        $resolver->setDefault('label', false);
+        $resolver->setDefaults([
+            'label' => $this->trans('Conditions', 'Admin.Catalog.Feature'),
+            'label_tag_name' => 'h4',
+            'required' => false,
+        ]);
     }
 }

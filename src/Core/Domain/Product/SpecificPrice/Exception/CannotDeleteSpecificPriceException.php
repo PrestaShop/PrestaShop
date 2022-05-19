@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -22,25 +23,14 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import specificPriceMap from '@pages/specific-price/specific-price-map';
+
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception;
 
 /**
- * Disables price input once "leave initial price" is checked
+ * Exception thrown when SpecificPrice could not be deleted
  */
-export default class PriceInputToggle {
-  public constructor() {
-    this.init();
-  }
-
-  private init(): void {
-    const initialPriceCheckbox = document.querySelector(specificPriceMap.leaveInitialPriceCheckbox) as HTMLInputElement;
-    this.toggle(initialPriceCheckbox.checked);
-
-    initialPriceCheckbox.addEventListener('change', () => this.toggle(initialPriceCheckbox.checked));
-  }
-
-  private toggle(disable: boolean): void {
-    const priceInput = document.querySelector(specificPriceMap.priceInput) as HTMLInputElement;
-    priceInput.classList.toggle('disabled', disable);
-  }
+class CannotDeleteSpecificPriceException extends SpecificPriceException
+{
 }

@@ -107,4 +107,9 @@ export default {
     notificationClass: 'contextual-notification',
   },
   ajaxConfirmation: '#ajax_confirmation',
+  dateRange: {
+    container: '.date-range',
+    endDate: '.date-range-end-date',
+    unlimitedCheckbox: '.date-range-unlimited',
+  },
 };

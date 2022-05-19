@@ -19,6 +19,14 @@ services:
     tags:
       - { name: form.type }
 
+  form.type.date_range:
+    class: PrestaShopBundle\Form\Admin\Type\DateRangeType
+    arguments:
+      - "@translator"
+      - "@form.form_cloner"
+    tags:
+      - { name: form.type }
+
   form.type.product.simple_category:
     class: PrestaShopBundle\Form\Admin\Category\SimpleCategory
     arguments:
@@ -1074,24 +1082,24 @@ services:
       - '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
       - '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
       - '@=service("prestashop.adapter.form.choice_provider.shop_name_by_id").getChoices()'
-      - '@=service("prestashop.core.form.choice_provider.tax_inclusion").getChoices()'
       - '@=service("prestashop.core.form.choice_provider.currency_by_id").getChoicesAttributes()'
+      - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency().symbol'
     tags:
       - { name: form.type }
 
-  form.type.reduction:
-    class: 'PrestaShopBundle\Form\Admin\Type\ReductionType'
+  form.type.price_reduction:
+    class: 'PrestaShopBundle\Form\Admin\Type\PriceReductionType'
     parent: 'form.type.common_type'
     arguments:
-      - '@=service("prestashop.core.form.choice_provider.price_reduction_type").getChoices()'
       - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
-      - '@form.event_listener.reduction'
+      - '@form.event_listener.price_reduction'
+      - '@prestashop.core.form.choice_provider.tax_inclusion'
     public: true
     tags:
       - { name: form.type }
 
-  form.event_listener.reduction:
-    class: 'PrestaShopBundle\Form\Admin\Type\EventListener\ReductionListener'
+  form.event_listener.price_reduction:
+    class: 'PrestaShopBundle\Form\Admin\Type\EventListener\PriceReductionListener'
     public: true
 
   form.type.sell.customer.private_note:
@@ -1560,15 +1568,18 @@ services:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\Pricing\SpecificPriceType'
     parent: 'form.type.translatable.aware'
     arguments:
-      - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency().iso_code'
-      - '@prestashop.core.form.choice_provider.currency_by_id'
-      - '@prestashop.core.form.choice_provider.country_by_id'
-      - '@prestashop.core.form.choice_provider.group_by_id'
-      - '@prestashop.adapter.form.choice_provider.shop_name_by_id'
-      - '@prestashop.core.form.choice_provider.tax_inclusion'
       - '@prestashop.adapter.form.choice_provider.combination_id_choice_provider'
       - '@prestashop.core.admin.url_generator'
-      - '@=service("prestashop.adapter.multistore_feature").isUsed()'
+      - '@prestashop.adapter.product.repository.product_repository'
+    public: true
+    tags:
+      - { name: form.type }
+
+  form.type.sell.product.pricing.specific_price_impact_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Pricing\SpecificPriceImpactType'
+    parent: 'form.type.translatable.aware'
+    arguments:
+      - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency().iso_code'
     public: true
     tags:
       - { name: form.type }
@@ -1588,6 +1599,20 @@ services:
     public: true
     arguments:
       - '@=service("prestashop.core.form.choice_provider.specific_price_priority_choice_provider")'
+    tags:
+      - { name: form.type }
+
+  form.type.sell.product.pricing.group_price_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Pricing\ApplicableGroupsType'
+    parent: 'form.type.translatable.aware'
+    arguments:
+      - '@prestashop.core.form.choice_provider.currency_by_id'
+      - '@prestashop.core.form.choice_provider.country_by_id'
+      - '@prestashop.core.form.choice_provider.group_by_id'
+      - '@prestashop.adapter.form.choice_provider.shop_name_by_id'
+      - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency().symbol'
+      - '@=service("prestashop.adapter.multistore_feature").isUsed()'
+    public: true
     tags:
       - { name: form.type }
 

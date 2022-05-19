@@ -22,17 +22,18 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+import {FormIframeModal} from '@components/modal';
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
 import {EventEmitter} from 'events';
 import SpecificPriceList from '@pages/product/components/specific-price/specific-price-list';
-import Vue from 'vue';
-import VueI18n from 'vue-i18n';
-import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
-import SpecificPriceModal from '@pages/product/components/specific-price/SpecificPriceModal.vue';
+import Router from '@components/router';
 import FormFieldDisabler from '@components/form/form-field-disabler';
+import {isUndefined} from '@PSTypes/typeguard';
 
-Vue.use(VueI18n);
+import ClickEvent = JQuery.ClickEvent;
+
 const SpecificPriceMap = ProductMap.specificPrice;
 const PriorityMap = SpecificPriceMap.priority;
 
@@ -41,25 +42,36 @@ export default class SpecificPricesManager {
 
   productId: number;
 
-  specificPriceList: SpecificPriceList;
+  listContainer: HTMLElement;
+
+  specificPriceList!: SpecificPriceList;
+
+  router: Router;
 
   constructor(
     productId: number,
   ) {
+    this.router = new Router();
     this.productId = productId;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
-    this.specificPriceList = new SpecificPriceList(productId);
+    this.listContainer = document.querySelector<HTMLElement>(SpecificPriceMap.listContainer)!;
+
     this.initComponents();
-    this.specificPriceList.renderList();
     this.initListeners();
+
+    this.specificPriceList.renderList();
   }
 
   private initListeners(): void {
-    this.eventEmitter.on(ProductEventMap.specificPrice.specificPriceUpdated, () => this.specificPriceList.renderList());
+    this.eventEmitter.on(ProductEventMap.specificPrice.listUpdated, () => this.specificPriceList.renderList());
   }
 
   private initComponents() {
-    this.initSpecificPriceModal(this.productId, SpecificPriceMap.formModal, this.eventEmitter);
+    this.specificPriceList = new SpecificPriceList(this.productId);
+
+    this.initSpecificPriceModals();
+
+    // Enable/disabled the priority selectors depending on the priority type selected (global or custom)
     new FormFieldDisabler({
       disablingInputSelector: PriorityMap.priorityTypeCheckboxesSelector,
       matchingValue: '0',
@@ -67,36 +79,84 @@ export default class SpecificPricesManager {
     });
   }
 
-  private initSpecificPriceModal(
-    productId: number,
-    specificPriceModalSelector: string,
-    eventEmitter: EventEmitter,
-  ): Vue | null {
-    const container = document.querySelector(specificPriceModalSelector);
+  private initSpecificPriceModals() {
+    // Delegate listener for each edit buttons in the list (even future added ones)
+    $(this.listContainer).on('click', SpecificPriceMap.listFields.editBtn, (event: ClickEvent) => {
+      if (!(event.currentTarget instanceof HTMLElement)) {
+        return;
+      }
 
-    if (!(container instanceof HTMLElement)) {
-      console.error('Invalid container provided for specificPrice modal');
+      const editButton = event.currentTarget;
+      const {specificPriceId} = editButton.dataset;
 
-      return null;
+      if (isUndefined(specificPriceId)) {
+        return;
+      }
+
+      const url = this.router.generate(
+        'admin_products_specific_prices_edit',
+        {
+          specificPriceId,
+          liteDisplaying: 1,
+        },
+      );
+      this.renderSpecificPriceModal(
+        url,
+        editButton.dataset.modalTitle || 'Edit specific price',
+        editButton.dataset.confirmButtonLabel || 'Save and publish',
+        editButton.dataset.cancelButtonLabel || 'Cancel',
+      );
+    });
+
+    // Creation modal on single add button
+    const addButton = document.querySelector<HTMLElement>(SpecificPriceMap.addSpecificPriceBtn);
+
+    if (addButton === null) {
+      return;
     }
 
-    const translations = JSON.parse(<string>container.dataset.translations);
-    const i18n = new VueI18n({
-      locale: 'en',
-      formatter: new ReplaceFormatter(),
-      messages: {en: translations},
+    addButton.addEventListener('click', (e) => {
+      e.stopImmediatePropagation();
+      const url = this.router.generate(
+        'admin_products_specific_prices_create',
+        {
+          productId: this.productId,
+          liteDisplaying: 1,
+        },
+      );
+      this.renderSpecificPriceModal(
+        url,
+        addButton.dataset.modalTitle || 'Add new specific price',
+        addButton.dataset.confirmButtonLabel || 'Save and publish',
+        addButton.dataset.cancelButtonLabel || 'Cancel',
+      );
     });
+  }
 
-    return new Vue({
-      el: specificPriceModalSelector,
-      template:
-        '<specific-price-modal :productId=productId :eventEmitter=eventEmitter />',
-      components: {SpecificPriceModal},
-      i18n,
-      data: {
-        eventEmitter,
-        productId,
+  private renderSpecificPriceModal(
+    formUrl: string,
+    modalTitle: string,
+    confirmButtonLabel: string,
+    closeButtonLabel: string,
+  ) {
+    const iframeModal = new FormIframeModal({
+      id: 'modal-specific-price-form',
+      formSelector: 'form[name="specific_price"]',
+      formUrl,
+      closable: true,
+      modalTitle,
+      closeButtonLabel,
+      confirmButtonLabel,
+      closeOnConfirm: false,
+      onFormLoaded: (form: HTMLFormElement, formData: FormData, dataAttributes: DOMStringMap | null): void => {
+        if (dataAttributes && dataAttributes.alertsSuccess === '1') {
+          this.eventEmitter.emit(ProductEventMap.specificPrice.listUpdated);
+        }
+      },
+      formConfirmCallback: (form: HTMLFormElement): void => {
+        form.submit();
       },
     });
+    iframeModal.show();
   }
 }

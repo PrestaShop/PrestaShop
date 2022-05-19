@@ -51,7 +51,9 @@ class DisablingSwitchExtension extends AbstractTypeExtension
     public const FIELD_PREFIX = 'disabling_switch_';
 
     public const SWITCH_OPTION = 'disabling_switch';
+    public const SWITCH_EVENT_OPTION = 'disabling_switch_event';
     public const DISABLED_VALUE_OPTION = 'disabled_value';
+    public const SWITCH_STATE_ON_DISABLE_OPTION = 'switch_state_on_disable';
 
     /**
      * @var EventSubscriberInterface
@@ -82,7 +84,7 @@ class DisablingSwitchExtension extends AbstractTypeExtension
     {
         // This particular field has the expected option enabled, so we assign the add listener to dynamically add the
         // associated DisablingSwitchType to the parent
-        $hasToggleOption = $builder->getOption(self::SWITCH_OPTION);
+        $hasToggleOption = $builder->getOption(static::SWITCH_OPTION);
         if ($hasToggleOption) {
             $builder->addEventSubscriber($this->addDisablingSwitchListener);
         }
@@ -95,7 +97,7 @@ class DisablingSwitchExtension extends AbstractTypeExtension
      */
     public function buildView(FormView $view, FormInterface $form, array $options): void
     {
-        $view->vars[self::SWITCH_OPTION] = $options[self::SWITCH_OPTION];
+        $view->vars[static::SWITCH_OPTION] = $options[static::SWITCH_OPTION];
     }
 
     /**
@@ -105,7 +107,7 @@ class DisablingSwitchExtension extends AbstractTypeExtension
     {
         $resolver
             ->setDefaults([
-                self::SWITCH_OPTION => false,
+                static::SWITCH_OPTION => false,
                 // We use this value to know if the field state is disabled or not on first rendering, if the value is null
                 // we have other fallback options, the priority is:
                 //   - disabled_value
@@ -124,10 +126,17 @@ class DisablingSwitchExtension extends AbstractTypeExtension
                 // ex: 'disabled_value' => function (?array $data, FormInterface $form): bool {
                 //          return empty($data['reduction_type']) || empty($data['reduction_value']);
                 //      },
-                self::DISABLED_VALUE_OPTION => null,
+                static::DISABLED_VALUE_OPTION => null,
+                // You can define an JS event triggered on witch changes
+                static::SWITCH_EVENT_OPTION => null,
+                // Define the state of the switch component when value is disabled (by default on off)
+                static::SWITCH_STATE_ON_DISABLE_OPTION => 'off',
             ])
-            ->setAllowedTypes(self::SWITCH_OPTION, 'bool')
-            ->setAllowedTypes(self::DISABLED_VALUE_OPTION, ['null', 'string', 'int', 'array', 'object', 'bool', 'float', 'callback', Closure::class])
+            ->setAllowedTypes(static::SWITCH_OPTION, 'bool')
+            ->setAllowedTypes(static::DISABLED_VALUE_OPTION, ['null', 'string', 'int', 'array', 'object', 'bool', 'float', 'callback', Closure::class])
+            ->setAllowedTypes(static::SWITCH_EVENT_OPTION, ['string', 'null'])
+            ->setAllowedTypes(static::SWITCH_STATE_ON_DISABLE_OPTION, 'string')
+            ->setAllowedValues(static::SWITCH_STATE_ON_DISABLE_OPTION, ['off', 'on'])
         ;
     }
 }

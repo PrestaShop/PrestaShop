@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -23,26 +24,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-//@todo: Im not sure this is the best place for types, but I don't like them being in generic js/types dir.
-//    whole js structure needs cleaning (for product) it should be more oriented to feature driven structure rather than type driven
-//    e.g. everything related to specificPrices should go to product/specific-price (including components, services(data providers), managers etc.),
-//    code related to categories goes to product/category etc.
+namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler;
 
-type SpecificPriceForListing = {
-  id: number,
-  combination: string,
-  currency: string,
-  country: string,
-  group: string,
-  shop: string,
-  customer: string,
-  price: string,
-  impact: string,
-  period: Period|null,
-  fromQuantity: string,
-}
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\DeleteSpecificPriceCommand;
 
-type Period = {
-  from: string,
-  to: string
+/**
+ * Interface for handling DeleteSpecificPriceCommand command
+ */
+interface DeleteSpecificPriceHandlerInterface
+{
+    /**
+     * @param DeleteSpecificPriceCommand $command
+     *
+     * @return void
+     */
+    public function handle(DeleteSpecificPriceCommand $command): void;
 }

@@ -34,7 +34,7 @@ use Symfony\Component\Form\Extension\Core\Type\PercentType;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 
-class ReductionListener implements EventSubscriberInterface
+class PriceReductionListener implements EventSubscriberInterface
 {
     /**
      * {@inheritDoc}
@@ -53,16 +53,25 @@ class ReductionListener implements EventSubscriberInterface
     public function adaptReductionField(FormEvent $event): void
     {
         $data = $event->getData();
+        if (!isset($data['type'])) {
+            return;
+        }
 
-        if (isset($data['type']) && $data['type'] === Reduction::TYPE_PERCENTAGE) {
+        if ($data['type'] === Reduction::TYPE_PERCENTAGE) {
             $form = $event->getForm();
             $valueField = $form->get('value');
             $options = $valueField->getConfig()->getOptions();
-
+            // Change MoneyType into a PercentType
             $form->add('value', PercentType::class, [
+                'type' => 'integer',
                 'scale' => $options['scale'],
                 'attr' => [
+                    // We still need the data attribute available to handle switching in JS
                     'data-currency' => $options['attr']['data-currency'],
+                ],
+                'row_attr' => [
+                    // Do not forget the row class which is important for JS
+                    'class' => 'price-reduction-value',
                 ],
             ]);
         }

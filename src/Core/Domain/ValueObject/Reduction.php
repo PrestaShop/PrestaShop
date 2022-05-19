@@ -69,7 +69,7 @@ class Reduction
 
     /**
      * @param string $type
-     * @param string $value
+     * @param string $value For percentage, we use value between 0 and 100
      *
      * @throws DomainConstraintException
      */

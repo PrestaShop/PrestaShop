@@ -24,38 +24,34 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\CommandHandler;
+
+use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\DeleteSpecificPriceCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler\DeleteSpecificPriceHandlerInterface;
 
 /**
- * Provides choices for price reduction types
+ * Handles DeleteSpecificPriceCommand using legacy object model
  */
-final class PriceReductionTypeChoiceProvider implements FormChoiceProviderInterface
+class DeleteSpecificPriceHandler implements DeleteSpecificPriceHandlerInterface
 {
     /**
-     * @var TranslatorInterface
+     * @var SpecificPriceRepository
      */
-    private $translator;
+    private $specificPriceRepository;
 
     /**
-     * @param TranslatorInterface $translator
+     * @param SpecificPriceRepository $specificPriceRepository
      */
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(SpecificPriceRepository $specificPriceRepository)
     {
-        $this->translator = $translator;
+        $this->specificPriceRepository = $specificPriceRepository;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getChoices()
+    public function handle(DeleteSpecificPriceCommand $command): void
     {
-        return [
-            $this->translator->trans('Amount', [], 'Admin.Global') => Reduction::TYPE_AMOUNT,
-            $this->translator->trans('Percentage', [], 'Admin.Global') => Reduction::TYPE_PERCENTAGE,
-        ];
+        $this->specificPriceRepository->delete($command->getSpecificPriceId());
     }
 }

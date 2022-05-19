@@ -23,15 +23,22 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import EntitySearchInput from '@components/entity-search-input';
-import PriceInputToggle from '@pages/specific-price/form/price-input-toggle';
 import CurrencySymbolUpdater from '@components/form/currency-symbol-updater';
 import SpecificPriceMap from '@pages/specific-price/specific-price-map';
+import SpecificPriceEventMap from '@pages/specific-price/specific-price-event-map';
 import ReductionTaxFieldToggle from '@components/form/reduction-tax-field-toggle';
 
 const {$} = window;
 
 $(() => {
-  new PriceInputToggle();
+  window.prestashop.component.initComponents([
+    'EventEmitter',
+    'DisablingSwitch',
+    'DateRange',
+  ]);
+
+  const {eventEmitter} = window.prestashop.instance;
+
   new CurrencySymbolUpdater(
     SpecificPriceMap.currencyId,
     ((symbol: string): void => {
@@ -40,7 +47,7 @@ $(() => {
       }
 
       // Specific Price
-      const priceSymbols = document.querySelectorAll(SpecificPriceMap.priceSymbol);
+      const priceSymbols = document.querySelectorAll(SpecificPriceMap.fixedPriceSymbol);
 
       if (priceSymbols.length) {
         priceSymbols.forEach((value: Element) => {
@@ -52,14 +59,29 @@ $(() => {
       // Reduction Amount
       const reductionTypeSelect = document.querySelector<HTMLSelectElement>(SpecificPriceMap.reductionTypeSelect);
 
-      if (reductionTypeSelect?.options[reductionTypeSelect.selectedIndex].value === 'amount') {
-        const reductionTypeAmountSymbols = document.querySelectorAll(SpecificPriceMap.reductionTypeAmountSymbol);
+      if (reductionTypeSelect) {
+        // Update the amount option innerHTML
+        for (let i = 0; i < reductionTypeSelect.options.length; i += 1) {
+          const reductionOption = reductionTypeSelect.options[i];
 
-        if (reductionTypeAmountSymbols.length) {
-          reductionTypeAmountSymbols.forEach((value: Element) => {
-            const elt = value;
-            elt.innerHTML = symbol;
-          });
+          if (reductionOption.value === 'amount') {
+            reductionOption.innerHTML = symbol;
+          }
+        }
+
+
+        const selectedReduction = reductionTypeSelect.options[reductionTypeSelect.selectedIndex].value;
+
+        // If amount reduction type is selected update the reduction value symbol
+        if (selectedReduction === 'amount') {
+          const reductionTypeAmountSymbols = document.querySelectorAll(SpecificPriceMap.reductionTypeAmountSymbol);
+
+          if (reductionTypeAmountSymbols.length) {
+            reductionTypeAmountSymbols.forEach((value: Element) => {
+              const elt = value;
+              elt.innerHTML = symbol;
+            });
+          }
         }
       }
     }),
@@ -70,6 +92,7 @@ $(() => {
     SpecificPriceMap.currencyId,
     SpecificPriceMap.reductionTypeAmountSymbol,
   );
+
   new EntitySearchInput($(SpecificPriceMap.customerSearchContainer), {
     responseTransformer: (response: any) => {
       if (!response || response.customers.length === 0) {
@@ -78,5 +101,10 @@ $(() => {
 
       return Object.values(response.customers);
     },
+  });
+
+  // When customer search is disabled we also disable the selected item (if present)
+  eventEmitter.on(SpecificPriceEventMap.switchCustomer, (event: any) => {
+    $(SpecificPriceMap.customerItem).toggleClass('disabled', event.disable);
   });
 });

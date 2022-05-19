@@ -42,8 +42,8 @@ use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 
 /**
  * @deprecated since 8.0.0 and will be removed in the next major version.
- * @see UpdateProductPriceInCartCommand or
- * @see AddProductSpecificPriceCommand
+ * @see UpdateProductPriceInCartCommand to change a product price in a cart
+ * or @see AddSpecificPriceCommand if you wish to set special price rules on a product
  */
 class AddSpecificPriceCommand
 {

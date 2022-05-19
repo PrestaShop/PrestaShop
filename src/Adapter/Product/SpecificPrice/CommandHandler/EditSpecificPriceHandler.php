@@ -27,16 +27,18 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\CommandHandler;
 
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Repository\SpecificPriceRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\EditProductSpecificPriceCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler\EditProductSpecificPriceHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\EditSpecificPriceCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler\EditSpecificPriceHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use SpecificPrice;
 
 /**
- * Handles @see EditProductSpecificPriceCommand using legacy object model
+ * Handles @see EditSpecificPriceCommand using legacy object model
  */
-class EditProductSpecificPriceHandler implements EditProductSpecificPriceHandlerInterface
+class EditSpecificPriceHandler implements EditSpecificPriceHandlerInterface
 {
     /**
      * @var SpecificPriceRepository
@@ -55,7 +57,7 @@ class EditProductSpecificPriceHandler implements EditProductSpecificPriceHandler
     /**
      * {@inheritDoc}
      */
-    public function handle(EditProductSpecificPriceCommand $command): void
+    public function handle(EditSpecificPriceCommand $command): void
     {
         $specificPrice = $this->specificPriceRepository->get($command->getSpecificPriceId());
 
@@ -66,18 +68,23 @@ class EditProductSpecificPriceHandler implements EditProductSpecificPriceHandler
     }
 
     /**
-     * @param EditProductSpecificPriceCommand $command
+     * @param EditSpecificPriceCommand $command
      * @param SpecificPrice $specificPrice
      *
      * @return string[]
      */
-    private function fillUpdatableProperties(EditProductSpecificPriceCommand $command, SpecificPrice $specificPrice): array
+    protected function fillUpdatableProperties(EditSpecificPriceCommand $command, SpecificPrice $specificPrice): array
     {
         $updatableProperties = [];
 
         if (null !== $command->getReduction()) {
             $specificPrice->reduction_type = $command->getReduction()->getType();
-            $specificPrice->reduction = (string) $command->getReduction()->getValue();
+            $reductionValue = $command->getReduction()->getValue();
+            // VO stores percent expressed based on 100, while the DB stored the float value (VO: 57.5 - DB: 0.575)
+            if ($command->getReduction()->getType() === Reduction::TYPE_PERCENTAGE) {
+                $reductionValue = $reductionValue->dividedBy(new DecimalNumber('100'));
+            }
+            $specificPrice->reduction = (string) $reductionValue;
             $updatableProperties = [
                 'reduction_type',
                 'reduction',

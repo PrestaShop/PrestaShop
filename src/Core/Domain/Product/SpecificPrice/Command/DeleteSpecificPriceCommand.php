@@ -23,34 +23,38 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command;
 
-use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Update\SpecificPricePriorityUpdater;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\RemoveSpecificPricePriorityForProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\SpecificPriceId;
 
-class RemoveSpecificPricePriorityForProductHandler implements RemoveSpecificPricePriorityForProductHandlerInterface
+/**
+ * Delete specific price to a Product
+ */
+class DeleteSpecificPriceCommand
 {
     /**
-     * @var SpecificPricePriorityUpdater
+     * @var SpecificPriceId
      */
-    private $specificPricePriorityUpdater;
+    protected $specificPriceId;
 
     /**
-     * @param SpecificPricePriorityUpdater $specificPricePriorityUpdater
+     * DeleteSpecificPriceCommand constructor.
+     *
+     * @param int $specificPriceId
      */
-    public function __construct(
-        SpecificPricePriorityUpdater $specificPricePriorityUpdater
-    ) {
-        $this->specificPricePriorityUpdater = $specificPricePriorityUpdater;
+    public function __construct(int $specificPriceId)
+    {
+        $this->specificPriceId = new SpecificPriceId($specificPriceId);
     }
 
     /**
-     * @param RemoveSpecificPricePriorityForProductCommand $command
+     * @return SpecificPriceId
      */
-    public function handle(RemoveSpecificPricePriorityForProductCommand $command): void
+    public function getSpecificPriceId(): SpecificPriceId
     {
-        $this->specificPricePriorityUpdater->removePrioritiesForProduct($command->getProductId());
+        return $this->specificPriceId;
     }
 }

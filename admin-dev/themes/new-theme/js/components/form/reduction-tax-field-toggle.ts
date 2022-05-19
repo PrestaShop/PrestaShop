@@ -82,11 +82,12 @@ export default class ReductionTaxFieldToggle {
       return defaultValue;
     }
 
+    const defaultCurrencySymbol: string = select.dataset.defaultCurrencySymbol ?? '';
     const selectItem = select.item(select.selectedIndex);
 
     if (!selectItem) {
-      return defaultValue;
+      return defaultCurrencySymbol;
     }
-    return selectItem.getAttribute('symbol') ?? defaultValue;
+    return selectItem.getAttribute('symbol') ?? defaultCurrencySymbol;
   }
 }
