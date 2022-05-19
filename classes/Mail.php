@@ -844,9 +844,7 @@ class MailCore extends ObjectModel
         return str_replace(
             '"',
             '&quot;',
-            Tools::stripslashes(
-                (array_key_exists($key, $_LANGMAIL) && !empty($_LANGMAIL[$key])) ? $_LANGMAIL[$key] : $string
-            )
+            (array_key_exists($key, $_LANGMAIL) && !empty($_LANGMAIL[$key])) ? $_LANGMAIL[$key] : $string
         );
     }
 
