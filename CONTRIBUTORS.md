@@ -163,6 +163,7 @@ GitHub contributors:
 - Daniel
 - Daniel Böttner
 - Daniel Hlavacek
+- Daniel Martin
 - Daniel Ziegenberg
 - Daniele Giachino
 - Daniele Rosario
@@ -530,6 +531,7 @@ GitHub contributors:
 - Mickaël Andrieu
 - Mickael Desgranges
 - Mickaël Fernandez
+- Miguel Paolino
 - Mikael Blotin
 - Mikko Hellsing
 - Milow
