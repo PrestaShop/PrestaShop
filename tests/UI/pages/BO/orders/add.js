@@ -139,7 +139,6 @@ class AddOrder extends BOBasePage {
     this.sendOrderMailButton = '#js-send-process-order-email-btn';
     this.proceedOrderLink = '#js-process-order-link';
     this.summarySuccessMessageBlock = '#js-summary-success-block';
-
     this.totalTaxIncluded = '#summary-block span.js-total-with-tax';
   }
 

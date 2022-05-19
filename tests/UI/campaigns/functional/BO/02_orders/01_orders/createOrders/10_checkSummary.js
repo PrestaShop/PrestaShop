@@ -49,15 +49,19 @@ const cartRuleWithCodeData = new CartRuleFaker(
 );
 
 const paymentMethod = 'Payments by check';
+const orderMessage = 'Test order message';
 
 /*
 Pre-condition:
-
+- Create cart rule
 Scenario:
-- Go to create order page and choose customer
-
+- Go to create order page, choose customer and add product to cart
+- Check summary information
+- Add voucher/ Delete voucher then check summary information
+- Check 'Create order button'
+- Check 'More actions button'
 Post-condition:
-
+- Delete created cart rule
  */
 describe('BO - Orders - Create order : Check summary', async () => {
   // Pre-condition: Create cart rule with code
@@ -247,7 +251,7 @@ describe('BO - Orders - Create order : Check summary', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'setMoreActions', baseContext);
 
         const textMessage = await addOrderPage.setMoreActions(page, 'Send pre-filled order to the customer by email');
-        await expect(textMessage).to.be.equal(addOrderPage.emailSendSuccessMessage);
+        await expect(textMessage, 'Invalid success message!').to.be.equal(addOrderPage.emailSendSuccessMessage);
       });
 
       it('should choose \'Proceed to checkout in the front office\' from more actions', async function () {
@@ -265,7 +269,7 @@ describe('BO - Orders - Create order : Check summary', async () => {
         page = await checkoutPage.closePage(browserContext, page, 0);
 
         const pageTitle = await addOrderPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addOrderPage.pageTitle);
+        await expect(pageTitle, 'Fo page not closed!').to.contains(addOrderPage.pageTitle);
       });
     });
 
@@ -273,7 +277,7 @@ describe('BO - Orders - Create order : Check summary', async () => {
       it('should set order message, click on create order and check that the order is not created', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'clickOnCreateOrder', baseContext);
 
-        await addOrderPage.setOrderMessage(page, 'Test order message');
+        await addOrderPage.setOrderMessage(page, orderMessage);
 
         const isOrderCreated = await addOrderPage.clickOnCreateOrderButton(page, false);
         await expect(isOrderCreated, 'The order is created!').to.be.false;
@@ -304,14 +308,14 @@ describe('BO - Orders - Create order : Check summary', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'checkOrder message', baseContext);
 
         const pageTitle = await orderPageMessagesBlock.getPageTitle(page);
-        await expect(pageTitle).to.contain(orderPageMessagesBlock.pageTitle);
+        await expect(pageTitle, 'View order page is not displayed!').to.contain(orderPageMessagesBlock.pageTitle);
       });
 
       it('should check that the order message is displayed on view order page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkOrderMessage', baseContext);
 
         const textMessage = await orderPageMessagesBlock.getTextMessage(page, 1, 'customer');
-        await expect(textMessage).to.contains('Test order message');
+        await expect(textMessage, 'Message is not correct!').to.contains(orderMessage);
       });
     });
   });
