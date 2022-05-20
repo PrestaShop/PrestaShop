@@ -37,10 +37,14 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
  */
 class CountryQueryBuilder extends AbstractDoctrineQueryBuilder
 {
-    /** @var DoctrineSearchCriteriaApplicatorInterface */
+    /**
+     * @var DoctrineSearchCriteriaApplicatorInterface
+     */
     protected $searchCriteriaApplicator;
 
-    /** @var int[] */
+    /**
+     * @var int[]
+     */
     protected $contextShopIds;
 
     /**
