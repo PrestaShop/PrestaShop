@@ -83,11 +83,6 @@ class CountryType extends AbstractType
                 'label' => $this->translator->trans('Country', [], 'Admin.Global'),
                 'options' => [
                     'constraints' => [
-                        new NotBlank([
-                            'message' => $this->translator->trans(
-                                'This field cannot be empty.', [], 'Admin.Notifications.Error'
-                            ),
-                        ]),
                         new Length([
                             'max' => 64,
                             'maxMessage' => $this->translator->trans(
@@ -114,13 +109,13 @@ class CountryType extends AbstractType
                 'required' => true,
                 'label' => $this->translator->trans('Call prefix', [], 'Admin.Global'),
             ])
-            ->add('id_currency', ChoiceType::class, [
+            ->add('default_currency', ChoiceType::class, [
                 'required' => false,
                 'label' => $this->translator->trans('Default currency', [], 'Admin.Global'),
                 'choices' => $this->currencyChoiceProvider->getChoices(),
                 'placeholder' => $this->translator->trans('Default store currency', [], 'Admin.Global'),
             ])
-            ->add('id_zone', ChoiceType::class, [
+            ->add('zone', ChoiceType::class, [
                 'required' => false,
                 'label' => $this->translator->trans('Zone', [], 'Admin.Global'),
                 'choices' => $this->zoneChoiceProvider->getChoices(),
@@ -133,14 +128,18 @@ class CountryType extends AbstractType
                 'required' => true,
                 'label' => $this->translator->trans(' Zip/Postal code format', [], 'Admin.International.Feature'),
                 'help' => $this->translator->trans('Indicate the format of the postal code: use L for a letter, N for a number, and C for the country\'s ISO 3166-1 alpha-2 code. For example, NNNNN for the United States, France, Poland and many other; LNNNNLLL for Argentina, etc. If you do not want PrestaShop to verify the postal code for this country, leave it blank.', [], 'Admin.International.Help'),
+                'constraints' => [
+                    new TypedRegex([
+                        'type' => TypedRegex::TYPE_ZIP_CODE_FORMAT,
+                    ]),
+                ]
             ])
-//            ->add('address_format', TextareaType::class, [
-//                'required' => true,
-//                'constraints' => [
-//                    new AddressFormat(),
-//                ],
-//            ])
-            ->add('active', SwitchType::class, [
+            //todo : create address layout form
+            ->add('address_format', TextType::class, [
+                'required' => true,
+                'label' => $this->translator->trans('Address layout', [], 'Admin.International.Feature'),
+            ])
+            ->add('is_enabled', SwitchType::class, [
                 'required' => false,
                 'label' => $this->translator->trans('Active', [], 'Admin.Global'),
             ])
@@ -161,14 +160,6 @@ class CountryType extends AbstractType
         if ($this->isMultistoreEnabled) {
             $builder->add('shop_association', ShopChoiceTreeType::class, [
                 'required' => false,
-                'constraints' => [
-                    new NotBlank([
-                        'message' => $this->translator->trans(
-                            'This field cannot be empty.', [], 'Admin.Notifications.Error'
-                        ),
-                    ]),
-                ],
-                'label' => $this->translator->trans('Shop association', [], 'Admin.Global'),
             ]);
         }
     }

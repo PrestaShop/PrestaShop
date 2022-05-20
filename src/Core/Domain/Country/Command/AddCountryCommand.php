@@ -28,84 +28,71 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Country\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryZipCodeFormat;
+
 /**
  * Adds new zone with provided data.
  */
 class AddCountryCommand
 {
-    /** @var string */
-    private $name;
+    /** @var string[] */
+    private $localizedNames;
 
     /** @var string */
     private $isoCode;
 
-    /** @var string */
+    /** @var int */
     private $callPrefix;
 
     /** @var int */
-    private $currencyId;
+    private $defaultCurrency = 0;
 
-    /** @var int */
+    /**@var int|null */
     private $zoneId;
 
     /** @var bool */
-    private $needZipCode;
+    private $needZipCode = false;
 
-    /** @var string */
+    /** @var CountryZipCodeFormat|null */
     private $zipCodeFormat;
 
-    /** @var string[] */
-    private $addressLayout;
+    /** @var string */
+    private $addressFormat;
 
     /** @var bool */
-    private $enabled;
+    private $enabled = false;
 
     /** @var bool */
-    private $containsStates;
+    private $containsStates = false;
 
     /** @var bool */
-    private $needIdentificationNumber;
+    private $needIdNumber = false;
 
     /** @var bool */
-    private $displayTaxLabel;
+    private $displayTaxLabel = false;
 
     /** @var array */
-    private $shopAssociation;
+    private $shopAssociation = [];
 
     public function __construct(
-        string $name,
+        array $localizedNames,
         string $isoCode,
-        string $callPrefix,
-        int $currencyId,
-        int $zoneId,
-        bool $needZipCode,
-        string $zipCodeFormat,
-        array $addressLayout,
-        bool $enabled, bool
-        $containsStates,
-        bool $needIdentificationNumber,
-        bool $displayTaxLabel,
-        array $shopAssociation
-    )
-    {
-        $this->name = $name;
+        int $callPrefix,
+        string $addressFormat
+    ) {
+        $this->localizedNames = $localizedNames;
         $this->isoCode = $isoCode;
         $this->callPrefix = $callPrefix;
-        $this->currencyId = $currencyId;
-        $this->zoneId = $zoneId;
-        $this->needZipCode = $needZipCode;
-        $this->zipCodeFormat = $zipCodeFormat;
-        $this->addressLayout = $addressLayout;
-        $this->enabled = $enabled;
-        $this->containsStates = $containsStates;
-        $this->needIdentificationNumber = $needIdentificationNumber;
-        $this->displayTaxLabel = $displayTaxLabel;
-        $this->shopAssociation = $shopAssociation;
+        $this->addressFormat = $addressFormat;
     }
 
-    public function getName(): string
+    /**
+     * @return string[]
+     */
+    public function getLocalizedNames(): array
     {
-        return $this->name;
+        return $this->localizedNames;
     }
 
     public function getIsoCode(): string
@@ -113,34 +100,69 @@ class AddCountryCommand
         return $this->isoCode;
     }
 
-    public function getCallPrefix(): string
+    public function getCallPrefix(): int
     {
         return $this->callPrefix;
     }
 
-    public function getCurrencyId(): int
-    {
-        return $this->currencyId;
-    }
-
-    public function getZoneId(): int
-    {
-        return $this->zoneId;
-    }
-
-    public function isNeedZipCode(): bool
-    {
-        return $this->needZipCode;
-    }
-
-    public function getZipCodeFormat(): string
+    public function getZipCodeFormat(): ?CountryZipCodeFormat
     {
         return $this->zipCodeFormat;
     }
 
-    public function getAddressLayout(): array
+    /**
+     * @param string $zipCodeFormat
+     *
+     * @return AddCountryCommand
+     *
+     * @throws CountryConstraintException
+     */
+    public function setZipCodeFormat(string $zipCodeFormat): AddCountryCommand
     {
-        return $this->addressLayout;
+        $this->zipCodeFormat = new CountryZipCodeFormat($zipCodeFormat);
+
+        return $this;
+    }
+
+    public function getAddressFormat(): string
+    {
+        return $this->addressFormat;
+    }
+
+    public function getDefaultCurrency(): int
+    {
+        return $this->defaultCurrency;
+    }
+
+    public function setDefaultCurrency(int $defaultCurrency): self
+    {
+        $this->defaultCurrency = $defaultCurrency;
+
+        return $this;
+    }
+
+    public function getZoneId(): ?int
+    {
+        return $this->zoneId;
+    }
+
+    public function setZoneId(int $zoneId): self
+    {
+        $this->zoneId = $zoneId;
+
+        return $this;
+    }
+
+    public function needZipCode(): bool
+    {
+        return $this->needZipCode;
+    }
+
+    public function setNeedZipCode(bool $needZipCode): self
+    {
+        $this->needZipCode = $needZipCode;
+
+        return $this;
     }
 
     public function isEnabled(): bool
@@ -148,23 +170,58 @@ class AddCountryCommand
         return $this->enabled;
     }
 
-    public function isContainsStates(): bool
+    public function setEnabled(bool $enabled): self
+    {
+        $this->enabled = $enabled;
+
+        return $this;
+    }
+
+    public function containsStates(): bool
     {
         return $this->containsStates;
     }
 
-    public function isNeedIdentificationNumber(): bool
+    public function setContainsStates(bool $containsStates): self
     {
-        return $this->needIdentificationNumber;
+        $this->containsStates = $containsStates;
+
+        return $this;
     }
 
-    public function isDisplayTaxLabel(): bool
+    public function needIdNumber(): bool
+    {
+        return $this->needIdNumber;
+    }
+
+    public function setNeedIdNumber(bool $needIdNumber): self
+    {
+        $this->needIdNumber = $needIdNumber;
+
+        return $this;
+    }
+
+    public function displayTaxLabel(): bool
     {
         return $this->displayTaxLabel;
+    }
+
+    public function setDisplayTaxLabel(bool $displayTaxLabel): self
+    {
+        $this->displayTaxLabel = $displayTaxLabel;
+
+        return $this;
     }
 
     public function getShopAssociation(): array
     {
         return $this->shopAssociation;
+    }
+
+    public function setShopAssociation(array $shopAssociation): self
+    {
+        $this->shopAssociation = $shopAssociation;
+
+        return $this;
     }
 }

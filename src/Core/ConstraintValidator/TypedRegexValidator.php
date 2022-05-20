@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Address\Configuration\AddressConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryZipCodeFormat;
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\AlphaIsoCode;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\IsoCode;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Ean13;
@@ -145,6 +146,8 @@ class TypedRegexValidator extends ConstraintValidator
                 return '/^[a-zA-Z0-9_-]+$/';
             case TypedRegex::TYPE_URL:
                 return '/^[~:#,$%&_=\(\)\.\? \+\-@\/a-zA-Z0-9\pL\pS-]+$/u';
+            case TypedRegex::TYPE_ZIP_CODE_FORMAT:
+                return CountryZipCodeFormat::ZIP_CODE_PATTERN;
             case TypedRegex::TYPE_WEBSERVICE_KEY:
                 return '/^[a-zA-Z0-9@\#\?\-\_]+$/i';
             case TypedRegex::TYPE_LINK_REWRITE:

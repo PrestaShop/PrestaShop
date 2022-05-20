@@ -80,7 +80,7 @@ final class CountryFormDataProvider implements FormDataProviderInterface
         $data = [
             'id' => $id,
             'name' => $result->getName(),
-            'enabled' => $result->isEnabled(),
+            'is_enabled' => $result->isEnabled(),
         ];
 
         if ($this->multistoreEnabled) {
@@ -97,7 +97,7 @@ final class CountryFormDataProvider implements FormDataProviderInterface
     {
         $data = [
             'need_zip_code' => false,
-            'enabled' => true,
+            'active' => true,
             'contains_states' => false,
             'need_identification_number' => false,
             'display_tax_label' => true,
