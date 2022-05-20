@@ -85,7 +85,10 @@ class BulkCombinationStockType extends TranslatorAwareType
                 ])
                 ->add('fixed_quantity', IntegerType::class, [
                     'required' => false,
+                    'label' => $this->trans('Edit fixed quantity', 'Admin.Catalog.Feature'),
+                    'default_empty_data' => 0,
                     'disabling_switch' => true,
+                    'modify_all_shops' => true,
                 ])
             ;
         }
