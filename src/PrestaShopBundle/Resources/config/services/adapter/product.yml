@@ -126,6 +126,7 @@ services:
     arguments:
       - '@prestashop.adapter.product.repository.product_multi_shop_repository'
       - '@=service("prestashop.adapter.legacy.configuration").get("PS_LANG_DEFAULT")'
+      - '@prestashop.adapter.tools'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand
@@ -257,6 +258,7 @@ services:
     arguments:
       - '@prestashop.adapter.product.repository.product_multi_shop_repository'
       - '@prestashop.adapter.product.update.product_seo_properties_filler'
+      - '@prestashop.adapter.tools'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand
