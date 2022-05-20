@@ -118,7 +118,12 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
         // Check prices drop link
         await homePage.goToFooterLink(page, args.linkSelector);
 
-        const pageTitle = await homePage.getPageTitle(page);
+        let pageTitle;
+        if (args.linkSelector === 'Create account') {
+          pageTitle = await createAccountPage.getHeaderTitle(page);
+        } else {
+          pageTitle = await homePage.getPageTitle(page);
+        }
         await expect(pageTitle).to.equal(args.pageTitle);
       });
     });
