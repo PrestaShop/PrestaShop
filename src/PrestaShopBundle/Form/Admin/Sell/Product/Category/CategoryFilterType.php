@@ -104,7 +104,7 @@ class CategoryFilterType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getParent(): string
+    public function getParent()
     {
         return ChoiceType::class;
     }
