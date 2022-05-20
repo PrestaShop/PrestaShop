@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
 
-use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockProperties;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository;
@@ -82,7 +81,7 @@ final class UpdateCombinationStockHandler implements UpdateCombinationStockHandl
                 $command->getDeltaQuantity(),
                 $this->movementReasonRepository->getIdForEmployeeEdition($command->getDeltaQuantity() > 0)
             );
-        } else if (null !== $command->getFixedQuantity()) {
+        } elseif (null !== $command->getFixedQuantity()) {
             $currentQuantity = (int) $this->stockAvailableRepository->getForCombination($command->getCombinationId())->quantity;
             $deltaQuantity = $command->getFixedQuantity() - $currentQuantity;
 

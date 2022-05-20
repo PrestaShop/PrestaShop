@@ -18,9 +18,7 @@ Feature: Update product combination stock information in Back Office (BO)
     And attribute "Black" named "Black" in en language exists
     And attribute "Blue" named "Blue" in en language exists
     And attribute "Red" named "Red" in en language exists
-
-  Scenario: I update combination options:
-    Given I add product "product1" with following information:
+    And I add product "product1" with following information:
       | name[en-US] | universal T-shirt |
       | type        | combinations      |
     And product product1 type should be combinations
@@ -54,6 +52,8 @@ Feature: Update product combination stock information in Back Office (BO)
       | low stock alert is enabled | false |
       | location                   |       |
       | available date             |       |
+
+  Scenario: I update combination options:
     When I update combination "product1SBlack" stock with following details:
       | delta quantity             | 100         |
       | minimal quantity           | 10          |
@@ -99,7 +99,7 @@ Feature: Update product combination stock information in Back Office (BO)
       | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
     # Product quantity is the sum of all combinations' quantity
     And product "product1" should have following stock information:
-      | quantity            | 150       |
+      | quantity | 150 |
     When I update combination "product1SBlack" stock with following details:
       | delta quantity      | -101        |
       | minimal quantity    | 1           |
@@ -119,7 +119,7 @@ Feature: Update product combination stock information in Back Office (BO)
       | Puff       | Daddy     | 100            |
     And combination "product1SBlack" last stock movement decreased by 101
     And product "product1" should have following stock information:
-      | quantity            | 49       |
+      | quantity | 49 |
     When I update combination "product1SBlack" stock with following details:
       | delta quantity             | 1          |
       | minimal quantity           | 0          |
@@ -150,7 +150,7 @@ Feature: Update product combination stock information in Back Office (BO)
       | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
       | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
     And product "product1" should have following stock information:
-      | quantity            | 50       |
+      | quantity | 50 |
     # Following assert makes sure that 0 delta quantity is valid input for command but is skipped and stock does not move
     When I update combination "product1SBlack" stock with following details:
       | delta quantity | 0 |
@@ -169,4 +169,56 @@ Feature: Update product combination stock information in Back Office (BO)
       | Puff       | Daddy     | 100            |
     And combination "product1SBlack" last stock movement increased by 1
     And product "product1" should have following stock information:
-      | quantity            | 50       |
+      | quantity | 50 |
+
+  Scenario: I update combination stock using fixed quantity
+    Given combination "product1SBlack" should have following stock details:
+      | combination stock detail   | value |
+      | quantity                   | 0     |
+      | minimal quantity           | 1     |
+      | low stock threshold        | 0     |
+      | low stock alert is enabled | false |
+      | location                   |       |
+      | available date             |       |
+    When I update combination "product1SBlack" stock with following details:
+      | fixed quantity | 10 |
+    Then combination "product1SBlack" should have following stock details:
+      | combination stock detail   | value |
+      | quantity                   | 10    |
+      | minimal quantity           | 1     |
+      | low stock threshold        | 0     |
+      | low stock alert is enabled | false |
+      | location                   |       |
+      | available date             |       |
+    When I update combination "product1SBlack" stock with following details:
+      | fixed quantity | -3 |
+    Then combination "product1SBlack" should have following stock details:
+      | combination stock detail   | value |
+      | quantity                   | -3    |
+      | minimal quantity           | 1     |
+      | low stock threshold        | 0     |
+      | low stock alert is enabled | false |
+      | location                   |       |
+      | available date             |       |
+
+  Scenario: I should not be able to provide both delta and fixed quantities when updating combination stock information
+    Given combination "product1SBlack" should have following stock details:
+      | combination stock detail   | value |
+      | quantity                   | 0     |
+      | minimal quantity           | 1     |
+      | low stock threshold        | 0     |
+      | low stock alert is enabled | false |
+      | location                   |       |
+      | available date             |       |
+    When I update combination "product1SBlack" stock with following details:
+      | fixed quantity | -7 |
+      | delta quantity | -5 |
+    Then I should get error that it is not allowed to perform update using both - delta and fixed quantity
+    And combination "product1SBlack" should have following stock details:
+      | combination stock detail   | value |
+      | quantity                   | 0     |
+      | minimal quantity           | 1     |
+      | low stock threshold        | 0     |
+      | low stock alert is enabled | false |
+      | location                   |       |
+      | available date             |       |
