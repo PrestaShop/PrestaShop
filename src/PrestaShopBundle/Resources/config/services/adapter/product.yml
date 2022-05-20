@@ -117,6 +117,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Product\CommandHandler\AddProductHandler
     arguments:
       - '@prestashop.adapter.product.repository.product_multi_shop_repository'
+      - '@prestashop.adapter.tools'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Command\AddProductCommand

@@ -33,6 +33,7 @@ use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\Manufacturer\Repository\ManufacturerRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator;
 use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
+use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierReferenceId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
@@ -103,6 +104,7 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
      * @param int $defaultCategoryId
      * @param TaxRulesGroupRepository $taxRulesGroupRepository
      * @param ManufacturerRepository $manufacturerRepository
+     * @param Tools $tools
      */
     public function __construct(
         Connection $connection,
@@ -184,22 +186,29 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
 
     /**
      * @param array<int, string> $localizedNames
+     * @param array<int, string> $localizedLinkRewrites
      * @param string $productType
+     * @param ShopId $shopId
      *
      * @return Product
      *
-     * @throws CannotAddProductException
+     * @throws CoreException
      */
-    public function create(array $localizedNames, string $productType, ShopId $shopId): Product
-    {
+    public function create(
+        array $localizedNames,
+        array $localizedLinkRewrites,
+        string $productType,
+        ShopId $shopId
+    ): Product {
         $product = new Product(null, false, null, $shopId->getValue());
         $product->active = false;
         $product->id_category_default = $this->defaultCategoryId;
-        $product->name = $localizedNames;
         $product->is_virtual = ProductType::TYPE_VIRTUAL === $productType;
         $product->cache_is_pack = ProductType::TYPE_PACK === $productType;
         $product->product_type = $productType;
         $product->id_shop_default = $shopId->getValue();
+        $product->name = $localizedNames;
+        $product->link_rewrite = $localizedLinkRewrites;
 
         $this->productValidator->validateCreation($product);
         $this->addObjectModelToShop($product, $shopId->getValue(), CannotAddProductException::class);

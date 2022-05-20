@@ -119,7 +119,7 @@ class UpdateProductBasicInformationHandler implements UpdateProductBasicInformat
         }
 
         foreach ($product->link_rewrite as $langId => $linkRewrite) {
-            if (!empty($linkRewrite)) {
+            if (!empty($linkRewrite) || empty($product->name[$langId])) {
                 continue;
             }
 
