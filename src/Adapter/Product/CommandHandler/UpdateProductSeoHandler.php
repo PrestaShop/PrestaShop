@@ -131,10 +131,15 @@ class UpdateProductSeoHandler implements UpdateProductSeoHandlerInterface
                 continue;
             }
 
-            $product->link_rewrite[$langId] = $this->tools->linkRewrite($product->name[$langId]);
-            if (!isset($updatableProperties['link_rewrite']) || !in_array($langId, $updatableProperties['link_rewrite'])) {
-                $updatableProperties['link_rewrite'][] = $langId;
+            if (!empty($localizedLinkRewrites[$langId])) {
+                $product->link_rewrite[$langId] = $localizedLinkRewrites[$langId];
+            } elseif (!empty($product->name[$langId])) {
+                $product->link_rewrite[$langId] = $this->tools->linkRewrite($product->name[$langId]);
+            } else {
+                continue;
             }
+
+            $updatableProperties['link_rewrite'][] = $langId;
         }
 
         return $updatableProperties;
