@@ -157,7 +157,7 @@ describe('BO - Advanced Parameters - Import : Import categories', async () => {
     });
 
     it('should check number of categories in BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'resetSecond', baseContext);
 
       const numberOfCategoriesAfterImport = await categoriesPage.resetAndGetNumberOfLines(page);
       await expect(numberOfCategoriesAfterImport).to.be.above(numberOfCategories);

@@ -262,14 +262,14 @@ describe('BO - Orders - View and edit order : Change order status', async () => 
     });
 
     it(`should check that the actual status is '${Statuses.shipped.status}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkActualStatus2', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkActualStatus3', baseContext);
 
       const actualStatus = await orderPageTabListBlock.getOrderStatus(page);
       expect(actualStatus).to.be.equal(Statuses.shipped.status);
     });
 
     it('should click on \'View delivery slip\' button and check that the file is downloaded', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'clickOnViewInvoice', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnViewInvoice2', baseContext);
 
       filePath = await orderPageTabListBlock.viewDeliverySlip(page);
 

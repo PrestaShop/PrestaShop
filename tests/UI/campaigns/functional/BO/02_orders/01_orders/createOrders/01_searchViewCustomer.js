@@ -53,10 +53,10 @@ Pre-condition:
  */
 describe('BO - Orders - Create order : Search and view customer details from new order page', async () => {
   // Pre-condition: Create disabled customer
-  createCustomerTest(disabledCustomer, baseContext);
+  createCustomerTest(disabledCustomer, `${baseContext}_preTest_1`);
 
   // Pre-condition: Create new customer
-  createCustomerTest(newCustomer, baseContext);
+  createCustomerTest(newCustomer, `${baseContext}_preTest_2`);
 
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -212,8 +212,8 @@ describe('BO - Orders - Create order : Search and view customer details from new
   });
 
   // Post-condition: Delete disabled customer
-  deleteCustomerTest(disabledCustomer, baseContext);
+  deleteCustomerTest(disabledCustomer, `${baseContext}_postTest_1`);
 
   // Post-condition: Delete created customer
-  deleteCustomerTest(newCustomer, baseContext);
+  deleteCustomerTest(newCustomer, `${baseContext}_postTest_2`);
 });

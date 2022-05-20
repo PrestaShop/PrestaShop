@@ -253,7 +253,7 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
     });
 
     it('should check the total discounts value', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkTotalAfterDiscount', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkTotalDiscountValue', baseContext);
 
       const discountValue = await orderPageProductsBlock.getOrderTotalDiscounts(page);
       await expect(discountValue).to.equal((totalOrder * discountPercentGoodValue.value) / 100 - totalOrder);
@@ -291,7 +291,7 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
     });
 
     it('should add a good discount amount and check validation message', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'addDiscountAmountNegativeValue', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'addCorrectDiscountAmount', baseContext);
 
       const errorMessage = await orderPageProductsBlock.addDiscount(page, discountAmountGoodValue);
       await expect(errorMessage, 'Validation message is not correct!')
@@ -329,7 +329,7 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
     });
 
     it('should check the total discounts value', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkTotalAfterDiscount2', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkTotalDiscountValue2', baseContext);
 
       const discountValue = await orderPageProductsBlock.getOrderTotalDiscounts(page);
       await expect(discountValue).to.equal(discountAmountGoodValue.value * -1);
@@ -507,7 +507,7 @@ describe('BO - Orders - View and edit order : Add discount', async () => {
     });
 
     it('should check the total discounts value', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkTotalAfterDiscount3', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkTotalDiscountValue3', baseContext);
 
       const discountValue = await orderPageProductsBlock.getOrderTotalDiscounts(page);
       await expect(discountValue).to.equal(-8.40);

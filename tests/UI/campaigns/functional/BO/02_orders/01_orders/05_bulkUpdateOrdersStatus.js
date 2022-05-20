@@ -41,11 +41,10 @@ Scenario:
 - Check orders new status
  */
 describe('BO - Orders : Bulk update orders status', async () => {
-  // Pre-condition: Create first order in FO
-  createOrderByCustomerTest(orderByCustomerData, baseContext);
-
-  // Pre-condition: Create second order in FO
-  createOrderByCustomerTest(orderByCustomerData, baseContext);
+  // Pre-condition: Create 2 orders in FO
+  for (let i = 1; i <= 2; i++) {
+    createOrderByCustomerTest(orderByCustomerData, `${baseContext}_${i}`);
+  }
 
   // before and after functions
   before(async function () {
