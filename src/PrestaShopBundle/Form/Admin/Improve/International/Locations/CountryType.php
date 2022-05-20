@@ -100,10 +100,22 @@ class CountryType extends AbstractType
                     new DefaultLanguage(),
                 ],
             ])
-            //todo: make sure only upper case iso_code is saved
             ->add('iso_code', TextType::class, [
                 'required' => true,
                 'label' => $this->translator->trans('ISO code', [], 'Admin.Global'),
+                'constraints' => [
+                    new Length([
+                        'max' => 2,
+                        'maxMessage' => $this->translator->trans(
+                            'This field cannot be longer than %limit% characters.',
+                            ['%limit%' => 2],
+                            'Admin.Notifications.Error'
+                        ),
+                    ]),
+                    new TypedRegex([
+                        'type' => TypedRegex::TYPE_LANGUAGE_ISO_CODE,
+                    ]),
+                ],
             ])
             ->add('call_prefix', TextType::class, [
                 'required' => true,
@@ -154,8 +166,7 @@ class CountryType extends AbstractType
             ->add('display_tax_label', SwitchType::class, [
                 'required' => false,
                 'label' => $this->translator->trans('Display tax label (e.g. "Tax incl.")', [], 'Admin.International.Feature'),
-            ])
-        ;
+            ]);
 
         if ($this->isMultistoreEnabled) {
             $builder->add('shop_association', ShopChoiceTreeType::class, [
