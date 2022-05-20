@@ -36,7 +36,6 @@ class RoundingTypeConfigurationFeatureContext extends AbstractConfigurationFeatu
      */
     public function setRoundingMode($value)
     {
-        $this->previousConfiguration['PS_ROUND_TYPE'] = Configuration::get('PS_ROUND_TYPE');
         switch ($value) {
             case 'each article':
                 $this->setConfiguration('PS_ROUND_TYPE', Order::ROUND_ITEM);
