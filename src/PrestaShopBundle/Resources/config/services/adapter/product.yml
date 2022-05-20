@@ -313,7 +313,7 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductPricePropertiesFiller
     arguments:
       - '@prestashop.core.util.number.number_extractor'
-      - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_USE_ECOTAX')"
+      - '@prestashop.adapter.legacy.configuration'
 
   prestashop.adapter.product.update.product_type_updater:
     class: PrestaShop\PrestaShop\Adapter\Product\Update\ProductTypeUpdater

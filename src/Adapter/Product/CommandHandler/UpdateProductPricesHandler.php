@@ -121,7 +121,8 @@ final class UpdateProductPricesHandler implements UpdateProductPricesHandlerInte
             $command->getPrice(),
             $command->getUnitPrice(),
             $command->getWholesalePrice(),
-            $command->getEcotax()
+            $command->getEcotax(),
+            $command->getShopConstraint()
         );
 
         if (null !== $command->getUnity()) {
