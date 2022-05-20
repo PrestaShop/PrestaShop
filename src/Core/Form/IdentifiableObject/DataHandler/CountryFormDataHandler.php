@@ -30,9 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\AddCountryCommand;
-use PrestaShop\PrestaShop\Core\Domain\Zone\Command\AddZoneCommand;
-use PrestaShop\PrestaShop\Core\Domain\Zone\Command\EditZoneCommand;
-use PrestaShop\PrestaShop\Core\Domain\Zone\Exception\ZoneException;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 
 /**
  * Handles submitted zone form data.
@@ -61,28 +59,53 @@ final class CountryFormDataHandler implements FormDataHandlerInterface
      */
     public function create(array $data): int
     {
-        if (empty($data['shop_association'])) {
-            $data['shop_association'] = [];
-        }
-
-        $addZoneCommand = new AddCountryCommand(
+        $addCountryCommand = new AddCountryCommand(
             $data['name'],
             $data['iso_code'],
-            $data['call_prefix'],
-            $data['currency_id'],
-            $data['zone_id'],
-            $data['need_zip_code'],
-            $data['zip_code_format'],
-            $data['address_layout'],
-            $data['enabled'],
-            $data['contains_state'],
-            $data['need_identification_number'],
-            $data['display_tax_label'],
-            $data['shop_association']
+            (int) $data['call_prefix'],
+            $data['address_format']
         );
-        $zoneId = $this->commandBus->handle($addZoneCommand);
 
-        return $zoneId->getValue();
+        if (null !== $data['zip_code_format']) {
+            $addCountryCommand->setZipCodeFormat($data['zip_code_format']);
+        }
+
+        if (null !== $data['default_currency']) {
+            $addCountryCommand->setDefaultCurrency($data['default_currency']);
+        }
+
+        if (null !== $data['zone'] && !empty($data['zone'])) {
+            $addCountryCommand->setZoneId($data['zone']);
+        }
+
+        if (null !== $data['need_zip_code']) {
+            $addCountryCommand->setNeedZipCode($data['need_zip_code']);
+        }
+
+        if (null !== $data['is_enabled']) {
+            $addCountryCommand->setEnabled($data['is_enabled']);
+        }
+
+        if (null !== $data['contains_states']) {
+            $addCountryCommand->setContainsStates($data['contains_states']);
+        }
+
+        if (null !== $data['need_identification_number']) {
+            $addCountryCommand->setNeedIdNumber($data['need_identification_number']);
+        }
+
+        if (null !== $data['display_tax_label']) {
+            $addCountryCommand->setDisplayTaxLabel($data['display_tax_label']);
+        }
+
+        if (isset($data['shop_association'])) {
+            $addCountryCommand->setShopAssociation($data['shop_association']);
+        }
+
+        /** @var CountryId $countryId */
+        $countryId = $this->commandBus->handle($addCountryCommand);
+
+        return $countryId->getValue();
     }
 
     public function update($id, array $data)

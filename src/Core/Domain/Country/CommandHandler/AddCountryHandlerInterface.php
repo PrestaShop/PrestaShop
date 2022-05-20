@@ -24,32 +24,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
+namespace PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
-use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
-use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
-use Zone;
+use PrestaShop\PrestaShop\Core\Domain\Country\Command\AddCountryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 
 /**
- * Class CountryByIdChoiceProvider provides country choices with ID values.
+ * Interface for service that creates new zone
  */
-final class ZoneByIdChoiceProvider implements FormChoiceProviderInterface
+interface AddCountryHandlerInterface
 {
     /**
-     * Get currency choices.
+     * @param AddCountryCommand $command
      *
-     * @return array
+     * @return CountryId
      */
-    public function getChoices()
-    {
-        $zones = Zone::getZones();
-        $choices = [];
-
-        foreach ($zones as $zone) {
-            $choices[$zone['name']] = (int) $zone['id_zone'];
-        }
-
-        return $choices;
-    }
+    public function handle(AddCountryCommand $command): CountryId;
 }

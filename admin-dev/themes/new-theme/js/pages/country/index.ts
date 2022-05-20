@@ -35,6 +35,7 @@ import LinkRowActionExtension from '@components/grid/extension/link-row-action-e
 import FormSubmitButton from '@components/form-submit-button';
 import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
 import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
+import TranslatableInput from '../../components/translatable-input';
 
 const {$} = window;
 
@@ -51,6 +52,8 @@ $(() => {
   countryGrid.addExtension(new LinkRowActionExtension());
   countryGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
   countryGrid.addExtension(new ColumnTogglingExtension());
+
+  new TranslatableInput();
 
   new FormSubmitButton();
 });
