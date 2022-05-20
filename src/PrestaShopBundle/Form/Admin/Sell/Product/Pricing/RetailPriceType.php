@@ -184,6 +184,7 @@ class RetailPriceType extends TranslatorAwareType
                     new Type(['type' => 'float']),
                     new PositiveOrZero(),
                 ],
+                'currency' => $this->defaultCurrency->iso_code,
                 'modify_all_shops' => true,
                 'attr' => [
                     'data-tax-rate' => (string) $ecotaxRate,
@@ -228,6 +229,7 @@ class RetailPriceType extends TranslatorAwareType
                     new Type(['type' => 'float']),
                     new PositiveOrZero(),
                 ],
+                'currency' => $this->defaultCurrency->iso_code,
                 'modify_all_shops' => true,
                 'attr' => [
                     'data-tax-rate' => (string) $ecotaxRate,

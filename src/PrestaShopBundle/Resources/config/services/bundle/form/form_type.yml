@@ -1796,6 +1796,8 @@ services:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationItemType'
     parent: 'form.type.translatable.aware'
     public: true
+    arguments:
+      - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
     tags:
       - { name: form.type }
 
