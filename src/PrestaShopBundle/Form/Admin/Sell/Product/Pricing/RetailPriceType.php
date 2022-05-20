@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
 use Currency;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
@@ -51,47 +52,47 @@ class RetailPriceType extends TranslatorAwareType
     /**
      * @var Locale
      */
-    private $contextLocale;
+    protected $contextLocale;
 
     /**
      * @var Currency
      */
-    private $defaultCurrency;
+    protected $defaultCurrency;
 
     /**
      * @var FormChoiceProviderInterface|FormChoiceAttributeProviderInterface
      */
-    private $taxRuleGroupChoicesProvider;
+    protected $taxRuleGroupChoicesProvider;
 
     /**
      * @var RouterInterface
      */
-    private $router;
+    protected $router;
 
     /**
      * @var bool
      */
-    private $taxEnabled;
+    protected $isTaxEnabled;
 
     /**
      * @var bool
      */
-    private $isEcotaxEnabled;
+    protected $isEcotaxEnabled;
 
     /**
      * @var int
      */
-    private $ecoTaxGroupId;
+    protected $ecoTaxGroupId;
 
     /**
      * @var TaxComputer
      */
-    private $taxComputer;
+    protected $taxComputer;
 
     /**
      * @var int
      */
-    private $contextCountryId;
+    protected $contextCountryId;
 
     public function __construct(
         TranslatorInterface $translator,
@@ -100,7 +101,7 @@ class RetailPriceType extends TranslatorAwareType
         Currency $defaultCurrency,
         $taxRuleGroupChoicesProvider,
         RouterInterface $router,
-        bool $taxEnabled,
+        bool $isTaxEnabled,
         bool $isEcotaxEnabled,
         int $ecoTaxGroupId,
         TaxComputer $taxComputer,
@@ -111,7 +112,7 @@ class RetailPriceType extends TranslatorAwareType
         $this->defaultCurrency = $defaultCurrency;
         $this->taxRuleGroupChoicesProvider = $taxRuleGroupChoicesProvider;
         $this->router = $router;
-        $this->taxEnabled = $taxEnabled;
+        $this->isTaxEnabled = $isTaxEnabled;
         $this->isEcotaxEnabled = $isEcotaxEnabled;
         $this->ecoTaxGroupId = $ecoTaxGroupId;
         $this->taxComputer = $taxComputer;
@@ -123,7 +124,11 @@ class RetailPriceType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $ecotaxRate = $this->taxComputer->getTaxRate(new TaxRulesGroupId($this->ecoTaxGroupId), new CountryId($this->contextCountryId));
+        if ($this->isTaxEnabled) {
+            $ecotaxRate = $this->taxComputer->getTaxRate(new TaxRulesGroupId($this->ecoTaxGroupId), new CountryId($this->contextCountryId));
+        } else {
+            $ecotaxRate = new DecimalNumber('0');
+        }
 
         $builder
             // @todo we should have DecimalType and MoneyDecimalType it was moved in a separate PR #22162
@@ -155,13 +160,13 @@ class RetailPriceType extends TranslatorAwareType
                 'attr' => [
                     'data-toggle' => 'select2',
                     'data-minimumResultsForSearch' => '7',
-                    'data-tax-enabled' => $this->taxEnabled,
+                    'data-tax-enabled' => $this->isTaxEnabled,
                 ],
                 'row_attr' => [
                     'class' => 'retail-price-tax-rules-group-id',
                 ],
                 'label' => $this->trans('Tax rule', 'Admin.Catalog.Feature'),
-                'help' => !$this->taxEnabled ? $this->trans('Tax feature is disabled, it will not affect price tax included.', 'Admin.Catalog.Feature') : '',
+                'help' => !$this->isTaxEnabled ? $this->trans('Tax feature is disabled, it will not affect price tax included.', 'Admin.Catalog.Feature') : '',
                 'external_link' => [
                     'text' => $this->trans('[1]Manage tax rules[/1]', 'Admin.Catalog.Feature'),
                     'href' => $this->router->generate('admin_taxes_index'),
@@ -211,9 +216,13 @@ class RetailPriceType extends TranslatorAwareType
         ;
 
         if ($this->isEcotaxEnabled) {
+            $helpMessage = '';
+            if ($this->isTaxEnabled) {
+                $helpMessage = $this->trans('Ecotax rate %rate%%', 'Admin.Catalog.Feature', ['%rate%' => $ecotaxRate->round(2)]);
+            }
             $builder->add('ecotax_tax_included', MoneyType::class, [
                 'label' => $this->trans('Ecotax (tax incl.)', 'Admin.Catalog.Feature'),
-                'help' => $this->trans('Ecotax rate %rate%%', 'Admin.Catalog.Feature', ['%rate%' => $ecotaxRate->round(2)]),
+                'help' => $helpMessage,
                 'constraints' => [
                     new NotBlank(),
                     new Type(['type' => 'float']),

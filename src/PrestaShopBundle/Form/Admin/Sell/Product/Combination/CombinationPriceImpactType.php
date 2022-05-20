@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
 use Currency;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
@@ -50,43 +51,49 @@ class CombinationPriceImpactType extends TranslatorAwareType
     /**
      * @var Currency
      */
-    private $defaultCurrency;
+    protected $defaultCurrency;
 
     /**
      * @var string
      */
-    private $weightUnit;
+    protected $weightUnit;
 
     /**
      * @var bool
      */
-    private $isEcotaxEnabled;
+    protected $isTaxEnabled;
+
+    /**
+     * @var bool
+     */
+    protected $isEcotaxEnabled;
 
     /**
      * @var int
      */
-    private $ecoTaxGroupId;
+    protected $ecoTaxGroupId;
 
     /**
      * @var TaxComputer
      */
-    private $taxComputer;
+    protected $taxComputer;
 
     /**
      * @var int
      */
-    private $contextCountryId;
+    protected $contextCountryId;
 
     /**
      * @var Locale
      */
-    private $contextLocale;
+    protected $contextLocale;
 
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         Currency $defaultCurrency,
         string $weightUnit,
+        bool $isTaxEnabled,
         bool $isEcotaxEnabled,
         int $ecoTaxGroupId,
         TaxComputer $taxComputer,
@@ -96,6 +103,7 @@ class CombinationPriceImpactType extends TranslatorAwareType
         parent::__construct($translator, $locales);
         $this->defaultCurrency = $defaultCurrency;
         $this->weightUnit = $weightUnit;
+        $this->isTaxEnabled = $isTaxEnabled;
         $this->isEcotaxEnabled = $isEcotaxEnabled;
         $this->ecoTaxGroupId = $ecoTaxGroupId;
         $this->taxComputer = $taxComputer;
@@ -137,7 +145,13 @@ class CombinationPriceImpactType extends TranslatorAwareType
         ;
 
         if ($this->isEcotaxEnabled) {
-            $ecotaxRate = $this->taxComputer->getTaxRate(new TaxRulesGroupId($this->ecoTaxGroupId), new CountryId($this->contextCountryId));
+            if ($this->isTaxEnabled) {
+                $ecotaxRate = $this->taxComputer->getTaxRate(new TaxRulesGroupId($this->ecoTaxGroupId), new CountryId($this->contextCountryId));
+                $helpMessage = $this->trans('Ecotax rate %rate%%', 'Admin.Catalog.Feature', ['%rate%' => $ecotaxRate->round(2)]);
+            } else {
+                $ecotaxRate = new DecimalNumber('0');
+                $helpMessage = '';
+            }
 
             $builder
                 ->add('ecotax_tax_excluded', MoneyType::class, [
@@ -157,7 +171,7 @@ class CombinationPriceImpactType extends TranslatorAwareType
                 ])
                 ->add('ecotax_tax_included', MoneyType::class, [
                     'label' => $this->trans('Ecotax (tax incl.)', 'Admin.Catalog.Feature'),
-                    'help' => $this->trans('Ecotax rate %rate%%', 'Admin.Catalog.Feature', ['%rate%' => $ecotaxRate->round(2)]),
+                    'help' => $helpMessage,
                     'constraints' => [
                         new NotBlank(),
                         new Type(['type' => 'float']),

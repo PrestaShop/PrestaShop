@@ -179,14 +179,16 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
                     new TaxRulesGroupId($this->ecoTaxGroupId),
                     $countryId
                 );
-
-                if ($this->isEcotaxEnabled) {
-                    // We assume the list should display the final price tax excluded, not the actual value of the price tax excluded
-                    $priceTaxExcluded = $priceTaxExcluded->plus($ecotaxTaxExcluded);
-                    $priceTaxIncluded = $priceTaxIncluded->plus($ecotaxTaxIncluded);
-                }
             } else {
                 $priceTaxIncluded = $priceTaxExcluded;
+                $ecotaxTaxIncluded = $ecotaxTaxExcluded;
+            }
+
+            // Ecotax is applied independently of tax enabled
+            if ($this->isEcotaxEnabled) {
+                // We assume the list should display the final price tax excluded, not the actual value of the price tax excluded
+                $priceTaxExcluded = $priceTaxExcluded->plus($ecotaxTaxExcluded);
+                $priceTaxIncluded = $priceTaxIncluded->plus($ecotaxTaxIncluded);
             }
 
             $products[$i]['price_tax_excluded'] = $this->locale->formatPrice(

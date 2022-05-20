@@ -77,3 +77,30 @@ Feature: Update product price fields from Back Office (BO).
       | ecotax_tax_included | 1.053 |
       | unit_price          | 10.0  |
       | unit_price_ratio    | 0.1   |
+
+  Scenario: I set ecotax value on a product but the tax is disabled, the ecotax should be applied but without taxes
+    When I update product "ecoProduct" prices with following information:
+      | price              | 51.42           |
+      | ecotax             | 8.56            |
+      | tax rules group    | US-AL Rate (4%) |
+    Then product ecoProduct should have following prices information:
+      | price                   | 51.42   |
+      # (51.42 + 4% = 53.4768) + (8.56 + 0%)
+      | price_tax_included      | 62.0368 |
+      | ecotax                  | 8.56    |
+      | ecotax_tax_included     | 8.56    |
+    And shop configuration for "PS_ECOTAX_TAX_RULES_GROUP_ID" is set to us-ks-tax-rate
+    Then product ecoProduct should have following prices information:
+      | price                   | 51.42   |
+      # (51.42 + 4% = 53.4768) + (8.56 + 5.3%)
+      | price_tax_included      | 62.49048 |
+      | ecotax                  | 8.56     |
+      | ecotax_tax_included     | 9.01368  |
+    # Disable tax feature
+    And shop configuration for "PS_TAX" is set to 0
+    Then product ecoProduct should have following prices information:
+      | price                   | 51.42 |
+      # (51.42 + 0% = 51.42) + (8.56 + 0%)
+      | price_tax_included      | 59.98 |
+      | ecotax                  | 8.56  |
+      | ecotax_tax_included     | 8.56  |

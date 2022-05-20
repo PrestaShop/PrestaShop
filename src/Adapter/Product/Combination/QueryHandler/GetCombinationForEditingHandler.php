@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler;
 
 use Combination;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
@@ -236,10 +237,12 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
                 new TaxRulesGroupId($ecoTaxGroupId),
                 $defaultCountryId
             );
+            $productTaxRate = $this->taxComputer->getTaxRate($productTaxRulesGroupId, $defaultCountryId);
         } else {
             $impactPriceTaxIncluded = $impactPriceTaxExcluded;
             $impactUnitPriceTaxIncluded = $impactUnitPriceTaxExcluded;
             $ecotaxTaxIncluded = $ecotaxTaxExcluded;
+            $productTaxRate = new DecimalNumber('0');
         }
 
         return new CombinationPrices(
@@ -250,7 +253,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
             $ecotaxTaxExcluded,
             $ecotaxTaxIncluded,
             $this->numberExtractor->extract($combination, 'wholesale_price'),
-            $this->taxComputer->getTaxRate($productTaxRulesGroupId, $defaultCountryId),
+            $productTaxRate,
             $this->numberExtractor->extract($product, 'price'),
             $this->numberExtractor->extract($product, 'ecotax')
         );

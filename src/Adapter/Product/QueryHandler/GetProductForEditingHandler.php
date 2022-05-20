@@ -310,20 +310,20 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
                 new TaxRulesGroupId((int) $product->id_tax_rules_group),
                 new CountryId($this->countryId)
             );
-
             $ecotaxTaxIncluded = $this->taxComputer->computePriceWithTaxes(
                 $ecotaxTaxExcluded,
                 new TaxRulesGroupId($ecoTaxGroupId),
                 new CountryId($this->countryId)
             );
-
-            if ($ecotaxEnabled) {
-                $priceTaxIncluded = $priceTaxIncluded->plus($ecotaxTaxIncluded);
-            }
         } else {
             $priceTaxIncluded = $priceTaxExcluded;
             $unitPriceTaxIncluded = $unitPriceTaxExcluded;
             $ecotaxTaxIncluded = $ecotaxTaxExcluded;
+        }
+
+        // Ecotax is applied independently of tax enabled
+        if ($ecotaxEnabled) {
+            $priceTaxIncluded = $priceTaxIncluded->plus($ecotaxTaxIncluded);
         }
 
         return new ProductPricesInformation(

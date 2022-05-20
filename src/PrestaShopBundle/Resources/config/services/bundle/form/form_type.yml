@@ -1822,6 +1822,7 @@ services:
     arguments:
       - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
       - "@=service('prestashop.adapter.legacy.configuration').get('PS_WEIGHT_UNIT')"
+      - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_TAX')"
       - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_USE_ECOTAX')"
       - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_ECOTAX_TAX_RULES_GROUP_ID')"
       - '@prestashop.adapter.tax.tax_computer'
