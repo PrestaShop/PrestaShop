@@ -41,7 +41,9 @@ class CountryZipCodeFormat
      */
     const ZIP_CODE_PATTERN = '/^[NLCnlc 0-9-]+$/';
 
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $zipCodeFormat;
 
     public function __construct(string $zipCodeFormat)

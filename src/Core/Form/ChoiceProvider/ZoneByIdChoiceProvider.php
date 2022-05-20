@@ -47,7 +47,7 @@ final class ZoneByIdChoiceProvider implements FormChoiceProviderInterface
         $choices = [];
 
         foreach ($zones as $zone) {
-            $choices[$zone['name']] = $zone['id_zone'];
+            $choices[$zone['name']] = (int) $zone['id_zone'];
         }
 
         return $choices;
