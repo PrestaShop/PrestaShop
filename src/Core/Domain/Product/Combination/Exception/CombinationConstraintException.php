@@ -37,4 +37,6 @@ class CombinationConstraintException extends CombinationException
      * When combination id is invalid
      */
     public const INVALID_ID = 1;
+
+    public const DUPLICATE_QUANTITY_UPDATE = 2;
 }
