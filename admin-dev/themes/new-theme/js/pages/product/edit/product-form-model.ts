@@ -72,6 +72,8 @@ export default class ProductFormModel {
       'price.unitPriceTaxExcluded',
       'price.ecotaxTaxIncluded',
       'price.ecotaxTaxExcluded',
+      // This one has no impact but at least its value is guaranteed to be a number
+      'price.wholesalePrice',
     ];
     this.mapper.watch(pricesFields, (event: FormUpdateEvent) => this.updateProductPrices(event));
   }
@@ -154,6 +156,12 @@ export default class ProductFormModel {
    * Specific handler for modifications related to the product price
    */
   private updateProductPrices(event: FormUpdateEvent): void {
+    // We don't allow invalid value which turn out to NaN values so we automatically replace them by 0
+    if (new BigNumber(event.value).isNaN()) {
+      this.mapper.set(event.modelKey, new BigNumber(0).toFixed(this.precision));
+      return;
+    }
+
     const taxRatio = this.getTaxRatio();
 
     if (taxRatio.isNaN()) {
