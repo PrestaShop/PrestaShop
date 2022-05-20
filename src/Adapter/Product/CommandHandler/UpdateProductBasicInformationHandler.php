@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductBasicInformationHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
@@ -50,14 +51,23 @@ class UpdateProductBasicInformationHandler implements UpdateProductBasicInformat
     private $defaultLanguageId;
 
     /**
+     * @var Tools
+     */
+    private $tools;
+
+    /**
      * @param ProductMultiShopRepository $productRepository
+     * @param int $defaultLanguageId
+     * @param Tools $tools
      */
     public function __construct(
         ProductMultiShopRepository $productRepository,
-        int $defaultLanguageId
+        int $defaultLanguageId,
+        Tools $tools
     ) {
         $this->productRepository = $productRepository;
         $this->defaultLanguageId = $defaultLanguageId;
+        $this->tools = $tools;
     }
 
     /**
@@ -106,6 +116,15 @@ class UpdateProductBasicInformationHandler implements UpdateProductBasicInformat
             }
             $product->name = $localizedNames;
             $updatableProperties['name'] = array_keys($localizedNames);
+        }
+
+        foreach ($product->link_rewrite as $langId => $linkRewrite) {
+            if (!empty($linkRewrite)) {
+                continue;
+            }
+
+            $product->link_rewrite[$langId] = $this->tools->linkRewrite($product->name[$langId]);
+            $updatableProperties['link_rewrite'][] = $langId;
         }
 
         $localizedDescriptions = $command->getLocalizedDescriptions();
