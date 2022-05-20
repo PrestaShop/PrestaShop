@@ -97,7 +97,7 @@ final class CountryFormDataProvider implements FormDataProviderInterface
     {
         $data = [
             'need_zip_code' => false,
-            'active' => true,
+            'is_enabled' => true,
             'contains_states' => false,
             'need_identification_number' => false,
             'display_tax_label' => true,

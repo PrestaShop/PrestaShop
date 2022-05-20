@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Country\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryZipCodeFormat;
+use Tools;
 
 /**
  * Adds new zone with provided data.
@@ -97,7 +98,7 @@ class AddCountryCommand
 
     public function getIsoCode(): string
     {
-        return $this->isoCode;
+        return Tools::strtoupper(Tools::substr($this->isoCode, 0, 2));
     }
 
     public function getCallPrefix(): int
