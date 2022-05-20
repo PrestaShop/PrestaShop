@@ -280,7 +280,7 @@ export default class FormObjectMapper {
    *
    * @returns {*|{}|undefined} Returns any element from the model, undefined if not found
    */
-  private getValue(modelKey: string): string | number | string[] | undefined {
+  getValue(modelKey: string): string | number | string[] | undefined {
     const modelKeys = modelKey.split('.');
 
     return $.serializeJSON.deepGet(this.model, modelKeys);
@@ -444,12 +444,14 @@ export default class FormObjectMapper {
     }
 
     /*
-     * And we also try to see if both values have the same Number value, this avoids forcing a number input value when
+     * And we also try to see if both values have the same BigNumber value, this avoids forcing a number input value when
      * it's not written exactly the same way (like pending zeros). When checking a number we use the numberCommaTransform
      * as numbers can be written with comma separator depending on the language.
      */
-    // eslint-disable-next-line eqeqeq
-    if (Number(numberCommaTransform(referenceValue)) == numberCommaTransform(inputValue)) {
+    const referenceBigNumber: BigNumber = new BigNumber(numberCommaTransform(referenceValue));
+    const inputBigNumber: BigNumber = new BigNumber(numberCommaTransform(inputValue));
+
+    if (inputBigNumber.isEqualTo(referenceBigNumber)) {
       return true;
     }
 
