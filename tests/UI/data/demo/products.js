@@ -54,6 +54,12 @@ module.exports = {
       quantity: 1500,
       status: true,
     },
+    demo_7: {
+      id: 5,
+      name: 'Today is a good day Framed poster',
+      reference: 'demo_7',
+      status: true,
+    },
     demo_8: {
       id: 16,
       name: 'Mountain fox notebook',

@@ -505,6 +505,34 @@ class Order extends BOBasePage {
 
     return this.getPaginationLabel(page);
   }
+
+  /* Preview order methods */
+  async previewOrder(page, row = 1) {
+    await page.hover(this.tableColumn(row, 'id_order'));
+    await this.waitForSelectorAndClick(page, '#order_grid_table > tbody > tr:nth-child(1) > td.identifier-type.column-id_order > span');
+
+    return this.elementVisible(page, '.preview-row', 2000);
+  }
+
+  async getShippingDetails(page) {
+    return this.getTextContent(page, '#order_grid_table tr.preview-row td div[data-role=shipping-details]');
+  }
+
+  async getCustomerEmail(page) {
+    return this.getTextContent(page, '#order_grid_table tr.preview-row td div[data-role=email]');
+  }
+
+  async getCustomerInvoiceAddressDetails(page) {
+    return this.getTextContent(page, '#order_grid_table tr.preview-row td div[data-role=invoice-details]');
+  }
+
+  async getProductsNumberFromTable(page){
+    return this.getNumberFromText(page, '#order_grid_table tr.preview-row div.table-responsive table thead tr:nth-child(1)');
+  }
+
+  async getProductDetailsFromTable(page, row = 1) {
+    return this.getTextContent(page, `#order_grid_table tr.preview-row div.table-responsive table tbody tr:nth-child(${row})`);
+  }
 }
 
 module.exports = new Order();
