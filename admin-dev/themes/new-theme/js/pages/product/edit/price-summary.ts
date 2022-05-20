@@ -119,7 +119,7 @@ export default class PriceSummary {
     this.updateField(this.marginRate, this.marginRateLabel.replace('%margin_rate%', marginRate.toFixed(2)));
 
     // Unit price is composed of two fields and it is shown only when values are not empty
-    const unitPrice = this.getBigNumber('price.wholesalePrice');
+    const unitPrice = this.getBigNumber('price.unitPriceTaxExcluded');
     const {unity} = this.productFormModel.getProduct().price;
 
     if (unity !== '' && !unitPrice.isZero()) {
