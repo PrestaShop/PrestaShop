@@ -74,9 +74,9 @@ Feature: Update product SEO options from Back Office (BO)
       | fr-FR  |                  |
     # Default no picture image
     And product product2 should have following seo options:
-      | redirect_type   | 301-product                                          |
-      | redirect_target | product1                                             |
-      | redirect_name   | just boots                                           |
+      | redirect_type   | 301-product                                            |
+      | redirect_target | product1                                               |
+      | redirect_name   | just boots                                             |
       | redirect_image  | http://myshop.com/img/p/{no_picture}-small_default.jpg |
 
   Scenario: Update product redirect type without providing redirect target
@@ -383,3 +383,45 @@ Feature: Update product SEO options from Back Office (BO)
       | redirect_target | clothes                               |
       | redirect_name   | Home > Clothes                        |
       | redirect_image  | http://myshop.com/img/c/{clothes}.jpg |
+
+  Scenario: Empty friendly-urls should be auto-filled using product name value
+    And I add product "product4" with following information:
+      | type        | standard     |
+      | name[en-US] | en product 4 |
+      | name[fr-FR] | fr product 4 |
+    Then product "product4" localized "name" should be:
+      | locale | value        |
+      | en-US  | en product 4 |
+      | fr-FR  | fr product 4 |
+    And product "product4" localized "link_rewrite" should be:
+      | locale | value |
+      | en-US  |       |
+      | fr-FR  |       |
+    When I update product product4 SEO information with following values:
+      | link_rewrite[en-US] |  |
+      | link_rewrite[fr-FR] |  |
+    And product "product4" localized "link_rewrite" should be:
+      | locale | value        |
+      | en-US  | en-product-4 |
+      | fr-FR  | fr-product-4 |
+    When I add product "product5" with following information:
+      | type | standard |
+    Then product "product5" localized "name" should be:
+      | locale | value |
+      | en-US  |       |
+      | fr-FR  |       |
+    When I update product product5 SEO information with following values:
+      | link_rewrite[en-US] | en-no-name |
+      | link_rewrite[fr-FR] | fr-no-name |
+    And product "product5" localized "link_rewrite" should be:
+      | locale | value      |
+      | en-US  | en-no-name |
+      | fr-FR  | fr-no-name |
+    When I update product product5 SEO information with following values:
+      | link_rewrite[en-US] |  |
+      | link_rewrite[fr-FR] |  |
+    # Name is still empty, so link rewrite is too
+    And product "product5" localized "link_rewrite" should be:
+      | locale | value |
+      | en-US  |       |
+      | fr-FR  |       |
