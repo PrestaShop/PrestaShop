@@ -110,7 +110,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
     [
       {linkSelector: 'Order tracking', pageTitle: guestOrderTrackingPage.pageTitle},
       {linkSelector: 'Sign in', pageTitle: loginPage.pageTitle},
-      {linkSelector: 'Create account', pageTitle: createAccountPage.pageTitle},
+      {linkSelector: 'Create account', pageTitle: createAccountPage.formTitle},
     ].forEach((args, index) => {
       it(`should check '${args.linkSelector}' footer links`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkYourAccountFooterLinks1${index}`, baseContext);
