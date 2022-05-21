@@ -33,6 +33,7 @@ use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
@@ -58,23 +59,31 @@ class ShippingType extends TranslatorAwareType
     private $deliveryTimeNoteTypesProvider;
 
     /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param string $currencyIsoCode
      * @param FormChoiceProviderInterface $carrierChoiceProvider
      * @param FormChoiceProviderInterface $additionalDeliveryTimeNoteTypesProvider
+     * @param RouterInterface $router
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         string $currencyIsoCode,
         FormChoiceProviderInterface $carrierChoiceProvider,
-        FormChoiceProviderInterface $additionalDeliveryTimeNoteTypesProvider
+        FormChoiceProviderInterface $additionalDeliveryTimeNoteTypesProvider,
+        RouterInterface $router
     ) {
         parent::__construct($translator, $locales);
         $this->currencyIsoCode = $currencyIsoCode;
         $this->carrierChoiceProvider = $carrierChoiceProvider;
         $this->deliveryTimeNoteTypesProvider = $additionalDeliveryTimeNoteTypesProvider;
+        $this->router = $router;
     }
 
     /**
@@ -93,6 +102,11 @@ class ShippingType extends TranslatorAwareType
                 'label' => $this->trans('Delivery Time', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h3',
                 'label_help_box' => $this->trans('Display delivery time for a product is advised for merchants selling in Europe to comply with the local laws.', 'Admin.Catalog.Help'),
+                'external_link' => [
+                    'text' => $this->trans('[1]Manage default settings[/1]', 'Admin.Actions'),
+                    'href' => $this->router->generate('admin_product_preferences'),
+                    'position' => 'prepend',
+                ],
             ])
             ->add('delivery_time_notes', DeliveryTimeNotesType::class)
             ->add('additional_shipping_cost', MoneyType::class, [

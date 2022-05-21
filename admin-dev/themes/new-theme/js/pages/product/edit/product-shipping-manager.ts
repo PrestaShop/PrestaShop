@@ -22,18 +22,21 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import ComponentsMap from '@components/components-map';
-import FormFieldToggler from '@components/form/form-field-toggler';
+import FormFieldToggler, {ToggleType} from '@components/form/form-field-toggler';
+import ProductMap from '@pages/product/product-map';
 
-/**
- * This components work along with the form option disabling_switch it automatizes the initialization
- * of the switch disabler inputs, it is accessible easily with the other PrestaShop components via the
- * initComponents method.
- */
-export default class DisablingSwitch {
+export default class ProductShippingManager {
   constructor() {
+    this.initDeliveryTimesToggler();
+  }
+
+  private initDeliveryTimesToggler(): void {
     new FormFieldToggler({
-      disablingInputSelector: ComponentsMap.disablingSwitch.disablingSelector,
+      disablingInputSelector: ProductMap.shipping.deliveryTimeTypeInput,
+      matchingValue: '2',
+      disableOnMatch: false,
+      targetSelector: ProductMap.shipping.deliveryTimeNotesBlock,
+      toggleType: ToggleType.visibility,
     });
   }
 }
