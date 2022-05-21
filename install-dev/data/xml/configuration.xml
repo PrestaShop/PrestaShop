@@ -218,6 +218,12 @@
   <configuration id="PS_CONDITIONS_CMS_ID" name="PS_CONDITIONS_CMS_ID">
     <value>3</value>
   </configuration>
+  <configuration id="PS_PRIVACY_CMS_ID" name="PS_PRIVACY_CMS_ID">
+    <value>6</value>
+  </configuration>
+  <configuration id="PS_REVOCATION_CMS_ID" name="PS_REVOCATION_CMS_ID">
+    <value>7</value>
+  </configuration>
   <configuration id="PS_VOLUME_UNIT" name="PS_VOLUME_UNIT">
     <value>cl</value>
   </configuration>
