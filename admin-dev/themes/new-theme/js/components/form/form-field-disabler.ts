@@ -27,6 +27,12 @@ import {isUndefined} from '@PSTypes/typeguard';
 
 const {$} = window;
 
+// eslint-disable-next-line no-shadow
+export enum toggleType {
+  visibility = 'visibility',
+  availability = 'availability',
+}
+
 /**
  * @param {string} disablingInputSelector - selector of input (e.g. checkbox or radio)
  *                 which on change enables/disables the element selected by targetSelector.
@@ -45,6 +51,7 @@ export type FormFieldDisablerParams = {
   targetSelector: string | null,
   switchEvent: string | null,
   disableOnMatch: boolean,
+  toggleType: toggleType
 }
 export type InputFormFieldDisablerParams = Partial<FormFieldDisablerParams> & {
   disablingInputSelector: string,
@@ -70,6 +77,7 @@ export default class FormFieldDisabler {
       disableOnMatch: true,
       targetSelector: null,
       switchEvent: null,
+      toggleType: toggleType.availability,
       ...inputParams,
     };
 
@@ -166,8 +174,14 @@ export default class FormFieldDisabler {
     }
 
     elementsToToggle.forEach((elementToToggle: Element) => {
-      elementToToggle.classList.toggle('disabled', disable);
-      elementToToggle.toggleAttribute('disabled', disable);
+      const toggleAvailability = this.params.toggleType === toggleType.availability;
+
+      if (toggleAvailability) {
+        elementToToggle.classList.toggle('disabled', disable);
+        elementToToggle.toggleAttribute('disabled', disable);
+      } else {
+        elementToToggle.classList.toggle('d-none', !disable);
+      }
 
       const formElements = elementToToggle.querySelectorAll('input, select, textarea, button, option, fieldset');
 
@@ -176,7 +190,9 @@ export default class FormFieldDisabler {
       }
 
       formElements.forEach((element: Element) => {
-        element.toggleAttribute('disabled', disable);
+        if (toggleAvailability) {
+          element.toggleAttribute('disabled', disable);
+        }
       });
     });
   }
