@@ -44,17 +44,25 @@ class ConditionsToApproveFinderCore
      */
     private function getDefaultTermsAndConditions()
     {
-        $cms = new CMS((int) Configuration::get('PS_CONDITIONS_CMS_ID'), $this->context->language->id);
+        $cms = new CMS(Configuration::get('PS_CONDITIONS_CMS_ID'), $this->context->language->id);
         $link = $this->context->link->getCMSLink($cms, $cms->link_rewrite, (bool) Configuration::get('PS_SSL_ENABLED'));
+        
+        $cms_prv = new CMS(Configuration::get('PS_PRIVACY_CMS_ID'), $this->context->language->id);
+        $link_prv = $this->context->link->getCMSLink($cms_prv, $cms_prv->link_rewrite, (bool) Configuration::get('PS_SSL_ENABLED'));
+        
+        $cms_rev = new CMS(Configuration::get('PS_REVOCATIONS_CMS_ID'), $this->context->language->id);
+        $link_rev = $this->context->link->getCMSLink($cms_rev, $cms_rev->link_rewrite, (bool) Configuration::get('PS_SSL_ENABLED'));
 
         $termsAndConditions = new TermsAndConditions();
         $termsAndConditions
             ->setText(
-                $this->translator->trans('I agree to the [terms of service] and will adhere to them unconditionally.', [], 'Shop.Theme.Checkout'),
-                $link
+                $this->translator->trans('I agree to the [terms of service], [privacy policy] and [revocation terms] and will adhere to them unconditionally.', [], 'Shop.Theme.Checkout'),
+                $link,
+                $link_prv,
+                $link_rev
             )
             ->setIdentifier('terms-and-conditions');
-
+        
         return $termsAndConditions;
     }
 
