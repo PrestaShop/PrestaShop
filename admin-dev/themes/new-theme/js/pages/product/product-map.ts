@@ -195,10 +195,18 @@ export default {
     coveredPreview: '.dz-preview.is-cover',
     windowFileManager: '.dropzone-window-filemanager',
   },
+  options: {
+    availableForOrderInput: 'input[name="product[options][visibility][available_for_order]"]',
+    showPriceSwitchContainer: '.show-price-switch-container',
+  },
   suppliers: {
     productSuppliers: '#product_options_product_suppliers',
     supplierIdsInput: '#product_options_suppliers_supplier_ids',
     defaultSupplierInput: '#product_options_suppliers_default_supplier_id',
+  },
+  shipping: {
+    deliveryTimeTypeInput: 'input[name="product[shipping][delivery_time_note_type]"]',
+    deliveryTimeNotesBlock: '#product_shipping_delivery_time_notes',
   },
   seo: {
     container: '#product_seo_serp',
