@@ -33,7 +33,6 @@ use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\Manufacturer\Repository\ManufacturerRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator;
 use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
-use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Domain\Carrier\ValueObject\CarrierReferenceId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
@@ -104,7 +103,6 @@ class ProductMultiShopRepository extends AbstractMultiShopObjectModelRepository
      * @param int $defaultCategoryId
      * @param TaxRulesGroupRepository $taxRulesGroupRepository
      * @param ManufacturerRepository $manufacturerRepository
-     * @param Tools $tools
      */
     public function __construct(
         Connection $connection,
