@@ -170,7 +170,7 @@ class ProductCore extends ObjectModel
     /** @var string MPN */
     public $mpn;
 
-    /** @var string[] friendly url values indexed by language id */
+    /** @var string|string[] Friendly URL or array of friendly URL by id_lang */
     public $link_rewrite;
 
     /** @var string|array Meta description or array of meta description by id_lang */
