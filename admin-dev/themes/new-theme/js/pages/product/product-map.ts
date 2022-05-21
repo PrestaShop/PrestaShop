@@ -33,6 +33,8 @@ const progressModalId = 'bulk-combination-progress-modal';
 
 export default {
   productForm: 'form[name=product]',
+  productLocalizedNameInput: 'input[name^="product[header][name]"]',
+  productLocalizedLinkRewriteInput: 'input[name^="product[seo][link_rewrite]"]',
   productTypePreview: '.product-type-preview',
   productType: {
     headerSelector: '#product_header_type',
@@ -215,6 +217,7 @@ export default {
       labelSelector: 'label',
       helpSelector: 'small.form-text',
     },
+    resetLinkRewriteBtn: '.reset-link-rewrite',
   },
   jsTabs: '.js-tabs',
   jsArrow: '.js-arrow',

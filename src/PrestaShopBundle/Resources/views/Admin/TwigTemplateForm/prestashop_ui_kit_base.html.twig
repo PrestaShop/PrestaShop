@@ -926,9 +926,11 @@
         {% if default_locale.id_lang != translateField.vars.name %}
           {% set classes = classes ~ ' d-none' %}
         {% endif %}
-        <div class="{{ classes }}" style="flex-grow: 1;">
-          {{ form_widget(translateField) }}
-        </div>
+        {% block translatable_fields_with_dropdown_t %}
+          <div data-lang-id="{{ translateField.vars.name }}" class="{{ classes }}" style="flex-grow: 1;">
+            {{ form_widget(translateField) }}
+          </div>
+        {%  endblock %}
       {% endfor %}
       {% if not hide_locales %}
         <div class="dropdown">
