@@ -27,6 +27,8 @@ import {EventEmitter} from 'events';
 import RedirectOptionManager from '@pages/product/edit/redirect-option-manager';
 import ProductMap from '@pages/product/product-map';
 import TaggableField from '@components/taggable-field';
+import textToLinkRewriteCopier from '@components/text-to-link-rewrite-copier';
+import TranslatableInput from '@components/translatable-input';
 
 const {$} = window;
 
@@ -34,6 +36,8 @@ export default class ProductSEOManager {
   eventEmitter: EventEmitter;
 
   $previewButton: JQuery;
+
+  translatableInput: TranslatableInput;
 
   /**
    * @param {EventEmitter} eventEmitter
@@ -43,6 +47,7 @@ export default class ProductSEOManager {
   constructor(eventEmitter: EventEmitter) {
     this.eventEmitter = eventEmitter;
     this.$previewButton = $(ProductMap.footer.previewUrlButton);
+    this.translatableInput = window.prestashop.instance.translatableInput;
 
     this.init();
   }
@@ -55,7 +60,7 @@ export default class ProductSEOManager {
     new RedirectOptionManager(this.eventEmitter);
 
     // Init Serp component to preview Search engine display
-    const {translatableInput, translatableField} = window.prestashop.instance;
+    const {translatableField} = window.prestashop.instance;
     let previewUrl = this.$previewButton.data('seoUrl');
 
     if (!previewUrl) {
@@ -70,7 +75,7 @@ export default class ProductSEOManager {
         defaultDescription: ProductMap.seo.defaultDescription,
         watchedDescription: ProductMap.seo.watchedDescription,
         watchedMetaUrl: ProductMap.seo.watchedMetaUrl,
-        multiLanguageInput: `${translatableInput.localeInputSelector}:not(.d-none)`,
+        multiLanguageInput: `${this.translatableInput.localeInputSelector}:not(.d-none)`,
         multiLanguageField: `${translatableField.translationFieldSelector}.active`,
       },
       previewUrl,
@@ -85,5 +90,38 @@ export default class ProductSEOManager {
         maxCharacters: 32,
       },
     });
+
+    const resetLinkRewriteBtn = document.querySelector<HTMLButtonElement>(ProductMap.seo.resetLinkRewriteBtn)!;
+    resetLinkRewriteBtn.addEventListener('click', () => this.resetLinkRewrite());
+
+    textToLinkRewriteCopier({
+      sourceElementSelector: 'input[name^="product[header][name]"]',
+      /* eslint-disable-next-line max-len */
+      destinationElementSelector: `${this.translatableInput.localeInputSelector}:not(.d-none) input[name^="product[seo][link_rewrite]"]`,
+      options: {
+        eventName: 'click',
+        triggeringElementSelector: '.reset-link-rewrite',
+      },
+    });
+  }
+
+  private resetLinkRewrite(): void {
+    // eslint-disable-next-line max-len
+    const nameInput = document.querySelector<HTMLInputElement>(`${this.translatableInput.localeInputSelector}:not(.d-none) ${ProductMap.productLocalizedNameInput}`);
+    // eslint-disable-next-line max-len
+    const linkRewriteInput = document.querySelector<HTMLInputElement>(`${this.translatableInput.localeInputSelector}:not(.d-none) ${ProductMap.productLocalizedLinkRewriteInput}`);
+
+    if (!nameInput || !linkRewriteInput) {
+      console.error('Couldn\'t find product name or link rewrite input');
+      return;
+    }
+
+    const nameValue = nameInput.value;
+
+    if (!nameValue) {
+      return;
+    }
+
+    linkRewriteInput.value = window.str2url(nameValue);
   }
 }
