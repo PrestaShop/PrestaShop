@@ -24,7 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-use PrestaShop\PrestaShop\Core\Search\AlternativeSearchPanel;
+use PrestaShop\PrestaShop\Core\Search\SearchPanel;
+use PrestaShop\PrestaShop\Core\Search\SearchPanelInterface;
 
 class AdminSearchControllerCore extends AdminController
 {
@@ -474,27 +475,64 @@ class AdminSearchControllerCore extends AdminController
                 $this->tpl_view_vars['modules'] = $this->_list['modules'];
             }
 
-            $alternativeSearchPanels = [];
-            $alternativeSearchPanelsFromModules = Hook::exec(
-                'actionGetAlternativeSearchPanels',
-                [
-                    'bo_query' => $searchedExpression,
-                ],
-                null,
-                true
-            );
-
-            foreach ($alternativeSearchPanelsFromModules as $alternativeSearchPanelsFromModule) {
-                foreach ($alternativeSearchPanelsFromModule as $alternativeSearchPanel) {
-                    if ($alternativeSearchPanel instanceof AlternativeSearchPanel) {
-                        $alternativeSearchPanels[] = $alternativeSearchPanel;
-                    }
-                }
-            }
-
-            $this->tpl_view_vars['alternativeSearchPanels'] = $alternativeSearchPanels;
+            $this->getSearchPanels($searchedExpression);
 
             return parent::renderView();
+        }
+    }
+
+    protected function getSearchPanels(string $searchedExpression): void
+    {
+        // Build native search panels
+        $searchPanels = [];
+        $searchPanels[] = new SearchPanel(
+            $this->trans('Search doc.prestashop.com', [], 'Admin.Navigation.Search'),
+            $this->trans('Go to the documentation', [], 'Admin.Navigation.Search'),
+            'https://doc.prestashop.com/dosearchsite.action',
+            [
+                'spaceSearch' => 'true',
+                'queryString' => $searchedExpression,
+                'utm_source' => 'back-office',
+                'utm_medium' => 'search',
+                'utm_campaign' => 'back-office-{$lang_iso|upper}',
+                'utm_content' => 'download',
+            ]
+        );
+        $searchPanels[] = new SearchPanel(
+            $this->trans('Search prestashop.com forum', [], 'Admin.Navigation.Search'),
+            $this->trans('Go to the Forum', [], 'Admin.Navigation.Search'),
+            'https://www.google.fr/search',
+            [
+                'q' => sprintf('site:prestashop.com/forums/ %s', $searchedExpression),
+            ]
+        );
+
+        // Get additional search panels from hooks
+        $alternativeSearchPanelsFromModules = Hook::exec(
+            'actionGetAlternativeSearchPanels',
+            [
+                'bo_query' => $searchedExpression,
+            ],
+            null,
+            true
+        );
+
+        foreach ($alternativeSearchPanelsFromModules as $alternativeSearchPanelsFromModule) {
+            foreach ($alternativeSearchPanelsFromModule as $alternativeSearchPanel) {
+                if ($alternativeSearchPanel instanceof SearchPanelInterface) {
+                    $searchPanels[] = $alternativeSearchPanel;
+                }
+            }
+        }
+
+        // Transform the search panels and inject them to the view
+        $this->tpl_view_vars['searchPanels'] = [];
+        foreach ($searchPanels as $searchPanel) {
+            $this->tpl_view_vars['searchPanels'][] = [
+                'title' => $searchPanel->getTitle(),
+                'button_label' => $searchPanel->getButtonLabel(),
+                'link' => $searchPanel->buildLink(),
+            ];
         }
     }
 

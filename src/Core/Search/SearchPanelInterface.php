@@ -26,57 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Core\Search;
 
-class AlternativeSearchPanel
+interface SearchPanelInterface
 {
-    /**
-     * @var string
-     */
-    private $title;
+    public function getTitle(): string;
 
-    /**
-     * @var string
-     */
-    private $buttonLabel;
+    public function getButtonLabel(): string;
 
-    /**
-     * @var string
-     */
-    private $link;
-
-    /**
-     * @var array
-     */
-    private $queryParams;
-
-    public function __construct(
-        string $title,
-        string $buttonLabel,
-        string $link,
-        array $queryParams
-    ) {
-        $this->title = $title;
-        $this->buttonLabel = $buttonLabel;
-        $this->link = $link;
-        $this->queryParams = $queryParams;
-    }
-
-    public function getTitle(): string
-    {
-        return $this->title;
-    }
-
-    public function getButtonLabel(): string
-    {
-        return $this->buttonLabel;
-    }
-
-    public function getLink(): string
-    {
-        return $this->link;
-    }
-
-    public function getQueryParams(): array
-    {
-        return $this->queryParams;
-    }
+    public function buildLink(): string;
 }
