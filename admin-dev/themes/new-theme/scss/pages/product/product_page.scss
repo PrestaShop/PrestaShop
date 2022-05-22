@@ -1167,11 +1167,6 @@ $product-page-padding-bottom: 80px !default;
     > .form-contenttab.active:first-child {
       @include border-top-left-radius(0);
     }
-
-    > .external-tab-placeholder {
-      // So that the placeholder has size 0
-      padding: 0;
-    }
   }
 
   // External tab are rendered outside of the tab container so their bottom corners need to to be rounded
@@ -1513,10 +1508,7 @@ $product-page-padding-bottom: 80px !default;
   }
 }
 
-#external-combination-tab {
-  padding-bottom: $product-page-padding-bottom;
-  margin-top: -$product-page-padding-bottom;
-
+#product_combinations_combination_manager {
   #combination-list-actions {
     display: flex;
     flex-direction: row;

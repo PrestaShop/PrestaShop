@@ -245,12 +245,20 @@ export default class CombinationsListEditor {
     }
   }
 
+  /**
+   * The product page doesn't incude the combination list into a for tag because it is rendered inside a form
+   * itself. So to get the data we create a dynamic form tag and include all the element from the list container
+   * inside it, this way it is as if they were actually in a form tag.
+   */
   private getFormData(): FormData {
-    const combinationListForm = document.querySelector<HTMLFormElement>(ProductMap.combinations.list.form);
-
-    if (!combinationListForm) {
-      return new FormData();
-    }
+    const combinationListForm = document.createElement('form');
+    this.$combinationsFormContainer.get().forEach((formElement: HTMLElement) => {
+      // We need to use appendChild and not innerHTML string content because the string content would lose the dynamic
+      // values from the DOM (especially input values) and would only rely on the initial value from the first rendered
+      // layout. We also need to clone each element before appending them or they would be removed from the DOM and the user
+      // would not see them anymore.
+      combinationListForm.appendChild(formElement.cloneNode(true));
+    });
 
     return new FormData(combinationListForm);
   }

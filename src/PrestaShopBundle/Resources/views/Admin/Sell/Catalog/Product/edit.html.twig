@@ -146,13 +146,6 @@
   {{ form_end(productForm) }}
   {% endblock %}
 
-  {# We don't want the combinations input to be inside the product form which is why this tab is rendered after the form #}
-  {% block product_external_tab_combinations %}
-    {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Combination/external_tab.html.twig', {
-      'productId': productId,
-    }) }}
-  {% endblock %}
-
   {% block category_tree_form %}
     {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Category/category_tree_form.html.twig') }}
   {% endblock %}

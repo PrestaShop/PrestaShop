@@ -174,10 +174,9 @@ class CombinationController extends FrameworkBundleAdminController
      * Note: role must be hard coded because there is no route associated to this action therefore not
      * _legacy_controller request parameter.
      *
-     * Renders combinations list prototype (which contains form inputs submittable by ajax)
      * It can only be embedded into another view (does not have a route), it is included in this template:
      *
-     * src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/Combination/external_tab.html.twig
+     * src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/FormTheme/combination.html.twig
      *
      * @param int $productId
      *
