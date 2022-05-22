@@ -66,6 +66,15 @@ abstract class AbstractLoggerCore
         if ($level >= $this->level) {
             $this->logMessage($message, $level);
         }
+
+        Hook::exec(
+            'actionLoggerLogMessage',
+            [
+                'message' => $message,
+                'level' => $level,
+                'logged' => $level >= $this->level,
+            ]
+        );
     }
 
     /**

@@ -3620,5 +3620,10 @@
       <title>Extra message to display for an empty modules category</title>
       <description>This hook allows to add an extra message to display in the Module manager page when a category doesn't have any module</description>
     </hook>
+    <hook id="actionLoggerLogMessage">
+      <name>actionLoggerLogMessage</name>
+      <title>Allows to make extra action while a log is logged</title>
+      <description>This hook allows to make an extra action while an exception is throw and the logger log it</description>
+    </hook>
   </entities>
 </entity_hook>
