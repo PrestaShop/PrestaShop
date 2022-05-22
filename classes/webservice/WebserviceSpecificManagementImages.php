@@ -563,8 +563,8 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                         $this->output->addParentNode('declination')
                             ->setAttributes([
                                 'id' => $available_image_id,
-                                'xlink:href' => $this->wsObject->wsUrl . 'images/' . $this->imageType . '/' . $object_id . '/' . $available_image_id
-                        ]);
+                                'xlink:href' => $this->wsObject->wsUrl . 'images/' . $this->imageType . '/' . $object_id . '/' . $available_image_id,
+                            ]);
                     }
                 } else {
                     $this->objOutput->setStatus(404);
