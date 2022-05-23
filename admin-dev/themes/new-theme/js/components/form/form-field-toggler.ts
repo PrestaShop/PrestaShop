@@ -28,32 +28,33 @@ import {isUndefined} from '@PSTypes/typeguard';
 const {$} = window;
 
 // eslint-disable-next-line no-shadow
-export enum toggleType {
-  visibility = 'visibility',
+export enum ToggleType {
   availability = 'availability',
+  visibility = 'visibility',
 }
 
 /**
  * @param {string} disablingInputSelector - selector of input (e.g. checkbox or radio)
- *                 which on change enables/disables the element selected by targetSelector.
+ *                 which on change enables/disables or shows/hides the element selected by targetSelector.
  * @param {string} matchingValue - value which should match with disablingInput value to enable/disable related element
  * @param {string} targetSelector - selector of element which is toggled by the disablingInput.
  * @param {boolean} disableOnMatch - once disablingInput & matchingValue values match, then
- *                  if true - related element is disabled
- *                  if false - related element is enabled.
+ *                  if true - related element is disabled if toggle type is "availability" or hidden - if ToggleType is "visibility"
+ *                  if false - related element is enabled if toggle type is "availability" or visible - if ToggleType is "visibility".
+ * @param {ToggleType} toggleType - whether to toggle between enable/disable (availability) or show/hide (visibility)
  *
  * Important Note: the component can be configured on construction via the parameters object, but its behaviour
  * and parameters will be overridden if a data attribute is associated to the selector node.
  */
-export type FormFieldDisablerParams = {
+export type FormFieldTogglerParams = {
   disablingInputSelector: string,
   matchingValue: string | null,
   targetSelector: string | null,
   switchEvent: string | null,
   disableOnMatch: boolean,
-  toggleType: toggleType
+  toggleType: ToggleType
 }
-export type InputFormFieldDisablerParams = Partial<FormFieldDisablerParams> & {
+export type InputFormFieldTogglerParams = Partial<FormFieldTogglerParams> & {
   disablingInputSelector: string,
 };
 
@@ -63,21 +64,21 @@ export type SwitchEventData = {
 }
 
 /**
- * Enables or disables element depending on certain input value.
+ * Enables/disables or shows/hides element depending on certain input value.
  */
-export default class FormFieldDisabler {
-  params: FormFieldDisablerParams;
+export default class FormFieldToggler {
+  params: FormFieldTogglerParams;
 
   /**
-   * @param {InputFormFieldDisablerParams} inputParams
+   * @param {InputFormFieldTogglerParams} inputParams
    */
-  constructor(inputParams: InputFormFieldDisablerParams) {
+  constructor(inputParams: InputFormFieldTogglerParams) {
     this.params = {
       matchingValue: '0',
       disableOnMatch: true,
       targetSelector: null,
       switchEvent: null,
-      toggleType: toggleType.availability,
+      toggleType: ToggleType.availability,
       ...inputParams,
     };
 
@@ -174,7 +175,7 @@ export default class FormFieldDisabler {
     }
 
     elementsToToggle.forEach((elementToToggle: Element) => {
-      const toggleAvailability = this.params.toggleType === toggleType.availability;
+      const toggleAvailability = this.params.toggleType === ToggleType.availability;
 
       if (toggleAvailability) {
         elementToToggle.classList.toggle('disabled', disable);

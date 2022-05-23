@@ -35,7 +35,6 @@ import CountryStateSelectionToggler from '@components/country-state-selection-to
 import DateRange from '@js/components/form/date-range';
 import DeltaQuantityInput from '@components/form/delta-quantity-input';
 import DisablingSwitch from '@components/form/disabling-switch';
-import FormFieldDisabler from '@components/form/form-field-disabler';
 import GeneratableInput from '@js/components/generatable-input';
 import Grid from '@components/grid/grid';
 import ModifyAllShopsCheckbox from '@components/modify-all-shops-checkbox';
@@ -69,6 +68,7 @@ import SubmitBulkActionExtension from '@components/grid/extension/submit-bulk-ac
 import AjaxBulkActionExtension from '@components/grid/extension/ajax-bulk-action-extension';
 import SubmitGridActionExtension from '@components/grid/extension/submit-grid-action-extension';
 import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
+import FormFieldToggler from '@components/form/form-field-toggler';
 
 const GridExtensions = {
   AjaxBulkActionExtension,
@@ -140,7 +140,7 @@ const initPrestashopComponents = (): void => {
     DeltaQuantityInput,
     DisablingSwitch,
     EventEmitter,
-    FormFieldDisabler,
+    FormFieldDisabler: FormFieldToggler,
     GeneratableInput,
     DateRange,
     Grid,

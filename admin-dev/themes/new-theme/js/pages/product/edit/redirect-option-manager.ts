@@ -28,7 +28,7 @@ import {EventEmitter} from 'events';
 import ComponentsMap from '@components/components-map';
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
-import FormFieldDisabler, {toggleType} from "@components/form/form-field-disabler";
+import FormFieldToggler, {ToggleType} from "@components/form/form-field-toggler";
 
 const {$} = window;
 
@@ -77,12 +77,12 @@ export default class RedirectOptionManager {
     this.buildAutoCompleteSearchInput();
     this.watchRedirectType();
 
-    new FormFieldDisabler({
+    new FormFieldToggler({
       disablingInputSelector: 'input[name="product[options][visibility][available_for_order]"]',
       matchingValue: '0',
       disableOnMatch: true,
       targetSelector: '.show-price-switch-container',
-      toggleType: toggleType.visibility,
+      toggleType: ToggleType.visibility,
     });
   }
 
