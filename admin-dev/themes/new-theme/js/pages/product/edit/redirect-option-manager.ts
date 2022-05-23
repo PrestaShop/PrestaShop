@@ -28,7 +28,6 @@ import {EventEmitter} from 'events';
 import ComponentsMap from '@components/components-map';
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
-import FormFieldToggler, {ToggleType} from '@components/form/form-field-toggler';
 
 const {$} = window;
 
