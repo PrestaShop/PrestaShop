@@ -111,18 +111,18 @@
     </button>
     <div class="dropdown-menu category-filter-menu">
       <div class="categories-tree-actions">
-        <a href="#" class="category_tree_filter_expand">
+        <button type="button" class="category_tree_filter_expand btn">
           <i class="material-icons">expand_more</i>
           {{ 'Expand'|trans({}, 'Admin.Actions') }}
-        </a>
-        <a href="#" class="category_tree_filter_collapse">
+        </button>
+        <button type="button" class="category_tree_filter_collapse btn">
           <i class="material-icons">expand_less</i>
           {{ 'Collapse'|trans({}, 'Admin.Actions') }}
-        </a>
-        <a href="#" class="category_tree_filter_reset">
+        </button>
+        <button type="button" class="category_tree_filter_reset btn">
           <i class="material-icons">radio_button_unchecked</i>
           {{ 'Unselect'|trans({}, 'Admin.Actions') }}
-        </a>
+        </button>
       </div>
       {{ form_widget(form) }}
     </div>

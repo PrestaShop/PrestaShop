@@ -84,7 +84,6 @@ export default class CategoryTreeFilter {
   }
 
   private filterCategory(categoryId: string): void {
-    console.log('filterCategory', categoryId);
     this.$categoryInput.val(categoryId);
     this.$filterForm.submit();
   }

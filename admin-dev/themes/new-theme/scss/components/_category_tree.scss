@@ -109,6 +109,13 @@ ul.category-tree {
         vertical-align: bottom;
       }
     }
+
+    > button {
+      display: inline-block;
+      padding: 0;
+      margin-bottom: 0.625rem;
+      color: $gray-medium;
+    }
   }
 
   label.form-control-label {
@@ -123,4 +130,8 @@ ul.category-tree {
       margin-bottom: 0;
     }
   }
+}
+
+.category-filter-menu {
+  min-width: 320px;
 }
