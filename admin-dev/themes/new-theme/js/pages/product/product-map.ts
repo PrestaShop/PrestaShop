@@ -160,6 +160,7 @@ export default {
     bulkActionsDropdownBtn: '#combination-bulk-actions-btn',
     bulkAllPreviewInput: '#bulk-all-preview',
     bulkSelectAll: '#bulk-select-all',
+    bulkCheckboxesDropdownButton: '#bulk-all-selection-dropdown-button',
     commonBulkAllSelector: `.${commonBulkSelectAllClass}`,
     bulkSelectAllInPage: `#${bulkCombinationSelectAllInPageId}`,
     bulkSelectAllInPageId: bulkCombinationSelectAllInPageId,

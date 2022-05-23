@@ -58,7 +58,8 @@ export default class CombinationsListEditor {
   private readonly editionDisabledElements: string[] = [
     CombinationsMap.bulkActionsDropdownBtn,
     CombinationsMap.tableRow.isSelectedCombination,
-    CombinationsMap.bulkSelectAllInPage,
+    CombinationsMap.commonBulkAllSelector,
+    CombinationsMap.bulkCheckboxesDropdownButton,
     CombinationsMap.filtersSelectorButtons,
     CombinationsMap.generateCombinationsButton,
     CombinationsMap.list.rowActionButtons,
@@ -163,8 +164,13 @@ export default class CombinationsListEditor {
 
     this.editionMode = true;
     this.$paginatedList.addClass(CombinationsMap.list.editionModeClass);
+    this.disableElements();
+  }
 
-    // Disabled elements (bulk actions, filters, ...)
+  /**
+   * Disabled elements (bulk actions, filters, ...) that could mess with the pagination and the edition mode
+   */
+  private disableElements(): void {
     this.editionDisabledElements.forEach((disabledSelector: string) => {
       const $disabledElements = $(disabledSelector);
       $disabledElements.each((index: number, disabledElement: HTMLElement): void => {
@@ -272,5 +278,10 @@ export default class CombinationsListEditor {
       const $input = $(`[name="${inputName}"]`, this.$combinationsFormContainer);
       this.watchInputChange($input, this.savedInputValues[inputName]);
     });
+
+    // Trigger event so that external components can update the content (like checkboxes labels)
+    this.eventEmitter.emit(CombinationEvents.listRendered);
+    // Elements were re-rendered so they must be disabled again
+    this.disableElements();
   }
 }

@@ -1521,7 +1521,7 @@ $product-page-padding-bottom: 80px !default;
     min-height: 3.5rem;
     margin-top: 0.5rem;
 
-    #id-header {
+    #combination-bulk-cell {
       white-space: nowrap;
 
       .md-checkbox {
@@ -1530,11 +1530,21 @@ $product-page-padding-bottom: 80px !default;
 
       .dropdown-menu .md-checkbox {
         display: block;
-        padding-left: 38px;
+        padding-left: 2rem;
+
+        .md-checkbox-control::before,
+        .md-checkbox-control::after {
+          margin-top: 0.4rem;
+          margin-left: 0.4rem;
+        }
       }
 
       .ps-sortable-column {
         display: inline-block;
+      }
+
+      .dropdown-toggle:not(.dropdown-toggle-split)::after {
+        margin-left: 0;
       }
     }
 
@@ -1558,6 +1568,18 @@ $product-page-padding-bottom: 80px !default;
 
           .form-check-label {
             justify-content: center;
+          }
+        }
+
+        .input-group.money-type {
+          max-width: 10rem;
+        }
+
+        .delta-quantity {
+          max-width: 15rem;
+
+          &-quantity {
+            max-width: 10rem;
           }
         }
 
