@@ -26,6 +26,7 @@ Feature: Search combinations to associate them in the BO
     And attribute "Blue" named "Blue" in en language exists
     And attribute "Red" named "Red" in en language exists
 
+
   Scenario: I can search combinations by name
     When I add product "beer_bottle" with following information:
       | name[en-US] | bottle of beer     |
@@ -293,3 +294,34 @@ Feature: Search combinations to associate them in the BO
       | lemon_tshirt  | lemon_tshirt_s_black | lemon t-shirt: Size - S, Color - Black |           | http://myshop.com/img/p/{lemon_image1}-home_default.jpg |
       | lemon_tshirt  | lemon_tshirt_m_white | lemon t-shirt: Size - M, Color - White |           | http://myshop.com/img/p/{lemon_image4}-home_default.jpg |
       | lemon_tshirt  | lemon_tshirt_m_black | lemon t-shirt: Size - M, Color - Black |           | http://myshop.com/img/p/{lemon_image3}-home_default.jpg |
+
+  Scenario: I perform a search for candidate to be packed and I get result, but no pack is available
+    Given I add product "packedProduct" with following information:
+      | name[en-US] | pack of shots of Diplomatico Rum |
+      | type        | pack                             |
+    And I add product "secondPackedProduct" with following information:
+      | name[en-US] | pack of shots of White Rum |
+      | type        | pack                       |
+    And I add product "product1" with following information:
+      | name[en-US] | shot of White Rum         |
+      | name[fr-FR] | petit verre de Rhum Blanc |
+      | type        | standard                  |
+    And I add product "product2" with following information:
+      | name[en-US] | shot of Kir Breton        |
+      | name[fr-FR] | petit verre de Kir Breton |
+      | type        | standard                  |
+
+    Then I search for products with locale "english" matching "kir breton" for "packedProduct" I should get following results:
+      | product  | name               | reference | image url                                             |
+      | product2 | shot of Kir Breton |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+    Then I search for products with locale "french" matching "petit verre" for "packedProduct" I should get following results:
+      | product  | name                      | reference | image url                                             |
+      | product2 | petit verre de Kir Breton |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+      | product1 | petit verre de Rhum Blanc |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+
+  Scenario: I perform a search for candidate to be packed and I get no result, also if packs are available
+    Then I search for products with locale "english" matching "pack of shots" for "packedProduct" I should get no results:
+
+  Scenario: I perform a search for candidate to be packed and I get no result, also if packs himself fits the search
+    Then I search for products with locale "english" matching "Diplomatico" for "packedProduct" I should get no results:
+
