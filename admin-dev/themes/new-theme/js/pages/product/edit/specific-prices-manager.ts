@@ -71,7 +71,7 @@ export default class SpecificPricesManager {
 
     this.initSpecificPriceModals();
 
-    // Enable/disabled the priority selectors depending on the priority type selected (global or custom)
+    // Enable/disable the priority selectors depending on the priority type selected (global or custom)
     new FormFieldToggler({
       disablingInputSelector: PriorityMap.priorityTypeCheckboxesSelector,
       matchingValue: '0',

@@ -106,7 +106,7 @@ export default class FormFieldToggler {
     const matchingValue = inputElement.dataset.matchingValue ?? this.params.matchingValue;
     const targetSelector = inputElement.dataset.targetSelector ?? this.params.targetSelector;
     const switchEvent = inputElement.dataset.switchEvent ?? this.params.switchEvent;
-    const disableOnMatch = inputElement.dataset?.disableOnMatch === '1' ?? this.params.disableOnMatch;
+    const disableOnMatch = inputElement.dataset.disableOnMatch === '1' ? true : this.params.disableOnMatch;
 
     if (matchingValue === null) {
       console.error('No matching value defined for inputElement', inputElement);
