@@ -665,10 +665,8 @@ class WebserviceOutputBuilderCore
                             continue;
                         }
                         $value = $object_assoc;
-                        if (empty($fields_assoc)) {
-                            if (!empty($value['id'])) {
-                                $fields_assoc = [['id' => $value['id']]];
-                            }
+                        if (empty($fields_assoc) && !empty($value['id'])) {
+                            $fields_assoc = [['id' => $value['id']]];
                         }
                         $output_details .= $this->renderFlatAssociation($object, $depth, $assoc_name, $association['resource'], $fields_assoc, $value, $parent_details);
                     } else {
