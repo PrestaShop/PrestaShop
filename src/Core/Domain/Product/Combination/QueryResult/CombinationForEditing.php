@@ -81,6 +81,7 @@ class CombinationForEditing
      * @param CombinationPrices $prices
      * @param CombinationStock $stock
      * @param int[] $imageIds
+     * @param bool $isDefault
      */
     public function __construct(
         int $combinationId,
