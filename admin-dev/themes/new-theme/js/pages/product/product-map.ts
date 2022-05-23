@@ -200,6 +200,10 @@ export default {
     supplierIdsInput: '#product_options_suppliers_supplier_ids',
     defaultSupplierInput: '#product_options_suppliers_default_supplier_id',
   },
+  shipping: {
+    deliveryTimeTypeInput: 'input[name="product[shipping][delivery_time_note_type]"]',
+    deliveryTimeNotesBlock: '#product_shipping_delivery_time_notes',
+  },
   seo: {
     container: '#product_seo_serp',
     defaultTitle: '.serp-default-title:input',

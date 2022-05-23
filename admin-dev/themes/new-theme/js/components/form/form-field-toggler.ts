@@ -181,7 +181,7 @@ export default class FormFieldToggler {
         elementToToggle.classList.toggle('disabled', disable);
         elementToToggle.toggleAttribute('disabled', disable);
       } else {
-        elementToToggle.classList.toggle('d-none', !disable);
+        elementToToggle.classList.toggle('d-none', disable);
       }
 
       const formElements = elementToToggle.querySelectorAll('input, select, textarea, button, option, fieldset');
