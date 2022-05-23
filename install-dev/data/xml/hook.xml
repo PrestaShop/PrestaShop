@@ -3622,7 +3622,7 @@
     </hook>
     <hook id="actionLoggerLogMessage">
       <name>actionLoggerLogMessage</name>
-      <title>Allows to make extra action while a log is logged</title>
+      <title>Allows to make extra action while a log is triggered</title>
       <description>This hook allows to make an extra action while an exception is throw and the logger log it</description>
     </hook>
   </entities>
