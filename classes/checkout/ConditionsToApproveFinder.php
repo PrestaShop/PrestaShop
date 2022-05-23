@@ -46,10 +46,10 @@ class ConditionsToApproveFinderCore
     {
         $cms = new CMS((int) Configuration::get('PS_CONDITIONS_CMS_ID'), $this->context->language->id);
         $link = $this->context->link->getCMSLink($cms, $cms->link_rewrite, (bool) Configuration::get('PS_SSL_ENABLED'));
-        
+
         $cms_prv = new CMS((int) Configuration::get('PS_PRIVACY_CMS_ID'), $this->context->language->id);
         $link_prv = $this->context->link->getCMSLink($cms_prv, $cms_prv->link_rewrite, (bool) Configuration::get('PS_SSL_ENABLED'));
-        
+
         $cms_rev = new CMS((int) Configuration::get('PS_REVOCATION_CMS_ID'), $this->context->language->id);
         $link_rev = $this->context->link->getCMSLink($cms_rev, $cms_rev->link_rewrite, (bool) Configuration::get('PS_SSL_ENABLED'));
 
@@ -62,7 +62,7 @@ class ConditionsToApproveFinderCore
                 $link_rev
             )
             ->setIdentifier('terms-and-conditions');
-        
+
         return $termsAndConditions;
     }
 
