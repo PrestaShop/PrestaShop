@@ -116,10 +116,11 @@ class ProductTypeListener implements EventSubscriberInterface
             return;
         }
         $retailPrice = $pricing->get('retail_price');
-        if (!$retailPrice->has('ecotax')) {
-            return;
+        if ($retailPrice->has('ecotax_tax_excluded')) {
+            $retailPrice->remove('ecotax_tax_excluded');
         }
-
-        $retailPrice->remove('ecotax');
+        if ($retailPrice->has('ecotax_tax_included')) {
+            $retailPrice->remove('ecotax_tax_included');
+        }
     }
 }
