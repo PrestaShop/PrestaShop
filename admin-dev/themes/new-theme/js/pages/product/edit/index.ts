@@ -37,18 +37,15 @@ import ProductFormModel from '@pages/product/edit/product-form-model';
 import ProductModulesManager from '@pages/product/edit/product-modules-manager';
 import ProductPartialUpdater from '@pages/product/edit/product-partial-updater';
 import ProductSEOManager from '@pages/product/edit/product-seo-manager';
-import ProductSuppliersCollection from '@pages/product/components/suppliers/product-suppliers-collection';
 import ProductTypeSwitcher from '@pages/product/edit/product-type-switcher';
 import VirtualProductManager from '@pages/product/edit/virtual-product-manager';
 import RelatedProductsManager from '@pages/product/edit/related-products-manager';
 import CreateProductModal from '@pages/product/components/create-product-modal';
 import SpecificPricesManager from '@pages/product/edit/specific-prices-manager';
-import SuppliersSelector from '@pages/product/components/suppliers/suppliers-selector';
-import {ProductSupplier, Supplier} from '@pages/product/components/suppliers/supplier-types';
 import initDropzone from '@pages/product/components/dropzone';
 import initTabs from '@pages/product/components/nav-tabs';
 import PriceSummary from '@pages/product/edit/price-summary';
-import ProductOptionsManager from "@pages/product/edit/product-options-manager";
+import ProductOptionsManager from '@pages/product/edit/product-options-manager';
 
 const {$} = window;
 
@@ -84,7 +81,7 @@ $(() => {
 
   new NavbarHandler($(ProductMap.navigationBar));
   new ProductSEOManager(eventEmitter);
-  new ProductOptionsManager();
+  new ProductOptionsManager(productType, productFormModel);
 
   // Product type has strong impact on the page rendering so when it is modified it must be submitted right away
   new ProductTypeSwitcher($productForm);
@@ -109,32 +106,6 @@ $(() => {
   new CustomizationsManager();
   new AttachmentsManager();
   new SpecificPricesManager(productId);
-
-  let productSuppliers: ProductSuppliersCollection;
-
-  if (productType !== ProductConst.PRODUCT_TYPE.COMBINATIONS) {
-    productSuppliers = new ProductSuppliersCollection(
-      ProductMap.suppliers.productSuppliers,
-      productFormModel.getProduct().suppliers?.defaultSupplierId || 0,
-      productFormModel.getProduct().price.wholesalePrice,
-      (defaultProductSupplier: ProductSupplier) => {
-        productFormModel.set('price.wholesalePrice', defaultProductSupplier.price);
-      },
-    );
-
-    productFormModel.watch('price.wholesalePrice', (event) => {
-      productSuppliers.updateWholesalePrice(event.value);
-    });
-    productFormModel.watch('suppliers.defaultSupplierId', (event) => {
-      productSuppliers.setDefaultSupplierId(event.value);
-    });
-  }
-
-  new SuppliersSelector((suppliers: Supplier[]) => {
-    if (productSuppliers) {
-      productSuppliers.setSelectedSuppliers(suppliers);
-    }
-  });
 
   if (productType === ProductConst.PRODUCT_TYPE.VIRTUAL) {
     new VirtualProductManager(productFormModel);
