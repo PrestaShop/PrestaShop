@@ -466,7 +466,7 @@ class ToolsCore
      *
      * @return string current url
      */
-    public static function getCurrentUrl()
+    public static function getCurrentUrl(): string
     {
         return Tools::getCurrentUrlProtocolPrefix() . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
     }
