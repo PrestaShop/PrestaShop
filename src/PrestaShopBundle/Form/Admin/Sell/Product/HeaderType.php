@@ -99,7 +99,7 @@ class HeaderType extends TranslatorAwareType
                     'data-combinations-warning' => $this->trans('This will delete all combinations.', 'Admin.Catalog.Notification'),
                     'data-pack-warning' => $this->trans('This will delete the list of products in this pack.', 'Admin.Catalog.Notification'),
                     'data-virtual-warning' => $this->trans('This will delete the associated virtual file.', 'Admin.Catalog.Notification'),
-                    'data-ecotax-warning' => $this->trans('This will reset the ecotax value.', 'Admin.Catalog.Notification'),
+                    'data-ecotax-warning' => $this->trans('This will reset the ecotax value and may impact your retail price tax included.', 'Admin.Catalog.Notification'),
                     'data-stock-warning' => $this->trans('This will reset the stock of this product.', 'Admin.Catalog.Notification'),
                     'data-stock-enabled' => $this->stockManagementEnabled,
                     'data-ecotax-enabled' => $this->isEcotaxEnabled,
