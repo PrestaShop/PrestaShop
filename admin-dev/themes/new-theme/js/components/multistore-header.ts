@@ -130,6 +130,15 @@ const initMultistoreHeader = () => {
   });
 
   /**
+   * Listen for changes in tinymce (user content is not in a form input, it's in a div,
+   * so we use MutationObserver)
+   */
+  const tinyMceContentNodes = document.querySelectorAll('.mce-content-body ');
+  tinyMceContentNodes.forEach((element) => {
+    alert('toto');
+  });
+
+  /**
    * When clicking on links to switch context,
    * if the configuration form has been modified, display confirmation modal
    */

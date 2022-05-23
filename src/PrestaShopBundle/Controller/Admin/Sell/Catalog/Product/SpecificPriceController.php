@@ -69,6 +69,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request, int $productId): Response
     {
+        echo 'testage'; exit;
         $form = $this->getFormBuilder()->getForm(['product_id' => $productId]);
         $form->handleRequest($request);
 
