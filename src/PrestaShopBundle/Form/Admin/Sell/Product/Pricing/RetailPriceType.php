@@ -255,6 +255,8 @@ class RetailPriceType extends TranslatorAwareType
             'attr' => [
                 'class' => 'retail-price-widget',
             ],
+            // Ecotax can be removed so there might be extra data in the request during type switching
+            'allow_extra_fields' => true,
         ]);
     }
 }
