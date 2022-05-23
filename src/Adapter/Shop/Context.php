@@ -92,18 +92,6 @@ class Context implements MultistoreContextCheckerInterface, ShopContextInterface
     }
 
     /**
-     * Get if it's a GroupShop context.
-     *
-     * @return bool
-     *
-     * @deprecated since 1.7.6.0, to be removed in 1.8. Use $this->isGroupShopContext() instead.
-     */
-    public function isShopGroupContext()
-    {
-        return $this->isGroupShopContext();
-    }
-
-    /**
      * Get if it's a Shop context.
      *
      * @return bool
@@ -111,18 +99,6 @@ class Context implements MultistoreContextCheckerInterface, ShopContextInterface
     public function isShopContext()
     {
         return Shop::getContext() === Shop::CONTEXT_SHOP;
-    }
-
-    /**
-     * Get if it's a All context.
-     *
-     * @return bool
-     *
-     * @deprecated since 1.7.6.0, to be removed in 1.8. Use $this->isAllShopContext() instead.
-     */
-    public function isAllContext()
-    {
-        return $this->isAllShopContext();
     }
 
     /**

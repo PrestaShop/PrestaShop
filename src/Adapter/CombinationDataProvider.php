@@ -65,28 +65,6 @@ class CombinationDataProvider
     }
 
     /**
-     * Get a combination values.
-     *
-     * @deprecated since 1.7.3.1 really slow, use getFormCombinations instead.
-     *
-     * @param int $combinationId The id_product_attribute
-     *
-     * @return array combinations
-     */
-    public function getFormCombination($combinationId)
-    {
-        $product = new Product((new Combination($combinationId))->id_product);
-
-        return $this->completeCombination(
-            $product->getAttributeCombinationsById(
-                $combinationId,
-                $this->context->getContext()->language->id
-            ),
-            $product
-        );
-    }
-
-    /**
      * Retrieve combinations data for a specific language id.
      *
      * @param array $combinationIds
