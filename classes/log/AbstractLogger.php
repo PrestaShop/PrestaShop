@@ -72,7 +72,7 @@ abstract class AbstractLoggerCore
             [
                 'message' => $message,
                 'level' => $level,
-                'logged' => $level >= $this->level,
+                'isLogged' => $level >= $this->level,
             ]
         );
     }
