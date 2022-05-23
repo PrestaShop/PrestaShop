@@ -68,3 +68,92 @@ $component-name: modal;
     @include border-radius(0 0 6px 6px);
   }
 }
+
+.#{$component-name}-progress {
+  .#{$component-name}-dialog {
+    width: 90%;
+    max-width: 800px;
+    max-height: 80vh;
+  }
+
+  .#{$component-name}-header {
+    padding: 1.5rem;
+
+    .switch-to-errors-button {
+      cursor: pointer;
+    }
+  }
+
+  .#{$component-name}-content {
+    padding: 0;
+  }
+
+  .#{$component-name}-footer {
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    background: rgba(234, 235, 236, 0.3);
+
+    .close-modal-button {
+      margin-left: auto;
+    }
+  }
+
+  .#{$component-name}-body {
+    max-height: 60vh;
+    padding: 0 1.5rem 1rem;
+    overflow: auto;
+
+    .progress-headline {
+      display: flex;
+      flex-direction: row;
+      margin-bottom: 0.5rem;
+
+      .progress-percent {
+        margin-left: auto;
+        font-weight: 700;
+      }
+    }
+
+    .progress {
+      margin-bottom: 1rem;
+
+      .progress-bar {
+        height: 100%;
+      }
+    }
+
+    .progress-icon {
+      margin-right: 0.5rem;
+
+      .spinner {
+        width: 1.25rem;
+        height: 1.25rem;
+      }
+
+      .material-icons {
+        &.progress-warning-icon {
+          color: map-get($alerts-second-colors, "warning");
+        }
+
+        &.progress-complete-icon {
+          color: map-get($alerts-second-colors, "success");
+        }
+
+        &.progress-stop-icon {
+          color: map-get($alerts-second-colors, "danger");
+        }
+      }
+    }
+
+    .progress-modal-error{
+      padding: 1rem 0 1rem 0.5rem;
+      border-bottom: 1px solid #dbe6e9;
+
+      .progress-warning-icon {
+        margin-right: 1rem;
+        margin-bottom: 0.5rem;
+        color: map-get($alerts-second-colors, "warning");
+      }
+    }
+  }
+}

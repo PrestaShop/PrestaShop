@@ -118,7 +118,10 @@
         :title="lowStockLevel"
       >!</span>
     </td>
-    <td class="qty-spinner text-right" data-role="update-quantity">
+    <td
+      class="qty-spinner text-right"
+      data-role="update-quantity"
+    >
       <Spinner
         :product="product"
         @updateProductQty="updateProductQty"

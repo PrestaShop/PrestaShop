@@ -73,7 +73,7 @@ final class DoctrinePositionUpdateHandler implements PositionUpdateHandlerInterf
 
         if (null !== $parentId && null !== $positionDefinition->getParentIdField()) {
             $qb
-                ->andWhere('t.' . $positionDefinition->getParentIdField() . ' = :parentId')
+                ->andWhere('t.`' . $positionDefinition->getParentIdField() . '` = :parentId')
                 ->setParameter('parentId', $parentId);
         }
 
@@ -90,7 +90,7 @@ final class DoctrinePositionUpdateHandler implements PositionUpdateHandlerInterf
     /**
      * {@inheritdoc}
      */
-    public function updatePositions(PositionDefinitionInterface $positionDefinition, array $newPositions)
+    public function updatePositions(PositionDefinitionInterface $positionDefinition, array $newPositions, $parentId = null)
     {
         try {
             $this->connection->beginTransaction();
@@ -103,6 +103,12 @@ final class DoctrinePositionUpdateHandler implements PositionUpdateHandlerInterf
                     ->andWhere($positionDefinition->getIdField() . ' = :rowId')
                     ->setParameter('rowId', $rowId)
                     ->setParameter('position', $positionIndex);
+
+                if (null !== $parentId && null !== $positionDefinition->getParentIdField()) {
+                    $qb
+                        ->andWhere('`' . $positionDefinition->getParentIdField() . '` = :parentId')
+                        ->setParameter('parentId', $parentId);
+                }
 
                 $statement = $qb->execute();
                 if ($statement instanceof Statement && $statement->errorCode()) {

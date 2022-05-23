@@ -113,9 +113,7 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
     {
         $productData = $this->productGridDataFactory->getData($searchCriteria);
 
-        $modifiedRecords = $this->applyModification(
-            $productData->getRecords()->all()
-        );
+        $modifiedRecords = $this->applyModification($productData->getRecords()->all());
 
         return new GridData(
             new RecordCollection($modifiedRecords),
@@ -155,7 +153,6 @@ final class ProductGridDataFactoryDecorator implements GridDataFactoryInterface
             if ($product['id_image']) {
                 $products[$i]['image'] = $this->productImagePathFactory->getPathByType(new ImageId((int) $product['id_image']), ProductImagePathFactory::IMAGE_TYPE_SMALL_DEFAULT);
             }
-            /* @todo when new image type for grid is imported, this needs to be changed to use that */
         }
 
         return $products;

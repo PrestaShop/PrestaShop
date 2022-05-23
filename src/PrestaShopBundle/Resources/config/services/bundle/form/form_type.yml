@@ -1359,6 +1359,16 @@ services:
     tags:
       - { name: form.type }
 
+  form.type.sell.product.category.category_filter_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoryFilterType'
+    public: true
+    arguments:
+      - "@translator"
+      - "@prestashop.adapter.data_provider.category"
+      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+    tags:
+      - { name: form.type }
+
   form.type.sell.product.category.categories_type:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoriesType'
     parent: 'form.type.translatable.aware'

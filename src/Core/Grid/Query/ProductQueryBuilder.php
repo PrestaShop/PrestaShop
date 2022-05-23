@@ -109,6 +109,7 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
             ->addSelect('cl.`name` AS `category`')
             ->addSelect('img_shop.`id_image`')
             ->addSelect('p.`id_tax_rules_group`')
+            ->addSelect('pc.`position`, pc.`id_category`')
         ;
 
         if ($this->configuration->getBoolean('PS_STOCK_MANAGEMENT')) {
@@ -170,6 +171,13 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
                 'img_shop',
                 'img_shop.`id_product` = ps.`id_product` AND img_shop.`cover` = 1 AND img_shop.`id_shop` = :id_shop'
             )
+            ->rightJoin(
+                   'p',
+                   $this->dbPrefix . 'category_product',
+                   'pc',
+                   'p.`id_product` = pc.`id_product` AND pc.id_category = :categoryId'
+               )
+            ->setParameter('categoryId', $this->getFilteredCategoryId($filterValues))
             ->andWhere('p.`state`=1')
         ;
 
@@ -255,11 +263,20 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
             if ('category' === $filterName) {
                 $qb->andWhere('cl.`name` LIKE :category');
                 $qb->setParameter('category', '%' . $filter . '%');
-
-                continue;
             }
         }
 
         return $qb;
+    }
+
+    private function getFilteredCategoryId(array $filterValues): int
+    {
+        foreach ($filterValues as $filterName => $filter) {
+            if ('id_category' === $filterName) {
+                return (int) $filter;
+            }
+        }
+
+        return $this->configuration->getInt('PS_HOME_CATEGORY');
     }
 }

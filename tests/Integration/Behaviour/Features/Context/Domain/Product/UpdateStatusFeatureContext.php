@@ -28,13 +28,43 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
+use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkUpdateProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
+use RuntimeException;
 use Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext;
 
 class UpdateStatusFeatureContext extends AbstractProductFeatureContext
 {
+    /**
+     * @When /^I bulk change status to be (enabled|disabled) for following products:$/
+     *
+     * @param bool $status
+     * @param TableNode $productsList
+     */
+    public function bulkUpdateStatus(bool $status, TableNode $productsList): void
+    {
+        $productIds = [];
+        foreach ($productsList->getColumnsHash() as $productInfo) {
+            $productIds[] = $this->getSharedStorage()->get($productInfo['reference']);
+        }
+
+        try {
+            $this->getCommandBus()->handle(new BulkUpdateProductStatusCommand(
+                $productIds,
+                $status
+            ));
+        } catch (ProductException $e) {
+            $this->setLastException($e);
+
+            return;
+        }
+    }
+
     /**
      * @When /^I (enable|disable) product "(.*)"$/
      *
@@ -98,5 +128,40 @@ class UpdateStatusFeatureContext extends AbstractProductFeatureContext
     public function assertInvalidOnlineDataException(): void
     {
         $this->assertLastErrorIs(ProductConstraintException::class, ProductConstraintException::INVALID_ONLINE_DATA);
+    }
+
+    /**
+     * @Then I should get an error that online data are invalid for products:
+     *
+     * @param TableNode $productsList
+     */
+    public function assertExceptionRoseForProducts(TableNode $productsList): void
+    {
+        /** @var CannotBulkUpdateProductException $bulkException */
+        $bulkException = $this->assertLastErrorIs(CannotBulkUpdateProductException::class);
+
+        $invalidProductIds = [];
+        foreach ($productsList->getColumnsHash() as $productInfo) {
+            $invalidProductIds[] = $this->getSharedStorage()->get($productInfo['reference']);
+        }
+
+        foreach ($bulkException->getBulkExceptions() as $productId => $productException) {
+            Assert::assertContains($productId, $invalidProductIds);
+            if (!$productException instanceof ProductConstraintException) {
+                throw new RuntimeException(sprintf(
+                    'Product error should be "%s", but got "%s"',
+                    ProductConstraintException::class,
+                    get_class($productException)
+                ));
+            }
+
+            if ($productException->getCode() !== ProductConstraintException::INVALID_ONLINE_DATA) {
+                throw new RuntimeException(sprintf(
+                    'Last error should have code "%s", but has "%s"',
+                    ProductConstraintException::INVALID_ONLINE_DATA,
+                    $productException->getCode()
+                ));
+            }
+        }
     }
 }

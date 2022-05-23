@@ -26,7 +26,6 @@ interface Window {
   permissionsMessages: Array<string>;
 }
 
-/* eslint-disable */
 interface JQuery {
   tableDnD(params: unknown): void;
   tokenfield: any;
@@ -40,7 +39,6 @@ interface JQuery {
   passy(params: unknown, length?: number): void;
   serializeJSON: any;
 }
-/* eslint-disable */
 
 interface JQueryStatic {
   tableDnD: TableDnD;
@@ -77,29 +75,24 @@ interface PrestashopWindow {
   instance: any;
 }
 
-interface RegExpPositions extends RegExpExecArray {
-  rowId: string;
-  oldPosition: string;
-}
-
 type FetchResponse = Record<string, any>;
 
 type OptionsObject = FetchResponse;
 
-type VTags = Vue & { 
+type VTags = Vue & {
   add: (tag: any) => void;
   tag: any;
 };
 
-type VTagsInput = Vue & { 
+type VTagsInput = Vue & {
   value: any;
 };
 
-type VCheckbox = Vue & { 
+type VCheckbox = Vue & {
   $data: VCheckboxDatas;
 };
 
-type VCheckboxDatas = Vue & { 
+type VCheckboxDatas = Vue & {
   checked: boolean;
 };
 
@@ -107,12 +100,12 @@ interface SelectorsMap extends Record<string, string> {
   [key: string]: string;
 }
 
-type VTransModal = Vue & { 
+type VTransModal = Vue & {
   showModal: () => void;
   $once: any;
 };
 
-type VPrincipal = Vue & { 
+type VPrincipal = Vue & {
   saveTranslations: () => void;
   edited: () => boolean;
 };
