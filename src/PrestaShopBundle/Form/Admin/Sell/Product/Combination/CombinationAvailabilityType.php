@@ -28,19 +28,32 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
+use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CombinationsType extends TranslatorAwareType
+class CombinationAvailabilityType extends TranslatorAwareType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('combination_manager', CombinationManagerType::class, [
-                'product_id' => $options['product_id'],
+            ->add('available_now_label', TranslatableType::class, [
+                'type' => TextType::class,
+                'label' => $this->trans('Label when in stock', 'Admin.Catalog.Feature'),
+                'required' => false,
+                'modify_all_shops' => true,
             ])
-            ->add('availability', CombinationAvailabilityType::class)
+            ->add('available_later_label', TranslatableType::class, [
+                'type' => TextType::class,
+                'label' => $this->trans(
+                    'Label when out of stock (and back order allowed)',
+                    'Admin.Catalog.Feature'
+                ),
+                'required' => false,
+                'modify_all_shops' => true,
+            ])
         ;
     }
 
@@ -48,11 +61,11 @@ class CombinationsType extends TranslatorAwareType
     {
         $resolver
             ->setDefaults([
-                'label' => false,
+                'label' => $this->trans('When out of stock', 'Admin.Catalog.Feature'),
+                'label_tag_name' => 'h2',
                 'required' => false,
-                'product_id' => null,
+                'columns_number' => 3,
             ])
-            ->setAllowedTypes('product_id', ['null', 'int'])
         ;
     }
 }
