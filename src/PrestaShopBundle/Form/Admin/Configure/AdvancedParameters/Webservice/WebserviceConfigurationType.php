@@ -53,7 +53,7 @@ class WebserviceConfigurationType extends TranslatorAwareType
         );
         $enableWebservicesHelp .= '<br/> 2. ';
         $enableWebservicesHelp .= $this->trans(
-            'Check that the five methods GET, POST, PUT, DELETE and HEAD are supported by this server.',
+            'Check that the six methods GET, POST, PUT, PATCH, DELETE and HEAD are supported by this server.',
             'Admin.Advparameters.Help'
         );
 

@@ -327,22 +327,22 @@ class WebserviceRequestCore
             'weight_ranges' => ['description' => 'Weight ranges', 'class' => 'RangeWeight'],
             'zones' => ['description' => 'The Countries zones', 'class' => 'Zone'],
             'employees' => ['description' => 'The Employees', 'class' => 'Employee'],
-            'search' => ['description' => 'Search', 'specific_management' => true, 'forbidden_method' => ['PUT', 'POST', 'DELETE']],
+            'search' => ['description' => 'Search', 'specific_management' => true, 'forbidden_method' => ['PUT', 'POST', 'PATCH', 'DELETE']],
             'content_management_system' => ['description' => 'Content management system', 'class' => 'CMS'],
             'shops' => ['description' => 'Shops from multi-shop feature', 'class' => 'Shop'],
             'shop_groups' => ['description' => 'Shop groups from multi-shop feature', 'class' => 'ShopGroup'],
             'taxes' => ['description' => 'The tax rate', 'class' => 'Tax'],
-            'stock_movements' => ['description' => 'Stock movements', 'class' => 'StockMvtWS', 'forbidden_method' => ['PUT', 'POST', 'DELETE']],
+            'stock_movements' => ['description' => 'Stock movements', 'class' => 'StockMvtWS', 'forbidden_method' => ['PUT', 'POST', 'PATCH', 'DELETE']],
             'stock_movement_reasons' => ['description' => 'Stock movement reason', 'class' => 'StockMvtReason'],
             'warehouses' => ['description' => 'Warehouses', 'class' => 'Warehouse', 'forbidden_method' => ['DELETE']],
-            'stocks' => ['description' => 'Stocks', 'class' => 'Stock', 'forbidden_method' => ['PUT', 'POST', 'DELETE']],
+            'stocks' => ['description' => 'Stocks', 'class' => 'Stock', 'forbidden_method' => ['PUT', 'POST', 'PATCH', 'DELETE']],
             'stock_availables' => ['description' => 'Available quantities', 'class' => 'StockAvailable', 'forbidden_method' => ['POST', 'DELETE']],
-            'warehouse_product_locations' => ['description' => 'Location of products in warehouses', 'class' => 'WarehouseProductLocation', 'forbidden_method' => ['PUT', 'POST', 'DELETE']],
-            'supply_orders' => ['description' => 'Supply Orders', 'class' => 'SupplyOrder', 'forbidden_method' => ['PUT', 'POST', 'DELETE']],
-            'supply_order_details' => ['description' => 'Supply Order Details', 'class' => 'SupplyOrderDetail', 'forbidden_method' => ['PUT', 'POST', 'DELETE']],
-            'supply_order_states' => ['description' => 'Supply Order Statuses', 'class' => 'SupplyOrderState', 'forbidden_method' => ['PUT', 'POST', 'DELETE']],
-            'supply_order_histories' => ['description' => 'Supply Order Histories', 'class' => 'SupplyOrderHistory', 'forbidden_method' => ['PUT', 'POST', 'DELETE']],
-            'supply_order_receipt_histories' => ['description' => 'Supply Order Receipt Histories', 'class' => 'SupplyOrderReceiptHistory', 'forbidden_method' => ['PUT', 'POST', 'DELETE']],
+            'warehouse_product_locations' => ['description' => 'Location of products in warehouses', 'class' => 'WarehouseProductLocation', 'forbidden_method' => ['PUT', 'POST', 'PATCH', 'DELETE']],
+            'supply_orders' => ['description' => 'Supply Orders', 'class' => 'SupplyOrder', 'forbidden_method' => ['PUT', 'POST', 'PATCH', 'DELETE']],
+            'supply_order_details' => ['description' => 'Supply Order Details', 'class' => 'SupplyOrderDetail', 'forbidden_method' => ['PUT', 'POST', 'PATCH', 'DELETE']],
+            'supply_order_states' => ['description' => 'Supply Order Statuses', 'class' => 'SupplyOrderState', 'forbidden_method' => ['PUT', 'POST', 'PATCH', 'DELETE']],
+            'supply_order_histories' => ['description' => 'Supply Order Histories', 'class' => 'SupplyOrderHistory', 'forbidden_method' => ['PUT', 'POST', 'PATCH', 'DELETE']],
+            'supply_order_receipt_histories' => ['description' => 'Supply Order Receipt Histories', 'class' => 'SupplyOrderReceiptHistory', 'forbidden_method' => ['PUT', 'POST', 'PATCH', 'DELETE']],
             'product_suppliers' => ['description' => 'Product Suppliers', 'class' => 'ProductSupplier'],
             'tax_rules' => ['description' => 'Tax rules entity', 'class' => 'TaxRule'],
             'tax_rule_groups' => ['description' => 'Tax rule groups', 'class' => 'TaxRulesGroup'],
@@ -582,6 +582,12 @@ class WebserviceRequestCore
                             break;
                         case 'PUT':
                             if ($this->executeEntityPut()) {
+                                $success = true;
+                            }
+
+                            break;
+                        case 'PATCH':
+                            if ($this->executeEntityPatch()) {
                                 $success = true;
                             }
 
@@ -953,7 +959,7 @@ class WebserviceRequestCore
      */
     protected function checkHTTPMethod()
     {
-        if (!in_array($this->method, ['GET', 'POST', 'PUT', 'DELETE', 'HEAD'])) {
+        if (!in_array($this->method, ['GET', 'PUT', 'POST', 'PATCH', 'DELETE', 'HEAD'])) {
             $this->setError(405, 'Method ' . $this->method . ' is not valid', 23);
         } elseif (isset($this->urlSegment[0], $this->resourceList[$this->urlSegment[0]]['forbidden_method']) && in_array($this->method, $this->resourceList[$this->urlSegment[0]]['forbidden_method'])) {
             $this->setError(405, 'Method ' . $this->method . ' is not allowed for the resource ' . $this->urlSegment[0], 101);
@@ -1448,6 +1454,16 @@ class WebserviceRequestCore
     }
 
     /**
+     * Execute PATCH method on a PrestaShop entity.
+     *
+     * @return bool
+     */
+    public function executeEntityPatch(): bool
+    {
+        return $this->saveEntityFromXml(200);
+    }
+
+    /**
      * Execute DELETE method on a PrestaShop entity.
      *
      * @return void
@@ -1539,7 +1555,7 @@ class WebserviceRequestCore
                 $ids[] = (int) $entity->id;
             }
         }
-        if ($this->method == 'PUT') {
+        if ($this->method == 'PUT' || $this->method == 'PATCH') {
             $ids2 = array_unique($ids);
             if (count($ids2) != count($ids)) {
                 $this->setError(400, 'id is duplicate in request', 89);
@@ -1565,7 +1581,7 @@ class WebserviceRequestCore
             /* @var ObjectModel $object */
             if ($this->method == 'POST') {
                 $object = new $this->resourceConfiguration['retrieveData']['className']();
-            } elseif ($this->method == 'PUT') {
+            } elseif ($this->method == 'PUT' || $this->method == 'PATCH') {
                 $object = new $this->resourceConfiguration['retrieveData']['className']((int) $attributes->id);
                 if (!$object->id) {
                     $this->setError(404, 'Invalid ID', 92);
@@ -1583,8 +1599,11 @@ class WebserviceRequestCore
             $i18n = false;
             // attributes
             foreach ($this->resourceConfiguration['fields'] as $fieldName => $fieldProperties) {
+                // only process fields actually in the input XML
+                if ($this->method == 'PATCH' && !isset($attributes->$fieldName)) {
+                    continue;
+                }
                 $sqlId = $fieldProperties['sqlId'];
-
                 if ($fieldName == 'id') {
                     $sqlId = $fieldName;
                 }
@@ -1833,7 +1852,7 @@ class WebserviceRequestCore
                         $type_of_view = WebserviceOutputBuilder::VIEW_LIST;
                     }
 
-                    if (in_array($this->method, ['PUT', 'POST'])) {
+                    if (in_array($this->method, ['PUT', 'POST', 'PATCH'])) {
                         $type_of_view = WebserviceOutputBuilder::VIEW_DETAILS;
                         $this->fieldsToDisplay = 'full';
                     }
@@ -1859,7 +1878,8 @@ class WebserviceRequestCore
                 unset($return['content']);
             }
         } elseif (isset($return['content'])) {
-            $this->objOutput->setHeaderParams('Content-Sha1', sha1($return['content']));
+            $return['content_sha1'] = sha1($return['content']);
+            $this->objOutput->setHeaderParams('Content-Sha1', $return['content_sha1']);
         }
 
         // if errors happens when creating returned xml,

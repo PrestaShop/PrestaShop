@@ -62,13 +62,13 @@ if (isset($_SERVER['PHP_AUTH_USER'])) {
 
 $input_xml = null;
 
-// if a XML is in PUT or in POST
-if (($_SERVER['REQUEST_METHOD'] == 'PUT') || ($_SERVER['REQUEST_METHOD'] == 'POST')) {
-    $putresource = fopen('php://input', 'rb');
-    while ($putData = fread($putresource, 1024)) {
-        $input_xml .= $putData;
+// if a XML is in POST, PUT or PATCH
+if (in_array($_SERVER['REQUEST_METHOD'], ['POST', 'PUT', 'PATCH'])) {
+    $put_resource = fopen('php://input', 'rb');
+    while ($put_data = fread($put_resource, 1024)) {
+        $input_xml .= $put_data;
     }
-    fclose($putresource);
+    fclose($put_resource);
 }
 if (isset($input_xml) && strncmp($input_xml, 'xml=', 4) == 0) {
     $input_xml = substr($input_xml, 4);
@@ -88,7 +88,6 @@ WebserviceRequest::$ws_current_classname = $class_name;
 $request = call_user_func([$class_name, 'getInstance']);
 
 $result = $request->fetch($key, $method, $_GET['url'], $params, $bad_class_name, $input_xml);
-
 // display result
 if (ob_get_length() != 0) {
     header('Content-Type: application/javascript');
@@ -96,7 +95,7 @@ if (ob_get_length() != 0) {
 
 // Manage cache
 if (isset($_SERVER['HTTP_LOCAL_CONTENT_SHA1']) && $_SERVER['HTTP_LOCAL_CONTENT_SHA1'] == $result['content_sha1']) {
-    $result['status'] = $_SERVER['SERVER_PROTOCOL'] . ' 304 Not Modified';
+    $result['headers'][] = $_SERVER['SERVER_PROTOCOL'] . ' 304 Not Modified';
 }
 
 if (is_array($result['headers'])) {
@@ -104,10 +103,11 @@ if (is_array($result['headers'])) {
         header($param_value);
     }
 }
+
 if (isset($result['type'])) {
-    //	header($result['content_sha1']);
     if (!isset($_SERVER['HTTP_LOCAL_CONTENT_SHA1']) || $_SERVER['HTTP_LOCAL_CONTENT_SHA1'] != $result['content_sha1']) {
         echo $result['content'];
     }
 }
+
 ob_end_flush();

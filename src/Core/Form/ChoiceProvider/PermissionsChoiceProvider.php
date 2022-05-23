@@ -58,6 +58,7 @@ final class PermissionsChoiceProvider implements FormChoiceProviderInterface
             $this->translator->trans('View (GET)', [], 'Admin.Advparameters.Feature') => Permission::VIEW,
             $this->translator->trans('Modify (PUT)', [], 'Admin.Advparameters.Feature') => Permission::MODIFY,
             $this->translator->trans('Add (POST)', [], 'Admin.Advparameters.Feature') => Permission::ADD,
+            $this->translator->trans('Patch (PATCH)', [], 'Admin.Advparameters.Feature') => Permission::PATCH,
             $this->translator->trans('Delete (DELETE)', [], 'Admin.Advparameters.Feature') => Permission::DELETE,
             $this->translator->trans('Fast view (HEAD)', [], 'Admin.Advparameters.Feature') => Permission::FAST_VIEW,
         ];
