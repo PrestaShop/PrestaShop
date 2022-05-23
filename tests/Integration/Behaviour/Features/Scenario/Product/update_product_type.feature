@@ -80,6 +80,29 @@ Feature: Add basic product from Back Office (BO)
     When I update product "virtualProduct" type to virtual
     Then product "virtualProduct" type should be virtual
 
+  Scenario: I update product type to virtual (ecotax should be reset and impacted on price)
+    When I add product "virtualProduct" with following information:
+      | name[en-US] | bottle of beer |
+      | type        | standard       |
+    Then product "virtualProduct" should be disabled
+    And product "virtualProduct" type should be standard
+    And product "virtualProduct" localized "name" should be:
+      | locale | value          |
+      | en-US  | bottle of beer |
+    And product "virtualProduct" should be assigned to following categories:
+      | id reference | name[en-US] | is default |
+      | home         | Home        | true       |
+    When I update product "virtualProduct" prices with following information:
+      | ecotax             | 8.56            |
+    Then product virtualProduct should have following prices information:
+      | ecotax                  | 8.56    |
+      | ecotax_tax_included     | 8.56    |
+    When I update product "virtualProduct" type to virtual
+    Then product "virtualProduct" type should be virtual
+    And product virtualProduct should have following prices information:
+      | ecotax                  | 0.00    |
+      | ecotax_tax_included     | 0.00    |
+
   Scenario: I update product type to pack
     When I add product "packProduct" with following information:
       | name[en-US] | bottle of beer |
