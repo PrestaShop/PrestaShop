@@ -30,7 +30,7 @@ let browserContext;
 let page;
 const firstCustomerData = new CustomerFaker();
 const secondCustomerData = new CustomerFaker();
-const addressData = new AddressFaker();
+const addressData = new AddressFaker({country: 'France'});
 
 const firstOrderByGuestData = {
   customer: firstCustomerData,

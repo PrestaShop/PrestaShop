@@ -32,7 +32,7 @@ let browserContext;
 let page;
 
 const customerData = new CustomerFaker({password: ''});
-const addressData = new AddressFaker();
+const addressData = new AddressFaker({country: 'France'});
 
 // New order by guest data
 const orderByGuestData = {
