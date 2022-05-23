@@ -136,7 +136,7 @@ class BulkCombinationFormDataFormatterTest extends TestCase
             ],
         ];
 
-        yield 'stock dat with fixed quantity' => [
+        yield 'stock data with fixed quantity' => [
             [
                 'stock' => [
                     'fixed_quantity' => 7,
