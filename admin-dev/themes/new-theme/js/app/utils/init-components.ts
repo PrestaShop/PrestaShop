@@ -140,7 +140,7 @@ const initPrestashopComponents = (): void => {
     DeltaQuantityInput,
     DisablingSwitch,
     EventEmitter,
-    FormFieldDisabler: FormFieldToggler,
+    FormFieldToggler,
     GeneratableInput,
     DateRange,
     Grid,
