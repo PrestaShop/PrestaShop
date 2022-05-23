@@ -50,6 +50,11 @@ export type InputFormFieldDisablerParams = Partial<FormFieldDisablerParams> & {
   disablingInputSelector: string,
 };
 
+export type SwitchEventData = {
+  targetSelector: string,
+  disable: boolean,
+}
+
 /**
  * Enables or disables element depending on certain input value.
  */
@@ -134,14 +139,22 @@ export default class FormFieldDisabler {
     }
   }
 
-  private toggle(targetSelector: string, disable: boolean, switchEvent: string | null): void {
+  private toggle(
+    targetSelector: string,
+    disable: boolean,
+    switchEvent: string | null,
+  ): void {
     if (switchEvent) {
       const {eventEmitter} = window.prestashop.instance;
 
       if (!eventEmitter) {
         console.error('Trying to use EventEmitter without having initialised the component before.');
       } else {
-        eventEmitter.emit(switchEvent, {targetSelector, disable});
+        const eventData: SwitchEventData = {
+          targetSelector,
+          disable,
+        };
+        eventEmitter.emit(switchEvent, eventData);
       }
     }
 

@@ -79,6 +79,7 @@ class BulkCombinationStockType extends TranslatorAwareType
                     'required' => false,
                     'label' => $this->trans('Edit quantity', 'Admin.Catalog.Feature'),
                     'disabling_switch' => true,
+                    'disabling_switch_event' => 'combinationSwitchDeltaQuantity',
                     'disabled_value' => function (?array $data) {
                         return empty($data['quantity']) && empty($data['delta']);
                     },
@@ -88,6 +89,7 @@ class BulkCombinationStockType extends TranslatorAwareType
                     'label' => $this->trans('Edit fixed quantity', 'Admin.Catalog.Feature'),
                     'default_empty_data' => 0,
                     'disabling_switch' => true,
+                    'disabling_switch_event' => 'combinationSwitchFixedQuantity',
                     'modify_all_shops' => true,
                 ])
             ;

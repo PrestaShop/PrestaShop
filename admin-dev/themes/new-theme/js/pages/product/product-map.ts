@@ -165,6 +165,8 @@ export default {
     bulkSelectAllInPageId: bulkCombinationSelectAllInPageId,
     bulkProgressModalId: progressModalId,
     bulkFormModalId: 'bulk-combination-form-modal',
+    bulkDeltaQuantitySwitchName: 'bulk_combination[stock][disabling_switch_delta_quantity]',
+    bulkFixedQuantitySwitchName: 'bulk_combination[stock][disabling_switch_fixed_quantity]',
   },
   virtualProduct: {
     container: '.virtual-product-file-container',
