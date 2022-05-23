@@ -191,6 +191,10 @@ export default {
     coveredPreview: '.dz-preview.is-cover',
     windowFileManager: '.dropzone-window-filemanager',
   },
+  options: {
+    availableForOrderInput: 'input[name="product[options][visibility][available_for_order]"]',
+    showPriceSwitchContainer: '.show-price-switch-container',
+  },
   suppliers: {
     productSuppliers: '#product_options_product_suppliers',
     supplierIdsInput: '#product_options_suppliers_supplier_ids',
