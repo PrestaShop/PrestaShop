@@ -28,7 +28,7 @@ class WebserviceSpecificManagementSearchCore implements WebserviceSpecificManage
     /** @var WebserviceOutputBuilder */
     protected $objOutput;
 
-    /** @var string */
+    /** @var ApiNode */
     protected $output;
 
     /** @var WebserviceRequest */
@@ -125,13 +125,16 @@ class WebserviceSpecificManagementSearchCore implements WebserviceSpecificManage
             $objects_categories[] = new Category($id);
         }
 
-        $this->output .= $this->objOutput->getContent($objects_products, null, $this->wsObject->fieldsToDisplay, $this->wsObject->depth, WebserviceOutputBuilder::VIEW_LIST, false);
+        $this->output = ApiNode::parent();
+        $this->objOutput->getContent($objects_products, null, $this->wsObject->fieldsToDisplay, $this->wsObject->depth, WebserviceOutputBuilder::VIEW_LIST, false);
+        $this->output->addApiNode($this->objOutput->getOutput());
         // @todo allow fields of type category and product
         // $this->_resourceConfiguration = $objects_categories['empty']->getWebserviceParameters();
         // if (!$this->setFieldsToDisplay())
         // return false;
 
-        $this->output .= $this->objOutput->getContent($objects_categories, null, $this->wsObject->fieldsToDisplay, $this->wsObject->depth, WebserviceOutputBuilder::VIEW_LIST, false);
+        $this->objOutput->getContent($objects_categories, null, $this->wsObject->fieldsToDisplay, $this->wsObject->depth, WebserviceOutputBuilder::VIEW_LIST, false);
+        $this->output->addApiNode($this->objOutput->getOutput());
     }
 
     /**
@@ -141,6 +144,6 @@ class WebserviceSpecificManagementSearchCore implements WebserviceSpecificManage
      */
     public function getContent()
     {
-        return $this->objOutput->getObjectRender()->overrideContent($this->output);
+        return $this->objOutput->getObjectRender()->renderNode($this->output);
     }
 }

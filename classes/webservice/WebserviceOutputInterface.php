@@ -25,39 +25,7 @@
  */
 interface WebserviceOutputInterface
 {
-    public function __construct($languages = []);
+    public function getContentType(): string;
 
-    public function setWsUrl($url);
-
-    public function getWsUrl();
-
-    public function getContentType();
-
-    public function setSchemaToDisplay($schema);
-
-    public function getSchemaToDisplay();
-
-    public function renderField($field);
-
-    public function renderNodeHeader($obj, $params, $more_attr = null, $has_child = true);
-
-    public function renderNodeFooter($obj, $params);
-
-    public function renderAssociationHeader($obj, $params, $assoc_name, $closed_tags = false);
-
-    public function renderAssociationFooter($obj, $params, $assoc_name);
-
-    public function overrideContent($content);
-
-    public function renderErrorsHeader();
-
-    public function renderErrorsFooter();
-
-    public function renderErrors($message, $code = null);
-
-    public function setLanguages($languages);
-
-    public function renderAssociationWrapperHeader();
-
-    public function renderAssociationWrapperFooter();
+    public function renderNode(ApiNode $apiNode);
 }
