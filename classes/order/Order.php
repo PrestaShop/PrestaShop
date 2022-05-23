@@ -790,7 +790,9 @@ class OrderCore extends ObjectModel
 
     public function getTaxesAverageUsed()
     {
-        return Cart::getTaxesAverageUsed((int) $this->id_cart);
+        $cart = new Cart((int) $this->id_cart);
+
+        return $cart->getAverageProductsTaxRate() * 100;
     }
 
     /**

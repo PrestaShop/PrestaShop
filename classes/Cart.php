@@ -410,36 +410,6 @@ class CartCore extends ObjectModel
     }
 
     /**
-     * Calculate average Tax rate in Cart, as a percentage.
-     *
-     * @deprecated since version 1.7.6. Use $cart->getAverageProductsTaxRate() instead.
-     *
-     * @param mixed $cart Cart ID or Cart Object
-     *
-     * @return float Average Tax used in Cart (eg. 20.0 for 20% average rate)
-     */
-    public static function getTaxesAverageUsed($cart)
-    {
-        @trigger_error(
-            'Cart::getTaxesAverageUsed() is deprecated since version 1.7.6. Use $cart->getAverageProductsTaxRate() instead.',
-            E_USER_DEPRECATED
-        );
-
-        if (!is_object($cart)) {
-            $cart = new Cart((int) $cart);
-        }
-        if (!Validate::isLoadedObject($cart)) {
-            die(Tools::displayError());
-        }
-
-        if (!Configuration::get('PS_TAX')) {
-            return 0;
-        }
-
-        return $cart->getAverageProductsTaxRate() * 100;
-    }
-
-    /**
      * Returns the average Tax rate for all products in the cart, as a multiplier.
      *
      * The arguments are optional and only serve as return values in case caller needs the details.
@@ -5097,41 +5067,6 @@ class CartCore extends ObjectModel
         }
 
         return true;
-    }
-
-    /**
-     * Execute hook displayCarrierList (extraCarrier) and merge them into the $array.
-     *
-     * @deprecated since 1.7.6.0.
-     * @see https://github.com/PrestaShop/PrestaShop/issues/10979
-     *
-     * @param array $array
-     */
-    public static function addExtraCarriers(&$array)
-    {
-        @trigger_error(
-            __FUNCTION__ . 'is deprecated since version 1.7.6.0 and will be removed in the next major version.',
-            E_USER_DEPRECATED
-        );
-
-        $first = true;
-        $hook_extracarrier_addr = [];
-        foreach (Context::getContext()->cart->getAddressCollection() as $address) {
-            $hook = Hook::exec('displayCarrierList', ['address' => $address]);
-            $hook_extracarrier_addr[$address->id] = $hook;
-
-            if ($first) {
-                $array = array_merge(
-                    $array,
-                    ['HOOK_EXTRACARRIER' => $hook]
-                );
-                $first = false;
-            }
-            $array = array_merge(
-                $array,
-                ['HOOK_EXTRACARRIER_ADDR' => $hook_extracarrier_addr]
-            );
-        }
     }
 
     /**
