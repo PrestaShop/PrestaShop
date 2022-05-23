@@ -65,6 +65,8 @@ class ProductTypeListener implements EventSubscriberInterface
             $form->remove('stock');
 
             return;
+        } else {
+            $form->remove('combinations');
         }
 
         if ($form->has('stock')) {
