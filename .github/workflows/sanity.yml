@@ -18,59 +18,14 @@ jobs:
 
       - uses: actions/checkout@v2
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
+      - name: Setup environment
+        uses: ./.github/actions/setup-prestashop-env
         with:
           php-version: ${{ matrix.php }}
-          extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml, pdo, mysql
-
-      - name: Setup Apache
-        run: sudo bash .github/workflows/sanity/setup-apache.sh ${{ github.workspace }} ${{ matrix.php }}
-
-      - name: Setup MySQL
-        uses: mirromutth/mysql-action@v1.1
-        with:
-          mysql version: '5.7'
-          mysql database: 'prestashop'
-          mysql root password: 'password'
-
-      - name: Setup Node
-        uses: actions/setup-node@v2
-        with:
+          mysql-version: '5.7'
+          mysql-database: 'prestashop'
+          mysql-root-password: 'password'
           node-version: '16'
-
-      - name: Setup NPM
-        run: npm install -g npm@7
-
-      - name: PrestaShop Configuration
-        run: cp .github/workflows/phpunit/parameters.yml app/config/parameters.yml
-
-      - name: Get Composer Cache Directory
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-      - name: Cache node Directory
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('admin-dev/**/package-lock.json', 'tests/**/package-lock.json', 'themes/**/package-lock.json') }}
-          restore-keys: ${{ runner.os }}-node-
-
-      - name: Cache Composer Directory
-        uses: actions/cache@v2
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
-
-      - name: Composer install and build assets
-        run: make
-
-      - run: |
-          sudo chown www-data:www-data -R ${{ github.workspace }} && \
-          sudo mkdir -p /var/lib/php/sessions && \
-          sudo chown www-data:www-data -R /var/lib/php/sessions && \
-          sudo service apache2 restart
 
       - name: Cache Playwright browsers
         uses: actions/cache@v2
