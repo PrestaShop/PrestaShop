@@ -221,7 +221,7 @@ final class GetCartForViewingHandler implements GetCartForViewingHandlerInterfac
                 'unit_price' => $product['product_price'],
                 'total_price_formatted' => $this->locale->formatPrice($product['product_total'], $currency->iso_code),
                 'unit_price_formatted' => $this->locale->formatPrice($product['product_price'], $currency->iso_code),
-                'image' => $this->imageManager->getThumbnailForListing($image['id_image']),
+                'image' => isset($image['id_image']) ? $this->imageManager->getThumbnailForListing($image['id_image']) : null,
             ];
 
             if (isset($product['customizationQuantityTotal'])) {
