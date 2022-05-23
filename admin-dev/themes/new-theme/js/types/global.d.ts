@@ -75,11 +75,6 @@ interface PrestashopWindow {
   instance: any;
 }
 
-interface RegExpPositions extends RegExpExecArray {
-  rowId: string;
-  oldPosition: string;
-}
-
 type FetchResponse = Record<string, any>;
 
 type OptionsObject = FetchResponse;

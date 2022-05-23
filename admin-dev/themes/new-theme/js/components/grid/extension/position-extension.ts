@@ -25,6 +25,7 @@
 
 import {Grid} from '@PSTypes/grid';
 import GridMap from '@components/grid/grid-map';
+import {isUndefined} from '@PSTypes/typeguard';
 import 'tablednd/dist/jquery.tablednd.min';
 
 const {$} = window;
@@ -221,16 +222,35 @@ export default class PositionExtension {
   private computeMappingBetweenOldAndNewPositions(
     rowsData: Array<RowDatas>,
   ): Array<DNDPositions> {
-    const regex = /^row_(\d+)_(\d+)$/;
-    const mapping = Array(rowsData.length).fill(undefined).map(Object);
+    const regex = /^row_(?<rowId>\d+)_(?<oldPosition>\d+)$/;
+    const mapping: Array<DNDPositions> = [];
 
+    // First loop is to create the mapping objects with old positions
     for (let i = 0; i < rowsData.length; i += 1) {
-      // @ts-ignore
-      const [, rowId, oldPosition] = regex.exec(rowsData[i].rowMarker);
-      mapping[i].rowId = rowId;
-      mapping[i].oldPosition = parseInt(oldPosition, 10);
-      // This row will have as a new position the old position of the current one
-      mapping[rowsData[i].offset].newPosition = mapping[i].oldPosition;
+      const regexResult = regex.exec(rowsData[i].rowMarker);
+
+      if (regexResult
+        && !isUndefined(regexResult.groups)
+        && !isUndefined(regexResult.groups.rowId)
+        && !isUndefined(regexResult.groups.oldPosition)) {
+        const oldPosition: number = parseInt(regexResult?.groups?.oldPosition, 10);
+        mapping[i] = {
+          rowId: regexResult.groups.rowId,
+          oldPosition,
+          newPosition: oldPosition,
+        };
+      }
+
+      // Second loop, now that all positions are defined for all rows we can switch the position when needed
+      for (let j = 0; j < rowsData.length; j += 1) {
+        if (!isUndefined(rowsData[j])
+          && !isUndefined(rowsData[j].offset)
+          && !isUndefined(mapping[rowsData[j].offset])
+          && !isUndefined(mapping[j])) {
+          // This row will have as a new position the old position of the current one
+          mapping[rowsData[j].offset].newPosition = mapping[j].oldPosition;
+        }
+      }
     }
 
     return mapping;
