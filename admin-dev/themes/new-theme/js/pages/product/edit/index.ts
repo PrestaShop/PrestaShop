@@ -48,6 +48,7 @@ import {ProductSupplier, Supplier} from '@pages/product/components/suppliers/sup
 import initDropzone from '@pages/product/components/dropzone';
 import initTabs from '@pages/product/components/nav-tabs';
 import PriceSummary from '@pages/product/edit/price-summary';
+import ProductOptionsManager from "@pages/product/edit/product-options-manager";
 
 const {$} = window;
 
@@ -83,6 +84,7 @@ $(() => {
 
   new NavbarHandler($(ProductMap.navigationBar));
   new ProductSEOManager(eventEmitter);
+  new ProductOptionsManager();
 
   // Product type has strong impact on the page rendering so when it is modified it must be submitted right away
   new ProductTypeSwitcher($productForm);

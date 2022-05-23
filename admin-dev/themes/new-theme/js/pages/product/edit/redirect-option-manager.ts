@@ -76,14 +76,6 @@ export default class RedirectOptionManager {
 
     this.buildAutoCompleteSearchInput();
     this.watchRedirectType();
-
-    new FormFieldToggler({
-      disablingInputSelector: ProductMap.options.availableForOrderInput,
-      matchingValue: '0',
-      disableOnMatch: true,
-      targetSelector: ProductMap.options.showPriceSwitchContainer,
-      toggleType: ToggleType.visibility,
-    });
   }
 
   /**
