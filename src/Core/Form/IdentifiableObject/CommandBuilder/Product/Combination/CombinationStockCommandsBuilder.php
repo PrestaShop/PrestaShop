@@ -68,6 +68,9 @@ final class CombinationStockCommandsBuilder implements CombinationCommandsBuilde
         if (isset($quantityData['options']['low_stock_alert'])) {
             $command->setLowStockAlert((bool) $quantityData['options']['low_stock_alert']);
         }
+        if (isset($quantityData['out_of_stock_type'])) {
+            $command->setOutOfStockType((int) $quantityData['out_of_stock_type']);
+        }
         if (isset($quantityData['available_date'])) {
             $command->setAvailableDate(new DateTime($quantityData['available_date']));
         }

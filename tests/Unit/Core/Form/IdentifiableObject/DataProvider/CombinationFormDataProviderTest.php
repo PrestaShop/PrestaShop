@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationPrices;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationStock;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetAssociatedSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\AssociatedSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
@@ -119,6 +120,7 @@ class CombinationFormDataProviderTest extends TestCase
             'low_stock_threshold' => 5,
             'low_stock_alert' => true,
             'location' => 'top shelf',
+            'out_of_stock_type' => OutOfStockType::OUT_OF_STOCK_AVAILABLE,
             'available_date' => new DateTime('1969/07/20'),
         ];
         $expectedOutputData['stock']['quantities']['delta_quantity']['quantity'] = 42;
@@ -126,6 +128,7 @@ class CombinationFormDataProviderTest extends TestCase
         $expectedOutputData['stock']['options']['low_stock_threshold'] = 5;
         $expectedOutputData['stock']['options']['low_stock_alert'] = true;
         $expectedOutputData['stock']['options']['stock_location'] = 'top shelf';
+        $expectedOutputData['stock']['out_of_stock_type'] = OutOfStockType::OUT_OF_STOCK_AVAILABLE;
         $expectedOutputData['stock']['available_date'] = '1969-07-20';
 
         $datasets[] = [
@@ -412,6 +415,7 @@ class CombinationFormDataProviderTest extends TestCase
             $combination['low_stock_threshold'] ?? 0,
             $combination['low_stock_alert'] ?? false,
             $combination['location'] ?? 'location',
+            $combination['out_of_stock_type'] ?? OutOfStockType::OUT_OF_STOCK_DEFAULT,
             $combination['available_date'] ?? null
         );
     }
@@ -497,6 +501,7 @@ class CombinationFormDataProviderTest extends TestCase
                     'low_stock_threshold' => 0,
                     'low_stock_alert' => false,
                 ],
+                'out_of_stock_type' => OutOfStockType::OUT_OF_STOCK_DEFAULT,
                 'available_date' => '',
             ],
             'price_impact' => [

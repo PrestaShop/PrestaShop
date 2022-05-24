@@ -28,15 +28,37 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Sell\Product\Stock\QuantityType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockOptionsType;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class CombinationStockType extends TranslatorAwareType
 {
+    /**
+     * @var FormChoiceProviderInterface
+     */
+    private $outOfStockTypeChoiceProvider;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param FormChoiceProviderInterface $outOfStockTypeChoiceProvider
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        FormChoiceProviderInterface $outOfStockTypeChoiceProvider
+    ) {
+        parent::__construct($translator, $locales);
+        $this->outOfStockTypeChoiceProvider = $outOfStockTypeChoiceProvider;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -51,6 +73,13 @@ class CombinationStockType extends TranslatorAwareType
                 'attr' => [
                     'placeholder' => 'YYYY-MM-DD',
                 ],
+            ])
+            ->add('out_of_stock_type', ChoiceType::class, [
+                'choices' => $this->outOfStockTypeChoiceProvider->getChoices(),
+                'label' => $this->trans('Behavior when out of stock', 'Admin.Catalog.Feature'),
+                'expanded' => true,
+                'column_breaker' => true,
+                'modify_all_shops' => true,
             ])
         ;
     }

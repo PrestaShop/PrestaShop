@@ -31,6 +31,7 @@ namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product\Combina
 use DateTime;
 use Generator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationStockCommandsBuilder;
 
 class CombinationStockCommandsBuilderTest extends AbstractCombinationCommandBuilderTest
@@ -147,6 +148,17 @@ class CombinationStockCommandsBuilderTest extends AbstractCombinationCommandBuil
             [
                 'stock' => [
                     'available_date' => '2022-10-10',
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = new UpdateCombinationStockCommand($this->getCombinationId()->getValue());
+        $command->setOutOfStockType(OutOfStockType::OUT_OF_STOCK_AVAILABLE);
+        yield [
+            [
+                'stock' => [
+                    'out_of_stock_type' => OutOfStockType::OUT_OF_STOCK_AVAILABLE,
                 ],
             ],
             [$command],
