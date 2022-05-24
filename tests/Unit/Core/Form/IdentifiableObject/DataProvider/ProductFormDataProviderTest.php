@@ -950,6 +950,7 @@ class ProductFormDataProviderTest extends TestCase
         ];
 
         $expectedOutputData['header']['type'] = ProductType::TYPE_COMBINATIONS;
+        $expectedOutputData['header']['initial_type'] = ProductType::TYPE_COMBINATIONS;
         $expectedOutputData['combinations']['availability']['out_of_stock_type'] = OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE;
         $expectedOutputData['combinations']['availability']['available_now_label'] = $localizedValues;
         $expectedOutputData['combinations']['availability']['available_later_label'] = $localizedValues;
