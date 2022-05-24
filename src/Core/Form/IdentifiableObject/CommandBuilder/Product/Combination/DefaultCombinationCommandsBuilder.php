@@ -23,18 +23,24 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler;
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationFromListingCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetDefaultCombinationCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 
-/**
- * Updates combination in BO product combinations listing
- */
-interface UpdateCombinationFromListingHandlerInterface
+class DefaultCombinationCommandsBuilder implements CombinationCommandsBuilderInterface
 {
     /**
-     * @param UpdateCombinationFromListingCommand $command
+     * {@inheritDoc}
      */
-    public function handle(UpdateCombinationFromListingCommand $command): void;
+    public function buildCommands(CombinationId $combinationId, array $formData): array
+    {
+        if (empty($formData['is_default'])) {
+            return [];
+        }
+
+        return [new SetDefaultCombinationCommand($combinationId->getValue())];
+    }
 }

@@ -69,6 +69,11 @@ class CombinationForEditing
     private $imageIds;
 
     /**
+     * @var bool
+     */
+    private $isDefault;
+
+    /**
      * @param int $combinationId
      * @param int $productId
      * @param string $name
@@ -76,6 +81,7 @@ class CombinationForEditing
      * @param CombinationPrices $prices
      * @param CombinationStock $stock
      * @param int[] $imageIds
+     * @param bool $isDefault
      */
     public function __construct(
         int $combinationId,
@@ -84,7 +90,8 @@ class CombinationForEditing
         CombinationDetails $options,
         CombinationPrices $prices,
         CombinationStock $stock,
-        array $imageIds
+        array $imageIds,
+        bool $isDefault
     ) {
         $this->combinationId = $combinationId;
         $this->productId = $productId;
@@ -93,6 +100,7 @@ class CombinationForEditing
         $this->stock = $stock;
         $this->prices = $prices;
         $this->imageIds = $imageIds;
+        $this->isDefault = $isDefault;
     }
 
     /**
@@ -149,5 +157,13 @@ class CombinationForEditing
     public function getImageIds(): array
     {
         return $this->imageIds;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDefault(): bool
+    {
+        return $this->isDefault;
     }
 }
