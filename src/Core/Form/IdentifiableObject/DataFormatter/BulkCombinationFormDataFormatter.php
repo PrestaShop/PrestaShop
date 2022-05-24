@@ -56,6 +56,7 @@ class BulkCombinationFormDataFormatter extends AbstractFormDataFormatter
             '[price][weight]' => '[price_impact][weight]',
             // Stock data are the trickiest
             '[stock][delta_quantity][delta]' => '[stock][quantities][delta_quantity][delta]',
+            '[stock][fixed_quantity]' => '[stock][quantities][fixed_quantity]',
             '[stock][minimal_quantity]' => '[stock][quantities][minimal_quantity]',
             '[stock][stock_location]' => '[stock][options][stock_location]',
             '[stock][low_stock_threshold]' => '[stock][options][low_stock_threshold]',

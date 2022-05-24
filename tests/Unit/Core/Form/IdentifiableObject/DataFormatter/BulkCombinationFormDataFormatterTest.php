@@ -136,7 +136,32 @@ class BulkCombinationFormDataFormatterTest extends TestCase
             ],
         ];
 
-        yield 'partial stock data wit no options' => [
+        yield 'stock data with fixed quantity' => [
+            [
+                'stock' => [
+                    'fixed_quantity' => 7,
+                    'stock_location' => 'close',
+                    'low_stock_threshold' => 2,
+                    'low_stock_alert' => false,
+                    'available_date' => '2022-02-15',
+                ],
+            ],
+            [
+                'stock' => [
+                    'quantities' => [
+                        'fixed_quantity' => 7,
+                    ],
+                    'options' => [
+                        'stock_location' => 'close',
+                        'low_stock_threshold' => 2,
+                        'low_stock_alert' => false,
+                    ],
+                    'available_date' => '2022-02-15',
+                ],
+            ],
+        ];
+
+        yield 'partial stock data with no options' => [
             [
                 'stock' => [
                     'delta_quantity' => [

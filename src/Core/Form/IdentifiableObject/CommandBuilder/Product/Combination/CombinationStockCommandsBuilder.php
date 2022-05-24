@@ -53,6 +53,9 @@ final class CombinationStockCommandsBuilder implements CombinationCommandsBuilde
         if (isset($quantityData['quantities']['delta_quantity']['delta'])) {
             $command->setDeltaQuantity((int) $quantityData['quantities']['delta_quantity']['delta']);
         }
+        if (isset($quantityData['quantities']['fixed_quantity'])) {
+            $command->setFixedQuantity((int) $quantityData['quantities']['fixed_quantity']);
+        }
         if (isset($quantityData['quantities']['minimal_quantity'])) {
             $command->setMinimalQuantity((int) $quantityData['quantities']['minimal_quantity']);
         }
