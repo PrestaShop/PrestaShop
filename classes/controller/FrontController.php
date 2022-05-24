@@ -1477,14 +1477,14 @@ class FrontControllerCore extends Controller
                 'discount', 'guest-tracking', 'history', 'identity', 'index', 'my-account',
                 'order-confirmation', 'order-detail', 'order-follow', 'order', 'order-return',
                 'order-slip', 'pagenotfound', 'password', 'pdf-invoice', 'pdf-order-return', 'pdf-order-slip',
-                'prices-drop', 'product', 'search', 'sitemap', 'stores', 'supplier',
+                'prices-drop', 'product', 'registration', 'search', 'sitemap', 'stores', 'supplier',
             ];
             foreach ($p as $page_name) {
                 $index = str_replace('-', '_', $page_name);
                 $pages[$index] = $this->context->link->getPageLink($page_name, $this->ssl);
             }
             $pages['brands'] = $pages['manufacturer'];
-            $pages['register'] = $this->context->link->getPageLink('authentication', true, null, ['create_account' => '1']);
+            $pages['register'] = $this->context->link->getPageLink('registration', true);
             $pages['order_login'] = $this->context->link->getPageLink('order', true, null, ['login' => '1']);
             $urls['pages'] = $pages;
 
@@ -1659,6 +1659,7 @@ class FrontControllerCore extends Controller
             'order-follow',
             'order-slip',
             'password',
+            'registration',
             'guest-tracking',
         ];
 
