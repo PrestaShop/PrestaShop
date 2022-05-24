@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command;
 use DateTimeInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 
 /**
  * Updates combination stock information
@@ -76,6 +77,11 @@ class UpdateCombinationStockCommand
      * @var DateTimeInterface|null
      */
     private $availableDate;
+
+    /**
+     * @var OutOfStockType|null
+     */
+    private $outOfStockType;
 
     /**
      * @param int $combinationId
@@ -243,10 +249,24 @@ class UpdateCombinationStockCommand
     }
 
     /**
-     * @return bool|null
+     * @return OutOfStockType|null
      */
-    public function getLowStockAlertEnabled(): ?bool
+    public function getOutOfStockType(): ?OutOfStockType
     {
-        return $this->lowStockAlertEnabled;
+        return $this->outOfStockType;
+    }
+
+    /**
+     * @param int $outOfStockType
+     *
+     * @return $this
+     *
+     * @throws ProductStockConstraintException
+     */
+    public function setOutOfStockType(int $outOfStockType): UpdateCombinationStockCommand
+    {
+        $this->outOfStockType = new OutOfStockType($outOfStockType);
+
+        return $this;
     }
 }

@@ -96,8 +96,9 @@ final class UpdateCombinationStockHandler implements UpdateCombinationStockHandl
             $command->getMinimalQuantity(),
             $command->getLocation(),
             $command->getLowStockThreshold(),
-            $command->getLowStockAlertEnabled(),
-            $command->getAvailableDate()
+            $command->isLowStockAlertEnabled(),
+            $command->getAvailableDate(),
+            $command->getOutOfStockType()
         );
 
         $this->combinationStockUpdater->update($command->getCombinationId(), $properties);

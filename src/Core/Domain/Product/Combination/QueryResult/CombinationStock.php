@@ -63,11 +63,17 @@ class CombinationStock
     private $availableDate;
 
     /**
+     * @var int
+     */
+    private $outOfStockType;
+
+    /**
      * @param int $quantity
      * @param int $minimalQuantity
      * @param int $lowStockThreshold
      * @param bool $lowStockAlertEnabled
      * @param string $location
+     * @param int $outOfStockType
      * @param DateTimeInterface|null $availableDate
      */
     public function __construct(
@@ -76,6 +82,7 @@ class CombinationStock
         int $lowStockThreshold,
         bool $lowStockAlertEnabled,
         string $location,
+        int $outOfStockType,
         ?DateTimeInterface $availableDate
     ) {
         $this->quantity = $quantity;
@@ -83,6 +90,7 @@ class CombinationStock
         $this->location = $location;
         $this->lowStockThreshold = $lowStockThreshold;
         $this->lowStockAlertEnabled = $lowStockAlertEnabled;
+        $this->outOfStockType = $outOfStockType;
         $this->availableDate = $availableDate;
     }
 
@@ -124,6 +132,14 @@ class CombinationStock
     public function isLowStockAlertEnabled(): bool
     {
         return $this->lowStockAlertEnabled;
+    }
+
+    /**
+     * @return int
+     */
+    public function getOutOfStockType(): int
+    {
+        return $this->outOfStockType;
     }
 
     /**

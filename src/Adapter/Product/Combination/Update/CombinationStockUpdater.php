@@ -134,9 +134,10 @@ class CombinationStockUpdater
     private function updateStockAvailable(Combination $combination, CombinationStockProperties $properties): void
     {
         $updateLocation = null !== $properties->getLocation();
+        $updateOutOfStock = null !== $properties->getOutOfStockType();
         $stockModification = $properties->getStockModification();
 
-        if (!$stockModification && !$updateLocation) {
+        if (!$stockModification && !$updateLocation && !$updateOutOfStock) {
             return;
         }
 
@@ -148,6 +149,10 @@ class CombinationStockUpdater
 
         if ($updateLocation) {
             $stockAvailable->location = $properties->getLocation();
+        }
+
+        if ($updateOutOfStock) {
+            $stockAvailable->out_of_stock = $properties->getOutOfStockType()->getValue();
         }
 
         $this->stockAvailableRepository->update($stockAvailable);

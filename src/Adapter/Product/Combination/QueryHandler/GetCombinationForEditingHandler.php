@@ -236,6 +236,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
             (int) $combination->low_stock_threshold,
             (bool) $combination->low_stock_alert,
             $stockAvailable->location,
+            (int) $stockAvailable->out_of_stock,
             DateTimeUtil::buildDateTimeOrNull($combination->available_date)
         );
     }

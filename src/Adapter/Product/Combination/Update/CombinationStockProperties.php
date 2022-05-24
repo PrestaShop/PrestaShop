@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Update;
 
 use DateTimeInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
 
 class CombinationStockProperties
@@ -63,12 +64,18 @@ class CombinationStockProperties
     private $availableDate;
 
     /**
+     * @var OutOfStockType|null
+     */
+    private $outOfStockType;
+
+    /**
      * @param StockModification|null $stockModification
      * @param int|null $minimalQuantity
      * @param string|null $location
      * @param int|null $lowStockThreshold
      * @param bool|null $lowStockAlertEnabled
      * @param DateTimeInterface|null $availableDate
+     * @param OutOfStockType|null $outOfStockType
      */
     public function __construct(
         ?StockModification $stockModification = null,
@@ -76,7 +83,8 @@ class CombinationStockProperties
         ?string $location = null,
         ?int $lowStockThreshold = null,
         ?bool $lowStockAlertEnabled = null,
-        ?DateTimeInterface $availableDate = null
+        ?DateTimeInterface $availableDate = null,
+        ?OutOfStockType $outOfStockType
     ) {
         $this->stockModification = $stockModification;
         $this->minimalQuantity = $minimalQuantity;
@@ -85,6 +93,7 @@ class CombinationStockProperties
         $this->lowStockAlertEnabled = $lowStockAlertEnabled;
         $this->availableDate = $availableDate;
         $this->stockModification = $stockModification;
+        $this->outOfStockType = $outOfStockType;
     }
 
     /**
@@ -133,5 +142,13 @@ class CombinationStockProperties
     public function getAvailableDate(): ?DateTimeInterface
     {
         return $this->availableDate;
+    }
+
+    /**
+     * @return OutOfStockType|null
+     */
+    public function getOutOfStockType(): ?OutOfStockType
+    {
+        return $this->outOfStockType;
     }
 }
