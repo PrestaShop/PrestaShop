@@ -148,6 +148,8 @@ admin_products_v2_bulk_duplicate:
       id_product: productId
   requirements:
     productId: \d+
+  options:
+    expose: true
 
 admin_products_v2_bulk_delete:
   path: /bulk-delete
@@ -161,6 +163,8 @@ admin_products_v2_bulk_delete:
       id_product: productId
   requirements:
     productId: \d+
+  options:
+    expose: true
 
 admin_products_v2_search_associations:
   path: /search/{languageCode}
