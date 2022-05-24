@@ -156,6 +156,7 @@ Feature: Add basic product from Back Office (BO)
       | low stock alert is enabled | false       |
       | location                   |             |
       | available date             |             |
+      | out of stock type          | default     |
     And combination "productCombinations3SWhite" last employees stock movements should be:
       | first_name | last_name | delta_quantity |
       | Puff       | Daddy     | 100            |
@@ -170,6 +171,7 @@ Feature: Add basic product from Back Office (BO)
       | low stock alert is enabled | false       |
       | location                   |             |
       | available date             |             |
+      | out of stock type          | default     |
     And combination "productCombinations3SBlack" last employees stock movements should be:
       | first_name | last_name | delta_quantity |
       | Puff       | Daddy     | 50             |

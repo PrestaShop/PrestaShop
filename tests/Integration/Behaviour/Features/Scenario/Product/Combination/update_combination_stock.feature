@@ -45,13 +45,14 @@ Feature: Update product combination stock information in Back Office (BO)
       | low_stock_alert     | false   |
       | available_date      |         |
     And combination "product1SBlack" should have following stock details:
-      | combination stock detail   | value |
-      | quantity                   | 0     |
-      | minimal quantity           | 1     |
-      | low stock threshold        | 0     |
-      | low stock alert is enabled | false |
-      | location                   |       |
-      | available date             |       |
+      | combination stock detail   | value   |
+      | quantity                   | 0       |
+      | minimal quantity           | 1       |
+      | low stock threshold        | 0       |
+      | low stock alert is enabled | false   |
+      | location                   |         |
+      | available date             |         |
+      | out of stock type          | default |
 
   Scenario: I update combination options:
     When I update combination "product1SBlack" stock with following details:
@@ -61,6 +62,7 @@ Feature: Update product combination stock information in Back Office (BO)
       | low stock threshold        | 10          |
       | low stock alert is enabled | true        |
       | available date             | 2021-10-10  |
+      | out of stock type          | available   |
     Then combination "product1SBlack" should have following stock details:
       | combination stock detail   | value       |
       | quantity                   | 100         |
@@ -69,6 +71,7 @@ Feature: Update product combination stock information in Back Office (BO)
       | low stock alert is enabled | true        |
       | location                   | Storage nr1 |
       | available date             | 2021-10-10  |
+      | out of stock type          | available   |
     And combination "product1SBlack" last employees stock movements should be:
       | first_name | last_name | delta_quantity |
       | Puff       | Daddy     | 100            |
@@ -88,6 +91,7 @@ Feature: Update product combination stock information in Back Office (BO)
       | low stock alert is enabled | true        |
       | location                   | Storage nr1 |
       | available date             | 2021-10-10  |
+      | out of stock type          | default     |
     And combination "product1SWhite" last stock movement increased by 50
     And product "product1" should have following combinations:
       | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
@@ -113,6 +117,7 @@ Feature: Update product combination stock information in Back Office (BO)
       | low stock alert is enabled | true        |
       | location                   | Storage nr2 |
       | available date             | 2021-10-10  |
+      | out of stock type          | available   |
     And combination "product1SBlack" last employees stock movements should be:
       | first_name | last_name | delta_quantity |
       | Puff       | Daddy     | -101           |
@@ -135,6 +140,7 @@ Feature: Update product combination stock information in Back Office (BO)
       | low stock alert is enabled | false      |
       | location                   |            |
       | available date             | 2020-01-01 |
+      | out of stock type          | available  |
     And combination "product1SBlack" last employees stock movements should be:
       | first_name | last_name | delta_quantity |
       | Puff       | Daddy     | 1              |
@@ -162,6 +168,7 @@ Feature: Update product combination stock information in Back Office (BO)
       | low stock alert is enabled | false      |
       | location                   |            |
       | available date             | 2020-01-01 |
+      | out of stock type          | available  |
     And combination "product1SBlack" last employees stock movements should be:
       | first_name | last_name | delta_quantity |
       | Puff       | Daddy     | 1              |
@@ -173,24 +180,26 @@ Feature: Update product combination stock information in Back Office (BO)
 
   Scenario: I update combination stock using fixed quantity
     Given combination "product1SBlack" should have following stock details:
-      | combination stock detail   | value |
-      | quantity                   | 0     |
-      | minimal quantity           | 1     |
-      | low stock threshold        | 0     |
-      | low stock alert is enabled | false |
-      | location                   |       |
-      | available date             |       |
+      | combination stock detail   | value   |
+      | quantity                   | 0       |
+      | minimal quantity           | 1       |
+      | low stock threshold        | 0       |
+      | low stock alert is enabled | false   |
+      | location                   |         |
+      | available date             |         |
+      | out of stock type          | default |
     And product "product1" should have no stock movements
     When I update combination "product1SBlack" stock with following details:
       | fixed quantity | 10 |
     Then combination "product1SBlack" should have following stock details:
-      | combination stock detail   | value |
-      | quantity                   | 10    |
-      | minimal quantity           | 1     |
-      | low stock threshold        | 0     |
-      | low stock alert is enabled | false |
-      | location                   |       |
-      | available date             |       |
+      | combination stock detail   | value   |
+      | quantity                   | 10      |
+      | minimal quantity           | 1       |
+      | low stock threshold        | 0       |
+      | low stock alert is enabled | false   |
+      | location                   |         |
+      | available date             |         |
+      | out of stock type          | default |
     And combination "product1SBlack" last stock movement increased by 10
     And combination "product1SBlack" last employees stock movements should be:
       | first_name | last_name | delta_quantity |
@@ -198,13 +207,14 @@ Feature: Update product combination stock information in Back Office (BO)
     When I update combination "product1SBlack" stock with following details:
       | fixed quantity | -3 |
     Then combination "product1SBlack" should have following stock details:
-      | combination stock detail   | value |
-      | quantity                   | -3    |
-      | minimal quantity           | 1     |
-      | low stock threshold        | 0     |
-      | low stock alert is enabled | false |
-      | location                   |       |
-      | available date             |       |
+      | combination stock detail   | value   |
+      | quantity                   | -3      |
+      | minimal quantity           | 1       |
+      | low stock threshold        | 0       |
+      | low stock alert is enabled | false   |
+      | location                   |         |
+      | available date             |         |
+      | out of stock type          | default |
     And combination "product1SBlack" last stock movement decreased by 13
     And combination "product1SBlack" last employees stock movements should be:
       | first_name | last_name | delta_quantity |
@@ -213,24 +223,26 @@ Feature: Update product combination stock information in Back Office (BO)
 
   Scenario: I should not be able to provide both delta and fixed quantities when updating combination stock information
     Given combination "product1SBlack" should have following stock details:
-      | combination stock detail   | value |
-      | quantity                   | 0     |
-      | minimal quantity           | 1     |
-      | low stock threshold        | 0     |
-      | low stock alert is enabled | false |
-      | location                   |       |
-      | available date             |       |
+      | combination stock detail   | value   |
+      | quantity                   | 0       |
+      | minimal quantity           | 1       |
+      | low stock threshold        | 0       |
+      | low stock alert is enabled | false   |
+      | location                   |         |
+      | available date             |         |
+      | out of stock type          | default |
     And product "product1" should have no stock movements
     When I update combination "product1SBlack" stock with following details:
       | fixed quantity | -7 |
       | delta quantity | -5 |
     Then I should get error that it is not allowed to perform update using both - delta and fixed quantity
     And combination "product1SBlack" should have following stock details:
-      | combination stock detail   | value |
-      | quantity                   | 0     |
-      | minimal quantity           | 1     |
-      | low stock threshold        | 0     |
-      | low stock alert is enabled | false |
-      | location                   |       |
-      | available date             |       |
+      | combination stock detail   | value   |
+      | quantity                   | 0       |
+      | minimal quantity           | 1       |
+      | low stock threshold        | 0       |
+      | low stock alert is enabled | false   |
+      | location                   |         |
+      | available date             |         |
+      | out of stock type          | default |
     And product "product1" should have no stock movements

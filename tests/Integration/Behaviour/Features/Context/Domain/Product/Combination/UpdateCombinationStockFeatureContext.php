@@ -74,6 +74,7 @@ class UpdateCombinationStockFeatureContext extends AbstractCombinationFeatureCon
             (int) $dataRows['low stock threshold'],
             PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['low stock alert is enabled']),
             $dataRows['location'],
+            $this->convertOutOfStockToInt($dataRows['out of stock type']),
             '' === $dataRows['available date'] ? null : new DateTime($dataRows['available date'])
         );
     }
@@ -112,6 +113,11 @@ class UpdateCombinationStockFeatureContext extends AbstractCombinationFeatureCon
             $expectedStock->getLocation(),
             $actualStock->getLocation(),
             sprintf('Unexpected combination "%s" location', $combinationReference)
+        );
+        Assert::assertSame(
+            $expectedStock->getOutOfStockType(),
+            $actualStock->getOutOfStockType(),
+            sprintf('Unexpected combination "%s" out of stock', $combinationReference)
         );
 
         if (null === $expectedStock->getAvailableDate()) {
@@ -171,6 +177,9 @@ class UpdateCombinationStockFeatureContext extends AbstractCombinationFeatureCon
         }
         if (isset($dataRows['available date'])) {
             $command->setAvailableDate(new DateTime($dataRows['available date']));
+        }
+        if (isset($dataRows['out of stock type'])) {
+            $command->setOutOfStockType($this->convertOutOfStockToInt($dataRows['out of stock type']));
         }
     }
 }
