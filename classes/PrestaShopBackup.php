@@ -42,7 +42,7 @@ class PrestaShopBackupCore
     public $customBackupDir = null;
 
     /** @var bool|string */
-    public $psBackupAll = true;
+    public $psIgnoreStats = false;
     /** @var bool|string */
     public $psBackupDropTable = true;
 
@@ -57,9 +57,9 @@ class PrestaShopBackupCore
             $this->id = $this->getRealBackupPath($filename);
         }
 
-        $psBackupAll = Configuration::get('PS_BACKUP_ALL');
+        $psIgnoreStats = Configuration::get('PS_IGNORE_STATS');
         $psBackupDropTable = Configuration::get('PS_BACKUP_DROP_TABLE');
-        $this->psBackupAll = $psBackupAll !== false ? $psBackupAll : true;
+        $this->psIgnoreStats = $psIgnoreStats !== false ? $psIgnoreStats : true;
         $this->psBackupDropTable = $psBackupDropTable !== false ? $psBackupDropTable : true;
     }
 
@@ -224,7 +224,7 @@ class PrestaShopBackupCore
      */
     public function add()
     {
-        if (!$this->psBackupAll) {
+        if ($this->psIgnoreStats) {
             $ignoreInsertTable = [_DB_PREFIX_ . 'connections', _DB_PREFIX_ . 'connections_page', _DB_PREFIX_
                 . 'connections_source', _DB_PREFIX_ . 'guest', _DB_PREFIX_ . 'statssearch',
             ];

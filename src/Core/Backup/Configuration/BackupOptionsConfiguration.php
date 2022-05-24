@@ -53,7 +53,7 @@ final class BackupOptionsConfiguration implements DataConfigurationInterface
     public function getConfiguration()
     {
         return [
-            'backup_all' => (bool) $this->configuration->get('PS_BACKUP_ALL'),
+            'ignore_stats' => (bool) $this->configuration->get('PS_IGNORE_STATS'),
             'backup_drop_tables' => (bool) $this->configuration->get('PS_BACKUP_DROP_TABLE'),
         ];
     }
@@ -64,7 +64,7 @@ final class BackupOptionsConfiguration implements DataConfigurationInterface
     public function updateConfiguration(array $config)
     {
         if ($this->validateConfiguration($config)) {
-            $this->configuration->set('PS_BACKUP_ALL', $config['backup_all']);
+            $this->configuration->set('PS_IGNORE_STATS', $config['ignore_stats']);
             $this->configuration->set('PS_BACKUP_DROP_TABLE', $config['backup_drop_tables']);
         }
 
@@ -77,7 +77,7 @@ final class BackupOptionsConfiguration implements DataConfigurationInterface
     public function validateConfiguration(array $config)
     {
         return isset(
-            $config['backup_all'],
+            $config['ignore_stats'],
             $config['backup_drop_tables']
         );
     }
