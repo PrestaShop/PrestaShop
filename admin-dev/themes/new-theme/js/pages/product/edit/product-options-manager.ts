@@ -47,7 +47,7 @@ export default class ProductOptionsManager {
 
   private init(): void {
     this.initShowPriceToggler();
-    this.manageSuppliers();
+    this.initSuppliers();
   }
 
   private initShowPriceToggler(): void {
@@ -60,7 +60,7 @@ export default class ProductOptionsManager {
     });
   }
 
-  private manageSuppliers(): void {
+  private initSuppliers(): void {
     let productSuppliers: ProductSuppliersCollection;
 
     if (this.productType !== ProductConst.PRODUCT_TYPE.COMBINATIONS) {

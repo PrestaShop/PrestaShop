@@ -175,9 +175,9 @@ export default class FormFieldToggler {
     }
 
     elementsToToggle.forEach((elementToToggle: Element) => {
-      const toggleAvailability = this.params.toggleType === ToggleType.availability;
+      const toggleByDisabling = this.params.toggleType === ToggleType.availability;
 
-      if (toggleAvailability) {
+      if (toggleByDisabling) {
         elementToToggle.classList.toggle('disabled', disable);
         elementToToggle.toggleAttribute('disabled', disable);
       } else {
@@ -191,7 +191,7 @@ export default class FormFieldToggler {
       }
 
       formElements.forEach((element: Element) => {
-        if (toggleAvailability) {
+        if (toggleByDisabling) {
           element.toggleAttribute('disabled', disable);
         }
       });

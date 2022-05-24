@@ -32,7 +32,7 @@ export default class ProductShippingManager {
 
   private initDeliveryTimesToggler(): void {
     new FormFieldToggler({
-      disablingInputSelector: `${ProductMap.shipping.deliveryTimeTypeInput}`,
+      disablingInputSelector: ProductMap.shipping.deliveryTimeTypeInput,
       matchingValue: '2',
       disableOnMatch: false,
       targetSelector: ProductMap.shipping.deliveryTimeNotesBlock,
