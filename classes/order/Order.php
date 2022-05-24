@@ -1205,6 +1205,10 @@ class OrderCore extends ObjectModel
      */
     public static function getByCartId($id_cart)
     {
+        if ($id_cart < 1) {
+            return null;
+        }
+
         $id_order = (int) self::getIdByCartId((int) $id_cart);
 
         return ($id_order > 0) ? new static($id_order) : null;
@@ -1215,10 +1219,14 @@ class OrderCore extends ObjectModel
      *
      * @param int $id_cart Cart id
      *
-     * @return int $id_order
+     * @return int|bool $id_order
      */
     public static function getIdByCartId($id_cart)
     {
+        if ($id_cart < 1) {
+            return false;
+        }
+
         $sql = 'SELECT `id_order`
             FROM `' . _DB_PREFIX_ . 'orders`
             WHERE `id_cart` = ' . (int) $id_cart .
