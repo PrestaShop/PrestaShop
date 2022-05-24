@@ -262,10 +262,9 @@ class ToolsCore
      *
      * @return string
      */
-    public static function getShopProtocol()
+    public static function getShopProtocol(): string
     {
-        $protocol = (Configuration::get('PS_SSL_ENABLED') || (!empty($_SERVER['HTTPS'])
-            && Tools::strtolower($_SERVER['HTTPS']) != 'off')) ? 'https://' : 'http://';
+        $protocol = (Configuration::get('PS_SSL_ENABLED') || Tools::usingSecureMode()) ? 'https://' : 'http://';
 
         return $protocol;
     }
