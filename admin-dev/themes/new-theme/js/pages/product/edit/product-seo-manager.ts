@@ -93,16 +93,6 @@ export default class ProductSEOManager {
 
     const resetLinkRewriteBtn = document.querySelector<HTMLButtonElement>(ProductMap.seo.resetLinkRewriteBtn)!;
     resetLinkRewriteBtn.addEventListener('click', () => this.resetLinkRewrite());
-
-    textToLinkRewriteCopier({
-      sourceElementSelector: 'input[name^="product[header][name]"]',
-      /* eslint-disable-next-line max-len */
-      destinationElementSelector: `${this.translatableInput.localeInputSelector}:not(.d-none) input[name^="product[seo][link_rewrite]"]`,
-      options: {
-        eventName: 'click',
-        triggeringElementSelector: '.reset-link-rewrite',
-      },
-    });
   }
 
   private resetLinkRewrite(): void {
