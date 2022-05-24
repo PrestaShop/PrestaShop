@@ -170,6 +170,7 @@ class ProductFormDataProviderTest extends TestCase
             $this->getDatasetsForOptions(),
             $this->getDatasetsForCategories(),
             $this->getDatasetsForRelatedProducts(),
+            $this->getDatasetsForCombinations(),
         ];
 
         foreach ($datasetsByType as $datasetByType) {
@@ -295,14 +296,14 @@ class ProductFormDataProviderTest extends TestCase
         ];
         $newCover = 'http://localhost/super_cover.jpg';
         $productData = [
-            'type' => ProductType::TYPE_COMBINATIONS,
+            'type' => ProductType::TYPE_VIRTUAL,
             'name' => $localizedValues,
             'description' => $localizedValues,
             'description_short' => $localizedValues,
             'cover_thumbnail' => $newCover,
         ];
         $expectedOutputData['header']['name'] = $localizedValues;
-        $expectedOutputData['header']['type'] = ProductType::TYPE_COMBINATIONS;
+        $expectedOutputData['header']['type'] = ProductType::TYPE_VIRTUAL;
         $expectedOutputData['header']['cover_thumbnail'] = $newCover;
 
         $expectedOutputData['description']['description'] = $localizedValues;
@@ -909,6 +910,46 @@ class ProductFormDataProviderTest extends TestCase
                 'required' => true,
             ],
         ];
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        return $datasets;
+    }
+
+    /**
+     * @return array
+     */
+    private function getDatasetsForCombinations(): array
+    {
+        $datasets = [];
+
+        $expectedOutputData = $this->getDefaultOutputData();
+        $productData = [];
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        $localizedValues = [
+            1 => 'english',
+            2 => 'french',
+        ];
+        $expectedOutputData = $this->getDefaultOutputData();
+        $productData = [
+            'type' => ProductType::TYPE_COMBINATIONS,
+            'available_now' => $localizedValues,
+            'available_later' => $localizedValues,
+        ];
+
+        $expectedOutputData['header']['type'] = ProductType::TYPE_COMBINATIONS;
+        $expectedOutputData['combinations']['availability']['available_now_label'] = $localizedValues;
+        $expectedOutputData['combinations']['availability']['available_later_label'] = $localizedValues;
+        $expectedOutputData['stock']['availability']['available_now_label'] = $localizedValues;
+        $expectedOutputData['stock']['availability']['available_later_label'] = $localizedValues;
 
         $datasets[] = [
             $productData,

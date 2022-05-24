@@ -94,6 +94,11 @@ class ProductTypeListenerTest extends FormListenerTestCase
         yield [ProductType::TYPE_PACK, 'pricing.retail_price.ecotax', true];
         yield [ProductType::TYPE_VIRTUAL, 'pricing.retail_price.ecotax', false];
         yield [ProductType::TYPE_COMBINATIONS, 'pricing.retail_price.ecotax', true];
+
+        yield [ProductType::TYPE_STANDARD, 'combinations', false];
+        yield [ProductType::TYPE_PACK, 'combinations', false];
+        yield [ProductType::TYPE_VIRTUAL, 'combinations', false];
+        yield [ProductType::TYPE_COMBINATIONS, 'combinations', true];
     }
 
     /**

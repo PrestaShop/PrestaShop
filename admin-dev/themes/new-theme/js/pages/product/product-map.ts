@@ -78,6 +78,7 @@ export default {
   combinations: {
     navigationTab: '#combinations-tab-nav',
     externalCombinationTab: '#external-combination-tab',
+    combinationManager: '#product_combinations_combination_manager',
     preloader: '#combinations-preloader',
     emptyState: '#combinations-empty-state',
     emptyFiltersState: '#combinations-empty-filters-state',
@@ -125,7 +126,6 @@ export default {
       deleteButton: (rowIndex: number): string => `${combinationListFormId}_combinations_${rowIndex}_delete`,
     },
     list: {
-      form: 'form[name="combination_list"]',
       combinationRow: '.combination-list-row',
       priceImpactTaxExcluded: '.combination-impact-on-price-tax-excluded',
       priceImpactTaxIncluded: '.combination-impact-on-price-tax-included',
@@ -160,6 +160,7 @@ export default {
     bulkActionsDropdownBtn: '#combination-bulk-actions-btn',
     bulkAllPreviewInput: '#bulk-all-preview',
     bulkSelectAll: '#bulk-select-all',
+    bulkCheckboxesDropdownButton: '#bulk-all-selection-dropdown-button',
     commonBulkAllSelector: `.${commonBulkSelectAllClass}`,
     bulkSelectAllInPage: `#${bulkCombinationSelectAllInPageId}`,
     bulkSelectAllInPageId: bulkCombinationSelectAllInPageId,

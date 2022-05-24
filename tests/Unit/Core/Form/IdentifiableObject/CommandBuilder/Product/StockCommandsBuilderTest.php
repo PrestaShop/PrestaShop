@@ -32,6 +32,7 @@ use Generator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\StockCommandsBuilder;
 use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
@@ -155,12 +156,27 @@ class StockCommandsBuilderTest extends AbstractProductCommandBuilderTest
         $command = $this->getSingleShopCommand();
         $localizedNotes = [
             '1' => 'hello',
-            '2', 'Goodbye',
+            '2' => 'Goodbye',
         ];
         $command->setLocalizedAvailableNowLabels($localizedNotes);
         yield [
             [
                 'stock' => [
+                    'availability' => [
+                        'available_now_label' => $localizedNotes,
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        // Handle available_now_label for product with combinations
+        yield [
+            [
+                'header' => [
+                    'type' => ProductType::TYPE_COMBINATIONS,
+                ],
+                'combinations' => [
                     'availability' => [
                         'available_now_label' => $localizedNotes,
                     ],
@@ -178,6 +194,21 @@ class StockCommandsBuilderTest extends AbstractProductCommandBuilderTest
         yield [
             [
                 'stock' => [
+                    'availability' => [
+                        'available_later_label' => $localizedNotes,
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        // Handle available_later_label for product with combinations
+        yield [
+            [
+                'header' => [
+                    'type' => ProductType::TYPE_COMBINATIONS,
+                ],
+                'combinations' => [
                     'availability' => [
                         'available_later_label' => $localizedNotes,
                     ],

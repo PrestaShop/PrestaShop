@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationsType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Description\DescriptionType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Options\OptionsType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Pricing\PricingType;
@@ -82,6 +83,9 @@ class EditProductFormType extends TranslatorAwareType
                 'product_id' => $productId,
             ])
             ->add('specifications', SpecificationsType::class)
+            ->add('combinations', CombinationsType::class, [
+                'product_id' => $productId,
+            ])
             ->add('stock', StockType::class, [
                 'product_id' => $productId,
                 'virtual_product_file_id' => $options['virtual_product_file_id'],

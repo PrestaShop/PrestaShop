@@ -1755,6 +1755,27 @@ services:
 
   # Combination form types
 
+  form.type.sell.product.combination.combinations_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationsType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+
+  form.type.sell.product.combination.combination_manager_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationManagerType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+
+  form.type.sell.product.combination.combination_availability_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationAvailabilityType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+
   form.type.sell.product.combination_list_type:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationListType'
     parent: 'form.type.translatable.aware'
