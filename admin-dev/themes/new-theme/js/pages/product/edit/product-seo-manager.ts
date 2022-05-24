@@ -27,7 +27,6 @@ import {EventEmitter} from 'events';
 import RedirectOptionManager from '@pages/product/edit/redirect-option-manager';
 import ProductMap from '@pages/product/product-map';
 import TaggableField from '@components/taggable-field';
-import textToLinkRewriteCopier from '@components/text-to-link-rewrite-copier';
 import TranslatableInput from '@components/translatable-input';
 
 const {$} = window;
