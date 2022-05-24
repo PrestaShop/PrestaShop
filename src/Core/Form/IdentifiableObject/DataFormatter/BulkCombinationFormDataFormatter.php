@@ -62,6 +62,7 @@ class BulkCombinationFormDataFormatter extends AbstractFormDataFormatter
             '[stock][low_stock_threshold]' => '[stock][options][low_stock_threshold]',
             '[stock][low_stock_alert]' => '[stock][options][low_stock_alert]',
             '[stock][available_date]' => '[stock][available_date]',
+            '[stock][out_of_stock_type]' => '[stock][out_of_stock_type]',
         ];
         $formattedData = $this->formatByPath($formData, $pathAssociations);
 

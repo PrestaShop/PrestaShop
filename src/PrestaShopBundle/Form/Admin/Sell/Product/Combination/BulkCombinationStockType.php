@@ -28,10 +28,12 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use PrestaShopBundle\Form\Admin\Type\DeltaQuantityType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -55,6 +57,11 @@ class BulkCombinationStockType extends TranslatorAwareType
     private $stockManagementEnabled;
 
     /**
+     * @var FormChoiceProviderInterface
+     */
+    private $outOfStockTypeChoiceProvider;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param RouterInterface $router
@@ -64,11 +71,13 @@ class BulkCombinationStockType extends TranslatorAwareType
         TranslatorInterface $translator,
         array $locales,
         RouterInterface $router,
-        bool $stockManagementEnabled
+        bool $stockManagementEnabled,
+        FormChoiceProviderInterface $outOfStockTypeChoiceProvider
     ) {
         parent::__construct($translator, $locales);
         $this->router = $router;
         $this->stockManagementEnabled = $stockManagementEnabled;
+        $this->outOfStockTypeChoiceProvider = $outOfStockTypeChoiceProvider;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -154,6 +163,14 @@ class BulkCombinationStockType extends TranslatorAwareType
                 'attr' => [
                     'placeholder' => 'YYYY-MM-DD',
                 ],
+                'disabling_switch' => true,
+            ])
+            ->add('out_of_stock_type', ChoiceType::class, [
+                'choices' => $this->outOfStockTypeChoiceProvider->getChoices(),
+                'label' => $this->trans('Behavior when out of stock', 'Admin.Catalog.Feature'),
+                'expanded' => true,
+                'column_breaker' => true,
+                'modify_all_shops' => true,
                 'disabling_switch' => true,
             ])
         ;

@@ -1841,6 +1841,7 @@ services:
     arguments:
       - '@router'
       - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_STOCK_MANAGEMENT')"
+      - '@prestashop.core.form.choice_provider.out_of_stock_type_choice_provider'
     tags:
       - { name: form.type }
 

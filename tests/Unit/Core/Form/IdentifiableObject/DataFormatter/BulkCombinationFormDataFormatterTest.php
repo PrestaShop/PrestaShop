@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Core\Form\IdentifiableObject\DataFormatter;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataFormatter\BulkCombinationFormDataFormatter;
 
 class BulkCombinationFormDataFormatterTest extends TestCase
@@ -116,6 +117,7 @@ class BulkCombinationFormDataFormatterTest extends TestCase
                     'low_stock_threshold' => 5,
                     'low_stock_alert' => true,
                     'available_date' => '2022-01-15',
+                    'out_of_stock_type' => OutOfStockType::OUT_OF_STOCK_AVAILABLE,
                 ],
             ],
             [
@@ -132,6 +134,7 @@ class BulkCombinationFormDataFormatterTest extends TestCase
                         'low_stock_alert' => true,
                     ],
                     'available_date' => '2022-01-15',
+                    'out_of_stock_type' => OutOfStockType::OUT_OF_STOCK_AVAILABLE,
                 ],
             ],
         ];
