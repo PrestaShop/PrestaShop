@@ -59,9 +59,14 @@ class DebugModeConfiguration implements DataConfigurationInterface
      * @param DebugMode $debugMode
      * @param Configuration $configuration
      * @param string $configDefinesPath
+     * @param ClassIndexCacheClearer $classIndexCacheClearer
      */
-    public function __construct(DebugMode $debugMode, Configuration $configuration, $configDefinesPath, ClassIndexCacheClearer $classIndexCacheClearer)
-    {
+    public function __construct(
+        DebugMode $debugMode,
+        Configuration $configuration,
+        $configDefinesPath,
+        ClassIndexCacheClearer $classIndexCacheClearer
+    ) {
         $this->debugMode = $debugMode;
         $this->configuration = $configuration;
         $this->configDefinesPath = $configDefinesPath;
@@ -76,7 +81,6 @@ class DebugModeConfiguration implements DataConfigurationInterface
     public function getConfiguration()
     {
         return [
-            'disable_non_native_modules' => $this->configuration->getBoolean('PS_DISABLE_NON_NATIVE_MODULE'),
             'disable_overrides' => $this->configuration->getBoolean('PS_DISABLE_OVERRIDES'),
             'debug_mode' => $this->debugMode->isDebugModeEnabled(),
         ];
@@ -90,16 +94,16 @@ class DebugModeConfiguration implements DataConfigurationInterface
         $errors = [];
 
         if ($this->validateConfiguration($configuration)) {
-            $this->configuration->set('PS_DISABLE_NON_NATIVE_MODULE', $configuration['disable_non_native_modules']);
+            // Set configuration
             $this->configuration->set('PS_DISABLE_OVERRIDES', $configuration['disable_overrides']);
 
             $this->classIndexCacheClearer->clear();
 
+            // Update Debug Mode
             $status = $this->updateDebugMode((bool) $configuration['debug_mode']);
-
             switch ($status) {
-                case DebugMode::DEBUG_MODE_SUCCEEDED:
-                    break;
+                case DebugMode::DEBUG_MODE_ERROR_NO_WRITE_ACCESS_CUSTOM:
+                case DebugMode::DEBUG_MODE_ERROR_NO_READ_ACCESS:
                 case DebugMode::DEBUG_MODE_ERROR_NO_WRITE_ACCESS:
                     $errors[] = [
                         'key' => 'Error: Could not write to file. Make sure that the correct permissions are set on the file %s',
@@ -116,22 +120,7 @@ class DebugModeConfiguration implements DataConfigurationInterface
                     ];
 
                     break;
-                case DebugMode::DEBUG_MODE_ERROR_NO_WRITE_ACCESS_CUSTOM:
-                    $errors[] = [
-                        'key' => 'Error: Could not write to file. Make sure that the correct permissions are set on the file %s',
-                        'domain' => 'Admin.Advparameters.Notification',
-                        'parameters' => [$this->configDefinesPath],
-                    ];
-
-                    break;
-                case DebugMode::DEBUG_MODE_ERROR_NO_READ_ACCESS:
-                    $errors[] = [
-                        'key' => 'Error: Could not write to file. Make sure that the correct permissions are set on the file %s',
-                        'domain' => 'Admin.Advparameters.Notification',
-                        'parameters' => [$this->configDefinesPath],
-                    ];
-
-                    break;
+                case DebugMode::DEBUG_MODE_SUCCEEDED:
                 default:
                     break;
             }
@@ -146,7 +135,6 @@ class DebugModeConfiguration implements DataConfigurationInterface
     public function validateConfiguration(array $configuration)
     {
         return isset(
-            $configuration['disable_non_native_modules'],
             $configuration['disable_overrides'],
             $configuration['debug_mode']
         );
@@ -159,7 +147,7 @@ class DebugModeConfiguration implements DataConfigurationInterface
      *
      * @return int|null Status of update
      */
-    private function updateDebugMode($enableStatus)
+    private function updateDebugMode(bool $enableStatus): ?int
     {
         $currentDebugMode = $this->debugMode->isDebugModeEnabled();
 

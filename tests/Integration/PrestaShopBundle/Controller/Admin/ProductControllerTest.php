@@ -239,7 +239,8 @@ class ProductControllerTest extends WebTestCase
 
         $values = [
             ['_PS_MODE_DEMO_', null, null, true],
-            ['_PS_MODULE_DIR_', null, null, dirname(__DIR__, 3) . '/resources/modules/'],
+            ['_PS_ROOT_DIR_', null, null, _PS_ROOT_DIR_ . '/'],
+            ['_PS_MODULE_DIR_', null, null, _PS_ROOT_DIR_ . '/tests/Resources/modules/'],
         ];
 
         $configurationMock->method('get')

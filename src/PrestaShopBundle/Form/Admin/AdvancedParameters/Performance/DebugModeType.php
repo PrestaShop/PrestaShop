@@ -41,11 +41,6 @@ class DebugModeType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('disable_non_native_modules', SwitchType::class, [
-                'required' => false,
-                'label' => $this->trans('Disable non PrestaShop modules', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('Enable or disable non PrestaShop Modules.', 'Admin.Advparameters.Feature'),
-            ])
             ->add('disable_overrides', SwitchType::class, [
                 'required' => false,
                 'label' => $this->trans('Disable all overrides', 'Admin.Advparameters.Feature'),

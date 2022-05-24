@@ -472,7 +472,7 @@ class ContextCore
                 // If a container is still not found, instantiate manually the translator loader
                 // This will happen in the Front as we have legacy controllers, the Sf container won't be available.
                 // As we get the translator in the controller's constructor and the container is built in the init method, we won't find it here
-                $translatorLoader = (new TranslatorLanguageLoader(new ModuleRepository()));
+                $translatorLoader = (new TranslatorLanguageLoader(new ModuleRepository(_PS_ROOT_DIR_, _PS_MODULE_DIR_)));
             }
 
             $translatorLoader

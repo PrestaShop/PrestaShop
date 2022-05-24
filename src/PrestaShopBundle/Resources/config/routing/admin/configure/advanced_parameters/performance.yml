@@ -54,6 +54,13 @@ admin_performance_caching_save:
     _legacy_controller: AdminPerformance
     _legacy_link: AdminPerformance:update
 
+admin_performance_module_disable_non_builtin:
+  path: /disable-non-builtin
+  methods: [ GET ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters\PerformanceController::disableNonBuiltInAction'
+    _legacy_controller: AdminPerformance
+    _legacy_link: AdminPerformance:update
 
 admin_clear_cache:
   path: /clear-cache

@@ -27,6 +27,7 @@
 use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
+use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
@@ -417,7 +418,11 @@ abstract class ModuleCore implements ModuleInterface
         }
 
         // Install module and retrieve the installation id
-        $result = Db::getInstance()->insert($this->table, ['name' => $this->name, 'active' => 1, 'version' => $this->version]);
+        $result = Db::getInstance()->insert($this->table, [
+            'name' => $this->name,
+            'active' => 1,
+            'version' => $this->version,
+        ]);
         if (!$result) {
             $this->_errors[] = Context::getContext()->getTranslator()->trans('Technical error: PrestaShop could not install this module.', [], 'Admin.Modules.Notification');
             if (method_exists($this, 'uninstallTabs')) {
@@ -1626,12 +1631,28 @@ abstract class ModuleCore implements ModuleInterface
      */
     public static function getNonNativeModuleList()
     {
-        return false;
+        return self::getModuleRepository()->getNonNativeModules();
     }
 
+    /**
+     * @return array<string>
+     */
     public static function getNativeModuleList()
     {
-        return false;
+        return self::getModuleRepository()->getNativeModules();
+    }
+
+    /**
+     * @return ModuleRepository
+     *
+     * @throws ContainerNotFoundException
+     */
+    private static function getModuleRepository(): ModuleRepository
+    {
+        $finder = new ContainerFinder(Context::getContext());
+        $sfContainer = $finder->getContainer();
+
+        return $sfContainer->get('prestashop.adapter.module.repository.module_repository');
     }
 
     /**
@@ -3487,6 +3508,12 @@ abstract class ModuleCore implements ModuleInterface
         }
 
         $this->getContainer()->get('prestashop.adapter.cache.clearer.symfony_cache_clearer')->clear();
+    }
+
+    public static function resetStaticCache()
+    {
+        static::$_INSTANCE = [];
+        Cache::clean('Module::isEnabled*');
     }
 }
 
