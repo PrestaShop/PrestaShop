@@ -101,7 +101,7 @@ final class ProductLightQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
-        $qb = $this->getQueryBuilder($searchCriteria->getFilters());
+        $qb = $this->getQueryBuilder([]);
         $qb
             ->select('p.`id_product`, p.`reference`')
             ->addSelect('ps.`price` AS `price_tax_excluded`')
@@ -128,7 +128,7 @@ final class ProductLightQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
-        $qb = $this->getQueryBuilder($searchCriteria->getFilters());
+        $qb = $this->getQueryBuilder([]);
         $qb->select('COUNT(p.`id_product`)');
 
         return $qb;

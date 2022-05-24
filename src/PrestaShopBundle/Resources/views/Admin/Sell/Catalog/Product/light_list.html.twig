@@ -7,9 +7,10 @@
     <div class="card-body">
       {% block grid_table_row %}
         {{ include('@PrestaShop/Admin/Common/Grid/Blocks/table.html.twig', {'grid': productLightGrid}) }}
+{#        @todo: probably not worth trying to reuse grid. simply create new table template.#}
       {% endblock %}
       {% block pagination %}
-        <div>
+        <div id="light_list_pagination">
 {#      @todo: should be able to use dynamic-paginator.ts to render the grid. Just need to implement new grid renderer in js to render whole template at once    #}
 {#      @todo: hardcoded values #}
           {{ include('@PrestaShop/Admin/Common/javascript_pagination.html.twig', {

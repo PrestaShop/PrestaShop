@@ -48,6 +48,8 @@ import {ProductSupplier, Supplier} from '@pages/product/components/suppliers/sup
 import initDropzone from '@pages/product/components/dropzone';
 import initTabs from '@pages/product/components/nav-tabs';
 import PriceSummary from '@pages/product/edit/price-summary';
+import DynamicPaginator from "@components/pagination/dynamic-paginator";
+import LightProductListService from "@pages/product/services/light-product-list-service";
 
 const {$} = window;
 
@@ -137,4 +139,7 @@ $(() => {
   if (productType === ProductConst.PRODUCT_TYPE.VIRTUAL) {
     new VirtualProductManager(productFormModel);
   }
+
+  //@todo: move out light list
+  new DynamicPaginator('#light_list_pagination', new LightProductListService(), );
 });

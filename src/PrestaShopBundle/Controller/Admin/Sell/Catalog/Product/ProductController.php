@@ -55,10 +55,14 @@ use PrestaShop\PrestaShop\Core\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
+use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteria;
+use PrestaShop\PrestaShop\Core\Search\Filters;
+use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Entity\ProductDownload;
 use PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoryFilterType;
+use PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationListType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Security\Voter\PageVoter;
@@ -135,7 +139,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @return JsonResponse
      */
-    public function lightListAction(Request $request): JsonResponse
+    public function getLightListAction(Request $request): JsonResponse
     {
         /** @var LightProductList $lightProductList */
         $lightProductList = $this->getQueryBus()->handle(new GetLightProductList(
@@ -160,6 +164,24 @@ class ProductController extends FrameworkBundleAdminController
         return $this->json([
             'products' => $productsForResponse,
             'total' => $lightProductList->getTotalCount(),
+        ]);
+    }
+
+    /**
+     * @AdminSecurity("is_granted('read', 'AdminProducts')")
+     *
+     * @return Response
+     *
+     * @todo: naming
+     */
+    public function showLightListAction(): Response
+    {
+        $gridFactory = $this->get('prestashop.core.grid.factory.product_light');
+        //@todo: hardcoded
+        $grid = $gridFactory->getGrid(new SearchCriteria(), 'light_product');
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/light_list.html.twig', [
+            'productLightGrid' => $this->presentGrid($grid),
         ]);
     }
 
