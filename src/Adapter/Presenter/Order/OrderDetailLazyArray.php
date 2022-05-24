@@ -229,7 +229,7 @@ class OrderDetailLazyArray extends AbstractLazyArray
                     ($shipping['weight'] > 0) ? sprintf('%.3f', $shipping['weight']) . ' ' .
                         Configuration::get('PS_WEIGHT_UNIT') : '-';
                 $shippingCost =
-                    (!$order->getTaxCalculationMethod()) ? $shipping['shipping_cost_tax_excl']
+                    ($order->getTaxCalculationMethod()) ? $shipping['shipping_cost_tax_excl']
                         : $shipping['shipping_cost_tax_incl'];
                 $orderShipping[$shippingId]['shipping_cost'] =
                     ($shippingCost > 0) ? $this->locale->formatPrice($shippingCost, (Currency::getIsoCodeById((int) $order->id_currency)))
