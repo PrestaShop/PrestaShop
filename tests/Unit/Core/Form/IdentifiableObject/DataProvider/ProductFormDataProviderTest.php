@@ -303,6 +303,7 @@ class ProductFormDataProviderTest extends TestCase
             'cover_thumbnail' => $newCover,
         ];
         $expectedOutputData['header']['name'] = $localizedValues;
+        $expectedOutputData['header']['initial_type'] = ProductType::TYPE_VIRTUAL;
         $expectedOutputData['header']['type'] = ProductType::TYPE_VIRTUAL;
         $expectedOutputData['header']['cover_thumbnail'] = $newCover;
 
@@ -1388,6 +1389,7 @@ class ProductFormDataProviderTest extends TestCase
             'id' => self::PRODUCT_ID,
             'header' => [
                 'type' => ProductType::TYPE_STANDARD,
+                'initial_type' => ProductType::TYPE_STANDARD,
                 'name' => [],
                 'cover_thumbnail' => self::COVER_URL,
             ],

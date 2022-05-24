@@ -187,6 +187,65 @@ class ProductTypeListenerTest extends FormListenerTestCase
     }
 
     /**
+     * @dataProvider getVirtualData
+     *
+     * @param array $formData
+     * @param bool $ecotaxExpected
+     */
+    public function testEcotaxForVirtualProduct(array $formData, bool $ecotaxExpected): void
+    {
+        $form = $this->createForm(TestProductFormType::class, [], $formData);
+
+        $this->assertFormTypeExistsInForm($form, 'pricing.retail_price.ecotax_tax_excluded', true);
+        $this->assertFormTypeExistsInForm($form, 'pricing.retail_price.ecotax_tax_included', true);
+        $this->adaptProductFormBasedOnProductType($form, $formData['header']['type'], $formData);
+        $this->assertFormTypeExistsInForm($form, 'pricing.retail_price.ecotax_tax_excluded', $ecotaxExpected);
+        $this->assertFormTypeExistsInForm($form, 'pricing.retail_price.ecotax_tax_included', $ecotaxExpected);
+    }
+
+    public function getVirtualData(): iterable
+    {
+        yield 'no initial type defined, virtual type defined, ecotax removed' => [
+            [
+                'header' => [
+                    'type' => ProductType::TYPE_VIRTUAL,
+                ],
+            ],
+            false,
+        ];
+
+        yield 'both initial and current are virtual, ecotax removed' => [
+            [
+                'header' => [
+                    'type' => ProductType::TYPE_VIRTUAL,
+                    'initial_type' => ProductType::TYPE_VIRTUAL,
+                ],
+            ],
+            false,
+        ];
+
+        yield 'initial standard and current virtual, ecotax present' => [
+            [
+                'header' => [
+                    'type' => ProductType::TYPE_VIRTUAL,
+                    'initial_type' => ProductType::TYPE_STANDARD,
+                ],
+            ],
+            true,
+        ];
+
+        yield 'initial virtual and current standard, ecotax present' => [
+            [
+                'header' => [
+                    'type' => ProductType::TYPE_VIRTUAL,
+                    'initial_type' => ProductType::TYPE_STANDARD,
+                ],
+            ],
+            true,
+        ];
+    }
+
+    /**
      * @param FormInterface $form
      * @param string $productType
      * @param array $extraData
