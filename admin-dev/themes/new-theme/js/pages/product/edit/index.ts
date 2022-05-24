@@ -46,7 +46,7 @@ import initDropzone from '@pages/product/components/dropzone';
 import initTabs from '@pages/product/components/nav-tabs';
 import PriceSummary from '@pages/product/edit/price-summary';
 import ProductOptionsManager from '@pages/product/edit/product-options-manager';
-import ProductShippingManager from "@pages/product/edit/product-shipping-manager";
+import ProductShippingManager from '@pages/product/edit/product-shipping-manager';
 
 const {$} = window;
 
