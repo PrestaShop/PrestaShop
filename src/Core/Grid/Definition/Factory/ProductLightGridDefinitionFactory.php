@@ -49,8 +49,7 @@ class ProductLightGridDefinitionFactory extends AbstractGridDefinitionFactory
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
         ConfigurationInterface $configuration
-    )
-    {
+    ) {
         parent::__construct($hookDispatcher);
         $this->configuration = $configuration;
     }
@@ -78,29 +77,29 @@ class ProductLightGridDefinitionFactory extends AbstractGridDefinitionFactory
     {
         $columns = (new ColumnCollection())
             ->add((new DataColumn('id_product'))
-                ->setName($this->trans('ID', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'id_product',
-                ])
+            ->setName($this->trans('ID', [], 'Admin.Global'))
+            ->setOptions([
+                'field' => 'id_product',
+            ])
             )
             ->add((new LinkColumn('name'))
-                ->setName($this->trans('Name', [], 'Admin.Global'))
-                ->setOptions([
-                    'field' => 'name',
-                    'route' => 'admin_products_v2_edit',
-                    'route_param_name' => 'productId',
-                    'route_param_field' => 'id_product',
-                ])
+            ->setName($this->trans('Name', [], 'Admin.Global'))
+            ->setOptions([
+                'field' => 'name',
+                'route' => 'admin_products_v2_edit',
+                'route_param_name' => 'productId',
+                'route_param_field' => 'id_product',
+            ])
             )
             ->add((new LinkColumn('price_tax_excluded'))
-                ->setName($this->trans('Price', [], 'Admin.Catalog.Feature'))
-                ->setOptions([
-                    'field' => 'price_tax_excluded',
-                    'route' => 'admin_products_v2_edit',
-                    'route_param_name' => 'productId',
-                    'route_param_field' => 'id_product',
-                    'fragment' => 'tab-pricing-tab',
-                ])
+            ->setName($this->trans('Price', [], 'Admin.Catalog.Feature'))
+            ->setOptions([
+                'field' => 'price_tax_excluded',
+                'route' => 'admin_products_v2_edit',
+                'route_param_name' => 'productId',
+                'route_param_field' => 'id_product',
+                'fragment' => 'tab-pricing-tab',
+            ])
             );
 
         if ($this->configuration->get('PS_STOCK_MANAGEMENT')) {
