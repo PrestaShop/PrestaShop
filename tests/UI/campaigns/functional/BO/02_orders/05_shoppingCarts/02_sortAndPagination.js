@@ -20,7 +20,7 @@ const AddressFaker = require('@data/faker/address');
 // Import demo data
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 
-const addressData = new AddressFaker();
+const addressData = new AddressFaker({country: 'France'});
 const customerData = new CustomerFaker({password: '', lastName: 'guest'});
 
 // Import test context

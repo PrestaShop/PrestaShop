@@ -27,8 +27,8 @@ const AddressFaker = require('@data/faker/address');
 
 // Create faker data
 const guestData = new CustomerFaker({password: ''});
-const deliveryAddress = new AddressFaker();
-const invoiceAddress = new AddressFaker();
+const deliveryAddress = new AddressFaker({country: 'France'});
+const invoiceAddress = new AddressFaker({country: 'France'});
 
 
 // Import test context
