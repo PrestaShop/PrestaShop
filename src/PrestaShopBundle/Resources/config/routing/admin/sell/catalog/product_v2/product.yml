@@ -21,7 +21,6 @@ admin_products_v2_light_list:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::lightListAction
     _legacy_controller: AdminProducts
 
-
 admin_products_search:
   path: /
   methods: [ POST ]

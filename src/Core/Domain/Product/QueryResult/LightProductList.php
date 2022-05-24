@@ -30,9 +30,10 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\QueryResult;
 class LightProductList
 {
     /**
-     * @var array
+     * @var LightProductForListing[]
      */
     private $productsForLightListing;
+
     /**
      * @var int
      */
@@ -53,7 +54,7 @@ class LightProductList
     /**
      * @return LightProductForListing[]
      */
-    public function getProductsForLightListing(): array
+    public function getProducts(): array
     {
         return $this->productsForLightListing;
     }
@@ -61,7 +62,7 @@ class LightProductList
     /**
      * @return int
      */
-    public function getTotalProductsCount(): int
+    public function getTotalCount(): int
     {
         return $this->totalProductsCount;
     }
