@@ -252,7 +252,7 @@ export default class CombinationsListEditor {
   }
 
   /**
-   * The product page doesn't incude the combination list into a for tag because it is rendered inside a form
+   * The product page doesn't include the combination list into a form tag because it is rendered inside a form
    * itself. So to get the data we create a dynamic form tag and include all the element from the list container
    * inside it, this way it is as if they were actually in a form tag.
    */

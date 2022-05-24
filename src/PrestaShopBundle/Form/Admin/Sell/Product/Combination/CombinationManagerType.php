@@ -40,7 +40,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * rendered via a controller action from the CombinationController.
  *
  * Some form inputs will be rendered in this sub form but they actually belong to another form (CombinationListType) so
- * they have different property path from the product form and won't be handled by it (since Formm::getData is based on
+ * they have different property path from the product form and won't be handled by it (since Form::getData is based on
  * the form naming structure it will naturally ignore all those fields).
  */
 class CombinationManagerType extends TranslatorAwareType
