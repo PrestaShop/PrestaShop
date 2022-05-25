@@ -97,6 +97,7 @@ final class StockCommandsBuilder implements MultiShopProductCommandsBuilderInter
     {
         $config = new CommandBuilderConfig($this->modifyAllNamePrefix);
         $config
+            ->addMultiShopField('[combinations][availability][out_of_stock_type]', 'setOutOfStockType', DataField::TYPE_INT)
             ->addMultiShopField('[combinations][availability][available_now_label]', 'setLocalizedAvailableNowLabels', DataField::TYPE_ARRAY)
             ->addMultiShopField('[combinations][availability][available_later_label]', 'setLocalizedAvailableLaterLabels', DataField::TYPE_ARRAY)
         ;
