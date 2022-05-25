@@ -39,6 +39,19 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class FeatureFlagCollectionType extends CollectionType
 {
     /**
+     * @var bool
+     */
+    private $isMultiShopUsed;
+
+    /**
+     * @param bool $isMultiShopUsed
+     */
+    public function __construct(bool $isMultiShopUsed)
+    {
+        $this->isMultiShopUsed = $isMultiShopUsed;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
@@ -50,6 +63,9 @@ class FeatureFlagCollectionType extends CollectionType
                 'label' => false,
                 'required' => false,
                 'allow_extra_fields' => true,
+                'attr' => [
+                    'data-is-multi-shop-used' => $this->isMultiShopUsed ? '1' : '0',
+                ],
             ])
         ;
     }

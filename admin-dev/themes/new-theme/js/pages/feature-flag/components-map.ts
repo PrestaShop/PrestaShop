@@ -27,4 +27,6 @@ export default {
   betaSubmitButton: '#submit-beta-feature-flags',
   betaForm: 'form[name="feature_flag_beta"]',
   betaFormInputFields: 'form[name="feature_flag_beta"] input',
+  productV2Switch: '#feature_flag_stable_product_page_v2_enabled',
+  productV2MultiShopSwitch: '#feature_flag_beta_product_page_v2_multi_shop_enabled',
 };
