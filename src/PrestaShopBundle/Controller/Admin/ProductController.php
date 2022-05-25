@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductExcep
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductIsEnabled;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcher;
 use PrestaShopBundle\Component\CsvResponse;
 use PrestaShopBundle\Entity\AdminFilter;
@@ -123,6 +124,10 @@ class ProductController extends FrameworkBundleAdminController
         $orderBy = 'id_product',
         $sortOrder = 'desc'
     ) {
+        if ($this->shouldRedirectToV2()) {
+            return $this->redirectToRoute('admin_products_v2_index');
+        }
+
         foreach ([PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE] as $permission) {
             if (!$this->isGranted($permission, self::PRODUCT_OBJECT)) {
                 return $this->redirect('admin_dashboard');
@@ -374,20 +379,6 @@ class ProductController extends FrameworkBundleAdminController
             'desc' => $this->trans('New product', 'Admin.Actions'),
             'icon' => 'add_circle_outline',
             'help' => $this->trans('Create a new product: CTRL+P', 'Admin.Catalog.Help'),
-        ];
-
-        $toolbarButtons['add_v2'] = [
-            'href' => $this->generateUrl('admin_products_v2_create'),
-            'desc' => $this->trans('New product on experimental page', 'Admin.Catalog.Feature'),
-            'icon' => 'add_circle_outline',
-            'class' => 'btn-outline-primary new-product',
-            'floating_class' => 'new-product',
-        ];
-
-        $toolbarButtons['list_v2'] = [
-            'href' => $this->generateUrl('admin_products_v2_index'),
-            'desc' => $this->trans('List on experimental page', 'Admin.Catalog.Feature'),
-            'class' => 'btn-outline-primary',
         ];
 
         return $toolbarButtons;
@@ -1342,5 +1333,25 @@ class ProductController extends FrameworkBundleAdminController
             'error_code' => $error_code,
             'allow_duplicate' => $allow_duplicate,
         ];
+    }
+
+    /**
+     * @return bool
+     */
+    private function shouldRedirectToV2(): bool
+    {
+        $multistoreFeature = $this->get('prestashop.adapter.multistore_feature');
+
+        if (!$multistoreFeature->isActive()) {
+            $productV2FeatureFlag = $this->get('prestashop.core.admin.feature_flag.repository')
+                ->findOneBy(['name' => FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2]);
+
+            return $productV2FeatureFlag->isEnabled();
+        }
+
+        $productV2BetaFeatureFlag = $this->get('prestashop.core.admin.feature_flag.repository')
+            ->findOneBy(['name' => FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2_BETA]);
+
+        return $productV2BetaFeatureFlag->isEnabled();
     }
 }
