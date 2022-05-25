@@ -57,8 +57,8 @@ class StockManager implements StockInterface
             $stockAvailable->id_product = (int) $product->id;
             $stockAvailable->id_product_attribute = (int) $id_product_attribute;
 
-            $outOfStock = $this->outOfStock((int) $product->id, $id_shop);
-            $stockAvailable->out_of_stock = (int) $outOfStock;
+            $productOutOfStock = $this->outOfStock((int) $product->id, $id_shop);
+            $stockAvailable->out_of_stock = (int) $productOutOfStock;
 
             if ($id_shop === null) {
                 $shop_group = $shopAdapter->getContextShopGroup();
@@ -210,11 +210,12 @@ class StockManager implements StockInterface
      *
      * @param int $productId
      * @param int $shopId Optional : gets context if null @see Context::getContext()
+     * @param int $combinationId
      *
      * @return bool : depends on stock @see $depends_on_stock
      */
-    public function outOfStock($productId, $shopId = null)
+    public function outOfStock($productId, $shopId = null, $combinationId = 0)
     {
-        return StockAvailable::outOfStock($productId, $shopId);
+        return StockAvailable::outOfStock($productId, $shopId, $combinationId);
     }
 }

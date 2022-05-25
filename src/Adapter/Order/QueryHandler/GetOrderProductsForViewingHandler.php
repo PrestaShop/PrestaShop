@@ -221,10 +221,11 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                 $packItemImagePath = isset($pack_item['image_tag']) ?
                     $this->imageTagSourceParser->parse($pack_item['image_tag']) :
                     null;
+                $combinationId = 0;
                 $packItems[] = new OrderProductForViewing(
                     null,
                     $pack_item['id_product'],
-                    0,
+                    $combinationId,
                     $pack_item['name'],
                     $pack_item['reference'],
                     $pack_item['supplier_reference'],
@@ -244,7 +245,7 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                     null,
                     '',
                     $packItemType,
-                    (bool) Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($pack_item['id_product']))
+                    (bool) Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($pack_item['id_product'], null, $combinationId))
                 );
             }
 
@@ -273,7 +274,7 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                     ? $orderInvoice->getInvoiceNumberFormatted((int) $order->getAssociatedLanguage()->getId())
                     : '',
                 $productType,
-                (bool) Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($product['product_id'])),
+                (bool) Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($product['product_id'], null, $product['product_attribute_id'])),
                 $packItems,
                 $product['customizations']
             );

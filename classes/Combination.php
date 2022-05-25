@@ -187,7 +187,8 @@ class CombinationCore extends ObjectModel
         if ($product->getType() == Product::PTYPE_VIRTUAL) {
             StockAvailable::setProductOutOfStock((int) $this->id_product, 1, null, (int) $this->id);
         } else {
-            StockAvailable::setProductOutOfStock((int) $this->id_product, StockAvailable::outOfStock((int) $this->id_product), null, $this->id);
+            $productOutOfStock = StockAvailable::outOfStock((int) $this->id_product);
+            StockAvailable::setProductOutOfStock((int) $this->id_product, $productOutOfStock, null, $this->id);
         }
 
         SpecificPriceRule::applyAllRules([(int) $this->id_product]);

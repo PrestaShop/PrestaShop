@@ -187,7 +187,7 @@ class StockAvailableCore extends ObjectModel
         }
 
         // Allow to order the product when out of stock?
-        $out_of_stock = StockAvailable::outOfStock($id_product);
+        $product_out_of_stock = StockAvailable::outOfStock($id_product);
 
         $manager = StockManagerFactory::getManager();
         // loops on $ids_warehouse to synchronize quantities
@@ -255,7 +255,7 @@ class StockAvailableCore extends ObjectModel
                                 'data' => [
                                     'quantity' => $quantity,
                                     'depends_on_stock' => 1,
-                                    'out_of_stock' => $out_of_stock,
+                                    'out_of_stock' => $product_out_of_stock,
                                     'id_product' => (int) $id_product,
                                     'id_product_attribute' => (int) $id_product_attribute,
                                 ],
@@ -593,9 +593,9 @@ class StockAvailableCore extends ObjectModel
                     $stockManager->saveMovement($id_product, $id_product_attribute, $deltaQuantity);
                 }
             } else {
-                $out_of_stock = StockAvailable::outOfStock($id_product, $id_shop);
+                $product_out_of_stock = StockAvailable::outOfStock($id_product, $id_shop);
                 $stock_available = new StockAvailable();
-                $stock_available->out_of_stock = (int) $out_of_stock;
+                $stock_available->out_of_stock = (int) $product_out_of_stock;
                 $stock_available->id_product = (int) $id_product;
                 $stock_available->id_product_attribute = (int) $id_product_attribute;
                 $stock_available->quantity = (int) $quantity;
@@ -742,10 +742,11 @@ class StockAvailableCore extends ObjectModel
      *
      * @param int $id_product
      * @param int|null $id_shop Optional : gets context if null @see Context::getContext()
+     * @param int $id_product_attribute
      *
      * @return int|bool : depends on stock @see $depends_on_stock
      */
-    public static function outOfStock($id_product, $id_shop = null)
+    public static function outOfStock($id_product, $id_shop = null, $id_product_attribute = 0)
     {
         if (!Validate::isUnsignedId($id_product)) {
             return false;
@@ -755,7 +756,7 @@ class StockAvailableCore extends ObjectModel
         $query->select('out_of_stock');
         $query->from('stock_available');
         $query->where('id_product = ' . (int) $id_product);
-        $query->where('id_product_attribute = 0');
+        $query->where('id_product_attribute = ' . (int) $id_product_attribute);
 
         $query = StockAvailable::addSqlShopRestriction($query, $id_shop);
 

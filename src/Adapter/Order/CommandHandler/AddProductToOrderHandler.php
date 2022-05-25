@@ -561,9 +561,9 @@ final class AddProductToOrderHandler extends AbstractOrderHandler implements Add
      */
     private function checkProductInStock(Product $product, AddProductToOrderCommand $command, int $shopId): void
     {
+        $combinationId = null !== $command->getCombinationId() ? $command->getCombinationId()->getValue() : 0;
         //check if product is available in stock
-        if (!Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($command->getProductId()->getValue()))) {
-            $combinationId = null !== $command->getCombinationId() ? $command->getCombinationId()->getValue() : 0;
+        if (!Product::isAvailableWhenOutOfStock(StockAvailable::outOfStock($command->getProductId()->getValue(), null, $combinationId))) {
             $availableQuantity = StockAvailable::getQuantityAvailableByProduct(
                 $command->getProductId()->getValue(),
                 $combinationId,

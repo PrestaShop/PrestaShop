@@ -4277,10 +4277,10 @@ class ProductCore extends ObjectModel
      */
     public function checkQty($qty)
     {
-        if ($this->isAvailableWhenOutOfStock(StockAvailable::outOfStock($this->id))) {
+        $id_product_attribute = $this->id_product_attribute ?? null;
+        if ($this->isAvailableWhenOutOfStock(StockAvailable::outOfStock($this->id, null, $id_product_attribute ?? 0))) {
             return true;
         }
-        $id_product_attribute = isset($this->id_product_attribute) ? $this->id_product_attribute : null;
         $availableQuantity = StockAvailable::getQuantityAvailableByProduct($this->id, $id_product_attribute);
 
         return $qty <= $availableQuantity;
