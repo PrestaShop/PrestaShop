@@ -28,8 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag;
 
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+use PrestaShopBundle\Entity\FeatureFlag;
 
 /**
  * Passes data between the application layer in charge of the feature flags form
@@ -37,33 +39,84 @@ use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
  */
 class FeatureFlagsFormDataProvider implements FormDataProviderInterface
 {
-    /**
-     * @var DataConfigurationInterface
-     */
-    private $featureFlagDataConfigurator;
+    /** @var EntityManagerInterface */
+    private $doctrineEntityManager;
+
+    /** @var bool */
+    private $isBeta;
 
     /**
-     * @param DataConfigurationInterface $featureFlagDataConfigurator
+     * @param EntityManagerInterface $doctrineEntityManager
+     * @param bool $isBeta
      */
-    public function __construct(
-        DataConfigurationInterface $featureFlagDataConfigurator
-    ) {
-        $this->featureFlagDataConfigurator = $featureFlagDataConfigurator;
+    public function __construct(EntityManagerInterface $doctrineEntityManager, bool $isBeta)
+    {
+        $this->doctrineEntityManager = $doctrineEntityManager;
+        $this->isBeta = $isBeta;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getData(): array
+    public function getData()
     {
-        return $this->featureFlagDataConfigurator->getConfiguration();
+        $featureFlags = $this->doctrineEntityManager->getRepository(FeatureFlag::class)->findBy(['isBeta' => $this->isBeta]);
+
+        $featureFlagsData = [];
+        foreach ($featureFlags as $featureFlag) {
+            $featureFlagsData[$featureFlag->getName()] = [
+                'enabled' => $featureFlag->isEnabled(),
+                'name' => $featureFlag->getName(),
+                'label' => $featureFlag->getLabelWording(),
+                'label_domain' => $featureFlag->getLabelDomain(),
+                'description' => $featureFlag->getDescriptionWording(),
+                'description_domain' => $featureFlag->getDescriptionDomain(),
+            ];
+        }
+
+        return $featureFlagsData;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setData(array $data): array
+    public function setData(array $flagsData)
     {
-        return $this->featureFlagDataConfigurator->updateConfiguration($data);
+        if (!$this->validateFlagsData($flagsData)) {
+            throw new InvalidArgumentException('Invalid feature flag configuration submitted');
+        }
+
+        foreach ($flagsData as $flagName => $flagData) {
+            $featureFlag = $this->getOneFeatureFlagByName($flagName);
+
+            if (null === $featureFlag) {
+                throw new InvalidArgumentException(sprintf('Invalid feature flag configuration submitted, flag %s does not exist', $flagName));
+            }
+
+            $flagState = $flagData['enabled'] ?? false;
+            if ($flagState) {
+                $featureFlag->enable();
+            } else {
+                $featureFlag->disable();
+            }
+        }
+
+        $this->doctrineEntityManager->flush();
+
+        return [];
+    }
+
+    protected function validateFlagsData(array $flagsData): bool
+    {
+        foreach ($flagsData as $flagName => $flagData) {
+            if (!is_string($flagName)) {
+                return false;
+            }
+
+            if (!is_bool($flagData['enabled'])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    protected function getOneFeatureFlagByName(string $featureFlagName): ?FeatureFlag
+    {
+        return $this->doctrineEntityManager->getRepository(FeatureFlag::class)->findOneBy(['name' => $featureFlagName]);
     }
 }

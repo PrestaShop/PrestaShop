@@ -1898,12 +1898,19 @@ services:
     tags:
       - name: form.type
 
-  prestashop.bundle.form.admin.configure.advanced_parameters.experimental_feature:
-    class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagsType'
+  prestashop.bundle.form.admin.configure.advanced_parameters.feature_flag.feature_flag_collection_type:
+    class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagCollectionType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+
+  prestashop.bundle.form.admin.configure.advanced_parameters.feature_flag.feature_flag_type:
+    class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagType'
     parent: 'form.type.translatable.aware'
     public: true
     arguments:
-      - '@prestashop.core.feature_flags.modifier'
+      - '@form.form_cloner'
     tags:
       - { name: form.type }
 
