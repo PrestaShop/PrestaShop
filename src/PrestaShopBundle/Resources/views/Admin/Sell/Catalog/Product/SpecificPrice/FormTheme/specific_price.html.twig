@@ -26,7 +26,7 @@
 {% extends '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
 
 {% block searched_customer_row %}
-  <li class="media entity-item" id="{{ form.vars.name }}">
+  <li class="media entity-item">
     <div class="media-body media-middle">
       {{ form_widget(form.fullname_and_email) }}
       <i class="material-icons delete entity-item-delete">clear</i>

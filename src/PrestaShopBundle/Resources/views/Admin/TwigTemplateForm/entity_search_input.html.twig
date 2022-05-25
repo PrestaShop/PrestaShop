@@ -119,7 +119,7 @@
 {% endblock %}
 
 {% block entity_item_list_row %}
-  <li class="media entity-item" id="{{ form.vars.name }}">
+  <li class="media entity-item">
     <div class="media-left">
       {{ form_widget(form.image) }}
     </div>
@@ -132,7 +132,7 @@
 {% endblock %}
 
 {%- block entity_item_table_row -%}
-  <tr class="entity-item" id="{{ form.vars.name }}">
+  <tr class="entity-item">
   {% for child in form.children %}
     {% set childType = child.vars.block_prefixes.1 %}
     {% if childType == 'hidden'%}
