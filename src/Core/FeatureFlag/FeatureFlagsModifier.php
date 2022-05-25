@@ -43,12 +43,17 @@ class FeatureFlagsModifier implements DataConfigurationInterface
     /** @var EntityManagerInterface */
     private $doctrineEntityManager;
 
+    /** @var bool */
+    private $isBeta;
+
     /**
      * @param EntityManagerInterface $doctrineEntityManager
+     * @param bool $isBeta
      */
-    public function __construct(EntityManagerInterface $doctrineEntityManager)
+    public function __construct(EntityManagerInterface $doctrineEntityManager, bool $isBeta)
     {
         $this->doctrineEntityManager = $doctrineEntityManager;
+        $this->isBeta = $isBeta;
     }
 
     /**
@@ -70,7 +75,7 @@ class FeatureFlagsModifier implements DataConfigurationInterface
      */
     public function getAllFeatureFlags(): array
     {
-        return $this->doctrineEntityManager->getRepository(FeatureFlag::class)->findAll();
+        return $this->doctrineEntityManager->getRepository(FeatureFlag::class)->findBy(['isBeta' => $this->isBeta]);
     }
 
     /**
