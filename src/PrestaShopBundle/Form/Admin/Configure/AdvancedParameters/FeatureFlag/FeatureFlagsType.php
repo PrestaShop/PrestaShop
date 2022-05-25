@@ -43,32 +43,12 @@ use Symfony\Component\Translation\TranslatorInterface;
 class FeatureFlagsType extends TranslatorAwareType
 {
     /**
-     * @var FeatureFlagsModifier
-     */
-    private $featureFlagsModifier;
-
-    /**
-     * @param TranslatorInterface $translator
-     * @param array $locales
-     * @param FeatureFlagsModifier $featureFlagsModifier
-     */
-    public function __construct(
-        TranslatorInterface $translator,
-        array $locales,
-        FeatureFlagsModifier $featureFlagsModifier
-    ) {
-        parent::__construct($translator, $locales);
-
-        $this->featureFlagsModifier = $featureFlagsModifier;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         /** @var array<int, FeatureFlag> $allFeatureFlags */
-        $allFeatureFlags = $this->featureFlagsModifier->getAllFeatureFlags();
+        $allFeatureFlags = $options['feature_flags'];
 
         $enabledWording = $this->trans('Enabled', 'Admin.Global');
         $disabledWording = $this->trans('Disabled', 'Admin.Global');
@@ -83,6 +63,8 @@ class FeatureFlagsType extends TranslatorAwareType
                         $disabledWording => false,
                         $enabledWording => true,
                     ],
+                    'data' => $featureFlag->isEnabled(),
+                    'attr' => ['disabled' => $options['is_multistore_active'] && !$featureFlag->isBeta() || !$options['is_multistore_active'] && $featureFlag->isBeta()]
                 ]);
         }
     }
@@ -94,6 +76,8 @@ class FeatureFlagsType extends TranslatorAwareType
     {
         $resolver->setDefaults([
             'method' => 'POST',
+            'feature_flags' => [],
+            'is_multistore_active' => false,
         ]);
     }
 }

@@ -34,6 +34,32 @@
     <div class="card" id="configuration_fieldset_general">
       <h3 class="card-header">
         <i class="material-icons">settings</i>
+        {{ 'New features'|trans }}
+      </h3>
+
+      <div class="card-body">
+        <div class="form-wrapper">
+          <div class="alert alert-info alert-experimental" role="alert">
+            {{ 'New features are available. Fell free to try them out !'|trans({}, 'Admin.Advparameters.Notification') }}
+          </div>
+          {{ form_widget(featureFlagsForm) }}
+        </div>
+      </div>
+        <div class="card-footer">
+          <div class="d-flex justify-content-end">
+            <button type="submit" id="submit-btn-feature-flag" class="btn btn-primary">
+              {{ 'Save'|trans({}, 'Admin.Actions') }}
+            </button>
+          </div>
+        </div>
+    </div>
+  {% endblock %}
+  {{ form_end(featureFlagsForm) }}
+  {{ form_start(betaFeatureFlagsForm, {attr : {class: 'form', id:'beta-feature-flag-form'}, action: path('admin_feature_flags_index') }) }}
+  {% block beta_feature_flag_form %}
+    <div class="card" id="configuration_fieldset_general">
+      <h3 class="card-header">
+        <i class="material-icons">settings</i>
         {{ 'Experimental features'|trans }}
       </h3>
 
@@ -46,26 +72,22 @@
               <li>{{ 'In any case, you should never experiment in production.'|trans({}, 'Admin.Advparameters.Notification') }}</li>
             </ul>
           </div>
-          {{ form_widget(featureFlagsForm) }}
+          {{ form_widget(betaFeatureFlagsForm) }}
         </div>
       </div>
-      {% if featureFlagsForm.vars.data is not empty %}
         <div class="card-footer">
           <div class="d-flex justify-content-end">
-            <button type="submit" id="submit-btn-feature-flag" class="btn btn-primary" 
-                    data-modal-title="{{ 'Are you sure you want to enable this experimental feature?'|trans({}, 'Admin.Advparameters.Notification') }}" 
-                    data-modal-message="{{ 'You are about to enable a feature that is not stable yet. This should only be done in a test environment or in full knowledge of the potential risks.'|trans({}, 'Admin.Advparameters.Notification') }}" 
-                    data-modal-apply="{{ 'Enable'|trans({}, 'Admin.Actions') }}" 
+            <button type="submit" id="submit-btn-beta-feature-flag" class="btn btn-primary"
+                    data-modal-title="{{ 'Are you sure you want to enable this experimental feature?'|trans({}, 'Admin.Advparameters.Notification') }}"
+                    data-modal-message="{{ 'You are about to enable a feature that is not stable yet. This should only be done in a test environment or in full knowledge of the potential risks.'|trans({}, 'Admin.Advparameters.Notification') }}"
+                    data-modal-apply="{{ 'Enable'|trans({}, 'Admin.Actions') }}"
                     data-modal-cancel="{{ 'Cancel'|trans({}, 'Admin.Actions') }}">
               {{ 'Save'|trans({}, 'Admin.Actions') }}
             </button>
           </div>
         </div>
-      {% endif %}
     </div>
   {% endblock %}
-  {{ form_end(featureFlagsForm) }}
-
 {% endblock %}
 
 {% block javascripts %}

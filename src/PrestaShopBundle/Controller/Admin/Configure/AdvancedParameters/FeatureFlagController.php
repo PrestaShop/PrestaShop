@@ -32,6 +32,7 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagsType;
 
 /**
  * Manages the "Configure > Advanced Parameters > Experimental Features" page.
@@ -45,19 +46,38 @@ class FeatureFlagController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request): Response
     {
-        $featureFlagsFormHandler = $this->get('prestashop.admin.feature_flags.form_handler');
-        $featureFlagsForm = $featureFlagsFormHandler->getForm();
+        $multistoreFeature = $this->get('prestashop.adapter.multistore_feature');
+        $featureFlagsModifier = $this->get('prestashop.core.feature_flags.modifier');
+        $featureFlagsForm = $this->createForm(
+            FeatureFlagsType::class,
+            null,
+            [
+                'feature_flags' => $featureFlagsModifier->getAllFeatureFlags(),
+                'is_multistore_active' => $multistoreFeature->isActive(),
+            ]
+        );
+
+        $betaFeatureFlagsModifier = $this->get('prestashop.core.feature_flags_beta.modifier');
+        $betaFeatureFlagsForm = $this->createForm(
+            FeatureFlagsType::class,
+            null,
+            [
+                'feature_flags' => $betaFeatureFlagsModifier->getAllFeatureFlags(),
+                'is_multistore_active' => $multistoreFeature->isActive(),
+            ]
+        );
 
         $featureFlagsForm->handleRequest($request);
+        $betaFeatureFlagsForm->handleRequest($request);
 
         if ($featureFlagsForm->isSubmitted() && $featureFlagsForm->isValid()) {
-            $errors = $featureFlagsFormHandler->save($featureFlagsForm->getData());
+            $this->formSubmission($featureFlagsForm, $featureFlagsModifier);
 
-            if (empty($errors)) {
-                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
-            } else {
-                $this->flashErrors($errors);
-            }
+            return $this->redirectToRoute('admin_feature_flags_index');
+        }
+
+        if ($betaFeatureFlagsForm->isSubmitted() && $betaFeatureFlagsForm->isValid()) {
+            $this->formSubmission($betaFeatureFlagsForm, $betaFeatureFlagsModifier);
 
             return $this->redirectToRoute('admin_feature_flags_index');
         }
@@ -70,6 +90,7 @@ class FeatureFlagController extends FrameworkBundleAdminController
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'featureFlagsForm' => $featureFlagsForm->createView(),
+            'betaFeatureFlagsForm' => $betaFeatureFlagsForm->createView(),
             'multistoreInfoTip' => $this->trans(
                 'Note that this page is available in all shops context only, this is why your context has just switched.',
                 'Admin.Notifications.Info'
@@ -77,5 +98,22 @@ class FeatureFlagController extends FrameworkBundleAdminController
             'multistoreIsUsed' => ($this->get('prestashop.adapter.multistore_feature')->isUsed()
                 && $this->get('prestashop.adapter.shop.context')->isShopContext()),
         ]);
+    }
+
+    private function formSubmission($form, $modifier)
+    {
+        $errors = [];
+
+        try {
+            $modifier->updateConfiguration($form->getData());
+        } catch(\Exception $e) {
+            $error[] = $e->getMessage();
+        }
+
+        if (empty($errors)) {
+            $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+        } else {
+            $this->flashErrors($errors);
+        }
     }
 }
