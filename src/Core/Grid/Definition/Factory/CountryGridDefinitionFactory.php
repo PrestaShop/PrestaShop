@@ -229,13 +229,6 @@ class CountryGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'route_param_field' => 'id_country',
                         'clickable_row' => true,
                     ])
-//            )
-//            ->add(
-//                $this->buildDeleteAction(
-//                    'admin_country_delete',
-//                    'countryId',
-//                    'id_country'
-//                )
             );
 
         return $rowActionCollection;
@@ -269,6 +262,7 @@ class CountryGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getBulkActions(): BulkActionCollectionInterface
     {
+        //todo: need to implement bulk actions
         return new BulkActionCollection();
     }
 }

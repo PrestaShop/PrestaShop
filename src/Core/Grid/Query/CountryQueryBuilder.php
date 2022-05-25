@@ -98,6 +98,12 @@ class CountryQueryBuilder extends AbstractDoctrineQueryBuilder
             ->from($this->dbPrefix . 'country', 'c')
             ->innerJoin(
                 'c',
+                $this->dbPrefix . 'country_shop',
+                'cs',
+                'c.id_country = cs.id_country'
+            )
+            ->innerJoin(
+                'c',
                 $this->dbPrefix . 'country_lang',
                 'cl',
                 'cl.id_country = cs.id_country'
@@ -142,7 +148,7 @@ class CountryQueryBuilder extends AbstractDoctrineQueryBuilder
             }
 
             if ($filterName === 'zone_name') {
-                $builder->andWhere('zn.' . $filterName . ' LIKE :' . $filterName);
+                $builder->andWhere('z.name' . ' LIKE :' . $filterName);
                 $builder->setParameter($filterName, '%' . $filterValue . '%');
                 continue;
             }

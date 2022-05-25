@@ -68,9 +68,9 @@ class CountryController extends FrameworkBundleAdminController
 
         Tools::redirectAdmin(
             \Context::getContext()->link->getAdminLink('AdminCountries', true, [], [
-                    'updatecountry' => '',
-                    'id_country' => $countryId
-                ]
+                'updatecountry' => '',
+                'id_country' => $countryId,
+            ]
             )
         );
     }

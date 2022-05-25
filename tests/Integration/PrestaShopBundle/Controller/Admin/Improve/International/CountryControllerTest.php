@@ -65,28 +65,26 @@ class CountryControllerTest extends FormGridControllerTestCase
         // TODO: Implement when edit action is created
     }
 
-    /**
-     * @param int $countryId
-     */
-    public function testFilters(int $countryId): int
+    public function testFilters(): int
     {
+        //todo: when edit form is finished we can use it for filter test. Example AddressControllerTest.php
+        $countryId = 1;
         $gridFilters = [
-            ['country[id_address]' => $countryId],
-            ['address[firstname]' => 'editfirstname'],
-            ['address[lastname]' => 'editlastname'],
-            ['address[address1]' => 'editaddress1'],
-            ['address[postcode]' => '11111'],
-            ['address[city]' => 'editcity'],
-            ['address[id_country]' => $this->countryId],
+            ['country[id_country]' => $countryId],
+            ['country[name]' => 'Germany'],
+            ['country[iso_code]' => 'DE'],
+            ['country[call_prefix]' => 49],
+            ['country[zone_name]' => 'Europe'],
+            ['country[active]' => 0],
         ];
 
         foreach ($gridFilters as $testFilter) {
-            $addresses = $this->getFilteredEntitiesFromGrid($testFilter);
-            $this->assertGreaterThanOrEqual(1, count($addresses), sprintf(
+            $countries = $this->getFilteredEntitiesFromGrid($testFilter);
+            $this->assertGreaterThanOrEqual(1, count($countries), sprintf(
                 'Expected at least one address with filters %s',
                 var_export($testFilter, true)
             ));
-            $this->assertCollectionContainsEntity($addresses, $countryId);
+            $this->assertCollectionContainsEntity($countries, $countryId);
         }
 
         return $countryId;
