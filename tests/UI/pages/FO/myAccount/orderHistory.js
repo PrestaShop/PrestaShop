@@ -27,6 +27,8 @@ class OrderHistory extends FOBasePage {
     this.reorderLink = row => `${this.ordersTableRow(row)} a.reorder-link`;
     this.detailsLink = row => `${this.ordersTableRow(row)} a.view-order-details-link`;
     this.orderTableColumnInvoice = row => `${this.orderTableColumn(row, 6)} a`;
+    this.orderDetailsLink = orderID => `${this.ordersTableRows}`
+      + ` td a.view-order-details-link[href$='order-detail&id_order=${orderID}']`;
     // Messages block
     this.boxMessagesSection = '.box.messages';
     this.messageRow = row => `${this.boxMessagesSection} div:nth-child(${row}).message.row`;
@@ -109,6 +111,16 @@ class OrderHistory extends FOBasePage {
    */
   async goToDetailsPage(page, orderRow = 1) {
     await this.clickAndWaitForNavigation(page, this.detailsLink(orderRow));
+  }
+
+  /**
+   * Go to order details page
+   * @param page {Page} Browser tab
+   * @param orderID {number} Order ID
+   * @returns {Promise<void>}
+   */
+  async goToOrderDetailsPage(page, orderID = 1) {
+    await this.clickAndWaitForNavigation(page, this.orderDetailsLink(orderID));
   }
 
   // Methods for box messages

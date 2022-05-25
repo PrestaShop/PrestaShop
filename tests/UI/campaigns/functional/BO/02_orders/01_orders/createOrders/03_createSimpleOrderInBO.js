@@ -143,7 +143,7 @@ describe('BO - Orders - Create order : Create simple order in BO', async () => {
         .to.contain(orderToMake.addressValue.firstName)
         .and.to.contain(orderToMake.addressValue.lastName)
         .and.to.contain(orderToMake.addressValue.address)
-        .and.to.contain(orderToMake.addressValue.zipCode)
+        .and.to.contain(orderToMake.addressValue.postalCode)
         .and.to.contain(orderToMake.addressValue.city)
         .and.to.contain(orderToMake.addressValue.country);
     });
@@ -156,7 +156,7 @@ describe('BO - Orders - Create order : Create simple order in BO', async () => {
         .to.contain(orderToMake.addressValue.firstName)
         .and.to.contain(orderToMake.addressValue.lastName)
         .and.to.contain(orderToMake.addressValue.address)
-        .and.to.contain(orderToMake.addressValue.zipCode)
+        .and.to.contain(orderToMake.addressValue.postalCode)
         .and.to.contain(orderToMake.addressValue.city)
         .and.to.contain(orderToMake.addressValue.country);
     });

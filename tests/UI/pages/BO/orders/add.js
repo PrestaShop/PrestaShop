@@ -110,7 +110,11 @@ class AddOrder extends BOBasePage {
 
     // Addresses form selectors
     this.deliveryAddressSelect = '#delivery-address-select';
+    this.deliveryAddressDetails = '#delivery-address-details';
+    this.deliveryAddressEditButton = '#js-delivery-address-edit-btn';
     this.invoiceAddressSelect = '#invoice-address-select';
+    this.invoiceAddressdetails = '#invoice-address-details';
+    this.invoiceAddressEditButton = '#js-invoice-address-edit-btn';
 
     // Shipping form selectors
     this.shippingBlock = '#shipping-block';
@@ -677,6 +681,103 @@ class AddOrder extends BOBasePage {
   async chooseAddresses(page, deliveryAddress, invoiceAddress) {
     await this.selectByVisibleText(page, this.deliveryAddressSelect, deliveryAddress);
     await this.selectByVisibleText(page, this.invoiceAddressSelect, invoiceAddress);
+  }
+
+  /**
+   * Get delivery address details
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getDeliveryAddressDetails(page) {
+    await page.waitForTimeout(3000);
+
+    return this.getTextContent(page, this.deliveryAddressDetails);
+  }
+
+  /**
+   * Choose delivery address
+   * @param page {Page} Browser tab
+   * @param deliveryAddress {string} Delivery address to choose
+   * @returns {Promise<string>}
+   */
+  async chooseDeliveryAddress(page, deliveryAddress) {
+    await this.selectByVisibleText(page, this.deliveryAddressSelect, deliveryAddress);
+
+    return this.getDeliveryAddressDetails(page);
+  }
+
+  /**
+   * Get invoice address details
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getInvoiceAddressDetails(page) {
+    await page.waitForTimeout(2000);
+
+    return this.getTextContent(page, this.invoiceAddressdetails);
+  }
+
+  /**
+   * Choose invoice address
+   * @param page {Page} Browser tab
+   * @param invoiceAddress {string} Invoice address to choose
+   * @returns {Promise<string>}
+   */
+  async chooseInvoiceAddress(page, invoiceAddress) {
+    await this.selectByVisibleText(page, this.invoiceAddressSelect, invoiceAddress);
+
+    return this.getInvoiceAddressDetails(page);
+  }
+
+  /**
+   * Click on edit delivery address
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async clickOnEditDeliveryAddressButton(page) {
+    await this.waitForSelectorAndClick(page, this.deliveryAddressEditButton);
+
+    return this.elementVisible(page, this.iframe, 2000);
+  }
+
+  /**
+   * Click on edit invoice address
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async clickOnEditInvoiceAddressButton(page) {
+    await this.waitForSelectorAndClick(page, this.invoiceAddressEditButton);
+
+    return this.elementVisible(page, this.iframe, 2000);
+  }
+
+  /**
+   * Get edit address Iframe
+   * @param page {Page} Browser tab
+   * @returns {Promise<*>}
+   */
+  async getEditAddressIframe(page) {
+    return page.frame({url: new RegExp('sell/addresses/cart/', 'gmi')});
+  }
+
+  /**
+   * Click on add new address
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async clickOnAddNewAddressButton(page) {
+    await this.waitForSelectorAndClick(page, '#js-add-address-btn');
+
+    return this.elementVisible(page, this.iframe, 2000);
+  }
+
+  /**
+   * Get add address Iframe
+   * @param page {Page} Browser tab
+   * @returns {Promise<*>}
+   */
+  async getAddAddressIframe(page) {
+    return page.frame({url: new RegExp('sell/addresses/new?', 'gmi')});
   }
 
   /* Shipping methods */
