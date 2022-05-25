@@ -45,7 +45,7 @@ class FeatureFlagRepository extends EntityRepository
         return $this->findOneBy(['name' => $featureFlagName]);
     }
 
-    /**$
+    /**
      * Check if a feature flag is enabled based on its name (if it doesn't exist false is returned).
      *
      * @param string $featureFlagName
@@ -57,6 +57,20 @@ class FeatureFlagRepository extends EntityRepository
         $featureFlag = $this->getByName($featureFlagName);
 
         return null !== $featureFlag && $featureFlag->isEnabled();
+    }
+
+    /**
+     * Check if a feature flag is enabled based on its name (if it doesn't exist false is returned).
+     *
+     * @param string $featureFlagName
+     *
+     * @return bool
+     */
+    public function isDisabled(string $featureFlagName): bool
+    {
+        $featureFlag = $this->getByName($featureFlagName);
+
+        return null === $featureFlag || !$featureFlag->isEnabled();
     }
 
     /**

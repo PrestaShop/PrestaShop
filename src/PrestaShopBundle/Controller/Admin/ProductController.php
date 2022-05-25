@@ -445,6 +445,10 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function formAction($id, Request $request)
     {
+        if ($this->shouldRedirectToV2()) {
+            return $this->redirectToRoute('admin_products_v2_edit', ['productId' => $id]);
+        }
+
         gc_disable();
 
         foreach ([PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE] as $permission) {

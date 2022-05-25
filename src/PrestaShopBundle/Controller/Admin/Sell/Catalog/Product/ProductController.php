@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductFilters;
@@ -88,6 +89,10 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request, ProductFilters $filters): Response
     {
+        if ($this->shouldRedirectToV1()) {
+            return $this->redirectToRoute('admin_product_catalog');
+        }
+
         $productGridFactory = $this->get('prestashop.core.grid.factory.product');
         $productGrid = $productGridFactory->getGrid($filters);
 
@@ -141,6 +146,10 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function editAction(Request $request, int $productId): Response
     {
+        if ($this->shouldRedirectToV1()) {
+            return $this->redirectToRoute('admin_product_form', ['id' => $productId]);
+        }
+
         if (!$this->get('prestashop.adapter.shop.context')->isSingleShopContext()) {
             return $this->renderDisableMultistorePage($productId);
         }
@@ -492,5 +501,19 @@ class ProductController extends FrameworkBundleAdminController
                 !empty($productId) ? ['id' => $productId] : []
             ),
         ]);
+    }
+
+    /**
+     * @return bool
+     */
+    private function shouldRedirectToV1(): bool
+    {
+        $multistoreFeature = $this->get('prestashop.adapter.multistore_feature');
+
+        if (!$multistoreFeature->isActive()) {
+            return $this->get('prestashop.core.admin.feature_flag.repository')->isDisabled(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
+        }
+
+        return $this->get('prestashop.core.admin.feature_flag.repository')->isDisabled(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2_MULTI_SHOP);
     }
 }
