@@ -28,6 +28,25 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query;
 
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+
 class GetCatalogPriceRuleList
 {
+    /**
+     * @var LanguageId
+     */
+    private $langId;
+
+    public function __construct(int $langId)
+    {
+        $this->langId = new LanguageId($langId);
+    }
+
+    /**
+     * @return LanguageId
+     */
+    public function getLangId(): LanguageId
+    {
+        return $this->langId;
+    }
 }

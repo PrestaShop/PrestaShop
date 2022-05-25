@@ -62,10 +62,35 @@ class CatalogPriceRuleRepository
      *
      * @return array<int, array<string, string|null>>
      */
-    public function getAll(): array {
+    public function getAll(LanguageId $langId): array {
         $qb = $this->connection->createQueryBuilder()
-            ->select('spr.*')
+            ->select('spr.id_specific_price_rule, spr.name as specific_price_rule_name, currency_lang.symbol, country_lang.name as lang_name, group_lang.name as group_name, spr.from_quantity, spr.reduction_type, spr.reduction, spr.from, spr.to')
             ->from($this->dbPrefix . 'specific_price_rule', 'spr')
+            ->leftJoin(
+                'spr',
+                $this->dbPrefix . 'currency_lang',
+                'currency_lang',
+                'spr.id_currency = currency_lang.id_currency AND currency_lang.id_lang = :langId'
+            )
+            ->leftJoin(
+                'spr',
+                $this->dbPrefix . 'shop', 'shop',
+                'spr.id_shop = shop.id_shop'
+            )
+            ->leftJoin(
+                'spr',
+                $this->dbPrefix . 'country_lang',
+                'country_lang',
+                'spr.id_country = country_lang.id_country AND country_lang.id_lang = :langId'
+            )
+            ->leftJoin(
+                'spr',
+                $this->dbPrefix . 'group_lang',
+                'group_lang',
+                'spr.id_group = group_lang.id_group AND group_lang.id_lang = :langId'
+            )
+            ->orderBy('id_specific_price_rule', 'asc')
+            ->setParameter('langId', $langId->getValue())
         ;
 
         return $qb->execute()->fetchAllAssociative();

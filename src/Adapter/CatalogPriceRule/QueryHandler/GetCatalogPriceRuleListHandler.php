@@ -28,12 +28,14 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\CatalogPriceRule\QueryHandler;
 
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\CatalogPriceRule\Repository\CatalogPriceRuleRepository;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleList;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryHandler\GetCatalogPriceRuleListHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult\CatalogPriceRuleForListing;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult\CatalogPriceRuleList;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceForEditing;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 
 /**
  * Handles @see GetSpecificPriceForEditing using legacy object model
@@ -58,16 +60,20 @@ class GetCatalogPriceRuleListHandler implements GetCatalogPriceRuleListHandlerIn
      */
     public function handle(GetCatalogPriceRuleList $query): CatalogPriceRuleList
     {
-        $catalogPriceRules = $this->catalogPriceRuleRepository->getAll();
+        $catalogPriceRules = $this->catalogPriceRuleRepository->getAll($query->getLangId());
         $return = [];
         foreach ($catalogPriceRules as $catalogPriceRule) {
             $return[] = new CatalogPriceRuleForListing(
                 (int) $catalogPriceRule['id_specific_price_rule'],
-                $catalogPriceRule['name'],
-                (int) $catalogPriceRule['id_shop'],
-                (int) $catalogPriceRule['id_currency'],
-                (int) $catalogPriceRule['id_country'],
-                (int) $catalogPriceRule['id_group']
+                $catalogPriceRule['specific_price_rule_name'],
+                $catalogPriceRule['symbol'],
+                $catalogPriceRule['lang_name'],
+                $catalogPriceRule['group_name'],
+                (int) $catalogPriceRule['from_quantity'],
+                $catalogPriceRule['reduction_type'],
+                new DecimalNumber($catalogPriceRule['reduction']),
+                DateTimeUtil::buildNullableDateTime($catalogPriceRule['from']),
+                DateTimeUtil::buildNullableDateTime($catalogPriceRule['to'])
             );
         }
 

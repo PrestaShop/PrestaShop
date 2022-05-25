@@ -47,7 +47,7 @@ export default class CatalogPriceRuleList {
     tbody.innerHTML = '';
 
     getCatalogRules().then((response) => {
-      const catalogPriceRules = response.catalogPriceRules as Array<SpecificPriceForListing>;
+      const catalogPriceRules = response.catalogPriceRules as Array<CatalogPriceRuleForListing>;
       this.toggleListVisibility(catalogPriceRules.length > 0);
 
       catalogPriceRules.forEach((catalogPriceRule: CatalogPriceRuleForListing) => {
@@ -59,13 +59,25 @@ export default class CatalogPriceRuleList {
         const currencyField = this.selectListField(trClone, listFields.currency);
         const countryField = this.selectListField(trClone, listFields.country);
         const groupField = this.selectListField(trClone, listFields.group);
-        const shopField = this.selectListField(trClone, listFields.shop);
+        const nameField = this.selectListField(trClone, listFields.name);
+        const fromQuantityField = this.selectListField(trClone, listFields.fromQuantity);
+        const reductionTypeField = this.selectListField(trClone, listFields.reductionType);
+        const reductionField = this.selectListField(trClone, listFields.reduction);
+        const startDateField = this.selectListField(trClone, listFields.from);
+        const endDateField = this.selectListField(trClone, listFields.to);
+
         const editBtn = this.selectListField(trClone, listFields.editBtn);
         idField.textContent = String(catalogPriceRule.id);
         currencyField.textContent = catalogPriceRule.currency;
         countryField.textContent = catalogPriceRule.country;
         groupField.textContent = catalogPriceRule.group;
-        editBtn.dataset.specificPriceId = String(catalogPriceRule.id);
+        nameField.textContent = catalogPriceRule.name;
+        fromQuantityField.textContent = catalogPriceRule.fromQuantity;
+        reductionTypeField.textContent = catalogPriceRule.reductionType;
+        reductionField.textContent = catalogPriceRule.reduction;
+        startDateField.textContent = catalogPriceRule.startDate;
+        endDateField.textContent = catalogPriceRule.endDate;
+        editBtn.dataset.catalogPriceRuleId = String(catalogPriceRule.id);
         tbody.append(trClone);
       });
     });

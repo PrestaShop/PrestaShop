@@ -42,6 +42,7 @@ use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterf
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CatalogPriceRuleGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters\CatalogPriceRuleFilters;
+use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
@@ -83,7 +84,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
     public function productFormListAction(): JsonResponse
     {
         $catalogPriceRuleList = $this->getQueryBus()->handle(
-            new GetCatalogPriceRuleList()
+            new GetCatalogPriceRuleList($this->getContextLangId())
         );
 
         return $this->json(['catalogPriceRules' => $this->formatCatalogPriceRule($catalogPriceRuleList)]);
@@ -310,10 +311,15 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
         foreach ($catalogPriceRuleList->getCatalogPriceRules() as $catalogPriceRule) {
             $list[] = [
                 'id' => $catalogPriceRule->getCatalogPriceRuleId(),
-                'currency' => $catalogPriceRule->getCurrencyId() ?? $this->trans('All currencies', 'Admin.Global'),
-                'country' => $catalogPriceRule->getCountryId() ?? $this->trans('All countries', 'Admin.Global'),
-                'group' => $catalogPriceRule->getGroupId() ?? $this->trans('All groups', 'Admin.Global'),
-                'name' => $catalogPriceRule->getName() ?? $this->trans('All customers', 'Admin.Global'),
+                'currency' => $catalogPriceRule->getCountryName() ?? $this->trans('All currencies', 'Admin.Global'),
+                'country' => $catalogPriceRule->getCountryName() ?? $this->trans('All countries', 'Admin.Global'),
+                'group' => $catalogPriceRule->getGroupName() ?? $this->trans('All groups', 'Admin.Global'),
+                'name' => $catalogPriceRule->getCatalogPriceRuleName(),
+                'fromQuantity' => $catalogPriceRule->getFromQuantity(),
+                'reductionType' => $catalogPriceRule->getReductionType(),
+                'reduction' => (string) $catalogPriceRule->getReduction(),
+                'startDate' => $catalogPriceRule->getDateStart()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
+                'endDate' => $catalogPriceRule->getDateEnd()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
             ];
         }
 
