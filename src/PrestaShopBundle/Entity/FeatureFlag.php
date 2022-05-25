@@ -91,6 +91,12 @@ class FeatureFlag
     private $descriptionDomain;
 
     /**
+     * @var bool
+     * @ORM\Column(name="is_beta", type="boolean", options={"default":0, "unsigned":true})
+     */
+    private $isBeta;
+
+    /**
      * @param string $name
      */
     public function __construct(string $name)
@@ -104,6 +110,7 @@ class FeatureFlag
         $this->descriptionDomain = '';
         $this->labelWording = '';
         $this->labelDomain = '';
+        $this->isBeta = false;
     }
 
     /**
@@ -226,6 +233,26 @@ class FeatureFlag
     public function setDescriptionDomain(string $descriptionDomain): self
     {
         $this->descriptionDomain = $descriptionDomain;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isBeta(): bool
+    {
+        return $this->isBeta;
+    }
+
+    /**
+     * @param bool $isBeta
+     *
+     * @return self
+     */
+    public function setIsBeta(bool $isBeta): self
+    {
+        $this->isBeta = $isBeta;
 
         return $this;
     }

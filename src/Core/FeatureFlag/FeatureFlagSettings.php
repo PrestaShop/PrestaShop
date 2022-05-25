@@ -31,4 +31,6 @@ namespace PrestaShop\PrestaShop\Core\FeatureFlag;
 class FeatureFlagSettings
 {
     public const FEATURE_FLAG_PRODUCT_PAGE_V2 = 'product_page_v2';
+
+    public const FEATURE_FLAG_PRODUCT_PAGE_V2_BETA = 'product_page_v2_beta';
 }
