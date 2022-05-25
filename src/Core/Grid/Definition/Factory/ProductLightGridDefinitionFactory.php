@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Grid\Action\ViewOptionsCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
@@ -116,5 +117,15 @@ class ProductLightGridDefinitionFactory extends AbstractGridDefinitionFactory
         }
 
         return $columns;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getViewOptions()
+    {
+        return (new ViewOptionsCollection())
+            ->add('pagination_view', 'quicknav')
+        ;
     }
 }

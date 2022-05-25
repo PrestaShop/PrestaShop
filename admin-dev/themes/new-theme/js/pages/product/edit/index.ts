@@ -145,25 +145,4 @@ $(() => {
   if (productType === ProductConst.PRODUCT_TYPE.VIRTUAL) {
     new VirtualProductManager(productFormModel);
   }
-
-  //@todo light grid
-  //@todo: move to map
-  const modalSelector = '#product-light-grid-modal';
-  const container = document.querySelector(modalSelector);
-
-  // @ts-ignore
-  const translations = JSON.parse(<string>container.dataset.translations);
-  const i18n = new VueI18n({
-    locale: 'en',
-    formatter: new ReplaceFormatter(),
-    messages: {en: translations},
-  });
-
-  return new Vue({
-    el: modalSelector,
-    template:
-      '<product-light-grid-modal/>',
-    components: {ProductLightGridModal},
-    i18n,
-  });
 });

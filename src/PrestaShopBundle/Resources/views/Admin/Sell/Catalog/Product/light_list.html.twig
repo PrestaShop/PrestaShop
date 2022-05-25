@@ -22,7 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-{% set legacyBaseLayout = lightDisplay|default(false) ? 'light_display_layout.tpl' : 'layout.tpl' %}
+{% set legacyBaseLayout = lightDisplay|default(true) ? 'light_display_layout.tpl' : 'layout.tpl' %}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block stylesheets %}
@@ -32,12 +32,9 @@
 {#@todo: move whole file out to dedicated dir?#}
 {% block content %}
   {% block products_light_listing %}
-    <div class="card-body">
       {% block grid_table_row %}
-        {{ include('@PrestaShop/Admin/Common/Grid/Blocks/table.html.twig', {'grid': productLightGrid}) }}
-        {#        @todo: probably not worth trying to reuse grid. simply create new table template.#}
+        {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {'grid': productLightGrid}) }}
       {% endblock %}
-    </div>
   {% endblock %}
 {% endblock %}
 
