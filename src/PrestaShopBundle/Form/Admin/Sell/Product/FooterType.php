@@ -129,6 +129,16 @@ class FooterType extends TranslatorAwareType
                     'disabled' => empty($productId),
                 ],
             ])
+            ->add('new_product', IconButtonType::class, [
+                'label' => $this->trans('New product', 'Admin.Catalog.Feature'),
+                'type' => 'link',
+                'icon' => 'add_circle_outline',
+                'attr' => [
+                    'class' => 'btn-outline-secondary new-product',
+                    'href' => $this->router->generate('admin_products_v2_create'),
+                    'disabled' => empty($productId),
+                ],
+            ])
             // These two inputs are displayed separately
             ->add('active', SwitchType::class, [
                 'label' => false,
