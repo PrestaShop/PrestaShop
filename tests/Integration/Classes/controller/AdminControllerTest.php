@@ -221,7 +221,10 @@ class AdminControllerTest extends TestCase
 
     private function getMockLanguage(): Language
     {
-        return $this->getMockBuilder(Language::class)->getMock();
+        $language = $this->getMockBuilder(Language::class)->getMock();
+        $language->iso_code = 'en';
+
+        return $language;
     }
 
     private function getMockShop(): Shop

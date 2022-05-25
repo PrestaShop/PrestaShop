@@ -36,7 +36,7 @@ class Validate
     /**
      * @param mixed $way
      *
-     * @return int
+     * @return bool
      */
     public static function isOrderWay($way)
     {

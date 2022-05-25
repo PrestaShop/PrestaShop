@@ -107,7 +107,7 @@ class ImageManagerCore
                     $size = $y / ($x / $maxX);
                 }
 
-                ImageManager::resize($image, _PS_TMP_IMG_DIR_ . $cacheImage, $ratioX, $size, $imageType);
+                ImageManager::resize($image, _PS_TMP_IMG_DIR_ . $cacheImage, (int) $ratioX, (int) $size, $imageType);
             }
         }
 

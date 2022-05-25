@@ -284,7 +284,7 @@ class FolderThemeCatalogTest extends TestCase
         ;
 
         $dispatcherMock
-            ->expects($this->at(0))
+            ->expects($this->once())
             ->method('dispatchWithParameters')
             ->with(
                 $this->equalTo(ThemeCatalogInterface::LIST_MAIL_THEMES_HOOK),

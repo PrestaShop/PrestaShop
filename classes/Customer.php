@@ -118,7 +118,7 @@ class CustomerCore extends ObjectModel
     /** @var bool True if carrier has been deleted (staying in database as deleted) */
     public $deleted = false;
 
-    /** @var string Object creation date */
+    /** @var string|null Object creation date */
     public $date_add;
 
     /** @var string Object last modification date */

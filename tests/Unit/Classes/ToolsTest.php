@@ -521,7 +521,13 @@ class ToolsTest extends TestCase
      */
     public function testPasswdGen(string $expectedPassword, $passwordGenerated): void
     {
-        $this->assertRegExp($expectedPassword, $passwordGenerated, 'The password generated ' . $passwordGenerated . ' no match with ' . $expectedPassword);
+        $message = 'The password generated ' . $passwordGenerated . ' no match with ' . $expectedPassword;
+
+        if (method_exists($this, 'assertMatchesRegularExpression')) {
+            $this->assertMatchesRegularExpression($expectedPassword, $passwordGenerated, $message);
+        } else {
+            $this->assertRegExp($expectedPassword, $passwordGenerated, $message);
+        }
     }
 
     public function passwordGenProvider(): array

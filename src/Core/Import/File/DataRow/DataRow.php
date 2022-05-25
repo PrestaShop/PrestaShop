@@ -29,6 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Import\File\DataRow;
 use ArrayIterator;
 use PrestaShop\PrestaShop\Core\Import\File\DataCell\DataCell;
 use PrestaShop\PrestaShop\Core\Import\File\DataCell\DataCellInterface;
+use Traversable;
 
 /**
  * Class DataRow defines a basic data row of imported file.
@@ -67,7 +68,7 @@ final class DataRow implements DataRowInterface
     /**
      * {@inheritdoc}
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return array_key_exists($offset, $this->cells);
     }
@@ -83,7 +84,7 @@ final class DataRow implements DataRowInterface
     /**
      * {@inheritdoc}
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         $this->cells[$offset] = $value;
     }
@@ -91,7 +92,7 @@ final class DataRow implements DataRowInterface
     /**
      * {@inheritdoc}
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         unset($this->cells[$offset]);
     }
@@ -99,7 +100,7 @@ final class DataRow implements DataRowInterface
     /**
      * {@inheritdoc}
      */
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         return new ArrayIterator($this->cells);
     }
@@ -107,7 +108,7 @@ final class DataRow implements DataRowInterface
     /**
      * {@inheritdoc}
      */
-    public function count()
+    public function count(): int
     {
         return count($this->cells);
     }

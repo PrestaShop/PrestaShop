@@ -52,7 +52,7 @@ class HelperListCore extends Helper
     /** @var int Default number of results in list per page */
     public $_default_pagination = 50;
 
-    /** @var string ORDER BY clause determined by field/arrows in list header */
+    /** @var string|null ORDER BY clause determined by field/arrows in list header */
     public $orderBy;
 
     /** @var bool|string Default ORDER BY clause when `$orderBy` is not defined */
@@ -61,7 +61,7 @@ class HelperListCore extends Helper
     /** @var array : list of vars for button delete */
     public $tpl_delete_link_vars = [];
 
-    /** @var string Order way (ASC, DESC) determined by arrows in list header */
+    /** @var string|null Order way (ASC, DESC) determined by arrows in list header */
     public $orderWay;
 
     public $identifier;
@@ -204,9 +204,13 @@ class HelperListCore extends Helper
             '/^([a-z _]*\.)/Ui',    // remove a! for example
             '/`/',                  // remove ` char
         ];
-        $this->orderBy = preg_replace($patternsOrderBy, '', $this->orderBy);
+        if ($this->orderBy !== null) {
+            $this->orderBy = preg_replace($patternsOrderBy, '', $this->orderBy);
+        }
 
-        $this->orderWay = preg_replace('/^([a-z _]*!)/Ui', '', $this->orderWay);
+        if ($this->orderWay !== null) {
+            $this->orderWay = preg_replace('/^([a-z _]*!)/Ui', '', $this->orderWay);
+        }
 
         $this->tpl->assign([
             'header' => $this->displayListHeader(), // Display list header (filtering, pagination and column names)

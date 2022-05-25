@@ -85,6 +85,7 @@ class ModuleCollection implements ArrayAccess, Countable, IteratorAggregate
      *
      * @return ModuleInterface|null
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->modules[$offset] ?? null;

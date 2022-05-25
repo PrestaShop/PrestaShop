@@ -589,14 +589,14 @@ class MailCore extends ObjectModel
             $templateVars = array_merge($templateVars, $extraTemplateVars);
             $swift->registerPlugin(new Swift_Plugins_DecoratorPlugin([self::toPunycode($toPlugin) => $templateVars]));
             if ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH ||
-                $configuration['PS_MAIL_TYPE'] == Mail::TYPE_TEXT
-            ) {
-                $message->addPart($templateTxt, 'text/plain', 'utf-8');
-            }
-            if ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH ||
                 $configuration['PS_MAIL_TYPE'] == Mail::TYPE_HTML
             ) {
-                $message->addPart($templateHtml, 'text/html', 'utf-8');
+                $message->setBody($templateHtml, 'text/html', 'utf-8');
+                if ($configuration['PS_MAIL_TYPE'] == Mail::TYPE_BOTH) {
+                    $message->addPart($templateTxt, 'text/plain', 'utf-8');
+                }
+            } else {
+                $message->setBody($templateTxt, 'text/plain', 'utf-8');
             }
 
             if (!empty($fileAttachment)) {
@@ -852,9 +852,9 @@ class MailCore extends ObjectModel
     protected static function generateId($idstring = null)
     {
         $midparams = [
-            'utctime' => gmstrftime('%Y%m%d%H%M%S'),
+            'utctime' => date('YmdHis'),
             'randint' => mt_rand(),
-            'customstr' => (preg_match('/^(?<!\\.)[a-z0-9\\.]+(?!\\.)$/iD', $idstring) ? $idstring : 'swift'),
+            'customstr' => ($idstring !== null && preg_match('/^(?<!\\.)[a-z0-9\\.]+(?!\\.)$/iD', $idstring) ? $idstring : 'swift'),
             'hostname' => !empty($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : php_uname('n'),
         ];
 

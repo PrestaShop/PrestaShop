@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Import\File\DataRow;
 
 use ArrayIterator;
+use Traversable;
 
 /**
  * Class DataRowCollection defines a collection of data rows.
@@ -51,7 +52,7 @@ final class DataRowCollection implements DataRowCollectionInterface
     /**
      * {@inheritdoc}
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return array_key_exists($offset, $this->dataRows);
     }
@@ -71,7 +72,7 @@ final class DataRowCollection implements DataRowCollectionInterface
     /**
      * {@inheritdoc}
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         $this->dataRows[$offset] = $value;
     }
@@ -79,7 +80,7 @@ final class DataRowCollection implements DataRowCollectionInterface
     /**
      * {@inheritdoc}
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         unset($this->dataRows[$offset]);
     }
@@ -87,7 +88,7 @@ final class DataRowCollection implements DataRowCollectionInterface
     /**
      * {@inheritdoc}
      */
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         return new ArrayIterator($this->dataRows);
     }

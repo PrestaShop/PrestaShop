@@ -484,7 +484,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 return (int) $value;
 
             case self::TYPE_FLOAT:
-                return (float) str_replace(',', '.', $value);
+                return (float) str_replace(',', '.', $value ?? '');
 
             case self::TYPE_DATE:
                 if (!$value) {

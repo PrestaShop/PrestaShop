@@ -1233,7 +1233,7 @@ class ProductCore extends ObjectModel
                 "\n\r",
                 "\r\n",
             ];
-            $str = str_replace($replaceArray, [''], strip_tags($value));
+            $str = $value ? str_replace($replaceArray, [''], strip_tags($value)) : '';
             $size_without_html = iconv_strlen($str);
             $size_with_html = Tools::strlen($value);
             $adaptedLimit = $limit + $size_with_html - $size_without_html;
@@ -7442,7 +7442,7 @@ class ProductCore extends ObjectModel
         $sep = Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR');
         foreach ($attributes as &$a) {
             foreach ($a as &$b) {
-                $b = str_replace($sep, '_', Tools::link_rewrite($b));
+                $b = str_replace($sep, '_', Tools::link_rewrite((string) $b));
             }
             $anchor .= '/' . ($with_id && isset($a['id_attribute']) && $a['id_attribute'] ? (int) $a['id_attribute'] . $sep : '') . $a['group'] . $sep . $a['name'];
         }

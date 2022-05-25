@@ -66,7 +66,7 @@ class TranslationService
         $doctrine = $this->container->get('doctrine');
 
         /** @var Lang|null $lang */
-        $lang = $doctrine->getManager()->getRepository('PrestaShopBundle:Lang')->findOneByLocale($locale);
+        $lang = $doctrine->getManager()->getRepository(Lang::class)->findOneByLocale($locale);
 
         if (!$lang instanceof Lang) {
             throw InvalidLanguageException::localeNotFound($locale);
@@ -238,7 +238,7 @@ class TranslationService
         $translation = null;
 
         try {
-            $translation = $entityManager->getRepository('PrestaShopBundle:Translation')
+            $translation = $entityManager->getRepository(Translation::class)
                 ->createQueryBuilder('t')
                 ->where('t.lang = :lang')->setParameter('lang', $lang)
                 ->andWhere('t.domain = :domain')->setParameter('domain', $domain)
@@ -314,7 +314,7 @@ class TranslationService
             $searchTranslation['theme'] = $theme;
         }
 
-        $translation = $entityManager->getRepository('PrestaShopBundle:Translation')->findOneBy($searchTranslation);
+        $translation = $entityManager->getRepository(Translation::class)->findOneBy($searchTranslation);
 
         $resetTranslationSuccessfully = false;
         if (null === $translation) {

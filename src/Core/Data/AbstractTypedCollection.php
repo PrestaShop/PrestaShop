@@ -78,7 +78,7 @@ abstract class AbstractTypedCollection extends ArrayCollection
      *
      * @throws TypeException
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         $this->checkElementType($value);
 
