@@ -287,6 +287,13 @@ services:
     class: 'PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagsModifier'
     arguments:
       - '@doctrine.orm.entity_manager'
+      - false
+
+  prestashop.core.feature_flags_beta.modifier:
+    class: 'PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagsModifier'
+    arguments:
+      - '@doctrine.orm.entity_manager'
+      - true
 
   prestashop.adapter.security.general.configuration:
     class: 'PrestaShop\PrestaShop\Core\Security\GeneralConfiguration'
