@@ -214,16 +214,10 @@ class ProductController extends FrameworkBundleAdminController
 
         $toolbarButtons['add'] = [
             'href' => $this->generateUrl('admin_products_v2_create'),
-            'desc' => $this->trans('New product on experimental page', 'Admin.Actions'),
+            'desc' => $this->trans('New product', 'Admin.Actions'),
             'icon' => 'add_circle_outline',
             'class' => 'btn-primary new-product',
             'floating_class' => 'new-product',
-        ];
-
-        $toolbarButtons['list_v1'] = [
-            'href' => $this->generateUrl('admin_product_catalog'),
-            'desc' => $this->trans('Back to standard page', 'Admin.Catalog.Feature'),
-            'class' => 'btn-outline-primary',
         ];
 
         return $toolbarButtons;
@@ -371,6 +365,7 @@ class ProductController extends FrameworkBundleAdminController
             'editable' => $this->isGranted(PageVoter::UPDATE, self::PRODUCT_CONTROLLER_PERMISSION),
             'taxEnabled' => (bool) $configuration->get('PS_TAX'),
             'stockEnabled' => (bool) $configuration->get('PS_STOCK_MANAGEMENT'),
+            'isMultistoreActive' => $this->get('prestashop.adapter.multistore_feature')->isActive()
         ]);
     }
 
