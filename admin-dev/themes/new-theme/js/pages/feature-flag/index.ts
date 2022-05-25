@@ -28,10 +28,10 @@ import ConfirmModal from '@components/modal';
 const {$} = window;
 
 $(() => {
-  const $submitButton = $('#submit-btn-feature-flag');
+  const $submitButton = $('#submit-btn-beta-feature-flag');
   $submitButton.prop('disabled', true);
-  const $form = $('#feature-flag-form');
-  const $formInputs = $('#feature-flag-form input');
+  const $form = $('#beta-feature-flag-form');
+  const $formInputs = $('#beta-feature-flag-form input');
   const initialState = $form.serialize();
   const initialFormData = $form.serializeArray();
 
