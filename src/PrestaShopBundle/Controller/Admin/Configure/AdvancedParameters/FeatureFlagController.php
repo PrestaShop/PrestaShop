@@ -58,6 +58,8 @@ class FeatureFlagController extends FrameworkBundleAdminController
             } else {
                 $this->flashErrors($errors);
             }
+
+            $this->redirectToRoute('admin_feature_flags_index');
         }
 
         $betaFormHandler = $this->get('prestashop.admin.feature_flags.beta_form_handler');
@@ -73,6 +75,8 @@ class FeatureFlagController extends FrameworkBundleAdminController
             } else {
                 $this->flashErrors($errors);
             }
+
+            $this->redirectToRoute('admin_feature_flags_index');
         }
 
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/FeatureFlag/index.html.twig', [
