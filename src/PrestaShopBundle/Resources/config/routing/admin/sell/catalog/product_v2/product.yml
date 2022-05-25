@@ -29,6 +29,8 @@ admin_products_v2_light_list:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::showLightListAction
     _legacy_controller: AdminProducts
+  options:
+    expose: true
 
 admin_products_search:
   path: /

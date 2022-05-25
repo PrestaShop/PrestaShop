@@ -174,13 +174,14 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @todo: naming
      */
-    public function showLightListAction(): Response
+    public function showLightListAction(Request $request): Response
     {
         $gridFactory = $this->get('prestashop.core.grid.factory.product_light');
         //@todo: hardcoded
         $grid = $gridFactory->getGrid(new SearchCriteria(), 'light_product');
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/light_list.html.twig', [
+            'lightDisplay' => $request->query->has('liteDisplaying'),
             'productLightGrid' => $this->presentGrid($grid),
         ]);
     }

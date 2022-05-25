@@ -50,6 +50,12 @@ import initTabs from '@pages/product/components/nav-tabs';
 import PriceSummary from '@pages/product/edit/price-summary';
 import DynamicPaginator from "@components/pagination/dynamic-paginator";
 import LightProductListService from "@pages/product/services/light-product-list-service";
+import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
+import Vue from 'vue';
+import VueI18n from 'vue-i18n';
+import ProductLightGridModal from '@pages/product/components/light-grid/ProductLightGridModal.vue';
+
+Vue.use(VueI18n);
 
 const {$} = window;
 
@@ -140,6 +146,24 @@ $(() => {
     new VirtualProductManager(productFormModel);
   }
 
-  //@todo: move out light list
-  new DynamicPaginator('#light_list_pagination', new LightProductListService(), );
+  //@todo light grid
+  //@todo: move to map
+  const modalSelector = '#product-light-grid-modal';
+  const container = document.querySelector(modalSelector);
+
+  // @ts-ignore
+  const translations = JSON.parse(<string>container.dataset.translations);
+  const i18n = new VueI18n({
+    locale: 'en',
+    formatter: new ReplaceFormatter(),
+    messages: {en: translations},
+  });
+
+  return new Vue({
+    el: modalSelector,
+    template:
+      '<product-light-grid-modal/>',
+    components: {ProductLightGridModal},
+    i18n,
+  });
 });
