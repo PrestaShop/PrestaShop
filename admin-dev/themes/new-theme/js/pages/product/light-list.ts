@@ -1,4 +1,4 @@
-{#**
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,20 +21,11 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
-{% set legacyBaseLayout = lightDisplay|default(true) ? 'light_display_layout.tpl' : 'layout.tpl' %}
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
+ */
 
-{#@todo: move whole file out to dedicated dir?#}
-{% block content %}
-  {% block products_light_listing %}
-    {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {'grid': productLightGrid}) }}
-  {% endblock %}
-{% endblock %}
+$(() => {
+  const grid = new window.prestashop.component.Grid('product_light');
 
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
-  <script src="{{ asset('themes/new-theme/public/product_light_list.bundle.js') }}"></script>
-{% endblock %}
+  grid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
+});
