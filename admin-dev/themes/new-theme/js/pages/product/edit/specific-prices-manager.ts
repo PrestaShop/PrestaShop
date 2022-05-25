@@ -29,7 +29,7 @@ import ProductEventMap from '@pages/product/product-event-map';
 import {EventEmitter} from 'events';
 import SpecificPriceList from '@pages/product/components/specific-price/specific-price-list';
 import Router from '@components/router';
-import FormFieldToggler from '@components/form/form-field-toggler';
+import FormFieldDisabler from '@components/form/form-field-disabler';
 import {isUndefined} from '@PSTypes/typeguard';
 
 import ClickEvent = JQuery.ClickEvent;
@@ -71,8 +71,8 @@ export default class SpecificPricesManager {
 
     this.initSpecificPriceModals();
 
-    // Enable/disable the priority selectors depending on the priority type selected (global or custom)
-    new FormFieldToggler({
+    // Enable/disabled the priority selectors depending on the priority type selected (global or custom)
+    new FormFieldDisabler({
       disablingInputSelector: PriorityMap.priorityTypeCheckboxesSelector,
       matchingValue: '0',
       targetSelector: PriorityMap.priorityListWrapper,

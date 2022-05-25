@@ -1,4 +1,4 @@
-import {SwitchEventData} from '@components/form/form-field-toggler';
+import {SwitchEventData} from '@components/form/form-field-disabler';
 import {EventEmitter} from 'events';
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
