@@ -31,7 +31,7 @@
   {% include '@PrestaShop/Admin/Common/multistore-infotip.html.twig' %}
 
   {# Stable feature flags form #}
-  {{ form_start(stableFeatureFlagsForm, {attr : {class: 'form', id:'feature-flag-form'}, action: path('admin_feature_flags_index') }) }}
+  {{ form_start(stableFeatureFlagsForm, {attr : {class: 'form'} }) }}
   {% block stable_feature_flag_form %}
     <div class="card" id="configuration_fieldset_general">
       <h3 class="card-header">
@@ -59,7 +59,7 @@
   {{ form_end(stableFeatureFlagsForm) }}
 
   {# Beta feature flags form #}
-  {{ form_start(betaFeatureFlagsForm, {attr : {class: 'form', id:'feature-flag-form'}, action: path('admin_feature_flags_index') }) }}
+  {{ form_start(betaFeatureFlagsForm, {attr : {class: 'form'} }) }}
   {% block beta_feature_flag_form %}
     <div class="card" id="configuration_fieldset_general">
       <h3 class="card-header">
@@ -81,7 +81,11 @@
       </div>
       <div class="card-footer">
         <div class="d-flex justify-content-end">
-          <button type="submit" id="submit-beta-feature-flags" class="btn btn-primary">
+          <button type="submit" id="submit-beta-feature-flags" class="btn btn-primary"
+                  data-modal-title="{{ 'Are you sure you want to enable this experimental feature?'|trans({}, 'Admin.Advparameters.Notification') }}"
+                  data-modal-message="{{ 'You are about to enable a feature that is not stable yet. This should only be done in a test environment or in full knowledge of the potential risks.'|trans({}, 'Admin.Advparameters.Notification') }}"
+                  data-modal-apply="{{ 'Enable'|trans({}, 'Admin.Actions') }}"
+                  data-modal-cancel="{{ 'Cancel'|trans({}, 'Admin.Actions') }}">
             {{ 'Save'|trans({}, 'Admin.Actions') }}
           </button>
         </div>

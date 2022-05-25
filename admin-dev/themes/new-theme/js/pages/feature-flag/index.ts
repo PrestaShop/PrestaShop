@@ -24,14 +24,15 @@
  */
 
 import ConfirmModal from '@components/modal';
+import FeatureFlagMap from '@pages/feature-flag/components-map';
 
 const {$} = window;
 
 $(() => {
-  const $submitButton = $('#submit-btn-beta-feature-flag');
+  const $submitButton = $(FeatureFlagMap.betaSubmitButton);
   $submitButton.prop('disabled', true);
-  const $form = $('#beta-feature-flag-form');
-  const $formInputs = $('#beta-feature-flag-form input');
+  const $form = $(FeatureFlagMap.betaForm);
+  const $formInputs = $(FeatureFlagMap.betaFormInputFields);
   const initialState = $form.serialize();
   const initialFormData = $form.serializeArray();
 
