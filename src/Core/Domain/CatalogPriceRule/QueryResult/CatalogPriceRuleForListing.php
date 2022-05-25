@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult;
 
 use DateTimeInterface;
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\FixedPriceInterface;
 
 class CatalogPriceRuleForListing
 {
@@ -41,40 +40,75 @@ class CatalogPriceRuleForListing
     /**
      * @var string
      */
-    private $name;
+    private $catalogPriceRuleName;
+
+    /**
+     * @var string|null
+     */
+    private $currencyName;
+
+    /**
+     * @var string|null
+     */
+    private $countryName;
+
+    /**
+     * @var string|null
+     */
+    private $groupName;
 
     /**
      * @var int
      */
-    private $shopId;
+    private $fromQuantity;
 
     /**
-     * @var int
+     * @var string
      */
-    private $currencyId;
+    private $reductionType;
 
     /**
-     * @var int
+     * @var DecimalNumber
      */
-    private $countryId;
+    private $reduction;
 
     /**
-     * @var int
+     * @var DateTimeInterface
      */
-    private $groupId;
+    private $dateStart;
 
-    public function __construct(int $catalogPriceRuleId, string $name, int $shopId, int $currencyId, int $countryId, int $groupId)
+    /**
+     * @var DateTimeInterface
+     */
+    private $dateEnd;
+
+    public function __construct(
+        int $catalogPriceRuleId,
+        string $catalogPriceRuleName,
+        ?string $currencyName,
+        ?string $countryName,
+        ?string $groupName,
+        int $fromQuantity,
+        string $reductionType,
+        DecimalNumber $reduction,
+        DateTimeInterface $dateStart,
+        DateTimeInterface $dateEnd
+    )
    {
        $this->catalogPriceRuleId = $catalogPriceRuleId;
-       $this->name = $name;
-       $this->shopId = $shopId;
-       $this->currencyId = $currencyId;
-       $this->countryId = $countryId;
-       $this->groupId = $groupId;
+       $this->catalogPriceRuleName = $catalogPriceRuleName;
+       $this->currencyName = $currencyName;
+       $this->countryName = $countryName;
+       $this->groupName = $groupName;
+       $this->fromQuantity = $fromQuantity;
+       $this->reductionType = $reductionType;
+       $this->reduction = $reduction;
+       $this->dateStart = $dateStart;
+       $this->dateEnd = $dateEnd;
    }
 
     /**
-     * @param int $catalogPriceRuleId
+     * @return int
      */
     public function getCatalogPriceRuleId(): int
     {
@@ -82,42 +116,74 @@ class CatalogPriceRuleForListing
     }
 
     /**
-     * @param string $name
+     * @return string
      */
-    public function getName(): string
+    public function getCatalogPriceRuleName(): string
     {
-        return $this->name;
+        return $this->catalogPriceRuleName;
     }
 
     /**
-     * @param int $shopId
+     * @return string|null
      */
-    public function getShopId(): int
+    public function getCurrencyName(): ?string
     {
-        return $this->shopId;
+        return $this->currencyName;
     }
 
     /**
-     * @param int $currencyId
+     * @return string|null
      */
-    public function getCurrencyId(): int
+    public function getCountryName(): ?string
     {
-        return $this->currencyId;
+        return $this->countryName;
     }
 
     /**
-     * @param int $countryId
+     * @return string|null
      */
-    public function getCountryId(): int
+    public function getGroupName(): ?string
     {
-        return $this->countryId;
+        return $this->groupName;
     }
 
     /**
-     * @param int $groupId
+     * @return int
      */
-    public function getGroupId(): int
+    public function getFromQuantity(): int
     {
-        return $this->groupId;
+        return $this->fromQuantity;
+    }
+
+    /**
+     * @return string
+     */
+    public function getReductionType(): string
+    {
+        return $this->reductionType;
+    }
+
+    /**
+     * @return DecimalNumber
+     */
+    public function getReduction(): DecimalNumber
+    {
+        return $this->reduction;
+    }
+
+    /**
+     * @return DateTimeInterface
+     */
+    public function getDateStart(): DateTimeInterface
+    {
+        return $this->dateStart;
+    }
+
+    /**
+     * @return DateTimeInterface
+     */
+    public function getDateEnd(): DateTimeInterface
+    {
+        return $this->dateEnd;
     }
 }

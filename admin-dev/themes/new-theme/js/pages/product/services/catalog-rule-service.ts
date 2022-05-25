@@ -28,7 +28,7 @@ import Router from '@components/router';
 const router = new Router();
 const {$} = window;
 
-export const getCatalogRules = async (): Promise<Record<string, number | SpecificPriceForListing[]>> => $.get(
+export const getCatalogRules = async (): Promise<Record<string, number | CatalogPriceRuleForListing[]>> => $.get(
   router.generate('admin_catalog_price_rules_product_form_list'),
 );
 

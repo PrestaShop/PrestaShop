@@ -33,10 +33,11 @@ type CatalogPriceRuleForListing = {
   currency: string,
   country: string,
   group: string,
-  customer: string,
-  price: string,
-  impact: string,
-  period: Period|null,
+  name: string,
+  reductionType: string,
+  reduction: string,
+  startDate: string,
+  endDate: string,
   fromQuantity: string,
 }
 
