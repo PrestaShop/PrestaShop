@@ -66,14 +66,30 @@ class CountryControllerTest extends FormGridControllerTestCase
     }
 
     /**
-     * @depends testEdit
-     *
      * @param int $countryId
      */
-    public function testFilters(int $countryId): void
+    public function testFilters(int $countryId): int
     {
-        $this->markTestSkipped('Not implemented');
-        // TODO: Implement when testEdit is finished
+        $gridFilters = [
+            ['country[id_address]' => $countryId],
+            ['address[firstname]' => 'editfirstname'],
+            ['address[lastname]' => 'editlastname'],
+            ['address[address1]' => 'editaddress1'],
+            ['address[postcode]' => '11111'],
+            ['address[city]' => 'editcity'],
+            ['address[id_country]' => $this->countryId],
+        ];
+
+        foreach ($gridFilters as $testFilter) {
+            $addresses = $this->getFilteredEntitiesFromGrid($testFilter);
+            $this->assertGreaterThanOrEqual(1, count($addresses), sprintf(
+                'Expected at least one address with filters %s',
+                var_export($testFilter, true)
+            ));
+            $this->assertCollectionContainsEntity($addresses, $countryId);
+        }
+
+        return $countryId;
     }
 
     protected function generateCreateUrl(): string

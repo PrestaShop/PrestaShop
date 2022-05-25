@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollectionInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
+use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollectionInterface;
@@ -217,6 +218,25 @@ class CountryGridDefinitionFactory extends AbstractGridDefinitionFactory
     private function getRowActions(): RowActionCollection
     {
         $rowActionCollection = new RowActionCollection();
+        $rowActionCollection
+            ->add(
+                (new LinkRowAction('edit'))
+                    ->setName($this->trans('Edit', [], 'Admin.Actions'))
+                    ->setIcon('edit')
+                    ->setOptions([
+                        'route' => 'admin_country_edit',
+                        'route_param_name' => 'countryId',
+                        'route_param_field' => 'id_country',
+                        'clickable_row' => true,
+                    ])
+//            )
+//            ->add(
+//                $this->buildDeleteAction(
+//                    'admin_country_delete',
+//                    'countryId',
+//                    'id_country'
+//                )
+            );
 
         return $rowActionCollection;
     }

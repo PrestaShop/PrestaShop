@@ -70,8 +70,7 @@ class CountryQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
         $qb = $this->getQueryBuilder($searchCriteria)
-            ->select('c.id_country, c.iso_code, c.call_prefix, c.active, cl.name, z.name as zone_name')
-            ->groupBy('c.id_country');
+            ->select('c.id_country, c.iso_code, c.call_prefix, c.active, cl.name, z.name as zone_name');
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
@@ -99,17 +98,11 @@ class CountryQueryBuilder extends AbstractDoctrineQueryBuilder
             ->from($this->dbPrefix . 'country', 'c')
             ->innerJoin(
                 'c',
-                $this->dbPrefix . 'country_shop',
-                'cs',
-                'c.id_country = cs.id_country'
-            )
-            ->innerJoin(
-                'c',
                 $this->dbPrefix . 'country_lang',
                 'cl',
                 'cl.id_country = cs.id_country'
             )
-            ->innerJoin(
+            ->leftJoin(
                 'c',
                 $this->dbPrefix . 'zone',
                 'z',

@@ -33,6 +33,7 @@ use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Tools;
 
 /**
  * CountryController is responsible for handling "Improve > International > Locations > Countries"
@@ -59,5 +60,18 @@ class CountryController extends FrameworkBundleAdminController
             'countryGrid' => $this->presentGrid($countryGrid),
             'enableSidebar' => true,
         ]);
+    }
+
+    public function editAction(int $countryId, Request $request): Response
+    {
+        //todo: complete edit action migration to symfony
+
+        Tools::redirectAdmin(
+            \Context::getContext()->link->getAdminLink('AdminCountries', true, [], [
+                    'updatecountry' => '',
+                    'id_country' => $countryId
+                ]
+            )
+        );
     }
 }
