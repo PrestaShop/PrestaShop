@@ -421,6 +421,22 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                 'radio_button_unchecked',
                 ['productStatus' => false]
             ))
+            ->add($this->buildAjaxBulkAction(
+                'bulk_duplicate_ajax',
+                'admin_products_v2_bulk_duplicate',
+                $this->trans('Duplicate selection', [], 'Admin.Actions'),
+                $this->trans('Duplicating %total% products', [], 'Admin.Actions'),
+                $this->trans('Duplicating %done% / %total% products', [], 'Admin.Actions'),
+                'content_copy'
+            ))
+            ->add($this->buildAjaxBulkAction(
+                'bulk_delete_ajax',
+                'admin_products_v2_bulk_delete',
+                $this->trans('Delete selection', [], 'Admin.Actions'),
+                $this->trans('Deleting %total% products', [], 'Admin.Actions'),
+                $this->trans('Deleting %done% / %total% products', [], 'Admin.Actions'),
+                'delete'
+            ))
         ;
     }
 
