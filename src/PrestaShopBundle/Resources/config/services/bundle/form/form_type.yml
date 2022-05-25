@@ -1629,6 +1629,8 @@ services:
   form.type.sell.product.pricing.catalog_price_rules_type:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\Pricing\CatalogPriceRulesType'
     parent: 'form.type.translatable.aware'
+    arguments:
+      - '@prestashop.router'
     public: true
     tags:
       - { name: form.type }
