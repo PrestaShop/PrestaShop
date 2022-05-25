@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import ComponentsMap from '@components/components-map';
-import FormFieldToggler from '@components/form/form-field-toggler';
+import FormFieldDisabler from '@components/form/form-field-disabler';
 
 /**
  * This components work along with the form option disabling_switch it automatizes the initialization
@@ -32,7 +32,7 @@ import FormFieldToggler from '@components/form/form-field-toggler';
  */
 export default class DisablingSwitch {
   constructor() {
-    new FormFieldToggler({
+    new FormFieldDisabler({
       disablingInputSelector: ComponentsMap.disablingSwitch.disablingSelector,
     });
   }
