@@ -365,7 +365,7 @@ class ProductController extends FrameworkBundleAdminController
             'editable' => $this->isGranted(PageVoter::UPDATE, self::PRODUCT_CONTROLLER_PERMISSION),
             'taxEnabled' => (bool) $configuration->get('PS_TAX'),
             'stockEnabled' => (bool) $configuration->get('PS_STOCK_MANAGEMENT'),
-            'isMultistoreActive' => $this->get('prestashop.adapter.multistore_feature')->isActive()
+            'isMultistoreActive' => $this->get('prestashop.adapter.multistore_feature')->isActive(),
         ]);
     }
 

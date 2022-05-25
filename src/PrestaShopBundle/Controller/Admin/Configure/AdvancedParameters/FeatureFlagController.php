@@ -29,10 +29,10 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagsType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagsType;
 
 /**
  * Manages the "Configure > Advanced Parameters > Experimental Features" page.
@@ -106,7 +106,7 @@ class FeatureFlagController extends FrameworkBundleAdminController
 
         try {
             $modifier->updateConfiguration($form->getData());
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $error[] = $e->getMessage();
         }
 

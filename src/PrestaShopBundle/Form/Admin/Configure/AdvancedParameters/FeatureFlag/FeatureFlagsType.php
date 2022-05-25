@@ -28,13 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag;
 
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagsModifier;
 use PrestaShopBundle\Entity\FeatureFlag;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Represents the form used to manage feature flags state.
@@ -64,7 +62,7 @@ class FeatureFlagsType extends TranslatorAwareType
                         $enabledWording => true,
                     ],
                     'data' => $featureFlag->isEnabled(),
-                    'attr' => ['disabled' => $options['is_multistore_active'] && !$featureFlag->isBeta() || !$options['is_multistore_active'] && $featureFlag->isBeta()]
+                    'attr' => ['disabled' => $options['is_multistore_active'] && !$featureFlag->isBeta() || !$options['is_multistore_active'] && $featureFlag->isBeta()],
                 ]);
         }
     }
