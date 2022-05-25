@@ -64,14 +64,8 @@ class ProductControllerTest extends FormGridControllerTestCase
     {
         parent::setUp();
         $featureFlagRepository = $this->client->getContainer()->get('prestashop.core.admin.feature_flag.repository');
-        $productFeatureFlag = $featureFlagRepository->findOneBy(['name' => FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2]);
-        if (!$productFeatureFlag->isEnabled()) {
-            $featureFlagModifier = $this->client->getContainer()->get('prestashop.core.feature_flags.modifier');
-            $featureFlagModifier->updateConfiguration(
-                [
-                    FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2 => true,
-                ]
-            );
+        if (!$featureFlagRepository->isEnabled(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2)) {
+            $featureFlagRepository->enable(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
             $this->changedProductFeatureFlag = true;
         }
     }
@@ -79,12 +73,8 @@ class ProductControllerTest extends FormGridControllerTestCase
     public function tearDown(): void
     {
         if ($this->changedProductFeatureFlag) {
-            $featureFlagModifier = $this->client->getContainer()->get('prestashop.core.feature_flags.modifier');
-            $featureFlagModifier->updateConfiguration(
-                [
-                    FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2 => false,
-                ]
-            );
+            $featureFlagRepository = $this->client->getContainer()->get('prestashop.core.admin.feature_flag.repository');
+            $featureFlagRepository->disable(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
         }
 
         // Call parent tear down later or the kernel will be shut down

@@ -1343,15 +1343,9 @@ class ProductController extends FrameworkBundleAdminController
         $multistoreFeature = $this->get('prestashop.adapter.multistore_feature');
 
         if (!$multistoreFeature->isActive()) {
-            $productV2FeatureFlag = $this->get('prestashop.core.admin.feature_flag.repository')
-                ->findOneBy(['name' => FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2]);
-
-            return $productV2FeatureFlag->isEnabled();
+            return $this->get('prestashop.core.admin.feature_flag.repository')->isEnabled(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
         }
 
-        $productV2BetaFeatureFlag = $this->get('prestashop.core.admin.feature_flag.repository')
-            ->findOneBy(['name' => FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2_BETA]);
-
-        return $productV2BetaFeatureFlag->isEnabled();
+        return $this->get('prestashop.core.admin.feature_flag.repository')->isEnabled(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2_BETA);
     }
 }

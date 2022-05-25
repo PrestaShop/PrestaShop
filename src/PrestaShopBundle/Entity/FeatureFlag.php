@@ -33,7 +33,7 @@ use InvalidArgumentException;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\FeatureFlagRepository")
  * @ORM\Table()
  * @UniqueEntity("name")
  */
