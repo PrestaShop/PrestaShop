@@ -101,7 +101,7 @@ final class ProductLightQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria): QueryBuilder
     {
-        $qb = $this->getQueryBuilder([]);
+        $qb = $this->getQueryBuilder($searchCriteria->getFilters());
         $qb
             ->select('p.`id_product`, p.`reference`')
             ->addSelect('ps.`price` AS `price_tax_excluded`')

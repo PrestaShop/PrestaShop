@@ -55,10 +55,8 @@ use PrestaShop\PrestaShop\Core\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
-use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteria;
-use PrestaShop\PrestaShop\Core\Search\Filters;
-use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductFilters;
+use PrestaShop\PrestaShop\Core\Search\Filters\ProductLightGridFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Entity\ProductDownload;
 use PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoryFilterType;
@@ -174,11 +172,11 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @todo: naming
      */
-    public function showLightListAction(Request $request): Response
+    public function showLightListAction(ProductLightGridFilters $filters, Request $request): Response
     {
         $gridFactory = $this->get('prestashop.core.grid.factory.product_light');
         //@todo: hardcoded
-        $grid = $gridFactory->getGrid(new SearchCriteria());
+        $grid = $gridFactory->getGrid($filters);
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/light_list.html.twig', [
             'lightDisplay' => $request->query->has('liteDisplaying'),
