@@ -42,22 +42,22 @@ class FeatureFlagsFormDataProvider implements FormDataProviderInterface
     /** @var EntityManagerInterface */
     private $doctrineEntityManager;
 
-    /** @var bool */
-    private $isBeta;
+    /** @var string */
+    private $stability;
 
     /**
      * @param EntityManagerInterface $doctrineEntityManager
-     * @param bool $isBeta
+     * @param string $stability
      */
-    public function __construct(EntityManagerInterface $doctrineEntityManager, bool $isBeta)
+    public function __construct(EntityManagerInterface $doctrineEntityManager, string $stability)
     {
         $this->doctrineEntityManager = $doctrineEntityManager;
-        $this->isBeta = $isBeta;
+        $this->stability = $stability;
     }
 
     public function getData()
     {
-        $featureFlags = $this->doctrineEntityManager->getRepository(FeatureFlag::class)->findBy(['isBeta' => $this->isBeta]);
+        $featureFlags = $this->doctrineEntityManager->getRepository(FeatureFlag::class)->findBy(['stability' => $this->stability]);
 
         $featureFlagsData = [];
         foreach ($featureFlags as $featureFlag) {

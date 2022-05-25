@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -65,7 +66,7 @@ class FeatureFlag
     /**
      * @var string
      *
-     * @ORM\Column(name="label_wording", type="string", length=191, options={"default":""})
+     * @ORM\Column(name="label_wording", type="string", length=512, options={"default":""})
      */
     private $labelWording;
 
@@ -79,7 +80,7 @@ class FeatureFlag
     /**
      * @var string
      *
-     * @ORM\Column(name="description_wording", type="string", length=191, options={"default":""})
+     * @ORM\Column(name="description_wording", type="string", length=512, options={"default":""})
      */
     private $descriptionWording;
 
@@ -91,10 +92,11 @@ class FeatureFlag
     private $descriptionDomain;
 
     /**
-     * @var bool
-     * @ORM\Column(name="is_beta", type="boolean", options={"default":0, "unsigned":true})
+     * @var string
+     *
+     * @ORM\Column(name="stability", type="string", length=64, options={"default":"beta"})
      */
-    private $isBeta;
+    private $stability;
 
     /**
      * @param string $name
@@ -110,7 +112,7 @@ class FeatureFlag
         $this->descriptionDomain = '';
         $this->labelWording = '';
         $this->labelDomain = '';
-        $this->isBeta = false;
+        $this->stability = FeatureFlagSettings::STABILITY_BETA;
     }
 
     /**
@@ -238,21 +240,21 @@ class FeatureFlag
     }
 
     /**
-     * @return bool
+     * @return string
      */
-    public function isBeta(): bool
+    public function stability(): string
     {
-        return $this->isBeta;
+        return $this->stability;
     }
 
     /**
-     * @param bool $isBeta
+     * @param string $stability
      *
      * @return self
      */
-    public function setIsBeta(bool $isBeta): self
+    public function setStability(string $stability): self
     {
-        $this->isBeta = $isBeta;
+        $this->stability = $stability;
 
         return $this;
     }
