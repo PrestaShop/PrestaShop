@@ -61,6 +61,7 @@ export default class CatalogPriceRuleList {
 
         const trClone = temporaryContainer.firstChild as HTMLElement;
         const idField = this.selectListField(trClone, listFields.catalogPriceRuleId);
+        const shopField = this.selectListField(trClone, listFields.shop);
         const currencyField = this.selectListField(trClone, listFields.currency);
         const countryField = this.selectListField(trClone, listFields.country);
         const groupField = this.selectListField(trClone, listFields.group);
@@ -73,6 +74,7 @@ export default class CatalogPriceRuleList {
 
         const editBtn = this.selectLink(trClone, listFields.editBtn);
         idField.textContent = String(catalogPriceRule.id);
+        shopField.textContent = catalogPriceRule.shop;
         currencyField.textContent = catalogPriceRule.currency;
         countryField.textContent = catalogPriceRule.country;
         groupField.textContent = catalogPriceRule.group;

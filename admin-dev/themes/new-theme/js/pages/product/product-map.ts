@@ -392,11 +392,11 @@ export default {
     listRowTemplate: '#catalog-price-rule-tr-template',
     listFields: {
       catalogPriceRuleId: '.catalog-price-rule-id',
+      shop: '.shop',
       currency: '.currency',
       country: '.country',
       group: '.group',
       name: '.name',
-      shop: '.shop',
       reduction: '.reduction',
       reductionType: '.reduction-type',
       from: '.from',

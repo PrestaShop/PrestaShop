@@ -64,7 +64,7 @@ class CatalogPriceRuleRepository
      */
     public function getAll(LanguageId $langId): array {
         $qb = $this->connection->createQueryBuilder()
-            ->select('spr.id_specific_price_rule, spr.name as specific_price_rule_name, currency_lang.symbol, country_lang.name as lang_name, group_lang.name as group_name, spr.from_quantity, spr.reduction_type, spr.reduction, spr.from, spr.to')
+            ->select('spr.id_specific_price_rule, spr.name as specific_price_rule_name, currency_lang.symbol, country_lang.name as lang_name, shop.name as shop_name, group_lang.name as group_name, spr.from_quantity, spr.reduction_type, spr.reduction, spr.from, spr.to')
             ->from($this->dbPrefix . 'specific_price_rule', 'spr')
             ->leftJoin(
                 'spr',
@@ -74,7 +74,8 @@ class CatalogPriceRuleRepository
             )
             ->leftJoin(
                 'spr',
-                $this->dbPrefix . 'shop', 'shop',
+                $this->dbPrefix . 'shop',
+                'shop',
                 'spr.id_shop = shop.id_shop'
             )
             ->leftJoin(
