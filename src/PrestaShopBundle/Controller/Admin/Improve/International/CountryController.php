@@ -67,10 +67,14 @@ class CountryController extends FrameworkBundleAdminController
         //todo: complete edit action migration to symfony
 
         Tools::redirectAdmin(
-            \Context::getContext()->link->getAdminLink('AdminCountries', true, [], [
-                'updatecountry' => '',
-                'id_country' => $countryId,
-            ]
+            \Context::getContext()->link->getAdminLink(
+                'AdminCountries',
+                true,
+                [],
+                [
+                    'updatecountry' => '',
+                    'id_country' => $countryId,
+                ]
             )
         );
     }
