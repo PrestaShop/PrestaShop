@@ -104,7 +104,7 @@ class StoreRepository extends AbstractObjectModelRepository
      * @param StoreId $storeId
      * @return int
      */
-    protected function add(StoreId $storeId): int
+    public function add(StoreId $storeId): int
     {
         return $this->addObjectModel($this->get($storeId), CannotDeleteStoreException::class);
     }
