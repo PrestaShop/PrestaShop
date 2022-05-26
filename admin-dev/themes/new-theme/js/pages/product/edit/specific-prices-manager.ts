@@ -31,7 +31,7 @@ import SpecificPriceListRenderer from '@pages/product/components/specific-price/
 import Router from '@components/router';
 import FormFieldToggler from '@components/form/form-field-toggler';
 import FormFieldDisabler from '@components/form/form-field-disabler';
-import CatalogPriceRuleList from "@pages/product/components/catalog-price-rule/catalog-price-rule-list";
+import CatalogPriceRuleList from '@pages/product/components/catalog-price-rule/catalog-price-rule-list';
 import {isUndefined} from '@PSTypes/typeguard';
 import PaginatedSpecificPricesService from '@pages/product/services/paginated-specific-prices-service';
 import DynamicPaginator from '@components/pagination/dynamic-paginator';
