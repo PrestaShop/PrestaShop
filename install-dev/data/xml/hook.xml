@@ -3620,5 +3620,10 @@
       <title>Extra message to display for an empty modules category</title>
       <description>This hook allows to add an extra message to display in the Module manager page when a category doesn't have any module</description>
     </hook>
+    <hook id="actionCartGetPackageShippingCost">
+      <name>actionCartGetPackageShippingCost</name>
+      <title>After getting package shipping cost value</title>
+      <description>This hook is called in order to allow to modify package shipping cost</description>
+    </hook>
   </entities>
 </entity_hook>
