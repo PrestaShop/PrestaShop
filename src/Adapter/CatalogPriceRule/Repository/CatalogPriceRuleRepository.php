@@ -29,10 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\CatalogPriceRule\Repository;
 
 use Doctrine\DBAL\Connection;
-use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Validate\SpecificPriceValidator;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 class CatalogPriceRuleRepository
 {
@@ -59,10 +56,10 @@ class CatalogPriceRuleRepository
     }
 
     /**
-     *
      * @return array<int, array<string, string|null>>
      */
-    public function getAll(LanguageId $langId): array {
+    public function getAll(LanguageId $langId): array
+    {
         $qb = $this->connection->createQueryBuilder()
             ->select('spr.id_specific_price_rule, spr.name as specific_price_rule_name, currency_lang.symbol, country_lang.name as lang_name, shop.name as shop_name, group_lang.name as group_name, spr.from_quantity, spr.reduction_type, spr.reduction, spr.from, spr.to')
             ->from($this->dbPrefix . 'specific_price_rule', 'spr')

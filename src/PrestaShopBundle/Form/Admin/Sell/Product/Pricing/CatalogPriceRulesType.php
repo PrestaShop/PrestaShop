@@ -56,7 +56,7 @@ class CatalogPriceRulesType extends TranslatorAwareType
                 'attr' => [
                     'class' => 'btn btn-link px-0 align-right',
                     'href' => $this->router->generate('admin_catalog_price_rules_index'),
-                    'target' => '_blank'
+                    'target' => '_blank',
                 ],
                 'icon' => 'open_in_new',
             ])
