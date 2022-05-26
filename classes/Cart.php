@@ -3565,7 +3565,7 @@ class CartCore extends ObjectModel
                 'id_carrier' => $id_carrier,
                 'use_tax' => $use_tax,
                 'default_country' => $default_country,
-                'product_list' =>  $product_list,
+                'product_list' => $product_list,
                 'id_zone' => $id_zone,
                 'keepOrderPrices' => $keepOrderPrices,
                 'shippingCost' => &$shippingCost,
