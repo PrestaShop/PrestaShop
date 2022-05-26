@@ -25,7 +25,7 @@
 import {getCatalogRules} from '@pages/product/services/catalog-rule-service';
 import {EventEmitter} from 'events';
 import ProductMap from '@pages/product/product-map';
-import Router from "@components/router";
+import Router from '@components/router';
 
 const CatalogPriceRuleMap = ProductMap.catalogPriceRule;
 
