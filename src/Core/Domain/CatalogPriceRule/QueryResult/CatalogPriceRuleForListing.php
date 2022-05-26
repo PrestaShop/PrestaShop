@@ -45,6 +45,11 @@ class CatalogPriceRuleForListing
     /**
      * @var string|null
      */
+    private $shopName;
+
+    /**
+     * @var string|null
+     */
     private $currencyName;
 
     /**
@@ -85,6 +90,7 @@ class CatalogPriceRuleForListing
     public function __construct(
         int $catalogPriceRuleId,
         string $catalogPriceRuleName,
+        ?string $shopName,
         ?string $currencyName,
         ?string $countryName,
         ?string $groupName,
@@ -97,6 +103,7 @@ class CatalogPriceRuleForListing
    {
        $this->catalogPriceRuleId = $catalogPriceRuleId;
        $this->catalogPriceRuleName = $catalogPriceRuleName;
+       $this->shopName = $shopName;
        $this->currencyName = $currencyName;
        $this->countryName = $countryName;
        $this->groupName = $groupName;
@@ -121,6 +128,14 @@ class CatalogPriceRuleForListing
     public function getCatalogPriceRuleName(): string
     {
         return $this->catalogPriceRuleName;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getShopName(): ?string
+    {
+        return $this->shopName;
     }
 
     /**

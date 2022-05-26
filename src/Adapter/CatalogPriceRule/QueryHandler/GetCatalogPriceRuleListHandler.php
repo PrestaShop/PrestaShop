@@ -66,6 +66,7 @@ class GetCatalogPriceRuleListHandler implements GetCatalogPriceRuleListHandlerIn
             $return[] = new CatalogPriceRuleForListing(
                 (int) $catalogPriceRule['id_specific_price_rule'],
                 $catalogPriceRule['specific_price_rule_name'],
+                $catalogPriceRule['shop_name'],
                 $catalogPriceRule['symbol'],
                 $catalogPriceRule['lang_name'],
                 $catalogPriceRule['group_name'],

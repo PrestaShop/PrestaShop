@@ -30,6 +30,7 @@
 
 type CatalogPriceRuleForListing = {
   id: number,
+  shop: string,
   currency: string,
   country: string,
   group: string,
