@@ -46,6 +46,7 @@ class GetCatalogPriceRuleListHandler implements GetCatalogPriceRuleListHandlerIn
      * @var CatalogPriceRuleRepository
      */
     private $catalogPriceRuleRepository;
+
     /**
      * @param CatalogPriceRuleRepository $catalogPriceRuleRepository
      */

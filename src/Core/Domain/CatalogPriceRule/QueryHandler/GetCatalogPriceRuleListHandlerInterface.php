@@ -26,10 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleForEditing;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleList;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult\CatalogPriceRuleList;
-use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult\EditableCatalogPriceRule;
 
 /**
  * Defines contract for GetCatalogPriceRuleForEditingHandler

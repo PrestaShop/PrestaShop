@@ -99,20 +99,19 @@ class CatalogPriceRuleForListing
         DecimalNumber $reduction,
         DateTimeInterface $dateStart,
         DateTimeInterface $dateEnd
-    )
-   {
-       $this->catalogPriceRuleId = $catalogPriceRuleId;
-       $this->catalogPriceRuleName = $catalogPriceRuleName;
-       $this->shopName = $shopName;
-       $this->currencyName = $currencyName;
-       $this->countryName = $countryName;
-       $this->groupName = $groupName;
-       $this->fromQuantity = $fromQuantity;
-       $this->reductionType = $reductionType;
-       $this->reduction = $reduction;
-       $this->dateStart = $dateStart;
-       $this->dateEnd = $dateEnd;
-   }
+    ) {
+        $this->catalogPriceRuleId = $catalogPriceRuleId;
+        $this->catalogPriceRuleName = $catalogPriceRuleName;
+        $this->shopName = $shopName;
+        $this->currencyName = $currencyName;
+        $this->countryName = $countryName;
+        $this->groupName = $groupName;
+        $this->fromQuantity = $fromQuantity;
+        $this->reductionType = $reductionType;
+        $this->reduction = $reduction;
+        $this->dateStart = $dateStart;
+        $this->dateEnd = $dateEnd;
+    }
 
     /**
      * @return int
