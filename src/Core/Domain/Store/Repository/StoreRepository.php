@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Store\Repository;
 
+use PrestaShop\PrestaShop\Core\Domain\Store\Exception\CannotAddStoreException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\CannotDeleteStoreException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\CannotUpdateStoreException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreNotFoundException;
@@ -82,5 +83,29 @@ class StoreRepository extends AbstractObjectModelRepository
     public function delete(StoreId $storeId): void
     {
         $this->deleteObjectModel($this->get($storeId), CannotDeleteStoreException::class);
+    }
+    
+    /**
+     * @param Store $store
+     * @param array $propertiesToUpdate
+     * @param int $errorCode
+     */
+    public function partialUpdate(Store $store, array $propertiesToUpdate, int $errorCode): void
+    {
+        $this->partiallyUpdateObjectModel(
+            $store,
+            $propertiesToUpdate,
+            CannotUpdateStoreException::class,
+            $errorCode
+        );
+    }
+    
+    /**
+     * @param StoreId $storeId
+     * @return int
+     */
+    protected function add(StoreId $storeId): int
+    {
+        return $this->addObjectModel($this->get($storeId), CannotDeleteStoreException::class);
     }
 }
