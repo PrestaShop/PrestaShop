@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Store\Command\AddStoreCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\CommandHandler\AddStoreHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\CannotAddStoreException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreException;
+use PrestaShop\PrestaShop\Core\Domain\Store\Repository\StoreRepository;
 use PrestaShop\PrestaShop\Core\Domain\Store\ValueObject\StoreId;
 use PrestaShopException;
 use Store;
@@ -43,6 +44,16 @@ use Store;
  */
 class AddStoreHandler extends AbstractObjectModelHandler implements AddStoreHandlerInterface
 {
+    /**
+     * @var StoreRepository
+     */
+    private $storeRepository;
+
+    public function __construct(StoreRepository $storeRepository)
+    {
+        $this->storeRepository = $storeRepository;
+    }
+
     /**
      * @throws CannotAddStoreException
      * @throws StoreException
@@ -102,7 +113,7 @@ class AddStoreHandler extends AbstractObjectModelHandler implements AddStoreHand
             }
 
             if (false === $entity->add()) {
-                throw new CannotAddContactException('Unable to add contact');
+                throw new CannotAddStoreException('Unable to add store');
             }
 
             if (null !== $command->getShopAssociation()) {
