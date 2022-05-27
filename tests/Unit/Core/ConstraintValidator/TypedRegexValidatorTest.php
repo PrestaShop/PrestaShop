@@ -333,7 +333,7 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
     {
         $this->validator->validate('22XRNQR7X4RLAGCBSSNQIVPXQ271ZIKE', new TypedRegex(['type' => TypedRegex::TYPE_WEBSERVICE_KEY]));
     }
-    
+
     public function testItSucceedsForCoordinateTypeWhenValidCharactersGiven(): void
     {
         $this->validator->validate('48.856614', new TypedRegex(['type' => TypedRegex::TYPE_COORDINATE]));
