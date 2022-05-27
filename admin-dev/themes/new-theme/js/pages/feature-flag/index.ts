@@ -81,7 +81,6 @@ $(() => {
   // We disable product v2 switch based on multishop state, this is handled hardcoded here for now, someday we will need
   // to implement a more generic feature for any feature flag
   const isMultiShopUsed = $form.data('isMultiShopUsed');
-  console.log('isMultiShopUsed', isMultiShopUsed);
   if (isMultiShopUsed) {
     $(FeatureFlagMap.productV2Switch).addClass('disabled');
     $(':input', FeatureFlagMap.productV2Switch).prop('disabled', true);
