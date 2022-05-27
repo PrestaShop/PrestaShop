@@ -12,37 +12,43 @@ services:
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Store\Query\GetStoreForEditing' }
 
-  prestashop.adapter.store.command_handler.add_store:
-    class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\AddStoreHandler'
+  prestashop.adapter.store.command_handler.abstract:
+    abstract: true
+    class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\AbstractStoreHandler'
     arguments:
       - '@prestashop.core.domain.store.repository.store_repository'
+
+  prestashop.adapter.store.command_handler.add_store:
+    public: true
+    class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\AddStoreHandler'
+    parent: 'prestashop.adapter.store.command_handler.abstract'
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Store\Command\AddStoreCommand }
 
   prestashop.adapter.store.command_handler.toggle_store_status:
+    public: true
     class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\ToggleStoreStatusHandler'
-    arguments:
-      - '@prestashop.core.domain.store.repository.store_repository'
+    parent: 'prestashop.adapter.store.command_handler.abstract'
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Store\Command\ToggleStoreStatusCommand }
 
   prestashop.adapter.store.command_handler.bulk_toggle_store_status_handler:
+    public: true
     class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\BulkUpdateStoreStatusHandler'
-    arguments:
-      - '@prestashop.core.domain.store.repository.store_repository'
+    parent: 'prestashop.adapter.store.command_handler.abstract'
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkUpdateStoreStatusCommand }
 
   prestashop.adapter.store.command_handler.delete_store:
+    public: true
     class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\DeleteStoreHandler'
-    arguments:
-      - '@prestashop.core.domain.store.repository.store_repository'
+    parent: 'prestashop.adapter.store.command_handler.abstract'
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Store\Command\DeleteStoreCommand }
 
   prestashop.adapter.store.command_handler.bulk_delete_store_handler:
+    public: true
     class: 'PrestaShop\PrestaShop\Adapter\Store\CommandHandler\BulkDeleteStoreHandler'
-    arguments:
-      - '@prestashop.core.domain.store.repository.store_repository'
+    parent: 'prestashop.adapter.store.command_handler.abstract'
     tags:
       - { name: tactician.handler, command: PrestaShop\PrestaShop\Core\Domain\Store\Command\BulkDeleteStoreCommand }

@@ -29,30 +29,18 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Store\CommandHandler;
 
 use Exception;
-use PrestaShop\PrestaShop\Adapter\Domain\AbstractObjectModelHandler;
 use PrestaShop\PrestaShop\Core\Domain\Store\Command\AddStoreCommand;
 use PrestaShop\PrestaShop\Core\Domain\Store\CommandHandler\AddStoreHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\CannotAddStoreException;
 use PrestaShop\PrestaShop\Core\Domain\Store\Exception\StoreException;
-use PrestaShop\PrestaShop\Core\Domain\Store\Repository\StoreRepository;
 use PrestaShop\PrestaShop\Core\Domain\Store\ValueObject\StoreId;
 use Store;
 
 /**
  * Class AddStoreHandler is used for adding store data.
  */
-class AddStoreHandler extends AbstractObjectModelHandler implements AddStoreHandlerInterface
+class AddStoreHandler extends AbstractStoreHandler implements AddStoreHandlerInterface
 {
-    /**
-     * @var StoreRepository
-     */
-    private $storeRepository;
-
-    public function __construct(StoreRepository $storeRepository)
-    {
-        $this->storeRepository = $storeRepository;
-    }
-
     /**
      * @throws CannotAddStoreException
      * @throws StoreException
