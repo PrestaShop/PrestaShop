@@ -70,17 +70,17 @@ class GetStoreForEditingHandler implements GetStoreForEditingHandlerInterface
             $store->id_country,
             $store->postcode,
             $store->city,
-            $store->id_state,
-            (string) $store->latitude,
-            (string) $store->longitude,
-            $store->phone,
-            $store->fax,
-            $store->email,
-            $store->name,
-            $store->address1,
-            $store->address2,
-            $store->hours,
-            $store->note
+            $store->id_state ?: null,
+            (string) $store->latitude ?: null,
+            (string) $store->longitude ?: null,
+            $store->phone ?: null,
+            $store->fax ?: null,
+            $store->email ?: null,
+            $store->name ?: null,
+            $store->address1 ?: null,
+            $store->address2 ?: null,
+            $store->hours ?: null,
+            $store->note ?: null
         );
     }
 }

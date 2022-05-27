@@ -33,7 +33,6 @@ Feature: Store
       | note[fr-FR]     | Le meilleur magasin bien sur. |
     Then store "store1" should have the following details:
       | country         | France                        |
-      | state           | 0                             |
       | postcode        | 75009                         |
       | city            | Paris                         |
       | latitude        | 48.88061405                   |
