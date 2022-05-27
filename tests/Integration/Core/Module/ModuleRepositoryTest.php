@@ -73,7 +73,7 @@ class ModuleRepositoryTest extends TestCase
             // - overrides `dummy_payment` module `fullDescription` attributes
             // - adds `testAttribute` attributes to `dummy_payment` module
             // when 'actionListModules' hook called
-            if($hook_name == 'actionListModules') {
+            if ($hook_name == 'actionListModules') {
                 return [
                     'ps_distributionapiclient' => [
                         [
@@ -81,13 +81,13 @@ class ModuleRepositoryTest extends TestCase
                             'fullDescription' => 'overridden full description',
                             'testAttribute' => 'added value',
                         ],
-                    ]
+                    ],
                 ];
             } else {
                 return [];
             }
         };
-        $hookManager->method("exec")->willReturn(
+        $hookManager->method('exec')->willReturn(
             $this->returnCallback($hookExecMethodMock)
         );
 

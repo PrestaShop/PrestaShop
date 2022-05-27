@@ -41,11 +41,9 @@ class UpdatesController extends ModuleAbstractController
      */
     public function indexAction()
     {
-        $moduleRepository = $this->getModuleRepository();
+        $moduleList = $this->getModuleRepository()->getUpgradableModules();
+        $pageData = $this->getNotificationPageData($moduleList);
 
-        return $this->render(
-            '@PrestaShop/Admin/Module/updates.html.twig',
-            $this->getNotificationPageData($moduleRepository->getUpgradableModules())
-        );
+        return $this->render('@PrestaShop/Admin/Module/updates.html.twig', $pageData);
     }
 }

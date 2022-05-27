@@ -70,6 +70,41 @@ class ModuleRepository implements ModuleRepositoryInterface
     /** @var array|null */
     private $installedModules;
 
+    /**
+     * This attribute is made to store all static calls in an anonymous class functions
+     * This way we can mock the class thanks \ReflectionProperty and override static calls
+     */
+    private $storedSaticCall;
+
+    private function staticCall()
+    {
+        if ($this->storedSaticCall == null) {
+            $this->storedSaticCall = new class() {
+                public function getContextShopIdListCacheKey(): string
+                {
+                    return implode('-', Shop::getContextListShopID());
+                }
+
+                public function moduleCollectionCreateFrom(array $modules): ModuleCollection
+                {
+                    return ModuleCollection::createFrom($modules);
+                }
+
+                public function getModuleInstanceByName(string $moduleName)
+                {
+                    return ModuleLegacy::getInstanceByName($moduleName);
+                }
+
+                public function newModule(array $attributes = [], array $disk = [], array $database = []): Module
+                {
+                    return new Module($attributes, $disk, $database);
+                }
+            };
+        }
+
+        return $this->storedSaticCall;
+    }
+
     public function __construct(
         ModuleDataProvider $moduleDataProvider,
         AdminModuleDataProvider $adminModuleDataProvider,
@@ -99,10 +134,10 @@ class ModuleRepository implements ModuleRepositoryInterface
                 continue;
             }
 
-            $modules[] = $this->getModule($moduleName);
+            $modules[] = $this->getCoreModule($moduleName);
         }
 
-        return ModuleCollection::createFrom($this->mergeWithModulesFromHook($modules));
+        return $this->staticCall()->moduleCollectionCreateFrom($this->enrichModuleListFromHook($modules));
     }
 
     public function getInstalledModules(): ModuleCollection
@@ -133,6 +168,20 @@ class ModuleRepository implements ModuleRepositoryInterface
      */
     public function getModule(string $moduleName): ModuleInterface
     {
+        $coreModule = $this->getCoreModule($moduleName);
+
+        return $this->enrichModuleAttributesFromHook($coreModule);
+    }
+
+    /**
+     * @param string $moduleName
+     *
+     * @return Module
+     *
+     * Internal function used for internal module description and cache management
+     */
+    protected function getCoreModule(string $moduleName): ModuleInterface
+    {
         $filePath = $this->getModulePath($moduleName);
 
         $filemtime = $filePath === null
@@ -154,7 +203,7 @@ class ModuleRepository implements ModuleRepositoryInterface
         $disk = $this->getModuleDiskAttributes($moduleName, $isValid, $filemtime);
         $database = $this->getModuleDatabaseAttributes($moduleName);
 
-        $this->cacheProvider->save($cacheKey, new Module($attributes, $disk, $database));
+        $this->cacheProvider->save($cacheKey, $this->staticCall()->newModule($attributes, $disk, $database));
 
         return $this->cacheProvider->fetch($cacheKey);
     }
@@ -225,7 +274,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     {
         $attributes = ['name' => $moduleName];
         if ($isValid) {
-            $tmpModule = ModuleLegacy::getInstanceByName($moduleName);
+            $tmpModule = $this->staticCall()->getModuleInstanceByName($moduleName);
             foreach (self::MODULE_ATTRIBUTES as $attribute) {
                 if (isset($tmpModule->{$attribute})) {
                     $attributes[$attribute] = $tmpModule->{$attribute};
@@ -247,7 +296,7 @@ class ModuleRepository implements ModuleRepositoryInterface
             'filemtime' => $filemtime,
             'is_present' => $this->moduleDataProvider->isOnDisk($moduleName),
             'is_valid' => $isValid,
-            'version' => $isValid ? ModuleLegacy::getInstanceByName($moduleName)->version : null,
+            'version' => $isValid ? $this->staticCall()->getModuleInstanceByName($moduleName)->version : null,
             'path' => $path,
         ];
     }
@@ -262,19 +311,25 @@ class ModuleRepository implements ModuleRepositoryInterface
     }
 
     /**
+     * @return array
+     */
+    private function getHookModulesForActionListModules()
+    {
+        $actionListModules = $this->hookManager->exec('actionListModules', [], null, true);
+        $externalModules = array_values($actionListModules ?? []);
+
+        return empty($externalModules) ? $externalModules : array_merge(...$externalModules);
+    }
+
+    /**
      * @param Module[] $modules
      *
      * @return Module[]
      */
-    private function mergeWithModulesFromHook(array $modules): array
+    protected function enrichModuleListFromHook(array $modules): array
     {
-        $actionListModules = $this->hookManager->exec('actionListModules', [], null, true);
-        $externalModules = array_values($actionListModules ?? []);
-        if (empty(reset($externalModules))) {
-            return $modules;
-        }
-
-        foreach (array_merge(...$externalModules) as $externalModule) {
+        $externalModules = $this->getHookModulesForActionListModules();
+        foreach ($externalModules as $externalModule) {
             $merged = false;
             foreach ($modules as $module) {
                 if ($module->get('name') === $externalModule['name']) {
@@ -284,10 +339,27 @@ class ModuleRepository implements ModuleRepositoryInterface
                 }
             }
             if (!$merged) {
-                $modules[] = new Module($externalModule);
+                $modules[] = $this->staticCall()->newModule($externalModule);
             }
         }
 
         return $modules;
+    }
+
+    /**
+     * @param Module $module
+     *
+     * @return Module
+     */
+    protected function enrichModuleAttributesFromHook(Module $module): ModuleInterface
+    {
+        $externalModules = $this->getHookModulesForActionListModules();
+        foreach ($externalModules as $externalModule) {
+            if ($module->get('name') === $externalModule['name']) {
+                $module->getAttributes()->add($externalModule);
+            }
+        }
+
+        return $module;
     }
 }
