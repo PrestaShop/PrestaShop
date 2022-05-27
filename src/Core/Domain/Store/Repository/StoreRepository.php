@@ -42,6 +42,15 @@ use Store;
 class StoreRepository extends AbstractObjectModelRepository
 {
     /**
+     * @param Store $store
+     * @return int
+     */
+    public function add(Store $store): int
+    {
+        return $this->addObjectModel($store, CannotAddStoreException::class);
+    }
+
+    /**
      * @param StoreId $storeId
      *
      * @return Store
