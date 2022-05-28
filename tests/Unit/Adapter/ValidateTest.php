@@ -129,7 +129,7 @@ class ValidateTest extends TestCase
 
     /**
      * @param bool $expected
-     * @param mixed $value
+     * @param mixed $objectClassName
      *
      * @dataProvider isValidObjectClassNameDataProvider
      */
@@ -147,8 +147,6 @@ class ValidateTest extends TestCase
             [true, '_MyClassName_'],
             [true, '__My__Class__Name__'],
             [false, ''],
-            [false, null],
-            [false, 666],
             [false, '666'],
             [true, '_666'],
             [true, '_6_6_6_'],
