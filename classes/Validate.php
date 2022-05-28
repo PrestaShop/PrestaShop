@@ -1353,7 +1353,7 @@ class ValidateCore
     }
 
     /**
-     * Check the given string is a valid object class name
+     * Check the given string is a valid PHP class name
      *
      * @param string $objectClassName object class name
      *
