@@ -129,7 +129,7 @@ class ValidateTest extends TestCase
 
     /**
      * @param bool $expected
-     * @param mixed $objectClassName
+     * @param string $objectClassName
      *
      * @dataProvider isValidObjectClassNameDataProvider
      */
