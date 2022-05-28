@@ -39,6 +39,7 @@ use ZxcvbnPhp\Zxcvbn;
 class ValidateCore
 {
     public const ORDER_BY_REGEXP = '/^(?:(`?)[\w!_-]+\1\.)?(?:(`?)[\w!_-]+\2)$/';
+    public const OBJECT_CLASS_NAME_REGEXP = '/^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*$/';
     /**
      * Maximal 32 bits value: (2^32)-1
      *
@@ -1349,5 +1350,17 @@ class ValidateCore
         }
 
         return true;
+    }
+
+    /**
+     * Check the given string is a valid object class name
+     *
+     * @param string $objectClassName object class name
+     *
+     * @return bool
+     */
+    public static function isValidObjectClassName(string $objectClassName): bool
+    {
+        return preg_match(static::OBJECT_CLASS_NAME_REGEXP, $objectClassName);
     }
 }
