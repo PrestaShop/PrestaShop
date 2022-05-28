@@ -92,7 +92,7 @@ class PrestaShopLoggerCore extends ObjectModel
             'id_lang' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'allow_null' => true],
             'in_all_shops' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'id_employee' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
-            'object_type' => ['type' => self::TYPE_STRING, 'validate' => 'isName'],
+            'object_type' => ['type' => self::TYPE_STRING, 'validate' => 'isValidObjectClassName'],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
             'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
         ],
