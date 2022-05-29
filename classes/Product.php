@@ -1044,7 +1044,7 @@ class ProductCore extends ObjectModel
      * @param int $minimum_quantity
      * @param bool $reset
      *
-     * @return int Attributes list
+     * @return int Attributes id
      */
     public static function getDefaultAttribute($id_product, $minimum_quantity = 0, $reset = false)
     {
@@ -4093,18 +4093,7 @@ class ProductCore extends ObjectModel
      */
     public function getDefaultIdProductAttribute()
     {
-        if (!Combination::isFeatureActive()) {
-            return 0;
-        }
-
-        return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
-            '
-            SELECT pa.`id_product_attribute`
-            FROM `' . _DB_PREFIX_ . 'product_attribute` pa
-            ' . Shop::addSqlAssociation('product_attribute', 'pa') . '
-            WHERE pa.`id_product` = ' . (int) $this->id . '
-            AND product_attribute_shop.default_on = 1'
-        );
+        return (int) Product::getDefaultAttribute($this->id);
     }
 
     /**
