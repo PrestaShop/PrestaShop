@@ -1044,7 +1044,7 @@ class ProductCore extends ObjectModel
      * @param int $minimum_quantity
      * @param bool $reset
      *
-     * @return int Attributes id
+     * @return int Attribute id
      */
     public static function getDefaultAttribute($id_product, $minimum_quantity = 0, $reset = false)
     {
