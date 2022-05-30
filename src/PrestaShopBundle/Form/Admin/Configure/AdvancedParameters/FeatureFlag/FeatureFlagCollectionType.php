@@ -41,7 +41,7 @@ class FeatureFlagCollectionType extends CollectionType
     /**
      * @var bool
      */
-    private $isMultiShopUsed;
+    protected $isMultiShopUsed;
 
     /**
      * @param bool $isMultiShopUsed
