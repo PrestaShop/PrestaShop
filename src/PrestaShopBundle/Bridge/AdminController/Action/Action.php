@@ -39,12 +39,12 @@ class Action implements ActionInterface
     /**
      * @var string
      */
-    private $label;
+    protected $label;
 
     /**
      * @var array
      */
-    private $config;
+    protected $config;
 
     /**
      * To create an action, you must specify a label and an array of configurations where you can find:

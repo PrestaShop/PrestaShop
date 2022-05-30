@@ -68,8 +68,7 @@ class BreadcrumbsAndTitleConfigurator implements ConfiguratorInterface
      */
     public function configure(ControllerConfiguration $controllerConfiguration): void
     {
-        $tabs = [];
-        $tabs = Tab::recursiveTab($controllerConfiguration->id, $tabs);
+        $tabs = Tab::recursiveTab($controllerConfiguration->id, []);
 
         if (!empty($tabs[0])) {
             $this->addMetaTitle($controllerConfiguration, $tabs[0]['name']);
@@ -96,10 +95,8 @@ class BreadcrumbsAndTitleConfigurator implements ConfiguratorInterface
      */
     public function getBreadcrumbs(int $id): array
     {
-        $tabs = [];
-
         $tabId = $id;
-        $tabs = Tab::recursiveTab($tabId, $tabs);
+        $tabs = Tab::recursiveTab($tabId, []);
 
         $dummy = ['name' => '', 'href' => '', 'icon' => ''];
         $breadcrumbs = [
