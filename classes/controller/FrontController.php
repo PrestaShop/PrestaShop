@@ -2001,7 +2001,7 @@ class FrontControllerCore extends Controller
 
         foreach ($languages as $lang) {
             $langUrl = $this->context->link->getLanguageLink($lang['id_lang']);
-            $alternativeLangs[$lang['language_code']] = $this->sanitizeUrl($langUrl);
+            $alternativeLangs[$lang['language_code']] = $langUrl;
         }
 
         return $alternativeLangs;
