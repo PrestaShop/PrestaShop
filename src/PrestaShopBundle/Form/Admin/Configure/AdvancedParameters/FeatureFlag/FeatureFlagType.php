@@ -57,8 +57,6 @@ class FeatureFlagType extends TranslatorAwareType
     {
         $builder
             ->add('enabled', SwitchType::class, [
-                //'label' => $this->trans($featureFlag->getLabelWording(), $featureFlag->getLabelDomain()),
-                //'help' => $this->trans($featureFlag->getDescriptionWording(), $featureFlag->getDescriptionDomain()),
                 'choices' => [
                     $this->trans('Disabled', 'Admin.Global') => false,
                     $this->trans('Enabled', 'Admin.Global') => true,
