@@ -211,7 +211,9 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         $categoriesFormView = $categoriesForm->createView();
-        $selectedCategory = !empty($combinedFilterParameters['filter_category']) ? new Category($combinedFilterParameters['filter_category']) : null;
+        $selectedCategory = !empty($combinedFilterParameters['filter_category'])
+            ? new Category((int) $combinedFilterParameters['filter_category'])
+            : null;
 
         //Drag and drop is ONLY activated when EXPLICITLY requested by the user
         //Meaning a category is selected and the user clicks on REORDER button
