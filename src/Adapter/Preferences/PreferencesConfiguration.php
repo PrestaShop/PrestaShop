@@ -45,7 +45,7 @@ class PreferencesConfiguration implements DataConfigurationInterface
     /**
      * @var FeatureFlagRepository
      */
-    private $featureFlagRepository;
+    protected $featureFlagRepository;
 
     public function __construct(
         Configuration $configuration,
