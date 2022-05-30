@@ -88,11 +88,7 @@ class FeatureFlagsFormDataProvider implements FormDataProviderInterface
             }
 
             $flagState = $flagData['enabled'] ?? false;
-            if ($flagState) {
-                $featureFlag->enable();
-            } else {
-                $featureFlag->disable();
-            }
+            $flagState ? $featureFlag->enable() : $featureFlag->disable();
         }
 
         $this->doctrineEntityManager->flush();
