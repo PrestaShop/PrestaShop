@@ -40,7 +40,7 @@ use PrestaShopBundle\Entity\FeatureFlag;
 class FeatureFlagsFormDataProvider implements FormDataProviderInterface
 {
     /** @var EntityManagerInterface */
-    private $doctrineEntityManager;
+    protected $doctrineEntityManager;
 
     /** @var string */
     private $stability;
