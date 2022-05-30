@@ -506,7 +506,7 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * @return bool
      */
-    private function shouldRedirectToV1(): bool
+    protected function shouldRedirectToV1(): bool
     {
         $multistoreFeature = $this->get('prestashop.adapter.multistore_feature');
 
