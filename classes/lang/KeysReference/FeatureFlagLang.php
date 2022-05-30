@@ -36,5 +36,5 @@ trans('New product page - Single store', 'Admin.Advparameters.Feature');
 trans('This page benefits from increased performance and includes new features such as a new combination management system.', 'Admin.Advparameters.Help');
 
 // Product multi store feature flag in 8.0
-trans('New product page - Multi store', 'Admin.Advparameters.Feature');
+trans('New product page - Multistore', 'Admin.Advparameters.Feature');
 trans('Access the new product page, even in a multistore context. This is a work in progress and some features are not available.', 'Admin.Advparameters.Help');
