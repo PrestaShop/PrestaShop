@@ -836,7 +836,7 @@ class AddOrder extends BOBasePage {
 
       return this.getTextContent(page, this.summarySuccessMessageBlock);
     }
-    return await this.openLinkWithTargetBlank(page, this.proceedOrderLink, 'body a');
+    return this.openLinkWithTargetBlank(page, this.proceedOrderLink, 'body a');
   }
 
   /**
