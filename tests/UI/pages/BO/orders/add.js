@@ -831,16 +831,12 @@ class AddOrder extends BOBasePage {
   // eslint-disable-next-line consistent-return
   async setMoreActions(page, action) {
     await this.waitForSelectorAndClick(page, this.moreActionsDropDownButton);
-    if (action === 'Send pre-filled order to the customer by email') {
+    if (action === 'pre-filled order') {
       await this.waitForSelectorAndClick(page, this.sendOrderMailButton);
 
       return this.getTextContent(page, this.summarySuccessMessageBlock);
     }
-    if (action === 'Proceed to checkout in the front office') {
-      const newPage = await this.openLinkWithTargetBlank(page, this.proceedOrderLink, 'body a');
-
-      return newPage;
-    }
+    return await this.openLinkWithTargetBlank(page, this.proceedOrderLink, 'body a');
   }
 
   /**

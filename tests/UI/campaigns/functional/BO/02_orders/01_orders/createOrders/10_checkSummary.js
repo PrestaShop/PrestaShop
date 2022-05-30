@@ -124,15 +124,15 @@ describe('BO - Orders - Create order : Check summary', async () => {
     it(`should add to cart '${Products.demo_12.name}'`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addStandardSimpleProduct', baseContext);
 
-      const productToSelect = `${Products.demo_11.name} - €${Products.demo_11.price.toFixed(2)}`;
-      await addOrderPage.addProductToCart(page, Products.demo_11, productToSelect);
+      const productToSelect = `${Products.demo_12.name} - €${Products.demo_12.price_ht.toFixed(2)}`;
+      await addOrderPage.addProductToCart(page, Products.demo_12, productToSelect);
 
       const result = await addOrderPage.getProductDetailsFromTable(page);
       await Promise.all([
-        expect(result.image).to.contains(Products.demo_11.thumbnailImage),
-        expect(result.description).to.equal(Products.demo_11.name),
-        expect(result.reference).to.equal(Products.demo_11.reference),
-        expect(result.price).to.equal(Products.demo_11.price),
+        expect(result.image).to.contains(Products.demo_12.thumbnailImage),
+        expect(result.description).to.equal(Products.demo_12.name),
+        expect(result.reference).to.equal(Products.demo_12.reference),
+        expect(result.price).to.equal(Products.demo_12.price_ht),
       ]);
     });
 
@@ -250,14 +250,14 @@ describe('BO - Orders - Create order : Check summary', async () => {
       it('should choose \'Send pre-filled order to the customer by email\' from more actions', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'setMoreActions', baseContext);
 
-        const textMessage = await addOrderPage.setMoreActions(page, 'Send pre-filled order to the customer by email');
+        const textMessage = await addOrderPage.setMoreActions(page, 'pre-filled order');
         await expect(textMessage, 'Invalid success message!').to.be.equal(addOrderPage.emailSendSuccessMessage);
       });
 
       it('should choose \'Proceed to checkout in the front office\' from more actions', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'setMoreActions', baseContext);
 
-        page = await addOrderPage.setMoreActions(page, 'Proceed to checkout in the front office');
+        page = await addOrderPage.setMoreActions(page, 'Proceed to checkout');
 
         const isCheckoutPage = await checkoutPage.isCheckoutPage(page);
         await expect(isCheckoutPage, 'Not redirected to checkout page!').to.be.true;
