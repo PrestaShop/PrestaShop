@@ -96,7 +96,7 @@ class FeatureFlag
      *
      * @ORM\Column(name="stability", type="string", length=64, options={"default":"beta"})
      */
-    protected $stability;
+    private $stability;
 
     /**
      * @param string $name
