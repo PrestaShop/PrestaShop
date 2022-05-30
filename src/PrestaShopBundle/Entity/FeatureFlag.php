@@ -242,7 +242,7 @@ class FeatureFlag
     /**
      * @return string
      */
-    public function stability(): string
+    public function getStability(): string
     {
         return $this->stability;
     }
