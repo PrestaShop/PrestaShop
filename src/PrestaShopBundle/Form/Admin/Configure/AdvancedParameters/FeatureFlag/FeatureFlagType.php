@@ -42,7 +42,7 @@ class FeatureFlagType extends TranslatorAwareType
     /**
      * @var FormCloner
      */
-    private $formCloner;
+    protected $formCloner;
 
     public function __construct(
         TranslatorInterface $translator,
