@@ -43,7 +43,7 @@ class FeatureFlagsFormDataProvider implements FormDataProviderInterface
     protected $doctrineEntityManager;
 
     /** @var string */
-    private $stability;
+    protected $stability;
 
     /**
      * @param EntityManagerInterface $doctrineEntityManager
