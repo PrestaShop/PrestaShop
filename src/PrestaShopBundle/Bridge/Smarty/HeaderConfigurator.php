@@ -359,9 +359,6 @@ class HeaderConfigurator implements ConfiguratorInterface
     {
         /* @var PriceSpecification */
         $priceSpecification = $this->currentLocale->getPriceSpecification($this->currency->iso_code);
-        if (empty($priceSpecification)) {
-            return [];
-        }
 
         return array_merge(
             ['symbol' => $priceSpecification->getSymbolsByNumberingSystem(Locale::NUMBERING_SYSTEM_LATIN)->toArray()],
@@ -378,9 +375,6 @@ class HeaderConfigurator implements ConfiguratorInterface
     {
         /* @var NumberSpecification */
         $numberSpecification = $this->currentLocale->getNumberSpecification();
-        if (empty($numberSpecification)) {
-            return [];
-        }
 
         return array_merge(
             ['symbol' => $numberSpecification->getSymbolsByNumberingSystem(Locale::NUMBERING_SYSTEM_LATIN)->toArray()],

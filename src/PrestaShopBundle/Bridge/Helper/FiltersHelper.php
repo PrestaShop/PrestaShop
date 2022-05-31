@@ -73,7 +73,7 @@ class FiltersHelper
         HelperListConfiguration $helperListConfiguration
     ): void {
         $this->hookDispatcher->dispatchWithParameters('action' . $helperListConfiguration->controllerNameLegacy . 'ListingFieldsModifier', [
-            'fields' => $helperListConfiguration->fieldsList,
+            'fields' => &$helperListConfiguration->fieldsList,
         ]);
 
         $prefix = FilterPrefix::getByClassName($helperListConfiguration->controllerNameLegacy);

@@ -160,7 +160,7 @@ class Locale implements LocaleInterface
      *
      * @param string $currencyCode Currency of the price
      *
-     * @return NumberSpecificationInterface|null
+     * @return NumberSpecificationInterface
      */
     public function getPriceSpecification($currencyCode)
     {
@@ -176,7 +176,7 @@ class Locale implements LocaleInterface
     /**
      * Get number specification
      *
-     * @return NumberSpecification|null
+     * @return NumberSpecification
      */
     public function getNumberSpecification()
     {
