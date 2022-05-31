@@ -92,8 +92,10 @@ class StockMovementRepository
         if ($historySettings->isZeroQuantityGroupingExcluded()) {
             $queryBuilder->andHaving('delta_quantity != 0');
         }
+        //$sql = $queryBuilder->getSQL();
+        $result = $queryBuilder->execute()->fetchAllAssociative();
 
-        return $queryBuilder->execute()->fetchAllAssociative();
+        return $result;
     }
 
     /**
@@ -139,16 +141,28 @@ class StockMovementRepository
     ): void {
         $pkColumn = 'sm.id_stock_mvt';
         $groupingIdColumn = 'grouping_id';
+        $groupingTypeColumn = 'grouping_type';
         $groupingNameColumn = 'grouping_name';
         $groupingQueryBuilder = $this->createFilterQueryBuilder($singleFilter);
         $groupingCondition = (string) $groupingQueryBuilder->getQueryPart('where');
         $queryBuilder
+//            ->addSelect(
+//                "MIN(@$groupingIdColumn := CASE WHEN @$groupingIdColumn IS NULL THEN $pkColumn WHEN $groupingCondition THEN $pkColumn ELSE @$groupingIdColumn END) $groupingIdColumn",
+//                "CASE WHEN $groupingCondition THEN CONCAT('single-', $pkColumn) ELSE CONCAT('range-', @$groupingIdColumn) END $groupingNameColumn",
+//                "CASE WHEN $groupingCondition THEN 'single' ELSE 'range' END $groupingTypeColumn"
+//            )
+
 //            ->addSelect(
 //                sprintf(
 //                    'MIN(@%2$s := CASE WHEN @%2$s IS NULL THEN %1$s WHEN %3$s THEN %1$s ELSE @%2$s END) %2$s',
 //                    $pkColumn,
 //                    $groupingIdColumn,
 //                    $groupingCondition
+//                ),
+//                sprintf(
+//                    'CASE WHEN %s THEN \'single\' ELSE \'range\' END %s',
+//                    $groupingCondition,
+//                    $groupingTypeColumn
 //                ),
 //                sprintf(
 //                    'CASE WHEN %s THEN CONCAT(\'single-\', %s) ELSE CONCAT(\'range-\', @%s) END %s',
@@ -158,6 +172,7 @@ class StockMovementRepository
 //                    $groupingNameColumn
 //                )
 //            )
+
             ->addSelect(
                 implode(' ', [
                     "MIN(@$groupingIdColumn := CASE",

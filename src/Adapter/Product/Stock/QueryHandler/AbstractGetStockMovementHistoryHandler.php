@@ -67,6 +67,12 @@ abstract class AbstractGetStockMovementHistoryHandler
         // Exclude stock movement groupings with zero quantity
         $historySettings->excludeGroupingWithZeroQuantity(true);
 
+        $lastStockMovements = $this->stockMovementRepository->getLastStockMovementHistories(
+            $historySettings,
+            $offset,
+            $limit
+        );
+
         return array_map(
             function (array $historyRow): StockMovementHistory {
                 return (int) $historyRow['id_stock_mvt_count'] === 1
@@ -74,11 +80,7 @@ abstract class AbstractGetStockMovementHistoryHandler
                     : $this->createGroupStockMovementHistory($historyRow)
                 ;
             },
-            $this->stockMovementRepository->getLastStockMovementHistories(
-                $historySettings,
-                $offset,
-                $limit
-            )
+            $lastStockMovements
         );
     }
 
