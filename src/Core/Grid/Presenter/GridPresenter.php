@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\Form\FormView;
 
 /**
  * Class GridPresenter is responsible for presenting grid.
@@ -55,15 +56,13 @@ final class GridPresenter implements GridPresenterInterface
      */
     public function present(GridInterface $grid)
     {
-        $filterForm = $grid->getFilterForm();
-
         $definition = $grid->getDefinition();
         $searchCriteria = $grid->getSearchCriteria();
         $data = $grid->getData();
         $presentedGrid = [
             'id' => $definition->getId(),
             'name' => $definition->getName(),
-            'filter_form' => $filterForm->createView(),
+            'filter_form' => $this->getFilterForm($grid),
             'form_prefix' => '',
             'columns' => $this->getColumns($grid),
             'column_filters' => $this->getColumnFilters($definition),
@@ -110,7 +109,7 @@ final class GridPresenter implements GridPresenterInterface
      *
      * @return array
      */
-    private function getColumns(GridInterface $grid)
+    protected function getColumns(GridInterface $grid)
     {
         $columns = $grid->getDefinition()->getColumns()->toArray();
 
@@ -119,6 +118,7 @@ final class GridPresenter implements GridPresenterInterface
         if (null !== $positionColumn) {
             $searchCriteria = $grid->getSearchCriteria();
             $requiredFilter = $positionColumn->getOption('required_filter');
+
             // If the required filter is not set the position column is not displayed
             if (null !== $requiredFilter && empty($searchCriteria->getFilters()[$requiredFilter])) {
                 $columns = array_filter($columns, function (array $column) use ($positionColumn) {
@@ -138,6 +138,57 @@ final class GridPresenter implements GridPresenterInterface
     }
 
     /**
+     * Get filters that have associated columns.
+     *
+     * @param GridDefinitionInterface $definition
+     *
+     * @return array
+     */
+    protected function getColumnFilters(GridDefinitionInterface $definition)
+    {
+        $columnFiltersMapping = [];
+
+        /** @var FilterInterface $filter */
+        foreach ($definition->getFilters()->all() as $filter) {
+            if (null !== $associatedColumn = $filter->getAssociatedColumn()) {
+                $columnFiltersMapping[$associatedColumn][] = $filter->getName();
+            }
+        }
+
+        return $columnFiltersMapping;
+    }
+
+    /**
+     * @param GridInterface $grid
+     *
+     * @return FormView
+     */
+    protected function getFilterForm(GridInterface $grid): FormView
+    {
+        $filterForm = $grid->getFilterForm();
+
+        /** @var PositionColumn|null $positionColumn */
+        $positionColumn = $this->getPositionColumn($grid);
+        if (null !== $positionColumn) {
+            $searchCriteria = $grid->getSearchCriteria();
+            $requiredFilter = $positionColumn->getOption('required_filter');
+            if (null !== $requiredFilter && empty($searchCriteria->getFilters()[$requiredFilter])) {
+                $definition = $grid->getDefinition();
+
+                /** @var FilterInterface $filter */
+                foreach ($definition->getFilters()->all() as $filter) {
+                    // When position column is not displayed we don't display the filter either
+                    if ($filter->getAssociatedColumn() === $positionColumn->getId()) {
+                        $filterForm->remove($filter->getName());
+                    }
+                }
+            }
+        }
+
+        return $filterForm->createView();
+    }
+
+    /**
      * @param GridInterface $grid
      *
      * @return PositionColumn|null
@@ -152,27 +203,6 @@ final class GridPresenter implements GridPresenterInterface
         }
 
         return null;
-    }
-
-    /**
-     * Get filters that have associated columns.
-     *
-     * @param GridDefinitionInterface $definition
-     *
-     * @return array
-     */
-    private function getColumnFilters(GridDefinitionInterface $definition)
-    {
-        $columnFiltersMapping = [];
-
-        /** @var FilterInterface $filter */
-        foreach ($definition->getFilters()->all() as $filter) {
-            if (null !== $associatedColumn = $filter->getAssociatedColumn()) {
-                $columnFiltersMapping[$associatedColumn][] = $filter->getName();
-            }
-        }
-
-        return $columnFiltersMapping;
     }
 
     /**
