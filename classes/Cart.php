@@ -3588,7 +3588,7 @@ class CartCore extends ObjectModel
      *
      * @return float|bool Shipping total, false if not possible to ship with the given carrier
      */
-    public function getPackageShippingCostValue(
+    protected function getPackageShippingCostValue(
         $id_carrier = null,
         $use_tax = true,
         Country $default_country = null,
