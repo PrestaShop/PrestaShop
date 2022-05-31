@@ -526,12 +526,25 @@ class Order extends BOBasePage {
     return this.getTextContent(page, '#order_grid_table tr.preview-row td div[data-role=invoice-details]');
   }
 
-  async getProductsNumberFromTable(page){
+  async getProductsNumberFromTable(page) {
     return this.getNumberFromText(page, '#order_grid_table tr.preview-row div.table-responsive table thead tr:nth-child(1)');
   }
 
   async getProductDetailsFromTable(page, row = 1) {
     return this.getTextContent(page, `#order_grid_table tr.preview-row div.table-responsive table tbody tr:nth-child(${row})`);
+  }
+
+  async getLastProductsTableLine(page, row = 12) {
+    return this.getTextContent(page, `#order_grid_table tr.preview-row div.table-responsive table tbody tr:nth-child(${row})`);
+  }
+
+  async clickOnMoreLink(page, row = 12) {
+    await this.waitForSelectorAndClick(page, `#order_grid_table tr.preview-row div.table-responsive table tbody tr:nth-child(${row}) td a.js-preview-more-products-btn`);
+    await this.waitForVisibleSelector(page, `#order_grid_table tr.preview-row div.table-responsive table tbody tr:nth-child(${row - 1})`);
+  }
+
+  async openOrderDetails(page) {
+    await this.waitForSelectorAndClick(page, '#order_grid_table tr.preview-row a.btn-primary');
   }
 }
 
