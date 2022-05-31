@@ -45,6 +45,7 @@ class ModuleRepository implements ModuleRepositoryInterface
         'tab',
         'displayName',
         'description',
+        'additional_description',
         'author',
         'limited_countries',
         'need_instance',

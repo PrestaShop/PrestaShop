@@ -88,6 +88,11 @@
               ...
             {% endif %}
           {% endblock %}
+          {% block addon_additional_description %}
+            {% if module.attributes.additional_description is defined %}
+              {{ module.attributes.additional_description|raw }}
+            {% endif %}
+          {% endblock %}
         </div>
         <div class="col-lg-3 text-md-right">
           {% block module_actions %}
