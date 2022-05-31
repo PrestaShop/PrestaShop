@@ -32,5 +32,5 @@ interface SearchPanelInterface
 
     public function getButtonLabel(): string;
 
-    public function buildLink(): string;
+    public function getLink(): string;
 }

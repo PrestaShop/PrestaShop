@@ -486,24 +486,11 @@ class AdminSearchControllerCore extends AdminController
         // Build native search panels
         $searchPanels = [];
         $searchPanels[] = new SearchPanel(
-            $this->trans('Search doc.prestashop.com', [], 'Admin.Navigation.Search'),
+            $this->trans('Search docs.prestashop-project.org', [], 'Admin.Navigation.Search'),
             $this->trans('Go to the documentation', [], 'Admin.Navigation.Search'),
-            'https://doc.prestashop.com/dosearchsite.action',
+            'https://docs.prestashop-project.org/welcome/',
             [
-                'spaceSearch' => 'true',
-                'queryString' => $searchedExpression,
-                'utm_source' => 'back-office',
-                'utm_medium' => 'search',
-                'utm_campaign' => 'back-office-{$lang_iso|upper}',
-                'utm_content' => 'download',
-            ]
-        );
-        $searchPanels[] = new SearchPanel(
-            $this->trans('Search prestashop.com forum', [], 'Admin.Navigation.Search'),
-            $this->trans('Go to the Forum', [], 'Admin.Navigation.Search'),
-            'https://www.google.fr/search',
-            [
-                'q' => sprintf('site:prestashop.com/forums/ %s', $searchedExpression),
+                'q' => $searchedExpression,
             ]
         );
 
@@ -511,6 +498,7 @@ class AdminSearchControllerCore extends AdminController
         $alternativeSearchPanelsFromModules = Hook::exec(
             'actionGetAlternativeSearchPanels',
             [
+                'previous_search_panels' => $searchPanels,
                 'bo_query' => $searchedExpression,
             ],
             null,
@@ -531,7 +519,7 @@ class AdminSearchControllerCore extends AdminController
             $this->tpl_view_vars['searchPanels'][] = [
                 'title' => $searchPanel->getTitle(),
                 'button_label' => $searchPanel->getButtonLabel(),
-                'link' => $searchPanel->buildLink(),
+                'link' => $searchPanel->getLink(),
             ];
         }
     }

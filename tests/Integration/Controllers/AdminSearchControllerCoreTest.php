@@ -67,7 +67,13 @@ class AdminSearchControllerCoreTest extends TestCase
                     'query' => '',
                     'show_toolbar' => true,
                     'nb_results' => 0,
-                    'alternativeSearchPanels' => [],
+                    'searchPanels' => [
+                        [
+                            'title' => 'Search docs.prestashop-project.org',
+                            'button_label' => 'Go to the documentation',
+                            'link' => 'https://docs.prestashop-project.org/welcome/?q=',
+                        ],
+                    ],
                 ],
             ],
             [
@@ -83,7 +89,13 @@ class AdminSearchControllerCoreTest extends TestCase
                             ],
                         ],
                     ],
-                    'alternativeSearchPanels' => [],
+                    'searchPanels' => [
+                        [
+                            'title' => 'Search docs.prestashop-project.org',
+                            'button_label' => 'Go to the documentation',
+                            'link' => 'https://docs.prestashop-project.org/welcome/?q=orders',
+                        ],
+                    ],
                 ],
             ],
         ];

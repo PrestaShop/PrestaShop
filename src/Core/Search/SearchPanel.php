@@ -72,7 +72,7 @@ class SearchPanel implements SearchPanelInterface
         return $this->buttonLabel;
     }
 
-    public function buildLink(): string
+    public function getLink(): string
     {
         return sprintf('%s?%s', $this->link, http_build_query($this->queryParams));
     }
