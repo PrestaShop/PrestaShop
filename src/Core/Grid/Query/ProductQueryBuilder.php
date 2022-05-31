@@ -259,27 +259,26 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
             if ('active' === $filterName) {
                 $qb->andWhere('ps.`active` = :active');
                 $qb->setParameter('active', $filter);
-
-                continue;
             }
 
             if ('name' === $filterName) {
                 $qb->andWhere('pl.`name` LIKE :name');
                 $qb->setParameter('name', '%' . $filter . '%');
-
-                continue;
             }
 
             if ('reference' === $filterName) {
                 $qb->andWhere('p.`reference` LIKE :reference');
                 $qb->setParameter('reference', '%' . $filter . '%');
-
-                continue;
             }
 
             if ('category' === $filterName) {
                 $qb->andWhere('cl.`name` LIKE :category');
                 $qb->setParameter('category', '%' . $filter . '%');
+            }
+
+            if ('position' === $filterName) {
+                $qb->andWhere('pc.`position` = :position');
+                $qb->setParameter('position', $filter);
             }
         }
 
