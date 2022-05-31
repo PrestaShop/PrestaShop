@@ -164,7 +164,10 @@ class Context implements MultistoreContextCheckerInterface, ShopContextInterface
     public function setAllContext($id = null)
     {
         if (null !== $id) {
-            trigger_error('id param is deprecated since 8.x', E_USER_DEPRECATED);
+            @trigger_error(
+                'The parameter $id is deprecated since version 8.0.0 and will be removed in the next major version.',
+                E_USER_DEPRECATED
+            );
         }
         Shop::setContext(Shop::CONTEXT_ALL);
     }
