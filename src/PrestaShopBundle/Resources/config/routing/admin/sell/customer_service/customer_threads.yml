@@ -4,9 +4,13 @@ admin_customer_threads_view:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\CustomerThreadController::viewAction
     _legacy_controller: AdminCustomerThreads
-  #  _legacy_link: AdminCustomerThreads
+    _legacy_parameters:
+      id_customer_thread: customerThreadId
+    _legacy_link: AdminCustomerThreads:viewcustomer_thread
   requirements:
     customerThreadId: \d+
+  options:
+    expose: true
 
 admin_customer_threads_reply:
   path: /{customerThreadId}/reply
