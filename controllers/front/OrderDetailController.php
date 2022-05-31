@@ -49,7 +49,7 @@ class OrderDetailControllerCore extends FrontController
 
             if (!$idOrder || !Validate::isUnsignedId($idOrder)) {
                 $this->errors[] = $this->trans('The order is no longer valid.', [], 'Shop.Notifications.Error');
-            } elseif (empty($msgText)) {
+            } elseif (empty(trim($msgText))) {
                 $this->errors[] = $this->trans('The message cannot be blank.', [], 'Shop.Notifications.Error');
             } elseif (!Validate::isMessage($msgText)) {
                 $this->errors[] = $this->trans('This message is invalid (HTML is not allowed).', [], 'Shop.Notifications.Error');
