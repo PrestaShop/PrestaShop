@@ -112,6 +112,13 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
             ->addSelect('pc.`position`, pc.`id_category`')
         ;
 
+        // When ecotax is enabled the real final price is the sum of price and ecotax so we fetch an extra alias column that is used for sorting
+        if ($this->configuration->getBoolean('PS_USE_ECOTAX')) {
+            $qb->addSelect('(ps.`price` + ps.`ecotax`) AS `final_price_tax_excluded`');
+        } else {
+            $qb->addSelect('(ps.`price` + ps.`ecotax`) AS `final_price_tax_excluded`');
+        }
+
         if ($this->configuration->getBoolean('PS_STOCK_MANAGEMENT')) {
             $qb->addSelect('sa.`quantity`');
         }
@@ -216,12 +223,22 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
                 'p.`id_product`',
                 SqlFilters::MIN_MAX
             )
-            ->addFilter(
-                'price_tax_excluded',
+        ;
+
+        // When ecotax is enabled the real final price is the sum of price and ecotax so the filters must be setup accordingly
+        if ($this->configuration->getBoolean('PS_USE_ECOTAX')) {
+            $sqlFilters->addFilter(
+                'final_price_tax_excluded',
+                '(ps.`price` + ps.`ecotax`)',
+                SqlFilters::MIN_MAX
+            );
+        } else {
+            $sqlFilters->addFilter(
+                'final_price_tax_excluded',
                 'ps.`price`',
                 SqlFilters::MIN_MAX
-            )
-        ;
+            );
+        }
 
         if ($isStockManagementEnabled) {
             $sqlFilters
