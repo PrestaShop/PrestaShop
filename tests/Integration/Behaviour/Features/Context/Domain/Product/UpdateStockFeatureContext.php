@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
+use Cache;
 use DateTime;
 use DateTimeImmutable;
 use Pack;
@@ -105,6 +106,9 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
                 sprintf('Not all provided data was handled in scenario. Unhandled: %s', var_export($unhandledData, true))
             );
             $this->getCommandBus()->handle($command);
+
+            // Clean the cache or legacy code won't return the right quantity in following steps
+            Cache::clean('StockAvailable::*');
         } catch (ProductException $e) {
             $this->setLastException($e);
         }
