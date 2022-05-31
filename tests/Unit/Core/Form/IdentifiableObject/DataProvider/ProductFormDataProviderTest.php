@@ -409,7 +409,7 @@ class ProductFormDataProviderTest extends TestCase
             'low_stock_threshold' => 5,
             'low_stock_alert' => true,
             'pack_stock_type' => PackStockType::STOCK_TYPE_PACK_ONLY,
-            'out_of_stock' => OutOfStockType::OUT_OF_STOCK_AVAILABLE,
+            'out_of_stock_type' => OutOfStockType::OUT_OF_STOCK_AVAILABLE,
             'available_now' => $localizedValues,
             'available_later' => $localizedValues,
             'available_date' => new DateTime('1969/07/20'),
@@ -941,15 +941,18 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData = $this->getDefaultOutputData();
         $productData = [
             'type' => ProductType::TYPE_COMBINATIONS,
+            'out_of_stock_type' => OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE,
             'available_now' => $localizedValues,
             'available_later' => $localizedValues,
         ];
 
         $expectedOutputData['header']['type'] = ProductType::TYPE_COMBINATIONS;
+        $expectedOutputData['combinations']['availability']['out_of_stock_type'] = OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE;
         $expectedOutputData['combinations']['availability']['available_now_label'] = $localizedValues;
         $expectedOutputData['combinations']['availability']['available_later_label'] = $localizedValues;
         $expectedOutputData['stock']['availability']['available_now_label'] = $localizedValues;
         $expectedOutputData['stock']['availability']['available_later_label'] = $localizedValues;
+        $expectedOutputData['stock']['availability']['out_of_stock_type'] = OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE;
 
         $datasets[] = [
             $productData,
@@ -1150,7 +1153,7 @@ class ProductFormDataProviderTest extends TestCase
     {
         return new ProductStockInformation(
             $product['pack_stock_type'] ?? PackStockType::STOCK_TYPE_DEFAULT,
-            $product['out_of_stock'] ?? OutOfStockType::OUT_OF_STOCK_DEFAULT,
+            $product['out_of_stock_type'] ?? OutOfStockType::OUT_OF_STOCK_DEFAULT,
             $product['quantity'] ?? self::DEFAULT_QUANTITY,
             $product['minimal_quantity'] ?? 0,
             $product['low_stock_threshold'] ?? 0,

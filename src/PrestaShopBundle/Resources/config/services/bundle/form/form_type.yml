@@ -1496,6 +1496,7 @@ services:
     public: true
     arguments:
       - '@prestashop.core.form.choice_provider.out_of_stock_type_choice_provider'
+      - '@router'
     tags:
       - { name: form.type }
 
@@ -1772,6 +1773,9 @@ services:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationAvailabilityType'
     parent: 'form.type.translatable.aware'
     public: true
+    arguments:
+      - '@prestashop.core.form.choice_provider.out_of_stock_type_choice_provider'
+      - '@router'
     tags:
       - { name: form.type }
 

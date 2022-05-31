@@ -153,6 +153,35 @@ class StockCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
+        // Handle out_of_stock_type for product with combinations
+        $command->setOutOfStockType(OutOfStockType::OUT_OF_STOCK_DEFAULT);
+        yield [
+            [
+                'header' => [
+                    'type' => ProductType::TYPE_COMBINATIONS,
+                ],
+                'combinations' => [
+                    'availability' => [
+                        'out_of_stock_type' => '2',
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getSingleShopCommand();
+        $command->setAvailableDate(new DateTimeImmutable('2022-10-10'));
+        yield [
+            [
+                'stock' => [
+                    'availability' => [
+                        'available_date' => '2022-10-10',
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
         $command = $this->getSingleShopCommand();
         $localizedNotes = [
             '1' => 'hello',
