@@ -83,7 +83,7 @@ class FeatureFlagController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
             'layoutHeaderToolbarBtn' => [],
-            'layoutTitle' => $this->trans('Experimental Features', 'Admin.Advparameters.Feature'),
+            'layoutTitle' => $this->trans('New & Experimental Features', 'Admin.Advparameters.Feature'),
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'stableFeatureFlagsForm' => $stableFeatureFlagsForm->createView(),
