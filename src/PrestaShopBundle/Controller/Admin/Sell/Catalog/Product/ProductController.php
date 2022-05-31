@@ -152,7 +152,8 @@ class ProductController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_product_form', ['id' => $productId]);
         }
 
-        if (!$this->get('prestashop.adapter.shop.context')->isSingleShopContext()) {
+        if (!$this->get('prestashop.adapter.shop.context')->isSingleShopContext()
+            && $this->get('prestashop.core.admin.feature_flag.repository')->isDisabled(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2_MULTI_SHOP)) {
             return $this->renderDisableMultistorePage($productId);
         }
 
