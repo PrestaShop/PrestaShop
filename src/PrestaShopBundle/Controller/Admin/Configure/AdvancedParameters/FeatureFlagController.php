@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,7 +52,11 @@ class FeatureFlagController extends FrameworkBundleAdminController
         $stableFeatureFlagsForm->handleRequest($request);
 
         if ($stableFeatureFlagsForm->isSubmitted() && $stableFeatureFlagsForm->isValid()) {
-            $errors = $stableFormHandler->save($stableFeatureFlagsForm->getData());
+            try {
+                $errors = $stableFormHandler->save($stableFeatureFlagsForm->getData());
+            } catch (InvalidArgumentException $e) {
+                $errors[] = $e->getMessage();
+            }
 
             if (empty($errors)) {
                 $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
@@ -68,7 +73,11 @@ class FeatureFlagController extends FrameworkBundleAdminController
         $betaFeatureFlagsForm->handleRequest($request);
 
         if ($betaFeatureFlagsForm->isSubmitted() && $betaFeatureFlagsForm->isValid()) {
-            $errors = $betaFormHandler->save($betaFeatureFlagsForm->getData());
+            try {
+                $errors = $betaFormHandler->save($betaFeatureFlagsForm->getData());
+            } catch (InvalidArgumentException $e) {
+                $errors[] = $e->getMessage();
+            }
 
             if (empty($errors)) {
                 $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
