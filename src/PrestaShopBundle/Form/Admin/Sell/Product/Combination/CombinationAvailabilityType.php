@@ -54,6 +54,7 @@ class CombinationAvailabilityType extends TranslatorAwareType
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param FormChoiceProviderInterface $outOfStockTypeChoiceProvider
+     * @param RouterInterface $router
      */
     public function __construct(
         TranslatorInterface $translator,
