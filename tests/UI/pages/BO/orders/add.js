@@ -23,6 +23,7 @@ class AddOrder extends BOBasePage {
     this.cartRuleAlreadyExistErrorText = 'This voucher is already in your cart';
     this.noVoucherFoudErrorMessage = 'No voucher was found';
     this.voucherDisabledErrorMessage = 'This voucher is disabled';
+    this.emailSendSuccessMessage = 'The email was sent to your customer.';
 
     // Iframe
     this.iframe = 'iframe.fancybox-iframe';
@@ -134,9 +135,14 @@ class AddOrder extends BOBasePage {
     this.totalTaxesProduct = `${this.summaryBlock} .js-total-taxes`;
     this.totalTaxExcProduct = `${this.summaryBlock} .js-total-without-tax`;
     this.totalTaxIncProduct = `${this.summaryBlock} div:nth-child(6)`;
+    this.orderMessageTextArea = '#cart_summary_order_message';
     this.paymentMethodSelect = '#cart_summary_payment_module';
     this.orderStatusSelect = '#cart_summary_order_state';
     this.createOrderButton = '#create-order-button';
+    this.moreActionsDropDownButton = '#dropdown-menu-actions';
+    this.sendOrderMailButton = '#js-send-process-order-email-btn';
+    this.proceedOrderLink = '#js-process-order-link';
+    this.summarySuccessMessageBlock = '#js-summary-success-block';
     this.totalTaxIncluded = '#summary-block span.js-total-with-tax';
   }
 
@@ -873,6 +879,15 @@ class AddOrder extends BOBasePage {
   /* Summary methods */
 
   /**
+   * Is summary block visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async isSummaryBlockVisible(page) {
+    return this.elementVisible(page, this.summaryBlock, 2000);
+  }
+
+  /**
    * Get Total
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
@@ -898,6 +913,32 @@ class AddOrder extends BOBasePage {
     };
   }
 
+  /**
+   * Set order message
+   * @param page {Page} Browser tab
+   * @param message {string} Message text to set
+   * @returns {Promise<void>}
+   */
+  async setOrderMessage(page, message) {
+    await this.setValue(page, this.orderMessageTextArea, message);
+  }
+
+  /**
+   * Set more actions
+   * @param page {Page} Browser tab
+   * @param action {string} Action to select
+   * @returns {Promise<Page|string>}
+   */
+  // eslint-disable-next-line consistent-return
+  async setMoreActions(page, action) {
+    await this.waitForSelectorAndClick(page, this.moreActionsDropDownButton);
+    if (action === 'pre-filled order') {
+      await this.waitForSelectorAndClick(page, this.sendOrderMailButton);
+
+      return this.getTextContent(page, this.summarySuccessMessageBlock);
+    }
+    return this.openLinkWithTargetBlank(page, this.proceedOrderLink, 'body a');
+  }
 
   /**
    * Set payment method
@@ -922,10 +963,17 @@ class AddOrder extends BOBasePage {
   /**
    * Click on create order button
    * @param page {Page} Browser tab
-   * @returns {Promise<void>}
+   * @param waitForNavigation {boolean} True if we need save and waitForNavigation, false if not
+   * @returns {Promise<boolean>}
    */
-  async clickOnCreateOrderButton(page) {
-    await this.clickAndWaitForNavigation(page, this.createOrderButton);
+  async clickOnCreateOrderButton(page, waitForNavigation = true) {
+    if (waitForNavigation) {
+      await this.clickAndWaitForNavigation(page, this.createOrderButton);
+    } else {
+      await this.waitForSelectorAndClick(page, this.createOrderButton);
+    }
+
+    return this.elementNotVisible(page, this.createOrderButton, 2000);
   }
 
   /**
