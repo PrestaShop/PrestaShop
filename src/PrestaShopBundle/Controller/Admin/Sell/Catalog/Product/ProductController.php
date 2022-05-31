@@ -113,7 +113,9 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request): Response
     {
-        if (!$this->get('prestashop.adapter.shop.context')->isSingleShopContext()) {
+        if (!$this->get('prestashop.adapter.shop.context')->isSingleShopContext()
+            && $this->get('prestashop.core.admin.feature_flag.repository')->isDisabled(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2_MULTI_SHOP)
+        ) {
             return $this->renderDisableMultistorePage();
         }
 
