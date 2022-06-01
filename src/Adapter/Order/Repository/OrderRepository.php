@@ -37,7 +37,6 @@ use PrestaShopException;
 
 class OrderRepository extends AbstractObjectModelRepository
 {
-
     /**
      * Gets legacy Order
      *
