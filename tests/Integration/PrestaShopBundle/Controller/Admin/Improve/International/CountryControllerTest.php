@@ -50,32 +50,27 @@ class CountryControllerTest extends FormGridControllerTestCase
      */
     public function testCreate(int $initialEntityCount): int
     {
-        // First create address
+        // First create country
         $formData = [
-            ['country[name]' => 'createName'],
-            ['country[iso_code]' => 'TE'],
-            ['country[call_prefix]' => 123],
-            ['country[default_currency]' => 1],
-            ['country[zone]' => 1],
-            ['country[need_zip_code]' => 0],
-            ['country[need_zip_code]' => '12NNNLL'],
-            ['country[address_format]' => ''], //todo: add when address format will be implemented
-            ['country[active]' => 1],
-            ['country[contains_states]' => 0],
-            ['country[need_identification_number]' => 0],
-            ['country[display_tax_label]' => 1],
+            'country[name][1]' => 'createName',
+            'country[iso_code]' => 'TE',
+            'country[call_prefix]' => 123,
+            'country[default_currency]' => 1,
+            'country[zone]' => 1,
+            'country[need_zip_code]' => '1',
+            'country[zip_code_format]' => '12NNNLL',
+            'country[address_format]' => 'todo', //todo: add when address format will be implemented
+            'country[is_enabled]' => 1,
+            'country[contains_states]' => 0,
+            'country[need_identification_number]' => 0,
+            'country[display_tax_label]' => 1,
         ];
         $countryId = $this->createEntityFromPage($formData);
 
-        // Check that there is one more address in the list
+        // Check that there is one more country in the list
         $newCountry = $this->getEntitiesFromGrid();
         $this->assertCount($initialEntityCount + 1, $newCountry);
         $this->assertCollectionContainsEntity($newCountry, $countryId);
-
-        $this->assertFormValuesFromPage(
-            ['addressId' => $countryId],
-            $formData
-        );
 
         return $countryId;
     }
@@ -116,61 +111,87 @@ class CountryControllerTest extends FormGridControllerTestCase
         return $countryId;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected function generateCreateUrl(): string
     {
         // TODO: Implement generateCreateUrl() method.
-        return 'Not implemented yet';
+        return $this->router->generate('admin_countries_create');
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected function getCreateSubmitButtonSelector(): string
     {
-        // TODO: Implement getCreateSubmitButtonSelector() method.
-        return 'Not implemented yet';
+        return 'save-button';
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected function getFormHandlerChecker(): FormHandlerChecker
     {
         // TODO: Implement getFormHandlerChecker() method.
         /** @var FormHandlerChecker $checker */
-        $checker = $this->client->getContainer()->get('prestashop.core.form.identifiable_object.country_form_handler');
+        $checker = $this->client->getContainer()->get('prestashop.core.form.identifiable_object.handler.country_form_handler');
 
         return $checker;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected function generateEditUrl(array $routeParams): string
     {
         // TODO: Implement generateEditUrl() method.
         return 'Not implemented yet';
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected function getEditSubmitButtonSelector(): string
     {
         // TODO: Implement getEditSubmitButtonSelector() method.
         return 'Not implemented yet';
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected function getFilterSearchButtonSelector(): string
     {
         return 'country[actions][search]';
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected function generateGridUrl(array $routeParams = []): string
     {
         if (empty($routeParams)) {
             $routeParams = [
                 'country[offset]' => 0,
-                'country[limit]' => 100,
+                'country[limit]' => 1000,
             ];
         }
 
         return $this->router->generate('admin_countries_index', $routeParams);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected function getGridSelector(): string
     {
         return '#country_grid_table';
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected function parseEntityFromRow(Crawler $tr, int $i): TestEntityDTO
     {
         return new TestEntityDTO(
