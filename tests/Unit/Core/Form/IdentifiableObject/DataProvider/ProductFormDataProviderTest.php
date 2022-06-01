@@ -120,7 +120,8 @@ class ProductFormDataProviderTest extends TestCase
             $configurationMock,
             self::CONTEXT_LANG_ID,
             self::DEFAULT_SHOP_ID,
-            null
+            null,
+            $this->getDefaultTranslatorMock()
         );
 
         $formData = $provider->getData(self::PRODUCT_ID);
@@ -132,7 +133,8 @@ class ProductFormDataProviderTest extends TestCase
             $configurationMock,
             self::CONTEXT_LANG_ID,
             self::DEFAULT_SHOP_ID,
-            $contextShopId
+            $contextShopId,
+            $this->getDefaultTranslatorMock()
         );
 
         $formData = $provider->getData(self::PRODUCT_ID);
@@ -1677,18 +1679,13 @@ class ProductFormDataProviderTest extends TestCase
      */
     private function buildProvider(CommandBusInterface $queryBusMock): ProductFormDataProvider
     {
-        $translatorMock = $this->createMock(TranslatorInterface::class);
-        $translatorMock
-            ->method('trans')
-            ->willReturnArgument(0)
-        ;
-
         return new ProductFormDataProvider(
             $queryBusMock,
             $this->getDefaultConfigurationMock(),
             self::CONTEXT_LANG_ID,
             self::DEFAULT_SHOP_ID,
-            $translatorMock
+            null,
+            $this->getDefaultTranslatorMock()
         );
     }
 
@@ -1704,5 +1701,19 @@ class ProductFormDataProviderTest extends TestCase
         ]);
 
         return $configurationMock;
+    }
+
+    /**
+     * @return TranslatorInterface
+     */
+    private function getDefaultTranslatorMock(): TranslatorInterface
+    {
+        $translatorMock = $this->createMock(TranslatorInterface::class);
+        $translatorMock
+            ->method('trans')
+            ->willReturnArgument(0)
+        ;
+
+        return $translatorMock;
     }
 }

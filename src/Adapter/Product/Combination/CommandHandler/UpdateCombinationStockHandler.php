@@ -87,7 +87,7 @@ final class UpdateCombinationStockHandler implements UpdateCombinationStockHandl
 
             $stockModification = new StockModification(
                 $deltaQuantity,
-                $this->movementReasonRepository->getIdForEmployeeEdition($deltaQuantity > 0)
+                $this->movementReasonRepository->getEmployeeEditionReasonId($deltaQuantity > 0)
             );
         }
 

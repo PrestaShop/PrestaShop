@@ -103,10 +103,10 @@ class ProductFormDataProvider implements FormDataProviderInterface
         TranslatorInterface $translator
     ) {
         $this->queryBus = $queryBus;
+        $this->configuration = $configuration;
         $this->contextLangId = $contextLangId;
         $this->defaultShopId = $defaultShopId;
         $this->contextShopId = $contextShopId;
-        $this->configuration = $configuration;
         $this->translator = $translator;
     }
 

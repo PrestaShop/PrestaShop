@@ -158,7 +158,7 @@ class ProductStockUpdater
                 continue;
             }
 
-            $employeeEditionReasonId = $this->movementReasonRepository->getIdForEmployeeEdition($stockAvailable->quantity > 0);
+            $employeeEditionReasonId = $this->movementReasonRepository->getEmployeeEditionReasonId($stockAvailable->quantity > 0);
             $stockModification = new StockModification(-$stockAvailable->quantity, $employeeEditionReasonId);
 
             // Update product

@@ -323,13 +323,13 @@ class StockAvailableMultiShopRepository extends AbstractMultiShopObjectModelRepo
         ;
 
         $result = $qb->execute()->fetchAssociative();
-        $reservedQuantity = (int) $result['reserved_quantity'] ?? 0;
+        $reservedQuantity = (int) ($result['reserved_quantity'] ?: 0);
 
         if ($reservedQuantity > 0) {
             $updateQb = $this->connection->createQueryBuilder();
             $updateQb
                 ->update($this->dbPrefix . 'stock_available', 'sa')
-                ->set('reserved_quantity', $reservedQuantity)
+                ->set('reserved_quantity', (string) $reservedQuantity)
                 ->where('sa.id_stock_available = :stockId')
                 ->setParameter('stockId', $stockId->getValue())
             ;
