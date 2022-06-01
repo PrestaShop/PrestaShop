@@ -303,8 +303,3 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\GenderChoiceProvider'
     arguments:
       - '@translator'
-
-  prestashop.core.form.choice_provider.zone_choice_provider:
-    class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\ZoneByIdChoiceProvider'
-    arguments:
-      - '@translator'

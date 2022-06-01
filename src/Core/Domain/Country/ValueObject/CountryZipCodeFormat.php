@@ -42,7 +42,7 @@ class CountryZipCodeFormat
     const ZIP_CODE_PATTERN = '/^[NLCnlc 0-9-]+$/';
 
     /** @var string */
-    private $zipCodeFormat;
+    protected $zipCodeFormat;
 
     public function __construct(string $zipCodeFormat)
     {
@@ -60,7 +60,7 @@ class CountryZipCodeFormat
      *
      * @throws CountryConstraintException
      */
-    private function assertIsValidZipCodeFormat(string $zipCodeFormat): void
+    protected function assertIsValidZipCodeFormat(string $zipCodeFormat): void
     {
         if (!preg_match(self::ZIP_CODE_PATTERN, $zipCodeFormat)) {
             throw new CountryConstraintException(

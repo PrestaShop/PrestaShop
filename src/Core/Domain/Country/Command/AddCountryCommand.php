@@ -38,43 +38,43 @@ use Tools;
 class AddCountryCommand
 {
     /** @var string[] */
-    private $localizedNames;
+    protected $localizedNames;
 
     /** @var string */
-    private $isoCode;
+    protected $isoCode;
 
     /** @var int */
-    private $callPrefix;
+    protected $callPrefix;
 
     /** @var int */
-    private $defaultCurrency = 0;
+    protected $defaultCurrency = 0;
 
     /**@var int|null */
-    private $zoneId;
+    protected $zoneId;
 
     /** @var bool */
-    private $needZipCode = false;
+    protected $needZipCode = false;
 
     /** @var CountryZipCodeFormat|null */
-    private $zipCodeFormat;
+    protected $zipCodeFormat;
 
     /** @var string */
-    private $addressFormat;
+    protected $addressFormat;
 
     /** @var bool */
-    private $enabled = false;
+    protected $enabled = false;
 
     /** @var bool */
-    private $containsStates = false;
+    protected $containsStates = false;
 
     /** @var bool */
-    private $needIdNumber = false;
+    protected $needIdNumber = false;
 
     /** @var bool */
-    private $displayTaxLabel = false;
+    protected $displayTaxLabel = false;
 
     /** @var array */
-    private $shopAssociation = [];
+    protected $shopAssociation = [];
 
     public function __construct(
         array $localizedNames,
@@ -111,14 +111,7 @@ class AddCountryCommand
         return $this->zipCodeFormat;
     }
 
-    /**
-     * @param string $zipCodeFormat
-     *
-     * @return AddCountryCommand
-     *
-     * @throws CountryConstraintException
-     */
-    public function setZipCodeFormat(string $zipCodeFormat): AddCountryCommand
+    public function setZipCodeFormat(string $zipCodeFormat): self
     {
         $this->zipCodeFormat = new CountryZipCodeFormat($zipCodeFormat);
 

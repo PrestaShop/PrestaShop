@@ -44,7 +44,7 @@ class AbstractCountryHandler
      * @throws CountryConstraintException
      * @throws PrestaShopException
      */
-    protected function validateCountryFields(Country $country)
+    protected function validateCountryFields(Country $country): void
     {
         if (!$country->validateFields(false) || !$country->validateFieldsLang(false)) {
             throw new CountryConstraintException('Country contains invalid field values');
