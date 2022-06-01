@@ -26,6 +26,14 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\CustomerService;
 
+use Exception;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\MissingOrderReturnRequiredFieldsException;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnOrderStateConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\UpdateOrderReturnException;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderReturnForEditing;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\EditableOrderReturn;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\MerchandiseReturnFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -77,6 +85,95 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
             'merchandiseReturnsGrid' => $this->presentGrid($gridFactory->getGrid($filters)),
             'merchandiseReturnsOptionsForm' => $optionsForm->createView(),
         ]);
+    }
+
+    /**
+     * Edit existing order return
+     *
+     * @AdminSecurity(
+     *     "is_granted(['update'], request.get('_legacy_controller'))",
+     *     redirectRoute="admin_merchandise_returns_index"
+     * )
+     *
+     * @param int $orderReturnId
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function editAction(int $orderReturnId, Request $request): Response
+    {
+        $formBuilder = $this->get('prestashop.core.form.identifiable_object.builder.order_return_form_builder');
+        $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.order_return_form_handler');
+
+        try {
+            /** @var EditableOrderReturn $editableOrderReturn */
+            $editableOrderReturn = $this->getQueryBus()->handle(
+                new GetOrderReturnForEditing(
+                    $orderReturnId
+                )
+            );
+
+            $form = $formBuilder->getFormFor($orderReturnId);
+            $form->handleRequest($request);
+
+            $result = $formHandler->handleFor($orderReturnId, $form);
+
+            if ($result->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_merchandise_returns_index');
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
+
+            return $this->redirectToRoute('admin_merchandise_returns_index');
+        }
+
+        $legacyContext = $this->get('prestashop.adapter.legacy.context');
+
+        return $this->render('@PrestaShop/Admin/Sell/CustomerService/OrderReturn/edit.html.twig', [
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'enableSidebar' => true,
+            'layoutTitle' => sprintf($this->trans('Return Merchandise Authorization (RMA)', 'Admin.Orderscustomers.Feature')),
+            'orderReturnForm' => $form->createView(),
+            'editableOrderReturn' => $editableOrderReturn,
+            'dateFormat' => $legacyContext->getLanguage()->date_format_lite,
+        ]);
+    }
+
+    /**
+     * Provides error messages for exceptions
+     *
+     * @return array
+     */
+    private function getErrorMessages(Exception $e = null): array
+    {
+        return [
+            OrderReturnConstraintException::class => [
+                OrderReturnConstraintException::INVALID_ID => $this->trans(
+                    'The object cannot be loaded (the identifier is missing or invalid)',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+            MissingOrderReturnRequiredFieldsException::class => $this->trans(
+                'Missing required fields for merchandise return.',
+                'Admin.Notifications.Error'
+            ),
+            OrderReturnNotFoundException::class => $this->trans(
+                'Merchandise return not found.',
+                'Admin.Notifications.Error'
+            ),
+            OrderReturnOrderStateConstraintException::class => [
+                OrderReturnOrderStateConstraintException::INVALID_ID => $this->trans(
+                    'The object cannot be loaded (the identifier is missing or invalid)',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+            UpdateOrderReturnException::class => $this->trans(
+                'An error occurred while trying to update merchandise return.',
+                'Admin.Notifications.Error'
+            ),
+        ];
     }
 
     /**

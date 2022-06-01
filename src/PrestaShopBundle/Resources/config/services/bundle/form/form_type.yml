@@ -1297,6 +1297,14 @@ services:
     tags:
       - { name: form.type }
 
+  form.type.order_return:
+    class: 'PrestaShopBundle\Form\Admin\Sell\CustomerService\MerchandiseReturn\OrderReturnType'
+    arguments:
+      - '@=service("prestashop.adapter.form.choice_provider.order_return_state").getChoices()'
+      - '@translator'
+    tags:
+      - { name: form.type }
+
   form.type.customer_address:
     class: 'PrestaShopBundle\Form\Admin\Sell\Address\CustomerAddressType'
     parent: 'form.type.translatable.aware'
