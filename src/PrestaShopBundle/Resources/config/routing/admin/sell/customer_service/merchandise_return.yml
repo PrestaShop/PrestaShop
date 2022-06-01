@@ -26,7 +26,7 @@ admin_merchandise_returns_filter:
 
 admin_order_returns_edit:
     path: /{orderReturnId}/edit
-    methods: [GET]
+    methods: [GET, POST]
     defaults:
         _controller: PrestaShopBundle\Controller\Admin\Sell\CustomerService\MerchandiseReturnController::editAction
         _legacy_controller: AdminReturn
