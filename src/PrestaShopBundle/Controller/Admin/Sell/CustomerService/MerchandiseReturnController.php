@@ -27,13 +27,12 @@
 namespace PrestaShopBundle\Controller\Admin\Sell\CustomerService;
 
 use Exception;
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\MissingOrderReturnRequiredFieldsException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnOrderStateConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\UpdateOrderReturnException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderReturnForEditing;
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\EditableOrderReturn;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\QueryResult\OrderReturnForEditing;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\MerchandiseReturnFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -106,8 +105,8 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
         $formHandler = $this->get('prestashop.core.form.identifiable_object.handler.order_return_form_handler');
 
         try {
-            /** @var EditableOrderReturn $editableOrderReturn */
-            $editableOrderReturn = $this->getQueryBus()->handle(
+            /** @var OrderReturnForEditing $orderReturnForEditing */
+            $orderReturnForEditing = $this->getQueryBus()->handle(
                 new GetOrderReturnForEditing(
                     $orderReturnId
                 )
@@ -136,7 +135,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'layoutTitle' => sprintf($this->trans('Return Merchandise Authorization (RMA)', 'Admin.Orderscustomers.Feature')),
             'orderReturnForm' => $form->createView(),
-            'editableOrderReturn' => $editableOrderReturn,
+            'orderReturnForEditing' => $orderReturnForEditing,
             'dateFormat' => $legacyContext->getLanguage()->date_format_lite,
         ]);
     }
@@ -155,10 +154,6 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error'
                 ),
             ],
-            MissingOrderReturnRequiredFieldsException::class => $this->trans(
-                'Missing required fields for merchandise return.',
-                'Admin.OrdersCustomers.Notification'
-            ),
             OrderReturnNotFoundException::class => $this->trans(
                 'Merchandise return not found.',
                 'Admin.Orderscustomers.Notification'

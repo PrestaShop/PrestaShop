@@ -30,13 +30,24 @@ namespace PrestaShop\PrestaShop\Adapter\OrderReturn\Repository;
 
 use OrderReturn;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Adapter\OrderReturn\Validator\OrderReturnValidator;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception\OrderReturnNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\ValueObject\OrderReturnId;
-use PrestaShopException;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
 class OrderReturnRepository extends AbstractObjectModelRepository
 {
+    /**
+     * @var OrderReturnValidator
+     */
+    private $validator;
+
+    public function __construct(OrderReturnValidator $validator)
+    {
+        $this->validator = $validator;
+    }
+
     /**
      * Gets legacy OrderReturn
      *
@@ -48,16 +59,23 @@ class OrderReturnRepository extends AbstractObjectModelRepository
      */
     public function get(OrderReturnId $orderReturnId): OrderReturn
     {
-        try {
-            $orderReturn = new OrderReturn($orderReturnId->getValue());
-        } catch (PrestaShopException $e) {
-            throw new OrderReturnException('Failed to create new order return', 0, $e);
-        }
-
-        if ($orderReturn->id !== $orderReturnId->getValue()) {
-            throw new OrderReturnNotFoundException($orderReturnId, sprintf('Merchandise return with id "%d" was not found.', $orderReturnId->getValue()));
-        }
+        /** @var OrderReturn $orderReturn */
+        $orderReturn = $this->getObjectModel($orderReturnId->getValue(), OrderReturn::class, OrderReturnNotFoundException::class);
 
         return $orderReturn;
+    }
+
+    /**
+     * @param OrderReturn $orderReturn
+     *
+     * @throws CoreException
+     */
+    public function update(OrderReturn $orderReturn): void
+    {
+        $this->validator->validate($orderReturn);
+        $this->updateObjectModel(
+            $orderReturn,
+            OrderReturnException::class
+        );
     }
 }

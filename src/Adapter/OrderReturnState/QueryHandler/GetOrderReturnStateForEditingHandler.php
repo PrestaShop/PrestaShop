@@ -31,7 +31,7 @@ use OrderReturnState;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Exception\OrderReturnStateNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Query\GetOrderReturnStateForEditing;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\QueryHandler\GetOrderReturnStateForEditingHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\QueryResult\EditableOrderReturnState;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\QueryResult\OrderReturnStateForEditing;
 
 /**
  * Handles command that gets orderReturnState for editing
@@ -52,7 +52,7 @@ final class GetOrderReturnStateForEditingHandler implements GetOrderReturnStateF
             throw new OrderReturnStateNotFoundException($orderReturnStateId, sprintf('OrderReturnState with id "%s" was not found', $orderReturnStateId->getValue()));
         }
 
-        return new EditableOrderReturnState(
+        return new OrderReturnStateForEditing(
             $orderReturnStateId,
             $orderReturnState->name,
             $orderReturnState->color

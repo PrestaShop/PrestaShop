@@ -26,39 +26,30 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\OrderReturn\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Customer\Repository;
 
-/**
- * Is thrown when some of the required fields are missing when saving order return
- */
-class MissingOrderReturnRequiredFieldsException extends OrderReturnException
+use Customer;
+use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
+
+class CustomerRepository extends AbstractObjectModelRepository
 {
     /**
-     * @var array
+     * Gets legacy Customer
+     *
+     * @param CustomerId $customerId
+     *
+     * @return Customer
+     *
+     * @throws CoreException
      */
-    private $missingFields;
-
-    /**
-     * @param array $missingFields
-     * @param string $message
-     * @param int $code
-     * @param \Exception|null $previous
-     */
-    public function __construct(
-        array $missingFields,
-        string $message = '',
-        int $code = 0,
-        $previous = null
-    ) {
-        parent::__construct($message, $code, $previous);
-        $this->missingFields = $missingFields;
-    }
-
-    /**
-     * @return array
-     */
-    public function getMissingFields(): array
+    public function get(CustomerId $customerId): Customer
     {
-        return $this->missingFields;
+        /** @var Customer $customer */
+        $customer = $this->getObjectModel($customerId->getValue(), Customer::class, CustomerNotFoundException::class);
+
+        return $customer;
     }
 }

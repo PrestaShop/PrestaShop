@@ -45,10 +45,12 @@ class UpdateOrderReturnStateHandler implements UpdateOrderReturnStateHandlerInte
      * @var OrderReturnRepository
      */
     private $orderReturnRepository;
+
     /**
      * @var OrderReturnStateRepository
      */
     private $orderReturnStateRepository;
+
     /**
      * @var OrderReturnValidator
      */
@@ -77,16 +79,11 @@ class UpdateOrderReturnStateHandler implements UpdateOrderReturnStateHandlerInte
     public function handle(UpdateOrderReturnStateCommand $command): void
     {
         $orderReturnId = $command->getOrderReturnId();
-
         $orderReturn = $this->orderReturnRepository->get($orderReturnId);
-
         $orderReturn = $this->updateOrderReturnWithCommandData($orderReturn, $command);
 
-        $this->validator->validateUpdate($orderReturn);
-
-        if (false === $orderReturn->update()) {
-            throw new OrderReturnException('Failed to update order return');
-        }
+        $this->validator->validate($orderReturn);
+        $this->orderReturnRepository->update($orderReturn);
     }
 
     /**
@@ -96,7 +93,6 @@ class UpdateOrderReturnStateHandler implements UpdateOrderReturnStateHandlerInte
      * @return OrderReturn
      *
      * @throws OrderReturnException
-     * @throws OrderReturnOrderStateConstraintException
      */
     private function updateOrderReturnWithCommandData(OrderReturn $orderReturn, UpdateOrderReturnStateCommand $command): OrderReturn
     {

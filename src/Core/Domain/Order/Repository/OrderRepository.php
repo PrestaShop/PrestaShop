@@ -26,47 +26,30 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
+namespace PrestaShop\PrestaShop\Core\Domain\Order\Repository;
 
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderReturnForEditing;
+use Order;
+use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
+use PrestaShop\PrestaShop\Core\Exception\CoreException;
 
-/**
- * Provides data for order return edit form
- */
-class OrderReturnFormDataProvider implements FormDataProviderInterface
+class OrderRepository extends AbstractObjectModelRepository
 {
     /**
-     * @var CommandBusInterface
+     * Gets legacy Order
+     *
+     * @param OrderId $orderId
+     *
+     * @return Order
+     *
+     * @throws CoreException
      */
-    private $queryBus;
-
-    /**
-     * @param CommandBusInterface $queryBus
-     */
-    public function __construct(
-        CommandBusInterface $queryBus
-    ) {
-        $this->queryBus = $queryBus;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getData($orderReturnId): array
+    public function get(OrderId $orderId): Order
     {
-        $orderReturnForEditing = $this->queryBus->handle(new GetOrderReturnForEditing($orderReturnId));
+        /** @var Order $order */
+        $order = $this->getObjectModel($orderId->getValue(), Order::class, OrderNotFoundException::class);
 
-        return [
-            'order_return_state' => $orderReturnForEditing->getOrderReturnStateId(),
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getDefaultData(): array
-    {
-        return [];
+        return $order;
     }
 }

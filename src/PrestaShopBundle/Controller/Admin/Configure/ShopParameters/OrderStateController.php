@@ -271,7 +271,7 @@ class OrderStateController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/OrderReturnStates/edit.html.twig', [
             'orderReturnStateForm' => $orderReturnStateForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
-            'editableOrderReturnState' => $this->getQueryBus()->handle(new GetOrderReturnStateForEditing((int) $orderReturnStateId)),
+            'orderReturnStateForEditing' => $this->getQueryBus()->handle(new GetOrderReturnStateForEditing((int) $orderReturnStateId)),
             'contextLangId' => $this->getContextLangId(),
         ]);
     }

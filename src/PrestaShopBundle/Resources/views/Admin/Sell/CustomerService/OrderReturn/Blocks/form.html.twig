@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  *#}
 
-{{ form_start(orderReturnForm, {action: path('admin_order_returns_update', {'orderReturnId': editableOrderReturn.orderReturnId})}) }}
+{{ form_start(orderReturnForm, {action: path('admin_order_returns_update', {'orderReturnId': orderReturnForEditing.orderReturnId})}) }}
 <div class="card">
   <h3 class="card-header">
     <i class="material-icons">person</i>
@@ -40,9 +40,9 @@
         </label>
 
         <div class="col-sm form-control-value">
-          <p>{{ editableOrderReturn.customerFullName }}</p>
+          <p>{{ orderReturnForEditing.customerFullName }}</p>
 
-          <a href="{{ path('admin_customers_view', {'customerId': editableOrderReturn.customerId }) }}" class="btn btn-outline-secondary">
+          <a href="{{ path('admin_customers_view', {'customerId': orderReturnForEditing.customerId }) }}" class="btn btn-outline-secondary">
             {{ 'View customer details'|trans({}, 'Admin.Actions') }}
           </a>
         </div>
@@ -54,9 +54,9 @@
         </label>
 
         <div class="col-sm form-control-value">
-          <p>#{{ editableOrderReturn.orderId }} {{ 'from'|trans({}, 'Admin.Global') }} {{ editableOrderReturn.orderDate.format(dateFormat) }}</p>
+          <p>#{{ orderReturnForEditing.orderId }} {{ 'from'|trans({}, 'Admin.Global') }} {{ orderReturnForEditing.orderDate.format(dateFormat) }}</p>
 
-          <a href="{{ path('admin_orders_view', {'orderId': editableOrderReturn.orderId }) }}" class="btn btn-outline-secondary">
+          <a href="{{ path('admin_orders_view', {'orderId': orderReturnForEditing.orderId }) }}" class="btn btn-outline-secondary">
             {{ 'View order details'|trans({}, 'Admin.Actions') }}
           </a>
         </div>
@@ -69,7 +69,7 @@
 
         <div class="col-sm form-control-value">
 {#          Raw needed to display values like < properly. Should be safe because OrderReturn object model has isCleanHtml validation#}
-          <p>{{ editableOrderReturn.question|raw }}</p>
+          <p>{{ orderReturnForEditing.question|raw }}</p>
         </div>
       </div>
 

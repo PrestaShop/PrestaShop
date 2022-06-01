@@ -28,14 +28,15 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\OrderReturn\QueryHandler;
 
-use Customer;
 use DateTime;
-use Order;
-use PrestaShop\PrestaShop\Adapter\OrderReturn\AbstractOrderReturnHandler;
 use PrestaShop\PrestaShop\Adapter\OrderReturn\Repository\OrderReturnRepository;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Repository\CustomerRepository;
+use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\CustomerId;
+use PrestaShop\PrestaShop\Core\Domain\Order\Repository\OrderRepository;
+use PrestaShop\PrestaShop\Core\Domain\Order\ValueObject\OrderId;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderReturnForEditing;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryHandler\GetOrderReturnForEditingHandlerInterface;
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\EditableOrderReturn;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\OrderReturnForEditing;
 
 /**
  * Handles query which gets order return for editing
@@ -47,22 +48,37 @@ class GetOrderReturnForEditingHandler implements GetOrderReturnForEditingHandler
      */
     private $orderReturnRepository;
 
-    public function __construct(OrderReturnRepository $orderReturnRepository)
-    {
+    /**
+     * @var CustomerRepository
+     */
+    private $customerRepository;
+
+    /**
+     * @var OrderRepository
+     */
+    private $orderRepository;
+
+    public function __construct(
+        OrderReturnRepository $orderReturnRepository,
+        CustomerRepository $customerRepository,
+        OrderRepository $orderRepository
+    ) {
         $this->orderReturnRepository = $orderReturnRepository;
+        $this->customerRepository = $customerRepository;
+        $this->orderRepository = $orderRepository;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function handle(GetOrderReturnForEditing $query): EditableOrderReturn
+    public function handle(GetOrderReturnForEditing $query): OrderReturnForEditing
     {
         $orderReturnId = $query->getOrderReturnId();
         $orderReturn = $this->orderReturnRepository->get($orderReturnId);
-        $customer = new Customer($orderReturn->id_customer);
-        $order = new Order($orderReturn->id_order);
+        $customer = $this->customerRepository->get(new CustomerId((int) $orderReturn->id_customer));
+        $order = $this->orderRepository->get(new OrderId((int) $orderReturn->id_order));
 
-        return new EditableOrderReturn(
+        return new OrderReturnForEditing(
             $orderReturnId->getValue(),
             (int) $orderReturn->id_customer,
             $customer->firstname,
