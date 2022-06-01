@@ -36,7 +36,7 @@ describe('BO - Customers - Outstanding : Help card on 03_outstanding page', asyn
     await helper.closeBrowserContext(browserContext);
   });
 
-  describe('BO - Customers - Outstanding : Help card on 03_outstanding page', async () => {
+  describe('BO - Customers - Outstanding : Help card on outstanding page', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
