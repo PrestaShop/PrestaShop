@@ -63,7 +63,7 @@ class OrderReturnFormDataProviderTest extends TestCase
      *
      * @return MockObject|CommandBusInterface
      */
-    private function createQueryBusMock(OrderReturnForEditing $orderReturnForEditing)
+    private function createQueryBusMock(OrderReturnForEditing $orderReturnForEditing): CommandBusInterface
     {
         $queryBusMock = $this->createMock(CommandBusInterface::class);
 
