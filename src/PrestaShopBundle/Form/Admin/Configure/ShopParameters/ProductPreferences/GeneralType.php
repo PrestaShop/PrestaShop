@@ -29,7 +29,6 @@ namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreference
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShopBundle\Form\Admin\Sell\Product\Pricing\SpecificPricePriorityType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -104,7 +103,7 @@ class GeneralType extends TranslatorAwareType
                 ),
                 'required' => false,
             ])
-            ->add('short_description_limit', TextWithUnitType::class, [
+            ->add('short_description_limit', IntegerType::class, [
                 'label' => $this->trans(
                     'Max size of product summary',
                     'Admin.Shopparameters.Feature'
