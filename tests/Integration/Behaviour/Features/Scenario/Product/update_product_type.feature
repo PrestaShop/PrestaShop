@@ -43,7 +43,7 @@ Feature: Add basic product from Back Office (BO)
     Then product "productCombinations" type should be combinations
     And product "productCombinations" should have following stock information:
       | quantity | 0 |
-    And product "productCombinations" last employees stock movements should be:
+    And product "productCombinations" last stock movements should be:
       | first_name | last_name | delta_quantity |
       | Puff       | Daddy     | -51            |
       | Puff       | Daddy     | 51             |
@@ -191,7 +191,7 @@ Feature: Add basic product from Back Office (BO)
       | low stock alert is enabled | false |
       | location                   |       |
       | available date             |       |
-    And combination "productCombinations3SWhite" last employees stock movements should be:
+    And combination "productCombinations3SWhite" last stock movements should be:
       | first_name | last_name | delta_quantity |
       | Puff       | Daddy     | 100            |
     And combination "productCombinations3SWhite" last stock movement increased by 100
@@ -205,7 +205,7 @@ Feature: Add basic product from Back Office (BO)
       | low stock alert is enabled | false |
       | location                   |       |
       | available date             |       |
-    And combination "productCombinations3SBlack" last employees stock movements should be:
+    And combination "productCombinations3SBlack" last stock movements should be:
       | first_name | last_name | delta_quantity |
       | Puff       | Daddy     | 50             |
     And combination "productCombinations3SBlack" last stock movement increased by 50
@@ -228,7 +228,7 @@ Feature: Add basic product from Back Office (BO)
       | low_stock_threshold | 0     |
       | low_stock_alert     | false |
       | available_date      |       |
-    And product "productCombinations3" last employees stock movements should be:
+    And product "productCombinations3" last stock movements should be:
       | first_name | last_name | delta_quantity |
       | Puff       | Daddy     | -150           |
     And product "productCombinations3" last stock movement decreased by 150
