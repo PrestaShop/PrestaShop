@@ -32,13 +32,11 @@ const CatalogPriceRuleMap = ProductMap.catalogPriceRule;
 export default class CatalogPriceRuleList {
   private router: Router;
 
-  eventEmitter: EventEmitter;
+  private eventEmitter: EventEmitter;
 
-  listContainer: HTMLElement
+  private listContainer: HTMLElement
 
-
-  constructor(
-  ) {
+  constructor() {
     this.listContainer = document.querySelector(CatalogPriceRuleMap.listContainer) as HTMLElement;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.router = new Router();
