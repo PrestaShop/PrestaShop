@@ -54,8 +54,6 @@ class Ps_Emailsubscription extends Module
                 1 => 'txt',
             ],
         ];
-
-        parent::__construct();
     }
 
     public function install()
