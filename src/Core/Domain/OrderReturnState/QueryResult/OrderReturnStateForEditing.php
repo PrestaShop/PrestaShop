@@ -23,30 +23,61 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace Tests\Unit\Core\Domain\OrderReturn\QueryResult;
+namespace PrestaShop\PrestaShop\Core\Domain\OrderReturnState\QueryResult;
 
-use DateTime;
-use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\EditableOrderReturn;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\ValueObject\OrderReturnStateId;
 
-class EditableOrderReturnTest extends TestCase
+/**
+ * Stores editable data for order return state
+ */
+class OrderReturnStateForEditing
 {
-    public function testGetCustomerFullName(): void
-    {
-        $editableOrderReturn = new EditableOrderReturn(
-            1,
-            1,
-            'John',
-            'Doe',
-            1,
-            new DateTime(),
-            1,
-            ''
-        );
+    /**
+     * @var OrderReturnStateId
+     */
+    private $orderReturnStateId;
+    /**
+     * @var array
+     */
+    private $localizedNames;
+    /**
+     * @var string
+     */
+    private $color;
 
-        $this->assertEquals('John Doe', $editableOrderReturn->getCustomerFullName());
+    public function __construct(
+        OrderReturnStateId $orderStateId,
+        array $name,
+        string $color
+    ) {
+        $this->orderReturnStateId = $orderStateId;
+        $this->localizedNames = $name;
+        $this->color = $color;
+    }
+
+    /**
+     * @return OrderReturnStateId
+     */
+    public function getOrderReturnStateId()
+    {
+        return $this->orderReturnStateId;
+    }
+
+    /**
+     * @return array
+     */
+    public function getLocalizedNames()
+    {
+        return $this->localizedNames;
+    }
+
+    /**
+     * @return string
+     */
+    public function getColor()
+    {
+        return $this->color;
     }
 }

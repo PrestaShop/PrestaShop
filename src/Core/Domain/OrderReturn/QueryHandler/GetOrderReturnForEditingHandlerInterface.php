@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderReturnForEditing;
-use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\EditableOrderReturn;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\OrderReturnForEditing;
 
 /**
  * Defines contract for GetOrderReturnForEditingHandler
@@ -37,7 +37,7 @@ interface GetOrderReturnForEditingHandlerInterface
     /**
      * @param GetOrderReturnForEditing $query
      *
-     * @return EditableOrderReturn
+     * @return OrderReturnForEditing
      */
-    public function handle(GetOrderReturnForEditing $query): EditableOrderReturn;
+    public function handle(GetOrderReturnForEditing $query): OrderReturnForEditing;
 }

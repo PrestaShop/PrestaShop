@@ -43,7 +43,7 @@ class UpdateOrderReturnStateCommand
     private $orderReturnId;
 
     /**
-     * @var OrderReturnStateId|null
+     * @var OrderReturnStateId
      */
     private $orderReturnStateId;
 
