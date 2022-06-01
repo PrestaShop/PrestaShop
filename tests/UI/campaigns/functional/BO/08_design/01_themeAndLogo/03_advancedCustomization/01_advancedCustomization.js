@@ -192,7 +192,7 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
     it('should use the child theme', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'useChildTheme', baseContext);
 
-      const successResult = await themeAndLogoPage.useThisTheme(page);
+      const successResult = await themeAndLogoPage.useTheme(page);
       await expect(successResult).to.be.equal(themeAndLogoPage.successfulUpdateMessage);
     });
 
@@ -222,14 +222,14 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
     it('should use the classic theme', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'useClassicTheme', baseContext);
 
-      const successResult = await themeAndLogoPage.useThisTheme(page);
+      const successResult = await themeAndLogoPage.useTheme(page);
       await expect(successResult).to.be.equal(themeAndLogoPage.successfulUpdateMessage);
     });
 
     it('should delete the child theme', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteChildTheme', baseContext);
 
-      const successResult = await themeAndLogoPage.deleteNotUsedTheme(page);
+      const successResult = await themeAndLogoPage.deleteTheme(page);
       await expect(successResult).to.be.equal(themeAndLogoPage.successfulDeleteMessage);
     });
   });

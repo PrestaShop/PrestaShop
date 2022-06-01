@@ -17,10 +17,10 @@ module.exports = class themeAndLogoBasePage extends BOBasePage {
     this.advancedCustomizationNavItemLink = '#subtab-AdminPsThemeCustoAdvanced';
     this.themeShopCard = '.card-header[data-role="theme-shop"]';
     this.cardInactiveTheme = '.card-body :nth-child(2) .theme-card[data-role="theme-card-container"]';
-    this.useTheme = '.action-button.js-display-use-theme-modal';
+    this.useThemeButton = '.action-button.js-display-use-theme-modal';
     this.useThemeModalDialog = '#use_theme_modal .modal-dialog';
     this.useThemeModalDialogYesButton = `${this.useThemeModalDialog} .js-submit-use-theme`;
-    this.deleteTheme = '.delete-button';
+    this.deleteThemeButton = '.delete-button';
     this.deleteThemeModalDialog = '#delete_theme_modal .modal-dialog';
     this.deleteThemeModalDialogYesButton = `${this.deleteThemeModalDialog} .js-submit-delete-theme`;
   }
@@ -40,10 +40,10 @@ module.exports = class themeAndLogoBasePage extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<String>}
    */
-  async useThisTheme(page) {
+  async useTheme(page) {
     await this.scrollTo(page, this.themeShopCard);
     await page.hover(this.cardInactiveTheme);
-    await this.waitForSelectorAndClick(page, this.useTheme);
+    await this.waitForSelectorAndClick(page, this.useThemeButton);
     await this.waitForSelectorAndClick(page, this.useThemeModalDialogYesButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -54,10 +54,10 @@ module.exports = class themeAndLogoBasePage extends BOBasePage {
    * @param page {Page} Browser tab
    * @returns {Promise<String>}
    */
-  async deleteNotUsedTheme(page) {
+  async deleteTheme(page) {
     await this.scrollTo(page, this.themeShopCard);
     await page.hover(this.cardInactiveTheme);
-    await this.waitForSelectorAndClick(page, this.deleteTheme);
+    await this.waitForSelectorAndClick(page, this.deleteThemeButton);
     await this.waitForSelectorAndClick(page, this.deleteThemeModalDialogYesButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
