@@ -382,12 +382,6 @@ export default {
     searchInput: '#product_stock_packed_products',
   },
   catalogPriceRule: {
-    container: '#catalog-price-rule-list-container',
-    modalTemplate: '#catalog-price-rule-modal-template',
-    modalContentId: 'catalog-price-rule-modal',
-    addSpecificPriceBtn: '.js-add-catalog-price-rule-btn',
-    formModal: '#catalog-price-rule-form-modal',
-    form: 'form[name="specific_price"]',
     listContainer: '#catalog-price-rule-list-container',
     listRowTemplate: '#catalog-price-rule-tr-template',
     listFields: {
@@ -403,10 +397,6 @@ export default {
       to: '.to',
       fromQuantity: '.from-qty',
       editBtn: '.js-edit-catalog-price-rule-btn',
-    },
-    priority: {
-      priorityListWrapper: '.catalog-price-rule-priority-list',
-      priorityTypeCheckboxesSelector: 'input[name="product[pricing][priority_management][use_custom_priority]"]',
     },
   },
 };
