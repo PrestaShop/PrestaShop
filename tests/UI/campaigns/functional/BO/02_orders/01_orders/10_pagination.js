@@ -51,7 +51,8 @@ Scenario:
  */
 describe('BO - Orders : Pagination of orders table', async () => {
   // Pre-condition: Create 6 orders in FO
-  for (let i = 1; i <= 6; i++) {
+  const orderNumber = 6;
+  for (let i = 1; i <= orderNumber; i++) {
     createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_${i}`);
   }
 
