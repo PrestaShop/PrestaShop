@@ -48,10 +48,36 @@ class CountryControllerTest extends FormGridControllerTestCase
      *
      * @param int $initialEntityCount
      */
-    public function testCreate(int $initialEntityCount): void
+    public function testCreate(int $initialEntityCount): int
     {
-        $this->markTestSkipped('Not implemented');
-        // TODO: Implement when create action is created
+        // First create address
+        $formData = [
+            ['country[name]' => 'createName'],
+            ['country[iso_code]' => 'TE'],
+            ['country[call_prefix]' => 123],
+            ['country[default_currency]' => 1],
+            ['country[zone]' => 1],
+            ['country[need_zip_code]' => 0],
+            ['country[need_zip_code]' => '12NNNLL'],
+            ['country[address_format]' => ''], //todo: add when address format will be implemented
+            ['country[active]' => 1],
+            ['country[contains_states]' => 0],
+            ['country[need_identification_number]' => 0],
+            ['country[display_tax_label]' => 1],
+        ];
+        $countryId = $this->createEntityFromPage($formData);
+
+        // Check that there is one more address in the list
+        $newCountry = $this->getEntitiesFromGrid();
+        $this->assertCount($initialEntityCount + 1, $newCountry);
+        $this->assertCollectionContainsEntity($newCountry, $countryId);
+
+        $this->assertFormValuesFromPage(
+            ['addressId' => $countryId],
+            $formData
+        );
+
+        return $countryId;
     }
 
     /**
