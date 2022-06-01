@@ -32,7 +32,7 @@ use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\ValueObject\OrderReturnSt
 /**
  * Stores editable data for order return state
  */
-class OrderReturnStateForEditing
+class EditableOrderReturnState
 {
     /**
      * @var OrderReturnStateId
