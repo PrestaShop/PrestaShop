@@ -67,7 +67,7 @@ Post-condition:
  */
 describe('BO - Orders - Create order : Choose address', async () => {
   // Pre-condition: Create new address
-  createAddressTest(newAddressToCreate, baseContext);
+  createAddressTest(newAddressToCreate, `${baseContext}_preTest_1`);
 
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -249,7 +249,7 @@ describe('BO - Orders - Create order : Choose address', async () => {
 
     describe('Check that the edited address is not changed in the first created order in BO', async () => {
       it('should go to \'Orders > Orders\' page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage2', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage3', baseContext);
 
         await dashboardPage.goToSubMenu(
           page,
@@ -397,7 +397,7 @@ describe('BO - Orders - Create order : Choose address', async () => {
 
     describe('Edit invoice address', async () => {
       it('should go to \'Orders > Orders\' page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage3', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage4', baseContext);
 
         await dashboardPage.goToSubMenu(
           page,
@@ -410,7 +410,7 @@ describe('BO - Orders - Create order : Choose address', async () => {
       });
 
       it('should go to create order page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToCreateOrderPage2', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'goToCreateOrderPage3', baseContext);
 
         await ordersPage.goToCreateOrderPage(page);
         const pageTitle = await addOrderPage.getPageTitle(page);
@@ -418,7 +418,7 @@ describe('BO - Orders - Create order : Choose address', async () => {
       });
 
       it(`should choose customer ${DefaultCustomer.firstName} ${DefaultCustomer.lastName}`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'chooseDefaultCustomer2', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'chooseDefaultCustomer3', baseContext);
 
         await addOrderPage.searchCustomer(page, DefaultCustomer.email);
 
@@ -437,14 +437,14 @@ describe('BO - Orders - Create order : Choose address', async () => {
       });
 
       it('should click on edit address and check if edit address iframe is visible', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'clickOnEditAddress', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'clickOnEditAddress2', baseContext);
 
         const isIframeVisible = await addOrderPage.clickOnEditInvoiceAddressButton(page);
         await expect(isIframeVisible, 'Edit address iframe is not visible!').to.be.true;
       });
 
       it('should edit the address and check it', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'editAddress', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'editAddress2', baseContext);
 
         editAddressIframe = await addOrderPage.getEditAddressIframe(page);
 
@@ -462,7 +462,7 @@ describe('BO - Orders - Create order : Choose address', async () => {
   // 4 - Add new address
   describe('Add new address', async () => {
     it('should click on add delivery address and check if add new address iframe is visible', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'clickOnEditAddress', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnEditAddress3', baseContext);
 
       const isIframeVisible = await addOrderPage.clickOnAddNewAddressButton(page);
       await expect(isIframeVisible, 'Add address iframe is not visible!').to.be.true;
@@ -494,5 +494,5 @@ describe('BO - Orders - Create order : Choose address', async () => {
   });
 
   // Post-condition: Bulk delete created addresses
-  bulkDeleteAddressesTest('lastname', 'test', baseContext);
+  bulkDeleteAddressesTest('lastname', 'test', `${baseContext}_postTest_1`);
 });
