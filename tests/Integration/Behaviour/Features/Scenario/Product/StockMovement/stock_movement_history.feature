@@ -105,26 +105,26 @@ Feature: Search stock movement history from Back Office (BO)
       | single | Puff       | Daddy     | 5              |
       | group  |            |           | -9             |
       | single | Puff       | Daddy     | 10             |
-      # Since no stock movement is generated until the order is shipped this group only has a quantity of -3,
+      # Since no stock movement is generated until the order is shipped this group only has a quantity of -2,
       # not -5 because second order is still waiting for payment
-      | group  |            |           | -3             |
+      | group  |            |           | -2             |
     When I search stock movement history of product "product1" with offset 0 and limit 6 I should get following results:
       | type   | first_name | last_name | delta_quantity |
       | group  |            |           | -6             |
       | single | Puff       | Daddy     | 5              |
       | group  |            |           | -9             |
       | single | Puff       | Daddy     | 10             |
-      | group  |            |           | -3             |
+      | group  |            |           | -2             |
       | single | Puff       | Daddy     | 100            |
     When I search stock movement history of product "product1" with offset 1 and limit 5 I should get following results:
       | type   | first_name | last_name | delta_quantity |
       | single | Puff       | Daddy     | 5              |
       | group  |            |           | -9             |
       | single | Puff       | Daddy     | 10             |
-      | group  |            |           | -3             |
+      | group  |            |           | -2             |
       | single | Puff       | Daddy     | 100            |
     When I search stock movement history of product "product1" with offset 2 and limit 3 I should get following results:
       | type   | first_name | last_name | delta_quantity |
       | group  |            |           | -9             |
       | single | Puff       | Daddy     | 10             |
-      | group  |            |           | -3             |
+      | group  |            |           | -2             |
