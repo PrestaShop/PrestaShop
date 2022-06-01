@@ -75,7 +75,7 @@ abstract class AbstractGetStockMovementHistoryHandler
 
         return array_map(
             function (array $historyRow): StockMovementHistory {
-                return (int) $historyRow['id_stock_mvt_count'] === 1
+                return $historyRow['grouping_type'] === 'single'
                     ? $this->createSingleStockMovementHistory($historyRow)
                     : $this->createGroupStockMovementHistory($historyRow)
                 ;
