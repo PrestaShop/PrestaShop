@@ -139,16 +139,16 @@
           <tbody>
           {% for productDetail in orderPreview.productDetails %}
             <tr class="{% if loop.index > productsPreviewLimit %}js-product-preview-more d-none{% endif %}">
-              <td class="p-1" data-role="product-name"><a class="px-0 external-link" href="{{ path('admin_product_form', {'id': productDetail.id}) }}" target="_blank">{{ productDetail.name }}</a></td>
-              <td class="p-1" data-role="product-reference">{{ productDetail.reference }}</td>
+              <td class="p-1"><a class="px-0 external-link" href="{{ path('admin_product_form', {'id': productDetail.id}) }}" target="_blank">{{ productDetail.name }}</a></td>
+              <td class="p-1">{{ productDetail.reference }}</td>
               <td class="p-1 js-cell-product-stock-location">
                 {% if productDetail.location is not empty %}{{ productDetail.location }}{% endif %}
               </td>
               {% if orderPreview.taxIncluded == false %}
                 <td class="p-1 text-center">{{ productDetail.totalTax }}</td>
               {% endif %}
-              <td class="p-1 text-center" data-role="product-quantity">{{ productDetail.quantity }}</td>
-              <td class="p-1 text-center" data-role="product-total">{{ productDetail.totalPrice }}</td>
+              <td class="p-1 text-center">{{ productDetail.quantity }}</td>
+              <td class="p-1 text-center">{{ productDetail.totalPrice }}</td>
             </tr>
           {% endfor %}
 
