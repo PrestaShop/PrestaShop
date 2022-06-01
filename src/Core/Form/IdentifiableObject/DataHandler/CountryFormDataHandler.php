@@ -35,12 +35,12 @@ use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 /**
  * Handles submitted zone form data.
  */
-final class CountryFormDataHandler implements FormDataHandlerInterface
+class CountryFormDataHandler implements FormDataHandlerInterface
 {
     /**
      * @var CommandBusInterface
      */
-    private $commandBus;
+    protected $commandBus;
 
     /**
      * @param CommandBusInterface $commandBus

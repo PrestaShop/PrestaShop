@@ -42,7 +42,7 @@ use PrestaShopException;
 /**
  * Handles creation of country and address format for it
  */
-final class AddCountryHandler extends AbstractCountryHandler implements AddCountryHandlerInterface
+class AddCountryHandler extends AbstractCountryHandler implements AddCountryHandlerInterface
 {
     /**
      * {@inheritdoc}
@@ -55,7 +55,7 @@ final class AddCountryHandler extends AbstractCountryHandler implements AddCount
     {
         try {
             $country = new Country();
-            
+
             $country->name = $command->getLocalizedNames();
             $country->iso_code = $command->getIsoCode();
             $country->call_prefix = $command->getCallPrefix();
@@ -69,7 +69,7 @@ final class AddCountryHandler extends AbstractCountryHandler implements AddCount
             if (null !== $command->getDefaultCurrency()) {
                 $country->id_currency = $command->getDefaultCurrency();
             }
-            
+
             if (null !== $command->getZoneId()) {
                 $country->id_zone = $command->getZoneId();
             }

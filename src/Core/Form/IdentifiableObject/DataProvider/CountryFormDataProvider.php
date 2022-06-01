@@ -35,22 +35,22 @@ use PrestaShop\PrestaShop\Core\Domain\Zone\QueryResult\EditableZone;
 /**
  * Provides data for zone add/edit form.
  */
-final class CountryFormDataProvider implements FormDataProviderInterface
+class CountryFormDataProvider implements FormDataProviderInterface
 {
     /**
      * @var CommandBusInterface
      */
-    private $queryBus;
+    protected $queryBus;
 
     /**
      * @var bool
      */
-    private $multistoreEnabled;
+    protected $multistoreEnabled;
 
     /**
      * @var int[]
      */
-    private $defaultShopAssociation;
+    protected $defaultShopAssociation;
 
     /**
      * @param CommandBusInterface $queryBus
@@ -72,9 +72,8 @@ final class CountryFormDataProvider implements FormDataProviderInterface
      */
     public function getData($id): array
     {
-        /**
-         * @var EditableZone
-         */
+
+        /** @var EditableZone $result */
         $result = $this->queryBus->handle(new GetZoneForEditing($id));
 
         $data = [

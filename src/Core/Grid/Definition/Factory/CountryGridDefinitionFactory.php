@@ -215,7 +215,7 @@ class CountryGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * @return RowActionCollection
      */
-    private function getRowActions(): RowActionCollection
+    protected function getRowActions(): RowActionCollection
     {
         $rowActionCollection = new RowActionCollection();
         $rowActionCollection

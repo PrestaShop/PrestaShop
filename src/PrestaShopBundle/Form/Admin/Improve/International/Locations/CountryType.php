@@ -31,6 +31,7 @@ namespace PrestaShopBundle\Form\Admin\Improve\International\Locations;
 use Currency;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\ShopChoiceTreeType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -46,27 +47,36 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class CountryType extends AbstractType
 {
-    /** @var TranslatorInterface */
-    private $translator;
-    /** @var bool */
-    private $isMultistoreEnabled;
-    /** @var FormChoiceProviderInterface */
-    private $currencyChoiceProvider;
-    /** @var FormChoiceProviderInterface */
-    private $zoneChoiceProvider;
+    /**
+     * @var TranslatorInterface
+     */
+    protected $translator;
+
+    /**
+     * @var bool
+     */
+    protected $isMultistoreEnabled;
+
+    /**
+     * @var FormChoiceProviderInterface
+     */
+    protected $currencyChoiceProvider;
+
+    /**
+     * @var ConfigurableFormChoiceProviderInterface
+     */
+    protected $zoneChoiceProvider;
 
     /**
      * ZoneType constructor.
-     *
-     * @param TranslatorInterface $translator
-     * @param bool $isMultistoreEnabled
      */
     public function __construct(
         TranslatorInterface $translator,
         bool $isMultistoreEnabled,
         FormChoiceProviderInterface $currencyChoiceProvider,
-        FormChoiceProviderInterface $zoneChoiceProvider
-    ) {
+        ConfigurableFormChoiceProviderInterface $zoneChoiceProvider
+    )
+    {
         $this->translator = $translator;
         $this->isMultistoreEnabled = $isMultistoreEnabled;
         $this->currencyChoiceProvider = $currencyChoiceProvider;
@@ -123,14 +133,20 @@ class CountryType extends AbstractType
             ])
             ->add('default_currency', ChoiceType::class, [
                 'required' => false,
-                'label' => $this->translator->trans('Default currency', [], 'Admin.Global'),
+                'label' => $this->translator->trans('Default currency', [], 'Admin.International.Feature'),
                 'choices' => $this->currencyChoiceProvider->getChoices(),
-                'placeholder' => $this->translator->trans('Default store currency', [], 'Admin.Global'),
+                'placeholder' => $this->translator->trans('Default store currency', [], 'Admin.International.Feature'),
             ])
             ->add('zone', ChoiceType::class, [
                 'required' => false,
                 'label' => $this->translator->trans('Zone', [], 'Admin.Global'),
-                'choices' => $this->zoneChoiceProvider->getChoices(),
+                'choices' => $this->zoneChoiceProvider->getChoices(
+                    [
+                        'active' => false,
+                        'active_first' => false,
+                    ]
+                ),
+                'placeholder' => false
             ])
             ->add('need_zip_code', SwitchType::class, [
                 'required' => false,
@@ -148,8 +164,8 @@ class CountryType extends AbstractType
             ])
             //todo : create address layout form
             ->add('address_format', TextType::class, [
-                'required' => true,
-                'label' => $this->translator->trans('Address layout', [], 'Admin.International.Feature'),
+                'required' => false,
+                'label' => $this->translator->trans('Address format', [], 'Admin.International.Feature'),
             ])
             ->add('is_enabled', SwitchType::class, [
                 'required' => false,
@@ -157,7 +173,7 @@ class CountryType extends AbstractType
             ])
             ->add('contains_states', SwitchType::class, [
                 'required' => false,
-                'label' => $this->translator->trans('Contains states', [], 'Admin.Global'),
+                'label' => $this->translator->trans('Contains states', [], 'Admin.International.Feature'),
             ])
             ->add('need_identification_number', SwitchType::class, [
                 'required' => false,

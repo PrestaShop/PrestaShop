@@ -131,6 +131,7 @@ class CountryController extends FrameworkBundleAdminController
 
 
     public function editAction(int $countryId, Request $request): Response
+    public function editAction(int $countryId, Request $request): void
     {
         //todo: complete edit action migration to symfony
         return $this->redirect(
@@ -145,6 +146,22 @@ class CountryController extends FrameworkBundleAdminController
             )
         );
     }
+
+    /**
+     * @return array
+     */
+    protected function getCountryToolbarButtons(): array
+    {
+        return [
+            'add' => [
+                'href' => $this->generateUrl('admin_countries_create'),
+                'desc' => $this->trans('Add new country', 'Admin.International.Feature'),
+                'icon' => 'add_circle_outline',
+            ],
+        ];
+    }
+
+
     /**
      * Returns country error messages mapping.
      *
@@ -152,9 +169,8 @@ class CountryController extends FrameworkBundleAdminController
      *
      * @return array
      */
-    private function getErrorMessages(Exception $e): array
+    protected function getErrorMessages(Exception $e): array
     {
-        return [
-        ];
+        return [];
     }
 }
