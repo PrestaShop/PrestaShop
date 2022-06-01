@@ -26,43 +26,42 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Core\Domain\Employee\ValueObject;
+namespace Tests\Unit\Core\Domain\FeatureValue\ValueObject;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidEmployeeIdException;
-use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
+use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\InvalidFeatureIdException;
+use PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject\FeatureId;
 
-class EmployeeIdTest extends TestCase
+class FeatureIdTest extends TestCase
 {
     /**
-     * @dataProvider getValidValues
+     * @dataProvider getValidInput
      */
-    public function testItCreatesEmployeeWithValidValues($employeId): void
+    public function testValidInput($featureValueId): void
     {
-        $employeeId = new EmployeeId($employeId);
-
-        $this->assertEquals($employeId, $employeeId->getValue());
+        $vo = new FeatureId($featureValueId);
+        $this->assertEquals($featureValueId, $vo->getValue());
     }
 
-    public function getValidValues(): iterable
+    public function getValidInput(): iterable
     {
         yield [0];
-        yield [1];
+        yield [42];
     }
 
     /**
-     * @dataProvider getInvalidValues
+     * @dataProvider getInvalidInput
      */
-    public function testItExceptionThrownWithInvalidValues($employeId): void
+    public function testInvalidInput($featureValueId): void
     {
-        $this->expectException(InvalidEmployeeIdException::class);
-        new EmployeeId($employeId);
+        $this->expectException(InvalidFeatureIdException::class);
+        new FeatureId($featureValueId);
     }
 
-    public function getInvalidValues(): iterable
+    public function getInvalidInput(): iterable
     {
-        yield ['-1'];
-        yield ['1.1'];
+        yield [-1];
+        yield [1.1];
         yield ['a'];
         yield ['+'];
     }

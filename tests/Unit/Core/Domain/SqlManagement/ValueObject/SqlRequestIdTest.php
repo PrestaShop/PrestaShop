@@ -26,44 +26,37 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Core\Domain\Employee\ValueObject;
+namespace Tests\Unit\Core\Domain\SqlManagement\ValueObject;
 
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Domain\Employee\Exception\InvalidEmployeeIdException;
-use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\Exception\SqlRequestException;
+use PrestaShop\PrestaShop\Core\Domain\SqlManagement\ValueObject\SqlRequestId;
 
-class EmployeeIdTest extends TestCase
+class SqlRequestIdTest extends TestCase
 {
-    /**
-     * @dataProvider getValidValues
-     */
-    public function testItCreatesEmployeeWithValidValues($employeId): void
+    public function testValidValues(): void
     {
-        $employeeId = new EmployeeId($employeId);
-
-        $this->assertEquals($employeId, $employeeId->getValue());
-    }
-
-    public function getValidValues(): iterable
-    {
-        yield [0];
-        yield [1];
+        $vo = new SqlRequestId(1);
+        $this->assertEquals(1, $vo->getValue());
     }
 
     /**
      * @dataProvider getInvalidValues
      */
-    public function testItExceptionThrownWithInvalidValues($employeId): void
+    public function testInvalidValues($sqlRequestId): void
     {
-        $this->expectException(InvalidEmployeeIdException::class);
-        new EmployeeId($employeId);
+        $this->expectException(SqlRequestException::class);
+        new SqlRequestId($sqlRequestId);
     }
 
     public function getInvalidValues(): iterable
     {
-        yield ['-1'];
-        yield ['1.1'];
-        yield ['a'];
-        yield ['+'];
+        return [
+            [0],
+            ['-1'],
+            ['1.1'],
+            ['a'],
+            ['+'],
+        ];
     }
 }
