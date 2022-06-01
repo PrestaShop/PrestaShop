@@ -297,7 +297,7 @@ class ProductStockUpdater
             $this->stockAvailableRepository->updatePhysicalProductQuantity(
                 new StockId((int) $stockAvailable->id),
                 new OrderStateId((int) $this->configuration->get('PS_OS_ERROR', null, ShopConstraint::shop((int) $stockAvailable->id_shop))),
-                new OrderStateId((int) $this->configuration->get('PS_OS_CANCELED', null, ShopConstraint::shop((int) $stockAvailable->id_shop))),
+                new OrderStateId((int) $this->configuration->get('PS_OS_CANCELED', null, ShopConstraint::shop((int) $stockAvailable->id_shop)))
             );
         }
     }
