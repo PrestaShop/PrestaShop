@@ -110,7 +110,7 @@ describe('BO - Advanced Parameters - Email : Filter, delete and bulk delete emai
     });
 
     it('should pay the order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'payTheOrder', baseContext);
 
       // Payment step - Choose payment step
       await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);

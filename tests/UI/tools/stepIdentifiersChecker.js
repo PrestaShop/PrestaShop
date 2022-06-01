@@ -35,16 +35,33 @@ const duplicates = dict => Object.keys(dict)
 const getAllTests = (jsonFile) => {
   // Parse json report
   const jsonReport = JSON.parse(jsonFile);
-
-  // Map all tests contexts
-  const testsInSuites = jsonReport.results[0].suites.map(suite => suite.tests);
+  const parentSuites = jsonReport.results[0].suites;
 
   let allTests = [];
-  for (let i = 0; i < testsInSuites.length - 1; i++) {
-    allTests = allTests.concat(testsInSuites[i]);
+
+  // eslint-disable-next-line no-restricted-syntax
+  for (const suite of parentSuites) {
+    allTests = allTests.concat(getTestsFromSuite(suite));
   }
 
   return allTests;
+};
+
+/**
+ * Get tests from suite and nested suites
+ * @param suite
+ * @returns {*[]}
+ */
+const getTestsFromSuite = (suite) => {
+  let tests = suite.tests || [];
+
+  const nestedSuites = suite.suites;
+
+  // eslint-disable-next-line no-restricted-syntax
+  for (const nestedSuite of nestedSuites) {
+    tests = tests.concat(getTestsFromSuite(nestedSuite));
+  }
+  return tests;
 };
 
 /**

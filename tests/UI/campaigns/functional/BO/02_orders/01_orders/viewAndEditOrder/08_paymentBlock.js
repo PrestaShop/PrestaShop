@@ -105,13 +105,13 @@ Post-condition
 
 describe('BO - Orders - View and edit order : Check payment Block', async () => {
   // Pre-condition: Create first order by default customer
-  createOrderByCustomerTest(orderByCustomerData, baseContext);
+  createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_1`);
 
   // Pre-condition: Create second order by default customer
-  createOrderByCustomerTest(orderByCustomerData, baseContext);
+  createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_2`);
 
   // Pre-condition: Create currency
-  createCurrencyTest(Currencies.mad, baseContext);
+  createCurrencyTest(Currencies.mad, `${baseContext}_preTest_3`);
 
   // before and after functions
   before(async function () {
@@ -174,7 +174,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
   // 2 - Add payment inferior to the total
   describe('Add payment inferior to the total', async () => {
     it('should check that payments number is equal to 0', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkPaymentsNumber1', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkPayments1', baseContext);
 
       const paymentsNumber = await orderPageMessagesBlock.getPaymentsNumber(page);
       await expect(paymentsNumber, 'Payments number is not correct! ').to.equal(0);
@@ -197,7 +197,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
     });
 
     it('should check that the payments number is equal to 1', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkPaymentsNumber2', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkpayments2', baseContext);
 
       const paymentsNumber = await orderPageMessagesBlock.getPaymentsNumber(page);
       await expect(paymentsNumber, 'Payments number is not correct! ').to.equal(1);
@@ -228,14 +228,14 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
     });
 
     it('should check that the payments number is equal to 2', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkPaymentsNumber3', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkpayments3', baseContext);
 
       const paymentsNumber = await orderPageMessagesBlock.getPaymentsNumber(page);
       await expect(paymentsNumber, 'Payments number is not correct! ').to.equal(2);
     });
 
     it('should check the payment details', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkPayment2', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkPaymentDetails1', baseContext);
 
       const result = await orderPageMessagesBlock.getPaymentsDetails(page, 3);
       await Promise.all([
@@ -251,7 +251,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
   // 4 - Add payment superior to the total
   describe('Add payment superior to the total', async () => {
     it('should add payment when amount is superior to the total', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'testAmountSupTotal', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'testAmountSupTotal1', baseContext);
 
       const validationMessage = await orderPageMessagesBlock.addPayment(page, paymentDataAmountSupTotal);
       expect(validationMessage, 'Successful message is not correct!')
@@ -268,14 +268,14 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
     });
 
     it('should check that the payments number is equal to 3', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkPaymentsNumber4', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkpayments4', baseContext);
 
       const paymentsNumber = await orderPageMessagesBlock.getPaymentsNumber(page);
       await expect(paymentsNumber, 'Payments number is not correct! ').to.equal(3);
     });
 
     it('should check the payment details', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkPayment2', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkPaymentDetail1', baseContext);
 
       const result = await orderPageMessagesBlock.getPaymentsDetails(page, 5);
       await Promise.all([
@@ -377,14 +377,14 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
     });
 
     it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetOrderTableFilters2', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'resetOrderTableFilters3', baseContext);
 
       const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
       await expect(numberOfOrders).to.be.above(0);
     });
 
     it(`should filter the Orders table by 'Customer: ${DefaultCustomer.lastName}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer2', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'filterByCustomer3', baseContext);
 
       await ordersPage.filterOrders(page, 'input', 'customer', DefaultCustomer.lastName);
 
@@ -393,7 +393,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
     });
 
     it('should view the order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'orderPageMessagesBlock2', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'orderPageMessagesBlock3', baseContext);
 
       await ordersPage.goToOrder(page, 2);
 
@@ -402,7 +402,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
     });
 
     it('should check that the payments number is equal to 0', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkPaymentsNumber4', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkpayments5', baseContext);
 
       const paymentsNumber = await orderPageMessagesBlock.getPaymentsNumber(page);
       await expect(paymentsNumber, 'Payments number is not correct! ').to.equal(0);
@@ -416,7 +416,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
     });
 
     it('should check that the payments number is equal to 1', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkPaymentsNumber5', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkpayments6', baseContext);
 
       const paymentsNumber = await orderPageMessagesBlock.getPaymentsNumber(page);
       await expect(paymentsNumber, 'Payments number is not correct! ').to.equal(1);
@@ -465,7 +465,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
     });
 
     it('should check that payments number is equal to 1', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkPaymentsNumber6', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkpayments7', baseContext);
 
       const paymentsNumber = await orderPageMessagesBlock.getPaymentsNumber(page);
       await expect(paymentsNumber, 'Payments number is not correct! ').to.equal(1);
@@ -480,7 +480,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
     });
 
     it('should add payment when amount is equal to the rest to the new invoice', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'testAmountSupTotal', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'testAmountSupTotal2', baseContext);
 
       const invoice = `#IN0000${(invoiceID + 1) >= 10 ? '' : '0'}${invoiceID + 1}`;
 
@@ -490,7 +490,7 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
     });
 
     it('should check that payments number is equal to 2', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkPaymentsNumber7', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkpayments8', baseContext);
 
       const paymentsNumber = await orderPageMessagesBlock.getPaymentsNumber(page);
       await expect(paymentsNumber, 'Payments number is not correct! ').to.equal(2);
@@ -514,5 +514,5 @@ describe('BO - Orders - View and edit order : Check payment Block', async () => 
   });
 
   // Post-condition - Delete currency
-  deleteCurrencyTest(Currencies.mad, baseContext);
+  deleteCurrencyTest(Currencies.mad, `${baseContext}_postTest_1`);
 });

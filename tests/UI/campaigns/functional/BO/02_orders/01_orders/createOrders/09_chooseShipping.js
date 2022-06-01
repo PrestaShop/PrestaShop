@@ -227,7 +227,7 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
     });
 
     it('should re-check summary block', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkSummaryBlock3', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkSummaryBlock4', baseContext);
 
       const tax = await basicHelper.percentage(giftOptions.price, 10);
       const totalTaxExc = (Products.demo_12.price_ht + giftOptions.price).toFixed(2);

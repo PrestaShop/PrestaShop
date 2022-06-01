@@ -65,7 +65,7 @@ Post-condition:
  */
 describe('BO - Orders - Create order : Check summary', async () => {
   // Pre-condition: Create cart rule with code
-  createCartRuleTest(cartRuleWithCodeData, baseContext);
+  createCartRuleTest(cartRuleWithCodeData, `${baseContext}_preTest_1`);
 
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -255,7 +255,7 @@ describe('BO - Orders - Create order : Check summary', async () => {
       });
 
       it('should choose \'Proceed to checkout in the front office\' from more actions', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'setMoreActions', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'proceedToCheckout', baseContext);
 
         page = await addOrderPage.setMoreActions(page, 'Proceed to checkout');
 
@@ -321,5 +321,5 @@ describe('BO - Orders - Create order : Check summary', async () => {
   });
 
   // Post-condition: Delete created cart rule
-  deleteCartRuleTest(cartRuleWithCodeData.name, baseContext);
+  deleteCartRuleTest(cartRuleWithCodeData.name, `${baseContext}_postTest_1`);
 });
