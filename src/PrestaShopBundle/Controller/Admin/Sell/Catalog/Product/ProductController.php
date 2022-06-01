@@ -113,9 +113,7 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function createAction(Request $request): Response
     {
-        if (!$this->get('prestashop.adapter.shop.context')->isSingleShopContext()
-            && $this->get('prestashop.core.admin.feature_flag.repository')->isDisabled(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2_MULTI_SHOP)
-        ) {
+        if (!$this->get('prestashop.adapter.shop.context')->isSingleShopContext()) {
             return $this->renderDisableMultistorePage();
         }
 
@@ -152,8 +150,7 @@ class ProductController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_product_form', ['id' => $productId]);
         }
 
-        if (!$this->get('prestashop.adapter.shop.context')->isSingleShopContext()
-            && $this->get('prestashop.core.admin.feature_flag.repository')->isDisabled(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2_MULTI_SHOP)) {
+        if (!$this->get('prestashop.adapter.shop.context')->isSingleShopContext()) {
             return $this->renderDisableMultistorePage($productId);
         }
 
@@ -498,10 +495,6 @@ class ProductController extends FrameworkBundleAdminController
                     '[1]' => sprintf('<a href="%s">', $this->get('router')->generate('admin_preferences')),
                     '[/1]' => '</a>',
                 ]
-            ),
-            'standardPageUrl' => $this->generateUrl(
-                !empty($productId) ? 'admin_product_form' : 'admin_product_new',
-                !empty($productId) ? ['id' => $productId] : []
             ),
         ]);
     }
