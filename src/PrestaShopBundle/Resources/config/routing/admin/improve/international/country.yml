@@ -1,4 +1,4 @@
-#todo uncomment all legacy links when page is finished.
+# todo uncomment all legacy links when page is finished.
 admin_countries_index:
   path: /
   methods: GET
@@ -29,7 +29,7 @@ admin_country_edit:
   requirements:
     countryId: \d+
 #
-#admin_zones_delete:
+# admin_zones_delete:
 #  path: /{zoneId}/delete
 #  methods: [ POST, DELETE ]
 #  defaults:

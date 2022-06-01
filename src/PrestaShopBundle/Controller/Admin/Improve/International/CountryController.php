@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
+use Context;
 use PrestaShop\PrestaShop\Core\Search\Filters\CountryFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -62,12 +63,21 @@ class CountryController extends FrameworkBundleAdminController
         ]);
     }
 
+    /**
+     * Display country edit form
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     *
+     * @param int $countryId
+     * @param Request $request
+     *
+     * @return Response
+     */
     public function editAction(int $countryId, Request $request): Response
     {
         //todo: complete edit action migration to symfony
-
-        Tools::redirectAdmin(
-            \Context::getContext()->link->getAdminLink(
+        return $this->redirect(
+            Context::getContext()->link->getAdminLink(
                 'AdminCountries',
                 true,
                 [],
