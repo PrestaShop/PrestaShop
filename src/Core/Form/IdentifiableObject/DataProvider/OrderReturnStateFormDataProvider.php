@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Query\GetOrderReturnStateForEditing;
-use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\QueryResult\OrderReturnStateForEditing;
+use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\QueryResult\EditableOrderReturnState;
 
 /**
  * Provides data for order return state forms
@@ -52,12 +52,12 @@ final class OrderReturnStateFormDataProvider implements FormDataProviderInterfac
      */
     public function getData($orderStateId)
     {
-        /** @var OrderReturnStateForEditing $orderReturnStateForEditing */
-        $orderReturnStateForEditing = $this->queryBus->handle(new GetOrderReturnStateForEditing((int) $orderStateId));
+        /** @var EditableOrderReturnState $editableOrderReturnState */
+        $editableOrderReturnState = $this->queryBus->handle(new GetOrderReturnStateForEditing((int) $orderStateId));
 
         return [
-            'name' => $orderReturnStateForEditing->getLocalizedNames(),
-            'color' => $orderReturnStateForEditing->getColor(),
+            'name' => $editableOrderReturnState->getLocalizedNames(),
+            'color' => $editableOrderReturnState->getColor(),
         ];
     }
 
