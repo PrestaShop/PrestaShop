@@ -46,18 +46,32 @@ class FeatureFlagsFormDataProvider implements FormDataProviderInterface
     protected $stability;
 
     /**
+     * @var bool
+     */
+    protected $isMultiShopUsed;
+
+    /**
      * @param EntityManagerInterface $doctrineEntityManager
      * @param string $stability
+     * @param bool $isMultiShopUsed
      */
-    public function __construct(EntityManagerInterface $doctrineEntityManager, string $stability)
+    public function __construct(EntityManagerInterface $doctrineEntityManager, string $stability, bool $isMultiShopUsed)
     {
         $this->doctrineEntityManager = $doctrineEntityManager;
         $this->stability = $stability;
+        $this->isMultiShopUsed = $isMultiShopUsed;
     }
 
     public function getData()
     {
         $featureFlags = $this->doctrineEntityManager->getRepository(FeatureFlag::class)->findBy(['stability' => $this->stability]);
+
+        // We disable product v2 switch based on multishop state and stability, someday we will need
+        // to implement a more generic feature for any feature flag
+        $isDisabled = false;
+        if ($this->stability === 'stable' && $this->isMultiShopUsed || $this->stability === 'beta' && !$this->isMultiShopUsed) {
+            $isDisabled = true;
+        }
 
         $featureFlagsData = [];
         foreach ($featureFlags as $featureFlag) {
@@ -68,19 +82,21 @@ class FeatureFlagsFormDataProvider implements FormDataProviderInterface
                 'label_domain' => $featureFlag->getLabelDomain(),
                 'description' => $featureFlag->getDescriptionWording(),
                 'description_domain' => $featureFlag->getDescriptionDomain(),
+                'disabled' => $isDisabled,
             ];
         }
 
-        return $featureFlagsData;
+        return ['feature_flags' => $featureFlagsData, 'submit' => ['disabled' => $isDisabled, 'stability' => $this->stability]];
     }
 
     public function setData(array $flagsData)
     {
-        if (!$this->validateFlagsData($flagsData)) {
+        $featureFlags = $flagsData['feature_flags'];
+        if (!$this->validateFlagsData($featureFlags)) {
             throw new InvalidArgumentException('Invalid feature flag configuration submitted');
         }
 
-        foreach ($flagsData as $flagName => $flagData) {
+        foreach ($featureFlags as $flagName => $flagData) {
             $featureFlag = $this->getOneFeatureFlagByName($flagName);
 
             if (null === $featureFlag) {

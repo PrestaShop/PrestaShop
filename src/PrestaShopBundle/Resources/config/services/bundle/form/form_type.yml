@@ -1900,9 +1900,11 @@ services:
 
   prestashop.bundle.form.admin.configure.advanced_parameters.feature_flag.feature_flag_collection_type:
     class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagCollectionType'
+    parent: 'form.type.translatable.aware'
     public: true
     arguments:
       - '@=service("prestashop.adapter.multistore_feature").isUsed()'
+      - '@form.form_cloner'
     tags:
       - { name: form.type }
 

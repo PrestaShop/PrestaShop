@@ -44,14 +44,12 @@
           <div class="alert alert-info alert-experimental" role="alert">
             {{ 'New features are available. Fell free to try them out!'|trans({}, 'Admin.Advparameters.Notification') }}
           </div>
-          {{ form_row(stableFeatureFlagsForm) }}
+          {{ form_widget(stableFeatureFlagsForm.feature_flags) }}
         </div>
       </div>
         <div class="card-footer">
           <div class="d-flex justify-content-end">
-            <button type="submit" id="submit-stable-feature-flags" class="btn btn-primary">
-              {{ 'Save'|trans({}, 'Admin.Actions') }}
-            </button>
+            {{ form_widget(stableFeatureFlagsForm.submit) }}
           </div>
         </div>
     </div>
@@ -76,18 +74,12 @@
               <li>{{ 'In any case, you should never experiment in production.'|trans({}, 'Admin.Advparameters.Notification') }}</li>
             </ul>
           </div>
-          {{ form_row(betaFeatureFlagsForm) }}
+          {{ form_widget(betaFeatureFlagsForm.feature_flags) }}
         </div>
       </div>
       <div class="card-footer">
         <div class="d-flex justify-content-end">
-          <button type="submit" id="submit-beta-feature-flags" class="btn btn-primary"
-                  data-modal-title="{{ 'Are you sure you want to enable this experimental feature?'|trans({}, 'Admin.Advparameters.Notification') }}"
-                  data-modal-message="{{ 'You are about to enable a feature that is not stable yet. This should only be done in a test environment or in full knowledge of the potential risks.'|trans({}, 'Admin.Advparameters.Notification') }}"
-                  data-modal-apply="{{ 'Enable'|trans({}, 'Admin.Actions') }}"
-                  data-modal-cancel="{{ 'Cancel'|trans({}, 'Admin.Actions') }}">
-            {{ 'Save'|trans({}, 'Admin.Actions') }}
-          </button>
+          {{ form_widget(betaFeatureFlagsForm.submit) }}
         </div>
       </div>
     </div>

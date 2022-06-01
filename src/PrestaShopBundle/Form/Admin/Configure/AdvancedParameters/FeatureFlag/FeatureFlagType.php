@@ -74,6 +74,7 @@ class FeatureFlagType extends TranslatorAwareType
         $form->add($this->formCloner->cloneForm($form->get('enabled'), [
             'label' => $this->trans($featureFlagData['label'], $featureFlagData['label_domain']),
             'help' => $this->trans($featureFlagData['description'], $featureFlagData['description_domain']),
+            'attr' => ['disabled' => $featureFlagData['disabled']],
         ]));
     }
 
