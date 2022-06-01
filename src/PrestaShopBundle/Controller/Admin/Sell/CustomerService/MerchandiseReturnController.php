@@ -133,7 +133,7 @@ class MerchandiseReturnController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Sell/CustomerService/OrderReturn/edit.html.twig', [
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
-            'layoutTitle' => sprintf($this->trans('Return Merchandise Authorization (RMA)', 'Admin.Orderscustomers.Feature')),
+            'layoutTitle' => $this->trans('Return Merchandise Authorization (RMA)', 'Admin.Orderscustomers.Feature'),
             'orderReturnForm' => $form->createView(),
             'orderReturnForEditing' => $orderReturnForEditing,
             'dateFormat' => $legacyContext->getLanguage()->date_format_lite,
