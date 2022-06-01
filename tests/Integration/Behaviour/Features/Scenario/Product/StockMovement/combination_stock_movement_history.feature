@@ -47,12 +47,15 @@ Feature: Search stock movement history from Back Office (BO)
       | delta quantity | 100 |
     When I create an empty cart "dummy_cart1" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart1"
+    # First create a cart with 2 product1SBlack and order it
     And I add 2 items of combination "product1SBlack" of the product "product1" to the cart "dummy_cart1"
     And I add order "bo_order1" with the following details:
       | cart                | dummy_cart1                |
       | message             | order1                     |
       | payment module name | dummy_payment              |
       | status              | Delivered                  |
+    And combination "product1SBlack" should have 98 available items
+    # Then create a second cart with 3 product1SBlack, order it without paying (no stock movement the quantity is reserved)
     When I create an empty cart "dummy_cart2" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart2"
     And I add 3 items of combination "product1SBlack" of the product "product1" to the cart "dummy_cart2"
@@ -60,9 +63,14 @@ Feature: Search stock movement history from Back Office (BO)
       | cart                | dummy_cart2                |
       | message             | order2                     |
       | payment module name | dummy_payment              |
-      | status              | Delivered                  |
+      | status              | Awaiting bank wire payment |
+    # Even though the quantity is reserved and no stock movement was generated the available quantity is correctly updated
+    And combination "product1SBlack" should have 95 available items
+    # Then update the product stock from BO by adding 10 more combinations
     When I update combination "product1SBlack" stock with following details:
       | delta quantity | 10 |
+    Then combination "product1SBlack" should have 105 available items
+    # Then order 4 product1SBlack (status delivered)
     When I create an empty cart "dummy_cart3" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart3"
     And I add 4 items of combination "product1SBlack" of the product "product1" to the cart "dummy_cart3"
@@ -71,6 +79,8 @@ Feature: Search stock movement history from Back Office (BO)
       | message             | order3                     |
       | payment module name | dummy_payment              |
       | status              | Delivered                  |
+    And combination "product1SBlack" should have 101 available items
+    # Then order 5 product1SBlack (status delivered)
     When I create an empty cart "dummy_cart4" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart4"
     And I add 5 items of combination "product1SBlack" of the product "product1" to the cart "dummy_cart4"
@@ -79,8 +89,12 @@ Feature: Search stock movement history from Back Office (BO)
       | message             | order4                     |
       | payment module name | dummy_payment              |
       | status              | Delivered                  |
+    And combination "product1SBlack" should have 96 available items
+    # Now update product quantity of product1SBlack by 5
     When I update combination "product1SBlack" stock with following details:
       | delta quantity | 5 |
+    Then combination "product1SBlack" should have 101 available items
+    # Order 5 product1SBlack (status delivered)
     When I create an empty cart "dummy_cart5" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart5"
     And I add 3 items of combination "product1SBlack" of the product "product1" to the cart "dummy_cart5"
@@ -89,6 +103,8 @@ Feature: Search stock movement history from Back Office (BO)
       | message             | order5                     |
       | payment module name | dummy_payment              |
       | status              | Delivered                  |
+    And combination "product1SBlack" should have 98 available items
+    # Order 1 product1SBlack (status delivered)
     When I create an empty cart "dummy_cart6" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart6"
     And I add 1 items of combination "product1SBlack" of the product "product1" to the cart "dummy_cart6"
@@ -97,6 +113,8 @@ Feature: Search stock movement history from Back Office (BO)
       | message             | order6                     |
       | payment module name | dummy_payment              |
       | status              | Delivered                  |
+    And combination "product1SBlack" should have 97 available items
+    # Order 2 product1SBlack (status delivered)
     When I create an empty cart "dummy_cart7" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart7"
     And I add 2 items of combination "product1SBlack" of the product "product1" to the cart "dummy_cart7"
@@ -105,30 +123,34 @@ Feature: Search stock movement history from Back Office (BO)
       | message             | order7                     |
       | payment module name | dummy_payment              |
       | status              | Delivered                  |
+    And combination "product1SBlack" should have 95 available items
+    # Now we check at the stock movements
     When I search stock movement history of combination "product1SBlack" I should get following results:
       | type   | first_name | last_name | delta_quantity |
       | group  |            |           | -6             |
       | single | Puff       | Daddy     | 5              |
       | group  |            |           | -9             |
       | single | Puff       | Daddy     | 10             |
-      | group  |            |           | -5             |
+      # Since no stock movement is generated until the order is shipped this group only has a quantity of -2,
+      # not -5 because second order is still waiting for payment
+      | group  |            |           | -2             |
     When I search stock movement history of combination "product1SBlack" with offset 0 and limit 6 I should get following results:
       | type   | first_name | last_name | delta_quantity |
       | group  |            |           | -6             |
       | single | Puff       | Daddy     | 5              |
       | group  |            |           | -9             |
       | single | Puff       | Daddy     | 10             |
-      | group  |            |           | -5             |
+      | group  |            |           | -2             |
       | single | Puff       | Daddy     | 100            |
     When I search stock movement history of combination "product1SBlack" with offset 1 and limit 5 I should get following results:
       | type   | first_name | last_name | delta_quantity |
       | single | Puff       | Daddy     | 5              |
       | group  |            |           | -9             |
       | single | Puff       | Daddy     | 10             |
-      | group  |            |           | -5             |
+      | group  |            |           | -2             |
       | single | Puff       | Daddy     | 100            |
     When I search stock movement history of combination "product1SBlack" with offset 2 and limit 3 I should get following results:
       | type   | first_name | last_name | delta_quantity |
       | group  |            |           | -9             |
       | single | Puff       | Daddy     | 10             |
-      | group  |            |           | -5             |
+      | group  |            |           | -2             |
