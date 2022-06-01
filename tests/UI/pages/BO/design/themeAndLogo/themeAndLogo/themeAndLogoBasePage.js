@@ -15,8 +15,8 @@ module.exports = class themeAndLogoBasePage extends BOBasePage {
   constructor() {
     super();
     this.advancedCustomizationNavItemLink = '#subtab-AdminPsThemeCustoAdvanced';
-    this.themeShopCard = '#themes-logo-page .card-header[data-role="theme-shop"]';
-    this.cardInactiveTheme = '#themes-logo-page .card-body :nth-child(2) .theme-card';
+    this.themeShopCard = '.card-header[data-role="theme-shop"]';
+    this.cardInactiveTheme = '.card-body :nth-child(2) .theme-card[data-role="theme-card-container"]';
     this.useTheme = '.action-button.js-display-use-theme-modal';
     this.useThemeModalDialog = '#use_theme_modal .modal-dialog';
     this.useThemeModalDialogYesButton = `${this.useThemeModalDialog} .js-submit-use-theme`;

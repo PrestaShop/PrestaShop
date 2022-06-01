@@ -23,8 +23,7 @@ class AdvancedCustomization extends themeAndLogoBasePage {
     this.childThemeImportDropZone = '#importDropzone';
     this.modalDialogUploadChildThemeSelectLink = `${this.childThemeImportDropZone} a.module-import-start-select-manual`;
     this.successMsgUploadChildTheme = `${this.childThemeImportDropZone} .module-import-success`;
-    this.clickOnHowToUseParentsChildThemesLink = '#psthemecusto .link-child';
-    this.newPageSelector = '#body-inner #parentchild-theme';
+    this.howToUseParentsChildThemesLink = '#psthemecusto .link-child';
   }
 
   /* Methods */
@@ -75,14 +74,14 @@ class AdvancedCustomization extends themeAndLogoBasePage {
   }
 
   /**
-   * Click on the How to use Parent's child theme
+   * Get the link How to use Parent's child theme
    * @param page {Page} Browser tab
-   * @returns {Promise<Page>}
+   * @returns {Promise<string>}
    */
-  async clickOnHowToUseParentsChildThemes(page) {
-    return this.openLinkWithTargetBlank(page,
-      this.clickOnHowToUseParentsChildThemesLink,
-      this.newPageSelector,
+  async getHowToUseParentsChildThemesLink(page) {
+    return this.getAttributeContent(page,
+      this.howToUseParentsChildThemesLink,
+      'href',
     );
   }
 }

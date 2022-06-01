@@ -13,7 +13,6 @@ const loginCommon = require('@commonTests/BO/loginBO');
 const dashboardPage = require('@pages/BO/dashboard');
 const themeAndLogoPage = require('@pages/BO/design/themeAndLogo/themeAndLogo');
 const advancedCustomizationPage = require('@pages/BO/design/themeAndLogo/advancedCustomization');
-const parentChildThemePage = require('@pages/BO/design/themeAndLogo/advancedCustomization/parentChildTheme');
 const moduleManagerPage = require('@pages/BO/modules/moduleManager');
 
 // Import FO pages
@@ -46,7 +45,7 @@ Scenario:
 - Download a child theme and check the theme is well uploaded
 - Use the child theme
 - Use the classic theme and remove the child theme
-- Click on the link How to use parents/child themes
+- Check the How to use parents/child themes link
  */
 
 describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
@@ -246,14 +245,14 @@ describe('BO - Design - Theme & Logo - Advanced Customization', async () => {
       await expect(pageTitle).to.contains(advancedCustomizationPage.pageTitle);
     });
 
-    it('should click on How to use parents/child themes', async function () {
+    it('should get the How to use parents/child themes link', async function () {
       await testContext
-        .addContextItem(this, 'testIdentifier', 'clickOnHowToUseParentsChildThemes', baseContext);
+        .addContextItem(this, 'testIdentifier', 'getHowToUseParentsChildThemesLink', baseContext);
 
-      page = await advancedCustomizationPage.clickOnHowToUseParentsChildThemes(page);
-
-      const ParentChildPage = await parentChildThemePage.getPageTitle(page);
-      await expect(ParentChildPage).to.be.equal(parentChildThemePage.pageTitle);
+      const linkParentChildPage = await advancedCustomizationPage.getHowToUseParentsChildThemesLink(page);
+      await expect(linkParentChildPage)
+        .to
+        .contains('https://devdocs.prestashop.com/1.7/themes/reference/template_inheritance/parent_child_feature/');
     });
   });
 });
