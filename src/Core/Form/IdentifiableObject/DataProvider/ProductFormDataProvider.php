@@ -72,7 +72,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
     private $defaultShopId;
 
     /**
-     * @var int
+     * @var int|null
      */
     private $contextShopId;
 
@@ -103,10 +103,10 @@ class ProductFormDataProvider implements FormDataProviderInterface
         TranslatorInterface $translator
     ) {
         $this->queryBus = $queryBus;
+        $this->configuration = $configuration;
         $this->contextLangId = $contextLangId;
         $this->defaultShopId = $defaultShopId;
         $this->contextShopId = $contextShopId;
-        $this->configuration = $configuration;
         $this->translator = $translator;
     }
 
