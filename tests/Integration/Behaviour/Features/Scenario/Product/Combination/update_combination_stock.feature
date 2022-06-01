@@ -192,7 +192,7 @@ Feature: Update product combination stock information in Back Office (BO)
       | location                   |       |
       | available date             |       |
     And combination "product1SBlack" last stock movement increased by 10
-    And combination "product1SBlack" last employees stock movements should be:
+    And combination "product1SBlack" last stock movements should be:
       | first_name | last_name | delta_quantity |
       | Puff       | Daddy     | 10             |
     When I update combination "product1SBlack" stock with following details:
@@ -206,7 +206,7 @@ Feature: Update product combination stock information in Back Office (BO)
       | location                   |       |
       | available date             |       |
     And combination "product1SBlack" last stock movement decreased by 13
-    And combination "product1SBlack" last employees stock movements should be:
+    And combination "product1SBlack" last stock movements should be:
       | first_name | last_name | delta_quantity |
       | Puff       | Daddy     | -13            |
       | Puff       | Daddy     | 10             |

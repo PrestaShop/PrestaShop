@@ -345,14 +345,14 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
       | delta_quantity | 51 |
     Then product "productCombinations" should have following stock information for shops "shop1":
       | quantity | 93 |
-    And product "productCombinations" last employees stock movements for shop "shop1" should be:
+    And product "productCombinations" last stock movements for shop "shop1" should be:
       | first_name | last_name | delta_quantity |
       | Puff       | Daddy     | 51             |
       | Puff       | Daddy     | 42             |
     And product "productCombinations" last stock movement for shop "shop1" increased by 51
     And product "productCombinations" should have following stock information for shops "shop2":
       | quantity | 111 |
-    And product "productCombinations" last employees stock movements for shop "shop2" should be:
+    And product "productCombinations" last stock movements for shop "shop2" should be:
       | first_name | last_name | delta_quantity |
       | Puff       | Daddy     | 69             |
     And product "productCombinations" last stock movement for shop "shop2" increased by 69
@@ -360,13 +360,13 @@ Feature: Update product price fields from Back Office (BO) for multiple shops.
     Then product "productCombinations" type should be combinations
     Then product "productCombinations" should have following stock information for shops "shop1,shop2":
       | quantity | 0 |
-    And product "productCombinations" last employees stock movements for shop "shop1" should be:
+    And product "productCombinations" last stock movements for shop "shop1" should be:
       | first_name | last_name | delta_quantity |
       | Puff       | Daddy     | -93            |
       | Puff       | Daddy     | 51             |
       | Puff       | Daddy     | 42             |
     And product "productCombinations" last stock movement for shop "shop1" decreased by 93
-    And product "productCombinations" last employees stock movements for shop "shop2" should be:
+    And product "productCombinations" last stock movements for shop "shop2" should be:
       | first_name | last_name | delta_quantity |
       | Puff       | Daddy     | -111           |
       | Puff       | Daddy     | 69             |
