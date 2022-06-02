@@ -30,13 +30,14 @@
       <div class="form-group product-footer-right">
         <div id="product-footer-right" class="footer-buttons-container">
           {{ form_row(productForm.footer.preview) }}
-          {{ form_row(productForm.footer.active) }}
           {{ form_row(productForm.footer.save) }}
+
         </div>
       </div>
 
       {# The rest is displayed in the left column, it is displayed after because it renders all that's left #}
       {{ form_row(productForm.footer) }}
+      {{ form_row(productForm.footer.cancel) }}
     </div>
   {% endblock %}
 </div>
