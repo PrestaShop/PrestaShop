@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Country\Command;
 
-use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryZipCodeFormat;
 use Tools;
 
@@ -49,7 +48,7 @@ class AddCountryCommand
     /** @var int */
     protected $defaultCurrency = 0;
 
-    /**@var int|null */
+    /** @var int|null */
     protected $zoneId;
 
     /** @var bool */

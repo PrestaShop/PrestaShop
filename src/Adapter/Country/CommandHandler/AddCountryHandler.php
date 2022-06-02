@@ -30,7 +30,6 @@ namespace PrestaShop\PrestaShop\Adapter\Country\CommandHandler;
 
 use Country;
 use PrestaShop\PrestaShop\Adapter\Country\AbstractCountryHandler;
-use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\AddCountryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler\AddCountryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotAddCountryException;
