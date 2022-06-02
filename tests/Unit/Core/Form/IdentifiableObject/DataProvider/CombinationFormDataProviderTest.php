@@ -147,8 +147,7 @@ class CombinationFormDataProviderTest extends TestCase
                     'stock_id' => 42,
                     'order_id' => 310,
                     'employee_id' => 12,
-                    'employee_firstname' => 'Paul',
-                    'employee_lastname' => 'Atreide',
+                    'employee_name' => 'Paul Atreide',
                     'delta_quantity' => +20,
                 ],
                 [
@@ -168,8 +167,7 @@ class CombinationFormDataProviderTest extends TestCase
                     'stock_id' => 42,
                     'order_id' => 210,
                     'employee_id' => 11,
-                    'employee_firstname' => 'Frodo',
-                    'employee_lastname' => 'Baggins',
+                    'employee_name' => 'Frodo Baggins',
                     'delta_quantity' => +20,
                 ],
                 [
@@ -200,7 +198,7 @@ class CombinationFormDataProviderTest extends TestCase
             [
                 'type' => 'edition',
                 'date' => '2021-05-24 15:24:32',
-                'employee_name' => '%firstname% %lastname%',
+                'employee_name' => 'Paul Atreide',
                 'delta_quantity' => +20,
             ],
             [
@@ -212,7 +210,7 @@ class CombinationFormDataProviderTest extends TestCase
             [
                 'type' => 'edition',
                 'date' => '2021-05-22 16:35:48',
-                'employee_name' => '%firstname% %lastname%',
+                'employee_name' => 'Frodo Baggins',
                 'delta_quantity' => +20,
             ],
             [
@@ -606,8 +604,7 @@ class CombinationFormDataProviderTest extends TestCase
                         $historyData['stock_id'],
                         $historyData['order_id'],
                         $historyData['employee_id'],
-                        $historyData['employee_firstname'],
-                        $historyData['employee_lastname'],
+                        $historyData['employee_name'],
                         $historyData['delta_quantity']
                     );
                 }

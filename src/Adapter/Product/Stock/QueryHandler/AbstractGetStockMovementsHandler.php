@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiSh
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockMovementRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementEvent;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockId;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class AbstractGetStockMovementsHandler
 {
@@ -45,12 +46,19 @@ abstract class AbstractGetStockMovementsHandler
      */
     protected $stockMovementRepository;
 
+    /**
+     * @var TranslatorInterface
+     */
+    protected $translator;
+
     public function __construct(
         StockAvailableMultiShopRepository $stockAvailableRepository,
-        StockMovementRepository $stockMovementRepository
+        StockMovementRepository $stockMovementRepository,
+        TranslatorInterface $translator
     ) {
         $this->stockAvailableRepository = $stockAvailableRepository;
         $this->stockMovementRepository = $stockMovementRepository;
+        $this->translator = $translator;
     }
 
     /**
@@ -77,14 +85,20 @@ abstract class AbstractGetStockMovementsHandler
 
     protected function createEditionStockMovementEvent(array $historyRow): StockMovementEvent
     {
+        $employeeName = $this->translator->trans('%firstname% %lastname%', [
+            '%firstname%' => $historyRow['employee_firstname'],
+            '%lastname%' => $historyRow['employee_lastname'],
+        ],
+            'Admin.Global'
+        );
+
         return StockMovementEvent::createEditionEvent(
             $historyRow['date_add_min'],
             (int) $historyRow['id_stock_mvt_min'],
             (int) $historyRow['id_stock_list'],
             (int) $historyRow['id_order_list'],
             (int) $historyRow['id_employee_list'],
-            $historyRow['employee_firstname'],
-            $historyRow['employee_lastname'],
+            $employeeName,
             (int) $historyRow['delta_quantity']
         );
     }

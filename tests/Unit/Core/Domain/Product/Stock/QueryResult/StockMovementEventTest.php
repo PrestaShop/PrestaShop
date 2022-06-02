@@ -45,8 +45,7 @@ class StockMovementEventTest extends TestCase
         int $stockId,
         ?int $orderId,
         int $employeeId,
-        ?string $employeeFirstName,
-        ?string $employeeLastName,
+        ?string $employeeName,
         int $deltaQuantity
     ): void {
         $history = StockMovementEvent::createEditionEvent(
@@ -55,8 +54,7 @@ class StockMovementEventTest extends TestCase
             $stockId,
             $orderId,
             $employeeId,
-            $employeeFirstName,
-            $employeeLastName,
+            $employeeName,
             $deltaQuantity
         );
         Assert::assertTrue($history->isEdition());
@@ -70,8 +68,7 @@ class StockMovementEventTest extends TestCase
             $history->getOrderIds()
         );
         Assert::assertSame([$employeeId], $history->getEmployeeIds());
-        Assert::assertSame($employeeFirstName, $history->getEmployeeFirstname());
-        Assert::assertSame($employeeLastName, $history->getEmployeeLastname());
+        Assert::assertSame($employeeName, $history->getEmployeeName());
         Assert::assertSame($deltaQuantity, $history->getDeltaQuantity());
     }
 
@@ -83,8 +80,7 @@ class StockMovementEventTest extends TestCase
             'stockId' => 2,
             'orderId' => 3,
             'employeeId' => 4,
-            'employeeFirstName' => 'Penelope',
-            'employeeLastName' => 'Cruz',
+            'employeeName' => 'Penelope Cruz',
             'deltaQuantity' => -5,
         ];
         yield 'single history is employee edition' => [
@@ -93,8 +89,7 @@ class StockMovementEventTest extends TestCase
             'stockId' => 2,
             'orderId' => null,
             'employeeId' => 4,
-            'employeeFirstName' => 'Penelope',
-            'employeeLastName' => 'Cruz',
+            'employeeName' => 'Penelope Cruz',
             'deltaQuantity' => 5,
         ];
         yield 'single history without employee name' => [
@@ -103,8 +98,7 @@ class StockMovementEventTest extends TestCase
             'stockId' => 2,
             'orderId' => null,
             'employeeId' => 4,
-            'employeeFirstName' => null,
-            'employeeLastName' => null,
+            'employeeName' => null,
             'deltaQuantity' => 5,
         ];
     }
@@ -199,8 +193,7 @@ class StockMovementEventTest extends TestCase
             2,
             null,
             4,
-            'Penelope',
-            'Cruz',
+            'Penelope Cruz',
             5
         );
         $groupHistory = StockMovementEvent::createOrdersEvent(

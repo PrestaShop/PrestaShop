@@ -44,9 +44,9 @@ Feature: Add basic product from Back Office (BO)
     And product "productCombinations" should have following stock information:
       | quantity | 0 |
     And product "productCombinations" last stock movements should be:
-      | first_name | last_name | delta_quantity |
-      | Puff       | Daddy     | -51            |
-      | Puff       | Daddy     | 51             |
+      | employee   | delta_quantity |
+      | Puff Daddy | -51            |
+      | Puff Daddy | 51             |
 
   Scenario: I update product type to combinations (if stock was zero no problem occurs)
     When I add product "productCombinations2" with following information:
@@ -192,8 +192,8 @@ Feature: Add basic product from Back Office (BO)
       | location                   |       |
       | available date             |       |
     And combination "productCombinations3SWhite" last stock movements should be:
-      | first_name | last_name | delta_quantity |
-      | Puff       | Daddy     | 100            |
+      | employee   | delta_quantity |
+      | Puff Daddy | 100            |
     And combination "productCombinations3SWhite" last stock movement increased by 100
     When I update combination "productCombinations3SBlack" stock with following details:
       | delta quantity | 50 |
@@ -206,8 +206,8 @@ Feature: Add basic product from Back Office (BO)
       | location                   |       |
       | available date             |       |
     And combination "productCombinations3SBlack" last stock movements should be:
-      | first_name | last_name | delta_quantity |
-      | Puff       | Daddy     | 50             |
+      | employee   | delta_quantity |
+      | Puff Daddy | 50             |
     And combination "productCombinations3SBlack" last stock movement increased by 50
     # Product stock is the sum of all combinations
     And product "productCombinations3" should have following stock information:
@@ -229,8 +229,8 @@ Feature: Add basic product from Back Office (BO)
       | low_stock_alert     | false |
       | available_date      |       |
     And product "productCombinations3" last stock movements should be:
-      | first_name | last_name | delta_quantity |
-      | Puff       | Daddy     | -150           |
+      | employee   | delta_quantity |
+      | Puff Daddy | -150           |
     And product "productCombinations3" last stock movement decreased by 150
 
   Scenario: Changing virtual type should remove virtual file
