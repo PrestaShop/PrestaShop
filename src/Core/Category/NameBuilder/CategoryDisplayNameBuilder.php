@@ -79,7 +79,7 @@ class CategoryDisplayNameBuilder
         ShopId $shopId,
         LanguageId $languageId,
         CategoryId $categoryId,
-        bool $useCache = false
+        bool $useCache = true
     ): string {
         $duplicateNameIds = $this->getDuplicateNameIds($shopId, $languageId, $useCache);
         $isDuplicate = false;
@@ -136,7 +136,6 @@ class CategoryDisplayNameBuilder
         if (!$useCache) {
             return $this->fetchBreadcrumbs($categoryIds, $languageId);
         }
-
         $cacheKey = $this->buildCacheKeyForBreadcrumbs($shopId, $languageId);
 
 //      @todo: consider using Symfony\Component\Cache\Adapter\AdapterInterface instead of legacy Cache
