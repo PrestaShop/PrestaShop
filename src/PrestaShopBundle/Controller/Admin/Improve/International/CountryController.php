@@ -29,9 +29,6 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use Exception;
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CountryGridDefinitionFactory;
-use Exception;
-use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CountryGridDefinitionFactory;
 use Context;
 use PrestaShop\PrestaShop\Core\Search\Filters\CountryFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
@@ -147,21 +144,6 @@ class CountryController extends FrameworkBundleAdminController
             )
         );
     }
-
-    /**
-     * @return array
-     */
-    protected function getCountryToolbarButtons(): array
-    {
-        return [
-            'add' => [
-                'href' => $this->generateUrl('admin_countries_create'),
-                'desc' => $this->trans('Add new country', 'Admin.International.Feature'),
-                'icon' => 'add_circle_outline',
-            ],
-        ];
-    }
-
 
     /**
      * Returns country error messages mapping.
