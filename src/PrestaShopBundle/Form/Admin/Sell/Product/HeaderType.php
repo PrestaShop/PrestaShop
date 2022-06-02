@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShopBundle\Form\Admin\Type\ImagePreviewType;
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -89,6 +90,13 @@ class HeaderType extends TranslatorAwareType
                     'class' => 'header-name',
                 ],
                 'modify_all_shops' => true,
+            ])
+            ->add('active', SwitchType::class, [
+                'label' => false,
+                'choices' => [
+                    $this->trans('Offline', 'Admin.Global') => false,
+                    $this->trans('Online', 'Admin.Global') => true,
+                ],
             ])
             ->add('type', ProductTypeType::class, [
                 'attr' => [

@@ -224,7 +224,11 @@ export default {
   rightArrow: '.right-arrow',
   footer: {
     previewUrlButton: '.preview-url-button',
+    duplicateProductButton: '.duplicate-product-button',
     deleteProductButton: '.delete-product-button',
+    newProductButton: '.new-product-button',
+    goToCatalogButton: '.go-to-catalog-button',
+    cancelButton: '.cancel-button',
   },
   categories: {
     categoriesContainer: '#product_description_categories',
