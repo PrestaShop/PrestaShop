@@ -104,20 +104,6 @@ class CountryController extends FrameworkBundleAdminController
         ]);
     }
 
-    /**
-     * @return array
-     */
-    private function getCountryToolbarButtons(): array
-    {
-        return [
-            'add' => [
-                'href' => $this->generateUrl('admin_countries_create'),
-                'desc' => $this->trans('Add new country', 'Admin.International.Feature'),
-                'icon' => 'add_circle_outline',
-            ],
-        ];
-    }
-
     public function editAction(int $countryId, Request $request): Response
     {
         //todo: complete edit action migration to symfony
@@ -132,6 +118,20 @@ class CountryController extends FrameworkBundleAdminController
                 ]
             )
         );
+    }
+
+    /**
+     * @return array
+     */
+    protected function getCountryToolbarButtons(): array
+    {
+        return [
+            'add' => [
+                'href' => $this->generateUrl('admin_countries_create'),
+                'desc' => $this->trans('Add new country', 'Admin.International.Feature'),
+                'icon' => 'add_circle_outline',
+            ],
+        ];
     }
 
     /**

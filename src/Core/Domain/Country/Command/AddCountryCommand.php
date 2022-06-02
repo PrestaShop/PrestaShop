@@ -36,43 +36,69 @@ use Tools;
  */
 class AddCountryCommand
 {
-    /** @var string[] */
+    /**
+     * @var string[]
+     */
     protected $localizedNames;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $isoCode;
 
-    /** @var int */
+    /**
+     * @var int
+     */
     protected $callPrefix;
 
-    /** @var int */
+    /**
+     * @var int
+     */
     protected $defaultCurrency = 0;
 
-    /** @var int|null */
+    /**
+     * @var int|null
+     */
     protected $zoneId;
 
-    /** @var bool */
+    /**
+     * @var bool
+     */
     protected $needZipCode = false;
 
-    /** @var CountryZipCodeFormat|null */
+    /**
+     * @var CountryZipCodeFormat
+     */
     protected $zipCodeFormat;
 
-    /** @var string */
-    protected $addressFormat;
+    /**
+     * @var string
+     */
+    protected $addressFormat = '';
 
-    /** @var bool */
+    /**
+     * @var bool
+     */
     protected $enabled = false;
 
-    /** @var bool */
+    /**
+     * @var bool
+     */
     protected $containsStates = false;
 
-    /** @var bool */
+    /**
+     * @var bool
+     */
     protected $needIdNumber = false;
 
-    /** @var bool */
+    /**
+     * @var bool
+     */
     protected $displayTaxLabel = false;
 
-    /** @var array */
+    /**
+     * @var array
+     */
     protected $shopAssociation = [];
 
     public function __construct(
@@ -85,6 +111,7 @@ class AddCountryCommand
         $this->isoCode = $isoCode;
         $this->callPrefix = $callPrefix;
         $this->addressFormat = $addressFormat;
+        $this->zipCodeFormat = new CountryZipCodeFormat('');
     }
 
     /**
@@ -206,6 +233,9 @@ class AddCountryCommand
         return $this;
     }
 
+    /**
+     * @return int[]
+     */
     public function getShopAssociation(): array
     {
         return $this->shopAssociation;

@@ -61,9 +61,9 @@ class CountryFormDataHandler implements FormDataHandlerInterface
     {
         $addCountryCommand = new AddCountryCommand(
             $data['name'],
-            $data['iso_code'],
+            (string) $data['iso_code'],
             (int) $data['call_prefix'],
-            $data['address_format']
+            (string) $data['address_format']
         );
 
         if (null !== $data['zip_code_format']) {
@@ -74,7 +74,7 @@ class CountryFormDataHandler implements FormDataHandlerInterface
             $addCountryCommand->setDefaultCurrency($data['default_currency']);
         }
 
-        if (null !== $data['zone'] && !empty($data['zone'])) {
+        if (null !== $data['zone']) {
             $addCountryCommand->setZoneId($data['zone']);
         }
 
