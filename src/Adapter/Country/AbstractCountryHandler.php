@@ -37,7 +37,6 @@ use PrestaShopException;
  */
 class AbstractCountryHandler
 {
-
     /**
      * @param Country $country
      *

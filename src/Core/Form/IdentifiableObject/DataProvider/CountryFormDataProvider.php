@@ -72,7 +72,6 @@ class CountryFormDataProvider implements FormDataProviderInterface
      */
     public function getData($id): array
     {
-
         /** @var EditableZone $result */
         $result = $this->queryBus->handle(new GetZoneForEditing($id));
 

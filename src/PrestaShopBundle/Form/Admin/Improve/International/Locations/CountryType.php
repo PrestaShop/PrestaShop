@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Locations;
 
-use Currency;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
@@ -38,12 +37,10 @@ use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 class CountryType extends AbstractType
 {
@@ -75,8 +72,7 @@ class CountryType extends AbstractType
         bool $isMultistoreEnabled,
         FormChoiceProviderInterface $currencyChoiceProvider,
         ConfigurableFormChoiceProviderInterface $zoneChoiceProvider
-    )
-    {
+    ) {
         $this->translator = $translator;
         $this->isMultistoreEnabled = $isMultistoreEnabled;
         $this->currencyChoiceProvider = $currencyChoiceProvider;
@@ -146,7 +142,7 @@ class CountryType extends AbstractType
                         'active_first' => false,
                     ]
                 ),
-                'placeholder' => false
+                'placeholder' => false,
             ])
             ->add('need_zip_code', SwitchType::class, [
                 'required' => false,
@@ -160,7 +156,7 @@ class CountryType extends AbstractType
                     new TypedRegex([
                         'type' => TypedRegex::TYPE_ZIP_CODE_FORMAT,
                     ]),
-                ]
+                ],
             ])
             //todo : create address layout form
             ->add('address_format', TextType::class, [
