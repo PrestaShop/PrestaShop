@@ -38,7 +38,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * Represents the form used to manage feature flags state.
  * There is one SwitchType per existing feature flag.
  */
-class FeatureFlagCollectionType extends TranslatorAwareType
+class FeatureFlagListType extends TranslatorAwareType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
