@@ -166,6 +166,7 @@ class FooterType extends TranslatorAwareType
                 'label' => $options['active'] ? $this->trans('Save and publish', 'Admin.Actions') : $this->trans('Save', 'Admin.Actions'),
                 'attr' => [
                     'data-toggle' => 'pstooltip',
+                    'accesskey' => 's',
                     'disabled' => true,
                     'title' => $this->trans('Save the product and stay on the current page: ALT+SHIFT+S', 'Admin.Catalog.Help'),
                     'class' => 'btn-primary product-form-save-button',
