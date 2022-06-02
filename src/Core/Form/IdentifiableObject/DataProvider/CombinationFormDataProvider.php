@@ -123,7 +123,7 @@ class CombinationFormDataProvider implements FormDataProviderInterface
                     'quantity' => $stockInformation->getQuantity(),
                     'delta' => 0,
                 ],
-                'stock_movement_history' => $this->getStockMovementHistories(
+                'stock_movements' => $this->getStockMovementHistories(
                     $combinationForEditing->getCombinationId(),
                     $shopConstraint
                 ),

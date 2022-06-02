@@ -82,12 +82,12 @@ class QuantityType extends TranslatorAwareType
                     'label' => $this->trans('Edit quantity', 'Admin.Catalog.Feature'),
                     'label_tag_name' => 'h4',
                 ])
-                ->add('stock_movement_history', EntitySearchInputType::class, [
+                ->add('stock_movements', EntitySearchInputType::class, [
                     'required' => false,
                     'label' => $this->trans('Recent stock movements', 'Admin.Catalog.Feature'),
                     'label_tag_name' => 'h4',
                     'layout' => 'table',
-                    'entry_type' => StockMovementHistoryType::class,
+                    'entry_type' => StockMovementEventType::class,
                     // No search input
                     'allow_search' => false,
                     // No delete button
