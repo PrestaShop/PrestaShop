@@ -40,7 +40,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\AssociatedSup
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Provides the data that is used to prefill the Combination form
@@ -58,23 +57,15 @@ class CombinationFormDataProvider implements FormDataProviderInterface
     private $shopContext;
 
     /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
      * @param CommandBusInterface $queryBus
      * @param Context $shopContext
-     * @param TranslatorInterface $translator
      */
     public function __construct(
         CommandBusInterface $queryBus,
-        Context $shopContext,
-        TranslatorInterface $translator
+        Context $shopContext
     ) {
         $this->queryBus = $queryBus;
         $this->shopContext = $shopContext;
-        $this->translator = $translator;
     }
 
     /**
@@ -145,15 +136,12 @@ class CombinationFormDataProvider implements FormDataProviderInterface
     {
         return array_map(
             function (StockMovementEvent $history): array {
+                $date = null;
                 if ($history->isEdition()) {
                     $date = $history
                         ->getDate('add')
                         ->format(DateTime::DEFAULT_DATETIME_FORMAT)
                     ;
-                } elseif ($history->getDeltaQuantity() < 0) {
-                    $date = $this->translator->trans('Shipped products');
-                } else {
-                    $date = $this->translator->trans('Returned products');
                 }
 
                 return [
