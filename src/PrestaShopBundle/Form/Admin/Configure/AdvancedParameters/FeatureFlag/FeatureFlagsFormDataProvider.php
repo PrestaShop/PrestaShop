@@ -86,7 +86,7 @@ class FeatureFlagsFormDataProvider implements FormDataProviderInterface
             ];
         }
 
-        return ['feature_flags' => $featureFlagsData, 'submit' => ['disabled' => $isDisabled, 'stability' => $this->stability]];
+        return ['feature_flags' => $featureFlagsData];
     }
 
     public function setData(array $flagsData)
