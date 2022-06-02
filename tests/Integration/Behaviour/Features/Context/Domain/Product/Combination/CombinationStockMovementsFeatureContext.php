@@ -38,8 +38,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementEve
 class CombinationStockMovementsFeatureContext extends AbstractCombinationFeatureContext
 {
     private const DATE_KEYS_BY_TYPE = [
-        StockMovementEvent::SINGLE_TYPE => ['add'],
-        StockMovementEvent::RANGE_TYPE => ['from', 'to'],
+        StockMovementEvent::EDITION_TYPE => ['add'],
+        StockMovementEvent::ORDERS_TYPE => ['from', 'to'],
     ];
 
     /**

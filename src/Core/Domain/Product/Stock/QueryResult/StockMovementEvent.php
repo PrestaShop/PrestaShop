@@ -33,8 +33,8 @@ use RuntimeException;
 
 class StockMovementEvent
 {
-    public const SINGLE_TYPE = 'single';
-    public const RANGE_TYPE = 'range';
+    public const EDITION_TYPE = 'edition';
+    public const ORDERS_TYPE = 'orders';
 
     /**
      * @var string
@@ -146,7 +146,7 @@ class StockMovementEvent
         );
     }
 
-    public static function createSingleEvent(
+    public static function createEditionEvent(
         string $dateAdd,
         int $stockMovementId,
         int $stockId,
@@ -157,7 +157,7 @@ class StockMovementEvent
         int $deltaQuantity
     ): self {
         return new static(
-            static::SINGLE_TYPE,
+            static::EDITION_TYPE,
             [
                 'add' => $dateAdd,
             ],
@@ -180,7 +180,7 @@ class StockMovementEvent
      * @param string[]|int[] $employeeIds
      * @param int $deltaQuantity
      */
-    public static function createRangeEvent(
+    public static function createOrdersEvent(
         string $fromDate,
         string $toDate,
         array $stockMovementIds,
@@ -190,7 +190,7 @@ class StockMovementEvent
         int $deltaQuantity
     ): self {
         return new static(
-            static::RANGE_TYPE,
+            static::ORDERS_TYPE,
             [
                 'from' => $fromDate,
                 'to' => $toDate,
@@ -206,21 +206,21 @@ class StockMovementEvent
     }
 
     /**
-     * Returns history type : "single" or "range"
+     * Returns history type : "edition" or "orders"
      */
     public function getType(): string
     {
         return $this->type;
     }
 
-    public function isSingle(): bool
+    public function isEdition(): bool
     {
-        return static::SINGLE_TYPE === $this->getType();
+        return static::EDITION_TYPE === $this->getType();
     }
 
-    public function isRange(): bool
+    public function isFromOrders(): bool
     {
-        return static::RANGE_TYPE === $this->getType();
+        return static::ORDERS_TYPE === $this->getType();
     }
 
     /**
