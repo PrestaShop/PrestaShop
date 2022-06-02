@@ -146,7 +146,7 @@ export default class CategoryTreeSelector {
     }
 
     this.treeCategories.forEach((treeCategory) => {
-      const treeCategoryElement = this.generateCategoryTree(treeCategory);
+      const treeCategoryElement = this.generateCategoryTree(treeCategory, null);
       categoryTree.append(treeCategoryElement);
     });
 
@@ -192,15 +192,33 @@ export default class CategoryTreeSelector {
   /**
    * Used to recursively create items of the category tree
    */
-  private generateCategoryTree(treeCategory: TreeCategory): HTMLElement {
+  private generateCategoryTree(treeCategory: TreeCategory, parentNode: HTMLElement|null): HTMLElement {
     const categoryNode = this.generateTreeElement(treeCategory) as HTMLElement;
     const childrenList = categoryNode.querySelector(ProductCategoryMap.childrenList) as HTMLElement;
-
     const hasChildren = treeCategory.children && treeCategory.children.length > 0;
+    const parentInput = parentNode?.querySelector<HTMLInputElement>(ProductCategoryMap.treeCheckboxInput);
+
+    //@todo: check if needed. WIP - commiting progress
+    // // Show child list only if parent is checked
+    // childrenList.classList.toggle(
+    //   'd-none',
+    //   hasChildren && !parentInput?.checked,
+    // );
+
+    const checkboxInput = categoryNode.querySelector<HTMLInputElement>(ProductCategoryMap.treeCheckboxInput);
+
+    if (!checkboxInput) {
+      // checkbox input is mandatory. If there is none, it's something fatally wrong already. Returning empty HTML to respect return type.
+      // eslint-disable-next-line no-throw-literal
+      throw 'Checkbox input not found in category tree. It is mandatory detail for category tree to work.';
+    }
+
+    // force show parent checkbox tree if at least one of childs are checked
+    parentInput?.classList.toggle('d-none', !checkboxInput.checked);
+
     categoryNode.classList.toggle('more', hasChildren);
     if (hasChildren) {
       const inputsContainer = categoryNode.querySelector(ProductCategoryMap.treeElementInputs) as HTMLElement;
-      const checkboxInput = inputsContainer.querySelector(ProductCategoryMap.treeCheckboxInput) as HTMLInputElement;
       checkboxInput.value = String(treeCategory.id);
 
       inputsContainer.addEventListener('click', (event) => {
@@ -218,7 +236,7 @@ export default class CategoryTreeSelector {
 
       // Recursively build the children trees
       treeCategory.children.forEach((childCategory) => {
-        const childTree = this.generateCategoryTree(childCategory);
+        const childTree = this.generateCategoryTree(childCategory, checkboxInput);
 
         childrenList.append(childTree);
       });

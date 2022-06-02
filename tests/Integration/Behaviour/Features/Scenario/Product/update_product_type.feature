@@ -94,8 +94,8 @@ Feature: Add basic product from Back Office (BO)
       | locale | value          |
       | en-US  | bottle of beer |
     And product "virtualProduct" should be assigned to following categories:
-      | id reference | name[en-US] | is default |
-      | home         | Home        | true       |
+      | id reference | name | is default |
+      | home         | Home | true       |
     When I update product "virtualProduct" prices with following information:
       | price              | 51.42           |
       | ecotax             | 8.56            |
