@@ -133,6 +133,6 @@ class FeatureFlagsFormDataProvider implements FormDataProviderInterface
 
     protected function getOneFeatureFlagByName(string $featureFlagName): ?FeatureFlag
     {
-        return $this->doctrineEntityManager->getRepository(FeatureFlag::class)->getByName($featureFlagName);
+        return $this->doctrineEntityManager->getRepository(FeatureFlag::class)->findOneBy(['name' => $featureFlagName]);
     }
 }
