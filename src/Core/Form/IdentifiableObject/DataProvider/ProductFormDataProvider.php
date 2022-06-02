@@ -414,7 +414,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
     {
         return array_map(
             function (StockMovementEvent $history): array {
-                if ($history->isSingle()) {
+                if ($history->isEdition()) {
                     $date = $history
                         ->getDate('add')
                         ->format(DateTime::DEFAULT_DATETIME_FORMAT)

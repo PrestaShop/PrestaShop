@@ -84,7 +84,7 @@ class StockMovementRepository
             )
         ;
 
-        // Add grouping condition to get range and single rows alternatively
+        // Add grouping condition to get orders and edition rows alternatively
         $this->addGroupingCondition($queryBuilder);
 
         $queryBuilder
@@ -115,26 +115,26 @@ class StockMovementRepository
          * a single row whereas the customer orders should be aggregated together between each edition. That's where our grouping_id
          * column comes into action, it is generated based on our grouping condition (sm.id_order IS NULL) and basically each time the
          * condition is met we update @grouping_id variable by assigning it the lowest stock movement ID, this indicates that our list
-         * changed from a state of single edition movement to a state of grouped customer orders.
+         * changed from a state of single edition movement to a state of grouped orders movements.
          *
          * But it wouldn't be enough because two rows share the same grouping_id, so we need an extra column grouping_type which indicates
          * which type of movement we are dealing with. Finally by concatenating those two infos we get a grouping_name column which is the
          * proper criteria that we are gonna be able to use to group our rows properly using a groupBy(grouping_name).
          *
          * For more clarity here is a simplified subset of the query so that you can picture the expected result, you can see how each
-         * row changes from the single to the range group, and that range rows are an aggregate of multiple stock movements which each
+         * row changes from the edition to the orders group, and that orders rows are an aggregate of multiple stock movements which each
          * delta_quantity was summed to get their total.
          *
          * | id_stock_mvt_min | id_stock_mvt_count | id_stock_mvt_list | id_order_list | id_employee_list | delta_quantity | grouping_id | grouping_type | grouping_name |
          * | ---------------- | ------------------ | ----------------- | ------------- | ---------------- | -------------- | ----------- | ------------- | ------------- |
-         * | 7                | 3                  | 9,8,7             | 12,11,10      | 1,1,1            | -6             | 6           | range         | range-6       |
-         * | 6                | 1                  | 6                 | NULL          | 1                | 5              | 6           | single        | single-6      |
-         * | 4                | 2                  | 5,4               | 9,8           | 1,1              | -9             | 3           | range         | range-3       |
-         * | 3                | 1                  | 3                 | NULL          | 1                | 10             | 3           | single        | single-3      |
-         * | 2                | 1                  | 2                 | 6             | 1                | -2             | 1           | range         | range-1       |
+         * | 7                | 3                  | 9,8,7             | 12,11,10      | 1,1,1            | -6             | 6           | orders         | orders-6       |
+         * | 6                | 1                  | 6                 | NULL          | 1                | 5              | 6           | edition        | edition-6      |
+         * | 4                | 2                  | 5,4               | 9,8           | 1,1              | -9             | 3           | orders         | orders-3       |
+         * | 3                | 1                  | 3                 | NULL          | 1                | 10             | 3           | edition        | edition-3      |
+         * | 2                | 1                  | 2                 | 6             | 1                | -2             | 1           | orders         | orders-1       |
          *
-         * Note: you can see that a range row is now necessarily composed of multiple stock movements, the important is that it is between two employee editions (single row),
-         * however we could have multiple single rows one after another if no products were bought in between.
+         * Note: you can see that an orders row is not necessarily composed of multiple stock movements, the important is that it is between two employee edition rows,
+         * however we could have multiple edition rows one after another if no products were bought in between.
          *
          * The real query has more columns returned, not all of them are being used currently but it's a good thing to keep them for future use
          * (maybe we'll need to add a link to all related orders for example) and as a demonstration.
@@ -146,8 +146,8 @@ class StockMovementRepository
         $queryBuilder
             ->addSelect(
                 "MIN(@grouping_id := CASE WHEN @grouping_id IS NULL THEN $stockMovementId WHEN $groupingCondition THEN $stockMovementId ELSE @grouping_id END) grouping_id",
-                "CASE WHEN $groupingCondition THEN CONCAT('single-', $stockMovementId) ELSE CONCAT('range-', @grouping_id) END grouping_name",
-                "CASE WHEN $groupingCondition THEN 'single' ELSE 'range' END grouping_type"
+                "CASE WHEN $groupingCondition THEN CONCAT('edition-', $stockMovementId) ELSE CONCAT('orders-', @grouping_id) END grouping_name",
+                "CASE WHEN $groupingCondition THEN 'edition' ELSE 'orders' END grouping_type"
             )
             ->groupBy('grouping_name')
         ;

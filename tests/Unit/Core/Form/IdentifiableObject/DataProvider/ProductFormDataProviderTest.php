@@ -423,7 +423,7 @@ class ProductFormDataProviderTest extends TestCase
             'available_date' => new DateTime('1969/07/20'),
             'stock_movement_history' => [
                 [
-                    'type' => StockMovementEvent::RANGE_TYPE,
+                    'type' => StockMovementEvent::ORDERS_TYPE,
                     'from_date' => '2022-01-13 18:20:58',
                     'to_date' => '2021-05-24 15:24:32',
                     'stock_movement_ids' => [321, 322, 323, 324, 325],
@@ -433,7 +433,7 @@ class ProductFormDataProviderTest extends TestCase
                     'delta_quantity' => -19,
                 ],
                 [
-                    'type' => StockMovementEvent::SINGLE_TYPE,
+                    'type' => StockMovementEvent::EDITION_TYPE,
                     'date_add' => '2021-05-24 15:24:32',
                     'stock_movement_id' => 320,
                     'stock_id' => 42,
@@ -444,7 +444,7 @@ class ProductFormDataProviderTest extends TestCase
                     'delta_quantity' => +20,
                 ],
                 [
-                    'type' => StockMovementEvent::RANGE_TYPE,
+                    'type' => StockMovementEvent::ORDERS_TYPE,
                     'from_date' => '2021-05-24 15:24:32',
                     'to_date' => '2021-05-22 16:35:48',
                     'stock_movement_ids' => [221, 222, 223, 224, 225],
@@ -454,7 +454,7 @@ class ProductFormDataProviderTest extends TestCase
                     'delta_quantity' => -23,
                 ],
                 [
-                    'type' => StockMovementEvent::SINGLE_TYPE,
+                    'type' => StockMovementEvent::EDITION_TYPE,
                     'date_add' => '2021-05-22 16:35:48',
                     'stock_movement_id' => 220,
                     'stock_id' => 42,
@@ -465,7 +465,7 @@ class ProductFormDataProviderTest extends TestCase
                     'delta_quantity' => +20,
                 ],
                 [
-                    'type' => StockMovementEvent::RANGE_TYPE,
+                    'type' => StockMovementEvent::ORDERS_TYPE,
                     'from_date' => '2021-05-22 16:35:48',
                     'to_date' => '2021-01-24 15:24:32',
                     'stock_movement_ids' => [121, 122, 123, 124, 125],
@@ -488,31 +488,31 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData['stock']['availability']['available_date'] = '1969-07-20';
         $expectedOutputData['stock']['quantities']['stock_movement_history'] = [
             [
-                'type' => 'group',
+                'type' => 'orders',
                 'date' => 'Shipped products',
                 'employee_name' => null,
                 'delta_quantity' => -19,
             ],
             [
-                'type' => 'single',
+                'type' => 'edition',
                 'date' => '2021-05-24 15:24:32',
                 'employee_name' => '%firstname% %lastname%',
                 'delta_quantity' => +20,
             ],
             [
-                'type' => 'group',
+                'type' => 'orders',
                 'date' => 'Shipped products',
                 'employee_name' => null,
                 'delta_quantity' => -23,
             ],
             [
-                'type' => 'single',
+                'type' => 'edition',
                 'date' => '2021-05-22 16:35:48',
                 'employee_name' => '%firstname% %lastname%',
                 'delta_quantity' => +20,
             ],
             [
-                'type' => 'group',
+                'type' => 'orders',
                 'date' => 'Shipped products',
                 'employee_name' => null,
                 'delta_quantity' => -17,
@@ -1258,8 +1258,8 @@ class ProductFormDataProviderTest extends TestCase
     {
         return array_map(
             static function (array $historyData): StockMovementEvent {
-                if (StockMovementEvent::SINGLE_TYPE === $historyData['type']) {
-                    return StockMovementEvent::createSingleEvent(
+                if (StockMovementEvent::EDITION_TYPE === $historyData['type']) {
+                    return StockMovementEvent::createEditionEvent(
                         $historyData['date_add'],
                         $historyData['stock_movement_id'],
                         $historyData['stock_id'],
@@ -1270,8 +1270,8 @@ class ProductFormDataProviderTest extends TestCase
                         $historyData['delta_quantity']
                     );
                 }
-                if (StockMovementEvent::RANGE_TYPE === $historyData['type']) {
-                    return StockMovementEvent::createRangeEvent(
+                if (StockMovementEvent::ORDERS_TYPE === $historyData['type']) {
+                    return StockMovementEvent::createOrdersEvent(
                         $historyData['from_date'],
                         $historyData['to_date'],
                         $historyData['stock_movement_ids'],

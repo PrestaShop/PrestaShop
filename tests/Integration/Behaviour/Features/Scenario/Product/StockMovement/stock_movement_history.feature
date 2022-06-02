@@ -100,36 +100,36 @@ Feature: Search stock movements from Back Office (BO)
     And the available stock for product "product1" should be 95
     # Now we check at the stock movements
     When I search stock movements of product "product1" I should get following results:
-      | type   | first_name | last_name | delta_quantity |
-      | range  |            |           | -6             |
-      | single | Puff       | Daddy     | 5              |
-      | range  |            |           | -9             |
-      | single | Puff       | Daddy     | 10             |
-      # Since no stock movement is generated until the order is shipped this range only has a quantity of -2,
+      | type    | first_name | last_name | delta_quantity |
+      | orders  |            |           | -6             |
+      | edition | Puff       | Daddy     | 5              |
+      | orders  |            |           | -9             |
+      | edition | Puff       | Daddy     | 10             |
+      # Since no stock movement is generated until the order is shipped this orders movement only has a quantity of -2,
       # not -5 because second order is still waiting for payment
-      | range  |            |           | -2             |
+      | orders  |            |           | -2             |
     When I search stock movements of product "product1" with offset 0 and limit 6 I should get following results:
-      | type   | first_name | last_name | delta_quantity |
-      | range  |            |           | -6             |
-      | single | Puff       | Daddy     | 5              |
-      | range  |            |           | -9             |
-      | single | Puff       | Daddy     | 10             |
-      | range  |            |           | -2             |
-      | single | Puff       | Daddy     | 100            |
+      | type    | first_name | last_name | delta_quantity |
+      | orders  |            |           | -6             |
+      | edition | Puff       | Daddy     | 5              |
+      | orders  |            |           | -9             |
+      | edition | Puff       | Daddy     | 10             |
+      | orders  |            |           | -2             |
+      | edition | Puff       | Daddy     | 100            |
     When I search stock movements of product "product1" with offset 1 and limit 5 I should get following results:
-      | type   | first_name | last_name | delta_quantity |
-      | single | Puff       | Daddy     | 5              |
-      | range  |            |           | -9             |
-      | single | Puff       | Daddy     | 10             |
-      | range  |            |           | -2             |
-      | single | Puff       | Daddy     | 100            |
+      | type    | first_name | last_name | delta_quantity |
+      | edition | Puff       | Daddy     | 5              |
+      | orders  |            |           | -9             |
+      | edition | Puff       | Daddy     | 10             |
+      | orders  |            |           | -2             |
+      | edition | Puff       | Daddy     | 100            |
     When I search stock movements of product "product1" with offset 2 and limit 3 I should get following results:
-      | type   | first_name | last_name | delta_quantity |
-      | range  |            |           | -9             |
-      | single | Puff       | Daddy     | 10             |
-      | range  |            |           | -2             |
+      | type    | first_name | last_name | delta_quantity |
+      | orders  |            |           | -9             |
+      | edition | Puff       | Daddy     | 10             |
+      | orders  |            |           | -2             |
 
-  Scenario: I can search the last stock movements also if the first one is an edition (and can have multiple single edition one after another)
+  Scenario: I can search the last stock movements also if the first one is an edition (and can have multiple editions one after another)
     Given there is a product in the catalog named "product2" with a price of 17.0 and 100 items in stock
     # First edit product quantity
     When I update product "product2" stock with following information:
@@ -149,8 +149,8 @@ Feature: Search stock movements from Back Office (BO)
       | delta_quantity | 1 |
     Then the available stock for product "product2" should be 94
     When I search stock movements of product "product2" I should get following results:
-      | type   | first_name | last_name | delta_quantity |
-      | single | Puff       | Daddy     | 1              |
-      | range  |            |           | -2             |
-      | single | Puff       | Daddy     | -5             |
-      | single | Puff       | Daddy     | 100            |
+      | type    | first_name | last_name | delta_quantity |
+      | edition | Puff       | Daddy     | 1              |
+      | orders  |            |           | -2             |
+      | edition | Puff       | Daddy     | -5             |
+      | edition | Puff       | Daddy     | 100            |

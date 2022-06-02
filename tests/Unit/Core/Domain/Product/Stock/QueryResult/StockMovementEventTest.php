@@ -49,7 +49,7 @@ class StockMovementEventTest extends TestCase
         ?string $employeeLastName,
         int $deltaQuantity
     ): void {
-        $history = StockMovementEvent::createSingleEvent(
+        $history = StockMovementEvent::createEditionEvent(
             $dateAdd,
             $stockMovementId,
             $stockId,
@@ -59,8 +59,8 @@ class StockMovementEventTest extends TestCase
             $employeeLastName,
             $deltaQuantity
         );
-        Assert::assertTrue($history->isSingle());
-        Assert::assertFalse($history->isRange());
+        Assert::assertTrue($history->isEdition());
+        Assert::assertFalse($history->isFromOrders());
         Assert::assertSame('single', $history->getType());
         Assert::assertEquals(new DateTimeImmutable($dateAdd), $history->getDate('add'));
         Assert::assertSame([$stockMovementId], $history->getStockMovementIds());
@@ -129,7 +129,7 @@ class StockMovementEventTest extends TestCase
         array $employeeIds,
         int $deltaQuantity
     ): void {
-        $history = StockMovementEvent::createRangeEvent(
+        $history = StockMovementEvent::createOrdersEvent(
             $fromDate,
             $toDate,
             $stockMovementIds,
@@ -138,8 +138,8 @@ class StockMovementEventTest extends TestCase
             $employeeIds,
             $deltaQuantity
         );
-        Assert::assertFalse($history->isSingle());
-        Assert::assertTrue($history->isRange());
+        Assert::assertFalse($history->isEdition());
+        Assert::assertTrue($history->isFromOrders());
         Assert::assertSame('group', $history->getType());
         Assert::assertEquals(new DateTimeImmutable($fromDate), $history->getDate('from'));
         Assert::assertEquals(new DateTimeImmutable($toDate), $history->getDate('to'));
@@ -193,7 +193,7 @@ class StockMovementEventTest extends TestCase
 
     public function getInvalidDateKeyFromHistory(): Generator
     {
-        $singleHistory = StockMovementEvent::createSingleEvent(
+        $singleHistory = StockMovementEvent::createEditionEvent(
             '2022-01-13 18:21:33',
             1,
             2,
@@ -203,7 +203,7 @@ class StockMovementEventTest extends TestCase
             'Cruz',
             5
         );
-        $groupHistory = StockMovementEvent::createRangeEvent(
+        $groupHistory = StockMovementEvent::createOrdersEvent(
             '2022-01-13 18:20:58',
             '2022-01-13 18:21:18',
             [1, 2],

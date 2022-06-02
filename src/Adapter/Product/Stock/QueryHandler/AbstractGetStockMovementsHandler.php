@@ -66,18 +66,18 @@ abstract class AbstractGetStockMovementsHandler
 
         return array_map(
             function (array $historyRow): StockMovementEvent {
-                return $historyRow['grouping_type'] === 'single'
-                    ? $this->createSingleStockMovementEvent($historyRow)
-                    : $this->createRangeStockMovementEvent($historyRow)
+                return $historyRow['grouping_type'] === StockMovementEvent::EDITION_TYPE
+                    ? $this->createEditionStockMovementEvent($historyRow)
+                    : $this->createOrdersStockMovementEvent($historyRow)
                 ;
             },
             $lastStockMovements
         );
     }
 
-    protected function createSingleStockMovementEvent(array $historyRow): StockMovementEvent
+    protected function createEditionStockMovementEvent(array $historyRow): StockMovementEvent
     {
-        return StockMovementEvent::createSingleEvent(
+        return StockMovementEvent::createEditionEvent(
             $historyRow['date_add_min'],
             (int) $historyRow['id_stock_mvt_min'],
             (int) $historyRow['id_stock_list'],
@@ -89,9 +89,9 @@ abstract class AbstractGetStockMovementsHandler
         );
     }
 
-    protected function createRangeStockMovementEvent(array $historyRow): StockMovementEvent
+    protected function createOrdersStockMovementEvent(array $historyRow): StockMovementEvent
     {
-        return StockMovementEvent::createRangeEvent(
+        return StockMovementEvent::createOrdersEvent(
             $historyRow['date_add_min'],
             $historyRow['date_add_max'],
             explode(',', $historyRow['id_stock_mvt_list']),
