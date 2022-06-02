@@ -31,10 +31,10 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product;
 use PrestaShop\PrestaShop\Adapter\Shop\Url\ProductPreviewProvider;
 use PrestaShop\PrestaShop\Adapter\Shop\Url\ProductProvider;
 use PrestaShopBundle\Form\Admin\Type\IconButtonType;
-use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -81,6 +81,9 @@ class FooterType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $request = Request::createFromGlobals();
+        $page = $request->query->get('page');
+
         $productId = !empty($options['product_id']) ? (int) $options['product_id'] : null;
         $deleteUrl = $productId ? $this->router->generate('admin_product_unit_action', [
             'action' => 'delete',
@@ -99,7 +102,7 @@ class FooterType extends TranslatorAwareType
                 'type' => 'link',
                 'icon' => 'arrow_back_ios',
                 'attr' => [
-                    'class' => 'btn-outline-secondary border-white',
+                    'class' => 'btn-outline-secondary border-white go-to-catalog-button',
                     'href' => $this->router->generate('admin_products_v2_index', ['offset' => 'last', 'limit' => 'last']),
                 ],
             ])
@@ -108,9 +111,8 @@ class FooterType extends TranslatorAwareType
                 'type' => 'link',
                 'icon' => 'content_copy',
                 'attr' => [
-                    'class' => 'btn-outline-secondary',
+                    'class' => 'btn-outline-secondary  duplicate-product-button' . (empty($productId) ? ' disabled' : ''),
                     'href' => $duplicateUrl,
-                    'disabled' => empty($productId),
                 ],
             ])
             ->add('delete', IconButtonType::class, [
@@ -134,9 +136,18 @@ class FooterType extends TranslatorAwareType
                 'type' => 'link',
                 'icon' => 'add_circle_outline',
                 'attr' => [
-                    'class' => 'btn-outline-secondary new-product',
+                    'class' => 'btn-outline-secondary new-product-button' . (empty($productId) ? ' disabled' : ''),
                     'href' => $this->router->generate('admin_products_v2_create'),
-                    'disabled' => empty($productId),
+                ],
+            ])
+            ->add('cancel', IconButtonType::class, [
+                'label' => $this->trans('Cancel', 'Admin.Actions'),
+                'icon' => 'undo',
+                'type' => 'link',
+                'attr' => [
+                    'href' => $page,
+                    'class' => 'btn-secondary cancel-button' . (empty($productId) ? ' disabled' : ''),
+                    'disabled' => true,
                 ],
             ])
             // These two inputs are displayed separately
@@ -147,16 +158,8 @@ class FooterType extends TranslatorAwareType
                 'attr' => [
                     'target' => '_blank',
                     'href' => $productPreviewUrl,
-                    'class' => 'btn-outline-secondary preview-url-button',
+                    'class' => 'btn-outline-secondary preview-url-button' . (empty($productId) ? ' disabled' : ''),
                     'data-seo-url' => $seoUrl,
-                    'disabled' => empty($productId),
-                ],
-            ])
-            ->add('active', SwitchType::class, [
-                'label' => false,
-                'choices' => [
-                    $this->trans('Offline', 'Admin.Global') => false,
-                    $this->trans('Online', 'Admin.Global') => true,
                 ],
             ])
             ->add('save', SubmitType::class, [
