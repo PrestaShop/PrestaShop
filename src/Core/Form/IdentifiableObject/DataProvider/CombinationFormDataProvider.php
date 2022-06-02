@@ -33,8 +33,8 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetCombinationStockMovementHistory;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementHistory;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetCombinationStockMovements;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementEvent;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetAssociatedSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\AssociatedSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
@@ -144,7 +144,7 @@ class CombinationFormDataProvider implements FormDataProviderInterface
     private function getStockMovementHistories(int $combinationId, ShopConstraint $shopConstraint): array
     {
         return array_map(
-            function (StockMovementHistory $history): array {
+            function (StockMovementEvent $history): array {
                 if ($history->isSingle()) {
                     $date = $history
                         ->getDate('add')
@@ -174,7 +174,7 @@ class CombinationFormDataProvider implements FormDataProviderInterface
                 ];
             },
             $this->queryBus->handle(
-                new GetCombinationStockMovementHistory(
+                new GetCombinationStockMovements(
                     $combinationId,
                     $shopConstraint->getShopId()->getValue()
                 )

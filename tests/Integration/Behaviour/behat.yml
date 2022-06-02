@@ -403,10 +403,10 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\OrderFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\AddProductFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\CombinationListingFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\CombinationStockMovementHistoryFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\CombinationStockMovementsFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\GenerateCombinationFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\UpdateCombinationStockFeatureContext
-                - Tests\Integration\Behaviour\Features\Context\Domain\Product\StockMovementHistoryFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\StockMovementsFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateStockFeatureContext
         shop:
             paths:

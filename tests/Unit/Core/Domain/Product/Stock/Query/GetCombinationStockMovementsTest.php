@@ -31,11 +31,11 @@ use Generator;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetCombinationStockMovementHistory;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetCombinationStockMovements;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
-class GetCombinationStockMovementHistoryTest extends TestCase
+class GetCombinationStockMovementsTest extends TestCase
 {
     /**
      * @dataProvider getValidValues
@@ -46,7 +46,7 @@ class GetCombinationStockMovementHistoryTest extends TestCase
         int $offset,
         int $limit
     ): void {
-        $query = new GetCombinationStockMovementHistory(
+        $query = new GetCombinationStockMovements(
             $combinationId,
             $shopId,
             $offset,
@@ -85,7 +85,7 @@ class GetCombinationStockMovementHistoryTest extends TestCase
     ): void {
         $this->expectException($exceptionClass);
 
-        new GetCombinationStockMovementHistory(
+        new GetCombinationStockMovements(
             $combinationId,
             $shopId,
             $offset,

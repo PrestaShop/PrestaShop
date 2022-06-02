@@ -63,8 +63,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInforma
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductStockInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RelatedProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetProductStockMovementHistory;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementHistory;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetProductStockMovements;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementEvent;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
@@ -423,7 +423,7 @@ class ProductFormDataProviderTest extends TestCase
             'available_date' => new DateTime('1969/07/20'),
             'stock_movement_history' => [
                 [
-                    'type' => StockMovementHistory::RANGE_TYPE,
+                    'type' => StockMovementEvent::RANGE_TYPE,
                     'from_date' => '2022-01-13 18:20:58',
                     'to_date' => '2021-05-24 15:24:32',
                     'stock_movement_ids' => [321, 322, 323, 324, 325],
@@ -433,7 +433,7 @@ class ProductFormDataProviderTest extends TestCase
                     'delta_quantity' => -19,
                 ],
                 [
-                    'type' => StockMovementHistory::SINGLE_TYPE,
+                    'type' => StockMovementEvent::SINGLE_TYPE,
                     'date_add' => '2021-05-24 15:24:32',
                     'stock_movement_id' => 320,
                     'stock_id' => 42,
@@ -444,7 +444,7 @@ class ProductFormDataProviderTest extends TestCase
                     'delta_quantity' => +20,
                 ],
                 [
-                    'type' => StockMovementHistory::RANGE_TYPE,
+                    'type' => StockMovementEvent::RANGE_TYPE,
                     'from_date' => '2021-05-24 15:24:32',
                     'to_date' => '2021-05-22 16:35:48',
                     'stock_movement_ids' => [221, 222, 223, 224, 225],
@@ -454,7 +454,7 @@ class ProductFormDataProviderTest extends TestCase
                     'delta_quantity' => -23,
                 ],
                 [
-                    'type' => StockMovementHistory::SINGLE_TYPE,
+                    'type' => StockMovementEvent::SINGLE_TYPE,
                     'date_add' => '2021-05-22 16:35:48',
                     'stock_movement_id' => 220,
                     'stock_id' => 42,
@@ -465,7 +465,7 @@ class ProductFormDataProviderTest extends TestCase
                     'delta_quantity' => +20,
                 ],
                 [
-                    'type' => StockMovementHistory::RANGE_TYPE,
+                    'type' => StockMovementEvent::RANGE_TYPE,
                     'from_date' => '2021-05-22 16:35:48',
                     'to_date' => '2021-01-24 15:24:32',
                     'stock_movement_ids' => [121, 122, 123, 124, 125],
@@ -1252,14 +1252,14 @@ class ProductFormDataProviderTest extends TestCase
     /**
      * @param array $productData
      *
-     * @return StockMovementHistory[]
+     * @return StockMovementEvent[]
      */
     private function createStockMovementHistories(array $productData): array
     {
         return array_map(
-            static function (array $historyData): StockMovementHistory {
-                if (StockMovementHistory::SINGLE_TYPE === $historyData['type']) {
-                    return StockMovementHistory::createSingleHistory(
+            static function (array $historyData): StockMovementEvent {
+                if (StockMovementEvent::SINGLE_TYPE === $historyData['type']) {
+                    return StockMovementEvent::createSingleEvent(
                         $historyData['date_add'],
                         $historyData['stock_movement_id'],
                         $historyData['stock_id'],
@@ -1270,8 +1270,8 @@ class ProductFormDataProviderTest extends TestCase
                         $historyData['delta_quantity']
                     );
                 }
-                if (StockMovementHistory::RANGE_TYPE === $historyData['type']) {
-                    return StockMovementHistory::createRangeHistory(
+                if (StockMovementEvent::RANGE_TYPE === $historyData['type']) {
+                    return StockMovementEvent::createRangeEvent(
                         $historyData['from_date'],
                         $historyData['to_date'],
                         $historyData['stock_movement_ids'],
@@ -1282,7 +1282,7 @@ class ProductFormDataProviderTest extends TestCase
                     );
                 }
                 throw new RuntimeException(
-                    sprintf('Unsupported stock movement history type "%s"', $historyData['type'])
+                    sprintf('Unsupported stock movement event type "%s"', $historyData['type'])
                 );
             },
             $productData['stock_movement_history'] ?? []
@@ -1513,7 +1513,7 @@ class ProductFormDataProviderTest extends TestCase
             $this->isInstanceOf(GetProductSupplierOptions::class),
             $this->isInstanceOf(GetProductFeatureValues::class),
             $this->isInstanceOf(GetProductCustomizationFields::class),
-            $this->isInstanceOf(GetProductStockMovementHistory::class),
+            $this->isInstanceOf(GetProductStockMovements::class),
             $this->isInstanceOf(GetRelatedProducts::class),
             $this->isInstanceOf(GetPackedProducts::class)
         );
@@ -1523,7 +1523,7 @@ class ProductFormDataProviderTest extends TestCase
      * @param mixed $query
      * @param array $productData
      *
-     * @return ProductForEditing|ProductSupplierOptions|ProductFeatureValue[]|CustomizationField[]|StockMovementHistory[]|RelatedProduct[]
+     * @return ProductForEditing|ProductSupplierOptions|ProductFeatureValue[]|CustomizationField[]|StockMovementEvent[]|RelatedProduct[]
      */
     private function createResultBasedOnQuery($query, array $productData)
     {
@@ -1536,7 +1536,7 @@ class ProductFormDataProviderTest extends TestCase
                 return $this->createProductFeatureValueOptions($productData);
             case GetProductCustomizationFields::class:
                 return $this->createProductCustomizationFields($productData);
-            case GetProductStockMovementHistory::class:
+            case GetProductStockMovements::class:
                 return $this->createStockMovementHistories($productData);
             case GetRelatedProducts::class:
                 return $this->createRelatedProducts($productData);

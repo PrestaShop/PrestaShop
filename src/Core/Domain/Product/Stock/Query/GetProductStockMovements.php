@@ -29,24 +29,29 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query;
 
 use LogicException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 
-class GetCombinationStockMovementHistory extends AbstractGetStockMovementHistory
+/**
+ * This query returns a list of stock movements for a product, each row is either
+ * an edition from the BO by an employee or a range of customer orders resume (all the
+ * products that were sold between each edition).
+ */
+class GetProductStockMovements extends AbstractGetStockMovements
 {
     /**
-     * @var CombinationId
+     * @var ProductId
      */
-    private $combinationId;
+    private $productId;
 
     /**
-     * @throws CombinationConstraintException
+     * @throws ProductConstraintException
      * @throws ShopException
      * @throws LogicException
      */
     public function __construct(
-        int $combinationId,
+        int $productId,
         int $shopId,
         int $offset = 0,
         int $limit = self::DEFAULT_LIMIT
@@ -56,11 +61,11 @@ class GetCombinationStockMovementHistory extends AbstractGetStockMovementHistory
             $offset,
             $limit
         );
-        $this->combinationId = new CombinationId($combinationId);
+        $this->productId = new ProductId($productId);
     }
 
-    public function getCombinationId(): CombinationId
+    public function getProductId(): ProductId
     {
-        return $this->combinationId;
+        return $this->productId;
     }
 }

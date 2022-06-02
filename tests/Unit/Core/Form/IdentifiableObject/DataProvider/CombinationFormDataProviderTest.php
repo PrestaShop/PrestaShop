@@ -41,8 +41,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationPrices;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationStock;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetCombinationStockMovementHistory;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementHistory;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetCombinationStockMovements;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementEvent;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetAssociatedSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\AssociatedSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
@@ -131,7 +131,7 @@ class CombinationFormDataProviderTest extends TestCase
             'available_date' => new DateTime('1969/07/20'),
             'stock_movement_history' => [
                 [
-                    'type' => StockMovementHistory::RANGE_TYPE,
+                    'type' => StockMovementEvent::RANGE_TYPE,
                     'from_date' => '2022-01-13 18:20:58',
                     'to_date' => '2021-05-24 15:24:32',
                     'stock_movement_ids' => [321, 322, 323, 324, 325],
@@ -141,7 +141,7 @@ class CombinationFormDataProviderTest extends TestCase
                     'delta_quantity' => -19,
                 ],
                 [
-                    'type' => StockMovementHistory::SINGLE_TYPE,
+                    'type' => StockMovementEvent::SINGLE_TYPE,
                     'date_add' => '2021-05-24 15:24:32',
                     'stock_movement_id' => 320,
                     'stock_id' => 42,
@@ -152,7 +152,7 @@ class CombinationFormDataProviderTest extends TestCase
                     'delta_quantity' => +20,
                 ],
                 [
-                    'type' => StockMovementHistory::RANGE_TYPE,
+                    'type' => StockMovementEvent::RANGE_TYPE,
                     'from_date' => '2021-05-24 15:24:32',
                     'to_date' => '2021-05-22 16:35:48',
                     'stock_movement_ids' => [221, 222, 223, 224, 225],
@@ -162,7 +162,7 @@ class CombinationFormDataProviderTest extends TestCase
                     'delta_quantity' => -23,
                 ],
                 [
-                    'type' => StockMovementHistory::SINGLE_TYPE,
+                    'type' => StockMovementEvent::SINGLE_TYPE,
                     'date_add' => '2021-05-22 16:35:48',
                     'stock_movement_id' => 220,
                     'stock_id' => 42,
@@ -173,7 +173,7 @@ class CombinationFormDataProviderTest extends TestCase
                     'delta_quantity' => +20,
                 ],
                 [
-                    'type' => StockMovementHistory::RANGE_TYPE,
+                    'type' => StockMovementEvent::RANGE_TYPE,
                     'from_date' => '2021-05-22 16:35:48',
                     'to_date' => '2021-01-24 15:24:32',
                     'stock_movement_ids' => [121, 122, 123, 124, 125],
@@ -442,7 +442,7 @@ class CombinationFormDataProviderTest extends TestCase
                 $this->isInstanceOf(GetCombinationForEditing::class),
                 $this->isInstanceOf(GetAssociatedSuppliers::class),
                 $this->isInstanceOf(GetCombinationSuppliers::class),
-                $this->isInstanceOf(GetCombinationStockMovementHistory::class)
+                $this->isInstanceOf(GetCombinationStockMovements::class)
             ))
             ->willReturnCallback(function ($query) use ($combinationData) {
                 return $this->createResultBasedOnQuery($query, $combinationData);
@@ -456,7 +456,7 @@ class CombinationFormDataProviderTest extends TestCase
      * @param GetCombinationForEditing $query
      * @param array $combinationData
      *
-     * @return CombinationForEditing|AssociatedSuppliers|ProductSupplierForEditing[]|StockMovementHistory[]
+     * @return CombinationForEditing|AssociatedSuppliers|ProductSupplierForEditing[]|StockMovementEvent[]
      */
     private function createResultBasedOnQuery($query, array $combinationData)
     {
@@ -467,7 +467,7 @@ class CombinationFormDataProviderTest extends TestCase
                 return $this->createAssociatedSuppliers($combinationData);
             case GetCombinationSuppliers::class:
                 return $this->createCombinationSupplierInfos($combinationData);
-            case GetCombinationStockMovementHistory::class:
+            case GetCombinationStockMovements::class:
                 return $this->createStockMovementHistories($combinationData);
         }
 
@@ -593,14 +593,14 @@ class CombinationFormDataProviderTest extends TestCase
     /**
      * @param array $combinationData
      *
-     * @return StockMovementHistory[]
+     * @return StockMovementEvent[]
      */
     private function createStockMovementHistories(array $combinationData): array
     {
         return array_map(
-            static function (array $historyData): StockMovementHistory {
-                if (StockMovementHistory::SINGLE_TYPE === $historyData['type']) {
-                    return StockMovementHistory::createSingleHistory(
+            static function (array $historyData): StockMovementEvent {
+                if (StockMovementEvent::SINGLE_TYPE === $historyData['type']) {
+                    return StockMovementEvent::createSingleEvent(
                         $historyData['date_add'],
                         $historyData['stock_movement_id'],
                         $historyData['stock_id'],
@@ -611,8 +611,8 @@ class CombinationFormDataProviderTest extends TestCase
                         $historyData['delta_quantity']
                     );
                 }
-                if (StockMovementHistory::RANGE_TYPE === $historyData['type']) {
-                    return StockMovementHistory::createRangeHistory(
+                if (StockMovementEvent::RANGE_TYPE === $historyData['type']) {
+                    return StockMovementEvent::createRangeEvent(
                         $historyData['from_date'],
                         $historyData['to_date'],
                         $historyData['stock_movement_ids'],
@@ -623,7 +623,7 @@ class CombinationFormDataProviderTest extends TestCase
                     );
                 }
                 throw new RuntimeException(
-                    sprintf('Unsupported stock movement history type "%s"', $historyData['type'])
+                    sprintf('Unsupported stock movement event type "%s"', $historyData['type'])
                 );
             },
             $combinationData['stock_movement_history'] ?? []

@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult;
 use DateTimeImmutable;
 use RuntimeException;
 
-class StockMovementHistory
+class StockMovementEvent
 {
     public const SINGLE_TYPE = 'single';
     public const RANGE_TYPE = 'range';
@@ -146,7 +146,7 @@ class StockMovementHistory
         );
     }
 
-    public static function createSingleHistory(
+    public static function createSingleEvent(
         string $dateAdd,
         int $stockMovementId,
         int $stockId,
@@ -180,7 +180,7 @@ class StockMovementHistory
      * @param string[]|int[] $employeeIds
      * @param int $deltaQuantity
      */
-    public static function createRangeHistory(
+    public static function createRangeEvent(
         string $fromDate,
         string $toDate,
         array $stockMovementIds,

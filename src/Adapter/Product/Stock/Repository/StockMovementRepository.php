@@ -59,7 +59,7 @@ class StockMovementRepository
      *
      * @return array<int, array<string, mixed>>
      */
-    public function getLastStockMovementHistories(
+    public function getLastStockMovements(
         StockId $stockId,
         int $offset = 0,
         int $limit = self::DEFAULT_LIMIT

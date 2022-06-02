@@ -3,9 +3,9 @@
 @clear-cache-before-feature
 @product-stock-movement-history
 @stock-movement-history
-Feature: Search stock movement history from Back Office (BO)
+Feature: Search stock movements from Back Office (BO)
   As a BO user
-  I need to be able to search stock movement history for a product from BO
+  I need to be able to search stock movements for a product from BO
 
   Background:
     Given email sending is disabled
@@ -18,7 +18,7 @@ Feature: Search stock movement history from Back Office (BO)
     And a carrier "default_carrier" with name "My carrier" exists
     And there is a product in the catalog named "product1" with a price of 17.0 and 100 items in stock
 
-  Scenario: I can search the last 5 rows of stock movement history by default and paginate through history
+  Scenario: I can search the last 5 rows of stock movements by default and paginate through history
     # First create a cart with 2 product1 and order it
     When I create an empty cart "dummy_cart1" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart1"
@@ -99,7 +99,7 @@ Feature: Search stock movement history from Back Office (BO)
       | status              | Delivered                  |
     And the available stock for product "product1" should be 95
     # Now we check at the stock movements
-    When I search stock movement history of product "product1" I should get following results:
+    When I search stock movements of product "product1" I should get following results:
       | type   | first_name | last_name | delta_quantity |
       | range  |            |           | -6             |
       | single | Puff       | Daddy     | 5              |
@@ -108,7 +108,7 @@ Feature: Search stock movement history from Back Office (BO)
       # Since no stock movement is generated until the order is shipped this range only has a quantity of -2,
       # not -5 because second order is still waiting for payment
       | range  |            |           | -2             |
-    When I search stock movement history of product "product1" with offset 0 and limit 6 I should get following results:
+    When I search stock movements of product "product1" with offset 0 and limit 6 I should get following results:
       | type   | first_name | last_name | delta_quantity |
       | range  |            |           | -6             |
       | single | Puff       | Daddy     | 5              |
@@ -116,14 +116,14 @@ Feature: Search stock movement history from Back Office (BO)
       | single | Puff       | Daddy     | 10             |
       | range  |            |           | -2             |
       | single | Puff       | Daddy     | 100            |
-    When I search stock movement history of product "product1" with offset 1 and limit 5 I should get following results:
+    When I search stock movements of product "product1" with offset 1 and limit 5 I should get following results:
       | type   | first_name | last_name | delta_quantity |
       | single | Puff       | Daddy     | 5              |
       | range  |            |           | -9             |
       | single | Puff       | Daddy     | 10             |
       | range  |            |           | -2             |
       | single | Puff       | Daddy     | 100            |
-    When I search stock movement history of product "product1" with offset 2 and limit 3 I should get following results:
+    When I search stock movements of product "product1" with offset 2 and limit 3 I should get following results:
       | type   | first_name | last_name | delta_quantity |
       | range  |            |           | -9             |
       | single | Puff       | Daddy     | 10             |

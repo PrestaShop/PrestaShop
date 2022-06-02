@@ -24,43 +24,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryHandler;
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetCombinationStockMovements;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementEvent;
 
-use LogicException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
-use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
-
-class GetProductStockMovementHistory extends AbstractGetStockMovementHistory
+/**
+ * Defines contract for GetStockMovementsHistoryHandler
+ */
+interface GetCombinationStockMovementsHandlerInterface
 {
     /**
-     * @var ProductId
+     * @return StockMovementEvent[]
      */
-    private $productId;
-
-    /**
-     * @throws ProductConstraintException
-     * @throws ShopException
-     * @throws LogicException
-     */
-    public function __construct(
-        int $productId,
-        int $shopId,
-        int $offset = 0,
-        int $limit = self::DEFAULT_LIMIT
-    ) {
-        parent::__construct(
-            $shopId,
-            $offset,
-            $limit
-        );
-        $this->productId = new ProductId($productId);
-    }
-
-    public function getProductId(): ProductId
-    {
-        return $this->productId;
-    }
+    public function handle(GetCombinationStockMovements $query): array;
 }

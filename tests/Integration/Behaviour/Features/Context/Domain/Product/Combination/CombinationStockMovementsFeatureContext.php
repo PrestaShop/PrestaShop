@@ -26,32 +26,32 @@
 
 declare(strict_types=1);
 
-namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
+namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination;
 
 use Behat\Gherkin\Node\TableNode;
 use DateTimeImmutable;
 use LogicException;
 use PHPUnit\Framework\Assert;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetProductStockMovementHistory;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementHistory;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetCombinationStockMovements;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementEvent;
 
-class StockMovementHistoryFeatureContext extends AbstractProductFeatureContext
+class CombinationStockMovementsFeatureContext extends AbstractCombinationFeatureContext
 {
     private const DATE_KEYS_BY_TYPE = [
-        StockMovementHistory::SINGLE_TYPE => ['add'],
-        StockMovementHistory::RANGE_TYPE => ['from', 'to'],
+        StockMovementEvent::SINGLE_TYPE => ['add'],
+        StockMovementEvent::RANGE_TYPE => ['from', 'to'],
     ];
 
     /**
-     * @When I search stock movement history of product :productReference I should get following results:
+     * @When I search stock movements of combination :combinationReference I should get following results:
      */
-    public function assertStockMovementHistoryOfProductForDefaultShop(
-        string $productReference,
+    public function assertStockMovementsOfCombinationForDefaultShop(
+        string $combinationReference,
         TableNode $table
     ): void {
-        $this->assertStockMovementHistory(
-            new GetProductStockMovementHistory(
-                $this->getSharedStorage()->get($productReference),
+        $this->assertStockMovements(
+            new GetCombinationStockMovements(
+                $this->getSharedStorage()->get($combinationReference),
                 $this->getDefaultShopId()
             ),
             $table
@@ -59,17 +59,17 @@ class StockMovementHistoryFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @When I search stock movement history of product :productReference with offset :offset and limit :limit I should get following results:
+     * @When I search stock movements of combination :combinationReference with offset :offset and limit :limit I should get following results:
      */
-    public function assertStockMovementHistoryPageOfProductForDefaultShop(
-        string $productReference,
+    public function assertStockMovementsPageOfCombinationForDefaultShop(
+        string $combinationReference,
         int $offset,
         int $limit,
         TableNode $table
     ): void {
-        $this->assertStockMovementHistory(
-            new GetProductStockMovementHistory(
-                $this->getSharedStorage()->get($productReference),
+        $this->assertStockMovements(
+            new GetCombinationStockMovements(
+                $this->getSharedStorage()->get($combinationReference),
                 $this->getDefaultShopId(),
                 $offset,
                 $limit
@@ -78,7 +78,7 @@ class StockMovementHistoryFeatureContext extends AbstractProductFeatureContext
         );
     }
 
-    private function assertStockMovementHistory(GetProductStockMovementHistory $query, TableNode $table): void
+    private function assertStockMovements(GetCombinationStockMovements $query, TableNode $table): void
     {
         $stockMovementHistories = $this->getQueryBus()->handle($query);
         $tableRows = $table->getColumnsHash();
@@ -89,48 +89,49 @@ class StockMovementHistoryFeatureContext extends AbstractProductFeatureContext
             'Unexpected history size'
         );
         foreach ($tableRows as $index => $tableRow) {
-            $stockMovementHistory = $stockMovementHistories[$index];
+            /** @var StockMovementEvent $stockMovementEvent */
+            $stockMovementEvent = $stockMovementHistories[$index];
 
             Assert::assertSame(
                 $tableRow['type'],
-                $stockMovementHistory->getType(),
+                $stockMovementEvent->getType(),
                 sprintf(
-                    'Invalid stock movement history type, expected "%s" instead of "%s"',
+                    'Invalid stock movement event type, expected "%s" instead of "%s"',
                     $tableRow['type'],
-                    $stockMovementHistory->getType()
+                    $stockMovementEvent->getType()
                 )
             );
             Assert::assertEquals(
                 $tableRow['first_name'],
-                $stockMovementHistory->getEmployeeFirstName(),
+                $stockMovementEvent->getEmployeeFirstName(),
                 sprintf(
-                    'Invalid employee first name of stock movement history, expected "%s" instead of "%s"',
+                    'Invalid employee first name of stock movement event, expected "%s" instead of "%s"',
                     $tableRow['first_name'],
-                    $stockMovementHistory->getEmployeeFirstName()
+                    $stockMovementEvent->getEmployeeFirstName()
                 )
             );
             Assert::assertEquals(
                 $tableRow['last_name'],
-                $stockMovementHistory->getEmployeeLastName(),
+                $stockMovementEvent->getEmployeeLastName(),
                 sprintf(
-                    'Invalid employee last name of stock movement history, expected "%s" instead of "%s"',
+                    'Invalid employee last name of stock movement event, expected "%s" instead of "%s"',
                     $tableRow['last_name'],
-                    $stockMovementHistory->getEmployeeLastName()
+                    $stockMovementEvent->getEmployeeLastName()
                 )
             );
             Assert::assertSame(
                 (int) $tableRow['delta_quantity'],
-                $stockMovementHistory->getDeltaQuantity(),
+                $stockMovementEvent->getDeltaQuantity(),
                 sprintf(
-                    'Invalid delta quantity of stock movement history, expected "%d" instead of "%d"',
+                    'Invalid delta quantity of stock movement event, expected "%d" instead of "%d"',
                     $tableRow['delta_quantity'],
-                    $stockMovementHistory->getDeltaQuantity()
+                    $stockMovementEvent->getDeltaQuantity()
                 )
             );
-            foreach ($this->resolveHistoryDateKeys($stockMovementHistory->getType()) as $dateKey) {
+            foreach ($this->resolveHistoryDateKeys($stockMovementEvent->getType()) as $dateKey) {
                 Assert::assertInstanceOf(
                     DateTimeImmutable::class,
-                    $stockMovementHistory->getDate($dateKey)
+                    $stockMovementEvent->getDate($dateKey)
                 );
             }
         }
