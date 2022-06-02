@@ -29,6 +29,10 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetAddressFormatData;
+use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\AddressFormatData;
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\CountryGridDefinitionFactory;
+use Context;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CannotEditCountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
@@ -90,6 +94,9 @@ class CountryController extends FrameworkBundleAdminController
         $countryForm->handleRequest($request);
 
         try {
+            /** @var AddressFormatData $addressFormat */
+            $addressFormat = $this->getQueryBus()->handle(new GetAddressFormatData());
+
             $handleResult = $countryFormHandler->handle($countryForm);
 
             if (null !== $handleResult->getIdentifiableObjectId()) {
@@ -105,6 +112,10 @@ class CountryController extends FrameworkBundleAdminController
             'countryForm' => $countryForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'enableSidebar' => true,
+            'addressFormat' => $addressFormat->getAddressFormat(),
+            'encodingAddressFormat' => urlencode($addressFormat->getAddressFormat()),
+            'defaultFormat' => urlencode($addressFormat->getDefaultFormat()),
+            'availableFields' => $addressFormat->getAvailableFields(),
         ]);
     }
 
