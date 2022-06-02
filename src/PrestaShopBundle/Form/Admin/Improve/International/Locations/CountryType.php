@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Locations;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressFormat;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
@@ -37,6 +38,7 @@ use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Length;
@@ -151,9 +153,11 @@ class CountryType extends AbstractType
                 ],
             ])
             //todo : create address layout form
-            ->add('address_format', TextType::class, [
-                'required' => false,
-                'label' => $this->translator->trans('Address format', [], 'Admin.International.Feature'),
+            ->add('address_format', TextareaType::class, [
+                'required' => true,
+                'constraints' => [
+                    new AddressFormat(),
+                ],
             ])
             ->add('is_enabled', SwitchType::class, [
                 'required' => false,

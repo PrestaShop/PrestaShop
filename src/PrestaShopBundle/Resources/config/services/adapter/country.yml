@@ -49,3 +49,9 @@ services:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing' }
 
   PrestaShop\PrestaShop\Adapter\Country\Validate\CountryValidator:
+
+  prestashop.adapter.country.query_handler.get_address_layout:
+    public: true
+    class: 'PrestaShop\PrestaShop\Adapter\Country\QueryHandler\GetAddressFormatDataHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Country\Query\GetAddressFormatData' }
