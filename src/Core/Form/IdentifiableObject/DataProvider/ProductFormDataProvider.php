@@ -42,8 +42,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LocalizedTags;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RelatedProduct;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetProductStockMovementHistory;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementHistory;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetProductStockMovements;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementEvent;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
@@ -413,7 +413,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
     private function getStockMovementHistory(int $productId, ShopConstraint $shopConstraint): array
     {
         return array_map(
-            function (StockMovementHistory $history): array {
+            function (StockMovementEvent $history): array {
                 if ($history->isSingle()) {
                     $date = $history
                         ->getDate('add')
@@ -443,7 +443,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
                 ];
             },
             $this->queryBus->handle(
-                new GetProductStockMovementHistory(
+                new GetProductStockMovements(
                     $productId,
                     $shopConstraint->getShopId()->getValue()
                 )

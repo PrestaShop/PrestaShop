@@ -39,9 +39,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstrai
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetCombinationStockMovementHistory;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetProductStockMovementHistory;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementHistory;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetCombinationStockMovements;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetProductStockMovements;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementEvent;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -232,7 +232,7 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
         $productId = $this->getSharedStorage()->get($productReference);
 
         $stockMovementHistories = $this->getQueryBus()->handle(
-            new GetProductStockMovementHistory($productId, $shopId)
+            new GetProductStockMovements($productId, $shopId)
         );
         Assert::assertEmpty($stockMovementHistories, 'Expected to find no stock movements');
     }
@@ -271,7 +271,7 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
     ): void {
         $productId = (int) $this->getSharedStorage()->get($productReference);
         $stockMovementHistories = $this->getQueryBus()->handle(
-            new GetProductStockMovementHistory($productId, $shopId)
+            new GetProductStockMovements($productId, $shopId)
         );
         $this->assertStockMovementHistories($stockMovementHistories, $table);
     }
@@ -310,7 +310,7 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
     ): void {
         $combinationId = (int) $this->getSharedStorage()->get($combinationReference);
         $stockMovementHistories = $this->getQueryBus()->handle(
-            new GetCombinationStockMovementHistory($combinationId, $shopId)
+            new GetCombinationStockMovements($combinationId, $shopId)
         );
         $this->assertStockMovementHistories($stockMovementHistories, $table);
     }
@@ -356,9 +356,9 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
     ): void {
         $productId = (int) $this->getSharedStorage()->get($productReference);
         $stockMovementHistories = $this->getQueryBus()->handle(
-            new GetProductStockMovementHistory($productId, $shopId)
+            new GetProductStockMovements($productId, $shopId)
         );
-        $this->assertStockMovementHistory(
+        $this->assertStockMovements(
             $stockMovementHistories[0],
             $movementType,
             $movementQuantity
@@ -406,9 +406,9 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
     ): void {
         $combinationId = (int) $this->getSharedStorage()->get($combinationReference);
         $stockMovementHistories = $this->getQueryBus()->handle(
-            new GetCombinationStockMovementHistory($combinationId, $shopId)
+            new GetCombinationStockMovements($combinationId, $shopId)
         );
-        $this->assertStockMovementHistory(
+        $this->assertStockMovements(
             $stockMovementHistories[0],
             $movementType,
             $movementQuantity
@@ -524,7 +524,7 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @param StockMovementHistory[] $stockMovementHistories
+     * @param StockMovementEvent[] $stockMovementHistories
      * @param TableNode $table
      */
     private function assertStockMovementHistories(array $stockMovementHistories, TableNode $table): void
@@ -534,46 +534,46 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
         Assert::assertEquals(count($movementsData), count($stockMovementHistories));
         $index = 0;
         foreach ($movementsData as $movementDatum) {
-            $stockMovementHistory = $stockMovementHistories[$index];
+            $stockMovementEvent = $stockMovementHistories[$index];
             Assert::assertEquals(
                 $movementDatum['first_name'],
-                $stockMovementHistory->getEmployeeFirstName(),
+                $stockMovementEvent->getEmployeeFirstName(),
                 sprintf(
-                    'Invalid employee first name of stock movement history, expected "%s" instead of "%s"',
+                    'Invalid employee first name of stock movement event, expected "%s" instead of "%s"',
                     $movementDatum['first_name'],
-                    $stockMovementHistory->getEmployeeFirstName()
+                    $stockMovementEvent->getEmployeeFirstName()
                 )
             );
             Assert::assertEquals(
                 $movementDatum['last_name'],
-                $stockMovementHistory->getEmployeeLastName(),
+                $stockMovementEvent->getEmployeeLastName(),
                 sprintf(
-                    'Invalid employee last name of stock movement history, expected "%s" instead of "%s"',
+                    'Invalid employee last name of stock movement event, expected "%s" instead of "%s"',
                     $movementDatum['last_name'],
-                    $stockMovementHistory->getEmployeeLastName()
+                    $stockMovementEvent->getEmployeeLastName()
                 )
             );
             Assert::assertEquals(
                 (int) $movementDatum['delta_quantity'],
-                $stockMovementHistory->getDeltaQuantity(),
+                $stockMovementEvent->getDeltaQuantity(),
                 sprintf(
-                    'Invalid delta quantity of stock movement history, expected "%d" instead of "%d"',
+                    'Invalid delta quantity of stock movement event, expected "%d" instead of "%d"',
                     $movementDatum['delta_quantity'],
-                    $stockMovementHistory->getDeltaQuantity()
+                    $stockMovementEvent->getDeltaQuantity()
                 )
             );
-            Assert::assertInstanceOf(DateTimeImmutable::class, $stockMovementHistory->getDate('add'));
+            Assert::assertInstanceOf(DateTimeImmutable::class, $stockMovementEvent->getDate('add'));
 
             ++$index;
         }
     }
 
-    private function assertStockMovementHistory(
-        StockMovementHistory $stockMovementHistory,
+    private function assertStockMovements(
+        StockMovementEvent $stockMovementEvent,
         string $movementType,
         int $movementQuantity
     ): void {
-        $lastMovementType = $stockMovementHistory->getDeltaQuantity() < 0 ? 'decreased' : 'increased';
+        $lastMovementType = $stockMovementEvent->getDeltaQuantity() < 0 ? 'decreased' : 'increased';
 
         Assert::assertEquals(
             $movementType,
@@ -586,11 +586,11 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
         );
         Assert::assertEquals(
             $movementQuantity,
-            abs($stockMovementHistory->getDeltaQuantity()),
+            abs($stockMovementEvent->getDeltaQuantity()),
             sprintf(
                 'Invalid stock movement quantity, expected "%d" instead of "%d"',
                 $movementQuantity,
-                abs($stockMovementHistory->getDeltaQuantity())
+                abs($stockMovementEvent->getDeltaQuantity())
             )
         );
     }

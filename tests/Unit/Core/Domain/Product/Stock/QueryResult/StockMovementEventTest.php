@@ -31,10 +31,10 @@ use DateTimeImmutable;
 use Generator;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementHistory;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementEvent;
 use RuntimeException;
 
-class StockMovementHistoryTest extends TestCase
+class StockMovementEventTest extends TestCase
 {
     /**
      * @dataProvider getSingleHistoryValidValues
@@ -49,7 +49,7 @@ class StockMovementHistoryTest extends TestCase
         ?string $employeeLastName,
         int $deltaQuantity
     ): void {
-        $history = StockMovementHistory::createSingleHistory(
+        $history = StockMovementEvent::createSingleEvent(
             $dateAdd,
             $stockMovementId,
             $stockId,
@@ -129,7 +129,7 @@ class StockMovementHistoryTest extends TestCase
         array $employeeIds,
         int $deltaQuantity
     ): void {
-        $history = StockMovementHistory::createRangeHistory(
+        $history = StockMovementEvent::createRangeEvent(
             $fromDate,
             $toDate,
             $stockMovementIds,
@@ -184,7 +184,7 @@ class StockMovementHistoryTest extends TestCase
     /**
      * @dataProvider getInvalidDateKeyFromHistory
      */
-    public function testHistoryFailsOnInvalidDateKey(StockMovementHistory $history, string $key): void
+    public function testHistoryFailsOnInvalidDateKey(StockMovementEvent $history, string $key): void
     {
         $this->expectException(RuntimeException::class);
 
@@ -193,7 +193,7 @@ class StockMovementHistoryTest extends TestCase
 
     public function getInvalidDateKeyFromHistory(): Generator
     {
-        $singleHistory = StockMovementHistory::createSingleHistory(
+        $singleHistory = StockMovementEvent::createSingleEvent(
             '2022-01-13 18:21:33',
             1,
             2,
@@ -203,7 +203,7 @@ class StockMovementHistoryTest extends TestCase
             'Cruz',
             5
         );
-        $groupHistory = StockMovementHistory::createRangeHistory(
+        $groupHistory = StockMovementEvent::createRangeEvent(
             '2022-01-13 18:20:58',
             '2022-01-13 18:21:18',
             [1, 2],

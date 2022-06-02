@@ -30,10 +30,10 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Stock\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockMovementRepository;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementHistory;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementEvent;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockId;
 
-abstract class AbstractGetStockMovementHistoryHandler
+abstract class AbstractGetStockMovementsHandler
 {
     /**
      * @var StockAvailableMultiShopRepository
@@ -54,30 +54,30 @@ abstract class AbstractGetStockMovementHistoryHandler
     }
 
     /**
-     * @return StockMovementHistory[]
+     * @return StockMovementEvent[]
      */
-    protected function getStockMovementHistory(StockId $stockId, int $offset, int $limit): array
+    protected function getStockMovements(StockId $stockId, int $offset, int $limit): array
     {
-        $lastStockMovements = $this->stockMovementRepository->getLastStockMovementHistories(
+        $lastStockMovements = $this->stockMovementRepository->getLastStockMovements(
             $stockId,
             $offset,
             $limit
         );
 
         return array_map(
-            function (array $historyRow): StockMovementHistory {
+            function (array $historyRow): StockMovementEvent {
                 return $historyRow['grouping_type'] === 'single'
-                    ? $this->createSingleStockMovementHistory($historyRow)
-                    : $this->createRangeStockMovementHistory($historyRow)
+                    ? $this->createSingleStockMovementEvent($historyRow)
+                    : $this->createRangeStockMovementEvent($historyRow)
                 ;
             },
             $lastStockMovements
         );
     }
 
-    protected function createSingleStockMovementHistory(array $historyRow): StockMovementHistory
+    protected function createSingleStockMovementEvent(array $historyRow): StockMovementEvent
     {
-        return StockMovementHistory::createSingleHistory(
+        return StockMovementEvent::createSingleEvent(
             $historyRow['date_add_min'],
             (int) $historyRow['id_stock_mvt_min'],
             (int) $historyRow['id_stock_list'],
@@ -89,9 +89,9 @@ abstract class AbstractGetStockMovementHistoryHandler
         );
     }
 
-    protected function createRangeStockMovementHistory(array $historyRow): StockMovementHistory
+    protected function createRangeStockMovementEvent(array $historyRow): StockMovementEvent
     {
-        return StockMovementHistory::createRangeHistory(
+        return StockMovementEvent::createRangeEvent(
             $historyRow['date_add_min'],
             $historyRow['date_add_max'],
             explode(',', $historyRow['id_stock_mvt_list']),

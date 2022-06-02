@@ -24,24 +24,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryHandler;
 
-namespace PrestaShop\PrestaShop\Adapter\Product\Stock\QueryHandler;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetProductStockMovements;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementEvent;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetCombinationStockMovementHistory;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryHandler\GetCombinationStockMovementHistoryHandlerInterface;
-
-class GetCombinationStockMovementHistoryHandler extends AbstractGetStockMovementHistoryHandler implements GetCombinationStockMovementHistoryHandlerInterface
+/**
+ * Defines contract for GetStockMovementsHistoryHandler
+ */
+interface GetProductStockMovementsHandlerInterface
 {
-    public function handle(GetCombinationStockMovementHistory $query): array
-    {
-        return $this->getStockMovementHistory(
-            $this->stockAvailableRepository->getStockIdByCombination(
-                $query->getCombinationId(),
-                $query->getShopId()
-            ),
-            $query->getOffset(),
-            $query->getLimit()
-        );
-    }
+    /**
+     * @return StockMovementEvent[]
+     */
+    public function handle(GetProductStockMovements $query): array;
 }

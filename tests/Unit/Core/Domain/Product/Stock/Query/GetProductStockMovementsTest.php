@@ -31,11 +31,11 @@ use Generator;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetProductStockMovementHistory;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetProductStockMovements;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 
-class GetProductStockMovementHistoryTest extends TestCase
+class GetProductStockMovementsTest extends TestCase
 {
     /**
      * @dataProvider getValidValues
@@ -46,7 +46,7 @@ class GetProductStockMovementHistoryTest extends TestCase
         int $offset,
         int $limit
     ): void {
-        $query = new GetProductStockMovementHistory(
+        $query = new GetProductStockMovements(
             $productId,
             $shopId,
             $offset,
@@ -91,7 +91,7 @@ class GetProductStockMovementHistoryTest extends TestCase
     ): void {
         $this->expectException($exceptionClass);
 
-        new GetProductStockMovementHistory(
+        new GetProductStockMovements(
             $productId,
             $shopId,
             $offset,

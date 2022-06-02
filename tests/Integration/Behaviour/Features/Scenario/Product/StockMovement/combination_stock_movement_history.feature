@@ -4,9 +4,9 @@
 @product-combination
 @combination-stock-movement-history
 @stock-movement-history
-Feature: Search stock movement history from Back Office (BO)
+Feature: Search stock movements from Back Office (BO)
   As a BO user
-  I need to be able to search stock movement history for a combination from BO
+  I need to be able to search stock movements for a combination from BO
 
   Background:
     Given email sending is disabled
@@ -42,7 +42,7 @@ Feature: Search stock movement history from Back Office (BO)
       | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
       | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
 
-  Scenario: I can get the last 5 rows of stock movement history by default and I can paginate
+  Scenario: I can get the last 5 rows of stock movements by default and I can paginate
     When I update combination "product1SBlack" stock with following details:
       | delta quantity | 100 |
     When I create an empty cart "dummy_cart1" for customer "testCustomer"
@@ -125,7 +125,7 @@ Feature: Search stock movement history from Back Office (BO)
       | status              | Delivered                  |
     And combination "product1SBlack" should have 95 available items
     # Now we check at the stock movements
-    When I search stock movement history of combination "product1SBlack" I should get following results:
+    When I search stock movements of combination "product1SBlack" I should get following results:
       | type   | first_name | last_name | delta_quantity |
       | range  |            |           | -6             |
       | single | Puff       | Daddy     | 5              |
@@ -134,7 +134,7 @@ Feature: Search stock movement history from Back Office (BO)
       # Since no stock movement is generated until the order is shipped this range only has a quantity of -2,
       # not -5 because second order is still waiting for payment
       | range  |            |           | -2             |
-    When I search stock movement history of combination "product1SBlack" with offset 0 and limit 6 I should get following results:
+    When I search stock movements of combination "product1SBlack" with offset 0 and limit 6 I should get following results:
       | type   | first_name | last_name | delta_quantity |
       | range  |            |           | -6             |
       | single | Puff       | Daddy     | 5              |
@@ -142,14 +142,14 @@ Feature: Search stock movement history from Back Office (BO)
       | single | Puff       | Daddy     | 10             |
       | range  |            |           | -2             |
       | single | Puff       | Daddy     | 100            |
-    When I search stock movement history of combination "product1SBlack" with offset 1 and limit 5 I should get following results:
+    When I search stock movements of combination "product1SBlack" with offset 1 and limit 5 I should get following results:
       | type   | first_name | last_name | delta_quantity |
       | single | Puff       | Daddy     | 5              |
       | range  |            |           | -9             |
       | single | Puff       | Daddy     | 10             |
       | range  |            |           | -2             |
       | single | Puff       | Daddy     | 100            |
-    When I search stock movement history of combination "product1SBlack" with offset 2 and limit 3 I should get following results:
+    When I search stock movements of combination "product1SBlack" with offset 2 and limit 3 I should get following results:
       | type   | first_name | last_name | delta_quantity |
       | range  |            |           | -9             |
       | single | Puff       | Daddy     | 10             |
