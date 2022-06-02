@@ -62,8 +62,8 @@ class StockMovementEventType extends TranslatorAwareType
                 // For orders, we display the kind of movements instead of the data range
                 if ($type === StockMovementEvent::ORDERS_TYPE) {
                     $dateData = $increasedQuantity ?
+                        $this->trans('Returned products', 'Admin.Catalog.Feature') :
                         $this->trans('Shipped products', 'Admin.Catalog.Feature')
-                        : $this->trans('Returned products', 'Admin.Catalog.Feature')
                     ;
                     $event->setData(array_merge($event->getData(), [
                         'date' => $dateData,
@@ -73,7 +73,7 @@ class StockMovementEventType extends TranslatorAwareType
                 $previewClasses = [
                     'stock_movement_quantity',
                 ];
-                $previewClasses[] = $increasedQuantity ? 'decreased_quantity' : 'increased_quantity';
+                $previewClasses[] = $increasedQuantity ? 'increased_quantity' : 'decreased_quantity';
                 $form->add('delta_quantity', TextPreviewType::class, [
                     'label' => $this->trans('Quantity', 'Admin.Global'),
                     'preview_class' => implode(' ', $previewClasses),
@@ -88,7 +88,7 @@ class StockMovementEventType extends TranslatorAwareType
 
         $view->vars['attr']['class'] = trim(
             sprintf(
-                '%s %s-history',
+                '%s %s-stock-movement',
                 $view->vars['attr']['class'] ?? '',
                 $type
             )

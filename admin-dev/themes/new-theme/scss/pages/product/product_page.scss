@@ -1254,19 +1254,21 @@ $product-page-padding-bottom: 80px !default;
     }
   }
 
-  #product_stock_quantities_stock_movement_histories {
+  #product_stock_quantities_stock_movements_list {
     max-width: 600px;
   }
 
-  #product_stock_quantities_stock_movement_histories,
-  #combination_form_stock_quantities_stock_movement_histories {
+  #product_stock_quantities_stock_movements_list,
+  #combination_form_stock_quantities_stock_movements_list {
     .table {
       margin-bottom: 0.8rem;
+      border-bottom: none;
     }
 
     td {
       padding-top: 0.8rem;
       padding-bottom: 0.8rem;
+      border: none;
     }
 
     .stock_movement_quantity {
@@ -1284,6 +1286,18 @@ $product-page-padding-bottom: 80px !default;
 
       &.decreased_quantity {
         background-color: $gray-dark;
+      }
+    }
+
+    .entity-item {
+      border-bottom: none;
+    }
+
+    .orders-stock-movement {
+      background-color: rgba(219, 225, 227, 0.5);
+
+      .text-preview {
+        font-weight: 700;
       }
     }
   }
