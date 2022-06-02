@@ -34,7 +34,7 @@ use RuntimeException;
 class StockMovementHistory
 {
     public const SINGLE_TYPE = 'single';
-    public const GROUP_TYPE = 'group';
+    public const RANGE_TYPE = 'range';
 
     /**
      * @var string
@@ -180,7 +180,7 @@ class StockMovementHistory
      * @param string[]|int[] $employeeIds
      * @param int $deltaQuantity
      */
-    public static function createGroupHistory(
+    public static function createRangeHistory(
         string $fromDate,
         string $toDate,
         array $stockMovementIds,
@@ -190,7 +190,7 @@ class StockMovementHistory
         int $deltaQuantity
     ): self {
         return new static(
-            static::GROUP_TYPE,
+            static::RANGE_TYPE,
             [
                 'from' => $fromDate,
                 'to' => $toDate,
@@ -206,7 +206,7 @@ class StockMovementHistory
     }
 
     /**
-     * Returns history type : "single" or "group"
+     * Returns history type : "single" or "range"
      */
     public function getType(): string
     {
@@ -218,9 +218,9 @@ class StockMovementHistory
         return static::SINGLE_TYPE === $this->getType();
     }
 
-    public function isGroup(): bool
+    public function isRange(): bool
     {
-        return static::GROUP_TYPE === $this->getType();
+        return static::RANGE_TYPE === $this->getType();
     }
 
     /**

@@ -60,7 +60,7 @@ class StockMovementHistoryTest extends TestCase
             $deltaQuantity
         );
         Assert::assertTrue($history->isSingle());
-        Assert::assertFalse($history->isGroup());
+        Assert::assertFalse($history->isRange());
         Assert::assertSame('single', $history->getType());
         Assert::assertEquals(new DateTimeImmutable($dateAdd), $history->getDate('add'));
         Assert::assertSame([$stockMovementId], $history->getStockMovementIds());
@@ -129,7 +129,7 @@ class StockMovementHistoryTest extends TestCase
         array $employeeIds,
         int $deltaQuantity
     ): void {
-        $history = StockMovementHistory::createGroupHistory(
+        $history = StockMovementHistory::createRangeHistory(
             $fromDate,
             $toDate,
             $stockMovementIds,
@@ -139,7 +139,7 @@ class StockMovementHistoryTest extends TestCase
             $deltaQuantity
         );
         Assert::assertFalse($history->isSingle());
-        Assert::assertTrue($history->isGroup());
+        Assert::assertTrue($history->isRange());
         Assert::assertSame('group', $history->getType());
         Assert::assertEquals(new DateTimeImmutable($fromDate), $history->getDate('from'));
         Assert::assertEquals(new DateTimeImmutable($toDate), $history->getDate('to'));
@@ -203,7 +203,7 @@ class StockMovementHistoryTest extends TestCase
             'Cruz',
             5
         );
-        $groupHistory = StockMovementHistory::createGroupHistory(
+        $groupHistory = StockMovementHistory::createRangeHistory(
             '2022-01-13 18:20:58',
             '2022-01-13 18:21:18',
             [1, 2],

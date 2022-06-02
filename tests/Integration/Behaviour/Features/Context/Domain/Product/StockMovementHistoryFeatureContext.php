@@ -33,12 +33,13 @@ use DateTimeImmutable;
 use LogicException;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetProductStockMovementHistory;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementHistory;
 
 class StockMovementHistoryFeatureContext extends AbstractProductFeatureContext
 {
     private const DATE_KEYS_BY_TYPE = [
-        'single' => ['add'],
-        'group' => ['from', 'to'],
+        StockMovementHistory::SINGLE_TYPE => ['add'],
+        StockMovementHistory::RANGE_TYPE => ['from', 'to'],
     ];
 
     /**

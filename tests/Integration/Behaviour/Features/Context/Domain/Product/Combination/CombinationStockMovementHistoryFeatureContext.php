@@ -33,12 +33,13 @@ use DateTimeImmutable;
 use LogicException;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetCombinationStockMovementHistory;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementHistory;
 
 class CombinationStockMovementHistoryFeatureContext extends AbstractCombinationFeatureContext
 {
     private const DATE_KEYS_BY_TYPE = [
-        'single' => ['add'],
-        'group' => ['from', 'to'],
+        StockMovementHistory::SINGLE_TYPE => ['add'],
+        StockMovementHistory::RANGE_TYPE => ['from', 'to'],
     ];
 
     /**
@@ -88,6 +89,7 @@ class CombinationStockMovementHistoryFeatureContext extends AbstractCombinationF
             'Unexpected history size'
         );
         foreach ($tableRows as $index => $tableRow) {
+            /** @var StockMovementHistory $stockMovementHistory */
             $stockMovementHistory = $stockMovementHistories[$index];
 
             Assert::assertSame(
