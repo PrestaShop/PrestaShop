@@ -537,7 +537,7 @@ services:
       - '@form.factory'
       - '@prestashop.core.hook.dispatcher'
       - '@prestashop.admin.configure.advanced_parameters.stable_feature_flags_form_data_provider'
-      - 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagCollectionType'
+      - 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagListType'
       - 'FeatureFlagStable'
       - 'feature_flag_stable'
 
@@ -547,7 +547,7 @@ services:
       - '@form.factory'
       - '@prestashop.core.hook.dispatcher'
       - '@prestashop.admin.configure.advanced_parameters.beta_feature_flags_form_data_provider'
-      - 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagCollectionType'
+      - 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagListType'
       - 'FeatureFlagBeta'
       - 'feature_flag_beta'
 

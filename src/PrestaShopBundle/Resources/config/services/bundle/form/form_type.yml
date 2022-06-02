@@ -1898,8 +1898,8 @@ services:
     tags:
       - name: form.type
 
-  prestashop.bundle.form.admin.configure.advanced_parameters.feature_flag.feature_flag_collection_type:
-    class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagCollectionType'
+  prestashop.bundle.form.admin.configure.advanced_parameters.feature_flag.feature_flag_list_type:
+    class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagListType'
     parent: 'form.type.translatable.aware'
     public: true
     tags:
