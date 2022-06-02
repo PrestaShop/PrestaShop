@@ -30,13 +30,14 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Stock;
 
 use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 
-class StockMovementHistoryType extends TranslatorAwareType
+class StockMovementEventType extends TranslatorAwareType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -47,6 +48,7 @@ class StockMovementHistoryType extends TranslatorAwareType
             ->add('employee_name', TextPreviewType::class, [
                 'label' => $this->trans('Employee', 'Admin.Global'),
             ])
+            ->add('type', HiddenType::class)
             // Quantity field depends on the data, then it's added via form event
             ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
                 $data = $event->getData();

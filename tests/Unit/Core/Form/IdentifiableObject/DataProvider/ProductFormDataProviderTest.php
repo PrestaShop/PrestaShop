@@ -421,7 +421,7 @@ class ProductFormDataProviderTest extends TestCase
             'available_now' => $localizedValues,
             'available_later' => $localizedValues,
             'available_date' => new DateTime('1969/07/20'),
-            'stock_movement_history' => [
+            'stock_movements' => [
                 [
                     'type' => StockMovementEvent::ORDERS_TYPE,
                     'from_date' => '2022-01-13 18:20:58',
@@ -486,7 +486,7 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData['stock']['availability']['available_now_label'] = $localizedValues;
         $expectedOutputData['stock']['availability']['available_later_label'] = $localizedValues;
         $expectedOutputData['stock']['availability']['available_date'] = '1969-07-20';
-        $expectedOutputData['stock']['quantities']['stock_movement_history'] = [
+        $expectedOutputData['stock']['quantities']['stock_movements'] = [
             [
                 'type' => 'orders',
                 'date' => 'Shipped products',
@@ -1285,7 +1285,7 @@ class ProductFormDataProviderTest extends TestCase
                     sprintf('Unsupported stock movement event type "%s"', $historyData['type'])
                 );
             },
-            $productData['stock_movement_history'] ?? []
+            $productData['stock_movements'] ?? []
         );
     }
 
@@ -1591,7 +1591,7 @@ class ProductFormDataProviderTest extends TestCase
                         'quantity' => self::DEFAULT_QUANTITY,
                         'delta' => 0,
                     ],
-                    'stock_movement_history' => [],
+                    'stock_movements' => [],
                     'minimal_quantity' => 0,
                 ],
                 'options' => [

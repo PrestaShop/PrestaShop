@@ -129,7 +129,7 @@ class CombinationFormDataProviderTest extends TestCase
             'low_stock_alert' => true,
             'location' => 'top shelf',
             'available_date' => new DateTime('1969/07/20'),
-            'stock_movement_history' => [
+            'stock_movements' => [
                 [
                     'type' => StockMovementEvent::ORDERS_TYPE,
                     'from_date' => '2022-01-13 18:20:58',
@@ -190,33 +190,33 @@ class CombinationFormDataProviderTest extends TestCase
         $expectedOutputData['stock']['options']['low_stock_alert'] = true;
         $expectedOutputData['stock']['options']['stock_location'] = 'top shelf';
         $expectedOutputData['stock']['available_date'] = '1969-07-20';
-        $expectedOutputData['stock']['quantities']['stock_movement_history'] = [
+        $expectedOutputData['stock']['quantities']['stock_movements'] = [
             [
-                'type' => 'group',
+                'type' => 'orders',
                 'date' => 'Shipped products',
                 'employee_name' => null,
                 'delta_quantity' => -19,
             ],
             [
-                'type' => 'single',
+                'type' => 'edition',
                 'date' => '2021-05-24 15:24:32',
                 'employee_name' => '%firstname% %lastname%',
                 'delta_quantity' => +20,
             ],
             [
-                'type' => 'group',
+                'type' => 'orders',
                 'date' => 'Shipped products',
                 'employee_name' => null,
                 'delta_quantity' => -23,
             ],
             [
-                'type' => 'single',
+                'type' => 'edition',
                 'date' => '2021-05-22 16:35:48',
                 'employee_name' => '%firstname% %lastname%',
                 'delta_quantity' => +20,
             ],
             [
-                'type' => 'group',
+                'type' => 'orders',
                 'date' => 'Shipped products',
                 'employee_name' => null,
                 'delta_quantity' => -17,
@@ -626,7 +626,7 @@ class CombinationFormDataProviderTest extends TestCase
                     sprintf('Unsupported stock movement event type "%s"', $historyData['type'])
                 );
             },
-            $combinationData['stock_movement_history'] ?? []
+            $combinationData['stock_movements'] ?? []
         );
     }
 
@@ -649,7 +649,7 @@ class CombinationFormDataProviderTest extends TestCase
                         'quantity' => self::DEFAULT_QUANTITY,
                         'delta' => 0,
                     ],
-                    'stock_movement_history' => [],
+                    'stock_movements' => [],
                     'minimal_quantity' => 0,
                 ],
                 'options' => [

@@ -384,7 +384,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
                     'quantity' => $stockInformation->getQuantity(),
                     'delta' => 0,
                 ],
-                'stock_movement_history' => $this->getStockMovementHistory(
+                'stock_movements' => $this->getStockMovementHistory(
                     $productForEditing->getProductId(),
                     $shopConstraint
                 ),

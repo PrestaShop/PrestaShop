@@ -1511,8 +1511,8 @@ services:
     tags:
       - { name: form.type }
 
-  form.type.sell.product.stock.stock_movement_history:
-    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockMovementHistoryType'
+  form.type.sell.product.stock.stock_movement_event_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockMovementEventType'
     parent: 'form.type.translatable.aware'
     public: true
     tags:
