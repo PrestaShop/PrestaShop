@@ -479,7 +479,7 @@ describe('BO - Orders - Create order : Choose address', async () => {
     });
 
     it('should choose the new delivery address', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'addNewAddress', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'chooseNewDeliveryAddress', baseContext);
 
       const newAddress = await addOrderPage.chooseDeliveryAddress(page, newAddressData.alias);
       await expect(newAddress).to.be.equal(`${newAddressData.firstName} ${newAddressData.lastName}`
@@ -500,5 +500,5 @@ describe('BO - Orders - Create order : Choose address', async () => {
   });
 
   // Post-condition: Bulk delete created addresses
- // bulkDeleteAddressesTest('lastname', 'test', `${baseContext}_postTest_1`);
+  bulkDeleteAddressesTest('lastname', 'test', `${baseContext}_postTest_1`);
 });
