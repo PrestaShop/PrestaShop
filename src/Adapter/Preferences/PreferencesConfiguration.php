@@ -118,7 +118,6 @@ class PreferencesConfiguration implements DataConfigurationInterface
 
         // Update product page feature automatically based on PS_MULTISHOP_FEATURE_ACTIVE
         if (!$previousMultistoreFeatureState && (bool) $this->configuration->get('PS_MULTISHOP_FEATURE_ACTIVE')) {
-            $this->featureFlagRepository->disable(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
             $this->featureFlagRepository->disable(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2_MULTI_SHOP);
         }
 
