@@ -253,6 +253,10 @@ class CategoryCore extends ObjectModel
             $changed = true;
         }
 
+        if (Category::getParentId($this->id) !== (int) $this->id_parent) {
+            $changed = true;
+        }
+
         // If the parent category was changed, we don't want to have 2 categories with the same position
         if (!isset($changed)) {
             $changed = $this->getDuplicatePosition();
@@ -632,6 +636,26 @@ class CategoryCore extends ObjectModel
         }
 
         return $categories;
+    }
+
+    /**
+     * @param int $categoryId
+     *
+     * @return int
+     *
+     * @throws PrestaShopDatabaseException
+     */
+    public static function getParentId(int $categoryId): int
+    {
+        $query = (new DbQuery())
+            ->select('id_parent')
+            ->from('category')
+            ->where('id_category = ' . $categoryId)
+        ;
+
+        $id = Db::getInstance()->getValue($query);
+
+        return (int) $id;
     }
 
     /**
