@@ -30,14 +30,21 @@ const {$} = window;
 
 $(() => {
   const $submitButton = $(FeatureFlagMap.betaSubmitButton);
-  $submitButton.prop('disabled', true);
+  const $stableFormSubmitButton = $(FeatureFlagMap.stableSubmitButton);
   const $form = $(FeatureFlagMap.betaForm);
-  const $formInputs = $(FeatureFlagMap.betaFormInputFields);
+  const $betaFormInputs = $(FeatureFlagMap.betaFormInputFields);
+  const $stableForm = $(FeatureFlagMap.stableForm);
+  const $stableFormInputs = $(FeatureFlagMap.stableFormInputs);
+  const $stableFormInitialState = $stableForm.serialize();
   const initialState = $form.serialize();
   const initialFormData = $form.serializeArray();
 
-  $formInputs.change(() => {
+  $betaFormInputs.change(() => {
     $submitButton.prop('disabled', initialState === $form.serialize());
+  });
+
+  $stableFormInputs.change(() => {
+    $stableFormSubmitButton.prop('disabled', $stableFormInitialState === $stableForm.serialize());
   });
 
   $submitButton.on('click', (event) => {
