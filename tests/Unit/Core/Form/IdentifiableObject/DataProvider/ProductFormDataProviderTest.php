@@ -78,7 +78,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\Vir
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ProductFormDataProvider;
 use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 use RuntimeException;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 // @todo: ProductFormDataProvider needs to be split to multiple classes to allow easier testing
 class ProductFormDataProviderTest extends TestCase
@@ -120,8 +119,7 @@ class ProductFormDataProviderTest extends TestCase
             $configurationMock,
             self::CONTEXT_LANG_ID,
             self::DEFAULT_SHOP_ID,
-            null,
-            $this->getDefaultTranslatorMock()
+            null
         );
 
         $formData = $provider->getData(self::PRODUCT_ID);
@@ -133,8 +131,7 @@ class ProductFormDataProviderTest extends TestCase
             $configurationMock,
             self::CONTEXT_LANG_ID,
             self::DEFAULT_SHOP_ID,
-            $contextShopId,
-            $this->getDefaultTranslatorMock()
+            $contextShopId
         );
 
         $formData = $provider->getData(self::PRODUCT_ID);
@@ -487,7 +484,7 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData['stock']['quantities']['stock_movements'] = [
             [
                 'type' => 'orders',
-                'date' => 'Shipped products',
+                'date' => null,
                 'employee_name' => null,
                 'delta_quantity' => -19,
             ],
@@ -499,7 +496,7 @@ class ProductFormDataProviderTest extends TestCase
             ],
             [
                 'type' => 'orders',
-                'date' => 'Shipped products',
+                'date' => null,
                 'employee_name' => null,
                 'delta_quantity' => -23,
             ],
@@ -511,7 +508,7 @@ class ProductFormDataProviderTest extends TestCase
             ],
             [
                 'type' => 'orders',
-                'date' => 'Shipped products',
+                'date' => null,
                 'employee_name' => null,
                 'delta_quantity' => -17,
             ],
@@ -1681,8 +1678,7 @@ class ProductFormDataProviderTest extends TestCase
             $this->getDefaultConfigurationMock(),
             self::CONTEXT_LANG_ID,
             self::DEFAULT_SHOP_ID,
-            null,
-            $this->getDefaultTranslatorMock()
+            null
         );
     }
 
@@ -1698,19 +1694,5 @@ class ProductFormDataProviderTest extends TestCase
         ]);
 
         return $configurationMock;
-    }
-
-    /**
-     * @return TranslatorInterface
-     */
-    private function getDefaultTranslatorMock(): TranslatorInterface
-    {
-        $translatorMock = $this->createMock(TranslatorInterface::class);
-        $translatorMock
-            ->method('trans')
-            ->willReturnArgument(0)
-        ;
-
-        return $translatorMock;
     }
 }

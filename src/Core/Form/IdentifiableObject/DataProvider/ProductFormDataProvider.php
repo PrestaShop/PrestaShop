@@ -49,7 +49,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSuppli
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Provides the data that is used to prefill the Product form
@@ -82,32 +81,24 @@ class ProductFormDataProvider implements FormDataProviderInterface
     private $configuration;
 
     /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
      * @param CommandBusInterface $queryBus
      * @param ConfigurationInterface $configuration
      * @param int $contextLangId
      * @param int $defaultShopId
      * @param int|null $contextShopId
-     * @param TranslatorInterface $translator
      */
     public function __construct(
         CommandBusInterface $queryBus,
         ConfigurationInterface $configuration,
         int $contextLangId,
         int $defaultShopId,
-        ?int $contextShopId,
-        TranslatorInterface $translator
+        ?int $contextShopId
     ) {
         $this->queryBus = $queryBus;
         $this->configuration = $configuration;
         $this->contextLangId = $contextLangId;
         $this->defaultShopId = $defaultShopId;
         $this->contextShopId = $contextShopId;
-        $this->translator = $translator;
     }
 
     /**
@@ -414,15 +405,12 @@ class ProductFormDataProvider implements FormDataProviderInterface
     {
         return array_map(
             function (StockMovementEvent $history): array {
+                $date = null;
                 if ($history->isEdition()) {
                     $date = $history
                         ->getDate('add')
                         ->format(DateTime::DEFAULT_DATETIME_FORMAT)
                     ;
-                } elseif ($history->getDeltaQuantity() < 0) {
-                    $date = $this->translator->trans('Shipped products');
-                } else {
-                    $date = $this->translator->trans('Returned products');
                 }
 
                 return [

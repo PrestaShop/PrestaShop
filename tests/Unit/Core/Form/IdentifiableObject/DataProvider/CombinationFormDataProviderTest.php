@@ -50,7 +50,6 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\NoSupplierId;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CombinationFormDataProvider;
 use RuntimeException;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CombinationFormDataProviderTest extends TestCase
 {
@@ -85,7 +84,7 @@ class CombinationFormDataProviderTest extends TestCase
 
         $formData = $formDataProvider->getData(self::COMBINATION_ID);
         // assertSame is very important here We can't assume null and 0 are the same thing
-        $this->assertSame($expectedData, $formDataProvider->getData(self::COMBINATION_ID));
+        $this->assertSame($expectedData, $formData);
     }
 
     public function getExpectedData(): Generator
@@ -191,7 +190,7 @@ class CombinationFormDataProviderTest extends TestCase
         $expectedOutputData['stock']['quantities']['stock_movements'] = [
             [
                 'type' => 'orders',
-                'date' => 'Shipped products',
+                'date' => null,
                 'employee_name' => null,
                 'delta_quantity' => -19,
             ],
@@ -203,7 +202,7 @@ class CombinationFormDataProviderTest extends TestCase
             ],
             [
                 'type' => 'orders',
-                'date' => 'Shipped products',
+                'date' => null,
                 'employee_name' => null,
                 'delta_quantity' => -23,
             ],
@@ -215,7 +214,7 @@ class CombinationFormDataProviderTest extends TestCase
             ],
             [
                 'type' => 'orders',
-                'date' => 'Shipped products',
+                'date' => null,
                 'employee_name' => null,
                 'delta_quantity' => -17,
             ],
@@ -686,23 +685,9 @@ class CombinationFormDataProviderTest extends TestCase
         CommandBusInterface $queryBusMock
     ): CombinationFormDataProvider {
         return new CombinationFormDataProvider(
-            $this->mockShopContext(),
-            $this->mockTranslator()
+            $queryBusMock,
+            $this->mockShopContext()
         );
-    }
-
-    /**
-     * @return TranslatorInterface
-     */
-    private function mockTranslator(): TranslatorInterface
-    {
-        $translatorMock = $this->createMock(TranslatorInterface::class);
-        $translatorMock
-            ->method('trans')
-            ->willReturnArgument(0)
-        ;
-
-        return $translatorMock;
     }
 
     /**

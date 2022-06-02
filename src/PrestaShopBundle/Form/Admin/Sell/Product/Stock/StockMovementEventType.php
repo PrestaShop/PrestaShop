@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Stock;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementEvent;
 use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -54,13 +55,25 @@ class StockMovementEventType extends TranslatorAwareType
                 $data = $event->getData();
                 $form = $event->getForm();
 
+                // Check that data exists, during prototype rendering it will be empty
+                $type = $data['type'] ?? StockMovementEvent::EDITION_TYPE;
+                $increasedQuantity = !empty($data['delta_quantity']) && $data['delta_quantity'] > 0;
+
+                // For orders, we display the kind of movements instead of the data range
+                if ($type === StockMovementEvent::ORDERS_TYPE) {
+                    $dateData = $increasedQuantity ?
+                        $this->trans('Shipped products', 'Admin.Catalog.Feature')
+                        : $this->trans('Returned products', 'Admin.Catalog.Feature')
+                    ;
+                    $event->setData(array_merge($event->getData(), [
+                        'date' => $dateData,
+                    ]));
+                }
+
                 $previewClasses = [
                     'stock_movement_quantity',
                 ];
-                // Check that data exists, during prototype rendering it will be empty
-                if (!empty($data['delta_quantity'])) {
-                    $previewClasses[] = 0 < $data['delta_quantity'] ? 'decreased_quantity' : 'increased_quantity';
-                }
+                $previewClasses[] = $increasedQuantity ? 'decreased_quantity' : 'increased_quantity';
                 $form->add('delta_quantity', TextPreviewType::class, [
                     'label' => $this->trans('Quantity', 'Admin.Global'),
                     'preview_class' => implode(' ', $previewClasses),
