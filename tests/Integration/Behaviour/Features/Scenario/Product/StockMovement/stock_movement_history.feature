@@ -16,9 +16,9 @@ Feature: Search stock movements from Back Office (BO)
     And there is customer "testCustomer" with email "pub@prestashop.com"
     And customer "testCustomer" has address in "US" country
     And a carrier "default_carrier" with name "My carrier" exists
-    And there is a product in the catalog named "product1" with a price of 17.0 and 100 items in stock
 
   Scenario: I can search the last 5 rows of stock movements by default and paginate through history
+    Given there is a product in the catalog named "product1" with a price of 17.0 and 100 items in stock
     # First create a cart with 2 product1 and order it
     When I create an empty cart "dummy_cart1" for customer "testCustomer"
     And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart1"
@@ -128,3 +128,29 @@ Feature: Search stock movements from Back Office (BO)
       | range  |            |           | -9             |
       | single | Puff       | Daddy     | 10             |
       | range  |            |           | -2             |
+
+  Scenario: I can search the last stock movements also if the first one is an edition (and can have multiple single edition one after another)
+    Given there is a product in the catalog named "product2" with a price of 17.0 and 100 items in stock
+    # First edit product quantity
+    When I update product "product2" stock with following information:
+      | delta_quantity | -5 |
+    Then the available stock for product "product2" should be 95
+    # Then create a cart with 2 product2 and order it
+    When I create an empty cart "dummy_cart8" for customer "testCustomer"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart8"
+    And I add 2 products "product2" to the cart "dummy_cart8"
+    And I add order "bo_order8" with the following details:
+      | cart                | dummy_cart8                |
+      | message             | order8                     |
+      | payment module name | dummy_payment              |
+      | status              | Delivered                  |
+    And the available stock for product "product2" should be 93
+    When I update product "product2" stock with following information:
+      | delta_quantity | 1 |
+    Then the available stock for product "product2" should be 94
+    When I search stock movements of product "product2" I should get following results:
+      | type   | first_name | last_name | delta_quantity |
+      | single | Puff       | Daddy     | 1              |
+      | range  |            |           | -2             |
+      | single | Puff       | Daddy     | -5             |
+      | single | Puff       | Daddy     | 100            |

@@ -154,3 +154,32 @@ Feature: Search stock movements from Back Office (BO)
       | range  |            |           | -9             |
       | single | Puff       | Daddy     | 10             |
       | range  |            |           | -2             |
+
+  Scenario: I can search the last stock movements also if the first one is an edition (and can have multiple single edition one after another)
+    # First edit product quantity
+    When I update combination "product1MWhite" stock with following details:
+      | delta quantity | 15 |
+    Then combination "product1MWhite" should have 15 available items
+    # Edit a second time to have two edition rows one after another
+    When I update combination "product1MWhite" stock with following details:
+      | delta quantity | -5 |
+    Then combination "product1MWhite" should have 10 available items
+    # Then create a cart with 2 product1MWhite and order it
+    When I create an empty cart "dummy_cart8" for customer "testCustomer"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart8"
+    And I add 2 items of combination "product1MWhite" of the product "product1" to the cart "dummy_cart8"
+    And I add order "bo_order8" with the following details:
+      | cart                | dummy_cart8                |
+      | message             | order8                     |
+      | payment module name | dummy_payment              |
+      | status              | Delivered                  |
+    Then combination "product1MWhite" should have 8 available items
+    When I update combination "product1MWhite" stock with following details:
+      | delta quantity | -3 |
+    Then combination "product1MWhite" should have 5 available items
+    When I search stock movements of combination "product1MWhite" I should get following results:
+      | type   | first_name | last_name | delta_quantity |
+      | single | Puff       | Daddy     | -3             |
+      | range  |            |           | -2             |
+      | single | Puff       | Daddy     | -5             |
+      | single | Puff       | Daddy     | 15             |
