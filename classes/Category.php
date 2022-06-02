@@ -1896,7 +1896,7 @@ class CategoryCore extends ObjectModel
     {
         $sql = new DbQuery();
         $sql->select('l.`id_lang`, cl.`link_rewrite`');
-        $sql->from('category_link', 'cl');
+        $sql->from('category_lang', 'cl');
         $sql->leftJoin('lang', 'l', 'cl.`id_lang` = l.`id_lang`');
         $sql->where('cl.`id_category` = ' . (int) $idCategory);
         $sql->where('l.`active` = 1');
