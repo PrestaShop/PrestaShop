@@ -131,7 +131,7 @@ class CombinationFormDataProviderTest extends TestCase
             'available_date' => new DateTime('1969/07/20'),
             'stock_movement_history' => [
                 [
-                    'type' => StockMovementHistory::GROUP_TYPE,
+                    'type' => StockMovementHistory::RANGE_TYPE,
                     'from_date' => '2022-01-13 18:20:58',
                     'to_date' => '2021-05-24 15:24:32',
                     'stock_movement_ids' => [321, 322, 323, 324, 325],
@@ -152,7 +152,7 @@ class CombinationFormDataProviderTest extends TestCase
                     'delta_quantity' => +20,
                 ],
                 [
-                    'type' => StockMovementHistory::GROUP_TYPE,
+                    'type' => StockMovementHistory::RANGE_TYPE,
                     'from_date' => '2021-05-24 15:24:32',
                     'to_date' => '2021-05-22 16:35:48',
                     'stock_movement_ids' => [221, 222, 223, 224, 225],
@@ -173,7 +173,7 @@ class CombinationFormDataProviderTest extends TestCase
                     'delta_quantity' => +20,
                 ],
                 [
-                    'type' => StockMovementHistory::GROUP_TYPE,
+                    'type' => StockMovementHistory::RANGE_TYPE,
                     'from_date' => '2021-05-22 16:35:48',
                     'to_date' => '2021-01-24 15:24:32',
                     'stock_movement_ids' => [121, 122, 123, 124, 125],
@@ -611,8 +611,8 @@ class CombinationFormDataProviderTest extends TestCase
                         $historyData['delta_quantity']
                     );
                 }
-                if (StockMovementHistory::GROUP_TYPE === $historyData['type']) {
-                    return StockMovementHistory::createGroupHistory(
+                if (StockMovementHistory::RANGE_TYPE === $historyData['type']) {
+                    return StockMovementHistory::createRangeHistory(
                         $historyData['from_date'],
                         $historyData['to_date'],
                         $historyData['stock_movement_ids'],

@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Stock\Repository;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockId;
 
 class StockMovementRepository
 {
@@ -59,16 +60,14 @@ class StockMovementRepository
      * @return array<int, array<string, mixed>>
      */
     public function getLastStockMovementHistories(
-        StockMovementHistorySettings $historySettings,
+        StockId $stockId,
         int $offset = 0,
         int $limit = self::DEFAULT_LIMIT
     ): array {
-        $queryBuilder = $this
-            ->createFilterQueryBuilder(
-                $historySettings->getMainFilter(),
-                $offset,
-                $limit
-            )
+        $queryBuilder = $this->connection->createQueryBuilder();
+        $queryBuilder
+            ->select('sm.*')
+            ->from($this->dbPrefix . 'stock_mvt', 'sm')
             ->select(
                 'MIN(sm.id_stock_mvt) id_stock_mvt_min',
                 'COUNT(id_stock_mvt) id_stock_mvt_count',
@@ -83,15 +82,19 @@ class StockMovementRepository
                 'MIN(sm.date_add) date_add_min',
                 'MAX(sm.date_add) date_add_max'
             )
-            ->orderBy('id_stock_mvt_min', 'DESC')
         ;
-        $this->updateQueryBuilderWithGroupings(
-            $queryBuilder,
-            $historySettings->getSingleFilter()
-        );
-        if ($historySettings->isZeroQuantityGroupingExcluded()) {
-            $queryBuilder->andHaving('delta_quantity != 0');
-        }
+
+        // Add grouping condition to get range and single rows alternatively
+        $this->addGroupingCondition($queryBuilder);
+
+        $queryBuilder
+            ->andHaving('delta_quantity != 0')
+            ->orderBy('id_stock_mvt_min', 'DESC')
+            ->andWhere('sm.id_stock = :stockId')
+            ->setParameter('stockId', $stockId->getValue())
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+        ;
 
         // It is CRITICAL to reset the counter before each request
         $this->connection->executeStatement('SET @grouping_id := null');
@@ -100,60 +103,53 @@ class StockMovementRepository
         return $result;
     }
 
-    /**
-     * Returns a new query builder with the given filter.
-     */
-    protected function createFilterQueryBuilder(
-        StockMovementFilter $filter,
-        int $offset = 0,
-        int $limit = self::DEFAULT_LIMIT
-    ): QueryBuilder {
-        $queryBuilder = $this
-            ->connection
-            ->createQueryBuilder()
-            ->select('sm.*')
-            ->from($this->dbPrefix . 'stock_mvt', 'sm')
-            ->setFirstResult($offset)
-            ->setMaxResults($limit)
-        ;
-        if (!empty($filter->getStockIds())) {
-            $queryBuilder
-                ->andWhere('sm.id_stock IN (:stockIds)')
-                ->setParameter('stockIds', $filter->getStockIdsAsString())
-            ;
-        }
-        if (null !== $filter->isGroupedByOrderAssociation()) {
-            $queryBuilder->andWhere(
-                'sm.id_order IS ' . ($filter->isGroupedByOrderAssociation() ? 'NOT NULL' : 'NULL')
-            );
-        }
-
-        return $queryBuilder;
-    }
-
-    /**
-     * Updates a query builder with a filter to group rows together
-     *
-     * @param QueryBuilder $queryBuilder Query builder to update
-     * @param StockMovementFilter $singleFilter Filter to exclude single rows from groupings
-     */
-    protected function updateQueryBuilderWithGroupings(
-        QueryBuilder $queryBuilder,
-        StockMovementFilter $singleFilter
-    ): void {
-        $pkColumn = 'sm.id_stock_mvt';
-        $groupingIdColumn = 'grouping_id';
-        $groupingTypeColumn = 'grouping_type';
-        $groupingNameColumn = 'grouping_name';
-        $groupingQueryBuilder = $this->createFilterQueryBuilder($singleFilter);
-        $groupingCondition = (string) $groupingQueryBuilder->getQueryPart('where');
+    private function addGroupingCondition(QueryBuilder $queryBuilder): void
+    {
+        /**
+         * This is where the whole magic happens, this query is a bit hard to understand so it deserves explanation. The idea
+         * of this query is to group the stock movement based on a criteria: is it a stock movement made by an employee in the
+         * product page for an edition or is it a stock movement linked to a customer buying the product? And the criteria for
+         * this is checking if stock_movement.id_order is NULL or NOT.
+         *
+         * So that's our grouping condition, but then it goes further because we want the employee editions to be returned as
+         * a single row whereas the customer orders should be aggregated together between each edition. That's where our grouping_id
+         * column comes into action, it is generated based on our grouping condition (sm.id_order IS NULL) and basically each time the
+         * condition is met we update @grouping_id variable by assigning it the lowest stock movement ID, this indicates that our list
+         * changed from a state of single edition movement to a state of grouped customer orders.
+         *
+         * But it wouldn't be enough because two rows share the same grouping_id, so we need an extra column grouping_type which indicates
+         * which type of movement we are dealing with. Finally by concatenating those two infos we get a grouping_name column which is the
+         * proper criteria that we are gonna be able to use to group our rows properly using a groupBy(grouping_name).
+         *
+         * For more clarity here is a simplified subset of the query so that you can picture the expected result, you can see how each
+         * row changes from the single to the range group, and that range rows are an aggregate of multiple stock movements which each
+         * delta_quantity was summed to get their total.
+         *
+         * | id_stock_mvt_min | id_stock_mvt_count | id_stock_mvt_list | id_order_list | id_employee_list | delta_quantity | grouping_id | grouping_type | grouping_name |
+         * | ---------------- | ------------------ | ----------------- | ------------- | ---------------- | -------------- | ----------- | ------------- | ------------- |
+         * | 7                | 3                  | 9,8,7             | 12,11,10      | 1,1,1            | -6             | 6           | range         | range-6       |
+         * | 6                | 1                  | 6                 | NULL          | 1                | 5              | 6           | single        | single-6      |
+         * | 4                | 2                  | 5,4               | 9,8           | 1,1              | -9             | 3           | range         | range-3       |
+         * | 3                | 1                  | 3                 | NULL          | 1                | 10             | 3           | single        | single-3      |
+         * | 2                | 1                  | 2                 | 6             | 1                | -2             | 1           | range         | range-1       |
+         *
+         * Note: you can see that a range row is now necessarily composed of multiple stock movements, the important is that it is between two employee editions (single row),
+         * however we could have multiple single rows one after another if no products were bought in between.
+         *
+         * The real query has more columns returned, not all of them are being used currently but it's a good thing to keep them for future use
+         * (maybe we'll need to add a link to all related orders for example) and as a demonstration.
+         *
+         * Note: we don't explicitly need the grouping_type column to handle our grouping conditions but we need it later to easily identify the type of the row.
+         */
+        $stockMovementId = 'sm.id_stock_mvt';
+        $groupingCondition = 'sm.id_order IS NULL';
         $queryBuilder
             ->addSelect(
-                "MIN(@$groupingIdColumn := CASE WHEN @$groupingIdColumn IS NULL THEN $pkColumn WHEN $groupingCondition THEN $pkColumn ELSE @$groupingIdColumn END) $groupingIdColumn",
-                "CASE WHEN $groupingCondition THEN CONCAT('single-', $pkColumn) ELSE CONCAT('range-', @$groupingIdColumn) END $groupingNameColumn",
-                "CASE WHEN $groupingCondition THEN 'single' ELSE 'range' END $groupingTypeColumn"
+                "MIN(@grouping_id := CASE WHEN @grouping_id IS NULL THEN $stockMovementId WHEN $groupingCondition THEN $stockMovementId ELSE @grouping_id END) grouping_id",
+                "CASE WHEN $groupingCondition THEN CONCAT('single-', $stockMovementId) ELSE CONCAT('range-', @grouping_id) END grouping_name",
+                "CASE WHEN $groupingCondition THEN 'single' ELSE 'range' END grouping_type"
             )
-            ->groupBy($groupingNameColumn)
+            ->groupBy('grouping_name')
         ;
     }
 }

@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Stock\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableMultiShopRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockMovementHistorySettings;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockMovementRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementHistory;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockId;
@@ -59,16 +58,8 @@ abstract class AbstractGetStockMovementHistoryHandler
      */
     protected function getStockMovementHistory(StockId $stockId, int $offset, int $limit): array
     {
-        $historySettings = new StockMovementHistorySettings();
-        // Filter stock movements by stock ID
-        $historySettings->getMainFilter()->setStockIds($stockId);
-        // Select stock movements without order as single histories, excluded from groupings
-        $historySettings->getSingleFilter()->setGroupedByOrderAssociation(false);
-        // Exclude stock movement groupings with zero quantity
-        $historySettings->excludeGroupingWithZeroQuantity(true);
-
         $lastStockMovements = $this->stockMovementRepository->getLastStockMovementHistories(
-            $historySettings,
+            $stockId,
             $offset,
             $limit
         );
@@ -77,7 +68,7 @@ abstract class AbstractGetStockMovementHistoryHandler
             function (array $historyRow): StockMovementHistory {
                 return $historyRow['grouping_type'] === 'single'
                     ? $this->createSingleStockMovementHistory($historyRow)
-                    : $this->createGroupStockMovementHistory($historyRow)
+                    : $this->createRangeStockMovementHistory($historyRow)
                 ;
             },
             $lastStockMovements
@@ -98,9 +89,9 @@ abstract class AbstractGetStockMovementHistoryHandler
         );
     }
 
-    protected function createGroupStockMovementHistory(array $historyRow): StockMovementHistory
+    protected function createRangeStockMovementHistory(array $historyRow): StockMovementHistory
     {
-        return StockMovementHistory::createGroupHistory(
+        return StockMovementHistory::createRangeHistory(
             $historyRow['date_add_min'],
             $historyRow['date_add_max'],
             explode(',', $historyRow['id_stock_mvt_list']),
