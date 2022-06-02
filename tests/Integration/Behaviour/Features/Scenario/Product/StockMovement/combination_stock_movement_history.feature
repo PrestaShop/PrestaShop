@@ -126,34 +126,34 @@ Feature: Search stock movements from Back Office (BO)
     And combination "product1SBlack" should have 95 available items
     # Now we check at the stock movements
     When I search stock movements of combination "product1SBlack" I should get following results:
-      | type    | first_name | last_name | delta_quantity |
-      | orders  |            |           | -6             |
-      | edition | Puff       | Daddy     | 5              |
-      | orders  |            |           | -9             |
-      | edition | Puff       | Daddy     | 10             |
+      | type    | employee   | delta_quantity |
+      | orders  |            | -6             |
+      | edition | Puff Daddy | 5              |
+      | orders  |            | -9             |
+      | edition | Puff Daddy | 10             |
       # Since no stock movement is generated until the order is shipped this orders movement only has a quantity of -2,
       # not -5 because second order is still waiting for payment
-      | orders  |            |           | -2             |
+      | orders  |            | -2             |
     When I search stock movements of combination "product1SBlack" with offset 0 and limit 6 I should get following results:
-      | type    | first_name | last_name | delta_quantity |
-      | orders  |            |           | -6             |
-      | edition | Puff       | Daddy     | 5              |
-      | orders  |            |           | -9             |
-      | edition | Puff       | Daddy     | 10             |
-      | orders  |            |           | -2             |
-      | edition | Puff       | Daddy     | 100            |
+      | type    | employee   | delta_quantity |
+      | orders  |            | -6             |
+      | edition | Puff Daddy | 5              |
+      | orders  |            | -9             |
+      | edition | Puff Daddy | 10             |
+      | orders  |            | -2             |
+      | edition | Puff Daddy | 100            |
     When I search stock movements of combination "product1SBlack" with offset 1 and limit 5 I should get following results:
-      | type    | first_name | last_name | delta_quantity |
-      | edition | Puff       | Daddy     | 5              |
-      | orders  |            |           | -9             |
-      | edition | Puff       | Daddy     | 10             |
-      | orders  |            |           | -2             |
-      | edition | Puff       | Daddy     | 100            |
+      | type    | employee   | delta_quantity |
+      | edition | Puff Daddy | 5              |
+      | orders  |            | -9             |
+      | edition | Puff Daddy | 10             |
+      | orders  |            | -2             |
+      | edition | Puff Daddy | 100            |
     When I search stock movements of combination "product1SBlack" with offset 2 and limit 3 I should get following results:
-      | type    | first_name | last_name | delta_quantity |
-      | orders  |            |           | -9             |
-      | edition | Puff       | Daddy     | 10             |
-      | orders  |            |           | -2             |
+      | type    | employee   | delta_quantity |
+      | orders  |            | -9             |
+      | edition | Puff Daddy | 10             |
+      | orders  |            | -2             |
 
   Scenario: I can search the last stock movements also if the first one is an edition (and can have multiple editions one after another)
     # First edit product quantity
@@ -178,8 +178,8 @@ Feature: Search stock movements from Back Office (BO)
       | delta quantity | -3 |
     Then combination "product1MWhite" should have 5 available items
     When I search stock movements of combination "product1MWhite" I should get following results:
-      | type    | first_name | last_name | delta_quantity |
-      | edition | Puff       | Daddy     | -3             |
-      | orders  |            |           | -2             |
-      | edition | Puff       | Daddy     | -5             |
-      | edition | Puff       | Daddy     | 15             |
+      | type    | employee   | delta_quantity |
+      | edition | Puff Daddy | -3             |
+      | orders  |            | -2             |
+      | edition | Puff Daddy | -5             |
+      | edition | Puff Daddy | 15             |

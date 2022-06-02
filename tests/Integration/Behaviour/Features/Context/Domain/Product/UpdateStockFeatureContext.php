@@ -536,21 +536,12 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
         foreach ($movementsData as $movementDatum) {
             $stockMovementEvent = $stockMovementHistories[$index];
             Assert::assertEquals(
-                $movementDatum['first_name'],
-                $stockMovementEvent->getEmployeeFirstName(),
+                $movementDatum['employee'],
+                $stockMovementEvent->getEmployeeName(),
                 sprintf(
-                    'Invalid employee first name of stock movement event, expected "%s" instead of "%s"',
-                    $movementDatum['first_name'],
-                    $stockMovementEvent->getEmployeeFirstName()
-                )
-            );
-            Assert::assertEquals(
-                $movementDatum['last_name'],
-                $stockMovementEvent->getEmployeeLastName(),
-                sprintf(
-                    'Invalid employee last name of stock movement event, expected "%s" instead of "%s"',
-                    $movementDatum['last_name'],
-                    $stockMovementEvent->getEmployeeLastName()
+                    'Invalid employee name of stock movement event, expected "%s" instead of "%s"',
+                    $movementDatum['employee'],
+                    $stockMovementEvent->getEmployeeName()
                 )
             );
             Assert::assertEquals(

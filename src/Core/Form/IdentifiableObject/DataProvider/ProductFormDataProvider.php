@@ -419,26 +419,16 @@ class ProductFormDataProvider implements FormDataProviderInterface
                         ->getDate('add')
                         ->format(DateTime::DEFAULT_DATETIME_FORMAT)
                     ;
-                    $employeeName = $this->translator->trans(
-                        '%firstname% %lastname%',
-                        [
-                            '%firstname%' => $history->getEmployeeFirstname(),
-                            '%lastname%' => $history->getEmployeeLastname(),
-                        ],
-                        'Modules.Customersignin.Admin'
-                    );
                 } elseif ($history->getDeltaQuantity() < 0) {
                     $date = $this->translator->trans('Shipped products');
-                    $employeeName = null;
                 } else {
                     $date = $this->translator->trans('Returned products');
-                    $employeeName = null;
                 }
 
                 return [
                     'type' => $history->getType(),
                     'date' => $date,
-                    'employee_name' => $employeeName,
+                    'employee_name' => $history->getEmployeeName(),
                     'delta_quantity' => $history->getDeltaQuantity(),
                 ];
             },

@@ -102,21 +102,12 @@ class StockMovementsFeatureContext extends AbstractProductFeatureContext
                 )
             );
             Assert::assertEquals(
-                $tableRow['first_name'],
-                $stockMovementEvent->getEmployeeFirstName(),
+                $tableRow['employee'],
+                $stockMovementEvent->getEmployeeName(),
                 sprintf(
-                    'Invalid employee first name of stock movement event, expected "%s" instead of "%s"',
-                    $tableRow['first_name'],
-                    $stockMovementEvent->getEmployeeFirstName()
-                )
-            );
-            Assert::assertEquals(
-                $tableRow['last_name'],
-                $stockMovementEvent->getEmployeeLastName(),
-                sprintf(
-                    'Invalid employee last name of stock movement event, expected "%s" instead of "%s"',
-                    $tableRow['last_name'],
-                    $stockMovementEvent->getEmployeeLastName()
+                    'Invalid employee name of stock movement event, expected "%s" instead of "%s"',
+                    $tableRow['employee'],
+                    $stockMovementEvent->getEmployeeName()
                 )
             );
             Assert::assertSame(

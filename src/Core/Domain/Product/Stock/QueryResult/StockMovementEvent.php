@@ -42,7 +42,7 @@ class StockMovementEvent
     protected $type;
 
     /**
-     * @var DateTimeImmutable[]
+     * @var array<string, DateTimeImmutable>
      */
     protected $dates;
 
@@ -69,12 +69,7 @@ class StockMovementEvent
     /**
      * @var string|null
      */
-    protected $employeeFirstname = null;
-
-    /**
-     * @var string|null
-     */
-    protected $employeeLastname = null;
+    protected $employeeName = null;
 
     /**
      * @var int
@@ -88,8 +83,7 @@ class StockMovementEvent
      * @param int[] $stockIds
      * @param int[] $orderIds
      * @param int[] $employeeIds
-     * @param string|null $employeeFirstName
-     * @param string|null $employeeLastName
+     * @param string|null $employeeName
      * @param int $deltaQuantity
      */
     protected function __construct(
@@ -99,8 +93,7 @@ class StockMovementEvent
         array $stockIds,
         array $orderIds,
         array $employeeIds,
-        ?string $employeeFirstName,
-        ?string $employeeLastName,
+        ?string $employeeName,
         int $deltaQuantity
     ) {
         $this->type = $type;
@@ -110,8 +103,7 @@ class StockMovementEvent
         $this->orderIds = $this->initializeIds($orderIds);
         $this->employeeIds = $this->initializeIds($employeeIds);
         $this->stockMovementIds = $this->initializeIds($stockMovementIds);
-        $this->employeeFirstname = $employeeFirstName;
-        $this->employeeLastname = $employeeLastName;
+        $this->employeeName = $employeeName;
         $this->deltaQuantity = $deltaQuantity;
     }
 
@@ -152,8 +144,7 @@ class StockMovementEvent
         int $stockId,
         ?int $orderId,
         int $employeeId,
-        ?string $employeeFirstName,
-        ?string $employeeLastName,
+        ?string $employeeName,
         int $deltaQuantity
     ): self {
         return new static(
@@ -165,8 +156,7 @@ class StockMovementEvent
             [$stockId],
             $orderId !== null ? [$orderId] : [],
             [$employeeId],
-            $employeeFirstName,
-            $employeeLastName,
+            $employeeName,
             $deltaQuantity
         );
     }
@@ -199,7 +189,6 @@ class StockMovementEvent
             $stockIds,
             $orderIds,
             $employeeIds,
-            null,
             null,
             $deltaQuantity
         );
@@ -255,14 +244,9 @@ class StockMovementEvent
         return $this->employeeIds;
     }
 
-    public function getEmployeeFirstname(): ?string
+    public function getEmployeeName(): ?string
     {
-        return $this->employeeFirstname;
-    }
-
-    public function getEmployeeLastname(): ?string
-    {
-        return $this->employeeLastname;
+        return $this->employeeName;
     }
 
     public function getDeltaQuantity(): int
@@ -271,7 +255,7 @@ class StockMovementEvent
     }
 
     /**
-     * @return DateTimeImmutable[]
+     * @return array<string, DateTimeImmutable>
      */
     public function getDates(): array
     {

@@ -120,17 +120,17 @@ Feature: Update product stock from Back Office (BO)
     And product "product1" should have following stock information:
       | quantity | 51 |
     And product "product1" last stock movements should be:
-      | first_name | last_name | delta_quantity |
-      | Puff       | Daddy     | 51             |
+      | employee   | delta_quantity |
+      | Puff Daddy | 51             |
     And product "product1" last stock movement increased by 51
     When I update product "product1" stock with following information:
       | delta_quantity | -9 |
     And product "product1" should have following stock information:
       | quantity | 42 |
     And product "product1" last stock movements should be:
-      | first_name | last_name | delta_quantity |
-      | Puff       | Daddy     | -9             |
-      | Puff       | Daddy     | 51             |
+      | employee   | delta_quantity |
+      | Puff Daddy | -9             |
+      | Puff Daddy | 51             |
     And product "product1" last stock movement decreased by 9
     # Next assert makes sure that 0 delta quantity is valid input for command but is skipped and stock does not move
     When I update product "product1" stock with following information:
@@ -138,9 +138,9 @@ Feature: Update product stock from Back Office (BO)
     Then product "product1" should have following stock information:
       | quantity | 42 |
     And product "product1" last stock movements should be:
-      | first_name | last_name | delta_quantity |
-      | Puff       | Daddy     | -9             |
-      | Puff       | Daddy     | 51             |
+      | employee   | delta_quantity |
+      | Puff Daddy | -9             |
+      | Puff Daddy | 51             |
     And product "product1" last stock movement decreased by 9
 
   Scenario: I update product simple stock fields
