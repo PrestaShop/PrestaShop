@@ -1,0 +1,42 @@
+# todo uncomment all legacy links when page is finished.
+admin_countries_index:
+  path: /
+  methods: GET
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\CountryController::indexAction'
+    _legacy_controller: AdminCountries
+#    _legacy_link: AdminCountries
+
+admin_countries_search:
+  path: /
+  methods: POST
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.country
+    redirectRoute: admin_countries_index
+    _legacy_controller: AdminCountries
+#    _legacy_link: AdminCountries:submitFiltercountry
+
+admin_country_edit:
+  path: /{countryId}/edit
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\CountryController::editAction'
+    _legacy_controller: AdminCountry
+    # _legacy_link: AdminCountry:updateCountry
+    _legacy_parameters:
+      id_country: countryId
+  requirements:
+    countryId: \d+
+
+# admin_zones_delete:
+#  path: /{zoneId}/delete
+#  methods: [ POST, DELETE ]
+#  defaults:
+#    _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\ZoneController::deleteAction'
+#    _legacy_controller: AdminZones
+#    _legacy_link: AdminZones:deletezone
+#    _legacy_parameters:
+#      id_zone: zoneId
+#  requirements:
+#    zoneId: \d+

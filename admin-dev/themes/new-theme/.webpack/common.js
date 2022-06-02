@@ -134,6 +134,7 @@ module.exports = {
     translations: './js/app/pages/translations',
     webservice: './js/pages/webservice',
     zone: './js/pages/zone',
+    country: './js/pages/country',
   },
   output: {
     path: path.resolve(__dirname, '../public'),

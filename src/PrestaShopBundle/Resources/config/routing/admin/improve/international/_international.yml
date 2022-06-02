@@ -33,3 +33,7 @@ _tax_rules_groups:
 _zone:
   resource: "zone.yml"
   prefix: /zones/
+
+_country:
+  resource: "country.yml"
+  prefix: /countries/
