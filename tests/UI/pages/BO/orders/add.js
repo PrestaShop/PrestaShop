@@ -690,6 +690,17 @@ class AddOrder extends BOBasePage {
   }
 
   /**
+   * Get delivery address list
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getDeliveryAddressList(page) {
+    await this.waitForSelectorAndClick(page, this.deliveryAddressSelect);
+
+    return this.getTextContent(page, this.deliveryAddressSelect);
+  }
+
+  /**
    * Get delivery address details
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
