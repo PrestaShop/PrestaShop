@@ -1902,9 +1902,6 @@ services:
     class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagCollectionType'
     parent: 'form.type.translatable.aware'
     public: true
-    arguments:
-      - '@=service("prestashop.adapter.multistore_feature").isUsed()'
-      - '@form.form_cloner'
     tags:
       - { name: form.type }
 

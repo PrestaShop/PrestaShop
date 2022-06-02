@@ -28,16 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag;
 
-use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use PrestaShopBundle\Form\FormCloner;
-use Symfony\Component\Form\Event\PreSetDataEvent;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Represents the form used to manage feature flags state.
@@ -45,34 +40,6 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class FeatureFlagCollectionType extends TranslatorAwareType
 {
-    /**
-     * @var bool
-     */
-    protected $isMultiShopUsed;
-
-    /**
-     * @var FormCloner
-     */
-    protected $formCloner;
-
-    /**
-     * FeatureFlagCollectionType constructor.
-     *
-     * @param TranslatorInterface $translator
-     * @param array $locales
-     * @param bool $isMultiShopUsed
-     */
-    public function __construct(
-        TranslatorInterface $translator,
-        array $locales,
-        bool $isMultiShopUsed,
-        FormCloner $formCloner
-    ) {
-        parent::__construct($translator, $locales);
-        $this->isMultiShopUsed = $isMultiShopUsed;
-        $this->formCloner = $formCloner;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -81,31 +48,12 @@ class FeatureFlagCollectionType extends TranslatorAwareType
                 'label' => false,
                 'required' => false,
                 'allow_extra_fields' => true,
-                'attr' => [
-                    'data-is-multi-shop-used' => $this->isMultiShopUsed ? '1' : '0',
-                ],
             ])
-            ->addEventListener(FormEvents::PRE_SET_DATA, [$this, 'addSubmitButton']);
-    }
-
-    public function addSubmitButton(PreSetDataEvent $event)
-    {
-        $featureFlagData = $event->getData();
-        $attributes = [];
-        if ($featureFlagData['submit']['stability'] === 'beta') {
-            $attributes = [
-                'data-modal-title' => $this->trans('Are you sure you want to enable this experimental feature?', 'Admin.Advparameters.Notification'),
-                'data-modal-message' => $this->trans('You are about to enable a feature that is not stable yet. This should only be done in a test environment or in full knowledge of the potential risks.', 'Admin.Advparameters.Notification'),
-                'data-modal-apply' => $this->trans('Enable', 'Admin.Actions'),
-                'data-modal-cancel' => $this->trans('Cancel', 'Admin.Actions'),
-            ];
-        }
-        $attributes['disabled'] = $featureFlagData['submit']['disabled'];
-        $form = $event->getForm();
-        $form->add('submit', SubmitType::class, [
-            'label' => $this->trans('Save', 'Admin.Actions'),
-            'attr' => $attributes,
-        ]);
+            ->add('submit', SubmitType::class, [
+                'label' => $this->trans('Save', 'Admin.Actions'),
+                'attr' => ['disabled' => true],
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)

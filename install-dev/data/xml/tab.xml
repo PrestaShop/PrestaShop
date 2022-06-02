@@ -621,8 +621,8 @@
                 </tab>
                 <tab id="FeatureFlag" id_parent="Advanced_Parameters" active="1" enabled="1" icon="">
                   <class_name>AdminFeatureFlag</class_name>
-                  <wording>Experimental Features</wording>
-                  <wording_domain>Admin.Navigation.Menu</wording_domain>
+                  <wording>New &amp; Experimental Features</wording>
+                  <wording_domain>Admin.Advparameters.Feature</wording_domain>
                 </tab>
                 <tab id="Security" id_parent="Advanced_Parameters" active="1" enabled="1">
                     <class_name>AdminParentSecurity</class_name>
