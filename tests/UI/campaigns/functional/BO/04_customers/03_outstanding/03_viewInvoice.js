@@ -4,6 +4,7 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const files = require('@utils/files');
 
 // Import common test
 const {enableB2BTest, disableB2BTest} = require('@commonTests/BO/shopParameters/enableDisableB2B');
@@ -19,26 +20,24 @@ const loginCommon = require('@commonTests/BO/loginBO');
 const dashboardPage = require('@pages/BO/dashboard');
 const outstandingPage = require('@pages/BO/customers/outstanding');
 const ordersPage = require('@pages/BO/orders/index');
-const viewOrderBasePage = require('@pages/BO/orders/view/viewOrderBasePage');
 
 // Import data
 const {Statuses} = require('@data/demo/orderStatuses');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {DefaultCustomer} = require('@data/demo/customer');
 
-const baseContext = 'functional_BO_customers_outstanding_viewOrder';
+const baseContext = 'functional_BO_customers_outstanding_viewInvoice';
 
 let browserContext;
 let page;
-
-// last order ID created
-let orderId;
 
 // last order reference created
 let orderReference;
 
 // last outstanding ID created
 let outstandingId;
+
+let filePath;
 
 const orderByCustomerData = {
   customer: DefaultCustomer,
@@ -47,7 +46,7 @@ const orderByCustomerData = {
   paymentMethod: PaymentMethods.wirePayment.moduleName,
 };
 
-describe('BO - Customers - Outstanding : View order from the outstanding page', async () => {
+describe('BO - Customers - Outstanding : View invoice from the outstanding page', async () => {
   // Pre-Condition : Enable B2B
   enableB2BTest(baseContext);
 
@@ -82,25 +81,13 @@ describe('BO - Customers - Outstanding : View order from the outstanding page', 
       await expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
-    [
-      {args: {columnName: 'id_order', result: 1}},
-      {args: {columnName: 'reference', result: null}},
-    ].forEach((test) => {
-      it(`should reset filter and get the last ${test.args.columnName}`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'resetFilterOrder', baseContext);
+    it('should reset filter and get the last reference', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterOrder', baseContext);
 
-        await ordersPage.resetFilter(page);
+      await ordersPage.resetFilter(page);
 
-        const orderColumn = await ordersPage.getTextColumn(page, `${test.args.columnName}`, 1);
-
-        if (test.args.columnName === 'id_order') {
-          orderId = orderColumn;
-          await expect(orderColumn).to.be.at.least(test.args.result);
-        } else {
-          orderReference = orderColumn;
-          await expect(orderColumn).to.not.equal(test.args.result);
-        }
-      });
+      orderReference = await ordersPage.getTextColumn(page, 'reference', 1);
+      await expect(orderReference).to.not.equal(null);
     });
 
     it('should update order status', async function () {
@@ -117,6 +104,7 @@ describe('BO - Customers - Outstanding : View order from the outstanding page', 
       await expect(orderStatus, 'Order status was not updated').to.equal(Statuses.paymentAccepted.status);
     });
   });
+
 
   describe('BO - Customers - Outstanding : View order', async () => {
     it('should go to \'Customers > Outstanding\' page', async function () {
@@ -143,21 +131,22 @@ describe('BO - Customers - Outstanding : View order from the outstanding page', 
       await expect(outstandingId).to.be.at.least(1);
     });
 
-    it('should click on view Order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'viewOrder', baseContext);
+    it('should click on view invoice', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'viewInvoice', baseContext);
 
-      await outstandingPage.viewOrder(page, 'actions', 1);
+      filePath = await outstandingPage.viewInvoice(page, 'invoice', 1);
 
-      const outstandingOrderId = await viewOrderBasePage.getOrderID(page);
-      const outstandingOrderReference = await viewOrderBasePage.getOrderReference(page);
-
-      [
-        {args: {columnName: outstandingOrderId, result: orderId}},
-        {args: {columnName: outstandingOrderReference, result: orderReference}},
-      ].forEach((test) => {
-        expect(test.args.columnName).to.be.equal(test.args.result);
-      });
+      const doesFileExist = await files.doesFileExist(filePath, 5000);
+      await expect(doesFileExist, 'The file is not existing!').to.be.true;
     });
+
+    // it('should check invoice pdf file', async function () {
+    //   await testContext.addContextItem(this, 'testIdentifier', 'checkInvoiceText', baseContext);
+    //
+    //   // Check Reference in pdf
+    //   const referenceOrder = await files.getPageTextFromPdf(filePath, orderReference);
+    //   await expect(referenceOrder).to.be.equal(orderReference);
+    // });
   });
 
   // Post-Condition : Disable B2B

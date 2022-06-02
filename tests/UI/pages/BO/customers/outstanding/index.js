@@ -23,6 +23,7 @@ class Outstanding extends BOBasePage {
     this.tableBody = `${this.gridTable} tbody`;
     this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
     this.tableColumn = (row, column) => `${this.tableRow(row)} td.column-${column}`;
+    this.tableColumnActionType = (row, column) => `${this.tableColumn(row, column)} a`;
   }
 
   /*
@@ -51,14 +52,25 @@ Methods
   }
 
   /**
-   * Get text from Column
+   * Click on view order
    * @param page {Page} Browser tab
    * @param columnName {string} Column name on table
    * @param row {number} Oustanding row in table
    * @returns {Promise<void>}
    */
   async viewOrder(page, columnName, row) {
-    return this.waitForSelectorAndClick(page, this.tableColumn(row, 'actions'));
+    await this.waitForSelectorAndClick(page, this.tableColumnActionType(row, columnName));
+  }
+
+  /**
+   * Click on view invoice
+   * @param page {Page} Browser tab
+   * @param columnName {string} Column name on table
+   * @param row {number} Oustanding row in table
+   * @returns {Promise<void>}
+   */
+  async viewInvoice(page, columnName, row) {
+    return this.clickAndWaitForDownload(page, this.tableColumnActionType(row, 'invoice'));
   }
 }
 
