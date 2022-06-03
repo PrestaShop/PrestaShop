@@ -65,24 +65,6 @@ class MovementReasonRepository
     }
 
     /**
-     * Provides stock movement reason ids from configuration keys
-     *
-     * @return MovementReasonId[]
-     *
-     * @throws MovementReasonConfigurationNotFoundException
-     * @throws MovementReasonConstraintException
-     */
-    public function getReasonIdsFromConfiguration(string ...$configurationKeys): array
-    {
-        return array_map(
-            function (string $key): MovementReasonId {
-                return $this->getReasonIdFromConfiguration($key);
-            },
-            $configurationKeys
-        );
-    }
-
-    /**
      * @param bool $increased true if quantity increased, false if decreased
      *
      * @throws MovementReasonConfigurationNotFoundException
@@ -94,19 +76,6 @@ class MovementReasonRepository
             $increased
             ? MovementReasonId::INCREASE_BY_EMPLOYEE_EDITION_CONFIG_KEY
             : MovementReasonId::DECREASE_BY_EMPLOYEE_EDITION_CONFIG_KEY
-        );
-    }
-
-    /**
-     * @return MovementReasonId[]
-     *
-     * @throws MovementReasonConfigurationNotFoundException
-     * @throws MovementReasonConstraintException
-     */
-    public function getEmployeeEditionReasonIds(): array
-    {
-        return $this->getReasonIdsFromConfiguration(
-            ...MovementReasonId::EMPLOYEE_EDITION_CONFIG_KEYS
         );
     }
 }

@@ -179,6 +179,13 @@ class ProductStockUpdater
             // Generate stock movement related to the employee
             $this->saveMovement($stockAvailable, $stockModification);
 
+            // Update reserved and physical quantity for this stock
+            $this->stockAvailableRepository->updatePhysicalProductQuantity(
+                new StockId((int) $stockAvailable->id),
+                new OrderStateId((int) $this->configuration->get('PS_OS_ERROR', null, ShopConstraint::shop((int) $stockAvailable->id_shop))),
+                new OrderStateId((int) $this->configuration->get('PS_OS_CANCELED', null, ShopConstraint::shop((int) $stockAvailable->id_shop)))
+            );
+
             if ($this->advancedStockEnabled) {
                 StockAvailable::synchronize($productId->getValue(), $shopId->getValue());
             }
