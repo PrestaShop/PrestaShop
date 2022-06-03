@@ -96,6 +96,8 @@ class BOBasePage extends CommonPage {
 
     // Design
     this.designParentLink = '#subtab-AdminParentThemes';
+    // Theme & Logo
+    this.themeAndLogoParentLink = '#subtab-AdminThemesParent';
     // Email theme
     this.emailThemeLink = '#subtab-AdminParentMailTheme';
     // Pages
