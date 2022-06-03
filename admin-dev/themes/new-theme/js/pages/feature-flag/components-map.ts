@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -24,17 +23,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-// Product feature flag in 1.7.8
-trans('Experimental product page', 'Admin.Advparameters.Feature');
-trans(
-    'This page benefits from increased performance and includes new features such as a new combination management system. Please note this is a work in progress and some features are not available yet.',
-    'Admin.Advparameters.Help'
-);
-
-// Product feature flag in 8.0
-trans('New product page - Single store', 'Admin.Advparameters.Feature');
-trans('This page benefits from increased performance and includes new features such as a new combination management system.', 'Admin.Advparameters.Help');
-
-// Product multi store feature flag in 8.0
-trans('New product page - Multistore', 'Admin.Advparameters.Feature');
-trans('Access the new product page, even in a multistore context. This is a work in progress and some features are not available.', 'Admin.Advparameters.Help');
+export default {
+  betaSubmitButton: '#feature_flag_beta_submit',
+  betaForm: 'form[name="feature_flag_beta"]',
+  betaFormInputFields: 'form[name="feature_flag_beta"] input',
+  stableForm: 'form[name="feature_flag_stable"]',
+  stableFormInputs: 'form[name="feature_flag_stable"] input',
+  stableSubmitButton: '#feature_flag_stable_submit',
+};

@@ -28,72 +28,64 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag;
 
-use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagsModifier;
-use PrestaShopBundle\Entity\FeatureFlag;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\FormCloner;
+use Symfony\Component\Form\Event\PreSetDataEvent;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * Represents the form used to manage feature flags state.
- * There is one SwitchType per existing feature flag.
- */
-class FeatureFlagsType extends TranslatorAwareType
+class FeatureFlagType extends TranslatorAwareType
 {
     /**
-     * @var FeatureFlagsModifier
+     * @var FormCloner
      */
-    private $featureFlagsModifier;
+    protected $formCloner;
 
-    /**
-     * @param TranslatorInterface $translator
-     * @param array $locales
-     * @param FeatureFlagsModifier $featureFlagsModifier
-     */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        FeatureFlagsModifier $featureFlagsModifier
+        FormCloner $formCloner
     ) {
         parent::__construct($translator, $locales);
-
-        $this->featureFlagsModifier = $featureFlagsModifier;
+        $this->formCloner = $formCloner;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        /** @var array<int, FeatureFlag> $allFeatureFlags */
-        $allFeatureFlags = $this->featureFlagsModifier->getAllFeatureFlags();
-
-        $enabledWording = $this->trans('Enabled', 'Admin.Global');
-        $disabledWording = $this->trans('Disabled', 'Admin.Global');
-
-        /** @var FeatureFlag $featureFlag */
-        foreach ($allFeatureFlags as $featureFlag) {
-            $builder->add($featureFlag->getName(),
-                SwitchType::class, [
-                    'label' => $this->trans($featureFlag->getLabelWording(), $featureFlag->getLabelDomain()),
-                    'help' => $this->trans($featureFlag->getDescriptionWording(), $featureFlag->getDescriptionDomain()),
-                    'choices' => [
-                        $disabledWording => false,
-                        $enabledWording => true,
-                    ],
-                ]);
-        }
+        $builder
+            ->add('enabled', SwitchType::class, [
+                'choices' => [
+                    $this->trans('Disabled', 'Admin.Global') => false,
+                    $this->trans('Enabled', 'Admin.Global') => true,
+                ],
+                'required' => false,
+            ])
+            ->addEventListener(FormEvents::PRE_SET_DATA, [$this, 'adaptSwitchOption'])
+        ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    public function adaptSwitchOption(PreSetDataEvent $event): void
+    {
+        $featureFlagData = $event->getData();
+        $form = $event->getForm();
+        $form->add($this->formCloner->cloneForm($form->get('enabled'), [
+            'label' => $this->trans($featureFlagData['label'], $featureFlagData['label_domain']),
+            'help' => $this->trans($featureFlagData['description'], $featureFlagData['description_domain']),
+            'attr' => ['disabled' => $featureFlagData['disabled']],
+        ]));
+    }
+
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'method' => 'POST',
-        ]);
+        parent::configureOptions($resolver);
+        $resolver
+            ->setDefaults([
+                'label' => false,
+                'required' => false,
+            ])
+        ;
     }
 }

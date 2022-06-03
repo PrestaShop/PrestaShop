@@ -531,14 +531,25 @@ services:
       - 'PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip\CreditSlipOptionsType'
       - 'CreditSlip'
 
-  prestashop.admin.feature_flags.form_handler:
+  prestashop.admin.feature_flags.stable_form_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\Handler'
     arguments:
       - '@form.factory'
       - '@prestashop.core.hook.dispatcher'
-      - '@prestashop.admin.configure.advanced_parameters.feature_flags_form_data_provider'
-      - 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagsType'
-      - 'FeatureFlag'
+      - '@prestashop.admin.configure.advanced_parameters.stable_feature_flags_form_data_provider'
+      - 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagListType'
+      - 'FeatureFlagStable'
+      - 'feature_flag_stable'
+
+  prestashop.admin.feature_flags.beta_form_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\Handler'
+    arguments:
+      - '@form.factory'
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.admin.configure.advanced_parameters.beta_feature_flags_form_data_provider'
+      - 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagListType'
+      - 'FeatureFlagBeta'
+      - 'feature_flag_beta'
 
   prestashop.adapter.security.general.form_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\Handler'

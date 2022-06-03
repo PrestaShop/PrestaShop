@@ -94,7 +94,9 @@ services:
 
   prestashop.adapter.preferences.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Preferences\PreferencesConfiguration'
-    arguments: [ '@prestashop.adapter.legacy.configuration' ]
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.core.admin.feature_flag.repository'
 
   prestashop.adapter.upload_quota.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Upload\UploadQuotaConfiguration'
@@ -277,11 +279,6 @@ services:
     class: 'PrestaShop\PrestaShop\Core\CreditSlip\CreditSlipOptionsConfiguration'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
-
-  prestashop.core.feature_flags.modifier:
-    class: 'PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagsModifier'
-    arguments:
-      - '@doctrine.orm.entity_manager'
 
   prestashop.adapter.security.general.configuration:
     class: 'PrestaShop\PrestaShop\Core\Security\GeneralConfiguration'
