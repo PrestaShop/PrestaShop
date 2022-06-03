@@ -240,13 +240,13 @@ class FeatureController extends FrameworkBundleAdminController implements Legacy
     {
         $this->addAction(new HeaderToolbarAction('new_feature', [
             //Used $this->generateUrl('admin_features_add')
-            'href' => $this->controllerConfiguration->currentIndex . '&addfeature&token=' . $this->controllerConfiguration->token,
+            'href' => $this->controllerConfiguration->legacyCurrentIndex . '&addfeature&token=' . $this->controllerConfiguration->token,
             'desc' => $this->trans('Add new feature', 'Admin.Catalog.Feature'),
             'icon' => 'process-icon-new',
         ]));
         $this->addAction(new HeaderToolbarAction('new_feature_value', [
             //Used $this->generateUrl('admin_features_add_value')
-            'href' => $this->controllerConfiguration->currentIndex . '&addfeature_value&id_feature=' . (int) Tools::getValue('id_feature') . '&token=' . $this->controllerConfiguration->token,
+            'href' => $this->controllerConfiguration->legacyCurrentIndex . '&addfeature_value&id_feature=' . (int) Tools::getValue('id_feature') . '&token=' . $this->controllerConfiguration->token,
             'desc' => $this->trans('Add new feature value', 'Admin.Catalog.Help'),
             'icon' => 'process-icon-new',
         ]));
@@ -263,7 +263,7 @@ class FeatureController extends FrameworkBundleAdminController implements Legacy
     {
         $this->addActionList(new ListHeaderToolbarAction('new', [
             //Replace by $this->generateUrl('admin_features_add')
-            'href' => $this->controllerConfiguration->currentIndex . '&addfeature&token=' . $this->controllerConfiguration->token,
+            'href' => $this->controllerConfiguration->legacyCurrentIndex . '&addfeature&token=' . $this->controllerConfiguration->token,
             'desc' => $this->trans('Add new', 'Admin.Actions'),
         ]), $helperListConfiguration);
 

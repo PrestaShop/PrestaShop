@@ -30,7 +30,6 @@ namespace PrestaShopBundle\Bridge\Helper;
 
 use HelperList;
 use PrestaShopBundle\Bridge\Smarty\BreadcrumbsAndTitleConfigurator;
-use PrestaShopBundle\Service\Routing\Router;
 
 /**
  * Assign variables needed by the legacy helper list to render a list using Smarty.
@@ -44,20 +43,12 @@ class HelperListConfigurator
     private $breadcrumbsAndTitleHydrator;
 
     /**
-     * @var Router
-     */
-    private $router;
-
-    /**
      * @param BreadcrumbsAndTitleConfigurator $breadcrumbsAndTitleHydrator
-     * @param Router $router
      */
     public function __construct(
-        BreadcrumbsAndTitleConfigurator $breadcrumbsAndTitleHydrator,
-        Router $router
+        BreadcrumbsAndTitleConfigurator $breadcrumbsAndTitleHydrator
     ) {
         $this->breadcrumbsAndTitleHydrator = $breadcrumbsAndTitleHydrator;
-        $this->router = $router;
     }
 
     /**
@@ -79,7 +70,7 @@ class HelperListConfigurator
         $helper->show_toolbar = true;
         $helper->actions = $helperListConfiguration->actions;
         $helper->bulk_actions = $helperListConfiguration->bulkActions;
-        $helper->currentIndex = $this->router->generate('admin_features_index');
+        $helper->currentIndex = $helperListConfiguration->legacyCurrentIndex;
         $helper->table = $helperListConfiguration->table;
         $helper->orderBy = $helperListConfiguration->orderBy;
         $helper->orderWay = $helperListConfiguration->orderWay;

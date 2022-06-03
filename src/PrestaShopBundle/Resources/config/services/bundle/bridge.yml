@@ -69,7 +69,6 @@ services:
     class: PrestaShopBundle\Bridge\Helper\HelperListConfigurator
     arguments:
       - "@prestashop.core.bridge.breadcrumbs_and_title_configurator"
-      - "@prestashop.router"
 
   prestashop.core.bridge.processor.filters_helper:
     class: PrestaShopBundle\Bridge\Helper\FiltersHelper

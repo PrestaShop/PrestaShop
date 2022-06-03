@@ -80,6 +80,7 @@ class HelperListConfigurationFactory
         $helperListConfiguration->controllerNameLegacy = $controllerConfiguration->controllerNameLegacy;
         $helperListConfiguration->token = $controllerConfiguration->token;
         $helperListConfiguration->bootstrap = $controllerConfiguration->bootstrap;
+        $helperListConfiguration->legacyCurrentIndex = $controllerConfiguration->legacyCurrentIndex;
 
         return $helperListConfiguration;
     }

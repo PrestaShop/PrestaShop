@@ -117,7 +117,7 @@ class InitControllerListener
             $controller->getTable()
         );
 
-        $this->setCurrentIndex($controller);
+        $this->setLegacyCurrentIndex($controller, $event->getRequest()->attributes->get('_legacy_controller'));
         $this->initToken($controller, $event->getRequest());
     }
 
@@ -141,21 +141,22 @@ class InitControllerListener
 
     /**
      * @param LegacyControllerBridgeInterface $controller
+     * @param string $legacyController
      *
      * @return void
      */
-    private function setCurrentIndex(LegacyControllerBridgeInterface $controller): void
+    private function setLegacyCurrentIndex(LegacyControllerBridgeInterface $controller, string $legacyController): void
     {
         if (!property_exists($controller, 'controllerConfiguration')) {
             throw new \Exception(sprintf('Child class %s failed to define controllerConfiguration property', get_called_class()));
         }
 
-        $currentIndex = 'index.php' . (($controllerName = Tools::getValue('controller')) ? '?controller=' . $controllerName : '');
+        $legacyCurrentIndex = 'index.php' . '?controller=' . $legacyController;
         if ($back = Tools::getValue('back')) {
-            $currentIndex .= '&back=' . urlencode($back);
+            $legacyCurrentIndex .= '&back=' . urlencode($back);
         }
 
-        $controller->controllerConfiguration->currentIndex = $currentIndex;
+        $controller->controllerConfiguration->legacyCurrentIndex = $legacyCurrentIndex;
     }
 
     /**
@@ -170,6 +171,10 @@ class InitControllerListener
             throw new \Exception(sprintf('Child class %s failed to define controllerConfiguration property', get_called_class()));
         }
 
-        $controller->controllerConfiguration->token = $request->query->get('_token');
+        $controllerConfiguration = $controller->controllerConfiguration;
+
+        $controller->controllerConfiguration->token = Tools::getAdminToken(
+            $controllerConfiguration->controllerNameLegacy . (int) $controllerConfiguration->id . (int) $controllerConfiguration->user->getData()->id
+        );
     }
 }

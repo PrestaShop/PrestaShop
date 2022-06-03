@@ -230,4 +230,9 @@ class HelperListConfiguration
      * @var bool
      */
     public $bootstrap;
+
+    /**
+     * @var string|null
+     */
+    public $legacyCurrentIndex;
 }

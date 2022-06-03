@@ -54,7 +54,7 @@ class ControllerConfiguration
     /**
      * @var string|null
      */
-    public $currentIndex;
+    public $legacyCurrentIndex;
 
     /**
      * @var string|null
