@@ -468,12 +468,18 @@ describe('BO - Orders - Create order : Choose address', async () => {
       await expect(isIframeVisible, 'Add address iframe is not visible!').to.be.true;
     });
 
-    it('should add new address, select it as a delivery address and check it', async function () {
+    it('should add new address', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addNewAddress', baseContext);
 
       addAddressIframe = await addOrderPage.getAddAddressIframe(page);
 
       await addAddressPage.createEditAddress(addAddressIframe, newAddressData, true, false);
+      const deliveryAddress = await addOrderPage.getDeliveryAddressList(page);
+      await expect(deliveryAddress).to.contains(newAddressData.alias);
+    });
+
+    it('should choose the new delivery address', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'chooseNewDeliveryAddress', baseContext);
 
       const newAddress = await addOrderPage.chooseDeliveryAddress(page, newAddressData.alias);
       await expect(newAddress).to.be.equal(`${newAddressData.firstName} ${newAddressData.lastName}`
