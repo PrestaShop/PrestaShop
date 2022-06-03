@@ -30,18 +30,12 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
 use DateTimeImmutable;
-use LogicException;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetProductStockMovements;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementEvent;
 
 class StockMovementsFeatureContext extends AbstractProductFeatureContext
 {
-    private const DATE_KEYS_BY_TYPE = [
-        StockMovementEvent::EDITION_TYPE => ['add'],
-        StockMovementEvent::ORDERS_TYPE => ['from', 'to'],
-    ];
-
     /**
      * @When I search stock movements of product :productReference I should get following results:
      */
@@ -126,22 +120,5 @@ class StockMovementsFeatureContext extends AbstractProductFeatureContext
                 );
             }
         }
-    }
-
-    /**
-     * @return string[]
-     */
-    private function resolveHistoryDateKeys(string $type): array
-    {
-        if (array_key_exists($type, self::DATE_KEYS_BY_TYPE)) {
-            return self::DATE_KEYS_BY_TYPE[$type];
-        }
-        throw new LogicException(
-            sprintf(
-                'Invalid history type "%s" given, expected any of: %s.',
-                $type,
-                implode(', ', array_keys(self::DATE_KEYS_BY_TYPE))
-            )
-        );
     }
 }

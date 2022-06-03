@@ -32,11 +32,13 @@ use Configuration;
 use DateTime;
 use DateTimeInterface;
 use Language;
+use LogicException;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovementEvent;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use RuntimeException;
@@ -46,6 +48,11 @@ use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContext
 {
+    protected const DATE_KEYS_BY_TYPE = [
+        StockMovementEvent::EDITION_TYPE => ['add'],
+        StockMovementEvent::ORDERS_TYPE => ['from', 'to'],
+    ];
+
     /**
      * Transform url from behat test into a proper one, expected value looks like this:
      *   http://myshop.com/img/p/{image1}-small_default.jpg
@@ -311,5 +318,22 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
 
         return $propertyAccessor->getValue($productForEditing, $pathsByNames[$propertyName]);
+    }
+
+    /**
+     * @return string[]
+     */
+    protected function resolveHistoryDateKeys(string $type): array
+    {
+        if (array_key_exists($type, self::DATE_KEYS_BY_TYPE)) {
+            return self::DATE_KEYS_BY_TYPE[$type];
+        }
+        throw new LogicException(
+            sprintf(
+                'Invalid history type "%s" given, expected any of: %s.',
+                $type,
+                implode(', ', array_keys(self::DATE_KEYS_BY_TYPE))
+            )
+        );
     }
 }

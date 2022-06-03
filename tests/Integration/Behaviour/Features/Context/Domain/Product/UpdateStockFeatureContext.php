@@ -553,7 +553,12 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
                     $stockMovementEvent->getDeltaQuantity()
                 )
             );
-            Assert::assertInstanceOf(DateTimeImmutable::class, $stockMovementEvent->getDate('add'));
+            foreach ($this->resolveHistoryDateKeys($stockMovementEvent->getType()) as $dateKey) {
+                Assert::assertInstanceOf(
+                    DateTimeImmutable::class,
+                    $stockMovementEvent->getDate($dateKey)
+                );
+            }
 
             ++$index;
         }

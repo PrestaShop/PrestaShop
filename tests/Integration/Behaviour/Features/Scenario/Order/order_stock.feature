@@ -28,8 +28,8 @@ Feature: Stock management of order from Back Office (BO)
       | payment module name | dummy_payment     |
       | status              | <order_status>    |
     Then product "product<index>" last stock movements should be:
-      | first_name | last_name | delta_quantity |
-      | Puff       | Daddy     | 100            |
+      | employee   | delta_quantity |
+      | Puff Daddy | 100            |
     Examples:
       | index | order_status                         |
       | 1     | Awaiting check payment               |
@@ -55,9 +55,9 @@ Feature: Stock management of order from Back Office (BO)
       | payment module name | dummy_payment     |
       | status              | <order_status>    |
     Then product "product<index>" last stock movements should be:
-      | first_name | last_name | delta_quantity |
-      | Puff       | Daddy     | -2             |
-      | Puff       | Daddy     | 100            |
+      | employee   | delta_quantity |
+      |            | -2             |
+      | Puff Daddy | 100            |
     Examples:
       | index | order_status |
       | 1     | Shipped      |
