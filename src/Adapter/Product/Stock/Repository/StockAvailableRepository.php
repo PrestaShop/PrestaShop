@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Stock\Repository;
 
 use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Validate\StockAvailableValidator;
+use PrestaShop\PrestaShop\Core\Domain\OrderState\ValueObject\OrderStateId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\CannotUpdateStockAvailableException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\StockAvailableNotFoundException;
@@ -113,6 +114,76 @@ class StockAvailableRepository extends AbstractObjectModelRepository
         }
 
         return $this->getStockAvailable(new StockId((int) $result['id_stock_available']));
+    }
+
+    /**
+     * Updates the physical_quantity and reserved_quantity columns for the specified Stock. Most of this function logic comes from
+     * StockManager::updatePhysicalProductQuantity
+     *
+     * @param StockId $stockId
+     * @param OrderStateId $errorStateId
+     * @param OrderStateId $canceledStateId
+     */
+    public function updatePhysicalProductQuantity(StockId $stockId, OrderStateId $errorStateId, OrderStateId $canceledStateId): void
+    {
+        $this->updateReservedProductQuantity($stockId, $errorStateId, $canceledStateId);
+
+        // Now update the physical_quantity
+        $updateQb = $this->connection->createQueryBuilder();
+        $updateQb
+            ->update($this->dbPrefix . 'stock_available', 'sa')
+            ->set('physical_quantity', 'sa.quantity + sa.reserved_quantity')
+            ->where('sa.id_stock_available = :stockId')
+            ->setParameter('stockId', $stockId->getValue())
+        ;
+        $updateQb->execute();
+    }
+
+    protected function updateReservedProductQuantity(StockId $stockId, OrderStateId $errorStateId, OrderStateId $canceledStateId): void
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->addSelect('SUM(od.product_quantity - od.product_quantity_refunded) AS reserved_quantity')
+            ->from($this->dbPrefix . 'orders', 'o')
+            ->innerJoin('o', $this->dbPrefix . 'order_detail', 'od', 'od.id_order = o.id_order')
+            ->innerJoin('o', $this->dbPrefix . 'order_state', 'os', 'os.id_order_state = o.current_state')
+            ->innerJoin(
+                'od', $this->dbPrefix . 'stock_available', 'sa',
+                'od.product_id = sa.id_product AND od.product_attribute_id = sa.id_product_attribute AND od.id_shop = sa.id_shop'
+            )
+            ->where($qb->expr()->and(
+                $qb->expr()->eq('o.id_shop', 'sa.id_shop'),
+                $qb->expr()->neq('os.shipped', 1),
+                $qb->expr()->or(
+                    $qb->expr()->eq('o.valid', 1),
+                    $qb->expr()->and(
+                        $qb->expr()->neq('os.id_order_state', ':errorStateId'),
+                        $qb->expr()->neq('os.id_order_state', ':canceledStateId')
+                    )
+                ),
+                $qb->expr()->eq('sa.id_stock_available', ':stockId')
+            ))
+            ->groupBy('od.product_id', 'od.product_attribute_id')
+            ->setParameters([
+                'stockId' => $stockId->getValue(),
+                'errorStateId' => $errorStateId->getValue(),
+                'canceledStateId' => $canceledStateId->getValue(),
+            ])
+        ;
+
+        $result = $qb->execute()->fetchAssociative();
+        $reservedQuantity = (int) ($result['reserved_quantity'] ?? 0);
+
+        if ($reservedQuantity > 0) {
+            $updateQb = $this->connection->createQueryBuilder();
+            $updateQb
+                ->update($this->dbPrefix . 'stock_available', 'sa')
+                ->set('reserved_quantity', (string) $reservedQuantity)
+                ->where('sa.id_stock_available = :stockId')
+                ->setParameter('stockId', $stockId->getValue())
+            ;
+            $updateQb->execute();
+        }
     }
 
     /**

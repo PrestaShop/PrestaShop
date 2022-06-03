@@ -105,6 +105,7 @@ services:
       - '@prestashop.adapter.product.stock.repository.stock_available_repository'
       - '@prestashop.adapter.product.combination.repository.combination_repository'
       - '@prestashop.core.stock.stock_manager'
+      - '@prestashop.adapter.legacy.configuration'
 
   prestashop.adapter.product.combination.create.combination_creator:
     class: PrestaShop\PrestaShop\Adapter\Product\Combination\Create\CombinationCreator
