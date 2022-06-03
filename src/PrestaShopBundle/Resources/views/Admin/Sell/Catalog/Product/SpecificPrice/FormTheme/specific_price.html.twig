@@ -27,7 +27,7 @@
 
 {% block searched_customer_row %}
   {% set attr = attr|merge({'class': (attr.class|default('') ~ ' media entity-item')|trim}) %}
-  <li {{ block('widget_attributes') }}>
+  <li {{ block('widget_container_attributes') }}>
     <div class="media-body media-middle">
       {{ form_widget(form.fullname_and_email) }}
       <i class="material-icons entity-item-delete">clear</i>

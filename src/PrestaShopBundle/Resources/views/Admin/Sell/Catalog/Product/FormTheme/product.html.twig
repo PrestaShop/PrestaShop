@@ -42,7 +42,7 @@
 
 {% block related_product_row %}
   {% set attr = attr|merge({'class': (attr.class|default('') ~ ' related-product entity-item')|trim}) %}
-  <li {{ block('widget_attributes') }}>
+  <li {{ block('widget_container_attributes') }}>
     <div class="related-product-image">
       {{ form_widget(form.image) }}
     </div>

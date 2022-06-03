@@ -82,7 +82,7 @@
 
 {% block entity_search_table_layout %}
   {%- set attr = list_attr|merge({'class': (list_attr.class|default('') ~ ' entities-list-container')|trim }) -%}
-  <div {{ block('widget_attributes') }}>
+  <div {{ block('widget_container_attributes') }}>
     <div class="row">
       <div class="col-sm">
         <table class="table">
@@ -120,7 +120,7 @@
 
 {% block entity_item_list_row %}
   {% set attr = attr|merge({'class': (attr.class|default('') ~ ' media entity-item')|trim}) %}
-  <li {{ block('widget_attributes') }}>
+  <li {{ block('widget_container_attributes') }}>
     <div class="media-left">
       {{ form_widget(form.image) }}
     </div>
@@ -134,7 +134,7 @@
 
 {%- block entity_item_table_row -%}
   {% set attr = attr|merge({'class': (attr.class|default('') ~ ' entity-item')|trim}) %}
-  <tr {{ block('widget_attributes') }}>
+  <tr {{ block('widget_container_attributes') }}>
   {% for child in form.children %}
     {% set childType = child.vars.block_prefixes.1 %}
     {% if childType == 'hidden'%}
