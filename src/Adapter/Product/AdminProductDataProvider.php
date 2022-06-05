@@ -54,6 +54,11 @@ use Tools;
 class AdminProductDataProvider extends AbstractAdminQueryBuilder implements ProductInterface
 {
     /**
+     * @var HookDispatcherInterface
+     */
+    protected $hookDispatcher;
+
+    /**
      * @var EntityManager
      */
     private $entityManager;
@@ -71,11 +76,13 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
     public function __construct(
         EntityManager $entityManager,
         ImageManager $imageManager,
-        CacheItemPoolInterface $cache
+        CacheItemPoolInterface $cache,
+        HookDispatcherInterface $hookDispatcher
     ) {
         $this->entityManager = $entityManager;
         $this->imageManager = $imageManager;
         $this->cache = $cache;
+        $this->hookDispatcher = $hookDispatcher;
     }
 
     /**
