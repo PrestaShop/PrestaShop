@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -256,7 +257,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
                 'table' => 'stock_available',
                 'join' => 'LEFT JOIN',
                 'on' => 'sav.`id_product` = p.`id_product` AND sav.`id_product_attribute` = 0' .
-                StockAvailable::addSqlShopRestriction(null, $idShop, 'sav'),
+                    StockAvailable::addSqlShopRestriction(null, $idShop, 'sav'),
             ],
             'sa' => [
                 'table' => 'product_shop',
@@ -338,7 +339,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         $sqlWhere[] = 'state = ' . Product::STATE_SAVED;
 
         // exec legacy hook but with different parameters (retro-compat < 1.7 is broken here)
-        Hook::exec('actionAdminProductsListingFieldsModifier', [
+        $this->hookDispatcher->dispatchWithParameters('actionAdminProductsListingFieldsModifier', [
             '_ps_version' => AppKernel::VERSION,
             'sql_select' => &$sqlSelect,
             'sql_table' => &$sqlTable,
@@ -387,7 +388,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
 
         // post treatment by hooks
         // exec legacy hook but with different parameters (retro-compat < 1.7 is broken here)
-        Hook::exec('actionAdminProductsListingResultsModifier', [
+        $this->hookDispatcher->dispatchWithParameters('actionAdminProductsListingResultsModifier', [
             '_ps_version' => AppKernel::VERSION,
             'products' => &$products,
             'total' => $total,
