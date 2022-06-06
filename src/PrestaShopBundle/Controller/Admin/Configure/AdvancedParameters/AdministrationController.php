@@ -107,8 +107,7 @@ class AdministrationController extends FrameworkBundleAdminController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-            $saveErrors = $formHandler->save($data);
+            $saveErrors = $formHandler->save($form->getData());
 
             if (0 === count($saveErrors)) {
                 return $this->renderFormProcessingSuccess();
@@ -143,8 +142,7 @@ class AdministrationController extends FrameworkBundleAdminController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-            $saveErrors = $formHandler->save($data);
+            $saveErrors = $formHandler->save($form->getData());
 
             if (0 === count($saveErrors)) {
                 return $this->renderFormProcessingSuccess();
