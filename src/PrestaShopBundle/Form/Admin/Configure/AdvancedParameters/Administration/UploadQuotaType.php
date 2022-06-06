@@ -122,7 +122,7 @@ class UploadQuotaType extends TranslatorAwareType
         return [
             new Type(
                 [
-                    'type' => 'numeric',
+                    'type' => 'integer',
                     'message' => $this->trans('The field is invalid. Please enter an integer greater than or equal to 0.', 'Admin.Notifications.Error'),
                 ]
             ),

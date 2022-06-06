@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Upload;
 
-use Exception;
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\UploadQuotaType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -50,12 +49,9 @@ class UploadQuotaConfiguration extends AbstractMultistoreConfiguration
         $shopConstraint = $this->getShopConstraint();
 
         return [
-            UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES
-                => (double) $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE', null, $shopConstraint),
-            UploadQuotaType::FIELD_MAX_SIZE_DOWNLOADABLE_FILE 
-                => (double) $this->configuration->get('PS_LIMIT_UPLOAD_FILE_VALUE', null, $shopConstraint),
-            UploadQuotaType::FIELD_MAX_SIZE_PRODUCT_IMAGE 
-                => (double) $this->configuration->get('PS_LIMIT_UPLOAD_IMAGE_VALUE', null, $shopConstraint),
+            UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES => (int) $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE', null, $shopConstraint),
+            UploadQuotaType::FIELD_MAX_SIZE_DOWNLOADABLE_FILE => (int) $this->configuration->get('PS_LIMIT_UPLOAD_FILE_VALUE', null, $shopConstraint),
+            UploadQuotaType::FIELD_MAX_SIZE_PRODUCT_IMAGE => (int) $this->configuration->get('PS_LIMIT_UPLOAD_IMAGE_VALUE', null, $shopConstraint),
         ];
     }
 
@@ -67,7 +63,7 @@ class UploadQuotaConfiguration extends AbstractMultistoreConfiguration
         if ($this->validateConfiguration($configuration)) {
             $shopConstraint = $this->getShopConstraint();
 
-            $updateConfigurationValue = function(string $configurationKey, string $fieldName) use ($configuration, $shopConstraint): void {
+            $updateConfigurationValue = function (string $configurationKey, string $fieldName) use ($configuration, $shopConstraint): void {
                 $this->updateConfigurationValue($configurationKey, $fieldName, $configuration, $shopConstraint);
             };
 
@@ -86,9 +82,9 @@ class UploadQuotaConfiguration extends AbstractMultistoreConfiguration
     {
         $resolver = (new OptionsResolver())
             ->setDefined(self::CONFIGURATION_FIELDS)
-            ->setAllowedTypes(UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES, ['double'])
-            ->setAllowedTypes(UploadQuotaType::FIELD_MAX_SIZE_DOWNLOADABLE_FILE, ['double'])
-            ->setAllowedTypes(UploadQuotaType::FIELD_MAX_SIZE_PRODUCT_IMAGE, ['double'])
+            ->setAllowedTypes(UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES, ['int'])
+            ->setAllowedTypes(UploadQuotaType::FIELD_MAX_SIZE_DOWNLOADABLE_FILE, ['int'])
+            ->setAllowedTypes(UploadQuotaType::FIELD_MAX_SIZE_PRODUCT_IMAGE, ['int'])
         ;
 
         return $resolver;
