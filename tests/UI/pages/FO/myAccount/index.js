@@ -43,7 +43,7 @@ class MyAccount extends FOBasePage {
    * @returns {Promise<void>}
    */
   async goToHistoryAndDetailsPage(page) {
-    await this.waitForSelectorAndClick(page, this.accountHistoryLink);
+    await this.clickAndWaitForNavigation(page, this.accountHistoryLink);
   }
 
   /**
