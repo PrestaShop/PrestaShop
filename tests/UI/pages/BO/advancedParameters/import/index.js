@@ -90,7 +90,7 @@ class Import extends BOBasePage {
     await this.waitForVisibleSelector(page, this.importProgressModalCloseButton);
     await this.clickAndWaitForNavigation(page, this.importProgressModalCloseButton);
 
-    return this.elementVisible(page, this.fileTypeSelector, 1000);
+    return this.elementVisible(page, this.fileTypeSelector, 2000);
   }
 }
 
