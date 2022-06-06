@@ -28,6 +28,9 @@
       v-if="isModalShown"
       :modal-title="$t('modal.title')"
       :confirmation="true"
+      :close-label="$t('modal.close')"
+      :confirm-label="$t('modal.apply')"
+      :cancel-label="$t('modal.cancel')"
       @close="closeModal"
     >
       <template #body>
@@ -61,7 +64,7 @@
           <span v-if="!loading">
             {{
               $tc('generator.action', generatedCombinationsNb, {
-                '%combinationsNb%': generatedCombinationsNb,
+                'combinationsNb': generatedCombinationsNb,
               })
             }}
           </span>
@@ -82,7 +85,8 @@
   import AttributesSelector from '@pages/product/components/generator/AttributesSelector.vue';
   import isSelected from '@pages/product/mixins/is-attribute-selected';
   import {getAllAttributeGroups} from '@pages/product/services/attribute-groups';
-  import Modal from '@vue/components/Modal.vue';
+  import Modal from '@PSVue/components/Modal.vue';
+  import {defineComponent} from 'vue';
   import ProductEventMap from '@pages/product/product-event-map';
   import {Attribute, AttributeGroup} from '@pages/product/types';
 
@@ -100,7 +104,7 @@
     hasGeneratedCombinations: boolean,
   }
 
-  export default isSelected.extend({
+  export default defineComponent({
     name: 'CombinationGenerator',
     data(): CombinationGeneratorStates {
       return {
@@ -123,6 +127,7 @@
         required: true,
       },
     },
+    mixins: [isSelected],
     components: {
       Modal,
       AttributesSelector,
@@ -211,13 +216,13 @@
           const response = await this.combinationsService.generateCombinations(this.productId, data);
           $.growl({
             message: this.$t('generator.success', {
-              '%combinationsNb%': response.combination_ids.length,
+              combinationsNb: response.combination_ids.length,
             }),
           });
           this.selectedAttributeGroups = {};
           this.hasGeneratedCombinations = true;
-        } catch (error) {
-          if (error.responseJSON && error.responseJSON.error) {
+        } catch (error: any) {
+          if (error.responseJSON && error.responseJSON?.error) {
             $.growl.error({message: error.responseJSON.error});
           } else {
             $.growl.error({message: error});

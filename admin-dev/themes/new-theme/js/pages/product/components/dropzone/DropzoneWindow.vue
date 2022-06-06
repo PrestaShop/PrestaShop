@@ -29,7 +29,7 @@
         <p
           class="dropzone-window-number"
           v-html="
-            $t('window.selectedFiles', { '%filesNb%': selectedFiles.length })
+            $t('window.selectedFiles', { 'filesNb': selectedFiles.length })
           "
         />
       </div>
@@ -177,11 +177,11 @@
 <script lang="ts">
   import {PSDropzoneFile} from '@pages/product/components/dropzone/Dropzone.vue';
   import ProductMap from '@pages/product/product-map';
-  import Vue, {PropType} from 'vue';
+  import {PropType, defineComponent} from 'vue';
 
   const DropzoneMap = ProductMap.dropzone;
 
-  export default Vue.extend({
+  export default defineComponent({
     name: 'DropzoneWindow',
     props: {
       selectedFiles: {
@@ -218,6 +218,7 @@
        * on save.
        */
       selectedFiles(value: Array<PSDropzoneFile>): void {
+        console.log(this.selectedFiles.length, 'prout');
         if (value.length > 1) {
           this.captionValue = {};
           this.locales.forEach((locale: string) => {

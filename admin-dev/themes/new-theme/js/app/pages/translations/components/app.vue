@@ -59,14 +59,16 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
+  import {defineComponent} from 'vue';
   import Search from '@app/pages/translations/components/header/search.vue';
   import Sidebar from '@app/pages/translations/components/sidebar/index.vue';
   import Principal from '@app/pages/translations/components/principal/index.vue';
+  import TranslationMixin from '@app/pages/translations/mixins/translate';
   import PSModal from '@app/widgets/ps-modal.vue';
 
-  export default Vue.extend({
+  export default defineComponent({
     name: 'App',
+    mixins: [TranslationMixin],
     computed: {
       isReady(): boolean {
         return this.$store.getters.isReady;
@@ -74,9 +76,9 @@
       totalTranslations(): string {
         return this.$store.state.totalTranslations <= 1
           ? this.trans('label_total_domain_singular')
-            .replace('%nb_translation%', this.$store.state.totalTranslations)
+            .replace('%nb_translation%', this.$store.state.totalTranslations.toString())
           : this.trans('label_total_domain')
-            .replace('%nb_translations%', this.$store.state.totalTranslations);
+            .replace('%nb_translations%', this.$store.state.totalTranslations.toString());
       },
       totalMissingTranslations(): number {
         return this.$store.state.totalMissingTranslations;

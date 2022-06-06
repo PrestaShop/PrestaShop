@@ -41,6 +41,7 @@
         :label="filter.name"
         @addFilter="addFilter"
         @removeFilter="removeFilter"
+        :event-emitter="eventEmitter"
       />
       <button
         type="button"
@@ -49,20 +50,20 @@
         @click="clearAll"
       >
         <i class="material-icons">close</i>
-        {{ $tc('filters.clear', selectedFiltersNumber, { '%filtersNb%': selectedFiltersNumber }) }}
+        {{ $tc('filters.clear', selectedFiltersNumber, { 'filtersNb': selectedFiltersNumber }) }}
       </button>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
   import FilterDropdown from '@pages/product/components/filters/FilterDropdown.vue';
   import ProductEventMap from '@pages/product/product-event-map';
+  import {defineComponent} from 'vue';
 
   const CombinationEvents = ProductEventMap.combinations;
 
-  export default Vue.extend({
+  export default defineComponent({
     name: 'Filters',
     data(): {selectedFilters: Record<string, any>} {
       return {
@@ -101,7 +102,7 @@
       addFilter(filter: Record<string, any>, parentId: number): void {
         // If absent set new field with set method so that it's reactive
         if (!this.selectedFilters[parentId]) {
-          this.$set(this.selectedFilters, parentId, []);
+          this.selectedFilters[parentId] = [];
         }
 
         this.selectedFilters[parentId].push(filter);
@@ -126,6 +127,7 @@
       clearAll(): void {
         this.selectedFilters = [];
         this.$emit('clearAll');
+        this.eventEmitter.emit('clearAll');
         this.eventEmitter.emit(CombinationEvents.updateAttributeGroups, this.selectedFilters);
       },
       updateFilters(): void {
@@ -142,7 +144,7 @@
   .control-label {
     font-weight: 600;
     color: #000;
-    margin-botton: 1rem;
+    margin-bottom: 1rem;
   }
 
   &-line {

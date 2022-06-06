@@ -38,8 +38,9 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
   import ComponentsMap from '@components/components-map';
+  import {defineComponent} from 'vue';
+  import translate from '@app/pages/stock/mixins/translate';
   import Breadcrumb from './breadcrumb.vue';
   import Tabs from './tabs.vue';
 
@@ -55,11 +56,12 @@
     return $(`${ComponentsMap.ajaxConfirmation}, #${ComponentsMap.contextualNotification.messageBoxId}`);
   }
 
-  export default Vue.extend({
+  export default defineComponent({
     components: {
       Breadcrumb,
       Tabs,
     },
+    mixins: [translate],
     mounted() {
       const $vueElement = $(this.$el);
       // move the toolbar buttons to this header

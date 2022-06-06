@@ -22,105 +22,131 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import Vue from 'vue';
 import {Commit} from 'vuex/types';
-import VueResource from 'vue-resource';
 import * as types from '@app/pages/stock/store/mutation-types';
 import {showGrowl} from '@app/utils/growl';
-import {EventBus} from '@app/utils/event-bus';
+import {EventEmitter} from '@components/event-emitter';
+import {
+  omitBy, isNil,
+} from 'lodash';
 
-Vue.use(VueResource);
+const isParamInvalid = (value: any) => isNil(value) || value.length <= 0;
 
-export const getStock = ({commit}: {commit: Commit}, payload: Record<string, any>): void => {
+export const getStock = async ({commit}: {commit: Commit}, payload: Record<string, any>): Promise<void> => {
   const url = window.data.apiStockUrl;
-  Vue.http.get(url, {
-    params: {
-      order: payload.order,
-      page_size: payload.page_size,
-      page_index: payload.page_index,
-      keywords: payload.keywords ? payload.keywords : [],
-      supplier_id: payload.suppliers ? payload.suppliers : [],
-      category_id: payload.categories ? payload.categories : [],
-      active: payload.active !== 'null' ? payload.active : [],
-      low_stock: payload.low_stock,
-    },
-  }).then((response: Record<string, any>): void => {
+  const params = new URLSearchParams(omitBy({
+    order: payload.order,
+    page_size: payload.page_size,
+    page_index: payload.page_index,
+    keywords: payload.keywords,
+    supplier_id: payload.suppliers,
+    category_id: payload.categories,
+    active: payload.active,
+    low_stock: payload.low_stock,
+  }, isParamInvalid));
+
+  try {
+    const response = await fetch(`${url}${params}`);
+    const datas = await response.json();
+
     commit(types.LOADING_STATE, false);
     commit(types.SET_TOTAL_PAGES, response.headers.get('Total-Pages'));
-    commit(types.ADD_PRODUCTS, response.body);
-  }, (error): void => {
+    commit(types.ADD_PRODUCTS, datas);
+  } catch (error: any) {
     showGrowl('error', error.statusText);
-  });
+  }
 };
 
-export const getSuppliers = ({commit}: {commit: Commit}): void => {
+export const getSuppliers = async ({commit}: {commit: Commit}): Promise<void> => {
   const url = window.data.suppliersUrl;
-  Vue.http.get(url).then((response: Record<string, any>): void => {
-    commit(types.SET_SUPPLIERS, response.body);
-  }, (error): void => {
+
+  try {
+    const response = await fetch(url);
+    const datas = await response.json();
+    commit(types.SET_SUPPLIERS, datas);
+  } catch (error: any) {
     showGrowl('error', error.statusText);
-  });
+  }
 };
 
-export const getCategories = ({commit}: {commit: Commit}): void => {
+export const getCategories = async ({commit}: {commit: Commit}): Promise<void> => {
   const url = window.data.categoriesUrl;
-  Vue.http.get(url).then((response: Record<string, any>): void => {
-    commit(types.SET_CATEGORIES, response.body);
-  }, (error): void => {
+
+  try {
+    const response = await fetch(url);
+    const datas = await response.json();
+    commit(types.SET_CATEGORIES, datas);
+  } catch (error: any) {
     showGrowl('error', error.statusText);
-  });
+  }
 };
 
-export const getMovements = ({commit}: {commit: Commit}, payload: Record<string, any>): void => {
+export const getMovements = async ({commit}: {commit: Commit}, payload: Record<string, any>): Promise<void> => {
   const url = window.data.apiMovementsUrl;
+  const params = new URLSearchParams(omitBy({
+    order: payload.order,
+    page_size: payload.page_size,
+    page_index: payload.page_index,
+    keywords: payload.keywords,
+    supplier_id: payload.suppliers,
+    category_id: payload.categories,
+    id_stock_mvt_reason: payload.id_stock_mvt_reason,
+    id_employee: payload.id_employee,
+  }, isParamInvalid));
 
-  Vue.http.get(url, {
-    params: {
-      order: payload.order,
-      page_size: payload.page_size,
-      page_index: payload.page_index,
-      keywords: payload.keywords ? payload.keywords : [],
-      supplier_id: payload.suppliers ? payload.suppliers : [],
-      category_id: payload.categories ? payload.categories : [],
-      id_stock_mvt_reason: payload.id_stock_mvt_reason ? payload.id_stock_mvt_reason : [],
-      id_employee: payload.id_employee ? payload.id_employee : [],
-      date_add: payload.date_add ? payload.date_add : [],
-    },
-  }).then((response: Record<string, any>): void => {
+  if (payload.date_add?.sup) {
+    params.append('date_add[sup]', payload.date_add.sup);
+  }
+
+  if (payload.date_add?.inf) {
+    params.append('date_add[inf]', payload.date_add.inf);
+  }
+
+  try {
+    const response = await fetch(`${url}${params}`);
+    const datas = await response.json();
+
     commit(types.LOADING_STATE, false);
     commit(types.SET_TOTAL_PAGES, response.headers.get('Total-Pages'));
-    commit(types.SET_MOVEMENTS, response.body);
-  }, (error): void => {
+    commit(types.SET_MOVEMENTS, datas);
+  } catch (error: any) {
     showGrowl('error', error.statusText);
-  });
+  }
 };
 
-export const getTranslations = ({commit}: {commit: Commit}): void => {
+export const getTranslations = async ({commit}: {commit: Commit}): Promise<void> => {
   const url = window.data.translationUrl;
-  Vue.http.get(url).then((response: Record<string, any>): void => {
-    commit(types.SET_TRANSLATIONS, response.body);
+  try {
+    const response = await fetch(url);
+    const datas = await response.json();
+
+    commit(types.SET_TRANSLATIONS, datas);
     commit(types.APP_IS_READY);
-  }, (error): void => {
+  } catch (error: any) {
     showGrowl('error', error.statusText);
-  });
+  }
 };
 
-export const getEmployees = ({commit}: {commit: Commit}): void => {
+export const getEmployees = async ({commit}: {commit: Commit}): Promise<void> => {
   const url = window.data.employeesUrl;
-  Vue.http.get(url).then((response: Record<string, any>): void => {
-    commit(types.SET_EMPLOYEES_LIST, response.body);
-  }, (error): void => {
+  try {
+    const response = await fetch(url);
+    const datas = await response.json();
+    commit(types.SET_EMPLOYEES_LIST, datas);
+  } catch (error: any) {
     showGrowl('error', error.statusText);
-  });
+  }
 };
 
-export const getMovementsTypes = ({commit}: {commit: Commit}): void => {
+export const getMovementsTypes = async ({commit}: {commit: Commit}): Promise<void> => {
   const url = window.data.movementsTypesUrl;
-  Vue.http.get(url).then((response: Record<string, any>): void => {
-    commit(types.SET_MOVEMENTS_TYPES, response.body);
-  }, (error): void => {
+  try {
+    const response = await fetch(url);
+    const datas = await response.json();
+    commit(types.SET_MOVEMENTS_TYPES, datas);
+  } catch (error: any) {
     showGrowl('error', error.statusText);
-  });
+  }
 };
 
 export const updateOrder = ({commit}: {commit: Commit}, order: Record<string, any>): void => {
@@ -147,30 +173,40 @@ export const updateProductQty = ({commit}: {commit: Commit}, payload: Record<str
   commit(types.UPDATE_PRODUCT_QTY, payload);
 };
 
-export const updateQtyByProductId = ({commit}: {commit: Commit}, payload: Record<string, any>): void => {
+export const updateQtyByProductId = async ({commit}: {commit: Commit}, payload: Record<string, any>): Promise<void> => {
   const {url} = payload;
   const {delta} = payload;
 
-  Vue.http.post(url, {
-    delta,
-  }).then((res: Record<string, any>): void => {
-    commit(types.UPDATE_PRODUCT, res.body);
-    EventBus.$emit('displayBulkAlert', 'success');
-  }, (error): void => {
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      body: JSON.stringify({delta}),
+    });
+    const datas = await res.json();
+
+    commit(types.UPDATE_PRODUCT, datas);
+    EventEmitter.emit('displayBulkAlert', 'success');
+  } catch (error: any) {
     showGrowl('error', error.statusText);
-  });
+  }
 };
 
-export const updateQtyByProductsId = ({commit, state}: {commit: Commit, state: Record<string, any>}): void => {
+export const updateQtyByProductsId = async ({commit, state}: {commit: Commit, state: Record<string, any>}): Promise<void> => {
   const url = state.editBulkUrl;
   const productsQty = state.productsToUpdate;
 
-  Vue.http.post(url, productsQty).then((res: Record<string, any>): void => {
-    commit(types.UPDATE_PRODUCTS_QTY, res.body);
-    EventBus.$emit('displayBulkAlert', 'success');
-  }, (error): void => {
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      body: JSON.stringify(productsQty),
+    });
+    const datas = await res.json();
+
+    commit(types.UPDATE_PRODUCTS_QTY, datas);
+    EventEmitter.emit('displayBulkAlert', 'success');
+  } catch (error: any) {
     showGrowl('error', error.body?.error ?? error.statusText);
-  });
+  }
 };
 
 export const updateBulkEditQty = ({commit}: {commit: Commit}, value: number): void => {

@@ -22,17 +22,14 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import Vue from 'vue';
-import VueI18n from 'vue-i18n';
-import VueResource from 'vue-resource';
+import {createApp} from 'vue';
+import {createI18n} from 'vue-i18n';
 import {showGrowl} from '@app/utils/growl';
 import ConfirmModal from '@components/modal';
-import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
-// @ts-ignore-next-line
+import ReplaceFormatter from '@PSVue/plugins/vue-i18n/replace-formatter';
+import {EventEmitter} from '@components/event-emitter';
 import CurrencyFormatter from './components/CurrencyFormatter.vue';
 
-Vue.use(VueResource);
-Vue.use(VueI18n);
 
 export default class CurrencyForm {
   map: Record<string, any>;
@@ -42,8 +39,6 @@ export default class CurrencyForm {
   $currencyFormFooter: JQuery;
 
   apiReferenceUrl: string;
-
-  referenceCurrencyResource: any;
 
   originalLanguages: any;
 
@@ -79,7 +74,6 @@ export default class CurrencyForm {
     this.$currencyForm = $(this.map.currencyForm);
     this.$currencyFormFooter = $(this.map.currencyFormFooter);
     this.apiReferenceUrl = this.$currencyForm.data('reference-url');
-    this.referenceCurrencyResource = (Vue as any).resource(this.apiReferenceUrl);
     this.originalLanguages = this.$currencyForm.data('languages');
     this.translations = this.$currencyForm.data('translations');
     this.$currencySelector = $(this.map.currencySelector);
@@ -105,6 +99,13 @@ export default class CurrencyForm {
     this.initFields();
     this.initState();
     this.initCurrencyFormatter();
+
+    EventEmitter.on('refreshCurrencyApp', (currencyData) => {
+      console.log(currencyData);
+      this.state.currencyData = currencyData;
+      this.fillCurrencyCustomData(currencyData);
+      this.initCurrencyFormatter();
+    });
   }
 
   initState(): void {
@@ -120,35 +121,22 @@ export default class CurrencyForm {
       return;
     }
 
-    const i18n = new VueI18n({
+    $(`<div id="${this.currencyFormatterId}"></div>`).insertBefore(
+      this.$currencyFormFooter,
+    );
+
+    const i18n = createI18n({
       locale: 'en',
       formatter: new ReplaceFormatter(),
       messages: {en: this.translations},
     });
 
-    $(`<div id="${this.currencyFormatterId}"></div>`).insertBefore(
-      this.$currencyFormFooter,
-    );
-    this.currencyFormatter = new Vue({
-      el: this.map.currencyFormatter,
-      i18n,
-      components: {CurrencyFormatter},
-      data: this.state,
-      template: `<currency-formatter
-        id="${this.currencyFormatterId}"
-        :languages="languages"
-        :currencyData="currencyData">
-      </currency-formatter>`,
-    });
-
-    this.currencyFormatter.$watch(
-      'currencyData',
-      () => {
-        // We use the state value directly since the object is shared with the Vue component and already updated
-        this.fillCurrencyCustomData(this.state.currencyData);
-      },
-      {deep: true, immediate: true},
-    );
+    this.currencyFormatter = createApp(CurrencyFormatter, {
+      data: () => this.state,
+      languages: this.state.languages,
+      currencyData: this.state.currencyData,
+      id: this.currencyFormatterId,
+    }).use(i18n).mount(this.map.currencyFormatter);
   }
 
   initListeners(): void {
@@ -256,22 +244,20 @@ export default class CurrencyForm {
     let currencyData: Record<string, any> = {};
 
     if (currencyIsoCode) {
-      await this.referenceCurrencyResource.get({id: currencyIsoCode}).then(
-        (response: Record<string, any>) => {
-          currencyData = response.body;
-        },
-        (errorResponse: Record<string, any>) => {
-          if (errorResponse.body && errorResponse.body.error) {
-            showGrowl('error', errorResponse.body.error, 3000);
-          } else {
-            showGrowl(
-              'error',
-              `Can not find CLDR data for currency ${currencyIsoCode}`,
-              3000,
-            );
-          }
-        },
-      );
+      try {
+        const response = await fetch(`${this.apiReferenceUrl}${new URLSearchParams({id: currencyIsoCode})}`);
+        currencyData = await response.json();
+      } catch (errorResponse: any) {
+        if (errorResponse.body && errorResponse.body.error) {
+          showGrowl('error', errorResponse.body.error, 3000);
+        } else {
+          showGrowl(
+            'error',
+            `Can not find CLDR data for currency ${currencyIsoCode}`,
+            3000,
+          );
+        }
+      }
     }
 
     if (currencyData && currencyData.transformations === undefined) {

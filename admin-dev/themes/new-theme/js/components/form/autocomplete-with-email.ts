@@ -26,11 +26,11 @@
 const {$}: Window = window;
 
 export default class AutocompleteWithEmail {
-  map: SelectorsMap;
+  map: Record<string, any>;
 
   $emailInput: JQuery;
 
-  constructor(emailInputSelector: string, map: SelectorsMap = {}) {
+  constructor(emailInputSelector: string, map: Record<string, any> = {}) {
     this.map = map;
     this.$emailInput = $(emailInputSelector);
     this.$emailInput.on('change', () => this.change());

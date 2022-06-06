@@ -41,7 +41,9 @@
 </template>
 
 <script>
-  export default {
+  import {defineComponent} from 'vue';
+
+  export default defineComponent({
     name: 'Serp',
     props: {
       url: {
@@ -89,7 +91,7 @@
         return this.description;
       },
     },
-  };
+  });
 </script>
 
 <style lang="scss" type="text/scss" scoped>

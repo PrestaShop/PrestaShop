@@ -22,15 +22,11 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import Vue from 'vue';
-import VueRouter from 'vue-router';
+import {createRouter, createWebHistory} from 'vue-router';
 import Overview from '@app/pages/translations/components/app.vue';
 
-Vue.use(VueRouter);
-
-export default new VueRouter({
-  mode: 'history',
-  base: `${window.data.baseUrl}/translations`,
+export default createRouter({
+  history: createWebHistory(`${window.data.baseUrl}/translations`),
   routes: [
     {
       path: '/',

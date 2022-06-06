@@ -22,36 +22,33 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import Vue from 'vue';
-import VueI18n from 'vue-i18n';
+import {createApp, App} from 'vue';
+import {createI18n} from 'vue-i18n';
 import EventEmitter from '@components/event-emitter';
-import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
+import ReplaceFormatter from '@PSVue/plugins/vue-i18n/replace-formatter';
 import CombinationGenerator from '@pages/product/components/generator/CombinationGenerator.vue';
-
-Vue.use(VueI18n);
 
 export default function initCombinationGenerator(
   combinationGeneratorSelector: string,
   eventEmitter: typeof EventEmitter,
   productId: number,
-): Vue {
+): App {
   const container = <HTMLElement> document.querySelector(combinationGeneratorSelector);
 
   const translations = JSON.parse(<string>container.dataset.translations);
-  const i18n = new VueI18n({
+  const i18n = createI18n({
     locale: 'en',
     formatter: new ReplaceFormatter(),
     messages: {en: translations},
   });
 
-  return new Vue({
-    el: combinationGeneratorSelector,
-    template: '<combination-generator :productId=productId :eventEmitter=eventEmitter />',
-    components: {CombinationGenerator},
+  const vueApp = createApp(CombinationGenerator, {
     i18n,
-    data: {
-      productId,
-      eventEmitter,
-    },
-  });
+    productId,
+    eventEmitter,
+  }).use(i18n);
+
+  vueApp.mount(combinationGeneratorSelector);
+
+  return vueApp;
 }

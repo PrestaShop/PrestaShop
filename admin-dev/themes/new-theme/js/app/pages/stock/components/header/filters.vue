@@ -126,21 +126,21 @@
               :label="trans('filter_status_enable')"
               :checked="false"
               value="1"
-              @change="onRadioChange"
+              @change="onRadioChange(1)"
             />
             <PSRadio
               id="disable"
               :label="trans('filter_status_disable')"
               :checked="false"
               value="0"
-              @change="onRadioChange"
+              @change="onRadioChange(0)"
             />
             <PSRadio
               id="all"
               :label="trans('filter_status_all')"
               :checked="true"
               value="null"
-              @change="onRadioChange"
+              @change="onRadioChange()"
             />
           </div>
         </div>
@@ -151,11 +151,11 @@
 
 <script lang="ts">
   /* eslint-disable camelcase */
-  import Vue from 'vue';
   import PSSelect from '@app/widgets/ps-select.vue';
   import PSDatePicker from '@app/widgets/ps-datepicker.vue';
   import PSRadio from '@app/widgets/ps-radio.vue';
-  import {Moment} from 'moment';
+  import {defineComponent} from 'vue';
+  import translate from '@app/pages/stock/mixins/translate';
   import FilterComponent, {FilterComponentInstanceType} from './filters/filter-component.vue';
 
   export interface StockCategory {
@@ -184,7 +184,7 @@
   const DATE_TYPE_SUP = 'sup';
   const DATE_TYPE_INF = 'inf';
 
-  const Filters = Vue.extend({
+  const Filters = defineComponent({
     computed: {
       locale(): string {
         return window.data.locale;
@@ -208,13 +208,14 @@
         return <FilterComponentInstanceType>(this.$refs.categories);
       },
     },
+    mixins: [translate],
     methods: {
       reset(): void {
         const dataOption = this.$options.data;
 
         Object.assign(
           this.$data,
-          dataOption instanceof Function ? dataOption.apply(this) : dataOption,
+          dataOption instanceof Function ? (<any>dataOption).apply(this) : dataOption,
         );
         this.suppliersFilterRef?.reset();
         this.categoriesFilterRef?.reset();

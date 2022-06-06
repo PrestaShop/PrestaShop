@@ -23,14 +23,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import Vue from 'vue';
-import VueI18n from 'vue-i18n';
+import {createApp, App} from 'vue';
+import {createI18n} from 'vue-i18n';
 import EventEmitter from '@components/event-emitter';
-import ReplaceFormatter from '@vue/plugins/vue-i18n/replace-formatter';
+import ReplaceFormatter from '@PSVue/plugins/vue-i18n/replace-formatter';
 import CombinationModal from '@pages/product/components/combination-modal/CombinationModal.vue';
 import PaginatedCombinationsService from '@pages/product/services/paginated-combinations-service';
-
-Vue.use(VueI18n);
 
 /**
  * @param {string} combinationModalSelector
@@ -45,28 +43,28 @@ export default function initCombinationModal(
   paginatedCombinationsService: PaginatedCombinationsService,
   productId: number,
   eventEmitter: typeof EventEmitter,
-): Vue {
+): App | null {
   const container = <HTMLElement> document.querySelector(combinationModalSelector);
   const {emptyImage} = container.dataset;
 
   const translations = JSON.parse(<string>container.dataset.translations);
-  const i18n = new VueI18n({
+  const i18n = createI18n({
     locale: 'en',
     formatter: new ReplaceFormatter(),
     messages: {en: translations},
   });
 
-  return new Vue({
-    el: combinationModalSelector,
-    template:
-    // eslint-disable-next-line max-len
-      '<combination-modal :emptyImageUrl="emptyImage" :eventEmitter=eventEmitter :paginated-combinations-service="paginatedCombinationsService"/>',
-    components: {CombinationModal},
+  const vueApp = createApp(CombinationModal, {
     i18n,
-    data: {
-      paginatedCombinationsService,
-      eventEmitter,
-      emptyImage,
-    },
+    productId,
+    eventEmitter,
+    emptyImage,
+    paginatedCombinationsService,
   });
+
+  vueApp.mount(combinationModalSelector);
+
+  vueApp.use(i18n);
+
+  return vueApp;
 }

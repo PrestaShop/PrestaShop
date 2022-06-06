@@ -75,14 +75,15 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
   import PSTags from '@app/widgets/ps-tags.vue';
   import PSButton from '@app/widgets/ps-button.vue';
   import PSAlert from '@app/widgets/ps-alert.vue';
-  import {EventBus} from '@app/utils/event-bus';
+  import {EventEmitter} from '@components/event-emitter';
+  import {defineComponent} from 'vue';
+  import translate from '@app/pages/stock/mixins/translate';
   import Filters, {FiltersInstanceType} from './filters.vue';
 
-  const Search = Vue.extend({
+  const Search = defineComponent({
     components: {
       Filters,
       PSTags,
@@ -97,6 +98,7 @@
         return (this.alertType === 'ALERT_TYPE_DANGER');
       },
     },
+    mixins: [translate],
     methods: {
       onClick(): void {
         const refPsTags = this.$refs.psTags as VTags;
@@ -119,7 +121,7 @@
       },
     },
     mounted() {
-      EventBus.$on('displayBulkAlert', (type: string) => {
+      EventEmitter.on('displayBulkAlert', (type: string) => {
         this.alertType = type === 'success' ? 'ALERT_TYPE_SUCCESS' : 'ALERT_TYPE_DANGER';
         this.showAlert = true;
         setTimeout(() => {

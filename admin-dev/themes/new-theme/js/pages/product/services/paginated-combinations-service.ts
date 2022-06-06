@@ -24,7 +24,7 @@
  */
 
 import Router from '@components/router';
-import PaginationServiceType from '@PSTypes/services';
+import PaginationServiceType from '@js/types/services';
 
 const {$} = window;
 

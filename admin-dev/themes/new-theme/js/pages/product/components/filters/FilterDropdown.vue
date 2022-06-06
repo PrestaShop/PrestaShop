@@ -69,9 +69,9 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
+  import {defineComponent} from 'vue';
 
-  export default Vue.extend({
+  export default defineComponent({
     name: 'FilterDropdown',
     data(): {selectedFilters: Array<Record<string, any>>} {
       return {
@@ -91,9 +91,13 @@
         type: String,
         required: true,
       },
+      eventEmitter: {
+        type: Object,
+        required: true,
+      },
     },
     mounted() {
-      this.$parent.$on('clearAll', this.clear);
+      this.eventEmitter.on('clearAll', this.clear);
     },
     computed: {
       nbFiles(): string | null {
@@ -104,10 +108,10 @@
     },
     methods: {
       isChecked(filter: Record<string, any>): boolean {
-        return this.selectedFilters.includes(filter);
+        return this.selectedFilters.some((e) => filter.id === e.id);
       },
       toggleFilter(filter: Record<string, any>): void {
-        if (this.selectedFilters.includes(filter)) {
+        if (this.selectedFilters.some((e) => filter.id === e.id)) {
           this.$emit('removeFilter', filter, this.parentId);
           this.selectedFilters = this.selectedFilters.filter(
             (item) => item.id !== filter.id,

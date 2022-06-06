@@ -87,9 +87,10 @@
       :confirmation="true"
       :modal-title="
         $tc('modal.title', this.selectedFiles.length, {
-          '%filesNb%': this.selectedFiles.length,
+          '{filesNb}': this.selectedFiles.length,
         })
       "
+      :close-label="$t('modal.close')"
       :confirm-label="$t('modal.accept')"
       :cancel-label="$t('modal.close')"
       @confirm="removeSelection"
@@ -140,7 +141,6 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
   import Router from '@components/router';
   import {
     getProductImages,
@@ -151,7 +151,8 @@
   } from '@pages/product/services/images';
   import ProductMap from '@pages/product/product-map';
   import ProductEventMap from '@pages/product/product-event-map';
-  import Modal from '@vue/components/Modal.vue';
+  import Modal from '@PSVue/components/Modal.vue';
+  import {defineComponent} from 'vue';
   import DropzoneWindow from './DropzoneWindow.vue';
   import DropzonePhotoSwipe from './DropzonePhotoSwipe.vue';
 
@@ -183,7 +184,7 @@
     sortableContainer: JQuery | null;
   }
 
-  export default Vue.extend({
+  export default defineComponent({
     name: 'Dropzone',
     data(): DropzoneStates {
       return {
@@ -337,7 +338,7 @@
                 file.previewElement.classList.toggle('selected');
               }
             } else {
-              this.selectedFiles = this.selectedFiles.filter((e) => e !== file);
+              this.selectedFiles = this.selectedFiles.filter((e) => e.image_id !== file.image_id);
               file.previewElement.classList.toggle('selected');
             }
           });
@@ -400,7 +401,7 @@
               if (file.is_cover) {
                 isCoverImageRemoved = true;
               }
-            } catch (error) {
+            } catch (error: any) {
               errorMessage = error.responseJSON
                 ? error.responseJSON.error
                 : error;
@@ -415,7 +416,7 @@
         } else {
           $.growl({
             message: this.$t('delete.success', {
-              '%filesNb%': nbFiles,
+              '{filesNb}': nbFiles,
             }),
           });
         }
@@ -499,7 +500,7 @@
           }
           $.growl({message: this.$t('window.settingsUpdated')});
           this.buttonLoading = false;
-        } catch (error) {
+        } catch (error: any) {
           $.growl.error({message: error.error});
           this.buttonLoading = false;
         }
@@ -529,7 +530,7 @@
             $.growl({message: this.$t('window.imageReplaced')});
             this.buttonLoading = false;
           }
-        } catch (error) {
+        } catch (error: any) {
           $.growl.error({message: error.responseJSON.error});
           this.buttonLoading = false;
         }
@@ -542,7 +543,7 @@
             this.formName,
             this.token,
           );
-        } catch (error) {
+        } catch (error: any) {
           this.sortableContainer?.sortable('cancel');
           $.growl.error({message: error.responseJSON.error});
         }

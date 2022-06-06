@@ -56,8 +56,9 @@
 
 <script>
   import {NumberFormatter} from '@app/cldr';
+  import {defineComponent} from 'vue';
 
-  export default {
+  export default defineComponent({
     name: 'CurrencyFormatForm',
     data: () => ({
       value: {
@@ -82,7 +83,7 @@
         },
         set(symbol) {
           this.value.symbol = symbol;
-          this.$emit('input', this.value);
+          this.$emit('formatChange', this.value);
         },
       },
       customTransformation: {
@@ -91,7 +92,7 @@
         },
         set(transformation) {
           this.value.transformation = transformation;
-          this.$emit('input', this.value);
+          this.$emit('formatChange', this.value);
         },
       },
     },
@@ -125,5 +126,5 @@
         }
       }
     },
-  };
+  });
 </script>
