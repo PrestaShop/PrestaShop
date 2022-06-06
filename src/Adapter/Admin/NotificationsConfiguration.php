@@ -35,7 +35,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class NotificationsConfiguration extends AbstractMultistoreConfiguration
 {
-    private const CONFIGURATION_FIELDS = [
+    protected const CONFIGURATION_FIELDS = [
         NotificationsType::FIELD_SHOW_NOTIFS_NEW_ORDERS,
         NotificationsType::FIELD_SHOW_NOTIFS_NEW_CUSTOMERS,
         NotificationsType::FIELD_SHOW_NOTIFS_NEW_MESSAGES,

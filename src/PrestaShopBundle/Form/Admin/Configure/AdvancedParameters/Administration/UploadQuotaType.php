@@ -117,7 +117,7 @@ class UploadQuotaType extends TranslatorAwareType
     /**
      * @return Constraint[]
      */
-    private function getUploadMaxSizeConstraints(int $serverMaxSize): array
+    protected function getUploadMaxSizeConstraints(int $serverMaxSize): array
     {
         return [
             new Type(

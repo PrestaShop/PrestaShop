@@ -159,7 +159,7 @@ class AdministrationController extends FrameworkBundleAdminController
         return $this->renderForms($generalForm, $uploadQuotaForm, $form, $request);
     }
 
-    private function dispatchPostProcessHooks(string $formName): void
+    protected function dispatchPostProcessHooks(string $formName): void
     {
         $this->dispatchHook(
             'actionAdminAdministrationControllerPostProcess' . $formName . 'Before',
@@ -169,14 +169,14 @@ class AdministrationController extends FrameworkBundleAdminController
         $this->dispatchHook('actionAdminAdministrationControllerPostProcessBefore', ['controller' => $this]);
     }
 
-    private function renderFormProcessingSuccess(): Response
+    protected function renderFormProcessingSuccess(): Response
     {
         $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
 
         return $this->redirectToRoute('admin_administration');
     }
 
-    private function renderForms(
+    protected function renderForms(
         FormInterface $generalForm,
         FormInterface $uploadQuotaForm,
         FormInterface $notificationsForm,

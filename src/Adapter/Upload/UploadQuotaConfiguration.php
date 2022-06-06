@@ -35,7 +35,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class UploadQuotaConfiguration extends AbstractMultistoreConfiguration
 {
-    private const CONFIGURATION_FIELDS = [
+    protected const CONFIGURATION_FIELDS = [
         UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES,
         UploadQuotaType::FIELD_MAX_SIZE_DOWNLOADABLE_FILE,
         UploadQuotaType::FIELD_MAX_SIZE_PRODUCT_IMAGE,

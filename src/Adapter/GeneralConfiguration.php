@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Cookie;
@@ -38,7 +40,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class GeneralConfiguration extends AbstractMultistoreConfiguration
 {
-    private const CONFIGURATION_FIELDS = [
+    protected const CONFIGURATION_FIELDS = [
         GeneralType::FIELD_CHECK_MODULES_UPDATE,
         GeneralType::FIELD_CHECK_IP_ADDRESS,
         GeneralType::FIELD_FRONT_COOKIE_LIFETIME,
@@ -49,7 +51,7 @@ class GeneralConfiguration extends AbstractMultistoreConfiguration
     /**
      * @var Cookie
      */
-    private $cookie;
+    protected $cookie;
 
     /**
      * @param Configuration $configuration
