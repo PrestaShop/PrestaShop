@@ -79,7 +79,7 @@ export default class RowDeleteHandler {
         this.eventEmitter.emit(CombinationEvents.combinationDeleted);
       });
       modal.show();
-    } catch (error) {
+    } catch (error: any) {
       const errorMessage = error.response?.JSON ?? error;
       $.growl.error({message: errorMessage});
     }

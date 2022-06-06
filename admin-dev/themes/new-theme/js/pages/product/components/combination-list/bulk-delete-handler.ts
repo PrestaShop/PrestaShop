@@ -91,7 +91,7 @@ export default class BulkDeleteHandler {
           },
         );
         modal.show();
-      } catch (error) {
+      } catch (error: any) {
         const errorMessage = error.response?.JSON ?? error;
         $.growl.error({message: errorMessage});
       }

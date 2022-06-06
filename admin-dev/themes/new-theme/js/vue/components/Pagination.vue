@@ -55,9 +55,9 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
+  import {defineComponent} from 'vue';
 
-  export default Vue.extend({
+  export default defineComponent({
     name: 'Pagination',
     data(): {paginatedDatas: Array<Record<string, any>>, currentPage: number} {
       return {

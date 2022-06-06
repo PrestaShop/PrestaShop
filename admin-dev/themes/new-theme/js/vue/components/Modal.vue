@@ -109,11 +109,14 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
-  import '@vue/directives/click-outside';
+  import ClickOutside from '@PSVue/directives/click-outside';
+  import {defineComponent} from 'vue';
 
-  export default Vue.extend({
+  export default defineComponent({
     name: 'Modal',
+    directives: {
+      ClickOutside,
+    },
     props: {
       confirmation: {
         type: Boolean,
@@ -122,24 +125,15 @@
       },
       cancelLabel: {
         type: String,
-        required: false,
-        default() {
-          return this.$t('modal.cancel');
-        },
+        required: true,
       },
       confirmLabel: {
         type: String,
-        required: false,
-        default() {
-          return this.$t('modal.apply');
-        },
+        required: true,
       },
       closeLabel: {
         type: String,
-        required: false,
-        default() {
-          return this.$t('modal.close');
-        },
+        required: true,
       },
       modalTitle: {
         type: String,

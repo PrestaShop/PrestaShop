@@ -74,20 +74,20 @@ type FetchResponse = Record<string, any>;
 
 type OptionsObject = FetchResponse;
 
-type VTags = Vue & {
+type VTags = {
   add: (tag: any) => void;
   tag: any;
 };
 
-type VTagsInput = Vue & {
+type VTagsInput = {
   value: any;
 };
 
-type VCheckbox = Vue & {
+type VCheckbox = {
   $data: VCheckboxDatas;
 };
 
-type VCheckboxDatas = Vue & {
+type VCheckboxDatas = {
   checked: boolean;
 };
 
@@ -95,12 +95,12 @@ interface SelectorsMap extends Record<string, string> {
   [key: string]: string;
 }
 
-type VTransModal = Vue & {
+type VTransModal = {
   showModal: () => void;
   $once: any;
 };
 
-type VPrincipal = Vue & {
+type VPrincipal = {
   saveTranslations: () => void;
   edited: () => boolean;
 };

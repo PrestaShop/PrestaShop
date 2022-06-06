@@ -131,27 +131,28 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
+  import {defineComponent} from 'vue';
   import PSCheckbox from '@app/widgets/ps-checkbox.vue';
   import PSMedia from '@app/widgets/ps-media.vue';
   import {StockProduct} from '@app/pages/stock/components/overview/products-table.vue';
   import ProductDesc from '@app/pages/stock/mixins/product-desc';
-  import {EventBus} from '@app/utils/event-bus';
+  import {EventEmitter} from '@components/event-emitter';
   import Spinner from '@app/pages/stock/components/overview/spinner.vue';
+  import TranslationMixin from '@app/pages/stock/mixins/translate';
 
   export interface StockProductToUpdate {
     product: StockProduct;
     delta: number;
   }
 
-  export default Vue.extend({
+  export default defineComponent({
     props: {
       product: {
         type: Object,
         required: true,
       },
     },
-    mixins: [ProductDesc],
+    mixins: [TranslationMixin, ProductDesc],
     computed: {
       reference(): string {
         if (this.product.combination_reference !== 'N/A') {
@@ -206,6 +207,7 @@
           combination_id: productToUpdate.product.combination_id,
           delta: productToUpdate.delta,
         };
+
         this.$store.dispatch('updateProductQty', updatedProduct);
         if (productToUpdate.delta) {
           this.$store.dispatch('addProductToUpdate', updatedProduct);
@@ -215,7 +217,7 @@
       },
     },
     mounted() {
-      EventBus.$on('toggleProductsCheck', (checked: boolean) => {
+      EventEmitter.on('toggleProductsCheck', (checked: boolean) => {
         const ref = this.id;
 
         if (this.$refs[ref]) {

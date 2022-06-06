@@ -77,11 +77,11 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
   import PsCheckbox from '@app/components/checkbox.vue';
   import ColSize from '@app/mixins/col-size.vue';
+  import {defineComponent} from 'vue';
 
-  export default Vue.extend({
+  export default defineComponent({
     name: 'Row',
     mixins: [
       ColSize,

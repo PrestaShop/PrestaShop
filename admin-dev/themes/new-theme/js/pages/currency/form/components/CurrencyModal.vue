@@ -26,24 +26,28 @@
   <modal
     confirmation
     :modal-title="modalTitle"
+    :close-label="$t('modal.close')"
+    :confirm-label="$t('modal.apply')"
+    :cancel-label="$t('modal.cancel')"
     @close="$emit('close')"
     @confirm="$emit('applyCustomization', customData)"
     v-if="language !== null"
   >
-    <template slot="body">
+    <template #body>
       <currency-format-form
         :language="language"
-        @input="customData = $event"
+        @formatChange="customData = $event"
       />
     </template>
   </modal>
 </template>
 
 <script>
-  import Modal from '@vue/components/Modal';
+  import Modal from '@PSVue/components/Modal';
+  import {defineComponent} from 'vue';
   import CurrencyFormatForm from './CurrencyFormatForm';
 
-  export default {
+  export default defineComponent({
     name: 'CurrencyModal',
     data: () => ({
       customData: null,
@@ -64,7 +68,7 @@
         return this.$t('modal.title') + (this.language !== null ? ` + ${this.language.name}` : '');
       },
     },
-  };
+  });
 </script>
 
 <style lang="scss" scoped>

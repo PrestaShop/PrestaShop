@@ -58,7 +58,7 @@ class ImageDropzoneType extends TranslatorAwareType
                 'window.replaceSelection' => $this->trans('Replace selection', 'Admin.Actions'),
                 'window.cantDisableCover' => $this->trans('Using another image as cover will automatically uncheck this box.', 'Admin.Catalog.Help'),
                 'window.selectedFiles' => $this->trans(
-                    '[1]%filesNb%[/1] selected file(s)',
+                    '[1]{filesNb}[/1] selected file(s)',
                     'Admin.Catalog.Feature',
                     ['[1]' => '<span>', '[/1]' => '</span>']
                 ),
@@ -76,8 +76,8 @@ class ImageDropzoneType extends TranslatorAwareType
                 'window.zoom' => $this->trans('Zoom on selection', 'Admin.Actions'),
                 'modal.close' => $this->trans('Cancel', 'Admin.Actions'),
                 'modal.accept' => $this->trans('Delete', 'Admin.Actions'),
-                'modal.title' => $this->trans('Are you sure you want to delete the selected image?|Are you sure you want to delete the %filesNb% selected images?', 'Admin.Catalog.Notification'),
-                'delete.success' => $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success'),
+                'modal.title' => $this->trans('Are you sure you want to delete the selected image?|Are you sure you want to delete the {filesNb} selected images?', 'Admin.Catalog.Notification'),
+                'delete.success' => $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success'),
                 'window.fileisTooLarge' => $this->trans(
                     'The file is too large. The maximum size allowed is [1] MB. The file you are trying to upload is [2] MB.',
                     'Admin.Notifications.Error',

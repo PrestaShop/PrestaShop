@@ -28,6 +28,9 @@
       class="combination-modal"
       v-if="selectedCombinationId !== null"
       @close="closeModal"
+      :close-label="$t('modal.close')"
+      :confirm-label="$t('modal.apply')"
+      :cancel-label="$t('modal.cancel')"
     >
       <template #body>
         <div
@@ -140,9 +143,10 @@
 <script lang="ts">
   import ProductMap from '@pages/product/product-map';
   import ProductEventMap from '@pages/product/product-event-map';
-  import Modal from '@vue/components/Modal.vue';
+  import Modal from '@PSVue/components/Modal.vue';
   import Router from '@components/router';
-  import Vue from 'vue';
+  import {defineComponent} from 'vue';
+  import EventEmitter from '@components/event-emitter';
   import PaginatedCombinationsService from '@pages/product/services/paginated-combinations-service';
   import PsModal from '@components/modal/modal';
   import History from './History.vue';
@@ -174,7 +178,7 @@
 
   const router = new Router();
 
-  export default Vue.extend({
+  export default defineComponent({
     name: 'CombinationModal',
     components: {Modal, History},
     data(): CombinationModalStates {
@@ -336,6 +340,7 @@
       },
       selectCombination(combination: Combination): void {
         this.navigateToCombination(combination.id);
+        EventEmitter.emit(CombinationEvents.selectCombination, combination.id);
       },
       confirmSelection(): void {
         if (this.isClosing) {

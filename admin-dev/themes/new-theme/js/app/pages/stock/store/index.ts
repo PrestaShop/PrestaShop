@@ -24,13 +24,10 @@
  */
 /* eslint-disable no-param-reassign */
 
-import Vue from 'vue';
-import Vuex from 'vuex';
+import {createStore} from 'vuex';
 import _ from 'lodash';
 import * as actions from './actions';
 import mutations from './mutations';
-
-Vue.use(Vuex);
 
 // root state object.
 
@@ -90,8 +87,10 @@ const getters = {
 
 // A Vuex instance is created by combining the state, mutations, actions,
 // and getters.
-export default new Vuex.Store({
-  state,
+export default createStore({
+  state() {
+    return state;
+  },
   getters,
   actions,
   mutations,

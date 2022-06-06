@@ -58,11 +58,11 @@
 
 <script lang="ts">
   import PSNumber from '@app/widgets/ps-number.vue';
-  import Vue from 'vue';
+  import {defineComponent} from 'vue';
 
   const {$} = window;
 
-  export default Vue.extend({
+  export default defineComponent({
     props: {
       product: {
         type: Object,
@@ -88,9 +88,11 @@
         }
         return <string> this.value === '' ? '' : Number.parseInt(<string> this.value, 10);
       },
-      onChange(val: number): void {
-        this.value = val;
-        this.isEnabled = !!val;
+      onChange(val: Event): void {
+        if (val) {
+          this.value = (val.target as HTMLInputElement).value;
+          this.isEnabled = !!val;
+        }
       },
       deActivate(): void {
         this.isActive = false;
@@ -107,12 +109,13 @@
       onKeyup(event: Event): void {
         const val = (<HTMLInputElement>event.target).value;
 
-        if (parseInt(val, 10) === 0) {
-          this.deActivate();
-        } else {
-          this.isActive = true;
-          this.isEnabled = true;
-          this.value = parseInt(val, 10);
+          if (parseInt(val, 10) === 0) {
+            this.deActivate();
+          } else {
+            this.isActive = true;
+            this.isEnabled = true;
+            this.value = parseInt(val, 10);
+          }
         }
       },
       focusIn(): void {
@@ -147,10 +150,12 @@
     },
     watch: {
       value(val: number): void {
-        this.$emit('updateProductQty', {
-          product: this.product,
-          delta: val,
-        });
+        if (val) {
+          this.$emit('updateProductQty', {
+            product: this.product,
+            delta: val,
+          });
+        }
       },
     },
     components: {

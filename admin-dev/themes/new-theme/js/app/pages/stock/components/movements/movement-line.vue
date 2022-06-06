@@ -75,11 +75,11 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
   import PSMedia from '@app/widgets/ps-media.vue';
   import productDesc from '@app/pages/stock/mixins/product-desc';
+  import {defineComponent} from 'vue';
 
-  export default Vue.extend({
+  export default defineComponent({
     props: {
       product: {
         type: Object,

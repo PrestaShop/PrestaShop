@@ -22,21 +22,11 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import Vue from 'vue';
-import app from './components/app.vue';
+import {createApp} from 'vue';
+import App from './components/app.vue';
 import store from './store';
 import router from './router';
-import Translation from './mixins/translate';
 
-Vue.mixin(Translation);
+const vueApp = createApp(App).use(store).use(router);
 
-new Vue({
-  router,
-  store,
-  el: '#stock-app',
-  template: '<app />',
-  components: {app},
-  beforeMount() {
-    this.$store.dispatch('getTranslations');
-  },
-});
+vueApp.mount('#stock-app');

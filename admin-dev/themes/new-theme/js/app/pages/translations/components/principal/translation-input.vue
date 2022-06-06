@@ -44,12 +44,14 @@
 </template>
 
 <script lang="ts">
-  import Vue from 'vue';
   import PSButton from '@app/widgets/ps-button.vue';
-  import {EventBus} from '@app/utils/event-bus';
+  import {EventEmitter} from '@components/event-emitter';
+  import TranslationMixin from '@app/pages/translations/mixins/translate';
+  import {defineComponent} from 'vue';
 
-  export default Vue.extend({
+  export default defineComponent({
     name: 'TranslationInput',
+    mixins: [TranslationMixin],
     props: {
       id: {
         type: Number,
@@ -93,7 +95,7 @@
     methods: {
       resetTranslation(): void {
         this.getTranslated = '';
-        EventBus.$emit('resetTranslation', this.translated);
+        EventEmitter.emit('resetTranslation', this.translated);
       },
     },
     components: {
