@@ -30,7 +30,7 @@ namespace Tests\Unit\Adapter\Configure\AdvancedParameters\Administration;
 
 use Cookie;
 use PHPUnit\Framework\MockObject\MockObject;
-use PrestaShop\PrestaShop\Adapter\Configure\AdvancedParameters\Administration\GeneralConfiguration;
+use PrestaShop\PrestaShop\Adapter\GeneralConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralType;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
