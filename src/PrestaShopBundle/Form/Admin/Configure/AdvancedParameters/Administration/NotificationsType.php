@@ -46,7 +46,7 @@ class NotificationsType extends TranslatorAwareType
         $builder
             ->add(self::FIELD_SHOW_NOTIFS_NEW_ORDERS, SwitchType::class, [
                 'label' => $this->trans('Show notifications for new orders', 'Admin.Advparameters.Feature'),
-                'multistore_configuration_key' => 'PS_SHOW_NEW_ORDERS'
+                'multistore_configuration_key' => 'PS_SHOW_NEW_ORDERS',
             ])
             ->add(self::FIELD_SHOW_NOTIFS_NEW_CUSTOMERS, SwitchType::class, [
                 'label' => $this->trans('Show notifications for new customers', 'Admin.Advparameters.Feature'),

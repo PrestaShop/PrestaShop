@@ -45,7 +45,7 @@ class UploadQuotaConfigurationTest extends AbstractConfigurationTestCase
     private const VALID_CONFIGURATION = [
         UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES => 1,
         UploadQuotaType::FIELD_MAX_SIZE_DOWNLOADABLE_FILE => 1,
-        UploadQuotaType::FIELD_MAX_SIZE_PRODUCT_IMAGE => 1
+        UploadQuotaType::FIELD_MAX_SIZE_PRODUCT_IMAGE => 1,
     ];
 
     private const SHOP_ID = 42;

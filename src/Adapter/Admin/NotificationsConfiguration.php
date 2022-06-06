@@ -49,12 +49,9 @@ class NotificationsConfiguration extends AbstractMultistoreConfiguration
         $shopConstraint = $this->getShopConstraint();
 
         return [
-            NotificationsType::FIELD_SHOW_NOTIFS_NEW_ORDERS 
-                => (bool) $this->configuration->get('PS_SHOW_NEW_ORDERS', null, $shopConstraint),
-            NotificationsType::FIELD_SHOW_NOTIFS_NEW_CUSTOMERS 
-                => (bool) $this->configuration->get('PS_SHOW_NEW_CUSTOMERS', null, $shopConstraint),
-            NotificationsType::FIELD_SHOW_NOTIFS_NEW_MESSAGES 
-                => (bool) $this->configuration->get('PS_SHOW_NEW_MESSAGES', null, $shopConstraint),
+            NotificationsType::FIELD_SHOW_NOTIFS_NEW_ORDERS => (bool) $this->configuration->get('PS_SHOW_NEW_ORDERS', null, $shopConstraint),
+            NotificationsType::FIELD_SHOW_NOTIFS_NEW_CUSTOMERS => (bool) $this->configuration->get('PS_SHOW_NEW_CUSTOMERS', null, $shopConstraint),
+            NotificationsType::FIELD_SHOW_NOTIFS_NEW_MESSAGES => (bool) $this->configuration->get('PS_SHOW_NEW_MESSAGES', null, $shopConstraint),
         ];
     }
 
@@ -68,7 +65,7 @@ class NotificationsConfiguration extends AbstractMultistoreConfiguration
         if ($this->validateConfiguration($configuration)) {
             $shopConstraint = $this->getShopConstraint();
 
-            $updateConfigurationValue = function(string $configurationKey, string $fieldName) use ($configuration, $shopConstraint): void {
+            $updateConfigurationValue = function (string $configurationKey, string $fieldName) use ($configuration, $shopConstraint): void {
                 $this->updateConfigurationValue($configurationKey, $fieldName, $configuration, $shopConstraint);
             };
 

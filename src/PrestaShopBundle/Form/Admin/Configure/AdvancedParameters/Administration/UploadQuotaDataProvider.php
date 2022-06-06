@@ -30,9 +30,6 @@ namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administratio
 
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
-use PrestaShopBundle\Form\Exception\DataProviderException;
-use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
-use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
 
 /**
  * This class is responsible of managing the data manipulated using Upload Quota form
