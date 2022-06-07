@@ -38,8 +38,6 @@ Scenario:
 - Paginate between pages
 - Sort brands table
 - Enable/Disable/Delete brands with bulk actions
-Post-condition:
-- Delete imported brands by bulk actions
  */
 describe('BO - Catalog - Brands & Suppliers : Sort, pagination and bulk actions Brands table', async () => {
   // Pre-condition: Import list of categories
@@ -201,8 +199,8 @@ describe('BO - Catalog - Brands & Suppliers : Sort, pagination and bulk actions 
     });
   });
 
-  // Post-condition : Delete brands with bulk actions
-  describe('POST-TEST: Delete Brands with bulk actions', async () => {
+  // 4 : Delete brands with bulk actions
+  describe('Delete Brands with bulk actions', async () => {
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterToDeleteBrands', baseContext);
 
