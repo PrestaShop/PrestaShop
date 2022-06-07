@@ -28,6 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Customer;
 
 use Customer;
 use Db;
+use Message;
 use Symfony\Component\Process\Exception\LogicException;
 
 /**
@@ -114,15 +115,29 @@ class CustomerDataProvider
         $mainSql .= ' GROUP BY cm.id_customer_message
             ORDER BY cm.date_add DESC';
 
-        $count = Db::getInstance()->executeS("SELECT COUNT(*) AS total FROM ($mainSql) AS messages");
-
         if ($limit) {
             $mainSql .= " LIMIT $limit";
         }
 
+        $customerMessages = Db::getInstance()->executeS($mainSql);
+
+        if ($orderId) {
+            $orderMessages = Message::getMessagesByOrderId($orderId, true);
+            if (!empty($orderMessages)) {
+                $customerMessages = array_merge($customerMessages, $orderMessages);
+                $count = count($customerMessages);
+            }
+        }
+
+        if (is_array($customerMessages)) {
+            $count = count($customerMessages);
+        } else {
+            $count = 0;
+        }
+
         return [
-            'total' => empty($count) ? 0 : (int) $count[0]['total'],
-            'messages' => Db::getInstance()->executeS($mainSql),
+            'total' => $count,
+            'messages' => $customerMessages,
         ];
     }
 }

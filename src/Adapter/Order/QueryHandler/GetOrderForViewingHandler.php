@@ -695,7 +695,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $isCurrentEmployeesMessage = (int) $this->context->employee->id === $messageEmployeeId;
 
             $messages[] = new OrderMessageForViewing(
-                (int) $orderMessage['id_customer_message'],
+                isset($orderMessage['id_customer_message']) ? (int) $orderMessage['id_customer_message'] : 0,
                 $orderMessage['message'],
                 new OrderMessageDateForViewing(
                     new DateTimeImmutable($orderMessage['date_add']),
