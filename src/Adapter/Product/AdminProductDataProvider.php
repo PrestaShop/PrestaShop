@@ -34,7 +34,7 @@ use Currency;
 use Db;
 use DbQuery;
 use Doctrine\ORM\EntityManager;
-use Hook;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Adapter\Admin\AbstractAdminQueryBuilder;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
 use PrestaShop\PrestaShop\Adapter\Validate;
