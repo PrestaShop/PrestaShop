@@ -75,6 +75,7 @@ class Checkout extends FOBasePage {
 
     // Gift selectors
     this.giftCheckbox = '#input_gift';
+    this.giftMessageTextarea = '#gift_message';
     this.recycableGiftCheckbox = '#input_recyclable';
     this.cartSubtotalGiftWrappingDiv = '#cart-subtotal-gift_wrapping';
     this.cartSubtotalGiftWrappingValueSpan = `${this.cartSubtotalGiftWrappingDiv} span.value`;
@@ -327,6 +328,34 @@ class Checkout extends FOBasePage {
    */
   isGiftCheckboxVisible(page) {
     return this.elementVisible(page, this.giftCheckbox, 1000);
+  }
+
+  /**
+   * Set gift checkbox
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async setGiftCheckBox(page) {
+    await this.waitForSelectorAndClick(page, this.giftCheckbox);
+  }
+
+  /**
+   * Is gift message textarea visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  isGiftMessageTextareaVisible(page) {
+    return this.elementVisible(page, this.giftMessageTextarea, 2000);
+  }
+
+  /**
+   * Set gift message
+   * @param page {Page} Browser tab
+   * @param message {string} Message to set
+   * @returns {Promise<void>}
+   */
+  async setGiftMessage(page, message) {
+    await this.setValue(page, this.giftMessageTextarea, message);
   }
 
   /**
