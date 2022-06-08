@@ -63,6 +63,7 @@ class PackedProductType extends TranslatorAwareType
             ])
             ->add('reference', TextPreviewType::class, [
                 'label' => false,
+                'preview_class' => 'reference-preview',
             ])
             // @Todo must be an IntegerType or NumberType, but according with a prototype EntitySearchInputType limitation, set to TextType
             // @link https://github.com/PrestaShop/PrestaShop/issues/28513

@@ -96,6 +96,7 @@ class StockType extends TranslatorAwareType
                 ]),
                 'attr' => [
                     'class' => 'product_packed_products',
+                    'data-reference-label' => $this->trans('Ref: %s', 'Admin.Catalog.Feature'),
                 ],
                 'min_length' => 3,
                 'filtered_identities' => $options['product_id'] > 0 ? [$options['product_id'] . '_0'] : [],

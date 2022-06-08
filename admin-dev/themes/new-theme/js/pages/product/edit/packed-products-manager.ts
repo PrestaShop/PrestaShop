@@ -35,9 +35,34 @@ export default class PackedProductsManager {
 
   constructor(eventEmitter: EventEmitter) {
     this.eventEmitter = eventEmitter;
-    this.entitySearchInput = new EntitySearchInput($(ProductMap.packedProducts.searchInput), {
+    const $searchInput = $(ProductMap.packedProducts.searchInput);
+    const referenceLabel = $searchInput.data('referenceLabel') ?? '(Ref: %s)';
+    this.entitySearchInput = new EntitySearchInput($searchInput, {
       onRemovedContent: () => this.eventEmitter.emit(ProductEventMap.updateSubmitButtonState),
       onSelectedContent: () => this.eventEmitter.emit(ProductEventMap.updateSubmitButtonState),
+      suggestionTemplate: (combination: any) => {
+        let reference = '';
+
+        if (combination.reference) {
+          reference = `<span class="combination-reference">(${combination.reference})</span>`;
+        }
+
+        return `<div class="search-suggestion"><img src="${combination.image}" /> ${combination.name}${reference}</div>`;
+      },
+      responseTransformer: (response: any) => {
+        Object.keys(response).forEach((key) => {
+          if (Object.prototype.hasOwnProperty.call(response, key)) {
+            const combination = response[key];
+
+            if (combination.reference) {
+              // eslint-disable-next-line no-param-reassign
+              response[key].reference = referenceLabel.replace('%s', combination.reference);
+            }
+          }
+        });
+
+        return response;
+      },
     });
   }
 }
