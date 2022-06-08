@@ -332,7 +332,7 @@ describe('BO - Orders : Preview order', async () => {
       });
 
       it('should edit the shipping address', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'editAddress', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'editShippingAddress', baseContext);
 
         const shippingAddress = await orderPageCustomerBlock.editExistingShippingAddress(page, editShippingAddressData);
         await expect(shippingAddress, 'Shipping address is not correct!')
@@ -345,7 +345,7 @@ describe('BO - Orders : Preview order', async () => {
       });
 
       it('should edit the delivery address', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'editAddress', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'editDeliveryAddress', baseContext);
 
         const invoiceAddress = await orderPageCustomerBlock.editExistingInvoiceAddress(page, editInvoiceAddressData);
         await expect(invoiceAddress, 'Invoice address is not correct!')
