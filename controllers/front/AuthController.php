@@ -50,9 +50,7 @@ class AuthControllerCore extends FrontController
 
         $should_redirect = false;
 
-        $login_form = $this->makeLoginForm()->fillWith(
-            Tools::getAllValues()
-        );
+        $login_form = $this->getLoginForm();
 
         if (Tools::isSubmit('submitLogin')) {
             if ($login_form->submit()) {

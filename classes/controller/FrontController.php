@@ -491,6 +491,7 @@ class FrontControllerCore extends Controller
             'page' => $this->getTemplateVarPage(),
             'shop' => $this->getTemplateVarShop(),
             'urls' => $this->getTemplateVarUrls(),
+            'forms' => $this->getTemplateVarForms(),
             'configuration' => $this->getTemplateVarConfiguration(),
             'field_required' => $this->context->customer->validateFieldsRequiredDatabase(),
             'breadcrumb' => $this->getBreadcrumb(),
@@ -1990,6 +1991,27 @@ class FrontControllerCore extends Controller
         $form->setAction($this->getCurrentURL());
 
         return $form;
+    }
+
+    protected function getLoginForm(){
+       return $this->makeLoginForm()
+            ->fillWith(Tools::getAllValues())
+            ->setAction($this->context->link->getPageLink('authentication'))
+       ;
+    }
+
+    protected function getCustomerForm(){
+        return $this->makeCustomerForm()
+            ->fillWith(Tools::getAllValues())
+            ->setAction($this->context->link->getPageLink('authentication&create_account=1'))
+        ;
+    }
+
+    protected function getTemplateVarForms(){
+        return [
+            'login' => $this->getLoginForm()->getProxy(),
+            'register' => $this->getCustomerForm()->getProxy(),
+        ];
     }
 
     /**
