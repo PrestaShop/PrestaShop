@@ -39,6 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Pack\QueryHandler\GetPackedProduct
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\QueryResult\PackedProductDetails;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilder;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Handles GetPackedProducts query using legacy object model
@@ -71,6 +72,11 @@ class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
     protected $productImageRepository;
 
     /**
+     * @var TranslatorInterface
+     */
+    protected $translator;
+
+    /**
      * @param int $defaultLangId
      * @param ProductPackRepository $productPackRepository
      * @param AttributeRepository $attributeRepository
@@ -82,13 +88,15 @@ class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
         ProductPackRepository $productPackRepository,
         AttributeRepository $attributeRepository,
         CombinationNameBuilder $combinationNameBuilder,
-        ProductImageRepository $productImageRepository
+        ProductImageRepository $productImageRepository,
+        TranslatorInterface $translator
     ) {
         $this->productRepository = $productPackRepository;
         $this->combinationNameBuilder = $combinationNameBuilder;
         $this->attributeRepository = $attributeRepository;
         $this->languageId = $defaultLangId;
         $this->productImageRepository = $productImageRepository;
+        $this->translator = $translator;
     }
 
     /**
@@ -129,13 +137,17 @@ class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
             if ($combinationId > 0) {
                 $name = $this->combinationNameBuilder->buildFullName($name, $attributesInformations[$combinationId]);
             }
+            $reference = '';
+            if (!empty($packedItem['reference'])) {
+                $reference = $this->translator->trans('Ref: %s', ['%s' => $packedItem['reference']], 'Admin.Catalog.Feature');
+            }
 
             $packedProducts[] = new PackedProductDetails(
                 (int) $packedItem['id_product_item'],
                 (int) $packedItem['quantity'],
                 (int) $combinationId,
                 (string) $name,
-                (string) $packedItem['reference'],
+                (string) $reference,
                 $coverUrl
             );
         }

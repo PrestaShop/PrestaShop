@@ -68,14 +68,16 @@ Feature: Add product to pack from Back Office (BO)
     And I add product "product2" with following information:
       | name[en-US] | shady sunglasses |
       | type        | standard         |
+    And I update product "product2" details with following values:
+      | reference | ref1              |
     And product "product2" type should be standard
     When I update pack "productPack1" with following product quantities:
       | product  | quantity |
       | product2 | 5        |
     Then product "productPack1" type should be pack
     And pack "productPack1" should contain products with following details:
-      | product  | combination | name             | quantity | image url                                              |
-      | product2 |             | shady sunglasses | 5        | http://myshop.com/img/p/{no_picture}-small_default.jpg |
+      | product  | combination | name             | quantity | image url                                              | reference |
+      | product2 |             | shady sunglasses | 5        | http://myshop.com/img/p/{no_picture}-small_default.jpg | Ref: ref1 |
 
   Scenario: I add virtual products to a pack
     Given I add product "productPack2" with following information:

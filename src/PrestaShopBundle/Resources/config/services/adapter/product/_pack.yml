@@ -38,6 +38,7 @@ services:
       - '@prestashop.adapter.attribute.repository.attribute_repository'
       - '@prestashop.core.product.combination.name_builder.combination_name_builder'
       - '@prestashop.adapter.product.image.repository.product_image_repository'
+      - '@translator'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Pack\Query\GetPackedProducts
