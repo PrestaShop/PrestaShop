@@ -677,11 +677,11 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
     }
 
     /**
-     * @param Array $orderMessage
+     * @param array $orderMessage
      *
      * @return OrderMessageForViewing
      */
-    private function prepareOrderMessageForViewing(Array $orderMessage): OrderMessageForViewing
+    private function prepareOrderMessageForViewing(array $orderMessage): OrderMessageForViewing
     {
         $messageEmployeeId = (int) $orderMessage['id_employee'];
         $isCurrentEmployeesMessage = (int) $this->context->employee->id === $messageEmployeeId;
@@ -722,8 +722,8 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
         }
 
         $orderMessages = Message::getMessagesByOrderId((int) $order->id, true);
-        foreach($orderMessages as $orderMessage) {
-           $messages[] = $this->prepareOrderMessageForViewing($orderMessage);
+        foreach ($orderMessages as $orderMessage) {
+            $messages[] = $this->prepareOrderMessageForViewing($orderMessage);
         }
 
         $count = count($messages);
