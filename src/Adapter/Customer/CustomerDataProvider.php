@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Adapter\Customer;
 
 use Customer;
 use Db;
-use Message;
 use Symfony\Component\Process\Exception\LogicException;
 
 /**
