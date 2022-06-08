@@ -455,7 +455,7 @@ class ProductRepository extends AbstractObjectModelRepository
         if (!empty($filters)) {
             foreach ($filters as $type => $filter) {
                 switch ($type) {
-                    case 'filteredType':
+                    case 'filteredTypes':
                         $qb->andWhere('p.product_type not in(:filter)')
                             ->setParameter('filter', implode(', ', $filter));
                         break;

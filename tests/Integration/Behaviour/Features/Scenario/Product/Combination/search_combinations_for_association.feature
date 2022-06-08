@@ -310,18 +310,13 @@ Feature: Search combinations to associate them in the BO
       | name[en-US] | shot of Kir Breton        |
       | name[fr-FR] | petit verre de Kir Breton |
       | type        | standard                  |
-
-    Then I search for products with locale "english" matching "kir breton" for "packedProduct" I should get following results:
+    When I search for products with locale "english" matching "kir breton" for "packedProduct" I should get following results:
       | product  | name               | reference | image url                                             |
       | product2 | shot of Kir Breton |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
-    Then I search for products with locale "french" matching "petit verre" for "packedProduct" I should get following results:
+    When I search for products with locale "french" matching "petit verre" for "packedProduct" I should get following results:
       | product  | name                      | reference | image url                                             |
       | product2 | petit verre de Kir Breton |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
       | product1 | petit verre de Rhum Blanc |           | http://myshop.com/img/p/{no_picture}-home_default.jpg |
-
-  Scenario: I perform a search for candidate to be packed and I get no result, also if packs are available
-    Then I search for products with locale "english" matching "pack of shots" for "packedProduct" I should get no results:
-
-  Scenario: I perform a search for candidate to be packed and I get no result, also if packs himself fits the search
-    Then I search for products with locale "english" matching "Diplomatico" for "packedProduct" I should get no results:
+    When I search for combinations with locale "english" matching "pack of shots" for packs I should get no results
+    When I search for combinations with locale "english" matching "Diplomatico" for packs I should get no results
 
