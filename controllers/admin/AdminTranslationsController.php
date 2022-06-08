@@ -830,44 +830,41 @@ class AdminTranslationsControllerCore extends AdminController
                 /** @var bool $error */
                 $error = $gz->extractList($files_paths, _PS_TRANSLATIONS_DIR_ . '../');
                 if ($error) {
-                    if (!empty($error->message)) {
-                        $this->errors[] = $this->trans('The archive cannot be extracted.', [], 'Admin.International.Notification') . ' ' . $error->message;
-                    } else {
-                        foreach ($files_list as $file2check) {
-                            if (pathinfo($file2check['filename'], PATHINFO_BASENAME) == 'index.php' && file_put_contents(_PS_TRANSLATIONS_DIR_ . '../' . $file2check['filename'], Tools::getDefaultIndexContent())) {
-                                continue;
-                            }
+                    foreach ($files_list as $file2check) {
+                        if (pathinfo($file2check['filename'], PATHINFO_BASENAME) == 'index.php' && file_put_contents(_PS_TRANSLATIONS_DIR_ . '../' . $file2check['filename'], Tools::getDefaultIndexContent())) {
+                            continue;
                         }
-
-                        // Clear smarty modules cache
-                        Tools::clearCache();
-
-                        if (Validate::isLanguageFileName($filename)) {
-                            if (!Language::checkAndAddLanguage($iso_code)) {
-                                $conf = 20;
-                            } else {
-                                // Reset cache
-                                Language::loadLanguages();
-
-                                AdminTranslationsController::checkAndAddMailsFiles($iso_code, $files_list);
-                                $this->checkAndAddThemesFiles($files_list, $themes_selected);
-                                $tab_errors = AdminTranslationsController::addNewTabs($iso_code, $files_list);
-
-                                if (count($tab_errors)) {
-                                    $this->errors += $tab_errors;
-
-                                    return false;
-                                }
-                            }
-                        }
-
-                        /*
-                         * @see AdminController::$_conf
-                         */
-                        $this->redirect(false, (isset($conf) ? $conf : '15'));
                     }
+
+                    // Clear smarty modules cache
+                    Tools::clearCache();
+
+                    if (Validate::isLanguageFileName($filename)) {
+                        if (!Language::checkAndAddLanguage($iso_code)) {
+                            $conf = 20;
+                        } else {
+                            // Reset cache
+                            Language::loadLanguages();
+
+                            AdminTranslationsController::checkAndAddMailsFiles($iso_code, $files_list);
+                            $this->checkAndAddThemesFiles($files_list, $themes_selected);
+                            $tab_errors = AdminTranslationsController::addNewTabs($iso_code, $files_list);
+
+                            if (count($tab_errors)) {
+                                $this->errors += $tab_errors;
+
+                                return false;
+                            }
+                        }
+                    }
+
+                    /*
+                     * @see AdminController::$_conf
+                     */
+                    $this->redirect(false, (isset($conf) ? $conf : '15'));
+                } else {
+                    $this->errors[] = $this->trans('The archive cannot be extracted.', [], 'Admin.International.Notification');
                 }
-                $this->errors[] = $this->trans('The archive cannot be extracted.', [], 'Admin.International.Notification');
             } else {
                 $this->errors[] = $this->trans('ISO CODE invalid "%iso_code%" for the following file: "%file%"', ['%iso_code%' => $iso_code, '%file%' => $filename], 'Admin.International.Notification');
             }
