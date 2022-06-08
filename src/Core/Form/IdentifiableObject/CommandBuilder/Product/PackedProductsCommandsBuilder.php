@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Prod
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command\RemoveAllProductsFromPackCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command\SetPackProductsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 
 class PackedProductsCommandsBuilder implements ProductCommandsBuilderInterface
 {
@@ -39,7 +40,8 @@ class PackedProductsCommandsBuilder implements ProductCommandsBuilderInterface
      */
     public function buildCommands(ProductId $productId, array $formData): array
     {
-        if (!isset($formData['stock']['packed_products'])) {
+        $initialType = $formData['header']['initial_type'] ?? null;
+        if ($initialType !== ProductType::TYPE_PACK || !isset($formData['stock']['packed_products'])) {
             return [];
         }
 

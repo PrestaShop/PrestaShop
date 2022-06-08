@@ -30,6 +30,7 @@ namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command\RemoveAllProductsFromPackCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command\SetPackProductsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\PackedProductsCommandsBuilder;
 
 class PackedProductsCommandsBuilderTest extends AbstractProductCommandBuilderTest
@@ -69,6 +70,35 @@ class PackedProductsCommandsBuilderTest extends AbstractProductCommandBuilderTes
                     'packed_products' => [],
                 ],
             ],
+            [],
+        ];
+
+        yield [
+            [
+                'stock' => [
+                    'packed_products' => [
+                        [
+                            'product_id' => 23,
+                            'name' => 'dontcare',
+                            'image' => 'notused',
+                            'quantity' => 3,
+                            'combination_id' => 0,
+                        ],
+                    ],
+                ],
+            ],
+            [],
+        ];
+
+        yield [
+            [
+                'header' => [
+                    'initial_type' => ProductType::TYPE_PACK,
+                ],
+                'stock' => [
+                    'packed_products' => [],
+                ],
+            ],
             [new RemoveAllProductsFromPackCommand($this->getProductId()->getValue())],
         ];
 
@@ -84,6 +114,9 @@ class PackedProductsCommandsBuilderTest extends AbstractProductCommandBuilderTes
         );
         yield [
             [
+                'header' => [
+                    'initial_type' => ProductType::TYPE_PACK,
+                ],
                 'stock' => [
                     'packed_products' => [
                         [
@@ -116,6 +149,9 @@ class PackedProductsCommandsBuilderTest extends AbstractProductCommandBuilderTes
         );
         yield [
             [
+                'header' => [
+                    'initial_type' => ProductType::TYPE_PACK,
+                ],
                 'stock' => [
                     'packed_products' => [
                         [
