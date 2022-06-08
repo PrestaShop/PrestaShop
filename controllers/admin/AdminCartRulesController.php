@@ -212,7 +212,7 @@ class AdminCartRulesControllerCore extends AdminController
 
             // At least one of these is compulsory: code, customer or any restriction. If none of these are present, the cart rule applies to all carts !
             if (empty(Tools::getValue('id_cart_rule')) &&
-                empty($restrictions_selected) &&
+                !$restrictions_selected &&
                 empty(Tools::getValue('id_customer')) && empty(Tools::getValue('code')) && empty(Tools::getValue('minimum_amount'))
                 && Tools::getValue('date_from') < date('Y-m-d H:i:s')
             ) {
