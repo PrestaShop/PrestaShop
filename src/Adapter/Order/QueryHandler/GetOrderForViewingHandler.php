@@ -677,41 +677,58 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
     }
 
     /**
+     * @param Array $orderMessage
+     *
+     * @return OrderMessageForViewing
+     */
+    private function prepareOrderMessageForViewing(Array $orderMessage): OrderMessageForViewing
+    {
+        $messageEmployeeId = (int) $orderMessage['id_employee'];
+        $isCurrentEmployeesMessage = (int) $this->context->employee->id === $messageEmployeeId;
+
+        return new OrderMessageForViewing(
+            isset($orderMessage['id_customer_message']) ? (int) $orderMessage['id_customer_message'] : 0,
+            $orderMessage['message'],
+            new OrderMessageDateForViewing(
+                new DateTimeImmutable($orderMessage['date_add']),
+                $this->context->language->date_format_full
+            ),
+            $messageEmployeeId,
+            $isCurrentEmployeesMessage,
+            $orderMessage['efirstname'],
+            $orderMessage['elastname'],
+            $orderMessage['cfirstname'],
+            $orderMessage['clastname'],
+            (bool) $orderMessage['private']
+        );
+    }
+
+    /**
      * @param Order $order
      *
      * @return OrderMessagesForViewing
      */
     private function getOrderMessages(Order $order): OrderMessagesForViewing
     {
-        $orderMessagesForOrderPage = $this->customerDataProvider->getCustomerMessages(
+        $customerOrderMessagesForOrderPage = $this->customerDataProvider->getCustomerMessages(
             (int) $order->id_customer,
             (int) $order->id
         );
 
         $messages = [];
 
-        foreach ($orderMessagesForOrderPage['messages'] as $orderMessage) {
-            $messageEmployeeId = (int) $orderMessage['id_employee'];
-            $isCurrentEmployeesMessage = (int) $this->context->employee->id === $messageEmployeeId;
-
-            $messages[] = new OrderMessageForViewing(
-                isset($orderMessage['id_customer_message']) ? (int) $orderMessage['id_customer_message'] : 0,
-                $orderMessage['message'],
-                new OrderMessageDateForViewing(
-                    new DateTimeImmutable($orderMessage['date_add']),
-                    $this->context->language->date_format_full
-                ),
-                $messageEmployeeId,
-                $isCurrentEmployeesMessage,
-                $orderMessage['efirstname'],
-                $orderMessage['elastname'],
-                $orderMessage['cfirstname'],
-                $orderMessage['clastname'],
-                (bool) $orderMessage['private']
-            );
+        foreach ($customerOrderMessagesForOrderPage['messages'] as $orderMessage) {
+            $messages[] = $this->prepareOrderMessageForViewing($orderMessage);
         }
 
-        return new OrderMessagesForViewing($messages, $orderMessagesForOrderPage['total']);
+        $orderMessages = Message::getMessagesByOrderId((int) $order->id, true);
+        foreach($orderMessages as $orderMessage) {
+           $messages[] = $this->prepareOrderMessageForViewing($orderMessage);
+        }
+
+        $count = count($messages);
+
+        return new OrderMessagesForViewing($messages, $count);
     }
 
     /**

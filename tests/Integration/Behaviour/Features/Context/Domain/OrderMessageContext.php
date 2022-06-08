@@ -118,8 +118,10 @@ class OrderMessageContext extends AbstractDomainFeatureContext
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
 
-        if (0 !== count($orderForViewing->getMessages()->getMessages())) {
-            throw new RuntimeException(sprintf('Order #%s do have messages', $orderId));
+        foreach ($orderForViewing->getMessages()->getMessages() as $orderMessageForViewing) {
+            if (false === $orderMessageForViewing->isPrivate()) {
+                throw new RuntimeException(sprintf('Order #%s do have messages', $orderId));
+            }
         }
     }
 
