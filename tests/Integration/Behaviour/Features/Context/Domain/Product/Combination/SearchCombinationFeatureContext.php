@@ -153,7 +153,7 @@ class SearchCombinationFeatureContext extends AbstractProductFeatureContext
     {
         $language = $this->getSharedStorage()->get($localeReference);
         $filters = [
-            'filteredType' => [ProductType::TYPE_PACK],
+            'filteredTypes' => [ProductType::TYPE_PACK],
         ];
 
         /** @var ProductForAssociation[] $foundProducts */
@@ -220,16 +220,16 @@ class SearchCombinationFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @When I search for products with locale :localeReference matching :search for :packedProductReference I should get no results:
+     * @When I search for combinations with locale :localeReference matching :search for packs I should get no results
      *
      * @param string $localeReference
      * @param string $search
      */
-    public function assertSearchProductsForPackNoResults(string $localeReference, string $search, string $packedProductReference): void
+    public function assertSearchProductsForPackNoResults(string $localeReference, string $search): void
     {
         $language = $this->getSharedStorage()->get($localeReference);
         $filters = [
-            'filteredType' => [ProductType::TYPE_PACK],
+            'filteredTypes' => [ProductType::TYPE_PACK],
         ];
 
         /** @var ProductForAssociation[] $foundProducts */
