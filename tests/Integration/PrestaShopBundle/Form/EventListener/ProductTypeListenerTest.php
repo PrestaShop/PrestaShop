@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Form\EventListener;
 
-use Generator;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShopBundle\Form\Admin\Sell\Product\EventListener\ProductTypeListener;
 use Symfony\Component\Form\FormEvents;
@@ -63,13 +62,8 @@ class ProductTypeListenerTest extends FormListenerTestCase
         $this->assertFormTypeExistsInForm($form, $formTypeName, $shouldExist);
     }
 
-    public function getFormTypeExpectationsBasedOnProductType(): Generator
+    public function getFormTypeExpectationsBasedOnProductType(): iterable
     {
-        yield 'pack in standard context' => [ProductType::TYPE_STANDARD, 'stock.packed_products', false];
-        yield 'pack in pack context' => [ProductType::TYPE_PACK, 'stock.packed_products', true];
-        yield 'pack in combination context' => [ProductType::TYPE_COMBINATIONS, 'stock.packed_products', false];
-        yield 'pack in virtual context' => [ProductType::TYPE_VIRTUAL, 'stock.packed_products', false];
-
         yield 'product_supplier in standard context' => [ProductType::TYPE_STANDARD, 'options.product_suppliers', true];
         yield 'product_supplier in pack context' => [ProductType::TYPE_PACK, 'options.product_suppliers', true];
         yield 'product_supplier in virtual context' => [ProductType::TYPE_VIRTUAL, 'options.product_suppliers', true];
@@ -90,15 +84,10 @@ class ProductTypeListenerTest extends FormListenerTestCase
         yield 'retail_price.ecotax in virtual context' => [ProductType::TYPE_VIRTUAL, 'pricing.retail_price.ecotax', false];
         yield 'retail_price.ecotax in combination context' => [ProductType::TYPE_COMBINATIONS, 'pricing.retail_price.ecotax', true];
 
-        yield 'pack_stock_type in standard context' => [ProductType::TYPE_STANDARD, 'stock.pack_stock_type', false];
-        yield 'pack_stock_type in pack context' => [ProductType::TYPE_PACK, 'stock.pack_stock_type', true];
-        yield 'pack_stock_type in combination context' => [ProductType::TYPE_VIRTUAL, 'stock.pack_stock_type', false];
-        yield 'pack_stock_type in virtual context' => [ProductType::TYPE_COMBINATIONS, 'stock.pack_stock_type', false];
-
-        yield 'virtual_product_file in standard context' => [ProductType::TYPE_STANDARD, 'stock.virtual_product_file', false];
-        yield 'virtual_product_file in pack context' => [ProductType::TYPE_PACK, 'stock.virtual_product_file', false];
-        yield 'virtual_product_file in combination context' => [ProductType::TYPE_VIRTUAL, 'stock.virtual_product_file', true];
-        yield 'virtual_product_file in virtual context' => [ProductType::TYPE_COMBINATIONS, 'stock.virtual_product_file', false];
+        yield 'pack in standard context' => [ProductType::TYPE_STANDARD, 'stock.packed_products', false];
+        yield 'pack in pack context' => [ProductType::TYPE_PACK, 'stock.packed_products', true];
+        yield 'pack in combination context' => [ProductType::TYPE_COMBINATIONS, 'stock.packed_products', false];
+        yield 'pack in virtual context' => [ProductType::TYPE_VIRTUAL, 'stock.packed_products', false];
 
         yield 'pack_stock_type in standard context' => [ProductType::TYPE_STANDARD, 'stock.pack_stock_type', false];
         yield 'pack_stock_type in pack context' => [ProductType::TYPE_PACK, 'stock.pack_stock_type', true];
@@ -143,7 +132,7 @@ class ProductTypeListenerTest extends FormListenerTestCase
         $this->adaptProductFormBasedOnProductType($form, $newProductType);
     }
 
-    public function getFormTypeSwitching(): Generator
+    public function getFormTypeSwitching(): iterable
     {
         $productTypes = [
             ProductType::TYPE_STANDARD,

@@ -94,7 +94,6 @@ class ProductTypeListener implements EventSubscriberInterface
     {
         if ($form->has('options')) {
             $form->remove('combinations');
-            unset($data['combinations']);
         }
     }
 
@@ -103,14 +102,12 @@ class ProductTypeListener implements EventSubscriberInterface
         if ($form->has('options')) {
             $optionsForm = $form->get('options');
             $optionsForm->remove('product_suppliers');
-            unset($data['options']['product_suppliers']);
         }
     }
 
     protected function removeStock(FormInterface $form, array &$data): void
     {
         $form->remove('stock');
-        unset($data['stock']);
     }
 
     protected function removePackStockType(FormInterface $form, array &$data): void
@@ -120,7 +117,6 @@ class ProductTypeListener implements EventSubscriberInterface
         }
         $stock = $form->get('stock');
         $stock->remove('pack_stock_type');
-        unset($data['stock']['pack_stock_type']);
     }
 
     protected function removePack(FormInterface $form, array &$data): void
@@ -130,7 +126,6 @@ class ProductTypeListener implements EventSubscriberInterface
         }
         $stock = $form->get('stock');
         $stock->remove('packed_products');
-        unset($data['stock']['packed_products']);
     }
 
     protected function removeVirtualProduct(FormInterface $form, array &$data): void
@@ -140,7 +135,6 @@ class ProductTypeListener implements EventSubscriberInterface
         }
         $stock = $form->get('stock');
         $stock->remove('virtual_product_file');
-        unset($data['stock']['virtual_product_file']);
     }
 
     protected function removeStockMovementsIfNecessary(FormInterface $form, array &$data): void
@@ -155,14 +149,12 @@ class ProductTypeListener implements EventSubscriberInterface
         $quantities = $stock->get('quantities');
         if ($quantities->has('stock_movements') && empty($data['stock']['quantities']['stock_movements'])) {
             $quantities->remove('stock_movements');
-            unset($data['stock']['stock_movements']);
         }
     }
 
     protected function removeShipping(FormInterface $form, array &$data): void
     {
         $form->remove('shipping');
-        unset($data['shipping']);
     }
 
     protected function removeEcotax(FormInterface $form, array &$data): void
