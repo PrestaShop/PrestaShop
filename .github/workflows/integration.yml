@@ -30,6 +30,9 @@ jobs:
         with:
           node-version: '16'
 
+      - name: Setup NPM
+        run: npm install -g npm@7
+
       - uses: actions/checkout@v2
 
       - name: PrestaShop Configuration
