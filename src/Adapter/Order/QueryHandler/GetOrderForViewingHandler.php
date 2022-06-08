@@ -37,6 +37,7 @@ use Customer;
 use DateTimeImmutable;
 use Gender;
 use Group;
+use Message;
 use Module;
 use Order;
 use OrderInvoice;
