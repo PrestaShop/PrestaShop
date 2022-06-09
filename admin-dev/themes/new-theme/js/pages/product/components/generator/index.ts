@@ -27,6 +27,33 @@ import {createI18n} from 'vue-i18n';
 import EventEmitter from '@components/event-emitter';
 import ReplaceFormatter from '@PSVue/plugins/vue-i18n/replace-formatter';
 import CombinationGenerator from '@pages/product/components/generator/CombinationGenerator.vue';
+import { AutoCompleteSearchConfig } from '@js/components/auto-complete-search';
+import PerfectScrollbar from 'perfect-scrollbar';
+
+export interface AttributesSelectorStates {
+  dataSetConfig: AutoCompleteSearchConfig | {};
+  searchSource: Record<string, any>;
+  scrollbar: PerfectScrollbar | null;
+  hasGeneratedCombinations: boolean;
+  checkboxList: Array<Record<string, any>>;
+}
+
+export interface AttributeGroup {
+  id: number;
+  name: string;
+  publicName: string;
+  attributes: Array<Attribute>;
+}
+
+/* eslint-disable camelcase */
+export interface Attribute {
+  id: number;
+  color: string;
+  group_id: number;
+  group_name: string;
+  name: string;
+}
+/* eslint-enable camelcase */
 
 export default function initCombinationGenerator(
   combinationGeneratorSelector: string,
