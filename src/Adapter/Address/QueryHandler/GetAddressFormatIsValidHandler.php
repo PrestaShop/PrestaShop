@@ -23,27 +23,38 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * International Registered Trademark & Property of PrestaShop SA
  */
+declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
+namespace PrestaShop\PrestaShop\Adapter\Address\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\ConstraintValidator\AddressFormatValidator;
-use Symfony\Component\Validator\Constraint;
+use AddressFormat;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
+use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetAddressFormatIsValid;
+use PrestaShop\PrestaShop\Core\Domain\Address\QueryHandler\GetAddressFormatIsValidHandlerInterface;
+use PrestaShopException;
 
 /**
- * Address format validation constraint
+ * Handles validation of address format field value
  */
-class AddressFormat extends Constraint
+final class GetAddressFormatIsValidHandler implements GetAddressFormatIsValidHandlerInterface
 {
     /**
-     * @var string
+     * @param GetAddressFormatIsValid $command
+     *
+     * @return bool
+     *
+     * @throws AddressException
      */
-    public $message = '%s is invalid.';
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validatedBy()
+    public function handle(GetAddressFormatIsValid $command): bool
     {
-        return AddressFormatValidator::class;
+        try {
+            $addressFormat = new AddressFormat();
+        } catch (PrestaShopException $e) {
+            throw new AddressException('Failed to create AddressFormat object for validation');
+        }
+
+        $addressFormat->format = $command->getFormat();
+
+        return $addressFormat->checkFormatFields();
     }
 }

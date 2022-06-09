@@ -24,26 +24,42 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
+namespace PrestaShop\PrestaShop\Core\ConstraintValidator;
 
-use PrestaShop\PrestaShop\Core\ConstraintValidator\AddressFormatValidator;
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetAddressFormatIsValid;
 use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\ConstraintValidator;
 
 /**
- * Address format validation constraint
+ * Validates address format field value
  */
-class AddressFormat extends Constraint
+class AddressFormatValidator extends ConstraintValidator
 {
     /**
-     * @var string
+     * @var CommandBusInterface
      */
-    public $message = '%s is invalid.';
+    private $queryBus;
+
+    /**
+     * @param CommandBusInterface $queryBus
+     */
+    public function __construct(CommandBusInterface $queryBus)
+    {
+        $this->queryBus = $queryBus;
+    }
 
     /**
      * {@inheritdoc}
      */
-    public function validatedBy()
+    public function validate($value, Constraint $constraint)
     {
-        return AddressFormatValidator::class;
+        if (!$this->queryBus->handle(new GetAddressFormatIsValid($value))) {
+            $this->context->buildViolation($constraint->message)
+                ->setTranslationDomain('Admin.Notifications.Error')
+                ->setParameter('%s', $this->formatValue($value))
+                ->addViolation()
+            ;
+        }
     }
 }
