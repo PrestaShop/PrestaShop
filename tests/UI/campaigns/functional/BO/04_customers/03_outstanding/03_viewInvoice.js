@@ -31,14 +31,16 @@ const baseContext = 'functional_BO_customers_outstanding_viewInvoice';
 let browserContext;
 let page;
 
-// last order reference created
+// Variable used for the last order reference created
 let orderReference;
 
-// last outstanding ID created
+// Variable used for the last outstanding ID created
 let outstandingId;
 
+// Variable used for the temporary invoice file
 let filePath;
 
+// New order by customer data
 const orderByCustomerData = {
   customer: DefaultCustomer,
   product: 1,
@@ -46,7 +48,18 @@ const orderByCustomerData = {
   paymentMethod: PaymentMethods.wirePayment.moduleName,
 };
 
-describe('BO - Customers - Outstanding : View invoice from the outstanding page', async () => {
+/*
+Pre-condition:
+- Enable B2B
+- Create order in FO
+- Update order status to payment accepted
+Scenario:
+- View invoice from the outstanding page
+Post-condition:
+- Disable B2B
+*/
+
+describe('BO - Customers - Outstanding : View invoice', async () => {
   // Pre-Condition : Enable B2B
   enableB2BTest(baseContext);
 
@@ -63,6 +76,7 @@ describe('BO - Customers - Outstanding : View invoice from the outstanding page'
     await helper.closeBrowserContext(browserContext);
   });
 
+  // Pre-condition: Update order status to payment accepted
   describe('PRE-TEST: Update order status to payment accepted', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
@@ -106,7 +120,8 @@ describe('BO - Customers - Outstanding : View invoice from the outstanding page'
   });
 
 
-  describe('BO - Customers - Outstanding : View order', async () => {
+  // 1 - View invoice from the outstanding
+  describe('BO - Customers - Outstanding : View invoice', async () => {
     it('should go to \'Customers > Outstanding\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOutstandingPage', baseContext);
 
@@ -140,13 +155,13 @@ describe('BO - Customers - Outstanding : View invoice from the outstanding page'
       await expect(doesFileExist, 'The file is not existing!').to.be.true;
     });
 
-    // it('should check invoice pdf file', async function () {
-    //   await testContext.addContextItem(this, 'testIdentifier', 'checkInvoiceText', baseContext);
-    //
-    //   // Check Reference in pdf
-    //   const referenceOrder = await files.getPageTextFromPdf(filePath, orderReference);
-    //   await expect(referenceOrder).to.be.equal(orderReference);
-    // });
+    it('should check reference in the invoice pdf file', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkInvoiceReference', baseContext);
+
+      // Check Reference in pdf
+      const referenceOrder = await files.isTextInPDF(filePath, orderReference);
+      await expect(referenceOrder).to.be.true;
+    });
   });
 
   // Post-Condition : Disable B2B
