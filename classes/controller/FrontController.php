@@ -2007,7 +2007,7 @@ class FrontControllerCore extends Controller
     }
 
     /**
-     * Get customer register form
+     * Get customer registriation form
      *
      * @return CustomerForm
      */
