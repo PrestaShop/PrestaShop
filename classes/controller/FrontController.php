@@ -1998,7 +1998,7 @@ class FrontControllerCore extends Controller
      *
      * @return CustomerLoginForm
      */
-    public function getLoginForm()
+    public function getLoginForm(): CustomerLoginForm
     {
         return $this->makeLoginForm()
             ->fillWith(Tools::getAllValues())
