@@ -5,7 +5,7 @@ const {expect} = require('chai');
 // Import utils
 const helper = require('@utils/helpers');
 
-// Import common test
+// Import common tests
 const {enableB2BTest, disableB2BTest} = require('@commonTests/BO/shopParameters/enableDisableB2B');
 const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
 
@@ -31,15 +31,16 @@ const baseContext = 'functional_BO_customers_outstanding_viewOrder';
 let browserContext;
 let page;
 
-// last order ID created
+// Variable used for the last order ID created
 let orderId;
 
-// last order reference created
+// Variable used for the last order reference created
 let orderReference;
 
-// last outstanding ID created
+// Variable for the last outstanding ID created
 let outstandingId;
 
+// New order by customer data
 const orderByCustomerData = {
   customer: DefaultCustomer,
   product: 1,
@@ -47,7 +48,18 @@ const orderByCustomerData = {
   paymentMethod: PaymentMethods.wirePayment.moduleName,
 };
 
-describe('BO - Customers - Outstanding : View order from the outstanding page', async () => {
+/*
+Pre-condition:
+- Enable B2B
+- Create order in FO
+- Update order status to payment accepted
+Scenario:
+- View order from the outstanding page
+Post-condition:
+- Disable B2B
+*/
+
+describe('BO - Customers - Outstanding : View order', async () => {
   // Pre-Condition : Enable B2B
   enableB2BTest(baseContext);
 
@@ -64,6 +76,7 @@ describe('BO - Customers - Outstanding : View order from the outstanding page', 
     await helper.closeBrowserContext(browserContext);
   });
 
+  // Pre-condition: Update order status to payment accepted
   describe('PRE-TEST: Update order status to payment accepted', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
@@ -118,6 +131,7 @@ describe('BO - Customers - Outstanding : View order from the outstanding page', 
     });
   });
 
+  // 1 - View order from the outstanding page
   describe('BO - Customers - Outstanding : View order', async () => {
     it('should go to \'Customers > Outstanding\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOutstandingPage', baseContext);
