@@ -1995,10 +1995,10 @@ class FrontControllerCore extends Controller
 
     protected function getLoginForm()
     {
-       return $this->makeLoginForm()
+        return $this->makeLoginForm()
             ->fillWith(Tools::getAllValues())
             ->setAction($this->context->link->getPageLink('authentication'))
-       ;
+        ;
     }
 
     protected function getCustomerForm()
