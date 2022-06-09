@@ -83,11 +83,6 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
     private $contextStateManager;
 
     /**
-     * @var Configuration
-     */
-    private $configuration;
-
-    /**
      * @param LocaleInterface $locale
      * @param int $contextLangId
      * @param Link $contextLink
