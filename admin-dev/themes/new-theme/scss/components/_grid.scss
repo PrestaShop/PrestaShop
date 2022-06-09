@@ -126,7 +126,7 @@ table .column-filters {
               display: inline-block;
             }
 
-            & ~ .form-control {
+            ~ .form-control {
               display: inline-block;
               /* stylelint-disable-next-line */
               width: calc(100% - 32px);
