@@ -56,7 +56,7 @@ class Outstanding extends BOBasePage {
    * @param row {number} Outstanding row in table
    * @returns {Promise<void>}
    */
-  async viewOrder(page, columnName, row) {
+  async viewOrder(page, columnName, row = 1) {
     await this.waitForSelectorAndClick(page, this.tableColumnActionType(row, columnName));
   }
 
@@ -67,7 +67,7 @@ class Outstanding extends BOBasePage {
    * @param row {number} Outstanding row in table
    * @returns {Promise<string>}
    */
-  async viewInvoice(page, columnName, row) {
+  async viewInvoice(page, columnName, row = 1) {
     return this.clickAndWaitForDownload(page, this.tableColumnActionType(row, 'invoice'));
   }
 }
