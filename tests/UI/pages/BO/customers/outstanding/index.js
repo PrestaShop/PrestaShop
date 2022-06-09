@@ -9,7 +9,7 @@ const BOBasePage = require('@pages/BO/BObasePage');
 class Outstanding extends BOBasePage {
   /**
    * @constructs
-   * Setting up texts and selectors to use on 03_outstanding page
+   * Setting up texts and selectors to use on outstanding page
    */
   constructor() {
     super();
@@ -26,9 +26,7 @@ class Outstanding extends BOBasePage {
     this.tableColumnActionType = (row, column) => `${this.tableColumn(row, column)} a`;
   }
 
-  /*
-Methods
- */
+  /* Methods */
   /**
    * Reset filter in outstanding
    * @param page {Page} Browser tab
@@ -44,7 +42,7 @@ Methods
    * Get text from Column
    * @param page {Page} Browser tab
    * @param columnName {string} Column name on table
-   * @param row {number} Oustanding row in table
+   * @param row {number} Outstanding row in table
    * @returns {Promise<string|number>}
    */
   async getTextColumn(page, columnName, row) {
@@ -55,7 +53,7 @@ Methods
    * Click on view order
    * @param page {Page} Browser tab
    * @param columnName {string} Column name on table
-   * @param row {number} Oustanding row in table
+   * @param row {number} Outstanding row in table
    * @returns {Promise<void>}
    */
   async viewOrder(page, columnName, row) {
@@ -66,13 +64,12 @@ Methods
    * Click on view invoice
    * @param page {Page} Browser tab
    * @param columnName {string} Column name on table
-   * @param row {number} Oustanding row in table
-   * @returns {Promise<void>}
+   * @param row {number} Outstanding row in table
+   * @returns {Promise<string>}
    */
   async viewInvoice(page, columnName, row) {
     return this.clickAndWaitForDownload(page, this.tableColumnActionType(row, 'invoice'));
   }
 }
-
 
 module.exports = new Outstanding();

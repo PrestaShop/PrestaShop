@@ -73,7 +73,7 @@ function enableB2BTest(baseContext = 'commonTests-enableB2BTest') {
  * @param baseContext {string} String to identify the test
  */
 function disableB2BTest(baseContext = 'commonTests-disableB2BTest') {
-  describe('PRE-TEST: Disable B2B', async () => {
+  describe('POST-TEST: Disable B2B', async () => {
     // before and after functions
     before(async function () {
       browserContext = await helper.createBrowserContext(this.browser);

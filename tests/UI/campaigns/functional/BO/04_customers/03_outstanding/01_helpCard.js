@@ -4,6 +4,8 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+
+// Import common tests
 const {enableB2BTest, disableB2BTest} = require('@commonTests/BO/shopParameters/enableDisableB2B');
 
 // Import test context
@@ -21,8 +23,16 @@ const baseContext = 'functional_BO_customers_outstanding_helpCard';
 let browserContext;
 let page;
 
-// Check that help card is in english in customers page
-describe('BO - Customers - Outstanding : Help card on 03_outstanding page', async () => {
+/*
+Pre-condition:
+- Enable B2B
+Scenario:
+- Click on Help card
+Post-condition:
+- Disable B2B
+*/
+
+describe('BO - Customers - Outstanding : Help card in outstanding page', async () => {
   // Pre-Condition : Enable B2B
   enableB2BTest(baseContext);
 
@@ -36,7 +46,8 @@ describe('BO - Customers - Outstanding : Help card on 03_outstanding page', asyn
     await helper.closeBrowserContext(browserContext);
   });
 
-  describe('BO - Customers - Outstanding : Help card on outstanding page', async () => {
+  // 1 - Click on the help card
+  describe('BO - Customers - Outstanding : Help card in outstanding page', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
