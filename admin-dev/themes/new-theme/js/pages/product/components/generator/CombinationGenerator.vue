@@ -88,7 +88,7 @@
   import Modal from '@PSVue/components/Modal.vue';
   import {defineComponent} from 'vue';
   import ProductEventMap from '@pages/product/product-event-map';
-  import {Attribute, AttributeGroup} from '@pages/product/types';
+  import {Attribute, AttributeGroup} from './';
 
   const {$} = window;
 

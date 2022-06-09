@@ -1,7 +1,6 @@
 import {Store} from 'vuex';
 
 interface State {
-[x: string]: string | undefined;
   pageIndex: number;
   totalPages: number;
   translationsPerPage: number;

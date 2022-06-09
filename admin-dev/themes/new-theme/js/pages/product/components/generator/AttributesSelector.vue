@@ -129,35 +129,11 @@
   import Bloodhound from 'typeahead.js';
   import AutoCompleteSearch, {AutoCompleteSearchConfig} from '@components/auto-complete-search';
   import Tokenizers from '@components/bloodhound/tokenizers';
+  import { AttributeGroup, AttributesSelectorStates } from '.';
 
   const {$} = window;
 
   const CombinationsMap = ProductMap.combinations;
-
-  export interface AttributesSelectorStates {
-    dataSetConfig: AutoCompleteSearchConfig | {};
-    searchSource: Record<string, any>;
-    scrollbar: PerfectScrollbar | null;
-    hasGeneratedCombinations: boolean;
-    checkboxList: Array<Record<string, any>>;
-  }
-
-  export interface AttributeGroup {
-    id: number;
-    name: string;
-    publicName: string;
-    attributes: Array<Attribute>;
-  }
-
-  /* eslint-disable camelcase */
-  export interface Attribute {
-    id: number;
-    color: string;
-    group_id: number;
-    group_name: string;
-    name: string;
-  }
-  /* eslint-enable camelcase */
 
   export default defineComponent({
     name: 'AttributesSelector',
