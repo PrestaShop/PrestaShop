@@ -146,7 +146,7 @@ describe('BO - Customers - Outstanding : View invoice', async () => {
       await expect(outstandingId).to.be.at.least(1);
     });
 
-    it('should click on view invoice', async function () {
+    it('should view the Invoice and check the order reference', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewInvoice', baseContext);
 
       filePath = await outstandingPage.viewInvoice(page, 'invoice', 1);
