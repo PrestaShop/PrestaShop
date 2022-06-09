@@ -30,6 +30,14 @@ jobs:
           path: ~/.cache/ms-playwright/
           key: ${{ runner.os }}-browsers
 
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Setup NPM
+          run: npm install -g npm@7
+
       - name: Install dependencies in UI tests directory
         run: npm install
 
@@ -55,6 +63,14 @@ jobs:
         with:
           path: ~/.cache/ms-playwright/
           key: ${{ runner.os }}-browsers
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Setup NPM
+          run: npm install -g npm@7
 
       - name: Install dependencies in UI tests directory
         run: npm install
