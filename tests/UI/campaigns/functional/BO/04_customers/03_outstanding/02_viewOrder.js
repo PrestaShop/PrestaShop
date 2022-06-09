@@ -95,25 +95,16 @@ describe('BO - Customers - Outstanding : View order', async () => {
       await expect(pageTitle).to.contains(ordersPage.pageTitle);
     });
 
-    [
-      {args: {columnName: 'id_order', result: 1}},
-      {args: {columnName: 'reference', result: null}},
-    ].forEach((test) => {
-      it(`should reset filter and get the last ${test.args.columnName}`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'resetFilterOrder', baseContext);
+    it('should reset filter and get the last orderID and reference', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterOrder', baseContext);
 
-        await ordersPage.resetFilter(page);
+      await ordersPage.resetFilter(page);
 
-        const orderColumn = await ordersPage.getTextColumn(page, `${test.args.columnName}`, 1);
+      orderId = await ordersPage.getTextColumn(page, 'id_order', 1);
+      await expect(orderId).to.be.at.least(1);
 
-        if (test.args.columnName === 'id_order') {
-          orderId = orderColumn;
-          await expect(orderColumn).to.be.at.least(test.args.result);
-        } else {
-          orderReference = orderColumn;
-          await expect(orderColumn).to.not.equal(test.args.result);
-        }
-      });
+      orderReference = await ordersPage.getTextColumn(page, 'reference', 1);
+      await expect(orderReference).to.not.be.null;
     });
 
     it('should update order status', async function () {
@@ -157,7 +148,7 @@ describe('BO - Customers - Outstanding : View order', async () => {
       await expect(outstandingId).to.be.at.least(1);
     });
 
-    it('should click on view Order', async function () {
+    it('should view the Order and check the orderID and the reference', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'viewOrder', baseContext);
 
       await outstandingPage.viewOrder(page, 'actions', 1);
