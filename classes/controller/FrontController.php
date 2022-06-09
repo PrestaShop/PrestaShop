@@ -2024,7 +2024,7 @@ class FrontControllerCore extends Controller
      *
      * @return array
      */
-    protected function getTemplateVarForms()
+    protected function getTemplateVarForms(): array
     {
         return [
             'login' => $this->getLoginForm()->getProxy(),
