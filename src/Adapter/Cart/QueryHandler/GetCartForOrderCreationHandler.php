@@ -31,7 +31,6 @@ use AddressFormat;
 use Carrier;
 use Cart;
 use CartRule;
-use Configuration;
 use Currency;
 use Customer;
 use Link;
@@ -39,6 +38,7 @@ use Message;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryHandler\GetCartForOrderCreationHandlerInterface;
@@ -83,21 +83,29 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
     private $contextStateManager;
 
     /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
+    /**
      * @param LocaleInterface $locale
      * @param int $contextLangId
      * @param Link $contextLink
      * @param ContextStateManager $contextStateManager
+     * @param ConfigurationInterface $configuration
      */
     public function __construct(
         LocaleInterface $locale,
         int $contextLangId,
         Link $contextLink,
-        ContextStateManager $contextStateManager
+        ContextStateManager $contextStateManager,
+        ConfigurationInterface $configuration
     ) {
         $this->locale = $locale;
         $this->contextLangId = $contextLangId;
         $this->contextLink = $contextLink;
         $this->contextStateManager = $contextStateManager;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -364,7 +372,7 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
             $isFreeShipping && $hideDiscounts ? '0' : (string) $legacySummary['total_shipping'],
             $isFreeShipping,
             $this->fetchCartDeliveryOptions($deliveryOptionsByAddress, $deliveryAddress),
-            (int) $carrier->id ?: Configuration::get('PS_CARRIER_DEFAULT') ?: null,
+            (int) $carrier->id ?: $this->configuration->get('PS_CARRIER_DEFAULT') ?: null,
             (bool) $cart->gift,
             (bool) $cart->recyclable,
             $cart->gift_message

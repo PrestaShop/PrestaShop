@@ -109,6 +109,7 @@ services:
       - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
       - '@=service("prestashop.adapter.legacy.context").getContext().link'
       - '@prestashop.adapter.context_state_manager'
+      - '@prestashop.adapter.legacy.configuration'
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation'
