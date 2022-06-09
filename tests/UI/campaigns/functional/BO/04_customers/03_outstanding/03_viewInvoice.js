@@ -121,7 +121,7 @@ describe('BO - Customers - Outstanding : View invoice', async () => {
 
 
   // 1 - View invoice from the outstanding
-  describe('BO - Customers - Outstanding : View invoice', async () => {
+  describe('View invoice from the outstanding page', async () => {
     it('should go to \'Customers > Outstanding\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOutstandingPage', baseContext);
 
