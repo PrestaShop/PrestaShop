@@ -70,7 +70,15 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
     /**
      * @var array The list of supported mime types
      */
-    protected $acceptedImgMimeTypes = ['image/gif', 'image/jpg', 'image/jpeg', 'image/pjpeg', 'image/png', 'image/x-png'];
+    protected $acceptedImgMimeTypes = [
+        'image/gif',
+        'image/jpg',
+        'image/jpeg',
+        'image/pjpeg',
+        'image/png',
+        'image/webp',
+        'image/x-png',
+    ];
 
     /**
      * @var string The product image declination id
@@ -152,6 +160,10 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
                 'gif' => [
                     'function' => 'imagecreatefromgif',
                     'Content-Type' => 'image/gif',
+                ],
+                'webp' => [
+                    'function' => 'imagecreatefromwebp',
+                    'Content-Type' => 'image/webp',
                 ],
             ];
             if (array_key_exists($this->imgExtension, $types)) {
@@ -909,18 +921,18 @@ class WebserviceSpecificManagementImagesCore implements WebserviceSpecificManage
             $dest_height = $source_height;
         }
         switch ($type) {
-            case 1:
+            case IMAGETYPE_GIF:
                 $source_image = imagecreatefromgif($base_path);
-
                 break;
-            case 3:
+            case IMAGETYPE_PNG:
                 $source_image = imagecreatefrompng($base_path);
-
                 break;
-            case 2:
+            case IMAGETYPE_WEBP:
+                $source_image = imagecreatefromwebp($base_path);
+                break;
+            case IMAGETYPE_JPEG:
             default:
                 $source_image = imagecreatefromjpeg($base_path);
-
                 break;
         }
 
