@@ -1993,7 +1993,12 @@ class FrontControllerCore extends Controller
         return $form;
     }
 
-    protected function getLoginForm()
+    /**
+     * Get customer login form
+     *
+     * @return CustomerLoginForm
+     */
+    public function getLoginForm()
     {
         return $this->makeLoginForm()
             ->fillWith(Tools::getAllValues())
@@ -2001,7 +2006,12 @@ class FrontControllerCore extends Controller
         ;
     }
 
-    protected function getCustomerForm()
+    /**
+     * Get customer register form
+     *
+     * @return CustomerForm
+     */
+    public function getRegisterForm()
     {
         return $this->makeCustomerForm()
             ->fillWith(Tools::getAllValues())
@@ -2009,11 +2019,16 @@ class FrontControllerCore extends Controller
         ;
     }
 
+    /**
+     * Get forms templates vars
+     *
+     * @return array
+     */
     protected function getTemplateVarForms()
     {
         return [
             'login' => $this->getLoginForm()->getProxy(),
-            'register' => $this->getCustomerForm()->getProxy(),
+            'register' => $this->getRegisterForm()->getProxy(),
         ];
     }
 
