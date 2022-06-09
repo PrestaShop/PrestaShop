@@ -47,7 +47,7 @@ describe('BO - Customers - Outstanding : Help card in outstanding page', async (
   });
 
   // 1 - Click on the help card
-  describe('BO - Customers - Outstanding : Help card in outstanding page', async () => {
+  describe('Help card in outstanding page', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });

@@ -132,7 +132,7 @@ describe('BO - Customers - Outstanding : View order', async () => {
   });
 
   // 1 - View order from the outstanding page
-  describe('BO - Customers - Outstanding : View order', async () => {
+  describe('View order from the outstanding page', async () => {
     it('should go to \'Customers > Outstanding\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOutstandingPage', baseContext);
 
