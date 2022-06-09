@@ -1993,21 +1993,24 @@ class FrontControllerCore extends Controller
         return $form;
     }
 
-    protected function getLoginForm(){
+    protected function getLoginForm()
+    {
        return $this->makeLoginForm()
             ->fillWith(Tools::getAllValues())
             ->setAction($this->context->link->getPageLink('authentication'))
        ;
     }
 
-    protected function getCustomerForm(){
+    protected function getCustomerForm()
+    {
         return $this->makeCustomerForm()
             ->fillWith(Tools::getAllValues())
             ->setAction($this->context->link->getPageLink('authentication&create_account=1'))
         ;
     }
 
-    protected function getTemplateVarForms(){
+    protected function getTemplateVarForms()
+    {
         return [
             'login' => $this->getLoginForm()->getProxy(),
             'register' => $this->getCustomerForm()->getProxy(),
