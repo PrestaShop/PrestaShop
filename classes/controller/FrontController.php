@@ -2011,7 +2011,7 @@ class FrontControllerCore extends Controller
      *
      * @return CustomerForm
      */
-    public function getRegisterForm()
+    public function getRegisterForm(): CustomerForm
     {
         return $this->makeCustomerForm()
             ->fillWith(Tools::getAllValues())
