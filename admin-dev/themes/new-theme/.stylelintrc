@@ -11,6 +11,10 @@
     "selector-max-combinators": null,
     "selector-class-pattern": null,
     "selector-descendant-combinator-no-non-space": null,
-    "function-blacklist": null
+    "selector-id-pattern": null,
+    "function-disallowed-list": null,
+    "keyframes-name-pattern": null,
+    "declaration-block-semicolon-newline-before": null,
+    "declaration-block-semicolon-space-before": null
   }
 }
