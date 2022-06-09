@@ -29,6 +29,7 @@
 export default {
   shopChoiceTree: '#employee_shop_association',
   profileSelect: '#employee_profile',
+  passwordInput: '#employee_password',
   defaultPageSelect: '#employee_default_page',
   addonsConnectForm: '#addons-connect-form',
   addonsLoginButton: '#addons_login_btn',
@@ -37,10 +38,9 @@ export default {
   changePasswordInputsBlock: '.js-change-password-block',
   showChangePasswordBlockButton: '.js-change-password',
   hideChangePasswordBlockButton: '.js-change-password-cancel',
-  generatePasswordButton: '#employee_change_password_generate_password_button',
   oldPasswordInput: '#employee_change_password_old_password',
   newPasswordInput: '#employee_change_password_new_password_first',
   confirmNewPasswordInput: '#employee_change_password_new_password_second',
   generatedPasswordDisplayInput: '#employee_change_password_generated_password',
-  passwordStrengthFeedbackContainer: '.js-password-strength-feedback',
+  passwordStrengthFeedbackContainer: '.password-strength-feedback',
 };

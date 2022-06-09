@@ -84,6 +84,9 @@ services:
       - '@prestashop.adapter.employee.data_provider'
       - '@prestashop.core.crypto.hashing'
       - '@prestashop.adapter.image.uploader.employee_image_uploader'
+      - '@=service("prestashop.adapter.legacy.configuration").getInt(constant("PrestaShop\\PrestaShop\\Core\\Security\\PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH"))'
+      - '@=service("prestashop.adapter.legacy.configuration").getInt(constant("PrestaShop\\PrestaShop\\Core\\Security\\PasswordPolicyConfiguration::CONFIGURATION_MAXIMUM_LENGTH"))'
+      - '@=service("prestashop.adapter.legacy.configuration").getInt(constant("PrestaShop\\PrestaShop\\Core\\Security\\PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_SCORE"))'
 
   prestashop.core.form.identifiable_object.data_handler.profile_form_data_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ProfileFormDataHandler'

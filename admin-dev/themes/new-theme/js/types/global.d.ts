@@ -36,13 +36,11 @@ interface JQuery {
   fancybox: any;
   growl: any;
   pstooltip: any;
-  passy(params: unknown, length?: number): void;
   serializeJSON: any;
 }
 
 interface JQueryStatic {
   tableDnD: TableDnD;
-  passy: any;
   tokenfield: any;
   clickableDropdown: () => void;
   datetimepicker: any;

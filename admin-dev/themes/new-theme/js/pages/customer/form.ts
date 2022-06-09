@@ -1,4 +1,4 @@
-{#**
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,20 +21,10 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
+ */
 
-{% set enableSidebar = true %}
-{% set fullName = '%s. %s'|format(customerInformation.firstName.getValue[:1], customerInformation.lastName.getValue) %}
-{% set layoutTitle = 'Editing customer %name%'|trans({'%name%': fullName}, 'Admin.Orderscustomers.Feature') %}
+import CustomerForm from './CustomerForm';
 
-{% extends '@PrestaShop/Admin/layout.html.twig' %}
-
-{% block content %}
-  {% include '@PrestaShop/Admin/Sell/Customer/Blocks/form.html.twig' with {'isGuest': customerInformation.isGuest} %}
-{% endblock %}
-
-{% block javascripts %}
-  {{ parent() }}
-
-  <script src="{{ asset('themes/new-theme/public/customer_form.bundle.js') }}"></script>
-{% endblock %}
+$(() => {
+  new CustomerForm();
+});

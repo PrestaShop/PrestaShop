@@ -26,10 +26,12 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Customer;
 
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CustomerName;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\FirstName;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\LastName;
 use PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject\Password;
+use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
 use PrestaShopBundle\Form\Admin\Type\EmailType;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -81,11 +83,17 @@ class CustomerType extends TranslatorAwareType
     private $isPartnerOffersEnabled;
 
     /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
+    /**
      * @param array $genderChoices
      * @param array $groupChoices
      * @param array $riskChoices
      * @param bool $isB2bFeatureEnabled
      * @param bool $isPartnerOffersEnabled
+     * @param ConfigurationInterface $configuration
      */
     public function __construct(
         TranslatorInterface $translator,
@@ -94,7 +102,8 @@ class CustomerType extends TranslatorAwareType
         array $groupChoices,
         array $riskChoices,
         $isB2bFeatureEnabled,
-        $isPartnerOffersEnabled
+        $isPartnerOffersEnabled,
+        ConfigurationInterface $configuration
     ) {
         parent::__construct($translator, $locales);
         $this->genderChoices = $genderChoices;
@@ -102,6 +111,7 @@ class CustomerType extends TranslatorAwareType
         $this->isB2bFeatureEnabled = $isB2bFeatureEnabled;
         $this->riskChoices = $riskChoices;
         $this->isPartnerOffersEnabled = $isPartnerOffersEnabled;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -109,6 +119,10 @@ class CustomerType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $minScore = $this->configuration->get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_SCORE);
+        $maxLength = $this->configuration->get(PasswordPolicyConfiguration::CONFIGURATION_MAXIMUM_LENGTH);
+        $minLength = $this->configuration->get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH);
+
         $builder
             ->add('gender_id', ChoiceType::class, [
                 'choices' => $this->genderChoices,
@@ -184,6 +198,11 @@ class CustomerType extends TranslatorAwareType
             ])
             ->add('password', PasswordType::class, [
                 'label' => $this->trans('Password', 'Admin.Global'),
+                'attr' => [
+                    'data-minscore' => $minScore,
+                    'data-minlength' => $minLength,
+                    'data-maxlength' => $maxLength,
+                ],
                 'help' => $this->trans(
                     'Password should be at least %length% characters long.',
                     'Admin.Notifications.Info',

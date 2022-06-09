@@ -18,6 +18,10 @@
     <script type="text/javascript" src="../js/jquery/jquery-3.5.1.min.js"></script>
     <script type="text/javascript" src="../js/jquery/jquery-migrate-3.1.0.min.js"></script>
     <script type="text/javascript" src="../js/jquery/plugins/jquery.chosen.js"></script>
+
+    <script src="theme/js/sprintf.min.js" integrity="sha512-pmG0OkYtZVB2EqETE5HPsEaok7sNZFfStp5rNdpHv0tGQjbt1z8Qjzhtx88/4wsttOtDwq5DZGJyKyzEe7ribg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="theme/js/zxcvbn.js" integrity="sha512-TZlMGFY9xKj38t/5m2FzJ+RM/aD5alMHDe26p0mYUMoCF5G7ibfHUQILq0qQPV3wlsnCwL+TPRNK4vIWGLOkUQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
     <script type="text/javascript" src="theme/js/install.js"></script>
     <?php if (file_exists(_PS_INSTALL_PATH_ . 'theme/js/' . self::getSteps()->current()->getName() . '.js')) { ?>
       <script type="text/javascript" src="theme/js/<?php echo self::getSteps()->current()->getName(); ?>.js?version=<?php echo _PS_VERSION_; ?>"></script>
