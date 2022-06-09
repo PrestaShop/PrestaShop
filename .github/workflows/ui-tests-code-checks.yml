@@ -36,7 +36,7 @@ jobs:
           node-version: '16'
 
       - name: Setup NPM
-          run: npm install -g npm@7
+        run: npm install -g npm@7
 
       - name: Install dependencies in UI tests directory
         run: npm install
@@ -70,7 +70,7 @@ jobs:
           node-version: '16'
 
       - name: Setup NPM
-          run: npm install -g npm@7
+        run: npm install -g npm@7
 
       - name: Install dependencies in UI tests directory
         run: npm install
