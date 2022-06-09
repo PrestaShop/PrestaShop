@@ -45,7 +45,7 @@ class RegistrationControllerCore extends FrontController
 
     public function initContent()
     {
-        $register_form = $this->getCustomerForm()->setGuestAllowed(false);
+        $register_form = $this->getRegisterForm()->setGuestAllowed(false);
 
         // If registration form was submitted
         if (Tools::isSubmit('submitCreate')) {
