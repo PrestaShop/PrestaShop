@@ -37,6 +37,7 @@ use Link;
 use Message;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
+use Configuration;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
@@ -80,6 +81,11 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
      * @var ContextStateManager
      */
     private $contextStateManager;
+
+    /**
+     * @var Configuration
+     */
+    private $configuration;
 
     /**
      * @param LocaleInterface $locale
@@ -363,7 +369,7 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
             $isFreeShipping && $hideDiscounts ? '0' : (string) $legacySummary['total_shipping'],
             $isFreeShipping,
             $this->fetchCartDeliveryOptions($deliveryOptionsByAddress, $deliveryAddress),
-            (int) $carrier->id ?: null,
+            (int) $carrier->id ?: Configuration::get('PS_CARRIER_DEFAULT') ?: null,
             (bool) $cart->gift,
             (bool) $cart->recyclable,
             $cart->gift_message
