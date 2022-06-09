@@ -444,7 +444,7 @@ function hideFees()
 	$('tr.range_inf td, tr.range_sup td, tr.fees_all td, tr.fees td').each(function () {
 		if ($(this).index() >= 2)
 		{
-			$(this).find('input:text, button').val('').prop('disabled', true).css('background-color', '#999999').css('border-color', '#999999');
+			$(this).find('input:text, button').prop('disabled', true).css('background-color', '#999999').css('border-color', '#999999');
 			$(this).css('background-color', '#999999');
 		}
 	});
