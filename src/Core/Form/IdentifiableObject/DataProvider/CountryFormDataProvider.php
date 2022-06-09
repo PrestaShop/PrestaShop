@@ -31,6 +31,10 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\CountryForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetAddressFormatData;
+use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\AddressFormatData;
+use PrestaShop\PrestaShop\Core\Domain\Zone\Query\GetZoneForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Zone\QueryResult\EditableZone;
 
 /**
  * Provides data for zone add/edit form.
@@ -102,12 +106,16 @@ class CountryFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData(): array
     {
+        /** @var AddressFormatData $addressFormat */
+        $addressFormat = $this->queryBus->handle(new GetAddressFormatData());
+
         $data = [
             'need_zip_code' => false,
             'is_enabled' => true,
             'contains_states' => false,
             'need_identification_number' => false,
             'display_tax_label' => true,
+            'address_format' => $addressFormat->getDefaultFormat(),
         ];
 
         if ($this->multistoreEnabled) {

@@ -1,4 +1,3 @@
-<?php
 /**
  * 2007-2019 PrestaShop and Contributors
  *
@@ -24,26 +23,12 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
-
-use PrestaShop\PrestaShop\Core\ConstraintValidator\AddressFormatValidator;
-use Symfony\Component\Validator\Constraint;
-
 /**
- * Address format validation constraint
+ * Defines all selectors that are used in country add/edit form.
  */
-class AddressFormat extends Constraint
-{
-    /**
-     * @var string
-     */
-    public $message = '%s is invalid.';
-
-    /**
-     * {@inheritdoc}
-     */
-    public function validatedBy()
-    {
-        return AddressFormatValidator::class;
-    }
-}
+export default {
+  customAddressFieldsTabBtn: '#custom-address-fields',
+  addPatternBtn: '.add-pattern',
+  formatTextAreaField: '#country_address_format',
+  modifyAddressLayoutBtn: '.modify-address-layout',
+};

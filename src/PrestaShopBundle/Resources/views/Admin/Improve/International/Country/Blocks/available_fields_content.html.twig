@@ -1,4 +1,7 @@
-<ul class="nav nav-tabs address-format-tabs" id="custom-address-fields">
+<ul class="nav nav-pills address-format-tabs" id="custom-address-fields">
+  <small class="form-text">
+  {{ 'Some countries require different elements than others. Click on the button below to get the valid default address format for this country.'|trans({}, 'Admin.International.Feature') }}
+  </small>
   {% for key, rows in availableFields %}
     <li class="nav-item">
       <a href="#availableListFieldsFor_{{ key }}" class="nav-link  {{ loop.index == 1 ? 'active show' : '' }}">
@@ -23,6 +26,3 @@
     </div>
   {% endfor %}
 </div>
-<small class="form-text">
-  {{ 'Required fields for the address (click for more details):'|trans({}, 'Admin.International.Feature') }}
-</small>

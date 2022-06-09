@@ -30,6 +30,8 @@ namespace PrestaShop\PrestaShop\Adapter\Country\CommandHandler;
 
 use Country;
 use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
+use PrestaShop\PrestaShop\Adapter\Country\AbstractCountryHandler;
+use PrestaShop\PrestaShop\Core\Domain\Address\Exception\CannotAddAddressFormatException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\AddCountryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler\AddCountryHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
@@ -79,6 +81,12 @@ class AddCountryHandler implements AddCountryHandlerInterface
         }
 
         $this->countryRepository->add($country);
+
+        $addressFormat = $this->getValidAddressFormat((int) $country->id, $command->getAddressFormat());
+
+        if (false === $addressFormat->add()) {
+            throw new CannotAddAddressFormatException('Failed to add address format');
+        }
 
         return new CountryId((int) $country->id);
     }

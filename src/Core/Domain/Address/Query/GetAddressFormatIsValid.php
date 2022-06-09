@@ -24,26 +24,31 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints;
-
-use PrestaShop\PrestaShop\Core\ConstraintValidator\AddressFormatValidator;
-use Symfony\Component\Validator\Constraint;
+namespace PrestaShop\PrestaShop\Core\Domain\Address\Query;
 
 /**
- * Address format validation constraint
+ * Determines if address format field value is valid
  */
-class AddressFormat extends Constraint
+class GetAddressFormatIsValid
 {
     /**
      * @var string
      */
-    public $message = '%s is invalid.';
+    private $format;
 
     /**
-     * {@inheritdoc}
+     * @param string $format
      */
-    public function validatedBy()
+    public function __construct(string $format)
     {
-        return AddressFormatValidator::class;
+        $this->format = $format;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFormat(): string
+    {
+        return $this->format;
     }
 }

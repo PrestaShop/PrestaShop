@@ -82,3 +82,9 @@ services:
 
   prestashop.adapter.address.formatter:
     class: 'PrestaShop\PrestaShop\Adapter\Address\AddressFormatter'
+
+  prestashop.adapter.address.query_handler.get_address_format_is_valid:
+    class: 'PrestaShop\PrestaShop\Adapter\Address\QueryHandler\GetAddressFormatIsValidHandler'
+    tags:
+      - name: tactician.handler
+        command: 'PrestaShop\PrestaShop\Core\Domain\Address\Query\GetAddressFormatIsValid'
