@@ -228,8 +228,10 @@ export default {
   rightArrow: '.right-arrow',
   footer: {
     previewUrlButton: '.preview-url-button',
-    duplicateProductButton: '.duplicate-product-button',
     deleteProductButton: '.delete-product-button',
+    deleteProductModalId: 'delete-product-footer-modal',
+    duplicateProductButton: '.duplicate-product-button',
+    duplicateProductModalId: 'duplicate-product-footer-modal',
     newProductButton: '.new-product-button',
     goToCatalogButton: '.go-to-catalog-button',
     cancelButton: '.cancel-button',
