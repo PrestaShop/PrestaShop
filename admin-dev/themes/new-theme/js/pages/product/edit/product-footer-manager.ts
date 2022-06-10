@@ -35,7 +35,7 @@ export default class ProductFooterManager {
   }
 
   private deleteProduct(): void {
-    const modal = new (ConfirmModal as any)(
+    const modal = new ConfirmModal(
       {
         id: 'modal-confirm-delete-product',
         confirmTitle: this.$deleteProductButton.data('modal-title'),
@@ -48,7 +48,13 @@ export default class ProductFooterManager {
       () => {
         const removeUrl = this.$deleteProductButton.data('removeUrl');
         $(ProductMap.productFormSubmitButton).prop('disabled', true);
-        window.location = removeUrl;
+
+        const form = document.createElement('form');
+        form.setAttribute('method', 'POST');
+        form.setAttribute('action', removeUrl);
+        form.setAttribute('style', 'display: none;');
+        document.body.appendChild(form);
+        form.submit();
       },
     );
     modal.show();

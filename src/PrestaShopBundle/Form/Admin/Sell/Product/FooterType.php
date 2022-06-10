@@ -81,20 +81,20 @@ class FooterType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $request = Request::createFromGlobals();
-        $page = $request->query->get('page');
-
         $productId = $options['product_id'];
-        $deleteUrl = $productId ? $this->router->generate('admin_product_unit_action', [
-            'action' => 'delete',
-            'id' => $productId,
-        ]) : null;
-        $seoUrl = $productId ? $this->productUrlProvider->getUrl($productId, '{friendly-url}') : null;
+
+        $deleteUrl = $this->router->generate('admin_products_v2_delete', [
+            'productId' => $productId,
+        ]);
+        $duplicateUrl = $this->router->generate('admin_products_v2_duplicate', [
+            'productId' => $productId,
+        ]);
+        $editUrl = $this->router->generate('admin_products_v2_edit', [
+            'productId' => $productId,
+        ]);
         $productPreviewUrl = $this->productPreviewUrlProvider->getUrl($productId, $options['active']);
-        $duplicateUrl = $productId ? $this->router->generate('admin_product_unit_action', [
-            'action' => 'duplicate',
-            'id' => $productId,
-        ]) : null;
+        // We use a placeholder {friendly-url} as the rewrite part so that it can be replaced dynamically by js
+        $seoUrl = $this->productUrlProvider->getUrl($productId, '{friendly-url}');
 
         $builder
             ->add('catalog', IconButtonType::class, [
@@ -111,7 +111,7 @@ class FooterType extends TranslatorAwareType
                 'type' => 'link',
                 'icon' => 'content_copy',
                 'attr' => [
-                    'class' => 'btn-outline-secondary  duplicate-product-button' . (empty($productId) ? ' disabled' : ''),
+                    'class' => 'btn-outline-secondary duplicate-product-button',
                     'href' => $duplicateUrl,
                 ],
             ])
@@ -128,7 +128,6 @@ class FooterType extends TranslatorAwareType
                     'data-toggle' => 'pstooltip',
                     'data-placement' => 'left',
                     'title' => $this->trans('Permanently delete this product.', 'Admin.Catalog.Help'),
-                    'disabled' => empty($productId),
                 ],
             ])
             ->add('new_product', IconButtonType::class, [
@@ -136,7 +135,7 @@ class FooterType extends TranslatorAwareType
                 'type' => 'link',
                 'icon' => 'add_circle_outline',
                 'attr' => [
-                    'class' => 'btn-outline-secondary new-product-button' . (empty($productId) ? ' disabled' : ''),
+                    'class' => 'btn-outline-secondary new-product-button',
                     'href' => $this->router->generate('admin_products_v2_create'),
                 ],
             ])
@@ -145,8 +144,8 @@ class FooterType extends TranslatorAwareType
                 'icon' => 'undo',
                 'type' => 'link',
                 'attr' => [
-                    'href' => $page,
-                    'class' => 'btn-secondary cancel-button' . (empty($productId) ? ' disabled' : ''),
+                    'href' => $editUrl,
+                    'class' => 'btn-secondary cancel-button',
                     'disabled' => true,
                 ],
             ])
@@ -158,7 +157,7 @@ class FooterType extends TranslatorAwareType
                 'attr' => [
                     'target' => '_blank',
                     'href' => $productPreviewUrl,
-                    'class' => 'btn-outline-secondary preview-url-button' . (empty($productId) ? ' disabled' : ''),
+                    'class' => 'btn-outline-secondary preview-url-button',
                     'data-seo-url' => $seoUrl,
                 ],
             ])

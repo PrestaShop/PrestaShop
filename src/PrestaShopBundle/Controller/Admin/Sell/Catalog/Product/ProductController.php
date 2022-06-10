@@ -504,8 +504,8 @@ class ProductController extends FrameworkBundleAdminController
             'href' => $this->generateUrl('admin_products_v2_create'),
             'desc' => $this->trans('New product', 'Admin.Actions'),
             'icon' => 'add_circle_outline',
-            'class' => 'btn-primary new-product',
-            'floating_class' => 'new-product',
+            'class' => 'btn-primary new-product-button',
+            'floating_class' => 'new-product-button',
         ];
 
         return $toolbarButtons;
