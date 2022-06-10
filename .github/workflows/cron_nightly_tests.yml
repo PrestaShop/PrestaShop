@@ -27,6 +27,7 @@ jobs:
       matrix:
         BRANCH:
           - develop
+          - 8.0.x
         CAMPAIGN:
           - 'sanity'
           - 'regression'
@@ -118,6 +119,7 @@ jobs:
       matrix:
         BRANCH:
           - develop
+          - 8.0.x
 
     env:
       GH_BRANCH: ${{ matrix.branch }}  # Branch to test
@@ -177,6 +179,7 @@ jobs:
       matrix:
         BRANCH:
           - develop
+          - 8.0.x
 
     env:
       GH_BRANCH: ${{ matrix.branch }}

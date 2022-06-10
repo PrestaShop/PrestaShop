@@ -2,14 +2,37 @@ name: Cron Update JS Routing
 on:
   schedule:
     - cron: '0 23 * * *'
+  workflow_dispatch:
+
 jobs:
   js-routing-dump:
     runs-on: ubuntu-latest
     name: Update JS Routing
+    strategy:
+      fail-fast: false
+      matrix:
+        BRANCH:
+          - develop
+          - 8.0.x
+          - 1.7.8.x
+        include:
+          - BRANCH: develop
+            node: 16
+          - BRANCH: 8.0.x
+            node: 16
+          - BRANCH: 1.7.8.x
+            node: 14
+
+    env:
+      PHP_VERSION: '7.4'
+      NODE_VERSION: ${{ matrix.node }}
+      GH_BRANCH: ${{ matrix.BRANCH }}
+
     steps:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
+          php-version: ${{ env.PHP_VERSION }}
           extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml
 
       - name: Setup MySQL
@@ -22,10 +45,16 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Setup NPM
+        run: npm install -g npm@7
 
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: ${{ env.GH_BRANCH }}
 
       - name: PrestaShop Configuration
         run: cp .github/workflows/phpunit/parameters.yml app/config/parameters.yml
@@ -50,9 +79,6 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-composer-
-
-      - name: Update npm
-        run: npm install npm -g
 
       - name: Install Composer dependencies
         run: composer install --prefer-dist
@@ -82,7 +108,7 @@ jobs:
           body: |
                   | Questions         | Answers
                   | ----------------- | -------------------------------------------------------
-                  | Branch?           | develop
+                  | Branch?           | ${{ env.GH_BRANCH }}
                   | Description?      | Updated JS Routing file
                   | Type?             | improvement
                   | Category?         | CO
@@ -91,5 +117,5 @@ jobs:
                   | Fixed ticket?     | N/A
                   | How to test?      | N/A
                   | Possible impacts? | N/A
-          base: 'develop'
+          base: ${{ env.GH_BRANCH }}
           delete-branch: true
