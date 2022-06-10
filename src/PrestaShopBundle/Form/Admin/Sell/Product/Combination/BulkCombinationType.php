@@ -67,7 +67,9 @@ class BulkCombinationType extends TranslatorAwareType
                     'class' => 'bulk-combination-form',
                 ],
             ])
-            ->setRequired(['product_id'])
+            ->setRequired([
+                'product_id',
+            ])
             ->setAllowedTypes('product_id', 'int')
         ;
     }

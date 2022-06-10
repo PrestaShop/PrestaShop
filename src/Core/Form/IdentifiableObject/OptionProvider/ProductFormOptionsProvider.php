@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+
 /**
  * Provide dynamic complex options to the product type (like preview data that depend
  * on product current data, or specific options for inputs that are deep in the form
@@ -41,6 +43,7 @@ class ProductFormOptionsProvider implements FormOptionsProviderInterface
     public function getOptions(int $id, array $data): array
     {
         return [
+            'product_type' => $data['header']['type'] ?? ProductType::TYPE_STANDARD,
             'virtual_product_file_id' => $data['stock']['virtual_product_file']['virtual_product_file_id'] ?? null,
             'active' => $data['footer']['active'] ?? false,
         ];
