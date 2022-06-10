@@ -50,9 +50,11 @@ class CombinationsType extends TranslatorAwareType
             ->setDefaults([
                 'label' => false,
                 'required' => false,
-                'product_id' => null,
             ])
-            ->setAllowedTypes('product_id', ['null', 'int'])
+            ->setRequired([
+                'product_id',
+            ])
+            ->setAllowedTypes('product_id', 'int')
         ;
     }
 }

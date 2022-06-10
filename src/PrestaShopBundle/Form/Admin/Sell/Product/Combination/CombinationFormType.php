@@ -99,8 +99,10 @@ class CombinationFormType extends TranslatorAwareType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
-            ->setRequired(['product_id'])
-            ->setAllowedTypes('product_id', ['int'])
+            ->setRequired([
+                'product_id',
+            ])
+            ->setAllowedTypes('product_id', 'int')
             ->setDefaults([
                 'required' => false,
                 'label' => false,
