@@ -66,6 +66,20 @@ class FeatureController extends FrameworkBundleAdminController implements Legacy
     public $php_self;
 
     /**
+     * This parameter is needed by legacy helper shop, so we can't remove it.
+     *
+     * @var bool
+     */
+    public $multishop_context_group = true;
+
+    /**
+     * This parameter is needed by legacy helper shop, we can't remove it.
+     *
+     * @var int
+     */
+    public $multishop_context;
+
+    /**
      * @var ControllerConfiguration
      */
     public $controllerConfiguration;

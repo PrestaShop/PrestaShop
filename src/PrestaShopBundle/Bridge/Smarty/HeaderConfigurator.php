@@ -212,6 +212,7 @@ class HeaderConfigurator implements ConfiguratorInterface
         $controllerConfiguration->templatesVars['shop_name'] = $this->configuration->get('PS_SHOP_NAME');
         $controllerConfiguration->templatesVars['tabs'] = $tabs;
         $controllerConfiguration->templatesVars['version'] = _PS_VERSION_;
+        $controllerConfiguration->templatesVars['multishop_context'] = $controllerConfiguration->multishopContext;
 
         Media::addJsDef(
             [

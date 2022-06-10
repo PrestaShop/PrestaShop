@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Bridge\AdminController;
 
 use PrestaShopBundle\Security\Admin\Employee;
+use Shop;
 
 /**
  * This object holds the configuration of a Controller that is being migrated horizontally.
@@ -190,4 +191,9 @@ class ControllerConfiguration
      * @var array
      */
     public $modals = [];
+
+    /**
+     * @var int
+     */
+    public $multishopContext = Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP | Shop::CONTEXT_SHOP;
 }

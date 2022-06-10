@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Bridge\Helper;
 
 use PrestaShopBundle\Bridge\AdminController\Action\ActionInterface;
-use Shop;
 
 /**
  * This object contains the configuration needed to generate a list using the helper list.
@@ -149,7 +148,7 @@ class HelperListConfiguration
     /**
      * @var int
      */
-    public $multishopContext = Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP | Shop::CONTEXT_SHOP;
+    public $multishopContext;
 
     /**
      * @var bool

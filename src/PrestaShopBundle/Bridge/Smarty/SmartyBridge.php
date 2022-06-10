@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Bridge\Smarty;
 
 use Cookie;
+use HelperShop;
 use Link;
 use Media;
 use PrestaShop\PrestaShop\Adapter\Configuration;
@@ -166,6 +167,7 @@ class SmartyBridge
      */
     public function display(ControllerConfiguration $controllerConfiguration, string $content, $templateName): string
     {
+        $helperShop = new HelperShop();
         $this->smarty->assign([
             'content' => $content,
             'display_header' => $controllerConfiguration->displayHeader,
@@ -175,6 +177,7 @@ class SmartyBridge
             'toggle_navigation_url' => $this->link->getAdminLink('AdminEmployees', true, [], [
                 'action' => 'toggleMenu',
             ]),
+            'shop_list' => $helperShop->getRenderedShopList(),
         ]);
 
         if (!$controllerConfiguration->metaTitle) {

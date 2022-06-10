@@ -101,7 +101,6 @@ class InitControllerListener
         }
 
         $controller->php_self = get_class($controller);
-        $this->context->controller = $controller;
         $this->context->smarty->assign('link', $this->context->link);
 
         $this->context->currentLocale = $this->localeRepository->getLocale(
@@ -116,6 +115,9 @@ class InitControllerListener
             $controllerNameLegacy,
             $controller->getTable()
         );
+
+        $controller->multishop_context = $controller->controllerConfiguration->multishopContext;
+        $this->context->controller = $controller;
 
         $this->setLegacyCurrentIndex($controller, $event->getRequest()->attributes->get('_legacy_controller'));
         $this->initToken($controller, $event->getRequest());
