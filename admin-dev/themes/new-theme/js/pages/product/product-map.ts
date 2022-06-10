@@ -52,7 +52,7 @@ export default {
     },
   },
   create: {
-    newProductButton: 'a.new-product',
+    newProductButton: '.new-product-button',
     createModalSelector: '#product_type',
   },
   invalidField: '.is-invalid',
