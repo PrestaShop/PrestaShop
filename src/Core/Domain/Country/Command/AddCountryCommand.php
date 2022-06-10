@@ -67,7 +67,7 @@ class AddCountryCommand
     protected $needZipCode = false;
 
     /**
-     * @var CountryZipCodeFormat
+     * @var ?CountryZipCodeFormat
      */
     protected $zipCodeFormat;
 
@@ -111,7 +111,6 @@ class AddCountryCommand
         $this->isoCode = $isoCode;
         $this->callPrefix = $callPrefix;
         $this->addressFormat = $addressFormat;
-        $this->zipCodeFormat = new CountryZipCodeFormat('');
     }
 
     /**
