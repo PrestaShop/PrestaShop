@@ -97,7 +97,7 @@ class AddCountryCommand
     protected $displayTaxLabel = false;
 
     /**
-     * @var array
+     * @var int[]
      */
     protected $shopAssociation = [];
 
