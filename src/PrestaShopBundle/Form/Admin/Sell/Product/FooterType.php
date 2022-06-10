@@ -84,7 +84,7 @@ class FooterType extends TranslatorAwareType
         $request = Request::createFromGlobals();
         $page = $request->query->get('page');
 
-        $productId = !empty($options['product_id']) ? (int) $options['product_id'] : null;
+        $productId = $options['product_id'];
         $deleteUrl = $productId ? $this->router->generate('admin_product_unit_action', [
             'action' => 'delete',
             'id' => $productId,
@@ -183,7 +183,6 @@ class FooterType extends TranslatorAwareType
         parent::configureOptions($resolver);
         $resolver
             ->setDefaults([
-                'product_id' => null,
                 'active' => false,
                 'required' => false,
                 'label' => false,
@@ -194,7 +193,10 @@ class FooterType extends TranslatorAwareType
                     'class' => 'product-footer-left',
                 ],
             ])
-            ->setAllowedTypes('product_id', ['null', 'int'])
+            ->setRequired([
+                'product_id',
+            ])
+            ->setAllowedTypes('product_id', 'int')
             ->setAllowedTypes('active', ['bool'])
         ;
     }

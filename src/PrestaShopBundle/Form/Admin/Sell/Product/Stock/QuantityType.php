@@ -74,8 +74,7 @@ class QuantityType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         if ($this->stockManagementEnabled) {
-            $urlParameters = !empty($options['product_id']) ? ['productId' => (int) $options['product_id']] : [];
-            $stockMovementsUrl = $this->router->generate('admin_stock_movements_overview', $urlParameters);
+            $stockMovementsUrl = $this->router->generate('admin_stock_movements_overview', ['productId' => $options['product_id']]);
 
             $builder
                 ->add('delta_quantity', DeltaQuantityType::class, [
@@ -126,9 +125,11 @@ class QuantityType extends TranslatorAwareType
                 'label' => $this->trans('Quantities', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h3',
                 'required' => false,
-                'product_id' => null,
             ])
-            ->setAllowedTypes('product_id', ['null', 'int'])
+            ->setRequired([
+                'product_id',
+            ])
+            ->setAllowedTypes('product_id', 'int')
         ;
     }
 }

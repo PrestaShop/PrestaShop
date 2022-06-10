@@ -90,7 +90,6 @@ class ImageDropzoneType extends TranslatorAwareType
                 'window.cover' => $this->trans('Cover', 'Admin.Catalog.Feature'),
                 'window.caption' => $this->trans('Caption', 'Admin.Catalog.Feature'),
             ],
-            'product_id' => null,
             'update_form_type' => null,
             'attr' => [
                 'class' => 'product-image-dropzone',
@@ -99,9 +98,14 @@ class ImageDropzoneType extends TranslatorAwareType
             'label' => false,
         ]);
 
-        $resolver->setAllowedTypes('product_id', ['int', 'null']);
-        $resolver->setAllowedTypes('update_form_type', ['string', 'null']);
-        $resolver->setAllowedTypes('translations', ['array']);
+        $resolver
+            ->setRequired([
+                'product_id',
+            ])
+            ->setAllowedTypes('product_id', 'int')
+            ->setAllowedTypes('update_form_type', ['string', 'null'])
+            ->setAllowedTypes('translations', ['array'])
+        ;
     }
 
     /**

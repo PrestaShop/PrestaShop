@@ -107,7 +107,7 @@ class RedirectOptionType extends TranslatorAwareType
                     'languageCode' => $this->employeeIsoCode,
                     'query' => '__QUERY__',
                 ]),
-                'filtered' => json_encode(!empty($options['product_id']) ? [$options['product_id']] : []),
+                'filtered' => json_encode([$options['product_id']]),
             ],
             'category' => [
                 'label' => $this->trans('Target category', 'Admin.Catalog.Feature'),
@@ -175,7 +175,6 @@ class RedirectOptionType extends TranslatorAwareType
         parent::configureOptions($resolver);
         $resolver
             ->setDefaults([
-                'product_id' => null,
                 'required' => false,
                 'label' => $this->trans('Redirection page', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h3',
@@ -186,7 +185,10 @@ class RedirectOptionType extends TranslatorAwareType
                 ],
                 'alert_message' => $this->getRedirectionAlertMessages(),
             ])
-            ->setAllowedTypes('product_id', ['null', 'int'])
+            ->setRequired([
+                'product_id',
+            ])
+            ->setAllowedTypes('product_id', 'int')
         ;
     }
 
