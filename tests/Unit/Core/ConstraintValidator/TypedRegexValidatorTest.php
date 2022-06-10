@@ -770,7 +770,6 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
         yield [' '];
     }
 
-
     /**
      * @return Generator
      */
