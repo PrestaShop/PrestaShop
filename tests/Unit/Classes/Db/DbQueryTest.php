@@ -227,7 +227,7 @@ class DbQueryTest extends TestCase
             ],
             [
                 $selectWithSubQuery,
-                'SELECT *' . self::BREAK_LINE . 'FROM (SELECT *' . self::BREAK_LINE . 'FROM `test_product` p' . self::BREAK_LINE . 'WHERE (p.active = 1)' . self::BREAK_LINE . ') p' . self::BREAK_LINE . 'WHERE (p.visibility in ("both", "search"))',
+                'SELECT *' . self::BREAK_LINE . 'FROM (SELECT *' . self::BREAK_LINE . 'FROM `' . _DB_PREFIX_ . 'product` p' . self::BREAK_LINE . 'WHERE (p.active = 1)' . self::BREAK_LINE . ') p' . self::BREAK_LINE . 'WHERE (p.visibility in ("both", "search"))',
             ],
         ];
     }
