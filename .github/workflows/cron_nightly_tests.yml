@@ -57,6 +57,7 @@ jobs:
       DB_PREFIX: 'tst_'
       DB_USER: 'root'
       DB_PASSWD: 'prestashop'
+      ADMIN_PASSWD: 'Correct Horse Battery Staple'
 
     steps:
       - uses: actions/checkout@v2
