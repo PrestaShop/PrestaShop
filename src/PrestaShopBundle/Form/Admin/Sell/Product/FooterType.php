@@ -34,7 +34,6 @@ use PrestaShopBundle\Form\Admin\Type\IconButtonType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -112,7 +111,15 @@ class FooterType extends TranslatorAwareType
                 'icon' => 'content_copy',
                 'attr' => [
                     'class' => 'btn-outline-secondary duplicate-product-button',
-                    'href' => $duplicateUrl,
+                    'data-modal-title' => $this->trans('Duplicate this product.', 'Admin.Catalog.Help'),
+                    'data-modal-message' => $this->trans('Are you sure you want to duplicate this item?', 'Admin.Notifications.Warning'),
+                    'data-modal-apply' => $this->trans('Duplicate', 'Admin.Actions'),
+                    'data-modal-cancel' => $this->trans('Cancel', 'Admin.Actions'),
+                    'data-confirm-button-class' => 'btn-primary',
+                    'data-button-url' => $duplicateUrl,
+                    'data-toggle' => 'pstooltip',
+                    'data-placement' => 'left',
+                    'title' => $this->trans('Duplicate this product.', 'Admin.Catalog.Help'),
                 ],
             ])
             ->add('delete', IconButtonType::class, [
@@ -124,7 +131,8 @@ class FooterType extends TranslatorAwareType
                     'data-modal-message' => $this->trans('Are you sure you want to delete this item?', 'Admin.Notifications.Warning'),
                     'data-modal-apply' => $this->trans('Delete', 'Admin.Actions'),
                     'data-modal-cancel' => $this->trans('Cancel', 'Admin.Actions'),
-                    'data-remove-url' => $deleteUrl,
+                    'data-confirm-button-class' => 'btn-danger',
+                    'data-button-url' => $deleteUrl,
                     'data-toggle' => 'pstooltip',
                     'data-placement' => 'left',
                     'title' => $this->trans('Permanently delete this product.', 'Admin.Catalog.Help'),
