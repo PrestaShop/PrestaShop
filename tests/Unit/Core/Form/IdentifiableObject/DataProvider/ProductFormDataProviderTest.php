@@ -645,7 +645,7 @@ class ProductFormDataProviderTest extends TestCase
                 ),
             ],
         ];
-        $expectedOutputData['footer']['active'] = false;
+        $expectedOutputData['header']['active'] = false;
         $expectedOutputData['options']['visibility']['visibility'] = ProductVisibility::VISIBLE_IN_CATALOG;
         $expectedOutputData['options']['visibility']['available_for_order'] = false;
         $expectedOutputData['options']['visibility']['online_only'] = true;
@@ -1393,6 +1393,7 @@ class ProductFormDataProviderTest extends TestCase
                 'initial_type' => ProductType::TYPE_STANDARD,
                 'name' => [],
                 'cover_thumbnail' => self::COVER_URL,
+                'active' => true,
             ],
             'description' => [
                 'description' => [],
@@ -1500,9 +1501,6 @@ class ProductFormDataProviderTest extends TestCase
                     'supplier_ids' => [],
                 ],
                 'product_suppliers' => [],
-            ],
-            'footer' => [
-                'active' => true,
             ],
         ];
     }
