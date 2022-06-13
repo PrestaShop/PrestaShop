@@ -1317,7 +1317,6 @@ services:
     public: true
     arguments:
       - '@form.type.sell.product.event_listener.product_type_listener'
-      - '@prestashop.adapter.product.repository.product_repository'
     tags:
       - { name: form.type }
 
