@@ -22,11 +22,10 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-{#@todo: move whole file out to dedicated dir?#}
 {% block content %}
   {% block products_light_listing %}
-    <div class="quicknav-container">
+    <div class="product-light-list-container">
       {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {'grid': productLightGrid}) }}
-    </div>
+      </div>
   {% endblock %}
 {% endblock %}
