@@ -27,7 +27,6 @@ import BigNumber from 'bignumber.js';
 import {EventEmitter} from 'events';
 import FormObjectMapper, {FormUpdateEvent} from '@components/form/form-object-mapper';
 import ProductFormMapping from '@pages/product/edit/product-form-mapping';
-import ProductEventMap from '@pages/product/product-event-map';
 import {NumberFormatter} from '@app/cldr';
 
 export default class ProductFormModel {
@@ -46,12 +45,6 @@ export default class ProductFormModel {
     this.mapper = new FormObjectMapper(
       $form,
       ProductFormMapping,
-      eventEmitter,
-      {
-        modelUpdated: ProductEventMap.productModelUpdated,
-        updateModel: ProductEventMap.updatedProductModel,
-        modelFieldUpdated: ProductEventMap.updatedProductField,
-      },
     );
 
     // For now we get precision only in the component, but maybe it would deserve a more global configuration
@@ -158,6 +151,7 @@ export default class ProductFormModel {
   private updateProductPrices(event: FormUpdateEvent): void {
     // We don't allow invalid value which turn out to NaN values so we automatically replace them by 0
     if (new BigNumber(event.value).isNaN()) {
+      event.stopPropagation();
       this.mapper.set(event.modelKey, new BigNumber(0).toFixed(this.precision));
       return;
     }

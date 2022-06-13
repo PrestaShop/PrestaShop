@@ -25,7 +25,6 @@
 
 import ObjectFormMapper, {FormUpdateEvent} from '@components/form/form-object-mapper';
 import CombinationFormMapping from '@pages/product/combination/form/combination-form-mapping';
-import CombinationEventMap from '@pages/product/combination/form/combination-event-map';
 import {EventEmitter} from 'events';
 import BigNumber from '@node_modules/bignumber.js';
 import {NumberFormatter} from '@app/cldr';
@@ -45,12 +44,6 @@ export default class CombinationFormModel {
     this.mapper = new ObjectFormMapper(
       $form,
       CombinationFormMapping,
-      eventEmitter,
-      {
-        modelUpdated: CombinationEventMap.combinationModelUpdated,
-        modelFieldUpdated: CombinationEventMap.combinationFieldUpdated,
-        updateModel: CombinationEventMap.updateCombinationModel,
-      },
     );
 
     // For now we get precision only in the component, but maybe it would deserve a more global configuration
@@ -94,6 +87,7 @@ export default class CombinationFormModel {
   private updateCombinationPrices(event: FormUpdateEvent): void {
     // We don't allow invalid value which turn out to NaN values so we automatically replace them by 0
     if (new BigNumber(event.value).isNaN()) {
+      event.stopPropagation();
       this.mapper.set(event.modelKey, new BigNumber(0).toFixed(this.precision));
       return;
     }
