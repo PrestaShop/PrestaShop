@@ -111,7 +111,6 @@ module.exports = {
     product_edit: './js/pages/product/edit',
     product_create: './js/pages/product/create',
     product_index: './js/pages/product/index',
-    product_light_list: './js/pages/product/light-list',
     product_page: './js/product-page/index',
     product_preferences: './js/pages/product-preferences',
     profiles: './js/pages/profiles',
