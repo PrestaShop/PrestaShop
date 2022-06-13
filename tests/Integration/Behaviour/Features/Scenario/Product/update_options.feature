@@ -255,3 +255,49 @@ Feature: Update product options from Back Office (BO)
     When I disable product "product1"
     Then product "product1" should be disabled
     And product "product1" should not be indexed
+
+  Scenario: Price should not be shown when product is not available for ordering
+    Given product "product1" should have following options:
+      | product option      | value        |
+      | visibility          | both         |
+      | available_for_order | false        |
+      | online_only         | true         |
+      | show_price          | false        |
+      | condition           | used         |
+      | show_condition      | true         |
+      | manufacturer        | studioDesign |
+    When I update product "product1" options with following values:
+      | show_price | true |
+    Then product "product1" should have following options:
+      | product option      | value        |
+      | visibility          | both         |
+      | available_for_order | false        |
+      | online_only         | true         |
+      | show_price          | false        |
+      | condition           | used         |
+      | show_condition      | true         |
+      | manufacturer        | studioDesign |
+    When I update product "product1" options with following values:
+      | available_for_order | true |
+      | show_price          | true |
+    Then product "product1" should have following options:
+      | product option      | value        |
+      | visibility          | both         |
+      | available_for_order | true         |
+      | online_only         | true         |
+      | show_price          | true         |
+      | condition           | used         |
+      | show_condition      | true         |
+      | manufacturer        | studioDesign |
+    When I update product "product1" options with following values:
+      | available_for_order | false |
+      | show_price          | true  |
+    Then product "product1" should have following options:
+      | product option      | value        |
+      | visibility          | both         |
+      | available_for_order | false        |
+      | online_only         | true         |
+      | show_price          | false        |
+      | condition           | used         |
+      | show_condition      | true         |
+      | manufacturer        | studioDesign |
