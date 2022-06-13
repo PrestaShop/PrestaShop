@@ -119,9 +119,6 @@ class ProductFormDataProvider implements FormDataProviderInterface
             'seo' => $this->extractSEOData($productForEditing),
             'shipping' => $this->extractShippingData($productForEditing),
             'options' => $this->extractOptionsData($productForEditing),
-            'footer' => [
-                'active' => $productForEditing->isActive(),
-            ],
         ];
 
         if ($productForEditing->getType() === ProductType::TYPE_COMBINATIONS) {
@@ -244,6 +241,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
             'initial_type' => $productForEditing->getType(),
             'name' => $productForEditing->getBasicInformation()->getLocalizedNames(),
             'cover_thumbnail' => $productForEditing->getCoverThumbnailUrl(),
+            'active' => $productForEditing->isActive(),
         ];
     }
 
