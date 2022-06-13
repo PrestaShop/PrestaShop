@@ -91,13 +91,6 @@ class HeaderType extends TranslatorAwareType
                 ],
                 'modify_all_shops' => true,
             ])
-            ->add('active', SwitchType::class, [
-                'label' => false,
-                'choices' => [
-                    $this->trans('Offline', 'Admin.Global') => false,
-                    $this->trans('Online', 'Admin.Global') => true,
-                ],
-            ])
             ->add('type', ProductTypeType::class, [
                 'attr' => [
                     'data-switch-modal-title' => $this->trans('Change the product type', 'Admin.Catalog.Notification'),
@@ -113,6 +106,13 @@ class HeaderType extends TranslatorAwareType
                     'data-stock-enabled' => $this->stockManagementEnabled,
                     'data-ecotax-enabled' => $this->isEcotaxEnabled,
                     'class' => 'header-product-type-selector',
+                ],
+            ])
+            ->add('active', SwitchType::class, [
+                'label' => false,
+                'choices' => [
+                    $this->trans('Offline', 'Admin.Global') => false,
+                    $this->trans('Online', 'Admin.Global') => true,
                 ],
             ])
             ->add('initial_type', HiddenType::class)

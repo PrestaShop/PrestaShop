@@ -143,6 +143,27 @@ $product-page-padding-bottom: 80px !default;
         margin-bottom: 0;
       }
 
+      #product_header {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.5rem 1rem;
+
+        .header-name {
+          flex-basis: 100%;
+        }
+
+        .ps-switch {
+          /* This is a temporary fix, ps-switch component behaves poorly in a flex container this should be handled correctly in prestakit */
+          min-width: 7rem;
+          margin-top: 0;
+        }
+
+        .form-group {
+          margin-bottom: 0;
+        }
+      }
+
       .product-type-preview {
         color: $medium-gray;
         cursor: pointer;
