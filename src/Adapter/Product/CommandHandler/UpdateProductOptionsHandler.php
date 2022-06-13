@@ -107,15 +107,19 @@ final class UpdateProductOptionsHandler implements UpdateProductOptionsHandlerIn
             $product->available_for_order = $command->isAvailableForOrder();
             $updatableProperties[] = 'available_for_order';
         }
+        $availableForOrder = $product->available_for_order;
+
+        if (null !== $command->showPrice() && $availableForOrder) {
+            $product->show_price = $command->showPrice();
+            $updatableProperties[] = 'show_price';
+        } elseif (!$availableForOrder && $product->show_price) {
+            $product->show_price = false;
+            $updatableProperties[] = 'show_price';
+        }
 
         if (null !== $command->isOnlineOnly()) {
             $product->online_only = $command->isOnlineOnly();
             $updatableProperties[] = 'online_only';
-        }
-
-        if (null !== $command->showPrice()) {
-            $product->show_price = $command->showPrice();
-            $updatableProperties[] = 'show_price';
         }
 
         if (null !== $command->getCondition()) {
