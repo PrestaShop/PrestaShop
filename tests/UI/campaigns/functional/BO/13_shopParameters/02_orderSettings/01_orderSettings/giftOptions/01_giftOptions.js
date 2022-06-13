@@ -34,8 +34,12 @@ let browserContext;
 let page;
 
 /*
-Update gift options
-Go to FO, login by default customer and check gift in every option
+Scenario:
+- Update gift options
+- Go to FO, login by default customer and check gift in every option
+- Go to BO and check gift message
+Post-condition:
+- Disable 'Offer gift wrapping'
  */
 describe('BO - Shop Parameters - Order Settings : Update gift options ', async () => {
   // before and after functions
@@ -115,7 +119,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
     },
   ];
 
-  tests.forEach((test) => {
+  tests.forEach((test, index) => {
     describe(`Set gift option with status: '${test.args.wantedStatus}', price: '${test.args.price}', `
       + `tax: '${test.args.tax}', recyclable package: '${test.args.isRecyclablePackage}'`, async () => {
       it(
@@ -283,15 +287,16 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           ).to.equal(test.args.isRecyclablePackage);
         });
 
-      it('should choose payment method and confirm the order', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
+      if (index === 4) {
+        it('should choose payment method and confirm the order', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
 
-        await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.checkPayment.moduleName);
+          await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.checkPayment.moduleName);
 
-        const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-        await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
-      });
-
+          const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
+          await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+        });
+      }
       it('should sign out from FO', async function () {
         await testContext.addContextItem(
           this,
@@ -321,48 +326,48 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
         await expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
       });
     });
+  });
 
-    describe('Check the gift message from \'BO > Orders > view order page\'', async () => {
-      it('should go to \'Orders > Orders\' page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage1', baseContext);
+  describe('Check the gift message from \'BO > Orders > view order page\'', async () => {
+    it('should go to \'Orders > Orders\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage1', baseContext);
 
-        await dashboardPage.goToSubMenu(page, dashboardPage.ordersParentLink, dashboardPage.ordersLink);
+      await dashboardPage.goToSubMenu(page, dashboardPage.ordersParentLink, dashboardPage.ordersLink);
 
-        await ordersPage.closeSfToolBar(page);
+      await ordersPage.closeSfToolBar(page);
 
-        const pageTitle = await ordersPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(ordersPage.pageTitle);
-      });
+      const pageTitle = await ordersPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(ordersPage.pageTitle);
+    });
 
-      it('should reset all filters', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'resetOrderTableFilters1', baseContext);
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetOrderTableFilters1', baseContext);
 
-        const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
-        await expect(numberOfOrders).to.be.above(0);
-      });
+      const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfOrders).to.be.above(0);
+    });
 
-      it('should view the first order in the list', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'orderPageTabListBlock1', baseContext);
+    it('should view the first order in the list', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'orderPageTabListBlock1', baseContext);
 
-        await ordersPage.goToOrder(page, 1);
+      await ordersPage.goToOrder(page, 1);
 
-        const pageTitle = await orderPageTabListBlock.getPageTitle(page);
-        await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
-      });
+      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+      await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+    });
 
-      it('should click on \'Carriers\' tab', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'displayCarriersTab', baseContext);
+    it('should click on \'Carriers\' tab', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'displayCarriersTab', baseContext);
 
-        const isTabOpened = await orderPageTabListBlock.goToCarriersTab(page);
-        await expect(isTabOpened).to.be.true;
-      });
+      const isTabOpened = await orderPageTabListBlock.goToCarriersTab(page);
+      await expect(isTabOpened).to.be.true;
+    });
 
-      it('should check the gift message', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'checkGiftMessage', baseContext);
+    it('should check the gift message', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkGiftMessage', baseContext);
 
-        const giftMessageText = await orderPageTabListBlock.getGiftMessage(page);
-        await expect(giftMessageText).to.be.equal('This is your gift');
-      });
+      const giftMessageText = await orderPageTabListBlock.getGiftMessage(page);
+      await expect(giftMessageText).to.be.equal('This is your gift');
     });
   });
 
