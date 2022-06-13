@@ -39,7 +39,6 @@ final class ProductLightGridFilters extends Filters
         $filterId = ''
     ) {
         parent::__construct($filters, $filterId);
-        $this->needsToBePersisted = false;
     }
 
     /**

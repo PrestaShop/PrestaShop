@@ -170,7 +170,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function lightListAction(ProductLightGridFilters $filters, Request $request): Response
+    public function lightListAction(ProductFilters $filters, Request $request): Response
     {
         $gridFactory = $this->get('prestashop.core.grid.factory.product_light');
         $grid = $gridFactory->getGrid($filters);

@@ -43,12 +43,8 @@ services:
     parent: 'prestashop.core.grid.abstract_query_builder'
     arguments:
       - '@prestashop.core.query.doctrine_search_criteria_applicator'
-      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
-      - "@=service('prestashop.adapter.legacy.context').getContext().shop.id"
-      - "@=service('prestashop.adapter.legacy.context').getContext().shop.id_shop_group"
-      - "@=service('prestashop.adapter.legacy.context').getContext().shop.getGroup().share_stock"
-      - '@prestashop.core.grid.query.filter.doctrine_filter_applicator'
       - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.core.grid.query_builder.product'
     public: true
 
   prestashop.core.grid.query_builder.meta:
