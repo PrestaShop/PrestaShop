@@ -12,6 +12,8 @@ const loginCommon = require('@commonTests/BO/loginBO');
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const orderSettingsPage = require('@pages/BO/shopParameters/orderSettings');
+const ordersPage = require('@pages/BO/orders');
+const orderPageTabListBlock = require('@pages/BO/orders/view/tabListBlock');
 
 // Import FO pages
 const productPage = require('@pages/FO/product');
@@ -19,10 +21,12 @@ const homePage = require('@pages/FO/home');
 const cartPage = require('@pages/FO/cart');
 const checkoutPage = require('@pages/FO/checkout');
 const foLoginPage = require('@pages/FO/login');
+const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 
 // Import data
 const {DefaultCustomer} = require('@data/demo/customer');
 const {DefaultFrTax} = require('@data/demo/tax');
+const {PaymentMethods} = require('@data/demo/paymentMethods');
 
 const baseContext = 'functional_BO_shopParameters_orderSettings_giftOptions';
 
@@ -107,17 +111,6 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           price: 0,
           tax: 'None',
           isRecyclablePackage: true,
-        },
-    },
-    {
-      args:
-        {
-          testIdentifier: 'GiftDisabled',
-          action: 'disable',
-          wantedStatus: false,
-          price: 0,
-          tax: 'None',
-          isRecyclablePackage: false,
         },
     },
   ];
@@ -232,6 +225,26 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
         ).to.equal(test.args.wantedStatus);
       });
 
+      if (test.args.testIdentifier === 'GiftEnabledNoPriceNoTax') {
+        it('should check the gift checkbox and check that the gift message textarea is visible', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', 'checkGiftTextarea', baseContext);
+
+          await checkoutPage.setGiftCheckBox(page);
+
+          const isVisible = await checkoutPage.isGiftMessageTextareaVisible(page);
+          await expect(isVisible, 'Gift message textarea is not visible!').to.be.true;
+        });
+
+        it('should set a gift message and continue to payment', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', 'setGiftMessage', baseContext);
+
+          await checkoutPage.setGiftMessage(page, 'This is your gift');
+
+          const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
+          await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
+        });
+      }
+
       if (test.args.wantedStatus) {
         it('should check gift price and tax', async function () {
           await testContext.addContextItem(
@@ -270,6 +283,15 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           ).to.equal(test.args.isRecyclablePackage);
         });
 
+      it('should choose payment method and confirm the order', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
+
+        await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.checkPayment.moduleName);
+
+        const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
+        await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
+      });
+
       it('should sign out from FO', async function () {
         await testContext.addContextItem(
           this,
@@ -298,6 +320,67 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
         const pageTitle = await orderSettingsPage.getPageTitle(page);
         await expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
       });
+    });
+
+    describe('Check the gift message from \'BO > Orders > view order page\'', async () => {
+      it('should go to \'Orders > Orders\' page', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage1', baseContext);
+
+        await dashboardPage.goToSubMenu(page, dashboardPage.ordersParentLink, dashboardPage.ordersLink);
+
+        await ordersPage.closeSfToolBar(page);
+
+        const pageTitle = await ordersPage.getPageTitle(page);
+        await expect(pageTitle).to.contains(ordersPage.pageTitle);
+      });
+
+      it('should reset all filters', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'resetOrderTableFilters1', baseContext);
+
+        const numberOfOrders = await ordersPage.resetAndGetNumberOfLines(page);
+        await expect(numberOfOrders).to.be.above(0);
+      });
+
+      it('should view the first order in the list', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'orderPageTabListBlock1', baseContext);
+
+        await ordersPage.goToOrder(page, 1);
+
+        const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+        await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
+      });
+
+      it('should click on \'Carriers\' tab', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'displayCarriersTab', baseContext);
+
+        const isTabOpened = await orderPageTabListBlock.goToCarriersTab(page);
+        await expect(isTabOpened).to.be.true;
+      });
+
+      it('should check the gift message', async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'checkGiftMessage', baseContext);
+
+        const giftMessageText = await orderPageTabListBlock.getGiftMessage(page);
+        await expect(giftMessageText).to.be.equal('This is your gift');
+      });
+    });
+  });
+
+  describe('POST-TEST: Disable \'Offer gift wrapping\'', async () => {
+    it('should go to \'Shop Parameters > Order Settings\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToOrderSettingsPage2', baseContext);
+
+      await dashboardPage.goToSubMenu(page, dashboardPage.shopParametersParentLink, dashboardPage.orderSettingsLink);
+
+      const pageTitle = await orderSettingsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(orderSettingsPage.pageTitle);
+    });
+
+    it('should disable \'Offer gift wrapping\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'disableGiftWrapping', baseContext);
+
+      const result = await orderSettingsPage.setGiftOptions(page, false, 0, 'None', false);
+      await expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
     });
   });
 });
