@@ -104,6 +104,7 @@ module.exports = {
     order_view: './js/pages/order/view',
     orders: './scss/pages/orders/orders.scss',
     payment_preferences: './js/pages/payment-preferences',
+    performance_preferences: './js/pages/performance-preferences',
     permission: './js/pages/permission',
     permissions: './scss/pages/permissions/permissions.scss',
     product: './scss/pages/product/product_page.scss',
