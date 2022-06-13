@@ -1,6 +1,5 @@
 imports:
     - { resource: ../common.yml }
-    - { resource: ../../../src/PrestaShopBundle/Resources/config/services/adapter/news.yml }
 
 services:
     filesystem:
