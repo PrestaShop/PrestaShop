@@ -43,10 +43,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductPosit
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\DuplicateFeatureValueAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidAssociatedFeatureException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetLightProductList;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductIsEnabled;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForAssociation;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\LightProductList;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
@@ -56,11 +54,9 @@ use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductFilters;
-use PrestaShop\PrestaShop\Core\Search\Filters\ProductLightGridFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Entity\ProductDownload;
 use PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoryFilterType;
-use PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationListType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Security\Voter\PageVoter;
@@ -125,43 +121,6 @@ class ProductController extends FrameworkBundleAdminController
             'enableSidebar' => true,
             'layoutHeaderToolbarBtn' => $this->getProductToolbarButtons(),
             'help_link' => $this->generateSidebarLink('AdminProducts'),
-        ]);
-    }
-
-    /**
-     * Shows products listing.
-     *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function getLightListAction(Request $request): JsonResponse
-    {
-        /** @var LightProductList $lightProductList */
-        $lightProductList = $this->getQueryBus()->handle(new GetLightProductList(
-            $this->getContextLangId(),
-            $request->query->getInt('limit', 10),
-            $request->query->getInt('offset'),
-            $request->query->get('orderBy', 'id_product'),
-            $request->query->get('orderWay', 'asc')
-         ));
-
-        $productsForResponse = [];
-        foreach ($lightProductList->getProducts() as $product) {
-            $productsForResponse[] = [
-                'id' => $product->getProductId(),
-                'name' => $product->getName(),
-                // @todo: round?
-                'price' => (string) $product->getPrice(),
-                'quantity' => $product->getQuantity(),
-            ];
-        }
-
-        return $this->json([
-            'products' => $productsForResponse,
-            'total' => $lightProductList->getTotalCount(),
         ]);
     }
 
