@@ -209,7 +209,7 @@ class CustomerFormatterCore implements FormFormatterInterface
                         'Shop.Forms.Labels'
                     )
                 )
-                ->addAvailableValue('placeholder', $this->translator->trans('DD/MM/JJJJ',[] , 'Shop.Theme.Customeraccount'))
+                ->addAvailableValue('placeholder', $this->translator->trans('DD/MM/JJJJ', [], 'Shop.Theme.Customeraccount'))
                 ->addAvailableValue(
                     'comment',
                     $this->translator->trans('(E.g.: %date_format%)', ['%date_format%' => Tools::formatDateStr('31 May 1970')], 'Shop.Forms.Help')
