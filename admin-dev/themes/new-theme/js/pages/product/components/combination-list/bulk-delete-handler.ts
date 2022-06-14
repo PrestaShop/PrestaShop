@@ -111,6 +111,7 @@ export default class BulkDeleteHandler {
       },
       closeCallback: () => this.eventEmitter.emit(CombinationEvents.bulkDeleteFinished),
       total: combinationIds.length,
+      //@todo: add translated texts
     });
     progressModal.show();
     let stopProcess = false;
@@ -151,47 +152,5 @@ export default class BulkDeleteHandler {
     }
 
     progressModal.completeProgress();
-
-    // const progressModal = this.showProgressModal();
-    // const progressModalElement = document.getElementById(CombinationMap.bulkProgressModalId);
-
-    // let progress = 1;
-    //
-    // //@todo: is there better loop option to avoid disabling eslint?
-    // // eslint-disable-next-line no-restricted-syntax
-    // for (const combinationId of combinationIds) {
-    //   try {
-    //     // eslint-disable-next-line no-await-in-loop
-    //     await this.combinationsService.deleteCombination(combinationId);
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    //
-    //   //@todo: also related with temporary progress modal. Needs to be fixed according to new progress modal once its merged in #26004.
-    //   const progressContent = progressModalElement?.querySelector<HTMLParagraphElement>('.progress-increment');
-    //
-    //   if (progressContent) {
-    //     progressContent.innerHTML = String(progress);
-    //   }
-    //   progress += 1;
-    // }
-    //
-    // progressModal.hide();
-  }
-
-  private async showProgressModal(): Promise<void> {
-
-    // //@todo: Replace with new progress modal when introduced in #26004.
-    // const modal = new ConfirmModal(
-    //   {
-    //     id: CombinationMap.bulkProgressModalId,
-    //     confirmMessage: '<div>Updating combinations: <p class="progress-increment"></p></div>',
-    //   },
-    //   () => null,
-    // );
-    //
-    // modal.show();
-    //
-    // return modal;
   }
 }
