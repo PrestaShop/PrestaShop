@@ -54,7 +54,7 @@ class ShopParamsMaintenance extends BOBasePage {
     await this.setValueOnTinymceInput(page, this.maintenanceTextInputEN, text);
     await page.click(this.customMaintenanceFrTab);
     await this.setValueOnTinymceInput(page, this.maintenanceTextInputFR, text);
-    await page.click(this.saveFormButton);
+    await this.clickAndWaitForNavigation(page, this.saveFormButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
@@ -66,7 +66,7 @@ class ShopParamsMaintenance extends BOBasePage {
    */
   async addMyIpAddress(page) {
     await page.click(this.addMyIPAddressButton);
-    await page.click(this.saveFormButton);
+    await this.clickAndWaitForNavigation(page, this.saveFormButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
   }
