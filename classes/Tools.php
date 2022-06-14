@@ -949,6 +949,14 @@ class ToolsCore
      */
     public static function getDateFormat()
     {
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 8.1.0',
+                __METHOD__
+            ),
+            E_USER_DEPRECATED
+        );
+
         $format = Context::getContext()->language->date_format_lite;
         $search = ['d', 'm', 'Y'];
         $replace = ['DD', 'MM', 'YYYY'];
