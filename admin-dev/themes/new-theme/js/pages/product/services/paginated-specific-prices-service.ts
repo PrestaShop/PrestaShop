@@ -24,26 +24,31 @@
  */
 
 import Router from '@components/router';
+import PaginationServiceType from '@PSTypes/services';
 
-const router = new Router();
 const {$} = window;
 
-export const getSpecificPrices = async (productId: number): Promise<Record<string, number | SpecificPriceForListing[]>> => $.get(
-  router.generate('admin_products_specific_prices_list', {
-    productId,
-    limit: 3,
-    offset: 0,
-  }),
-);
+export default class PaginatedSpecificPricesService implements PaginationServiceType {
+  productId: number;
 
-export const deleteSpecificPrice = async (specificPriceId: string): Promise<JQuery.jqXHR> => $.ajax({
-  url: router.generate('admin_products_specific_prices_delete', {
-    specificPriceId,
-  }),
-  type: 'DELETE',
-});
+  router: Router;
 
-export default {
-  getSpecificPrices,
-  deleteSpecificPrice,
-};
+  offset: number;
+
+  limit: number;
+
+  constructor(productId: number) {
+    this.productId = productId;
+    this.router = new Router();
+    this.offset = 0;
+    this.limit = 0;
+  }
+
+  fetch(offset: number, limit: number): JQuery.jqXHR<any> {
+    return $.get(this.router.generate('admin_products_specific_prices_list', {
+      productId: this.productId,
+      limit,
+      offset,
+    }));
+  }
+}

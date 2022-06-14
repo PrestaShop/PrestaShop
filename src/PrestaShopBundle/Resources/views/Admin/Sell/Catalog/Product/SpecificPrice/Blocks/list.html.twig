@@ -45,6 +45,13 @@
     {# template rows dynamically generated using javascript #}
     </tbody>
   </table>
+  <div class="row justify-content-center" id="specific-prices-pagination">
+    {#@todo: hardcoded limit and choices#}
+    {{ include('@PrestaShop/Admin/Common/javascript_pagination.html.twig', {
+      'limit': 3,
+      'limitChoices': [3, 5],
+    }) }}
+  </div>
   <script type="text/html" id="specific-price-tr-template">
     <tr>
       <td class="specific-price-id"></td>

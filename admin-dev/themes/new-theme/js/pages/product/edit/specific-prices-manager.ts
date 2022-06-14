@@ -31,6 +31,8 @@ import SpecificPriceList from '@pages/product/components/specific-price/specific
 import Router from '@components/router';
 import FormFieldDisabler from '@components/form/form-field-disabler';
 import {isUndefined} from '@PSTypes/typeguard';
+import PaginatedSpecificPricesService from '@pages/product/services/paginated-specific-prices-service';
+import DynamicPaginator from '@components/pagination/dynamic-paginator';
 
 import ClickEvent = JQuery.ClickEvent;
 
@@ -48,6 +50,10 @@ export default class SpecificPricesManager {
 
   router: Router;
 
+  paginatedService: PaginatedSpecificPricesService;
+
+  paginator: DynamicPaginator;
+
   constructor(
     productId: number,
   ) {
@@ -55,15 +61,23 @@ export default class SpecificPricesManager {
     this.productId = productId;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.listContainer = document.querySelector<HTMLElement>(SpecificPriceMap.listContainer)!;
+    this.paginatedService = new PaginatedSpecificPricesService(productId);
 
     this.initComponents();
     this.initListeners();
 
-    this.specificPriceList.renderList();
+    this.paginator = new DynamicPaginator(
+      '#specific-prices-pagination',
+      this.paginatedService,
+      this.specificPriceList,
+      1,
+    );
   }
 
   private initListeners(): void {
-    this.eventEmitter.on(ProductEventMap.specificPrice.listUpdated, () => this.specificPriceList.renderList());
+    this.eventEmitter.on(ProductEventMap.specificPrice.listUpdated, () => {
+      this.paginator.paginate(1);
+    });
   }
 
   private initComponents() {

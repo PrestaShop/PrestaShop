@@ -22,16 +22,17 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import {getSpecificPrices, deleteSpecificPrice} from '@pages/product/services/specific-price-service';
+import {deleteSpecificPrice} from '@pages/product/services/specific-price-service';
 import {EventEmitter} from 'events';
 import ProductMap from '@pages/product/product-map';
 import ConfirmModal from '@components/modal/confirm-modal';
 import ProductEventMap from '@pages/product/product-event-map';
 import {isUndefined} from '@PSTypes/typeguard';
+import RendererType from '@PSTypes/renderers';
 
 const SpecificPriceMap = ProductMap.specificPrice;
 
-export default class SpecificPriceList {
+export default class SpecificPriceList implements RendererType {
   eventEmitter: EventEmitter;
 
   productId: number;
@@ -46,60 +47,62 @@ export default class SpecificPriceList {
     this.eventEmitter = window.prestashop.instance.eventEmitter;
   }
 
-  public renderList(): void {
+  public setLoading(toggle: boolean): void {
+    //@todo: not implemented
+  }
+
+  public render(data: Record<string, any>): void {
     const {listFields} = SpecificPriceMap;
     const tbody = this.listContainer.querySelector(`${SpecificPriceMap.listContainer} tbody`) as HTMLElement;
     const trTemplateContainer = this.listContainer.querySelector(SpecificPriceMap.listRowTemplate) as HTMLScriptElement;
     const trTemplate = trTemplateContainer.innerHTML as string;
     tbody.innerHTML = '';
 
-    getSpecificPrices(this.productId).then((response) => {
-      const specificPrices = response.specificPrices as Array<SpecificPriceForListing>;
-      this.toggleListVisibility(specificPrices.length > 0);
+    const specificPrices = data.specificPrices as Array<SpecificPriceForListing>;
+    this.toggleListVisibility(specificPrices.length > 0);
 
-      specificPrices.forEach((specificPrice: SpecificPriceForListing) => {
-        const temporaryContainer = document.createElement('tbody');
-        temporaryContainer.innerHTML = trTemplate.trim();
+    specificPrices.forEach((specificPrice: SpecificPriceForListing) => {
+      const temporaryContainer = document.createElement('tbody');
+      temporaryContainer.innerHTML = trTemplate.trim();
 
-        const trClone = temporaryContainer.firstChild as HTMLElement;
-        const idField = this.selectListField(trClone, listFields.specificPriceId);
-        const combinationField = this.selectListField(trClone, listFields.combination);
-        const currencyField = this.selectListField(trClone, listFields.currency);
-        const countryField = this.selectListField(trClone, listFields.country);
-        const groupField = this.selectListField(trClone, listFields.group);
-        const shopField = this.selectListField(trClone, listFields.shop);
-        const customerField = this.selectListField(trClone, listFields.customer);
-        const priceField = this.selectListField(trClone, listFields.price);
-        const impactField = this.selectListField(trClone, listFields.impact);
-        const periodField = this.selectListField(trClone, listFields.period);
-        const periodFromField = this.selectListField(trClone, listFields.from);
-        const periodToField = this.selectListField(trClone, listFields.to);
-        const fromQtyField = this.selectListField(trClone, listFields.fromQuantity);
-        const deleteBtn = this.selectListField(trClone, listFields.deleteBtn);
-        const editBtn = this.selectListField(trClone, listFields.editBtn);
-        idField.textContent = String(specificPrice.id);
-        combinationField.textContent = specificPrice.combination;
-        currencyField.textContent = specificPrice.currency;
-        countryField.textContent = specificPrice.country;
-        groupField.textContent = specificPrice.group;
-        shopField.textContent = specificPrice.shop;
-        customerField.textContent = specificPrice.customer;
-        priceField.textContent = specificPrice.price;
-        impactField.textContent = specificPrice.impact;
-        fromQtyField.textContent = specificPrice.fromQuantity;
-        deleteBtn.dataset.specificPriceId = String(specificPrice.id);
-        editBtn.dataset.specificPriceId = String(specificPrice.id);
+      const trClone = temporaryContainer.firstChild as HTMLElement;
+      const idField = this.selectListField(trClone, listFields.specificPriceId);
+      const combinationField = this.selectListField(trClone, listFields.combination);
+      const currencyField = this.selectListField(trClone, listFields.currency);
+      const countryField = this.selectListField(trClone, listFields.country);
+      const groupField = this.selectListField(trClone, listFields.group);
+      const shopField = this.selectListField(trClone, listFields.shop);
+      const customerField = this.selectListField(trClone, listFields.customer);
+      const priceField = this.selectListField(trClone, listFields.price);
+      const impactField = this.selectListField(trClone, listFields.impact);
+      const periodField = this.selectListField(trClone, listFields.period);
+      const periodFromField = this.selectListField(trClone, listFields.from);
+      const periodToField = this.selectListField(trClone, listFields.to);
+      const fromQtyField = this.selectListField(trClone, listFields.fromQuantity);
+      const deleteBtn = this.selectListField(trClone, listFields.deleteBtn);
+      const editBtn = this.selectListField(trClone, listFields.editBtn);
+      idField.textContent = String(specificPrice.id);
+      combinationField.textContent = specificPrice.combination;
+      currencyField.textContent = specificPrice.currency;
+      countryField.textContent = specificPrice.country;
+      groupField.textContent = specificPrice.group;
+      shopField.textContent = specificPrice.shop;
+      customerField.textContent = specificPrice.customer;
+      priceField.textContent = specificPrice.price;
+      impactField.textContent = specificPrice.impact;
+      fromQtyField.textContent = specificPrice.fromQuantity;
+      deleteBtn.dataset.specificPriceId = String(specificPrice.id);
+      editBtn.dataset.specificPriceId = String(specificPrice.id);
 
-        if (!specificPrice.period) {
-          periodField.textContent = String(periodField.dataset.unlimitedText);
-        } else {
-          periodFromField.textContent = specificPrice.period.from;
-          periodToField.textContent = specificPrice.period.to;
-        }
+      if (!specificPrice.period) {
+        periodField.textContent = String(periodField.dataset.unlimitedText);
+      } else {
+        periodFromField.textContent = specificPrice.period.from;
+        periodToField.textContent = specificPrice.period.to;
+      }
 
-        tbody.append(trClone);
-        this.addEventListenerForDeleteBtn(deleteBtn);
-      });
+      tbody.append(trClone);
+      this.addEventListenerForDeleteBtn(deleteBtn);
     });
   }
 
