@@ -33,8 +33,8 @@ use Db;
 use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Validate\CombinationValidator;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\BulkCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCombinationException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotBulkDeleteCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotDeleteCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
@@ -191,26 +191,27 @@ class CombinationRepository extends AbstractObjectModelRepository
 
     /**
      * @param CombinationId[] $combinationIds
+     *
+     * @throws BulkCombinationException
+     * @throws CoreException
      */
     public function bulkDelete(array $combinationIds): void
     {
-        $failedIds = [];
+        $bulkException = new BulkCombinationException('Errors occurred during bulk deletion of combinations');
+
         foreach ($combinationIds as $combinationId) {
             try {
                 $this->delete($combinationId);
             } catch (CannotDeleteCombinationException $e) {
-                $failedIds[] = $combinationId->getValue();
+                $bulkException->addException($combinationId, $e);
             }
         }
 
-        if (empty($failedIds)) {
+        if (empty($bulkException->getBulkExceptions())) {
             return;
         }
 
-        throw new CannotBulkDeleteCombinationException($failedIds, sprintf(
-            'Failed to delete following combinations: %s',
-            implode(', ', $failedIds)
-        ));
+        throw $bulkException;
     }
 
     /**

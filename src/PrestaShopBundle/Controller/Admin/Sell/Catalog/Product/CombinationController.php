@@ -37,6 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryResult\Attribu
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\BulkDeleteCombinationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\DeleteCombinationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\BulkCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
@@ -290,9 +291,6 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @todo: this has left unused after some changes, but it may be needed for bulk deletion by chunks
-     *        (remove this code if its still unused after issue #28491 is closed)
-     *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param int $productId
@@ -305,21 +303,47 @@ class CombinationController extends FrameworkBundleAdminController
         $combinationIds = $request->request->get('combinationIds');
         if (!$combinationIds) {
             return $this->json([
-                'error' => $this->getFallbackErrorMessage('', 0, 'Missing combinationIds in request body'),
+                'errors' => $this->getFallbackErrorMessage('', 0, 'Missing combinationIds in request body'),
             ], Response::HTTP_BAD_REQUEST);
         }
 
         try {
             $this->getCommandBus()->handle(new BulkDeleteCombinationCommand($productId, json_decode($combinationIds)));
         } catch (Exception $e) {
+            if ($e instanceof BulkCombinationException) {
+                return $this->jsonBulkErrors($e);
+            }
+
             return $this->json([
                 'error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        return $this->json([
-            'message' => $this->trans('Successful deletion', 'Admin.Notifications.Success'),
-        ]);
+        return $this->json(['success' => true]);
+    }
+
+    /**
+     * Format the bulk exception into an array of errors returned in a JsonResponse.
+     *
+     * @param BulkCombinationException $bulkCombinationException
+     *
+     * @return JsonResponse
+     */
+    private function jsonBulkErrors(BulkCombinationException $bulkCombinationException): JsonResponse
+    {
+        $errors = [];
+        foreach ($bulkCombinationException->getBulkExceptions() as $productId => $productException) {
+            $errors[] = $this->trans(
+                'Error for combination %combination_id%: %error_message%',
+                'Admin.Notification.Error',
+                [
+                    '%combination_id%' => $productId,
+                    '%error_message%' => $this->getErrorMessageForException($productException, $this->getErrorMessages($productException)),
+                ]
+            );
+        }
+
+        return $this->json(['errors' => $errors], Response::HTTP_BAD_REQUEST);
     }
 
     /**
