@@ -36,6 +36,10 @@ use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository;
 
+/**
+ * Decorates original grid data and returns modified prices for grid display as well as color option for stock column
+ * when it is out of stock.
+ */
 class ProductLightGridDataFactoryDecorator implements GridDataFactoryInterface
 {
     /**
