@@ -94,6 +94,10 @@ class ProductLightGridDataFactoryDecorator implements GridDataFactoryInterface
                 $products[$i]['price_tax_excluded'],
                 $currency->iso_code
             );
+
+            if ($products[$i]['quantity'] <= 0) {
+                $products[$i]['quantity_color'] = 'danger';
+            }
         }
 
         return $products;

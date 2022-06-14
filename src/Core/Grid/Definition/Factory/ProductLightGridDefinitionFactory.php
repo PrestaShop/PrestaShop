@@ -119,6 +119,7 @@ class ProductLightGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'route_param_field' => 'id_product',
                     'fragment' => 'tab-stock-tab',
                     'sortable' => false,
+                    'color_template_field' => 'quantity_color',
                 ])
             );
         }
