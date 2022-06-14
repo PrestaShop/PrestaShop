@@ -57,6 +57,12 @@ class ProductLightGridDataFactoryDecorator implements GridDataFactoryInterface
      */
     private $defaultCurrencyId;
 
+    /**
+     * @param GridDataFactoryInterface $productGridDataFactory
+     * @param Repository $localeRepository
+     * @param string $contextLocale
+     * @param int $defaultCurrencyId
+     */
     public function __construct(
         GridDataFactoryInterface $productGridDataFactory,
         Repository $localeRepository,
@@ -70,6 +76,11 @@ class ProductLightGridDataFactoryDecorator implements GridDataFactoryInterface
         $this->defaultCurrencyId = $defaultCurrencyId;
     }
 
+    /**
+     * @param SearchCriteriaInterface $searchCriteria
+     *
+     * @return GridData
+     */
     public function getData(SearchCriteriaInterface $searchCriteria)
     {
         $productsData = $this->productGridDataFactory->getData($searchCriteria);
