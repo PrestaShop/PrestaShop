@@ -24,9 +24,10 @@
  * #}
 <div id="specific-price-list-container" class="d-none">
   <div id="specific-prices-loading">
+    <div class="loading-label">{{ 'Loading specific prices'|trans({}, 'Admin.Catalog.Feature') }}</div>
     <div class="spinner spinner-primary"></div>
   </div>
-  <table class="table">
+  <table class="table" id="specific-prices-list-table">
     <thead class="thead-default">
     <tr>
       <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
@@ -49,7 +50,6 @@
     </tbody>
   </table>
   <div class="row justify-content-center" id="specific-prices-pagination">
-    {#@todo: hardcoded limit and choices#}
     {{ include('@PrestaShop/Admin/Common/javascript_pagination.html.twig', {
       'limit': 10,
       'limitChoices': [10, 20, 50, 100],

@@ -33,13 +33,15 @@ import RendererType from '@PSTypes/renderers';
 const SpecificPriceMap = ProductMap.specificPrice;
 
 export default class SpecificPriceListRenderer implements RendererType {
-  eventEmitter: EventEmitter;
+  private eventEmitter: EventEmitter;
 
-  productId: number;
+  private productId: number;
 
-  listContainer: HTMLElement
+  private listContainer: HTMLElement
 
-  $loadingSpinner: JQuery;
+  private $loadingSpinner: JQuery;
+
+  private $listTable: JQuery;
 
   constructor(
     productId: number,
@@ -48,10 +50,12 @@ export default class SpecificPriceListRenderer implements RendererType {
     this.listContainer = document.querySelector(SpecificPriceMap.listContainer) as HTMLElement;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.$loadingSpinner = $(ProductMap.specificPrice.loadingSpinner);
+    this.$listTable = $(ProductMap.specificPrice.listTable);
   }
 
   public setLoading(loading: boolean): void {
     this.$loadingSpinner.toggle(loading);
+    this.$listTable.toggle(!loading);
   }
 
   public render(data: Record<string, any>): void {

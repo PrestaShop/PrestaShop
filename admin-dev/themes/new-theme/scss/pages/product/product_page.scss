@@ -1456,6 +1456,18 @@ $product-page-padding-bottom: 80px !default;
   }
 }
 
+#specific-prices-loading {
+  .loading-label {
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .spinner {
+    display: block;
+    margin: 0 auto;
+  }
+}
+
 #modal-specific-price-form {
   .modal-dialog {
     max-width: 810px;
