@@ -2,4 +2,20 @@
   .grid table.grid-table tbody tr td {
     word-break: initial;
   }
+
+  .card-body {
+    padding: 0;
+  }
+
+  [data-column-id="name"],
+  .column-name {
+    width: 235px;
+    max-width: 235px;
+
+    a.text-nowrap {
+      width: 100%;
+      // stylelint-disable-next-line
+      white-space: normal !important;
+    }
+  }
 }

@@ -76,7 +76,6 @@ final class ProductLightQueryBuilder extends AbstractDoctrineQueryBuilder
             ->select('p.id_product')
             ->addSelect('ps.`price` AS `price_tax_excluded`')
             ->addSelect('pl.`name`')
-            ->addSelect('pl.`link_rewrite`')
         ;
 
         if ($this->configuration->getBoolean('PS_STOCK_MANAGEMENT')) {
