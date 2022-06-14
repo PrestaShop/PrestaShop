@@ -57,18 +57,16 @@ class ModuleRepositoryTest extends TestCase
         $translator->method('trans')->willReturnArgument(0);
 
         $hookManager = $this->createMock(HookManager::class);
-        $hookExecMethodMock = function () {
-            // cf. HookManager::exec() method signature
-            list(
-                $hook_name,
-                $hook_args,
-                $id_module,
-                $array_return,
-                $check_exceptions,
-                $use_push,
-                $id_shop
-                ) = func_get_args();
-
+        // cf. HookManager::exec() method signature
+        $hookExecMethodMock = function (
+            $hook_name,
+            $hook_args,
+            $id_module,
+            $array_return,
+            $check_exceptions,
+            $use_push,
+            $id_shop
+            ) {
             // This mock represents a module that :
             // - overrides `dummy_payment` module `fullDescription` attributes
             // - adds `testAttribute` attributes to `dummy_payment` module
@@ -100,9 +98,18 @@ class ModuleRepositoryTest extends TestCase
         );
     }
 
-    public function testGetAtLeastOneModuleFromUniverse(): void
+    public function testGetListReturnsWellEnrichedModule(): void
     {
-        $this->assertGreaterThan(0, count($this->moduleRepository->getList()));
+        $moduleList = iterator_to_array($this->moduleRepository->getList());
+        $filteredModules = array_filter($moduleList, function ($module, $key) {
+            return $module->get('name') == 'dummy_payment';
+        }, ARRAY_FILTER_USE_BOTH);
+
+        $this->assertEquals(1, count($filteredModules), 'Returned module list may contain at least "dummy_payment" module.');
+        $dummy_module = array_shift($filteredModules);
+
+        $this->assertEquals('overridden full description', $dummy_module->get('fullDescription'));
+        $this->assertEquals('added value', $dummy_module->get('testAttribute'));
     }
 
     public function testGetModuleWellEnrichedByModules(): void

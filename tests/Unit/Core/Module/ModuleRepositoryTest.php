@@ -28,16 +28,14 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Module;
 
+use Doctrine\Common\Cache\CacheProvider;
 use Module as LegacyModule;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\HookManager;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
-use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
-use Symfony\Component\Cache\Adapter\ArrayAdapter;
-use Symfony\Component\Cache\DoctrineProvider;
 
 class ModuleRepositoryTest extends TestCase
 {
@@ -56,89 +54,52 @@ class ModuleRepositoryTest extends TestCase
         'ps_banner',
     ];
 
+    /** @var ModuleRepository */
+    private $moduleRepository;
+
+    public function setUp(): void
+    {
+        $this->moduleRepository = $this->getMockBuilder(ModuleRepository::class)
+            ->setConstructorArgs([
+                $this->createMock(ModuleDataProvider::class),
+                $this->createMock(AdminModuleDataProvider::class),
+                $this->createMock(CacheProvider::class),
+                $this->createMock(HookManager::class),
+                dirname(__DIR__, 3) . '/Resources/modules',
+            ])
+            ->onlyMethods(['getModule'])
+            ->getMock()
+        ;
+        $this->moduleRepository->method('getModule')->willReturnCallback([$this, 'getModuleMock']);
+    }
+
     public function testGetList(): void
     {
-        $this->assertCount(10, $this->getModuleRepository()->getList());
+        $this->assertCount(10, $this->moduleRepository->getList());
     }
 
     public function testGetInstalledModules(): void
     {
-        $this->assertCount(count(self::INSTALLED_MODULES), $this->getModuleRepository()->getInstalledModules());
+        $this->assertCount(count(self::INSTALLED_MODULES), $this->moduleRepository->getInstalledModules());
     }
 
     public function testGetUpgradableModules(): void
     {
-        $this->assertCount(count(self::UPGRADABLE_MODULES), $this->getModuleRepository()->getUpgradableModules());
+        $this->assertCount(count(self::UPGRADABLE_MODULES), $this->moduleRepository->getUpgradableModules());
     }
 
     public function testGetMustBeConfiguredModules(): void
     {
-        $this->assertCount(count(self::CONFIGURABLE_MODULES), $this->getModuleRepository()->getMustBeConfiguredModules());
+        $this->assertCount(count(self::CONFIGURABLE_MODULES), $this->moduleRepository->getMustBeConfiguredModules());
     }
 
     public function testGetModulePath(): void
     {
-        $moduleRepository = $this->getModuleRepository();
-
         $this->assertEquals(
            dirname(__DIR__, 3) . '/Resources/modules/bankwire',
-           $moduleRepository->getModulePath('bankwire')
+            $this->moduleRepository->getModulePath('bankwire')
         );
-
-        $this->assertNull($moduleRepository->getModulePath('no-existing-module'));
-    }
-
-    private function getModuleRepository(): ModuleRepository
-    {
-        $moduleDataProvider = $this->createMock(ModuleDataProvider::class);
-        $adminModuleDataProvider = $this->createMock(AdminModuleDataProvider::class);
-        $cacheProvider = new DoctrineProvider(new ArrayAdapter());
-        $hookManager = $this->createMock(HookManager::class);
-        $modulePath = dirname(__DIR__, 3) . '/Resources/modules';
-
-        $moduleRepository = new ModuleRepository(
-            $moduleDataProvider,
-            $adminModuleDataProvider,
-            $cacheProvider,
-            $hookManager,
-            $modulePath
-        );
-
-        $reflection = new \ReflectionClass($moduleRepository);
-        $property = $reflection->getProperty('storedSaticCall');
-        $property->setAccessible(true);
-        $property->setValue($moduleRepository,
-            new class($this) {
-                private $testClass;
-
-                public function __construct($testClass)
-                {
-                    $this->testClass = $testClass;
-                }
-
-                public function getContextShopIdListCacheKey()
-                {
-                    return '1';
-                }
-
-                public function moduleCollectionCreateFrom(array $modules): ModuleCollection
-                {
-                    return ModuleCollection::createFrom($modules);
-                }
-
-                public function getModuleInstanceByName(string $moduleName)
-                {
-                    return $this->testClass->getModuleMock($moduleName);
-                }
-
-                public function newModule(array $attributes = [], array $disk = [], array $database = []): Module
-                {
-                    return $this->testClass->getModuleMock($attributes['name']);
-                }
-            }
-        );
-
-        return $moduleRepository;
+        $this->assertNull($this->moduleRepository->getModulePath('no-existing-module'));
     }
 
     public function getModuleMock(string $moduleName): Module
