@@ -39,6 +39,7 @@ import TaggableField from '@components/taggable-field';
 import TranslatableInput from '@components/translatable-input';
 import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
 import MetaPageNameOptionHandler from '@pages/meta/meta-page-name-option-handler';
+import TextWithRecommendedLengthCounter from '@components/form/text-with-recommended-length-counter';
 
 const {$} = window;
 
@@ -73,4 +74,6 @@ $(() => {
       'MultistoreConfigField',
     ],
   );
+
+  new TextWithRecommendedLengthCounter();
 });

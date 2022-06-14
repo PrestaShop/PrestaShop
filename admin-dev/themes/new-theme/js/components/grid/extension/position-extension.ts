@@ -25,6 +25,7 @@
 
 import {Grid} from '@PSTypes/grid';
 import GridMap from '@components/grid/grid-map';
+import {isUndefined} from '@PSTypes/typeguard';
 import 'tablednd/dist/jquery.tablednd.min';
 
 const {$} = window;
@@ -145,7 +146,7 @@ export default class PositionExtension {
         const position = $positionWrapper.data('position');
         const id = `row_${rowId}_${position}`;
         $positionWrapper.closest('tr').attr('id', id);
-        $positionWrapper.closest('td').addClass(GridMap.dragHandler);
+        $positionWrapper.closest('td').addClass(GridMap.dragHandlerClass);
         $positionWrapper.closest('tr').data('dragAndDropOffset', counter);
 
         counter += 1;
@@ -221,18 +222,35 @@ export default class PositionExtension {
   private computeMappingBetweenOldAndNewPositions(
     rowsData: Array<RowDatas>,
   ): Array<DNDPositions> {
-    const regex = /^row_(\d+)_(\d+)$/;
-    const mapping = Array(rowsData.length).map(Object);
+    const regex = /^row_(?<rowId>\d+)_(?<oldPosition>\d+)$/;
+    const mapping: Array<DNDPositions> = [];
 
+    // First loop is to create the mapping objects with old positions
     for (let i = 0; i < rowsData.length; i += 1) {
-      const regexResult = <RegExpPositions>regex.exec(rowsData[i].rowMarker);
+      const regexResult = regex.exec(rowsData[i].rowMarker);
 
-      if (regexResult?.rowId && regexResult?.oldPosition) {
-        mapping[i].rowId = regexResult.rowId;
-        mapping[i].oldPosition = parseInt(regexResult.oldPosition, 10);
+      if (regexResult
+        && !isUndefined(regexResult.groups)
+        && !isUndefined(regexResult.groups.rowId)
+        && !isUndefined(regexResult.groups.oldPosition)) {
+        const oldPosition: number = parseInt(regexResult?.groups?.oldPosition, 10);
+        mapping[i] = {
+          rowId: regexResult.groups.rowId,
+          oldPosition,
+          newPosition: oldPosition,
+        };
       }
-      // This row will have as a new position the old position of the current one
-      mapping[rowsData[i].offset].newPosition = mapping[i].oldPosition;
+
+      // Second loop, now that all positions are defined for all rows we can switch the position when needed
+      for (let j = 0; j < rowsData.length; j += 1) {
+        if (!isUndefined(rowsData[j])
+          && !isUndefined(rowsData[j].offset)
+          && !isUndefined(mapping[rowsData[j].offset])
+          && !isUndefined(mapping[j])) {
+          // This row will have as a new position the old position of the current one
+          mapping[rowsData[j].offset].newPosition = mapping[j].oldPosition;
+        }
+      }
     }
 
     return mapping;

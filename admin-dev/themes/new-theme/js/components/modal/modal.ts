@@ -33,12 +33,14 @@ export interface ModalContainerType {
   message: HTMLElement;
   header: HTMLElement;
   title?: HTMLElement;
-  closeIcon: HTMLButtonElement;
+  closeIcon?: HTMLButtonElement;
 }
-export interface ModalType {
-  modal: ModalContainerType;
+export interface ModalCoreType {
   show: () => void;
   hide: () => void;
+}
+export interface ModalType extends ModalCoreType {
+  modal: ModalContainerType;
   render: (content: string) => void;
 }
 export type CssProps = Record<string, string>;
@@ -74,7 +76,7 @@ export class ModalContainer implements ModalContainerType {
 
   title?: HTMLElement;
 
-  closeIcon!: HTMLButtonElement;
+  closeIcon?: HTMLButtonElement;
 
   body!: HTMLElement;
 
@@ -88,7 +90,7 @@ export class ModalContainer implements ModalContainerType {
     this.buildModalContainer(params);
   }
 
-  buildModalContainer(params: ModalParams): void {
+  protected buildModalContainer(params: ModalParams): void {
     // Main modal element
     this.container = document.createElement('div');
     this.container.classList.add('modal', 'fade');
@@ -205,8 +207,13 @@ export class Modal implements ModalType {
     if (!this.modal.title) {
       this.modal.title = document.createElement('h4');
       this.modal.title.classList.add('modal-title');
-      this.modal.header.insertBefore(this.modal.title, this.modal.closeIcon);
+      if (this.modal.closeIcon) {
+        this.modal.header.insertBefore(this.modal.title, this.modal.closeIcon);
+      } else {
+        this.modal.header.appendChild(this.modal.title);
+      }
     }
+
     this.modal.title.innerHTML = modalTitle;
   }
 

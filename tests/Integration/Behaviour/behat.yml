@@ -40,6 +40,15 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\CustomerFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
                 - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext
+        module:
+            paths:
+                - "%paths.base%/Features/Scenario/Module"
+            contexts:
+                - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ShopFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Configuration\CommonConfigurationFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\ModuleFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\ModuleFeatureContext
         category:
             paths:
                 - "%paths.base%/Features/Scenario/Category"
@@ -305,6 +314,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\UpdateCombinationPricesFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\UpdateCombinationStockFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\UpdateCombinationSuppliersFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\SetDefaultCombinationFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\CommonProductFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\DeleteProductFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\DuplicateProductFeatureContext
@@ -322,6 +332,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateDetailsFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateOptionsFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdatePackFeatureContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdatePositionFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdatePricesFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductFeatureValuesFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductSuppliersFeatureContext

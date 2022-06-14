@@ -58,7 +58,8 @@ export default class CombinationsListEditor {
   private readonly editionDisabledElements: string[] = [
     CombinationsMap.bulkActionsDropdownBtn,
     CombinationsMap.tableRow.isSelectedCombination,
-    CombinationsMap.bulkSelectAllInPage,
+    CombinationsMap.commonBulkAllSelector,
+    CombinationsMap.bulkCheckboxesDropdownButton,
     CombinationsMap.filtersSelectorButtons,
     CombinationsMap.generateCombinationsButton,
     CombinationsMap.list.rowActionButtons,
@@ -163,8 +164,13 @@ export default class CombinationsListEditor {
 
     this.editionMode = true;
     this.$paginatedList.addClass(CombinationsMap.list.editionModeClass);
+    this.disableElements();
+  }
 
-    // Disabled elements (bulk actions, filters, ...)
+  /**
+   * Disabled elements (bulk actions, filters, ...) that could mess with the pagination and the edition mode
+   */
+  private disableElements(): void {
     this.editionDisabledElements.forEach((disabledSelector: string) => {
       const $disabledElements = $(disabledSelector);
       $disabledElements.each((index: number, disabledElement: HTMLElement): void => {
@@ -245,12 +251,20 @@ export default class CombinationsListEditor {
     }
   }
 
+  /**
+   * The product page doesn't include the combination list into a form tag because it is rendered inside a form
+   * itself. So to get the data we create a dynamic form tag and include all the element from the list container
+   * inside it, this way it is as if they were actually in a form tag.
+   */
   private getFormData(): FormData {
-    const combinationListForm = document.querySelector<HTMLFormElement>(ProductMap.combinations.list.form);
-
-    if (!combinationListForm) {
-      return new FormData();
-    }
+    const combinationListForm = document.createElement('form');
+    this.$combinationsFormContainer.get().forEach((formElement: HTMLElement) => {
+      // We need to use appendChild and not innerHTML string content because the string content would lose the dynamic
+      // values from the DOM (especially input values) and would only rely on the initial value from the first rendered
+      // layout. We also need to clone each element before appending them or they would be removed from the DOM and the user
+      // would not see them anymore.
+      combinationListForm.appendChild(formElement.cloneNode(true));
+    });
 
     return new FormData(combinationListForm);
   }
@@ -264,5 +278,10 @@ export default class CombinationsListEditor {
       const $input = $(`[name="${inputName}"]`, this.$combinationsFormContainer);
       this.watchInputChange($input, this.savedInputValues[inputName]);
     });
+
+    // Trigger event so that external components can update the content (like checkboxes labels)
+    this.eventEmitter.emit(CombinationEvents.listRendered);
+    // Elements were re-rendered so they must be disabled again
+    this.disableElements();
   }
 }

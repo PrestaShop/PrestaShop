@@ -520,6 +520,10 @@ class EmployeeController extends FrameworkBundleAdminController
                 $e instanceof EmailAlreadyUsedException ? $e->getEmail() : ''
             ),
             EmployeeConstraintException::class => [
+                EmployeeConstraintException::INCORRECT_PASSWORD => $this->trans(
+                    'Your current password is invalid.',
+                    'Admin.Advparameters.Notification'
+                ),
                 EmployeeConstraintException::INVALID_EMAIL => $this->trans(
                     'The %s field is invalid.',
                     'Admin.Notifications.Error',
@@ -535,9 +539,9 @@ class EmployeeController extends FrameworkBundleAdminController
                     'Admin.Notifications.Error',
                     [sprintf('"%s"', $this->trans('Last name', 'Admin.Global'))]
                 ),
-                EmployeeConstraintException::INCORRECT_PASSWORD => $this->trans(
-                    'Your current password is invalid.',
-                    'Admin.Advparameters.Notification'
+                EmployeeConstraintException::INVALID_PASSWORD => $this->trans(
+                    'The password doesn\'t meet the password policy requirements.',
+                    'Admin.Notifications.Error'
                 ),
             ],
         ];

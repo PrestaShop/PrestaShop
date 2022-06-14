@@ -219,7 +219,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function editAction($sqlRequestId, Request $request)
+    public function editAction(int $sqlRequestId, Request $request)
     {
         $sqlRequestForm = $this->getSqlRequestFormBuilder()->getFormFor($sqlRequestId);
         $sqlRequestForm->handleRequest($request);
@@ -266,7 +266,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse
      */
-    public function deleteAction($sqlRequestId)
+    public function deleteAction(int $sqlRequestId)
     {
         try {
             $deleteSqlRequestCommand = new DeleteSqlRequestCommand(
@@ -300,7 +300,7 @@ class SqlManagerController extends FrameworkBundleAdminController
     public function deleteBulkAction(Request $request)
     {
         try {
-            $requestSqlIds = $request->request->get('sql_request_bulk');
+            $requestSqlIds = $this->getBulkSqlRequestFromRequest($request);
             $bulkDeleteSqlRequestCommand = new BulkDeleteSqlRequestCommand($requestSqlIds);
 
             $this->getCommandBus()->handle($bulkDeleteSqlRequestCommand);
@@ -330,7 +330,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function viewAction(Request $request, $sqlRequestId)
+    public function viewAction(Request $request, int $sqlRequestId)
     {
         try {
             $query = new GetSqlRequestExecutionResult($sqlRequestId);
@@ -364,7 +364,7 @@ class SqlManagerController extends FrameworkBundleAdminController
      *
      * @return RedirectResponse|BinaryFileResponse
      */
-    public function exportAction($sqlRequestId)
+    public function exportAction(int $sqlRequestId)
     {
         $requestSqlExporter = $this->get('prestashop.core.sql_manager.exporter.sql_request_exporter');
 
@@ -600,5 +600,23 @@ class SqlManagerController extends FrameworkBundleAdminController
         $databaseTablesList = $this->getQueryBus()->handle(new GetDatabaseTablesList());
 
         return $databaseTablesList->getTables();
+    }
+
+    /**
+     * Get SQL Request IDs from request for bulk actions.
+     *
+     * @param Request $request
+     *
+     * @return int[]
+     */
+    protected function getBulkSqlRequestFromRequest(Request $request): array
+    {
+        $sqlRequestIds = $request->request->get('sql_request_bulk');
+
+        if (!is_array($sqlRequestIds)) {
+            return [];
+        }
+
+        return array_map('intval', $sqlRequestIds);
     }
 }

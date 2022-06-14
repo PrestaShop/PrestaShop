@@ -58,7 +58,7 @@ export default class BulkEditionHandler {
     this.eventEmitter = eventEmitter;
     this.bulkChoicesSelector = bulkChoicesSelector;
     this.combinationsService = combinationsService;
-    this.tabContainer = document.querySelector<HTMLDivElement>(CombinationMap.externalCombinationTab)!;
+    this.tabContainer = document.querySelector<HTMLDivElement>(CombinationMap.combinationManager)!;
 
     this.init();
   }

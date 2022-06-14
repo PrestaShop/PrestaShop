@@ -141,8 +141,8 @@ class AdminControllerCore extends Controller
     /** @var bool If you want more fieldsets in the form */
     public $multiple_fieldsets = false;
 
-    /** @var array|false */
-    public $fields_value = false;
+    /** @var array */
+    public $fields_value = [];
 
     /** @var bool Define if the header of the list contains filter and sorting links or not */
     protected $list_simple_header;
@@ -2039,7 +2039,7 @@ class AdminControllerCore extends Controller
                 'show_new_messages' => Configuration::get('PS_SHOW_NEW_MESSAGES') && isset($accesses['AdminCustomerThreads']) && $accesses['AdminCustomerThreads']['view'],
                 'employee' => $this->context->employee,
                 'search_type' => Tools::getValue('bo_search_type'),
-                'bo_query' => Tools::safeOutput(Tools::stripslashes(Tools::getValue('bo_query'))),
+                'bo_query' => Tools::safeOutput(Tools::getValue('bo_query')),
                 'quick_access' => empty($quick_access) ? false : $quick_access,
                 'multi_shop' => Shop::isFeatureActive(),
                 'shop_list' => $helperShop->getRenderedShopList(),
@@ -3146,7 +3146,7 @@ class AdminControllerCore extends Controller
             $select_shop = ', shop.name as shop_name ';
         }
 
-        if ($this->multishop_context && Shop::isTableAssociated($this->table) && !empty($this->className)) {
+        if ($this->multishop_context && Shop::isTableAssociated($this->table) && !empty($this->className) && null !== $this->_join) {
             if (Shop::getContext() != Shop::CONTEXT_ALL || !$this->context->employee->isSuperAdmin()) {
                 $test_join = !preg_match('#`?' . preg_quote(_DB_PREFIX_ . $this->table . '_shop') . '`? *sa#', $this->_join);
                 if (Shop::isFeatureActive() && $test_join) {
@@ -3579,7 +3579,7 @@ class AdminControllerCore extends Controller
                                         $field_value = $input['default_value'];
                                     }
                                 }
-                                $this->fields_value[$input['name']][$language['id_lang']] = $field_value;
+                                $this->fields_value[$input['name']][$language['id_lang']] = $field_value ?: '';
                             }
                         } else {
                             $field_value = $this->getFieldValue($obj, $input['name']);

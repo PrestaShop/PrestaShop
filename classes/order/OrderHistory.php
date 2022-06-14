@@ -485,7 +485,7 @@ class OrderHistoryCore extends ObjectModel
                 '{firstname}' => $result['firstname'],
                 '{id_order}' => (int) $this->id_order,
                 '{order_name}' => $order->getUniqReference(),
-                '{followup}' => str_replace('@', $order->getShippingNumber(), $carrierUrl),
+                '{followup}' => str_replace('@', $order->getShippingNumber() ?? '', $carrierUrl),
                 '{shipping_number}' => $order->getShippingNumber(),
             ];
 

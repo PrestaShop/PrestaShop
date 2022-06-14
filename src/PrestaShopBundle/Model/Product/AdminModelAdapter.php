@@ -789,7 +789,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      */
     private function getDataSuppliersCombinations(Product $product)
     {
-        $combinations = $product->getAttributesResume($this->locales[0]['id_lang']);
+        $combinations = $product->getAttributesResume($this->locales[0]['id_lang']) ?: [];
         if (empty($combinations)) {
             $combinations[] = [
                 'id_product' => $product->id,
@@ -838,7 +838,7 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
      */
     private function getDataWarehousesCombinations(Product $product)
     {
-        $combinations = $product->getAttributesResume($this->locales[0]['id_lang']);
+        $combinations = $product->getAttributesResume($this->locales[0]['id_lang']) ?: [];
         if (empty($combinations)) {
             $combinations[] = [
                 'id_product' => $product->id,

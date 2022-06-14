@@ -133,7 +133,7 @@ class SitemapControllerCore extends FrontController
         $links[] = [
             'id' => 'register-page',
             'label' => $this->trans('Create new account', [], 'Shop.Theme.Global'),
-            'url' => $this->context->link->getPageLink('authentication', null, null, ['create_account' => 1]),
+            'url' => $this->context->link->getPageLink('registration'),
         ];
 
         return $links;

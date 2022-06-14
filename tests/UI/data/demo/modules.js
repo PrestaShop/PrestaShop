@@ -7,4 +7,8 @@ module.exports = {
     tag: 'contactform',
     name: 'Contact form',
   },
+  themeCustomization: {
+    tag: 'ps_themecusto',
+    name: 'Theme Customization',
+  },
 };

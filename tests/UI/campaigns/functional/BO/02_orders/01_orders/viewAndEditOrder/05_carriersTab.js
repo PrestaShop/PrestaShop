@@ -157,7 +157,7 @@ describe('BO - Orders - View and edit order : Check order carriers tab', async (
     });
 
     it('should check the updated carrier details', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkCarrierDetails', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedCarrierDetails', baseContext);
 
       await orderPageTabListBlock.goToCarriersTab(page);
 

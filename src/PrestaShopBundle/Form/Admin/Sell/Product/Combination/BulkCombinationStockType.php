@@ -32,6 +32,7 @@ use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use PrestaShopBundle\Form\Admin\Type\DeltaQuantityType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -78,9 +79,18 @@ class BulkCombinationStockType extends TranslatorAwareType
                     'required' => false,
                     'label' => $this->trans('Edit quantity', 'Admin.Catalog.Feature'),
                     'disabling_switch' => true,
+                    'disabling_switch_event' => 'combinationSwitchDeltaQuantity',
                     'disabled_value' => function (?array $data) {
                         return empty($data['quantity']) && empty($data['delta']);
                     },
+                ])
+                ->add('fixed_quantity', IntegerType::class, [
+                    'required' => false,
+                    'label' => $this->trans('Edit fixed quantity', 'Admin.Catalog.Feature'),
+                    'default_empty_data' => 0,
+                    'disabling_switch' => true,
+                    'disabling_switch_event' => 'combinationSwitchFixedQuantity',
+                    'modify_all_shops' => true,
                 ])
             ;
         }

@@ -362,9 +362,9 @@ class AdminCustomerThreadsControllerCore extends AdminController
                     $this->errors[] = $error;
                 } elseif ($id_employee && Validate::isLoadedObject($employee)) {
                     $params = [
-                        '{messages}' => Tools::stripslashes($output),
+                        '{messages}' => $output,
                         '{employee}' => $current_employee->firstname . ' ' . $current_employee->lastname,
-                        '{comment}' => Tools::stripslashes(Tools::nl2br($_POST['message_forward'])),
+                        '{comment}' => Tools::nl2br($_POST['message_forward']),
                         '{firstname}' => $employee->firstname,
                         '{lastname}' => $employee->lastname,
                     ];
@@ -394,9 +394,9 @@ class AdminCustomerThreadsControllerCore extends AdminController
                     }
                 } elseif ($email && Validate::isEmail($email)) {
                     $params = [
-                        '{messages}' => Tools::nl2br(Tools::stripslashes($output)),
+                        '{messages}' => Tools::nl2br($output),
                         '{employee}' => $current_employee->firstname . ' ' . $current_employee->lastname,
-                        '{comment}' => Tools::stripslashes($_POST['message_forward']),
+                        '{comment}' => $_POST['message_forward'],
                         '{firstname}' => '',
                         '{lastname}' => '',
                     ];

@@ -59,7 +59,7 @@ class NullDateTime extends DateTimeImmutable
      *
      * Outputs string representing null date time
      */
-    public function format($format)
+    public function format($format): string
     {
         $supportedFormats = $this::getSupportedFormats();
         if (isset($supportedFormats[$format])) {
@@ -78,7 +78,7 @@ class NullDateTime extends DateTimeImmutable
      *
      * @return static
      */
-    public function add($interval)
+    public function add($interval): DateTimeImmutable
     {
         return $this;
     }
@@ -86,6 +86,7 @@ class NullDateTime extends DateTimeImmutable
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public static function createFromFormat($format, $datetime, $timezone = null)
     {
         throw self::buildUnusableMethodException('createFromFormat');
@@ -94,7 +95,7 @@ class NullDateTime extends DateTimeImmutable
     /**
      * {@inheritdoc}
      */
-    public static function createFromMutable($object)
+    public static function createFromMutable($object): DateTimeImmutable
     {
         throw self::buildUnusableMethodException('createFromMutable');
     }
@@ -102,6 +103,7 @@ class NullDateTime extends DateTimeImmutable
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public static function getLastErrors()
     {
         throw self::buildUnusableMethodException('getLastErrors');
@@ -110,6 +112,7 @@ class NullDateTime extends DateTimeImmutable
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function modify($modifier)
     {
         throw $this::buildUnusableMethodException('modify');
@@ -118,7 +121,7 @@ class NullDateTime extends DateTimeImmutable
     /**
      * {@inheritdoc}
      */
-    public function setDate($year, $month, $day)
+    public function setDate($year, $month, $day): DateTimeImmutable
     {
         throw $this::buildUnusableMethodException('setDate');
     }
@@ -126,7 +129,7 @@ class NullDateTime extends DateTimeImmutable
     /**
      * {@inheritdoc}
      */
-    public function setISODate($year, $week, $dayOfWeek = 1)
+    public function setISODate($year, $week, $dayOfWeek = 1): DateTimeImmutable
     {
         throw $this::buildUnusableMethodException('setISODate');
     }
@@ -134,7 +137,7 @@ class NullDateTime extends DateTimeImmutable
     /**
      * {@inheritdoc}
      */
-    public function setTime($hour, $minute, $second = 0, $microsecond = 0)
+    public function setTime($hour, $minute, $second = 0, $microsecond = 0): DateTimeImmutable
     {
         throw $this::buildUnusableMethodException('setTime');
     }
@@ -142,7 +145,7 @@ class NullDateTime extends DateTimeImmutable
     /**
      * {@inheritdoc}
      */
-    public function setTimestamp($timestamp)
+    public function setTimestamp($timestamp): DateTimeImmutable
     {
         throw $this::buildUnusableMethodException('setTimestamp');
     }
@@ -150,7 +153,7 @@ class NullDateTime extends DateTimeImmutable
     /**
      * {@inheritdoc}
      */
-    public function setTimezone($timezone)
+    public function setTimezone($timezone): DateTimeImmutable
     {
         return $this;
     }
@@ -162,7 +165,7 @@ class NullDateTime extends DateTimeImmutable
      *
      * @return static
      */
-    public function sub($interval)
+    public function sub($interval): DateTimeImmutable
     {
         return $this;
     }
@@ -170,7 +173,7 @@ class NullDateTime extends DateTimeImmutable
     /**
      * {@inheritdoc}
      */
-    public function diff($targetObject, $absolute = false)
+    public function diff($targetObject, $absolute = false): DateInterval
     {
         throw $this::buildUnusableMethodException('diff');
     }
@@ -178,7 +181,7 @@ class NullDateTime extends DateTimeImmutable
     /**
      * {@inheritdoc}
      */
-    public function getOffset()
+    public function getOffset(): int
     {
         throw $this::buildUnusableMethodException('getOffset');
     }
@@ -186,7 +189,7 @@ class NullDateTime extends DateTimeImmutable
     /**
      * {@inheritdoc}
      */
-    public function getTimestamp()
+    public function getTimestamp(): int
     {
         throw $this::buildUnusableMethodException('getTimestamp');
     }
@@ -194,6 +197,7 @@ class NullDateTime extends DateTimeImmutable
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function getTimezone()
     {
         throw $this::buildUnusableMethodException('getTimezone');

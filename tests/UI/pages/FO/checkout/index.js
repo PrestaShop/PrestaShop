@@ -58,6 +58,7 @@ class Checkout extends FOBasePage {
     this.addressStepAddress1Input = `${this.addressStepSection} input[name='address1']`;
     this.addressStepPostCodeInput = `${this.addressStepSection} input[name='postcode']`;
     this.addressStepCityInput = `${this.addressStepSection} input[name='city']`;
+    this.addressStepCountrSelect = `${this.addressStepSection} select[name='id_country']`;
     this.addressStepPhoneInput = `${this.addressStepSection} input[name='phone']`;
     this.addressStepUseSameAddressCheckbox = '#use_same_address';
     this.addressStepContinueButton = `${this.addressStepSection} button[name='confirm-addresses']`;
@@ -148,7 +149,7 @@ class Checkout extends FOBasePage {
   /**
    * Get No payment needed block content
    * @param page
-   * @returns {string}
+   * @returns {Promise<string>}
    */
   getNoPaymentNeededBlockContent(page) {
     return this.getTextContent(page, this.noPaymentNeededElement);
@@ -285,7 +286,7 @@ class Checkout extends FOBasePage {
   /**
    * Is create account notice visible
    * @param page {Page} Browser tab
-   * @returns {boolean}
+   * @returns {Promise<boolean>}
    */
   isCreateAnAccountNoticeVisible(page) {
     return this.elementVisible(page, this.createAccountOptionalNotice, 1000);
@@ -294,7 +295,7 @@ class Checkout extends FOBasePage {
   /**
    * Is password input required
    * @param page {Page} Browser tab
-   * @returns {boolean}
+   * @returns {Promise<boolean>}
    */
   isPasswordRequired(page) {
     return this.elementVisible(page, `${this.checkoutGuestPasswordInput}:required`, 1000);
@@ -303,7 +304,7 @@ class Checkout extends FOBasePage {
   /**
    * Check if checkbox of condition to approve is visible
    * @param page {Page} Browser tab
-   * @returns {boolean}
+   * @returns {Promise<boolean>}
    */
   isConditionToApproveCheckboxVisible(page) {
     return this.elementVisible(page, this.conditionToApproveCheckbox, 1000);
@@ -322,7 +323,7 @@ class Checkout extends FOBasePage {
   /**
    * Check if gift checkbox is visible
    * @param page {Page} Browser tab
-   * @return {boolean}
+   * @return {Promise<boolean>}
    */
   isGiftCheckboxVisible(page) {
     return this.elementVisible(page, this.giftCheckbox, 1000);
@@ -331,7 +332,7 @@ class Checkout extends FOBasePage {
   /**
    * Check if recyclable checkbox is visible
    * @param page {Page} Browser tab
-   * @return {boolean}
+   * @return {Promise<boolean>}
    */
   isRecyclableCheckboxVisible(page) {
     return this.elementVisible(page, this.recycableGiftCheckbox, 1000);
@@ -358,6 +359,7 @@ class Checkout extends FOBasePage {
     await this.setValue(page, this.addressStepAddress1Input, address.address);
     await this.setValue(page, this.addressStepPostCodeInput, address.postalCode);
     await this.setValue(page, this.addressStepCityInput, address.city);
+    await this.selectByVisibleText(page, this.addressStepCountrSelect, address.country);
     await page.type(this.addressStepPhoneInput, address.phone, {delay: 50});
     await this.setValue(page, this.addressStepPhoneInput, address.phone);
   }

@@ -357,6 +357,9 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         $currency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
         $localeCldr = Tools::getContextLocale(Context::getContext());
 
+        /**
+         * @var array{id_product: int, reference: string, price: string, id_shop_default: int, link_rewrite: string, id_image: int} $product
+         */
         foreach ($products as &$product) {
             $product['total'] = $total; // total product count (filtered)
             $product['price_final'] = Product::getPriceStatic(
@@ -382,7 +385,10 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
                 $product['price_final'] = $localeCldr->formatPrice($product['price_final'], $currency->iso_code);
             }
             $product['image'] = $this->imageManager->getThumbnailForListing($product['id_image']);
-            $product['image_link'] = Context::getContext()->link->getImageLink($product['link_rewrite'], $product['id_image']);
+            $product['image_link'] = Context::getContext()->link->getImageLink(
+                $product['link_rewrite'],
+                (string) $product['id_image']
+            );
         }
 
         // post treatment by hooks

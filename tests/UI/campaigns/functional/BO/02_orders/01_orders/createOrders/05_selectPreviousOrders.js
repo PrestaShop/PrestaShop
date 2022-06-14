@@ -69,13 +69,13 @@ Post-condition:
  */
 describe('BO - Orders - Create order : Select previous orders', async () => {
   // Pre-condition: Create new customer
-  createCustomerTest(newCustomer, baseContext);
+  createCustomerTest(newCustomer, `${baseContext}_preTest_1`);
 
   // Pre-condition: Create new address
-  createAddressTest(newAddress, baseContext);
+  createAddressTest(newAddress, `${baseContext}_preTest_2`);
 
   // Pre-condition: Create order
-  createOrderByCustomerTest(orderData, baseContext);
+  createOrderByCustomerTest(orderData, `${baseContext}_preTest_3`);
 
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -216,7 +216,7 @@ describe('BO - Orders - Create order : Select previous orders', async () => {
       {args: {columnName: 'status', content: 'Awaiting bank wire payment'}},
     ].forEach((test) => {
       it(`should check the order '${test.args.columnName}'`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `check${test.args.blockName}Order`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `check${test.args.columnName}Order`, baseContext);
 
         const textResult = await addOrderPage.getTextFromOrdersTable(page, test.args.columnName);
         await expect(textResult, `The '${test.args.columnName}' value is not correct!`).to.contains(test.args.content);
@@ -307,5 +307,5 @@ describe('BO - Orders - Create order : Select previous orders', async () => {
   });
 
   // Post-condition: Delete created customer
-  deleteCustomerTest(newCustomer, baseContext);
+  deleteCustomerTest(newCustomer, `${baseContext}_postTest_1`);
 });

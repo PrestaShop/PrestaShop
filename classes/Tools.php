@@ -45,6 +45,8 @@ class ToolsCore
     public const PASSWORDGEN_FLAG_RANDOM = 'RANDOM';
     public const PASSWORDGEN_FLAG_ALPHANUMERIC = 'ALPHANUMERIC';
 
+    public const LANGUAGE_EXTRACTOR_REGEXP = '#(?<=-)\w\w|\w\w(?!-)#';
+
     protected static $file_exists_cache = [];
     protected static $_forceCompile;
     protected static $_caching;
@@ -1641,7 +1643,7 @@ class ToolsCore
 
     public static function strtolower($str)
     {
-        if (is_array($str)) {
+        if (null === $str || is_array($str)) {
             return false;
         }
 
@@ -1650,7 +1652,7 @@ class ToolsCore
 
     public static function strlen($str, $encoding = 'UTF-8')
     {
-        if (is_array($str)) {
+        if (null === $str || is_array($str)) {
             return false;
         }
 
@@ -2782,7 +2784,7 @@ FileETag none
             'addresses', 'address', 'authentication', 'cart', 'discount', 'footer',
             'get-file', 'header', 'history', 'identity', 'images.inc', 'init', 'my-account', 'order',
             'order-slip', 'order-detail', 'order-follow', 'order-return', 'order-confirmation', 'pagination', 'password',
-            'pdf-invoice', 'pdf-order-return', 'pdf-order-slip', 'product-sort', 'search', 'statistics', 'attachment', 'guest-tracking',
+            'pdf-invoice', 'pdf-order-return', 'pdf-order-slip', 'product-sort', 'registration', 'search', 'statistics', 'attachment', 'guest-tracking',
         ];
 
         // Rewrite files
@@ -3237,12 +3239,16 @@ exit;
     /**
      * Convert \n and \r\n and \r to <br />.
      *
-     * @param string $str String to transform
+     * @param string|null $str String to transform
      *
-     * @return string New string
+     * @return string|null New string
      */
     public static function nl2br($str)
     {
+        if (empty($str)) {
+            return $str;
+        }
+
         return str_replace(["\r\n", "\r", "\n", AddressFormat::FORMAT_NEW_LINE, PHP_EOL], '<br />', $str);
     }
 
@@ -3491,7 +3497,7 @@ exit;
         if (count($array) < 2) {
             return;
         }
-        $halfway = count($array) / 2;
+        $halfway = (int) (count($array) / 2);
         $array1 = array_slice($array, 0, $halfway, true);
         $array2 = array_slice($array, $halfway, null, true);
 
@@ -4126,6 +4132,34 @@ exit;
         }
 
         return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public static function isCountryFromBrowserAvailable(): bool
+    {
+        $languageAvailable = static::getCountryIsoCodeFromHeader();
+        if ($languageAvailable === null) {
+            return false;
+        }
+
+        return Configuration::get('PS_DETECT_COUNTRY')
+            && Validate::isLanguageIsoCode($languageAvailable);
+    }
+
+    /**
+     * @return string|null
+     */
+    public static function getCountryIsoCodeFromHeader(): ?string
+    {
+        if (!isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+            return null;
+        }
+
+        preg_match(static::LANGUAGE_EXTRACTOR_REGEXP, $_SERVER['HTTP_ACCEPT_LANGUAGE'], $languages);
+
+        return $languages[0] ?? null;
     }
 
     /**

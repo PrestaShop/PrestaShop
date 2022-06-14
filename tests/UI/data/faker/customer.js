@@ -29,7 +29,7 @@ class CustomerData {
     this.email = customerToCreate.email || faker.internet.email(this.firstName, this.lastName, 'prestashop.com');
 
     /** @type {string} Password for the customer account */
-    this.password = customerToCreate.password === undefined ? '123456789' : customerToCreate.password;
+    this.password = customerToCreate.password === undefined ? faker.internet.password : customerToCreate.password;
 
     /** @type {Date} Birthdate of the customer */
     this.birthDate = faker.date.between('1950-01-01', '2000-12-31');

@@ -8,7 +8,7 @@ doctrine:
       pool: "%cache.driver%"
     query_cache_driver:
       type: pool
-      pool: "%cache.driver.doctrine%"
+      pool: "%cache.driver%"
     result_cache_driver:
       type: pool
-      pool: "%cache.driver.doctrine%"
+      pool: "%cache.driver%"

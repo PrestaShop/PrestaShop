@@ -8,7 +8,7 @@ doctrine:
       pool: array
     query_cache_driver:
       type: pool
-      pool: array_doctrine
+      pool: array
     result_cache_driver:
       type: pool
-      pool: array_doctrine
+      pool: array

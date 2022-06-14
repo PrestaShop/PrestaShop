@@ -37,7 +37,8 @@
       'total': grid.data.records_total,
       'prefix': grid.form_prefix,
       'caller_route': app.request.attributes.get('_route'),
-      'caller_parameters': route_params
+      'caller_parameters': route_params,
+      'view': grid.view_options.pagination_view|default('full')
     })) }}
   {% endif %}
 {% endblock %}

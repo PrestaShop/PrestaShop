@@ -2302,6 +2302,7 @@ class AdminImportControllerCore extends AdminController
 
             // set advanced stock managment
             if (!$validateOnly) {
+                /* @phpstan-ignore-next-line Data from the property `advanced_stock_management` come from the database */
                 if ($product->advanced_stock_management != 1 && $product->advanced_stock_management != 0) {
                     $this->warnings[] = $this->trans(
                         'Advanced stock management has incorrect value. Not set for product %name%',
@@ -2369,6 +2370,7 @@ class AdminImportControllerCore extends AdminController
 
             // stock available
             if (isset($product->depends_on_stock)) {
+                /* @phpstan-ignore-next-line Data from the property `depends_on_stock` come from the database */
                 if ($product->depends_on_stock != 0 && $product->depends_on_stock != 1) {
                     $this->warnings[] = $this->trans(
                         'Incorrect value for "Depends on stock" for product %name%',
@@ -2377,6 +2379,7 @@ class AdminImportControllerCore extends AdminController
                         ],
                         'Admin.Advparameters.Notification'
                     );
+                /* @phpstan-ignore-next-line Data from properties `advanced_stock_management` & `depends_on_stock` come from the database */
                 } elseif ((!$product->advanced_stock_management || $product->advanced_stock_management == 0) && $product->depends_on_stock == 1) {
                     $this->warnings[] = $this->trans(
                         'Advanced stock management is not enabled, cannot set "Depends on stock" for product %name%',

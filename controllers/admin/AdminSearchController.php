@@ -23,6 +23,10 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+use PrestaShop\PrestaShop\Core\Search\SearchPanel;
+use PrestaShop\PrestaShop\Core\Search\SearchPanelInterface;
+
 class AdminSearchControllerCore extends AdminController
 {
     const TOKEN_CHECK_START_POS = 34;
@@ -238,7 +242,11 @@ class AdminSearchControllerCore extends AdminController
         $this->_list['modules'] = [];
         $all_modules = Module::getModulesOnDisk(true, Context::getContext()->employee->id);
         foreach ($all_modules as $module) {
-            if (stripos($module->name, $this->query) !== false || stripos($module->displayName, $this->query) !== false || stripos($module->description, $this->query) !== false) {
+            if (
+                (isset($module->name) && stripos($module->name, $this->query) !== false)
+                || (isset($module->displayName) && stripos($module->displayName, $this->query) !== false)
+                || (isset($module->description) && stripos($module->description, $this->query) !== false)
+            ) {
                 $module->linkto = 'index.php?tab=AdminModules&tab_module=' . $module->tab . '&module_name=' . $module->name . '&anchor=' . ucfirst($module->name) . '&token=' . Tools::getAdminTokenLite('AdminModules');
                 $this->_list['modules'][] = $module;
             }
@@ -361,7 +369,8 @@ class AdminSearchControllerCore extends AdminController
 
     public function renderView()
     {
-        $this->tpl_view_vars['query'] = Tools::safeOutput($this->query);
+        $searchedExpression = Tools::safeOutput($this->query);
+        $this->tpl_view_vars['query'] = $searchedExpression;
         $this->tpl_view_vars['show_toolbar'] = true;
 
         if (count($this->errors)) {
@@ -466,7 +475,52 @@ class AdminSearchControllerCore extends AdminController
                 $this->tpl_view_vars['modules'] = $this->_list['modules'];
             }
 
+            $this->getSearchPanels($searchedExpression);
+
             return parent::renderView();
+        }
+    }
+
+    protected function getSearchPanels(string $searchedExpression): void
+    {
+        // Build native search panels
+        $searchPanels = [];
+        $searchPanels[] = new SearchPanel(
+            $this->trans('Search docs.prestashop-project.org', [], 'Admin.Navigation.Search'),
+            $this->trans('Go to the documentation', [], 'Admin.Navigation.Search'),
+            'https://docs.prestashop-project.org/welcome/',
+            [
+                'q' => $searchedExpression,
+            ]
+        );
+
+        // Get additional search panels from hooks
+        $alternativeSearchPanelsFromModules = Hook::exec(
+            'actionGetAlternativeSearchPanels',
+            [
+                'previous_search_panels' => $searchPanels,
+                'bo_query' => $searchedExpression,
+            ],
+            null,
+            true
+        );
+
+        foreach ($alternativeSearchPanelsFromModules as $alternativeSearchPanelsFromModule) {
+            foreach ($alternativeSearchPanelsFromModule as $alternativeSearchPanel) {
+                if ($alternativeSearchPanel instanceof SearchPanelInterface) {
+                    $searchPanels[] = $alternativeSearchPanel;
+                }
+            }
+        }
+
+        // Transform the search panels and inject them to the view
+        $this->tpl_view_vars['searchPanels'] = [];
+        foreach ($searchPanels as $searchPanel) {
+            $this->tpl_view_vars['searchPanels'][] = [
+                'title' => $searchPanel->getTitle(),
+                'button_label' => $searchPanel->getButtonLabel(),
+                'link' => $searchPanel->getLink(),
+            ];
         }
     }
 

@@ -190,10 +190,10 @@ Post-condition:
 */
 describe('BO - Orders - View and edit order : Check product block in view order page', async () => {
   // Pre-condition: Create order by guest
-  createOrderByGuestTest(orderData, baseContext);
+  createOrderByGuestTest(orderData, `${baseContext}_preTest_1`);
 
   // Pre-condition: Enable EcoTax
-  enableEcoTaxTest(baseContext);
+  enableEcoTaxTest(`${baseContext}_preTest_2`);
 
   // before and after functions
   before(async function () {
@@ -817,14 +817,14 @@ describe('BO - Orders - View and edit order : Check product block in view order 
   });
 
   // Post-condition: Delete the created customer
-  deleteCustomerTest(customerData, baseContext);
+  deleteCustomerTest(customerData, `${baseContext}_postTest_1`);
 
   // Post-condition: Delete the created products
-  bulkDeleteProductsTest(prefixNewProduct, baseContext);
+  bulkDeleteProductsTest(prefixNewProduct, `${baseContext}_postTest_2`);
 
   // Post-condition: Delete cart rule
-  deleteCartRuleTest(newCartRuleData.name, baseContext);
+  deleteCartRuleTest(newCartRuleData.name, `${baseContext}_postTest_3`);
 
   // Post-condition: Disable EcoTax
-  disableEcoTaxTest(baseContext);
+  disableEcoTaxTest(`${baseContext}_postTest_4`);
 });

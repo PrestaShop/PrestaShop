@@ -24,14 +24,17 @@
  */
 
 import ImageSelector from '@pages/product/combination/form/image-selector';
+import QuantityModeSwitcher from '@pages/product/combination/QuantityModeSwitcher';
 
 // @ts-ignore
 const {$} = window;
 
 $(() => {
   window.prestashop.component.initComponents([
+    'EventEmitter',
     'DeltaQuantityInput',
     'DisablingSwitch',
   ]);
   new ImageSelector();
+  new QuantityModeSwitcher();
 });

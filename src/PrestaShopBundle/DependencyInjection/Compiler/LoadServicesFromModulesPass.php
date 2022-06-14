@@ -59,7 +59,7 @@ class LoadServicesFromModulesPass implements CompilerPassInterface
     public function __construct($containerName = '')
     {
         $this->configPath = '/config/' . (empty($containerName) ? '' : trim($containerName, '/') . '/');
-        $this->activeModulesPaths = (new ModuleRepository())->getActiveModulesPaths();
+        $this->activeModulesPaths = (new ModuleRepository(_PS_ROOT_DIR_, _PS_MODULE_DIR_))->getActiveModulesPaths();
     }
 
     /**

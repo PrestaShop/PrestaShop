@@ -24,19 +24,27 @@
  */
 
 import ConfirmModal from '@components/modal';
+import FeatureFlagMap from '@pages/feature-flag/components-map';
 
 const {$} = window;
 
 $(() => {
-  const $submitButton = $('#submit-btn-feature-flag');
-  $submitButton.prop('disabled', true);
-  const $form = $('#feature-flag-form');
-  const $formInputs = $('#feature-flag-form input');
+  const $submitButton = $(FeatureFlagMap.betaSubmitButton);
+  const $stableFormSubmitButton = $(FeatureFlagMap.stableSubmitButton);
+  const $form = $(FeatureFlagMap.betaForm);
+  const $betaFormInputs = $(FeatureFlagMap.betaFormInputFields);
+  const $stableForm = $(FeatureFlagMap.stableForm);
+  const $stableFormInputs = $(FeatureFlagMap.stableFormInputs);
+  const $stableFormInitialState = $stableForm.serialize();
   const initialState = $form.serialize();
   const initialFormData = $form.serializeArray();
 
-  $formInputs.change(() => {
+  $betaFormInputs.change(() => {
     $submitButton.prop('disabled', initialState === $form.serialize());
+  });
+
+  $stableFormInputs.change(() => {
+    $stableFormSubmitButton.prop('disabled', $stableFormInitialState === $stableForm.serialize());
   });
 
   $submitButton.on('click', (event) => {

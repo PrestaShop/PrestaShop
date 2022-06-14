@@ -31,7 +31,7 @@
   <div class="field clearfix">
 	<label for="infosShop" class="aligned"><?php echo $this->translator->trans('Shop name', [], 'Install'); ?> </label>
 	<div class="contentinput">
-	  <input class="text required" type="text" id="infosShop" name="shop_name" value="<?php echo htmlspecialchars($this->session->shop_name); ?>" /> <sup class="required">*</sup>
+	  <input class="text required" type="text" id="infosShop" name="shop_name" value="<?php echo htmlspecialchars($this->session->shop_name ?? ''); ?>" /> <sup class="required">*</sup>
 	</div>
 	<?php echo $this->displayError('shop_name'); ?>
   </div>
@@ -100,7 +100,7 @@
   <div class="field clearfix">
 	<label for="infosFirstname" class="aligned"><?php echo $this->translator->trans('First name', [], 'Install'); ?> </label>
 	<div class="contentinput">
-	  <input class="text required" type="text" id="infosFirstname" name="admin_firstname" value="<?php echo htmlspecialchars($this->session->admin_firstname); ?>" />
+	  <input class="text required" type="text" id="infosFirstname" name="admin_firstname" value="<?php echo htmlspecialchars($this->session->admin_firstname ?? ''); ?>" />
 	  <sup class="required">*</sup>
 	</div>
 	<?php echo $this->displayError('admin_firstname'); ?>
@@ -109,7 +109,7 @@
   <div class="field clearfix">
 	<label for="infosName" class="aligned"><?php echo $this->translator->trans('Last name', [], 'Install'); ?> </label>
 	<div class="contentinput">
-	  <input class="text required" type="text" id="infosName" name="admin_lastname" value="<?php echo htmlspecialchars($this->session->admin_lastname); ?>" />
+	  <input class="text required" type="text" id="infosName" name="admin_lastname" value="<?php echo htmlspecialchars($this->session->admin_lastname ?? ''); ?>" />
 	  <sup class="required">*</sup>
 	</div>
 	<?php echo $this->displayError('admin_lastname'); ?>
@@ -118,19 +118,26 @@
   <div class="field clearfix">
 	<label for="infosEmail" class="aligned"><?php echo $this->translator->trans('E-mail address', [], 'Install'); ?> </label>
 	<div class="contentinput">
-	  <input type="text" class="text required" id="infosEmail" name="admin_email" value="<?php echo htmlspecialchars($this->session->admin_email); ?>" />
+	  <input type="text" class="text required" id="infosEmail" name="admin_email" value="<?php echo htmlspecialchars($this->session->admin_email ?? ''); ?>" />
 	  <sup class="required">*</sup>
 	</div>
 	<p class="userInfos aligned"><?php echo $this->translator->trans('This email address will be your username to access your store\'s back office.', [], 'Install'); ?></p>
 	<?php echo $this->displayError('admin_email'); ?>
   </div>
 
-  <div class="field clearfix">
+  <div class="field field-password clearfix">
 	<label for="infosPassword" class="aligned"><?php echo $this->translator->trans('Shop password', [], 'Install'); ?> </label>
 	<div class="contentinput">
-	  <input autocomplete="off" type="password" class="text required" id="infosPassword" name="admin_password" value="<?php echo htmlspecialchars($this->session->admin_password); ?>" />
+      <div class="popover fade bs-popover-top d-none" role="tooltip" x-placement="top">
+        <div class="arrow"></div>
+        <h3 class="popover-header"></h3>
+        <div class="popover-body"></div>
+      </div>
+
+	  <input autocomplete="off" type="password" data-minlength="8" data-maxlength="72" data-minscore="3" class="text required" id="infosPassword" name="admin_password" value="<?php echo htmlspecialchars($this->session->admin_password ?? ''); ?>" />
 	  <sup class="required">*</sup>
 	</div>
+
 	<?php if ($this->displayError('admin_password')) { ?>
 	  <?php echo $this->displayError('admin_password'); ?>
 	<?php } else { ?>
@@ -141,7 +148,7 @@
   <div class="field clearfix">
 	<label class="aligned" for="infosPasswordRepeat"><?php echo $this->translator->trans('Re-type to confirm', [], 'Install'); ?> </label>
 	<div class="contentinput">
-	  <input type="password" autocomplete="off" class="text required" id="infosPasswordRepeat" name="admin_password_confirm" value="<?php echo htmlspecialchars($this->session->admin_password_confirm); ?>" />
+	  <input type="password" autocomplete="off" class="text required" id="infosPasswordRepeat" name="admin_password_confirm" value="<?php echo htmlspecialchars($this->session->admin_password_confirm ?? ''); ?>" />
 	  <sup class="required">*</sup>
 	</div>
 	<?php echo $this->displayError('admin_password_confirm'); ?>
@@ -152,3 +159,27 @@
 
 <!-- Partners form -->
 <div id="benefitsBlock" style="display:none"></div>
+
+<template id="password-feedback">
+  <div
+    class="password-strength-feedback"
+    data-translations="<?php echo htmlspecialchars($this->translatedStrings); ?>"
+  >
+    <div class="progress-container">
+      <div class="progress-bar">
+        <div></div>
+      </div>
+    </div>
+    <div class="password-strength-text"></div>
+    <div class="password-requirements">
+      <p class="password-requirements-length" data-translation="<?php echo htmlspecialchars($this->translator->trans('Enter a password between %d and %d characters', [], 'Install')); ?>">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0z" fill="none"/><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+        <span></span>
+      </p>
+      <p class="password-requirements-score" data-translation="<?php echo htmlspecialchars($this->translator->trans('The minimum score must be: %s', [], 'Install')); ?>">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px"><path d="M0 0h24v24H0z" fill="none"/><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+        <span></span>
+      </p>
+    </div>
+  </div>
+</template>

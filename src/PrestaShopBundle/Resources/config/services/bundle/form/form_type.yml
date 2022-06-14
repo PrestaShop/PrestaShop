@@ -464,6 +464,7 @@ services:
     arguments:
       - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrencyIsoCode()'
       - '@=service("prestashop.adapter.data_provider.tax").getTaxRulesGroupChoices()'
+      - "@router"
     tags:
       - { name: form.type }
 
@@ -862,6 +863,7 @@ services:
       - '@=service("prestashop.adapter.form.choice_provider.risk_by_id_choice_provider").getChoices()'
       - '@=service("prestashop.core.b2b.b2b_feature").isActive()'
       - '@=service("prestashop.adapter.legacy.configuration").get("PS_CUSTOMER_OPTIN")'
+      - "@=service('prestashop.adapter.legacy.configuration')"
     tags:
       - { name: form.type }
 
@@ -975,6 +977,7 @@ services:
       - '@=service("prestashop.core.form.choice_provider.profile").getChoices()'
       - '@=service("prestashop.adapter.multistore_feature").isActive()'
       - '@=service("prestashop.adapter.employee.avatar_provider").getDefaultAvatarUrl()'
+      - "@=service('prestashop.adapter.legacy.configuration')"
     calls:
       - { method: setTranslator, arguments: [ '@translator' ] }
     tags:
@@ -984,6 +987,8 @@ services:
     class: 'PrestaShopBundle\Form\Admin\Type\ChangePasswordType'
     calls:
       - { method: setTranslator, arguments: [ '@translator' ] }
+    arguments:
+      - "@=service('prestashop.adapter.legacy.configuration')"
     tags:
       - { name: form.type }
 
@@ -1359,6 +1364,16 @@ services:
     tags:
       - { name: form.type }
 
+  form.type.sell.product.category.category_filter_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoryFilterType'
+    public: true
+    arguments:
+      - "@translator"
+      - "@prestashop.adapter.data_provider.category"
+      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
+    tags:
+      - { name: form.type }
+
   form.type.sell.product.category.categories_type:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoriesType'
     parent: 'form.type.translatable.aware'
@@ -1486,6 +1501,7 @@ services:
     public: true
     arguments:
       - '@prestashop.core.form.choice_provider.out_of_stock_type_choice_provider'
+      - '@router'
     tags:
       - { name: form.type }
 
@@ -1744,6 +1760,30 @@ services:
 
   # Combination form types
 
+  form.type.sell.product.combination.combinations_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationsType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+
+  form.type.sell.product.combination.combination_manager_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationManagerType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+
+  form.type.sell.product.combination.combination_availability_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationAvailabilityType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    arguments:
+      - '@prestashop.core.form.choice_provider.out_of_stock_type_choice_provider'
+      - '@router'
+    tags:
+      - { name: form.type }
+
   form.type.sell.product.combination_list_type:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationListType'
     parent: 'form.type.translatable.aware'
@@ -1898,12 +1938,19 @@ services:
     tags:
       - name: form.type
 
-  prestashop.bundle.form.admin.configure.advanced_parameters.experimental_feature:
-    class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagsType'
+  prestashop.bundle.form.admin.configure.advanced_parameters.feature_flag.feature_flag_list_type:
+    class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagListType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+
+  prestashop.bundle.form.admin.configure.advanced_parameters.feature_flag.feature_flag_type:
+    class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagType'
     parent: 'form.type.translatable.aware'
     public: true
     arguments:
-      - '@prestashop.core.feature_flags.modifier'
+      - '@form.form_cloner'
     tags:
       - { name: form.type }
 
@@ -1933,6 +1980,13 @@ services:
 
   form.type.admin.security.general:
     class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Security\GeneralType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+
+  form.type.admin.security.password_policy:
+    class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Security\PasswordPolicyType'
     parent: 'form.type.translatable.aware'
     public: true
     tags:

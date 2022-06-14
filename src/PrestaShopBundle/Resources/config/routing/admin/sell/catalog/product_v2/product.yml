@@ -71,6 +71,101 @@ admin_products_v2_delete:
   requirements:
     productId: \d+
 
+admin_products_v2_duplicate:
+  path: /{productId}/duplicate
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::duplicateAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:duplicate
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
+
+admin_products_v2_toggle_status:
+  path: /{productId}/toggle_status
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::toggleStatusAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:statusproduct
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
+
+admin_products_v2_update_position:
+  path: /update_position
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::updatePositionAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:positionproduct
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
+
+admin_products_v2_bulk_enable:
+  path: /bulk-enable
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkEnableAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:submitBulkdisableSelectionproduct
+  requirements:
+    productId: \d+
+  options:
+    expose: true
+
+admin_products_v2_bulk_disable:
+  path: /bulk-disable
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkDisableAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:submitBulkenableSelectionproduct
+  requirements:
+    productId: \d+
+  options:
+    expose: true
+
+admin_products_v2_bulk_duplicate:
+  path: /bulk-duplicate
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkDuplicateAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:submitBulkduplicateSelectionproduct
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
+  options:
+    expose: true
+
+admin_products_v2_bulk_delete:
+  path: /bulk-delete
+  methods: [ POST, DELETE ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkDeleteAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:submitBulkdeleteproduct
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
+  options:
+    expose: true
+
 admin_products_v2_search_associations:
   path: /search/{languageCode}
   methods: [ GET, POST ]

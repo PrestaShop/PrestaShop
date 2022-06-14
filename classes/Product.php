@@ -1233,7 +1233,7 @@ class ProductCore extends ObjectModel
                 "\n\r",
                 "\r\n",
             ];
-            $str = str_replace($replaceArray, [''], strip_tags($value));
+            $str = $value ? str_replace($replaceArray, [''], strip_tags($value)) : '';
             $size_without_html = iconv_strlen($str);
             $size_with_html = Tools::strlen($value);
             $adaptedLimit = $limit + $size_with_html - $size_without_html;
@@ -4377,6 +4377,7 @@ class ProductCore extends ObjectModel
         }
 
         $colors = [];
+        /** @var array{id_product: int, id_attribute: int, id_product_attribute: int, color: string, texture: string, name: string,} $row */
         foreach ($res as $row) {
             $row['texture'] = '';
 
@@ -4386,7 +4387,14 @@ class ProductCore extends ObjectModel
                 continue;
             }
 
-            $colors[(int) $row['id_product']][] = ['id_product_attribute' => (int) $row['id_product_attribute'], 'color' => $row['color'], 'texture' => $row['texture'], 'id_product' => $row['id_product'], 'name' => $row['name'], 'id_attribute' => $row['id_attribute']];
+            $colors[(int) $row['id_product']][] = [
+                'id_product_attribute' => (int) $row['id_product_attribute'],
+                'color' => $row['color'],
+                'texture' => $row['texture'],
+                'id_product' => $row['id_product'],
+                'name' => $row['name'],
+                'id_attribute' => $row['id_attribute'],
+            ];
         }
 
         return $colors;
@@ -4796,6 +4804,7 @@ class ProductCore extends ObjectModel
         }
 
         $results_array = [];
+        /** @var array{id_product: int} $row */
         foreach ($result as $row) {
             $row['price_tax_incl'] = Product::getPriceStatic($row['id_product'], true, null, 2);
             $row['price_tax_excl'] = Product::getPriceStatic($row['id_product'], false, null, 2);
@@ -4819,8 +4828,7 @@ class ProductCore extends ObjectModel
         $combination_images = [];
 
         $result = Db::getInstance()->executeS(
-            '
-        SELECT pa.*, product_attribute_shop.*
+            'SELECT pa.*, product_attribute_shop.*
             FROM `' . _DB_PREFIX_ . 'product_attribute` pa
             ' . Shop::addSqlAssociation('product_attribute', 'pa') . '
             WHERE pa.`id_product` = ' . (int) $id_product_old
@@ -4828,6 +4836,7 @@ class ProductCore extends ObjectModel
         $combinations = [];
         $product_supplier_keys = [];
 
+        /** @var array{id_product_attribute: int, id_shop: int} $row */
         foreach ($result as $row) {
             $id_product_attribute_old = (int) $row['id_product_attribute'];
             $result2 = [];
@@ -7442,7 +7451,7 @@ class ProductCore extends ObjectModel
         $sep = Configuration::get('PS_ATTRIBUTE_ANCHOR_SEPARATOR');
         foreach ($attributes as &$a) {
             foreach ($a as &$b) {
-                $b = str_replace($sep, '_', Tools::link_rewrite($b));
+                $b = str_replace($sep, '_', Tools::link_rewrite((string) $b));
             }
             $anchor .= '/' . ($with_id && isset($a['id_attribute']) && $a['id_attribute'] ? (int) $a['id_attribute'] . $sep : '') . $a['group'] . $sep . $a['name'];
         }

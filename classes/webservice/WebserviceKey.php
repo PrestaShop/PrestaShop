@@ -189,7 +189,7 @@ class WebserviceKeyCore extends ObjectModel
         if (is_array($permissions_to_set)) {
             $permissions = [];
             $resources = WebserviceRequest::getResources();
-            $methods = ['GET', 'PUT', 'POST', 'DELETE', 'HEAD'];
+            $methods = ['GET', 'PUT', 'POST', 'PATCH', 'DELETE', 'HEAD'];
             foreach ($permissions_to_set as $resource_name => $resource_methods) {
                 if (in_array($resource_name, array_keys($resources))) {
                     foreach (array_keys($resource_methods) as $method_name) {

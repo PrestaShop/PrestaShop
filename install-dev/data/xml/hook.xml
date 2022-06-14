@@ -3620,6 +3620,11 @@
       <title>Extra message to display for an empty modules category</title>
       <description>This hook allows to add an extra message to display in the Module manager page when a category doesn't have any module</description>
     </hook>
+    <hook id="actionGetAlternativeSearchPanels">
+      <name>actionGetAlternativeSearchPanels</name>
+      <title>Additional search panel</title>
+      <description>This hook allows to add an additional search panel for external providers in PrestaShop back office</description>
+    </hook>
     <hook id="actionLoggerLogMessage">
       <name>actionLoggerLogMessage</name>
       <title>Allows to make extra action while a log is triggered</title>

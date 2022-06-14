@@ -109,7 +109,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
         /** @var ProductForEditing $productForEditing */
         $productForEditing = $this->queryBus->handle(new GetProductForEditing($productId, $shopConstraint));
 
-        return [
+        $productData = [
             'id' => $productId,
             'header' => $this->extractHeaderData($productForEditing),
             'description' => $this->extractDescriptionData($productForEditing),
@@ -123,6 +123,18 @@ class ProductFormDataProvider implements FormDataProviderInterface
                 'active' => $productForEditing->isActive(),
             ],
         ];
+
+        if ($productForEditing->getType() === ProductType::TYPE_COMBINATIONS) {
+            $productData['combinations'] = [
+                'availability' => [
+                    'out_of_stock_type' => $productData['stock']['availability']['out_of_stock_type'],
+                    'available_now_label' => $productData['stock']['availability']['available_now_label'] ?? [],
+                    'available_later_label' => $productData['stock']['availability']['available_later_label'] ?? [],
+                ],
+            ];
+        }
+
+        return $productData;
     }
 
     /**

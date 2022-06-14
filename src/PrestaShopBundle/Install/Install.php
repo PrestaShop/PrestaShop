@@ -205,7 +205,7 @@ class Install extends AbstractInstall
         ];
 
         array_walk($parameters['parameters'], function (&$param) {
-            $param = str_replace('%', '%%', $param);
+            $param = str_replace('%', '%%', $param ?? '');
         });
 
         $parameters = array_replace_recursive(

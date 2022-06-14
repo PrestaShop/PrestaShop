@@ -192,10 +192,10 @@ Post-condition:
  */
 describe('BO - Orders - Create order : Add a product to the cart', async () => {
   // Pre-condition: Enable EcoTax
-  enableEcoTaxTest(baseContext);
+  enableEcoTaxTest(`${baseContext}_preTest_1`);
 
   // Pre-condition: Create currency
-  createCurrencyTest(Currencies.mad, baseContext);
+  createCurrencyTest(Currencies.mad, `${baseContext}_preTest_2`);
 
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -669,14 +669,14 @@ describe('BO - Orders - Create order : Add a product to the cart', async () => {
   });
 
   // Post-condition: Delete the created products
-  bulkDeleteProductsTest(prefixNewProduct, baseContext);
+  bulkDeleteProductsTest(prefixNewProduct, `${baseContext}_postTest_1`);
 
   // Post-condition: Disable EcoTax
-  disableEcoTaxTest(baseContext);
+  disableEcoTaxTest(`${baseContext}_postTest_2`);
 
   // Post-condition: Delete currency
-  deleteCurrencyTest(Currencies.mad, baseContext);
+  deleteCurrencyTest(Currencies.mad, `${baseContext}_postTest_3`);
 
   // Post-condition: Delete cart rule
-  deleteCartRuleTest(newCartRuleData.name, baseContext);
+  deleteCartRuleTest(newCartRuleData.name, `${baseContext}_postTest_4`);
 });

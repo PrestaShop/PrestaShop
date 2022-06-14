@@ -31,6 +31,9 @@ class AddAddress extends BOBasePage {
     this.customerAddressCityInput = '#customer_address_city';
     this.customerAddressCountrySelect = '#customer_address_id_country';
     this.customerAddressCountryOption = `${this.customerAddressCountrySelect} option`;
+    this.customerAddressStateSelect = '#select2-customer_address_id_state-container';
+    this.searchStateInput = '.select2-search__field';
+    this.searchResultState = '.select2-results__option.select2-results__option--highlighted';
     this.customerAddressPhoneInput = '#customer_address_phone';
     this.customerAddressOtherInput = '#customer_address_other';
     this.saveAddressButton = '#save-button';
@@ -45,9 +48,10 @@ class AddAddress extends BOBasePage {
    * @param page {Page} Browser tab
    * @param addressData {AddressData} Data to set on new address form
    * @param save {boolean} True if we need to save the new address, false if not
+   * @param waitForNavigation {boolean} True if we need to wait for navigation after save, false if not
    * @returns {Promise<?string>}
    */
-  async createEditAddress(page, addressData, save = true) {
+  async createEditAddress(page, addressData, save = true, waitForNavigation = true) {
     if (await this.elementVisible(page, this.customerEmailInput, 2000)) {
       await this.setValue(page, this.customerEmailInput, addressData.email);
     }
@@ -65,10 +69,21 @@ class AddAddress extends BOBasePage {
     await this.setValue(page, this.customerAddressPhoneInput, addressData.phone);
     await this.setValue(page, this.customerAddressOtherInput, addressData.other);
 
-    // Save address
-    if (save) {
-      return this.saveAddress(page);
+    if (await this.elementVisible(page, this.customerAddressStateSelect, 1000)) {
+      await page.click(this.customerAddressStateSelect);
+      await this.setValue(page, this.searchStateInput, addressData.state);
+      await this.waitForSelectorAndClick(page, this.searchResultState);
     }
+
+    if (waitForNavigation) {
+      // Save and return successful message
+      if (save) {
+        return this.saveAddress(page);
+      }
+    }
+
+    // save
+    await this.waitForSelectorAndClick(page, this.saveAddressButton);
 
     return null;
   }

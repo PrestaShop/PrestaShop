@@ -136,7 +136,7 @@ services:
       - PrestaShopBundle\Entity\AttributeGroup
 
   prestashop.core.admin.feature_flag.repository:
-    class: Doctrine\ORM\EntityRepository
+    class: PrestaShopBundle\Entity\Repository\FeatureFlagRepository
     factory: [ '@doctrine.orm.default_entity_manager', getRepository ]
     arguments:
       - PrestaShopBundle\Entity\FeatureFlag

@@ -57,7 +57,7 @@ export default class CombinationsList {
 
   private readonly eventEmitter: EventEmitter;
 
-  private readonly externalCombinationTab: HTMLDivElement;
+  private readonly combinationManagerWidget: HTMLDivElement;
 
   private readonly $productForm: JQuery;
 
@@ -99,7 +99,7 @@ export default class CombinationsList {
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.$productForm = $(ProductMap.productForm);
     this.$combinationsFormContainer = $(CombinationsMap.combinationsFormContainer);
-    this.externalCombinationTab = document.querySelector<HTMLDivElement>(CombinationsMap.externalCombinationTab)!;
+    this.combinationManagerWidget = document.querySelector<HTMLDivElement>(CombinationsMap.combinationManager)!;
 
     this.$preloader = $(CombinationsMap.preloader);
     this.$paginatedList = $(CombinationsMap.combinationsPaginatedList);
@@ -120,10 +120,7 @@ export default class CombinationsList {
     // Paginate to first page when tab is shown
     this.$productForm
       .find(CombinationsMap.navigationTab)
-      .on('shown.bs.tab', () => this.showCombinationTab());
-    this.$productForm
-      .find(CombinationsMap.navigationTab)
-      .on('hidden.bs.tab', () => this.hideCombinationTab());
+      .on('shown.bs.tab', () => this.initializeComponents());
 
     // Finally watch events related to combination listing
     this.watchEvents();
@@ -168,15 +165,6 @@ export default class CombinationsList {
     this.eventEmitter.on(CombinationEvents.combinationDeleted, () => this.refreshPage());
     this.eventEmitter.on(CombinationEvents.bulkDeleteFinished, () => this.refreshPage());
     this.eventEmitter.on(CombinationEvents.bulkUpdateFinished, () => this.refreshPage());
-  }
-
-  private showCombinationTab(): void {
-    this.externalCombinationTab.classList.remove('d-none');
-    this.initializeComponents();
-  }
-
-  private hideCombinationTab(): void {
-    this.externalCombinationTab.classList.add('d-none');
   }
 
   private initializeComponents(): void {
@@ -225,7 +213,7 @@ export default class CombinationsList {
     );
     const bulkChoicesSelector = new BulkChoicesSelector(
       this.eventEmitter,
-      this.externalCombinationTab,
+      this.combinationManagerWidget,
       this.paginatedCombinationsService,
       this.paginator,
     );

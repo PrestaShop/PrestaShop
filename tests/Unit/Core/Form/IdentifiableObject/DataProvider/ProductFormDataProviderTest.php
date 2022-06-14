@@ -170,6 +170,7 @@ class ProductFormDataProviderTest extends TestCase
             $this->getDatasetsForOptions(),
             $this->getDatasetsForCategories(),
             $this->getDatasetsForRelatedProducts(),
+            $this->getDatasetsForCombinations(),
         ];
 
         foreach ($datasetsByType as $datasetByType) {
@@ -295,14 +296,14 @@ class ProductFormDataProviderTest extends TestCase
         ];
         $newCover = 'http://localhost/super_cover.jpg';
         $productData = [
-            'type' => ProductType::TYPE_COMBINATIONS,
+            'type' => ProductType::TYPE_VIRTUAL,
             'name' => $localizedValues,
             'description' => $localizedValues,
             'description_short' => $localizedValues,
             'cover_thumbnail' => $newCover,
         ];
         $expectedOutputData['header']['name'] = $localizedValues;
-        $expectedOutputData['header']['type'] = ProductType::TYPE_COMBINATIONS;
+        $expectedOutputData['header']['type'] = ProductType::TYPE_VIRTUAL;
         $expectedOutputData['header']['cover_thumbnail'] = $newCover;
 
         $expectedOutputData['description']['description'] = $localizedValues;
@@ -408,7 +409,7 @@ class ProductFormDataProviderTest extends TestCase
             'low_stock_threshold' => 5,
             'low_stock_alert' => true,
             'pack_stock_type' => PackStockType::STOCK_TYPE_PACK_ONLY,
-            'out_of_stock' => OutOfStockType::OUT_OF_STOCK_AVAILABLE,
+            'out_of_stock_type' => OutOfStockType::OUT_OF_STOCK_AVAILABLE,
             'available_now' => $localizedValues,
             'available_later' => $localizedValues,
             'available_date' => new DateTime('1969/07/20'),
@@ -919,6 +920,49 @@ class ProductFormDataProviderTest extends TestCase
     }
 
     /**
+     * @return array
+     */
+    private function getDatasetsForCombinations(): array
+    {
+        $datasets = [];
+
+        $expectedOutputData = $this->getDefaultOutputData();
+        $productData = [];
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        $localizedValues = [
+            1 => 'english',
+            2 => 'french',
+        ];
+        $expectedOutputData = $this->getDefaultOutputData();
+        $productData = [
+            'type' => ProductType::TYPE_COMBINATIONS,
+            'out_of_stock_type' => OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE,
+            'available_now' => $localizedValues,
+            'available_later' => $localizedValues,
+        ];
+
+        $expectedOutputData['header']['type'] = ProductType::TYPE_COMBINATIONS;
+        $expectedOutputData['combinations']['availability']['out_of_stock_type'] = OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE;
+        $expectedOutputData['combinations']['availability']['available_now_label'] = $localizedValues;
+        $expectedOutputData['combinations']['availability']['available_later_label'] = $localizedValues;
+        $expectedOutputData['stock']['availability']['available_now_label'] = $localizedValues;
+        $expectedOutputData['stock']['availability']['available_later_label'] = $localizedValues;
+        $expectedOutputData['stock']['availability']['out_of_stock_type'] = OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE;
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        return $datasets;
+    }
+
+    /**
      * @param array $product
      *
      * @return ProductForEditing
@@ -1109,7 +1153,7 @@ class ProductFormDataProviderTest extends TestCase
     {
         return new ProductStockInformation(
             $product['pack_stock_type'] ?? PackStockType::STOCK_TYPE_DEFAULT,
-            $product['out_of_stock'] ?? OutOfStockType::OUT_OF_STOCK_DEFAULT,
+            $product['out_of_stock_type'] ?? OutOfStockType::OUT_OF_STOCK_DEFAULT,
             $product['quantity'] ?? self::DEFAULT_QUANTITY,
             $product['minimal_quantity'] ?? 0,
             $product['low_stock_threshold'] ?? 0,

@@ -28,39 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Exception;
 
-use Throwable;
-
 /**
  * Thrown when product deletion fails in bulk action
  */
-class CannotBulkDeleteProductException extends ProductException
+class CannotBulkDeleteProductException extends BulkProductException
 {
-    /**
-     * @var int[]
-     */
-    private $productIds;
-
-    /**
-     * @param array $productIds
-     * @param string $message
-     * @param int $code
-     * @param Throwable|null $previous
-     */
-    public function __construct(
-        array $productIds,
-        $message = '',
-        $code = 0,
-        Throwable $previous = null
-    ) {
-        parent::__construct($message, $code, $previous);
-        $this->productIds = $productIds;
-    }
-
-    /**
-     * @return int[]
-     */
-    public function getProductIds(): array
-    {
-        return $this->productIds;
-    }
 }

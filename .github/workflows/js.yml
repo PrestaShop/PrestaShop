@@ -6,12 +6,15 @@ jobs:
     name: Run unit tests
     strategy:
       matrix:
-        js: [ '12', '13', '14', '15' ]
+        js: [ '16' ]
     steps:
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.js }}
+
+      - name: Setup NPM
+        run: npm install -g npm@7
 
       - name: Checkout
         uses: actions/checkout@v2

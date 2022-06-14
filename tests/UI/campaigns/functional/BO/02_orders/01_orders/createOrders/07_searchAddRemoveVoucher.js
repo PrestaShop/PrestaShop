@@ -102,10 +102,10 @@ Post-condition:
  */
 describe('BO - Orders - Create order : Search, add and remove voucher', async () => {
   // Pre-condition: Create cart rule without code
-  createCartRuleTest(cartRuleWithoutCodeData, baseContext);
+  createCartRuleTest(cartRuleWithoutCodeData, `${baseContext}_preTest_1`);
 
   // Pre-condition: Create cart rule with code
-  createCartRuleTest(cartRuleWithCodeData, baseContext);
+  createCartRuleTest(cartRuleWithCodeData, `${baseContext}_preTest_2`);
 
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -575,5 +575,5 @@ describe('BO - Orders - Create order : Search, add and remove voucher', async ()
   });
 
   // Post-condition: Delete created cart rules
-  bulkDeleteCartRuleTest(baseContext);
+  bulkDeleteCartRuleTest(`${baseContext}_postTest_1`);
 });

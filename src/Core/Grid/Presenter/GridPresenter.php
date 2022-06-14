@@ -114,15 +114,24 @@ final class GridPresenter implements GridPresenterInterface
     {
         $columns = $grid->getDefinition()->getColumns()->toArray();
 
-        /** @var ColumnInterface $positionColumn */
-        $positionColumn = $this->getOrderingPosition($grid);
+        /** @var PositionColumn|null $positionColumn */
+        $positionColumn = $this->getPositionColumn($grid);
         if (null !== $positionColumn) {
-            array_unshift($columns, [
-                'id' => $positionColumn->getId() . '_handle',
-                'name' => $positionColumn->getName(),
-                'type' => 'position_handle',
-                'options' => $positionColumn->getOptions(),
-            ]);
+            $searchCriteria = $grid->getSearchCriteria();
+            $requiredFilter = $positionColumn->getOption('required_filter');
+            // If the required filter is not set the position column is not displayed
+            if (null !== $requiredFilter && empty($searchCriteria->getFilters()[$requiredFilter])) {
+                $columns = array_filter($columns, function (array $column) use ($positionColumn) {
+                    return $column['id'] !== $positionColumn->getId();
+                });
+            } elseif (strtolower($positionColumn->getId()) == strtolower($searchCriteria->getOrderBy())) {
+                array_unshift($columns, [
+                    'id' => $positionColumn->getId() . '_handle',
+                    'name' => $positionColumn->getName(),
+                    'type' => 'position_handle',
+                    'options' => $positionColumn->getOptions(),
+                ]);
+            }
         }
 
         return $columns;
@@ -131,16 +140,13 @@ final class GridPresenter implements GridPresenterInterface
     /**
      * @param GridInterface $grid
      *
-     * @return ColumnInterface|null
+     * @return PositionColumn|null
      */
-    public function getOrderingPosition(GridInterface $grid)
+    protected function getPositionColumn(GridInterface $grid)
     {
-        $searchCriteria = $grid->getSearchCriteria();
         /** @var ColumnInterface $column */
         foreach ($grid->getDefinition()->getColumns() as $column) {
-            if ($column instanceof PositionColumn &&
-                strtolower($column->getId()) == strtolower($searchCriteria->getOrderBy())
-            ) {
+            if ($column instanceof PositionColumn) {
                 return $column;
             }
         }

@@ -66,7 +66,7 @@ class ArrayFinder implements ArrayAccess, Countable
     /**
      * {@inheritdoc}
      */
-    public function count()
+    public function count(): int
     {
         return count($this->array);
     }
@@ -130,7 +130,7 @@ class ArrayFinder implements ArrayAccess, Countable
      *
      * Example of use: isset($this->arrayFinder['a']
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         if (is_int($offset)) {
             $offset = (string) $offset;
@@ -150,6 +150,7 @@ class ArrayFinder implements ArrayAccess, Countable
      * $arrayFinder[4];
      * $arrayFinder['a'];
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         if (is_int($offset)) {
@@ -164,7 +165,7 @@ class ArrayFinder implements ArrayAccess, Countable
      *
      * Example of use: $this->arrayFinder['a'] = $value;
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         if (is_int($offset)) {
             $offset = (string) $offset;
@@ -182,7 +183,7 @@ class ArrayFinder implements ArrayAccess, Countable
      *
      * Example of use: unset($this->arrayFinder['a']);
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         if (is_int($offset)) {
             $offset = (string) $offset;

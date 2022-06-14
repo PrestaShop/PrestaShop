@@ -44,6 +44,17 @@ class Order extends BOBasePage {
     this.updateStatusInTableDropdown = row => `${this.tableColumnStatus(row)} div.js-choice-options`;
     this.updateStatusInTableDropdownChoice = (row, statusId) => `${this.updateStatusInTableDropdown(row)}`
       + ` button[data-value='${statusId}']`;
+    // Preview row
+    this.expandIcon = row => `${this.tableRow(row)} span.preview-toggle`;
+    this.previewRow = `${this.tableBody} tr.preview-row td div[data-role=preview-row]`;
+    this.shippingDetails = `${this.previewRow} div[data-role=shipping-details]`;
+    this.customerEmail = `${this.previewRow} div[data-role=email]`;
+    this.invoiceDetails = `${this.previewRow} div[data-role=invoice-details]`;
+    this.productTable = `${this.previewRow} table[data-role=product-table]`;
+    this.productsNumber = `${this.productTable} thead tr:nth-child(1)`;
+    this.productRowFromTable = row => `${this.productTable} tbody tr:nth-child(${row})`;
+    this.previewMoreProductsLink = row => `${this.productRowFromTable(row)} td a.js-preview-more-products-btn`;
+    this.previewOrderButton = `${this.gridTable} tr.preview-row a.btn-primary`;
 
     // Column actions selectors
     this.actionsColumn = row => `${this.tableRow(row)} td.column-actions`;
@@ -117,9 +128,10 @@ class Order extends BOBasePage {
    * @returns {Promise<void>}
    */
   async filterOrders(page, filterType, filterBy, value = '') {
+    await this.resetFilter(page);
     switch (filterType) {
       case 'input':
-        await this.setValue(page, this.filterColumn(filterBy), value.toString());
+        await this.setValue(page, this.filterColumn(filterBy), value);
         break;
       case 'select':
         await this.selectByVisibleText(page, this.filterColumn(filterBy), value);
@@ -503,6 +515,86 @@ class Order extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.paginationPreviousLink);
 
     return this.getPaginationLabel(page);
+  }
+
+  /* Preview order methods */
+  /**
+   * Preview order
+   * @param page {Page} Browser tab
+   * @param row {number} Row in orders table
+   * @returns {Promise<boolean>}
+   */
+  async previewOrder(page, row = 1) {
+    await page.hover(this.tableColumn(row, 'id_order'));
+    await this.waitForSelectorAndClick(page, this.expandIcon(row));
+
+    return this.elementVisible(page, this.previewRow, 2000);
+  }
+
+  /**
+   * Get shipping details
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getShippingDetails(page) {
+    return this.getTextContent(page, this.shippingDetails);
+  }
+
+  /**
+   * Get customer email
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getCustomerEmail(page) {
+    return this.getTextContent(page, this.customerEmail);
+  }
+
+  /**
+   * Get customer invoice address
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getCustomerInvoiceAddressDetails(page) {
+    return this.getTextContent(page, this.invoiceDetails);
+  }
+
+  /**
+   * Get products number from table
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getProductsNumberFromTable(page) {
+    return this.getNumberFromText(page, this.productsNumber);
+  }
+
+  /**
+   * Get product details from table
+   * @param page {Page} Browser tab
+   * @param row {number} Row in products table
+   * @returns {Promise<string>}
+   */
+  async getProductDetailsFromTable(page, row = 1) {
+    return this.getTextContent(page, this.productRowFromTable(row));
+  }
+
+  /**
+   * Click on more link
+   * @param page {Page} Browser tab
+   * @param row {number} Row in Products table
+   * @returns {Promise<void>}
+   */
+  async clickOnMoreLink(page, row = 12) {
+    await this.waitForSelectorAndClick(page, this.previewMoreProductsLink(row));
+    await this.waitForVisibleSelector(page, this.productRowFromTable(row - 1));
+  }
+
+  /**
+   * Open orders details
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async openOrderDetails(page) {
+    await this.waitForSelectorAndClick(page, this.previewOrderButton);
   }
 }
 
