@@ -39,16 +39,19 @@ export default class SpecificPriceListRenderer implements RendererType {
 
   listContainer: HTMLElement
 
+  $loadingSpinner: JQuery;
+
   constructor(
     productId: number,
   ) {
     this.productId = productId;
     this.listContainer = document.querySelector(SpecificPriceMap.listContainer) as HTMLElement;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
+    this.$loadingSpinner = $(ProductMap.specificPrice.loadingSpinner);
   }
 
-  public setLoading(toggle: boolean): void {
-    //@todo: not implemented
+  public setLoading(loading: boolean): void {
+    this.$loadingSpinner.toggle(loading);
   }
 
   public render(data: Record<string, any>): void {
