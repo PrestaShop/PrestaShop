@@ -55,6 +55,7 @@ class SpecificPriceController extends FrameworkBundleAdminController
      */
     public function listAction(Request $request, int $productId): JsonResponse
     {
+        /** @var SpecificPriceList $specificPricesList */
         $specificPricesList = $this->getQueryBus()->handle(
             new GetSpecificPriceList(
                 $productId,
@@ -64,12 +65,10 @@ class SpecificPriceController extends FrameworkBundleAdminController
             )
         );
 
-        //@todo: this could be refactored to make endpoint more reusable, by implementing formatting in javascript side.
         return $this->json([
             'specificPrices' => $this->formatSpecificPricesList($specificPricesList),
-//           @todo: hardcoded
-            'total' => 7,
-       ]);
+            'total' => $specificPricesList->getTotalSpecificPricesCount(),
+        ]);
     }
 
     /**
