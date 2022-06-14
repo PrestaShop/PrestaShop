@@ -22,10 +22,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-
 <div role="tabpanel" class="form-contenttab tab-pane container-fluid" id="stock-tab">
-  {% if productForm.stock.virtual_product_file is defined %}
-    {% form_theme productForm.stock.virtual_product_file '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/virtual_product_file.html.twig' %}
-  {% endif %}
   {{ form_row(productForm.stock) }}
 </div>
