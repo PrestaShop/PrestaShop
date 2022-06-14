@@ -47,6 +47,7 @@ class CombinationListType extends CollectionType
                 'allow_add' => true,
                 'allow_delete' => true,
                 'prototype_name' => '__COMBINATION_INDEX__',
+                'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/combination_listing.html.twig',
             ])
         ;
     }

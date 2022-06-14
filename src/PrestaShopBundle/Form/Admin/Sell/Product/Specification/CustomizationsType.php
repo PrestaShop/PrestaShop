@@ -68,6 +68,7 @@ class CustomizationsType extends TranslatorAwareType
             'attr' => [
                 'class' => 'product-customizations-collection',
             ],
+            'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/customizations.html.twig',
         ]);
     }
 }

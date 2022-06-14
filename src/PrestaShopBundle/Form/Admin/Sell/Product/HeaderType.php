@@ -137,6 +137,7 @@ class HeaderType extends TranslatorAwareType
                 'active' => false,
                 'required' => false,
                 'label' => false,
+                'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/header.html.twig',
             ])
             ->setAllowedTypes('active', ['bool'])
         ;

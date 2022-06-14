@@ -104,6 +104,7 @@ class CategoriesType extends TranslatorAwareType
             ->setDefaults([
                 'label' => false,
                 'required' => false,
+                'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/categories.html.twig',
             ])
             ->setRequired([
                 'product_id',

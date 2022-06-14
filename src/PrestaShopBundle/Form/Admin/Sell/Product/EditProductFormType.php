@@ -134,6 +134,8 @@ class EditProductFormType extends TranslatorAwareType
                 'virtual_product_file_id' => null,
                 'active' => false,
                 'allow_extra_fields' => true,
+                'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/product.html.twig',
+                'use_default_theme' => false,
             ])
             ->setRequired([
                 'product_id',
