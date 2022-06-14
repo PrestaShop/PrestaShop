@@ -209,6 +209,7 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
                     break;
                 case 'POST':
                 case 'PUT':
+                case 'PATCH':
                     $this->executeFileAddAndEdit();
 
                     // Emulate get/head to return output
@@ -231,6 +232,8 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
                     break;
                 case 'PUT':
                     $this->getWsObject()->executeEntityPut();
+                case 'PATCH':
+                    $this->getWsObject()->executeEntityPatch();
                     break;
                 case 'DELETE':
                     $this->getWsObject()->executeEntityDelete();
