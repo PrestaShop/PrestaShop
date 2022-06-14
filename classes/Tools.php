@@ -941,6 +941,8 @@ class ToolsCore
     }
 
     /**
+     * @deprecated Since 8.1.0
+     *
      * Get localized date format.
      *
      * @return string Date format
