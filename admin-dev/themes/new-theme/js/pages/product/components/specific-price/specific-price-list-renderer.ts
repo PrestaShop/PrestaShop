@@ -32,7 +32,7 @@ import RendererType from '@PSTypes/renderers';
 
 const SpecificPriceMap = ProductMap.specificPrice;
 
-export default class SpecificPriceList implements RendererType {
+export default class SpecificPriceListRenderer implements RendererType {
   eventEmitter: EventEmitter;
 
   productId: number;

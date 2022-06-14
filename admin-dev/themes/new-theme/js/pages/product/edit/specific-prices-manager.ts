@@ -27,7 +27,7 @@ import {FormIframeModal} from '@components/modal';
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
 import {EventEmitter} from 'events';
-import SpecificPriceList from '@pages/product/components/specific-price/specific-price-list';
+import SpecificPriceListRenderer from '@pages/product/components/specific-price/specific-price-list-renderer';
 import Router from '@components/router';
 import FormFieldDisabler from '@components/form/form-field-disabler';
 import {isUndefined} from '@PSTypes/typeguard';
@@ -46,13 +46,9 @@ export default class SpecificPricesManager {
 
   listContainer: HTMLElement;
 
-  specificPriceList!: SpecificPriceList;
-
   router: Router;
 
-  paginatedService: PaginatedSpecificPricesService;
-
-  paginator: DynamicPaginator;
+  paginator!: DynamicPaginator;
 
   constructor(
     productId: number,
@@ -61,17 +57,8 @@ export default class SpecificPricesManager {
     this.productId = productId;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.listContainer = document.querySelector<HTMLElement>(SpecificPriceMap.listContainer)!;
-    this.paginatedService = new PaginatedSpecificPricesService(productId);
-
     this.initComponents();
     this.initListeners();
-
-    this.paginator = new DynamicPaginator(
-      '#specific-prices-pagination',
-      this.paginatedService,
-      this.specificPriceList,
-      1,
-    );
   }
 
   private initListeners(): void {
@@ -81,7 +68,12 @@ export default class SpecificPricesManager {
   }
 
   private initComponents() {
-    this.specificPriceList = new SpecificPriceList(this.productId);
+    this.paginator = new DynamicPaginator(
+      SpecificPriceMap.paginationContainer,
+      new PaginatedSpecificPricesService(this.productId),
+      new SpecificPriceListRenderer(this.productId),
+      1,
+    );
 
     this.initSpecificPriceModals();
 

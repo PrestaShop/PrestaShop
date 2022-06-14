@@ -304,6 +304,7 @@ export default {
   },
   specificPrice: {
     container: '#specific-prices-container',
+    paginationContainer: '#specific-prices-pagination',
     modalTemplate: '#specific-price-modal-template',
     modalContentId: 'specific-price-modal',
     addSpecificPriceBtn: '.js-add-specific-price-btn',
