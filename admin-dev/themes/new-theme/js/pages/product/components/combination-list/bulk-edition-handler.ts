@@ -30,6 +30,7 @@ import CombinationsService from '@pages/product/services/combinations-service';
 import {EventEmitter} from 'events';
 import BulkChoicesSelector from '@pages/product/components/combination-list/bulk-choices-selector';
 import {notifyFormErrors} from '@components/form/helpers';
+import ProgressModal from '@components/modal/progress-modal';
 
 const CombinationMap = ProductMap.combinations;
 const CombinationEvents = ProductEvents.combinations;
@@ -95,6 +96,7 @@ export default class BulkEditionHandler {
     const selectedCombinationIds = await this.bulkChoicesSelector.getSelectedIds();
     const selectedCombinationsCount = selectedCombinationIds.length;
     let initialSerializedData: string;
+
     const iframeModal = new FormIframeModal({
       id: CombinationMap.bulkFormModalId,
       modalTitle,
@@ -120,9 +122,7 @@ export default class BulkEditionHandler {
           });
         }
       },
-      formConfirmCallback: (form: HTMLFormElement) => {
-        this.submitForm(form);
-      },
+      formConfirmCallback: (form: HTMLFormElement) => this.submitForm(form),
     });
 
     iframeModal.show();
@@ -134,59 +134,72 @@ export default class BulkEditionHandler {
   }
 
   private async submitForm(form: HTMLFormElement): Promise<void> {
-    const progressModal = this.showProgressModal();
-    const selectedIds = await this.bulkChoicesSelector.getSelectedIds();
-    const progressModalElement = document.getElementById(CombinationMap.bulkProgressModalId);
+    const combinationIds = await this.bulkChoicesSelector.getSelectedIds();
+    //@todo: for now no point of chuncks as endpoint accepts only one id at time
+    const bulkChunkSize = Number(form.dataset.bulkChunkSize);
+    const abortController = new AbortController();
 
-    let progress = 1;
-
-    for (let i = 0; i < selectedIds.length; i += 1) {
-      const combinationId = selectedIds[i];
-
-      // @todo when the ProgressModal will be integrated this will update it after each request
-      try {
-        // eslint-disable-next-line no-await-in-loop
-        const response: Response = await this.combinationsService.bulkUpdate(
-          this.productId,
-          combinationId,
-          new FormData(form),
-        );
-        // eslint-disable-next-line no-await-in-loop
-        const jsonResponse = await response.json();
-
-        if (jsonResponse.errors) {
-          notifyFormErrors(jsonResponse);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-
-      //@todo: also related with temporary progress modal. Needs to be fixed according to new progress modal once its merged in #26004.
-      const progressContent = progressModalElement?.querySelector<HTMLParagraphElement>('.progress-increment');
-
-      if (progressContent) {
-        progressContent.innerHTML = String(progress);
-      }
-      progress += 1;
-    }
-
-    progressModal.hide();
-
-    this.eventEmitter.emit(CombinationEvents.bulkUpdateFinished);
-  }
-
-  private showProgressModal(): ConfirmModal {
-    //@todo: Replace with new progress modal when introduced in #26004.
-    const modal = new ConfirmModal(
-      {
-        id: CombinationMap.bulkProgressModalId,
-        confirmMessage: '<div>Updating combinations: <p class="progress-increment"></p></div>',
+    const progressModal = new ProgressModal({
+      id: CombinationMap.bulkProgressModalId,
+      abortCallback: () => {
+        stopProcess = true;
+        abortController.abort();
       },
-      () => null,
-    );
+      closeCallback: () => this.eventEmitter.emit(CombinationEvents.bulkUpdateFinished),
+      progressionTitle: form.dataset.progressTitle,
+      progressionMessage: form.dataset.progressMessage,
+      closeLabel: form.dataset.closeLabel,
+      abortProcessingLabel: form.dataset.stopProcessing,
+      errorsMessage: form.dataset.errorsMessage,
+      backToProcessingLabel: form.dataset.backToProcessing,
+      downloadErrorLogLabel: form.dataset.downloadErrorLog,
+      viewErrorLogLabel: form.dataset.viewErrorLog,
+      viewErrorTitle: form.dataset.viewErrorTitle,
+      total: combinationIds.length,
+    });
+    progressModal.show();
+    let stopProcess = false;
+    let doneCount = 0;
+    while (combinationIds.length) {
+      if (stopProcess) {
+        break;
+      }
 
-    modal.show();
+      let data: Record<string, any>;
 
-    return modal;
+      // eslint-disable-next-line no-restricted-syntax
+      for (const combinationId of combinationIds) {
+        combinationIds.splice(0, 1);
+
+        try {
+          // eslint-disable-next-line no-await-in-loop
+          const response: Response = await this.combinationsService.bulkUpdate(
+            this.productId,
+            combinationId,
+            new FormData(form),
+          );
+          // eslint-disable-next-line no-await-in-loop
+          data = await response.json();
+          debugger;
+        } catch (e) {
+          data = {
+            error: `Something went wrong with ID ${combinationId}: ${e.message ?? ''}`,
+          };
+        }
+        doneCount += 1;
+        progressModal.updateProgress(doneCount);
+
+        if (!data.success) {
+          if (data.errors && Array.isArray(data.errors)) {
+            data.errors.forEach((error:string) => {
+              progressModal.addError(error);
+            });
+          } else {
+            progressModal.addError(data.errors ?? data.error ?? data.message);
+          }
+        }
+      }
+    }
+    progressModal.completeProgress();
   }
 }

@@ -157,7 +157,7 @@ class CombinationController extends FrameworkBundleAdminController
             }
 
             if ($result->isValid()) {
-                return $this->json([]);
+                return $this->json(['success' => true]);
             }
         } catch (CombinationException $e) {
             return $this->returnErrorJsonResponse(

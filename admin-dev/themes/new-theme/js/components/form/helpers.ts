@@ -24,7 +24,7 @@
  */
 
 /**
- * Used to display errors fetched from PrestaSHop API in a JSON format.
+ * Used to display errors fetched from PrestaShop API in a JSON format.
  * The expected format looks like this:
  * {
  *   errors: {
