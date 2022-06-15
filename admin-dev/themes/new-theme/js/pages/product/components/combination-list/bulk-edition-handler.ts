@@ -91,12 +91,13 @@ export default class BulkEditionHandler {
     modalTitle: string,
     confirmButtonLabel: string,
     closeButtonLabel: string,
+    prefilledForm?: HTMLFormElement|null,
   ): Promise<void> {
     const selectedCombinationIds = await this.bulkChoicesSelector.getSelectedIds();
     const selectedCombinationsCount = selectedCombinationIds.length;
     let initialSerializedData: string;
 
-    const iframeModal = new FormIframeModal({
+    const iframeModal: FormIframeModal = new FormIframeModal({
       id: CombinationMap.bulkFormModalId,
       modalTitle,
       formUrl,
@@ -107,6 +108,13 @@ export default class BulkEditionHandler {
       onFormLoaded: (form: HTMLFormElement) => {
         // Disable submit button as long as the form data has not changed
         iframeModal.modal.confirmButton?.setAttribute('disabled', 'disabled');
+        if (prefilledForm) {
+          form.replaceWith(prefilledForm);
+
+          // eslint-disable-next-line no-param-reassign
+          form = iframeModal.modal.iframe.contentWindow?.document
+            .querySelector<HTMLFormElement>('form[name="bulk_combination"]') as HTMLFormElement;
+        }
 
         if (form) {
           initialSerializedData = this.serializeForm(form);
@@ -134,7 +142,6 @@ export default class BulkEditionHandler {
 
   private async submitForm(form: HTMLFormElement): Promise<void> {
     const combinationIds = await this.bulkChoicesSelector.getSelectedIds();
-    //@todo: for now no point of chuncks as endpoint accepts only one id at time
     const bulkChunkSize = Number(form.dataset.bulkChunkSize);
     const abortController = new AbortController();
 
@@ -177,6 +184,24 @@ export default class BulkEditionHandler {
         );
           // eslint-disable-next-line no-await-in-loop
         data = await response.json();
+        if (data.formContent) {
+          const div = document.createElement('div');
+          div.innerHTML = data.formContent.trim();
+          progressModal.hide();
+          const bulkEditionFormBtn = this.tabContainer
+            .querySelector<HTMLButtonElement>(CombinationMap.bulkCombinationFormBtn) as HTMLButtonElement;
+          const {modalConfirmLabel, modalCancelLabel} = bulkEditionFormBtn?.dataset;
+          const {formUrl} = bulkEditionFormBtn?.dataset;
+
+          this.showFormModal(
+            // @ts-ignore
+            formUrl,
+            bulkEditionFormBtn.innerHTML,
+            modalConfirmLabel,
+            modalCancelLabel,
+            div.firstChild,
+          );
+        }
       } catch (e) {
         data = {
           errors: `Something went wrong with IDs ${chunkIds.join(', ')}: ${e.message ?? ''}`,
@@ -187,7 +212,7 @@ export default class BulkEditionHandler {
 
       if (!data.success) {
         if (data.errors && Array.isArray(data.errors)) {
-          data.errors.forEach((error:string) => {
+          data.errors.forEach((error: string) => {
             progressModal.addError(error);
           });
         } else {

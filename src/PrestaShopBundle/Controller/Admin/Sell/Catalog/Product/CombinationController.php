@@ -161,8 +161,13 @@ class CombinationController extends FrameworkBundleAdminController
                 }
 
                 if (!$result->isValid()) {
-                    $errors[] = $this->getFormErrorsForJS($bulkCombinationForm);
-                    continue;
+                    // it's the same form for all combinations, so if it is invalid for one, it will be invalid for all of them
+                    return $this->json([
+                        'formErrors' => $this->getFormErrorsForJS($bulkCombinationForm),
+                        'formContent' => $this->renderView('@PrestaShop/Admin/Sell/Catalog/Product/Combination/bulk_form.html.twig', [
+                            'bulkCombinationForm' => $bulkCombinationForm->createView(),
+                        ])
+                    ], Response::HTTP_BAD_REQUEST);
                 }
             } catch (CombinationException $e) {
                 $errors[] = $this->getErrorMessageForException($e, $this->getErrorMessages($e));
