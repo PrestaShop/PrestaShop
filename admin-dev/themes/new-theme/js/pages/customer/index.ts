@@ -82,4 +82,12 @@ $(() => {
   new LinkableItem();
 
   new FormSubmitButton();
+
+  // Scroll to the block
+  const documentURL = new URL(document.URL);
+  const documentHash = documentURL.hash.slice(1);
+
+  if (documentHash !== '') {
+    document.getElementById(documentHash)?.scrollIntoView();
+  }
 });
