@@ -45,7 +45,7 @@ class ProductFormOptionsProvider implements FormOptionsProviderInterface
         return [
             'product_type' => $data['header']['type'] ?? ProductType::TYPE_STANDARD,
             'virtual_product_file_id' => $data['stock']['virtual_product_file']['virtual_product_file_id'] ?? null,
-            'active' => $data['footer']['active'] ?? false,
+            'active' => $data['header']['active'] ?? false,
         ];
     }
 

@@ -70,7 +70,7 @@ class ProductFormOptionsProviderTest extends TestCase
         $this->assertFalse($options['active']);
 
         $options = $provider->getOptions(self::PRODUCT_ID, [
-            'footer' => [
+            'header' => [
                 'active' => true,
             ],
         ]);
