@@ -99,8 +99,8 @@ export default class BulkDeleteHandler {
   }
 
   private async bulkDelete(combinationIds: number[]): Promise<void> {
-    //@todo: hardcoded chunk size
-    const bulkChunkSize = 1;
+    const $bulkDeleteBtn = $(CombinationMap.bulkDeleteBtn);
+    const bulkChunkSize = Number($bulkDeleteBtn.data('bulkChunkSize'));
     const abortController = new AbortController();
 
     const progressModal = new ProgressModal({
@@ -110,8 +110,16 @@ export default class BulkDeleteHandler {
         abortController.abort();
       },
       closeCallback: () => this.eventEmitter.emit(CombinationEvents.bulkDeleteFinished),
+      progressionTitle: $bulkDeleteBtn.data('progressTitle'),
+      progressionMessage: $bulkDeleteBtn.data('progressMessage'),
+      closeLabel: $bulkDeleteBtn.data('closeLabel'),
+      abortProcessingLabel: $bulkDeleteBtn.data('stopProcessing'),
+      errorsMessage: $bulkDeleteBtn.data('errorsMessage'),
+      backToProcessingLabel: $bulkDeleteBtn.data('backToProcessing'),
+      downloadErrorLogLabel: $bulkDeleteBtn.data('downloadErrorLog'),
+      viewErrorLogLabel: $bulkDeleteBtn.data('viewErrorLog'),
+      viewErrorTitle: $bulkDeleteBtn.data('viewErrorTitle'),
       total: combinationIds.length,
-      //@todo: add translated texts
     });
     progressModal.show();
     let stopProcess = false;
@@ -127,9 +135,7 @@ export default class BulkDeleteHandler {
 
       try {
         // eslint-disable-next-line no-await-in-loop
-        const response = await this.combinationsService.bulkDeleteCombinations(this.productId, chunkIds);
-        // eslint-disable-next-line no-await-in-loop
-        data = await response.responseJSON;
+        data = await this.combinationsService.bulkDeleteCombinations(this.productId, chunkIds);
       } catch (e) {
         data = {
           errors: e.responseJSON.errors ?? null,
