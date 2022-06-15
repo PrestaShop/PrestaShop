@@ -108,7 +108,6 @@ class FooterType extends TranslatorAwareType
             ->add('duplicate_product', IconButtonType::class, [
                 'label' => $this->trans('Duplicate', 'Admin.Actions'),
                 'type' => 'link',
-                'icon' => 'content_copy',
                 'attr' => [
                     'class' => 'btn-outline-secondary duplicate-product-button',
                     'data-modal-title' => $this->trans('Duplicate this product.', 'Admin.Catalog.Help'),
@@ -123,7 +122,6 @@ class FooterType extends TranslatorAwareType
                 ],
             ])
             ->add('delete', IconButtonType::class, [
-                'icon' => 'delete',
                 'label' => $this->trans('Delete', 'Admin.Actions'),
                 'attr' => [
                     'class' => 'tooltip-link delete-product-button btn-outline-secondary',
@@ -141,7 +139,6 @@ class FooterType extends TranslatorAwareType
             ->add('new_product', IconButtonType::class, [
                 'label' => $this->trans('New product', 'Admin.Catalog.Feature'),
                 'type' => 'link',
-                'icon' => 'add_circle_outline',
                 'attr' => [
                     'class' => 'btn-outline-secondary new-product-button',
                     'href' => $this->router->generate('admin_products_v2_create'),
@@ -149,7 +146,6 @@ class FooterType extends TranslatorAwareType
             ])
             ->add('cancel', IconButtonType::class, [
                 'label' => $this->trans('Cancel', 'Admin.Actions'),
-                'icon' => 'undo',
                 'type' => 'link',
                 'attr' => [
                     'href' => $editUrl,
@@ -160,7 +156,6 @@ class FooterType extends TranslatorAwareType
             // These two inputs are displayed separately
             ->add('preview', IconButtonType::class, [
                 'label' => $this->trans('Preview', 'Admin.Actions'),
-                'icon' => 'remove_red_eye',
                 'type' => 'link',
                 'attr' => [
                     'target' => '_blank',
