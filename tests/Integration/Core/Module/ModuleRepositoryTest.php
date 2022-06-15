@@ -31,6 +31,7 @@ namespace Tests\Integration\Core\Module;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\HookManager;
 use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
+use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
@@ -55,11 +56,46 @@ class ModuleRepositoryTest extends TestCase
         $translator = $this->createMock(Translator::class);
         $translator->method('trans')->willReturnArgument(0);
 
+        $hookManager = $this->createMock(HookManager::class);
+        $hookExecMethodMock = function () {
+            // cf. HookManager::exec() method signature
+            list(
+                $hook_name,
+                $hook_args,
+                $id_module,
+                $array_return,
+                $check_exceptions,
+                $use_push,
+                $id_shop
+                ) = func_get_args();
+
+            // This mock represents a module that :
+            // - overrides `dummy_payment` module `fullDescription` attributes
+            // - adds `testAttribute` attributes to `dummy_payment` module
+            // when 'actionListModules' hook called
+            if($hook_name == 'actionListModules') {
+                return [
+                    'ps_distributionapiclient' => [
+                        [
+                            'name' => 'dummy_payment',
+                            'fullDescription' => 'overridden full description',
+                            'testAttribute' => 'added value',
+                        ],
+                    ]
+                ];
+            } else {
+                return [];
+            }
+        };
+        $hookManager->method("exec")->willReturn(
+            $this->returnCallback($hookExecMethodMock)
+        );
+
         $this->moduleRepository = new ModuleRepository(
             $moduleDataProvider,
             $this->createMock(AdminModuleDataProvider::class),
             new DoctrineProvider(new ArrayAdapter()),
-            $this->createMock(HookManager::class),
+            $hookManager,
             dirname(__DIR__, 3) . '/Resources/modules/'
         );
     }
@@ -67,5 +103,13 @@ class ModuleRepositoryTest extends TestCase
     public function testGetAtLeastOneModuleFromUniverse(): void
     {
         $this->assertGreaterThan(0, count($this->moduleRepository->getList()));
+    }
+
+    public function testGetModuleWellEnrichedByModules(): void
+    {
+        $dummy_module = $this->moduleRepository->getModule('dummy_payment');
+
+        $this->assertEquals('overridden full description', $dummy_module->get('fullDescription'));
+        $this->assertEquals('added value', $dummy_module->get('testAttribute'));
     }
 }
