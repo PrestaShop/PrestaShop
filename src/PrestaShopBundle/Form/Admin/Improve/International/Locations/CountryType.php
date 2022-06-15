@@ -108,7 +108,7 @@ class CountryType extends AbstractType
             ])
             ->add('iso_code', TextType::class, [
                 'required' => true,
-                'label' => $this->translator->trans('ISO code', [], 'Admin.Global'),
+                'label' => $this->translator->trans('ISO code', [], 'Admin.International.Feature'),
                 'constraints' => [
                     new Length([
                         'max' => 2,
@@ -125,7 +125,7 @@ class CountryType extends AbstractType
             ])
             ->add('call_prefix', TextType::class, [
                 'required' => true,
-                'label' => $this->translator->trans('Call prefix', [], 'Admin.Global'),
+                'label' => $this->translator->trans('Call prefix', [], 'Admin.International.Feature'),
             ])
             ->add('default_currency', ChoiceType::class, [
                 'required' => false,
