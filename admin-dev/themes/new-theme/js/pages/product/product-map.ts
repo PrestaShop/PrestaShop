@@ -232,7 +232,7 @@ export default {
   jsArrow: '.js-arrow',
   jsNavTabs: '.js-nav-tabs',
   toggleTab: '[data-toggle="tab"]',
-  formContentTab: '#form_content > .form-contenttab',
+  formContentTab: '#product-tabs-content > .form-contenttab',
   leftArrow: '.left-arrow',
   rightArrow: '.right-arrow',
   footer: {
