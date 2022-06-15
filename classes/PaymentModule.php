@@ -361,11 +361,6 @@ abstract class PaymentModuleCore extends Module
             }
         }
 
-        // The country can only change if the address used for the calculation is the delivery address, and if multi-shipping is activated
-        if (Configuration::get('PS_TAX_ADDRESS_TYPE') == 'id_address_delivery' && isset($context_country)) {
-            $this->context->country = $context_country;
-        }
-
         if (!$this->context->country->active) {
             PrestaShopLogger::addLog('PaymentModule::validateOrder - Country is not active', 3, null, 'Cart', (int) $id_cart, true);
 
