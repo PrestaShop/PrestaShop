@@ -219,12 +219,12 @@ class AdminCartRulesControllerCore extends AdminController
                 $this->errors[] = $this->trans('The starting time is in the past. To avoid any issue, create a promo code, select a condition or set a starting time in the future.', [], 'Admin.Catalog.Notification');
             }
 
-			$restrictions = [
-				'country' => $this->trans('Country selection', [], 'Admin.Catalog.Feature'),
-				'carrier' => $this->trans('Carrier selection', [], 'Admin.Catalog.Feature'),
-				'group' => $this->trans('Customer group selection', [], 'Admin.Catalog.Feature'),
-				'shop' => $this->trans('Shop selection', [], 'Admin.Catalog.Feature'),
-			];
+            $restrictions = [
+                'country' => $this->trans('Country selection', [], 'Admin.Catalog.Feature'),
+                'carrier' => $this->trans('Carrier selection', [], 'Admin.Catalog.Feature'),
+                'group' => $this->trans('Customer group selection', [], 'Admin.Catalog.Feature'),
+                'shop' => $this->trans('Shop selection', [], 'Admin.Catalog.Feature'),
+            ];
             // If the restriction is checked, but no item is selected, raise an error
             foreach ($restrictions as $type => $restriction_name) {
                 if (Tools::getValue($type . '_restriction') && empty(Tools::getValue($type . '_select'))) {
