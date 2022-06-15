@@ -79,11 +79,6 @@ class ProductTypeListenerTest extends FormListenerTestCase
         yield 'shipping in combination context' => [ProductType::TYPE_VIRTUAL, 'shipping', false];
         yield 'shipping in virtual context' => [ProductType::TYPE_COMBINATIONS, 'shipping', true];
 
-        yield 'retail_price.ecotax in standard context' => [ProductType::TYPE_STANDARD, 'pricing.retail_price.ecotax', true];
-        yield 'retail_price.ecotax in pack context' => [ProductType::TYPE_PACK, 'pricing.retail_price.ecotax', true];
-        yield 'retail_price.ecotax in virtual context' => [ProductType::TYPE_VIRTUAL, 'pricing.retail_price.ecotax', false];
-        yield 'retail_price.ecotax in combination context' => [ProductType::TYPE_COMBINATIONS, 'pricing.retail_price.ecotax', true];
-
         yield 'pack in standard context' => [ProductType::TYPE_STANDARD, 'stock.packed_products', false];
         yield 'pack in pack context' => [ProductType::TYPE_PACK, 'stock.packed_products', true];
         yield 'pack in combination context' => [ProductType::TYPE_COMBINATIONS, 'stock.packed_products', false];

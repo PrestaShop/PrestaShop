@@ -63,41 +63,41 @@ class ProductTypeListener implements EventSubscriberInterface
         $initialProductType = $data['header']['initial_type'] ?? $productType;
 
         if (ProductType::TYPE_COMBINATIONS === $productType) {
-            $this->removeSuppliers($form, $data);
-            $this->removeStock($form, $data);
+            $this->removeSuppliers($form);
+            $this->removeStock($form);
         } else {
-            $this->removeCombinations($form, $data);
+            $this->removeCombinations($form);
         }
 
         if (ProductType::TYPE_PACK !== $productType) {
-            $this->removePackStockType($form, $data);
-            $this->removePack($form, $data);
+            $this->removePackStockType($form);
+            $this->removePack($form);
         }
 
         $this->removeStockMovementsIfNecessary($form, $data);
 
         if (ProductType::TYPE_VIRTUAL === $productType) {
-            $this->removeShipping($form, $data);
+            $this->removeShipping($form);
             // We don't remove the ecotax during the transition request because we could lose the ecotax data
             // and some part of the price with it
             if (ProductType::TYPE_VIRTUAL === $initialProductType) {
-                $this->removeEcotax($form, $data);
+                $this->removeEcotax($form);
             }
         } else {
-            $this->removeVirtualProduct($form, $data);
+            $this->removeVirtualProduct($form);
         }
 
         $event->setData($data);
     }
 
-    protected function removeCombinations(FormInterface $form, array &$data): void
+    protected function removeCombinations(FormInterface $form): void
     {
         if ($form->has('options')) {
             $form->remove('combinations');
         }
     }
 
-    protected function removeSuppliers(FormInterface $form, array &$data): void
+    protected function removeSuppliers(FormInterface $form): void
     {
         if ($form->has('options')) {
             $optionsForm = $form->get('options');
@@ -105,12 +105,12 @@ class ProductTypeListener implements EventSubscriberInterface
         }
     }
 
-    protected function removeStock(FormInterface $form, array &$data): void
+    protected function removeStock(FormInterface $form): void
     {
         $form->remove('stock');
     }
 
-    protected function removePackStockType(FormInterface $form, array &$data): void
+    protected function removePackStockType(FormInterface $form): void
     {
         if (!$form->has('stock')) {
             return;
@@ -119,7 +119,7 @@ class ProductTypeListener implements EventSubscriberInterface
         $stock->remove('pack_stock_type');
     }
 
-    protected function removePack(FormInterface $form, array &$data): void
+    protected function removePack(FormInterface $form): void
     {
         if (!$form->has('stock')) {
             return;
@@ -128,7 +128,7 @@ class ProductTypeListener implements EventSubscriberInterface
         $stock->remove('packed_products');
     }
 
-    protected function removeVirtualProduct(FormInterface $form, array &$data): void
+    protected function removeVirtualProduct(FormInterface $form): void
     {
         if (!$form->has('stock')) {
             return;
@@ -137,7 +137,7 @@ class ProductTypeListener implements EventSubscriberInterface
         $stock->remove('virtual_product_file');
     }
 
-    protected function removeStockMovementsIfNecessary(FormInterface $form, array &$data): void
+    protected function removeStockMovementsIfNecessary(FormInterface $form, array $data): void
     {
         if (!$form->has('stock')) {
             return;
@@ -152,12 +152,12 @@ class ProductTypeListener implements EventSubscriberInterface
         }
     }
 
-    protected function removeShipping(FormInterface $form, array &$data): void
+    protected function removeShipping(FormInterface $form): void
     {
         $form->remove('shipping');
     }
 
-    protected function removeEcotax(FormInterface $form, array &$data): void
+    protected function removeEcotax(FormInterface $form): void
     {
         if (!$form->has('pricing')) {
             return;
