@@ -67,6 +67,10 @@ describe('BO - Catalog - Attributes & Features : Help card on features page', as
 
     const isHelpSidebarVisible = await featuresPage.openHelpSideBar(page);
     await expect(isHelpSidebarVisible).to.be.true;
+  });
+
+  it('should check the document language', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkDocumentLanguage', baseContext);
 
     const documentURL = await featuresPage.getHelpDocumentURL(page);
     await expect(documentURL).to.contains('country=en');
