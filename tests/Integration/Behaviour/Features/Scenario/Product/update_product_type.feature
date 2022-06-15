@@ -20,6 +20,8 @@ Feature: Add basic product from Back Office (BO)
     And attribute "Black" named "Black" in en language exists
     And attribute "Blue" named "Blue" in en language exists
     And attribute "Red" named "Red" in en language exists
+    And I identify tax rules group named "US-AL Rate (4%)" as "us-al-tax-rate"
+    And I identify tax rules group named "US-KS Rate (5.3%)" as "us-ks-tax-rate"
 
   Scenario: I update product type to combinations (stock is reset to zero)
     When I add product "productCombinations" with following information:
@@ -79,6 +81,39 @@ Feature: Add basic product from Back Office (BO)
       | home         | Home        | true       |
     When I update product "virtualProduct" type to virtual
     Then product "virtualProduct" type should be virtual
+
+  Scenario: I update product type to virtual (ecotax should be reset and impacted on price)
+    Given shop configuration for "PS_USE_ECOTAX" is set to 1
+    And shop configuration for "PS_ECOTAX_TAX_RULES_GROUP_ID" is set to us-ks-tax-rate
+    When I add product "virtualProduct" with following information:
+      | name[en-US] | bottle of beer |
+      | type        | standard       |
+    Then product "virtualProduct" should be disabled
+    And product "virtualProduct" type should be standard
+    And product "virtualProduct" localized "name" should be:
+      | locale | value          |
+      | en-US  | bottle of beer |
+    And product "virtualProduct" should be assigned to following categories:
+      | id reference | name[en-US] | is default |
+      | home         | Home        | true       |
+    When I update product "virtualProduct" prices with following information:
+      | price              | 51.42           |
+      | ecotax             | 8.56            |
+      | tax rules group    | US-AL Rate (4%) |
+    Then product virtualProduct should have following prices information:
+      | price                   | 51.42   |
+      # (51.42 + 4% = 53.4768) + (8.56 + 5.3%)
+      | price_tax_included      | 62.49048 |
+      | ecotax                  | 8.56     |
+      | ecotax_tax_included     | 9.01368  |
+    When I update product "virtualProduct" type to virtual
+    Then product "virtualProduct" type should be virtual
+    And product virtualProduct should have following prices information:
+      | price                   | 59.98   |
+      # 59.98 + 4% = 62.3792
+      | price_tax_included      | 62.3792 |
+      | ecotax                  | 0.00    |
+      | ecotax_tax_included     | 0.00    |
 
   Scenario: I update product type to pack
     When I add product "packProduct" with following information:

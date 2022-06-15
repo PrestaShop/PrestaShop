@@ -131,6 +131,13 @@ class ProductTypeUpdater
             $product->cache_default_attribute = 0;
             $updatedProperties[] = 'cache_default_attribute';
         }
+        // Virtual product cannot have ecotax
+        if ($productType->getValue() === ProductType::TYPE_VIRTUAL && !empty($product->ecotax)) {
+            $product->price += $product->ecotax;
+            $product->ecotax = 0;
+            $updatedProperties[] = 'ecotax';
+            $updatedProperties[] = 'price';
+        }
 
         $this->productRepository->partialUpdate($product, $updatedProperties, CannotUpdateProductException::FAILED_UPDATE_TYPE);
 

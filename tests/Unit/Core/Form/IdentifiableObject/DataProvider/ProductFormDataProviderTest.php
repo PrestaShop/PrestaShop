@@ -303,6 +303,7 @@ class ProductFormDataProviderTest extends TestCase
             'cover_thumbnail' => $newCover,
         ];
         $expectedOutputData['header']['name'] = $localizedValues;
+        $expectedOutputData['header']['initial_type'] = ProductType::TYPE_VIRTUAL;
         $expectedOutputData['header']['type'] = ProductType::TYPE_VIRTUAL;
         $expectedOutputData['header']['cover_thumbnail'] = $newCover;
 
@@ -338,6 +339,7 @@ class ProductFormDataProviderTest extends TestCase
             'price_tax_excluded' => new DecimalNumber('42.00'),
             'price_tax_included' => new DecimalNumber('50.40'),
             'ecotax' => new DecimalNumber('69.51'),
+            'ecotax_tax_included' => new DecimalNumber('72.2904'),
             'tax_rules_group_id' => 49,
             'on_sale' => true,
             'wholesale_price' => new DecimalNumber('66.56'),
@@ -349,7 +351,8 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData['pricing']['retail_price']['price_tax_excluded'] = 42.00;
         $expectedOutputData['pricing']['retail_price']['price_tax_included'] = 50.40;
         $expectedOutputData['pricing']['retail_price']['tax_rules_group_id'] = 49;
-        $expectedOutputData['pricing']['retail_price']['ecotax'] = 69.51;
+        $expectedOutputData['pricing']['retail_price']['ecotax_tax_excluded'] = 69.51;
+        $expectedOutputData['pricing']['retail_price']['ecotax_tax_included'] = 72.2904;
         $expectedOutputData['pricing']['on_sale'] = true;
         $expectedOutputData['pricing']['wholesale_price'] = 66.56;
         $expectedOutputData['pricing']['unit_price']['price_tax_excluded'] = 6.656;
@@ -947,6 +950,7 @@ class ProductFormDataProviderTest extends TestCase
         ];
 
         $expectedOutputData['header']['type'] = ProductType::TYPE_COMBINATIONS;
+        $expectedOutputData['header']['initial_type'] = ProductType::TYPE_COMBINATIONS;
         $expectedOutputData['combinations']['availability']['out_of_stock_type'] = OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE;
         $expectedOutputData['combinations']['availability']['available_now_label'] = $localizedValues;
         $expectedOutputData['combinations']['availability']['available_later_label'] = $localizedValues;
@@ -1246,6 +1250,7 @@ class ProductFormDataProviderTest extends TestCase
             $product['price_tax_excluded'] ?? new DecimalNumber('19.86'),
             $product['price_tax_included'] ?? new DecimalNumber('23.832'),
             $product['ecotax'] ?? new DecimalNumber('19.86'),
+            $product['ecotax_tax_included'] ?? new DecimalNumber('20.6544'),
             $product['tax_rules_group_id'] ?? 1,
             $product['on_sale'] ?? false,
             $product['wholesale_price'] ?? new DecimalNumber('19.86'),
@@ -1385,6 +1390,7 @@ class ProductFormDataProviderTest extends TestCase
             'id' => self::PRODUCT_ID,
             'header' => [
                 'type' => ProductType::TYPE_STANDARD,
+                'initial_type' => ProductType::TYPE_STANDARD,
                 'name' => [],
                 'cover_thumbnail' => self::COVER_URL,
             ],
@@ -1442,7 +1448,8 @@ class ProductFormDataProviderTest extends TestCase
                     'price_tax_excluded' => 19.86,
                     'price_tax_included' => 23.832,
                     'tax_rules_group_id' => 1,
-                    'ecotax' => 19.86,
+                    'ecotax_tax_excluded' => 19.86,
+                    'ecotax_tax_included' => 20.6544,
                 ],
                 'on_sale' => false,
                 'wholesale_price' => 19.86,

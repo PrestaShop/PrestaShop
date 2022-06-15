@@ -179,8 +179,8 @@ class ProductControllerTest extends FormGridControllerTestCase
                 'product[quantity][max_field]' => self::TEST_QUANTITY,
             ],
             [
-                'product[price_tax_excluded][min_field]' => self::TEST_PRICE,
-                'product[price_tax_excluded][max_field]' => self::TEST_PRICE,
+                'product[final_price_tax_excluded][min_field]' => self::TEST_PRICE,
+                'product[final_price_tax_excluded][max_field]' => self::TEST_PRICE,
             ],
         ];
 

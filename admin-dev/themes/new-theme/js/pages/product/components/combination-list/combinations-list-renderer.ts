@@ -237,6 +237,7 @@ export default class CombinationsListRenderer {
     const priceImpactTaxExcluded: BigNumber = new BigNumber(Number($priceImpactTaxExcluded.val()));
 
     if (priceImpactTaxExcluded.isNaN()) {
+      $priceImpactTaxExcluded.val(0);
       return;
     }
 
@@ -256,6 +257,7 @@ export default class CombinationsListRenderer {
     const priceImpactTaxIncluded: BigNumber = new BigNumber(Number($priceImpactTaxIncluded.val()));
 
     if (priceImpactTaxIncluded.isNaN()) {
+      $priceImpactTaxIncluded.val(0);
       return;
     }
 
