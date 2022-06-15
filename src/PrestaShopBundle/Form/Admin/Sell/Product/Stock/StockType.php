@@ -130,7 +130,7 @@ class StockType extends TranslatorAwareType
     {
         $resolver
             ->setDefaults([
-                'label' => false,
+                'label' => $this->trans('Stock', 'Admin.Catalog.Feature'),
                 'required' => false,
                 'virtual_product_file_id' => null,
                 // Suppliers can be removed so there might be extra data during type switching

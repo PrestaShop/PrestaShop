@@ -48,7 +48,7 @@ class CombinationsType extends TranslatorAwareType
     {
         $resolver
             ->setDefaults([
-                'label' => false,
+                'label' => $this->trans('Combinations', 'Admin.Catalog.Feature'),
                 'required' => false,
             ])
             ->setRequired([
