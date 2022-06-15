@@ -23,13 +23,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import {ConfirmModal, FormIframeModal} from '@components/modal';
+import {FormIframeModal} from '@components/modal';
 import ProductMap from '@pages/product/product-map';
 import ProductEvents from '@pages/product/product-event-map';
 import CombinationsService from '@pages/product/services/combinations-service';
 import {EventEmitter} from 'events';
 import BulkChoicesSelector from '@pages/product/components/combination-list/bulk-choices-selector';
-import {notifyFormErrors} from '@components/form/helpers';
 import ProgressModal from '@components/modal/progress-modal';
 
 const CombinationMap = ProductMap.combinations;
@@ -161,42 +160,38 @@ export default class BulkEditionHandler {
     let stopProcess = false;
     let doneCount = 0;
     while (combinationIds.length) {
+      const chunkIds: number[] = combinationIds.splice(0, bulkChunkSize);
+
       if (stopProcess) {
         break;
       }
 
       let data: Record<string, any>;
 
-      // eslint-disable-next-line no-restricted-syntax
-      for (const combinationId of combinationIds) {
-        combinationIds.splice(0, 1);
-
-        try {
+      try {
+        // eslint-disable-next-line no-await-in-loop
+        const response: Response = await this.combinationsService.bulkUpdate(
+          this.productId,
+          chunkIds,
+          new FormData(form),
+        );
           // eslint-disable-next-line no-await-in-loop
-          const response: Response = await this.combinationsService.bulkUpdate(
-            this.productId,
-            combinationId,
-            new FormData(form),
-          );
-          // eslint-disable-next-line no-await-in-loop
-          data = await response.json();
-          debugger;
-        } catch (e) {
-          data = {
-            error: `Something went wrong with ID ${combinationId}: ${e.message ?? ''}`,
-          };
-        }
-        doneCount += 1;
-        progressModal.updateProgress(doneCount);
+        data = await response.json();
+      } catch (e) {
+        data = {
+          errors: `Something went wrong with IDs ${chunkIds.join(', ')}: ${e.message ?? ''}`,
+        };
+      }
+      doneCount += chunkIds.length;
+      progressModal.updateProgress(doneCount);
 
-        if (!data.success) {
-          if (data.errors && Array.isArray(data.errors)) {
-            data.errors.forEach((error:string) => {
-              progressModal.addError(error);
-            });
-          } else {
-            progressModal.addError(data.errors ?? data.error ?? data.message);
-          }
+      if (!data.success) {
+        if (data.errors && Array.isArray(data.errors)) {
+          data.errors.forEach((error:string) => {
+            progressModal.addError(error);
+          });
+        } else {
+          progressModal.addError(data.errors ?? data.error ?? data.message);
         }
       }
     }

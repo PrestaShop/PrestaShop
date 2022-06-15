@@ -125,48 +125,55 @@ class CombinationController extends FrameworkBundleAdminController
      *
      * @param Request $request
      * @param int $productId
-     * @param int $combinationId
      *
      * @return JsonResponse
      */
-    public function bulkEditAction(Request $request, int $productId, int $combinationId): JsonResponse
+    public function bulkEditAction(Request $request, int $productId): JsonResponse
     {
-        try {
-            // PATCH request is required to avoid disabled fields to be forced with null values
-            $bulkCombinationForm = $this->getBulkCombinationFormBuilder()->getFormFor($combinationId, [], [
-                'method' => Request::METHOD_PATCH,
-                'product_id' => $productId,
-            ]);
-        } catch (CombinationNotFoundException $e) {
-            return $this->returnErrorJsonResponse(
-                ['error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
-                Response::HTTP_NOT_FOUND
-            );
+        $combinationIds = $request->request->get('combinationIds');
+        if (!$combinationIds) {
+            return $this->json([
+                'errors' => $this->getFallbackErrorMessage('', 0, 'Missing combinationIds in request body'),
+            ], Response::HTTP_BAD_REQUEST);
         }
 
-        try {
-            $bulkCombinationForm->handleRequest($request);
-            $result = $this->getBulkCombinationFormHandler()->handleFor($combinationId, $bulkCombinationForm);
-
-            if (!$result->isSubmitted()) {
-                return $this->json(['errors' => [
-                    'form' => [
-                        $this->trans('No submitted data.', 'Admin.Notifications.Error'),
-                    ],
-                ]], Response::HTTP_BAD_REQUEST);
+        $combinationIds = json_decode($combinationIds);
+        $errors = [];
+        foreach ($combinationIds as $combinationId) {
+            try {
+                // PATCH request is required to avoid disabled fields to be forced with null values
+                $bulkCombinationForm = $this->getBulkCombinationFormBuilder()->getFormFor($combinationId, [], [
+                    'method' => Request::METHOD_PATCH,
+                    'product_id' => $productId,
+                ]);
+            } catch (CombinationNotFoundException $e) {
+                $errors[] = $this->getErrorMessageForException($e, $this->getErrorMessages($e));
+                continue;
             }
 
-            if ($result->isValid()) {
-                return $this->json(['success' => true]);
+            try {
+                $bulkCombinationForm->handleRequest($request);
+                $result = $this->getBulkCombinationFormHandler()->handleFor($combinationId, $bulkCombinationForm);
+
+                if (!$result->isSubmitted()) {
+                    $errors[] = $this->trans('No submitted data.', 'Admin.Notifications.Error');
+                    continue;
+                }
+
+                if (!$result->isValid()) {
+                    $errors[] = $this->getFormErrorsForJS($bulkCombinationForm);
+                    continue;
+                }
+            } catch (CombinationException $e) {
+                $errors[] = $this->getErrorMessageForException($e, $this->getErrorMessages($e));
             }
-        } catch (CombinationException $e) {
-            return $this->returnErrorJsonResponse(
-                ['error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
-                Response::HTTP_BAD_REQUEST
-            );
         }
 
-        return $this->json(['errors' => $this->getFormErrorsForJS($bulkCombinationForm)], Response::HTTP_BAD_REQUEST);
+        if (empty($errors)) {
+            return $this->json(['success' => true]);
+        }
+
+        return $this->json(['errors' => $errors], Response::HTTP_BAD_REQUEST);
     }
 
     /**
