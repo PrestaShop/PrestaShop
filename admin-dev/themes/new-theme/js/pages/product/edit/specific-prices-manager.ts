@@ -106,7 +106,17 @@ export default class SpecificPricesManager {
       return;
     }
 
+    /** This should be the form container for the whole form element, so we can hide the whole block */
+    const formContainer = <HTMLElement>catalogPriceRulesContainer.parentNode;
+
+    if (formContainer === null) {
+      return;
+    }
+
     showCatalogPriceRulesButton.addEventListener('click', (e) => {
+      formContainer.classList.remove('d-none');
+      hideCatalogPriceRulesButton.classList.remove('d-none');
+      showCatalogPriceRulesButton.classList.add('d-none');
       if (!listRendered) {
         this.catalogPriceRuleList.renderList();
       } else {
@@ -118,9 +128,9 @@ export default class SpecificPricesManager {
 
     hideCatalogPriceRulesButton.addEventListener('click', (e) => {
       this.catalogPriceRuleList.toggleListVisibility(false);
-      hideCatalogPriceRulesButton.classList.add('hide');
-      showCatalogPriceRulesButton.classList.remove('hide');
-      catalogPriceRulesContainer.classList.add('hide');
+      formContainer.classList.add('d-none');
+      hideCatalogPriceRulesButton.classList.add('d-none');
+      showCatalogPriceRulesButton.classList.remove('d-none');
 
     });
   }

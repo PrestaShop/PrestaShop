@@ -54,7 +54,6 @@ export default class CatalogPriceRuleList {
       this.toggleListVisibility(catalogPriceRules.length > 0);
 
       catalogPriceRules.forEach((catalogPriceRule: CatalogPriceRuleForListing) => {
-        console.log(catalogPriceRule);
         const temporaryContainer = document.createElement('tbody');
         temporaryContainer.innerHTML = trTemplate.trim();
 

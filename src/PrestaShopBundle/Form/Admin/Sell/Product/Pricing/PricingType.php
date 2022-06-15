@@ -106,13 +106,16 @@ class PricingType extends TranslatorAwareType
             ->add('hide_catalog_price_rules', IconButtonType::class, [
                 'icon' => 'visibility_off',
                 'attr' => [
-                    'class' => 'hide btn-default',
+                    'class' => 'd-none btn-default',
                 ],
                 'label' => $this->trans('Hide catalog price rules', 'Admin.Catalog.Feature'),
             ])
             ->add('catalog_price_rules', CatalogPriceRulesType::class, [
                 'label' => $this->trans('Catalog price rules', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
+                'row_attr' => [
+                    'class' => 'd-none',
+                ],
             ])
             ->add('priority_management', ProductSpecificPricePriorityType::class, [
                 'label' => $this->trans('Priority management', 'Admin.Catalog.Feature'),
