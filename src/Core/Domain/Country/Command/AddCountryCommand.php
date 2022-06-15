@@ -108,7 +108,7 @@ class AddCountryCommand
         string $addressFormat
     ) {
         $this->localizedNames = $localizedNames;
-        $this->isoCode = $isoCode;
+        $this->isoCode = Tools::strtoupper(Tools::substr($isoCode, 0, 2));
         $this->callPrefix = $callPrefix;
         $this->addressFormat = $addressFormat;
     }
@@ -123,7 +123,7 @@ class AddCountryCommand
 
     public function getIsoCode(): string
     {
-        return Tools::strtoupper(Tools::substr($this->isoCode, 0, 2));
+        return $this->isoCode;
     }
 
     public function getCallPrefix(): int
