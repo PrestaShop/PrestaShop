@@ -82,6 +82,20 @@ describe('FO - Login : Login in FO', async () => {
     await expect(loginError).to.contains(loginPage.loginErrorText);
   });
 
+  it('should check password type', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkPasswordType', baseContext);
+
+    const inputType = await loginPage.getPasswordType(page);
+    await expect(inputType).to.equal('password');
+  });
+
+  it('should click on show button and check the password', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'clickOnShowButton', baseContext);
+
+    const inputType = await loginPage.showPassword(page);
+    await expect(inputType).to.equal('text');
+  });
+
   it('should enter a valid credentials', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'enterValidCredentials', baseContext);
 

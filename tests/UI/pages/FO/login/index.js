@@ -24,6 +24,7 @@ class Login extends FOBasePage {
     this.signInButton = `${this.loginForm} button#submit-login`;
     this.displayRegisterFormLink = 'div.no-account a[data-link-action=\'display-register-form\']';
     this.passwordReminderLink = '.forgot-password a';
+    this.showPasswordButton = '#login-form button[data-action=show-password]';
     this.alertDangerTextBlock = '#content section.login-form div.help-block li.alert-danger';
   }
 
@@ -55,6 +56,26 @@ class Login extends FOBasePage {
    */
   async getLoginError(page) {
     return this.getTextContent(page, this.alertDangerTextBlock);
+  }
+
+  /**
+   * Get password type
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getPasswordType(page) {
+    return this.getAttributeContent(page, this.passwordInput, 'type');
+  }
+
+  /**
+   * Show password
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async showPassword(page) {
+    await this.waitForSelectorAndClick(page, this.showPasswordButton);
+
+    return this.getAttributeContent(page, this.passwordInput, 'type');
   }
 
   /**
