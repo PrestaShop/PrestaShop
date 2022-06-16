@@ -390,6 +390,7 @@ class AddressController extends FrameworkBundleAdminController
             'displayInIframe' => $request->query->has('submitFormAjax'),
             'addressForm' => $addressForm->createView(),
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'cancelPath' => $request->query->has('back') ? $request->query->get('back') : $this->generateUrl('admin_addresses_index'),
         ]);
     }
 
