@@ -90,27 +90,27 @@ class CatalogPriceRuleForListing
     public function __construct(
         int $catalogPriceRuleId,
         string $catalogPriceRuleName,
-        ?string $shopName,
-        ?string $currencyName,
-        ?string $countryName,
-        ?string $groupName,
         int $fromQuantity,
         string $reductionType,
         DecimalNumber $reduction,
         DateTimeInterface $dateStart,
-        DateTimeInterface $dateEnd
+        DateTimeInterface $dateEnd,
+        ?string $shopName,
+        ?string $currencyName,
+        ?string $countryName,
+        ?string $groupName
     ) {
         $this->catalogPriceRuleId = $catalogPriceRuleId;
         $this->catalogPriceRuleName = $catalogPriceRuleName;
-        $this->shopName = $shopName;
-        $this->currencyName = $currencyName;
-        $this->countryName = $countryName;
-        $this->groupName = $groupName;
         $this->fromQuantity = $fromQuantity;
         $this->reductionType = $reductionType;
         $this->reduction = $reduction;
         $this->dateStart = $dateStart;
         $this->dateEnd = $dateEnd;
+        $this->shopName = $shopName;
+        $this->currencyName = $currencyName;
+        $this->countryName = $countryName;
+        $this->groupName = $groupName;
     }
 
     /**
@@ -127,38 +127,6 @@ class CatalogPriceRuleForListing
     public function getCatalogPriceRuleName(): string
     {
         return $this->catalogPriceRuleName;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getShopName(): ?string
-    {
-        return $this->shopName;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getCurrencyName(): ?string
-    {
-        return $this->currencyName;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getCountryName(): ?string
-    {
-        return $this->countryName;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getGroupName(): ?string
-    {
-        return $this->groupName;
     }
 
     /**
@@ -200,4 +168,37 @@ class CatalogPriceRuleForListing
     {
         return $this->dateEnd;
     }
+
+    /**
+     * @return string|null
+     */
+    public function getShopName(): ?string
+    {
+        return $this->shopName;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCurrencyName(): ?string
+    {
+        return $this->currencyName;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCountryName(): ?string
+    {
+        return $this->countryName;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getGroupName(): ?string
+    {
+        return $this->groupName;
+    }
+
 }

@@ -112,7 +112,7 @@ export default class SpecificPricesManager {
       return;
     }
 
-    showCatalogPriceRulesButton.addEventListener('click', (e) => {
+    showCatalogPriceRulesButton.addEventListener('click', () => {
       formContainer.classList.remove('d-none');
       hideCatalogPriceRulesButton.classList.remove('d-none');
       showCatalogPriceRulesButton.classList.add('d-none');
@@ -122,10 +122,9 @@ export default class SpecificPricesManager {
         catalogPriceRuleList.toggleListVisibility(true);
       }
       listRendered = true;
-
     });
 
-    hideCatalogPriceRulesButton.addEventListener('click', (e) => {
+    hideCatalogPriceRulesButton.addEventListener('click', () => {
       catalogPriceRuleList.toggleListVisibility(false);
       formContainer.classList.add('d-none');
       hideCatalogPriceRulesButton.classList.add('d-none');
