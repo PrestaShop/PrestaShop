@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Grid\Query\QueryParserInterface;
 use PrestaShop\PrestaShop\Core\Grid\Record\RecordCollection;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShop\PrestaShop\Core\Search\Filters;
 use Symfony\Component\DependencyInjection\Container;
 
 /**
@@ -93,9 +94,34 @@ final class DoctrineGridDataFactory implements GridDataFactoryInterface
             'search_criteria' => $searchCriteria,
         ]);
 
-        $records = $searchQueryBuilder->execute()->fetchAll();
         $recordsTotal = (int) $countQueryBuilder->execute()->fetch(PDO::FETCH_COLUMN);
 
+        // If offset is out of range, we apply biggest valid offset.
+        if ($recordsTotal > 0 && $searchCriteria->getOffset() >= $recordsTotal) {
+            $inRangeOffset = floor($recordsTotal / $searchCriteria->getLimit()) * $searchCriteria->getLimit();
+            // @TODO : add INFO log to prevent that we overwrite offset from `$searchCriteria->getOffset()` to `$inRangeOffset`
+
+            if ($searchCriteria instanceof Filters) {
+                $newSearchCriteria = clone $searchCriteria;
+                $newSearchCriteria->add(['offset' => $inRangeOffset]);
+            } else {
+                // @TODO : add INFO/WARN log to prevent that we replaced `get_class($searchCriteria)` by `Filters` search criteria
+
+                $newSearchCriteria = new Filters(
+                    [
+                        'limit' => $searchCriteria->getLimit(),
+                        'offset' => $inRangeOffset,
+                        'orderBy' => $searchCriteria->getOrderBy(),
+                        'sortOrder' => $searchCriteria->getOrderWay(),
+                        'filters' => $searchCriteria->getFilters(),
+                    ]
+                );
+            }
+
+            return $this->getData($newSearchCriteria);
+        }
+
+        $records = $searchQueryBuilder->execute()->fetchAll();
         $records = new RecordCollection($records);
 
         return new GridData(
