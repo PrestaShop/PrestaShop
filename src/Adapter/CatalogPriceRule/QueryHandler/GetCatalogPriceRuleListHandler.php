@@ -67,15 +67,15 @@ class GetCatalogPriceRuleListHandler implements GetCatalogPriceRuleListHandlerIn
             $return[] = new CatalogPriceRuleForListing(
                 (int) $catalogPriceRule['id_specific_price_rule'],
                 $catalogPriceRule['specific_price_rule_name'],
-                $catalogPriceRule['shop_name'],
-                $catalogPriceRule['symbol'],
-                $catalogPriceRule['lang_name'],
-                $catalogPriceRule['group_name'],
                 (int) $catalogPriceRule['from_quantity'],
                 $catalogPriceRule['reduction_type'],
                 new DecimalNumber($catalogPriceRule['reduction']),
                 DateTimeUtil::buildNullableDateTime($catalogPriceRule['from']),
-                DateTimeUtil::buildNullableDateTime($catalogPriceRule['to'])
+                DateTimeUtil::buildNullableDateTime($catalogPriceRule['to']),
+                $catalogPriceRule['shop_name'],
+                $catalogPriceRule['symbol'],
+                $catalogPriceRule['lang_name'],
+                $catalogPriceRule['group_name']
             );
         }
 
