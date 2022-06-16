@@ -1,4 +1,5 @@
-{**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,20 +22,27 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *}
+ */
 
-<div class="leadin">{block name="leadin"}{/block}</div>
+namespace PrestaShopBundle\Bridge\AdminController\Action;
 
-{block name="override_tpl"}{/block}
+/**
+ * Defines the contract for actions class and needed constant to know available action.
+ */
+interface ActionInterface
+{
+    public const AVAILABLE_ACTION_VIEW = 'view';
+    public const AVAILABLE_ACTION_EDIT = 'edit';
+    public const AVAILABLE_ACTION_DUPLICATE = 'duplicate';
+    public const AVAILABLE_ACTION_DELETE = 'delete';
 
-{hook h='displayAdminView'}
-{if isset($name_controller)}
-	{capture name=hookName assign=hookName}display{$name_controller|ucfirst}View{/capture}
-	{hook h=$hookName}
-{elseif isset($controller_name)}
-    {capture name=hookName assign=hookName}display{$controller_name|ucfirst}View{/capture}
-    {hook h=$hookName}
-{elseif isset($smarty.get.controller)}
-	{capture name=hookName assign=hookName}display{$smarty.get.controller|ucfirst|htmlentities}View{/capture}
-	{hook h=$hookName}
-{/if}
+    /**
+     * @return array
+     */
+    public function getConfig(): array;
+
+    /**
+     * @return string
+     */
+    public function getLabel(): string;
+}

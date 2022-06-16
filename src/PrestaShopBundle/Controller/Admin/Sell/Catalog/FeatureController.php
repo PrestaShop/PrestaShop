@@ -24,22 +24,132 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
+use PrestaShopBundle\Bridge\AdminController\Action\HeaderToolbarAction;
+use PrestaShopBundle\Bridge\AdminController\Action\ListBulkAction;
+use PrestaShopBundle\Bridge\AdminController\Action\ListHeaderToolbarAction;
+use PrestaShopBundle\Bridge\AdminController\Action\ListRowAction;
+use PrestaShopBundle\Bridge\AdminController\AdminControllerTrait;
+use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
+use PrestaShopBundle\Bridge\AdminController\Field\Field;
+use PrestaShopBundle\Bridge\AdminController\LegacyControllerBridgeInterface;
+use PrestaShopBundle\Bridge\AdminController\LegacyListControllerBridgeInterface;
+use PrestaShopBundle\Bridge\Helper\HelperListConfiguration;
+use PrestaShopBundle\Bridge\Helper\HelperListCustomizer\HelperListFeatureBridge;
+use PrestaShopBundle\Bridge\Smarty\SmartyTrait;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Tools;
 
 /**
  * Controller responsible for "Sell > Catalog > Attributes & Features > Features" page
  */
-class FeatureController extends FrameworkBundleAdminController
+class FeatureController extends FrameworkBundleAdminController implements LegacyControllerBridgeInterface, LegacyListControllerBridgeInterface
 {
+    use AdminControllerTrait;
+    use SmartyTrait;
+
+    /**
+     * This parameter is needed by legacy hook, so we can't remove it.
+     *
+     * @var string
+     */
+    public $php_self;
+
+    /**
+     * This parameter is needed by legacy helper shop, so we can't remove it.
+     *
+     * @var bool
+     */
+    public $multishop_context_group = true;
+
+    /**
+     * This parameter is needed by legacy helper shop, we can't remove it.
+     *
+     * @var int
+     */
+    public $multishop_context;
+
+    /**
+     * @var ControllerConfiguration
+     */
+    public $controllerConfiguration;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTable(): string
+    {
+        return 'feature';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getClassName(): string
+    {
+        return 'Feature';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getIdentifier(): string
+    {
+        return 'id_feature';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPositionIdentifier(): string
+    {
+        return 'id_feature';
+    }
+
+    /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     */
+    public function indexAction(Request $request)
+    {
+        $this->buildGenericAction();
+        $helperListConfiguration = $this->get('prestashop.core.bridge.helper_list_configuration_factory')->create(
+            $this->getTable(),
+            $this->getClassName(),
+            $this->controllerConfiguration,
+            $this->getIdentifier(),
+            $this->getPositionIdentifier(),
+            'position',
+            true
+        );
+        $this->setListFields($helperListConfiguration);
+        $this->buildActionList($helperListConfiguration);
+
+        if ($request->request->has('submitResetfeature')) {
+            $this->getResetFiltersHelper()->resetFilters($helperListConfiguration, $request);
+        }
+
+        $this->getFiltersHelper()->processFilter(
+            $request,
+            $helperListConfiguration
+        );
+
+        return $this->renderSmarty(
+            $this->getHelperListBridge()->generateList(
+                $helperListConfiguration
+            )
+        );
+    }
+
     /**
      * Create feature action.
      *
@@ -133,6 +243,94 @@ class FeatureController extends FrameworkBundleAdminController
             'featureForm' => $featureForm->createView(),
             'editableFeature' => $editableFeature,
         ]);
+    }
+
+    public function getHelperListBridge(): HelperListFeatureBridge
+    {
+        return $this->get('prestashop.core.bridge.helper_list_feature');
+    }
+
+    private function buildGenericAction(): void
+    {
+        $this->addAction(new HeaderToolbarAction('new_feature', [
+            //Used $this->generateUrl('admin_features_add')
+            'href' => $this->controllerConfiguration->legacyCurrentIndex . '&addfeature&token=' . $this->controllerConfiguration->token,
+            'desc' => $this->trans('Add new feature', 'Admin.Catalog.Feature'),
+            'icon' => 'process-icon-new',
+        ]));
+        $this->addAction(new HeaderToolbarAction('new_feature_value', [
+            //Used $this->generateUrl('admin_features_add_value')
+            'href' => $this->controllerConfiguration->legacyCurrentIndex . '&addfeature_value&id_feature=' . (int) Tools::getValue('id_feature') . '&token=' . $this->controllerConfiguration->token,
+            'desc' => $this->trans('Add new feature value', 'Admin.Catalog.Help'),
+            'icon' => 'process-icon-new',
+        ]));
+    }
+
+    /**
+     * Build actions for list.
+     *
+     * @return void
+     *
+     * @throws \Exception
+     */
+    private function buildActionList(HelperListConfiguration $helperListConfiguration): void
+    {
+        $this->addActionList(new ListHeaderToolbarAction('new', [
+            //Replace by $this->generateUrl('admin_features_add')
+            'href' => $this->controllerConfiguration->legacyCurrentIndex . '&addfeature&token=' . $this->controllerConfiguration->token,
+            'desc' => $this->trans('Add new', 'Admin.Actions'),
+        ]), $helperListConfiguration);
+
+        $this->addActionList(new ListRowAction('view'), $helperListConfiguration);
+        $this->addActionList(new ListRowAction('edit'), $helperListConfiguration);
+        $this->addActionList(new ListRowAction('delete'), $helperListConfiguration);
+
+        $this->addActionList(new ListBulkAction('delete', [
+            'text' => $this->trans('Delete selected', 'Admin.Actions'),
+            'icon' => 'icon-trash',
+            'confirm' => $this->trans('Delete selected items?', 'Admin.Notifications.Warning'),
+        ]), $helperListConfiguration);
+    }
+
+    /**
+     * Define fields in the list.
+     *
+     * @return void
+     */
+    private function setListFields(HelperListConfiguration $helperListConfiguration): void
+    {
+        $this->addListField(new Field(
+            'id_feature', [
+                'title' => $this->trans('ID', 'Admin.Global', []),
+                'align' => 'center',
+                'class' => 'fixed-width-xs',
+            ]
+        ), $helperListConfiguration);
+        $this->addListField(new Field(
+            'name', [
+                'title' => $this->trans('Name', 'Admin.Global', []),
+                'width' => 'auto',
+                'filter_key' => 'b!name',
+            ]
+        ), $helperListConfiguration);
+        $this->addListField(new Field(
+            'value', [
+                'title' => $this->trans('Values', 'Admin.Global', []),
+                'orderby' => false,
+                'search' => false,
+                'align' => 'center',
+                'class' => 'fixed-width-xs',
+            ]
+        ), $helperListConfiguration);
+        $this->addListField(new Field(
+            'position', [
+                'title' => $this->trans('Position', 'Admin.Global', []),
+                'filter_key' => 'a!position',
+                'align' => 'center',
+                'class' => 'fixed-width-xs',
+                'position' => 'position',
+            ]
+        ), $helperListConfiguration);
     }
 
     /**

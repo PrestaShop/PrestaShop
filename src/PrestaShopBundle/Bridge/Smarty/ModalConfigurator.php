@@ -1,4 +1,5 @@
-{**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,20 +22,29 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *}
+ */
 
-<div class="leadin">{block name="leadin"}{/block}</div>
+declare(strict_types=1);
 
-{block name="override_tpl"}{/block}
+namespace PrestaShopBundle\Bridge\Smarty;
 
-{hook h='displayAdminView'}
-{if isset($name_controller)}
-	{capture name=hookName assign=hookName}display{$name_controller|ucfirst}View{/capture}
-	{hook h=$hookName}
-{elseif isset($controller_name)}
-    {capture name=hookName assign=hookName}display{$controller_name|ucfirst}View{/capture}
-    {hook h=$hookName}
-{elseif isset($smarty.get.controller)}
-	{capture name=hookName assign=hookName}display{$smarty.get.controller|ucfirst|htmlentities}View{/capture}
-	{hook h=$hookName}
-{/if}
+use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
+
+/**
+ * This class hydrates modals information needed for legacy modals.
+ */
+class ModalConfigurator implements ConfiguratorInterface
+{
+    /**
+     * @param ControllerConfiguration $controllerConfiguration
+     *
+     * @return void
+     */
+    public function configure(ControllerConfiguration $controllerConfiguration): void
+    {
+        $controllerConfiguration->templatesVars['img_base_path'] = __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/';
+        $controllerConfiguration->templatesVars['check_url_fopen'] = (ini_get('allow_url_fopen') ? 'ok' : 'ko');
+        $controllerConfiguration->templatesVars['check_openssl'] = (extension_loaded('openssl') ? 'ok' : 'ko');
+        $controllerConfiguration->templatesVars['add_permission'] = 1;
+    }
+}

@@ -1,4 +1,5 @@
-{**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,20 +22,15 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *}
+ */
 
-<div class="leadin">{block name="leadin"}{/block}</div>
+declare(strict_types=1);
 
-{block name="override_tpl"}{/block}
+namespace PrestaShopBundle\Bridge\Exception;
 
-{hook h='displayAdminView'}
-{if isset($name_controller)}
-	{capture name=hookName assign=hookName}display{$name_controller|ucfirst}View{/capture}
-	{hook h=$hookName}
-{elseif isset($controller_name)}
-    {capture name=hookName assign=hookName}display{$controller_name|ucfirst}View{/capture}
-    {hook h=$hookName}
-{elseif isset($smarty.get.controller)}
-	{capture name=hookName assign=hookName}display{$smarty.get.controller|ucfirst|htmlentities}View{/capture}
-	{hook h=$hookName}
-{/if}
+/**
+ * Base class for PrestaShop bridge exceptions.
+ */
+class BridgeException extends \Exception
+{
+}

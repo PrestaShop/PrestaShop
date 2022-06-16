@@ -684,7 +684,7 @@ class HelperListCore extends Helper
             $table_dnd = true;
         }
 
-        $prefix = isset($this->controller_name) ? str_replace(['admin', 'controller'], '', Tools::strtolower($this->controller_name)) : '';
+        $prefix = str_replace(['admin', 'controller'], '', Tools::strtolower($this->controller_name));
         $ajax = false;
         foreach ($this->fields_list as $key => $params) {
             if (!isset($params['type'])) {
@@ -813,7 +813,9 @@ class HelperListCore extends Helper
             'name' => isset($name) ? $name : null,
             'name_id' => isset($name_id) ? $name_id : null,
             'row_hover' => $this->row_hover,
+            'js_dir' => _PS_JS_DIR_,
             'list_id' => isset($this->list_id) ? $this->list_id : $this->table,
+            'controller_name' => $this->controller_name,
         ], $this->tpl_vars));
 
         return $this->header_tpl->fetch();
