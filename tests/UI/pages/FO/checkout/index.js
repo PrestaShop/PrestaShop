@@ -359,21 +359,21 @@ class Checkout extends FOBasePage {
   }
 
   /**
-   * Check if recyclable checkbox is visible
+   * Check if recycled packaging checkbox is visible
    * @param page {Page} Browser tab
    * @return {Promise<boolean>}
    */
-  isRecyclableCheckboxVisible(page) {
+  isRecycledPackagingCheckboxVisible(page) {
     return this.elementVisible(page, this.recycableGiftCheckbox, 1000);
   }
 
   /**
-   * Set recycle packaging checkbox
+   * Set recycled packaging checkbox
    * @param page {Page} Browser tab
    * @param toCheck {boolean} True if we need to check recycle packaging checkbox
    * @returns {Promise<void>}
    */
-  async setRecyclePackagingCheckbox(page, toCheck = true) {
+  async setRecycledPackagingCheckbox(page, toCheck = true) {
     await this.setChecked(page, this.recycableGiftCheckbox, toCheck);
   }
 

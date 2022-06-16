@@ -24,7 +24,7 @@ class OrderConfirmation extends FOBasePage {
     this.orderReferenceValue = '#order-reference-value';
     this.customerSupportLink = '#content-hook_payment_return a';
     this.orderConfirmationTable = 'div.order-confirmation-table';
-    this.giftWrappingRow = `${this.orderConfirmationTable} tr[data-role=gift_wrapping]`;
+    this.giftWrappingRow = `${this.orderConfirmationTable} tr:nth-child(3)`;
   }
 
   /*

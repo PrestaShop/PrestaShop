@@ -66,7 +66,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           isGiftWrapping: true,
           giftWrappingPrice: 0,
           isGiftWrappingTax: 'None',
-          isRecyclablePackage: false,
+          isRecycledPackaging: false,
         },
     },
     // Case 2 : Add gift wrapping price
@@ -77,7 +77,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           isGiftWrapping: true,
           giftWrappingPrice: 1,
           isGiftWrappingTax: 'None',
-          isRecyclablePackage: false,
+          isRecycledPackaging: false,
         },
     },
     // Case 3 : Add gift wrapping tax
@@ -89,10 +89,10 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           giftWrappingPrice: 1,
           isGiftWrappingTax: 'FR Taux standard (20%)',
           taxValue: DefaultFrTax.rate / 100,
-          isRecyclablePackage: false,
+          isRecycledPackaging: false,
         },
     },
-    // Case 4 : Enable recycled package
+    // Case 4 : Enable offer recycled packaging
     {
       args:
         {
@@ -100,14 +100,14 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           isGiftWrapping: true,
           giftWrappingPrice: 0,
           isGiftWrappingTax: 'None',
-          isRecyclablePackage: true,
+          isRecycledPackaging: true,
         },
     },
   ];
 
   tests.forEach((test, index) => {
     describe(`Set gift option with status: '${test.args.isGiftWrapping}', price: '${test.args.giftWrappingPrice}', `
-      + `tax: '${test.args.isGiftWrappingTax}', recyclable package: '${test.args.isRecyclablePackage}'`, async () => {
+      + `tax: '${test.args.isGiftWrappingTax}', recyclable packaging: '${test.args.isRecycledPackaging}'`, async () => {
       describe('Set gift options in BO', async () => {
         it('should go to \'Shop Parameters > Order Settings\' page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToOrderSettingsPage${index}`, baseContext);
@@ -132,10 +132,11 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
             test.args.isGiftWrapping,
             test.args.giftWrappingPrice,
             test.args.isGiftWrappingTax,
-            test.args.isRecyclablePackage,
+            test.args.isRecycledPackaging,
           );
 
-          await expect(result).to.contains(orderSettingsPage.successfulUpdateMessage);
+          await expect(result, 'Success message is not displayed!')
+            .to.contains(orderSettingsPage.successfulUpdateMessage);
         });
       });
 
@@ -174,7 +175,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           await foLoginPage.goToHomePage(page);
 
           const isHomePage = await homePage.isHomePage(page);
-          await expect(isHomePage).to.be.true;
+          await expect(isHomePage, 'Fail to open home page!').to.be.true;
         });
 
         it('should add product to the cart', async function () {
@@ -213,11 +214,12 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           it('should check the gift checkbox and set a gift message', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `setGiftMessage${index}`, baseContext);
 
+            await checkoutPage.setGiftCheckBox(page);
+
             const isVisible = await checkoutPage.isGiftMessageTextareaVisible(page);
             await expect(isVisible, 'Gift message textarea is not visible!').to.be.true;
 
             if (isVisible) {
-              await checkoutPage.setGiftCheckBox(page);
               await checkoutPage.setGiftMessage(page, 'This is your gift');
             }
           });
@@ -239,20 +241,20 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
         }
 
         it(
-          `should check that recyclable package checkbox visibility is '${test.args.isRecyclablePackage}'`
+          `should check that recycled packaging checkbox visibility is '${test.args.isRecycledPackaging}'`
           + 'and check it if true',
           async function () {
-            await testContext.addContextItem(this, 'testIdentifier', `checkRecyclableVisibility${index}`, baseContext);
+            await testContext.addContextItem(this, 'testIdentifier', `checkRecycleDVisibility${index}`, baseContext);
 
-            const isRecyclableCheckboxVisible = await checkoutPage.isRecyclableCheckboxVisible(page);
+            const isRecycledPackagingCheckboxVisible = await checkoutPage.isRecycledPackagingCheckboxVisible(page);
 
             await expect(
-              isRecyclableCheckboxVisible,
-              'Gift checkbox has not the correct status',
-            ).to.equal(test.args.isRecyclablePackage);
+              isRecycledPackagingCheckboxVisible,
+              'Recycled packaging checkbox has not the correct status',
+            ).to.equal(test.args.isRecycledPackaging);
 
-            if (test.args.isRecyclablePackage) {
-              await checkoutPage.setRecyclePackagingCheckbox(page);
+            if (test.args.isRecycledPackaging) {
+              await checkoutPage.setRecycledPackagingCheckbox(page);
             }
           });
 
@@ -329,7 +331,7 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           await expect(pageTitle, 'View order page is not visible!').to.contains(orderPageTabListBlock.pageTitle);
         });
 
-        if (test.args.isGiftWrapping && !test.args.isRecyclablePackage) {
+        if (test.args.isGiftWrapping && !test.args.isRecycledPackaging) {
           it('should check \'gift wrapping\' badge on status tab', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkGiftOnStatusTab${index}`, baseContext);
 
@@ -375,15 +377,15 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           });
         }
 
-        if (test.args.isRecyclablePackage) {
+        if (test.args.isRecycledPackaging) {
           it('should check \'Recycled packaging\' and \'gift wrapping\' badges on status tab', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkBadgesOnStatusTab${index}`, baseContext);
 
-            const recyclePackagingBadge = await orderPageTabListBlock.getSuccessBadge(page, 1);
-            await expect(recyclePackagingBadge).to.be.equal('Recycled packaging');
+            const isRecycledPackaging = await orderPageTabListBlock.getSuccessBadge(page, 1);
+            await expect(isRecycledPackaging).to.be.equal('Recycled packaging');
 
-            const isRecyclingPackage = await orderPageTabListBlock.getSuccessBadge(page, 2);
-            await expect(isRecyclingPackage).to.be.equal('Gift wrapping');
+            const isGiftWrappingPackage = await orderPageTabListBlock.getSuccessBadge(page, 2);
+            await expect(isGiftWrappingPackage).to.be.equal('Gift wrapping');
           });
 
           it('should check \'Recycled packaging\' and \'gift wrapping\' badges on documents tab', async function () {
@@ -392,8 +394,8 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
             const isTabOpened = await orderPageTabListBlock.goToDocumentsTab(page);
             await expect(isTabOpened, 'Documents tab is not opened!').to.be.true;
 
-            const isRecyclingPackage = await orderPageTabListBlock.getSuccessBadge(page, 1);
-            await expect(isRecyclingPackage).to.be.equal('Recycled packaging');
+            const isRecycledPackaging = await orderPageTabListBlock.getSuccessBadge(page, 1);
+            await expect(isRecycledPackaging).to.be.equal('Recycled packaging');
 
             const isGiftWrapping = await orderPageTabListBlock.getSuccessBadge(page, 2);
             await expect(isGiftWrapping).to.be.equal('Gift wrapping');
@@ -405,8 +407,8 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
             const isTabOpened = await orderPageTabListBlock.goToCarriersTab(page);
             await expect(isTabOpened, 'Carriers tab is not opened!').to.be.true;
 
-            const isRecyclingPackage = await orderPageTabListBlock.getSuccessBadge(page, 1);
-            await expect(isRecyclingPackage).to.be.equal('Recycled packaging');
+            const isRecycledPackaging = await orderPageTabListBlock.getSuccessBadge(page, 1);
+            await expect(isRecycledPackaging).to.be.equal('Recycled packaging');
 
             const isGiftWrapping = await orderPageTabListBlock.getSuccessBadge(page, 2);
             await expect(isGiftWrapping).to.be.equal('Gift wrapping');
