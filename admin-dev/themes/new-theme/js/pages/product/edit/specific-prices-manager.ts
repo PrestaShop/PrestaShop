@@ -91,8 +91,7 @@ export default class SpecificPricesManager {
     });
   }
 
-  private initCatalogPriceRules()
-  {
+  private initCatalogPriceRules() {
     const catalogPriceRuleList = new CatalogPriceRuleList();
 
     const showCatalogPriceRulesButton = document.querySelector<HTMLElement>(CatalogPriceRulesMap.showCatalogPriceRules);
