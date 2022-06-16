@@ -178,6 +178,34 @@ class AddressControllerTest extends FormGridControllerTestCase
      * @depends testFilters
      *
      * @param int $addressId
+     *
+     * @return int
+     */
+    public function testOffsetOutOfRange(int $addressId): int
+    {
+        // We validate that the request return an address with valid offset
+        $addresses = $this->getEntitiesFromGrid(
+            ['address[offset]' => 0]
+        );
+        $this->assertGreaterThanOrEqual(1, count($addresses), 'Expected at least one address with valid offset');
+        // Preceding filter parameters should be applied here.
+        $this->assertCollectionContainsEntity($addresses, $addressId);
+
+        // We should get an address even with offset out of range
+        $addresses = $this->getEntitiesFromGrid(
+            ['address[offset]' => 10]
+        );
+        $this->assertGreaterThanOrEqual(1, count($addresses), 'Should return last element even if offset out of range.');
+        // Preceding filter parameters should be applied here.
+        $this->assertCollectionContainsEntity($addresses, $addressId);
+
+        return $addressId;
+    }
+
+    /**
+     * @depends testOffsetOutOfRange
+     *
+     * @param int $addressId
      */
     public function testDelete(int $addressId): void
     {
