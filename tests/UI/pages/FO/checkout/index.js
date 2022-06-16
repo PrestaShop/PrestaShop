@@ -368,6 +368,16 @@ class Checkout extends FOBasePage {
   }
 
   /**
+   * Set recycle packaging checkbox
+   * @param page {Page} Browser tab
+   * @param toCheck {boolean} True if we need to check recycle packaging checkbox
+   * @returns {Promise<void>}
+   */
+  async setRecyclePackagingCheckbox(page, toCheck = true) {
+    await this.setChecked(page, this.recycableGiftCheckbox, toCheck);
+  }
+
+  /**
    * Get gift price from cart summary
    * @param page {Page} Browser tab
    * @return {Promise<string>}
