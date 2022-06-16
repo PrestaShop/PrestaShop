@@ -1361,6 +1361,43 @@ $product-page-padding-bottom: 80px !default;
         }
       }
     }
+
+    .ecotax-tax-excluded {
+      margin-left: 3rem;
+
+      .input-group {
+        position: relative;
+
+        &::before {
+          position: absolute;
+          left: -2rem;
+          font-size: 1.5rem;
+          content: "+";
+        }
+      }
+    }
+
+    .ecotax-tax-included {
+      margin-left: 2rem;
+
+      .input-group {
+        position: relative;
+
+        &::before {
+          position: absolute;
+          left: -1rem;
+          font-size: 1.5rem;
+          content: "(";
+        }
+
+        &::after {
+          position: absolute;
+          right: -1rem;
+          font-size: 1.5rem;
+          content: ")";
+        }
+      }
+    }
   }
 
   .price-summary-widget {
@@ -1745,6 +1782,17 @@ $product-page-padding-bottom: 80px !default;
   .combination-images-selector.disabled .combination-image-choice {
     cursor: not-allowed;
     opacity: 0.4;
+  }
+
+  .final-price-preview {
+    display: block;
+    width: auto;
+    padding: 0.25rem 0.625rem;
+    @include border-radius(0.5rem);
+    font-size: 1rem;
+    font-weight: 700;
+    color: #363a41;
+    background-color: #eaebec;
   }
 }
 

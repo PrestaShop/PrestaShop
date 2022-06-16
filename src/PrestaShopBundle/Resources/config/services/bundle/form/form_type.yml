@@ -1335,6 +1335,7 @@ services:
     public: true
     arguments:
       - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_STOCK_MANAGEMENT')"
+      - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_USE_ECOTAX')"
     tags:
       - { name: form.type }
 
@@ -1549,11 +1550,13 @@ services:
     arguments:
       - '@prestashop.core.localization.locale.context_locale'
       - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
-      - '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider").getChoices()'
-      - '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider").getChoicesAttributes()'
+      - '@prestashop.core.form.choice_provider.tax_rule_group_choice_provider'
       - '@router'
       - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_TAX')"
       - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_USE_ECOTAX')"
+      - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_ECOTAX_TAX_RULES_GROUP_ID')"
+      - '@prestashop.adapter.tax.tax_computer'
+      - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
     tags:
       - { name: form.type }
 
@@ -1795,6 +1798,8 @@ services:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationItemType'
     parent: 'form.type.translatable.aware'
     public: true
+    arguments:
+      - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
     tags:
       - { name: form.type }
 
@@ -1821,6 +1826,12 @@ services:
     arguments:
       - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
       - "@=service('prestashop.adapter.legacy.configuration').get('PS_WEIGHT_UNIT')"
+      - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_TAX')"
+      - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_USE_ECOTAX')"
+      - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_ECOTAX_TAX_RULES_GROUP_ID')"
+      - '@prestashop.adapter.tax.tax_computer'
+      - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
+      - '@prestashop.core.localization.locale.context_locale'
     tags:
       - { name: form.type }
 

@@ -41,12 +41,13 @@
 {% endblock %}
 
 {% block related_product_row %}
-  <li class="related-product entity-item" id="{{ form.vars.name }}">
+  {% set attr = attr|merge({'class': (attr.class|default('') ~ ' related-product entity-item')|trim}) %}
+  <li {{ block('widget_container_attributes') }}>
     <div class="related-product-image">
       {{ form_widget(form.image) }}
     </div>
     <div class="related-product-legend">
-      {{ form_widget(form.name, {prefix: '<i class="material-icons delete entity-item-delete">delete</i>'}) }}
+      {{ form_widget(form.name, {prefix: '<i class="material-icons entity-item-delete">delete</i>'}) }}
     </div>
     {{ form_widget(form.id) }}
   </li>

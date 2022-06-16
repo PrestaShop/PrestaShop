@@ -293,8 +293,11 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
         $productId = new ProductId((int) $product->id);
 
         $taxEnabled = (bool) $this->configuration->get('PS_TAX', null, $shopConstraint);
+        $ecotaxEnabled = (bool) $this->configuration->get('PS_USE_ECOTAX', null, $shopConstraint);
+        $ecoTaxGroupId = (int) $this->configuration->get('PS_ECOTAX_TAX_RULES_GROUP_ID', null, $shopConstraint);
         $priceTaxExcluded = $this->numberExtractor->extract($product, 'price');
         $unitPriceTaxExcluded = $this->numberExtractor->extract($product, 'unit_price');
+        $ecotaxTaxExcluded = $this->numberExtractor->extract($product, 'ecotax');
 
         if ($taxEnabled) {
             $priceTaxIncluded = $this->taxComputer->computePriceWithTaxes(
@@ -307,15 +310,27 @@ final class GetProductForEditingHandler implements GetProductForEditingHandlerIn
                 new TaxRulesGroupId((int) $product->id_tax_rules_group),
                 new CountryId($this->countryId)
             );
+            $ecotaxTaxIncluded = $this->taxComputer->computePriceWithTaxes(
+                $ecotaxTaxExcluded,
+                new TaxRulesGroupId($ecoTaxGroupId),
+                new CountryId($this->countryId)
+            );
         } else {
             $priceTaxIncluded = $priceTaxExcluded;
             $unitPriceTaxIncluded = $unitPriceTaxExcluded;
+            $ecotaxTaxIncluded = $ecotaxTaxExcluded;
+        }
+
+        // Ecotax is applied independently of tax enabled
+        if ($ecotaxEnabled) {
+            $priceTaxIncluded = $priceTaxIncluded->plus($ecotaxTaxIncluded);
         }
 
         return new ProductPricesInformation(
             $priceTaxExcluded,
             $priceTaxIncluded,
-            $this->numberExtractor->extract($product, 'ecotax'),
+            $ecotaxTaxExcluded,
+            $ecotaxTaxIncluded,
             (int) $product->id_tax_rules_group,
             (bool) $product->on_sale,
             $this->numberExtractor->extract($product, 'wholesale_price'),
