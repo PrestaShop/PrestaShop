@@ -88,7 +88,7 @@ class CarrierDataProvider
                 $choiceId .= ' (' . $carrier['delay'] . ')';
             }
 
-            $carriersChoices[$choiceId] = $carrier['id_carrier'];
+            $carriersChoices[$choiceId] = (int) $carrier['id_carrier'];
         }
 
         return $carriersChoices;
