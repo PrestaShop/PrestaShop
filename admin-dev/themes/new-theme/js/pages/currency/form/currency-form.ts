@@ -30,7 +30,6 @@ import ReplaceFormatter from '@PSVue/plugins/vue-i18n/replace-formatter';
 import {EventEmitter} from '@components/event-emitter';
 import CurrencyFormatter from './components/CurrencyFormatter.vue';
 
-
 export default class CurrencyForm {
   map: Record<string, any>;
 
