@@ -129,7 +129,7 @@ export class FormIframeModal extends IframeModal implements FormIframeModalType 
     formConfirmCallback(iframeForm, iframe, event);
   }
 
-  public getForm(iframe: HTMLIFrameElement, formSelector: string): HTMLFormElement | null {
+  private getForm(iframe: HTMLIFrameElement, formSelector: string): HTMLFormElement | null {
     if (!iframe.contentWindow) {
       return null;
     }

@@ -161,7 +161,8 @@ class CombinationController extends FrameworkBundleAdminController
                 }
 
                 if (!$result->isValid()) {
-                    // it's the same form for all combinations, so if it is invalid for one, it will be invalid for all of them
+                    // it's the same form for all combinations, so if it is invalid for one, it will be invalid for all of them,
+                    // so we return and break the loop
                     return $this->json([
                         'formErrors' => $this->getFormErrorsForJS($bulkCombinationForm),
                         'formContent' => $this->renderView('@PrestaShop/Admin/Sell/Catalog/Product/Combination/bulk_form.html.twig', [

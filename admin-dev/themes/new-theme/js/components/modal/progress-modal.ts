@@ -414,6 +414,8 @@ export class ErrorView implements ViewContainerType {
 export class ProgressModal extends Modal implements ProgressModalType {
   modal!: ProgressModalContainerType;
 
+  protected id: string;
+
   protected doneCount: number;
 
   protected total: number;
@@ -442,6 +444,7 @@ export class ProgressModal extends Modal implements ProgressModalType {
     };
 
     super(params);
+    this.id = params.id;
     this.doneCount = 0;
     this.total = params.total;
     this.errors = [];
@@ -497,6 +500,10 @@ export class ProgressModal extends Modal implements ProgressModalType {
 
   public interruptProgress(): void {
     this.stopProgress(this.getStopIcon());
+  }
+
+  public remove(): void {
+    document.getElementById(this.id)?.remove();
   }
 
   protected stopProgress(progressIcon: HTMLElement): void {
