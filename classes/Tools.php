@@ -951,7 +951,7 @@ class ToolsCore
     {
         @trigger_error(
             sprintf(
-                '%s is deprecated since version 8.1.0',
+                '%s is deprecated since version 8.1.0 and will be removed in the next major version.',
                 __METHOD__
             ),
             E_USER_DEPRECATED
