@@ -26,6 +26,7 @@ jobs:
           mysql-database: 'prestashop'
           mysql-root-password: 'password'
           node-version: '16'
+          npm-version: '7'
 
       - name: Cache Playwright browsers
         uses: actions/cache@v2
