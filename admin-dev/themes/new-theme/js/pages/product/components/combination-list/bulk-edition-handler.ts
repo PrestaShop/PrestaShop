@@ -32,6 +32,7 @@ import BulkChoicesSelector from '@pages/product/components/combination-list/bulk
 import ProgressModal from '@components/modal/progress-modal';
 import ImageSelector from '@pages/product/combination/form/image-selector';
 import QuantityModeSwitcher from '@pages/product/combination/QuantityModeSwitcher';
+import {createElement} from "dropzone";
 
 const CombinationMap = ProductMap.combinations;
 const CombinationEvents = ProductEvents.combinations;
@@ -111,6 +112,7 @@ export default class BulkEditionHandler {
       confirmButtonLabel: modalConfirmLabel?.replace(/%combinations_number%/, String(selectedCombinationsCount)),
       closeButtonLabel: modalCancelLabel,
       onFormLoaded: (form: HTMLFormElement) => {
+        this.eventEmitter.emit('bulkFormLoaded', form);
         // Disable submit button as long as the form data has not changed
         iframeModal.modal.confirmButton?.setAttribute('disabled', 'disabled');
         // if (formContent) {
@@ -193,12 +195,15 @@ export default class BulkEditionHandler {
           progressModal.hide();
           if (this.formModal) {
             this.formModal.show();
+            this.eventEmitter.on('bulkFormLoaded', (modalForm: HTMLFormElement) => {
+              const div = document.createElement('div');
+              div.innerHTML = data.formContent.trim();
 
-            // this.formModal.modal.content.innerHTML;
-            debugger;
-
-            const currentForm = this.formModal.modal.iframe.querySelector(CombinationMap.editionForm);
-            currentForm?.replaceWith(data.formContent);
+              // @ts-ignore
+              modalForm.replaceWith(div.firstChild);
+              // const currentForm = this.formModal.modal.iframe.querySelector(CombinationMap.editionForm);
+              // currentForm?.replaceWith(data.formContent);
+            });
           }
 
           return;
