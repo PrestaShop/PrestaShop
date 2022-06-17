@@ -232,6 +232,7 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
                     break;
                 case 'PUT':
                     $this->getWsObject()->executeEntityPut();
+                    break;
                 case 'PATCH':
                     $this->getWsObject()->executeEntityPatch();
                     break;
