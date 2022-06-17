@@ -210,7 +210,7 @@ export default class FormObjectMapper {
     const inputs: Array<HTMLElement> = [];
     const domForm = this.$form.get(0);
 
-    if (!domForm) return;
+    if (!domForm) return undefined;
 
     inputNames.forEach((inputName: string) => {
       const inputsByName = domForm.querySelectorAll(`[name="${inputName}"]`);

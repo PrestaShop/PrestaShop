@@ -27,11 +27,11 @@ import {createI18n} from 'vue-i18n';
 import EventEmitter from '@components/event-emitter';
 import ReplaceFormatter from '@PSVue/plugins/vue-i18n/replace-formatter';
 import CombinationGenerator from '@pages/product/components/generator/CombinationGenerator.vue';
-import { AutoCompleteSearchConfig } from '@js/components/auto-complete-search';
+import {AutoCompleteSearchConfig} from '@js/components/auto-complete-search';
 import PerfectScrollbar from 'perfect-scrollbar';
 
 export interface AttributesSelectorStates {
-  dataSetConfig: AutoCompleteSearchConfig | {};
+  dataSetConfig: AutoCompleteSearchConfig | Record<string, any>;
   searchSource: Record<string, any>;
   scrollbar: PerfectScrollbar | null;
   hasGeneratedCombinations: boolean;
