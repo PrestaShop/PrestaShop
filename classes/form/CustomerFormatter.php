@@ -210,10 +210,6 @@ class CustomerFormatterCore implements FormFormatterInterface
                     )
                 )
                 ->addAvailableValue('placeholder', $this->translator->trans('DD/MM/YYYY', [], 'Shop.Theme.Customeraccount'))
-<<<<<<< HEAD
-
-=======
->>>>>>> ed54e5f46d8bd112191502f5ce05e8aa7d9ddd0d
                 ->addAvailableValue(
                     'comment',
                     $this->translator->trans('(E.g.: %date_format%)', ['%date_format%' => Tools::formatDateStr('31 May 1970')], 'Shop.Forms.Help')
