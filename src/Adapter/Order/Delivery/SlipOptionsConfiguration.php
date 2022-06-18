@@ -37,6 +37,7 @@ final class SlipOptionsConfiguration implements DataConfigurationInterface
     public const PREFIX = 'PS_DELIVERY_PREFIX';
     public const NUMBER = 'PS_DELIVERY_NUMBER';
     public const ENABLE_PRODUCT_IMAGE = 'PS_PDF_IMG_DELIVERY';
+    public const DELIVERY_LANGUAGE = 'PS_PDF_LANGUAGE_DELIVERY';
 
     /**
      * @var Configuration
@@ -59,6 +60,7 @@ final class SlipOptionsConfiguration implements DataConfigurationInterface
             'prefix' => $this->configuration->get(self::PREFIX),
             'number' => $this->configuration->getInt(self::NUMBER),
             'enable_product_image' => $this->configuration->getBoolean(self::ENABLE_PRODUCT_IMAGE),
+            'deliveryslip_language' => $this->configuration->getBoolean(self::DELIVERY_LANGUAGE),
         ];
     }
 
@@ -71,6 +73,7 @@ final class SlipOptionsConfiguration implements DataConfigurationInterface
             $this->configuration->set(self::PREFIX, $configuration['prefix']);
             $this->configuration->set(self::NUMBER, $configuration['number']);
             $this->configuration->set(self::ENABLE_PRODUCT_IMAGE, $configuration['enable_product_image']);
+            $this->configuration->set(self::DELIVERY_LANGUAGE, $configuration['deliveryslip_language']);
         }
 
         return [];
@@ -84,7 +87,8 @@ final class SlipOptionsConfiguration implements DataConfigurationInterface
         return isset(
             $configuration['prefix'],
             $configuration['number'],
-            $configuration['enable_product_image']
+            $configuration['enable_product_image'],
+            $configuration['deliveryslip_language']
         );
     }
 }

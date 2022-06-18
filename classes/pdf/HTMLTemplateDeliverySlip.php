@@ -49,7 +49,10 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
         $this->order_invoice = $order_invoice;
         $this->order = new Order($this->order_invoice->id_order);
         $this->smarty = $smarty;
-        Context::getContext()->language = new Language($this->order->id_lang);
+
+        if (Configuration::get('PS_PDF_LANGUAGE_DELIVERY')) {
+            Context::getContext()->language = new Language($this->order->id_lang);
+        }
 
         // If shop_address is null, then update it with current one.
         // But no DB save required here to avoid massive updates for bulk PDF generation case.
