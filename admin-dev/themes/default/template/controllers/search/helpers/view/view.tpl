@@ -79,7 +79,16 @@ $(function() {
             <tbody>
             {foreach $modules key=key item=module}
                 <tr>
-                    <td><a href="{$module->linkto|escape:'html':'UTF-8'}"><strong>{$module->displayName}</strong></a></td>
+                    <td>
+                        {if $module->active === 1}<i class="icon-check action-enabled"></i>{else}<i class="icon-remove"></i>{/if}                         
+                        <strong>{$module->displayName}</strong>
+                        {if $module->is_configurable && $module->active}
+                            <p><a href="{$module->linkto|escape:'html':'UTF-8'}">{l s='Configure'  d='Admin.Actions'}</a></p>
+                        {else}
+                            <p><a href="{$module->linkto|escape:'html':'UTF-8'}">{l s='Module pages'  d='Admin.Shopparameters.Feature'}</a><br/><small>{l s='This module is not configurable.' d='Admin.Navigation.Search'}</small></p>
+                        {/if}
+                        {if !$module->active && $module->is_configurable}<p>{l s='This module is disabled, you must enable it to configure it.' d='Admin.Navigation.Search'}</p>{/if}
+                    </td>
                     <td><a href="{$module->linkto|escape:'html':'UTF-8'}">{$module->description}</a></td>
                 </tr>
             {/foreach}
