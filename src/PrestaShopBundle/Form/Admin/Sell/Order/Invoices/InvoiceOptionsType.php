@@ -107,7 +107,18 @@ class InvoiceOptionsType extends TranslatorAwareType
                 'choices' => $this->invoiceModelChoiceProvider->getChoices(),
                 'translation_domain' => false,
             ])
-            ->add('use_disk_cache', SwitchType::class);
+            ->add('use_disk_cache', SwitchType::class)
+            ->add(
+                'invoice_language',
+                SwitchType::class,
+                [
+                    'label' => $this->trans('Invoice language', 'Admin.Orderscustomers.Feature'),
+                    'help' => $this->trans(
+                        'Use the language of the order for the invoice.',
+                        'Admin.Orderscustomers.Help'
+                    ),
+                ]
+            );
     }
 
     /**

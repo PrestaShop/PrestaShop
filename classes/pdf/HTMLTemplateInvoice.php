@@ -57,7 +57,10 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         $this->order = new Order((int) $this->order_invoice->id_order);
         $this->smarty = $smarty;
         $this->smarty->assign('isTaxEnabled', (bool) Configuration::get('PS_TAX'));
-        Context::getContext()->language = new Language($this->order->id_lang);
+
+        if (Configuration::get('PS_PDF_LANGUAGE_INVOICE')) {
+            Context::getContext()->language = new Language($this->order->id_lang);
+        }
 
         // If shop_address is null, then update it with current one.
         // But no DB save required here to avoid massive updates for bulk PDF generation case.

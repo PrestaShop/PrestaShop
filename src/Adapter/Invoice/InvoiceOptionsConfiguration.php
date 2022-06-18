@@ -65,6 +65,7 @@ final class InvoiceOptionsConfiguration implements DataConfigurationInterface
             'footer_text' => $this->configuration->get('PS_INVOICE_FREE_TEXT'),
             'invoice_model' => $this->configuration->get('PS_INVOICE_MODEL'),
             'use_disk_cache' => $this->configuration->getBoolean('PS_PDF_USE_CACHE'),
+            'invoice_language' => $this->configuration->getBoolean('PS_PDF_LANGUAGE_INVOICE'),
         ];
     }
 
@@ -86,6 +87,7 @@ final class InvoiceOptionsConfiguration implements DataConfigurationInterface
             $this->configuration->set('PS_INVOICE_FREE_TEXT', $configuration['footer_text']);
             $this->configuration->set('PS_INVOICE_MODEL', $configuration['invoice_model']);
             $this->configuration->set('PS_PDF_USE_CACHE', $configuration['use_disk_cache']);
+            $this->configuration->set('PS_PDF_LANGUAGE_INVOICE', $configuration['invoice_language']);
         }
 
         return [];
@@ -108,7 +110,8 @@ final class InvoiceOptionsConfiguration implements DataConfigurationInterface
             $configuration['legal_free_text'],
             $configuration['footer_text'],
             $configuration['invoice_model'],
-            $configuration['use_disk_cache']
+            $configuration['use_disk_cache'],
+            $configuration['invoice_language']
         );
     }
 }
