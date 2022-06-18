@@ -248,7 +248,7 @@ class AdminSearchControllerCore extends AdminController
                 || (isset($module->description) && stripos($module->description, $this->query) !== false)
             ) {
                 if (1 === $module->is_configurable) {
-                    $module->linkto = Context::getContext()->link->getAdminLink('AdminModules').'&configure=' . $module->name;
+                    $module->linkto = Context::getContext()->link->getAdminLink('AdminModules') . '&configure=' . $module->name;
                 } else {
                     $module->linkto = Context::getContext()->link->getAdminLink('ADMINMODULESSF');
                 }
