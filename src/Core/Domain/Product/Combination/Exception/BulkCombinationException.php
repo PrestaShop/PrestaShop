@@ -36,6 +36,10 @@ class BulkCombinationException extends CombinationException
      */
     protected $bulkExceptions = [];
 
+    /**
+     * @param CombinationId $combinationId
+     * @param CombinationException $exception
+     */
     public function addException(CombinationId $combinationId, CombinationException $exception): void
     {
         $this->bulkExceptions[$combinationId->getValue()] = $exception;

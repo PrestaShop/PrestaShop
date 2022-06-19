@@ -502,10 +502,6 @@ export class ProgressModal extends Modal implements ProgressModalType {
     this.stopProgress(this.getStopIcon());
   }
 
-  public remove(): void {
-    document.getElementById(this.id)?.remove();
-  }
-
   protected stopProgress(progressIcon: HTMLElement): void {
     if (this.progressStopped) {
       return;

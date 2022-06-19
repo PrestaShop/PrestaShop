@@ -50,6 +50,10 @@ export default class BulkEditionHandler {
 
   private formModal: FormIframeModal | null
 
+  /**
+   * This property contains a form content fetched from api when form constraints are violated during form submit.
+   * This form will already have rendered errors where they belong (depending on violated fields).
+   */
   private violatedFormContent: string | null
 
   constructor(
@@ -107,13 +111,13 @@ export default class BulkEditionHandler {
       closeButtonLabel: modalCancelLabel,
       onFormLoaded: (form: HTMLFormElement) => {
         if (this.violatedFormContent) {
-          // @ts-ignore
+          // Replace current form content with new one fetched from api which has violations rendered
           // eslint-disable-next-line no-param-reassign
-          form.parentElement.innerHTML = this.violatedFormContent.trim();
+          form.parentElement!.innerHTML = this.violatedFormContent.trim();
 
-          // @ts-ignore
+          // Select the freshly replaced form in DOM or else event listeners wouldn't work
           // eslint-disable-next-line no-param-reassign
-          form = iframeModal.modal.iframe.contentDocument.querySelector(CombinationMap.bulkForm);
+          form = <HTMLFormElement>iframeModal.modal.iframe.contentDocument!.querySelector(CombinationMap.bulkForm);
           this.violatedFormContent = null;
         }
         // Disable submit button as long as the form data has not changed
