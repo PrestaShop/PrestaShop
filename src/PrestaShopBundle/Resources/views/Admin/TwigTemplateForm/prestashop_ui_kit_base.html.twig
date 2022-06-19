@@ -1377,12 +1377,13 @@
     {% set firstChild = true %}
     {% for child in form %}
       {% if child.vars.compound %}
-      {% set isExpanded = firstChild and expand_first %}
+      {% set hasError = child.vars.valid != true %}
+      {% set isExpanded = firstChild and expand_first or (hasError and expand_on_error) %}
       <div class="card">
         <div class="card-header" id="{{ child.vars.id }}_accordion_header">
           <h2 class="mb-0">
             <button
-              class="accordion-form-button btn btn-block text-left{% if not isExpanded %} collapsed{% endif %}"
+              class="accordion-form-button {% if hasError %} has-error {% endif %} btn btn-block text-left{% if not isExpanded %} collapsed{% endif %}"
               type="button"
               data-toggle="collapse"
               data-target="#{{ child.vars.id }}_accordion"
