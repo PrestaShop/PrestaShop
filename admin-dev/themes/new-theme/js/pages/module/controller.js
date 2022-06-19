@@ -57,6 +57,8 @@ class AdminModuleController {
     this.lastBulkAction = null;
     this.isUploadStarted = false;
 
+    this.findMouduleUsed = false;
+
     this.recentlyUsedSelector = '#module-recently-used-list .modules-list';
 
     /**
@@ -476,6 +478,16 @@ class AdminModuleController {
     let tagExists;
     let newValue;
     let defaultMax;
+
+    const paramsUrl = (new URL(document.location)).searchParams;
+    const findModule = paramsUrl.get('find_module');
+
+    if (findModule !== null && self.findMouduleUsed !== true) {
+      self.currentTagsList.push(findModule);
+      self.findMouduleUsed = true;
+    } else if (findModule !== null) {
+      self.currentTagsList.pop(findModule);
+    }
 
     const modulesListLength = self.modulesList.length;
     const counter = {};

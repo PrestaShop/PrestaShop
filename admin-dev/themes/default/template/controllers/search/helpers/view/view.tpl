@@ -81,26 +81,11 @@ $(function() {
                 <tr>
                     <td>
                         {if $module->active === 1}
-                            <i class="icon-check action-enabled"></i>
+                            <i class="icon-check text-success"></i>
                         {else}
-                            <i class="icon-remove"></i>
+                            <i class="icon-remove text-danger"></i>
                         {/if}                         
-                        <strong>{$module->displayName}</strong>
-                        {if $module->is_configurable && $module->active}
-                            <p>
-                                <a href="{$module->linkto|escape:'html':'UTF-8'}">{l s='Configure'  d='Admin.Actions'}</a>
-                            </p>
-                        {else if !$module->active && $module->is_configurable}                        
-                            <p>
-                                <a href="{$module->linkto|escape:'html':'UTF-8'}">{l s='Module pages'  d='Admin.Shopparameters.Feature'}</a><br/>
-                                <small>{l s='This module is disabled, you must enable it to configure it.' d='Admin.Navigation.Search'}</small>
-                            </p>                            
-                        {else}
-                            <p>
-                                <a href="{$module->linkto|escape:'html':'UTF-8'}">{l s='Module pages'  d='Admin.Shopparameters.Feature'}</a><br/>
-                                <small>{l s='This module is not configurable.' d='Admin.Navigation.Search'}</small>
-                            </p>
-                        {/if}    
+                        <strong><a href="{$module->linkto|escape:'html':'UTF-8'}">{$module->displayName}</a></strong>
                     </td>
                     <td><a href="{$module->linkto|escape:'html':'UTF-8'}">{$module->description}</a></td>
                 </tr>
