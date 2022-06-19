@@ -133,6 +133,7 @@ class CombinationController extends FrameworkBundleAdminController
         $combinationIds = $request->request->get('combinationIds');
         if (!$combinationIds) {
             return $this->json([
+                'fatal' => true,
                 'errors' => $this->getFallbackErrorMessage('', 0, 'Missing combinationIds in request body'),
             ], Response::HTTP_BAD_REQUEST);
         }
@@ -156,14 +157,17 @@ class CombinationController extends FrameworkBundleAdminController
                 $result = $this->getBulkCombinationFormHandler()->handleFor($combinationId, $bulkCombinationForm);
 
                 if (!$result->isSubmitted()) {
-                    $errors[] = $this->trans('No submitted data.', 'Admin.Notifications.Error');
-                    continue;
+                    return $this->json([
+                        'fatal' => true,
+                        'errors' => $this->getFallbackErrorMessage('', 0, 'No submitted data'),
+                    ], Response::HTTP_BAD_REQUEST);
                 }
 
                 if (!$result->isValid()) {
                     // it's the same form for all combinations, so if it is invalid for one, it will be invalid for all of them,
                     // so we return and break the loop
                     return $this->json([
+                        'fatal' => true,
                         'formErrors' => $this->getFormErrorsForJS($bulkCombinationForm),
                         'formContent' => $this->renderView('@PrestaShop/Admin/Sell/Catalog/Product/Combination/bulk_form.html.twig', [
                             'bulkCombinationForm' => $bulkCombinationForm->createView(),

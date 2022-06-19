@@ -191,6 +191,11 @@ export default class BulkEditionHandler {
         );
           // eslint-disable-next-line no-await-in-loop
         data = await response.json();
+        if (data.fatal) {
+          progressModal.interruptProgress();
+          stopProcess = true;
+        }
+
         if (data.formContent) {
           progressModal.hide();
           this.violatedFormContent = data.formContent;
