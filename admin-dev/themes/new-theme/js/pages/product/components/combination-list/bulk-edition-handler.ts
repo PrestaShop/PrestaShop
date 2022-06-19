@@ -30,9 +30,6 @@ import CombinationsService from '@pages/product/services/combinations-service';
 import {EventEmitter} from 'events';
 import BulkChoicesSelector from '@pages/product/components/combination-list/bulk-choices-selector';
 import ProgressModal from '@components/modal/progress-modal';
-import ImageSelector from '@pages/product/combination/form/image-selector';
-import QuantityModeSwitcher from '@pages/product/combination/QuantityModeSwitcher';
-import {createElement} from "dropzone";
 
 const CombinationMap = ProductMap.combinations;
 const CombinationEvents = ProductEvents.combinations;
@@ -53,6 +50,8 @@ export default class BulkEditionHandler {
 
   private formModal: FormIframeModal | null
 
+  private violatedFormContent: string | null
+
   constructor(
     productId: number,
     eventEmitter: EventEmitter,
@@ -60,6 +59,7 @@ export default class BulkEditionHandler {
     combinationsService: CombinationsService,
   ) {
     this.formModal = null;
+    this.violatedFormContent = null;
     this.productId = productId;
     this.eventEmitter = eventEmitter;
     this.bulkChoicesSelector = bulkChoicesSelector;
@@ -84,13 +84,7 @@ export default class BulkEditionHandler {
     return bulkEditionFormBtn;
   }
 
-  /**
-   * @param formContent can be used to replace original form content that was loaded from url with a new one
-   * (e.g. the one returned from controller with already rendered form errors)
-   */
-  private async showFormModal(
-    formContent?: HTMLFormElement|null,
-  ): Promise<void> {
+  private async showFormModal(): Promise<void> {
     const bulkEditionFormBtn = this.getBulkEditFormBtn()!;
     const {modalConfirmLabel, modalCancelLabel} = bulkEditionFormBtn.dataset;
     const {formUrl} = bulkEditionFormBtn.dataset;
@@ -112,16 +106,18 @@ export default class BulkEditionHandler {
       confirmButtonLabel: modalConfirmLabel?.replace(/%combinations_number%/, String(selectedCombinationsCount)),
       closeButtonLabel: modalCancelLabel,
       onFormLoaded: (form: HTMLFormElement) => {
-        this.eventEmitter.emit('bulkFormLoaded', form);
+        if (this.violatedFormContent) {
+          // @ts-ignore
+          // eslint-disable-next-line no-param-reassign
+          form.parentElement.innerHTML = this.violatedFormContent.trim();
+
+          // @ts-ignore
+          // eslint-disable-next-line no-param-reassign
+          form = iframeModal.modal.iframe.contentDocument.querySelector(CombinationMap.bulkForm);
+          this.violatedFormContent = null;
+        }
         // Disable submit button as long as the form data has not changed
         iframeModal.modal.confirmButton?.setAttribute('disabled', 'disabled');
-        // if (formContent) {
-        //   form.replaceWith(formContent);
-        //
-        //   // eslint-disable-next-line no-param-reassign
-        //   form = iframeModal.modal.iframe.contentWindow?.document
-        //     .querySelector<HTMLFormElement>('form[name="bulk_combination"]') as HTMLFormElement;
-        // }
 
         if (form) {
           initialSerializedData = this.serializeForm(form);
@@ -193,18 +189,8 @@ export default class BulkEditionHandler {
         data = await response.json();
         if (data.formContent) {
           progressModal.hide();
-          if (this.formModal) {
-            this.formModal.show();
-            this.eventEmitter.on('bulkFormLoaded', (modalForm: HTMLFormElement) => {
-              const div = document.createElement('div');
-              div.innerHTML = data.formContent.trim();
-
-              // @ts-ignore
-              modalForm.replaceWith(div.firstChild);
-              // const currentForm = this.formModal.modal.iframe.querySelector(CombinationMap.editionForm);
-              // currentForm?.replaceWith(data.formContent);
-            });
-          }
+          this.violatedFormContent = data.formContent;
+          this.formModal?.show();
 
           return;
         }
