@@ -85,7 +85,7 @@ $(function() {
                         {else}
                             <i class="icon-remove text-danger"></i>
                         {/if}                         
-                        <strong><a href="{$module->linkto|escape:'html':'UTF-8'}">{$module->displayName}</a></strong>
+                        <a href="{$module->linkto|escape:'html':'UTF-8'}"><strong>{$module->displayName}</strong></a>
                     </td>
                     <td><a href="{$module->linkto|escape:'html':'UTF-8'}">{$module->description}</a></td>
                 </tr>
