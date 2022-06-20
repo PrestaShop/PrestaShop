@@ -1271,6 +1271,13 @@ $product-page-padding-bottom: 80px !default;
       border: none;
     }
 
+    .employee_preview {
+      display: inline-block;
+      max-width: 300px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
     .stock_movement_quantity {
       @include border-radius(5px);
       display: inline-block;

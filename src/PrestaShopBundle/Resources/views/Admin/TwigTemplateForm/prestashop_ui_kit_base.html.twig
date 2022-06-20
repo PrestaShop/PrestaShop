@@ -1292,7 +1292,7 @@
 {% block text_preview_widget %}
   {# This is the hidden input #}
   {{- block('form_widget_simple') -}}
-  <span class="label {{ preview_class }}">
+  <span class="label text-preview {{ preview_class }}">
     {# Allows to insert content as prefix, like an icon #}
     {% if prefix is defined %}
       {{ prefix|raw }}
