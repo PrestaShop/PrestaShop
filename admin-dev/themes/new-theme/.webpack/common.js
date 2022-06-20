@@ -231,13 +231,13 @@ module.exports = {
         ],
       },
       {
-        test: /dropzone\/dist\/dropzone\.js/,
+        test: require.resolve('dropzone'),
         loader: 'imports-loader',
         options: {
           wrapper: {
             thisArg: 'window',
             args: {
-              module: null,
+              module: false,
             },
           },
         },
