@@ -1,6 +1,7 @@
 import {Store} from 'vuex';
 
 interface State {
+  sort: string;
   pageIndex: number;
   totalPages: number;
   translationsPerPage: number;
@@ -17,7 +18,6 @@ interface State {
   principalLoading: boolean;
   searchTags: Array<any>;
   modifiedTranslations: Array<any>;
-
   order: string;
   productsPerPage: number;
   products: Array<any>;
