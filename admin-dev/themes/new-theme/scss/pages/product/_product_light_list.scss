@@ -23,6 +23,18 @@
     }
   }
 
+  .column-quantity {
+    a.text-danger {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.625rem;
+      // stylelint-disable-next-line
+      background-color: #f54c3e !important;
+      // stylelint-disable-next-line
+      color: #fff !important;
+      @include border-radius(0.25rem);
+    }
+  }
+
   nav {
     position: sticky;
     right: 3em;
