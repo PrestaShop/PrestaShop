@@ -38,16 +38,19 @@ const customerData = new CustomerFaker();
 const newPassword = 'new test password';
 const customerNewPassword = {email: customerData.email, password: newPassword};
 
-
 /*
-Go to the smtp parameters page
-Setup the smtp parameters in BO
-Send a test mail
-Check the test mail
-Go to login page in FO
-Use password reminder
+Pre-condition:
+- Config smtp
+- Create new customer on FO
+Scenario:
+- Send an email to reset password
+- Reset password
+- Try to sign in with old password and check error message
+- Try to sign in with new password
+Post-condition:
+- Delete created customer
+- Go back to default smtp config
  */
-
 describe('FO - Login : Password reminder', async () => {
   // Pre-Condition : Setup config SMTP
   setupSmtpConfigTest(`${baseContext}_preTest_1`);
@@ -146,7 +149,7 @@ describe('FO - Login : Password reminder', async () => {
       await expect(isCustomerConnected, 'Customer is connected').to.be.false;
     });
 
-    it('should try to login with default password and check the error message', async function () {
+    it('should try to login with old password and check the error message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
       await loginPage.customerLogin(page, customerData);
