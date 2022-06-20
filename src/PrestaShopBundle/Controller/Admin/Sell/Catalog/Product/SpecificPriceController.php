@@ -53,14 +53,22 @@ class SpecificPriceController extends FrameworkBundleAdminController
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      */
-    public function listAction(int $productId): JsonResponse
+    public function listAction(Request $request, int $productId): JsonResponse
     {
+        /** @var SpecificPriceList $specificPricesList */
         $specificPricesList = $this->getQueryBus()->handle(
-            new GetSpecificPriceList($productId, $this->getContextLangId())
+            new GetSpecificPriceList(
+                $productId,
+                $this->getContextLangId(),
+                $request->query->getInt('limit') ?: null,
+                $request->query->getInt('offset') ?: null
+            )
         );
 
-        //@todo: this could be refactored to make endpoint more reusable, by implementing formatting in javascript side.
-        return $this->json(['specificPrices' => $this->formatSpecificPricesList($specificPricesList)]);
+        return $this->json([
+            'specificPrices' => $this->formatSpecificPricesList($specificPricesList),
+            'total' => $specificPricesList->getTotalSpecificPricesCount(),
+        ]);
     }
 
     /**
