@@ -374,6 +374,8 @@ class AdminSearchControllerCore extends AdminController
         $this->tpl_view_vars['show_toolbar'] = true;
 
         if (count($this->errors)) {
+            $this->getSearchPanels($searchedExpression);
+
             return parent::renderView();
         } else {
             $nb_results = 0;
