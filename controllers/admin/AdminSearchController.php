@@ -375,6 +375,7 @@ class AdminSearchControllerCore extends AdminController
 
         if (count($this->errors)) {
             return parent::renderView();
+            $this->getSearchPanels($searchedExpression);
         } else {
             $nb_results = 0;
             foreach ($this->_list as $list) {
