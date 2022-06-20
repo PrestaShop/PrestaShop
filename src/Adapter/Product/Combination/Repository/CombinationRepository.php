@@ -193,7 +193,6 @@ class CombinationRepository extends AbstractObjectModelRepository
      * @param CombinationId[] $combinationIds
      *
      * @throws BulkCombinationException
-     * @throws CoreException
      */
     public function bulkDelete(array $combinationIds): void
     {

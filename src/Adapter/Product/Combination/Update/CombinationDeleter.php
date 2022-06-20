@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Update;
 
-use Exception;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCombinationException;
@@ -94,20 +93,14 @@ class CombinationDeleter
     /**
      * @param ProductId $productId
      * @param CombinationId[] $combinationIds
-     *
-     * @return Exception[] an array of exceptions if any was thrown during the process
      */
-    public function bulkDeleteProductCombinations(ProductId $productId, array $combinationIds): array
+    public function bulkDeleteProductCombinations(ProductId $productId, array $combinationIds): void
     {
-        $exceptions = [];
-
         try {
             $this->combinationRepository->bulkDelete($combinationIds);
         } finally {
             $this->updateDefaultCombination($productId);
         }
-
-        return $exceptions;
     }
 
     /**

@@ -29,6 +29,11 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 
+/**
+ * Base class to use for combination bulk operations,
+ * It stores a list of exceptions indexed by the combination ID that was impacted.
+ * It should be used as a base class for all the bulk action exceptions.
+ */
 class BulkCombinationException extends CombinationException
 {
     /**

@@ -51,10 +51,10 @@ export default class BulkEditionHandler {
   private formModal: FormIframeModal | null
 
   /**
-   * This property contains a form content fetched from api when form constraints are violated during form submit.
-   * This form will already have rendered errors where they belong (depending on violated fields).
+   * This property contains a form content fetched from api when invalid values are submitted.
+   * This form will already have errors rendered where they belong (depending on invalid fields).
    */
-  private violatedFormContent: string | null
+  private invalidFormContent: string | null
 
   constructor(
     productId: number,
@@ -63,7 +63,7 @@ export default class BulkEditionHandler {
     combinationsService: CombinationsService,
   ) {
     this.formModal = null;
-    this.violatedFormContent = null;
+    this.invalidFormContent = null;
     this.productId = productId;
     this.eventEmitter = eventEmitter;
     this.bulkChoicesSelector = bulkChoicesSelector;
@@ -74,22 +74,17 @@ export default class BulkEditionHandler {
   }
 
   private init(): void {
-    this.getBulkEditFormBtn()!.addEventListener('click', () => this.showFormModal());
-  }
-
-  private getBulkEditFormBtn(): HTMLButtonElement | null {
     const bulkEditionFormBtn = this.tabContainer.querySelector<HTMLButtonElement>(CombinationMap.bulkCombinationFormBtn);
 
     if (!(bulkEditionFormBtn instanceof HTMLButtonElement)) {
       console.error(`${CombinationMap.bulkCombinationFormBtn} was expected to be HTMLButtonElement`);
-      return null;
+      return;
     }
 
-    return bulkEditionFormBtn;
+    bulkEditionFormBtn.addEventListener('click', () => this.showFormModal(bulkEditionFormBtn));
   }
 
-  private async showFormModal(): Promise<void> {
-    const bulkEditionFormBtn = this.getBulkEditFormBtn()!;
+  private async showFormModal(bulkEditionFormBtn: HTMLButtonElement): Promise<void> {
     const {modalConfirmLabel, modalCancelLabel} = bulkEditionFormBtn.dataset;
     const {formUrl} = bulkEditionFormBtn.dataset;
 
@@ -110,15 +105,28 @@ export default class BulkEditionHandler {
       confirmButtonLabel: modalConfirmLabel?.replace(/%combinations_number%/, String(selectedCombinationsCount)),
       closeButtonLabel: modalCancelLabel,
       onFormLoaded: (form: HTMLFormElement) => {
-        if (this.violatedFormContent) {
+        if (this.invalidFormContent) {
           // Replace current form content with new one fetched from api which has violations rendered
           // eslint-disable-next-line no-param-reassign
-          form.parentElement!.innerHTML = this.violatedFormContent.trim();
+          form.parentElement!.innerHTML = this.invalidFormContent.trim();
+          const iframeDocument = iframeModal.modal.iframe.contentDocument;
+
+          if (!iframeDocument) {
+            console.error('Iframe document not found');
+            return;
+          }
 
           // Select the freshly replaced form in DOM or else event listeners wouldn't work
+          const newForm = iframeDocument.querySelector<HTMLFormElement>(CombinationMap.bulkForm);
+
+          if (!newForm) {
+            console.error(`${CombinationMap.bulkForm} not found`);
+            return;
+          }
+
           // eslint-disable-next-line no-param-reassign
-          form = <HTMLFormElement>iframeModal.modal.iframe.contentDocument!.querySelector(CombinationMap.bulkForm);
-          this.violatedFormContent = null;
+          form = newForm;
+          this.invalidFormContent = null;
         }
         // Disable submit button as long as the form data has not changed
         iframeModal.modal.confirmButton?.setAttribute('disabled', 'disabled');
@@ -191,21 +199,21 @@ export default class BulkEditionHandler {
         );
           // eslint-disable-next-line no-await-in-loop
         data = await response.json();
-        if (data.fatal) {
+        if (data.error) {
           progressModal.interruptProgress();
           stopProcess = true;
         }
 
         if (data.formContent) {
           progressModal.hide();
-          this.violatedFormContent = data.formContent;
+          this.invalidFormContent = data.formContent;
           this.formModal?.show();
 
           return;
         }
       } catch (e) {
         data = {
-          errors: `Something went wrong with IDs ${chunkIds.join(', ')}: ${e.message ?? ''}`,
+          error: `Something went wrong with IDs ${chunkIds.join(', ')}: ${e.message ?? ''}`,
         };
       }
 

@@ -125,11 +125,11 @@ export default class BulkDeleteHandler {
     let stopProcess = false;
     let doneCount = 0;
     while (combinationIds.length) {
-      const chunkIds: number[] = combinationIds.splice(0, bulkChunkSize);
-
       if (stopProcess) {
         break;
       }
+
+      const chunkIds: number[] = combinationIds.splice(0, bulkChunkSize);
 
       let data: Record<string, any>;
 
@@ -148,7 +148,7 @@ export default class BulkDeleteHandler {
 
       if (!data.success) {
         if (data.errors && Array.isArray(data.errors)) {
-          data.errors.forEach((error:string) => {
+          data.errors.forEach((error: string) => {
             progressModal.addError(error);
           });
         } else {
