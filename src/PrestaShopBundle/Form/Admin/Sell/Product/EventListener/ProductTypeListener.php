@@ -58,7 +58,9 @@ class ProductTypeListener implements EventSubscriberInterface
     {
         $form = $event->getForm();
         $data = $event->getData();
+        // We need both initial and new types because we may need to keep some fields during the transition request
         $productType = $data['header']['type'];
+        $initialProductType = $data['header']['initial_type'] ?? $productType;
 
         if (ProductType::TYPE_COMBINATIONS === $productType) {
             $this->removeSuppliers($form);
@@ -88,7 +90,11 @@ class ProductTypeListener implements EventSubscriberInterface
 
         if (ProductType::TYPE_VIRTUAL === $productType) {
             $form->remove('shipping');
-            $this->removeEcotax($form);
+            // We don't remove the ecotax during the transition request because we could lose the ecotax data
+            // and some part of the price with it
+            if (ProductType::TYPE_VIRTUAL === $initialProductType) {
+                $this->removeEcotax($form);
+            }
         }
     }
 
@@ -116,10 +122,11 @@ class ProductTypeListener implements EventSubscriberInterface
             return;
         }
         $retailPrice = $pricing->get('retail_price');
-        if (!$retailPrice->has('ecotax')) {
-            return;
+        if ($retailPrice->has('ecotax_tax_excluded')) {
+            $retailPrice->remove('ecotax_tax_excluded');
         }
-
-        $retailPrice->remove('ecotax');
+        if ($retailPrice->has('ecotax_tax_included')) {
+            $retailPrice->remove('ecotax_tax_included');
+        }
     }
 }

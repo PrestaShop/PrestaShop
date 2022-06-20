@@ -50,7 +50,7 @@ services:
       - '@prestashop.core.util.number.number_extractor'
       - '@prestashop.adapter.tax.tax_computer'
       - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
-      - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_COUNTRY_DEFAULT')"
+      - '@prestashop.adapter.legacy.configuration'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing
