@@ -111,9 +111,13 @@ class CombinationController extends FrameworkBundleAdminController
      *
      * @return Response
      */
-    public function bulkEditFormAction(int $productId): Response
+    public function bulkEditFormAction(Request $request, int $productId): Response
     {
-        $bulkCombinationForm = $this->getBulkCombinationFormBuilder()->getForm([], ['product_id' => $productId]);
+        $bulkCombinationForm = $this->getBulkCombinationFormBuilder()->getForm([], [
+            'product_id' => $productId,
+            'method' => Request::METHOD_PATCH,
+        ]);
+        $bulkCombinationForm->handleRequest($request);
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/Combination/bulk.html.twig', [
             'bulkCombinationForm' => $bulkCombinationForm->createView(),

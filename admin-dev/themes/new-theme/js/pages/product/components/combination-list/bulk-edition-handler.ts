@@ -105,29 +105,11 @@ export default class BulkEditionHandler {
       confirmButtonLabel: modalConfirmLabel?.replace(/%combinations_number%/, String(selectedCombinationsCount)),
       closeButtonLabel: modalCancelLabel,
       onFormLoaded: (form: HTMLFormElement) => {
-        if (this.invalidFormContent) {
-          // Replace current form content with new one fetched from api which has violations rendered
-          // eslint-disable-next-line no-param-reassign
-          form.parentElement!.innerHTML = this.invalidFormContent.trim();
-          const iframeDocument = iframeModal.modal.iframe.contentDocument;
-
-          if (!iframeDocument) {
-            console.error('Iframe document not found');
-            return;
-          }
-
-          // Select the freshly replaced form in DOM or else event listeners wouldn't work
-          const newForm = iframeDocument.querySelector<HTMLFormElement>(CombinationMap.bulkForm);
-
-          if (!newForm) {
-            console.error(`${CombinationMap.bulkForm} not found`);
-            return;
-          }
-
-          // eslint-disable-next-line no-param-reassign
-          form = newForm;
-          this.invalidFormContent = null;
+        if (form.dataset.formSubmitted === '1' && form.dataset.formValid === '1') {
+          this.submitForm(form);
+          iframeModal.hide();
         }
+
         // Disable submit button as long as the form data has not changed
         iframeModal.modal.confirmButton?.setAttribute('disabled', 'disabled');
         initialSerializedData = this.serializeForm(form);
@@ -142,7 +124,8 @@ export default class BulkEditionHandler {
           }
         });
       },
-      formConfirmCallback: (form: HTMLFormElement) => this.submitForm(form),
+      formConfirmCallback: (form: HTMLFormElement) => form.submit(),
+      closeOnConfirm: false,
     });
 
     this.formModal = iframeModal;
@@ -165,6 +148,7 @@ export default class BulkEditionHandler {
         stopProcess = true;
         abortController.abort();
       },
+      closeCallback: () => this.eventEmitter.emit(CombinationEvents.bulkUpdateFinished),
       progressionTitle: form.dataset.progressTitle,
       progressionMessage: form.dataset.progressMessage,
       closeLabel: form.dataset.closeLabel,
@@ -201,14 +185,6 @@ export default class BulkEditionHandler {
           progressModal.interruptProgress();
           stopProcess = true;
         }
-
-        if (data.formContent) {
-          progressModal.hide();
-          this.invalidFormContent = data.formContent;
-          this.formModal?.show();
-
-          return;
-        }
       } catch (e) {
         data = {
           error: `Something went wrong with IDs ${chunkIds.join(', ')}: ${e.message ?? ''}`,
@@ -229,6 +205,5 @@ export default class BulkEditionHandler {
       }
     }
     progressModal.completeProgress();
-    this.eventEmitter.emit(CombinationEvents.bulkUpdateFinished);
   }
 }

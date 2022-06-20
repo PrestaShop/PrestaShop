@@ -59,6 +59,8 @@
   {% set attr = attr|merge({'data-alerts-info': form.vars.alerts.info|default([])|length()}) %}
   {% set attr = attr|merge({'data-alerts-warning': form.vars.alerts.warning|default([])|length()}) %}
   {% set attr = attr|merge({'data-alerts-error': form.vars.alerts.error|default([])|length()}) %}
+  {% set attr = attr|merge({'data-form-submitted': form.vars.submitted ? 1 : 0}) %}
+  {% set attr = attr|merge({'data-form-valid': form.vars.valid ? 1 : 0}) %}
   {{ parent() }}
 {% endblock form_start %}
 
