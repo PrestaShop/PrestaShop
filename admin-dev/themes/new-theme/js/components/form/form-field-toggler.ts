@@ -27,6 +27,7 @@ import {isUndefined} from '@PSTypes/typeguard';
 
 const {$} = window;
 
+// @TODO: typescript-eslint adds a no-shadow there, remove it when it's fixed on their side
 // eslint-disable-next-line no-shadow
 export enum ToggleType {
   availability = 'availability',
