@@ -481,11 +481,21 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
                     $conf[$this->contextLanguageId] ?? '',
                     $document->id
                 );
+
+                $total_cart_rule = 0;
+                $cart_rules = $order->getCartRules();
+
+                if ($document->order_slip_type == 1 && is_array($cart_rules)) {
+                    foreach ($cart_rules as $cart_rule) {
+                        $total_cart_rule += $cart_rule['value'];
+                    }
+                }
+
                 $amount = $this->locale->formatPrice(
-                    $document->total_products_tax_incl + $document->total_shipping_tax_incl,
+                    $document->total_products_tax_incl + $document->total_shipping_tax_incl - $total_cart_rule,
                     $currency->iso_code
                 );
-                $numericAmount = $document->total_products_tax_incl + $document->total_shipping_tax_incl;
+                $numericAmount = $document->total_products_tax_incl + $document->total_shipping_tax_incl - $total_cart_rule;
             }
 
             $documentsForViewing[] = new OrderDocumentForViewing(
