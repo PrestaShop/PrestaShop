@@ -54,6 +54,7 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.18.9",
+    "@babel/core": "^7.15.7",
     "@types/bootstrap": "^4.5.0",
     "@types/dropzone": "^5.7.4",
     "@types/jquery": "^3.5.5",
