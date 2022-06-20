@@ -31,7 +31,6 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\ViewOptionsCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\LinkColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 
 class ProductLightGridDefinitionFactory extends AbstractGridDefinitionFactory
@@ -80,11 +79,14 @@ class ProductLightGridDefinitionFactory extends AbstractGridDefinitionFactory
     protected function getColumns()
     {
         $columns = (new ColumnCollection())
-            ->add((new DataColumn('id_product'))
+            ->add((new LinkColumn('id_product'))
             ->setName($this->trans('ID', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'id_product',
                 'sortable' => false,
+                'route' => 'admin_products_v2_edit',
+                'route_param_name' => 'productId',
+                'route_param_field' => 'id_product',
             ])
             )
             ->add((new LinkColumn('name'))
