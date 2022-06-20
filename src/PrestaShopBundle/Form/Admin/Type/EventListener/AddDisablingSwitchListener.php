@@ -151,10 +151,6 @@ class AddDisablingSwitchListener implements EventSubscriberInterface
 
     private function updateFormInitialDisableState(FormInterface $form, bool $shouldBeDisabled, string $disablingFieldName): void
     {
-        foreach ($form->all() as $childForm) {
-            $this->updateFormInitialDisableState($childForm, $shouldBeDisabled, $disablingFieldName);
-        }
-
         $formConfig = $form->getConfig();
         $newOptions = $formConfig->getOptions();
         if (empty($newOptions['attr'])) {
@@ -175,6 +171,11 @@ class AddDisablingSwitchListener implements EventSubscriberInterface
         if ($hasNewOptions) {
             $newForm = $this->formCloner->cloneForm($form, $newOptions);
             $form->getParent()->add($newForm);
+            $form = $newForm;
+        }
+
+        foreach ($form->all() as $childForm) {
+            $this->updateFormInitialDisableState($childForm, $shouldBeDisabled, $disablingFieldName);
         }
     }
 }
