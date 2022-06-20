@@ -100,7 +100,7 @@ class ProductLightGridDefinitionFactory extends AbstractGridDefinitionFactory
             ])
             )
             ->add((new LinkColumn('price_tax_excluded'))
-            ->setName($this->trans('Price', [], 'Admin.Catalog.Feature'))
+            ->setName($this->trans('Price', [], 'Admin.Global'))
             ->setOptions([
                 'field' => 'price_tax_excluded',
                 'route' => 'admin_products_v2_edit',
