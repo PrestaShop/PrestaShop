@@ -130,19 +130,17 @@ export default class BulkEditionHandler {
         }
         // Disable submit button as long as the form data has not changed
         iframeModal.modal.confirmButton?.setAttribute('disabled', 'disabled');
+        initialSerializedData = this.serializeForm(form);
 
-        if (form) {
-          initialSerializedData = this.serializeForm(form);
-          form.addEventListener('change', () => {
-            const currentSerializedData: string = this.serializeForm(form);
+        form.addEventListener('change', () => {
+          const currentSerializedData: string = this.serializeForm(form);
 
-            if (currentSerializedData === initialSerializedData) {
-              iframeModal.modal.confirmButton?.setAttribute('disabled', 'disabled');
-            } else {
-              iframeModal.modal.confirmButton?.removeAttribute('disabled');
-            }
-          });
-        }
+          if (currentSerializedData === initialSerializedData) {
+            iframeModal.modal.confirmButton?.setAttribute('disabled', 'disabled');
+          } else {
+            iframeModal.modal.confirmButton?.removeAttribute('disabled');
+          }
+        });
       },
       formConfirmCallback: (form: HTMLFormElement) => this.submitForm(form),
     });
