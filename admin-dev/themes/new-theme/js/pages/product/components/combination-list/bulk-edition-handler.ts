@@ -50,12 +50,6 @@ export default class BulkEditionHandler {
 
   private formModal: FormIframeModal | null
 
-  /**
-   * This property contains a form content fetched from api when invalid values are submitted.
-   * This form will already have errors rendered where they belong (depending on invalid fields).
-   */
-  private invalidFormContent: string | null
-
   constructor(
     productId: number,
     eventEmitter: EventEmitter,
@@ -63,7 +57,6 @@ export default class BulkEditionHandler {
     combinationsService: CombinationsService,
   ) {
     this.formModal = null;
-    this.invalidFormContent = null;
     this.productId = productId;
     this.eventEmitter = eventEmitter;
     this.bulkChoicesSelector = bulkChoicesSelector;

@@ -171,9 +171,6 @@ class CombinationController extends FrameworkBundleAdminController
                     return $this->json([
                         'error' => $this->trans('Form contains invalid values', 'Admin.Notifications.Error'),
                         'formErrors' => $this->getFormErrorsForJS($bulkCombinationForm),
-                        'formContent' => $this->renderView('@PrestaShop/Admin/Sell/Catalog/Product/Combination/bulk_form.html.twig', [
-                            'bulkCombinationForm' => $bulkCombinationForm->createView(),
-                        ]),
                     ], Response::HTTP_BAD_REQUEST);
                 }
             } catch (CombinationException $e) {
