@@ -153,6 +153,7 @@ class OrderDetailControllerCore extends FrontController
      */
     public function initContent()
     {
+        parent::initContent();
         if (Configuration::isCatalogMode()) {
             Tools::redirect('index.php');
         }
@@ -210,7 +211,6 @@ class OrderDetailControllerCore extends FrontController
             unset($order);
         }
 
-        parent::initContent();
         $this->setTemplate('customer/order-detail');
     }
 
