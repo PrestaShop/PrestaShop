@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShopBundle\Form\Admin\Type\ImagePreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -37,6 +38,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\Length;
 
 class HeaderType extends TranslatorAwareType
 {
@@ -73,7 +75,10 @@ class HeaderType extends TranslatorAwareType
                 'type' => TextType::class,
                 'constraints' => $options['active'] ? [new DefaultLanguage()] : [],
                 'options' => [
-                    'constraints' => [new TypedRegex(TypedRegex::TYPE_CATALOG_NAME)],
+                    'constraints' => [
+                        new TypedRegex(TypedRegex::TYPE_CATALOG_NAME),
+                        new Length(['max' => ProductSettings::MAX_NAME_LENGTH]),
+                    ],
                     'attr' => [
                         'class' => 'serp-default-title',
                     ],
