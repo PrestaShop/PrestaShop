@@ -138,7 +138,10 @@ class GetPackedProductsHandler implements GetPackedProductsHandlerInterface
                 $name = $this->combinationNameBuilder->buildFullName($name, $attributesInformations[$combinationId]);
             }
             $reference = '';
-            if (!empty($packedItem['reference'])) {
+            if (!empty($packedItem['reference']) or !empty($packedItem['packed_reference'])) {
+                if (empty($packedItem['reference'])) {
+                    $packedItem['reference'] = $packedItem['packed_reference'];
+                }
                 $reference = $this->translator->trans('Ref: %s', ['%s' => $packedItem['reference']], 'Admin.Catalog.Feature');
             }
 
