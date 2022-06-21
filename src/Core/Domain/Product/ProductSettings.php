@@ -51,4 +51,5 @@ class ProductSettings
 
     public const MAX_DESCRIPTION_SHORT_LENGTH = 800;
     public const MAX_DESCRIPTION_LENGTH = 21844;
+    public const MAX_LINK_REWRITE_LENGTH = 128;
 }
