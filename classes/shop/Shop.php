@@ -522,7 +522,7 @@ class ShopCore extends ObjectModel
      *
      * @return string|bool complete base url of current shop
      */
-    public function getBaseURL($auto_secure_mode = false, $add_base_uri = true)
+    public function getBaseURL($auto_secure_mode = true, $add_base_uri = true)
     {
         if ($auto_secure_mode && Tools::usingSecureMode()) {
             if (!$this->domain_ssl) {

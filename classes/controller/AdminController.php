@@ -2073,7 +2073,7 @@ class AdminControllerCore extends Controller
             'full_cldr_language_code' => $this->context->getCurrentLocale()->getCode(),
             'link' => $this->context->link,
             'shop_name' => Configuration::get('PS_SHOP_NAME'),
-            'base_url' => $this->context->shop->getBaseURL(true),
+            'base_url' => $this->context->shop->getBaseURL(),
             'current_parent_id' => (int) Tab::getCurrentParentId(),
             'tabs' => $tabs,
             'current_tab_level' => $currentTabLevel,
