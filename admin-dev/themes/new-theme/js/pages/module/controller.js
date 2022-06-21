@@ -480,7 +480,7 @@ class AdminModuleController {
     let defaultMax;
 
     const paramsUrl = (new URL(document.location)).searchParams;
-    const findModule = paramsUrl.get('find_module');
+    const findModule = paramsUrl.get('find');
 
     if (findModule !== null && self.findModuleUsed !== true) {
       self.currentTagsList.push(findModule);
