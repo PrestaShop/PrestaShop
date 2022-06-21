@@ -325,7 +325,7 @@ abstract class ProductListingFrontControllerCore extends ProductPresentingFrontC
         $query->setEncodedFacets($encodedFacets);
 
         Hook::exec('actionProductSearchProviderRunQueryBefore', [
-            'query' => $query,
+            'query' => &$query,
         ]);
 
         // We're ready to run the actual query!
