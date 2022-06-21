@@ -165,6 +165,7 @@ class SEOType extends TranslatorAwareType
                 'options' => [
                     'constraints' => [
                         new TypedRegex(TypedRegex::TYPE_LINK_REWRITE),
+                        new Length(['max' => ProductSettings::MAX_LINK_REWRITE_LENGTH]),
                     ],
                     'attr' => [
                         'class' => 'serp-watched-url',
