@@ -1495,9 +1495,11 @@ $product-page-padding-bottom: 80px !default;
     }
 
     .packed-product-legend,
+    .packed-product-reference,
     .packed-product-quantity {
       max-width: 100%;
 
+      .reference-preview,
       .text-preview {
         display: inline-block;
         max-width: 100%;
