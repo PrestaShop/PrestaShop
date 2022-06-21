@@ -153,9 +153,6 @@ class SEOType extends TranslatorAwareType
                 'modify_all_shops' => true,
             ])
             ->add('link_rewrite', TranslatableType::class, [
-                'constraints' => [
-                    new TypedRegex(TypedRegex::TYPE_LINK_REWRITE),
-                ],
                 'label' => $this->trans('Friendly URL', 'Admin.Catalog.Feature'),
                 'label_help_box' => $this->trans('This is the human-readable URL, as generated from the product\'s name. You can change it if you want.', 'Admin.Catalog.Help'),
                 'required' => false,
@@ -166,6 +163,9 @@ class SEOType extends TranslatorAwareType
                 ),
                 'alert_message' => $this->getFriendlyAlterMessages(),
                 'options' => [
+                    'constraints' => [
+                        new TypedRegex(TypedRegex::TYPE_LINK_REWRITE),
+                    ],
                     'attr' => [
                         'class' => 'serp-watched-url',
                     ],
