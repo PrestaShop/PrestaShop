@@ -52,7 +52,7 @@ describe('FO - Login : Logout from FO', async () => {
   });
 
   it('should sign in with default customer', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'signInFO1', baseContext);
 
     await loginPage.customerLogin(page, DefaultCustomer);
 
@@ -70,7 +70,7 @@ describe('FO - Login : Logout from FO', async () => {
   });
 
   it('should sign in with default customer', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'signInFO2', baseContext);
 
     await homePage.goToLoginPage(page);
     await loginPage.customerLogin(page, DefaultCustomer);
