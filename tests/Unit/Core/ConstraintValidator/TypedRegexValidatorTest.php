@@ -400,6 +400,7 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
             ['Notebook_3', '0', true],
             ['notebook-ė', '0', false],
             ['notebook-ė', '1', true],
+            ['notebook with spaces', '1', false],
         ];
     }
 
