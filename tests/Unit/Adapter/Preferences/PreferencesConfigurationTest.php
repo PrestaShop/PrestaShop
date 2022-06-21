@@ -42,47 +42,35 @@ class PreferencesConfigurationTest extends AbstractConfigurationTestCase
     private const SHOP_ID = 42;
 
     /**
-     * @dataProvider provideShopConstraints
-     *
-     * @param ShopConstraint $shopConstraint
-     */
-    private $mockConfiguration;
-
-    /**
      * @var FeatureFlagRepository|MockObject
      */
     private $featureFlagRepository;
 
     protected function setUp(): void
-
-    /**
-     * @var ShopContext
-     */
-    private $mockShopConfiguration;
-
-    /**
-     * @var FeatureInterface
-     */
-    private $mockMultistoreFeature;
-
-    protected function setUp(): void
     {
-        $this->mockConfiguration = $this->getMockBuilder(Configuration::class)
-            ->setMethods(['get', 'getBoolean', 'set'])
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->mockConfiguration = $this->createConfigurationMock();
+        $this->mockShopConfiguration = $this->createShopContextMock();
+        $this->mockMultistoreFeature = $this->createMultistoreFeatureMock();
+
         $this->featureFlagRepository = $this->getMockBuilder(FeatureFlagRepository::class)
             ->setMethods(['get'])
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
         $this->featureFlagRepository
             ->method('get')
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
     }
 
+    /**
+     * @dataProvider provideShopConstraints
+     *
+     * @param ShopConstraint $shopConstraint
+     */
     public function testGetConfiguration(ShopConstraint $shopConstraint): void
     {
-        $preferencesConfiguration = new PreferencesConfiguration($this->mockConfiguration, $this->mockShopConfiguration, $this->mockMultistoreFeature);
+        $preferencesConfiguration = new PreferencesConfiguration($this->mockConfiguration, $this->featureFlagRepository, $this->mockShopConfiguration, $this->mockMultistoreFeature);
 
         $this->mockShopConfiguration
             ->method('getShopConstraint')
@@ -136,7 +124,7 @@ class PreferencesConfigurationTest extends AbstractConfigurationTestCase
      */
     public function testUpdateConfigurationWithInvalidConfiguration(string $exception, array $values): void
     {
-        $maintenanceConfiguration = new PreferencesConfiguration($this->mockConfiguration, $this->mockShopConfiguration, $this->mockMultistoreFeature);
+        $maintenanceConfiguration = new PreferencesConfiguration($this->mockConfiguration, $this->featureFlagRepository, $this->mockShopConfiguration, $this->mockMultistoreFeature);
 
         $this->expectException($exception);
         $maintenanceConfiguration->updateConfiguration($values);
