@@ -28,14 +28,17 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Type\EventListener;
 
 use PrestaShopBundle\Form\Admin\Extension\DisablingSwitchExtension;
+use PrestaShopBundle\Form\Admin\Extension\DisablingSwitchTrait;
 use PrestaShopBundle\Form\Admin\Type\DisablingSwitchType;
 use PrestaShopBundle\Form\FormCloner;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Form\Event\PostSubmitEvent;
 use Symfony\Component\Form\Event\PreSetDataEvent;
 use Symfony\Component\Form\Exception\InvalidConfigurationException;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
-use TypeError;
 
 /**
  * This listener is used by the DisablingSwitchExtension to automatically add the DisablingSwitchType to the parent,
@@ -57,6 +60,8 @@ use TypeError;
  */
 class AddDisablingSwitchListener implements EventSubscriberInterface
 {
+    use DisablingSwitchTrait;
+
     public const TOGGLE_DATA_ATTRIBUTE = 'data-toggled-by';
 
     private const DISABLED_VALUE = '0';
@@ -83,6 +88,9 @@ class AddDisablingSwitchListener implements EventSubscriberInterface
     }
 
     /**
+     * On PRE_SET_DATA event we add the disabling switch, we make sure it is only added once, and pre-set the attached input disabled state
+     * based on its initial value and the switch configuration.
+     *
      * @param PreSetDataEvent $event
      */
     public function addDisablingSwitch(PreSetDataEvent $event): void
@@ -98,28 +106,7 @@ class AddDisablingSwitchListener implements EventSubscriberInterface
             return;
         }
 
-        $disabledValue = $form->getConfig()->getOption(DisablingSwitchExtension::DISABLED_VALUE_OPTION);
-        if (is_callable($disabledValue)) {
-            try {
-                $shouldBeDisabled = $disabledValue($event->getData(), $event->getForm());
-            } catch (TypeError $typeError) {
-                throw new InvalidConfigurationException(
-                    'The callable provided for disabled_value option seems invalid, its prototype should be compatible with function($data, FormInterface $form): void And $data is usually nullable',
-                    0,
-                    $typeError
-                );
-            }
-        } else {
-            if (null === $disabledValue) {
-                $disabledValue = $form->getConfig()->getOption('default_empty_data');
-            }
-            if (null === $disabledValue) {
-                $emptyData = $form->getConfig()->getOption('empty_data');
-                $disabledValue = $emptyData instanceof \Closure ? $emptyData($form) : $emptyData;
-            }
-
-            $shouldBeDisabled = $disabledValue === $event->getData();
-        }
+        $shouldBeDisabled = $this->shouldFormBeDisabled($form, $event->getData());
 
         // If field should be disabled then the toggle value should be 0
         $switchStateOnDisable = $form->getConfig()->getOption(DisablingSwitchExtension::SWITCH_STATE_ON_DISABLE_OPTION);
@@ -146,10 +133,14 @@ class AddDisablingSwitchListener implements EventSubscriberInterface
             $disablingSwitchOptions
         );
 
-        $this->updateFormInitialDisableState($form, $shouldBeDisabled, $disablingFieldName);
+        $this->addToggleAttribute($form, $disablingFieldName);
     }
 
-    private function updateFormInitialDisableState(FormInterface $form, bool $shouldBeDisabled, string $disablingFieldName): void
+    /**
+     * @param FormInterface $form
+     * @param string $disablingFieldName
+     */
+    private function addToggleAttribute(FormInterface $form, string $disablingFieldName): void
     {
         $formConfig = $form->getConfig();
         $newOptions = $formConfig->getOptions();
@@ -160,12 +151,6 @@ class AddDisablingSwitchListener implements EventSubscriberInterface
         // Add data attribute that allows the JS component to select associated components
         $newOptions['attr'][self::TOGGLE_DATA_ATTRIBUTE] = $disablingFieldName;
 
-        // We only set the HTML attribute not the form field option disabled, or else its value will be ignored and
-        // won't be part of the form submitted data The field is disabled in the FO via this initial state and potentially
-        // JS manipulation (when the switch is used), in which case the form submitted data will be replaced by the field's
-        // default_empty_data option (or empty_data if the default_empty_data option is not present)
-        $newOptions['attr']['disabled'] = $shouldBeDisabled;
-
         $currentOptions = $formConfig->getOptions();
         $hasNewOptions = $newOptions !== $currentOptions;
         if ($hasNewOptions) {
@@ -175,7 +160,7 @@ class AddDisablingSwitchListener implements EventSubscriberInterface
         }
 
         foreach ($form->all() as $childForm) {
-            $this->updateFormInitialDisableState($childForm, $shouldBeDisabled, $disablingFieldName);
+            $this->addToggleAttribute($childForm, $disablingFieldName);
         }
     }
 }

@@ -48,6 +48,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class DisablingSwitchExtension extends AbstractTypeExtension
 {
+    use DisablingSwitchTrait;
+
     public const FIELD_PREFIX = 'disabling_switch_';
 
     public const SWITCH_OPTION = 'disabling_switch';
@@ -97,7 +99,42 @@ class DisablingSwitchExtension extends AbstractTypeExtension
      */
     public function buildView(FormView $view, FormInterface $form, array $options): void
     {
-        $view->vars[static::SWITCH_OPTION] = $options[static::SWITCH_OPTION];
+        $switchableParent = $this->getSwitchableParent($form);
+        if ($switchableParent) {
+            $disablingFieldName = DisablingSwitchExtension::FIELD_PREFIX . $switchableParent->getName();
+            $parent = $switchableParent->getParent();
+            if ($parent->has($disablingFieldName)) {
+                $shouldBeDisabled = $this->shouldFormBeDisabled($switchableParent, $switchableParent->getData());
+
+                // We only set the HTML attribute not the form field option disabled, or else its value will be ignored and
+                // won't be part of the form submitted data, that's why we only set this attribute for the view This will
+                // correctly set the input state on initial rendering and even on submit since buildView happens after the
+                // submitted data is handled by the form
+                $view->vars['attr']['disabled'] = $shouldBeDisabled;
+            }
+        }
+    }
+
+    /**
+     * The switch option may be defined on a compound input, so we need to get back the parent with the option to get
+     * back the appropriate options and be able to check the disabled status. For non-compound forms the switachable
+     * parent is actually itself.
+     *
+     * @param FormInterface $form
+     *
+     * @return FormInterface|null
+     */
+    private function getSwitchableParent(FormInterface $form): ?FormInterface
+    {
+        if (!$form->getParent()) {
+            return null;
+        }
+
+        if ($form->getConfig()->getOption(static::SWITCH_OPTION, false)) {
+            return $form;
+        }
+
+        return $this->getSwitchableParent($form->getParent());
     }
 
     /**
