@@ -81,9 +81,10 @@ class ProductPackRepository extends AbstractObjectModelRepository
 
         try {
             $qb = $this->connection->createQueryBuilder();
-            $qb->select('pack.id_product_item, pack.id_product_attribute_item, pack.quantity, packed.reference, language.name')
+            $qb->select('pack.id_product_item, pack.id_product_attribute_item, pack.quantity, attribute.reference,  packed.reference as packed_reference, language.name')
                 ->from($this->dbPrefix . 'pack', 'pack')
                 ->leftJoin('pack', $this->dbPrefix . 'product', 'product', 'product.id_product = pack.id_product_pack')
+                ->leftJoin('pack', $this->dbPrefix . 'product_attribute', 'attribute', 'pack.id_product_attribute_item = attribute.id_product_attribute')
                 ->leftJoin('pack', $this->dbPrefix . 'product', 'packed', 'packed.id_product = pack.id_product_item')
                 ->leftJoin('pack', $this->dbPrefix . 'product_lang', 'language', 'pack.id_product_item = language.id_product')
                 ->where('pack.id_product_pack = :idProduct')
