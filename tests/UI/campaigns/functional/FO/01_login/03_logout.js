@@ -61,7 +61,7 @@ describe('FO - Login : Logout from FO', async () => {
   });
 
   it('should logout by the link in the header', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'signOutFO', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'signOutFOByHeaderLink', baseContext);
 
     await homePage.logout(page);
 
@@ -89,7 +89,7 @@ describe('FO - Login : Logout from FO', async () => {
   });
 
   it('should logout by the link in the footer of account page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'signOutFO', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'signOutFOByFooterLink', baseContext);
 
     await myAccountPage.logout(page);
 
