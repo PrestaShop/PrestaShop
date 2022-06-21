@@ -29,10 +29,10 @@ namespace PrestaShop\PrestaShop\Adapter\Preferences;
 use Cookie;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
-use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -74,8 +74,8 @@ class PreferencesConfiguration extends AbstractMultistoreConfiguration
         $shopConstraint = $this->getShopConstraint();
 
         return [
-            'enable_ssl' => (bool) $this->configuration->get('PS_SSL_ENABLED', false, $shopConstraint),
-            'enable_ssl_everywhere' => (bool) $this->configuration->get('PS_SSL_ENABLED_EVERYWHERE', false, $shopConstraint),
+            'enable_ssl' => (bool) $this->configuration->get('PS_SSL_ENABLED', null, $shopConstraint),
+            'enable_ssl_everywhere' => (bool) $this->configuration->get('PS_SSL_ENABLED_EVERYWHERE', null, $shopConstraint),
             'enable_token' => (bool) $this->configuration->get('PS_TOKEN_ENABLE', null, $shopConstraint),
             'allow_html_iframes' => (bool) $this->configuration->get('PS_ALLOW_HTML_IFRAME', null, $shopConstraint),
             'use_htmlpurifier' => (bool) $this->configuration->get('PS_USE_HTMLPURIFIER', null, $shopConstraint),

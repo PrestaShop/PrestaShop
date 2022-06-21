@@ -28,11 +28,10 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Adapter\Preferences;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PrestaShop\PrestaShop\Adapter\Preferences\PreferencesConfiguration;
-use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
-use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
-use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 use Tests\TestCase\AbstractConfigurationTestCase;
@@ -346,7 +345,7 @@ class PreferencesConfigurationTest extends AbstractConfigurationTestCase
 
     public function testSuccessfulUpdate(): void
     {
-        $preferencesConfiguration = new PreferencesConfiguration($this->mockConfiguration, $this->mockShopConfiguration, $this->mockMultistoreFeature);
+        $preferencesConfiguration = new PreferencesConfiguration($this->mockConfiguration, $this->featureFlagRepository, $this->mockShopConfiguration, $this->mockMultistoreFeature);
 
         $res = $preferencesConfiguration->updateConfiguration([
             'enable_ssl' => true,
