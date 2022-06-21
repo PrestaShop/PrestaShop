@@ -112,5 +112,6 @@ export default class ProductSEOManager {
     }
 
     linkRewriteInput.value = window.str2url(nameValue);
+    linkRewriteInput.dispatchEvent(new Event('change', {bubbles: true}));
   }
 }
