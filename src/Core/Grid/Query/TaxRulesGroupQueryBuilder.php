@@ -87,11 +87,9 @@ class TaxRulesGroupQueryBuilder extends AbstractDoctrineQueryBuilder
      */
     public function getCountQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
-        $qb = $this->getQueryBuilder($searchCriteria->getFilters())
-            ->select('COUNT(DISTINCT trg.`id_tax_rules_group`)')
-        ;
-
-        return $qb;
+        return $this
+            ->getQueryBuilder($searchCriteria->getFilters())
+            ->select('COUNT(DISTINCT trg.`id_tax_rules_group`)');
     }
 
     /**
@@ -141,14 +139,16 @@ class TaxRulesGroupQueryBuilder extends AbstractDoctrineQueryBuilder
                 continue;
             }
 
-            if ('name' === $filterName) {
-                $qb->andWhere($allowedFiltersMap[$filterName] . ' LIKE :' . $filterName)
-                    ->setParameter($filterName, '%' . $value . '%');
+            if (in_array($filterName, ['name', 'id_tax_rules_group'])) {
+                $qb
+                    ->andWhere($allowedFiltersMap[$filterName] . ' LIKE :' . $filterName)
+                    ->setParameter($filterName, '%' . $this->escapePercent($value) . '%');
 
                 continue;
             }
 
-            $qb->andWhere($allowedFiltersMap[$filterName] . ' = :' . $filterName)
+            $qb
+                ->andWhere($allowedFiltersMap[$filterName] . ' = :' . $filterName)
                 ->setParameter($filterName, $value);
         }
     }
