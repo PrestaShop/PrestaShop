@@ -2183,3 +2183,12 @@ services:
     public: true
     tags:
       - { name: form.type }
+
+  form.type.improve.international.tax.tax_rules_group_type:
+    class: 'PrestaShopBundle\Form\Admin\Improve\International\Tax\TaxRulesGroupType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    arguments:
+      - '@=service("prestashop.adapter.multistore_feature").isUsed()'
+    tags:
+      - { name: form.type }

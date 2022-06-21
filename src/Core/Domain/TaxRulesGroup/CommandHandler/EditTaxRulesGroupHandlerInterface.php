@@ -24,20 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\EditTaxRulesGroupCommand;
 
 /**
- * Thrown when tax rules group constraint is violated
+ * Defines contract for edit tax rules group handler
  */
-class TaxRulesGroupConstraintException extends TaxRulesGroupException
+interface EditTaxRulesGroupHandlerInterface
 {
     /**
-     * Thrown when provided tax rules group id value is not valid
+     * @param EditTaxRulesGroupCommand $command
      */
-    public const INVALID_ID = 1;
-
-    /**
-     * @var int - error is raised when a value in array is not integer type
-     */
-    public const INVALID_SHOP_ASSOCIATION = 2;
+    public function handle(EditTaxRulesGroupCommand $command): void;
 }

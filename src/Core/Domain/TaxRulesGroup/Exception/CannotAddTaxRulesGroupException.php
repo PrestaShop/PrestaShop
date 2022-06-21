@@ -24,20 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception;
 
 /**
- * Thrown when tax rules group constraint is violated
+ * Thrown on failure to add a tax rules group without errors
  */
-class TaxRulesGroupConstraintException extends TaxRulesGroupException
+class CannotAddTaxRulesGroupException extends TaxRulesGroupException
 {
-    /**
-     * Thrown when provided tax rules group id value is not valid
-     */
-    public const INVALID_ID = 1;
-
-    /**
-     * @var int - error is raised when a value in array is not integer type
-     */
-    public const INVALID_SHOP_ASSOCIATION = 2;
 }

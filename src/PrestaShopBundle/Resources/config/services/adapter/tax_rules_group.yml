@@ -2,6 +2,18 @@ services:
   _defaults:
     public: true
 
+  prestashop.adapter.tax_rules_group.command_handler.add_tax_rules_group_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler\AddTaxRulesGroupHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\AddTaxRulesGroupCommand'
+
+  prestashop.adapter.tax_rules_group.command_handler.edit_tax_rules_group_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler\EditTaxRulesGroupHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Command\EditTaxRulesGroupCommand'
+
   prestashop.adapter.tax_rules_group.command_handler.delete_tax_rules_group_handler:
     class: 'PrestaShop\PrestaShop\Adapter\TaxRulesGroup\CommandHandler\DeleteTaxRulesGroupHandler'
     tags:

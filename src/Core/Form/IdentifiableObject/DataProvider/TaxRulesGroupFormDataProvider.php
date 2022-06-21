@@ -24,34 +24,52 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Adapter\TaxRulesGroup\QueryHandler;
+declare(strict_types=1);
 
-use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\AbstractTaxRulesGroupHandler;
-use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupNotFoundException;
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
+
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Query\GetTaxRulesGroupForEditing;
-use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\QueryHandler\GetTaxRulesGroupForEditingHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\QueryResult\EditableTaxRulesGroup;
 
 /**
- * Handles query which gets tax rules group for editing
+ * Provides data for search engine add/edit form.
  */
-final class GetTaxRulesGroupForEditingHandler extends AbstractTaxRulesGroupHandler implements GetTaxRulesGroupForEditingHandlerInterface
+class TaxRulesGroupFormDataProvider implements FormDataProviderInterface
 {
     /**
-     * {@inheritdoc}
-     *
-     * @throws TaxRulesGroupNotFoundException
+     * @var CommandBusInterface
      */
-    public function handle(GetTaxRulesGroupForEditing $query): EditableTaxRulesGroup
-    {
-        $taxRulesGroupId = $query->getTaxRulesGroupId();
-        $taxRulesGroup = $this->getTaxRulesGroup($taxRulesGroupId);
+    protected $queryBus;
 
-        return new EditableTaxRulesGroup(
-            $taxRulesGroupId,
-            $taxRulesGroup->name,
-            (bool) $taxRulesGroup->active,
-            $taxRulesGroup->getAssociatedShops()
-        );
+    /**
+     * @param CommandBusInterface $queryBus
+     */
+    public function __construct(CommandBusInterface $queryBus)
+    {
+        $this->queryBus = $queryBus;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getData($id): array
+    {
+        /** @var EditableTaxRulesGroup $editableTaxRulesGroup */
+        $editableTaxRulesGroup = $this->queryBus->handle(new GetTaxRulesGroupForEditing($id));
+
+        return [
+            'name' => $editableTaxRulesGroup->getName(),
+            'is_enabled' => $editableTaxRulesGroup->isActive(),
+            'shop_association' => $editableTaxRulesGroup->getShopAssociationIds(),
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDefaultData(): array
+    {
+        return [];
     }
 }
