@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShopBundle\Form\Admin\Type\ImagePreviewType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
@@ -72,7 +73,6 @@ class HeaderType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $nameConstraints = $options['active'] ? [new DefaultLanguage()] : [];
         $builder
             ->add('cover_thumbnail', ImagePreviewType::class, [
                 'label' => false,
@@ -80,8 +80,9 @@ class HeaderType extends TranslatorAwareType
             ->add('name', TranslatableType::class, [
                 'label' => $this->trans('Product name', 'Admin.Catalog.Feature'),
                 'type' => TextType::class,
-                'constraints' => $nameConstraints,
+                'constraints' => $options['active'] ? [new DefaultLanguage()] : [],
                 'options' => [
+                    'constraints' => [new TypedRegex(TypedRegex::TYPE_CATALOG_NAME)],
                     'attr' => [
                         'class' => 'serp-default-title',
                     ],
