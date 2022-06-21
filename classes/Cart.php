@@ -4565,12 +4565,13 @@ class CartCore extends ObjectModel
     public function setWsCartRows($values)
     {
         if ($this->deleteAssociations()) {
-            $query = 'INSERT INTO `' . _DB_PREFIX_ . 'cart_product`(`id_cart`, `id_product`, `id_product_attribute`, `id_address_delivery`, `quantity`, `date_add`, `id_shop`) VALUES ';
+            $query = 'INSERT INTO `' . _DB_PREFIX_ . 'cart_product`(`id_cart`, `id_product`, `id_product_attribute`, `id_address_delivery`, `id_customization`, `quantity`, `date_add`, `id_shop`) VALUES ';
 
             foreach ($values as $value) {
                 $query .= '(' . (int) $this->id . ', ' . (int) $value['id_product'] . ', ' .
                     (isset($value['id_product_attribute']) ? (int) $value['id_product_attribute'] : 'NULL') . ', ' .
                     (isset($value['id_address_delivery']) ? (int) $value['id_address_delivery'] : 0) . ', ' .
+                    (isset($value['id_customization']) ? (int) $value['id_customization'] : 0) . ', ' .
                     (int) $value['quantity'] . ', NOW(), ' . (int) Context::getContext()->shop->id . '),';
             }
 
