@@ -3,15 +3,15 @@
   font-family: "Material Icons";
   font-style: normal;
   font-weight: 400;
-  src:
-    local("Material Icons"), local("MaterialIcons-Regular"), url("~material-design-icons-iconfont/dist/fonts/MaterialIcons-Regular.woff2")
-    format("woff2");
+  src: local("Material Icons"), local("MaterialIcons-Regular"),
+    url("~material-design-icons-iconfont/dist/fonts/MaterialIcons-Regular.woff2")
+      format("woff2");
 }
 
 .material-icons {
   display: inline-block;
   font-family: "Material Icons", sans-serif;
-  font-size: 24px;  /* Preferred icon size */
+  font-size: 24px; /* Preferred icon size */
   font-style: normal;
   font-weight: 500;
   line-height: 1;
