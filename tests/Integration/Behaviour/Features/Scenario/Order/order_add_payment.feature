@@ -82,6 +82,7 @@ Feature: Add payment to Order from Back Office (BO)
       | paymentMethod  | Payments by check   |
       | transactionId  | test123             |
       | amount         | $6.00               |
+      | employee       | Puff Daddy          |
     And order "bo_order1" should have the following details:
       | total_paid_real | 6.000000 |
 
@@ -98,6 +99,7 @@ Feature: Add payment to Order from Back Office (BO)
       | paymentMethod  | Payments by check   |
       | transactionId  | test123             |
       | amount         | €6.00               |
+      | employee       | Puff Daddy          |
     And order "bo_order1" should have the following details:
       | total_paid_real | 6.820000 |
 
