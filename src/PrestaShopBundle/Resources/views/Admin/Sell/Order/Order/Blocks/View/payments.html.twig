@@ -44,6 +44,7 @@
           <th class="table-head-transaction">{{ 'Transaction ID'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
           <th class="table-head-amount">{{ 'Amount'|trans({}, 'Admin.Global') }}</th>
           <th class="table-head-invoice">{{ 'Invoice'|trans({}, 'Admin.Global') }}</th>
+          <th class="table-head-employee">{{ 'Employee'|trans({}, 'Admin.Global') }}</th>
           <th></th>
         </tr>
       </thead>
@@ -55,6 +56,7 @@
           <td data-role="transaction-id-column">{{ payment.transactionId }}</td>
           <td data-role="amount-column">{{ payment.amount }}</td>
           <td data-role="invoice-column">{% if payment.invoiceNumber %}{{ payment.invoiceNumber }}{% endif %}</td>
+          <td data-role="invoice-column">{% if payment.employeeName %}{{ payment.employeeName }}{% else %}-{% endif %}</td>
           <td class="text-right">
             <button class="btn btn-sm btn-outline-secondary js-payment-details-btn">
               {{ 'Details'|trans({}, 'Admin.Global') }}
@@ -117,6 +119,7 @@
               {{ form_widget(addOrderPaymentForm.id_invoice) }}
             </div>
           </td>
+          <td></td>
           <td>
             <button type="submit" class="btn btn-primary btn-sm">{{ 'Add'|trans({}, 'Admin.Actions') }}</button>
           </td>

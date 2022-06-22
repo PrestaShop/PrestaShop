@@ -1905,11 +1905,19 @@ class OrderCore extends ObjectModel
      * @param Currency $currency
      * @param string $date
      * @param OrderInvoice $order_invoice
+     * @param int|null $id_employee
      *
      * @return bool
      */
-    public function addOrderPayment($amount_paid, $payment_method = null, $payment_transaction_id = null, $currency = null, $date = null, $order_invoice = null)
-    {
+    public function addOrderPayment(
+        $amount_paid,
+        $payment_method = null,
+        $payment_transaction_id = null,
+        $currency = null,
+        $date = null,
+        $order_invoice = null,
+        int $id_employee = null
+    ) {
         $order_payment = new OrderPayment();
         $order_payment->order_reference = $this->reference;
         $order_payment->id_currency = ($currency ? $currency->id : $this->id_currency);
@@ -1919,6 +1927,7 @@ class OrderCore extends ObjectModel
         $order_payment->payment_method = ($payment_method ? $payment_method : $this->payment);
         $order_payment->transaction_id = $payment_transaction_id;
         $order_payment->amount = (float) $amount_paid;
+        $order_payment->id_employee = $id_employee;
         $order_payment->date_add = ($date ? $date : null);
 
         // Add time to the date if needed
