@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
 use Currency;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShopBundle\Form\Admin\Type\IconButtonType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
@@ -50,14 +51,20 @@ class PricingType extends TranslatorAwareType
      * @var Currency
      */
     private $defaultCurrency;
+    /**
+     * @var LegacyContext
+     */
+    private $legacyContext;
 
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        Currency $defaultCurrency
+        Currency $defaultCurrency,
+        LegacyContext $legacyContext
     ) {
         parent::__construct($translator, $locales);
         $this->defaultCurrency = $defaultCurrency;
+        $this->legacyContext = $legacyContext;
     }
 
     /**
@@ -66,6 +73,10 @@ class PricingType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $catalogPriceRuleLink = $this->legacyContext->getAdminLink('AdminSpecificPriceRule', true, ['updatespecific_price_rule' => '', 'id_specific_price_rule' => 'catalog_price_rule_id']);
+        /** Adding % to make link more unique */
+        $catalogPriceRuleLink = str_replace('catalog_price_rule_id', '%catalog_price_rule_id%', $catalogPriceRuleLink);
+
         $builder
             ->add('retail_price', RetailPriceType::class, [
                 'tax_rules_group_id' => $options['tax_rules_group_id'],
@@ -113,6 +124,9 @@ class PricingType extends TranslatorAwareType
             ->add('catalog_price_rules', CatalogPriceRulesType::class, [
                 'label' => $this->trans('Catalog price rules', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
+                'attr' => [
+                  'data-catalog-price-url' => $catalogPriceRuleLink,
+                ],
                 'row_attr' => [
                     'class' => 'd-none',
                 ],

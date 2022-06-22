@@ -387,6 +387,7 @@ export default {
     listRowTemplate: '#catalog-price-rule-tr-template',
     showCatalogPriceRules: '#product_pricing_show_catalog_price_rules',
     hideCatalogPriceRules: '#product_pricing_hide_catalog_price_rules',
+    catalogPriceRuleRow: '#product_pricing_catalog_price_rules',
     listFields: {
       catalogPriceRuleId: '.catalog-price-rule-id',
       shop: '.shop',
