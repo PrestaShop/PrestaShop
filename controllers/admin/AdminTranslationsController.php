@@ -1210,8 +1210,8 @@ class AdminTranslationsControllerCore extends AdminController
                 $directories['php'] = [
                     _PS_FRONT_CONTROLLER_DIR_ => scandir(_PS_FRONT_CONTROLLER_DIR_, SCANDIR_SORT_NONE),
                     _PS_ADMIN_CONTROLLER_DIR_ => scandir(_PS_ADMIN_CONTROLLER_DIR_, SCANDIR_SORT_NONE),
-                    _PS_OVERRIDE_DIR_ . 'controllers/front/' => scandir(_PS_OVERRIDE_DIR_ . 'controllers/front/', SCANDIR_SORT_NONE),
-                    _PS_OVERRIDE_DIR_ . 'controllers/admin/' => scandir(_PS_OVERRIDE_DIR_ . 'controllers/admin/', SCANDIR_SORT_NONE),
+                    _PS_OVERRIDE_DIR_ . 'controllers/front/' => is_dir(_PS_OVERRIDE_DIR_ . 'controllers/front/') ? scandir(_PS_OVERRIDE_DIR_ . 'controllers/front/', SCANDIR_SORT_NONE) : '',
+                    _PS_OVERRIDE_DIR_ . 'controllers/admin/' => is_dir(_PS_OVERRIDE_DIR_ . 'controllers/admin/') ? scandir(_PS_OVERRIDE_DIR_ . 'controllers/admin/', SCANDIR_SORT_NONE) : '',
                     _PS_ADMIN_DIR_ . DIRECTORY_SEPARATOR => scandir(_PS_ADMIN_DIR_ . DIRECTORY_SEPARATOR, SCANDIR_SORT_NONE),
                 ];
 
@@ -3262,7 +3262,7 @@ class AdminTranslationsControllerCore extends AdminController
     {
         $dir = rtrim($dir, '/') . DIRECTORY_SEPARATOR;
 
-        $to_parse = scandir($dir, SCANDIR_SORT_NONE);
+        $to_parse = is_dir($dir) ? scandir($dir, SCANDIR_SORT_NONE) : [];
         // copied (and kind of) adapted from AdminImages.php
         foreach ($to_parse as $file) {
             if (!in_array($file, self::$ignore_folder)) {
