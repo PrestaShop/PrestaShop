@@ -1591,6 +1591,7 @@ CREATE TABLE `PREFIX_order_payment` (
   `card_expiration` CHAR(7) NULL,
   `card_holder` VARCHAR(254) NULL,
   `date_add` DATETIME NOT NULL,
+  `id_employee` INT NULL,
   PRIMARY KEY (`id_order_payment`),
   KEY `order_reference`(`order_reference`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;

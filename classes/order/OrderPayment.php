@@ -41,6 +41,11 @@ class OrderPaymentCore extends ObjectModel
     public $date_add;
 
     /**
+     * @var int|null
+     */
+    public $id_employee;
+
+    /**
      * @see ObjectModel::$definition
      */
     public static $definition = [
@@ -58,6 +63,7 @@ class OrderPaymentCore extends ObjectModel
             'card_expiration' => ['type' => self::TYPE_STRING, 'validate' => 'isAnything', 'size' => 254],
             'card_holder' => ['type' => self::TYPE_STRING, 'validate' => 'isAnything', 'size' => 254],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'id_employee' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'allow_null' => true],
         ],
     ];
 
