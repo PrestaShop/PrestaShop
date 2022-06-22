@@ -10,7 +10,7 @@ admin_order_invoices:
 # Process Invoice Options form
 admin_order_invoices_process:
   path: /
-  methods: [ POST ]
+  methods: [ PATCH, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Sell\Order\InvoicesController::processAction'
     _legacy_controller: AdminInvoices

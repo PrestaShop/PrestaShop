@@ -31,4 +31,10 @@ const {$} = window;
 $(() => {
   initDatePickers();
   new TranslatableInput();
+
+  window.prestashop.component.initComponents(
+    [
+      'MultistoreConfigField',
+    ],
+  );
 });
