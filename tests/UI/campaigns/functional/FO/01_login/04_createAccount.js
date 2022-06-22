@@ -5,7 +5,7 @@ const {expect} = require('chai');
 // Import utils
 const helper = require('@utils/helpers');
 
-//Import FO pages
+// Import FO pages
 const homePage = require('@pages/FO/home');
 const loginPage = require('@pages/FO/login');
 const createAccountPage = require('@pages/FO/myAccount/add');
