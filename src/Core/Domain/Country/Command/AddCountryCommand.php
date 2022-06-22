@@ -105,12 +105,30 @@ class AddCountryCommand
         array $localizedNames,
         string $isoCode,
         int $callPrefix,
-        string $addressFormat
-    ) {
+        int $defaultCurrency,
+        ?int $zoneId,
+        bool $needZipCode,
+        string $zipCodeFormat,
+        string $addressFormat,
+        bool $enabled,
+        bool $containsStates,
+        bool $needIdNumber,
+        bool $displayTaxLabel,
+        array $shopAssociation
+    ){
         $this->localizedNames = $localizedNames;
         $this->isoCode = Tools::strtoupper(Tools::substr($isoCode, 0, 2));
         $this->callPrefix = $callPrefix;
+        $this->defaultCurrency = $defaultCurrency;
+        $this->zoneId = $zoneId;
+        $this->needZipCode = $needZipCode;
+        $this->zipCodeFormat = new CountryZipCodeFormat($zipCodeFormat);
         $this->addressFormat = $addressFormat;
+        $this->enabled = $enabled;
+        $this->containsStates = $containsStates;
+        $this->needIdNumber = $needIdNumber;
+        $this->displayTaxLabel = $displayTaxLabel;
+        $this->shopAssociation = $shopAssociation;
     }
 
     /**
@@ -121,7 +139,7 @@ class AddCountryCommand
         return $this->localizedNames;
     }
 
-    public function getIsoCode(): string
+    public function getIsoCode()
     {
         return $this->isoCode;
     }
@@ -131,33 +149,9 @@ class AddCountryCommand
         return $this->callPrefix;
     }
 
-    public function getZipCodeFormat(): ?CountryZipCodeFormat
-    {
-        return $this->zipCodeFormat;
-    }
-
-    public function setZipCodeFormat(string $zipCodeFormat): self
-    {
-        $this->zipCodeFormat = new CountryZipCodeFormat($zipCodeFormat);
-
-        return $this;
-    }
-
-    public function getAddressFormat(): string
-    {
-        return $this->addressFormat;
-    }
-
     public function getDefaultCurrency(): int
     {
         return $this->defaultCurrency;
-    }
-
-    public function setDefaultCurrency(int $defaultCurrency): self
-    {
-        $this->defaultCurrency = $defaultCurrency;
-
-        return $this;
     }
 
     public function getZoneId(): ?int
@@ -165,23 +159,19 @@ class AddCountryCommand
         return $this->zoneId;
     }
 
-    public function setZoneId(int $zoneId): self
-    {
-        $this->zoneId = $zoneId;
-
-        return $this;
-    }
-
     public function needZipCode(): bool
     {
         return $this->needZipCode;
     }
 
-    public function setNeedZipCode(bool $needZipCode): self
+    public function getZipCodeFormat(): ?CountryZipCodeFormat
     {
-        $this->needZipCode = $needZipCode;
+        return $this->zipCodeFormat;
+    }
 
-        return $this;
+    public function getAddressFormat(): string
+    {
+        return $this->addressFormat;
     }
 
     public function isEnabled(): bool
@@ -189,23 +179,9 @@ class AddCountryCommand
         return $this->enabled;
     }
 
-    public function setEnabled(bool $enabled): self
-    {
-        $this->enabled = $enabled;
-
-        return $this;
-    }
-
     public function containsStates(): bool
     {
         return $this->containsStates;
-    }
-
-    public function setContainsStates(bool $containsStates): self
-    {
-        $this->containsStates = $containsStates;
-
-        return $this;
     }
 
     public function needIdNumber(): bool
@@ -213,23 +189,9 @@ class AddCountryCommand
         return $this->needIdNumber;
     }
 
-    public function setNeedIdNumber(bool $needIdNumber): self
-    {
-        $this->needIdNumber = $needIdNumber;
-
-        return $this;
-    }
-
     public function displayTaxLabel(): bool
     {
         return $this->displayTaxLabel;
-    }
-
-    public function setDisplayTaxLabel(bool $displayTaxLabel): self
-    {
-        $this->displayTaxLabel = $displayTaxLabel;
-
-        return $this;
     }
 
     /**
@@ -238,12 +200,5 @@ class AddCountryCommand
     public function getShopAssociation(): array
     {
         return $this->shopAssociation;
-    }
-
-    public function setShopAssociation(array $shopAssociation): self
-    {
-        $this->shopAssociation = $shopAssociation;
-
-        return $this;
     }
 }

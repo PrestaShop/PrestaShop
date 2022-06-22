@@ -70,22 +70,9 @@ class CountryFormDataProvider implements FormDataProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function getData($id): array
+    public function getData($id): void
     {
-        /** @var EditableZone $result */
-        $result = $this->queryBus->handle(new GetZoneForEditing($id));
-
-        $data = [
-            'id' => $id,
-            'name' => $result->getName(),
-            'is_enabled' => $result->isEnabled(),
-        ];
-
-        if ($this->multistoreEnabled) {
-            $data['shop_association'] = $result->getAssociatedShops();
-        }
-
-        return $data;
+        //todo: will be implemented on edit PR
     }
 
     /**
