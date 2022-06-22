@@ -140,6 +140,10 @@ final class Currency implements CurrencyInterface
      */
     public function getDisplayName($countContext = CurrencyInterface::DISPLAY_NAME_COUNT_DEFAULT)
     {
+        if (empty($this->displayNames)) {
+            return $this->isoCode;
+        }
+
         if (!in_array($countContext, [CurrencyInterface::DISPLAY_NAME_COUNT_DEFAULT, CurrencyInterface::DISPLAY_NAME_COUNT_ONE, CurrencyInterface::DISPLAY_NAME_COUNT_OTHER])) {
             throw new LocalizationException(sprintf('Unknown display name: "%s"', print_r($countContext, true)));
         }
