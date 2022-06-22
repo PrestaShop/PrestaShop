@@ -25,13 +25,10 @@
 import {getCatalogRules} from '@pages/product/services/catalog-rule-service';
 import {EventEmitter} from 'events';
 import ProductMap from '@pages/product/product-map';
-import Router from '@components/router';
 
 const CatalogPriceRuleMap = ProductMap.catalogPriceRule;
 
 export default class CatalogPriceRuleList {
-  private router: Router;
-
   private eventEmitter: EventEmitter;
 
   private listContainer: HTMLElement
@@ -39,13 +36,18 @@ export default class CatalogPriceRuleList {
   constructor() {
     this.listContainer = document.querySelector(CatalogPriceRuleMap.listContainer) as HTMLElement;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
-    this.router = new Router();
   }
 
   public renderList(): void {
     const {listFields} = CatalogPriceRuleMap;
     const tbody = this.listContainer.querySelector(`${CatalogPriceRuleMap.listContainer} tbody`) as HTMLElement;
     const trTemplateContainer = this.listContainer.querySelector(CatalogPriceRuleMap.listRowTemplate) as HTMLScriptElement;
+    const rowContainer = document.querySelector(CatalogPriceRuleMap.catalogPriceRuleRow) as HTMLElement;
+    const editCatalogPriceRuleUrl = rowContainer.dataset.catalogPriceUrl;
+    if (!editCatalogPriceRuleUrl) {
+      return;
+    }
+
     const trTemplate = trTemplateContainer.innerHTML as string;
     tbody.innerHTML = '';
 
@@ -82,7 +84,7 @@ export default class CatalogPriceRuleList {
         reductionField.textContent = catalogPriceRule.reduction;
         startDateField.textContent = catalogPriceRule.startDate;
         endDateField.textContent = catalogPriceRule.endDate;
-        editBtn.href = this.router.generate('admin_catalog_price_rules_edit', {catalogPriceRuleId: String(catalogPriceRule.id)});
+        editBtn.href = editCatalogPriceRuleUrl.replace('%catalog_price_rule_id%', String(catalogPriceRule.id));
         tbody.append(trClone);
       });
     });

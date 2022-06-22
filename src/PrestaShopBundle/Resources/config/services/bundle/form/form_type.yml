@@ -1583,6 +1583,7 @@ services:
     public: true
     arguments:
       - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
+      - '@prestashop.adapter.legacy.context'
     tags:
       - { name: form.type }
 
