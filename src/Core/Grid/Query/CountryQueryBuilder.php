@@ -48,20 +48,27 @@ class CountryQueryBuilder extends AbstractDoctrineQueryBuilder
     protected $contextShopIds;
 
     /**
+     * @var int
+     */
+    private $contextLangId;
+
+    /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
-     * @param int[] $contextShopIds
+     * @param int $contextShopIds
      */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
         DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
-        array $contextShopIds
+        array $contextShopIds,
+        int $contextLangId
     ) {
         parent::__construct($connection, $dbPrefix);
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
         $this->contextShopIds = $contextShopIds;
+        $this->contextLangId = $contextLangId;
     }
 
     /**
@@ -98,24 +105,18 @@ class CountryQueryBuilder extends AbstractDoctrineQueryBuilder
             ->from($this->dbPrefix . 'country', 'c')
             ->innerJoin(
                 'c',
-                $this->dbPrefix . 'country_shop',
-                'cs',
-                'c.id_country = cs.id_country'
-            )
-            ->innerJoin(
-                'c',
                 $this->dbPrefix . 'country_lang',
                 'cl',
-                'cl.id_country = cs.id_country'
+                'cl.id_country = c.id_country AND cl.id_lang = (:contextLangId)'
             )
-            ->leftJoin(
+            ->innerJoin(
                 'c',
                 $this->dbPrefix . 'zone',
                 'z',
                 'z.id_zone = c.id_zone'
             )
-            ->where('cs.id_shop IN (:contextShopIds)')
-            ->setParameter('contextShopIds', $this->contextShopIds, Connection::PARAM_INT_ARRAY);
+            ->setParameter('contextLangId', $this->contextLangId)
+        ;
 
         $this->applyFilters($qb, $searchCriteria);
 
