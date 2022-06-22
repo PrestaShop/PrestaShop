@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -23,8 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-export default {
-  combinationModelUpdated: 'combinationModelUpdated',
-  combinationFieldUpdated: 'combinationFieldUpdated',
-  updateCombinationModel: 'updateCombinationModel',
-};
+declare(strict_types=1);
+
+namespace PrestaShopBundle\Bridge\AdminController\Action;
+
+/**
+ * This class is the object to instantiate if you want to add a bulk action for your list.
+ */
+class ListBulkAction extends Action
+{
+}

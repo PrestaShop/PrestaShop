@@ -43,6 +43,7 @@ class ProductsBlock extends ViewOrderBasePage.constructor {
 
     // Total order
     this.orderTotalPriceSpan = '#orderTotal';
+    this.orderWrappingTotal = '#orderWrappingTotal';
 
     // Add discount
     this.orderTotalDiscountsSpan = '#orderDiscountsTotal';
@@ -245,6 +246,15 @@ class ProductsBlock extends ViewOrderBasePage.constructor {
    */
   getOrderTotalPrice(page) {
     return this.getPriceFromText(page, this.orderTotalPriceSpan, 1000);
+  }
+
+  /**
+   * Get order wrapping total
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  getOrderWrappingTotal(page) {
+    return this.getPriceFromText(page, this.orderWrappingTotal);
   }
 
   /**

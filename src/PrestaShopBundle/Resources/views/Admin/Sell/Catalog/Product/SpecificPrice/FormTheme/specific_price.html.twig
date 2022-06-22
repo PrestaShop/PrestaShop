@@ -26,10 +26,11 @@
 {% extends '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
 
 {% block searched_customer_row %}
-  <li class="media entity-item" id="{{ form.vars.name }}">
+  {% set attr = attr|merge({'class': (attr.class|default('') ~ ' media entity-item')|trim}) %}
+  <li {{ block('widget_container_attributes') }}>
     <div class="media-body media-middle">
       {{ form_widget(form.fullname_and_email) }}
-      <i class="material-icons delete entity-item-delete">clear</i>
+      <i class="material-icons entity-item-delete">clear</i>
     </div>
     {{ form_widget(form.id_customer) }}
   </li>

@@ -82,7 +82,7 @@
 
 {% block entity_search_table_layout %}
   {%- set attr = list_attr|merge({'class': (list_attr.class|default('') ~ ' entities-list-container')|trim }) -%}
-  <div {{ block('widget_attributes') }}>
+  <div {{ block('widget_container_attributes') }}>
     <div class="row">
       <div class="col-sm">
         <table class="table">
@@ -119,20 +119,22 @@
 {% endblock %}
 
 {% block entity_item_list_row %}
-  <li class="media entity-item" id="{{ form.vars.name }}">
+  {% set attr = attr|merge({'class': (attr.class|default('') ~ ' media entity-item')|trim}) %}
+  <li {{ block('widget_container_attributes') }}>
     <div class="media-left">
       {{ form_widget(form.image) }}
     </div>
     <div class="media-body media-middle">
       {{ form_widget(form.name) }}
-      <i class="material-icons delete entity-item-delete">clear</i>
+      <i class="material-icons entity-item-delete">clear</i>
     </div>
     {{ form_widget(form.id) }}
   </li>
 {% endblock %}
 
 {%- block entity_item_table_row -%}
-  <tr class="entity-item" id="{{ form.vars.name }}">
+  {% set attr = attr|merge({'class': (attr.class|default('') ~ ' entity-item')|trim}) %}
+  <tr {{ block('widget_container_attributes') }}>
   {% for child in form.children %}
     {% set childType = child.vars.block_prefixes.1 %}
     {% if childType == 'hidden'%}
@@ -147,7 +149,7 @@
   {# If item deletion is disabled we don't display the extra column for actions #}
   {% if form.parent.vars.allow_delete %}
     <td>
-      <i class="material-icons delete entity-item-delete">clear</i>
+      <i class="material-icons entity-item-delete">clear</i>
     </td>
   {% endif %}
   </tr>

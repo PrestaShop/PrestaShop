@@ -23,7 +23,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * #}
 <div id="specific-price-list-container" class="d-none">
-  <table class="table seo-table">
+  <div id="specific-prices-loading">
+    <div class="loading-label">{{ 'Loading specific prices'|trans({}, 'Admin.Catalog.Feature') }}</div>
+    <div class="spinner spinner-primary"></div>
+  </div>
+  <table class="table" id="specific-prices-list-table">
     <thead class="thead-default">
     <tr>
       <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
@@ -45,6 +49,12 @@
     {# template rows dynamically generated using javascript #}
     </tbody>
   </table>
+  <div class="row justify-content-center" id="specific-prices-pagination">
+    {{ include('@PrestaShop/Admin/Common/javascript_pagination.html.twig', {
+      'limit': 10,
+      'limitChoices': [10, 20, 50, 100],
+    }) }}
+  </div>
   <script type="text/html" id="specific-price-tr-template">
     <tr>
       <td class="specific-price-id"></td>

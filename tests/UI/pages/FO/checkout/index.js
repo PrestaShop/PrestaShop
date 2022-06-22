@@ -75,6 +75,7 @@ class Checkout extends FOBasePage {
 
     // Gift selectors
     this.giftCheckbox = '#input_gift';
+    this.giftMessageTextarea = '#gift_message';
     this.recycableGiftCheckbox = '#input_recyclable';
     this.cartSubtotalGiftWrappingDiv = '#cart-subtotal-gift_wrapping';
     this.cartSubtotalGiftWrappingValueSpan = `${this.cartSubtotalGiftWrappingDiv} span.value`;
@@ -330,12 +331,50 @@ class Checkout extends FOBasePage {
   }
 
   /**
-   * Check if recyclable checkbox is visible
+   * Set gift checkbox
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async setGiftCheckBox(page) {
+    await this.waitForSelectorAndClick(page, this.giftCheckbox);
+  }
+
+  /**
+   * Is gift message textarea visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  isGiftMessageTextareaVisible(page) {
+    return this.elementVisible(page, this.giftMessageTextarea, 2000);
+  }
+
+  /**
+   * Set gift message
+   * @param page {Page} Browser tab
+   * @param message {string} Message to set
+   * @returns {Promise<void>}
+   */
+  async setGiftMessage(page, message) {
+    await this.setValue(page, this.giftMessageTextarea, message);
+  }
+
+  /**
+   * Check if recycled packaging checkbox is visible
    * @param page {Page} Browser tab
    * @return {Promise<boolean>}
    */
-  isRecyclableCheckboxVisible(page) {
+  isRecycledPackagingCheckboxVisible(page) {
     return this.elementVisible(page, this.recycableGiftCheckbox, 1000);
+  }
+
+  /**
+   * Set recycled packaging checkbox
+   * @param page {Page} Browser tab
+   * @param toCheck {boolean} True if we need to check recycle packaging checkbox
+   * @returns {Promise<void>}
+   */
+  async setRecycledPackagingCheckbox(page, toCheck = true) {
+    await this.setChecked(page, this.recycableGiftCheckbox, toCheck);
   }
 
   /**

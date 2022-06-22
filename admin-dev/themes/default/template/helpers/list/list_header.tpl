@@ -59,12 +59,12 @@
 {/if}
 {* Display column names and arrows for ordering (ASC, DESC) *}
 {if $is_order_position}
-	<script type="text/javascript" src="../js/jquery/plugins/jquery.tablednd.js"></script>
+	<script type="text/javascript" src="{$js_dir}jquery/plugins/jquery.tablednd.js"></script>
 	<script type="text/javascript">
 		var come_from = '{$list_id|addslashes}';
 		var alternate = {if $order_way == 'DESC'}'1'{else}'0'{/if};
 	</script>
-	<script type="text/javascript" src="../js/admin/dnd.js"></script>
+	<script type="text/javascript" src="{$js_dir}admin/dnd.js"></script>
 {/if}
 {if !$simple_header}
 	<script type="text/javascript">
@@ -104,6 +104,9 @@
 
 {if isset($name_controller)}
 	{capture name=hookName assign=hookName}display{$name_controller|ucfirst}ListBefore{/capture}
+	{hook h=$hookName}
+{elseif isset($controller_name)}
+	{capture name=hookName assign=hookName}display{$controller_name|ucfirst}ListBefore{/capture}
 	{hook h=$hookName}
 {elseif isset($smarty.get.controller)}
 	{capture name=hookName assign=hookName}display{$smarty.get.controller|ucfirst|htmlentities}ListBefore{/capture}

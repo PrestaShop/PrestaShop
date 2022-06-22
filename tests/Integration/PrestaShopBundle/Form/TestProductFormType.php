@@ -68,6 +68,7 @@ class TestProductFormType extends CommonAbstractType
         $pricingForm->add('retail_price', FormType::class);
 
         $retailPricingForm = $pricingForm->get('retail_price');
-        $retailPricingForm->add('ecotax', UnavailableType::class);
+        $retailPricingForm->add('ecotax_tax_excluded', UnavailableType::class);
+        $retailPricingForm->add('ecotax_tax_included', UnavailableType::class);
     }
 }
