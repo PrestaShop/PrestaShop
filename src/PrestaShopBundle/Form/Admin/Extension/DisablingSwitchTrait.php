@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Form\Admin\Extension;
 
 use Symfony\Component\Form\Exception\InvalidConfigurationException;
 use Symfony\Component\Form\FormInterface;
+use TypeError;
 
 /**
  * This trait is used by the DisablingSwitchExtension and the AddDisablingSwitchListener because they both need

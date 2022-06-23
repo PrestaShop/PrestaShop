@@ -28,7 +28,6 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Extension;
 
 use Closure;
-use PrestaShopBundle\Form\Admin\Type\DisablingSwitchType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\FormType;

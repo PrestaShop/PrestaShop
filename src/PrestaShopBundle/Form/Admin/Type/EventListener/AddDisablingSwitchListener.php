@@ -34,7 +34,6 @@ use PrestaShopBundle\Form\FormCloner;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\Event\PreSetDataEvent;
 use Symfony\Component\Form\Exception\InvalidConfigurationException;
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 
