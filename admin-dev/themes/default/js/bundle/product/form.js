@@ -762,7 +762,7 @@ window.form = (function () {
               .first()
               .attr('class')
               .split(' '),
-            v => v.indexOf(regexLabel) === 0,
+            (v) => v.indexOf(regexLabel) === 0,
           )
             .join();
 
@@ -1874,7 +1874,8 @@ window.priceCalculation = (function () {
           ps_round(price - getEcotaxTaxIncluded(),
             displayPricePrecision,
           ),
-          rates, computationMethod),
+          rates,
+          computationMethod),
         displayPricePrecision,
       );
     },
@@ -2197,7 +2198,7 @@ window.priceCalculation = (function () {
         .find('option:selected')
         .attr('data-rates')
         .split(',')
-        .map(rate => Tools.parseFloatFromString(rate, true));
+        .map((rate) => Tools.parseFloatFromString(rate, true));
     },
   };
 }());
