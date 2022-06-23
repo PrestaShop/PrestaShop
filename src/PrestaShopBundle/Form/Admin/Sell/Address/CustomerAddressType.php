@@ -396,7 +396,7 @@ class CustomerAddressType extends TranslatorAwareType
                 ],
             ])->add('phone', TextType::class, [
                 'label' => $this->trans('Phone', 'Admin.Global'),
-                'required' => false,
+                'required' => true,
                 'empty_data' => '',
                 'constraints' => [
                     new CleanHtml(),
