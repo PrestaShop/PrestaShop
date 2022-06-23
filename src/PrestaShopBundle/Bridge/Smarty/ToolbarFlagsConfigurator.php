@@ -44,11 +44,6 @@ class ToolbarFlagsConfigurator implements ConfiguratorInterface
     private const HELP_URL = 'https://help.prestashop.com/';
 
     /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
      * @var Configuration
      */
     private $configuration;
@@ -59,13 +54,11 @@ class ToolbarFlagsConfigurator implements ConfiguratorInterface
     private $environment;
 
     /**
-     * @param RouterInterface $router
      * @param Configuration $configuration
      * @param Environment $environment
      */
-    public function __construct(RouterInterface $router, Configuration $configuration, Environment $environment)
+    public function __construct(Configuration $configuration, Environment $environment)
     {
-        $this->router = $router;
         $this->configuration = $configuration;
         $this->environment = $environment;
     }

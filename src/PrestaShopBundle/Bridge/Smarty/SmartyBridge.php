@@ -165,7 +165,7 @@ class SmartyBridge
      *
      * @return string
      */
-    public function display(ControllerConfiguration $controllerConfiguration, string $content, $templateName): string
+    private function display(ControllerConfiguration $controllerConfiguration, string $content, $templateName): string
     {
         $helperShop = new HelperShop();
         $this->smarty->assign([

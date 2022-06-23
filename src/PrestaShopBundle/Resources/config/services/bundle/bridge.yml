@@ -33,7 +33,6 @@ services:
   prestashop.core.bridge.header_configurator:
     class: PrestaShopBundle\Bridge\Smarty\HeaderConfigurator
     arguments:
-      - "@prestashop.router"
       - "@translator"
       - "@prestashop.adapter.legacy.context"
       - "@prestashop.hook.dispatcher"
@@ -50,7 +49,6 @@ services:
   prestashop.core.bridge.toolbar_flags_configurator:
     class: PrestaShopBundle\Bridge\Smarty\ToolbarFlagsConfigurator
     arguments:
-      - "@prestashop.router"
       - "@prestashop.adapter.legacy.configuration"
       - "@prestashop.adapter.environment"
 
@@ -90,7 +88,7 @@ services:
       - "@prestashop.adapter.legacy.context"
       - "@prestashop.core.bridge.controller_configuration_factory"
       - "@prestashop.core.localization.locale.repository"
-      - "@router"
+      - "@prestashop.router"
 
   prestashop.core.bridge.helper_list_feature:
     class: PrestaShopBundle\Bridge\Helper\HelperListCustomizer\HelperListFeatureBridge
