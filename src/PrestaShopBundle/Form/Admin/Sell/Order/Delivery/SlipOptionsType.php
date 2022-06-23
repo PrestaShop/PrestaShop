@@ -81,7 +81,7 @@ class SlipOptionsType extends TranslatorAwareType
                 [
                     'label' => $this->trans('Delivery slip Language', 'Admin.Orderscustomers.Feature'),
                     'help' => $this->trans(
-                        'Use the language of the order for the delivery slip.',
+                        'Create a delivery slip in the same language as the one used for the order.',
                         'Admin.Orderscustomers.Help'
                     ),
                 ]
