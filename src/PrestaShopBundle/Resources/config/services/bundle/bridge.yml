@@ -52,6 +52,7 @@ services:
     arguments:
       - "@prestashop.router"
       - "@prestashop.adapter.legacy.configuration"
+      - "@prestashop.adapter.environment"
 
   prestashop.core.bridge.helper_list_bridge:
     class: PrestaShopBundle\Bridge\Helper\HelperListBridge
@@ -89,6 +90,7 @@ services:
       - "@prestashop.adapter.legacy.context"
       - "@prestashop.core.bridge.controller_configuration_factory"
       - "@prestashop.core.localization.locale.repository"
+      - "@router"
 
   prestashop.core.bridge.helper_list_feature:
     class: PrestaShopBundle\Bridge\Helper\HelperListCustomizer\HelperListFeatureBridge

@@ -35,6 +35,7 @@ use PrestaShopBundle\Bridge\AdminController\ControllerConfigurationFactory;
 use PrestaShopBundle\Bridge\AdminController\LegacyControllerBridgeInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
+use Symfony\Component\Routing\RouterInterface;
 use Tab;
 use Tools;
 
@@ -60,15 +61,22 @@ class InitControllerListener
     private $localeRepository;
 
     /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    /**
      * @param LegacyContext $legacyContext
      * @param ControllerConfigurationFactory $configurationFactory
      * @param Repository $localeRepository
+     * @param RouterInterface $router
      */
-    public function __construct(LegacyContext $legacyContext, ControllerConfigurationFactory $configurationFactory, Repository $localeRepository)
+    public function __construct(LegacyContext $legacyContext, ControllerConfigurationFactory $configurationFactory, Repository $localeRepository, RouterInterface $router)
     {
         $this->context = $legacyContext->getContext();
         $this->configurationFactory = $configurationFactory;
         $this->localeRepository = $localeRepository;
+        $this->router = $router;
     }
 
     /**
@@ -120,6 +128,7 @@ class InitControllerListener
         $this->context->controller = $controller;
 
         $this->setLegacyCurrentIndex($controller, $event->getRequest()->attributes->get('_legacy_controller'));
+        $this->setCurrentIndex($controller, $event->getRequest()->attributes->get('_route'));
         $this->initToken($controller, $event->getRequest());
     }
 
@@ -159,6 +168,21 @@ class InitControllerListener
         }
 
         $controller->controllerConfiguration->legacyCurrentIndex = $legacyCurrentIndex;
+    }
+
+    /**
+     * @param LegacyControllerBridgeInterface $controller
+     * @param string $routeName
+     *
+     * @return void
+     */
+    private function setCurrentIndex(LegacyControllerBridgeInterface $controller, string $routeName): void
+    {
+        if (!property_exists($controller, 'controllerConfiguration')) {
+            throw new \Exception(sprintf('Child class %s failed to define controllerConfiguration property', get_called_class()));
+        }
+
+        $controller->controllerConfiguration->currentIndex = $this->router->generate($routeName);
     }
 
     /**

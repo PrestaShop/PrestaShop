@@ -234,4 +234,9 @@ class HelperListConfiguration
      * @var string|null
      */
     public $legacyCurrentIndex;
+
+    /**
+     * @var bool
+     */
+    public $shopShareDatas = false;
 }

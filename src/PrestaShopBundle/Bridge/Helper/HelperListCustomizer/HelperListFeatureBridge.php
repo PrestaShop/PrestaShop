@@ -42,6 +42,10 @@ class HelperListFeatureBridge extends HelperListBridge
         HelperListConfiguration $helperListConfiguration,
         int $idLang
     ): void {
+        if ($helperListConfiguration->table == 'feature_value') {
+            $helperListConfiguration->where .= ' AND (a.custom = 0 OR a.custom IS NULL)';
+        }
+
         parent::generateListQuery($helperListConfiguration, $idLang);
 
         $nbItems = count($helperListConfiguration->list);

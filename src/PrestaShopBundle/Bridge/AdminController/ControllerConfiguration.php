@@ -60,6 +60,11 @@ class ControllerConfiguration
     /**
      * @var string|null
      */
+    public $currentIndex;
+
+    /**
+     * @var string|null
+     */
     public $positionIdentifier;
 
     /**

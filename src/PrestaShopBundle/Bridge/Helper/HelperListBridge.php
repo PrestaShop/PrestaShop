@@ -137,10 +137,6 @@ class HelperListBridge
         HelperListConfiguration $helperListConfiguration,
         int $idLang
     ): void {
-        if ($helperListConfiguration->table == 'feature_value') {
-            $helperListConfiguration->where .= ' AND (a.custom = 0 OR a.custom IS NULL)';
-        }
-
         $this->hookDispatcher->dispatchWithParameters('action' . $helperListConfiguration->controllerNameLegacy . 'ListingFieldsModifier', [
             'select' => &$helperListConfiguration->select,
             'join' => &$helperListConfiguration->join,
@@ -316,6 +312,7 @@ class HelperListBridge
      */
     private function getFromClause(HelperListConfiguration $helperListConfiguration)
     {
+        //@todo investigate why order table is hardcoded.
         $sqlTable = $helperListConfiguration->table == 'order' ? 'orders' : $helperListConfiguration->table;
 
         return "\n" . 'FROM `' . _DB_PREFIX_ . $sqlTable . '` a ';
@@ -379,8 +376,7 @@ class HelperListBridge
     {
         $whereShop = '';
         if ($helperListConfiguration->shopLinkType) {
-            //$whereShop = Shop::addSqlRestriction($this->shopShareDatas, 'a');
-            $whereShop = Shop::addSqlRestriction(false, 'a');
+            $whereShop = Shop::addSqlRestriction($helperListConfiguration->shopShareDatas, 'a');
         }
 
         return ' WHERE 1 ' . $helperListConfiguration->where . ' ' .

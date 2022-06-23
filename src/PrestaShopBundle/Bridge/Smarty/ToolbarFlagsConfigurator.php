@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Bridge\Smarty;
 
 use Language;
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Adapter\Environment;
 use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 use Symfony\Component\Routing\RouterInterface;
 use Tools;
@@ -53,13 +54,20 @@ class ToolbarFlagsConfigurator implements ConfiguratorInterface
     private $configuration;
 
     /**
+     * @var Environment
+     */
+    private $environment;
+
+    /**
      * @param RouterInterface $router
      * @param Configuration $configuration
+     * @param Environment $environment
      */
-    public function __construct(RouterInterface $router, Configuration $configuration)
+    public function __construct(RouterInterface $router, Configuration $configuration, Environment $environment)
     {
         $this->router = $router;
         $this->configuration = $configuration;
+        $this->environment = $environment;
     }
 
     /**
@@ -73,9 +81,9 @@ class ToolbarFlagsConfigurator implements ConfiguratorInterface
         $this->initPageHeaderToolbar($controllerConfiguration);
 
         $controllerConfiguration->templatesVars['maintenance_mode'] = !(bool) $this->configuration->get('PS_SHOP_ENABLE');
-        $controllerConfiguration->templatesVars['debug_mode'] = (bool) _PS_MODE_DEV_;
+        $controllerConfiguration->templatesVars['debug_mode'] = $this->environment->isDebug();
         $controllerConfiguration->templatesVars['lite_display'] = $controllerConfiguration->liteDisplay;
-        $controllerConfiguration->templatesVars['url_post'] = $this->router->generate('admin_features_index');
+        $controllerConfiguration->templatesVars['url_post'] = $controllerConfiguration->currentIndex;
         $controllerConfiguration->templatesVars['show_page_header_toolbar'] = $controllerConfiguration->showPageHeaderToolbar;
         $controllerConfiguration->templatesVars['page_header_toolbar_title'] = $controllerConfiguration->pageHeaderToolbarTitle;
         $controllerConfiguration->templatesVars['title'] = $controllerConfiguration->pageHeaderToolbarTitle;

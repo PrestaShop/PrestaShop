@@ -148,7 +148,7 @@ class HeaderConfigurator implements ConfiguratorInterface
     public function configure(ControllerConfiguration $controllerConfiguration): void
     {
         $controllerConfiguration->templatesVars['table'] = $controllerConfiguration->table;
-        $controllerConfiguration->templatesVars['current'] = $this->router->generate('admin_features_index');
+        $controllerConfiguration->templatesVars['current'] = $controllerConfiguration->currentIndex;
         $controllerConfiguration->templatesVars['token'] = $controllerConfiguration->token;
         $controllerConfiguration->templatesVars['host_mode'] = (int) defined('_PS_HOST_MODE_');
         $controllerConfiguration->templatesVars['stock_management'] = (int) $this->configuration->get('PS_STOCK_MANAGEMENT');
@@ -198,7 +198,7 @@ class HeaderConfigurator implements ConfiguratorInterface
         $controllerConfiguration->templatesVars['bootstrap'] = $controllerConfiguration->bootstrap;
         $controllerConfiguration->templatesVars['controller_name'] = $controllerConfiguration->controllerNameLegacy;
         $controllerConfiguration->templatesVars['country_iso_code'] = $this->country->iso_code;
-        $controllerConfiguration->templatesVars['currentIndex'] = $this->router->generate('admin_features_index');
+        $controllerConfiguration->templatesVars['currentIndex'] = $controllerConfiguration->currentIndex;
         $controllerConfiguration->templatesVars['current_tab_level'] = $currentTabLevel;
         $controllerConfiguration->templatesVars['default_language'] = (int) $this->configuration->get('PS_LANG_DEFAULT');
         $controllerConfiguration->templatesVars['full_language_code'] = $this->language->language_code;
