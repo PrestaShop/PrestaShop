@@ -114,7 +114,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                 [
                     'label' => $this->trans('Invoice language', 'Admin.Orderscustomers.Feature'),
                     'help' => $this->trans(
-                        'Use the language of the order for the invoice.',
+                        'Create an invoice in the same language as the one used for the order.',
                         'Admin.Orderscustomers.Help'
                     ),
                 ]
