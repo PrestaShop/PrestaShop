@@ -52,13 +52,18 @@ export default class CombinationsService {
     });
   }
 
-  bulkDeleteCombinations(productId: number, combinationIds: number[]): JQuery.jqXHR {
-    return $.post({
-      url: this.router.generate('admin_products_combinations_bulk_delete', {productId}),
-      data: {
-        combinationIds: JSON.stringify(combinationIds),
+  bulkDeleteCombinations(productId: number, combinationIds: number[], abortSignal: AbortSignal): Promise<Response> {
+    const formData = new FormData();
+    formData.append('combinationIds', JSON.stringify(combinationIds));
+
+    return fetch(
+      this.router.generate('admin_products_combinations_bulk_delete', {productId}),
+      {
+        method: 'POST',
+        body: formData,
+        signal: abortSignal,
       },
-    });
+    );
   }
 
   updateCombinationList(productId: number, formData: FormData): Promise<Response> {
@@ -90,7 +95,7 @@ export default class CombinationsService {
     });
   }
 
-  bulkUpdate(productId: number, combinationIds: number[], formData: FormData): Promise<Response> {
+  bulkUpdate(productId: number, combinationIds: number[], formData: FormData, abortSignal: AbortSignal): Promise<Response> {
     formData.append('_method', 'PATCH');
     formData.append('combinationIds', JSON.stringify(combinationIds));
 
@@ -103,6 +108,7 @@ export default class CombinationsService {
       headers: {
         _method: 'PATCH',
       },
+      signal: abortSignal,
     });
   }
 

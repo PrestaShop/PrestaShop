@@ -130,15 +130,24 @@ export default class BulkDeleteHandler {
       }
 
       const chunkIds: number[] = combinationIds.splice(0, bulkChunkSize);
-
       let data: Record<string, any>;
 
       try {
         // eslint-disable-next-line no-await-in-loop
-        data = await this.combinationsService.bulkDeleteCombinations(this.productId, chunkIds);
+        const response: Response = await this.combinationsService.bulkDeleteCombinations(
+          this.productId,
+          chunkIds,
+          abortController.signal,
+        );
+
+        // eslint-disable-next-line no-await-in-loop
+        data = await response.json();
+        if (data.error) {
+          progressModal.interruptProgress();
+          stopProcess = true;
+        }
       } catch (e) {
         data = {
-          errors: e.responseJSON.errors ?? null,
           error: `Something went wrong with IDs ${chunkIds.join(', ')}: ${e.message ?? ''}`,
         };
       }

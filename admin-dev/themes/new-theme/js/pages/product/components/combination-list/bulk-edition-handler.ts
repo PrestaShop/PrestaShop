@@ -48,15 +48,12 @@ export default class BulkEditionHandler {
 
   private bulkChoicesSelector: BulkChoicesSelector;
 
-  private formModal: FormIframeModal | null
-
   constructor(
     productId: number,
     eventEmitter: EventEmitter,
     bulkChoicesSelector: BulkChoicesSelector,
     combinationsService: CombinationsService,
   ) {
-    this.formModal = null;
     this.productId = productId;
     this.eventEmitter = eventEmitter;
     this.bulkChoicesSelector = bulkChoicesSelector;
@@ -120,8 +117,8 @@ export default class BulkEditionHandler {
       formConfirmCallback: (form: HTMLFormElement) => form.submit(),
       closeOnConfirm: false,
     });
-
-    this.formModal = iframeModal;
+    // Disable before loading
+    iframeModal.modal.confirmButton?.setAttribute('disabled', 'disabled');
     iframeModal.show();
   }
 
@@ -157,12 +154,11 @@ export default class BulkEditionHandler {
     let stopProcess = false;
     let doneCount = 0;
     while (combinationIds.length) {
-      const chunkIds: number[] = combinationIds.splice(0, bulkChunkSize);
-
       if (stopProcess) {
         break;
       }
 
+      const chunkIds: number[] = combinationIds.splice(0, bulkChunkSize);
       let data: Record<string, any>;
 
       try {
@@ -171,8 +167,10 @@ export default class BulkEditionHandler {
           this.productId,
           chunkIds,
           new FormData(form),
+          abortController.signal,
         );
-          // eslint-disable-next-line no-await-in-loop
+
+        // eslint-disable-next-line no-await-in-loop
         data = await response.json();
         if (data.error) {
           progressModal.interruptProgress();
