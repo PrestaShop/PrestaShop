@@ -40,6 +40,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\PositiveOrZero;
 
 /**
  * Class InvoiceOptionsType generates "Invoice options" form
@@ -79,9 +80,6 @@ class InvoiceOptionsType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $featureTranslationKey = 'Admin.Orderscustomers.Feature';
-        $helpTranslationKey = 'Admin.Orderscustomers.Help';
-
         $builder
             ->add(
                 'enable_invoices',
@@ -89,10 +87,10 @@ class InvoiceOptionsType extends TranslatorAwareType
                 [
                     'required' => true,
                     'multistore_configuration_key' => 'PS_INVOICE',
-                    'label' => $this->trans('Enable invoices', $featureTranslationKey),
+                    'label' => $this->trans('Enable invoices', 'Admin.Orderscustomers.Feature'),
                     'help' => $this->trans(
                         'If enabled, your customers will receive an invoice for the purchase.',
-                        $helpTranslationKey
+                        'Admin.Orderscustomers.Help'
                     ),
                 ]
             )
@@ -101,10 +99,10 @@ class InvoiceOptionsType extends TranslatorAwareType
                 SwitchType::class,
                 [
                     'multistore_configuration_key' => 'PS_INVOICE_TAXES_BREAKDOWN',
-                    'label' => $this->trans('Enable tax breakdown', $featureTranslationKey),
+                    'label' => $this->trans('Enable tax breakdown', 'Admin.Orderscustomers.Feature'),
                     'help' => $this->trans(
                         'If required, show the total amount per rate of the corresponding tax.',
-                        $helpTranslationKey
+                        'Admin.Orderscustomers.Help'
                     ),
                 ]
             )
@@ -113,10 +111,10 @@ class InvoiceOptionsType extends TranslatorAwareType
                 SwitchType::class,
                 [
                     'multistore_configuration_key' => 'PS_PDF_IMG_INVOICE',
-                    'label' => $this->trans('Enable product image', $featureTranslationKey),
+                    'label' => $this->trans('Enable product image', 'Admin.Orderscustomers.Feature'),
                     'help' => $this->trans(
                         'Adds an image in front of the product name on the invoice',
-                        $helpTranslationKey
+                        'Admin.Orderscustomers.Help'
                     ),
                 ]
             )
@@ -126,10 +124,10 @@ class InvoiceOptionsType extends TranslatorAwareType
                 [
                     'type' => TextType::class,
                     'multistore_configuration_key' => 'PS_INVOICE_PREFIX',
-                    'label' => $this->trans('Invoice prefix', $featureTranslationKey),
+                    'label' => $this->trans('Invoice prefix', 'Admin.Orderscustomers.Feature'),
                     'help' => $this->trans(
                         'Freely definable prefix for invoice number (e.g. #IN00001).',
-                        $helpTranslationKey
+                        'Admin.Orderscustomers.Help'
                     ),
                 ]
             )
@@ -140,7 +138,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                     'multistore_configuration_key' => 'PS_INVOICE_USE_YEAR',
                     'label' => $this->trans(
                         'Add current year to invoice number',
-                        $featureTranslationKey
+                        'Admin.Orderscustomers.Feature'
                     ),
                 ]
             )
@@ -151,7 +149,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                     'multistore_configuration_key' => 'PS_INVOICE_RESET',
                     'label' => $this->trans(
                         'Reset sequential invoice number at the beginning of the year',
-                        $featureTranslationKey
+                        'Admin.Orderscustomers.Feature'
                     ),
                 ]
             )
@@ -160,12 +158,12 @@ class InvoiceOptionsType extends TranslatorAwareType
                 ChoiceType::class,
                 [
                     'choices' => [
-                        $this->trans('After the sequential number', $featureTranslationKey) => 0,
-                        $this->trans('Before the sequential number', $featureTranslationKey) => 1,
+                        $this->trans('After the sequential number', 'Admin.Orderscustomers.Feature') => 0,
+                        $this->trans('Before the sequential number', 'Admin.Orderscustomers.Feature') => 1,
                     ],
                     'expanded' => true,
                     'multistore_configuration_key' => 'PS_INVOICE_YEAR_POS',
-                    'label' => $this->trans('Position of the year date', $featureTranslationKey),
+                    'label' => $this->trans('Position of the year date', 'Admin.Orderscustomers.Feature'),
                 ]
             )
             ->add(
@@ -173,11 +171,12 @@ class InvoiceOptionsType extends TranslatorAwareType
                 IntegerType::class,
                 [
                     'required' => false,
+                    'constraints' => [new PositiveOrZero()],
                     'multistore_configuration_key' => 'PS_INVOICE_START_NUMBER',
-                    'label' => $this->trans('Invoice number', $featureTranslationKey),
+                    'label' => $this->trans('Invoice number', 'Admin.Orderscustomers.Feature'),
                     'help' => $this->trans(
                         'The next invoice will begin with this number, and then increase with each additional invoice. Set to 0 if you want to keep the current number (which is #%number%).',
-                        $helpTranslationKey,
+                        'Admin.Orderscustomers.Help',
                         [
                             '%number%' => $this->nextInvoiceNumber,
                         ]
@@ -190,10 +189,10 @@ class InvoiceOptionsType extends TranslatorAwareType
                 [
                     'type' => TextareaType::class,
                     'multistore_configuration_key' => 'PS_INVOICE_LEGAL_FREE_TEXT',
-                    'label' => $this->trans('Legal free text', $featureTranslationKey),
+                    'label' => $this->trans('Legal free text', 'Admin.Orderscustomers.Feature'),
                     'help' => $this->trans(
                         'Use this field to show additional information on the invoice, below the payment methods summary (like specific legal information).',
-                        $helpTranslationKey
+                        'Admin.Orderscustomers.Help'
                     ),
                 ]
             )
@@ -203,10 +202,10 @@ class InvoiceOptionsType extends TranslatorAwareType
                 [
                     'type' => TextType::class,
                     'multistore_configuration_key' => 'PS_INVOICE_FREE_TEXT',
-                    'label' => $this->trans('Footer text', $featureTranslationKey),
+                    'label' => $this->trans('Footer text', 'Admin.Orderscustomers.Feature'),
                     'help' => $this->trans(
                         'This text will appear at the bottom of the invoice, below your company details.',
-                        $helpTranslationKey
+                        'Admin.Orderscustomers.Help'
                     ),
                 ]
             )
@@ -217,8 +216,8 @@ class InvoiceOptionsType extends TranslatorAwareType
                     'choices' => $this->invoiceModelChoiceProvider->getChoices(),
                     'translation_domain' => false,
                     'multistore_configuration_key' => 'PS_INVOICE_MODEL',
-                    'label' => $this->trans('Invoice model', $featureTranslationKey),
-                    'help' => $this->trans('Choose an invoice model.', $helpTranslationKey),
+                    'label' => $this->trans('Invoice model', 'Admin.Orderscustomers.Feature'),
+                    'help' => $this->trans('Choose an invoice model.', 'Admin.Orderscustomers.Help'),
                 ]
             )
             ->add(
@@ -228,11 +227,11 @@ class InvoiceOptionsType extends TranslatorAwareType
                     'multistore_configuration_key' => 'PS_PDF_USE_CACHE',
                     'label' => $this->trans(
                         'Use the disk as cache for PDF invoices',
-                        $featureTranslationKey
+                        'Admin.Orderscustomers.Feature'
                     ),
                     'help' => $this->trans(
                         'Saves memory but slows down the PDF generation.',
-                        $helpTranslationKey
+                        'Admin.Orderscustomers.Help'
                     ),
                 ]
             );
