@@ -77,6 +77,7 @@ class FOBasePage extends CommonPage {
 
     // Alert block selectors
     this.alertSuccessBlock = '.alert-success ul li';
+    this.notificationsBlock = '#notifications';
   }
 
   // Methods
