@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
-use PrestaShop\PrestaShop\Core\Form\ChoiceProvider\InvoiceModelByNameChoiceProvider;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -39,7 +39,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 final class InvoiceOptionsConfiguration extends AbstractMultistoreConfiguration
 {
     /**
-     * @var InvoiceModelByNameChoiceProvider
+     * @var FormChoiceProviderInterface
      */
     private $invoiceModelByNameChoiceProvider;
 
@@ -49,12 +49,16 @@ final class InvoiceOptionsConfiguration extends AbstractMultistoreConfiguration
      * @param Configuration $configuration
      * @param Context $shopContext
      * @param FeatureInterface $multistoreFeature
-     * @param InvoiceModelByNameChoiceProvider $choiceProvider
+     * @param FormChoiceProviderInterface $invoiceModelByNameChoiceProvider
      */
-    public function __construct(Configuration $configuration, Context $shopContext, FeatureInterface $multistoreFeature, InvoiceModelByNameChoiceProvider $choiceProvider)
-    {
+    public function __construct(
+        Configuration $configuration,
+        Context $shopContext,
+        FeatureInterface $multistoreFeature,
+        FormChoiceProviderInterface $invoiceModelByNameChoiceProvider
+        ) {
         parent::__construct($configuration, $shopContext, $multistoreFeature);
-        $this->invoiceModelByNameChoiceProvider = $choiceProvider;
+        $this->invoiceModelByNameChoiceProvider = $invoiceModelByNameChoiceProvider;
     }
 
     /**
@@ -134,7 +138,11 @@ final class InvoiceOptionsConfiguration extends AbstractMultistoreConfiguration
             ->setAllowedTypes('add_current_year', ['bool'])
             ->setAllowedTypes('reset_number_annually', ['bool'])
             ->setAllowedTypes('year_position', ['integer'])
+            ->setAllowedValues('year_position', [0, 1])
             ->setAllowedTypes('invoice_number', ['integer'])
+            ->setAllowedValues('invoice_number', function (int $value) {
+                return $value >= 0;
+            })
             ->setAllowedTypes('legal_free_text', ['array'])
             ->setAllowedTypes('footer_text', ['array'])
             ->setAllowedTypes('invoice_model', ['string'])
