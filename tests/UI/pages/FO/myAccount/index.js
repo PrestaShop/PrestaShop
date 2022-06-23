@@ -15,6 +15,8 @@ class MyAccount extends FOBasePage {
     super();
 
     this.pageTitle = 'My account';
+    this.resetPasswordSuccessMessage = 'Your password has been successfully reset and a confirmation has been sent to'
+      + ' your email address:';
 
     // Selectors
     this.accountInformationLink = '#identity-link';
@@ -23,11 +25,20 @@ class MyAccount extends FOBasePage {
     this.accountFirstAddressLink = '#address-link';
     this.accountVouchersLink = '#discounts-link';
     this.merchandiseReturnsLink = '#returns-link';
+    this.successMessageAlert = '#notifications article.alert-success';
   }
 
   /*
   Methods
    */
+  /**
+   * Get success message
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  getSuccessMessageAlert(page) {
+    return this.getTextContent(page, this.successMessageAlert);
+  }
 
   /**
    * Go to account information page
