@@ -2,7 +2,11 @@ require('module-alias/register');
 
 const {expect} = require('chai');
 
+// Import utils
 const helper = require('@utils/helpers');
+
+// Import common tests
+const {deleteCacheTest} = require('@commonTests/BO/advancedParameters/deleteCache');
 
 // Importing FO pages
 const homePage = require('@pages/FO/home');
@@ -46,6 +50,9 @@ Check your account links( Personal info, Orders, Credit slips, Addresses)
  */
 
 describe('FO - Header and Footer : Check links in footer page', async () => {
+  // Pre-condition: Delete cache
+
+  deleteCacheTest(baseContext);
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

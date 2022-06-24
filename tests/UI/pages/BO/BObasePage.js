@@ -150,6 +150,8 @@ class BOBasePage extends CommonPage {
 
     // Advanced Parameters
     this.advancedParametersLink = '#subtab-AdminAdvancedParameters';
+    // Performance
+    this.performanceLink = '#subtab-AdminPerformance';
     // E-mail
     this.emailLink = '#subtab-AdminEmails';
     // Import
