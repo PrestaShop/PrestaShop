@@ -428,10 +428,7 @@ export default class ModuleCard {
           mainElement.attr('data-installed', '0');
           mainElement.attr('data-active', '0');
 
-          refreshNeeded = true; // if uninstalled, some sub pages may change (updates)
           BOEvent.emitEvent('Module Uninstalled', 'CustomEvent', mainElement);
-        } else if (action === 'update') {
-          refreshNeeded = true; // if module upgraded, sub pages may change (updates)
         } else if (action === 'disable') {
           mainElement = jqElementObj.closest(`.${alteredSelector}`);
           mainElement.addClass(`${alteredSelector}-isNotActive`);
@@ -470,7 +467,6 @@ export default class ModuleCard {
       .always(() => {
         if (refreshNeeded) {
           document.location.reload();
-          refreshNeeded = false;
           return;
         }
         jqElementObj.fadeIn();

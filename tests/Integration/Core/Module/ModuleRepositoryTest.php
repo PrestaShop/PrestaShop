@@ -71,7 +71,7 @@ class ModuleRepositoryTest extends TestCase
             // - overrides `dummy_payment` module `fullDescription` attributes
             // - adds `testAttribute` attributes to `dummy_payment` module
             // when 'actionListModules' hook called
-            if ($hook_name == 'actionListModules') {
+            if ($hook_name === 'actionListModules') {
                 return [
                     'ps_distributionapiclient' => [
                         [
@@ -102,7 +102,7 @@ class ModuleRepositoryTest extends TestCase
     {
         $moduleList = iterator_to_array($this->moduleRepository->getList());
         $filteredModules = array_filter($moduleList, function ($module, $key) {
-            return $module->get('name') == 'dummy_payment';
+            return $module->get('name') === 'dummy_payment';
         }, ARRAY_FILTER_USE_BOTH);
 
         $this->assertEquals(1, count($filteredModules), 'Returned module list may contain at least "dummy_payment" module.');
