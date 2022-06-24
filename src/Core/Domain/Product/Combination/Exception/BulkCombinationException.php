@@ -1,3 +1,4 @@
+<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -22,29 +23,37 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception;
+
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 
 /**
- * Used to display errors fetched from PrestaShop API in a JSON format.
- * The expected format looks like this:
- * {
- *   errors: {
- *     price: 'Invalid negative value',
- *     name: 'Forbidden blank value',
- *   },
- * }
- *
- * @param jsonResponse
+ * Base class to use for bulk operations, it stores a list of exception indexed by the product ID that was impacted.
+ * It should be used as a base class for all the bulk action exceptions.
  */
-export function notifyFormErrors(jsonResponse: any): void {
-  Object.keys(jsonResponse.errors).forEach((field: string) => {
-    if (Object.prototype.hasOwnProperty.call(jsonResponse.errors, field)) {
-      const fieldErrors: string[] = jsonResponse.errors[field];
-      const errors: string = fieldErrors.join(' ');
-      $.growl.error({message: `${field}: ${errors}`});
-    }
-  });
-};
+class BulkCombinationException extends CombinationException
+{
+    /**
+     * @var array<int, CombinationException>
+     */
+    protected $bulkExceptions = [];
 
-export default {
-  notifyFormErrors,
-};
+    /**
+     * @param CombinationId $combinationId
+     * @param CombinationException $exception
+     */
+    public function addException(CombinationId $combinationId, CombinationException $exception): void
+    {
+        $this->bulkExceptions[$combinationId->getValue()] = $exception;
+    }
+
+    /**
+     * @return CombinationException[]
+     */
+    public function getBulkExceptions(): array
+    {
+        return $this->bulkExceptions;
+    }
+}

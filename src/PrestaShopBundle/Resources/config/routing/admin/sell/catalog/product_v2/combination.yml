@@ -41,7 +41,7 @@ admin_products_combinations_edit_combination:
 
 admin_products_combinations_bulk_combination_form:
   path: /{productId}/combinations/bulk-form
-  methods: [ GET ]
+  methods: [ GET, PATCH ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\CombinationController::bulkEditFormAction
     _legacy_controller: AdminProducts
@@ -49,7 +49,7 @@ admin_products_combinations_bulk_combination_form:
       productId: \d+
 
 admin_products_combinations_bulk_edit_combination:
-  path: /{productId}/combinations/{combinationId}/bulk-edit
+  path: /{productId}/combinations/bulk-edit
   methods: [ PATCH ]
   options:
     expose: true
@@ -57,7 +57,6 @@ admin_products_combinations_bulk_edit_combination:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\CombinationController::bulkEditAction
     _legacy_controller: AdminProducts
   requirements:
-    combinationId: \d+
     productId: \d+
 
 admin_products_combinations_delete_combination:

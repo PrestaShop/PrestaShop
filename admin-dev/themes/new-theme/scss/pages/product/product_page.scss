@@ -1806,6 +1806,11 @@ $product-page-padding-bottom: 80px !default;
     color: #363a41;
     background-color: #eaebec;
   }
+
+  .accordion-form-button.has-error {
+    color: #c45c67;
+    border-top: 3px solid #c45c67;
+  }
 }
 
 .product-page,
