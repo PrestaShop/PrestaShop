@@ -118,7 +118,7 @@ class CachingType extends TranslatorAwareType
                     '(you must install the [a]Memcache PECL extension[/a])',
                     'Admin.Advparameters.Notification',
                     [
-                        '[a]' => '<a href="http://www.php.net/manual/en/memcache.installation.php" class="ml-1" target="_blank">',
+                        '[a]' => '<a href="https://www.php.net/manual/en/memcache.installation.php" class="ml-1" target="_blank">',
                         '[/a]' => '</a>',
                     ]
                 ),
@@ -128,7 +128,7 @@ class CachingType extends TranslatorAwareType
                     '(you must install the [a]Memcached PECL extension[/a])',
                     'Admin.Advparameters.Notification',
                     [
-                        '[a]' => '<a href="http://www.php.net/manual/en/memcached.installation.php" class="ml-1" target="_blank">',
+                        '[a]' => '<a href="https://www.php.net/manual/en/memcached.installation.php" class="ml-1" target="_blank">',
                         '[/a]' => '</a>',
                     ]
                 ),
