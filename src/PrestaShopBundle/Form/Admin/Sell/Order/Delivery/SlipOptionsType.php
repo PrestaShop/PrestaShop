@@ -76,7 +76,7 @@ class SlipOptionsType extends TranslatorAwareType
                 ]
             )
             ->add(
-                'deliveryslip_language',
+                'delivery_slip_language',
                 SwitchType::class,
                 [
                     'label' => $this->trans('Language of the delivery slip', 'Admin.Orderscustomers.Feature'),

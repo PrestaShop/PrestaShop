@@ -60,7 +60,7 @@ final class SlipOptionsConfiguration implements DataConfigurationInterface
             'prefix' => $this->configuration->get(self::PREFIX),
             'number' => $this->configuration->getInt(self::NUMBER),
             'enable_product_image' => $this->configuration->getBoolean(self::ENABLE_PRODUCT_IMAGE),
-            'deliveryslip_language' => $this->configuration->getBoolean(self::DELIVERY_LANGUAGE),
+            'delivery_slip_language' => $this->configuration->getBoolean(self::DELIVERY_LANGUAGE),
         ];
     }
 
@@ -73,7 +73,7 @@ final class SlipOptionsConfiguration implements DataConfigurationInterface
             $this->configuration->set(self::PREFIX, $configuration['prefix']);
             $this->configuration->set(self::NUMBER, $configuration['number']);
             $this->configuration->set(self::ENABLE_PRODUCT_IMAGE, $configuration['enable_product_image']);
-            $this->configuration->set(self::DELIVERY_LANGUAGE, $configuration['deliveryslip_language']);
+            $this->configuration->set(self::DELIVERY_LANGUAGE, $configuration['delivery_slip_language']);
         }
 
         return [];
@@ -88,7 +88,7 @@ final class SlipOptionsConfiguration implements DataConfigurationInterface
             $configuration['prefix'],
             $configuration['number'],
             $configuration['enable_product_image'],
-            $configuration['deliveryslip_language']
+            $configuration['delivery_slip_language']
         );
     }
 }
