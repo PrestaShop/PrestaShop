@@ -111,19 +111,4 @@ export default class CombinationsService {
       signal: abortSignal,
     });
   }
-
-  validateBulkUpdate(productId: number, formData: FormData): Promise<Response> {
-    formData.append('_method', 'PATCH');
-
-    return fetch(this.router.generate('admin_products_combinations_bulk_combination_form',
-      {
-        productId,
-      }), {
-      method: 'POST',
-      body: formData,
-      headers: {
-        _method: 'PATCH',
-      },
-    });
-  }
 }
