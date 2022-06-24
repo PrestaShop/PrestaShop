@@ -116,8 +116,8 @@ class DisablingSwitchExtension extends AbstractTypeExtension
 
     /**
      * The switch option may be defined on a compound input, so we need to get back the parent with the option to get
-     * back the appropriate options and be able to check the disabled status. For non-compound forms the switachable
-     * parent is actually itself.
+     * back the appropriate options and be able to check the disabled status even for children. For non-compound forms
+     * the switchable parent is actually itself.
      *
      * @param FormInterface $form
      *
