@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Address;
 
+use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressStateRequired;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressZipCode;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
@@ -33,6 +34,7 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\ExistingCustomerE
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShop\PrestaShop\Core\Domain\Address\Configuration\AddressConstraint;
+use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetRequiredFieldsForAddress;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
 use PrestaShopBundle\Form\Admin\Type\EmailType;
@@ -69,6 +71,11 @@ class CustomerAddressType extends TranslatorAwareType
     private $router;
 
     /**
+     * @var CommandBusInterface
+     */
+    private $commandBus;
+
+    /**
      * CustomerAddressType constructor.
      *
      * Backwards compatibility break introduced in 1.7.8.0 due to addition of Router as mandatory constructor argument
@@ -85,12 +92,14 @@ class CustomerAddressType extends TranslatorAwareType
         array $locales,
         ConfigurableFormChoiceProviderInterface $stateChoiceProvider,
         $contextCountryId,
-        RouterInterface $router
+        RouterInterface $router,
+        CommandBusInterface $commandBus
     ) {
         parent::__construct($translator, $locales);
         $this->stateChoiceProvider = $stateChoiceProvider;
         $this->contextCountryId = $contextCountryId;
         $this->router = $router;
+        $this->commandBus = $commandBus;
     }
 
     /**
@@ -107,6 +116,8 @@ class CustomerAddressType extends TranslatorAwareType
         $stateChoices = $this->stateChoiceProvider->getChoices(['id_country' => $countryId]);
 
         $showStates = !empty($stateChoices);
+
+        $requiredFields = $this->commandBus->handle(new GetRequiredFieldsForAddress());
 
         if (!isset($data['id_customer'])) {
             $builder->add('customer_email', EmailType::class, [
@@ -138,7 +149,7 @@ class CustomerAddressType extends TranslatorAwareType
                 'The national ID card number of this person, or a unique tax identification number.',
                 'Admin.Orderscustomers.Feature'
             ),
-            'required' => false,
+            'required' => in_array('dni', $requiredFields) ? true : false,
             'empty_data' => '',
             'constraints' => [
                 new CleanHtml(),
@@ -236,7 +247,7 @@ class CustomerAddressType extends TranslatorAwareType
             ->add('company', TextType::class, [
                 'label' => $this->trans('Company', 'Admin.Global'),
                 'help' => $genericInvalidCharsMessage,
-                'required' => false,
+                'required' => in_array('company', $requiredFields) ? true : false,
                 'empty_data' => '',
                 'constraints' => [
                     new CleanHtml(),
@@ -255,7 +266,7 @@ class CustomerAddressType extends TranslatorAwareType
             ])
             ->add('vat_number', TextType::class, [
                 'label' => $this->trans('VAT number', 'Admin.Orderscustomers.Feature'),
-                'required' => false,
+                'required' => in_array('vat_number', $requiredFields) ? true : false,
                 'empty_data' => '',
                 'constraints' => [
                     new CleanHtml(),
@@ -396,7 +407,7 @@ class CustomerAddressType extends TranslatorAwareType
                 ],
             ])->add('phone', TextType::class, [
                 'label' => $this->trans('Phone', 'Admin.Global'),
-                'required' => false,
+                'required' => in_array('phone', $requiredFields) ? true : false,
                 'empty_data' => '',
                 'constraints' => [
                     new CleanHtml(),
@@ -415,7 +426,7 @@ class CustomerAddressType extends TranslatorAwareType
             ])
             ->add('phone_mobile', TextType::class, [
                 'label' => $this->trans('Mobile phone', 'Admin.Global'),
-                'required' => false,
+                'required' => in_array('phone_mobile', $requiredFields) ? true : false,
                 'constraints' => [
                     new CleanHtml(),
                     new TypedRegex([
@@ -432,7 +443,7 @@ class CustomerAddressType extends TranslatorAwareType
                 ],
             ])
             ->add('other', TextareaType::class, [
-                'required' => false,
+                'required' => in_array('other', $requiredFields) ? true : false,
                 'label' => $this->trans('Other', 'Admin.Global'),
                 'help' => $this->trans(
                     'Invalid characters:',

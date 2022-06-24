@@ -1271,6 +1271,7 @@ services:
       - '@prestashop.adapter.form.choice_provider.country_state_by_id'
       - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
       - '@router'
+      - '@prestashop.core.command_bus'
     tags:
       - { name: form.type }
 
