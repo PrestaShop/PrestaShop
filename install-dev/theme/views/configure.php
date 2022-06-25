@@ -37,20 +37,6 @@
   </div>
 
   <div class="field clearfix">
-	<label for="infosActivity" class="aligned"><?php echo $this->translator->trans('Main activity', [], 'Install'); ?></label>
-	<div class="contentinput">
-	  <select id="infosActivity" name="shop_activity" class="chosen">
-		<option value="0" style="font-weight: bold" <?php if (!$this->session->shop_activity) { ?>selected="selected"<?php } ?>><?php echo $this->translator->trans('Please choose your main activity', [], 'Install'); ?></option>
-		<?php foreach ($this->list_activities as $i => $activity) { ?>
-		  <option value="<?php echo $i; ?>" <?php if (isset($this->session->shop_activity) && $this->session->shop_activity == $i) { ?>selected="selected"<?php } ?>><?php echo $activity; ?></option>
-		<?php } ?>
-		<option value="0"><?php echo $this->translator->trans('Other activity...', [], 'Install'); ?></option>
-	  </select>
-	</div>
-	<p class="userInfos aligned"><?php echo $this->translator->trans('Help us learn more about your store so we can offer you optimal guidance and the best features for your business!', [], 'Install'); ?></p>
-  </div>
-
-  <div class="field clearfix">
 	<label for="infosCountry" class="aligned"><?php echo $this->translator->trans('Country', [], 'Install'); ?></label>
 	<div class="contentinput">
 	  <select name="shop_country" id="infosCountry" class="chosen">

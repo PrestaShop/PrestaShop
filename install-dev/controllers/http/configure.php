@@ -54,7 +54,6 @@ class InstallControllerHttpConfigure extends InstallControllerHttp implements Ht
         if (Tools::isSubmit('shop_name')) {
             // Save shop configuration
             $this->session->shop_name = trim(Tools::getValue('shop_name'));
-            $this->session->shop_activity = Tools::getValue('shop_activity');
             $this->session->enable_ssl = (bool) Tools::getValue('enable_ssl');
             $this->session->shop_country = Tools::getValue('shop_country');
             $this->session->shop_timezone = Tools::getValue('shop_timezone');
