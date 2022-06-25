@@ -72,7 +72,6 @@ class PreferencesConfiguration implements DataConfigurationInterface
             'display_manufacturers' => $this->configuration->getBoolean('PS_DISPLAY_MANUFACTURERS'),
             'display_best_sellers' => $this->configuration->getBoolean('PS_DISPLAY_BEST_SELLERS'),
             'multishop_feature_active' => $this->configuration->getBoolean('PS_MULTISHOP_FEATURE_ACTIVE'),
-            'shop_activity' => $this->configuration->get('PS_SHOP_ACTIVITY'),
         ];
     }
 
@@ -114,7 +113,6 @@ class PreferencesConfiguration implements DataConfigurationInterface
         $this->configuration->set('PS_DISPLAY_MANUFACTURERS', $configuration['display_manufacturers']);
         $this->configuration->set('PS_DISPLAY_BEST_SELLERS', $configuration['display_best_sellers']);
         $this->configuration->set('PS_MULTISHOP_FEATURE_ACTIVE', $configuration['multishop_feature_active']);
-        $this->configuration->set('PS_SHOP_ACTIVITY', $configuration['shop_activity']);
 
         // Update product page feature automatically based on PS_MULTISHOP_FEATURE_ACTIVE
         if (!$previousMultistoreFeatureState && (bool) $this->configuration->get('PS_MULTISHOP_FEATURE_ACTIVE')) {

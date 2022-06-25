@@ -79,7 +79,6 @@ class PreferencesConfigurationTest extends TestCase
                 [
                     ['PS_PRICE_ROUND_MODE', null, null, 'test'],
                     ['PS_ROUND_TYPE', null, null, 'test'],
-                    ['PS_SHOP_ACTIVITY', null, null, 'test'],
                 ]
             );
 
@@ -113,7 +112,6 @@ class PreferencesConfigurationTest extends TestCase
                 'display_manufacturers' => true,
                 'display_best_sellers' => false,
                 'multishop_feature_active' => true,
-                'shop_activity' => 'test',
             ],
             $result
         );
@@ -165,7 +163,6 @@ class PreferencesConfigurationTest extends TestCase
                     'display_manufacturers' => true,
                     'display_best_sellers' => false,
                     'multishop_feature_active' => true,
-                    'shop_activity' => 'test',
                 ]
             )
         );
@@ -195,7 +192,6 @@ class PreferencesConfigurationTest extends TestCase
                     ['PS_MULTISHOP_FEATURE_ACTIVE', true],
                     ['PS_PRICE_ROUND_MODE', 'test'],
                     ['PS_ROUND_TYPE', 'test'],
-                    ['PS_SHOP_ACTIVITY', 'test'],
                 ]
             );
 
@@ -221,7 +217,6 @@ class PreferencesConfigurationTest extends TestCase
                     'display_manufacturers' => true,
                     'display_best_sellers' => false,
                     'multishop_feature_active' => true,
-                    'shop_activity' => 'test',
                 ]
             )
         );
