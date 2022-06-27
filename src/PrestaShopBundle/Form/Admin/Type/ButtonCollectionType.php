@@ -67,7 +67,13 @@ class ButtonCollectionType extends AbstractType
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         parent::buildView($view, $form, $options);
-        $view->vars['button_groups'] = $options['button_groups'];
+
+        $buttonsOptions = $options['buttons'];
+        $buttonGroups = [];
+        foreach ($buttonsOptions as $buttonOptions) {
+            $buttonGroups[$buttonOptions['group']][] = $buttonOptions['name'];
+        }
+        $view->vars['button_groups'] = $buttonGroups;
         $view->vars['justify_content'] = $options['justify_content'];
     }
 
@@ -78,20 +84,8 @@ class ButtonCollectionType extends AbstractType
                 'label' => false,
                 'buttons' => [],
                 'justify_content' => 'space-between',
-                // Internal option automatically built based on the group option of each button
-                'button_groups' => [],
             ])
             ->setAllowedTypes('buttons', 'array')
-            ->setNormalizer('button_groups', function (Options $options) {
-                // This option is built automatically via this normalizer
-                $buttonsOptions = $options->offsetGet('buttons');
-                $buttonGroups = [];
-                foreach ($buttonsOptions as $buttonOptions) {
-                    $buttonGroups[$buttonOptions['group']][] = $buttonOptions['name'];
-                }
-
-                return $buttonGroups;
-            })
             ->setNormalizer('buttons', function (Options $options, $buttons) {
                 $resolver = $this->getButtonOptionsResolver();
                 $normalizedOptions = [];
