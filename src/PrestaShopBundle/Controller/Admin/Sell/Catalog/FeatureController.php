@@ -68,7 +68,7 @@ class FeatureController extends AbstractAdminBridgeController implements LegacyC
     /**
      * {@inheritdoc}
      */
-    public function getPositionIdentifier(): string
+    public function getPositionIdentifier(): ?string
     {
         return 'id_feature';
     }

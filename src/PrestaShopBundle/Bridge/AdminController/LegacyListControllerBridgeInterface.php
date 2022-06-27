@@ -34,9 +34,9 @@ interface LegacyListControllerBridgeInterface
     /**
      * Get position identifier for legacy list request.
      *
-     * @return string
+     * @return string|null
      */
-    public function getPositionIdentifier(): string;
+    public function getPositionIdentifier(): ?string;
 
     /**
      * Get identifier for table.
