@@ -7,7 +7,6 @@
     "scss-lint": "stylelint \"**/*.scss\" --formatter verbose",
     "scss-fix": "stylelint \"**/*.scss\" --fix",
     "build": "webpack --bail --progress",
-    "dev": "webpack --progress --mode=development",
     "watch": "webpack --bail --progress --watch --mode development",
     "lint": "eslint -c .eslintrc.js --ext .js,.vue .",
     "lint-fix": "eslint -c .eslintrc.js --ext .js,.vue . --fix"
