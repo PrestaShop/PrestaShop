@@ -111,9 +111,9 @@ class QuickAccessCore extends ObjectModel
 
                 if ($quick['link'] === 'index.php/sell/catalog/products/new') {
                     //if new product page feature is enabled we create new product v2 modal popup
-                    if (self::productPageV2Enabled()) {
-                        $quickAccess[$index]['link'] = Context::getContext()->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . 'index.php/sell/catalog/products-v2/create';
-                        $quickAccess[$index]['class'] = 'new-product-button';
+                    if (self::shouldRedirectToV2()) {
+                        $quickAccess[$index]['link'] = Context::getContext()->link->getBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . 'index.php/sell/catalog/products-v2/create';
+                        $quickAccess[$index]['class'] = 'new-product';
                     }
                 }
             }
@@ -150,7 +150,7 @@ class QuickAccessCore extends ObjectModel
     /**
      * @return bool
      */
-    private static function productPageV2Enabled(): bool
+    private static function shouldRedirectToV2(): bool
     {
         $multistoreFeature = SymfonyContainer::getInstance()->get('prestashop.adapter.multistore_feature');
 

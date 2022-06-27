@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
+use PrestaShopBundle\Twig\Extension\JsRouterMetadataExtension;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class AdminControllerCore extends Controller
@@ -573,9 +574,18 @@ class AdminControllerCore extends Controller
             $this->can_import = true;
         }
 
+        if ($this instanceof AdminSearchConfController) {
+            return;
+        }
+
+        $container = SymfonyContainer::getInstance();
+        /** @var JsRouterMetadataExtension $jsRouterMetadataExtension */
+        $jsRouterMetadataExtension = $container->get('prestashop.bundle.twig.extension.js_router_metadata_extension');
+
         $this->context->smarty->assign([
             'context_mode' => $this->context->mode,
             'can_import' => $this->can_import,
+            'js_router_metadata' => $jsRouterMetadataExtension->getJsRouterMetadata(),
         ]);
     }
 
