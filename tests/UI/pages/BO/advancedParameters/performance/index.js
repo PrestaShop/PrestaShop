@@ -31,7 +31,7 @@ class Performance extends BOBasePage {
    * @returns {Promise<string>}
    */
   async clearCache(page) {
-    await this.waitForSelectorAndClick(page, this.clearCacheButton);
+    await this.clickAndWaitForNavigation(page, this.clearCacheButton);
 
     return this.getTextContent(page, this.alertSuccessBlockParagraph);
   }
