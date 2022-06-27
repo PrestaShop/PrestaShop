@@ -345,7 +345,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
                 $this->where(self::LANG_ALIAS . '.id_lang', '=', $this->id_lang);
             }
             if (!empty($this->definition['multilang_shop'])) {
-                $this->sqlWhere($this->join_list[self::LANG_ALIAS]['alias'] . '.`id_shop` = ' . Context::getContext()->shop->id);
+                $this->sqlWhere($this->join_list[self::LANG_ALIAS]['alias'] . '.`id_shop` = ' . (int) Context::getContext()->shop->id);
             }
         }
 
