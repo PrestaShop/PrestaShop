@@ -168,6 +168,7 @@ export default class CombinationsList {
   }
 
   private initializeComponents(): void {
+    console.log('initializeComponents');
     if (this.initialized) {
       return;
     }
