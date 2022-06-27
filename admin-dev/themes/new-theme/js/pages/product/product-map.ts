@@ -78,8 +78,7 @@ export default {
     customizationFieldRow: '.customization-field-row',
   },
   combinations: {
-    navigationTab: '#combinations-tab-nav',
-    externalCombinationTab: '#external-combination-tab',
+    navigationTab: '#product_combinations-tab-nav',
     combinationManager: '#product_combinations_combination_manager',
     preloader: '#combinations-preloader',
     emptyState: '#combinations-empty-state',
