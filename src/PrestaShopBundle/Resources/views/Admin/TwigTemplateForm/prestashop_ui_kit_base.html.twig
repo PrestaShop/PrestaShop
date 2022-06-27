@@ -1395,7 +1395,7 @@
     <ul class="nav nav-tabs js-nav-tabs" id="form-nav" role="tablist">
     {% set firstRenderedChild = true %}
     {% for child in form.children %}
-      {% if not child.rendered %}
+      {% if not child.rendered and child.vars.name != 'toolbar_buttons' %}
       <li id="{{ child.vars.id }}-tab-nav" class="nav-item{% if not child.vars.valid %} has-error{% endif %}">
         <a href="#{{ child.vars.id }}-tab" role="tab" data-toggle="tab" class="nav-link{% if firstRenderedChild %} active{% endif %}">
           {{ child.vars.label }}
@@ -1409,6 +1409,12 @@
     <div class="arrow d-xl-none js-arrow right-arrow visible float-right">
       <i class="material-icons rtl-flip hide">chevron_right</i>
     </div>
+
+    {% if form.offsetExists('toolbar_buttons') %}
+    <div class="navigation-tab-widget-toolbar toolbar text-md-right">
+      {{ form_widget(form.toolbar_buttons) }}
+    </div>
+    {% endif %}
   </div>
 
   <div id="{{ form.vars.id }}-tabs-content" class="tab-content">
@@ -1466,7 +1472,7 @@
   </div>
 {%- endblock -%}
 
-{% block button_collection_row %}
+{% block button_collection_widget %}
   {%- set attr = attr|merge({
     class: (attr.class|default('') ~ ' form-group btn-collection btn-toolbar')|trim,
     role: 'group',

@@ -28,7 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form type is used as a container of sub forms, each sub form will be rendered as a part of navigation tab
@@ -37,4 +40,49 @@ use Symfony\Component\Form\AbstractType;
  */
 class NavigationTabType extends AbstractType
 {
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * {@inheritDoc}
+     */
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        parent::buildForm($builder, $options);
+        if (!empty($options['toolbar_buttons'])) {
+            if ($builder->has('toolbar_buttons')) {
+                $this->logger->warning('You should not add a field which name is toolbar_buttons on this component as it is used internally.');
+            }
+
+            $builder->add('toolbar_buttons', ButtonCollectionType::class, array_merge([
+                'buttons' => $options['toolbar_buttons'],
+            ], $options['toolbar_options']));
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+        $resolver
+            ->setDefaults([
+                'toolbar_buttons' => [],
+                'toolbar_options' => [],
+            ])
+            ->setAllowedTypes('toolbar_buttons', 'array')
+            ->setAllowedTypes('toolbar_options', 'array')
+        ;
+    }
 }
