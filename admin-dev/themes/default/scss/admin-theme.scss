@@ -111,3 +111,8 @@
 
 //Print support
 @import "partials/print";
+
+//modal loader
+@import "../../new-theme/scss/config/settings";
+@import "../../new-theme/scss/components/modal";
+@import "~prestakit/scss/spinners";
