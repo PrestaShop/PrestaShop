@@ -139,6 +139,7 @@ module.exports = {
     zone: './js/pages/zone',
     country: './js/pages/country',
     country_form: './js/pages/country/form',
+    create_product: './js/pages/product/components/create-product',
   },
   output: {
     path: path.resolve(__dirname, '../public'),

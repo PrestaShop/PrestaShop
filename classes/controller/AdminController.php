@@ -32,6 +32,7 @@ use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
+use PrestaShopBundle\Twig\Extension\JsRouterMetadataExtension;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class AdminControllerCore extends Controller
@@ -573,9 +574,18 @@ class AdminControllerCore extends Controller
             $this->can_import = true;
         }
 
+        if ($this instanceof AdminSearchConfController) {
+            return;
+        }
+
+        $container = SymfonyContainer::getInstance();
+        /** @var JsRouterMetadataExtension $jsRouterMetadataExtension */
+        $jsRouterMetadataExtension = $container->get('prestashop.bundle.twig.extension.js_router_metadata_extension');
+
         $this->context->smarty->assign([
             'context_mode' => $this->context->mode,
             'can_import' => $this->can_import,
+            'js_router_metadata' => $jsRouterMetadataExtension->getJsRouterMetadata(),
         ]);
     }
 
@@ -2614,6 +2624,7 @@ class AdminControllerCore extends Controller
 
             $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/theme.css', 'all', 0);
             $this->addJS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/main.bundle.js');
+            $this->addJS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/create_product.bundle.js');
 
             // the multistore dropdown should be called only once, and only if multistore is used
             if ($this->isMultistoreEnabled()) {
@@ -2637,6 +2648,7 @@ class AdminControllerCore extends Controller
             // implement $.browser object and live method, that has been removed since jquery 1.9
             $this->addJs(_PS_JS_DIR_ . 'jquery/jquery.browser-0.1.0.min.js');
             $this->addJs(_PS_JS_DIR_ . 'jquery/jquery.live-polyfill-1.1.2.min.js');
+            $this->addJS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/create_product.bundle.js');
 
             $this->addJqueryPlugin(['scrollTo', 'alerts', 'chosen', 'autosize', 'fancybox']);
             $this->addJqueryPlugin('growl', null, false);
