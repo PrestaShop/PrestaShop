@@ -42,17 +42,19 @@ let browserContext;
 let page;
 
 /*
-Go to FO
-Check footer Products links( Prices drop, New products and Best sales)
+Pre-condition:
+- Delete cache
+Scenario:
+- Go to FO
+- Check footer Products links( Prices drop, New products and Best sales)
 Check our company links( Delivery, Legal notices, Terms and conditions of use, About us, Secure payment, Contact us,
 Sitemap, Stores)
-Check your account links( Personal info, Orders, Credit slips, Addresses)
+- Check your account links( Personal info, Orders, Credit slips, Addresses)
  */
-
 describe('FO - Header and Footer : Check links in footer page', async () => {
   // Pre-condition: Delete cache
-
   deleteCacheTest(baseContext);
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

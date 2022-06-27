@@ -2,14 +2,14 @@ require('module-alias/register');
 const BOBasePage = require('@pages/BO/BObasePage');
 
 /**
- * Logs page, contains functions that can be used on the page
+ * Performance page, contains functions that can be used on the page
  * @class
  * @extends BOBasePage
  */
 class Performance extends BOBasePage {
   /**
    * @constructs
-   * Setting up texts and selectors to use on logs page
+   * Setting up texts and selectors to use on Performance page
    */
   constructor() {
     super();
