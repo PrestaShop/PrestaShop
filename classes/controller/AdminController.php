@@ -574,6 +574,8 @@ class AdminControllerCore extends Controller
             $this->can_import = true;
         }
 
+        // searchConfController is called after original controller is called, and it has no request info
+        // to stop it from overriding metadata we need to skip smarty assign
         if ($this instanceof AdminSearchConfController) {
             return;
         }
