@@ -51,7 +51,7 @@ trait SmartyTrait
     {
         $this->setMedia($isNewTheme);
 
-        return $this->get('prestashop.core.bridge.smarty_bridge')->render($content, $this->controllerConfiguration, $response);
+        return $this->get('prestashop.core.bridge.smarty_bridge')->render($content, $this->bridgeControllerConfiguration, $response);
     }
 
     /**
@@ -108,7 +108,7 @@ trait SmartyTrait
 
             $this->addJS(_PS_JS_DIR_ . 'jquery/plugins/timepicker/jquery-ui-timepicker-addon.js');
 
-            if (!$this->controllerConfiguration->liteDisplay) {
+            if (!$this->bridgeControllerConfiguration->liteDisplay) {
                 $this->addJS(__PS_BASE_URI__ . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/js/help.js');
             }
 
@@ -179,13 +179,13 @@ trait SmartyTrait
             }
 
             $key = is_array($css_path) ? key($css_path) : $css_path;
-            if ($css_path && (!isset($this->controllerConfiguration->cssFiles[$key]) || ($this->controllerConfiguration->cssFiles[$key] != reset($css_path)))) {
-                $size = count($this->controllerConfiguration->cssFiles);
+            if ($css_path && (!isset($this->bridgeControllerConfiguration->cssFiles[$key]) || ($this->bridgeControllerConfiguration->cssFiles[$key] != reset($css_path)))) {
+                $size = count($this->bridgeControllerConfiguration->cssFiles);
                 if ($offset === null || $offset > $size || $offset < 0 || !is_numeric($offset)) {
                     $offset = $size;
                 }
 
-                $this->controllerConfiguration->cssFiles = array_merge(array_slice($this->controllerConfiguration->cssFiles, 0, $offset), $css_path, array_slice($this->controllerConfiguration->cssFiles, $offset));
+                $this->bridgeControllerConfiguration->cssFiles = array_merge(array_slice($this->bridgeControllerConfiguration->cssFiles, 0, $offset), $css_path, array_slice($this->bridgeControllerConfiguration->cssFiles, $offset));
             }
         }
     }
@@ -210,8 +210,8 @@ trait SmartyTrait
                 $jsPath = Media::getJSPath($jsFile);
             }
 
-            if ($jsPath && !in_array($jsPath, $this->controllerConfiguration->jsFiles)) {
-                $this->controllerConfiguration->jsFiles[] = $jsPath . ($version ? '?' . $version : '');
+            if ($jsPath && !in_array($jsPath, $this->bridgeControllerConfiguration->jsFiles)) {
+                $this->bridgeControllerConfiguration->jsFiles[] = $jsPath . ($version ? '?' . $version : '');
             }
         }
     }

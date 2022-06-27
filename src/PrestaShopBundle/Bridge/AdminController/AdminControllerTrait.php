@@ -88,7 +88,7 @@ trait AdminControllerTrait
     public function addAction(ActionInterface $action): void
     {
         if ($action instanceof HeaderToolbarAction) {
-            $this->controllerConfiguration->pageHeaderToolbarButton[$action->getLabel()] = $action->getConfig();
+            $this->bridgeControllerConfiguration->pageHeaderToolbarButton[$action->getLabel()] = $action->getConfig();
 
             return;
         }
