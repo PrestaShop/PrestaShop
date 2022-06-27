@@ -12,6 +12,13 @@ services:
     tags:
       - { name: form.type }
 
+  form.type.navigation_tab:
+    class: PrestaShopBundle\Form\Admin\Type\NavigationTabType
+    arguments:
+      - '@logger'
+    tags:
+      - { name: form.type }
+
   form.type.email:
     class: PrestaShopBundle\Form\Admin\Type\EmailType
     arguments:
@@ -1324,8 +1331,18 @@ services:
     public: true
     arguments:
       - '@form.type.sell.product.event_listener.product_type_listener'
+      - '@form.type.sell.product.toolbar_buttons_provider'
     tags:
       - { name: form.type }
+
+  form.type.sell.product.toolbar_buttons_provider:
+    class: 'PrestaShopBundle\Form\Toolbar\ProductToolbarButtonsProvider'
+    arguments:
+      - '@translator'
+      - '@router'
+      - '@prestashop.adapter.shop.url.help_provider'
+      - '@prestashop.adapter.data_provider.module'
+      - '@prestashop.adapter.legacy.context'
 
   form.type.sell.product.product_type_type:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\ProductTypeType'
