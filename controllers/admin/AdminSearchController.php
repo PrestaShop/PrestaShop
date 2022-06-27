@@ -373,9 +373,7 @@ class AdminSearchControllerCore extends AdminController
         $this->tpl_view_vars['query'] = $searchedExpression;
         $this->tpl_view_vars['show_toolbar'] = true;
 
-        if (count($this->errors)) {
-            return parent::renderView();
-        } else {
+        if (!count($this->errors)) {
             $nb_results = 0;
             foreach ($this->_list as $list) {
                 if ($list != false) {
@@ -474,11 +472,10 @@ class AdminSearchControllerCore extends AdminController
             if ($this->isCountableAndNotEmpty($this->_list, 'modules')) {
                 $this->tpl_view_vars['modules'] = $this->_list['modules'];
             }
-
-            $this->getSearchPanels($searchedExpression);
-
-            return parent::renderView();
         }
+        $this->getSearchPanels($searchedExpression);
+
+        return parent::renderView();
     }
 
     protected function getSearchPanels(string $searchedExpression): void
