@@ -28,35 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception;
 
-use Throwable;
-
 /**
  * Thrown when bulk deleting combination fails
  */
-class CannotBulkDeleteCombinationException extends CombinationException
+class CannotBulkDeleteCombinationException extends BulkCombinationException
 {
-    /**
-     * @var int[]
-     */
-    private $combinationIds;
-
-    /**
-     * @param int[] $combinationIds ids of combinations which cannot be deleted
-     * @param string $message
-     * @param int $code
-     * @param Throwable|null $previous
-     */
-    public function __construct(array $combinationIds, $message = '', $code = 0, Throwable $previous = null)
-    {
-        parent::__construct($message, $code, $previous);
-        $this->combinationIds = $combinationIds;
-    }
-
-    /**
-     * @return int[]
-     */
-    public function getCombinationIds(): array
-    {
-        return $this->combinationIds;
-    }
 }

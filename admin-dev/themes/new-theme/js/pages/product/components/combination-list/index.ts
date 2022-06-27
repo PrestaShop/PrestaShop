@@ -127,7 +127,7 @@ export default class CombinationsList {
   }
 
   private watchEvents(): void {
-    this.eventEmitter.on(CombinationEvents.refreshCombinationList, () => this.refreshCombinationList(false));
+    this.eventEmitter.on(CombinationEvents.refreshCombinationList, () => this.refreshCombinationList());
     this.eventEmitter.on(CombinationEvents.refreshPage, () => this.refreshPage());
 
     this.eventEmitter.on(CombinationEvents.updateAttributeGroups, (attributeGroups) => {
@@ -172,6 +172,8 @@ export default class CombinationsList {
       return;
     }
 
+    // Preloader is only shown on first load
+    this.$preloader.toggleClass('d-none', false);
     this.initialized = true;
 
     // External vue components
@@ -221,13 +223,10 @@ export default class CombinationsList {
     new BulkEditionHandler(this.productId, this.eventEmitter, bulkChoicesSelector, this.combinationsService);
     new BulkDeleteHandler(this.productId, this.eventEmitter, bulkChoicesSelector, this.combinationsService);
 
-    this.refreshCombinationList(true);
+    this.refreshCombinationList();
   }
 
-  private async refreshCombinationList(firstTime: boolean): Promise<void> {
-    // Preloader is only shown on first load
-    this.$preloader.toggleClass('d-none', !firstTime);
-
+  private async refreshCombinationList(): Promise<void> {
     // Wait for product attributes to adapt rendering depending on their number
     this.productAttributeGroups = await getProductAttributeGroups(this.productId);
 
@@ -238,7 +237,6 @@ export default class CombinationsList {
     // We trigger the clearFilters which will be handled by the filters app, after clean the component will trigger
     // the updateAttributeGroups event which is caught by this manager which will in turn refresh the list to first page
     this.eventEmitter.emit(CombinationEvents.clearFilters);
-    this.$preloader.addClass('d-none');
   }
 
   private refreshPage(): void {
@@ -276,5 +274,8 @@ export default class CombinationsList {
       this.$emptyFiltersState.addClass('d-none');
       $combinationsTable.removeClass('d-none');
     }
+
+    // After init preloader is always empty
+    this.$preloader.toggleClass('d-none', true);
   }
 }

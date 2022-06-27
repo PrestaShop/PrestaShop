@@ -25,16 +25,31 @@
 {% set legacyBaseLayout = 'light_display_layout.tpl' %}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
-{% form_theme bulkCombinationForm '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/combination.html.twig' %}
-
 {% block stylesheets %}
   <link rel="stylesheet" href="{{ asset('themes/new-theme/public/product' ~ rtl_suffix ~ '.css') }}" type="text/css"
         media="all">
 {% endblock %}
 
 {% block content %}
-  {{ form_start(bulkCombinationForm, {'attr': {'class': 'combination-page ' ~ bulkCombinationForm.vars.attr.class|default('')}}) }}
-    {{ form_row(bulkCombinationForm) }}
+  {% form_theme bulkCombinationForm '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/combination.html.twig' %}
+
+  {{ form_start(
+    bulkCombinationForm,
+    {'attr': {
+      'class': 'combination-page ' ~ bulkCombinationForm.vars.attr.class|default(''),
+      'data-bulk-chunk-size': 10,
+      'data-progress-title': 'Editing %total% combinations'|trans({}, 'Admin.Catalog.Feature'),
+      'data-progress-message': 'Editing %done%/%total% combinations'|trans({}, 'Admin.Catalog.Feature'),
+      'data-close-label': 'Close'|trans({}, 'Admin.Catalog.Feature'),
+      'data-stop-processing': 'Stop processing'|trans({}, 'Admin.Catalog.Feature'),
+      'data-errors-message': '%error_count% errors occurred. You can download the logs for future reference.'|trans({}, 'Admin.Catalog.Feature'),
+      'data-back-to-processing': 'Back to processing'|trans({}, 'Admin.Catalog.Feature'),
+      'data-download-error-log': 'Download error log'|trans({}, 'Admin.Catalog.Feature'),
+      'data-view-error-log': 'View %error_count% error logs'|trans({}, 'Admin.Catalog.Feature'),
+      'data-view-error-title': 'Error log'|trans({}, 'Admin.Catalog.Feature'),
+    }}
+  )}}
+  {{ form_row(bulkCombinationForm) }}
   {{ form_end(bulkCombinationForm) }}
 {% endblock %}
 

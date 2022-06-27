@@ -41,6 +41,7 @@ class AccordionType extends AbstractType
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $view->vars['expand_first'] = $options['expand_first'];
+        $view->vars['expand_on_error'] = $options['expand_on_error'];
         $view->vars['display_one'] = $options['display_one'];
     }
 
@@ -48,6 +49,7 @@ class AccordionType extends AbstractType
     {
         $resolver->setDefaults([
             'expand_first' => true,
+            'expand_on_error' => true,
             'display_one' => true,
         ]);
     }

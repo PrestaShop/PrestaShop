@@ -1806,6 +1806,11 @@ $product-page-padding-bottom: 80px !default;
     color: #363a41;
     background-color: #eaebec;
   }
+
+  .accordion-form-button.has-error {
+    color: #c45c67;
+    border-top: 3px solid #c45c67;
+  }
 }
 
 .product-page,
@@ -2267,3 +2272,4 @@ $product-page-padding-bottom: 80px !default;
 
 // Create product modal
 @import "create_product_modal";
+@import "product_light_list";

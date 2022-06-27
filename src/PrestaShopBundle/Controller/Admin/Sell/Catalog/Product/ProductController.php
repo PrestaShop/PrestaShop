@@ -125,6 +125,22 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('read', 'AdminProducts')")
+     *
+     * @return Response
+     */
+    public function lightListAction(ProductFilters $filters, Request $request): Response
+    {
+        $gridFactory = $this->get('prestashop.core.grid.factory.product_light');
+        $grid = $gridFactory->getGrid($filters);
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/light_list.html.twig', [
+            'lightDisplay' => $request->query->has('liteDisplaying'),
+            'productLightGrid' => $this->presentGrid($grid),
+        ]);
+    }
+
+    /**
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message="You do not have permission to create this.")
      *
      * @param Request $request
