@@ -87,8 +87,16 @@ class FormListenerTestCase extends KernelTestCase
         if ($shouldExist) {
             $this->assertNotNull($this->getFormChild($form, $typeName));
         } else {
-            $this->expectException(OutOfBoundsException::class);
-            $this->getFormChild($form, $typeName);
+            $expectedException = null;
+            try {
+                $this->getFormChild($form, $typeName);
+            } catch (OutOfBoundsException $e) {
+                $expectedException = $e;
+            }
+            $this->assertNotNull(
+                $expectedException,
+                sprintf('Exception not triggered meaning the field %s is still present', $typeName)
+            );
         }
     }
 

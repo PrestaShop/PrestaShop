@@ -28,7 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\EventListener;
 
+use PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShopBundle\Form\Admin\Sell\Product\ExtraModulesType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -40,6 +42,19 @@ use Symfony\Component\Form\FormInterface;
  */
 class ProductTypeListener implements EventSubscriberInterface
 {
+    /**
+     * @var HookInformationProvider
+     */
+    private $hookInformationProvider;
+
+    /**
+     * @param HookInformationProvider $hookInformationProvider
+     */
+    public function __construct(HookInformationProvider $hookInformationProvider)
+    {
+        $this->hookInformationProvider = $hookInformationProvider;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -61,6 +76,11 @@ class ProductTypeListener implements EventSubscriberInterface
         // We need both initial and new types because we may need to keep some fields during the transition request
         $productType = $data['header']['type'];
         $initialProductType = $data['header']['initial_type'] ?? $productType;
+
+        $registeredExtraModules = $this->hookInformationProvider->getRegisteredModulesByHookName(ExtraModulesType::HOOK_NAME);
+        if (empty($registeredExtraModules)) {
+            $form->remove('extra_modules');
+        }
 
         if (ProductType::TYPE_COMBINATIONS === $productType) {
             $this->removeSuppliers($form);
