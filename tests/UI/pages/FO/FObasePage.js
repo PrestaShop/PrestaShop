@@ -119,6 +119,16 @@ class FOBasePage extends CommonPage {
   }
 
   /**
+   * Click on bread crumb link
+   * @param page {Page} Browser tab
+   * @param link {string} Link to click on
+   * @returns {Promise<void>}
+   */
+  async clickOnBreadCrumbLink(page, link) {
+    await this.waitForSelectorAndClick(page, `#wrapper nav.breadcrumb a[href*=${link}]`);
+  }
+
+  /**
    * Go to the home page
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
