@@ -64,15 +64,15 @@ class ControllerConfigurationFactory
         string $controllerNameLegacy,
         string $table
     ): ControllerConfiguration {
-        $configuratorController = new ControllerConfiguration();
+        $controllerConfiguration = new ControllerConfiguration();
+        $controllerConfiguration->id = $id;
+        $controllerConfiguration->controllerName = $controllerName;
+        $controllerConfiguration->php_self = $controllerName;
+        $controllerConfiguration->controllerNameLegacy = $controllerNameLegacy;
+        $controllerConfiguration->table = $table;
+        $controllerConfiguration->user = $this->userProvider->getUser();
+        $controllerConfiguration->folderTemplate = Tools::toUnderscoreCase(substr($controllerConfiguration->controllerNameLegacy, 5)) . '/';
 
-        $configuratorController->id = $id;
-        $configuratorController->controllerName = $controllerName;
-        $configuratorController->controllerNameLegacy = $controllerNameLegacy;
-        $configuratorController->table = $table;
-        $configuratorController->user = $this->userProvider->getUser();
-        $configuratorController->folderTemplate = Tools::toUnderscoreCase(substr($configuratorController->controllerNameLegacy, 5)) . '/';
-
-        return $configuratorController;
+        return $controllerConfiguration;
     }
 }
