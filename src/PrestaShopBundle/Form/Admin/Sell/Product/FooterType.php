@@ -110,30 +110,22 @@ class FooterType extends TranslatorAwareType
                 'type' => 'link',
                 'attr' => [
                     'class' => 'btn-outline-secondary duplicate-product-button',
-                    'data-modal-title' => $this->trans('Duplicate this product.', 'Admin.Catalog.Help'),
-                    'data-modal-message' => $this->trans('Are you sure you want to duplicate this item?', 'Admin.Notifications.Warning'),
+                    'data-modal-title' => $this->trans('Duplicate product?', 'Admin.Catalog.Notification'),
                     'data-modal-apply' => $this->trans('Duplicate', 'Admin.Actions'),
                     'data-modal-cancel' => $this->trans('Cancel', 'Admin.Actions'),
                     'data-confirm-button-class' => 'btn-primary',
                     'data-button-url' => $duplicateUrl,
-                    'data-toggle' => 'pstooltip',
-                    'data-placement' => 'left',
-                    'title' => $this->trans('Duplicate this product.', 'Admin.Catalog.Help'),
                 ],
             ])
             ->add('delete', IconButtonType::class, [
                 'label' => $this->trans('Delete', 'Admin.Actions'),
                 'attr' => [
                     'class' => 'tooltip-link delete-product-button btn-outline-secondary',
-                    'data-modal-title' => $this->trans('Permanently delete this product.', 'Admin.Catalog.Help'),
-                    'data-modal-message' => $this->trans('Are you sure you want to delete this item?', 'Admin.Notifications.Warning'),
+                    'data-modal-title' => $this->trans('Permanently delete this product?', 'Admin.Catalog.Notification'),
                     'data-modal-apply' => $this->trans('Delete', 'Admin.Actions'),
                     'data-modal-cancel' => $this->trans('Cancel', 'Admin.Actions'),
                     'data-confirm-button-class' => 'btn-danger',
                     'data-button-url' => $deleteUrl,
-                    'data-toggle' => 'pstooltip',
-                    'data-placement' => 'left',
-                    'title' => $this->trans('Permanently delete this product.', 'Admin.Catalog.Help'),
                 ],
             ])
             ->add('new_product', IconButtonType::class, [
