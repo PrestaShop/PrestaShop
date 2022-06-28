@@ -31,9 +31,7 @@ namespace PrestaShopBundle\Bridge\AdminController\Listener;
 use Context;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository;
-use PrestaShopBundle\Bridge\AdminController\ControllerConfigurationFactory;
-use PrestaShopBundle\Bridge\AdminController\LegacyControllerBridgeInterface;
-use Symfony\Component\HttpFoundation\Request;
+use PrestaShopBundle\Bridge\AdminController\BridgeControllerInterface;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 
 /**
@@ -48,24 +46,17 @@ class InitControllerListener
     private $context;
 
     /**
-     * @var ControllerConfigurationFactory
-     */
-    private $configurationFactory;
-
-    /**
      * @var Repository
      */
     private $localeRepository;
 
     /**
      * @param LegacyContext $legacyContext
-     * @param ControllerConfigurationFactory $configurationFactory
      * @param Repository $localeRepository
      */
-    public function __construct(LegacyContext $legacyContext, ControllerConfigurationFactory $configurationFactory, Repository $localeRepository)
+    public function __construct(LegacyContext $legacyContext, Repository $localeRepository)
     {
         $this->context = $legacyContext->getContext();
-        $this->configurationFactory = $configurationFactory;
         $this->localeRepository = $localeRepository;
     }
 
@@ -91,6 +82,7 @@ class InitControllerListener
             return;
         }
 
+        /** @var BridgeControllerInterface $controller */
         $controller = $event->getController()[0];
 
         if (!is_string(get_class($controller))) {
@@ -103,8 +95,8 @@ class InitControllerListener
             $this->context->language->getLocale()
         );
 
-        $controller->initControllerConfiguration($event->getRequest());
-        $this->context->controller = $controller;
+        $legacyControllerBridge = $controller->initLegacyControllerBridge($event->getRequest());
+        $this->context->controller = $legacyControllerBridge;
     }
 
     /**
@@ -118,7 +110,7 @@ class InitControllerListener
             return false;
         }
 
-        if (!$event->getController()[0] instanceof LegacyControllerBridgeInterface) {
+        if (!$event->getController()[0] instanceof BridgeControllerInterface) {
             return false;
         }
 
