@@ -427,6 +427,16 @@ class Checkout extends FOBasePage {
   }
 
   /**
+   * Get number od addresses
+   * @param page
+   * @returns {Promise<number>}
+   */
+  async getNumberOfAddresses(page) {
+    await this.waitForSelector(page, '#delivery-addresses', 'visible');
+    return page.$$('#delivery-addresses article').length;
+  }
+
+  /**
    * Fill personal information form and click on continue
    * @param page {Page} Browser tab
    * @param customerData {object} Guest Customer's information to fill on form
