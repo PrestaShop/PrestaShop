@@ -61,12 +61,9 @@ export default class SpecificPricesManager {
     this.router = new Router();
     this.productId = productId;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
-    this.specificPriceList = new SpecificPriceList(productId);
-    this.catalogPriceRuleList = new CatalogPriceRuleList();
 
     this.listContainer = document.querySelector<HTMLElement>(SpecificPriceMap.listContainer)!;
     this.initComponents();
-    this.specificPriceList.renderList();
     this.initListeners();
   }
 
@@ -96,6 +93,8 @@ export default class SpecificPricesManager {
 
   private initCatalogPriceRules()
   {
+    const catalogPriceRuleList = new CatalogPriceRuleList();
+
     const showCatalogPriceRulesButton = document.querySelector<HTMLElement>(CatalogPriceRulesMap.showCatalogPriceRules);
     const hideCatalogPriceRulesButton = document.querySelector<HTMLElement>(CatalogPriceRulesMap.hideCatalogPriceRules);
     const catalogPriceRulesContainer = document.querySelector<HTMLElement>(CatalogPriceRulesMap.blockContainer);
@@ -118,16 +117,16 @@ export default class SpecificPricesManager {
       hideCatalogPriceRulesButton.classList.remove('d-none');
       showCatalogPriceRulesButton.classList.add('d-none');
       if (!listRendered) {
-        this.catalogPriceRuleList.renderList();
+        catalogPriceRuleList.renderList();
       } else {
-        this.catalogPriceRuleList.toggleListVisibility(true);
+        catalogPriceRuleList.toggleListVisibility(true);
       }
       listRendered = true;
 
     });
 
     hideCatalogPriceRulesButton.addEventListener('click', (e) => {
-      this.catalogPriceRuleList.toggleListVisibility(false);
+      catalogPriceRuleList.toggleListVisibility(false);
       formContainer.classList.add('d-none');
       hideCatalogPriceRulesButton.classList.add('d-none');
       showCatalogPriceRulesButton.classList.remove('d-none');
