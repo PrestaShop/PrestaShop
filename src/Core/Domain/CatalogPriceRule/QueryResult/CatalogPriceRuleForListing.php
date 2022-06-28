@@ -201,5 +201,4 @@ class CatalogPriceRuleForListing
     {
         return $this->groupName;
     }
-
 }
