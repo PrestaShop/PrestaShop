@@ -43,7 +43,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class ExtraModulesType extends TranslatorAwareType
 {
-    private const HOOK_NAME = 'displayAdminProductsExtra';
+    public const HOOK_NAME = 'displayAdminProductsExtra';
 
     /**
      * @var HookDispatcherInterface

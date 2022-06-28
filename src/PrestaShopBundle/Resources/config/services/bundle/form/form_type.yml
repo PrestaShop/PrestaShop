@@ -1794,6 +1794,8 @@ services:
   form.type.sell.product.event_listener.product_type_listener:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\ProductTypeListener'
     public: true
+    arguments:
+      - '@prestashop.adapter.legacy.hook'
 
   form.type.sell.product.event_listener.redirect_option_listener:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\RedirectOptionListener'
