@@ -24,34 +24,26 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShopBundle\Bridge\AdminController;
 
-namespace PrestaShopBundle\Bridge\Smarty;
+use Symfony\Component\HttpFoundation\Request;
 
-use Symfony\Component\HttpFoundation\Response;
-
-/**
- * This trait adds methods to get a response object with the HTML passed as parameters and with all stuff needed,
- * like header, footer, notifications.
- *
- * Developers must use this trait in a controller migrated horizontally to render a smarty template as a Symfony response.
- * He can also be used to add CSS, js, jquery plugin, and jquery UI to a response.
- */
-trait SmartyTrait
+interface BridgeControllerInterface
 {
     /**
-     * @param string $content
-     * @param Response|null $response
+     * @param Request $request
      *
-     * @return Response
+     * @return LegacyControllerBridgeInterface
      */
-    public function renderSmarty(string $content, Response $response = null, bool $isNewTheme = false): Response
-    {
-        $this->legacyControllerBridge->setMedia($isNewTheme);
+    public function initLegacyControllerBridge(Request $request): LegacyControllerBridgeInterface;
 
-        return $this
-            ->get('prestashop.core.bridge.smarty_bridge')
-            ->render($content, $this->legacyControllerBridge->getControllerConfiguration(), $response)
-        ;
-    }
+    /**
+     * @return string
+     */
+    public function getTableName(): string;
+
+    /**
+     * @return string
+     */
+    public function getClassName(): string;
 }

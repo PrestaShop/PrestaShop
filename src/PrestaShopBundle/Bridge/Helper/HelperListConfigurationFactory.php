@@ -81,7 +81,7 @@ class HelperListConfigurationFactory
         $helperListConfiguration->token = $controllerConfiguration->token;
         $helperListConfiguration->bootstrap = $controllerConfiguration->bootstrap;
         $helperListConfiguration->legacyCurrentIndex = $controllerConfiguration->legacyCurrentIndex;
-        $helperListConfiguration->multishopContext = $controllerConfiguration->multishopContext;
+        $helperListConfiguration->multishopContext = $controllerConfiguration->multishop_context;
 
         return $helperListConfiguration;
     }

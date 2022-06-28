@@ -38,10 +38,9 @@ use PrestaShopBundle\Bridge\AdminController\Action\ListHeaderToolbarAction;
 use PrestaShopBundle\Bridge\AdminController\Action\ListRowAction;
 use PrestaShopBundle\Bridge\AdminController\AdminControllerTrait;
 use PrestaShopBundle\Bridge\AdminController\AdminListControllerTrait;
-use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
+use PrestaShopBundle\Bridge\AdminController\BridgeControllerInterface;
+use PrestaShopBundle\Bridge\AdminController\BridgeListControllerInterface;
 use PrestaShopBundle\Bridge\AdminController\Field\Field;
-use PrestaShopBundle\Bridge\AdminController\LegacyControllerBridgeInterface;
-use PrestaShopBundle\Bridge\AdminController\LegacyListControllerBridgeInterface;
 use PrestaShopBundle\Bridge\Helper\HelperListConfiguration;
 use PrestaShopBundle\Bridge\Helper\HelperListCustomizer\HelperListFeatureBridge;
 use PrestaShopBundle\Bridge\Smarty\SmartyTrait;
@@ -54,37 +53,11 @@ use Tools;
 /**
  * Controller responsible for "Sell > Catalog > Attributes & Features > Features" page
  */
-class FeatureController extends FrameworkBundleAdminController implements LegacyControllerBridgeInterface, LegacyListControllerBridgeInterface
+class FeatureController extends FrameworkBundleAdminController implements BridgeControllerInterface, BridgeListControllerInterface
 {
     use AdminControllerTrait;
     use AdminListControllerTrait;
     use SmartyTrait;
-
-    /**
-     * This parameter is needed by legacy hook, so we can't remove it.
-     *
-     * @var string
-     */
-    public $php_self;
-
-    /**
-     * This parameter is needed by legacy helper shop, so we can't remove it.
-     *
-     * @var bool
-     */
-    public $multishop_context_group = true;
-
-    /**
-     * This parameter is needed by legacy helper shop, we can't remove it.
-     *
-     * @var int
-     */
-    public $multishop_context;
-
-    /**
-     * @var ControllerConfiguration
-     */
-    public $controllerConfiguration;
 
     /**
      * {@inheritdoc}
@@ -127,7 +100,7 @@ class FeatureController extends FrameworkBundleAdminController implements Legacy
         $helperListConfiguration = $this->get('prestashop.core.bridge.helper_list_configuration_factory')->create(
             $this->getTableName(),
             $this->getClassName(),
-            $this->controllerConfiguration,
+            $this->legacyControllerBridge->getControllerConfiguration(),
             $this->getIdentifier(),
             $this->getPositionIdentifier(),
             'position',
@@ -256,13 +229,13 @@ class FeatureController extends FrameworkBundleAdminController implements Legacy
     {
         $this->addAction(new HeaderToolbarAction('new_feature', [
             //Used $this->generateUrl('admin_features_add')
-            'href' => $this->controllerConfiguration->legacyCurrentIndex . '&addfeature&token=' . $this->controllerConfiguration->token,
+            'href' => $this->legacyControllerBridge->getControllerConfiguration()->legacyCurrentIndex . '&addfeature&token=' . $this->legacyControllerBridge->getControllerConfiguration()->token,
             'desc' => $this->trans('Add new feature', 'Admin.Catalog.Feature'),
             'icon' => 'process-icon-new',
         ]));
         $this->addAction(new HeaderToolbarAction('new_feature_value', [
             //Used $this->generateUrl('admin_features_add_value')
-            'href' => $this->controllerConfiguration->legacyCurrentIndex . '&addfeature_value&id_feature=' . (int) Tools::getValue('id_feature') . '&token=' . $this->controllerConfiguration->token,
+            'href' => $this->legacyControllerBridge->getControllerConfiguration()->legacyCurrentIndex . '&addfeature_value&id_feature=' . (int) Tools::getValue('id_feature') . '&token=' . $this->legacyControllerBridge->getControllerConfiguration()->token,
             'desc' => $this->trans('Add new feature value', 'Admin.Catalog.Help'),
             'icon' => 'process-icon-new',
         ]));
@@ -279,7 +252,7 @@ class FeatureController extends FrameworkBundleAdminController implements Legacy
     {
         $this->addActionList(new ListHeaderToolbarAction('new', [
             //Replace by $this->generateUrl('admin_features_add')
-            'href' => $this->controllerConfiguration->legacyCurrentIndex . '&addfeature&token=' . $this->controllerConfiguration->token,
+            'href' => $this->legacyControllerBridge->getControllerConfiguration()->legacyCurrentIndex . '&addfeature&token=' . $this->legacyControllerBridge->getControllerConfiguration()->token,
             'desc' => $this->trans('Add new', 'Admin.Actions'),
         ]), $helperListConfiguration);
 

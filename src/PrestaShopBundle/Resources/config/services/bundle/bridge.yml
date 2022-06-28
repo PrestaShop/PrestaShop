@@ -87,7 +87,6 @@ services:
       - { name: kernel.event_listener, event: kernel.controller }
     arguments:
       - "@prestashop.adapter.legacy.context"
-      - "@prestashop.core.bridge.controller_configuration_factory"
       - "@prestashop.core.localization.locale.repository"
 
   prestashop.core.bridge.helper_list_feature:

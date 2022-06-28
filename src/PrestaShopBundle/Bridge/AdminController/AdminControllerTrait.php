@@ -40,6 +40,11 @@ use Tools;
 trait AdminControllerTrait
 {
     /**
+     * @var LegacyControllerBridge
+     */
+    private $legacyControllerBridge;
+
+    /**
      * This method add action for the page.
      *
      * @param ActionInterface $action
@@ -49,7 +54,7 @@ trait AdminControllerTrait
     public function addAction(ActionInterface $action): void
     {
         if ($action instanceof HeaderToolbarAction) {
-            $this->controllerConfiguration->pageHeaderToolbarButton[$action->getLabel()] = $action->getConfig();
+            $this->legacyControllerBridge->getControllerConfiguration()->pageHeaderToolbarButton[$action->getLabel()] = $action->getConfig();
 
             return;
         }
@@ -60,9 +65,9 @@ trait AdminControllerTrait
     /**
      * @param Request $request
      *
-     * @return void
+     * @return LegacyControllerBridgeInterface
      */
-    public function initControllerConfiguration(Request $request): void
+    public function initLegacyControllerBridge(Request $request): LegacyControllerBridgeInterface
     {
         $legacyControllerName = $request->attributes->get('_legacy_controller');
         $tabId = Tab::getIdFromClassName($legacyControllerName);
@@ -74,18 +79,18 @@ trait AdminControllerTrait
             ));
         }
 
-        $this->controllerConfiguration = $this->getControllerConfigurationFactory()->create(
+        $controllerConfiguration = $this->getControllerConfigurationFactory()->create(
             $tabId,
             get_class($this),
             $legacyControllerName,
             $this->getTableName()
         );
 
-        $this->php_self = get_class($this);
-        $this->multishop_context = $this->controllerConfiguration->multishopContext;
+        $this->legacyControllerBridge = new LegacyControllerBridge($this->container, $controllerConfiguration);
+        $this->setLegacyCurrentIndex($controllerConfiguration);
+        $this->initToken($controllerConfiguration);
 
-        $this->setLegacyCurrentIndex($legacyControllerName);
-        $this->initToken();
+        return $this->legacyControllerBridge;
     }
 
     private function getControllerConfigurationFactory(): ControllerConfigurationFactory
@@ -97,36 +102,26 @@ trait AdminControllerTrait
     }
 
     /**
-     * @param string $legacyControllerName
+     * @param ControllerConfiguration $controllerConfiguration
      *
      * @return void
      */
-    private function setLegacyCurrentIndex(string $legacyControllerName): void
+    private function setLegacyCurrentIndex(ControllerConfiguration $controllerConfiguration): void
     {
-        if (!isset($this->controllerConfiguration)) {
-            throw new BridgeException('controllerConfiguration must be initialized first', get_called_class());
-        }
-
-        $legacyCurrentIndex = 'index.php' . '?controller=' . $legacyControllerName;
+        $legacyCurrentIndex = 'index.php' . '?controller=' . $controllerConfiguration->controllerNameLegacy;
         if ($back = Tools::getValue('back')) {
             $legacyCurrentIndex .= '&back=' . urlencode($back);
         }
 
-        $this->controllerConfiguration->legacyCurrentIndex = $legacyCurrentIndex;
+        $controllerConfiguration->legacyCurrentIndex = $legacyCurrentIndex;
     }
 
     /**
      * @return void
      */
-    private function initToken(): void
+    private function initToken(ControllerConfiguration $controllerConfiguration): void
     {
-        if (!isset($this->controllerConfiguration)) {
-            throw new BridgeException('controllerConfiguration must be initialized first');
-        }
-
-        $controllerConfiguration = $this->controllerConfiguration;
-
-        $this->controllerConfiguration->token = Tools::getAdminToken(
+        $controllerConfiguration->token = Tools::getAdminToken(
             $controllerConfiguration->controllerNameLegacy .
             (int) $controllerConfiguration->id .
             (int) $controllerConfiguration->user->getData()->id

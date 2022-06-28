@@ -29,7 +29,7 @@ namespace PrestaShopBundle\Bridge\AdminController;
 /**
  * This interface will be shared with legacy and expose legacy methods needed for modules.
  */
-interface LegacyListControllerBridgeInterface
+interface BridgeListControllerInterface
 {
     /**
      * Get position identifier for legacy list request.
