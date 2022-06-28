@@ -26,7 +26,7 @@ class MyAccount extends FOBasePage {
     this.accountVouchersLink = '#discounts-link';
     this.merchandiseReturnsLink = '#returns-link';
     this.successMessageAlert = '#notifications article.alert-success';
-    this.logoutLink = '#main footer a[href*="mylogout"]';
+    this.logoutFooterLink = '#main footer a[href*="mylogout"]';
   }
 
   /*
@@ -96,7 +96,7 @@ class MyAccount extends FOBasePage {
    * @returns {Promise<void>}
    */
   async logout(page) {
-    await this.clickAndWaitForNavigation(page, this.logoutLink);
+    await this.clickAndWaitForNavigation(page, this.logoutFooterLink);
   }
 }
 
