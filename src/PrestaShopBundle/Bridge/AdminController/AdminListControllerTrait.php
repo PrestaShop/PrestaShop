@@ -40,15 +40,7 @@ use PrestaShopBundle\Bridge\Helper\HelperListConfiguration;
 use PrestaShopBundle\Bridge\Helper\ResetFiltersHelper;
 
 /**
- * This trait contains the principal methods you need when you want to migrate a controller horizontally.
- *
- * This trait adds methods to:
- *     - add a general action
- *     - add a specific action to list
- *     - add a field to a controller
- *     - get reset filter helpers
- *     - get filter helpers
- *     - get helper list bridge
+ * Contains the principal methods you need to horizontally migrate a controller which has a list.
  */
 trait AdminListControllerTrait
 {

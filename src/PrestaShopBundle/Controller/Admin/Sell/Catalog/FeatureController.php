@@ -89,7 +89,7 @@ class FeatureController extends FrameworkBundleAdminController implements Legacy
     /**
      * {@inheritdoc}
      */
-    public function getTable(): string
+    public function getTableName(): string
     {
         return 'feature';
     }
@@ -125,7 +125,7 @@ class FeatureController extends FrameworkBundleAdminController implements Legacy
     {
         $this->buildGenericAction();
         $helperListConfiguration = $this->get('prestashop.core.bridge.helper_list_configuration_factory')->create(
-            $this->getTable(),
+            $this->getTableName(),
             $this->getClassName(),
             $this->controllerConfiguration,
             $this->getIdentifier(),

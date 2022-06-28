@@ -26,12 +26,16 @@
 
 namespace PrestaShopBundle\Bridge\AdminController;
 
+use Symfony\Component\HttpFoundation\Request;
+
 /**
  * This interface will be shared with legacy and expose legacy methods needed for modules.
  */
 interface LegacyControllerBridgeInterface
 {
     const DEFAULT_THEME = 'default';
+
+    public function initControllerConfiguration(Request $request): void;
 
     /**
      * Sets default media list for this controller.
@@ -91,7 +95,7 @@ interface LegacyControllerBridgeInterface
      *
      * @return string
      */
-    public function getTable(): string;
+    public function getTableName(): string;
 
     /**
      * Get legacy class object name.
