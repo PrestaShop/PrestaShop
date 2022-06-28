@@ -32,7 +32,6 @@ use Currency;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShopBundle\Form\Admin\Type\IconButtonType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -119,18 +118,11 @@ class PricingType extends TranslatorAwareType
                 'icon' => 'visibility',
                 'label' => $this->trans('Show catalog price rules', 'Admin.Catalog.Feature'),
             ])
-            ->add('hide_catalog_price_rules', IconButtonType::class, [
-                'icon' => 'visibility_off',
-                'attr' => [
-                    'class' => 'd-none btn-default',
-                ],
-                'label' => $this->trans('Hide catalog price rules', 'Admin.Catalog.Feature'),
-            ])
             ->add('catalog_price_rules', CatalogPriceRulesType::class, [
                 'label' => $this->trans('Catalog price rules', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
                 'attr' => [
-                  'data-catalog-price-url' => $catalogPriceRuleLink,
+                    'data-catalog-price-url' => $catalogPriceRuleLink,
                 ],
                 'row_attr' => [
                     'class' => 'd-none',

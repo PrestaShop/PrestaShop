@@ -100,12 +100,11 @@ export default class SpecificPricesManager {
     );
 
     const showCatalogPriceRulesButton = document.querySelector<HTMLElement>(CatalogPriceRulesMap.showCatalogPriceRules);
-    const hideCatalogPriceRulesButton = document.querySelector<HTMLElement>(CatalogPriceRulesMap.hideCatalogPriceRules);
     const catalogPriceRulesContainer = document.querySelector<HTMLElement>(CatalogPriceRulesMap.blockContainer);
 
     let listRendered = false;
 
-    if (showCatalogPriceRulesButton === null || hideCatalogPriceRulesButton === null || catalogPriceRulesContainer === null) {
+    if (showCatalogPriceRulesButton === null || catalogPriceRulesContainer === null) {
       return;
     }
 
@@ -118,7 +117,6 @@ export default class SpecificPricesManager {
 
     showCatalogPriceRulesButton.addEventListener('click', () => {
       formContainer.classList.remove('d-none');
-      hideCatalogPriceRulesButton.classList.remove('d-none');
       showCatalogPriceRulesButton.classList.add('d-none');
       if (!listRendered) {
         catalogPriceRulePaginator.paginate(1);
@@ -126,13 +124,6 @@ export default class SpecificPricesManager {
         priceRuleRenderer.toggleListVisibility(true);
       }
       listRendered = true;
-    });
-
-    hideCatalogPriceRulesButton.addEventListener('click', () => {
-      priceRuleRenderer.toggleListVisibility(false);
-      formContainer.classList.add('d-none');
-      hideCatalogPriceRulesButton.classList.add('d-none');
-      showCatalogPriceRulesButton.classList.remove('d-none');
     });
   }
 
