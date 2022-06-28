@@ -574,20 +574,9 @@ class AdminControllerCore extends Controller
             $this->can_import = true;
         }
 
-        // searchConfController is called after original controller is called, and it has no request info
-        // to stop it from overriding metadata we need to skip smarty assign
-        if ($this instanceof AdminSearchConfController) {
-            return;
-        }
-
-        $container = SymfonyContainer::getInstance();
-        /** @var JsRouterMetadataExtension $jsRouterMetadataExtension */
-        $jsRouterMetadataExtension = $container->get('prestashop.bundle.twig.extension.js_router_metadata_extension');
-
         $this->context->smarty->assign([
             'context_mode' => $this->context->mode,
             'can_import' => $this->can_import,
-            'js_router_metadata' => $jsRouterMetadataExtension->getJsRouterMetadata(),
         ]);
     }
 
@@ -2724,6 +2713,20 @@ class AdminControllerCore extends Controller
             'prestashop' => [
                 'debug' => _PS_MODE_DEV_,
             ],
+        ]);
+
+        $container = SymfonyContainer::getInstance();
+        /** @var JsRouterMetadataExtension $jsRouterMetadataExtension */
+        $jsRouterMetadataExtension = $container->get('prestashop.bundle.twig.extension.js_router_metadata_extension');
+
+        $metaData = $jsRouterMetadataExtension->getJsRouterMetadata();
+        $this->context->smarty->assign([
+            'context_mode' => $this->context->mode,
+            'can_import' => $this->can_import,
+            'js_router_metadata' => [
+                'base_url' => __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_),
+                'token' => $metaData['token']
+            ]
         ]);
 
         // Execute Hook AdminController SetMedia
