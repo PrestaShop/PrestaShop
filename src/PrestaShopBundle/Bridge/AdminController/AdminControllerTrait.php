@@ -24,60 +24,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
-
 namespace PrestaShopBundle\Bridge\AdminController;
 
 use PrestaShopBundle\Bridge\AdminController\Action\ActionInterface;
 use PrestaShopBundle\Bridge\AdminController\Action\HeaderToolbarAction;
-use PrestaShopBundle\Bridge\AdminController\Action\ListBulkAction;
-use PrestaShopBundle\Bridge\AdminController\Action\ListHeaderToolbarAction;
-use PrestaShopBundle\Bridge\AdminController\Action\ListRowAction;
-use PrestaShopBundle\Bridge\AdminController\Field\FieldInterface;
-use PrestaShopBundle\Bridge\Exception\NotAllowedActionTypeForListException;
 use PrestaShopBundle\Bridge\Exception\NotAllowedGenericActionTypeException;
-use PrestaShopBundle\Bridge\Helper\FiltersHelper;
-use PrestaShopBundle\Bridge\Helper\HelperListBridge;
-use PrestaShopBundle\Bridge\Helper\HelperListConfiguration;
-use PrestaShopBundle\Bridge\Helper\ResetFiltersHelper;
 
-/**
- * This trait contains the principal methods you need when you want to migrate a controller horizontally.
- *
- * This trait adds methods to:
- *     - add a general action
- *     - add a specific action to list
- *     - add a field to a controller
- *     - get reset filter helpers
- *     - get filter helpers
- *     - get helper list bridge
- */
 trait AdminControllerTrait
 {
-    /**
-     * @return ResetFiltersHelper
-     */
-    public function getResetFiltersHelper(): ResetFiltersHelper
-    {
-        return $this->get('prestashop.core.bridge.processor.reset_filters_helper');
-    }
-
-    /**
-     * @return FiltersHelper
-     */
-    public function getFiltersHelper(): FiltersHelper
-    {
-        return $this->get('prestashop.core.bridge.processor.filters_helper');
-    }
-
-    /**
-     * @return HelperListBridge
-     */
-    public function getHelperListBridge(): HelperListBridge
-    {
-        return $this->get('prestashop.core.bridge.helper_list_bridge');
-    }
-
     /**
      * This method add action for the page.
      *
@@ -94,48 +48,5 @@ trait AdminControllerTrait
         }
 
         throw new NotAllowedGenericActionTypeException(sprintf('This action %s doesn\'t exist', get_class($action)));
-    }
-
-    /**
-     * This method add action specific for the list.
-     *
-     * @param ActionInterface $action
-     * @param HelperListConfiguration $helperListConfiguration
-     *
-     * @return void
-     */
-    public function addActionList(ActionInterface $action, HelperListConfiguration $helperListConfiguration): void
-    {
-        if ($action instanceof ListBulkAction) {
-            $helperListConfiguration->bulkActions[$action->getLabel()] = $action->getConfig();
-
-            return;
-        }
-
-        if ($action instanceof ListRowAction) {
-            $helperListConfiguration->actions[] = $action->getLabel();
-
-            return;
-        }
-
-        if ($action instanceof ListHeaderToolbarAction) {
-            $helperListConfiguration->toolbarButton[$action->getLabel()] = $action->getConfig();
-
-            return;
-        }
-
-        throw new NotAllowedActionTypeForListException(sprintf('This action %s doesn\'t exist', get_class($action)));
-    }
-
-    /**
-     * This methods allow you to add field to your list.
-     *
-     * @param FieldInterface $field
-     *
-     * @return void
-     */
-    public function addListField(FieldInterface $field, HelperListConfiguration $helperListConfiguration): void
-    {
-        $helperListConfiguration->fieldsList[$field->getLabel()] = $field->getConfig();
     }
 }
