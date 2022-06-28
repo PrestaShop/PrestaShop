@@ -1748,6 +1748,17 @@ services:
     tags:
       - { name: form.type }
 
+  form.type.sell.product.extra_modules_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\ExtraModulesType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    arguments:
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.adapter.data_provider.module'
+      - '@prestashop.core.admin.module.repository'
+    tags:
+      - { name: form.type }
+
   form.type.sell.product.footer_type:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\FooterType'
     parent: 'form.type.translatable.aware'
