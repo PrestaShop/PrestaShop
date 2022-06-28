@@ -2715,17 +2715,21 @@ class AdminControllerCore extends Controller
         ]);
 
         $container = SymfonyContainer::getInstance();
-        /** @var JsRouterMetadataExtension $jsRouterMetadataExtension */
-        $jsRouterMetadataExtension = $container->get('prestashop.bundle.twig.extension.js_router_metadata_extension');
+        $token = false;
+        if ($container) {
+            /** @var JsRouterMetadataExtension $jsRouterMetadataExtension */
+            $jsRouterMetadataExtension = $container->get('prestashop.bundle.twig.extension.js_router_metadata_extension');
+            $metaData = $jsRouterMetadataExtension->getJsRouterMetadata();
+            $token = $metaData['token'];
+        }
 
-        $metaData = $jsRouterMetadataExtension->getJsRouterMetadata();
         $this->context->smarty->assign([
             'context_mode' => $this->context->mode,
             'can_import' => $this->can_import,
             'js_router_metadata' => [
                 'base_url' => __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_),
-                'token' => $metaData['token']
-            ]
+                'token' => $token,
+            ],
         ]);
 
         // Execute Hook AdminController SetMedia
