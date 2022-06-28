@@ -51,6 +51,7 @@ class PricingType extends TranslatorAwareType
      * @var Currency
      */
     private $defaultCurrency;
+
     /**
      * @var LegacyContext
      */
