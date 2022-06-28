@@ -106,6 +106,9 @@ class EditProductFormType extends TranslatorAwareType
                 'product_id' => $productId,
             ])
             ->add('options', OptionsType::class)
+            ->add('extra_modules', ExtraModulesType::class, [
+                'product_id' => $productId,
+            ])
             ->add('footer', FooterType::class, [
                 'product_id' => $productId,
                 'active' => $options['active'],
