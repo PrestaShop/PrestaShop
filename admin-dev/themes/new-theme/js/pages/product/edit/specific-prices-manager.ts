@@ -128,7 +128,6 @@ export default class SpecificPricesManager {
       formContainer.classList.add('d-none');
       hideCatalogPriceRulesButton.classList.add('d-none');
       showCatalogPriceRulesButton.classList.remove('d-none');
-
     });
   }
 
