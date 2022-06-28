@@ -35,8 +35,6 @@ use PrestaShopBundle\Bridge\AdminController\ControllerConfigurationFactory;
 use PrestaShopBundle\Bridge\AdminController\LegacyControllerBridgeInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
-use Tab;
-use Tools;
 
 /**
  * Initialize controller by instantiating controller configuration,
@@ -94,33 +92,19 @@ class InitControllerListener
         }
 
         $controller = $event->getController()[0];
-        $controllerNameLegacy = $event->getRequest()->attributes->get('_legacy_controller');
 
         if (!is_string(get_class($controller))) {
             return;
         }
 
-        $controller->php_self = get_class($controller);
         $this->context->smarty->assign('link', $this->context->link);
 
         $this->context->currentLocale = $this->localeRepository->getLocale(
             $this->context->language->getLocale()
         );
 
-        $controller->controllerConfiguration = $this->configurationFactory->create(
-            Tab::getIdFromClassName(
-                $controllerNameLegacy
-            ),
-            get_class($controller),
-            $controllerNameLegacy,
-            $controller->getTable()
-        );
-
-        $controller->multishop_context = $controller->controllerConfiguration->multishopContext;
+        $controller->initControllerConfiguration($event->getRequest());
         $this->context->controller = $controller;
-
-        $this->setLegacyCurrentIndex($controller, $event->getRequest()->attributes->get('_legacy_controller'));
-        $this->initToken($controller, $event->getRequest());
     }
 
     /**
@@ -139,44 +123,5 @@ class InitControllerListener
         }
 
         return true;
-    }
-
-    /**
-     * @param LegacyControllerBridgeInterface $controller
-     * @param string $legacyController
-     *
-     * @return void
-     */
-    private function setLegacyCurrentIndex(LegacyControllerBridgeInterface $controller, string $legacyController): void
-    {
-        if (!property_exists($controller, 'controllerConfiguration')) {
-            throw new \Exception(sprintf('Child class %s failed to define controllerConfiguration property', get_called_class()));
-        }
-
-        $legacyCurrentIndex = 'index.php' . '?controller=' . $legacyController;
-        if ($back = Tools::getValue('back')) {
-            $legacyCurrentIndex .= '&back=' . urlencode($back);
-        }
-
-        $controller->controllerConfiguration->legacyCurrentIndex = $legacyCurrentIndex;
-    }
-
-    /**
-     * @param LegacyControllerBridgeInterface $controller
-     * @param Request $request
-     *
-     * @return void
-     */
-    private function initToken(LegacyControllerBridgeInterface $controller, Request $request)
-    {
-        if (!property_exists($controller, 'controllerConfiguration')) {
-            throw new \Exception(sprintf('Child class %s failed to define controllerConfiguration property', get_called_class()));
-        }
-
-        $controllerConfiguration = $controller->controllerConfiguration;
-
-        $controller->controllerConfiguration->token = Tools::getAdminToken(
-            $controllerConfiguration->controllerNameLegacy . (int) $controllerConfiguration->id . (int) $controllerConfiguration->user->getData()->id
-        );
     }
 }
