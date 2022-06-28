@@ -41,6 +41,13 @@ class CatalogPriceRulesType extends TranslatorAwareType
      */
     private $router;
 
+    /**
+     * CatalogPriceRulesType constructor.
+     *
+     * @param TranslatorInterface $translator
+     * @param array<string> $locales
+     * @param Router $router
+     */
     public function __construct(TranslatorInterface $translator, array $locales, Router $router)
     {
         parent::__construct($translator, $locales);
