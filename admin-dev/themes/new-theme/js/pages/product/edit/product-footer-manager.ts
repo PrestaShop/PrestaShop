@@ -39,7 +39,7 @@ export default class ProductFooterManager {
         {
           id: modalId,
           confirmTitle: $footerButton.data('modal-title'),
-          confirmMessage: $footerButton.data('modal-message'),
+          confirmMessage: $footerButton.data('modal-message') ?? '',
           confirmButtonLabel: $footerButton.data('modal-apply'),
           closeButtonLabel: $footerButton.data('modal-cancel'),
           confirmButtonClass: $footerButton.data('confirm-button-class'),
