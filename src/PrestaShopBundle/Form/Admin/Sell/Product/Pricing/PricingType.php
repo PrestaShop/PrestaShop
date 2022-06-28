@@ -74,6 +74,10 @@ class PricingType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        /**
+         * %catalog_price_rule_id% can't be used in this function, because getAdminLink adds uneeded stuff to % while creating url
+         * That's why catalog_price_rule_id is used and then string repalced.
+         */
         $catalogPriceRuleLink = $this->legacyContext->getAdminLink('AdminSpecificPriceRule', true, ['updatespecific_price_rule' => '', 'id_specific_price_rule' => 'catalog_price_rule_id']);
         /** Adding % to make link more unique */
         $catalogPriceRuleLink = str_replace('catalog_price_rule_id', '%catalog_price_rule_id%', $catalogPriceRuleLink);
