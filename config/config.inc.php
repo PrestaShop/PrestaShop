@@ -221,8 +221,30 @@ if (defined('_PS_ADMIN_DIR_')) {
 if (isset($cookie->id_lang) && $cookie->id_lang) {
     $language = new Language($cookie->id_lang);
 }
-if (!isset($language) || !Validate::isLoadedObject($language) || !$language->isAssociatedToShop()) {
+
+$isNotValidLanguage = !isset($language) || !Validate::isLoadedObject($language);
+// `true` if language is defined from multishop or backoffice (`$employee` variable defined) session
+$isLanguageDefinedFromSession = (isset($language) && $language->isAssociatedToShop()) || defined('_PS_ADMIN_DIR_');
+
+$useDefaultLanguage = $isNotValidLanguage || !$isLanguageDefinedFromSession;
+if ($useDefaultLanguage) {
+
+    // Default value for most cases
     $language = new Language(Configuration::get('PS_LANG_DEFAULT'));
+
+    // if `PS_LANG_DEFAULT` not a valid language for current shop then 
+    // use first valid language of the shop as default language.
+    if($language->isMultishop() && !$language->isAssociatedToShop()) {
+        $shopLanguages = $language->getLanguages(true, Context::getContext()->shop->id, false);
+        
+        if(isset($shopLanguages[0]['id_lang'])) {
+            $shopDefaultLanguage = new Language($shopLanguages[0]['id_lang']);
+
+            if(Validate::isLoadedObject($language)) {
+                $language = $shopDefaultLanguage;
+            }
+        }
+    }
 }
 
 $context->language = $language;
