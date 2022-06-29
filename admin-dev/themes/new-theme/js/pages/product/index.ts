@@ -23,7 +23,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import CreateProductModal from '@pages/product/components/create-product-modal';
 import CategoryTreeFilter from '@pages/product/components/categories/category-tree-filter';
 
 const {$} = window;
@@ -42,7 +41,6 @@ $(() => {
   grid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
   grid.addExtension(new window.prestashop.component.GridExtensions.AsyncToggleColumnExtension());
 
-  new CreateProductModal();
   grid.addExtension(new window.prestashop.component.GridExtensions.PositionExtension(grid));
 
   new CategoryTreeFilter();
