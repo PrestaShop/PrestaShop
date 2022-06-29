@@ -28,7 +28,7 @@ import RendererType from '@PSTypes/renderers';
 
 const CatalogPriceRuleMap = ProductMap.catalogPriceRule;
 
-export default class CatalogPriceRuleRenderer implements RendererType{
+export default class CatalogPriceRuleRenderer implements RendererType {
   private eventEmitter: EventEmitter;
 
   private listContainer: HTMLElement
@@ -55,6 +55,7 @@ export default class CatalogPriceRuleRenderer implements RendererType{
     const trTemplateContainer = this.listContainer.querySelector(CatalogPriceRuleMap.listRowTemplate) as HTMLScriptElement;
     const rowContainer = document.querySelector(CatalogPriceRuleMap.catalogPriceRuleRow) as HTMLElement;
     const editCatalogPriceRuleUrl = rowContainer.dataset.catalogPriceUrl;
+
     if (!editCatalogPriceRuleUrl) {
       return;
     }

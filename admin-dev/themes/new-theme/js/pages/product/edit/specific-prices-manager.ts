@@ -23,6 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+import PaginatedCatalogPriceRulesService from '@pages/product/services/paginated-catalog-price-rules-service';
+import CatalogPriceRuleRenderer from '@pages/product/components/catalog-price-rule/catalog-price-rule-renderer';
 import {FormIframeModal} from '@components/modal';
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
@@ -34,10 +36,7 @@ import FormFieldDisabler from '@components/form/form-field-disabler';
 import {isUndefined} from '@PSTypes/typeguard';
 import PaginatedSpecificPricesService from '@pages/product/services/paginated-specific-prices-service';
 import DynamicPaginator from '@components/pagination/dynamic-paginator';
-
 import ClickEvent = JQuery.ClickEvent;
-import PaginatedCatalogPriceRulesService from "@pages/product/services/paginated-catalog-price-rules-service";
-import CatalogPriceRuleRenderer from "@pages/product/components/catalog-price-rule/catalog-price-rule-renderer";
 
 const SpecificPriceMap = ProductMap.specificPrice;
 const CatalogPriceRulesMap = ProductMap.catalogPriceRule;

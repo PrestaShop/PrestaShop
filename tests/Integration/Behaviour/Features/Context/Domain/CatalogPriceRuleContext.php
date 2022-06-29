@@ -99,7 +99,7 @@ class CatalogPriceRuleContext extends AbstractDomainFeatureContext
             );
         }
 
-        /** isTaxIncluded can't be accessed by property accessor */
+        /* isTaxIncluded can't be accessed by property accessor */
         Assert::assertSame(
             $expectedItem->isTaxIncluded(),
             $actualItem->isTaxIncluded(),
@@ -129,14 +129,14 @@ class CatalogPriceRuleContext extends AbstractDomainFeatureContext
                 Assert::assertSame(
                     $expectedDateTime,
                     $actualDateTime,
-                    'Unexpected specific price date time'
+                    'Unexpected catalog price rule date time'
                 );
                 continue;
             }
             Assert::assertSame(
                 $expectedDateTime->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
                 $actualDateTime->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
-                'Unexpected specific price date time'
+                'Unexpected catalog price rule date time'
             );
         }
     }
@@ -164,7 +164,7 @@ class CatalogPriceRuleContext extends AbstractDomainFeatureContext
         Assert::assertEquals(
             $transformedList->getTotalCatalogPriceRulesCount(),
             $actualList->getTotalCatalogPriceRulesCount(),
-            'Unexpected count of specific prices for listing'
+            'Unexpected count of catalog price rules for listing'
         );
         $actualCatalogPriceRules = $actualList->getCatalogPriceRules();
         foreach ($transformedList->getCatalogPriceRules() as $key => $expectedItem) {
@@ -203,7 +203,7 @@ class CatalogPriceRuleContext extends AbstractDomainFeatureContext
                 Assert::assertSame(
                     $expectedDateTime->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
                     $actualDateTime->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
-                    'Unexpected specific price date time'
+                    'Unexpected catalog price rule date time'
                 );
             }
         }
@@ -246,14 +246,14 @@ class CatalogPriceRuleContext extends AbstractDomainFeatureContext
         }
 
         if (ctype_digit($dataRows[$fieldId])) {
-            return (int)$dataRows[$fieldId];
+            return (int) $dataRows[$fieldId];
         }
 
         if (!$this->getSharedStorage()->exists($dataRows[$fieldId])) {
             throw new RuntimeException(sprintf('Trying to access a non saved id by key %s', $dataRows[$fieldId]));
         }
 
-        return (int)$this->getSharedStorage()->get($dataRows[$fieldId]);
+        return (int) $this->getSharedStorage()->get($dataRows[$fieldId]);
     }
 
     /**
@@ -266,6 +266,7 @@ class CatalogPriceRuleContext extends AbstractDomainFeatureContext
     public function transformCatalogPriceRule(TableNode $tableNode): EditableCatalogPriceRule
     {
         $dataRows = $tableNode->getRowsHash();
+
         return new EditableCatalogPriceRule(
             new CatalogPriceRuleId(42),
             $dataRows['name'],
@@ -283,7 +284,6 @@ class CatalogPriceRuleContext extends AbstractDomainFeatureContext
     }
 
     /**
-     *
      * @param TableNode $tableNode
      *
      * @return CatalogPriceRuleList

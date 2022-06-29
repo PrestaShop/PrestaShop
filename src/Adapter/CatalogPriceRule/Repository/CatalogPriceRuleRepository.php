@@ -65,7 +65,7 @@ class CatalogPriceRuleRepository
         ?int $limit = null,
         ?int $offset = null
     ): array {
-        $qb = $this->getSpecificPricesQueryBuilder($langId)
+        $qb = $this->getCatalogPriceRulesQueryBuilder($langId)
             ->select('spr.id_specific_price_rule, spr.name as specific_price_rule_name, currency_lang.symbol, country_lang.name as lang_name, shop.name as shop_name, group_lang.name as group_name, spr.from_quantity, spr.reduction_type, spr.reduction, spr.from, spr.to')
             ->setFirstResult($offset)
             ->setMaxResults($limit)
@@ -83,14 +83,14 @@ class CatalogPriceRuleRepository
      */
     public function countCatalogPriceRules(LanguageId $langId): int
     {
-        $qb = $this->getSpecificPricesQueryBuilder($langId)
+        $qb = $this->getCatalogPriceRulesQueryBuilder($langId)
             ->select('COUNT(spr.id_specific_price_rule) AS total_catalog_price_rules')
         ;
 
         return (int) $qb->execute()->fetch()['total_catalog_price_rules'];
     }
 
-    private function getSpecificPricesQueryBuilder(LanguageId $langId): QueryBuilder
+    private function getCatalogPriceRulesQueryBuilder(LanguageId $langId): QueryBuilder
     {
         return $this->connection->createQueryBuilder()
             ->from($this->dbPrefix . 'specific_price_rule', 'spr')
