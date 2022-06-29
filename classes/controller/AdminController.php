@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
-use PrestaShopBundle\Twig\Extension\JsRouterMetadataExtension;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class AdminControllerCore extends Controller
@@ -2715,14 +2714,10 @@ class AdminControllerCore extends Controller
             ],
         ]);
 
-        $container = SymfonyContainer::getInstance();
-        $token = false;
-        if ($container) {
-            /** @var JsRouterMetadataExtension $jsRouterMetadataExtension */
-            $jsRouterMetadataExtension = $container->get('prestashop.bundle.twig.extension.js_router_metadata_extension');
-            $metaData = $jsRouterMetadataExtension->getJsRouterMetadata();
-            $token = $metaData['token'];
-        }
+        $username = $this->get('prestashop.user_provider')->getUsername();
+        $token = $this->get('security.csrf.token_manager')
+            ->getToken($username)
+            ->getValue();
 
         $this->context->smarty->assign([
             'context_mode' => $this->context->mode,
