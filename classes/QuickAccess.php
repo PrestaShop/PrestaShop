@@ -112,7 +112,7 @@ class QuickAccessCore extends ObjectModel
                 if ($quick['link'] === 'index.php/sell/catalog/products/new') {
                     //if new product page feature is enabled we create new product v2 modal popup
                     if (self::shouldRedirectToV2()) {
-                        $quickAccess[$index]['link'] = Context::getContext()->link->getBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . 'index.php/sell/catalog/products-v2/create';
+                        $quickAccess[$index]['link'] = Context::getContext()->link->getAdminBaseLink() . basename(_PS_ADMIN_DIR_) . '/' . 'index.php/sell/catalog/products-v2/create';
                         $quickAccess[$index]['class'] = 'new-product';
                     }
                 }
