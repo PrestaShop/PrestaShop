@@ -98,6 +98,7 @@ class EditProductFormType extends TranslatorAwareType
             ])
             ->add('stock', StockType::class, [
                 'product_id' => $productId,
+                'product_type' => $options['product_type'],
                 'virtual_product_file_id' => $options['virtual_product_file_id'],
             ])
             ->add('shipping', ShippingType::class)
