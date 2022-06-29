@@ -144,7 +144,7 @@ final class Currency implements CurrencyInterface
             throw new LocalizationException(sprintf('Unknown display name: "%s"', print_r($countContext, true)));
         }
 
-        return $this->displayNames[$countContext];
+        return $this->displayNames[$countContext] ?? $this->isoCode;
     }
 
     /**
