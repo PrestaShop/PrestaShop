@@ -1,0 +1,7 @@
+admin_groups_index:
+  path: /
+  methods: [ GET, POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Configure\ShopParameters\GroupController::indexAction
+    _legacy_controller: AdminGroups
+#    _legacy_link: AdminGroups

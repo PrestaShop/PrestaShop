@@ -41,3 +41,7 @@ _search_engines:
 _title:
   resource: "title.yml"
   prefix: /title/
+
+_groups:
+  resource: "groups.yml"
+  prefix: /groups/
