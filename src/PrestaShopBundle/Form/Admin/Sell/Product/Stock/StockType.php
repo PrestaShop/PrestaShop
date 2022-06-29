@@ -89,12 +89,14 @@ class StockType extends TranslatorAwareType
             ->setDefaults([
                 'label' => false,
                 'required' => false,
-                'product_id' => null,
                 'virtual_product_file_id' => null,
                 // Suppliers can be removed so there might be extra data during type switching
                 'allow_extra_fields' => true,
             ])
-            ->setAllowedTypes('product_id', ['null', 'int'])
+            ->setRequired([
+                'product_id',
+            ])
+            ->setAllowedTypes('product_id', 'int')
             ->setAllowedTypes('virtual_product_file_id', ['int', 'null'])
         ;
     }

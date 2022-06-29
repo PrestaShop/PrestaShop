@@ -1726,6 +1726,7 @@ services:
     public: true
     arguments:
       - '@prestashop.adapter.shop.url.product_provider'
+      - '@prestashop.adapter.shop.url.product_preview_provider'
       - '@router'
     tags:
       - { name: form.type }

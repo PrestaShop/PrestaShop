@@ -56,9 +56,11 @@ class CombinationManagerType extends TranslatorAwareType
             ->setDefaults([
                 'label' => $this->trans('Manage product combinations', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
-                'product_id' => null,
             ])
-            ->setAllowedTypes('product_id', ['null', 'int'])
+            ->setRequired([
+                'product_id',
+            ])
+            ->setAllowedTypes('product_id', 'int')
         ;
     }
 }

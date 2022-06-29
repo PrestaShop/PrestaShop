@@ -27,30 +27,37 @@ import ConfirmModal from '@components/modal';
 import ProductMap from '@pages/product/product-map';
 
 export default class ProductFooterManager {
-  $deleteProductButton: JQuery;
-
   constructor() {
-    this.$deleteProductButton = $(ProductMap.footer.deleteProductButton);
-    this.$deleteProductButton.click(() => this.deleteProduct());
+    this.initFooterButton(ProductMap.footer.deleteProductButton, ProductMap.footer.deleteProductModalId);
+    this.initFooterButton(ProductMap.footer.duplicateProductButton, ProductMap.footer.duplicateProductModalId);
   }
 
-  private deleteProduct(): void {
-    const modal = new (ConfirmModal as any)(
-      {
-        id: 'modal-confirm-delete-product',
-        confirmTitle: this.$deleteProductButton.data('modal-title'),
-        confirmMessage: this.$deleteProductButton.data('modal-message'),
-        confirmButtonLabel: this.$deleteProductButton.data('modal-apply'),
-        closeButtonLabel: this.$deleteProductButton.data('modal-cancel'),
-        confirmButtonClass: 'btn-danger',
-        closable: true,
-      },
-      () => {
-        const removeUrl = this.$deleteProductButton.data('removeUrl');
-        $(ProductMap.productFormSubmitButton).prop('disabled', true);
-        window.location = removeUrl;
-      },
-    );
-    modal.show();
+  private initFooterButton(buttonId: string, modalId: string): void {
+    const $footerButton = $(buttonId);
+    $footerButton.on('click', () => {
+      const modal = new ConfirmModal(
+        {
+          id: modalId,
+          confirmTitle: $footerButton.data('modal-title'),
+          confirmMessage: $footerButton.data('modal-message') ?? '',
+          confirmButtonLabel: $footerButton.data('modal-apply'),
+          closeButtonLabel: $footerButton.data('modal-cancel'),
+          confirmButtonClass: $footerButton.data('confirm-button-class'),
+          closable: true,
+        },
+        () => {
+          const buttonUrl = $footerButton.data('buttonUrl');
+          $(ProductMap.productFormSubmitButton).prop('disabled', true);
+
+          const form = document.createElement('form');
+          form.setAttribute('method', 'POST');
+          form.setAttribute('action', buttonUrl);
+          form.setAttribute('style', 'display: none;');
+          document.body.appendChild(form);
+          form.submit();
+        },
+      );
+      modal.show();
+    });
   }
 }

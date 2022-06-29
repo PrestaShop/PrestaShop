@@ -50,7 +50,7 @@ export default {
     },
   },
   create: {
-    newProductButton: 'a.new-product',
+    newProductButton: '.new-product-button',
     createModalSelector: '#product_type',
   },
   invalidField: '.is-invalid',
@@ -226,6 +226,12 @@ export default {
   footer: {
     previewUrlButton: '.preview-url-button',
     deleteProductButton: '.delete-product-button',
+    deleteProductModalId: 'delete-product-footer-modal',
+    duplicateProductButton: '.duplicate-product-button',
+    duplicateProductModalId: 'duplicate-product-footer-modal',
+    newProductButton: '.new-product-button',
+    goToCatalogButton: '.go-to-catalog-button',
+    cancelButton: '.cancel-button',
   },
   categories: {
     categoriesContainer: '#product_description_categories',

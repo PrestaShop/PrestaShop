@@ -61,7 +61,9 @@ class CombinationImagesChoiceType extends TranslatorAwareType
     {
         parent::configureOptions($resolver);
         $resolver
-            ->setRequired('product_id')
+            ->setRequired([
+                'product_id',
+            ])
             ->setAllowedTypes('product_id', 'int')
             ->setDefaults([
                 'label' => $this->trans('Images', 'Admin.Global'),
