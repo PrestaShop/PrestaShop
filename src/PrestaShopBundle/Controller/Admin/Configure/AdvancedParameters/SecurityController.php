@@ -68,6 +68,7 @@ class SecurityController extends FrameworkBundleAdminController
     public function indexAction(Request $request): Response
     {
         $generalForm = $this->getGeneralFormHandler()->getForm();
+        $passwordPolicyForm = $this->getPasswordPolicyFormHandler()->getForm();
 
         return $this->render(
             '@PrestaShop/Admin/Configure/AdvancedParameters/Security/index.html.twig',
@@ -75,6 +76,7 @@ class SecurityController extends FrameworkBundleAdminController
                 'enableSidebar' => true,
                 'layoutHeaderToolbarBtn' => [],
                 'layoutTitle' => $this->trans('Security', 'Admin.Navigation.Menu'),
+                'passwordPolicyForm' => $passwordPolicyForm->createView(),
                 'generalForm' => $generalForm->createView(),
                 'multistoreInfoTip' => $this->trans(
                     'Note that this page is available in all shops context only, this is why your context has just switched.',
@@ -104,6 +106,26 @@ class SecurityController extends FrameworkBundleAdminController
             $request,
             $this->getGeneralFormHandler(),
             'actionAdminSecurityControllerPostProcessGeneralBefore'
+        );
+    }
+
+    /**
+     * Process the Security password policy configuration form.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))"
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function processPasswordPolicyFormAction(Request $request): RedirectResponse
+    {
+        return $this->processForm(
+            $request,
+            $this->getPasswordPolicyFormHandler(),
+            'actionAdminSecurityControllerPostProcessPasswordPolicyBefore'
         );
     }
 
@@ -403,5 +425,13 @@ class SecurityController extends FrameworkBundleAdminController
     protected function getGeneralFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.adapter.security.general.form_handler');
+    }
+
+    /**
+     * @return FormHandlerInterface
+     */
+    protected function getPasswordPolicyFormHandler(): FormHandlerInterface
+    {
+        return $this->get('prestashop.adapter.security.password_policy.form_handler');
     }
 }

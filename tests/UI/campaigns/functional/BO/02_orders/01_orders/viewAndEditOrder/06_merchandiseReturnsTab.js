@@ -72,10 +72,10 @@ Post-condition:
  */
 describe('BO - Orders - View and edit order : Check merchandise returns tab', async () => {
   // Pre-condition: Create order by default customer
-  createOrderByCustomerTest(orderByCustomerData, baseContext);
+  createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_1`);
 
   // Pre-condition: Enable merchandise returns
-  enableMerchandiseReturns(baseContext);
+  enableMerchandiseReturns(`${baseContext}_preTest_2`);
 
   // before and after functions
   before(async function () {
@@ -93,7 +93,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
     });
 
     it('should go to \'Orders > Orders\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage1', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -106,7 +106,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
     });
 
     it('should filter the Orders table by the default customer and check the result', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterOrder', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'filterOrder1', baseContext);
 
       await ordersPage.filterOrders(page, 'input', 'customer', DefaultCustomer.lastName);
 
@@ -122,7 +122,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
     });
 
     it('should go to the first order page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToOrderPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToOrderPage1', baseContext);
 
       // View order
       await ordersPage.goToOrder(page, 1);
@@ -258,7 +258,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
 
   describe('Check the existence of the merchandise returns on \'Merchandise returns\' tab', async () => {
     it('should go to \'Orders > Orders\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage2', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -271,7 +271,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
     });
 
     it('should filter the Orders table by the default customer and check the result', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterOrder', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'filterOrder2', baseContext);
 
       await ordersPage.filterOrders(page, 'input', 'customer', DefaultCustomer.lastName);
 
@@ -280,7 +280,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
     });
 
     it('should go to the first order page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToOrderPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToOrderPage2', baseContext);
 
       // View order
       await ordersPage.goToOrder(page, 1);
@@ -304,7 +304,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
     });
 
     it('should check the merchandise returns details', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkCarrierDetails', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCarrierDetails1', baseContext);
 
       const result = await orderPageTabListBlock.getMerchandiseReturnsDetails(page);
       await Promise.all([
@@ -367,7 +367,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
 
     describe('Check the updated status of merchandise returns on view order page', async () => {
       it('should go to \'Orders > Orders\' page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToOrdersPage${index}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `goToOrdersPage0${index}`, baseContext);
 
         await dashboardPage.goToSubMenu(
           page,
@@ -380,7 +380,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
       });
 
       it('should filter the Orders table by the default customer and check the result', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `filterOrder${index}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `filterOrder0${index}`, baseContext);
 
         await ordersPage.filterOrders(page, 'input', 'customer', DefaultCustomer.lastName);
 
@@ -389,7 +389,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
       });
 
       it('should go to the first order page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToOrderPage${index}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `goToOrderPage0${index}`, baseContext);
 
         // View order
         await ordersPage.goToOrder(page, 1);
@@ -413,7 +413,7 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
       });
 
       it(`should check the merchandise returns status is '${test.args.status}'`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'checkCarrierDetails', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `checkCarrierDetails0${index}`, baseContext);
 
         const result = await orderPageTabListBlock.getMerchandiseReturnsDetails(page);
         await expect(result.status).to.equal(test.args.status);
@@ -471,5 +471,5 @@ describe('BO - Orders - View and edit order : Check merchandise returns tab', as
   });
 
   // Post-condition: Disable merchandise returns
-  disableMerchandiseReturns(baseContext);
+  disableMerchandiseReturns(`${baseContext}_postTest_1`);
 });

@@ -128,5 +128,5 @@ jobs:
           SYMFONY_DEPRECATIONS_HELPER: disabled
 
       - name: Test git versionned files unchanged
-        if: ${{ !startsWith(matrix.php, '8.') }} # composer.lock changes when updating phpunit version
+        if: ${{ !startsWith(matrix.php, '8.') }}  # composer.lock changes when updating phpunit version
         run: git diff --exit-code

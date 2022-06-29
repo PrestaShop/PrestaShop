@@ -127,6 +127,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
         if ($productForEditing->getType() === ProductType::TYPE_COMBINATIONS) {
             $productData['combinations'] = [
                 'availability' => [
+                    'out_of_stock_type' => $productData['stock']['availability']['out_of_stock_type'],
                     'available_now_label' => $productData['stock']['availability']['available_now_label'] ?? [],
                     'available_later_label' => $productData['stock']['availability']['available_later_label'] ?? [],
                 ],
@@ -240,6 +241,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
     {
         return [
             'type' => $productForEditing->getType(),
+            'initial_type' => $productForEditing->getType(),
             'name' => $productForEditing->getBasicInformation()->getLocalizedNames(),
             'cover_thumbnail' => $productForEditing->getCoverThumbnailUrl(),
         ];
@@ -389,7 +391,8 @@ class ProductFormDataProvider implements FormDataProviderInterface
                 'price_tax_excluded' => (float) (string) $productForEditing->getPricesInformation()->getPrice(),
                 'price_tax_included' => (float) (string) $productForEditing->getPricesInformation()->getPriceTaxIncluded(),
                 'tax_rules_group_id' => $productForEditing->getPricesInformation()->getTaxRulesGroupId(),
-                'ecotax' => (float) (string) $productForEditing->getPricesInformation()->getEcotax(),
+                'ecotax_tax_excluded' => (float) (string) $productForEditing->getPricesInformation()->getEcotax(),
+                'ecotax_tax_included' => (float) (string) $productForEditing->getPricesInformation()->getEcotaxTaxIncluded(),
             ],
             'on_sale' => $productForEditing->getPricesInformation()->isOnSale(),
             'wholesale_price' => (float) (string) $productForEditing->getPricesInformation()->getWholesalePrice(),

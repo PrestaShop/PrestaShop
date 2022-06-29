@@ -268,6 +268,9 @@ class CartCore extends ObjectModel
         if (!$this->id_shop) {
             $this->id_shop = Context::getContext()->shop->id;
         }
+        if (!$this->id_shop_group) {
+            $this->id_shop_group = Context::getContext()->shop->id_shop_group;
+        }
 
         $return = parent::add($autoDate, $nullValues);
         Hook::exec('actionCartSave', ['cart' => $this]);
@@ -881,7 +884,7 @@ class CartCore extends ObjectModel
         } else {
             $address_id = (int) $row['id_address_delivery'];
         }
-        if (!Address::addressExists($address_id)) {
+        if (!Address::addressExists($address_id, true)) {
             $address_id = null;
         }
 
@@ -3623,7 +3626,7 @@ class CartCore extends ObjectModel
         } else {
             $address_id = null;
         }
-        if (!Address::addressExists($address_id)) {
+        if (!Address::addressExists($address_id, true)) {
             $address_id = null;
         }
 

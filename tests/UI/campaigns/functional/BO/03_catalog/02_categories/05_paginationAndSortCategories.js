@@ -44,7 +44,7 @@ Post-condition:
  */
 describe('BO - Catalog - Categories : Pagination and sort categories table', async () => {
   // Pre-condition: Import list of categories
-  importFileTest(fileName, Data.entity, baseContext);
+  importFileTest(fileName, Data.entity, `${baseContext}_preTest_1`);
 
   // before and after functions
   before(async function () {
@@ -187,5 +187,5 @@ describe('BO - Catalog - Categories : Pagination and sort categories table', asy
   });
 
   // Pre-condition: Delete imported categories by bulk actions
-  bulkDeleteCategoriesTest(categoryData, baseContext);
+  bulkDeleteCategoriesTest(categoryData, `${baseContext}_postTest_1`);
 });

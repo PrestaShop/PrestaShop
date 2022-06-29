@@ -104,13 +104,20 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
         $qb
             ->select('p.`id_product`, p.`reference`')
-            ->addSelect('ps.`price` AS `price_tax_excluded`, ps.`active`')
+            ->addSelect('ps.`price` AS `price_tax_excluded`, ps.`ecotax` AS `ecotax_tax_excluded`, ps.`id_tax_rules_group`, ps.`active`')
             ->addSelect('pl.`name`, pl.`link_rewrite`')
             ->addSelect('cl.`name` AS `category`')
             ->addSelect('img_shop.`id_image`')
             ->addSelect('p.`id_tax_rules_group`')
             ->addSelect('pc.`position`, pc.`id_category`')
         ;
+
+        // When ecotax is enabled the real final price is the sum of price and ecotax so we fetch an extra alias column that is used for sorting
+        if ($this->configuration->getBoolean('PS_USE_ECOTAX')) {
+            $qb->addSelect('(ps.`price` + ps.`ecotax`) AS `final_price_tax_excluded`');
+        } else {
+            $qb->addSelect('(ps.`price` + ps.`ecotax`) AS `final_price_tax_excluded`');
+        }
 
         if ($this->configuration->getBoolean('PS_STOCK_MANAGEMENT')) {
             $qb->addSelect('sa.`quantity`');
@@ -216,12 +223,22 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
                 'p.`id_product`',
                 SqlFilters::MIN_MAX
             )
-            ->addFilter(
-                'price_tax_excluded',
+        ;
+
+        // When ecotax is enabled the real final price is the sum of price and ecotax so the filters must be setup accordingly
+        if ($this->configuration->getBoolean('PS_USE_ECOTAX')) {
+            $sqlFilters->addFilter(
+                'final_price_tax_excluded',
+                '(ps.`price` + ps.`ecotax`)',
+                SqlFilters::MIN_MAX
+            );
+        } else {
+            $sqlFilters->addFilter(
+                'final_price_tax_excluded',
                 'ps.`price`',
                 SqlFilters::MIN_MAX
-            )
-        ;
+            );
+        }
 
         if ($isStockManagementEnabled) {
             $sqlFilters
@@ -242,27 +259,26 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
             if ('active' === $filterName) {
                 $qb->andWhere('ps.`active` = :active');
                 $qb->setParameter('active', $filter);
-
-                continue;
             }
 
             if ('name' === $filterName) {
                 $qb->andWhere('pl.`name` LIKE :name');
                 $qb->setParameter('name', '%' . $filter . '%');
-
-                continue;
             }
 
             if ('reference' === $filterName) {
                 $qb->andWhere('p.`reference` LIKE :reference');
                 $qb->setParameter('reference', '%' . $filter . '%');
-
-                continue;
             }
 
             if ('category' === $filterName) {
                 $qb->andWhere('cl.`name` LIKE :category');
                 $qb->setParameter('category', '%' . $filter . '%');
+            }
+
+            if ('position' === $filterName) {
+                $qb->andWhere('pc.`position` = :position');
+                $qb->setParameter('position', $filter);
             }
         }
 

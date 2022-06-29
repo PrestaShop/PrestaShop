@@ -29,7 +29,9 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler;
 
 use Combination;
+use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
@@ -46,6 +48,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Image\ValueObject\ImageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
@@ -103,9 +106,9 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
     private $taxComputer;
 
     /**
-     * @var int
+     * @var Configuration
      */
-    private $countryId;
+    private $configuration;
 
     /**
      * @param CombinationRepository $combinationRepository
@@ -117,7 +120,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
      * @param NumberExtractor $numberExtractor
      * @param TaxComputer $taxComputer
      * @param int $contextLanguageId
-     * @param int $countryId
+     * @param Configuration $configuration
      */
     public function __construct(
         CombinationRepository $combinationRepository,
@@ -129,7 +132,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
         NumberExtractor $numberExtractor,
         TaxComputer $taxComputer,
         int $contextLanguageId,
-        int $countryId
+        Configuration $configuration
     ) {
         $this->combinationRepository = $combinationRepository;
         $this->combinationNameBuilder = $combinationNameBuilder;
@@ -140,7 +143,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
         $this->numberExtractor = $numberExtractor;
         $this->taxComputer = $taxComputer;
         $this->contextLanguageId = $contextLanguageId;
-        $this->countryId = $countryId;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -205,19 +208,54 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
      */
     private function getPrices(Combination $combination, Product $product): CombinationPrices
     {
-        $priceTaxExcluded = $this->numberExtractor->extract($combination, 'price');
-        $priceTaxIncluded = $this->taxComputer->computePriceWithTaxes(
-            $priceTaxExcluded,
-            new TaxRulesGroupId((int) $product->id_tax_rules_group),
-            new CountryId($this->countryId)
-        );
+        $taxEnabled = (bool) $this->configuration->get('PS_TAX', null, ShopConstraint::allShops());
+        $ecoTaxGroupId = (int) $this->configuration->get('PS_ECOTAX_TAX_RULES_GROUP_ID', null, ShopConstraint::allShops());
+        $defaultCountryId = (int) $this->configuration->get('PS_COUNTRY_DEFAULT', null, ShopConstraint::allShops());
+        $defaultCountryId = new CountryId($defaultCountryId);
+
+        $productTaxRulesGroupId = new TaxRulesGroupId((int) $product->id_tax_rules_group);
+
+        $impactPriceTaxExcluded = $this->numberExtractor->extract($combination, 'price');
+        $impactUnitPriceTaxExcluded = $this->numberExtractor->extract($combination, 'unit_price_impact');
+        $ecotaxTaxExcluded = $this->numberExtractor->extract($combination, 'ecotax');
+
+        if ($taxEnabled) {
+            $impactPriceTaxIncluded = $this->taxComputer->computePriceWithTaxes(
+                $impactPriceTaxExcluded,
+                $productTaxRulesGroupId,
+                $defaultCountryId
+            );
+
+            $impactUnitPriceTaxIncluded = $this->taxComputer->computePriceWithTaxes(
+                $impactUnitPriceTaxExcluded,
+                $productTaxRulesGroupId,
+                $defaultCountryId
+            );
+
+            $ecotaxTaxIncluded = $this->taxComputer->computePriceWithTaxes(
+                $ecotaxTaxExcluded,
+                new TaxRulesGroupId($ecoTaxGroupId),
+                $defaultCountryId
+            );
+            $productTaxRate = $this->taxComputer->getTaxRate($productTaxRulesGroupId, $defaultCountryId);
+        } else {
+            $impactPriceTaxIncluded = $impactPriceTaxExcluded;
+            $impactUnitPriceTaxIncluded = $impactUnitPriceTaxExcluded;
+            $ecotaxTaxIncluded = $ecotaxTaxExcluded;
+            $productTaxRate = new DecimalNumber('0');
+        }
 
         return new CombinationPrices(
-            $this->numberExtractor->extract($combination, 'ecotax'),
-            $priceTaxExcluded,
-            $priceTaxIncluded,
-            $this->numberExtractor->extract($combination, 'unit_price_impact'),
-            $this->numberExtractor->extract($combination, 'wholesale_price')
+            $impactPriceTaxExcluded,
+            $impactPriceTaxIncluded,
+            $impactUnitPriceTaxExcluded,
+            $impactUnitPriceTaxIncluded,
+            $ecotaxTaxExcluded,
+            $ecotaxTaxIncluded,
+            $this->numberExtractor->extract($combination, 'wholesale_price'),
+            $productTaxRate,
+            $this->numberExtractor->extract($product, 'price'),
+            $this->numberExtractor->extract($product, 'ecotax')
         );
     }
 

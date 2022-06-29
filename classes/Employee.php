@@ -114,7 +114,7 @@ class EmployeeCore extends ObjectModel
             'firstname' => ['type' => self::TYPE_STRING, 'validate' => 'isName', 'required' => true, 'size' => 255],
             'email' => ['type' => self::TYPE_STRING, 'validate' => 'isEmail', 'required' => true, 'size' => 255],
             'id_lang' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt', 'required' => true],
-            'passwd' => ['type' => self::TYPE_STRING, 'validate' => 'isPlaintextPassword', 'required' => true, 'size' => 255],
+            'passwd' => ['type' => self::TYPE_STRING, 'validate' => 'isHashedPassword', 'required' => true, 'size' => 255],
             'last_passwd_gen' => ['type' => self::TYPE_STRING],
             'active' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'id_profile' => ['type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true],
@@ -303,7 +303,7 @@ class EmployeeCore extends ObjectModel
      */
     public function getByEmail($email, $plaintextPassword = null, $activeOnly = true)
     {
-        if (!Validate::isEmail($email) || ($plaintextPassword != null && !Validate::isPlaintextPassword($plaintextPassword))) {
+        if (!Validate::isEmail($email)) {
             die(Tools::displayError());
         }
 

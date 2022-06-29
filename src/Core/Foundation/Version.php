@@ -223,23 +223,6 @@ class Version
     }
 
     /**
-     * Returns the current release version.
-     *
-     * @deprecated Since 1.7.6.0, use getPatchVersion();
-     *
-     * @return int
-     */
-    public function getReleaseVersion()
-    {
-        @trigger_error(
-            'getReleaseVersion() is deprecated since version 1.7.6.0 Use getPatchVersion() instead.',
-            E_USER_DEPRECATED
-        );
-
-        return $this->getPatchVersion();
-    }
-
-    /**
      * Returns the current pre release version (if any)
      *
      * @return string

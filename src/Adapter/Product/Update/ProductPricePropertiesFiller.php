@@ -29,6 +29,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Update;
 
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Util\Number\NumberExtractor;
 use Product;
 
@@ -43,12 +45,20 @@ class ProductPricePropertiesFiller
     private $numberExtractor;
 
     /**
+     * @var Configuration
+     */
+    private $configuration;
+
+    /**
      * @param NumberExtractor $numberExtractor
+     * @param Configuration $configuration
      */
     public function __construct(
-        NumberExtractor $numberExtractor
+        NumberExtractor $numberExtractor,
+        Configuration $configuration
     ) {
         $this->numberExtractor = $numberExtractor;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -59,11 +69,18 @@ class ProductPricePropertiesFiller
      * @param DecimalNumber|null $price
      * @param DecimalNumber|null $unitPrice
      * @param DecimalNumber|null $wholesalePrice
+     * @param ShopConstraint $shopConstraint
      *
      * @return string[] updatable properties
      */
-    public function fillWithPrices(Product $product, ?DecimalNumber $price, ?DecimalNumber $unitPrice, ?DecimalNumber $wholesalePrice): array
-    {
+    public function fillWithPrices(
+        Product $product,
+        ?DecimalNumber $price,
+        ?DecimalNumber $unitPrice,
+        ?DecimalNumber $wholesalePrice,
+        ?DecimalNumber $ecotax,
+        ShopConstraint $shopConstraint
+    ): array {
         $updatableProperties = [];
         if (null !== $wholesalePrice) {
             $product->wholesale_price = (float) (string) $wholesalePrice;
@@ -75,12 +92,19 @@ class ProductPricePropertiesFiller
             $updatableProperties[] = 'price';
         }
 
-        if (null !== $unitPrice) {
-            // When product price is zero unit price must be 0 as well
-            if ($product->price == 0) {
-                $unitPrice = new DecimalNumber('0');
-            }
+        if (null !== $ecotax) {
+            $product->ecotax = (float) (string) $ecotax;
+            $updatableProperties[] = 'ecotax';
+        }
 
+        // When product price is zero we force unit price to zero
+        $productPrice = $this->getProductFinalPrice($price, $ecotax, $product, $shopConstraint);
+        $currentUnitPrice = $unitPrice ?: $this->numberExtractor->extract($product, 'unit_price');
+        if ($productPrice->equalsZero() && !$currentUnitPrice->equalsZero()) {
+            $unitPrice = new DecimalNumber('0');
+        }
+
+        if (null !== $unitPrice) {
             $product->unit_price = (float) (string) $unitPrice;
             $updatableProperties[] = 'unit_price';
         }
@@ -94,6 +118,24 @@ class ProductPricePropertiesFiller
         return $updatableProperties;
     }
 
+    private function getProductFinalPrice(
+        ?DecimalNumber $price,
+        ?DecimalNumber $ecotax,
+        Product $product,
+        ShopConstraint $shopConstraint
+    ): DecimalNumber {
+        $price = $price ?: $this->numberExtractor->extract($product, 'price');
+
+        $ecotaxEnabled = (bool) $this->configuration->get('PS_USE_ECOTAX', null, $shopConstraint);
+        if ($ecotaxEnabled) {
+            $ecotax = $ecotax ?: $this->numberExtractor->extract($product, 'ecotax');
+        } else {
+            $ecotax = new DecimalNumber('0');
+        }
+
+        return $price->plus($ecotax);
+    }
+
     /**
      * @param Product $product
      * @param DecimalNumber|null $price
@@ -101,14 +143,11 @@ class ProductPricePropertiesFiller
      */
     private function fillUnitPriceRatio(Product $product, ?DecimalNumber $price, ?DecimalNumber $unitPrice): void
     {
-        if (null === $price) {
-            $price = $this->numberExtractor->extract($product, 'price');
-        }
+        $price = $price ?: $this->numberExtractor->extract($product, 'price');
+        $unitPrice = $unitPrice ?: $this->numberExtractor->extract($product, 'unit_price');
 
-        if (null === $unitPrice) {
-            $unitPrice = $this->numberExtractor->extract($product, 'unit_price');
-        }
-
+        // Reminder: regardless of what we compute here a final update is also performed in Product::updateUnitRatio
+        // this part is more destined to keep the field consistent in the $product object
         $this->setUnitPriceRatio($product, $price, $unitPrice);
     }
 

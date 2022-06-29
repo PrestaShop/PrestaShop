@@ -50,7 +50,7 @@ Scenario :
 
 describe('BO - Orders - View and edit order : Check order documents tab', async () => {
   // Pre-condition - Create order by default customer
-  createOrderByCustomerTest(orderByCustomerData, baseContext);
+  createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_1`);
 
   // before and after functions
   before(async function () {
@@ -139,14 +139,14 @@ describe('BO - Orders - View and edit order : Check order documents tab', async 
   // 3 - Check generate invoice button
   describe('Check generate invoice button', async () => {
     it('should click on \'Documents\' tab', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'displayDocumentsTab', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'displayDocumentsTab1', baseContext);
 
       const isTabOpened = await orderPageTabListBlock.goToDocumentsTab(page);
       await expect(isTabOpened).to.be.true;
     });
 
     it('should check that \'Generate invoice\' button is not visible', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkGenerateInvoiceButton', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkGenerateInvoiceButton1', baseContext);
 
       const isVisible = await orderPageTabListBlock.isGenerateInvoiceButtonVisible(page);
       await expect(isVisible).to.be.false;
@@ -226,14 +226,14 @@ describe('BO - Orders - View and edit order : Check order documents tab', async 
   // 6 - Check documents tab
   describe('Check documents tab', async () => {
     it('should click on \'DocumentS\' tab', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'displayDocumentsTab', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'displayDocumentsTab2', baseContext);
 
       const isTabOpened = await orderPageTabListBlock.goToDocumentsTab(page);
       await expect(isTabOpened).to.be.true;
     });
 
     it('should check that \'Generate invoice\' button is visible', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkGenerateInvoiceButton', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkGenerateInvoiceButton2', baseContext);
 
       const isVisible = await orderPageTabListBlock.isGenerateInvoiceButtonVisible(page);
       await expect(isVisible).to.be.true;

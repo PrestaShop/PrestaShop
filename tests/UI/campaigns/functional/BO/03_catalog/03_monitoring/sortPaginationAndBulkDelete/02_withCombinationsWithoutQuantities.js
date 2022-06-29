@@ -49,10 +49,10 @@ Post-condition:
 describe('BO - Catalog - Monitoring : Sort and pagination list of products with '
   + 'combinations but without available quantities', async () => {
   // Pre-condition: Import list of products
-  importFileTest(productFileName, ProductsData.entity, baseContext);
+  importFileTest(productFileName, ProductsData.entity, `${baseContext}_preTest_1`);
 
   // Pre-condition: Import list of combinations
-  importFileTest(combinationsFileName, CombinationsData.entity, baseContext);
+  importFileTest(combinationsFileName, CombinationsData.entity, `${baseContext}_preTest_2`);
 
   // before and after functions
   before(async function () {
@@ -191,5 +191,5 @@ describe('BO - Catalog - Monitoring : Sort and pagination list of products with 
   });
 
   // Post-condition: Delete created products
-  bulkDeleteProductsTest(tableName, baseContext);
+  bulkDeleteProductsTest(tableName, `${baseContext}_postTest_1`);
 });

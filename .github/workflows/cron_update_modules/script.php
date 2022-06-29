@@ -112,11 +112,13 @@ if (empty($pullRequestBodyBumpModules)) {
     exit();
 }
 
+$branch = $argv[1] ?? 'develop';
+
 file_put_contents(
     'cron_php_update_modules.txt',
     '| Questions         | Answers' . PHP_EOL
         . '| ----------------- | -----------------' . PHP_EOL
-        . '| Branch?           | develop' . PHP_EOL
+        . '| Branch?           | ' . $branch . PHP_EOL
         . '| Description?      | ' . $pullRequestBodyBumpModules . PHP_EOL
         . '| Type?             | improvement' . PHP_EOL
         . '| Category?         | CO' . PHP_EOL

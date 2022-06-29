@@ -27,10 +27,12 @@ import {FormIframeModal} from '@components/modal';
 import ProductMap from '@pages/product/product-map';
 import ProductEventMap from '@pages/product/product-event-map';
 import {EventEmitter} from 'events';
-import SpecificPriceList from '@pages/product/components/specific-price/specific-price-list';
+import SpecificPriceListRenderer from '@pages/product/components/specific-price/specific-price-list-renderer';
 import Router from '@components/router';
 import FormFieldDisabler from '@components/form/form-field-disabler';
 import {isUndefined} from '@PSTypes/typeguard';
+import PaginatedSpecificPricesService from '@pages/product/services/paginated-specific-prices-service';
+import DynamicPaginator from '@components/pagination/dynamic-paginator';
 
 import ClickEvent = JQuery.ClickEvent;
 
@@ -44,9 +46,9 @@ export default class SpecificPricesManager {
 
   listContainer: HTMLElement;
 
-  specificPriceList!: SpecificPriceList;
-
   router: Router;
+
+  paginator!: DynamicPaginator;
 
   constructor(
     productId: number,
@@ -55,19 +57,23 @@ export default class SpecificPricesManager {
     this.productId = productId;
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.listContainer = document.querySelector<HTMLElement>(SpecificPriceMap.listContainer)!;
-
     this.initComponents();
     this.initListeners();
-
-    this.specificPriceList.renderList();
   }
 
   private initListeners(): void {
-    this.eventEmitter.on(ProductEventMap.specificPrice.listUpdated, () => this.specificPriceList.renderList());
+    this.eventEmitter.on(ProductEventMap.specificPrice.listUpdated, () => {
+      this.paginator.paginate(1);
+    });
   }
 
   private initComponents() {
-    this.specificPriceList = new SpecificPriceList(this.productId);
+    this.paginator = new DynamicPaginator(
+      SpecificPriceMap.paginationContainer,
+      new PaginatedSpecificPricesService(this.productId),
+      new SpecificPriceListRenderer(this.productId),
+      1,
+    );
 
     this.initSpecificPriceModals();
 

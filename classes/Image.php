@@ -591,6 +591,7 @@ class ImageCore extends ObjectModel
         $image_types = ImageType::getImagesTypes();
         foreach ($image_types as $imageType) {
             $filesToDelete[] = $this->image_dir . $this->getExistingImgPath() . '-' . $imageType['name'] . '.' . $this->image_format;
+            $filesToDelete[] = $this->image_dir . $this->getExistingImgPath() . '-' . $imageType['name'] . '2x.' . $this->image_format;
             if (Configuration::get('WATERMARK_HASH')) {
                 $filesToDelete[] = $this->image_dir . $this->getExistingImgPath() . '-' . $imageType['name'] . '-' . Configuration::get('WATERMARK_HASH') . '.' . $this->image_format;
             }
@@ -598,6 +599,7 @@ class ImageCore extends ObjectModel
 
         // Delete watermark image
         $filesToDelete[] = $this->image_dir . $this->getExistingImgPath() . '-watermark.' . $this->image_format;
+        $filesToDelete[] = $this->image_dir . $this->getExistingImgPath() . '-watermark2x.' . $this->image_format;
         // delete index.php
         $filesToDelete[] = $this->image_dir . $this->getImgFolder() . 'index.php';
         // delete fileType

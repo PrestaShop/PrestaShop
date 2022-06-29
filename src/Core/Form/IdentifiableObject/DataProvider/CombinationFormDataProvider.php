@@ -115,12 +115,17 @@ class CombinationFormDataProvider implements FormDataProviderInterface
         $priceImpactInformation = $combinationForEditing->getPrices();
 
         return [
-            'wholesale_price' => (float) (string) $priceImpactInformation->getWholesalePrice(),
             'price_tax_excluded' => (float) (string) $priceImpactInformation->getImpactOnPrice(),
             'price_tax_included' => (float) (string) $priceImpactInformation->getImpactOnPriceTaxIncluded(),
-            'ecotax' => (float) (string) $priceImpactInformation->getEcoTax(),
-            'unit_price' => (float) (string) $priceImpactInformation->getImpactOnUnitPrice(),
+            'unit_price_tax_excluded' => (float) (string) $priceImpactInformation->getImpactOnUnitPrice(),
+            'unit_price_tax_included' => (float) (string) $priceImpactInformation->getImpactOnUnitPriceTaxIncluded(),
+            'ecotax_tax_excluded' => (float) (string) $priceImpactInformation->getEcotax(),
+            'ecotax_tax_included' => (float) (string) $priceImpactInformation->getEcotaxTaxIncluded(),
+            'wholesale_price' => (float) (string) $priceImpactInformation->getWholesalePrice(),
             'weight' => (float) (string) $combinationForEditing->getDetails()->getImpactOnWeight(),
+            'product_tax_rate' => (float) (string) $priceImpactInformation->getProductTaxRate(),
+            'product_price_tax_excluded' => (float) (string) $priceImpactInformation->getProductPrice(),
+            'product_ecotax_tax_excluded' => (float) (string) $priceImpactInformation->getProductEcotax(),
         ];
     }
 

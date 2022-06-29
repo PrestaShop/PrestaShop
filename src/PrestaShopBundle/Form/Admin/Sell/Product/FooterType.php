@@ -130,21 +130,13 @@ class FooterType extends TranslatorAwareType
                 ],
             ])
             ->add('new_product', IconButtonType::class, [
-                'label' => $this->trans('New product on experimental page', 'Admin.Catalog.Feature'),
+                'label' => $this->trans('New product', 'Admin.Catalog.Feature'),
                 'type' => 'link',
                 'icon' => 'add_circle_outline',
                 'attr' => [
                     'class' => 'btn-outline-secondary new-product',
                     'href' => $this->router->generate('admin_products_v2_create'),
                     'disabled' => empty($productId),
-                ],
-            ])
-            ->add('standard_page', IconButtonType::class, [
-                'label' => $this->trans('Back to standard page', 'Admin.Catalog.Feature'),
-                'type' => 'link',
-                'attr' => [
-                    'class' => 'btn-outline-secondary',
-                    'href' => $standardPageUrl,
                 ],
             ])
             // These two inputs are displayed separately

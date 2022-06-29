@@ -125,7 +125,7 @@ class ProductCore extends ObjectModel
     /** @var float price for product's unity ratio */
     public $unit_price_ratio = 0;
 
-    /** @var float Ecotax */
+    /** @var float|null Ecotax */
     public $ecotax = 0;
 
     /** @var string Reference */
@@ -742,11 +742,8 @@ class ProductCore extends ObjectModel
             $this->loadStockData();
         }
 
-        $unitPrice = new DecimalNumber((string) ($this->unit_price ?? 0));
-        $price = new DecimalNumber((string) ($this->price ?? 0));
-        if ($unitPrice->isGreaterThanZero()) {
-            $this->unit_price_ratio = (float) (string) $price->dividedBy($unitPrice);
-        }
+        $ecotaxEnabled = (bool) Configuration::get('PS_USE_ECOTAX');
+        $this->fillUnitRatio($ecotaxEnabled);
 
         if ($this->id_category_default) {
             $this->category = Category::getLinkRewrite((int) $this->id_category_default, (int) $id_lang);
@@ -846,25 +843,51 @@ class ProductCore extends ObjectModel
      * in the DB we kept unit_price_ratio in the DB for backward compatibility but shouldn't be written anymore so
      * it is automatically updated when product is saved
      */
-    private function updateUnitRatio(): void
+    protected function updateUnitRatio(): void
+    {
+        $ecotaxEnabled = (bool) Configuration::get('PS_USE_ECOTAX');
+        $this->fillUnitRatio($ecotaxEnabled);
+        if ($ecotaxEnabled) {
+            Db::getInstance()->execute(sprintf(
+                'UPDATE %sproduct SET `unit_price_ratio` = IF (`unit_price` != 0, (`price` + `ecotax`) / `unit_price`, 0) WHERE `id_product` = %d;',
+                _DB_PREFIX_,
+                $this->id
+            ));
+            Db::getInstance()->execute(sprintf(
+                'UPDATE %sproduct_shop SET `unit_price_ratio` = IF (`unit_price` != 0, (`price` + `ecotax`) / `unit_price`, 0) WHERE `id_product` = %d;',
+                _DB_PREFIX_,
+                $this->id
+            ));
+        } else {
+            Db::getInstance()->execute(sprintf(
+                'UPDATE %sproduct SET `unit_price_ratio` = IF (`unit_price` != 0, `price` / `unit_price`, 0) WHERE `id_product` = %d;',
+                _DB_PREFIX_,
+                $this->id
+            ));
+            Db::getInstance()->execute(sprintf(
+                'UPDATE %sproduct_shop SET `unit_price_ratio` = IF (`unit_price` != 0, `price` / `unit_price`, 0) WHERE `id_product` = %d;',
+                _DB_PREFIX_,
+                $this->id
+            ));
+        }
+    }
+
+    /**
+     * Unit price ratio is not edited anymore, the reference is handled via the unit_price field which is now saved
+     * in the DB we kept unit_price_ratio in the DB for backward compatibility but but the DB value should not be used
+     * any more since it is deprecated so the object field is computed automatically.
+     */
+    protected function fillUnitRatio(bool $ecotaxEnabled): void
     {
         // Update instance field
-        $unitPrice = new DecimalNumber((string) $this->unit_price);
-        $price = new DecimalNumber((string) $this->price);
+        $unitPrice = new DecimalNumber((string) ($this->unit_price ?? 0));
+        $price = new DecimalNumber((string) ($this->price ?? 0));
+        if ($ecotaxEnabled) {
+            $price = $price->plus(new DecimalNumber((string) ($this->ecotax ?? 0)));
+        }
         if ($unitPrice->isGreaterThanZero()) {
             $this->unit_price_ratio = (float) (string) $price->dividedBy($unitPrice);
         }
-
-        Db::getInstance()->execute(sprintf(
-            'UPDATE %sproduct SET `unit_price_ratio` = IF (`unit_price` != 0, `price` / `unit_price`, 0) WHERE `id_product` = %d;',
-            _DB_PREFIX_,
-            $this->id
-        ));
-        Db::getInstance()->execute(sprintf(
-            'UPDATE %sproduct_shop SET `unit_price_ratio` = IF (`unit_price` != 0, `price` / `unit_price`, 0) WHERE `id_product` = %d;',
-            _DB_PREFIX_,
-            $this->id
-        ));
     }
 
     /**
@@ -4377,6 +4400,7 @@ class ProductCore extends ObjectModel
         }
 
         $colors = [];
+        /** @var array{id_product: int, id_attribute: int, id_product_attribute: int, color: string, texture: string, name: string,} $row */
         foreach ($res as $row) {
             $row['texture'] = '';
 
@@ -4386,7 +4410,14 @@ class ProductCore extends ObjectModel
                 continue;
             }
 
-            $colors[(int) $row['id_product']][] = ['id_product_attribute' => (int) $row['id_product_attribute'], 'color' => $row['color'], 'texture' => $row['texture'], 'id_product' => $row['id_product'], 'name' => $row['name'], 'id_attribute' => $row['id_attribute']];
+            $colors[(int) $row['id_product']][] = [
+                'id_product_attribute' => (int) $row['id_product_attribute'],
+                'color' => $row['color'],
+                'texture' => $row['texture'],
+                'id_product' => $row['id_product'],
+                'name' => $row['name'],
+                'id_attribute' => $row['id_attribute'],
+            ];
         }
 
         return $colors;
@@ -4796,6 +4827,7 @@ class ProductCore extends ObjectModel
         }
 
         $results_array = [];
+        /** @var array{id_product: int} $row */
         foreach ($result as $row) {
             $row['price_tax_incl'] = Product::getPriceStatic($row['id_product'], true, null, 2);
             $row['price_tax_excl'] = Product::getPriceStatic($row['id_product'], false, null, 2);
@@ -4819,8 +4851,7 @@ class ProductCore extends ObjectModel
         $combination_images = [];
 
         $result = Db::getInstance()->executeS(
-            '
-        SELECT pa.*, product_attribute_shop.*
+            'SELECT pa.*, product_attribute_shop.*
             FROM `' . _DB_PREFIX_ . 'product_attribute` pa
             ' . Shop::addSqlAssociation('product_attribute', 'pa') . '
             WHERE pa.`id_product` = ' . (int) $id_product_old
@@ -4828,6 +4859,7 @@ class ProductCore extends ObjectModel
         $combinations = [];
         $product_supplier_keys = [];
 
+        /** @var array{id_product_attribute: int, id_shop: int} $row */
         foreach ($result as $row) {
             $id_product_attribute_old = (int) $row['id_product_attribute'];
             $result2 = [];

@@ -151,10 +151,10 @@ Post-conditions:
 */
 describe('BO - Orders - View and edit order: Check invoice', async () => {
   // Pre-condition - Create first order from FO
-  createOrderByCustomerTest(firstOrderByCustomer, baseContext);
+  createOrderByCustomerTest(firstOrderByCustomer, `${baseContext}_preTest_1`);
 
   // Pre-condition - Enable Ecotax
-  enableEcoTaxTest(baseContext);
+  enableEcoTaxTest(`${baseContext}_preTest_2`);
 
   // before and after functions
   before(async function () {
@@ -882,7 +882,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
 
       describe('Check that Taxes table is not visible', async () => {
         it('should check that \'Tax Detail\' table is not visible', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', 'checkIsTaxesTableNotVisible', baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', 'checkIsTaxesTableNotVisible2', baseContext);
 
           const isTaxTableVisible = await files.isTextInPDF(filePath, 'Tax Detail,Tax Rate,Base price,Total Tax');
           await expect(isTaxTableVisible, 'Tax table is visible!').to.be.false;
@@ -1487,11 +1487,11 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
   });
 
   // Post-condition: Delete the created products
-  bulkDeleteProductsTest(prefixNewProduct, baseContext);
+  bulkDeleteProductsTest(prefixNewProduct, `${baseContext}_postTest_1`);
 
   // Post-condition: Disable EcoTax
-  disableEcoTaxTest(baseContext);
+  disableEcoTaxTest(`${baseContext}_postTest_2`);
 
   // Post-condition: Delete discount
-  deleteCartRuleTest(discountData.name, baseContext);
+  deleteCartRuleTest(discountData.name, `${baseContext}_postTest_3`);
 });

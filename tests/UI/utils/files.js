@@ -2,6 +2,7 @@ const fs = require('fs');
 const pdfJs = require('pdfjs-dist/legacy/build/pdf.js');
 const imgGen = require('js-image-generator');
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
+const path = require('path');
 
 /**
  * @module FilesHelper
@@ -188,5 +189,16 @@ module.exports = {
     await this.createFile(path, fileName, '');
     const csvWriter = await createCsvWriter({path: fileName, header: data.header, fieldDelimiter: ';'});
     await csvWriter.writeRecords(data.records);
+  },
+
+  /**
+   * Get the path of the file automatically generated
+   * @param folderPath {string} Path of the folder where the file exists
+   * @param filename {string} Path of the file automatically created
+   * @returns {Promise<string>}
+   */
+  async getFilePathAutomaticallyGenerated(folderPath, filename) {
+    const generatedFilePath = path.resolve(__dirname, '../../../', folderPath, filename);
+    return generatedFilePath;
   },
 };

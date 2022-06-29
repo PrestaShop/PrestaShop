@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity_feature_flag>
+  <fields id="name" class="FeatureFlag">
+    <field name="name"/>
+    <field name="label_wording"/>
+    <field name="label_domain"/>
+    <field name="description_wording"/>
+    <field name="description_domain"/>
+    <field name="state"/>
+    <field name="stability"/>
+  </fields>
+  <entities>
+    <feature_flag id="product_page_v2" name="product_page_v2" label_wording="New product page - Single store" label_domain="Admin.Advparameters.Feature" description_wording="This page benefits from increased performance and includes new features such as a new combination management system." description_domain="Admin.Advparameters.Help" state="0" stability="stable" />
+    <feature_flag id="product_page_v2_multi_shop" name="product_page_v2_multi_shop" label_wording="New product page - Multi store" label_domain="Admin.Advparameters.Feature" description_wording="Access the new product page, even in a multistore context. This is a work in progress and some features are not available." description_domain="Admin.Advparameters.Help" state="0" stability="beta" />
+  </entities>
+</entity_feature_flag>

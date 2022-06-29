@@ -99,17 +99,6 @@
     form-group row
 {%- endblock form_row_class %}
 
-{% block text_with_unit_widget %}
-<div class="input-group">
-    {{- block('form_widget_simple') -}}
-    {% if form.vars.unit is defined %}
-        <div class="input-group-append">
-            <span class="input-group-text">{{ form.vars.unit }}</span>
-        </div>
-    {% endif %}
-</div>
-{% endblock text_with_unit_widget %}
-
 {% block ip_address_text_widget %}
 <div class="input-group">
     {{- block('form_widget_simple') -}}
@@ -151,3 +140,29 @@
     {% endif %}
   </div>
 {% endblock text_with_length_counter_widget %}
+
+{%- block number_widget -%}
+  {%- set type = type|default('text') -%}
+  <div class="input-group">
+    {{- block('form_widget_simple') -}}
+    {{- block('form_unit') -}}
+  </div>
+  {{ block('form_help') }}
+{%- endblock number_widget -%}
+
+{%- block integer_widget -%}
+  {%- set type = type|default('number') -%}
+  <div class="input-group">
+    {{- block('form_widget_simple') -}}
+    {{- block('form_unit') -}}
+  </div>
+  {{ block('form_help') }}
+{%- endblock integer_widget -%}
+
+{% block form_unit %}
+  {% if form.vars.unit is defined %}
+    <div class="input-group-append">
+      <span class="input-group-text">{{ form.vars.unit }}</span>
+    </div>
+  {% endif %}
+{% endblock form_unit %}

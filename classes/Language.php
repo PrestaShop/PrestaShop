@@ -333,7 +333,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      * @param string $theme_from
      * @param string|bool $iso_to
      * @param string|bool $theme_to
-     * @param bool $select
+     * @param bool|string $select
      * @param bool $check
      * @param bool $modules
      *
@@ -1018,6 +1018,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
                 }
                 Db::getInstance()->execute('DELETE FROM `' . $row['Tables_in_' . _DB_NAME_] . '` WHERE `id_lang` = ' . (int) $to);
                 $query = 'INSERT INTO `' . $row['Tables_in_' . _DB_NAME_] . '` VALUES ';
+                /** @var array<string, int|string|null> $row2 */
                 foreach ($result2 as $row2) {
                     $query .= '(';
                     $row2['id_lang'] = $to;

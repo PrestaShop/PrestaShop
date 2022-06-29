@@ -150,7 +150,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ])
             )
             ->add(
-                (new LinkColumn('price_tax_excluded'))
+                (new LinkColumn('final_price_tax_excluded'))
                     ->setName($this->trans('Price (tax excl.)', [], 'Admin.Catalog.Feature'))
                     ->setOptions([
                         'field' => 'price_tax_excluded',
@@ -317,11 +317,11 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setAssociatedColumn('category')
             )
             ->add(
-                (new Filter('price_tax_excluded', NumberMinMaxFilterType::class))
+                (new Filter('final_price_tax_excluded', NumberMinMaxFilterType::class))
                     ->setTypeOptions([
                         'required' => false,
                     ])
-                    ->setAssociatedColumn('price_tax_excluded')
+                    ->setAssociatedColumn('final_price_tax_excluded')
             )
             ->add(
                 (new Filter('active', YesAndNoChoiceType::class))

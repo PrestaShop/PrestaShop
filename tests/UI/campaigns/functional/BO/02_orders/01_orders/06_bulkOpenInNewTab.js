@@ -60,10 +60,10 @@ Post-condition:
  */
 describe('BO - Orders : Bulk open on new tab', async () => {
   // Pre-condition: Create first order in FO
-  createOrderByGuestTest(firstOrderByGuestData, baseContext);
+  createOrderByGuestTest(firstOrderByGuestData, `${baseContext}_preTest_1`);
 
   // Pre-condition: Create second order in FO
-  createOrderByGuestTest(secondOrderByGuestData, baseContext);
+  createOrderByGuestTest(secondOrderByGuestData, `${baseContext}_preTest_2`);
 
   // before and after functions
   before(async function () {
@@ -140,8 +140,8 @@ describe('BO - Orders : Bulk open on new tab', async () => {
   });
 
   // Post-condition: Delete first guest customers
-  deleteCustomerTest(firstCustomerData, baseContext);
+  deleteCustomerTest(firstCustomerData, `${baseContext}_postTest_1`);
 
   // Post-condition: Delete second guest customers
-  deleteCustomerTest(secondCustomerData, baseContext);
+  deleteCustomerTest(secondCustomerData, `${baseContext}_postTest_2`);
 });
