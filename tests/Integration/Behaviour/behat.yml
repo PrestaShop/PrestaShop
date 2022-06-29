@@ -416,3 +416,9 @@ default:
                 - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\ProfileFeatureContext
                 - Tests\Integration\Behaviour\Features\Context\Domain\PermissionFeatureContext
+        country:
+            paths:
+                - "%paths.base%/Features/Scenario/Country"
+            contexts:
+               - Tests\Integration\Behaviour\Features\Context\CommonFeatureContext
+               - Tests\Integration\Behaviour\Features\Context\Domain\CountryFeatureContext

@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\AddCountryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShopBundle\Exception\NotImplementedException;
 
 /**
  * Handles submitted zone form data.
@@ -83,6 +84,7 @@ class CountryFormDataHandler implements FormDataHandlerInterface
 
     public function update($id, array $data)
     {
-        // TODO: Implement update() method.
+        // TODO: Implement update() method in edit PR.
+        throw new NotImplementedException();
     }
 }
