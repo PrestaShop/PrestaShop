@@ -115,7 +115,7 @@ class AddCountryCommand
         bool $needIdNumber,
         bool $displayTaxLabel,
         array $shopAssociation
-    ){
+    ) {
         $this->localizedNames = $localizedNames;
         $this->isoCode = Tools::strtoupper(Tools::substr($isoCode, 0, 2));
         $this->callPrefix = $callPrefix;

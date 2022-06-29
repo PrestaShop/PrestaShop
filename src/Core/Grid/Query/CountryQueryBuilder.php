@@ -56,7 +56,7 @@ class CountryQueryBuilder extends AbstractDoctrineQueryBuilder
      * @param Connection $connection
      * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
-     * @param int $contextShopIds
+     * @param int[] $contextShopIds
      */
     public function __construct(
         Connection $connection,
