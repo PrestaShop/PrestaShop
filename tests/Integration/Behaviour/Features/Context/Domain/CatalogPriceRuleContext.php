@@ -78,7 +78,7 @@ class CatalogPriceRuleContext extends AbstractDomainFeatureContext
      * @Then catalog price rule :catalogPriceRuleReference should have following details:
      *
      * @param string $catalogPriceRuleReference
-     * @param EditableCatalogPriceRule $catalogPriceRule
+     * @param EditableCatalogPriceRule $expectedItem
      *
      * @see transformCatalogPriceRule
      */
@@ -121,9 +121,9 @@ class CatalogPriceRuleContext extends AbstractDomainFeatureContext
 
         $dateTimeProperties = ['from', 'to'];
         foreach ($dateTimeProperties as $dateTimeProperty) {
-            /** @var DateTimeInterface $expectedDateTime */
+            /** @var DateTimeInterface|null $expectedDateTime */
             $expectedDateTime = $propertyAccessor->getValue($expectedItem, $dateTimeProperty);
-            /** @var DateTimeInterface $actualDateTime */
+            /** @var DateTimeInterface|null $actualDateTime */
             $actualDateTime = $propertyAccessor->getValue($actualItem, $dateTimeProperty);
             if ($expectedDateTime === null) {
                 Assert::assertSame(
@@ -142,27 +142,29 @@ class CatalogPriceRuleContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then I should be able to see following list of catalog price rules in product page for language :langIso:
+     * @Then I should be able to see following list of catalog price rules with language :langIso with limit :limit offset :offset and total :total:
      *
      * @param TableNode $expectedList
      *
      * @see transformCatalogPriceRuleList
      */
-    public function assertCatalogPriceRuleList(string $langIso, TableNode $expectedList): void
+    public function assertCatalogPriceRuleList(string $langIso, int $limit, int $offset, int $total, TableNode $expectedList): void
     {
         $langId = (int) Language::getIdByIso($langIso);
 
         /** @var CatalogPriceRuleList $actualList */
         $actualList = $this->getQueryBus()->handle(
             new GetCatalogPriceRuleList(
-                $langId
+                $langId,
+                $limit,
+                $offset
             )
         );
 
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
         $transformedList = $this->transformCatalogPriceRuleList($expectedList, $langId);
         Assert::assertEquals(
-            $transformedList->getTotalCatalogPriceRulesCount(),
+            $total,
             $actualList->getTotalCatalogPriceRulesCount(),
             'Unexpected count of catalog price rules for listing'
         );
@@ -293,13 +295,12 @@ class CatalogPriceRuleContext extends AbstractDomainFeatureContext
         $dataRows = $tableNode->getColumnsHash();
         $catalogPriceRules = [];
         foreach ($dataRows as $dataRow) {
-            $catalogPriceRulId = $this->getSharedStorage()->get($dataRow['catalog price rule reference']);
             $shop = new Shop($this->getStoredId($dataRow, 'shop'), $languageId);
             $currency = new Currency($this->getStoredId($dataRow, 'currency'), $languageId);
             $country = new Country($this->getStoredId($dataRow, 'country'), $languageId);
             $group = new Group($this->getStoredId($dataRow, 'group'), $languageId);
             $catalogPriceRules[] = new CatalogPriceRuleForListing(
-                $catalogPriceRulId,
+                35,
                 $dataRow['name'],
                 (int) $dataRow['from quantity'],
                 $dataRow['reduction type'],
