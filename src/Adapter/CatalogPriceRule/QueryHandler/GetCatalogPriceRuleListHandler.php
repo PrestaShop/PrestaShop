@@ -34,11 +34,10 @@ use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRule
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryHandler\GetCatalogPriceRuleListHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult\CatalogPriceRuleForListing;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult\CatalogPriceRuleList;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceForEditing;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 
 /**
- * Handles @see GetSpecificPriceForEditing using legacy object model
+ * Handles @see GetCatalogPriceRuleList using legacy object model
  */
 class GetCatalogPriceRuleListHandler implements GetCatalogPriceRuleListHandlerInterface
 {

@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult;
 
 /**
- * Transfer SpecificPrice list data
+ * Transfer CatalogPriceRule list data
  */
 class CatalogPriceRuleList
 {
