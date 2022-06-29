@@ -64,7 +64,7 @@ class CountryFormDataHandler implements FormDataHandlerInterface
             $data['name'],
             (string) $data['iso_code'],
             (int) $data['call_prefix'],
-            $data['default_currency'],
+            (int) $data['default_currency'],
             $data['zone'],
             $data['need_zip_code'],
             $data['zip_code_format'],
@@ -73,7 +73,7 @@ class CountryFormDataHandler implements FormDataHandlerInterface
             $data['contains_states'],
             $data['need_identification_number'],
             $data['display_tax_label'],
-            $data['shop_association']
+            $data['shop_association'] ?? []
         );
 
         /** @var CountryId $countryId */
