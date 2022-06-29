@@ -105,9 +105,13 @@ class Field implements FieldInterface
             'position',
             'search',
             'width',
+            'type',
+            'havingFilter',
         ]);
 
         $resolver->addAllowedTypes('orderby', 'boolean');
         $resolver->addAllowedTypes('search', 'boolean');
+        $resolver->addAllowedTypes('type', 'string');
+        $resolver->addAllowedTypes('havingFilter', 'boolean');
     }
 }
