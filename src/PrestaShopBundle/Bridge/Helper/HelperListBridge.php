@@ -114,6 +114,7 @@ class HelperListBridge
         $helper->_default_pagination = $helperListConfiguration->defaultPagination;
         $helper->_pagination = $helperListConfiguration->pagination;
         $helper->tpl_delete_link_vars = $helperListConfiguration->deleteLinksVariableTemplate;
+        $helper->list_skip_actions = $helperListConfiguration->skipActionsList;
 
         foreach ($helperListConfiguration->actionsAvailable as $action) {
             if (!in_array($action, $helperListConfiguration->actions) && isset($helperListConfiguration->$action) && $helperListConfiguration->$action) {

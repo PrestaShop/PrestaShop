@@ -196,6 +196,15 @@ class HelperListConfiguration
     public $deleteLinksVariableTemplate = [];
 
     /**
+     * Ids list indexed by action name. All of those ids will not have the specified row action.
+     *
+     * E.g. if you want to prohibit deleting certain items in list ['delete' => [1, 3, 70]
+     *
+     * @var array<string, int[]>
+     */
+    public $skipActionsList = [];
+
+    /**
      * @var array List of available actions for each list row - default actions are view, edit, delete, duplicate
      */
     public $actionsAvailable = [

@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 
+use Configuration;
 use PrestaShopBundle\Bridge\AdminController\Action\HeaderToolbarAction;
 use PrestaShopBundle\Bridge\AdminController\Action\ListBulkAction;
 use PrestaShopBundle\Bridge\AdminController\Action\ListHeaderToolbarAction;
@@ -72,6 +73,11 @@ class GroupController extends FrameworkBundleAdminController implements LegacyCo
      */
     public $multishop_context;
 
+    /**
+     * @var array<string, int[]>
+     */
+    public $list_skip_actions;
+
     public function indexAction(Request $request): Response
     {
         $this->addAction(new HeaderToolbarAction('new_feature', [
@@ -88,11 +94,12 @@ class GroupController extends FrameworkBundleAdminController implements LegacyCo
             $this->controllerConfiguration,
             $this->getIdentifier(),
             $this->getPositionIdentifier(),
-            'name',
+            'id_group',
             true
         );
         $this->setListFields($helperListConfiguration);
         $this->buildActionList($helperListConfiguration);
+        $this->setSkipActions($helperListConfiguration);
 
         if ($request->request->has('submitResetgroup')) {
             $this->getResetFiltersHelper()->resetFilters($helperListConfiguration, $request);
@@ -146,6 +153,7 @@ class GroupController extends FrameworkBundleAdminController implements LegacyCo
         ]), $helperListConfiguration);
 
         $this->addActionList(new ListRowAction('edit'), $helperListConfiguration);
+        $this->addActionList(new ListRowAction('view'), $helperListConfiguration);
         $this->addActionList(new ListRowAction('delete'), $helperListConfiguration);
 
         $this->addActionList(new ListBulkAction('delete', [
@@ -192,5 +200,21 @@ class GroupController extends FrameworkBundleAdminController implements LegacyCo
             'type' => 'date',
             'align' => 'right',
         ]), $helperListConfiguration);
+    }
+
+    /**
+     * Set which row actions shouldn't be generated on certain rows
+     *
+     * @param HelperListConfiguration $helperListConfiguration
+     *
+     * @return void
+     */
+    private function setSkipActions(HelperListConfiguration $helperListConfiguration): void
+    {
+        $helperListConfiguration->skipActionsList['delete'] = [
+            (int) Configuration::get('PS_UNIDENTIFIED_GROUP'),
+            (int) Configuration::get('PS_GUEST_GROUP'),
+            (int) Configuration::get('PS_CUSTOMER_GROUP'),
+        ];
     }
 }
