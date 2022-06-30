@@ -26,7 +26,6 @@ let page;
 Go to FO
 Check header links:
 - Contact us
-- Language( English, Français)
 - Sign in
 - My account( Customer name)
 - Cart
@@ -61,20 +60,6 @@ describe('FO - Header and Footer : Check links in header page', async () => {
 
     const pageTitle = await contactUsPage.getPageTitle(page);
     await expect(pageTitle, 'Fail to open FO login page').to.contains(contactUsPage.pageTitle);
-  });
-
-  it('should check \'languages\' link', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkLanguagesLink', baseContext);
-
-    await homePage.changeLanguage(page, 'fr');
-
-    let language = await homePage.getShopLanguage(page);
-    expect(language).to.equal('Français');
-
-    await homePage.changeLanguage(page, 'en');
-
-    language = await homePage.getShopLanguage(page);
-    expect(language).to.equal('English');
   });
 
   it('should check \'sign in\' link', async function () {
