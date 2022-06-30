@@ -252,3 +252,29 @@ Feature: Add product to pack from Back Office (BO)
     And I remove all products from pack productPack4
     Then product "productPack4" type should be pack
     And pack "productPack4" should be empty
+
+  Scenario: I remove a product or a combination its relation should also be removed if it was associated with a pack
+    Given I update pack productPack4 with following product quantities:
+      | product       | combination         | quantity |
+      | productSkirt1 | productSkirt1SWhite | 10       |
+      | productSkirt1 | productSkirt1MWhite | 11       |
+      | productSkirt1 | productSkirt1MBlack | 12       |
+      | product2      |                     | 2        |
+    Then product "productPack4" type should be pack
+    And pack productPack4 should contain products with following details:
+      | product       | name                                   | combination         | quantity | image url                                              | reference                  |
+      | productSkirt1 | regular skirt: Size - S, Color - White | productSkirt1SWhite | 10       | http://myshop.com/img/p/{skirtWhiteS}.jpg              | Ref: productSkirtSWhiteRef |
+      | productSkirt1 | regular skirt: Size - M, Color - White | productSkirt1MWhite | 11       | http://myshop.com/img/p/{skirtWhiteM}.jpg              | Ref: productSkirtRef       |
+      | productSkirt1 | regular skirt: Size - M, Color - Black | productSkirt1MBlack | 12       | http://myshop.com/img/p/{skirtBlackM}.jpg              | Ref: productSkirtRef       |
+      | product2      | shady sunglasses                       |                     | 2        | http://myshop.com/img/p/{no_picture}-small_default.jpg | Ref: ref1                  |
+    When I delete product product2
+    Then pack productPack4 should contain products with following details:
+      | product       | name                                   | combination         | quantity | image url                                              | reference                  |
+      | productSkirt1 | regular skirt: Size - S, Color - White | productSkirt1SWhite | 10       | http://myshop.com/img/p/{skirtWhiteS}.jpg              | Ref: productSkirtSWhiteRef |
+      | productSkirt1 | regular skirt: Size - M, Color - White | productSkirt1MWhite | 11       | http://myshop.com/img/p/{skirtWhiteM}.jpg              | Ref: productSkirtRef       |
+      | productSkirt1 | regular skirt: Size - M, Color - Black | productSkirt1MBlack | 12       | http://myshop.com/img/p/{skirtBlackM}.jpg              | Ref: productSkirtRef       |
+    When I delete combination productSkirt1MWhite
+    Then pack productPack4 should contain products with following details:
+      | product       | name                                   | combination         | quantity | image url                                              | reference                  |
+      | productSkirt1 | regular skirt: Size - S, Color - White | productSkirt1SWhite | 10       | http://myshop.com/img/p/{skirtWhiteS}.jpg              | Ref: productSkirtSWhiteRef |
+      | productSkirt1 | regular skirt: Size - M, Color - Black | productSkirt1MBlack | 12       | http://myshop.com/img/p/{skirtBlackM}.jpg              | Ref: productSkirtRef       |
