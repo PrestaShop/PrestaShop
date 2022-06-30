@@ -19,6 +19,14 @@ services:
     tags:
       - { name: form.type }
 
+  form.type.date_range:
+    class: PrestaShopBundle\Form\Admin\Type\DateRangeType
+    arguments:
+      - "@translator"
+      - "@form.form_cloner"
+    tags:
+      - { name: form.type }
+
   form.type.product.simple_category:
     class: PrestaShopBundle\Form\Admin\Category\SimpleCategory
     arguments:
@@ -405,12 +413,28 @@ services:
   form.type.product_preferences.general:
     class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\GeneralType'
     parent: 'form.type.translatable.aware'
+    arguments:
+      - '@prestashop.adapter.legacy.context'
     public: true
     tags:
       - { name: form.type }
 
   form.type.product_preferences.stock:
     class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\StockType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+
+  form.type.product_preferences.page:
+    class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\PageType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+
+  form.type.product_preferences.pagination:
+    class: 'PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences\PaginationType'
     parent: 'form.type.translatable.aware'
     public: true
     tags:
@@ -440,6 +464,7 @@ services:
     arguments:
       - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrencyIsoCode()'
       - '@=service("prestashop.adapter.data_provider.tax").getTaxRulesGroupChoices()'
+      - "@router"
     tags:
       - { name: form.type }
 
@@ -838,6 +863,7 @@ services:
       - '@=service("prestashop.adapter.form.choice_provider.risk_by_id_choice_provider").getChoices()'
       - '@=service("prestashop.core.b2b.b2b_feature").isActive()'
       - '@=service("prestashop.adapter.legacy.configuration").get("PS_CUSTOMER_OPTIN")'
+      - "@=service('prestashop.adapter.legacy.configuration')"
     tags:
       - { name: form.type }
 
@@ -951,6 +977,7 @@ services:
       - '@=service("prestashop.core.form.choice_provider.profile").getChoices()'
       - '@=service("prestashop.adapter.multistore_feature").isActive()'
       - '@=service("prestashop.adapter.employee.avatar_provider").getDefaultAvatarUrl()'
+      - "@=service('prestashop.adapter.legacy.configuration')"
     calls:
       - { method: setTranslator, arguments: [ '@translator' ] }
     tags:
@@ -960,6 +987,8 @@ services:
     class: 'PrestaShopBundle\Form\Admin\Type\ChangePasswordType'
     calls:
       - { method: setTranslator, arguments: [ '@translator' ] }
+    arguments:
+      - "@=service('prestashop.adapter.legacy.configuration')"
     tags:
       - { name: form.type }
 
@@ -1058,23 +1087,24 @@ services:
       - '@=service("prestashop.core.form.choice_provider.country_by_id").getChoices()'
       - '@=service("prestashop.core.form.choice_provider.group_by_id").getChoices()'
       - '@=service("prestashop.adapter.form.choice_provider.shop_name_by_id").getChoices()'
-      - '@=service("prestashop.core.form.choice_provider.tax_inclusion").getChoices()'
+      - '@=service("prestashop.core.form.choice_provider.currency_by_id").getChoicesAttributes()'
+      - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency().symbol'
     tags:
       - { name: form.type }
 
-  form.type.reduction:
-    class: 'PrestaShopBundle\Form\Admin\Type\ReductionType'
+  form.type.price_reduction:
+    class: 'PrestaShopBundle\Form\Admin\Type\PriceReductionType'
     parent: 'form.type.common_type'
     arguments:
-      - '@=service("prestashop.core.form.choice_provider.price_reduction_type").getChoices()'
       - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
-      - '@form.event_listener.reduction'
+      - '@form.event_listener.price_reduction'
+      - '@prestashop.core.form.choice_provider.tax_inclusion'
     public: true
     tags:
       - { name: form.type }
 
-  form.event_listener.reduction:
-    class: 'PrestaShopBundle\Form\Admin\Type\EventListener\ReductionListener'
+  form.event_listener.price_reduction:
+    class: 'PrestaShopBundle\Form\Admin\Type\EventListener\PriceReductionListener'
     public: true
 
   form.type.sell.customer.private_note:
@@ -1305,6 +1335,7 @@ services:
     public: true
     arguments:
       - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_STOCK_MANAGEMENT')"
+      - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_USE_ECOTAX')"
     tags:
       - { name: form.type }
 
@@ -1331,6 +1362,16 @@ services:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\Image\ImageDropzoneType'
     parent: 'form.type.translatable.aware'
     public: true
+    tags:
+      - { name: form.type }
+
+  form.type.sell.product.category.category_filter_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoryFilterType'
+    public: true
+    arguments:
+      - "@translator"
+      - "@prestashop.adapter.data_provider.category"
+      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
     tags:
       - { name: form.type }
 
@@ -1461,6 +1502,7 @@ services:
     public: true
     arguments:
       - '@prestashop.core.form.choice_provider.out_of_stock_type_choice_provider'
+      - '@router'
     tags:
       - { name: form.type }
 
@@ -1497,11 +1539,7 @@ services:
     parent: 'form.type.translatable.aware'
     public: true
     arguments:
-      - '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider").getChoices()'
-      - '@=service("prestashop.core.form.choice_provider.tax_rule_group_choice_provider").getChoicesAttributes()'
       - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
-      - '@router'
-      - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_TAX')"
     tags:
       - { name: form.type }
 
@@ -1510,8 +1548,15 @@ services:
     parent: 'form.type.translatable.aware'
     public: true
     arguments:
+      - '@prestashop.core.localization.locale.context_locale'
       - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
+      - '@prestashop.core.form.choice_provider.tax_rule_group_choice_provider'
+      - '@router'
+      - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_TAX')"
       - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_USE_ECOTAX')"
+      - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_ECOTAX_TAX_RULES_GROUP_ID')"
+      - '@prestashop.adapter.tax.tax_computer'
+      - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
     tags:
       - { name: form.type }
 
@@ -1521,6 +1566,13 @@ services:
     public: true
     arguments:
       - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
+    tags:
+      - { name: form.type }
+
+  form.type.sell.product.pricing.price_summary_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Pricing\PriceSummaryType'
+    parent: 'form.type.translatable.aware'
+    public: true
     tags:
       - { name: form.type }
 
@@ -1535,15 +1587,18 @@ services:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\Pricing\SpecificPriceType'
     parent: 'form.type.translatable.aware'
     arguments:
-      - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency().iso_code'
-      - '@prestashop.core.form.choice_provider.currency_by_id'
-      - '@prestashop.core.form.choice_provider.country_by_id'
-      - '@prestashop.core.form.choice_provider.group_by_id'
-      - '@prestashop.adapter.form.choice_provider.shop_name_by_id'
-      - '@prestashop.core.form.choice_provider.tax_inclusion'
       - '@prestashop.adapter.form.choice_provider.combination_id_choice_provider'
       - '@prestashop.core.admin.url_generator'
-      - '@=service("prestashop.adapter.multistore_feature").isUsed()'
+      - '@prestashop.adapter.product.repository.product_repository'
+    public: true
+    tags:
+      - { name: form.type }
+
+  form.type.sell.product.pricing.specific_price_impact_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Pricing\SpecificPriceImpactType'
+    parent: 'form.type.translatable.aware'
+    arguments:
+      - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency().iso_code'
     public: true
     tags:
       - { name: form.type }
@@ -1563,6 +1618,20 @@ services:
     public: true
     arguments:
       - '@=service("prestashop.core.form.choice_provider.specific_price_priority_choice_provider")'
+    tags:
+      - { name: form.type }
+
+  form.type.sell.product.pricing.group_price_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Pricing\ApplicableGroupsType'
+    parent: 'form.type.translatable.aware'
+    arguments:
+      - '@prestashop.core.form.choice_provider.currency_by_id'
+      - '@prestashop.core.form.choice_provider.country_by_id'
+      - '@prestashop.core.form.choice_provider.group_by_id'
+      - '@prestashop.adapter.form.choice_provider.shop_name_by_id'
+      - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency().symbol'
+      - '@=service("prestashop.adapter.multistore_feature").isUsed()'
+    public: true
     tags:
       - { name: form.type }
 
@@ -1632,6 +1701,14 @@ services:
     tags:
       - { name: form.type }
 
+  form.type.sell.product.options.product_supplier_collection_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Options\ProductSupplierCollectionType'
+    public: true
+    arguments:
+      - "@translator"
+    tags:
+      - { name: form.type }
+
   form.type.product.options.product_supplier_type:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\Options\ProductSupplierType'
     parent: 'form.type.translatable.aware'
@@ -1639,6 +1716,8 @@ services:
     arguments:
       - '@prestashop.core.form.choice_provider.currency_by_id'
       - "@=service('prestashop.adapter.legacy.context').getContext().currency.iso_code"
+      - '@prestashop.adapter.currency.repository.currency_repository'
+      - '@form.form_cloner'
     tags:
       - { name: form.type }
 
@@ -1684,6 +1763,30 @@ services:
 
   # Combination form types
 
+  form.type.sell.product.combination.combinations_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationsType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+
+  form.type.sell.product.combination.combination_manager_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationManagerType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+
+  form.type.sell.product.combination.combination_availability_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationAvailabilityType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    arguments:
+      - '@prestashop.core.form.choice_provider.out_of_stock_type_choice_provider'
+      - '@router'
+    tags:
+      - { name: form.type }
+
   form.type.sell.product.combination_list_type:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationListType'
     parent: 'form.type.translatable.aware'
@@ -1695,6 +1798,8 @@ services:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationItemType'
     parent: 'form.type.translatable.aware'
     public: true
+    arguments:
+      - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
     tags:
       - { name: form.type }
 
@@ -1721,6 +1826,12 @@ services:
     arguments:
       - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrency()'
       - "@=service('prestashop.adapter.legacy.configuration').get('PS_WEIGHT_UNIT')"
+      - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_TAX')"
+      - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_USE_ECOTAX')"
+      - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_ECOTAX_TAX_RULES_GROUP_ID')"
+      - '@prestashop.adapter.tax.tax_computer'
+      - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
+      - '@prestashop.core.localization.locale.context_locale'
     tags:
       - { name: form.type }
 
@@ -1838,12 +1949,19 @@ services:
     tags:
       - name: form.type
 
-  prestashop.bundle.form.admin.configure.advanced_parameters.experimental_feature:
-    class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagsType'
+  prestashop.bundle.form.admin.configure.advanced_parameters.feature_flag.feature_flag_list_type:
+    class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagListType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+
+  prestashop.bundle.form.admin.configure.advanced_parameters.feature_flag.feature_flag_type:
+    class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\FeatureFlag\FeatureFlagType'
     parent: 'form.type.translatable.aware'
     public: true
     arguments:
-      - '@prestashop.core.feature_flags.modifier'
+      - '@form.form_cloner'
     tags:
       - { name: form.type }
 
@@ -1873,6 +1991,13 @@ services:
 
   form.type.admin.security.general:
     class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Security\GeneralType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+
+  form.type.admin.security.password_policy:
+    class: 'PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Security\PasswordPolicyType'
     parent: 'form.type.translatable.aware'
     public: true
     tags:

@@ -52,14 +52,28 @@ export default class CombinationsService {
     });
   }
 
-  updateListedCombination(combinationId: number, data: Record<string, any>): JQuery.jqXHR<any> {
-    return $.ajax({
-      url: this.router.generate('admin_products_combinations_update_combination_from_listing', {
-        combinationId,
-      }),
-      data,
-      type: 'PATCH',
+  bulkDeleteCombinations(productId: number, combinationIds: number[]): JQuery.jqXHR {
+    return $.post({
+      url: this.router.generate('admin_products_combinations_bulk_delete', {productId}),
+      data: {
+        combinationIds: JSON.stringify(combinationIds),
+      },
     });
+  }
+
+  updateCombinationList(productId: number, formData: FormData): Promise<Response> {
+    formData.append('_method', 'PATCH');
+
+    return fetch(
+      this.router.generate('admin_products_combinations_update_combination_from_listing', {productId}),
+      {
+        method: 'POST',
+        body: formData,
+        headers: {
+          _method: 'PATCH',
+        },
+      },
+    );
   }
 
   /**
@@ -90,13 +104,5 @@ export default class CombinationsService {
         _method: 'PATCH',
       },
     });
-  }
-
-  getCombinationIds(productId: number): JQuery.jqXHR<any> {
-    return $.get(
-      this.router.generate('admin_products_combinations_ids', {
-        productId,
-      }),
-    );
   }
 }

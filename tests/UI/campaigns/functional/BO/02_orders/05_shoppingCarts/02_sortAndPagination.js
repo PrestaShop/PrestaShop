@@ -20,7 +20,7 @@ const AddressFaker = require('@data/faker/address');
 // Import demo data
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 
-const addressData = new AddressFaker();
+const addressData = new AddressFaker({country: 'France'});
 const customerData = new CustomerFaker({password: '', lastName: 'guest'});
 
 // Import test context
@@ -56,8 +56,8 @@ describe('BO - Orders - Shopping carts : Sort and pagination shopping carts', as
   // Pre-condition: Create 16 orders
   describe('PRE-TEST: Create 16 orders by guest in FO', async () => {
     const creationTests = new Array(16).fill(0, 0, 16);
-    creationTests.forEach(() => {
-      createOrderByGuestTest(orderByGuestData, baseContext);
+    creationTests.forEach((value, index) => {
+      createOrderByGuestTest(orderByGuestData, `${baseContext}_preTest_${index}`);
     });
   });
 
@@ -217,5 +217,5 @@ describe('BO - Orders - Shopping carts : Sort and pagination shopping carts', as
   });
 
   // Post-condition: Delete created guest customers by bulk action
-  bulkDeleteCustomersTest('email', customerData.email, baseContext);
+  bulkDeleteCustomersTest('email', customerData.email, `${baseContext}_postTest_1`);
 });

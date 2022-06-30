@@ -138,12 +138,12 @@
 </template>
 
 <script lang="ts">
-  import CombinationsService from '@pages/product/services/combinations-service';
   import ProductMap from '@pages/product/product-map';
   import ProductEventMap from '@pages/product/product-event-map';
   import Modal from '@vue/components/Modal.vue';
   import Router from '@components/router';
   import Vue from 'vue';
+  import PaginatedCombinationsService from '@pages/product/services/paginated-combinations-service';
   import History from './History.vue';
 
   export interface Combination {
@@ -151,7 +151,6 @@
   }
 
   interface CombinationModalStates {
-    combinationsService: null | CombinationsService,
     combinationIds: Array<number>,
     selectedCombinationId: number | null,
     selectedCombinationName: string | null,
@@ -179,7 +178,6 @@
     components: {Modal, History},
     data(): CombinationModalStates {
       return {
-        combinationsService: null,
         combinationIds: [],
         selectedCombinationId: null,
         selectedCombinationName: null,
@@ -188,7 +186,7 @@
         editCombinationUrl: '',
         loadingCombinationForm: false,
         submittingCombinationForm: false,
-        combinationList: <JQuery>$(ProductMap.combinations.combinationsListContainer),
+        combinationList: <JQuery>$(ProductMap.combinations.combinationsFormContainer),
         hasSubmittedCombinations: false,
         combinationsHistory: [],
         showConfirm: false,
@@ -198,8 +196,8 @@
       };
     },
     props: {
-      productId: {
-        type: Number,
+      paginatedCombinationsService: {
+        type: PaginatedCombinationsService,
         required: true,
       },
       eventEmitter: {
@@ -212,12 +210,11 @@
       },
     },
     mounted() {
-      this.combinationList = $(ProductMap.combinations.combinationsListContainer);
-      this.combinationsService = new CombinationsService();
+      this.combinationList = $(ProductMap.combinations.combinationsFormContainer);
       this.initCombinationIds();
       this.watchEditButtons();
-      this.eventEmitter.on(CombinationEvents.refreshCombinationList, () => this.initCombinationIds(),
-      );
+      this.eventEmitter.on(CombinationEvents.refreshCombinationList, () => this.initCombinationIds());
+      this.eventEmitter.on(CombinationEvents.listRendered, () => this.initCombinationIds());
     },
     methods: {
       watchEditButtons(): void {
@@ -235,7 +232,7 @@
         );
       },
       async initCombinationIds() {
-        this.combinationIds = await this.combinationsService?.getCombinationIds(this.productId);
+        this.combinationIds = await this.paginatedCombinationsService.getCombinationIds();
       },
       frameLoading(): void {
         this.applyIframeStyling();
@@ -440,7 +437,7 @@
       overflow: hidden;
 
       .modal-body {
-        padding: 0.5rem;
+        padding: 0;
         margin: 0;
         background: #eaebec;
 

@@ -127,6 +127,8 @@ class TypedRegexValidator extends ConstraintValidator
                 return '/^[a-zA-Z0-9_-]+$/';
             case TypedRegex::TYPE_URL:
                 return '/^[~:#,$%&_=\(\)\.\? \+\-@\/a-zA-Z0-9\pL\pS-]+$/u';
+            case TypedRegex::TYPE_WEBSERVICE_KEY:
+                return '/^[a-zA-Z0-9@\#\?\-\_]+$/i';
             default:
                 $definedTypes = implode(', ', array_values((new ReflectionClass(TypedRegex::class))->getConstants()));
                 throw new InvalidArgumentException(sprintf('Type "%s" is not defined. Defined types are: %s', $type, $definedTypes));

@@ -24,7 +24,7 @@
  */
 /* eslint-disable max-len */
 import Router from '@components/router';
-import {AttributeGroup} from '@pages/product/components/generator/AttributesSelector.vue';
+import {AttributeGroup} from '@pages/product/types';
 
 const router = new Router();
 const {$} = window;

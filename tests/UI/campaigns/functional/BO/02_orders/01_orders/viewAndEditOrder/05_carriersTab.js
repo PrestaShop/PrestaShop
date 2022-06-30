@@ -28,7 +28,12 @@ let browserContext;
 let page;
 const today = getDateFormat('mm/dd/yyyy');
 
-const shippingDetailsData = {trackingNumber: '0523698', carrier: Carriers.myCarrier.name, shippingCost: '€8.40'};
+const shippingDetailsData = {
+  trackingNumber: '0523698',
+  carrier: Carriers.myCarrier.name,
+  carrierID: Carriers.myCarrier.id,
+  shippingCost: '€8.40',
+};
 
 // New order by customer data
 const orderByCustomerData = {
@@ -152,7 +157,7 @@ describe('BO - Orders - View and edit order : Check order carriers tab', async (
     });
 
     it('should check the updated carrier details', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkCarrierDetails', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedCarrierDetails', baseContext);
 
       await orderPageTabListBlock.goToCarriersTab(page);
 

@@ -65,10 +65,6 @@ class CustomerIdTest extends TestCase
     public function getValidValues(): Generator
     {
         yield [
-            0,
-        ];
-
-        yield [
             1,
         ];
 
@@ -82,6 +78,10 @@ class CustomerIdTest extends TestCase
      */
     public function getInvalidValues(): Generator
     {
+        yield [
+            0,
+        ];
+
         yield [
             -10,
         ];

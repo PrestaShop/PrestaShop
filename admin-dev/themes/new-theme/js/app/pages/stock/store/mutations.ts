@@ -32,6 +32,9 @@ export default {
   [types.UPDATE_ORDER](state: Record<string, any>, order: Record<string, any>): void {
     state.order = order;
   },
+  [types.UPDATE_SORT](state: Record<string, any>, sort: string): void {
+    state.sort = sort;
+  },
   [types.UPDATE_KEYWORDS](state: Record<string, any>, keywords: Array<string>): void {
     state.keywords = keywords;
   },

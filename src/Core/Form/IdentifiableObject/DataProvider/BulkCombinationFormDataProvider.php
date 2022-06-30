@@ -42,6 +42,7 @@ class BulkCombinationFormDataProvider implements FormDataProviderInterface
                     'quantity' => 0,
                     'delta' => 0,
                 ],
+                'fixed_quantity' => 0,
                 'minimal_quantity' => 0,
                 'stock_location' => '',
                 'low_stock_threshold' => 0,

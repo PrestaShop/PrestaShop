@@ -29,12 +29,19 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Tax;
 
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\Decimal\Operation\Division;
 use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 
 class TaxComputer
 {
+    /**
+     * The conversion between tax rate as percent to tax ratio as float value can make us lose some precision,
+     * so we increase the default precision (6) to avoid losing two digits by diving by 100 (two decimal factors).
+     */
+    protected const DIVISION_PRECISION = Division::DEFAULT_PRECISION + 2;
+
     /**
      * @var TaxRulesGroupRepository
      */
@@ -84,12 +91,14 @@ class TaxComputer
     }
 
     /**
+     * Returns the tax rate for a group and a specific country. The value is the decimal rate (usually a float between 0 and 1)
+     *
      * @param TaxRulesGroupId $taxRulesGroupId
      * @param CountryId $countryId
      *
      * @return DecimalNumber
      */
-    private function getTaxRatio(TaxRulesGroupId $taxRulesGroupId, CountryId $countryId): DecimalNumber
+    public function getTaxRate(TaxRulesGroupId $taxRulesGroupId, CountryId $countryId): DecimalNumber
     {
         $taxRulesGroup = $this->taxRulesGroupRepository->getTaxRulesGroupDetails($taxRulesGroupId);
         if (!empty($taxRulesGroup['rates'])) {
@@ -99,6 +108,19 @@ class TaxComputer
             $countryTaxRate = 0;
         }
 
-        return new DecimalNumber((string) (1 + ($countryTaxRate / 100)));
+        return new DecimalNumber((string) $countryTaxRate);
+    }
+
+    /**
+     * @param TaxRulesGroupId $taxRulesGroupId
+     * @param CountryId $countryId
+     *
+     * @return DecimalNumber
+     */
+    protected function getTaxRatio(TaxRulesGroupId $taxRulesGroupId, CountryId $countryId): DecimalNumber
+    {
+        $countryTaxRate = $this->getTaxRate($taxRulesGroupId, $countryId);
+
+        return $countryTaxRate->dividedBy(new DecimalNumber('100'), self::DIVISION_PRECISION)->plus(new DecimalNumber('1'));
     }
 }

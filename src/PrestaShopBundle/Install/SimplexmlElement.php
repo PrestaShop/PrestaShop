@@ -65,6 +65,7 @@ class SimplexmlElement extends \SimpleXMLElement
      *
      * @see SimpleXMLElement::asXML()
      */
+    #[\ReturnTypeWillChange]
     public function asXML($filename = null)
     {
         $dom = new DOMDocument('1.0');

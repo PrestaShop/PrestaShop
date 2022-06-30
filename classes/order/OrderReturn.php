@@ -214,6 +214,7 @@ class OrderReturnCore extends ObjectModel
         }
         $products = $order->getProducts();
 
+        /** @var array{id_order_detail: int} $return */
         foreach ($returns as &$return) {
             $return['product_id'] = (int) $products[(int) $return['id_order_detail']]['product_id'];
             $return['product_attribute_id'] = (int) $products[(int) $return['id_order_detail']]['product_attribute_id'];

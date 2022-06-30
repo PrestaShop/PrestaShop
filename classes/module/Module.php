@@ -27,6 +27,7 @@
 use PrestaShop\PrestaShop\Adapter\ContainerFinder;
 use PrestaShop\PrestaShop\Adapter\LegacyLogger;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
+use PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
@@ -417,7 +418,11 @@ abstract class ModuleCore implements ModuleInterface
         }
 
         // Install module and retrieve the installation id
-        $result = Db::getInstance()->insert($this->table, ['name' => $this->name, 'active' => 1, 'version' => $this->version]);
+        $result = Db::getInstance()->insert($this->table, [
+            'name' => $this->name,
+            'active' => 1,
+            'version' => $this->version,
+        ]);
         if (!$result) {
             $this->_errors[] = Context::getContext()->getTranslator()->trans('Technical error: PrestaShop could not install this module.', [], 'Admin.Modules.Notification');
             if (method_exists($this, 'uninstallTabs')) {
@@ -1454,7 +1459,7 @@ abstract class ModuleCore implements ModuleInterface
                         $item->version = $tmp_module->version;
                         $item->tab = $tmp_module->tab;
                         $item->displayName = $tmp_module->displayName;
-                        $item->description = stripslashes($tmp_module->description);
+                        $item->description = isset($tmp_module->description) ? stripslashes($tmp_module->description) : null;
                         $item->author = $tmp_module->author;
                         $item->author_uri = (isset($tmp_module->author_uri) && $tmp_module->author_uri) ? $tmp_module->author_uri : false;
                         $item->limited_countries = $tmp_module->limited_countries;
@@ -1465,7 +1470,7 @@ abstract class ModuleCore implements ModuleInterface
                         $item->currencies = isset($tmp_module->currencies) ? $tmp_module->currencies : null;
                         $item->currencies_mode = isset($tmp_module->currencies_mode) ? $tmp_module->currencies_mode : null;
                         $item->confirmUninstall = isset($tmp_module->confirmUninstall) ? html_entity_decode($tmp_module->confirmUninstall) : null;
-                        $item->description_full = stripslashes($tmp_module->description_full);
+                        $item->description_full = isset($tmp_module->description_full) ? stripslashes($tmp_module->description_full) : null;
                         $item->additional_description = isset($tmp_module->additional_description) ? stripslashes($tmp_module->additional_description) : null;
                         $item->compatibility = isset($tmp_module->compatibility) ? (array) $tmp_module->compatibility : null;
                         $item->nb_rates = isset($tmp_module->nb_rates) ? (array) $tmp_module->nb_rates : null;
@@ -1626,12 +1631,28 @@ abstract class ModuleCore implements ModuleInterface
      */
     public static function getNonNativeModuleList()
     {
-        return false;
+        return self::getModuleRepository()->getNonNativeModules();
     }
 
+    /**
+     * @return array<string>
+     */
     public static function getNativeModuleList()
     {
-        return false;
+        return self::getModuleRepository()->getNativeModules();
+    }
+
+    /**
+     * @return ModuleRepository
+     *
+     * @throws ContainerNotFoundException
+     */
+    private static function getModuleRepository(): ModuleRepository
+    {
+        $finder = new ContainerFinder(Context::getContext());
+        $sfContainer = $finder->getContainer();
+
+        return $sfContainer->get('prestashop.adapter.module.repository.module_repository');
     }
 
     /**
@@ -3487,6 +3508,12 @@ abstract class ModuleCore implements ModuleInterface
         }
 
         $this->getContainer()->get('prestashop.adapter.cache.clearer.symfony_cache_clearer')->clear();
+    }
+
+    public static function resetStaticCache()
+    {
+        static::$_INSTANCE = [];
+        Cache::clean('Module::isEnabled*');
     }
 }
 

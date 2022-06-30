@@ -11,9 +11,9 @@ admin_tax_rules_groups_search:
   methods: [ POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
-    _legacy_controller: AdminTaxRulesGroup
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.tax_rules_group
     redirectRoute: admin_tax_rules_groups_index
+    _legacy_controller: AdminTaxRulesGroup
 #  _legacy_link: AdminTaxRulesGroup:submitFiltertax_rules_group
 
 admin_tax_rules_groups_create:
@@ -38,7 +38,7 @@ admin_tax_rules_groups_edit:
 
 admin_tax_rules_groups_delete:
   path: /{taxRulesGroupId}/delete
-  methods: POST
+  methods: [ POST, DELETE ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Improve\International\TaxRulesGroupController::deleteAction
     _legacy_controller: AdminTaxRulesGroup

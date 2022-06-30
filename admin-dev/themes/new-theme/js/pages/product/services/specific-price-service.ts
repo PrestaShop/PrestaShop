@@ -28,10 +28,13 @@ import Router from '@components/router';
 const router = new Router();
 const {$} = window;
 
-export const getSpecificPrices = async (productId: number): Promise<Record<string, number | SpecificPriceForListing[]>> => $.get(
-  router.generate('admin_products_specific_prices_list', {productId}),
-);
+export const deleteSpecificPrice = async (specificPriceId: string): Promise<JQuery.jqXHR> => $.ajax({
+  url: router.generate('admin_products_specific_prices_delete', {
+    specificPriceId,
+  }),
+  type: 'DELETE',
+});
 
 export default {
-  getSpecificPrices,
+  deleteSpecificPrice,
 };

@@ -45,7 +45,6 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
   it('should go to \'Catalog > Products\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
-    await dashboardPage.closeOnboardingModal(page, 3000);
     await dashboardPage.goToSubMenu(
       page,
       dashboardPage.catalogParentLink,

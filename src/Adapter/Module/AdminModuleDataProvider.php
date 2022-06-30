@@ -80,14 +80,14 @@ class AdminModuleDataProvider implements ModuleInterface
      */
     protected $moduleActions = [
         Module::ACTION_INSTALL,
-        Module::ACTION_UPGRADE,
         Module::ACTION_ENABLE,
         Module::ACTION_CONFIGURE,
-        Module::ACTION_DISABLE,
-        Module::ACTION_UNINSTALL,
+        Module::ACTION_UPGRADE,
         Module::ACTION_ENABLE_MOBILE,
         Module::ACTION_DISABLE_MOBILE,
+        Module::ACTION_DISABLE,
         Module::ACTION_RESET,
+        Module::ACTION_UNINSTALL,
     ];
 
     /**

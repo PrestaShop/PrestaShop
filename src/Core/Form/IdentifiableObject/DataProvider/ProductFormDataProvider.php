@@ -109,7 +109,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
         /** @var ProductForEditing $productForEditing */
         $productForEditing = $this->queryBus->handle(new GetProductForEditing($productId, $shopConstraint));
 
-        return [
+        $productData = [
             'id' => $productId,
             'header' => $this->extractHeaderData($productForEditing),
             'description' => $this->extractDescriptionData($productForEditing),
@@ -123,6 +123,18 @@ class ProductFormDataProvider implements FormDataProviderInterface
                 'active' => $productForEditing->isActive(),
             ],
         ];
+
+        if ($productForEditing->getType() === ProductType::TYPE_COMBINATIONS) {
+            $productData['combinations'] = [
+                'availability' => [
+                    'out_of_stock_type' => $productData['stock']['availability']['out_of_stock_type'],
+                    'available_now_label' => $productData['stock']['availability']['available_now_label'] ?? [],
+                    'available_later_label' => $productData['stock']['availability']['available_later_label'] ?? [],
+                ],
+            ];
+        }
+
+        return $productData;
     }
 
     /**
@@ -229,6 +241,7 @@ class ProductFormDataProvider implements FormDataProviderInterface
     {
         return [
             'type' => $productForEditing->getType(),
+            'initial_type' => $productForEditing->getType(),
             'name' => $productForEditing->getBasicInformation()->getLocalizedNames(),
             'cover_thumbnail' => $productForEditing->getCoverThumbnailUrl(),
         ];
@@ -377,9 +390,10 @@ class ProductFormDataProvider implements FormDataProviderInterface
             'retail_price' => [
                 'price_tax_excluded' => (float) (string) $productForEditing->getPricesInformation()->getPrice(),
                 'price_tax_included' => (float) (string) $productForEditing->getPricesInformation()->getPriceTaxIncluded(),
-                'ecotax' => (float) (string) $productForEditing->getPricesInformation()->getEcotax(),
+                'tax_rules_group_id' => $productForEditing->getPricesInformation()->getTaxRulesGroupId(),
+                'ecotax_tax_excluded' => (float) (string) $productForEditing->getPricesInformation()->getEcotax(),
+                'ecotax_tax_included' => (float) (string) $productForEditing->getPricesInformation()->getEcotaxTaxIncluded(),
             ],
-            'tax_rules_group_id' => $productForEditing->getPricesInformation()->getTaxRulesGroupId(),
             'on_sale' => $productForEditing->getPricesInformation()->isOnSale(),
             'wholesale_price' => (float) (string) $productForEditing->getPricesInformation()->getWholesalePrice(),
             'unit_price' => [
@@ -491,16 +505,16 @@ class ProductFormDataProvider implements FormDataProviderInterface
     private function extractOptionsData(ProductForEditing $productForEditing): array
     {
         $options = $productForEditing->getOptions();
+        $suppliersData = $this->extractSuppliersData($productForEditing);
 
-        return [
+        return array_merge([
             'visibility' => [
                 'visibility' => $options->getVisibility(),
                 'available_for_order' => $options->isAvailableForOrder(),
                 'show_price' => $options->showPrice(),
                 'online_only' => $options->isOnlineOnly(),
             ],
-            'suppliers' => $this->extractSuppliersData($productForEditing),
-        ];
+        ], $suppliersData);
     }
 
     /**
@@ -575,36 +589,41 @@ class ProductFormDataProvider implements FormDataProviderInterface
     /**
      * @param ProductForEditing $productForEditing
      *
-     * @return array<string, int|array<int, int|array<string, string|int>>>
+     * @return array{suppliers: array{default_supplier_id: int, supplier_ids: int[]}, product_suppliers: array<int, array{supplier_id: int, supplier_name: string, product_supplier_id: int, price_tax_excluded: string, reference: string, currency_id: int, combination_id: int}>}
      */
     private function extractSuppliersData(ProductForEditing $productForEditing): array
     {
-        /** @var ProductSupplierOptions $productSupplierOptions */
-        $productSupplierOptions = $this->queryBus->handle(new GetProductSupplierOptions($productForEditing->getProductId()));
-
-        if (empty($productSupplierOptions->getSuppliersInfo())) {
-            return [];
-        }
-
-        $defaultSupplierId = $productSupplierOptions->getDefaultSupplierId();
         $suppliersData = [
-            'default_supplier_id' => $defaultSupplierId,
+            'suppliers' => [
+                'default_supplier_id' => 0,
+                'supplier_ids' => [],
+            ],
+            'product_suppliers' => [],
         ];
 
-        foreach ($productSupplierOptions->getSuppliersInfo() as $supplierOption) {
-            $supplierForEditing = $supplierOption->getProductSupplierForEditing();
-            $supplierId = $supplierOption->getSupplierId();
+        /** @var ProductSupplierOptions $productSupplierOptions */
+        $productSupplierOptions = $this->queryBus->handle(new GetProductSupplierOptions($productForEditing->getProductId()));
+        $suppliersData['suppliers']['default_supplier_id'] = $productSupplierOptions->getDefaultSupplierId();
+        $suppliersData['suppliers']['supplier_ids'] = $productSupplierOptions->getSupplierIds();
 
-            $suppliersData['supplier_ids'][] = $supplierId;
-            $suppliersData['product_suppliers'][$supplierId] = [
-                'supplier_id' => $supplierId,
-                'supplier_name' => $supplierOption->getSupplierName(),
-                'product_supplier_id' => $supplierForEditing->getProductSupplierId(),
-                'price_tax_excluded' => $supplierForEditing->getPriceTaxExcluded(),
-                'reference' => $supplierForEditing->getReference(),
-                'currency_id' => $supplierForEditing->getCurrencyId(),
-                'combination_id' => $supplierForEditing->getCombinationId(),
-            ];
+        if (empty($productSupplierOptions->getProductSuppliers())) {
+            return $suppliersData;
+        }
+
+        foreach ($productSupplierOptions->getProductSuppliers() as $supplierForEditing) {
+            $supplierId = $supplierForEditing->getSupplierId();
+
+            if ($productForEditing->getType() !== ProductType::TYPE_COMBINATIONS) {
+                $suppliersData['product_suppliers'][$supplierId] = [
+                    'supplier_id' => $supplierId,
+                    'supplier_name' => $supplierForEditing->getSupplierName(),
+                    'product_supplier_id' => $supplierForEditing->getProductSupplierId(),
+                    'price_tax_excluded' => $supplierForEditing->getPriceTaxExcluded(),
+                    'reference' => $supplierForEditing->getReference(),
+                    'currency_id' => $supplierForEditing->getCurrencyId(),
+                    'combination_id' => $supplierForEditing->getCombinationId(),
+                ];
+            }
         }
 
         return $suppliersData;

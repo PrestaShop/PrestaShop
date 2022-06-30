@@ -22,7 +22,7 @@ class Search extends BOBasePage {
 
     // Selectors
     // Header links
-    this.addNewAliasLink = '#page-header-desc-alias-new_alias';
+    this.addNewAliasLink = 'a[data-role=page-header-desc-alias-link]';
 
     // Tabs
     this.tagsTabLink = '#subtab-AdminTags';

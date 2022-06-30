@@ -102,8 +102,9 @@ describe('BO - Orders - Orders : Filter the Orders table by ID, REFERENCE, STATU
         test.args.filterBy,
         test.args.filterValue,
       );
+
       const textColumn = await ordersPage.getTextColumn(page, test.args.filterBy, 1);
-      await expect(textColumn).to.contains(test.args.filterValue);
+      await expect(textColumn).to.equal(test.args.filterValue);
     });
 
     it('should reset all filters', async function () {

@@ -23,26 +23,21 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  * #}
 
-{% extends '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
-
-{% block specific_price_widget %}
-  <div class="card">
-    <h3 class="card-header">
-      <i class="material-icons">attach_money</i>
-      {{ 'Specific prices'|trans({}, 'Admin.Catalog.Feature') }}
-    </h3>
-    <div class="card-body">
-      {{ block('form_widget') }}
-    </div>
-  </div>
-{% endblock specific_price_widget %}
+{% extends '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
 
 {% block searched_customer_row %}
-  <li class="media entity-item" id="{{ form.vars.name }}">
+  {% set attr = attr|merge({'class': (attr.class|default('') ~ ' media entity-item')|trim}) %}
+  <li {{ block('widget_container_attributes') }}>
     <div class="media-body media-middle">
       {{ form_widget(form.fullname_and_email) }}
-      <i class="material-icons delete entity-item-delete">clear</i>
+      <i class="material-icons entity-item-delete">clear</i>
     </div>
     {{ form_widget(form.id_customer) }}
   </li>
+{% endblock %}
+
+{% block specific_price_impact_row %}
+  {{ form_label(form) }}
+  {{ form_errors(form) }}
+  {{ form_widget(form) }}
 {% endblock %}

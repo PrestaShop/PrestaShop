@@ -76,7 +76,8 @@ class ModuleControllerTest extends WebTestCase
         $configurationMock->method('get')
             ->will($this->returnValueMap([
                 ['_PS_MODE_DEMO_', null, null, true],
-                ['_PS_MODULE_DIR_', null, null, dirname(__DIR__, 3) . '/Resources/modules/'],
+                ['_PS_ROOT_DIR_', null, null, _PS_ROOT_DIR_],
+                ['_PS_MODULE_DIR_', null, null, _PS_ROOT_DIR_ . '/tests/Resources/modules/'],
                 ['_PS_ALL_THEMES_DIR_', null, null, dirname(__DIR__, 6) . '/themes/'],
             ]));
 

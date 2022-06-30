@@ -17,10 +17,6 @@ $search-border-color: #bbcdd2;
   color: $header-text-color;
   background: #fff;
 
-  .mobile & {
-    height: 60px;
-  }
-
   .material-icons {
     position: relative;
     vertical-align: middle;
@@ -931,6 +927,6 @@ $search-border-color: #bbcdd2;
 
 #employee_infos {
   > a > .material-icons {
-    font-size: 24px;
+    font-size: 22px;
   }
 }

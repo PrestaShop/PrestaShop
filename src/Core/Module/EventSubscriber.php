@@ -69,7 +69,7 @@ class EventSubscriber implements EventSubscriberInterface
     public function onModuleStateChanged(ModuleManagementEvent $event): void
     {
         $moduleName = $event->getModule()->get('name');
-        $this->moduleRepository->clearCache($moduleName);
+        $this->moduleRepository->clearCache($moduleName, true);
     }
 
     public function onModuleInstalledOrUninstalled(ModuleManagementEvent $event): void

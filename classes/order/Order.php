@@ -790,7 +790,9 @@ class OrderCore extends ObjectModel
 
     public function getTaxesAverageUsed()
     {
-        return Cart::getTaxesAverageUsed((int) $this->id_cart);
+        $cart = new Cart((int) $this->id_cart);
+
+        return $cart->getAverageProductsTaxRate() * 100;
     }
 
     /**
@@ -1000,9 +1002,9 @@ class OrderCore extends ObjectModel
         foreach ($res as $key => $val) {
             // In case order creation crashed midway some data might be absent
             $orderState = !empty($val['id_order_state']) ? $indexedOrderStates[$val['id_order_state']] : null;
-            $res[$key]['order_state'] = $orderState['name'] ?: null;
-            $res[$key]['invoice'] = $orderState['invoice'] ?: null;
-            $res[$key]['order_state_color'] = $orderState['color'] ?: null;
+            $res[$key]['order_state'] = $orderState['name'] ?? null;
+            $res[$key]['invoice'] = $orderState['invoice'] ?? null;
+            $res[$key]['order_state_color'] = $orderState['color'] ?? null;
         }
 
         return $res;
@@ -1203,6 +1205,10 @@ class OrderCore extends ObjectModel
      */
     public static function getByCartId($id_cart)
     {
+        if ($id_cart < 1) {
+            return null;
+        }
+
         $id_order = (int) self::getIdByCartId((int) $id_cart);
 
         return ($id_order > 0) ? new static($id_order) : null;
@@ -1213,10 +1219,14 @@ class OrderCore extends ObjectModel
      *
      * @param int $id_cart Cart id
      *
-     * @return int $id_order
+     * @return int|bool $id_order
      */
     public static function getIdByCartId($id_cart)
     {
+        if ($id_cart < 1) {
+            return false;
+        }
+
         $sql = 'SELECT `id_order`
             FROM `' . _DB_PREFIX_ . 'orders`
             WHERE `id_cart` = ' . (int) $id_cart .
@@ -1939,7 +1949,7 @@ class OrderCore extends ObjectModel
             $this->total_paid_real += $order_payment->amount;
         } else {
             $default_currency = (int) Configuration::get('PS_CURRENCY_DEFAULT');
-            if ($this->id_currency === $default_currency) {
+            if ($order_payment->id_currency === $default_currency) {
                 $this->total_paid_real += Tools::ps_round(
                     Tools::convertPrice((float) $order_payment->amount, $this->id_currency, false),
                     Context::getContext()->getComputingPrecision()

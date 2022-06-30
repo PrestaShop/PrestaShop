@@ -84,8 +84,8 @@ describe('BO - Customers - Customers : Set required fields', async () => {
       await foHomePage.goToLoginPage(page);
       await foLoginPage.goToCreateAccountPage(page);
 
-      const pageTitle = await foCreateAccountPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(foCreateAccountPage.pageTitle);
+      const pageTitle = await foCreateAccountPage.getHeaderTitle(page);
+      await expect(pageTitle).to.contains(foCreateAccountPage.formTitle);
     });
 
     it('should check \'Receive offers from our partners\' checkbox', async function () {

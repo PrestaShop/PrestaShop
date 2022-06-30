@@ -365,25 +365,30 @@ class ContextCore
             $this->cart = new Cart($idCart);
             $this->cart->secure_key = $customer->secure_key;
         } else {
-            $idCarrier = (int) $this->cart->id_carrier;
-            $this->cart->secure_key = $customer->secure_key;
-            $this->cart->id_carrier = 0;
-            $this->cart->setDeliveryOption(null);
-            $this->cart->updateAddressId($this->cart->id_address_delivery, (int) Address::getFirstCustomerAddressId((int) ($customer->id)));
-            $this->cart->id_address_delivery = (int) Address::getFirstCustomerAddressId((int) ($customer->id));
-            $this->cart->id_address_invoice = (int) Address::getFirstCustomerAddressId((int) ($customer->id));
+            if (Validate::isLoadedObject($this->cart)) {
+                $idCarrier = (int) $this->cart->id_carrier;
+                $this->cart->secure_key = $customer->secure_key;
+                $this->cart->id_carrier = 0;
+                if (!empty($idCarrier)) {
+                    $deliveryOption = [$this->cart->id_address_delivery => $idCarrier . ','];
+                    $this->cart->setDeliveryOption($deliveryOption);
+                } else {
+                    $this->cart->setDeliveryOption(null);
+                }
+                $this->cart->id_customer = (int) $customer->id;
+                $this->cart->updateAddressId($this->cart->id_address_delivery, (int) Address::getFirstCustomerAddressId((int) ($customer->id)));
+                $this->cart->id_address_delivery = (int) Address::getFirstCustomerAddressId((int) ($customer->id));
+                $this->cart->id_address_invoice = (int) Address::getFirstCustomerAddressId((int) ($customer->id));
+            }
         }
-        $this->cart->id_customer = (int) $customer->id;
 
-        if (isset($idCarrier) && $idCarrier) {
-            $deliveryOption = [$this->cart->id_address_delivery => $idCarrier . ','];
-            $this->cart->setDeliveryOption($deliveryOption);
+        if (Validate::isLoadedObject($this->cart)) {
+            $this->cart->save();
+            $this->cart->autosetProductAddress();
+            $this->cookie->id_cart = (int) $this->cart->id;
         }
 
-        $this->cart->save();
-        $this->cookie->id_cart = (int) $this->cart->id;
         $this->cookie->write();
-        $this->cart->autosetProductAddress();
 
         $this->cookie->registerSession(new CustomerSession());
     }
@@ -467,7 +472,7 @@ class ContextCore
                 // If a container is still not found, instantiate manually the translator loader
                 // This will happen in the Front as we have legacy controllers, the Sf container won't be available.
                 // As we get the translator in the controller's constructor and the container is built in the init method, we won't find it here
-                $translatorLoader = (new TranslatorLanguageLoader(new ModuleRepository()));
+                $translatorLoader = (new TranslatorLanguageLoader(new ModuleRepository(_PS_ROOT_DIR_, _PS_MODULE_DIR_)));
             }
 
             $translatorLoader

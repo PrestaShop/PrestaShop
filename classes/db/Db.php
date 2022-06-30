@@ -421,7 +421,7 @@ abstract class DbCore
         } elseif ($type == Db::ON_DUPLICATE_KEY) {
             $insert_keyword = 'INSERT';
         } else {
-            throw new PrestaShopDatabaseException('Bad keyword, must be Db::INSERT or Db::INSERT_IGNORE or Db::REPLACE');
+            throw new PrestaShopDatabaseException('Bad keyword, must be Db::INSERT or Db::INSERT_IGNORE or Db::REPLACE or Db::ON_DUPLICATE_KEY');
         }
 
         // Check if $data is a list of row
@@ -687,7 +687,7 @@ abstract class DbCore
      * @param string|DbQuery $sql
      * @param bool $use_cache
      *
-     * @return string|false Returns false if no results
+     * @return string|false|null Returns false if no results
      */
     public function getValue($sql, $use_cache = true)
     {

@@ -64,7 +64,7 @@
     },
     data() {
       return {
-        sortDirection: 'asc',
+        sortDirection: 'desc',
       };
     },
     computed: {

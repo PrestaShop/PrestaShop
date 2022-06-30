@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Validate\SpecificPriceVa
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\CannotAddSpecificPriceException;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\CannotDeleteSpecificPriceException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\CannotUpdateSpecificPriceException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceNotFoundException;
@@ -126,6 +127,22 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
     }
 
     /**
+     * @param SpecificPriceId $specificPriceId
+     *
+     * @return void
+     */
+    public function delete(SpecificPriceId $specificPriceId): void
+    {
+        $objectModel = $this->getObjectModel(
+            $specificPriceId->getValue(),
+            SpecificPrice::class,
+            SpecificPriceNotFoundException::class
+        );
+
+        $this->deleteObjectModel($objectModel, CannotDeleteSpecificPriceException::class);
+    }
+
+    /**
      * @param SpecificPrice $specificPrice
      * @param string[] $updatableProperties
      */
@@ -161,6 +178,7 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
                 sp.*,
                 shop.name as shop_name,
                 currency_lang.name as currency_name,
+                currency.iso_code as currency_iso_code,
                 customer.firstname as customer_firstname,
                 customer.lastname as customer_lastname,
                 country_lang.name as country_name,
@@ -307,6 +325,11 @@ class SpecificPriceRepository extends AbstractObjectModelRepository
                 'sp',
                 $this->dbPrefix . 'currency_lang', 'currency_lang',
                 'sp.id_currency = currency_lang.id_currency AND currency_lang.id_lang = :langId'
+            )
+            ->leftJoin(
+                'currency_lang',
+                $this->dbPrefix . 'currency', 'currency',
+                'currency.id_currency = currency_lang.id_currency'
             )
             ->leftJoin(
                 'sp',

@@ -27,14 +27,16 @@ import BigNumber from 'bignumber.js';
 import {EventEmitter} from 'events';
 import FormObjectMapper, {FormUpdateEvent} from '@components/form/form-object-mapper';
 import ProductFormMapping from '@pages/product/edit/product-form-mapping';
-import ProductEventMap from '@pages/product/product-event-map';
+import {NumberFormatter} from '@app/cldr';
 
 export default class ProductFormModel {
-  eventEmitter: EventEmitter;
+  private eventEmitter: EventEmitter;
 
-  mapper: FormObjectMapper;
+  private mapper: FormObjectMapper;
 
-  precision: number;
+  private precision: number;
+
+  private numberFormatter: NumberFormatter;
 
   constructor($form: JQuery, eventEmitter: EventEmitter) {
     this.eventEmitter = eventEmitter;
@@ -43,161 +45,200 @@ export default class ProductFormModel {
     this.mapper = new FormObjectMapper(
       $form,
       ProductFormMapping,
-      eventEmitter,
-      {
-        modelUpdated: ProductEventMap.productModelUpdated,
-        updateModel: ProductEventMap.updatedProductModel,
-        modelFieldUpdated: ProductEventMap.updatedProductField,
-      },
     );
 
     // For now we get precision only in the component, but maybe it would deserve a more global configuration
     // BigNumber.set({DECIMAL_PLACES: someConfig}) But where can we define/inject this global config?
-    const $priceTaxExcludedInput = this.mapper.getInputsFor('product.price.priceTaxExcluded');
+    const $priceTaxExcludedInput: JQuery<HTMLElement> | undefined = this.mapper.getInputsFor('price.priceTaxExcluded');
     this.precision = <number>$priceTaxExcludedInput?.data('displayPricePrecision');
+
+    this.numberFormatter = NumberFormatter.build($priceTaxExcludedInput?.data('priceSpecification'));
 
     // Listens to event for product modification (registered after the model is constructed, because events are
     // triggered during the initial parsing but don't need them at first).
-    this.eventEmitter.on(ProductEventMap.updatedProductField, (event) => this.productFieldUpdated(event));
+
+    const pricesFields = [
+      'price.priceTaxIncluded',
+      'price.priceTaxExcluded',
+      'price.taxRulesGroupId',
+      'price.unitPriceTaxIncluded',
+      'price.unitPriceTaxExcluded',
+      'price.ecotaxTaxIncluded',
+      'price.ecotaxTaxExcluded',
+      // This one has no impact but at least its value is guaranteed to be a number
+      'price.wholesalePrice',
+    ];
+    this.mapper.watch(pricesFields, (event: FormUpdateEvent) => this.updateProductPrices(event));
   }
 
-  /**
-   * @returns {Object}
-   *
-   * @private
-   */
-  getProduct(): Record<string, any> {
-    return this.mapper.getModel().product;
+  getProduct(): any {
+    return this.mapper.getModel();
   }
 
-  /**
-   * @param {string} productModelKey
-   * @param {function} callback
-   *
-   * @private
-   */
-  watch(productModelKey: string, callback: (event: FormUpdateEvent) => void): void {
-    this.mapper.watch(`product.${productModelKey}`, callback);
+  getBigNumber(modelKey: string): BigNumber | undefined {
+    return this.mapper.getBigNumber(`${modelKey}`);
   }
 
-  /**
-   * @param {string} productModelKey
-   * @param {*} value
-   */
-  set(productModelKey: string, value: any): void {
-    this.mapper.set(`product.${productModelKey}`, value);
+  watch(modelKeys: string | string[], callback: (event: FormUpdateEvent) => void): void {
+    this.mapper.watch(modelKeys, callback);
   }
 
-  /**
-   * Handles modifications that have happened in the product
-   *
-   * @param {Object} event
-   *
-   * @private
-   */
-  private productFieldUpdated(event: FormUpdateEvent): void {
-    this.updateProductPrices(event);
+  set(modelKey: string, value: string | number | string[] | undefined): void {
+    this.mapper.set(modelKey, value);
+  }
+
+  getTaxRatio(): BigNumber {
+    const $taxRulesGroupIdInput: JQuery<HTMLElement> | undefined = this.mapper.getInputsFor('price.taxRulesGroupId');
+
+    if (!$taxRulesGroupIdInput) {
+      console.error('Could not find tax rules input');
+      return new BigNumber(NaN);
+    }
+
+    const isTaxEnabled = $taxRulesGroupIdInput.data('taxEnabled');
+
+    if (!isTaxEnabled) {
+      return new BigNumber(1);
+    }
+
+    const $selectedTaxOption = $(':selected', $taxRulesGroupIdInput);
+
+    return this.getTaxRatioFromInput($selectedTaxOption);
+  }
+
+  getEcoTaxRatio(): BigNumber {
+    const $ecotaxTaxExcluded = this.mapper.getInputsFor('price.ecotaxTaxExcluded');
+
+    // If no ecotax field found return 1 this way it has no impact in computing
+    if (!$ecotaxTaxExcluded) {
+      return new BigNumber(1);
+    }
+
+    return this.getTaxRatioFromInput($ecotaxTaxExcluded);
+  }
+
+  getPriceTaxExcluded(): BigNumber {
+    return this.mapper.getBigNumber('price.priceTaxExcluded') ?? new BigNumber(0);
+  }
+
+  displayPrice(price: BigNumber): string {
+    return this.numberFormatter.format(price.toNumber());
+  }
+
+  removeTax(price: BigNumber): string {
+    const taxRatio = this.getTaxRatio();
+
+    if (taxRatio.isNaN()) {
+      return price.toFixed(this.precision);
+    }
+
+    return price.dividedBy(taxRatio).toFixed(this.precision);
+  }
+
+  addTax(price: BigNumber): string {
+    const taxRatio = this.getTaxRatio();
+
+    if (taxRatio.isNaN()) {
+      return price.toFixed(this.precision);
+    }
+
+    return price.times(taxRatio).toFixed(this.precision);
   }
 
   /**
    * Specific handler for modifications related to the product price
-   *
-   * @param {Object} event
-   * @private
    */
-  private updateProductPrices(event: Record<string, any>) {
-    const pricesFields = [
-      'product.price.priceTaxIncluded',
-      'product.price.priceTaxExcluded',
-      'product.price.taxRulesGroupId',
-      'product.price.unitPriceTaxIncluded',
-      'product.price.unitPriceTaxExcluded',
-    ];
-
-    if (!pricesFields.includes(event.modelKey)) {
+  private updateProductPrices(event: FormUpdateEvent): void {
+    // We don't allow invalid value which turn out to NaN values so we automatically replace them by 0
+    if (new BigNumber(event.value).isNaN()) {
+      event.stopPropagation();
+      this.mapper.set(event.modelKey, new BigNumber(0).toFixed(this.precision));
       return;
     }
 
-    const $taxRulesGroupIdInput = this.mapper.getInputsFor('product.price.taxRulesGroupId');
+    const taxRatio = this.getTaxRatio();
 
-    if (!$taxRulesGroupIdInput) {
-      console.error('Could not find tax rules input');
+    if (taxRatio.isNaN()) {
       return;
     }
-
-    const $selectedTaxOption = $(':selected', $taxRulesGroupIdInput);
-    const isTaxEnabled = $taxRulesGroupIdInput.data('taxEnabled');
-
-    let taxRate = new BigNumber(0);
-
-    if (isTaxEnabled) {
-      try {
-        taxRate = new BigNumber($selectedTaxOption.data('taxRate'));
-      } catch (error) {
-        taxRate = new BigNumber(NaN);
-      }
-      if (taxRate.isNaN()) {
-        taxRate = new BigNumber(0);
-      }
-    }
-
-    const taxRatio = taxRate.dividedBy(100).plus(1);
 
     // eslint-disable-next-line default-case
     switch (event.modelKey) {
-      case 'product.price.priceTaxIncluded': {
-        const priceTaxIncluded = this.mapper.getBigNumber('product.price.priceTaxIncluded');
-        this.mapper.set('product.price.priceTaxExcluded', this.removeTax(priceTaxIncluded, taxRatio));
+      // Regular retail price
+      case 'price.priceTaxIncluded': {
+        const priceTaxIncluded = this.mapper.getBigNumber('price.priceTaxIncluded') ?? new BigNumber(0);
+        const ecotaxTaxIncluded = this.mapper.getBigNumber('price.ecotaxTaxIncluded') ?? new BigNumber(0);
+        this.mapper.set('price.priceTaxExcluded', this.removeTax(priceTaxIncluded.minus(ecotaxTaxIncluded)));
         break;
       }
-      case 'product.price.priceTaxExcluded': {
-        const priceTaxExcluded = this.mapper.getBigNumber('product.price.priceTaxExcluded');
-        this.mapper.set('product.price.priceTaxIncluded', this.addTax(priceTaxExcluded, taxRatio));
-        break;
-      }
-
-      case 'product.price.unitPriceTaxIncluded': {
-        const unitPriceTaxIncluded = this.mapper.getBigNumber('product.price.unitPriceTaxIncluded');
-        this.mapper.set('product.price.unitPriceTaxExcluded', this.removeTax(unitPriceTaxIncluded, taxRatio));
-        break;
-      }
-      case 'product.price.unitPriceTaxExcluded': {
-        const unitPriceTaxExcluded = this.mapper.getBigNumber('product.price.unitPriceTaxExcluded');
-        this.mapper.set('product.price.unitPriceTaxIncluded', this.addTax(unitPriceTaxExcluded, taxRatio));
+      case 'price.priceTaxExcluded': {
+        const priceTaxExcluded = this.mapper.getBigNumber('price.priceTaxExcluded') ?? new BigNumber(0);
+        const ecotaxTaxIncluded = this.mapper.getBigNumber('price.ecotaxTaxIncluded') ?? new BigNumber(0);
+        this.mapper.set(
+          'price.priceTaxIncluded',
+          priceTaxExcluded.times(taxRatio).plus(ecotaxTaxIncluded).toFixed(this.precision),
+        );
         break;
       }
 
-      case 'product.price.taxRulesGroupId': {
-        const priceTaxExcluded = this.mapper.getBigNumber('product.price.priceTaxExcluded');
-        this.mapper.set('product.price.priceTaxIncluded', this.addTax(priceTaxExcluded, taxRatio));
-        const unitPriceTaxExcluded = this.mapper.getBigNumber('product.price.unitPriceTaxExcluded');
-        this.mapper.set('product.price.unitPriceTaxIncluded', this.addTax(unitPriceTaxExcluded, taxRatio));
+      // Ecotax values
+      case 'price.ecotaxTaxIncluded': {
+        // Only this update is needed here, the rest will be updated via the trigger for price.ecotaxTaxExcluded
+        const ecoTaxRatio = this.getEcoTaxRatio();
+        const ecotaxTaxIncluded = this.mapper.getBigNumber('price.ecotaxTaxIncluded') ?? new BigNumber(0);
+        this.mapper.set(
+          'price.ecotaxTaxExcluded',
+          ecotaxTaxIncluded.dividedBy(ecoTaxRatio).toFixed(this.precision),
+        );
+        break;
+      }
+      case 'price.ecotaxTaxExcluded': {
+        const ecoTaxRatio = this.getEcoTaxRatio();
+        const priceTaxIncluded = this.mapper.getBigNumber('price.priceTaxIncluded') ?? new BigNumber(0);
+        const ecotaxTaxExcluded = this.mapper.getBigNumber('price.ecotaxTaxExcluded') ?? new BigNumber(0);
+        const newEcotaxTaxIncluded = ecotaxTaxExcluded.times(ecoTaxRatio);
+        this.mapper.set('price.ecotaxTaxIncluded', newEcotaxTaxIncluded.toFixed(this.precision));
+        this.mapper.set('price.priceTaxExcluded', this.removeTax(priceTaxIncluded.minus(newEcotaxTaxIncluded)));
+        break;
+      }
+
+      // Unit price
+      case 'price.unitPriceTaxIncluded': {
+        const unitPriceTaxIncluded = this.mapper.getBigNumber('price.unitPriceTaxIncluded') ?? new BigNumber(0);
+        this.mapper.set('price.unitPriceTaxExcluded', this.removeTax(unitPriceTaxIncluded));
+        break;
+      }
+      case 'price.unitPriceTaxExcluded': {
+        const unitPriceTaxExcluded = this.mapper.getBigNumber('price.unitPriceTaxExcluded') ?? new BigNumber(0);
+        this.mapper.set('price.unitPriceTaxIncluded', this.addTax(unitPriceTaxExcluded));
+        break;
+      }
+
+      case 'price.taxRulesGroupId': {
+        const priceTaxExcluded = this.mapper.getBigNumber('price.priceTaxExcluded') ?? new BigNumber(0);
+        const ecotaxTaxIncluded = this.mapper.getBigNumber('price.ecotaxTaxIncluded') ?? new BigNumber(0);
+        this.mapper.set(
+          'price.priceTaxIncluded',
+          priceTaxExcluded.times(taxRatio).plus(ecotaxTaxIncluded).toFixed(this.precision),
+        );
+        const unitPriceTaxExcluded = this.mapper.getBigNumber('price.unitPriceTaxExcluded') ?? new BigNumber(0);
+        this.mapper.set('price.unitPriceTaxIncluded', this.addTax(unitPriceTaxExcluded));
         break;
       }
     }
   }
 
-  /**
-   * @param {BigNumber} price
-   * @param {BigNumber} taxRatio
-   *
-   * @private
-   *
-   * @returns {string}
-   */
-  private removeTax(price: BigNumber, taxRatio: BigNumber): string {
-    return price.dividedBy(taxRatio).toFixed(this.precision);
-  }
+  private getTaxRatioFromInput($taxInput: JQuery): BigNumber {
+    let taxRate;
+    try {
+      taxRate = new BigNumber($taxInput.data('taxRate'));
+    } catch (error) {
+      taxRate = new BigNumber(NaN);
+    }
+    if (taxRate.isNaN()) {
+      taxRate = new BigNumber(0);
+    }
 
-  /**
-   * @param {BigNumber} price
-   * @param {BigNumber} taxRatio
-   *
-   * @private
-   *
-   * @returns {string}
-   */
-  private addTax(price: BigNumber, taxRatio: BigNumber): string {
-    return price.times(taxRatio).toFixed(this.precision);
+    return taxRate.dividedBy(100).plus(1);
   }
 }

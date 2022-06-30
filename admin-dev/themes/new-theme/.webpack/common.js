@@ -34,7 +34,6 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FontPreloadPlugin = require('webpack-font-preload-plugin');
 const CssoWebpackPlugin = require('csso-webpack-plugin').default;
-const LicensePlugin = require('webpack-license-plugin');
 
 module.exports = {
   externals: {
@@ -57,12 +56,13 @@ module.exports = {
     cms_page: './js/pages/cms-page',
     cms_page_form: './js/pages/cms-page/form',
     combination_bulk: './js/pages/product/combination/bulk',
-    combination_edit: './js/pages/product/combination/edit',
+    combination_form: './js/pages/product/combination/form',
     contacts: './js/pages/contacts',
     credit_slip: './js/pages/credit-slip',
     currency: './js/pages/currency',
     currency_form: './js/pages/currency/form',
-    customer: './js/pages/customer',
+    customer: './js/pages/customer/index',
+    customer_form: './js/pages/customer/form',
     customer_address_form: './js/pages/address/form',
     customer_outstanding: './js/pages/outstanding',
     customer_thread_view: './js/pages/customer-thread/view',
@@ -104,6 +104,7 @@ module.exports = {
     order_view: './js/pages/order/view',
     orders: './scss/pages/orders/orders.scss',
     payment_preferences: './js/pages/payment-preferences',
+    performance_preferences: './js/pages/performance-preferences',
     permission: './js/pages/permission',
     permissions: './scss/pages/permissions/permissions.scss',
     product: './scss/pages/product/product_page.scss',
@@ -115,9 +116,9 @@ module.exports = {
     product_preferences: './js/pages/product-preferences',
     profiles: './js/pages/profiles',
     search_engine: './js/pages/search-engine',
+    security: './js/pages/security',
     shipping_preferences: './js/pages/shipping-preferences',
     specific_price_form: './js/pages/specific-price/form',
-    security: './js/pages/security',
     sql_manager: './js/pages/sql-manager',
     state: './js/pages/state',
     stock: './js/app/pages/stock',
@@ -135,6 +136,7 @@ module.exports = {
     translations: './js/app/pages/translations',
     webservice: './js/pages/webservice',
     zone: './js/pages/zone',
+    country: './js/pages/country',
   },
   output: {
     path: path.resolve(__dirname, '../public'),
@@ -409,14 +411,6 @@ module.exports = {
     }),
     new CssoWebpackPlugin({
       forceMediaMerge: true,
-    }),
-    new LicensePlugin({
-      outputFilename: 'thirdPartyNotice.json',
-      licenseOverrides: {
-        'vazirmatn@32.102.0': 'OFL-1.1',
-        'typeahead.js@0.11.1': 'MIT',
-      },
-      replenishDefaultLicenseTexts: true,
     }),
   ],
 };

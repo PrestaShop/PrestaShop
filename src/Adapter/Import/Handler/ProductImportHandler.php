@@ -1232,6 +1232,7 @@ final class ProductImportHandler extends AbstractImportHandler
 
         // set advanced stock managment
         if (!$validateOnly) {
+            /* @phpstan-ignore-next-line Data of the property `advanced_stock_management` comes from database */
             if ($product->advanced_stock_management != 1 && $product->advanced_stock_management != 0) {
                 $this->warning(
                     $this->translator->trans(
@@ -1303,6 +1304,7 @@ final class ProductImportHandler extends AbstractImportHandler
 
         // stock available
         if (isset($product->depends_on_stock)) {
+            /* @phpstan-ignore-next-line Data of the property `depends_on_stock` comes from database */
             if ($product->depends_on_stock != 0 && $product->depends_on_stock != 1) {
                 $this->warning(
                     $this->translator->trans(
@@ -1311,6 +1313,7 @@ final class ProductImportHandler extends AbstractImportHandler
                         'Admin.Advparameters.Notification'
                     )
                 );
+            /* @phpstan-ignore-next-line Data of properties `advanced_stock_management` & `depends_on_stock` comes from database */
             } elseif ((!$product->advanced_stock_management || $product->advanced_stock_management == 0) && $product->depends_on_stock == 1) {
                 $this->warning(
                     $this->translator->trans(

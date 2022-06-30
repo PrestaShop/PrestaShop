@@ -40,8 +40,9 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\AddProductSpecificPriceCommand;
-use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\EditProductSpecificPriceCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\AddSpecificPriceCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\DeleteSpecificPriceCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Command\EditSpecificPriceCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Query\GetSpecificPriceForEditing;
@@ -104,7 +105,7 @@ class SpecificPriceContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @Transform table:id reference,combination,reduction type,reduction value,includes tax,fixed price,from quantity,shop,currency,country,group,customer,from,to
+     * @Transform table:id reference,combination,reduction type,reduction value,includes tax,fixed price,from quantity,shop,currency,currencyISOCode,country,group,customer,from,to
      *
      * @param TableNode $tableNode
      *
@@ -129,6 +130,7 @@ class SpecificPriceContext extends AbstractProductFeatureContext
                 $dataRow['combination'] ?: null,
                 $dataRow['shop'] ?: null,
                 $dataRow['currency'] ?: null,
+                $dataRow['currencyISOCode'] ?: null,
                 $dataRow['country'] ?: null,
                 $dataRow['group'] ?: null,
                 $dataRow['customer'] ?: null
@@ -154,6 +156,7 @@ class SpecificPriceContext extends AbstractProductFeatureContext
 
             /** @var SpecificPriceId $specificPriceId */
             $specificPriceId = $this->getCommandBus()->handle($command);
+
             $this->getSharedStorage()->set($specificPriceReference, $specificPriceId->getValue());
         } catch (SpecificPriceException | DomainConstraintException | ProductException $e) {
             $this->setLastException($e);
@@ -172,6 +175,21 @@ class SpecificPriceContext extends AbstractProductFeatureContext
         try {
             $command = $this->createEditSpecificPriceCommand($specificPriceId, $tableNode);
             $this->getCommandBus()->handle($command);
+        } catch (DomainException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I delete specific price ":specificPriceReference"
+     *
+     * @param string $specificPriceReference
+     */
+    public function deleteSpecificPrice(string $specificPriceReference): void
+    {
+        $specificPriceId = $this->getSharedStorage()->get($specificPriceReference);
+        try {
+            $this->getCommandBus()->handle(new DeleteSpecificPriceCommand($specificPriceId));
         } catch (DomainException $e) {
             $this->setLastException($e);
         }
@@ -289,7 +307,7 @@ class SpecificPriceContext extends AbstractProductFeatureContext
 
             $scalarPropertyNames = [
                 'specificPriceId', 'reductionType', 'includesTax',
-                'fromQuantity', 'shopName', 'currencyName', 'countryName',
+                'fromQuantity', 'shopName', 'currencyName', 'currencyISOCode', 'countryName',
                 'groupName', 'customerName', 'combinationName',
             ];
 
@@ -399,21 +417,23 @@ class SpecificPriceContext extends AbstractProductFeatureContext
      * @param int $productId
      * @param TableNode $tableNode
      *
-     * @return AddProductSpecificPriceCommand
+     * @return AddSpecificPriceCommand
      *
      * @throws DomainConstraintException
      * @throws ProductConstraintException
      */
-    private function createAddSpecificPriceCommand(int $productId, TableNode $tableNode): AddProductSpecificPriceCommand
+    private function createAddSpecificPriceCommand(int $productId, TableNode $tableNode): AddSpecificPriceCommand
     {
         $dataRows = $tableNode->getRowsHash();
-        $addCommand = new AddProductSpecificPriceCommand(
+        $addCommand = new AddSpecificPriceCommand(
             $productId,
             $dataRows['reduction type'],
             $dataRows['reduction value'],
             PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['includes tax']),
             $dataRows['fixed price'],
-            (int) $dataRows['from quantity']
+            (int) $dataRows['from quantity'],
+            DateTimeUtil::buildNullableDateTime($dataRows['from'] ?? null),
+            DateTimeUtil::buildNullableDateTime($dataRows['to'] ?? null)
         );
 
         if (!empty($dataRows['combination'])) {
@@ -448,12 +468,12 @@ class SpecificPriceContext extends AbstractProductFeatureContext
      * @param int $specificPriceId
      * @param TableNode $tableNode
      *
-     * @return EditProductSpecificPriceCommand
+     * @return EditSpecificPriceCommand
      */
-    private function createEditSpecificPriceCommand(int $specificPriceId, TableNode $tableNode): EditProductSpecificPriceCommand
+    private function createEditSpecificPriceCommand(int $specificPriceId, TableNode $tableNode): EditSpecificPriceCommand
     {
         $dataRows = $tableNode->getRowsHash();
-        $editCommand = new EditProductSpecificPriceCommand($specificPriceId);
+        $editCommand = new EditSpecificPriceCommand($specificPriceId);
 
         if (isset($dataRows['reduction type'], $dataRows['reduction value'])) {
             $editCommand->setReduction($dataRows['reduction type'], (string) $dataRows['reduction value']);
@@ -493,6 +513,16 @@ class SpecificPriceContext extends AbstractProductFeatureContext
         }
 
         return $editCommand;
+    }
+
+    /**
+     * @param int $specificPriceId
+     *
+     * @return DeleteSpecificPriceCommand
+     */
+    private function createDeleteSpecificPriceCommand(int $specificPriceId): DeleteSpecificPriceCommand
+    {
+        return new DeleteSpecificPriceCommand($specificPriceId);
     }
 
     /**

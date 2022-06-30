@@ -39,20 +39,27 @@ class ProductSupplierOptions
     private $defaultSupplierId;
 
     /**
-     * @var ProductSupplierInfo[]
+     * @var int[]
      */
-    private $suppliersInfo;
+    private $supplierIds;
+
+    /**
+     * @var ProductSupplierForEditing[]
+     */
+    private $productSuppliers;
 
     /**
      * @param int $defaultSupplierId
-     * @param ProductSupplierInfo[] $suppliersInfo
+     * @param ProductSupplierForEditing[] $productSuppliers
      */
     public function __construct(
         int $defaultSupplierId,
-        array $suppliersInfo
+        array $supplierIds,
+        array $productSuppliers
     ) {
         $this->defaultSupplierId = $defaultSupplierId;
-        $this->suppliersInfo = $suppliersInfo;
+        $this->supplierIds = $supplierIds;
+        $this->productSuppliers = $productSuppliers;
     }
 
     /**
@@ -64,10 +71,18 @@ class ProductSupplierOptions
     }
 
     /**
-     * @return ProductSupplierInfo[]
+     * @return int[]
      */
-    public function getSuppliersInfo(): array
+    public function getSupplierIds(): array
     {
-        return $this->suppliersInfo;
+        return $this->supplierIds;
+    }
+
+    /**
+     * @return ProductSupplierForEditing[]
+     */
+    public function getProductSuppliers(): array
+    {
+        return $this->productSuppliers;
     }
 }

@@ -83,7 +83,7 @@ class CombinationIdChoiceProvider implements ConfigurableFormChoiceProviderInter
     public function getChoices(array $options): array
     {
         $options = $this->resolveOptions($options);
-        $combinationIds = $this->combinationRepository->getCombinationIdsByProductId(new ProductId($options['product_id']));
+        $combinationIds = $this->combinationRepository->getCombinationIds(new ProductId($options['product_id']));
         $attributesInfo = $this->attributeRepository->getAttributesInfoByCombinationIds($combinationIds, $this->languageId);
 
         $choices = [];

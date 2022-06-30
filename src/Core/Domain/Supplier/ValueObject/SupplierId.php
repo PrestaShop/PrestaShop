@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 /**
  * Class SupplierId
  */
-class SupplierId
+class SupplierId implements SupplierIdInterface
 {
     /**
      * @var int
@@ -43,7 +43,7 @@ class SupplierId
      *
      * @throws SupplierException
      */
-    public function __construct($supplierId)
+    public function __construct(int $supplierId)
     {
         $this->assertIsIntegerGreaterThanZero($supplierId);
         $this->value = $supplierId;
@@ -52,7 +52,7 @@ class SupplierId
     /**
      * @return int
      */
-    public function getValue()
+    public function getValue(): int
     {
         return $this->value;
     }
@@ -62,9 +62,9 @@ class SupplierId
      *
      * @throws SupplierException
      */
-    private function assertIsIntegerGreaterThanZero($supplierId)
+    private function assertIsIntegerGreaterThanZero(int $supplierId)
     {
-        if (!is_int($supplierId) || 0 >= $supplierId) {
+        if (0 >= $supplierId) {
             throw new SupplierException(sprintf('Invalid Supplier id: %s', var_export($supplierId, true)));
         }
     }

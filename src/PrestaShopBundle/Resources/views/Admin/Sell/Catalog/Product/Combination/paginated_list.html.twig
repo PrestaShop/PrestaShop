@@ -22,7 +22,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-{% form_theme combinationsForm '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/combination_listing.html.twig' %}
 
 {% block combinations_paginated_list %}
   <div id="combinations-paginated-list" class="d-none">
@@ -36,8 +35,33 @@
         <div class="spinner spinner-primary"></div>
       </div>
 
-      {# Integrate the token that will be required in the combination update request #}
-      {{ form_row(combinationsForm, {'attr': {'data-combination-token': csrf_token(combinationItemForm.vars.name) }}) }}
+      {#**
+        * This div contains the whole list with the input fields, it should contain nothing more because the whole
+        * content may be replaced when invalid form values are detected by the update list API in edition mode.
+      *#}
+      <div id="combinations-list-form-container">
+        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Combination/combination_list_form.html.twig', {'combinationsForm': combinationsForm}) }}
+      </div>
+
+      {# Empty state when product has no combinations by specified filters #}
+      {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Combination/empty_filters_state.html.twig') }}
+
+      <div id="combinations-list-footer">
+        <span>
+          {{ 'Edition mode'|trans({}, 'Admin.Actions') }}
+        </span>
+        <div id="combinations-list-footer-buttons">
+          <button type="button" id="cancel-combinations-edition" class="btn btn-secondary">
+            {{ 'Cancel'|trans({}, 'Admin.Actions') }}
+          </button>
+          <button type="button" id="reset-combinations-edition" class="btn btn-secondary">
+            {{ 'Reset'|trans({}, 'Admin.Actions') }}
+          </button>
+          <button type="button" id="save-combinations-edition" class="btn btn-primary">
+            {{ 'Save list'|trans({}, 'Admin.Catalog.Feature') }}
+          </button>
+        </div>
+      </div>
     </div>
 
     <div class="row justify-content-center" id="combinations-pagination">
@@ -45,12 +69,6 @@
         'limit': combinationsLimit,
         'limitChoices': combinationLimitChoices,
       }) }}
-    </div>
-
-    <div class="justify-content-start mt-2 mb-3">
-      <button id="generate-combinations-button" class="btn btn-primary generate-combinations-button" disabled="disabled">
-        {{ 'Generate combinations'|trans({}, 'Admin.Catalog.Feature') }}
-      </button>
     </div>
   </div>
 {% endblock %}

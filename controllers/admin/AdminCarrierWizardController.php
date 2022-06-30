@@ -517,6 +517,10 @@ class AdminCarrierWizardControllerCore extends AdminController
             }
         }
 
+        if ($fields_value['zones'] === false) {
+            $fields_value['zones'] = [];
+        }
+
         $range_table = $carrier->getRangeTable();
         $shipping_method = $carrier->getShippingMethod();
 

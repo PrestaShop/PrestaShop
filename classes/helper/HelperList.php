@@ -52,7 +52,7 @@ class HelperListCore extends Helper
     /** @var int Default number of results in list per page */
     public $_default_pagination = 50;
 
-    /** @var string ORDER BY clause determined by field/arrows in list header */
+    /** @var string|null ORDER BY clause determined by field/arrows in list header */
     public $orderBy;
 
     /** @var bool|string Default ORDER BY clause when `$orderBy` is not defined */
@@ -61,7 +61,7 @@ class HelperListCore extends Helper
     /** @var array : list of vars for button delete */
     public $tpl_delete_link_vars = [];
 
-    /** @var string Order way (ASC, DESC) determined by arrows in list header */
+    /** @var string|null Order way (ASC, DESC) determined by arrows in list header */
     public $orderWay;
 
     public $identifier;
@@ -204,9 +204,13 @@ class HelperListCore extends Helper
             '/^([a-z _]*\.)/Ui',    // remove a! for example
             '/`/',                  // remove ` char
         ];
-        $this->orderBy = preg_replace($patternsOrderBy, '', $this->orderBy);
+        if ($this->orderBy !== null) {
+            $this->orderBy = preg_replace($patternsOrderBy, '', $this->orderBy);
+        }
 
-        $this->orderWay = preg_replace('/^([a-z _]*!)/Ui', '', $this->orderWay);
+        if ($this->orderWay !== null) {
+            $this->orderWay = preg_replace('/^([a-z _]*!)/Ui', '', $this->orderWay);
+        }
 
         $this->tpl->assign([
             'header' => $this->displayListHeader(), // Display list header (filtering, pagination and column names)
@@ -597,10 +601,11 @@ class HelperListCore extends Helper
             $this->identifier => $id,
             'href' => $href,
             'action' => self::$cache_lang['Delete'],
+            'confirm' => Tools::safeOutput(self::$cache_lang['DeleteItem'] . $name),
         ];
 
-        if ($this->specificConfirmDelete !== false) {
-            $data['confirm'] = null !== $this->specificConfirmDelete ? '\r' . $this->specificConfirmDelete : Tools::safeOutput(self::$cache_lang['DeleteItem'] . $name);
+        if (!empty($this->specificConfirmDelete)) {
+            $data['confirm'] = '\r' . $this->specificConfirmDelete;
         }
 
         $tpl->assign(array_merge($this->tpl_delete_link_vars, $data));
@@ -679,7 +684,7 @@ class HelperListCore extends Helper
             $table_dnd = true;
         }
 
-        $prefix = isset($this->controller_name) ? str_replace(['admin', 'controller'], '', Tools::strtolower($this->controller_name)) : '';
+        $prefix = str_replace(['admin', 'controller'], '', Tools::strtolower($this->controller_name));
         $ajax = false;
         foreach ($this->fields_list as $key => $params) {
             if (!isset($params['type'])) {
@@ -808,7 +813,9 @@ class HelperListCore extends Helper
             'name' => isset($name) ? $name : null,
             'name_id' => isset($name_id) ? $name_id : null,
             'row_hover' => $this->row_hover,
+            'js_dir' => _PS_JS_DIR_,
             'list_id' => isset($this->list_id) ? $this->list_id : $this->table,
+            'controller_name' => $this->controller_name,
         ], $this->tpl_vars));
 
         return $this->header_tpl->fetch();

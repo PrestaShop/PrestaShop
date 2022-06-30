@@ -30,3 +30,14 @@ admin_products_specific_prices_edit:
     _legacy_controller: AdminProducts
   requirements:
     specificPriceId: \d+
+
+admin_products_specific_prices_delete:
+  path: /specific-prices/{specificPriceId}/delete
+  methods: [ DELETE ]
+  options:
+    expose: true
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\SpecificPriceController::deleteAction
+    _legacy_controller: AdminProducts
+  requirements:
+    specificPriceId: \d+

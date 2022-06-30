@@ -23,11 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-// This had to be commented because of TS2451: Cannot redeclare block-scoped variable '$'.
-// But in other index.ts there is no such issue
-// const {$} = window;
-
 import CreateProductModal from '@pages/product/components/create-product-modal';
+import CategoryTreeFilter from '@pages/product/components/categories/category-tree-filter';
+
+const {$} = window;
 
 $(() => {
   const grid = new window.prestashop.component.Grid('product');
@@ -36,11 +35,15 @@ $(() => {
   grid.addExtension(new window.prestashop.component.GridExtensions.ReloadListExtension());
   grid.addExtension(new window.prestashop.component.GridExtensions.SortingExtension());
   grid.addExtension(new window.prestashop.component.GridExtensions.FiltersResetExtension());
-  grid.addExtension(new window.prestashop.component.GridExtensions.ColumnTogglingExtension());
   grid.addExtension(new window.prestashop.component.GridExtensions.SubmitRowActionExtension());
   grid.addExtension(new window.prestashop.component.GridExtensions.SubmitBulkActionExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.AjaxBulkActionExtension());
   grid.addExtension(new window.prestashop.component.GridExtensions.BulkActionCheckboxExtension());
   grid.addExtension(new window.prestashop.component.GridExtensions.FiltersSubmitButtonEnablerExtension());
+  grid.addExtension(new window.prestashop.component.GridExtensions.AsyncToggleColumnExtension());
 
   new CreateProductModal();
+  grid.addExtension(new window.prestashop.component.GridExtensions.PositionExtension(grid));
+
+  new CategoryTreeFilter();
 });

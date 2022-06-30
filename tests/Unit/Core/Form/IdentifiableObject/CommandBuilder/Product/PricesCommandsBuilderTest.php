@@ -101,7 +101,7 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
                 'pricing' => [
                     'not_handled' => 0,
                     'retail_price' => [
-                        'ecotax' => '45.56',
+                        'ecotax_tax_excluded' => '45.56',
                     ],
                 ],
             ],
@@ -114,7 +114,9 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [
                 'pricing' => [
                     'not_handled' => 0,
-                    'tax_rules_group_id' => '42',
+                    'retail_price' => [
+                        'tax_rules_group_id' => '42',
+                    ],
                 ],
             ],
             [$command],
@@ -244,9 +246,9 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
                 'pricing' => [
                     'retail_price' => [
                         'price_tax_excluded' => 45.56,
-                        'ecotax' => '45.56',
+                        'ecotax_tax_excluded' => '45.56',
+                        'tax_rules_group_id' => '42',
                     ],
-                    'tax_rules_group_id' => '42',
                     'on_sale' => true,
                     'wholesale_price' => '45.56',
                     'unit_price' => [
@@ -274,9 +276,9 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
                     'retail_price' => [
                         'price_tax_excluded' => 45.56,
                         self::MODIFY_ALL_SHOPS_PREFIX . 'price_tax_excluded' => false,
-                        'ecotax' => '45.56',
+                        'ecotax_tax_excluded' => '45.56',
+                        'tax_rules_group_id' => '42',
                     ],
-                    'tax_rules_group_id' => '42',
                     'on_sale' => true,
                     'wholesale_price' => '45.56',
                     'unit_price' => [
@@ -307,9 +309,9 @@ class PricesCommandsBuilderTest extends AbstractProductCommandBuilderTest
                     'retail_price' => [
                         'price_tax_excluded' => 45.56,
                         self::MODIFY_ALL_SHOPS_PREFIX . 'price_tax_excluded' => true,
-                        'ecotax' => '45.56',
+                        'ecotax_tax_excluded' => '45.56',
+                        'tax_rules_group_id' => '42',
                     ],
-                    'tax_rules_group_id' => '42',
                     'on_sale' => true,
                     'wholesale_price' => '45.56',
                     'unit_price' => [

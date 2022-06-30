@@ -110,7 +110,7 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
     [
       {linkSelector: 'Order tracking', pageTitle: guestOrderTrackingPage.pageTitle},
       {linkSelector: 'Sign in', pageTitle: loginPage.pageTitle},
-      {linkSelector: 'Create account', pageTitle: createAccountPage.pageTitle},
+      {linkSelector: 'Create account', pageTitle: createAccountPage.formTitle},
     ].forEach((args, index) => {
       it(`should check '${args.linkSelector}' footer links`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkYourAccountFooterLinks1${index}`, baseContext);
@@ -118,7 +118,12 @@ describe('FO - Header and Footer : Check links in footer page', async () => {
         // Check prices drop link
         await homePage.goToFooterLink(page, args.linkSelector);
 
-        const pageTitle = await homePage.getPageTitle(page);
+        let pageTitle;
+        if (args.linkSelector === 'Create account') {
+          pageTitle = await createAccountPage.getHeaderTitle(page);
+        } else {
+          pageTitle = await homePage.getPageTitle(page);
+        }
         await expect(pageTitle).to.equal(args.pageTitle);
       });
     });

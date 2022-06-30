@@ -66,7 +66,12 @@ const orderByCustomerData = {
   paymentMethod: PaymentMethods.wirePayment.moduleName,
 };
 
-const carrierDataToSelect = {trackingNumber: '', carrier: Carriers.myCarrier.name, shippingCost: '€8.40'};
+const carrierDataToSelect = {
+  trackingNumber: '',
+  carrier: Carriers.myCarrier.name,
+  carrierID: Carriers.myCarrier.id,
+  shippingCost: '€8.40',
+};
 
 /*
 Pre-condition:
@@ -85,13 +90,13 @@ Post-condition:
 
 describe('BO - Orders - View and edit order: Check multi invoice', async () => {
   // Pre-condition: Create first product
-  createProductTest(firstProduct, baseContext);
+  createProductTest(firstProduct, `${baseContext}_preTest_1`);
 
   // Pre-condition: Create second product
-  createProductTest(secondProduct, baseContext);
+  createProductTest(secondProduct, `${baseContext}_preTest_2`);
 
   // Pre-condition: Create order by default customer
-  createOrderSpecificProductTest(orderByCustomerData, baseContext);
+  createOrderSpecificProductTest(orderByCustomerData, `${baseContext}_preTest_3`);
 
   // before and after functions
   before(async function () {
@@ -477,8 +482,8 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
   });
 
   // Post-condition: Delete created products
-  bulkDeleteProductsTest(prefixNewProduct, baseContext);
+  bulkDeleteProductsTest(prefixNewProduct, `${baseContext}_postTest_1`);
 
   // Post-condition: Delete 'Free shipping' cart rule
-  deleteCartRuleTest(baseContext);
+  deleteCartRuleTest(`${baseContext}_postTest_2`);
 });

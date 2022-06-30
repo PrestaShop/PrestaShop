@@ -91,3 +91,71 @@
   </div>
 </div>
 {% endblock %}
+
+{% block category_filter_row %}
+  <div class="d-inline-block dropdown dropdown-clickable product_list_category_filter">
+    <button
+      class="btn btn-outline-secondary dropdown-toggle"
+      type="button"
+      data-toggle="dropdown"
+      aria-haspopup="true"
+      aria-expanded="false"
+    >
+      {{ 'Filter by categories'|trans({}, 'Admin.Actions') }}
+      {# Display selected category if present #}
+      {%- for choice in choices -%}
+        {% if form.vars.data and choice.value == form.vars.data %}
+          ({{ choice.label }})
+        {% endif %}
+      {%- endfor -%}
+    </button>
+    <div class="dropdown-menu category-filter-menu">
+      <div class="categories-tree-actions">
+        <button type="button" class="category_tree_filter_expand btn">
+          <i class="material-icons">expand_more</i>
+          {{ 'Expand'|trans({}, 'Admin.Actions') }}
+        </button>
+        <button type="button" class="category_tree_filter_collapse btn">
+          <i class="material-icons">expand_less</i>
+          {{ 'Collapse'|trans({}, 'Admin.Actions') }}
+        </button>
+        <button type="button" class="category_tree_filter_reset btn">
+          <i class="material-icons">radio_button_unchecked</i>
+          {{ 'Unselect'|trans({}, 'Admin.Actions') }}
+        </button>
+      </div>
+      {{ form_widget(form) }}
+    </div>
+  </div>
+{% endblock %}
+
+{% block category_filter_widget -%}
+  <div {{ block('widget_container_attributes') }}>
+    <ul class="category-tree">
+      {%- for child in nested_tree %}
+        {{ block('category_filter_item_widget') }}
+      {% endfor -%}
+    </ul>
+  </div>
+{%- endblock %}
+
+{% block category_filter_item_widget -%}
+  <li class="category-node{% if child.children is defined and child.children|length %} more{% endif %}">
+    <div class="form-check form-check-radio form-radio radio category-label">
+      {{ child.name }}
+      <label class="form-check-label">
+        <input type="radio" name="{{ form.vars.id }}" value="{{ child.id_category }}" {% if child.id_category == form.vars.data %}checked="checked"{% endif %}>
+        <i class="form-check-round"></i>
+      </label>
+    </div>
+
+    {% if child.children is defined %}
+      <ul class="category-children d-none">
+        {% for item in child.children %}
+          {% set child = item %}
+          {{ block('category_filter_item_widget') }}
+        {% endfor -%}
+      </ul>
+    {% endif %}
+  </li>
+{%- endblock %}

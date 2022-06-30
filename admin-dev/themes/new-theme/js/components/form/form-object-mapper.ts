@@ -23,17 +23,69 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+/* eslint max-classes-per-file: ["error", 2] */
+
 import BigNumber from 'bignumber.js';
-import EventEmitter from '@components/event-emitter';
 import {transform as numberCommaTransform} from '@js/app/utils/number-comma-transformer';
+import {isUndefined} from '@PSTypes/typeguard';
+
+import NameValuePair = JQuery.NameValuePair;
 
 const {$} = window;
 
-export type FormUpdateEvent = {
+export interface FormUpdateEvent {
   object: Record<string, any>,
   modelKey: string,
   value: any,
   previousValue: any,
+
+  /**
+   * You can stop the propagation of an event propagation to avoid the other watchers to be triggered,
+   * this allows preventing infinite loop in case you change the value from an event (by stopping it
+   * and re-setting new value).
+   */
+  stopPropagation(): void,
+
+  /**
+   * When true the watchers callback stop being called (for this specific event instance only).
+   */
+  isPropagationStopped(): boolean,
+}
+
+/**
+ * Internal class for the event object that implements the FormUpdateEvent interface.
+ */
+class UpdateEvent implements FormUpdateEvent {
+  object: Record<string, any>;
+
+  modelKey: string;
+
+  value: any;
+
+  previousValue: any;
+
+  private propagationStopped: boolean;
+
+  constructor(
+    object: Record<string, any>,
+    modelKey: string,
+    value: any,
+    previousValue: any,
+  ) {
+    this.object = object;
+    this.modelKey = modelKey;
+    this.value = value;
+    this.previousValue = previousValue;
+    this.propagationStopped = false;
+  }
+
+  stopPropagation(): void {
+    this.propagationStopped = true;
+  }
+
+  isPropagationStopped(): boolean {
+    return this.propagationStopped;
+  }
 }
 
 /**
@@ -74,50 +126,35 @@ export type FormUpdateEvent = {
  * }
  */
 export default class FormObjectMapper {
-  $form: JQuery<HTMLElement>;
+  private $form: JQuery<HTMLElement>;
 
-  fullModelMapping: Record<string, any>;
+  private fullModelMapping: Record<string, any>;
 
-  eventEmitter: typeof EventEmitter;
+  private model: Record<string, any>;
 
-  updateModelEventName: string;
+  private modelMapping: Record<string, any>;
 
-  modelUpdatedEventName: string;
+  private formMapping: Record<string, any>;
 
-  modelFieldUpdatedEventName: string;
-
-  model: Record<string, any>;
-
-  modelMapping: Record<string, any>;
-
-  formMapping: Record<string, any>;
-
-  watchedProperties: Record<string, Array<(event: FormUpdateEvent) => void>>;
+  private watchedProperties: Record<string, Array<(event: FormUpdateEvent) => void>>;
 
   /**
    * @param {JQuery} $form - Form element to attach the mapper to
    * @param {Object} modelMapping - Structure mapping a model to form names
-   * @param {EventEmitter} eventEmitter
-   * @param {Object} [config] - Event names
-   * @param {Object} [config.updateModel] - Name of the event to listen to trigger a refresh of the model update
-   * @param {Object} [config.modelUpdated] - Name of the event emitted each time the model is updated
-   * @param {Object} [config.modelFieldUpdated] - Name of the event emitted each time a field is updated
    * @return {Object}
    */
-  /* eslint-enable */
   constructor(
     $form: JQuery<HTMLElement>,
     modelMapping: Record<string, any>,
-    eventEmitter: typeof EventEmitter,
-    config: Record<string, any>,
   ) {
+    if (!$form.length) {
+      console.error('Invalid empty form as input');
+    }
+
     this.$form = $form;
     this.fullModelMapping = modelMapping;
-    this.eventEmitter = eventEmitter;
     this.model = {};
     this.modelMapping = {};
-
-    const inputConfig = config || {};
 
     // modelMapping is a light version of the fullModelMapping,
     // it only contains one input name which is considered
@@ -129,27 +166,8 @@ export default class FormObjectMapper {
     // performance and convenience, this allows to get mapping data faster in other functions
     this.formMapping = {};
 
-    // This event is registered so when it is triggered it forces
-    // the form mapping and object update,
-    // it can be useful when some new inputs have been added
-    // in the DOM (or removed) so that the model
-    // acknowledges the update
-    this.updateModelEventName = inputConfig.updateModel || 'updateModel';
-
-    // This event is emitted each time
-    // the object is updated (from both input change and external event)
-    this.modelUpdatedEventName = inputConfig.modelUpdated || 'modelUpdated';
-
-    // This event is emitted each time an object field is updated
-    // (from both input change and external event)
-    this.modelFieldUpdatedEventName = inputConfig.modelFieldUpdated || 'modelFieldUpdated';
-
     // Contains callbacks identified by model keys
     this.watchedProperties = {};
-
-    // This event is emitted each time an object
-    // field is updated (from both input change and external event)
-    this.modelFieldUpdatedEventName = inputConfig.modelFieldUpdated || 'modelFieldUpdated';
 
     this.initFormMapping();
     this.updateFullObject();
@@ -223,7 +241,6 @@ export default class FormObjectMapper {
     // First update the inputs then the model, so that the event is sent at last
     this.updateInputValue(modelKey, value);
     this.updateObjectByKey(modelKey, value);
-    this.eventEmitter.emit(this.modelUpdatedEventName, this.model);
   }
 
   /**
@@ -233,16 +250,20 @@ export default class FormObjectMapper {
    * additionally any callback assigned
    * to this specific value is also called, the parameter is the same event.
    *
-   * @param {string} modelKey
+   * @param {string | string[]} modelKeys
    * @param {function} callback
    */
-  watch(modelKey: string, callback: (event: FormUpdateEvent) => void): void {
-    if (
-      !Object.prototype.hasOwnProperty.call(this.watchedProperties, modelKey)
-    ) {
-      this.watchedProperties[modelKey] = [];
-    }
-    this.watchedProperties[modelKey].push(callback);
+  watch(modelKeys: string | string[], callback: (event: FormUpdateEvent) => void): void {
+    const watchedKeys: string[] = Array.isArray(modelKeys) ? modelKeys : [modelKeys];
+
+    watchedKeys.forEach((modelKey: string) => {
+      if (
+        !Object.prototype.hasOwnProperty.call(this.watchedProperties, modelKey)
+      ) {
+        this.watchedProperties[modelKey] = [];
+      }
+      this.watchedProperties[modelKey].push(callback);
+    });
   }
 
   /**
@@ -252,8 +273,10 @@ export default class FormObjectMapper {
    *
    * @param modelKey
    */
-  getBigNumber(modelKey: string): BigNumber {
-    return new BigNumber(numberCommaTransform(this.getValue(modelKey)));
+  getBigNumber(modelKey: string): BigNumber | undefined {
+    const numberValue = this.getValue(modelKey);
+
+    return isUndefined(numberValue) ? undefined : new BigNumber(numberCommaTransform(numberValue));
   }
 
   /**
@@ -267,10 +290,35 @@ export default class FormObjectMapper {
    *
    * @returns {*|{}|undefined} Returns any element from the model, undefined if not found
    */
-  private getValue(modelKey: string): string | number | string[] | undefined {
+  getValue(modelKey: string): string | number | string[] | undefined {
     const modelKeys = modelKey.split('.');
 
     return $.serializeJSON.deepGet(this.model, modelKeys);
+  }
+
+  /**
+   * Serializes and updates the object based on form content and the mapping configuration, an event will be triggered
+   * for each field of the object.
+   */
+  updateFullObject():void {
+    // Temporarily enable all inputs or they will not be serialized
+    const $disabledInputs: JQuery<HTMLElement> = this.$form.find(':input:disabled').removeAttr('disabled');
+    const serializedFormArray = this.$form.serializeArray();
+    // Restore initial disabled state
+    $disabledInputs.prop('disabled', true);
+
+    const serializedFormMap: Record<string, any> = {};
+    serializedFormArray.forEach((value: NameValuePair) => {
+      serializedFormMap[value.name] = value.value;
+    });
+
+    this.model = {};
+    Object.keys(this.modelMapping).forEach((modelKey) => {
+      const formMapping = this.modelMapping[modelKey];
+      const formValue = serializedFormMap[formMapping];
+
+      this.updateObjectByKey(modelKey, formValue);
+    });
   }
 
   /**
@@ -285,8 +333,6 @@ export default class FormObjectMapper {
       'change dp.change',
       ':input',
       (event: JQuery.TriggeredEvent) => this.inputUpdated(event),
-    );
-    this.eventEmitter.on(this.updateModelEventName, () => this.updateFullObject(),
     );
   }
 
@@ -311,7 +357,6 @@ export default class FormObjectMapper {
 
     // Then update model and emit event
     this.updateObjectByKey(updatedModelKey, updatedValue);
-    this.eventEmitter.emit(this.modelUpdatedEventName, this.model);
   }
 
   /**
@@ -431,40 +476,19 @@ export default class FormObjectMapper {
     }
 
     /*
-     * And we also try to see if both values have the same Number value, this avoids forcing a number input value when
+     * And we also try to see if both values have the same BigNumber value, this avoids forcing a number input value when
      * it's not written exactly the same way (like pending zeros). When checking a number we use the numberCommaTransform
      * as numbers can be written with comma separator depending on the language.
      */
-    // eslint-disable-next-line eqeqeq
-    if (Number(numberCommaTransform(referenceValue)) == numberCommaTransform(inputValue)) {
+    const referenceBigNumber: BigNumber = new BigNumber(numberCommaTransform(referenceValue));
+    const inputBigNumber: BigNumber = new BigNumber(numberCommaTransform(inputValue));
+
+    if (inputBigNumber.isEqualTo(referenceBigNumber)) {
       return true;
     }
 
     // eslint-disable-next-line eqeqeq
     return referenceValue == inputValue;
-  }
-
-  /**
-   * Serializes and updates the object based on form content and the mapping configuration, finally
-   * emit an event for external components that may need the update.
-   *
-   * This method is called when this component initializes or when triggered by an external event.
-   */
-  private updateFullObject():void {
-    const serializedForm = this.$form.serializeJSON({
-      checkboxUncheckedValue: '0',
-    });
-
-    this.model = {};
-    Object.keys(this.modelMapping).forEach((modelKey) => {
-      const formMapping = this.modelMapping[modelKey];
-      const formKeys = $.serializeJSON.splitInputNameIntoKeysArray(formMapping);
-      const formValue = $.serializeJSON.deepGet(serializedForm, formKeys);
-
-      this.updateObjectByKey(modelKey, formValue);
-    });
-
-    this.eventEmitter.emit(this.modelUpdatedEventName, this.model);
   }
 
   /**
@@ -493,13 +517,12 @@ export default class FormObjectMapper {
 
     $.serializeJSON.deepSet(this.model, modelKeys, value);
 
-    const updateEvent: FormUpdateEvent = {
-      object: this.model,
+    const updateEvent: FormUpdateEvent = new UpdateEvent(
+      this.model,
       modelKey,
       value,
       previousValue,
-    };
-    this.eventEmitter.emit(this.modelFieldUpdatedEventName, updateEvent);
+    );
 
     if (
       Object.prototype.hasOwnProperty.call(this.watchedProperties, modelKey)
@@ -507,7 +530,9 @@ export default class FormObjectMapper {
       const propertyWatchers = this.watchedProperties[modelKey];
       propertyWatchers.forEach(
         (callback: (param: FormUpdateEvent) => void) => {
-          callback(updateEvent);
+          if (!updateEvent.isPropagationStopped()) {
+            callback(updateEvent);
+          }
         },
       );
     }

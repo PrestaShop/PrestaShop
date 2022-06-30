@@ -75,18 +75,6 @@
   {% include '@PrestaShop/Admin/TwigTemplateForm/form_max_length.html.twig' with {'attr': attr} %}
 {%- endblock form_widget_simple -%}
 
-{% block text_with_unit_widget %}
-  <div class="input-group">
-    {{- block('form_widget_simple') -}}
-    {% if form.vars.unit is defined %}
-      <div class="input-group-append">
-        <span class="input-group-text">{{ form.vars.unit }}</span>
-      </div>
-    {% endif %}
-  </div>
-  {{ block('form_help') }}
-{% endblock text_with_unit_widget %}
-
 {% block ip_address_text_widget %}
   <div class="input-group">
     {{- block('form_widget_simple') -}}
@@ -523,9 +511,9 @@
 
 {% block date_picker_widget %}
   {% apply spaceless %}
-    {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' datepicker')|trim)}) %}
+    {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' form-control datepicker')|trim)}) %}
     <div class="input-group datepicker">
-      <input type="text" class="form-control" data-format="{{ date_format }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+      <input type="text" data-format="{{ date_format }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
       <div class="input-group-append">
         <div class="input-group-text">
           <i class="material-icons">date_range</i>
@@ -538,10 +526,18 @@
 
 {% block date_range_widget %}
   {% apply spaceless %}
-    {{ form_widget(form.from) }}
-    {{ form_errors(form.from) }}
-    {{ form_widget(form.to) }}
-    {{ form_errors(form.to) }}
+    <div class="input-group date-range row">
+      <div class="col col-md-4">
+        {{ form_row(form.from) }}
+      </div>
+      <div class="col col-md-4">
+        {{ form_row(form.to) }}
+        {% if form.unlimited is defined %}
+          {{ form_widget(form.unlimited) }}
+          {{ form_errors(form.unlimited) }}
+        {% endif %}
+      </div>
+    </div>
   {% endapply %}
 {% endblock date_range_widget %}
 
@@ -594,6 +590,14 @@
   {% endapply %}
   {{- block('form_help') -}}
 {% endblock switch_widget %}
+
+{%- block row_attributes -%}
+  {% set rowAttributes  = row_attr|default({})%}
+  {%- for attrname, attrvalue in rowAttributes -%}
+    {{- " " -}}
+    {{- attrname }}="{{ attrvalue }}"
+  {%- endfor -%}
+{%- endblock -%}
 
 {% block _form_step6_attachments_widget %}
   <div class="js-options-no-attachments {{ form|length > 0 ? 'hide' : '' }}">
@@ -1080,7 +1084,7 @@
 
 {% block text_with_length_counter_widget %}
   <div class="input-group js-text-with-length-counter">
-    {% set current_length = form.vars.max_length - form.vars.value|length %}
+    {% set current_length = form.vars.max_length - value|length %}
 
     {% if form.vars.position == 'before' %}
       <div class="input-group-prepend">
@@ -1119,15 +1123,29 @@
 
 {%- block number_widget -%}
   {%- set type = type|default('text') -%}
-  {{ block('form_widget_simple') }}
-  {{- block('form_help') -}}
+  <div class="input-group">
+    {{- block('form_widget_simple') -}}
+    {{- block('form_unit') -}}
+  </div>
+  {{ block('form_help') }}
 {%- endblock number_widget -%}
 
 {%- block integer_widget -%}
   {%- set type = type|default('number') -%}
-  {{ block('form_widget_simple') }}
-  {{- block('form_help') -}}
+  <div class="input-group">
+    {{- block('form_widget_simple') -}}
+    {{- block('form_unit') -}}
+  </div>
+  {{ block('form_help') }}
 {%- endblock integer_widget -%}
+
+{% block form_unit %}
+  {% if form.vars.unit is defined %}
+    <div class="input-group-append">
+      <span class="input-group-text">{{ form.vars.unit }}</span>
+    </div>
+  {% endif %}
+{% endblock form_unit %}
 
 {% block form_help %}
   {% if help is not null %}
@@ -1261,7 +1279,7 @@
     {% endif %}
 
     {# This just outputs the value #}
-    {{ form.vars.value|e('html') }}
+    {{ value|e('html') }}
 
     {# Allows to insert content as suffix, like an icon #}
     {% if suffix is defined %}
@@ -1273,13 +1291,14 @@
 {% block image_preview_widget %}
   {# This is the hidden input #}
   {{- block('form_widget_simple') -}}
-  <img src="{{ form.vars.value }}" alt="{{ ('Image preview for ' ~ form.vars.name)|trim }}" class="{{ form.vars.image_class }}" />
+  <img src="{{ value }}" alt="{{ ('Image preview for ' ~ form.vars.name)|trim }}" class="{{ form.vars.image_class }}" />
 {% endblock %}
 
 {% block delta_quantity_widget %}
-  {%- set attr = attr|merge({class: (attr.class|default('') ~ ' delta-quantity')|trim, 'data-initial-quantity': form.quantity.vars.value}) -%}
+  {% set quantity = value.quantity|default(form.quantity.vars.value) %}
+  {% set attr = attr|merge({class: (attr.class|default('') ~ ' delta-quantity')|trim, 'data-initial-quantity': quantity}) %}
   <div {{ block('widget_container_attributes') }}>
-    {{ form_widget(form.quantity) }}
+    {{ form_widget(form.quantity, {value: quantity}) }}
     {{ form_row(form.delta) }}
   </div>
 {% endblock %}
@@ -1288,10 +1307,10 @@
   {%- set attr = attr|merge({class: (attr.class|default('') ~ ' delta-quantity-quantity')|trim}) -%}
   <div {{ block('widget_container_attributes') }}>
     {{- block('form_widget_simple') -}}
-    <span class="initial-quantity">{{ form.vars.value }}</span>
+    <span class="initial-quantity">{{ value }}</span>
     <span class="quantity-update">
       <i class="material-icons">trending_flat</i>
-      <span class="new-quantity">{{ form.vars.value }}</span>
+      <span class="new-quantity">{{ value }}</span>
     </span>
   </div>
 {% endblock %}
@@ -1344,8 +1363,8 @@
   <div {{ block('widget_attributes') }}>
     {%- set attr = form.vars.attr|merge({
       'class': (form.vars.attr.class|default('') ~ ' submittable-input')|trim,
-      'data-initial-value': form.vars.value,
-      'value': form.vars.value,
+      'data-initial-value': value,
+      'value': value,
     }) -%}
 
     {{ form_widget(form, {'attr': attr}) }}
@@ -1389,5 +1408,36 @@
 
     {# Display rest of children that may have not been rendered because they were not compound forms, like token hidden field for example #}
     {{ form_rest(form) }}
+  </div>
+{%- endblock -%}
+
+{% block button_collection_row %}
+  {%- set attr = attr|merge({
+    class: (attr.class|default('') ~ ' form-group btn-collection btn-toolbar')|trim,
+    role: 'group',
+    style: 'justify-content: ' ~ justify_content
+  }) -%}
+  <div {{ block('widget_attributes') }}>
+    {% for group, buttons in button_groups %}
+      <div class="btn-group group-{{ group }}">
+        {% for button in buttons %}
+          {{- form_widget(attribute(form, button)) -}}
+        {% endfor %}
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}
+
+{%- block price_reduction_widget -%}
+  {% set attr = attr|merge({class: (attr.class|default('') ~ ' reduction-widget row')|trim}) %}
+  <div {{ block('widget_attributes') }}>
+    {% for child in form.children %}
+      {% with {row_attr: child.vars.row_attr|merge({class: (child.vars.row_attr.class|default('') ~ ' col col-md-3')|trim})} %}
+      <div {{ block('row_attributes') }}>
+      {% endwith %}
+        {{ form_widget(child) }}
+        {{ form_errors(child) }}
+      </div>
+    {% endfor -%}
   </div>
 {%- endblock -%}

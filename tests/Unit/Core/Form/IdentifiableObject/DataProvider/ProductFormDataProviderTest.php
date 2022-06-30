@@ -67,7 +67,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierInfo;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
@@ -171,6 +170,7 @@ class ProductFormDataProviderTest extends TestCase
             $this->getDatasetsForOptions(),
             $this->getDatasetsForCategories(),
             $this->getDatasetsForRelatedProducts(),
+            $this->getDatasetsForCombinations(),
         ];
 
         foreach ($datasetsByType as $datasetByType) {
@@ -296,14 +296,15 @@ class ProductFormDataProviderTest extends TestCase
         ];
         $newCover = 'http://localhost/super_cover.jpg';
         $productData = [
-            'type' => ProductType::TYPE_COMBINATIONS,
+            'type' => ProductType::TYPE_VIRTUAL,
             'name' => $localizedValues,
             'description' => $localizedValues,
             'description_short' => $localizedValues,
             'cover_thumbnail' => $newCover,
         ];
         $expectedOutputData['header']['name'] = $localizedValues;
-        $expectedOutputData['header']['type'] = ProductType::TYPE_COMBINATIONS;
+        $expectedOutputData['header']['initial_type'] = ProductType::TYPE_VIRTUAL;
+        $expectedOutputData['header']['type'] = ProductType::TYPE_VIRTUAL;
         $expectedOutputData['header']['cover_thumbnail'] = $newCover;
 
         $expectedOutputData['description']['description'] = $localizedValues;
@@ -338,6 +339,7 @@ class ProductFormDataProviderTest extends TestCase
             'price_tax_excluded' => new DecimalNumber('42.00'),
             'price_tax_included' => new DecimalNumber('50.40'),
             'ecotax' => new DecimalNumber('69.51'),
+            'ecotax_tax_included' => new DecimalNumber('72.2904'),
             'tax_rules_group_id' => 49,
             'on_sale' => true,
             'wholesale_price' => new DecimalNumber('66.56'),
@@ -348,8 +350,9 @@ class ProductFormDataProviderTest extends TestCase
         ];
         $expectedOutputData['pricing']['retail_price']['price_tax_excluded'] = 42.00;
         $expectedOutputData['pricing']['retail_price']['price_tax_included'] = 50.40;
-        $expectedOutputData['pricing']['retail_price']['ecotax'] = 69.51;
-        $expectedOutputData['pricing']['tax_rules_group_id'] = 49;
+        $expectedOutputData['pricing']['retail_price']['tax_rules_group_id'] = 49;
+        $expectedOutputData['pricing']['retail_price']['ecotax_tax_excluded'] = 69.51;
+        $expectedOutputData['pricing']['retail_price']['ecotax_tax_included'] = 72.2904;
         $expectedOutputData['pricing']['on_sale'] = true;
         $expectedOutputData['pricing']['wholesale_price'] = 66.56;
         $expectedOutputData['pricing']['unit_price']['price_tax_excluded'] = 6.656;
@@ -409,7 +412,7 @@ class ProductFormDataProviderTest extends TestCase
             'low_stock_threshold' => 5,
             'low_stock_alert' => true,
             'pack_stock_type' => PackStockType::STOCK_TYPE_PACK_ONLY,
-            'out_of_stock' => OutOfStockType::OUT_OF_STOCK_AVAILABLE,
+            'out_of_stock_type' => OutOfStockType::OUT_OF_STOCK_AVAILABLE,
             'available_now' => $localizedValues,
             'available_later' => $localizedValues,
             'available_date' => new DateTime('1969/07/20'),
@@ -718,11 +721,8 @@ class ProductFormDataProviderTest extends TestCase
 
         $expectedOutputData = $this->getDefaultOutputData();
         $expectedOutputData['options']['suppliers']['default_supplier_id'] = 1;
-        $expectedOutputData['options']['suppliers']['supplier_ids'] = [
-            0 => 1,
-            1 => 2,
-        ];
-        $expectedOutputData['options']['suppliers']['product_suppliers'][1] = [
+        $expectedOutputData['options']['suppliers']['supplier_ids'] = [1, 2];
+        $expectedOutputData['options']['product_suppliers'][1] = [
             'supplier_id' => 1,
             'supplier_name' => 'test supplier 1',
             'product_supplier_id' => 1,
@@ -731,7 +731,7 @@ class ProductFormDataProviderTest extends TestCase
             'currency_id' => 1,
             'combination_id' => 0,
         ];
-        $expectedOutputData['options']['suppliers']['product_suppliers'][2] = [
+        $expectedOutputData['options']['product_suppliers'][2] = [
             'supplier_id' => 2,
             'supplier_name' => 'test supplier 2',
             'product_supplier_id' => 2,
@@ -744,29 +744,49 @@ class ProductFormDataProviderTest extends TestCase
         $productData = [
             'suppliers' => [
                 'default_supplier_id' => 1,
-                'product_suppliers' => [
-                    [
-                        'product_id' => self::PRODUCT_ID,
-                        'supplier_id' => 1,
-                        'supplier_name' => 'test supplier 1',
-                        'product_supplier_id' => 1,
-                        'price' => '0',
-                        'reference' => 'test supp ref 1',
-                        'currency_id' => 1,
-                        'combination_id' => 0,
-                    ],
-                    [
-                        'product_id' => self::PRODUCT_ID,
-                        'supplier_id' => 2,
-                        'supplier_name' => 'test supplier 2',
-                        'product_supplier_id' => 2,
-                        'price' => '0',
-                        'reference' => 'test supp ref 2',
-                        'currency_id' => 3,
-                        'combination_id' => 0,
-                    ],
+                'supplier_ids' => [1, 2],
+            ],
+            'product_suppliers' => [
+                [
+                    'product_id' => self::PRODUCT_ID,
+                    'supplier_id' => 1,
+                    'supplier_name' => 'test supplier 1',
+                    'product_supplier_id' => 1,
+                    'price' => '0',
+                    'reference' => 'test supp ref 1',
+                    'currency_id' => 1,
+                    'combination_id' => 0,
+                ],
+                [
+                    'product_id' => self::PRODUCT_ID,
+                    'supplier_id' => 2,
+                    'supplier_name' => 'test supplier 2',
+                    'product_supplier_id' => 2,
+                    'price' => '0',
+                    'reference' => 'test supp ref 2',
+                    'currency_id' => 3,
+                    'combination_id' => 0,
                 ],
             ],
+        ];
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        // We can have only the list of suppliers with no product suppliers infos (for product with combinations)
+        $expectedOutputData = $this->getDefaultOutputData();
+        $expectedOutputData['options']['suppliers']['default_supplier_id'] = 1;
+        $expectedOutputData['options']['suppliers']['supplier_ids'] = [1, 2];
+        $expectedOutputData['options']['product_suppliers'] = [];
+
+        $productData = [
+            'suppliers' => [
+                'default_supplier_id' => 1,
+                'supplier_ids' => [1, 2],
+            ],
+            'product_suppliers' => [],
         ];
 
         $datasets[] = [
@@ -903,6 +923,50 @@ class ProductFormDataProviderTest extends TestCase
     }
 
     /**
+     * @return array
+     */
+    private function getDatasetsForCombinations(): array
+    {
+        $datasets = [];
+
+        $expectedOutputData = $this->getDefaultOutputData();
+        $productData = [];
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        $localizedValues = [
+            1 => 'english',
+            2 => 'french',
+        ];
+        $expectedOutputData = $this->getDefaultOutputData();
+        $productData = [
+            'type' => ProductType::TYPE_COMBINATIONS,
+            'out_of_stock_type' => OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE,
+            'available_now' => $localizedValues,
+            'available_later' => $localizedValues,
+        ];
+
+        $expectedOutputData['header']['type'] = ProductType::TYPE_COMBINATIONS;
+        $expectedOutputData['header']['initial_type'] = ProductType::TYPE_COMBINATIONS;
+        $expectedOutputData['combinations']['availability']['out_of_stock_type'] = OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE;
+        $expectedOutputData['combinations']['availability']['available_now_label'] = $localizedValues;
+        $expectedOutputData['combinations']['availability']['available_later_label'] = $localizedValues;
+        $expectedOutputData['stock']['availability']['available_now_label'] = $localizedValues;
+        $expectedOutputData['stock']['availability']['available_later_label'] = $localizedValues;
+        $expectedOutputData['stock']['availability']['out_of_stock_type'] = OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE;
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        return $datasets;
+    }
+
+    /**
      * @param array $product
      *
      * @return ProductForEditing
@@ -936,29 +1000,29 @@ class ProductFormDataProviderTest extends TestCase
     private function createProductSupplierOptions(array $productData): ProductSupplierOptions
     {
         if (empty($productData['suppliers'])) {
-            return new ProductSupplierOptions(0, []);
+            return new ProductSupplierOptions(0, [], []);
         }
 
-        $suppliersInfo = [];
-        foreach ($productData['suppliers']['product_suppliers'] as $supplierInfo) {
-            $suppliersInfo[] = new ProductSupplierInfo(
-                $supplierInfo['supplier_name'],
-                $supplierInfo['supplier_id'],
-                new ProductSupplierForEditing(
+        $productSuppliers = [];
+        if (!empty($productData['product_suppliers'])) {
+            foreach ($productData['product_suppliers'] as $supplierInfo) {
+                $productSuppliers[] = new ProductSupplierForEditing(
                     $supplierInfo['product_supplier_id'],
                     $supplierInfo['product_id'],
                     $supplierInfo['supplier_id'],
+                    $supplierInfo['supplier_name'],
                     $supplierInfo['reference'],
                     $supplierInfo['price'],
                     $supplierInfo['currency_id'],
                     $supplierInfo['combination_id']
-                )
-            );
+                );
+            }
         }
 
         return new ProductSupplierOptions(
             $productData['suppliers']['default_supplier_id'],
-            $suppliersInfo
+            $productData['suppliers']['supplier_ids'],
+            $productSuppliers
         );
     }
 
@@ -1093,7 +1157,7 @@ class ProductFormDataProviderTest extends TestCase
     {
         return new ProductStockInformation(
             $product['pack_stock_type'] ?? PackStockType::STOCK_TYPE_DEFAULT,
-            $product['out_of_stock'] ?? OutOfStockType::OUT_OF_STOCK_DEFAULT,
+            $product['out_of_stock_type'] ?? OutOfStockType::OUT_OF_STOCK_DEFAULT,
             $product['quantity'] ?? self::DEFAULT_QUANTITY,
             $product['minimal_quantity'] ?? 0,
             $product['low_stock_threshold'] ?? 0,
@@ -1186,6 +1250,7 @@ class ProductFormDataProviderTest extends TestCase
             $product['price_tax_excluded'] ?? new DecimalNumber('19.86'),
             $product['price_tax_included'] ?? new DecimalNumber('23.832'),
             $product['ecotax'] ?? new DecimalNumber('19.86'),
+            $product['ecotax_tax_included'] ?? new DecimalNumber('20.6544'),
             $product['tax_rules_group_id'] ?? 1,
             $product['on_sale'] ?? false,
             $product['wholesale_price'] ?? new DecimalNumber('19.86'),
@@ -1325,6 +1390,7 @@ class ProductFormDataProviderTest extends TestCase
             'id' => self::PRODUCT_ID,
             'header' => [
                 'type' => ProductType::TYPE_STANDARD,
+                'initial_type' => ProductType::TYPE_STANDARD,
                 'name' => [],
                 'cover_thumbnail' => self::COVER_URL,
             ],
@@ -1381,9 +1447,10 @@ class ProductFormDataProviderTest extends TestCase
                 'retail_price' => [
                     'price_tax_excluded' => 19.86,
                     'price_tax_included' => 23.832,
-                    'ecotax' => 19.86,
+                    'tax_rules_group_id' => 1,
+                    'ecotax_tax_excluded' => 19.86,
+                    'ecotax_tax_included' => 20.6544,
                 ],
-                'tax_rules_group_id' => 1,
                 'on_sale' => false,
                 'wholesale_price' => 19.86,
                 'unit_price' => [
@@ -1428,7 +1495,11 @@ class ProductFormDataProviderTest extends TestCase
                     'show_price' => true,
                     'online_only' => false,
                 ],
-                'suppliers' => [],
+                'suppliers' => [
+                    'default_supplier_id' => 0,
+                    'supplier_ids' => [],
+                ],
+                'product_suppliers' => [],
             ],
             'footer' => [
                 'active' => true,

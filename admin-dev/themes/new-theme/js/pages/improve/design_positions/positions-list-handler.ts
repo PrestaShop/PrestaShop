@@ -58,8 +58,12 @@ class PositionsListHandler {
     this.$panelSelectionMultipleSelection = $(
       '#modules-position-multiple-selection',
     );
+    const $alertMessage = $('#content-message-box + .alert');
 
     this.$panelSelectionOriginalY = <number> this.$panelSelection.offset()?.top;
+    if ($alertMessage.length > 0) {
+      this.$panelSelectionOriginalY += <number> $alertMessage.outerHeight();
+    }
     this.$showModules = $('#show-modules');
     this.$modulesList = $('.modules-position-checkbox');
     this.$hookPosition = $('#hook-position');
@@ -71,6 +75,10 @@ class PositionsListHandler {
 
     this.handleList();
     this.handleSortable();
+
+    // Trigger some events for reloading all previous hooks
+    this.$modulesList.trigger('change');
+    this.$modulesList.trigger('scroll');
 
     $('input[name="general[enable_tos]"]').on('change', () => {
       this.handleList();

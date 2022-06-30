@@ -32,7 +32,7 @@ const titlesToCreate = [
   new TitleFaker({name: 'todelete2'}),
 ];
 
-describe('BO - Shop Parameters - Customer Settings : Bulk delete files', async () => {
+describe('BO - Shop Parameters - Customer Settings : Bulk delete titles', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

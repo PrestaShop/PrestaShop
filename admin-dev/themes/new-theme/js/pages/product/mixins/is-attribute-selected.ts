@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import Vue from 'vue';
-import {Attribute, AttributeGroup} from '@pages/product/components/generator/AttributesSelector.vue';
+import {Attribute, AttributeGroup} from '@pages/product/types';
 
 export default Vue.extend({
   methods: {

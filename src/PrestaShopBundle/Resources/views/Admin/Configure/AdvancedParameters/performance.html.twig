@@ -78,6 +78,50 @@
   {% endblock %}
   {{ form_end(debugModeForm) }}
 
+  {% block perfs_form_modules %}
+    <div class="card form-horizontal">
+      <h3 class="card-header">
+        <i class="material-icons">bug_report</i>
+        {{ 'Modules'|trans }}
+
+        <span
+          class="help-box"
+          data-container="body"
+          data-toggle="popover"
+          data-trigger="hover"
+          data-placement="right"
+          data-content="{{ 'This feature allows you to identify modules that might be causing bugs on your store. Disable all non-built-in modules (not listed in composer.json). Then, re-enable each module one by one and check that everything works properly before moving on to the next one.'|trans({}, 'Admin.Advparameters.Help')|escape('html_attr') }}"
+          title=""
+          data-original-title=""
+        ></span>
+      </h3>
+      <div class="card-body">
+        <div class="form-wrapper">
+          {% block perfs_form_modules_form %}
+            <div class="form-group row">
+              <label class="form-control-label">
+                {{ 'Disable non built-in modules'|trans({}, 'Admin.Advparameters.Feature') }}
+              </label>
+
+              <div class="col-sm input-container">
+                <a
+                  class="btn btn-primary pointer"
+                  href="{{ path('admin_performance_module_disable_non_builtin') }}"
+                  id="disableNonBuiltInModulesBtn"
+                  data-confirm-title="{{ 'Disable all non-built-in modules?'|trans({}, 'Advparameters.Feature') }}"
+                  data-confirm-button-label="{{ 'Disable'|trans({}, 'Admin.Actions') }}"
+                  data-close-button-label="{{ 'Cancel'|trans({}, 'Admin.Actions') }}"
+                >
+                  {{ 'Disable'|trans({}, 'Admin.Actions') }}
+                </a>
+              </div>
+            </div>
+          {% endblock %}
+        </div>
+      </div>
+    </div>
+  {% endblock %}
+
   {{ form_start(optionalFeaturesForm, {attr : {class: 'form'}, action: path('admin_performance_optional_features_save') }) }}
   {% block perfs_form_optional_features %}
     <div class="card" id="optional_features">
@@ -85,12 +129,12 @@
         <i class="material-icons">extension</i>
         {{ 'Optional features'|trans }}
 
-        <span class="help-box" 
-              data-container="body" 
-              data-toggle="popover" 
-              data-trigger="hover" 
-              data-placement="right" 
-              data-content="{{ 'Some features can be disabled in order to improve performance.'|trans({}, 'Admin.Advparameters.Help') }}" 
+        <span class="help-box"
+              data-container="body"
+              data-toggle="popover"
+              data-trigger="hover"
+              data-placement="right"
+              data-content="{{ 'Some features can be disabled in order to improve performance.'|trans({}, 'Admin.Advparameters.Help') }}"
               title="">
         </span>
       </h3>
@@ -117,12 +161,12 @@
         <i class="material-icons">zoom_out_map</i>
         {{ 'CCC (Combine, Compress and Cache)'|trans }}
 
-        <span class="help-box" 
-              data-container="body" 
-              data-toggle="popover" 
-              data-trigger="hover" 
-              data-placement="right" 
-              data-content="{{ 'CCC allows you to reduce the loading time of your page. With these settings you will gain performance without even touching the code of your theme. Make sure, however, that your theme is compatible with PrestaShop 1.7+. Otherwise, CCC will cause problems.'|trans({}, 'Admin.Advparameters.Help') }}" 
+        <span class="help-box"
+              data-container="body"
+              data-toggle="popover"
+              data-trigger="hover"
+              data-placement="right"
+              data-content="{{ 'CCC allows you to reduce the loading time of your page. With these settings you will gain performance without even touching the code of your theme. Make sure, however, that your theme is compatible with PrestaShop 1.7+. Otherwise, CCC will cause problems.'|trans({}, 'Admin.Advparameters.Help') }}"
               title="">
         </span>
       </h3>
@@ -149,12 +193,12 @@
         <i class="material-icons">link</i>
         {{ 'Media servers (use only with CCC)'|trans }}
 
-        <span class="help-box" 
-              data-container="body" 
-              data-toggle="popover" 
-              data-trigger="hover" 
-              data-placement="right" 
-              data-content="{{ 'You must enter another domain, or subdomain, in order to use cookieless static content.'|trans({}, 'Admin.Advparameters.Feature') }}" 
+        <span class="help-box"
+              data-container="body"
+              data-toggle="popover"
+              data-trigger="hover"
+              data-placement="right"
+              data-content="{{ 'You must enter another domain, or subdomain, in order to use cookieless static content.'|trans({}, 'Admin.Advparameters.Feature') }}"
               title="">
         </span>
       </h3>
@@ -202,6 +246,7 @@
 
 {% block javascripts %}
   {{ parent() }}
+  <script src="{{ asset('themes/new-theme/public/performance_preferences.bundle.js') }}"></script>
   <script src="{{ asset('themes/default/js/bundle/admin_parameters/performancePage.js') }}"></script>
   <script>
     var configuration = {

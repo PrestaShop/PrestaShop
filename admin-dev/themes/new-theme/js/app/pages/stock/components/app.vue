@@ -108,11 +108,12 @@
     methods: {
       onPageChanged(pageIndex: number): void {
         this.$store.dispatch('updatePageIndex', pageIndex);
-        this.fetch('asc');
+        this.fetch(this.$store.state.sort);
       },
       fetch(sortDirection?: string): void {
         const action = this.isOverview ? 'getStock' : 'getMovements';
         const sorting = sortDirection === 'desc' ? ' desc' : '';
+
         this.$store.dispatch('isLoading');
 
         this.filters = {

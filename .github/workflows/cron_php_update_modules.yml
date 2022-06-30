@@ -5,9 +5,19 @@ on:
   workflow_dispatch:
 
 jobs:
-  js-routing-dump:
+  update-composer-modules:
     runs-on: ubuntu-latest
     name: Update PHP Modules
+    strategy:
+      fail-fast: false
+      matrix:
+        BRANCH:
+          - develop
+          - 8.0.x
+          - 1.7.8.x
+    env:
+      GH_BRANCH: ${{ matrix.BRANCH }}
+
     steps:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -16,12 +26,15 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: ${{ env.GH_BRANCH }}
 
       - name: Install Composer dependencies
         run: composer install --prefer-dist
 
       - name: Execute script for updating modules
-        run: php .github/workflows/cron_update_modules/script.php
+        run: php .github/workflows/cron_update_modules/script.php ${{ env.GH_BRANCH }}
 
       - name: Update PrestaShop packages
         run: echo "PULL_REQUEST_BODY='$(cat cron_php_update_modules.txt)'" >> $GITHUB_ENV
@@ -37,5 +50,5 @@ jobs:
           author: prestonBot <prestonBot@users.noreply.github.com>
           title: 'Updated PrestaShop Packages'
           body: ${{ env.PULL_REQUEST_BODY }}
-          base: 'develop'
+          base: ${{ env.GH_BRANCH }}
           delete-branch: true

@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace Tests\Unit\Core\Domain\Employee\ValueObject;
 
 use PHPUnit\Framework\TestCase;
@@ -32,29 +34,36 @@ use PrestaShop\PrestaShop\Core\Domain\Employee\ValueObject\EmployeeId;
 
 class EmployeeIdTest extends TestCase
 {
-    public function testItCreatesEmployeeWithValidValues()
+    /**
+     * @dataProvider getValidValues
+     */
+    public function testItCreatesEmployeeWithValidValues($employeId): void
     {
-        $employeeId = new EmployeeId(1);
+        $employeeId = new EmployeeId($employeId);
 
-        $this->assertEquals(1, $employeeId->getValue());
+        $this->assertEquals($employeId, $employeeId->getValue());
+    }
+
+    public function getValidValues(): iterable
+    {
+        yield [0];
+        yield [1];
     }
 
     /**
-     * @dataProvider getInvalidEmployeeIds
+     * @dataProvider getInvalidValues
      */
-    public function testItExceptionThrownWithInvalidValues($employeId)
+    public function testItExceptionThrownWithInvalidValues($employeId): void
     {
         $this->expectException(InvalidEmployeeIdException::class);
         new EmployeeId($employeId);
     }
 
-    public function getInvalidEmployeeIds()
+    public function getInvalidValues(): iterable
     {
-        return [
-            'stringy -1' => ['-1'],
-            'stringy 1.1' => ['1.1'],
-            'stringy a' => ['a'],
-            'stringy +' => ['+'],
-        ];
+        yield ['-1'];
+        yield ['1.1'];
+        yield ['a'];
+        yield ['+'];
     }
 }

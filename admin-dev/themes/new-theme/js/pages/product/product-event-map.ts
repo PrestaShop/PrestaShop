@@ -24,9 +24,6 @@
  */
 
 export default {
-  productModelUpdated: 'productModelUpdated',
-  updatedProductModel: 'updatedProductModel',
-  updatedProductField: 'updatedProductField',
   updateSubmitButtonState: 'updateSubmitButtonState',
   customizations: {
     rowRemoved: 'customizationRowRemoved',
@@ -51,7 +48,12 @@ export default {
     clearFilters: 'clearFilters',
     selectCombination: 'selectCombination',
     listRendered: 'combinationsListRendered',
+    buildCombinationRow: 'buildCombinationRow',
     bulkUpdateFinished: 'combinationsBulkUpdateFinished',
+    bulkDeleteFinished: 'combinationsBulkDeleteFinished',
+    combinationDeleted: 'combinationDeleted',
+    combinationSwitchDeltaQuantity: 'combinationSwitchDeltaQuantity',
+    combinationSwitchFixedQuantity: 'combinationSwitchFixedQuantity',
   },
   categories: {
     applyCategoryTreeChanges: 'applyCategoryTreeChanges',
@@ -59,6 +61,6 @@ export default {
     categoriesUpdated: 'categoriesUpdated',
   },
   specificPrice: {
-    specificPriceUpdated: 'specificPriceUpdated',
+    listUpdated: 'specificPricesListUpdated',
   },
 };

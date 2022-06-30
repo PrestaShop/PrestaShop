@@ -280,12 +280,16 @@ class DbPDOCore extends Db
      *
      * @see DbCore::_escape()
      *
-     * @param string $str
+     * @param string|null $str
      *
      * @return string
      */
     public function _escape($str)
     {
+        if (null === $str) {
+            return '';
+        }
+
         $search = ['\\', "\0", "\n", "\r", "\x1a", "'", '"'];
         $replace = ['\\\\', '\\0', '\\n', '\\r', "\Z", "\'", '\"'];
 

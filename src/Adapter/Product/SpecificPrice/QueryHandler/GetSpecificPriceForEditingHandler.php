@@ -38,6 +38,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\Customer
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\FixedPrice;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\InitialPrice;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use SpecificPrice;
 
@@ -79,10 +80,16 @@ class GetSpecificPriceForEditingHandler implements GetSpecificPriceForEditingHan
             new FixedPrice($specificPrice->price)
         ;
 
+        // VO stores percent expressed based on 100, while the DB stored the float value (VO: 57.5 - DB: 0.575)
+        $reductionValue = new DecimalNumber((string) $specificPrice->reduction);
+        if ($specificPrice->reduction_type === Reduction::TYPE_PERCENTAGE) {
+            $reductionValue = $reductionValue->times(new DecimalNumber('100'));
+        }
+
         return new SpecificPriceForEditing(
             (int) $specificPrice->id,
             $specificPrice->reduction_type,
-            new DecimalNumber((string) $specificPrice->reduction),
+            $reductionValue,
             (bool) $specificPrice->reduction_tax,
             $fixedPrice,
             (int) $specificPrice->from_quantity,

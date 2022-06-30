@@ -65,10 +65,10 @@ class ProductTypeListenerTest extends FormListenerTestCase
 
     public function getFormTypeExpectationsBasedOnProductType(): Generator
     {
-        yield [ProductType::TYPE_STANDARD, 'options.suppliers', true];
-        yield [ProductType::TYPE_PACK, 'options.suppliers', true];
-        yield [ProductType::TYPE_VIRTUAL, 'options.suppliers', true];
-        yield [ProductType::TYPE_COMBINATIONS, 'options.suppliers', false];
+        yield [ProductType::TYPE_STANDARD, 'options.product_suppliers', true];
+        yield [ProductType::TYPE_PACK, 'options.product_suppliers', true];
+        yield [ProductType::TYPE_VIRTUAL, 'options.product_suppliers', true];
+        yield [ProductType::TYPE_COMBINATIONS, 'options.product_suppliers', false];
 
         yield [ProductType::TYPE_STANDARD, 'stock', true];
         yield [ProductType::TYPE_PACK, 'stock', true];
@@ -90,10 +90,20 @@ class ProductTypeListenerTest extends FormListenerTestCase
         yield [ProductType::TYPE_VIRTUAL, 'stock.virtual_product_file', true];
         yield [ProductType::TYPE_COMBINATIONS, 'stock.virtual_product_file', false];
 
-        yield [ProductType::TYPE_STANDARD, 'pricing.retail_price.ecotax', true];
-        yield [ProductType::TYPE_PACK, 'pricing.retail_price.ecotax', true];
-        yield [ProductType::TYPE_VIRTUAL, 'pricing.retail_price.ecotax', false];
-        yield [ProductType::TYPE_COMBINATIONS, 'pricing.retail_price.ecotax', true];
+        yield [ProductType::TYPE_STANDARD, 'combinations', false];
+        yield [ProductType::TYPE_PACK, 'combinations', false];
+        yield [ProductType::TYPE_VIRTUAL, 'combinations', false];
+        yield [ProductType::TYPE_COMBINATIONS, 'combinations', true];
+
+        yield [ProductType::TYPE_STANDARD, 'pricing.retail_price.ecotax_tax_excluded', true];
+        yield [ProductType::TYPE_PACK, 'pricing.retail_price.ecotax_tax_excluded', true];
+        yield [ProductType::TYPE_VIRTUAL, 'pricing.retail_price.ecotax_tax_excluded', false];
+        yield [ProductType::TYPE_COMBINATIONS, 'pricing.retail_price.ecotax_tax_excluded', true];
+
+        yield [ProductType::TYPE_STANDARD, 'pricing.retail_price.ecotax_tax_included', true];
+        yield [ProductType::TYPE_PACK, 'pricing.retail_price.ecotax_tax_included', true];
+        yield [ProductType::TYPE_VIRTUAL, 'pricing.retail_price.ecotax_tax_included', false];
+        yield [ProductType::TYPE_COMBINATIONS, 'pricing.retail_price.ecotax_tax_included', true];
     }
 
     /**
@@ -174,6 +184,65 @@ class ProductTypeListenerTest extends FormListenerTestCase
         yield [ProductType::TYPE_COMBINATIONS, $stockMovements, false];
         yield [ProductType::TYPE_PACK, $stockMovements, true];
         yield [ProductType::TYPE_VIRTUAL, $stockMovements, true];
+    }
+
+    /**
+     * @dataProvider getVirtualData
+     *
+     * @param array $formData
+     * @param bool $ecotaxExpected
+     */
+    public function testEcotaxForVirtualProduct(array $formData, bool $ecotaxExpected): void
+    {
+        $form = $this->createForm(TestProductFormType::class, [], $formData);
+
+        $this->assertFormTypeExistsInForm($form, 'pricing.retail_price.ecotax_tax_excluded', true);
+        $this->assertFormTypeExistsInForm($form, 'pricing.retail_price.ecotax_tax_included', true);
+        $this->adaptProductFormBasedOnProductType($form, $formData['header']['type'], $formData);
+        $this->assertFormTypeExistsInForm($form, 'pricing.retail_price.ecotax_tax_excluded', $ecotaxExpected);
+        $this->assertFormTypeExistsInForm($form, 'pricing.retail_price.ecotax_tax_included', $ecotaxExpected);
+    }
+
+    public function getVirtualData(): iterable
+    {
+        yield 'no initial type defined, virtual type defined, ecotax removed' => [
+            [
+                'header' => [
+                    'type' => ProductType::TYPE_VIRTUAL,
+                ],
+            ],
+            false,
+        ];
+
+        yield 'both initial and current are virtual, ecotax removed' => [
+            [
+                'header' => [
+                    'type' => ProductType::TYPE_VIRTUAL,
+                    'initial_type' => ProductType::TYPE_VIRTUAL,
+                ],
+            ],
+            false,
+        ];
+
+        yield 'initial standard and current virtual, ecotax present' => [
+            [
+                'header' => [
+                    'type' => ProductType::TYPE_VIRTUAL,
+                    'initial_type' => ProductType::TYPE_STANDARD,
+                ],
+            ],
+            true,
+        ];
+
+        yield 'initial virtual and current standard, ecotax present' => [
+            [
+                'header' => [
+                    'type' => ProductType::TYPE_VIRTUAL,
+                    'initial_type' => ProductType::TYPE_STANDARD,
+                ],
+            ],
+            true,
+        ];
     }
 
     /**

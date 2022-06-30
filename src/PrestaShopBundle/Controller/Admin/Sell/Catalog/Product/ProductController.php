@@ -29,27 +29,41 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkUpdateProductStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\DeleteProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\DuplicateProductCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductsPositionsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\BulkProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductPositionException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\DuplicateFeatureValueAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidAssociatedFeatureException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductIsEnabled;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProductsForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
 use PrestaShop\PrestaShop\Core\Exception\ProductException;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Entity\ProductDownload;
+use PrestaShopBundle\Form\Admin\Sell\Product\Category\CategoryFilterType;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -88,10 +102,21 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function indexAction(Request $request, ProductFilters $filters): Response
     {
+        if ($this->shouldRedirectToV1()) {
+            return $this->redirectToRoute('admin_product_catalog');
+        }
+
         $productGridFactory = $this->get('prestashop.core.grid.factory.product');
         $productGrid = $productGridFactory->getGrid($filters);
 
+        $filteredCategoryId = null;
+        if (isset($filters->getFilters()['id_category'])) {
+            $filteredCategoryId = (int) $filters->getFilters()['id_category'];
+        }
+        $categoriesForm = $this->createForm(CategoryFilterType::class, $filteredCategoryId);
+
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/index.html.twig', [
+            'categoryFilterForm' => $categoriesForm->createView(),
             'productGrid' => $this->presentGrid($productGrid),
             'enableSidebar' => true,
             'layoutHeaderToolbarBtn' => $this->getProductToolbarButtons(),
@@ -141,6 +166,10 @@ class ProductController extends FrameworkBundleAdminController
      */
     public function editAction(Request $request, int $productId): Response
     {
+        if ($this->shouldRedirectToV1()) {
+            return $this->redirectToRoute('admin_product_form', ['id' => $productId]);
+        }
+
         if (!$this->get('prestashop.adapter.shop.context')->isSingleShopContext()) {
             return $this->renderDisableMultistorePage($productId);
         }
@@ -185,6 +214,8 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", message="You do not have permission to delete this.")
+     *
      * @param Request $request
      * @param int $productId
      *
@@ -206,6 +237,263 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message="You do not have permission to create this.")
+     *
+     * @param int $productId
+     *
+     * @return Response
+     */
+    public function duplicateAction(int $productId): Response
+    {
+        try {
+            /** @var ProductId $newProductId */
+            $newProductId = $this->getCommandBus()->handle(new DuplicateProductCommand($productId));
+            $this->addFlash(
+                'success',
+                $this->trans('Successful duplication', 'Admin.Notifications.Success')
+            );
+        } catch (ProductException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+
+            return $this->redirectToRoute('admin_products_v2_index');
+        }
+
+        return $this->redirectToRoute('admin_products_v2_edit', ['productId' => $newProductId->getValue()]);
+    }
+
+    /**
+     * Toggles product status
+     *
+     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))", redirectRoute="admin_products_v2_index")
+     * @DemoRestricted(redirectRoute="admin_products_v2_index")
+     *
+     * @param int $productId
+     *
+     * @return JsonResponse
+     */
+    public function toggleStatusAction(int $productId): JsonResponse
+    {
+        if ($this->isDemoModeEnabled()) {
+            return $this->json([
+                'status' => false,
+                'message' => $this->getDemoModeErrorMessage(),
+            ]);
+        }
+
+        /** @var bool $isEnabled */
+        $isEnabled = $this->getQueryBus()->handle(new GetProductIsEnabled((int) $productId));
+
+        try {
+            $this->getCommandBus()->handle(
+                new UpdateProductStatusCommand((int) $productId, !$isEnabled)
+            );
+        } catch (ProductException $e) {
+            return $this->json([
+                'status' => false,
+                'message' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
+            ]);
+        }
+
+        return $this->json([
+            'status' => true,
+            'message' => $this->trans('The status has been successfully updated.', 'Admin.Notifications.Success'),
+        ]);
+    }
+
+    /**
+     * Updates product position.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_products_v2_index",
+     *     redirectQueryParamsToKeep={"id_category"},
+     *     message="You do not have permission to edit this."
+     * )
+     * @DemoRestricted(
+     *     redirectRoute="admin_products_v2_index",
+     *     redirectQueryParamsToKeep={"id_category"}
+     * )
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
+    public function updatePositionAction(Request $request): RedirectResponse
+    {
+        try {
+            $this->getCommandBus()->handle(
+                new UpdateProductsPositionsCommand(
+                    $request->request->get('positions'),
+                    $request->query->getInt('id_category')
+                )
+            );
+            $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+        } catch (CannotUpdateProductPositionException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+
+            return $this->redirectToRoute('admin_products_v2_index');
+        }
+
+        return $this->redirectToRoute('admin_products_v2_index');
+    }
+
+    /**
+     * Delete products in bulk action.
+     *
+     * @AdminSecurity(
+     *     "is_granted('delete', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_products_v2_index",
+     *     message="You do not have permission to delete this."
+     * )
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function bulkDeleteAction(Request $request): JsonResponse
+    {
+        try {
+            $this->getCommandBus()->handle(new BulkDeleteProductCommand(
+                $this->getProductIdsFromRequest($request))
+            );
+            $this->addFlash(
+                'success',
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
+            );
+        } catch (Exception $e) {
+            if ($e instanceof BulkProductException) {
+                return $this->jsonBulkErrors($e);
+            } else {
+                return $this->json(['error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))], Response::HTTP_BAD_REQUEST);
+            }
+        }
+
+        return $this->json(['success' => true]);
+    }
+
+    /**
+     * Enable products in bulk action.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_products_v2_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function bulkEnableAction(Request $request): JsonResponse
+    {
+        try {
+            $this->getCommandBus()->handle(
+                new BulkUpdateProductStatusCommand(
+                    $this->getProductIdsFromRequest($request),
+                    true
+                )
+            );
+        } catch (Exception $e) {
+            if ($e instanceof BulkProductException) {
+                return $this->jsonBulkErrors($e);
+            } else {
+                return $this->json(['error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))], Response::HTTP_BAD_REQUEST);
+            }
+        }
+
+        return $this->json(['success' => true]);
+    }
+
+    /**
+     * Disable products in bulk action.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_products_v2_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function bulkDisableAction(Request $request): JsonResponse
+    {
+        try {
+            $this->getCommandBus()->handle(
+                new BulkUpdateProductStatusCommand(
+                    $this->getProductIdsFromRequest($request),
+                    false
+                )
+            );
+        } catch (Exception $e) {
+            if ($e instanceof BulkProductException) {
+                return $this->jsonBulkErrors($e);
+            } else {
+                return $this->json(['error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))], Response::HTTP_BAD_REQUEST);
+            }
+        }
+
+        return $this->json(['success' => true]);
+    }
+
+    /**
+     * Duplicate products in bulk action.
+     *
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_products_v2_index",
+     *     message="You do not have permission to edit this."
+     * )
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function bulkDuplicateAction(Request $request): JsonResponse
+    {
+        try {
+            $this->getCommandBus()->handle(
+                new BulkDuplicateProductCommand(
+                    $this->getProductIdsFromRequest($request)
+                )
+            );
+        } catch (Exception $e) {
+            if ($e instanceof BulkProductException) {
+                return $this->jsonBulkErrors($e);
+            } else {
+                return $this->json(['error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))], Response::HTTP_BAD_REQUEST);
+            }
+        }
+
+        return $this->json(['success' => true]);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return array<int, int>
+     */
+    private function getProductIdsFromRequest(Request $request): array
+    {
+        $productIds = $request->request->get('product_bulk');
+
+        if (is_numeric($productIds)) {
+            return [(int) $productIds];
+        }
+
+        if (!is_array($productIds)) {
+            return [];
+        }
+
+        foreach ($productIds as $i => $productId) {
+            $productIds[$i] = (int) $productId;
+        }
+
+        return $productIds;
+    }
+
+    /**
      * @return array
      */
     private function getProductToolbarButtons(): array
@@ -214,22 +502,18 @@ class ProductController extends FrameworkBundleAdminController
 
         $toolbarButtons['add'] = [
             'href' => $this->generateUrl('admin_products_v2_create'),
-            'desc' => $this->trans('New product on experimental page', 'Admin.Actions'),
+            'desc' => $this->trans('New product', 'Admin.Actions'),
             'icon' => 'add_circle_outline',
             'class' => 'btn-primary new-product',
             'floating_class' => 'new-product',
-        ];
-
-        $toolbarButtons['list_v1'] = [
-            'href' => $this->generateUrl('admin_product_catalog'),
-            'desc' => $this->trans('Back to standard page', 'Admin.Catalog.Feature'),
-            'class' => 'btn-outline-primary',
         ];
 
         return $toolbarButtons;
     }
 
     /**
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="You do not have permission to read this.")
+     *
      * Download the content of the virtual product.
      *
      * @param int $virtualProductFileId
@@ -371,6 +655,7 @@ class ProductController extends FrameworkBundleAdminController
             'editable' => $this->isGranted(PageVoter::UPDATE, self::PRODUCT_CONTROLLER_PERMISSION),
             'taxEnabled' => (bool) $configuration->get('PS_TAX'),
             'stockEnabled' => (bool) $configuration->get('PS_STOCK_MANAGEMENT'),
+            'isMultistoreActive' => $this->get('prestashop.adapter.multistore_feature')->isActive(),
         ]);
     }
 
@@ -400,6 +685,30 @@ class ProductController extends FrameworkBundleAdminController
     private function getProductFormHandler(): FormHandlerInterface
     {
         return $this->get('prestashop.core.form.identifiable_object.product_form_handler');
+    }
+
+    /**
+     * Format the bulk exception into an array of errors returned in a JsonResponse.
+     *
+     * @param BulkProductException $bulkProductException
+     *
+     * @return JsonResponse
+     */
+    private function jsonBulkErrors(BulkProductException $bulkProductException): JsonResponse
+    {
+        $errors = [];
+        foreach ($bulkProductException->getBulkExceptions() as $productId => $productException) {
+            $errors[] = $this->trans(
+                'Error for product %product_id%: %error_message%',
+                'Admin.Notification.Error',
+                [
+                    '%product_id%' => $productId,
+                    '%error_message%' => $this->getErrorMessageForException($productException, $this->getErrorMessages($productException)),
+                ]
+            );
+        }
+
+        return $this->json(['errors' => $errors], Response::HTTP_BAD_REQUEST);
     }
 
     /**
@@ -492,10 +801,20 @@ class ProductController extends FrameworkBundleAdminController
                     '[/1]' => '</a>',
                 ]
             ),
-            'standardPageUrl' => $this->generateUrl(
-                !empty($productId) ? 'admin_product_form' : 'admin_product_new',
-                !empty($productId) ? ['id' => $productId] : []
-            ),
         ]);
+    }
+
+    /**
+     * @return bool
+     */
+    private function shouldRedirectToV1(): bool
+    {
+        $multistoreFeature = $this->get('prestashop.adapter.multistore_feature');
+
+        if (!$multistoreFeature->isActive()) {
+            return $this->get('prestashop.core.admin.feature_flag.repository')->isDisabled(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2);
+        }
+
+        return $this->get('prestashop.core.admin.feature_flag.repository')->isDisabled(FeatureFlagSettings::FEATURE_FLAG_PRODUCT_PAGE_V2_MULTI_SHOP);
     }
 }

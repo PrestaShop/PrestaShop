@@ -32,7 +32,12 @@
   <div class="product-header-summary">
     <div class="product-field-preview">
       <div class="product-field-value">
-        {{ productData.pricing.retail_price.price_tax_excluded|price_format }}
+        {% if productData.pricing.retail_price.ecotax_tax_excluded is defined %}
+          {% set final_price_tax_excluded = productData.pricing.retail_price.price_tax_excluded + productData.pricing.retail_price.ecotax_tax_excluded %}
+          {{ final_price_tax_excluded|price_format }}
+        {% else %}
+          {{ productData.pricing.retail_price.price_tax_excluded|price_format }}
+        {% endif %}
       </div>
       <div class="product-field-label">
         {{ 'tax excl.'|trans({}, 'Admin.Global') }}
@@ -48,8 +53,8 @@
         {% if taxEnabled %}
           {# First find the selected tax rate #}
           {% set taxRate = 0 %}
-          {% for group_label, choice in productForm.pricing.tax_rules_group_id.vars.choices %}
-            {% if choice.data == productData.pricing.tax_rules_group_id %}
+          {% for group_label, choice in productForm.pricing.retail_price.tax_rules_group_id.vars.choices %}
+            {% if choice.data == productData.pricing.retail_price.tax_rules_group_id %}
               {% set taxRate = choice.attr['data-tax-rate'] %}
             {% endif %}
           {% endfor %}

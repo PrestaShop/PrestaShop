@@ -133,6 +133,19 @@ class UpdateCombinationStockFeatureContext extends AbstractCombinationFeatureCon
     }
 
     /**
+     * @Then I should get error that it is not allowed to perform update using both - delta and fixed quantity
+     *
+     * @return void
+     */
+    public function assertLastErrorIsDuplicateQuantityUpdate(): void
+    {
+        $this->assertLastErrorIs(
+            ProductStockConstraintException::class,
+            ProductStockConstraintException::FIXED_AND_DELTA_QUANTITY_PROVIDED
+        );
+    }
+
+    /**
      * @param UpdateCombinationStockCommand $command
      * @param array<string, mixed> $dataRows
      */
@@ -140,6 +153,9 @@ class UpdateCombinationStockFeatureContext extends AbstractCombinationFeatureCon
     {
         if (isset($dataRows['delta quantity'])) {
             $command->setDeltaQuantity((int) $dataRows['delta quantity']);
+        }
+        if (isset($dataRows['fixed quantity'])) {
+            $command->setFixedQuantity((int) $dataRows['fixed quantity']);
         }
         if (isset($dataRows['minimal quantity'])) {
             $command->setMinimalQuantity((int) $dataRows['minimal quantity']);

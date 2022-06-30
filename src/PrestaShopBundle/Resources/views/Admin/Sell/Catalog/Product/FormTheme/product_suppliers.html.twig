@@ -1,0 +1,81 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{%- block product_supplier_row -%}
+  <tr class="product_supplier_row" id="product_supplier_row_{{ form.vars.name }}" data-supplier-index="{{ form.vars.name }}">
+  {% for child in form.children %}
+    {% set childType = child.vars.block_prefixes.1 %}
+    {% if childType != 'hidden' %}
+      {# Regular chidlren are displayed thanks to their widget #}
+      <td>
+        {{ form_widget(child) }}
+        {{ form_errors(child) }}
+      </td>
+    {% elseif child.vars.label is not empty %}
+      {# Hidden input with label is displayed, at least its value, with a class allowing to target them #}
+      <td class="{{ child.vars.name }}">
+        {{ form_widget(form.supplier_name) }}
+        <span class="preview">{% if child.vars.value %}{{ child.vars.value }}{% endif %}</span>
+      </td>
+    {% else %}
+      {# Other hidden types are simply added and will be invisible #}
+      {{ form_widget(child) }}
+    {% endif %}
+  {% endfor %}
+  </tr>
+{%- endblock product_supplier_row -%}
+
+{# Override suppliers collection template to remove the label and init the table #}
+{%- block product_supplier_collection_row -%}
+  <div class="form-group product-suppliers-collection-row">
+    {{ form_label(form) }}
+    {{- block('form_alert') -}}
+
+    {# We put prototype name in a data attribute, so the JS code can get it dynamically #}
+    {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
+    <div {{ block('widget_attributes') }}>
+      <div class="row">
+        <div class="col-sm">
+          <table class="table">
+            <thead class="thead-default">
+            <tr>
+              {% for child in prototype.children %}
+                {# We add column for children that are not hidden type, unless their label is not empty (like supplier_name) #}
+                {% set childType = child.vars.block_prefixes.1 %}
+                {% if childType != 'hidden' or (child.vars.label is not empty) %}
+                  <th>{{ child.vars.label }}</th>
+                {% endif %}
+              {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+            {{- block('form_rows') -}}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+{%- endblock -%}

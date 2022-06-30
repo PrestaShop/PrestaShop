@@ -88,6 +88,10 @@ export default class DynamicPaginator {
 
   private pagesCount: number;
 
+  private total: number;
+
+  private totalInPage: number;
+
   /**
    * @param {String} containerSelector
    * @param {Object} paginationService
@@ -108,6 +112,8 @@ export default class DynamicPaginator {
     this.selectorsMap = {};
     this.setSelectorsMap(selectorsMap);
     this.pagesCount = 0;
+    this.total = 0;
+    this.totalInPage = 0;
     this.init();
     this.currentPage = startingPage;
     if (startingPage > 0) {
@@ -120,7 +126,7 @@ export default class DynamicPaginator {
    */
   async paginate(page: number): Promise<void> {
     this.currentPage = page > 0 ? page : 1;
-    this.renderer.toggleLoading(true);
+    this.renderer.setLoading(true);
     const limit = this.getLimit();
 
     const data: FetchResponse = await this.paginationService.fetch(
@@ -132,6 +138,8 @@ export default class DynamicPaginator {
     this.countPages(<number>data.total);
     this.refreshButtonsData(page);
     this.refreshInfoLabel(page, <number>data.total);
+    this.total = data.total;
+    this.setTotalInPage(page, limit, data.total);
 
     this.toggleTargetAvailability(this.selectorsMap.firstPageItem, page > 1);
     this.toggleTargetAvailability(this.selectorsMap.previousPageItem, page > 1);
@@ -143,9 +151,14 @@ export default class DynamicPaginator {
       this.selectorsMap.lastPageItem,
       page < this.pagesCount,
     );
+    this.toggleTargetAvailability(
+      this.selectorsMap.jumpToPageInput,
+      this.getPagesCount() > 1,
+    );
 
     this.renderer.render(data);
-    this.renderer.toggleLoading(false);
+    this.$paginationContainer.toggleClass('d-none', this.getTotal() <= this.getMinLimit());
+    this.renderer.setLoading(false);
 
     window.prestaShopUiKit.initToolTips();
   }
@@ -156,6 +169,14 @@ export default class DynamicPaginator {
 
   getPagesCount(): number {
     return this.pagesCount;
+  }
+
+  getTotal(): number {
+    return this.total;
+  }
+
+  getTotalInPage(): number {
+    return this.totalInPage;
   }
 
   /**
@@ -226,12 +247,10 @@ export default class DynamicPaginator {
       this.selectorsMap.paginationInfoLabel,
     );
     const limit = this.getLimit();
-    const from = page === 1 ? 1 : Math.round((page - 1) * limit);
-    const to = page === this.pagesCount ? total : Math.round(page * limit);
     const modifiedInfoText = infoLabel
       .data('pagination-info')
-      .replace(/%from%/g, from)
-      .replace(/%to%/g, to)
+      .replace(/%from%/g, this.calculateFrom(page, limit))
+      .replace(/%to%/g, this.calculateTo(page, limit, total))
       .replace(/%total%/g, total)
       .replace(/%current_page%/g, page)
       .replace(/%page_count%/g, this.pagesCount);
@@ -251,11 +270,8 @@ export default class DynamicPaginator {
   ): void {
     const target = this.$paginationContainer.find(targetSelector);
 
-    if (enable) {
-      target.removeClass('disabled');
-    } else {
-      target.addClass('disabled');
-    }
+    target.toggleClass('disabled', !enable);
+    target.prop('disabled', !enable);
   }
 
   /**
@@ -281,6 +297,27 @@ export default class DynamicPaginator {
     return <number>(
       this.$paginationContainer.find(this.selectorsMap.limitSelect).val()
     );
+  }
+
+  /**
+   * @returns {Number}
+   *
+   * @private
+   */
+  private getMinLimit(): number {
+    const limitSelections = this.$paginationContainer.find(`${this.selectorsMap.limitSelect} option`).get();
+
+    const limitValues = limitSelections.map((option:HTMLElement) => {
+      if (!(option instanceof HTMLOptionElement)) {
+        console.error('Only <option> elements are expected in <select> for list limit choices');
+
+        return 0;
+      }
+
+      return Number(option.value);
+    });
+
+    return Math.min(...limitValues);
   }
 
   /**
@@ -324,5 +361,19 @@ export default class DynamicPaginator {
       //override with custom selectors if any provided
       ...selectorsMap,
     };
+  }
+
+  private calculateFrom(page: number, limit: number): number {
+    // increment by 1 because offset, starts from 0, but lowest "from" can be 1
+    return page === 1 ? 1 : Math.round((page - 1) * limit + 1);
+  }
+
+  private calculateTo(page: number, limit:number, total: number) {
+    return page === this.pagesCount ? total : Math.round(page * limit);
+  }
+
+  private setTotalInPage(page: number, limit: number, total: number): void {
+    // increment by 1 to include the first "from" result to total count
+    this.totalInPage = this.calculateTo(page, limit, total) - this.calculateFrom(page, limit) + 1;
   }
 }

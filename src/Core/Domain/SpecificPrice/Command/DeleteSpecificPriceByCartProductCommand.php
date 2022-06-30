@@ -41,6 +41,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
  * @deprecated since 8.0.0 and will be removed in the next major version.
+ * @see UpdateProductPriceInCartCommand to change a product price in a cart
+ * or @see DeleteProductSpecificPriceCommand if you wish to set special price rules on a product
  */
 class DeleteSpecificPriceByCartProductCommand
 {

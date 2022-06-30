@@ -131,7 +131,7 @@ class Factory
     {
         $patterns = explode(';', $pattern);
 
-        return isset($patterns[0]) ? $patterns[0] : '';
+        return $patterns[0] ?? '';
     }
 
     /**
@@ -148,9 +148,7 @@ class Factory
     {
         $patterns = explode(';', $pattern);
 
-        return isset($patterns[1])
-            ? $patterns[1]
-            : '-' . $patterns[0];
+        return $patterns[1] ?? '-' . $patterns[0];
     }
 
     /**

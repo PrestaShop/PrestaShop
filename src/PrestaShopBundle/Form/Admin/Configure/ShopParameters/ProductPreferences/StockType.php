@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
@@ -47,69 +48,41 @@ class StockType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('allow_ordering_oos', SwitchType::class)
-            ->add('stock_management', SwitchType::class)
-            ->add('in_stock_label', TranslatableType::class, [
-                'type' => TextType::class,
-                'only_enabled_locales' => false,
-                'options' => [
-                    'attr' => [
-                        'placeholder' => $this->trans('In stock', 'Admin.Shopparameters.Help'),
-                    ],
-                ],
-            ])
-            ->add('oos_allowed_backorders', TranslatableType::class, [
-                'type' => TextType::class,
-                'only_enabled_locales' => false,
-                'options' => [
-                    'attr' => [
-                        'placeholder' => $this->trans('On backorder', 'Admin.Shopparameters.Help'),
-                    ],
-                ],
-            ])
-            ->add('oos_denied_backorders', TranslatableType::class, [
-                'type' => TextType::class,
-                'only_enabled_locales' => false,
-                'options' => [
-                    'attr' => [
-                        'placeholder' => $this->trans('Out of stock', 'Admin.Shopparameters.Help'),
-                    ],
-                ],
-            ])
-            ->add('delivery_time', TranslatableType::class, [
-                'type' => TextType::class,
-                'only_enabled_locales' => false,
-                'options' => [
-                    'attr' => [
-                        'placeholder' => $this->trans('Delivered within 3-4 days', 'Admin.Shopparameters.Help'),
-                    ],
-                ],
-            ])
-            ->add('oos_delivery_time', TranslatableType::class, [
-                'type' => TextType::class,
-                'only_enabled_locales' => false,
-                'options' => [
-                    'attr' => [
-                        'placeholder' => $this->trans('Delivered within 5-7 days', 'Admin.Shopparameters.Help'),
-                    ],
-                ],
+            ->add('stock_management', SwitchType::class, [
+                'label' => $this->trans(
+                    'Enable stock management',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'required' => false,
             ])
             ->add('pack_stock_management', ChoiceType::class, [
-                'choices' => [
-                    'Decrement pack only.' => 0,
-                    'Decrement products in pack only.' => 1,
-                    'Decrement both.' => 2,
-                ],
-            ])
-            ->add('oos_show_label_listing_pages', SwitchType::class, [
                 'label' => $this->trans(
-                    'Display out-of-stock label on product listing pages',
+                    'Default pack stock management',
                     'Admin.Shopparameters.Feature'
                 ),
                 'help' => $this->trans(
-                    'Note that the label will be displayed only if backorders are denied.',
+                    'When selling packs of products, how do you want your stock to be calculated?',
                     'Admin.Shopparameters.Help'
                 ),
+                'choices' => [
+                    'Decrement pack only.' => PackStockType::STOCK_TYPE_PACK_ONLY,
+                    'Decrement products in pack only.' => PackStockType::STOCK_TYPE_PRODUCTS_ONLY,
+                    'Decrement both.' => PackStockType::STOCK_TYPE_BOTH,
+                ],
+                'choice_translation_domain' => 'Admin.Catalog.Feature',
+                'required' => false,
+                'placeholder' => false,
+            ])
+            ->add('display_unavailable_attributes', SwitchType::class, [
+                'label' => $this->trans(
+                    'Display unavailable attributes on the product page',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'help' => $this->trans(
+                    'If an attribute is not available in every product combination, it will not be displayed.',
+                    'Admin.Shopparameters.Help'
+                ),
+                'required' => false,
             ])
             ->add('display_last_quantities', IntegerType::class, [
                 'label' => $this->trans(
@@ -120,8 +93,120 @@ class StockType extends TranslatorAwareType
                     'Set to "0" to disable this feature.',
                     'Admin.Shopparameters.Help'
                 ),
+                'required' => false,
             ])
-            ->add('display_unavailable_attributes', SwitchType::class);
+            ->add('allow_ordering_oos', SwitchType::class, [
+                'label' => $this->trans(
+                    'Allow ordering of out-of-stock products',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'help' => $this->trans(
+                    'By default, the "%add_to_cart_label%" button is hidden when a product is unavailable. You can choose to have it displayed in all cases.',
+                    'Admin.Shopparameters.Help',
+                    [
+                        '%add_to_cart_label%' => $this->trans(
+                            'Add to cart',
+                            'Shop.Theme.Actions'
+                        ),
+                    ]
+                ),
+                'required' => false,
+            ])
+            ->add('in_stock_label', TranslatableType::class, [
+                'label' => $this->trans(
+                    'Label of in-stock products',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'type' => TextType::class,
+                'only_enabled_locales' => false,
+                'options' => [
+                    'attr' => [
+                        'placeholder' => $this->trans('In stock', 'Admin.Shopparameters.Help'),
+                    ],
+                ],
+                'required' => false,
+            ])
+            ->add('oos_allowed_backorders', TranslatableType::class, [
+                'label' => $this->trans(
+                    'Label of out-of-stock products with allowed backorders',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'type' => TextType::class,
+                'only_enabled_locales' => false,
+                'options' => [
+                    'attr' => [
+                        'placeholder' => $this->trans('On backorder', 'Admin.Shopparameters.Help'),
+                    ],
+                ],
+                'required' => false,
+            ])
+            ->add('oos_denied_backorders', TranslatableType::class, [
+                'label' => $this->trans(
+                    'Label of out-of-stock products with denied backorders',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'type' => TextType::class,
+                'only_enabled_locales' => false,
+                'options' => [
+                    'attr' => [
+                        'placeholder' => $this->trans('Out of stock', 'Admin.Shopparameters.Help'),
+                    ],
+                ],
+                'required' => false,
+            ])
+            ->add('delivery_time', TranslatableType::class, [
+                'label' => $this->trans(
+                    'Delivery time of in-stock products',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'help' => $this->trans(
+                        'Advised for European merchants to be legally compliant (eg: Delivered within 3-4 days)',
+                        'Admin.Shopparameters.Help'
+                    ) . '<br />' . $this->trans(
+                        'Leave empty to disable',
+                        'Admin.Shopparameters.Feature'
+                    ),
+                'type' => TextType::class,
+                'only_enabled_locales' => false,
+                'options' => [
+                    'attr' => [
+                        'placeholder' => $this->trans('Delivered within 3-4 days', 'Admin.Shopparameters.Help'),
+                    ],
+                ],
+                'required' => false,
+            ])
+            ->add('oos_delivery_time', TranslatableType::class, [
+                'label' => $this->trans(
+                    'Delivery time of out-of-stock products with allowed backorders',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'help' => $this->trans(
+                        'Advised for European merchants to be legally compliant (eg: Delivered within 5-7 days)',
+                        'Admin.Shopparameters.Help'
+                    ) . '<br />' . $this->trans(
+                        'Leave empty to disable',
+                        'Admin.Shopparameters.Feature'
+                    ),
+                'type' => TextType::class,
+                'only_enabled_locales' => false,
+                'options' => [
+                    'attr' => [
+                        'placeholder' => $this->trans('Delivered within 5-7 days', 'Admin.Shopparameters.Help'),
+                    ],
+                ],
+                'required' => false,
+            ])
+            ->add('oos_show_label_listing_pages', SwitchType::class, [
+                'label' => $this->trans(
+                    'Display out-of-stock label on product listing pages',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'help' => $this->trans(
+                    'Note that the label will be displayed only if backorders are denied.',
+                    'Admin.Shopparameters.Help'
+                ),
+                'required' => false,
+            ]);
     }
 
     /**

@@ -35,11 +35,11 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Manufacturer\Repository\ManufacturerRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator;
 use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDuplicateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
@@ -50,6 +50,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstrai
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductTaxRulesGroupSettings;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
@@ -134,6 +135,34 @@ class ProductRepository extends AbstractObjectModelRepository
         $this->addObjectModel($product, CannotDuplicateProductException::class);
 
         return $product;
+    }
+
+    /**
+     * Gets position product position in category
+     *
+     * @param ProductId $productId
+     * @param CategoryId $categoryId
+     *
+     * @return int|null
+     */
+    public function getPositionInCategory(ProductId $productId, CategoryId $categoryId): ?int
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('position')
+            ->from($this->dbPrefix . 'category_product')
+            ->where('id_product = :productId')
+            ->andWhere('id_category = :categoryId')
+            ->setParameter('productId', $productId->getValue())
+            ->setParameter('categoryId', $categoryId->getValue())
+        ;
+
+        $position = $qb->execute()->fetchOne();
+
+        if (!$position) {
+            return null;
+        }
+
+        return (int) $position;
     }
 
     /**
@@ -254,6 +283,27 @@ class ProductRepository extends AbstractObjectModelRepository
         return $this->loadProduct($product);
     }
 
+    public function getProductType(ProductId $productId): ProductType
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->addSelect('p.product_type')
+            ->from($this->dbPrefix . 'product', 'p')
+            ->where('p.id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+        ;
+
+        $result = $qb->execute()->fetchAssociative();
+        if (empty($result)) {
+            throw new ProductNotFoundException(sprintf(
+                'Cannot find product type for product %d because it does not exist',
+                $productId->getValue()
+            ));
+        }
+
+        return new ProductType($result['product_type']);
+    }
+
     /**
      * @param Product $product
      * @param array $propertiesToUpdate
@@ -279,32 +329,6 @@ class ProductRepository extends AbstractObjectModelRepository
     public function delete(ProductId $productId): void
     {
         $this->deleteObjectModel($this->get($productId), CannotDeleteProductException::class);
-    }
-
-    /**
-     * @param array $productIds
-     *
-     * @throws CannotBulkDeleteProductException
-     */
-    public function bulkDelete(array $productIds): void
-    {
-        $failedIds = [];
-        foreach ($productIds as $productId) {
-            try {
-                $this->delete($productId);
-            } catch (CannotDeleteProductException $e) {
-                $failedIds[] = $productId->getValue();
-            }
-        }
-
-        if (empty($failedIds)) {
-            return;
-        }
-
-        throw new CannotBulkDeleteProductException(
-            $failedIds,
-            sprintf('Failed to delete following products: "%s"', implode(', ', $failedIds))
-        );
     }
 
     /**

@@ -90,6 +90,19 @@ class CombinationStockCommandsBuilderTest extends AbstractCombinationCommandBuil
         ];
 
         $command = new UpdateCombinationStockCommand($this->getCombinationId()->getValue());
+        $command->setFixedQuantity(134);
+        yield [
+            [
+                'stock' => [
+                    'quantities' => [
+                        'fixed_quantity' => 134,
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = new UpdateCombinationStockCommand($this->getCombinationId()->getValue());
         $command->setLocation('Im in miami...');
         yield [
             [

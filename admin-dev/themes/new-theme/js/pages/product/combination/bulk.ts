@@ -23,15 +23,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import ImageSelector from '@pages/product/combination/image-selector';
+import ImageSelector from '@pages/product/combination/form/image-selector';
+import QuantityModeSwitcher from '@pages/product/combination/QuantityModeSwitcher';
 
 // @ts-ignore
 const {$} = window;
 
 $(() => {
   window.prestashop.component.initComponents([
+    'EventEmitter',
     'DeltaQuantityInput',
     'DisablingSwitch',
   ]);
   new ImageSelector();
+  new QuantityModeSwitcher();
 });

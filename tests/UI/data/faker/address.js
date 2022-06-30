@@ -1,7 +1,9 @@
 const faker = require('faker');
 const {countries} = require('@data/demo/countries');
+const {states} = require('@data/demo/states');
 
 const countriesNames = Object.values(countries).map(country => country.name);
+const statesNames = Object.values(states).map(state => state.name);
 
 /**
  * Create new address to use in customer address form on BO and FO
@@ -48,6 +50,9 @@ class AddressData {
 
     /** @type {string} Address country name */
     this.country = addressToCreate.country || faker.random.arrayElement(countriesNames);
+
+    /** @type {string} Address state name */
+    this.state = addressToCreate.state || faker.random.arrayElement(statesNames);
 
     /** @type {string} Phone number */
     this.phone = addressToCreate.homePhone || faker.phone.phoneNumber('01########');

@@ -23,6 +23,8 @@ class OrderConfirmation extends FOBasePage {
     this.orderSummaryContent = '#order-summary-content';
     this.orderReferenceValue = '#order-reference-value';
     this.customerSupportLink = '#content-hook_payment_return a';
+    this.orderConfirmationTable = 'div.order-confirmation-table';
+    this.giftWrappingRow = `${this.orderConfirmationTable} tr:nth-child(3)`;
   }
 
   /*
@@ -63,6 +65,15 @@ class OrderConfirmation extends FOBasePage {
    */
   async goToContactUsPage(page) {
     await this.clickAndWaitForNavigation(page, this.customerSupportLink);
+  }
+
+  /**
+   * Get gift wrapping value
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getGiftWrappingValue(page) {
+    return this.getNumberFromText(page, this.giftWrappingRow);
   }
 }
 

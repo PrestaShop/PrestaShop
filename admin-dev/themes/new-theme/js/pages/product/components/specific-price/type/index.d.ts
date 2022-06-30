@@ -34,6 +34,7 @@ type SpecificPriceForListing = {
   currency: string,
   country: string,
   group: string,
+  shop: string,
   customer: string,
   price: string,
   impact: string,

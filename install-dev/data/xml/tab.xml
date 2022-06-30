@@ -69,11 +69,6 @@
                     <wording>Products</wording>
                     <wording_domain>Admin.Navigation.Menu</wording_domain>
                 </tab>
-                <tab id="Products_v2" id_parent="Catalog" active="1" enabled="1" icon="science" route_name="admin_products_v2_index">
-                  <class_name>AdminProducts</class_name>
-                  <wording>Products (experimental)</wording>
-                  <wording_domain>Admin.Navigation.Menu</wording_domain>
-                </tab>
                 <tab id="Categories" id_parent="Catalog" active="1" enabled="1">
                     <class_name>AdminCategories</class_name>
                     <wording>Categories</wording>
@@ -626,7 +621,7 @@
                 </tab>
                 <tab id="FeatureFlag" id_parent="Advanced_Parameters" active="1" enabled="1" icon="">
                   <class_name>AdminFeatureFlag</class_name>
-                  <wording>Experimental Features</wording>
+                  <wording>New &amp; Experimental Features</wording>
                   <wording_domain>Admin.Navigation.Menu</wording_domain>
                 </tab>
                 <tab id="Security" id_parent="Advanced_Parameters" active="1" enabled="1">

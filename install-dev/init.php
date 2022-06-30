@@ -128,6 +128,11 @@ if (!defined('_THEME_NAME_')) {
             usort($themes, function ($a, $b) {
                 return strcmp($a, $b);
             });
+
+            if (empty($themes)) {
+                die('Error: Cannot find a valid theme in themes/ folder');
+            }
+
             define('_THEME_NAME_', basename(substr($themes[0], 0, -strlen('/config/theme.yml'))));
         }
     }

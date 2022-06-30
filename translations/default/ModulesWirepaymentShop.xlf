@@ -5,7 +5,7 @@
       <trans-unit id="763538d192c0e4a3a341c1c7d0db9240">
         <source>%1$s (tax incl.)</source>
         <target>%1$s (tax incl.)</target>
-        <note>Line: 40</note>
+        <note>Line: 43</note>
       </trans-unit>
     </body>
   </file>
@@ -14,7 +14,7 @@
       <trans-unit id="e2b7dec8fa4b498156dfee6e4c84b156">
         <source>This payment method is not available.</source>
         <target>This payment method is not available.</target>
-        <note>Line: 44</note>
+        <note>Line: 47</note>
       </trans-unit>
     </body>
   </file>

@@ -439,7 +439,7 @@
       <trans-unit id="d52c442675e27baf9d7c5a19d6ef93fa">
         <source>Select your default email theme</source>
         <target>Select your default email theme</target>
-        <note>Line: 42</note>
+        <note>Line: 41</note>
       </trans-unit>
     </body>
   </file>
@@ -458,12 +458,12 @@
       <trans-unit id="d8605aca26dca73f3e67726f7301a165">
         <source>Select the theme you want to overwrite</source>
         <target>Select the theme you want to overwrite</target>
-        <note>Line: 62</note>
+        <note>Line: 61</note>
       </trans-unit>
       <trans-unit id="b445b07a4ce0e996acaf7ceb6a2547c3">
         <source>Overwrite templates</source>
         <target>Overwrite templates</target>
-        <note>Line: 77</note>
+        <note>Line: 75</note>
       </trans-unit>
     </body>
   </file>

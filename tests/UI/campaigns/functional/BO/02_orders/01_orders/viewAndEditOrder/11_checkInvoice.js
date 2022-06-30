@@ -151,10 +151,10 @@ Post-conditions:
 */
 describe('BO - Orders - View and edit order: Check invoice', async () => {
   // Pre-condition - Create first order from FO
-  createOrderByCustomerTest(firstOrderByCustomer, baseContext);
+  createOrderByCustomerTest(firstOrderByCustomer, `${baseContext}_preTest_1`);
 
   // Pre-condition - Enable Ecotax
-  enableEcoTaxTest(baseContext);
+  enableEcoTaxTest(`${baseContext}_preTest_2`);
 
   // before and after functions
   before(async function () {
@@ -305,7 +305,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         await testContext.addContextItem(this, 'testIdentifier', 'changeBillingAddress1', baseContext);
 
         const addressToSelect = `${Address.third.id}- ${Address.third.address} ${Address.third.secondAddress} `
-          + `${Address.third.zipCode} ${Address.third.city}`;
+          + `${Address.third.postalCode} ${Address.third.city}`;
 
         const alertMessage = await orderPageCustomerBlock.selectAnotherInvoiceAddress(page, addressToSelect);
         expect(alertMessage).to.contains(orderPageCustomerBlock.successfulUpdateMessage);
@@ -373,7 +373,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
             + `${Address.second.company},`
             + `${Address.second.address},`
             + `${Address.second.secondAddress},`
-            + `${Address.second.zipCode} ${Address.second.city},`
+            + `${Address.second.postalCode} ${Address.second.city},`
             + `${Address.second.country},`
             + `${Address.second.phone}`,
           );
@@ -389,7 +389,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
             + `${Address.third.firstName} ${Address.third.lastName},`
             + `${Address.third.company},`
             + `${Address.third.address} ${Address.third.secondAddress},`
-            + `${Address.third.city}, ${Address.third.state} ${Address.third.zipCode},`
+            + `${Address.third.city}, ${Address.third.state} ${Address.third.postalCode},`
             + `${Address.third.country},`
             + `${Address.third.phone}`,
           );
@@ -606,7 +606,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
             + `${Address.second.company},`
             + `${Address.second.address},`
             + `${Address.second.secondAddress},`
-            + `${Address.second.zipCode} ${Address.second.city},`
+            + `${Address.second.postalCode} ${Address.second.city},`
             + `${Address.second.country},`
             + `${Address.second.phone}`,
           );
@@ -623,7 +623,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
             + `${Address.second.company},`
             + `${Address.second.address},`
             + `${Address.second.secondAddress},`
-            + `${Address.second.zipCode} ${Address.second.city},`
+            + `${Address.second.postalCode} ${Address.second.city},`
             + `${Address.second.country},`
             + `${Address.second.phone}`,
           );
@@ -800,7 +800,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
             + `${Address.second.company},`
             + `${Address.second.address},`
             + `${Address.second.secondAddress},`
-            + `${Address.second.zipCode} ${Address.second.city},`
+            + `${Address.second.postalCode} ${Address.second.city},`
             + `${Address.second.country},`
             + `${Address.second.phone}`,
           );
@@ -817,7 +817,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
             + `${Address.second.company},`
             + `${Address.second.address},`
             + `${Address.second.secondAddress},`
-            + `${Address.second.zipCode} ${Address.second.city},`
+            + `${Address.second.postalCode} ${Address.second.city},`
             + `${Address.second.country},`
             + `${Address.second.phone}`,
           );
@@ -882,7 +882,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
 
       describe('Check that Taxes table is not visible', async () => {
         it('should check that \'Tax Detail\' table is not visible', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', 'checkIsTaxesTableNotVisible', baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', 'checkIsTaxesTableNotVisible2', baseContext);
 
           const isTaxTableVisible = await files.isTextInPDF(filePath, 'Tax Detail,Tax Rate,Base price,Total Tax');
           await expect(isTaxTableVisible, 'Tax table is visible!').to.be.false;
@@ -1038,7 +1038,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
             + `${Address.second.company},`
             + `${Address.second.address},`
             + `${Address.second.secondAddress},`
-            + `${Address.second.zipCode} ${Address.second.city},`
+            + `${Address.second.postalCode} ${Address.second.city},`
             + `${Address.second.country},`
             + `${Address.second.phone}`,
           );
@@ -1055,7 +1055,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
             + `${Address.second.company},`
             + `${Address.second.address},`
             + `${Address.second.secondAddress},`
-            + `${Address.second.zipCode} ${Address.second.city},`
+            + `${Address.second.postalCode} ${Address.second.city},`
             + `${Address.second.country},`
             + `${Address.second.phone}`,
           );
@@ -1178,7 +1178,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'changeBillingAddress2', baseContext);
 
           const addressToSelect = `${Address.third.id}- ${Address.third.address} ${Address.third.secondAddress} `
-            + `${Address.third.zipCode} ${Address.third.city}`;
+            + `${Address.third.postalCode} ${Address.third.city}`;
 
           const alertMessage = await orderPageCustomerBlock.selectAnotherShippingAddress(page, addressToSelect);
           expect(alertMessage).to.contains(orderPageCustomerBlock.successfulUpdateMessage);
@@ -1202,7 +1202,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
             + `${Address.third.firstName} ${Address.third.lastName},`
             + `${Address.third.company},`
             + `${Address.third.address} ${Address.third.secondAddress},`
-            + `${Address.third.city}, ${Address.third.state} ${Address.third.zipCode},`
+            + `${Address.third.city}, ${Address.third.state} ${Address.third.postalCode},`
             + `${Address.third.country},`
             + `${Address.third.phone}`,
           );
@@ -1213,7 +1213,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
           await testContext.addContextItem(this, 'testIdentifier', 'changeBillingAddress3', baseContext);
 
           const addressToSelect = `${Address.third.id}- ${Address.third.address} ${Address.third.secondAddress} `
-            + `${Address.third.zipCode} ${Address.third.city}`;
+            + `${Address.third.postalCode} ${Address.third.city}`;
 
           const alertMessage = await orderPageCustomerBlock.selectAnotherInvoiceAddress(page, addressToSelect);
           expect(alertMessage).to.contains(orderPageCustomerBlock.successfulUpdateMessage);
@@ -1237,7 +1237,7 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
             + `${Address.third.firstName} ${Address.third.lastName},`
             + `${Address.third.company},`
             + `${Address.third.address} ${Address.third.secondAddress},`
-            + `${Address.third.city}, ${Address.third.state} ${Address.third.zipCode},`
+            + `${Address.third.city}, ${Address.third.state} ${Address.third.postalCode},`
             + `${Address.third.country},`
             + `${Address.third.phone}`,
           );
@@ -1325,7 +1325,11 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
         it('should update the carrier', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'updateCarrier', baseContext);
 
-          const shippingDetailsData = {trackingNumber: '', carrier: Carriers.myCarrier.name};
+          const shippingDetailsData = {
+            trackingNumber: '',
+            carrier: Carriers.myCarrier.name,
+            carrierID: 1,
+          };
 
           const textResult = await orderPageTabListBlock.setShippingDetails(page, shippingDetailsData);
           await expect(textResult).to.equal(orderPageTabListBlock.successfulUpdateMessage);
@@ -1483,11 +1487,11 @@ describe('BO - Orders - View and edit order: Check invoice', async () => {
   });
 
   // Post-condition: Delete the created products
-  bulkDeleteProductsTest(prefixNewProduct, baseContext);
+  bulkDeleteProductsTest(prefixNewProduct, `${baseContext}_postTest_1`);
 
   // Post-condition: Disable EcoTax
-  disableEcoTaxTest(baseContext);
+  disableEcoTaxTest(`${baseContext}_postTest_2`);
 
   // Post-condition: Delete discount
-  deleteCartRuleTest(discountData.name, baseContext);
+  deleteCartRuleTest(discountData.name, `${baseContext}_postTest_3`);
 });

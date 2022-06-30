@@ -31,6 +31,7 @@ namespace PrestaShopBundle\Form\Admin\Type;
 use Symfony\Component\Form\Extension\Core\DataTransformer\NumberToLocalizedStringTransformer;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 
@@ -52,16 +53,28 @@ class DeltaQuantityType extends TranslatorAwareType
             ])
             ->add('delta', IntegerType::class, [
                 'default_empty_data' => 0,
-                'label' => $this->trans('Add or subtract items', 'Admin.Global'),
+                'label' => $options['delta_label'],
                 'block_prefix' => 'delta_quantity_delta',
                 'constraints' => [
                     new Type(['type' => 'numeric']),
                     new NotBlank(),
                 ],
+                'required' => false,
                 'modify_all_shops' => true,
             ]);
 
         $builder->get('quantity')->addViewTransformer(new NumberToLocalizedStringTransformer(0, false));
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+        $resolver
+            ->setDefaults([
+                'delta_label' => $this->trans('Add or subtract items', 'Admin.Global'),
+            ])
+            ->setAllowedTypes('delta_label', ['string', 'boolean', 'null'])
+        ;
     }
 
     /**

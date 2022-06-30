@@ -78,6 +78,7 @@ class BulkCombinationFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data): void
     {
+        // @todo: a hook system should be integrated in this handler for extendability
         $formattedData = $this->bulkCombinationFormDataFormatter->format($data);
         $commands = $this->commandsBuilder->buildCommands(new CombinationId($id), $formattedData);
 

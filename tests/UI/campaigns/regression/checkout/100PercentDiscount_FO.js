@@ -38,7 +38,7 @@ const percentCartRule = new CartRuleFaker({
 });
 
 const customerData = new CustomerFaker({password: ''});
-const addressData = new AddressFaker();
+const addressData = new AddressFaker({country: 'France'});
 
 // Import test context
 const testContext = require('@utils/testContext');

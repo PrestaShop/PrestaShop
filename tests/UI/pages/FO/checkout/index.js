@@ -58,6 +58,7 @@ class Checkout extends FOBasePage {
     this.addressStepAddress1Input = `${this.addressStepSection} input[name='address1']`;
     this.addressStepPostCodeInput = `${this.addressStepSection} input[name='postcode']`;
     this.addressStepCityInput = `${this.addressStepSection} input[name='city']`;
+    this.addressStepCountrSelect = `${this.addressStepSection} select[name='id_country']`;
     this.addressStepPhoneInput = `${this.addressStepSection} input[name='phone']`;
     this.addressStepUseSameAddressCheckbox = '#use_same_address';
     this.addressStepContinueButton = `${this.addressStepSection} button[name='confirm-addresses']`;
@@ -74,6 +75,7 @@ class Checkout extends FOBasePage {
 
     // Gift selectors
     this.giftCheckbox = '#input_gift';
+    this.giftMessageTextarea = '#gift_message';
     this.recycableGiftCheckbox = '#input_recyclable';
     this.cartSubtotalGiftWrappingDiv = '#cart-subtotal-gift_wrapping';
     this.cartSubtotalGiftWrappingValueSpan = `${this.cartSubtotalGiftWrappingDiv} span.value`;
@@ -148,7 +150,7 @@ class Checkout extends FOBasePage {
   /**
    * Get No payment needed block content
    * @param page
-   * @returns {string}
+   * @returns {Promise<string>}
    */
   getNoPaymentNeededBlockContent(page) {
     return this.getTextContent(page, this.noPaymentNeededElement);
@@ -285,7 +287,7 @@ class Checkout extends FOBasePage {
   /**
    * Is create account notice visible
    * @param page {Page} Browser tab
-   * @returns {boolean}
+   * @returns {Promise<boolean>}
    */
   isCreateAnAccountNoticeVisible(page) {
     return this.elementVisible(page, this.createAccountOptionalNotice, 1000);
@@ -294,7 +296,7 @@ class Checkout extends FOBasePage {
   /**
    * Is password input required
    * @param page {Page} Browser tab
-   * @returns {boolean}
+   * @returns {Promise<boolean>}
    */
   isPasswordRequired(page) {
     return this.elementVisible(page, `${this.checkoutGuestPasswordInput}:required`, 1000);
@@ -303,7 +305,7 @@ class Checkout extends FOBasePage {
   /**
    * Check if checkbox of condition to approve is visible
    * @param page {Page} Browser tab
-   * @returns {boolean}
+   * @returns {Promise<boolean>}
    */
   isConditionToApproveCheckboxVisible(page) {
     return this.elementVisible(page, this.conditionToApproveCheckbox, 1000);
@@ -322,19 +324,57 @@ class Checkout extends FOBasePage {
   /**
    * Check if gift checkbox is visible
    * @param page {Page} Browser tab
-   * @return {boolean}
+   * @return {Promise<boolean>}
    */
   isGiftCheckboxVisible(page) {
     return this.elementVisible(page, this.giftCheckbox, 1000);
   }
 
   /**
-   * Check if recyclable checkbox is visible
+   * Set gift checkbox
    * @param page {Page} Browser tab
-   * @return {boolean}
+   * @returns {Promise<void>}
    */
-  isRecyclableCheckboxVisible(page) {
+  async setGiftCheckBox(page) {
+    await this.waitForSelectorAndClick(page, this.giftCheckbox);
+  }
+
+  /**
+   * Is gift message textarea visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  isGiftMessageTextareaVisible(page) {
+    return this.elementVisible(page, this.giftMessageTextarea, 2000);
+  }
+
+  /**
+   * Set gift message
+   * @param page {Page} Browser tab
+   * @param message {string} Message to set
+   * @returns {Promise<void>}
+   */
+  async setGiftMessage(page, message) {
+    await this.setValue(page, this.giftMessageTextarea, message);
+  }
+
+  /**
+   * Check if recycled packaging checkbox is visible
+   * @param page {Page} Browser tab
+   * @return {Promise<boolean>}
+   */
+  isRecycledPackagingCheckboxVisible(page) {
     return this.elementVisible(page, this.recycableGiftCheckbox, 1000);
+  }
+
+  /**
+   * Set recycled packaging checkbox
+   * @param page {Page} Browser tab
+   * @param toCheck {boolean} True if we need to check recycle packaging checkbox
+   * @returns {Promise<void>}
+   */
+  async setRecycledPackagingCheckbox(page, toCheck = true) {
+    await this.setChecked(page, this.recycableGiftCheckbox, toCheck);
   }
 
   /**
@@ -358,6 +398,7 @@ class Checkout extends FOBasePage {
     await this.setValue(page, this.addressStepAddress1Input, address.address);
     await this.setValue(page, this.addressStepPostCodeInput, address.postalCode);
     await this.setValue(page, this.addressStepCityInput, address.city);
+    await this.selectByVisibleText(page, this.addressStepCountrSelect, address.country);
     await page.type(this.addressStepPhoneInput, address.phone, {delay: 50});
     await this.setValue(page, this.addressStepPhoneInput, address.phone);
   }

@@ -14,11 +14,11 @@ admin_products_combinations_ids:
   options:
     expose: true
   defaults:
-    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\CombinationController::getListIdsAction
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\CombinationController::getCombinationIdsAction
     _legacy_controller: AdminProducts
 
 admin_products_combinations_update_combination_from_listing:
-  path: /combinations/{combinationId}/update-combination-from-listing
+  path: /combinations/{productId}/update-combination-from-listing
   methods: [ PATCH ]
   options:
     expose: true
@@ -70,6 +70,17 @@ admin_products_combinations_delete_combination:
     _legacy_controller: AdminProducts
   requirements:
     combinationId: \d+
+
+admin_products_combinations_bulk_delete:
+  path: /{productId}/combinations/bulk-delete
+  methods: [ POST ]
+  options:
+    expose: true
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\CombinationController::bulkDeleteAction
+    _legacy_controller: AdminProducts
+  requirements:
+    productId: \d+
 
 admin_products_attribute_groups:
   path: /{productId}/attribute-groups

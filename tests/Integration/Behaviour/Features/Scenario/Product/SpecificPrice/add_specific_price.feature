@@ -273,3 +273,28 @@ Feature: Update product options from Back Office (BO)
       | from quantity   | 1          |
     Then I should get error that specific price "fixed price" is invalid
     And product "product4" should have 1 specific prices
+
+  Scenario: I add a specific price with range dates
+    Given I add product "product1" with following information:
+      | name[en-US] | Presta camera |
+      | type        | standard      |
+    Then product "product1" should have 0 specific prices
+    When I add a specific price price1 to product product1 with following details:
+      | reduction type  | amount              |
+      | reduction value | 12.56               |
+      | includes tax    | true                |
+      | fixed price     | 45.78               |
+      | from quantity   | 1                   |
+      | from            | 2021-01-01 10:00:00 |
+      | to              | 2021-01-01 11:00:00 |
+    Then product "product1" should have 1 specific prices
+    And specific price price1 should have following details:
+      | specific price detail | value               |
+      | reduction type        | amount              |
+      | reduction value       | 12.56               |
+      | includes tax          | true                |
+      | fixed price           | 45.78               |
+      | from quantity         | 1                   |
+      | from                  | 2021-01-01 10:00:00 |
+      | to                    | 2021-01-01 11:00:00 |
+      | product               | product1            |

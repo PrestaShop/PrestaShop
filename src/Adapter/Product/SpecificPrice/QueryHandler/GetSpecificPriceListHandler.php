@@ -41,6 +41,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\Specific
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\QueryResult\SpecificPriceList;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\FixedPrice;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\InitialPrice;
+use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Product\Combination\NameBuilder\CombinationNameBuilderInterface;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 
@@ -119,10 +120,16 @@ class GetSpecificPriceListHandler implements GetSpecificPriceListHandlerInterfac
                 throw new CombinationException(sprintf('Failed to fetch combination "%d" info.', $combinationId));
             }
 
+            // VO stores percent expressed based on 100, while the DB stored the float value (VO: 57.5 - DB: 0.575)
+            $reductionValue = new DecimalNumber($specificPrice['reduction']);
+            if ($specificPrice['reduction_type'] === Reduction::TYPE_PERCENTAGE) {
+                $reductionValue = $reductionValue->times(new DecimalNumber('100'));
+            }
+
             $specificPricesForListing[] = new SpecificPriceForListing(
                 (int) $specificPrice['id_specific_price'],
                 $specificPrice['reduction_type'],
-                new DecimalNumber($specificPrice['reduction']),
+                $reductionValue,
                 (bool) $specificPrice['reduction_tax'],
                 InitialPrice::isInitialPriceValue($specificPrice['price']) ? new InitialPrice() : new FixedPrice($specificPrice['price']),
                 (int) $specificPrice['from_quantity'],
@@ -131,6 +138,7 @@ class GetSpecificPriceListHandler implements GetSpecificPriceListHandlerInterfac
                 $combinationId ? $this->combinationNameBuilder->buildName($attributesInfo[$combinationId]) : null,
                 $specificPrice['shop_name'],
                 $specificPrice['currency_name'],
+                $specificPrice['currency_iso_code'],
                 $specificPrice['country_name'],
                 $specificPrice['group_name'],
                 $this->buildCustomerFullName($specificPrice)

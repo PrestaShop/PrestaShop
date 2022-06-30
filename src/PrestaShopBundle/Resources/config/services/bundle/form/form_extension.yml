@@ -69,6 +69,11 @@ services:
     tags:
       - { name: form.type_extension, extended_type: PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType }
 
+  form.extension.unit:
+    class: 'PrestaShopBundle\Form\Admin\Extension\UnitTypeExtension'
+    tags:
+      - { name: form.type_extension }
+
   form.extension.multistore_dropdown:
     class: 'PrestaShopBundle\Form\Admin\Extension\MultistoreExtension'
     tags:

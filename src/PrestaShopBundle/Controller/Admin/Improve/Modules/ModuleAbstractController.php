@@ -59,6 +59,11 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
         ];
     }
 
+    protected function getModuleRepository(): ModuleRepositoryInterface
+    {
+        return $this->get('prestashop.core.admin.module.repository');
+    }
+
     /**
      * Common method for all module related controller for getting the header buttons.
      *
@@ -85,10 +90,5 @@ abstract class ModuleAbstractController extends FrameworkBundleAdminController
         }
 
         return $toolbarButtons;
-    }
-
-    protected function getModuleRepository(): ModuleRepositoryInterface
-    {
-        return $this->get('prestashop.core.admin.module.repository');
     }
 }

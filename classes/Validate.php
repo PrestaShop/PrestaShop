@@ -32,7 +32,9 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Factory\CustomerNameValidator
 use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\NumericIsoCode;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
 use PrestaShop\PrestaShop\Core\Email\SwiftMailerValidation;
+use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
 use Symfony\Component\Validator\Validation;
+use ZxcvbnPhp\Zxcvbn;
 
 class ValidateCore
 {
@@ -44,7 +46,14 @@ class ValidateCore
      */
     public const MYSQL_UNSIGNED_INT_MAX = 4294967295;
 
+    /**
+     * @deprecated since 8.0.0 use PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH
+     */
     const ADMIN_PASSWORD_LENGTH = 8;
+
+    /**
+     * @deprecated since 8.0.0 use PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH
+     */
     const PASSWORD_LENGTH = 5;
 
     public static function isIp2Long($ip)
@@ -520,6 +529,49 @@ class ValidateCore
     }
 
     /**
+     * Check if the password score is valid
+     *
+     * @param string $password Password to validate
+     *
+     * @return bool Indicates whether the given string is a valid password
+     *
+     * @since 8.0.0
+     */
+    public static function isAcceptablePasswordScore(string $password): bool
+    {
+        $zxcvbn = new Zxcvbn();
+        $result = $zxcvbn->passwordStrength($password);
+        $minScore = Configuration::hasKey(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_SCORE) ?
+                  Configuration::get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_SCORE) :
+                  PasswordPolicyConfiguration::PASSWORD_SAFELY_UNGUESSABLE;
+
+        return isset($result['score']) && $result['score'] >= $minScore;
+    }
+
+    /**
+     * Check if password length is valid
+     *
+     * @param string $password Password to validate
+     *
+     * @return bool Indicates whether the given string is a valid password length
+     *
+     * @since 8.0.0
+     */
+    public static function isAcceptablePasswordLength(string $password): bool
+    {
+        $passwordLength = Tools::strlen($password);
+        if (Configuration::hasKey(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH)
+            && Configuration::hasKey(PasswordPolicyConfiguration::CONFIGURATION_MAXIMUM_LENGTH)
+        ) {
+            return $passwordLength >= Configuration::get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH)
+                && $passwordLength <= Configuration::get(PasswordPolicyConfiguration::CONFIGURATION_MAXIMUM_LENGTH);
+        }
+
+        // If value doesn't exist in database, use default behavior check
+        return $passwordLength >= PasswordPolicyConfiguration::DEFAULT_MINIMUM_LENGTH && $passwordLength <= PasswordPolicyConfiguration::DEFAULT_MAXIMUM_LENGTH;
+    }
+
+    /**
      * Check if plaintext password is valid
      * Size is limited by `password_hash()` (72 chars).
      *
@@ -529,10 +581,11 @@ class ValidateCore
      * @return bool Indicates whether the given string is a valid plaintext password
      *
      * @since 1.7.0
+     * @deprecated since 8.0, use Validate::isAcceptablePasswordLength instead
      */
     public static function isPlaintextPassword($plaintextPasswd, $size = Validate::PASSWORD_LENGTH)
     {
-        // The password lenght is limited by `password_hash()`
+        // The password length is limited by `password_hash()`
         return Tools::strlen($plaintextPasswd) >= $size && Tools::strlen($plaintextPasswd) <= 72;
     }
 
@@ -553,6 +606,9 @@ class ValidateCore
         return Tools::strlen($hashedPasswd) == 32 || Tools::strlen($hashedPasswd) == 60;
     }
 
+    /**
+     * @deprecated since 8.0
+     */
     public static function isPasswdAdmin($passwd)
     {
         return Validate::isPlaintextPassword($passwd, Validate::ADMIN_PASSWORD_LENGTH);
@@ -751,11 +807,11 @@ class ValidateCore
      *
      * @param string $way Keyword to validate
      *
-     * @return int Validity is ok or not
+     * @return bool Validity is ok or not
      */
     public static function isOrderWay($way)
     {
-        return $way === 'ASC' | $way === 'DESC' | $way === 'asc' | $way === 'desc';
+        return !empty($way) && in_array(strtolower($way), ['asc', 'desc', 'random']);
     }
 
     /**
@@ -768,7 +824,7 @@ class ValidateCore
      */
     public static function isOrderBy($order)
     {
-        return preg_match(static::ORDER_BY_REGEXP, $order);
+        return !empty($order) && preg_match(static::ORDER_BY_REGEXP, $order);
     }
 
     /**

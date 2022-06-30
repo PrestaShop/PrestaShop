@@ -283,7 +283,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
             $customer->lastname,
             $genderName,
             $customer->email,
-            new DateTimeImmutable($customer->date_add),
+            new DateTimeImmutable($customer->date_add ?? 'now'),
             $totalSpentSinceRegistration !== null ? $this->locale->formatPrice($totalSpentSinceRegistration, $currency->iso_code) : '',
             $customerStats['nb_orders'],
             $customer->note,
@@ -556,7 +556,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
 
                 $carriers[] = new OrderCarrierForViewing(
                     (int) $item['id_order_carrier'],
-                    new DateTimeImmutable($item['date_add']),
+                    new DateTimeImmutable($item['date_add'] ?? 'now'),
                     $item['carrier_name'],
                     $weight,
                     (int) $item['id_carrier'],
@@ -632,7 +632,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
 
         if (count($payments) > 0) {
             $noPaymentMismatch = round($order->getOrdersTotalPaid(), 2) == round($order->getTotalPaid(), 2)
-                || ($currentState && $currentState->id == 6);
+                || ($currentState && $currentState->id == $this->configuration->getInt('PS_OS_CANCELED'));
 
             if (!$noPaymentMismatch) {
                 $orderAmountToPay = $this->locale->formatPrice($order->getOrdersTotalPaid(), $currency->iso_code);

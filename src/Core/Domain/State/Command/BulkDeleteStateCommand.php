@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\State\Command;
 
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\NoStateId;
 use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 
 /**
@@ -62,7 +63,7 @@ class BulkDeleteStateCommand
     private function setStateIds(array $stateIds): void
     {
         foreach ($stateIds as $stateId) {
-            $this->stateIds[] = new StateId((int) $stateId);
+            $this->stateIds[] = $stateId !== NoStateId::NO_STATE_ID_VALUE ? new StateId((int) $stateId) : new NoStateId();
         }
     }
 }

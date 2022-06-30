@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command;
 
 use DateTimeInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 
 /**
  * Updates combination stock information
@@ -45,6 +46,11 @@ class UpdateCombinationStockCommand
      * @var int|null
      */
     private $deltaQuantity;
+
+    /**
+     * @var int|null
+     */
+    private $fixedQuantity;
 
     /**
      * @var int|null
@@ -103,9 +109,37 @@ class UpdateCombinationStockCommand
      */
     public function setDeltaQuantity(int $deltaQuantity): UpdateCombinationStockCommand
     {
+        if (null !== $this->fixedQuantity) {
+            throw new ProductStockConstraintException(
+                'Cannot set $deltaQuantity, because $fixedQuantity is already set',
+                ProductStockConstraintException::FIXED_AND_DELTA_QUANTITY_PROVIDED
+            );
+        }
         $this->deltaQuantity = $deltaQuantity;
 
         return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getFixedQuantity(): ?int
+    {
+        return $this->fixedQuantity;
+    }
+
+    /**
+     * @param int $fixedQuantity
+     */
+    public function setFixedQuantity(int $fixedQuantity): void
+    {
+        if ($this->deltaQuantity) {
+            throw new ProductStockConstraintException(
+                'Cannot set $fixedQuantity, because $deltaQuantity is already set',
+                ProductStockConstraintException::FIXED_AND_DELTA_QUANTITY_PROVIDED
+            );
+        }
+        $this->fixedQuantity = $fixedQuantity;
     }
 
     /**

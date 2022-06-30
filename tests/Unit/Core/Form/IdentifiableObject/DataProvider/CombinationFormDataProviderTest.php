@@ -40,16 +40,17 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationPrices;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationStock;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetAssociatedSuppliers;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\AssociatedSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierInfo;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\NoSupplierId;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CombinationFormDataProvider;
 use RuntimeException;
 
 class CombinationFormDataProviderTest extends TestCase
 {
     private const DEFAULT_NAME = 'Combination products';
+    private const IS_DEFAULT = false;
     private const COMBINATION_ID = 42;
     private const PRODUCT_ID = 69;
     private const DEFAULT_QUANTITY = 51;
@@ -81,6 +82,7 @@ class CombinationFormDataProviderTest extends TestCase
     public function getExpectedData(): Generator
     {
         $datasetsByType = [
+            $this->getDatasetsForIsDefault(),
             $this->getDatasetsForStock(),
             $this->getDatasetsForPriceImpact(),
             $this->getDatasetsForDetails(),
@@ -151,19 +153,30 @@ class CombinationFormDataProviderTest extends TestCase
 
         $expectedOutputData = $this->getDefaultOutputData();
         $combinationData = [
-            'wholesale_price' => new DecimalNumber('69.00'),
             'price_impact_tax_excluded' => new DecimalNumber('47.00'),
             'price_impact_tax_included' => new DecimalNumber('56.40'),
-            'eco_tax' => new DecimalNumber('11.00'),
-            'unit_price_impact' => new DecimalNumber('0.50'),
+            'unit_price_tax_excluded' => new DecimalNumber('0.50'),
+            'unit_price_tax_included' => new DecimalNumber('0.70'),
+            'ecotax_tax_excluded' => new DecimalNumber('11.00'),
+            'ecotax_tax_included' => new DecimalNumber('12.00'),
+            'wholesale_price' => new DecimalNumber('69.00'),
             'combination_weight' => new DecimalNumber('1.45'),
+            'product_tax_rate' => new DecimalNumber('0.05'),
+            'product_price' => new DecimalNumber('69.00'),
+            'product_ecotax' => new DecimalNumber('5.00'),
         ];
-        $expectedOutputData['price_impact']['wholesale_price'] = 69.00;
+
         $expectedOutputData['price_impact']['price_tax_excluded'] = 47.00;
         $expectedOutputData['price_impact']['price_tax_included'] = 56.40;
-        $expectedOutputData['price_impact']['ecotax'] = 11.00;
-        $expectedOutputData['price_impact']['unit_price'] = 0.50;
+        $expectedOutputData['price_impact']['unit_price_tax_excluded'] = 0.50;
+        $expectedOutputData['price_impact']['unit_price_tax_included'] = 0.70;
+        $expectedOutputData['price_impact']['ecotax_tax_excluded'] = 11.00;
+        $expectedOutputData['price_impact']['ecotax_tax_included'] = 12.00;
+        $expectedOutputData['price_impact']['wholesale_price'] = 69.00;
         $expectedOutputData['price_impact']['weight'] = 1.45;
+        $expectedOutputData['price_impact']['product_tax_rate'] = 0.05;
+        $expectedOutputData['price_impact']['product_price_tax_excluded'] = 69.00;
+        $expectedOutputData['price_impact']['product_ecotax_tax_excluded'] = 5.00;
 
         $datasets[] = [
             $combinationData,
@@ -218,12 +231,8 @@ class CombinationFormDataProviderTest extends TestCase
         $datasets = [];
 
         $expectedOutputData = $this->getDefaultOutputData();
-        $expectedOutputData['suppliers']['default_supplier_id'] = 1;
-        $expectedOutputData['suppliers']['supplier_ids'] = [
-            0 => 1,
-            1 => 2,
-        ];
-        $expectedOutputData['suppliers']['product_suppliers'][1] = [
+        $expectedOutputData['default_supplier_id'] = 1;
+        $expectedOutputData['product_suppliers'][1] = [
             'supplier_id' => 1,
             'supplier_name' => 'test supplier 1',
             'product_supplier_id' => 1,
@@ -232,7 +241,7 @@ class CombinationFormDataProviderTest extends TestCase
             'currency_id' => 1,
             'combination_id' => self::COMBINATION_ID,
         ];
-        $expectedOutputData['suppliers']['product_suppliers'][2] = [
+        $expectedOutputData['product_suppliers'][2] = [
             'supplier_id' => 2,
             'supplier_name' => 'test supplier 2',
             'product_supplier_id' => 2,
@@ -243,29 +252,27 @@ class CombinationFormDataProviderTest extends TestCase
         ];
 
         $combinationData = [
-            'suppliers' => [
-                'default_supplier_id' => 1,
-                'product_suppliers' => [
-                    [
-                        'product_id' => self::PRODUCT_ID,
-                        'supplier_id' => 1,
-                        'supplier_name' => 'test supplier 1',
-                        'product_supplier_id' => 1,
-                        'price' => '0',
-                        'reference' => 'test supp ref 1',
-                        'currency_id' => 1,
-                        'combination_id' => self::COMBINATION_ID,
-                    ],
-                    [
-                        'product_id' => self::PRODUCT_ID,
-                        'supplier_id' => 2,
-                        'supplier_name' => 'test supplier 2',
-                        'product_supplier_id' => 2,
-                        'price' => '0',
-                        'reference' => 'test supp ref 2',
-                        'currency_id' => 3,
-                        'combination_id' => self::COMBINATION_ID,
-                    ],
+            'default_supplier_id' => 1,
+            'product_suppliers' => [
+                [
+                    'product_id' => self::PRODUCT_ID,
+                    'supplier_id' => 1,
+                    'supplier_name' => 'test supplier 1',
+                    'product_supplier_id' => 1,
+                    'price' => '0',
+                    'reference' => 'test supp ref 1',
+                    'currency_id' => 1,
+                    'combination_id' => self::COMBINATION_ID,
+                ],
+                [
+                    'product_id' => self::PRODUCT_ID,
+                    'supplier_id' => 2,
+                    'supplier_name' => 'test supplier 2',
+                    'product_supplier_id' => 2,
+                    'price' => '0',
+                    'reference' => 'test supp ref 2',
+                    'currency_id' => 3,
+                    'combination_id' => self::COMBINATION_ID,
                 ],
             ],
         ];
@@ -300,6 +307,29 @@ class CombinationFormDataProviderTest extends TestCase
         return $datasets;
     }
 
+    private function getDatasetsForIsDefault(): array
+    {
+        $datasets = [];
+
+        $expectedOutputData = $this->getDefaultOutputData();
+        $combinationData = ['is_default' => false];
+
+        $datasets[] = [
+            $combinationData,
+            $expectedOutputData,
+        ];
+
+        $expectedOutputData['is_default'] = true;
+        $combinationData = ['is_default' => true];
+
+        $datasets[] = [
+            $combinationData,
+            $expectedOutputData,
+        ];
+
+        return $datasets;
+    }
+
     /**
      * @param array $combinationData
      *
@@ -313,7 +343,7 @@ class CombinationFormDataProviderTest extends TestCase
             ->method('handle')
             ->with($this->logicalOr(
                 $this->isInstanceOf(GetCombinationForEditing::class),
-                $this->isInstanceOf(GetProductSupplierOptions::class),
+                $this->isInstanceOf(GetAssociatedSuppliers::class),
                 $this->isInstanceOf(GetCombinationSuppliers::class)
             ))
             ->willReturnCallback(function ($query) use ($combinationData) {
@@ -328,7 +358,7 @@ class CombinationFormDataProviderTest extends TestCase
      * @param GetCombinationForEditing $query
      * @param array $combinationData
      *
-     * @return CombinationForEditing|ProductSupplierOptions|ProductSupplierInfo[]
+     * @return CombinationForEditing|AssociatedSuppliers|ProductSupplierForEditing[]
      */
     private function createResultBasedOnQuery($query, array $combinationData)
     {
@@ -336,8 +366,8 @@ class CombinationFormDataProviderTest extends TestCase
         switch ($queryClass) {
             case GetCombinationForEditing::class:
                 return $this->createCombinationForEditing($combinationData);
-            case GetProductSupplierOptions::class:
-                return $this->createProductSupplierOptions($combinationData);
+            case GetAssociatedSuppliers::class:
+                return $this->createAssociatedSuppliers($combinationData);
             case GetCombinationSuppliers::class:
                 return $this->createCombinationSupplierInfos($combinationData);
         }
@@ -359,7 +389,8 @@ class CombinationFormDataProviderTest extends TestCase
             $this->createDetails($combination),
             $this->createPrices($combination),
             $this->createStock($combination),
-            $combination['image_ids'] ?? []
+            $combination['image_ids'] ?? [],
+            $combination['is_default'] ?? self::IS_DEFAULT
         );
     }
 
@@ -371,11 +402,16 @@ class CombinationFormDataProviderTest extends TestCase
     private function createPrices(array $combination): CombinationPrices
     {
         return new CombinationPrices(
-            $combination['eco_tax'] ?? new DecimalNumber('42.00'),
             $combination['price_impact_tax_excluded'] ?? new DecimalNumber('51.00'),
             $combination['price_impact_tax_included'] ?? new DecimalNumber('61.20'),
-            $combination['unit_price_impact'] ?? new DecimalNumber('69.00'),
-            $combination['wholesale_price'] ?? new DecimalNumber('99.00')
+            $combination['unit_price_tax_excluded'] ?? new DecimalNumber('69.00'),
+            $combination['unit_price_tax_included'] ?? new DecimalNumber('72.00'),
+            $combination['ecotax_tax_excluded'] ?? new DecimalNumber('42.00'),
+            $combination['ecotax_tax_included'] ?? new DecimalNumber('51.00'),
+            $combination['wholesale_price'] ?? new DecimalNumber('99.00'),
+            $combination['product_tax_rate'] ?? new DecimalNumber('0.20'),
+            $combination['product_price'] ?? new DecimalNumber('42.00'),
+            $combination['product_ecotax'] ?? new DecimalNumber('4.00')
         );
     }
 
@@ -416,12 +452,12 @@ class CombinationFormDataProviderTest extends TestCase
     /**
      * @param array $combinationData
      *
-     * @return ProductSupplierOptions
+     * @return AssociatedSuppliers
      */
-    private function createProductSupplierOptions(array $combinationData): ProductSupplierOptions
+    private function createAssociatedSuppliers(array $combinationData): AssociatedSuppliers
     {
-        return new ProductSupplierOptions(
-            $combinationData['suppliers']['default_supplier_id'] ?? 0,
+        return new AssociatedSuppliers(
+            $combinationData['default_supplier_id'] ?? 0,
             []
         );
     }
@@ -429,28 +465,25 @@ class CombinationFormDataProviderTest extends TestCase
     /**
      * @param array $combinationData
      *
-     * @return ProductSupplierInfo[]
+     * @return ProductSupplierForEditing[]
      */
     private function createCombinationSupplierInfos(array $combinationData): array
     {
-        if (empty($combinationData['suppliers']['product_suppliers'])) {
+        if (empty($combinationData['product_suppliers'])) {
             return [];
         }
 
         $suppliersInfo = [];
-        foreach ($combinationData['suppliers']['product_suppliers'] as $supplierInfo) {
-            $suppliersInfo[] = new ProductSupplierInfo(
-                $supplierInfo['supplier_name'],
+        foreach ($combinationData['product_suppliers'] as $supplierInfo) {
+            $suppliersInfo[] = new ProductSupplierForEditing(
+                $supplierInfo['product_supplier_id'],
+                $supplierInfo['product_id'],
                 $supplierInfo['supplier_id'],
-                new ProductSupplierForEditing(
-                    $supplierInfo['product_supplier_id'],
-                    $supplierInfo['product_id'],
-                    $supplierInfo['supplier_id'],
-                    $supplierInfo['reference'],
-                    $supplierInfo['price'],
-                    $supplierInfo['currency_id'],
-                    $supplierInfo['combination_id']
-                )
+                $supplierInfo['supplier_name'],
+                $supplierInfo['reference'],
+                $supplierInfo['price'],
+                $supplierInfo['currency_id'],
+                $supplierInfo['combination_id']
             );
         }
 
@@ -466,6 +499,7 @@ class CombinationFormDataProviderTest extends TestCase
             'id' => self::COMBINATION_ID,
             'product_id' => self::PRODUCT_ID,
             'name' => self::DEFAULT_NAME,
+            'is_default' => self::IS_DEFAULT,
             'stock' => [
                 'quantities' => [
                     'delta_quantity' => [
@@ -482,12 +516,17 @@ class CombinationFormDataProviderTest extends TestCase
                 'available_date' => '',
             ],
             'price_impact' => [
-                'wholesale_price' => 99.00,
                 'price_tax_excluded' => 51.00,
                 'price_tax_included' => 61.20,
-                'ecotax' => 42.00,
-                'unit_price' => 69.00,
+                'unit_price_tax_excluded' => 69.00,
+                'unit_price_tax_included' => 72.00,
+                'ecotax_tax_excluded' => 42.00,
+                'ecotax_tax_included' => 51.00,
+                'wholesale_price' => 99.00,
                 'weight' => 42.00,
+                'product_tax_rate' => 0.20,
+                'product_price_tax_excluded' => 42.00,
+                'product_ecotax_tax_excluded' => 4.00,
             ],
             'references' => [
                 'reference' => 'reference',
@@ -496,7 +535,8 @@ class CombinationFormDataProviderTest extends TestCase
                 'upc' => 'upc',
                 'mpn' => 'mpn',
             ],
-            'suppliers' => [],
+            'default_supplier_id' => NoSupplierId::NO_SUPPLIER_ID,
+            'product_suppliers' => [],
             'images' => [],
         ];
     }

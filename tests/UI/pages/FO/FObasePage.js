@@ -29,6 +29,7 @@ class FOBasePage extends CommonPage {
     this.languageSelectorDiv = '#_desktop_language_selector';
     this.defaultLanguageSpan = `${this.languageSelectorDiv} button span`;
     this.languageSelectorExpandIcon = `${this.languageSelectorDiv} i.expand-more`;
+    this.languageSelectorList = `${this.languageSelectorDiv} .js-dropdown.open`;
     this.languageSelectorMenuItemLink = language => `${this.languageSelectorDiv} ul li a[data-iso-code='${language}']`;
     this.currencySelectorDiv = '#_desktop_currency_selector';
     this.defaultCurrencySpan = `${this.currencySelectorDiv} button span`;
@@ -178,7 +179,7 @@ class FOBasePage extends CommonPage {
   async changeLanguage(page, lang = 'en') {
     await Promise.all([
       page.click(this.languageSelectorExpandIcon),
-      this.waitForVisibleSelector(page, this.languageSelectorMenuItemLink(lang)),
+      this.waitForVisibleSelector(page, this.languageSelectorList),
     ]);
     await this.clickAndWaitForNavigation(page, this.languageSelectorMenuItemLink(lang));
   }

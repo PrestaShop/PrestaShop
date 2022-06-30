@@ -22,10 +22,8 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
+{% form_theme productForm.combinations.combination_manager '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/combination.html.twig' %}
 
-<div role="tabpanel" class="form-contenttab tab-pane container-fluid external-tab-placeholder" id="combinations-tab">
-  {#
-  # This fake tab is actually empty the real content is in
-  # src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/Combination/external_tab.html.twig
-  #}
+<div role="tabpanel" class="form-contenttab tab-pane container-fluid" id="combinations-tab">
+  {{ form_row(productForm.combinations) }}
 </div>

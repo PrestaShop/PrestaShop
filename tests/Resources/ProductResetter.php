@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace Tests\Resources;
 
+use Product;
+
 class ProductResetter
 {
     public static function resetProducts(): void
@@ -72,5 +74,6 @@ class ProductResetter
             'feature_product',
             'warehouse_product_location',
         ]);
+        Product::resetStaticCache();
     }
 }

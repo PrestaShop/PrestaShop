@@ -521,7 +521,13 @@ class ToolsTest extends TestCase
      */
     public function testPasswdGen(string $expectedPassword, $passwordGenerated): void
     {
-        $this->assertRegExp($expectedPassword, $passwordGenerated, 'The password generated ' . $passwordGenerated . ' no match with ' . $expectedPassword);
+        $message = 'The password generated ' . $passwordGenerated . ' no match with ' . $expectedPassword;
+
+        if (method_exists($this, 'assertMatchesRegularExpression')) {
+            $this->assertMatchesRegularExpression($expectedPassword, $passwordGenerated, $message);
+        } else {
+            $this->assertRegExp($expectedPassword, $passwordGenerated, $message);
+        }
     }
 
     public function passwordGenProvider(): array
@@ -733,6 +739,91 @@ class ToolsTest extends TestCase
             ['z', 'zźżžƶȥɀζзزზẑẓẕⱬｚжظ'],
             ['Z', 'ZŹŻŽƵȤΖЗẐẒẔⱫⱿＺЖ'],
             ['zh', 'ჟ'],
+        ];
+    }
+
+    /**
+     * @param array $expectedResult
+     * @param array $originalArray
+     * @param string $insertedArrayKey Key of the inserted array
+     * @param array $insertedArrayData Which data insert to new array?
+     * @param string $key Where to insert the new array?
+     *
+     * @dataProvider providerArrayInsertElementAfterKey
+     */
+    public function testArrayInsertElementAfterKey(array $expectedResult, array $originalArray, string $insertedArrayKey, array $insertedArrayData, string $key): void
+    {
+        $this->assertSame($expectedResult, Tools::arrayInsertElementAfterKey($originalArray, $key, $insertedArrayKey, $insertedArrayData));
+    }
+
+    public function providerArrayInsertElementAfterKey(): iterable
+    {
+        $originalArray = [
+            'field1' => [
+                'value1',
+            ],
+            'field2' => [
+                'value2',
+            ],
+            'field3' => [
+                'value3',
+            ],
+        ];
+
+        yield [
+            [
+                'field1' => [
+                    'value1',
+                ],
+                'field2' => [
+                    'value2',
+                ],
+                'field0' => [
+                    'value0',
+                ],
+                'field3' => [
+                    'value3',
+                ],
+            ],
+            $originalArray,
+            'field0',
+            [
+                'value0',
+            ],
+            'field2',
+        ];
+
+        yield [
+            [
+                'field1' => [
+                    'value1',
+                ],
+                'field2' => [
+                    'value2',
+                ],
+                'field3' => [
+                    'value3',
+                ],
+                'field0' => [
+                    'value0',
+                ],
+            ],
+            $originalArray,
+            'field0',
+            [
+                'value0',
+            ],
+            'field3',
+        ];
+
+        yield [
+            $originalArray, // The field does not exist, we return an original array
+            $originalArray,
+            'field0',
+            [
+                'value0',
+            ],
+            'field4',
         ];
     }
 }

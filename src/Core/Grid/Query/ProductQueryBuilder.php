@@ -104,12 +104,20 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
         $qb = $this->getQueryBuilder($searchCriteria->getFilters());
         $qb
             ->select('p.`id_product`, p.`reference`')
-            ->addSelect('ps.`price` AS `price_tax_excluded`, ps.`active`')
+            ->addSelect('ps.`price` AS `price_tax_excluded`, ps.`ecotax` AS `ecotax_tax_excluded`, ps.`id_tax_rules_group`, ps.`active`')
             ->addSelect('pl.`name`, pl.`link_rewrite`')
             ->addSelect('cl.`name` AS `category`')
             ->addSelect('img_shop.`id_image`')
             ->addSelect('p.`id_tax_rules_group`')
+            ->addSelect('pc.`position`, pc.`id_category`')
         ;
+
+        // When ecotax is enabled the real final price is the sum of price and ecotax so we fetch an extra alias column that is used for sorting
+        if ($this->configuration->getBoolean('PS_USE_ECOTAX')) {
+            $qb->addSelect('(ps.`price` + ps.`ecotax`) AS `final_price_tax_excluded`');
+        } else {
+            $qb->addSelect('(ps.`price` + ps.`ecotax`) AS `final_price_tax_excluded`');
+        }
 
         if ($this->configuration->getBoolean('PS_STOCK_MANAGEMENT')) {
             $qb->addSelect('sa.`quantity`');
@@ -170,6 +178,13 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
                 'img_shop',
                 'img_shop.`id_product` = ps.`id_product` AND img_shop.`cover` = 1 AND img_shop.`id_shop` = :id_shop'
             )
+            ->rightJoin(
+                   'p',
+                   $this->dbPrefix . 'category_product',
+                   'pc',
+                   'p.`id_product` = pc.`id_product` AND pc.id_category = :categoryId'
+               )
+            ->setParameter('categoryId', $this->getFilteredCategoryId($filterValues))
             ->andWhere('p.`state`=1')
         ;
 
@@ -208,12 +223,22 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
                 'p.`id_product`',
                 SqlFilters::MIN_MAX
             )
-            ->addFilter(
-                'price_tax_excluded',
+        ;
+
+        // When ecotax is enabled the real final price is the sum of price and ecotax so the filters must be setup accordingly
+        if ($this->configuration->getBoolean('PS_USE_ECOTAX')) {
+            $sqlFilters->addFilter(
+                'final_price_tax_excluded',
+                '(ps.`price` + ps.`ecotax`)',
+                SqlFilters::MIN_MAX
+            );
+        } else {
+            $sqlFilters->addFilter(
+                'final_price_tax_excluded',
                 'ps.`price`',
                 SqlFilters::MIN_MAX
-            )
-        ;
+            );
+        }
 
         if ($isStockManagementEnabled) {
             $sqlFilters
@@ -234,32 +259,40 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
             if ('active' === $filterName) {
                 $qb->andWhere('ps.`active` = :active');
                 $qb->setParameter('active', $filter);
-
-                continue;
             }
 
             if ('name' === $filterName) {
                 $qb->andWhere('pl.`name` LIKE :name');
                 $qb->setParameter('name', '%' . $filter . '%');
-
-                continue;
             }
 
             if ('reference' === $filterName) {
                 $qb->andWhere('p.`reference` LIKE :reference');
                 $qb->setParameter('reference', '%' . $filter . '%');
-
-                continue;
             }
 
             if ('category' === $filterName) {
                 $qb->andWhere('cl.`name` LIKE :category');
                 $qb->setParameter('category', '%' . $filter . '%');
+            }
 
-                continue;
+            if ('position' === $filterName) {
+                $qb->andWhere('pc.`position` = :position');
+                $qb->setParameter('position', $filter);
             }
         }
 
         return $qb;
+    }
+
+    private function getFilteredCategoryId(array $filterValues): int
+    {
+        foreach ($filterValues as $filterName => $filter) {
+            if ('id_category' === $filterName) {
+                return (int) $filter;
+            }
+        }
+
+        return $this->configuration->getInt('PS_HOME_CATEGORY');
     }
 }

@@ -24,11 +24,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
+use PrestaShop\PrestaShop\Core\Action\ActionsBarButton;
+use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonInterface;
+use PrestaShop\PrestaShop\Core\Action\ActionsBarButtonsCollection;
+use PrestaShop\PrestaShop\Core\Exception\TypeException;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
-use PrestaShopBundle\Component\ActionBar\ActionsBarButtonsCollection;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class AdminControllerCore extends Controller
@@ -138,8 +141,8 @@ class AdminControllerCore extends Controller
     /** @var bool If you want more fieldsets in the form */
     public $multiple_fieldsets = false;
 
-    /** @var array|false */
-    public $fields_value = false;
+    /** @var array */
+    public $fields_value = [];
 
     /** @var bool Define if the header of the list contains filter and sorting links or not */
     protected $list_simple_header;
@@ -635,12 +638,12 @@ class AdminControllerCore extends Controller
         /* content, edit, list, add, details, options, view */
         switch ($this->display) {
             case 'add':
-                $breadcrumbs2['action']['name'] = $this->trans('Add');
+                $breadcrumbs2['action']['name'] = $this->trans('Add', [], 'Admin.Actions');
                 $breadcrumbs2['action']['icon'] = 'icon-plus';
 
                 break;
             case 'edit':
-                $breadcrumbs2['action']['name'] = $this->trans('Edit');
+                $breadcrumbs2['action']['name'] = $this->trans('Edit', [], 'Admin.Actions');
                 $breadcrumbs2['action']['icon'] = 'icon-pencil';
 
                 break;
@@ -690,20 +693,20 @@ class AdminControllerCore extends Controller
 
         switch ($this->display) {
             case 'edit':
-                $this->toolbar_title[] = $this->trans('Edit');
-                $this->addMetaTitle($this->trans('Edit'));
+                $this->toolbar_title[] = $this->trans('Edit', [], 'Admin.Actions');
+                $this->addMetaTitle($this->trans('Edit', [], 'Admin.Actions'));
 
                 break;
 
             case 'add':
-                $this->toolbar_title[] = $this->trans('Add new');
-                $this->addMetaTitle($this->trans('Add new'));
+                $this->toolbar_title[] = $this->trans('Add new', [], 'Admin.Actions');
+                $this->addMetaTitle($this->trans('Add new', [], 'Admin.Actions'));
 
                 break;
 
             case 'view':
-                $this->toolbar_title[] = $this->trans('View');
-                $this->addMetaTitle($this->trans('View'));
+                $this->toolbar_title[] = $this->trans('View', [], 'Admin.Actions');
+                $this->addMetaTitle($this->trans('View', [], 'Admin.Actions'));
 
                 break;
         }
@@ -732,7 +735,7 @@ class AdminControllerCore extends Controller
                         /** @var bool|string $val */
                         $filter_value = '';
                         if (isset($t['type']) && $t['type'] == 'bool') {
-                            $filter_value = ((bool) $val) ? $this->trans('yes') : $this->trans('no');
+                            $filter_value = ((bool) $val) ? $this->trans('Yes', [], 'Admin.Global') : $this->trans('No', [], 'Admin.Global');
                         } elseif (isset($t['type']) && $t['type'] == 'date' || isset($t['type']) && $t['type'] == 'datetime') {
                             $date = json_decode($val, true);
                             if (isset($date[0])) {
@@ -1618,7 +1621,7 @@ class AdminControllerCore extends Controller
                 if (!$this->lite_display) {
                     $this->page_header_toolbar_btn['back'] = [
                         'href' => $back,
-                        'desc' => $this->trans('Back to list'),
+                        'desc' => $this->trans('Back to list', [], 'Admin.Actions'),
                     ];
                 }
                 $obj = $this->loadObject(true);
@@ -1643,13 +1646,17 @@ class AdminControllerCore extends Controller
                             )
                                 ? $obj->{$this->identifier_name}[$this->context->employee->id_lang]
                                 : $obj->{$this->identifier_name},
-                        ]
+                        ],
+                        'Admin.Actions'
                     );
                     $this->addMetaTitle($this->toolbar_title[count($this->toolbar_title) - 1]);
                 }
 
                 break;
         }
+
+        // Add the extra toolbar buttons provided by hooks
+        $this->mergeExtraToolbarButtons();
 
         if (count($this->toolbar_title)) {
             $this->show_page_header_toolbar = true;
@@ -1675,7 +1682,7 @@ class AdminControllerCore extends Controller
                 // Default save button - action dynamically handled in javascript
                 $this->toolbar_btn['save'] = [
                     'href' => '#',
-                    'desc' => $this->trans('Save'),
+                    'desc' => $this->trans('Save', [], 'Admin.Actions'),
                 ];
                 $back = Tools::safeOutput(Tools::getValue('back', ''));
                 if (empty($back)) {
@@ -1687,7 +1694,7 @@ class AdminControllerCore extends Controller
                 if (!$this->lite_display) {
                     $this->toolbar_btn['cancel'] = [
                         'href' => $back,
-                        'desc' => $this->trans('Cancel'),
+                        'desc' => $this->trans('Cancel', [], 'Admin.Actions'),
                     ];
                 }
 
@@ -1704,7 +1711,7 @@ class AdminControllerCore extends Controller
                 if (!$this->lite_display) {
                     $this->toolbar_btn['back'] = [
                         'href' => $back,
-                        'desc' => $this->trans('Back to list'),
+                        'desc' => $this->trans('Back to list', [], 'Admin.Actions'),
                     ];
                 }
 
@@ -1712,7 +1719,7 @@ class AdminControllerCore extends Controller
             case 'options':
                 $this->toolbar_btn['save'] = [
                     'href' => '#',
-                    'desc' => $this->trans('Save'),
+                    'desc' => $this->trans('Save', [], 'Admin.Actions'),
                 ];
 
                 break;
@@ -1720,12 +1727,12 @@ class AdminControllerCore extends Controller
                 // list
                 $this->toolbar_btn['new'] = [
                     'href' => self::$currentIndex . '&add' . $this->table . '&token=' . $this->token,
-                    'desc' => $this->trans('Add new'),
+                    'desc' => $this->trans('Add new', [], 'Admin.Actions'),
                 ];
                 if ($this->allow_export) {
                     $this->toolbar_btn['export'] = [
                         'href' => self::$currentIndex . '&export' . $this->table . '&token=' . $this->token,
-                        'desc' => $this->trans('Export'),
+                        'desc' => $this->trans('Export', [], 'Admin.Actions'),
                     ];
                 }
         }
@@ -2032,7 +2039,7 @@ class AdminControllerCore extends Controller
                 'show_new_messages' => Configuration::get('PS_SHOW_NEW_MESSAGES') && isset($accesses['AdminCustomerThreads']) && $accesses['AdminCustomerThreads']['view'],
                 'employee' => $this->context->employee,
                 'search_type' => Tools::getValue('bo_search_type'),
-                'bo_query' => Tools::safeOutput(Tools::stripslashes(Tools::getValue('bo_query'))),
+                'bo_query' => Tools::safeOutput(Tools::getValue('bo_query')),
                 'quick_access' => empty($quick_access) ? false : $quick_access,
                 'multi_shop' => Shop::isFeatureActive(),
                 'shop_list' => $helperShop->getRenderedShopList(),
@@ -2066,7 +2073,7 @@ class AdminControllerCore extends Controller
             'full_cldr_language_code' => $this->context->getCurrentLocale()->getCode(),
             'link' => $this->context->link,
             'shop_name' => Configuration::get('PS_SHOP_NAME'),
-            'base_url' => $this->context->shop->getBaseURL(true),
+            'base_url' => $this->context->shop->getBaseURL(),
             'current_parent_id' => (int) Tab::getCurrentParentId(),
             'tabs' => $tabs,
             'current_tab_level' => $currentTabLevel,
@@ -2325,19 +2332,18 @@ class AdminControllerCore extends Controller
         $this->getList($this->context->language->id);
 
         // If list has 'active' field, we automatically create bulk action
-        if (isset($this->fields_list) && is_array($this->fields_list) && array_key_exists('active', $this->fields_list)
-            && !empty($this->fields_list['active'])) {
+        if (array_key_exists('active', $this->fields_list) && $this->fields_list['active'] == true) {
             if (!is_array($this->bulk_actions)) {
                 $this->bulk_actions = [];
             }
 
             $this->bulk_actions = array_merge([
                 'enableSelection' => [
-                    'text' => $this->trans('Enable selection'),
+                    'text' => $this->trans('Enable selection', [], 'Admin.Actions'),
                     'icon' => 'icon-power-off text-success',
                 ],
                 'disableSelection' => [
-                    'text' => $this->trans('Disable selection'),
+                    'text' => $this->trans('Disable selection', [], 'Admin.Actions'),
                     'icon' => 'icon-power-off text-danger',
                 ],
                 'divider' => [
@@ -2350,7 +2356,7 @@ class AdminControllerCore extends Controller
 
         // Empty list is ok
         if (!is_array($this->_list)) {
-            $this->displayWarning($this->trans('Bad SQL query') . '<br />' . htmlspecialchars($this->_list_error));
+            $this->displayWarning($this->trans('Bad SQL query', [], 'Admin.Notifications.Error') . '<br />' . htmlspecialchars($this->_list_error));
 
             return false;
         }
@@ -2606,7 +2612,7 @@ class AdminControllerCore extends Controller
                 $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/rtl.css', 'all', 1);
             }
 
-            $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/theme.css', 'all', 1);
+            $this->addCSS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/theme.css', 'all', 0);
             $this->addJS(__PS_BASE_URI__ . $this->admin_webpath . '/themes/new-theme/public/main.bundle.js');
 
             // the multistore dropdown should be called only once, and only if multistore is used
@@ -3012,11 +3018,11 @@ class AdminControllerCore extends Controller
         } elseif (is_array($this->bulk_actions)) {
             $submit_bulk_actions = array_merge([
                 'enableSelection' => [
-                    'text' => $this->trans('Enable selection'),
+                    'text' => $this->trans('Enable selection', [], 'Admin.Actions'),
                     'icon' => 'icon-power-off text-success',
                 ],
                 'disableSelection' => [
-                    'text' => $this->trans('Disable selection'),
+                    'text' => $this->trans('Disable selection', [], 'Admin.Actions'),
                     'icon' => 'icon-power-off text-danger',
                 ],
             ], $this->bulk_actions);
@@ -3140,7 +3146,7 @@ class AdminControllerCore extends Controller
             $select_shop = ', shop.name as shop_name ';
         }
 
-        if ($this->multishop_context && Shop::isTableAssociated($this->table) && !empty($this->className)) {
+        if ($this->multishop_context && Shop::isTableAssociated($this->table) && !empty($this->className) && null !== $this->_join) {
             if (Shop::getContext() != Shop::CONTEXT_ALL || !$this->context->employee->isSuperAdmin()) {
                 $test_join = !preg_match('#`?' . preg_quote(_DB_PREFIX_ . $this->table . '_shop') . '`? *sa#', $this->_join);
                 if (Shop::isFeatureActive() && $test_join) {
@@ -3573,7 +3579,7 @@ class AdminControllerCore extends Controller
                                         $field_value = $input['default_value'];
                                     }
                                 }
-                                $this->fields_value[$input['name']][$language['id_lang']] = $field_value;
+                                $this->fields_value[$input['name']][$language['id_lang']] = $field_value ?: '';
                             }
                         } else {
                             $field_value = $this->getFieldValue($obj, $input['name']);
@@ -4321,20 +4327,20 @@ class AdminControllerCore extends Controller
         if (!isset($this->translationsTab['Disable this module'])) {
             $this->translationsTab['Disable this module'] = $this->trans('Disable this module');
             $this->translationsTab['Enable this module for all shops'] = $this->trans('Enable this module for all shops');
-            $this->translationsTab['Disable'] = $this->trans('Disable');
-            $this->translationsTab['Enable'] = $this->trans('Enable');
+            $this->translationsTab['Disable'] = $this->trans('Disable', [], 'Admin.Actions');
+            $this->translationsTab['Enable'] = $this->trans('Enable', [], 'Admin.Actions');
             $this->translationsTab['Disable on mobiles'] = $this->trans('Disable on mobiles');
             $this->translationsTab['Disable on tablets'] = $this->trans('Disable on tablets');
             $this->translationsTab['Disable on computers'] = $this->trans('Disable on computers');
             $this->translationsTab['Display on mobiles'] = $this->trans('Display on mobiles');
             $this->translationsTab['Display on tablets'] = $this->trans('Display on tablets');
             $this->translationsTab['Display on computers'] = $this->trans('Display on computers');
-            $this->translationsTab['Reset'] = $this->trans('Reset');
-            $this->translationsTab['Configure'] = $this->trans('Configure');
-            $this->translationsTab['Delete'] = $this->trans('Delete');
-            $this->translationsTab['Install'] = $this->trans('Install');
-            $this->translationsTab['Uninstall'] = $this->trans('Uninstall');
-            $this->translationsTab['Would you like to delete the content related to this module ?'] = $this->trans('Would you like to delete the content related to this module ?');
+            $this->translationsTab['Reset'] = $this->trans('Reset', [], 'Admin.Actions');
+            $this->translationsTab['Configure'] = $this->trans('Configure', [], 'Admin.Actions');
+            $this->translationsTab['Delete'] = $this->trans('Delete', [], 'Admin.Actions');
+            $this->translationsTab['Install'] = $this->trans('Install', [], 'Admin.Actions');
+            $this->translationsTab['Uninstall'] = $this->trans('Uninstall', [], 'Admin.Actions');
+            $this->translationsTab['Would you like to delete the content related to this module ?'] = $this->trans('Would you like to delete the content related to this module ?', [], 'Admin.Modules.Notification');
             $this->translationsTab['This action will permanently remove the module from the server. Are you sure you want to do this?'] = $this->trans('This action will permanently remove the module from the server. Are you sure you want to do this?');
             $this->translationsTab['Remove from Favorites'] = $this->trans('Remove from Favorites');
             $this->translationsTab['Mark as Favorite'] = $this->trans('Mark as Favorite');
@@ -4794,5 +4800,79 @@ class AdminControllerCore extends Controller
     protected function isAnonymousAllowed()
     {
         return $this->allowAnonymous;
+    }
+
+    /**
+     * Get the buttons provided by hooks and merge them into the already defined page toolbar buttons
+     *
+     * @throws TypeException
+     */
+    protected function mergeExtraToolbarButtons(): void
+    {
+        $toolbarButtonsCollection = new ActionsBarButtonsCollection();
+
+        // Get previously assigned toolbar buttons of the controller
+        $controllerButtons = $this->page_header_toolbar_btn;
+        if (!empty($controllerButtons)) {
+            // Build ActionsBarButton based on array setting from the controller and add it to collection
+            foreach ($controllerButtons as $controllerButtonIndex => $controllerButton) {
+                $toolbarButtonsCollection->add(
+                    new ActionsBarButton(
+                        $controllerButton['class'] ?? $controllerButtonIndex,
+                        $controllerButton,
+                        $controllerButton['desc'] ?? ''
+                    )
+                );
+            }
+        }
+
+        // Get the toolbar buttons defined by hooks and add them to the main collection
+        try {
+            Hook::exec('actionGetAdminToolbarButtons', [
+                'controller' => $this,
+                'toolbar_extra_buttons_collection' => &$toolbarButtonsCollection,
+            ]);
+        } catch (Exception $exception) {
+            $this->get('logger')->addWarning(
+                'There was an error retrieving toolbar buttons from Hooks. Toolbar buttons are probably not complete',
+                [
+                    'message' => $exception->getMessage(),
+                    'file' => $exception->getFile(),
+                    'line' => $exception->getLine(),
+                ]
+            );
+
+            return; // In case of any error, the buttons from hooks are simply ignored
+        }
+
+        // Transform the collection of buttons into array and reassign it to the page header toolbar buttons
+        $toolbarButtons = [];
+
+        foreach ($toolbarButtonsCollection as $toolbarActionButton) {
+            $toolbarActionButtonProperties = $this->transformActionBarButtonToToolbarButton($toolbarActionButton);
+            $toolbarButtons[$toolbarActionButtonProperties['name']] = $toolbarActionButtonProperties;
+        }
+
+        $this->page_header_toolbar_btn = $toolbarButtons;
+    }
+
+    /**
+     * @param ActionsBarButtonInterface $actionBarButton
+     *
+     * @return array
+     */
+    private function transformActionBarButtonToToolbarButton(ActionsBarButtonInterface $actionBarButton): array
+    {
+        $buttonProperties = $actionBarButton->getProperties();
+
+        return array_merge(
+            $buttonProperties,
+            [
+                'name' => str_replace(' ', '-', $buttonProperties['class'] ?? $actionBarButton->getClass()),
+                'desc' => $buttonProperties['desc'] ?? $actionBarButton->getContent(),
+                'class' => ($buttonProperties['class'] ?? $actionBarButton->getClass()) . ' btn-primary',
+                'imgclass' => $buttonProperties['class'] ?? $actionBarButton->getClass(),
+            ]
+        );
     }
 }

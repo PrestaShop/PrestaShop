@@ -267,11 +267,13 @@ class ProductLazyArray extends AbstractLazyArray
      */
     public function getDeliveryInformation()
     {
-        if ($this->product['quantity'] > 0) {
+        $productQuantity = $this->product['stock_quantity'] ?? $this->product['quantity'];
+
+        if ($productQuantity >= $this->getQuantityWanted()) {
             $config = $this->configuration->get('PS_LABEL_DELIVERY_TIME_AVAILABLE');
 
             return $config[$this->language->id] ?? null;
-        } elseif ($this->product['allow_oosp']) {
+        } elseif ($this->shouldEnableAddToCartButton($this->product, $this->settings)) {
             $config = $this->configuration->get('PS_LABEL_DELIVERY_TIME_OOSBOA', []);
 
             return $config[$this->language->id] ?? null;
@@ -626,6 +628,10 @@ class ProductLazyArray extends AbstractLazyArray
             return false;
         }
 
+        if (!$this->configuration->getBoolean('PS_STOCK_MANAGEMENT')) {
+            return false;
+        }
+
         // Displayed only if the order of out of stock product is denied.
         if ($product['out_of_stock'] == OutOfStockType::OUT_OF_STOCK_AVAILABLE
             || (
@@ -833,7 +839,7 @@ class ProductLazyArray extends AbstractLazyArray
      */
     private function getQuantityWanted()
     {
-        return (int) Tools::getValue('quantity_wanted', 1);
+        return (int) Tools::getValue('quantity_wanted', $this->product['quantity_wanted'] ?? 1);
     }
 
     /**
@@ -1059,6 +1065,7 @@ class ProductLazyArray extends AbstractLazyArray
             'low_stock_alert',
             'low_stock_threshold',
             'main_variants',
+            'manufacturer_name',
             'meta_description',
             'meta_keywords',
             'meta_title',

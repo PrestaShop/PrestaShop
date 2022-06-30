@@ -70,7 +70,7 @@ class TemplateFinderCore
 
     private function getTemplateHierarchy($template, $entity, $id)
     {
-        $entity = basename($entity);
+        $entity = basename($entity ?? '');
         $id = (int) $id;
 
         if (in_array($entity, $this->getProductListEntities())) {

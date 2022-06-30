@@ -102,10 +102,11 @@ class ModuleTest extends TestCase
         Cache::clean('hook_alias');
         $possibleHooksList = $module->getPossibleHooksList();
 
-        $this->assertCount(2, $possibleHooksList);
+        $this->assertCount(3, $possibleHooksList);
 
-        $this->assertEquals('displayPaymentReturn', $possibleHooksList[0]['name']);
-        $this->assertEquals('paymentOptions', $possibleHooksList[1]['name']);
+        $this->assertEquals('displayHome', $possibleHooksList[0]['name']);
+        $this->assertEquals('displayPaymentReturn', $possibleHooksList[1]['name']);
+        $this->assertEquals('paymentOptions', $possibleHooksList[2]['name']);
 
         Module::getInstanceByName('bankwire')->uninstall();
     }

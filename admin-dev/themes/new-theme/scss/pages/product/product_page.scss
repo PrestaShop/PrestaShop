@@ -1167,11 +1167,6 @@ $product-page-padding-bottom: 80px !default;
     > .form-contenttab.active:first-child {
       @include border-top-left-radius(0);
     }
-
-    > .external-tab-placeholder {
-      // So that the placeholder has size 0
-      padding: 0;
-    }
   }
 
   // External tab are rendered outside of the tab container so their bottom corners need to to be rounded
@@ -1319,6 +1314,114 @@ $product-page-padding-bottom: 80px !default;
       width: auto;
     }
   }
+
+  .retail-price-widget {
+    display: flex;
+    flex-direction: row;
+
+    .form-group {
+      margin-bottom: 0;
+    }
+
+    .retail-price-tax-rules-group-id {
+      margin-left: 3rem;
+
+      .select2-container {
+        position: relative;
+
+        .select2-selection {
+          height: auto;
+          padding: 0.5rem 2.2rem 0.5rem 1rem;
+
+          .select2-selection__rendered {
+            line-height: 1.5;
+          }
+        }
+
+        &::before {
+          position: absolute;
+          left: -2rem;
+          font-size: 1.5rem;
+          content: "+";
+        }
+      }
+    }
+
+    .retail-price-tax-included {
+      margin-left: 3rem;
+
+      .input-group {
+        position: relative;
+
+        &::before {
+          position: absolute;
+          left: -2rem;
+          font-size: 1.5rem;
+          content: "=";
+        }
+      }
+    }
+
+    .ecotax-tax-excluded {
+      margin-left: 3rem;
+
+      .input-group {
+        position: relative;
+
+        &::before {
+          position: absolute;
+          left: -2rem;
+          font-size: 1.5rem;
+          content: "+";
+        }
+      }
+    }
+
+    .ecotax-tax-included {
+      margin-left: 2rem;
+
+      .input-group {
+        position: relative;
+
+        &::before {
+          position: absolute;
+          left: -1rem;
+          font-size: 1.5rem;
+          content: "(";
+        }
+
+        &::after {
+          position: absolute;
+          right: -1rem;
+          font-size: 1.5rem;
+          content: ")";
+        }
+      }
+    }
+  }
+
+  .price-summary-widget {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+
+    .price-summary-block {
+      padding: 1rem 2rem;
+      @include border-radius(0.5rem);
+      font-size: 1rem;
+      font-weight: 700;
+      color: #363a41;
+      background-color: #eaebec;
+
+      .price-summary-value {
+        margin-bottom: 0.8rem;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
 }
 
 // Some of the following styles target product page v2 components, but since the are new and only used in the new
@@ -1390,6 +1493,49 @@ $product-page-padding-bottom: 80px !default;
   }
 }
 
+#specific-prices-loading {
+  .loading-label {
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .spinner {
+    display: block;
+    margin: 0 auto;
+  }
+}
+
+#modal-specific-price-form {
+  .modal-dialog {
+    max-width: 810px;
+  }
+}
+
+#specific_price_customer_list {
+  .entity-item.disabled {
+    cursor: not-allowed;
+    background-color: #eceeef;
+
+    .material-icons {
+      cursor: not-allowed;
+    }
+  }
+}
+
+.light_display_layout form.specific-price-product-form {
+  padding-top: 2rem;
+}
+
+.specific-price-product-form {
+  input[type="text"]:not(.entity-search-input) {
+    max-width: 210px;
+  }
+
+  .entity-search-widget {
+    max-width: 420px;
+  }
+}
+
 .bulk-combination-form {
   padding: 0 1.625rem 1.625rem;
 
@@ -1411,32 +1557,48 @@ $product-page-padding-bottom: 80px !default;
   }
 }
 
-#external-combination-tab {
-  padding-bottom: $product-page-padding-bottom;
-  margin-top: -$product-page-padding-bottom;
-
-  #combination-actions {
+#product_combinations_combination_manager {
+  #combination-list-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
     margin: 0.5rem 0;
   }
 
   #combinations-list {
     position: relative;
     min-height: 3.5rem;
+    margin-top: 0.5rem;
 
-    #id-header {
+    #combination-bulk-cell {
       white-space: nowrap;
 
       .md-checkbox {
         display: inline-block;
       }
 
+      .dropdown-menu .md-checkbox {
+        display: block;
+        padding-left: 2rem;
+
+        .md-checkbox-control::before,
+        .md-checkbox-control::after {
+          margin-top: 0.4rem;
+          margin-left: 0.4rem;
+        }
+      }
+
       .ps-sortable-column {
         display: inline-block;
+      }
+
+      .dropdown-toggle:not(.dropdown-toggle-split)::after {
+        margin-left: 0;
       }
     }
 
     .combination {
-      &-actions {
+      &-row-actions {
         display: flex;
         align-items: center;
       }
@@ -1445,12 +1607,45 @@ $product-page-padding-bottom: 80px !default;
         width: 3rem;
       }
 
+      &-name-preview {
+        min-width: 10rem;
+      }
+
       td {
         .form-check-radio {
           margin-bottom: 0;
 
           .form-check-label {
             justify-content: center;
+          }
+        }
+
+        .input-group.money-type {
+          max-width: 10rem;
+        }
+
+        .delta-quantity {
+          max-width: 15rem;
+
+          &-quantity {
+            max-width: 10rem;
+          }
+        }
+
+        .alert > * {
+          padding: 0;
+        }
+
+        .alert-danger {
+          padding: 0.5rem;
+          margin: 0.2rem 0 0;
+
+          &::before {
+            content: "";
+          }
+
+          .close {
+            margin: 0;
           }
         }
       }
@@ -1473,6 +1668,65 @@ $product-page-padding-bottom: 80px !default;
         margin-top: -1.25rem;
         margin-right: auto;
         margin-left: auto;
+      }
+    }
+
+    #bulk-all-selection-dropdown {
+      cursor: pointer;
+
+      label {
+        cursor: pointer;
+      }
+
+      .dropdown-toggle {
+        background-color: inherit;
+        border: none;
+      }
+    }
+  }
+
+  #combinations-list-footer {
+    display: none;
+  }
+
+  #combinations-paginated-list {
+    &.edition-mode {
+      #combinations-list-form-container {
+        background-color: rgba(37, 185, 215, 0.1);
+        @include border-radius(0.5rem 0.5rem 0 0);
+      }
+
+      #combinations-pagination {
+        display: none;
+      }
+
+      #combinations-list-footer {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        padding: 1.25rem;
+        background-color: rgba(37, 185, 215, 0.1);
+        @include border-radius(0 0 0.5rem 0.5rem);
+
+        &-buttons {
+          display: flex;
+          flex-direction: row;
+          gap: 0.5rem;
+        }
+
+        span {
+          display: block;
+          padding-top: 0.5rem;
+          margin: 0 auto;
+        }
+      }
+
+      .combinations-table {
+        margin-bottom: 0;
+
+        .combination-value-changed {
+          background-color: #f4fcfd;
+        }
       }
     }
   }
@@ -1540,6 +1794,17 @@ $product-page-padding-bottom: 80px !default;
   .combination-images-selector.disabled .combination-image-choice {
     cursor: not-allowed;
     opacity: 0.4;
+  }
+
+  .final-price-preview {
+    display: block;
+    width: auto;
+    padding: 0.25rem 0.625rem;
+    @include border-radius(0.5rem);
+    font-size: 1rem;
+    font-weight: 700;
+    color: #363a41;
+    background-color: #eaebec;
   }
 }
 

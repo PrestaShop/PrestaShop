@@ -162,8 +162,8 @@ class Datas
         ],
         'admin_password' => [
             'name' => 'password',
-            'validate' => 'isPlaintextPassword',
-            'default' => '0123456789',
+            'validate' => 'isAcceptablePasswordLength',
+            'default' => 'Correct Horse Battery Staple',
         ],
         'admin_email' => [
             'name' => 'email',

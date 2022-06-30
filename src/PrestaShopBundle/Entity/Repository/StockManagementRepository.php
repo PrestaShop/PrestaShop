@@ -335,6 +335,9 @@ abstract class StockManagementRepository
         return strtr($orderByClause, [
             '{product} DESC' => $productColumns,
             '{product}' => $productColumns,
+            '{product_id}' => 'product_id',
+            '{product_name}' => 'product_name',
+            '{combination_id}' => 'combination_id',
             '{reference}' => 'product_reference',
             '{supplier}' => 'supplier_name',
             '{available_quantity}' => 'product_available_quantity',

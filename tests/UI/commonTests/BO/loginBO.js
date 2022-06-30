@@ -11,7 +11,6 @@ module.exports = {
     await loginPage.login(page, email, password);
     const pageTitle = await dashboardPage.getPageTitle(page);
     await expect(pageTitle).to.contains(dashboardPage.pageTitle);
-    await dashboardPage.closeOnboardingModal(page);
   },
 
   async logoutBO(mochaContext, page) {

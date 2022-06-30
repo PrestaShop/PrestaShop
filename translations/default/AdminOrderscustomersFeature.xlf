@@ -897,11 +897,6 @@ Best regards,</target>
   </file>
   <file original="controllers/admin/AdminOrdersController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="0f005bd8209a61e4fc96a69736eb9798">
-        <source>Order %reference% from %firstname% %lastname%</source>
-        <target>Order %reference% from %firstname% %lastname%</target>
-        <note>Line: 286</note>
-      </trans-unit>
       <trans-unit id="bbee72681d2c075d95355d3d9ccefb4e">
         <source>Credit card slip for order #%d</source>
         <target>Credit card slip for order #%d</target>
@@ -999,7 +994,7 @@ Best regards,</target>
       <trans-unit id="ffb7e666a70151215b4c55c6268d7d72">
         <source>Newsletter</source>
         <target>Newsletter</target>
-        <note>Line: 1407</note>
+        <note>Line: 1415</note>
       </trans-unit>
     </body>
   </file>
@@ -1104,12 +1099,12 @@ Best regards,</target>
       <trans-unit id="c12a553ab6ad810580afa3f07aa9f51f">
         <source>not paid</source>
         <target>not paid</target>
-        <note>Line: 418</note>
+        <note>Line: 423</note>
       </trans-unit>
       <trans-unit id="8d4ac0e8c6f5900930ddfccd45d10abf">
         <source>overpaid</source>
         <target>overpaid</target>
-        <note>Line: 424</note>
+        <note>Line: 429</note>
       </trans-unit>
     </body>
   </file>
@@ -1234,12 +1229,12 @@ Best regards,</target>
       <trans-unit id="aac772216aecbeca0e86d06671fe985a">
         <source>Birthday</source>
         <target>Birthday</target>
-        <note>Line: 937</note>
+        <note>Line: 943</note>
       </trans-unit>
       <trans-unit id="f0c7cdb1b872477a4c31bca923127c54">
         <source>You can use this feature in a single shop context only. Switch context to enable it.</source>
         <target>You can use this feature in a single shop context only. Switch context to enable it.</target>
-        <note>Line: 1007</note>
+        <note>Line: 1013</note>
       </trans-unit>
     </body>
   </file>
@@ -1254,15 +1249,20 @@ Best regards,</target>
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Sell/Order/OrderController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="0f005bd8209a61e4fc96a69736eb9798">
+        <source>Order %reference% from %firstname% %lastname%</source>
+        <target>Order %reference% from %firstname% %lastname%</target>
+        <note>Line: 536</note>
+      </trans-unit>
       <trans-unit id="e5d61db40a917c78a9d8e821dd0dd8de">
         <source>Add new order</source>
         <target>Add new order</target>
-        <note>Line: 170</note>
+        <note>Line: 171</note>
       </trans-unit>
       <trans-unit id="7442e29d7d53e549b78d93c46b8cdcfc">
         <source>Orders</source>
         <target>Orders</target>
-        <note>Line: 532</note>
+        <note>Line: 533</note>
       </trans-unit>
     </body>
   </file>
@@ -1417,7 +1417,7 @@ Best regards,</target>
       <trans-unit id="b7623e931f082f027293f27dbfe7a8ea">
         <source>Display to customer?</source>
         <target>Display to customer?</target>
-        <note>Line: 77</note>
+        <note>Line: 78</note>
       </trans-unit>
     </body>
   </file>
@@ -2143,7 +2143,7 @@ Best regards,</target>
       <trans-unit id="66dc0eb61ab4157d6170494e6841a77a">
         <source>Private note</source>
         <target>Private note</target>
-        <note>Line: 198</note>
+        <note>Line: 199</note>
       </trans-unit>
       <trans-unit id="0c458988127eb2150776881e2ef3f0c4">
         <source>Shipping address</source>

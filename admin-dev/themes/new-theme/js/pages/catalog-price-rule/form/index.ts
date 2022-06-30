@@ -23,7 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import IncludeTaxFieldToggle from '@components/form/include-tax-field-toggle';
+import ReductionTaxFieldToggle from '@components/form/reduction-tax-field-toggle';
+import CurrencySymbolUpdater from '@components/form/currency-symbol-updater';
 import PriceFieldAvailabilityHandler from './price-field-availability-handler';
 
 import CatalogPriceRuleFormMap from './catalog-price-rule-form-map';
@@ -31,12 +32,51 @@ import CatalogPriceRuleFormMap from './catalog-price-rule-form-map';
 const {$} = window;
 
 $(() => {
+  new CurrencySymbolUpdater(
+    CatalogPriceRuleFormMap.currencyId,
+    ((symbol: string): void => {
+      if (symbol === '') {
+        return;
+      }
+
+      // Reduction Amount
+      const reductionTypeSelect = document.querySelector<HTMLSelectElement>(CatalogPriceRuleFormMap.reductionTypeSelect);
+
+      if (reductionTypeSelect) {
+        // Update the amount option innerHTML
+        for (let i = 0; i < reductionTypeSelect.options.length; i += 1) {
+          const reductionOption = reductionTypeSelect.options[i];
+
+          if (reductionOption.value === 'amount') {
+            reductionOption.innerHTML = symbol;
+          }
+        }
+
+        const selectedReduction = reductionTypeSelect.options[reductionTypeSelect.selectedIndex].value;
+
+        if (selectedReduction === 'amount') {
+          const reductionTypeAmountSymbols = document.querySelectorAll(
+            CatalogPriceRuleFormMap.reductionTypeAmountSymbol,
+          );
+
+          if (reductionTypeAmountSymbols.length) {
+            reductionTypeAmountSymbols.forEach((value: Element) => {
+              const elt = value;
+              elt.innerHTML = symbol;
+            });
+          }
+        }
+      }
+    }),
+  );
   new PriceFieldAvailabilityHandler(
     CatalogPriceRuleFormMap.initialPrice,
     CatalogPriceRuleFormMap.price,
   );
-  new IncludeTaxFieldToggle(
-    CatalogPriceRuleFormMap.reductionType,
+  new ReductionTaxFieldToggle(
+    CatalogPriceRuleFormMap.reductionTypeSelect,
     CatalogPriceRuleFormMap.includeTax,
+    CatalogPriceRuleFormMap.currencyId,
+    CatalogPriceRuleFormMap.reductionTypeAmountSymbol,
   );
 });

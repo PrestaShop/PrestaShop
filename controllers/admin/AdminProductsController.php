@@ -729,7 +729,7 @@ class AdminProductsControllerCore extends AdminController
         }
 
         if (Validate::isLoadedObject($product = $this->object)) {
-            if ($this->isProductFieldUpdated('attribute_price') && (!Tools::getIsset('attribute_price') || Tools::getIsset('attribute_price') == null)) {
+            if ($this->isProductFieldUpdated('attribute_price') && !Tools::getIsset('attribute_price')) {
                 $this->errors[] = $this->trans('The price attribute is required.', [], 'Admin.Catalog.Notification');
             }
             if (!Tools::getIsset('attribute_combination_list') || Tools::isEmpty(Tools::getValue('attribute_combination_list'))) {
@@ -3302,6 +3302,7 @@ class AdminProductsControllerCore extends AdminController
 
         if ($items && ($disableCombination || $excludeIds)) {
             $results = $resultsJson = [];
+            /** @var array{id_product: int, link_rewrite: string, reference: string, name: string, id_image: string} $item */
             foreach ($items as $item) {
                 if (!$forceJson) {
                     $item['name'] = str_replace('|', '&#124;', $item['name']);

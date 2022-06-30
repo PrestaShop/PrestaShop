@@ -25,6 +25,8 @@
 
 import {isUndefined} from '@PSTypes/typeguard';
 
+const {$} = window;
+
 /**
  * @param {string} disablingInputSelector - selector of input (e.g. checkbox or radio)
  *                 which on change enables/disables the element selected by targetSelector.
@@ -41,11 +43,17 @@ export type FormFieldDisablerParams = {
   disablingInputSelector: string,
   matchingValue: string | null,
   targetSelector: string | null,
+  switchEvent: string | null,
   disableOnMatch: boolean,
 }
 export type InputFormFieldDisablerParams = Partial<FormFieldDisablerParams> & {
   disablingInputSelector: string,
 };
+
+export type SwitchEventData = {
+  targetSelector: string,
+  disable: boolean,
+}
 
 /**
  * Enables or disables element depending on certain input value.
@@ -61,6 +69,7 @@ export default class FormFieldDisabler {
       matchingValue: '0',
       disableOnMatch: true,
       targetSelector: null,
+      switchEvent: null,
       ...inputParams,
     };
 
@@ -72,7 +81,7 @@ export default class FormFieldDisabler {
     disablingInputs.forEach((input: HTMLInputElement) => {
       this.updateTargetState(input);
 
-      input.addEventListener('change', () => {
+      $(input).on('change', () => {
         this.updateTargetState(input);
       });
     });
@@ -85,9 +94,10 @@ export default class FormFieldDisabler {
       return;
     }
 
-    const matchingValue = inputElement.dataset.matchingValue || this.params.matchingValue;
-    const targetSelector = inputElement.dataset.targetSelector || this.params.targetSelector;
-    const disableOnMatch: boolean = inputElement.dataset.disableOnMatch === '1' || this.params.disableOnMatch;
+    const matchingValue = inputElement.dataset.matchingValue ?? this.params.matchingValue;
+    const targetSelector = inputElement.dataset.targetSelector ?? this.params.targetSelector;
+    const switchEvent = inputElement.dataset.switchEvent ?? this.params.switchEvent;
+    const disableOnMatch = inputElement.dataset?.disableOnMatch === '1' ?? this.params.disableOnMatch;
 
     if (matchingValue === null) {
       console.error('No matching value defined for inputElement', inputElement);
@@ -106,7 +116,7 @@ export default class FormFieldDisabler {
       disabledState = !disableOnMatch;
     }
 
-    this.toggle(targetSelector, disabledState);
+    this.toggle(targetSelector, disabledState, switchEvent);
   }
 
   private getInputValue(inputElement: HTMLInputElement): string | undefined {
@@ -129,7 +139,25 @@ export default class FormFieldDisabler {
     }
   }
 
-  private toggle(targetSelector: string, disable: boolean): void {
+  private toggle(
+    targetSelector: string,
+    disable: boolean,
+    switchEvent: string | null,
+  ): void {
+    if (switchEvent) {
+      const {eventEmitter} = window.prestashop.instance;
+
+      if (!eventEmitter) {
+        console.error('Trying to use EventEmitter without having initialised the component before.');
+      } else {
+        const eventData: SwitchEventData = {
+          targetSelector,
+          disable,
+        };
+        eventEmitter.emit(switchEvent, eventData);
+      }
+    }
+
     const elementsToToggle: NodeListOf<Element> = document.querySelectorAll(targetSelector);
 
     if (elementsToToggle.length === 0) {

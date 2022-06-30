@@ -48,12 +48,15 @@ class SpecificPriceFormDataProviderTest extends TestCase
         $provider = new SpecificPriceFormDataProvider($queryBusMock);
 
         $expectedDefaultData = [
-            'reduction' => [
-                'value' => 0,
-                'type' => Reduction::TYPE_AMOUNT,
-            ],
-            'leave_initial_price' => false,
             'from_quantity' => 1,
+            'impact' => [
+                'reduction' => [
+                    'value' => 0,
+                    'type' => Reduction::TYPE_AMOUNT,
+                    'include_tax' => true,
+                ],
+                'fixed_price_tax_excluded' => (float) InitialPrice::INITIAL_PRICE_VALUE,
+            ],
         ];
 
         $this->assertEquals($expectedDefaultData, $provider->getDefaultData());
@@ -97,22 +100,26 @@ class SpecificPriceFormDataProviderTest extends TestCase
             ),
             [
                 'product_id' => 10,
+                'groups' => [
+                    'currency_id' => 6,
+                    'country_id' => 7,
+                    'group_id' => 8,
+                    'shop_id' => 5,
+                ],
                 'combination_id' => 999,
-                'currency_id' => 6,
-                'country_id' => 7,
-                'group_id' => 8,
                 'from_quantity' => 1,
-                'fixed_price' => '-1',
-                'leave_initial_price' => true,
                 'date_range' => [
                     'from' => '2021-10-20 01:00:00',
                     'to' => '2021-10-20 08:00:00',
                 ],
-                'reduction' => [
-                    'type' => 'amount',
-                    'value' => '50',
+                'impact' => [
+                    'reduction' => [
+                        'type' => 'amount',
+                        'value' => 50.0,
+                        'include_tax' => false,
+                    ],
+                    'fixed_price_tax_excluded' => -1.0,
                 ],
-                'include_tax' => false,
                 'customer' => [
                     [
                         'id_customer' => 1,
@@ -142,22 +149,26 @@ class SpecificPriceFormDataProviderTest extends TestCase
             ),
             [
                 'product_id' => 11,
+                'groups' => [
+                    'currency_id' => null,
+                    'country_id' => null,
+                    'group_id' => null,
+                    'shop_id' => null,
+                ],
                 'combination_id' => null,
-                'currency_id' => null,
-                'country_id' => null,
-                'group_id' => null,
                 'from_quantity' => 10,
-                'fixed_price' => '100',
-                'leave_initial_price' => false,
                 'date_range' => [
                     'from' => '2021-11-20 01:00:00',
                     'to' => '2021-11-21 01:00:00',
                 ],
-                'reduction' => [
-                    'type' => 'percentage',
-                    'value' => '20',
+                'impact' => [
+                    'reduction' => [
+                        'type' => 'percentage',
+                        'value' => 20.0,
+                        'include_tax' => true,
+                    ],
+                    'fixed_price_tax_excluded' => 100.0,
                 ],
-                'include_tax' => true,
             ],
         ];
     }

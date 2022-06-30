@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShopBundle\Exception\NotImplementedException;
 use Shop;
 use Symfony\Component\HttpFoundation\ParameterBag;
+use Traversable;
 
 /**
  * Adapter of Configuration ObjectModel.
@@ -289,7 +290,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         return new \ArrayIterator($this->all());
     }
@@ -297,7 +298,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
     /**
      * {@inheritdoc}
      */
-    public function count()
+    public function count(): int
     {
         return count($this->all());
     }

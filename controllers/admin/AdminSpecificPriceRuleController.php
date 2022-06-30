@@ -86,10 +86,6 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                 'filter_key' => 'a!name',
                 'width' => 'auto',
             ],
-            'shop_name' => [
-                'title' => $this->trans('Shop', [], 'Admin.Global'),
-                'filter_key' => 's!name',
-            ],
             'id_currency' => [
                 'title' => $this->trans('Currency', [], 'Admin.Global'),
                 'align' => 'center',
@@ -138,6 +134,18 @@ class AdminSpecificPriceRuleControllerCore extends AdminController
                 'order_key' => 'a!to',
             ],
         ];
+
+        if (Shop::isFeatureActive()) {
+            $this->fields_list = Tools::arrayInsertElementAfterKey(
+                $this->fields_list,
+                'name',
+                'shop_name',
+                [
+                    'title' => $this->trans('Shop', [], 'Admin.Global'),
+                    'filter_key' => 's!name',
+                ]
+            );
+        }
     }
 
     public function initPageHeaderToolbar()

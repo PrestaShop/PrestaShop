@@ -28,7 +28,7 @@ let page;
 
 const quickAccessLinkData = {name: 'New customer', url: 'index.php/sell/customers/new', openNewWindow: false};
 
-describe('Header : Quick access links', async () => {
+describe('BO - Header : Quick access links', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

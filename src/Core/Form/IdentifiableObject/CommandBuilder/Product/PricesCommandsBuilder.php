@@ -66,8 +66,8 @@ class PricesCommandsBuilder implements MultiShopProductCommandsBuilderInterface
         $config = new CommandBuilderConfig($this->modifyAllNamePrefix);
         $config
             ->addMultiShopField('[retail_price][price_tax_excluded]', 'setPrice', DataField::TYPE_STRING)
-            ->addMultiShopField('[retail_price][ecotax]', 'setEcotax', DataField::TYPE_STRING)
-            ->addMultiShopField('[tax_rules_group_id]', 'setTaxRulesGroupId', DataField::TYPE_INT)
+            ->addMultiShopField('[retail_price][ecotax_tax_excluded]', 'setEcotax', DataField::TYPE_STRING)
+            ->addMultiShopField('[retail_price][tax_rules_group_id]', 'setTaxRulesGroupId', DataField::TYPE_INT)
             ->addMultiShopField('[on_sale]', 'setOnSale', DataField::TYPE_BOOL)
             ->addMultiShopField('[wholesale_price]', 'setWholesalePrice', DataField::TYPE_STRING)
             ->addMultiShopField('[unit_price][price_tax_excluded]', 'setUnitPrice', DataField::TYPE_STRING)

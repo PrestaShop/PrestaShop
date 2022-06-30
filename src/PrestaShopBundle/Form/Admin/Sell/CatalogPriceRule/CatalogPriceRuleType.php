@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DateRange;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\Reduction;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction as ReductionVO;
 use PrestaShopBundle\Form\Admin\Type\DateRangeType;
-use PrestaShopBundle\Form\Admin\Type\ReductionType;
+use PrestaShopBundle\Form\Admin\Type\PriceReductionType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -64,6 +64,11 @@ class CatalogPriceRuleType extends AbstractType
     /**
      * @var array
      */
+    private $currencyByIdChoicesAttributes;
+
+    /**
+     * @var array
+     */
     private $countryByIdChoices;
 
     /**
@@ -77,9 +82,9 @@ class CatalogPriceRuleType extends AbstractType
     private $shopByIdChoices;
 
     /**
-     * @var array
+     * @var string
      */
-    private $taxInclusionChoices;
+    private $defaultCurrencySymbol;
 
     /**
      * @param TranslatorInterface $translator
@@ -88,7 +93,7 @@ class CatalogPriceRuleType extends AbstractType
      * @param array $countryByIdChoices
      * @param array $groupByIdChoices
      * @param array $shopByIdChoices
-     * @param array $taxInclusionChoices
+     * @param array $currencyByIdChoicesAttributes
      */
     public function __construct(
         TranslatorInterface $translator,
@@ -97,15 +102,17 @@ class CatalogPriceRuleType extends AbstractType
         array $countryByIdChoices,
         array $groupByIdChoices,
         array $shopByIdChoices,
-        array $taxInclusionChoices
+        array $currencyByIdChoicesAttributes,
+        string $defaultCurrencySymbol
     ) {
         $this->translator = $translator;
         $this->isMultishopEnabled = $isMultishopEnabled;
         $this->currencyByIdChoices = $currencyByIdChoices;
+        $this->currencyByIdChoicesAttributes = $currencyByIdChoicesAttributes;
         $this->countryByIdChoices = $countryByIdChoices;
         $this->groupByIdChoices = $groupByIdChoices;
         $this->shopByIdChoices = $shopByIdChoices;
-        $this->taxInclusionChoices = $taxInclusionChoices;
+        $this->defaultCurrencySymbol = $defaultCurrencySymbol;
     }
 
     /**
@@ -123,6 +130,10 @@ class CatalogPriceRuleType extends AbstractType
                 'required' => false,
                 'placeholder' => false,
                 'choices' => $this->getModifiedCurrencyChoices(),
+                'choice_attr' => $this->currencyByIdChoicesAttributes,
+                'attr' => [
+                    'data-default-currency-symbol' => $this->defaultCurrencySymbol,
+                ],
             ])
             ->add('id_country', ChoiceType::class, [
                 'required' => false,
@@ -176,12 +187,7 @@ class CatalogPriceRuleType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('include_tax', ChoiceType::class, [
-                'placeholder' => false,
-                'required' => false,
-                'choices' => $this->taxInclusionChoices,
-            ])
-            ->add('reduction', ReductionType::class, [
+            ->add('reduction', PriceReductionType::class, [
                 'constraints' => [
                     new Reduction([
                         'invalidPercentageValueMessage' => $this->translator->trans(

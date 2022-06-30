@@ -19,7 +19,7 @@ class Groups extends BOBasePage {
     this.alertSuccessBlockParagraph = '.alert-success';
 
     // Header selectors
-    this.newGroupLink = '#page-header-desc-group-new_group';
+    this.newGroupLink = 'a[data-role=page-header-desc-group-link]';
 
     // Form selectors
     this.gridForm = '#form-group';

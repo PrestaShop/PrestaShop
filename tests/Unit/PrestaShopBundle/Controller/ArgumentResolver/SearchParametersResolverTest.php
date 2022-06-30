@@ -288,6 +288,11 @@ class SearchParametersResolverTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock()
         ;
+        $requestMock
+            ->method('get')
+            ->willReturnCallback(function ($parameter, $default = null) {
+                return $default;
+            });
 
         $parametersBagMock = $this->getMockBuilder(ParameterBag::class)
             ->disableOriginalConstructor()
@@ -301,8 +306,8 @@ class SearchParametersResolverTest extends TestCase
         ;
         $parametersBagMock
             ->method('get')
-            ->willReturnCallback(function ($parameter) use ($parameters) {
-                return $parameters[$parameter];
+            ->willReturnCallback(function ($parameter, $default = null) use ($parameters) {
+                return $parameters[$parameter] ?? $default;
             })
         ;
 
@@ -354,7 +359,7 @@ class SearchParametersResolverTest extends TestCase
                 ->willReturn(self::EMPLOYEE_ID)
             ;
 
-            $tokenMock = $this->getMockBuilder(TokenInterface::class)
+            $tokenMock = $this->getMockBuilder(SerializableTokenInterface::class)
                 ->disableOriginalConstructor()
                 ->getMock()
             ;
@@ -449,4 +454,11 @@ class SampleFilters extends Filters
             'filters' => [],
         ];
     }
+}
+
+interface SerializableTokenInterface extends TokenInterface
+{
+    public function __serialize(): array;
+
+    public function __unserialize(array $data): void;
 }

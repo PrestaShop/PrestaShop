@@ -40,7 +40,7 @@ Post-condition:
  */
 describe('BO - Customers - Customers : Pagination and sort customers table', async () => {
   // Pre-condition: Import list of categories
-  importFileTest(fileName, Data.entity, baseContext);
+  importFileTest(fileName, Data.entity, `${baseContext}_preTest_1`);
 
   // before and after functions
   before(async function () {
@@ -186,5 +186,5 @@ describe('BO - Customers - Customers : Pagination and sort customers table', asy
   });
 
   // Post-condition: Delete imported customers by bulk actions
-  bulkDeleteCustomersTest('email', 'test', baseContext);
+  bulkDeleteCustomersTest('email', 'test', `${baseContext}_postTest_1`);
 });

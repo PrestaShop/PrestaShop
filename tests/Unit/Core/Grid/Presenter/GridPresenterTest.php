@@ -113,6 +113,8 @@ class GridPresenterTest extends TestCase
             ->willReturn(new ViewOptionsCollection());
         $definition->method('getFilters')
             ->willReturn(new FilterCollection());
+        $definition->method('getId')
+            ->willReturn('');
 
         $criteria = $this->createMock(SearchCriteriaInterface::class);
 

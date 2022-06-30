@@ -86,7 +86,7 @@ if ($lastParametersModificationTime) {
 
     $config = require_once _PS_CACHE_DIR_ . 'appParameters.php';
     array_walk($config['parameters'], function (&$param) {
-        $param = str_replace('%%', '%', $param);
+        $param = str_replace('%%', '%', $param ?? '');
     });
 
     $database_host = $config['parameters']['database_host'];

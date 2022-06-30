@@ -321,6 +321,7 @@ class WebserviceOutputBuilderCore
                     'get' => (in_array('GET', $key_permissions[$resourceName]) ? 'true' : 'false'),
                     'put' => (in_array('PUT', $key_permissions[$resourceName]) ? 'true' : 'false'),
                     'post' => (in_array('POST', $key_permissions[$resourceName]) ? 'true' : 'false'),
+                    'patch' => (in_array('PATCH', $key_permissions[$resourceName]) ? 'true' : 'false'),
                     'delete' => (in_array('DELETE', $key_permissions[$resourceName]) ? 'true' : 'false'),
                     'head' => (in_array('HEAD', $key_permissions[$resourceName]) ? 'true' : 'false'),
                 ];
@@ -712,10 +713,10 @@ class WebserviceOutputBuilderCore
             if (!is_array($this->fieldsToDisplay) || in_array($field_name, $this->fieldsToDisplay[$assoc_name])) {
                 if ($field_name == 'id' && !isset($field['sqlId'])) {
                     $field['sqlId'] = 'id';
-                    $field['value'] = $object_assoc['id'];
+                    $field['value'] = isset($object_assoc['id']) ? $object_assoc['id'] : null;
                 } elseif (!isset($field['sqlId'])) {
                     $field['sqlId'] = $field_name;
-                    $field['value'] = $object_assoc[$field_name];
+                    $field['value'] = isset($object_assoc[$field_name]) ? $object_assoc[$field_name] : null;
                 }
                 $field['entities_name'] = $assoc_name;
                 $field['entity_name'] = $resource_name;

@@ -79,16 +79,16 @@ Post-condition
 */
 describe('BO - Orders - View and edit order : Check and edit customer block', async () => {
   // Pre-Condition: create customer
-  createAccountTest(customerData, baseContext);
+  createAccountTest(customerData, `${baseContext}_preTest_1`);
 
   // Pre-condition: Create first address
-  createAddressTest(customerLoginData, firstAddressData, baseContext);
+  createAddressTest(customerLoginData, firstAddressData, `${baseContext}_preTest_2`);
 
   // Pre-condition: Create second address
-  createAddressTest(customerLoginData, secondAddressData, baseContext);
+  createAddressTest(customerLoginData, secondAddressData, `${baseContext}_preTest_3`);
 
   // Pre-condition: Create order
-  createOrderByCustomerTest(orderData, baseContext);
+  createOrderByCustomerTest(orderData, `${baseContext}_preTest_4`);
 
   // before and after functions
   before(async function () {
@@ -187,7 +187,7 @@ describe('BO - Orders - View and edit order : Check and edit customer block', as
     });
 
     it(`should filter the Orders table by 'Customer: ${customerData.lastName}'`, async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterTable', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'filterTable2', baseContext);
 
       await ordersPage.filterOrders(page, 'input', 'customer', customerData.lastName);
 
@@ -297,7 +297,7 @@ describe('BO - Orders - View and edit order : Check and edit customer block', as
     });
 
     it('should view the order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'orderPageCustomerBlock1', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'orderPageCustomerBlock2', baseContext);
 
       await ordersPage.goToOrder(page, 1);
 
@@ -379,7 +379,7 @@ describe('BO - Orders - View and edit order : Check and edit customer block', as
     });
 
     it('should go back to \'Orders\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goBackToOrdersPage1', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToOrdersPage2', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -419,7 +419,7 @@ describe('BO - Orders - View and edit order : Check and edit customer block', as
     });
 
     it('should go back to \'Orders\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goBackToOrdersPage4', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToOrdersPage3', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -466,7 +466,7 @@ describe('BO - Orders - View and edit order : Check and edit customer block', as
     });
 
     it('should go back to \'Orders\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goBackToOrdersPage3', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToOrdersPage4', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -515,5 +515,5 @@ describe('BO - Orders - View and edit order : Check and edit customer block', as
   });
 
   // Post-condition: Delete the created customer
-  deleteCustomerTest(customerData, baseContext);
+  deleteCustomerTest(customerData, `${baseContext}_postTest_1`);
 });

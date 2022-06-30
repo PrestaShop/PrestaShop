@@ -28,5 +28,8 @@
         class="dropdown-item js-delete-customers-bulk-action"
         type="button"
 >
+  {% if action.icon is not empty %}
+    <i class="material-icons">{{ action.icon }}</i>
+  {% endif %}
   {{ action.name }}
 </button>

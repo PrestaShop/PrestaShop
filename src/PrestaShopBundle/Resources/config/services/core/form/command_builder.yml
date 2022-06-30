@@ -121,3 +121,7 @@ services:
   prestashop.core.form.command_builder.product.combination.images_command_builder:
     class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationImagesCommandsBuilder
     tags: [ 'core.combination_command_builder' ]
+
+  prestashop.core.form.command_builder.product.combination.default_combination_commands_builder:
+    class: PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\DefaultCombinationCommandsBuilder
+    tags: [ 'core.combination_command_builder' ]
