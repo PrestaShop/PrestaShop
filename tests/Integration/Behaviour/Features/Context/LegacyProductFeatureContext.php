@@ -988,13 +988,13 @@ class LegacyProductFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @Then product :productName as to be editable
+     * @Then product :productName should be editable
      */
-    public function productAsToBeEditable($productName)
+    public function productShouldBeEditable($productName)
     {
         $this->checkProductWithNameExists($productName);
         $productId = (int) $this->getProductWithName($productName)->id;
-        
+
         $formBuilder = CommonFeatureContext::getContainer()->get('prestashop.core.form.identifiable_object.builder.edit_product_form_builder');
 
         $productForm = $formBuilder->getFormFor($productId, [], [
