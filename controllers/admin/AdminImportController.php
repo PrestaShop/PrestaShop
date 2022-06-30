@@ -2100,14 +2100,13 @@ class AdminImportControllerCore extends AdminController
                 Db::getInstance()->getMsgError();
         } else {
             // Product supplier
-            if (!$validateOnly && !empty($product->id) && property_exists($product, 'supplier_reference')) {
+            if (!$validateOnly && !empty($product->id) && property_exists($product, 'supplier_reference') && !empty($product->id_supplier)) {
                 $id_product_supplier = (int) ProductSupplier::getIdByProductAndSupplier((int) $product->id, 0, (int) $product->id_supplier);
                 if ($id_product_supplier) {
                     $product_supplier = new ProductSupplier($id_product_supplier);
                 } else {
                     $product_supplier = new ProductSupplier();
                 }
-
                 $product_supplier->id_product = (int) $product->id;
                 $product_supplier->id_product_attribute = 0;
                 $product_supplier->id_supplier = (int) $product->id_supplier;
