@@ -73,6 +73,36 @@ class ControllerConfigurationFactory
         $controllerConfiguration->user = $this->userProvider->getUser();
         $controllerConfiguration->folderTemplate = Tools::toUnderscoreCase(substr($controllerConfiguration->controllerNameLegacy, 5)) . '/';
 
+        $this->setLegacyCurrentIndex($controllerConfiguration);
+        $this->initToken($controllerConfiguration);
+
         return $controllerConfiguration;
+    }
+
+    /**
+     * @param ControllerConfiguration $controllerConfiguration
+     *
+     * @return void
+     */
+    private function setLegacyCurrentIndex(ControllerConfiguration $controllerConfiguration): void
+    {
+        $legacyCurrentIndex = 'index.php' . '?controller=' . $controllerConfiguration->controllerNameLegacy;
+        if ($back = Tools::getValue('back')) {
+            $legacyCurrentIndex .= '&back=' . urlencode($back);
+        }
+
+        $controllerConfiguration->legacyCurrentIndex = $legacyCurrentIndex;
+    }
+
+    /**
+     * @return void
+     */
+    private function initToken(ControllerConfiguration $controllerConfiguration): void
+    {
+        $controllerConfiguration->token = Tools::getAdminToken(
+            $controllerConfiguration->controllerNameLegacy .
+            (int) $controllerConfiguration->id .
+            (int) $controllerConfiguration->user->getData()->id
+        );
     }
 }
