@@ -95,7 +95,7 @@ class InitControllerListener
             $this->context->language->getLocale()
         );
 
-        $legacyControllerBridge = $controller->initLegacyControllerBridge($event->getRequest());
+        $legacyControllerBridge = $controller->initLegacyControllerBridge();
         $this->context->controller = $legacyControllerBridge;
     }
 

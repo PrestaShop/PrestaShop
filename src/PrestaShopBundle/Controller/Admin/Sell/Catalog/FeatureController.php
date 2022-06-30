@@ -91,6 +91,11 @@ class FeatureController extends FrameworkBundleAdminController implements Bridge
         return 'id_feature';
     }
 
+    public function getLegacyControllerName(): string
+    {
+        return 'AdminFeatures';
+    }
+
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      */
