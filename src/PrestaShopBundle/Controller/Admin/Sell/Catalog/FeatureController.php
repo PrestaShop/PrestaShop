@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog;
 
 use Exception;
+use Feature;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
@@ -38,10 +39,10 @@ use PrestaShopBundle\Bridge\AdminController\Action\ListHeaderToolbarAction;
 use PrestaShopBundle\Bridge\AdminController\Action\ListRowAction;
 use PrestaShopBundle\Bridge\AdminController\AdminControllerTrait;
 use PrestaShopBundle\Bridge\AdminController\AdminListControllerTrait;
-use PrestaShopBundle\Bridge\AdminController\BridgeControllerInterface;
-use PrestaShopBundle\Bridge\AdminController\BridgeListControllerInterface;
 use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 use PrestaShopBundle\Bridge\AdminController\Field\Field;
+use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerInterface;
+use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeListControllerInterface;
 use PrestaShopBundle\Bridge\AdminController\LegacyControllerBridgeInterface;
 use PrestaShopBundle\Bridge\Helper\HelperListConfiguration;
 use PrestaShopBundle\Bridge\Helper\HelperListCustomizer\HelperListFeatureBridge;
@@ -55,7 +56,7 @@ use Tools;
 /**
  * Controller responsible for "Sell > Catalog > Attributes & Features > Features" page
  */
-class FeatureController extends FrameworkBundleAdminController implements BridgeControllerInterface, BridgeListControllerInterface
+class FeatureController extends FrameworkBundleAdminController implements FrameworkBridgeControllerInterface, FrameworkBridgeListControllerInterface
 {
     use AdminControllerTrait;
     use AdminListControllerTrait;
@@ -66,18 +67,18 @@ class FeatureController extends FrameworkBundleAdminController implements Bridge
      */
     public function indexAction(Request $request): Response
     {
-        $controllerConfig = $this->getControllerConfiguration();
-        $this->addToolbarActions($controllerConfig);
+        $controllerConfiguration = $this->getControllerConfiguration();
+        $this->addToolbarActions($controllerConfiguration);
 
         $helperListConfiguration = $this->get('prestashop.core.bridge.helper_list_configuration_factory')->create(
-            $controllerConfig,
+            $controllerConfiguration,
             $this->getIdentifier(),
             $this->getPositionIdentifier(),
             'position',
             true
         );
         $this->setListFields($helperListConfiguration);
-        $this->buildActionList($controllerConfig, $helperListConfiguration);
+        $this->buildActionList($controllerConfiguration, $helperListConfiguration);
 
         if ($request->request->has('submitResetfeature')) {
             $this->getResetFiltersHelper()->resetFilters($helperListConfiguration, $request);
@@ -181,9 +182,9 @@ class FeatureController extends FrameworkBundleAdminController implements Bridge
         ]);
     }
 
-    public function getControllerBridge(): LegacyControllerBridgeInterface
+    public function getLegacyControllerBridge(): LegacyControllerBridgeInterface
     {
-        return $this->buildControllerBridge('feature', get_class($this), 'AdminFeatures');
+        return $this->buildLegacyControllerBridge('feature', Feature::class, 'AdminFeatures');
     }
 
     public function getHelperListBridge(): HelperListFeatureBridge

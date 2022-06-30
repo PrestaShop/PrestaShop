@@ -31,14 +31,15 @@ namespace PrestaShopBundle\Bridge\AdminController\Listener;
 use Context;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository;
-use PrestaShopBundle\Bridge\AdminController\BridgeControllerInterface;
+use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerInterface;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 
 /**
- * Initialize controller by instantiating controller configuration,
- * and configuring legacy context, controller, and controller configuration.
+ * Initializes FrameworkBridgeController
+ *
+ * @see FrameworkBridgeControllerInterface
  */
-class InitControllerListener
+class InitFrameworkBridgeControllerListener
 {
     /**
      * @var Context
@@ -82,7 +83,7 @@ class InitControllerListener
             return;
         }
 
-        /** @var BridgeControllerInterface $controller */
+        /** @var FrameworkBridgeControllerInterface $controller */
         $controller = $event->getController()[0];
 
         if (!is_string(get_class($controller))) {
@@ -95,7 +96,7 @@ class InitControllerListener
             $this->context->language->getLocale()
         );
 
-        $legacyControllerBridge = $controller->getControllerBridge();
+        $legacyControllerBridge = $controller->getLegacyControllerBridge();
         $this->context->controller = $legacyControllerBridge;
     }
 
@@ -110,7 +111,7 @@ class InitControllerListener
             return false;
         }
 
-        if (!$event->getController()[0] instanceof BridgeControllerInterface) {
+        if (!$event->getController()[0] instanceof FrameworkBridgeControllerInterface) {
             return false;
         }
 

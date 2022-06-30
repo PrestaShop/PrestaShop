@@ -60,7 +60,7 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
     /**
      * @return ControllerConfiguration
      */
-    public function getControllerConfiguration(): ControllerConfiguration
+    public function getConfiguration(): ControllerConfiguration
     {
         return $this->controllerConfiguration;
     }

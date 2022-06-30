@@ -81,8 +81,8 @@ services:
     arguments:
       - "@prestashop.adapter.legacy.context"
 
-  PrestaShopBundle\Bridge\AdminController\Listener\InitControllerListener:
-    class: PrestaShopBundle\Bridge\AdminController\Listener\InitControllerListener
+  PrestaShopBundle\Bridge\AdminController\Listener\InitFrameworkBridgeControllerListener:
+    class: PrestaShopBundle\Bridge\AdminController\Listener\InitFrameworkBridgeControllerListener
     tags:
       - { name: kernel.event_listener, event: kernel.controller }
     arguments:

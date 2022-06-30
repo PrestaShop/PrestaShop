@@ -181,7 +181,7 @@ class HelperListBridge
             $select_shop = ', shop.name as shop_name ';
         }
 
-        if ($helperListConfiguration->multishopContext && Shop::isTableAssociated($helperListConfiguration->table) && !empty($helperListConfiguration->className)) {
+        if ($helperListConfiguration->multishopContext && Shop::isTableAssociated($helperListConfiguration->table) && !empty($helperListConfiguration->objectModelClassName)) {
             if (Shop::getContext() != Shop::CONTEXT_ALL || !$this->userProvider->getUser()->getData()->isSuperAdmin()) {
                 $helperListConfiguration->where .= ' AND EXISTS (
                         SELECT 1

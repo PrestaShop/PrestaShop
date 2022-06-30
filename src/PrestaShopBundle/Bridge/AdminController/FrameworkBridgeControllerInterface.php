@@ -27,21 +27,12 @@
 namespace PrestaShopBundle\Bridge\AdminController;
 
 /**
- * This interface will be shared with legacy and expose legacy methods needed for modules.
+ * Interface for horizontally migrated controllers
  */
-interface BridgeListControllerInterface
+interface FrameworkBridgeControllerInterface
 {
     /**
-     * Get position identifier for legacy list request.
-     *
-     * @return string
+     * @return LegacyControllerBridgeInterface
      */
-    public function getPositionIdentifier(): string;
-
-    /**
-     * Get identifier for table.
-     *
-     * @return string
-     */
-    public function getIdentifier(): string;
+    public function getLegacyControllerBridge(): LegacyControllerBridgeInterface;
 }

@@ -64,7 +64,7 @@ class HelperListConfigurationFactory
 
         $helperListConfiguration->table = $controllerConfiguration->table;
         $helperListConfiguration->listId = $controllerConfiguration->table;
-        $helperListConfiguration->className = $controllerConfiguration->controllerName;
+        $helperListConfiguration->objectModelClassName = $controllerConfiguration->objectModelClassName;
         $helperListConfiguration->identifier = $identifier;
         $helperListConfiguration->positionIdentifier = $positionIdentifier;
         $helperListConfiguration->isJoinLanguageTableAuto = $isJoinLanguageTableAuto;

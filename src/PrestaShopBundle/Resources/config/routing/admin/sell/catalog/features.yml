@@ -6,13 +6,13 @@ admin_features_index:
     _legacy_controller: AdminFeatures
 #    _legacy_link: AdminFeatures
 
-# admin_features_create:
-#  path: /update-position
-#  methods: [ POST ]
+#admin_features_add:
+#  path: /add
+#  methods: [ GET, POST ]
 #  defaults:
-#    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureController::updatePosition
+#    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureController::createAction
 #    _legacy_controller: AdminFeatures
-#    _legacy_link: AdminFeatures:updatePositions
+#    _legacy_link: AdminFeatures:addfeature
 #
 # admin_features_edit:
 #  path: /{featureId}/edit
