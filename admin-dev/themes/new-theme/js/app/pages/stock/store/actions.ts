@@ -169,7 +169,7 @@ export const updateQtyByProductsId = ({commit, state}: {commit: Commit, state: R
     commit(types.UPDATE_PRODUCTS_QTY, res.body);
     EventBus.$emit('displayBulkAlert', 'success');
   }, (error): void => {
-    showGrowl('error', error.statusText);
+    showGrowl('error', error.body?.error ?? error.statusText);
   });
 };
 
