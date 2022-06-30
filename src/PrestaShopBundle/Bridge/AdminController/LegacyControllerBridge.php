@@ -30,31 +30,31 @@ namespace PrestaShopBundle\Bridge\AdminController;
 use Context;
 use Hook;
 use Media;
-use Psr\Container\ContainerInterface;
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use Tools;
 
 class LegacyControllerBridge implements LegacyControllerBridgeInterface
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
-
     /**
      * @var ControllerConfiguration|null
      */
     private $controllerConfiguration;
 
     /**
-     * @param ContainerInterface $container
+     * @var FeatureInterface
+     */
+    private $multistoreFeature;
+
+    /**
      * @param ControllerConfiguration $controllerConfiguration
+     * @param FeatureInterface $multistoreFeature
      */
     public function __construct(
-        ContainerInterface $container,
-        ControllerConfiguration $controllerConfiguration
+        ControllerConfiguration $controllerConfiguration,
+        FeatureInterface $multistoreFeature
     ) {
-        $this->container = $container;
         $this->controllerConfiguration = $controllerConfiguration;
+        $this->multistoreFeature = $multistoreFeature;
     }
 
     /**

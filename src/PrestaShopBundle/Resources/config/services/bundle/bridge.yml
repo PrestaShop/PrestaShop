@@ -2,6 +2,7 @@ services:
   _defaults:
     public: true
 
+# @todo: services naming should follow classnames
   prestashop.core.bridge.smarty_bridge:
     class: PrestaShopBundle\Bridge\Smarty\SmartyBridge
     arguments:
@@ -18,6 +19,12 @@ services:
     class: PrestaShopBundle\Bridge\AdminController\ControllerConfigurationFactory
     arguments:
       - "@prestashop.user_provider"
+
+  prestashop.core.bridge.admin_controller.legacy_controller_bridge_factory:
+    class: PrestaShopBundle\Bridge\AdminController\LegacyControllerBridgeFactory
+    arguments:
+      - "@prestashop.core.bridge.controller_configuration_factory"
+      - "@prestashop.adapter.multistore_feature"
 
   prestashop.core.bridge.breadcrumbs_and_title_configurator:
     class: PrestaShopBundle\Bridge\Smarty\BreadcrumbsAndTitleConfigurator
