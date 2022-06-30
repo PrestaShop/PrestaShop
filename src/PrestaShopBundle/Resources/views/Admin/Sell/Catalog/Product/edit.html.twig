@@ -36,7 +36,6 @@
 <div class="product-page-v2">
   {% set productType = productForm.vars.product_type %}
   {% set productId = productForm.vars.product_id %}
-  {% set extraModulesHooks = renderhooksarray('displayAdminProductsExtra', { 'id_product': productId }) %}
 
   <div class="header-toolbar d-print-none">
     {{ multistoreHeader() }}
@@ -48,12 +47,12 @@
     'data-product-type': productType
   }}) }}
 
-  {# Header form child is rendered separately because it's not one of the tabs #}
+  {# Header form child is rendered separately because it's not one of the tabs so it needs to be rendered before #}
   {% block product_header %}
     {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/header.html.twig', {'productForm': productForm}) }}
   {% endblock %}
 
-  {# Footer form child is rendered separately because it's not one of the tabs #}
+  {# Footer form child is rendered separately because it's not one of the tabs so it needs to be rendered before #}
   {% block product_footer %}
     {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Blocks/footer.html.twig', {
       'productForm': productForm,
@@ -76,11 +75,7 @@
   {% endif %}
   <div id="contextual-notification-box"></div>
 
-  {% if productForm.vars.block_prefixes[1] == 'navigation_tab' %}
-    {{ form_widget(productForm) }}
-  {% else %}
-    {{ include('@PrestaShop/Admin/Sell/Catalog/Product/manual-tabs.html.twig', {'productForm': productForm}) }}
-  {% endif %}
+  {{ form_widget(productForm) }}
 
   {% block product_rest %}
   {{ form_end(productForm) }}
