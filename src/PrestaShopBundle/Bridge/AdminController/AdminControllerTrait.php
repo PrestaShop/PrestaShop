@@ -32,7 +32,6 @@ use PrestaShopBundle\Bridge\AdminController\Action\ActionInterface;
 use PrestaShopBundle\Bridge\AdminController\Action\HeaderToolbarAction;
 use PrestaShopBundle\Bridge\Exception\BridgeException;
 use PrestaShopBundle\Bridge\Exception\NotAllowedGenericActionTypeException;
-use Symfony\Component\HttpFoundation\Request;
 use Tab;
 use Tools;
 
@@ -65,18 +64,16 @@ trait AdminControllerTrait
     }
 
     /**
-     * @param Request $request
-     *
      * @return LegacyControllerBridgeInterface
      */
-    public function initLegacyControllerBridge(Request $request): LegacyControllerBridgeInterface
+    public function initLegacyControllerBridge(): LegacyControllerBridgeInterface
     {
-        $legacyControllerName = $request->attributes->get('_legacy_controller');
+        $legacyControllerName = $this->getLegacyControllerName();
         $tabId = Tab::getIdFromClassName($legacyControllerName);
 
         if (!$tabId) {
             throw new BridgeException(sprintf(
-                'Tab not found by className "%s". Make sure "_legacy_controller" attribute is correctly defined in route configuration',
+                'Tab not found by className "%s". Make sure legacyControllerName is correct',
                 $legacyControllerName
             ));
         }

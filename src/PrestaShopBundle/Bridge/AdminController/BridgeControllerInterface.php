@@ -26,16 +26,12 @@
 
 namespace PrestaShopBundle\Bridge\AdminController;
 
-use Symfony\Component\HttpFoundation\Request;
-
 interface BridgeControllerInterface
 {
     /**
-     * @param Request $request
-     *
      * @return LegacyControllerBridgeInterface
      */
-    public function initLegacyControllerBridge(Request $request): LegacyControllerBridgeInterface;
+    public function initLegacyControllerBridge(): LegacyControllerBridgeInterface;
 
     /**
      * @return string
@@ -46,4 +42,9 @@ interface BridgeControllerInterface
      * @return string
      */
     public function getClassName(): string;
+
+    /**
+     * @return string
+     */
+    public function getLegacyControllerName(): string;
 }
