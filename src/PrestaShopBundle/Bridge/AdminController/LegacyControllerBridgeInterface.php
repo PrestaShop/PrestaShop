@@ -36,7 +36,7 @@ interface LegacyControllerBridgeInterface
     /**
      * @return ControllerConfiguration
      */
-    public function getControllerConfiguration(): ControllerConfiguration;
+    public function getConfiguration(): ControllerConfiguration;
 
     /**
      * Sets default media list for this controller.

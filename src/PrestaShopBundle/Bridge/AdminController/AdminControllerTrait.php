@@ -44,9 +44,9 @@ trait AdminControllerTrait
     /**
      * @return LegacyControllerBridgeInterface
      */
-    protected function buildControllerBridge(
+    protected function buildLegacyControllerBridge(
         string $tableName,
-        string $controllerName,
+        string $objectModelClassName,
         string $legacyControllerName
     ): LegacyControllerBridgeInterface {
         if ($this->legacyControllerBridge) {
@@ -62,9 +62,11 @@ trait AdminControllerTrait
             ));
         }
 
-        $controllerConfiguration = $this->getControllerConfigurationFactory()->create(
+        /** @var ControllerConfigurationFactory $configurationFactory */
+        $configurationFactory = $this->get('prestashop.core.bridge.controller_configuration_factory');
+        $controllerConfiguration = $configurationFactory->create(
             $tabId,
-            $controllerName,
+            $objectModelClassName,
             $legacyControllerName,
             $tableName
         );
@@ -79,17 +81,6 @@ trait AdminControllerTrait
      */
     protected function getControllerConfiguration(): ControllerConfiguration
     {
-        return $this->getControllerBridge()->getControllerConfiguration();
-    }
-
-    /**
-     * @return ControllerConfigurationFactory
-     */
-    private function getControllerConfigurationFactory(): ControllerConfigurationFactory
-    {
-        /** @var ControllerConfigurationFactory $factory */
-        $factory = $this->container->get('prestashop.core.bridge.controller_configuration_factory');
-
-        return $factory;
+        return $this->getLegacyControllerBridge()->getConfiguration();
     }
 }
