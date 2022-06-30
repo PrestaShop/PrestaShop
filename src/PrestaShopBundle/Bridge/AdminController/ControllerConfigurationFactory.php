@@ -52,7 +52,7 @@ class ControllerConfigurationFactory
 
     /**
      * @param int $id
-     * @param string $controllerName
+     * @param string $objectModelClassName
      * @param string $controllerNameLegacy
      * @param string $table
      *
@@ -60,14 +60,14 @@ class ControllerConfigurationFactory
      */
     public function create(
         int $id,
-        string $controllerName,
+        string $objectModelClassName,
         string $controllerNameLegacy,
         string $table
     ): ControllerConfiguration {
         $controllerConfiguration = new ControllerConfiguration();
         $controllerConfiguration->id = $id;
-        $controllerConfiguration->controllerName = $controllerName;
-        $controllerConfiguration->php_self = $controllerName;
+        $controllerConfiguration->objectModelClassName = $objectModelClassName;
+        $controllerConfiguration->php_self = $objectModelClassName;
         $controllerConfiguration->controllerNameLegacy = $controllerNameLegacy;
         $controllerConfiguration->table = $table;
         $controllerConfiguration->user = $this->userProvider->getUser();

@@ -44,9 +44,11 @@ class ControllerConfiguration
     public $id;
 
     /**
+     * ClassName of related object model. E.g. "Feature", "Category", "Product" etc.
+     *
      * @var string|null
      */
-    public $controllerName;
+    public $objectModelClassName;
 
     /**
      * @var string|null

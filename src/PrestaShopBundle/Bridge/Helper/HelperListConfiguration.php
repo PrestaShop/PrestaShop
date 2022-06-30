@@ -53,7 +53,7 @@ class HelperListConfiguration
     /**
      * @var string
      */
-    public $className;
+    public $objectModelClassName;
 
     /**
      * @var string
