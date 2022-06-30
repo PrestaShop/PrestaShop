@@ -31,20 +31,5 @@ interface BridgeControllerInterface
     /**
      * @return LegacyControllerBridgeInterface
      */
-    public function initLegacyControllerBridge(): LegacyControllerBridgeInterface;
-
-    /**
-     * @return string
-     */
-    public function getTableName(): string;
-
-    /**
-     * @return string
-     */
-    public function getClassName(): string;
-
-    /**
-     * @return string
-     */
-    public function getLegacyControllerName(): string;
+    public function getControllerBridge(): LegacyControllerBridgeInterface;
 }

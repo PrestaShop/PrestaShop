@@ -41,6 +41,7 @@ use PrestaShopBundle\Bridge\AdminController\AdminListControllerTrait;
 use PrestaShopBundle\Bridge\AdminController\BridgeControllerInterface;
 use PrestaShopBundle\Bridge\AdminController\BridgeListControllerInterface;
 use PrestaShopBundle\Bridge\AdminController\Field\Field;
+use PrestaShopBundle\Bridge\AdminController\LegacyControllerBridgeInterface;
 use PrestaShopBundle\Bridge\Helper\HelperListConfiguration;
 use PrestaShopBundle\Bridge\Helper\HelperListCustomizer\HelperListFeatureBridge;
 use PrestaShopBundle\Bridge\Smarty\SmartyTrait;
@@ -60,51 +61,12 @@ class FeatureController extends FrameworkBundleAdminController implements Bridge
     use SmartyTrait;
 
     /**
-     * {@inheritdoc}
-     */
-    public function getTableName(): string
-    {
-        return 'feature';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getClassName(): string
-    {
-        return 'Feature';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getIdentifier(): string
-    {
-        return 'id_feature';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getPositionIdentifier(): string
-    {
-        return 'id_feature';
-    }
-
-    public function getLegacyControllerName(): string
-    {
-        return 'AdminFeatures';
-    }
-
-    /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      */
     public function indexAction(Request $request)
     {
         $this->buildGenericAction();
         $helperListConfiguration = $this->get('prestashop.core.bridge.helper_list_configuration_factory')->create(
-            $this->getTableName(),
-            $this->getClassName(),
             $this->legacyControllerBridge->getControllerConfiguration(),
             $this->getIdentifier(),
             $this->getPositionIdentifier(),
@@ -225,9 +187,30 @@ class FeatureController extends FrameworkBundleAdminController implements Bridge
         ]);
     }
 
+    public function getControllerBridge(): LegacyControllerBridgeInterface
+    {
+        return $this->buildControllerBridge('feature', get_class($this), 'AdminFeatures');
+    }
+
     public function getHelperListBridge(): HelperListFeatureBridge
     {
         return $this->get('prestashop.core.bridge.helper_list_feature');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getIdentifier(): string
+    {
+        return 'id_feature';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPositionIdentifier(): string
+    {
+        return 'id_feature';
     }
 
     private function buildGenericAction(): void
