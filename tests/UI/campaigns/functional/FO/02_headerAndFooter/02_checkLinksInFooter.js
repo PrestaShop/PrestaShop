@@ -62,6 +62,7 @@ Scenario:
 Check our company links( Delivery, Legal notices, Terms and conditions of use, About us, Secure payment, Contact us,
 Sitemap, Stores)
 - Check your account links( Personal info, Orders, Credit slips, Addresses)
+- Check store information
 - Check copyright
 Post-condition:
 - Delete created customer
