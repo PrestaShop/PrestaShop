@@ -115,7 +115,7 @@ describe('FO - Header and Footer : Check links in header page', async () => {
   });
 
   it('should go to home page and check the notification number', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkNotificationsLink', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'checkNotificationNumber1', baseContext);
 
     await loginPage.goToHomePage(page);
 
@@ -134,7 +134,7 @@ describe('FO - Header and Footer : Check links in header page', async () => {
   });
 
   it('should check that the cart is empty', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkNotificationsLink', baseContext);
+    await testContext.addContextItem(this, 'testIdentifier', 'checkNotificationNumber2', baseContext);
 
     const notificationsNumber = await homePage.getCartNotificationsNumber(page);
     await expect(notificationsNumber, 'The cart is not empty!').to.be.equal(0);
