@@ -30,7 +30,6 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Pack\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackId;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
  * Retrieves product from a pack
@@ -38,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 class GetPackedProducts
 {
     /**
-     * @var ProductId
+     * @var PackId
      */
     private $packId;
 
@@ -58,9 +57,9 @@ class GetPackedProducts
     }
 
     /**
-     * @return ProductId
+     * @return PackId
      */
-    public function getPackId(): ProductId
+    public function getPackId(): PackId
     {
         return $this->packId;
     }

@@ -63,7 +63,7 @@ class ProductPackRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param ProductId $productId
+     * @param PackId $productId
      * @param LanguageId $languageId
      *
      * @return array<array<string, string>>
@@ -74,7 +74,7 @@ class ProductPackRepository extends AbstractObjectModelRepository
      *
      * @throws CoreException
      */
-    public function getPackedProducts(ProductId $productId, LanguageId $languageId): array
+    public function getPackedProducts(PackId $productId, LanguageId $languageId): array
     {
         $this->assertProductExists($productId);
         $productIdValue = $productId->getValue();
@@ -165,6 +165,28 @@ class ProductPackRepository extends AbstractObjectModelRepository
                 $e
             );
         }
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return array
+     */
+    public function getPacksContaining(ProductId $productId): array
+    {
+        $this->assertProductExists($productId);
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('pack.id_product_pack')
+            ->from($this->dbPrefix . 'pack', 'pack')
+            ->where('pack.id_product_item = :productId')
+            ->setParameter('productId', $productId->getValue())
+        ;
+
+        $packs = $qb->execute()->fetchAllAssociative();
+
+        return array_map(function (array $packData) {
+            return new PackId((int) $packData['id_product_pack']);
+        }, $packs);
     }
 
     /**
