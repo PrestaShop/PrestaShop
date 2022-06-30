@@ -60,6 +60,7 @@ class FOBasePage extends CommonPage {
     this.signInLink = `${this.footerAccountList} a[title='Log in to your customer account']`;
     this.createAccountLink = `${this.footerAccountList} a[title='Create account']`;
     this.addressesLink = `${this.footerAccountList} a[title='Addresses']`;
+    this.addFirstAddressLink = `${this.footerAccountList} a[title='Add first address']`;
     this.ordersLink = `${this.footerAccountList} a[title='Orders']`;
     this.creditSlipsLink = `${this.footerAccountList} a[title='Credit slips']`;
     this.vouchersLink = `${this.footerAccountList} a[title='Vouchers']`;
@@ -74,6 +75,9 @@ class FOBasePage extends CommonPage {
     this.wrapperTitle = position => `${this.wrapperDiv(position)} p`;
     this.wrapperSubmenu = position => `${this.wrapperDiv(position)} ul[id*='footer_sub_menu']`;
     this.wrapperSubmenuItemLink = position => `${this.wrapperSubmenu(position)} li a`;
+
+    // Copyright
+    this.copyrightLink = '#footer div.footer-container a[href*="www.prestashop.com"]';
 
     // Alert block selectors
     this.alertSuccessBlock = '.alert-success ul li';
@@ -413,6 +417,10 @@ class FOBasePage extends CommonPage {
         selector = this.addressesLink;
         break;
 
+      case 'Add first address':
+        selector = this.addFirstAddressLink;
+        break;
+
       case 'Orders':
         selector = this.ordersLink;
         break;
@@ -437,6 +445,15 @@ class FOBasePage extends CommonPage {
         throw new Error(`The page ${textSelector} was not found`);
     }
     return this.clickAndWaitForNavigation(page, selector);
+  }
+
+  /**
+   * Get copyright
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getCopyright(page) {
+    return this.getTextContent(page, this.copyrightLink);
   }
 }
 
