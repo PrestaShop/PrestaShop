@@ -83,16 +83,9 @@ class FeatureController extends FrameworkBundleAdminController implements Bridge
             $this->getResetFiltersHelper()->resetFilters($helperListConfiguration, $request);
         }
 
-        $this->getFiltersHelper()->processFilter(
-            $request,
-            $helperListConfiguration
-        );
+        $this->getFiltersHelper()->processFilter($request, $helperListConfiguration);
 
-        return $this->renderSmarty(
-            $this->getHelperListBridge()->generateList(
-                $helperListConfiguration
-            )
-        );
+        return $this->renderSmarty($this->getHelperListBridge()->generateList($helperListConfiguration));
     }
 
     /**

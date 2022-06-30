@@ -47,11 +47,12 @@ trait SmartyTrait
      */
     public function renderSmarty(string $content, Response $response = null, bool $isNewTheme = false): Response
     {
-        $this->legacyControllerBridge->setMedia($isNewTheme);
+        $controllerBridge = $this->getControllerBridge();
+        $controllerBridge->setMedia($isNewTheme);
 
         return $this
             ->get('prestashop.core.bridge.smarty_bridge')
-            ->render($content, $this->legacyControllerBridge->getControllerConfiguration(), $response)
+            ->render($content, $controllerBridge->getControllerConfiguration(), $response)
         ;
     }
 }
