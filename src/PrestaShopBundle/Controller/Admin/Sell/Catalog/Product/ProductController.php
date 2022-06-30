@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\BulkProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductPositionException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\DuplicateFeatureValueAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidAssociatedFeatureException;
@@ -774,6 +775,12 @@ class ProductController extends FrameworkBundleAdminController
             SpecificPriceConstraintException::class => [
                 SpecificPriceConstraintException::DUPLICATE_PRIORITY => $this->trans(
                     'The selected condition must be different in each field to set an order of priority.',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+            InvalidProductTypeException::class => [
+                InvalidProductTypeException::EXPECTED_NO_EXISTING_PACK_ASSOCIATIONS => $this->trans(
+                    'This product cannot be changed into a pack because it is already associated to another pack.',
                     'Admin.Notifications.Error'
                 ),
             ],

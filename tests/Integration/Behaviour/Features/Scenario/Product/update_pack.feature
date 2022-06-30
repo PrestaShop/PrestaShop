@@ -278,3 +278,29 @@ Feature: Add product to pack from Back Office (BO)
       | product       | name                                   | combination         | quantity | image url                                              | reference                  |
       | productSkirt1 | regular skirt: Size - S, Color - White | productSkirt1SWhite | 10       | http://myshop.com/img/p/{skirtWhiteS}.jpg              | Ref: productSkirtSWhiteRef |
       | productSkirt1 | regular skirt: Size - M, Color - Black | productSkirt1MBlack | 12       | http://myshop.com/img/p/{skirtBlackM}.jpg              | Ref: productSkirtRef       |
+
+  Scenario: I cannot change a product type to a pack if it is already associated with a pack
+    Given I add product "product5" with following information:
+      | name[en-US] | shady sunglasses |
+      | type        | standard         |
+    And product "product5" type should be standard
+    Given I update pack productPack4 with following product quantities:
+      | product       | combination         | quantity |
+      | productSkirt1 | productSkirt1SWhite | 10       |
+      | productSkirt1 | productSkirt1MBlack | 12       |
+      | product5      |                     | 2        |
+    Then product "productPack4" type should be pack
+    And pack productPack4 should contain products with following details:
+      | product       | name                                   | combination         | quantity | image url                                              | reference                  |
+      | productSkirt1 | regular skirt: Size - S, Color - White | productSkirt1SWhite | 10       | http://myshop.com/img/p/{skirtWhiteS}.jpg              | Ref: productSkirtSWhiteRef |
+      | productSkirt1 | regular skirt: Size - M, Color - Black | productSkirt1MBlack | 12       | http://myshop.com/img/p/{skirtBlackM}.jpg              | Ref: productSkirtRef       |
+      | product5      | shady sunglasses                       |                     | 2        | http://myshop.com/img/p/{no_picture}-small_default.jpg |                            |
+    When I update product "product5" type to pack
+    Then I should get error that the product is already associated to a pack
+    And product "product5" type should be standard
+    And product "productPack4" type should be pack
+    And pack productPack4 should contain products with following details:
+      | product       | name                                   | combination         | quantity | image url                                              | reference                  |
+      | productSkirt1 | regular skirt: Size - S, Color - White | productSkirt1SWhite | 10       | http://myshop.com/img/p/{skirtWhiteS}.jpg              | Ref: productSkirtSWhiteRef |
+      | productSkirt1 | regular skirt: Size - M, Color - Black | productSkirt1MBlack | 12       | http://myshop.com/img/p/{skirtBlackM}.jpg              | Ref: productSkirtRef       |
+      | product5      | shady sunglasses                       |                     | 2        | http://myshop.com/img/p/{no_picture}-small_default.jpg |                            |
