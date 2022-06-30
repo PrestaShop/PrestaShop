@@ -41,7 +41,7 @@ class ControllerConfiguration
     /**
      * @var int|null
      */
-    public $id;
+    public $tabId;
 
     /**
      * ClassName of related object model. E.g. "Feature", "Category", "Product" etc.
@@ -68,7 +68,7 @@ class ControllerConfiguration
     /**
      * @var string|null
      */
-    public $table;
+    public $tableName;
 
     /**
      * @var string|null
