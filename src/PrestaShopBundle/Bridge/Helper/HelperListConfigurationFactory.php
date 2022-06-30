@@ -62,8 +62,8 @@ class HelperListConfigurationFactory
         }
         $helperListConfiguration = new HelperListConfiguration();
 
-        $helperListConfiguration->table = $controllerConfiguration->table;
-        $helperListConfiguration->listId = $controllerConfiguration->table;
+        $helperListConfiguration->table = $controllerConfiguration->tableName;
+        $helperListConfiguration->listId = $controllerConfiguration->tableName;
         $helperListConfiguration->objectModelClassName = $controllerConfiguration->objectModelClassName;
         $helperListConfiguration->identifier = $identifier;
         $helperListConfiguration->positionIdentifier = $positionIdentifier;
@@ -72,7 +72,7 @@ class HelperListConfigurationFactory
         $helperListConfiguration->defaultOrderBy = $defaultOrderBy;
         $helperListConfiguration->explicitSelect = $explicitSelect;
         $helperListConfiguration->useFoundRows = $useFoundRows;
-        $helperListConfiguration->id = $controllerConfiguration->id;
+        $helperListConfiguration->id = $controllerConfiguration->tabId;
         $helperListConfiguration->controllerNameLegacy = $controllerConfiguration->controllerNameLegacy;
         $helperListConfiguration->token = $controllerConfiguration->token;
         $helperListConfiguration->bootstrap = $controllerConfiguration->bootstrap;

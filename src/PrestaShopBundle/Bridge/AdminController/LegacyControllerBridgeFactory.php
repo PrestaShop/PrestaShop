@@ -23,63 +23,60 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
 namespace PrestaShopBundle\Bridge\AdminController;
 
-use PrestaShopBundle\Bridge\Exception\BridgeException;
-use Tab;
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 
-/**
- * Contains reusable methods for horizontally migrated controllers
- */
-trait AdminControllerTrait
+class LegacyControllerBridgeFactory
 {
     /**
-     * @var LegacyControllerBridgeInterface
+     * @var ControllerConfigurationFactory
      */
-    private $legacyControllerBridge;
+    private $controllerConfigurationFactory;
 
     /**
-     * @return LegacyControllerBridgeInterface
+     * @var FeatureInterface
      */
-    protected function buildLegacyControllerBridge(
-        string $tableName,
-        string $objectModelClassName,
-        string $legacyControllerName
-    ): LegacyControllerBridgeInterface {
-        if ($this->legacyControllerBridge) {
-            return $this->legacyControllerBridge;
-        }
+    private $multistoreFeature;
 
-        $tabId = Tab::getIdFromClassName($legacyControllerName);
-
-        if (!$tabId) {
-            throw new BridgeException(sprintf(
-                'Tab not found by className "%s". Make sure that $legacyControllerName is correct',
-                $legacyControllerName
-            ));
-        }
-
-        /** @var LegacyControllerBridgeFactory $legacyControllerBridgeFactory */
-        $legacyControllerBridgeFactory = $this->get('prestashop.core.bridge.admin_controller.legacy_controller_bridge_factory');
-
-        $this->legacyControllerBridge = $legacyControllerBridgeFactory->create(
-            $tabId,
-            $objectModelClassName,
-            $legacyControllerName,
-            $tableName
-        );
-
-        return $this->legacyControllerBridge;
+    /**
+     * @param ControllerConfigurationFactory $controllerConfigurationFactory
+     * @param FeatureInterface $multistoreFeature
+     */
+    public function __construct(
+        ControllerConfigurationFactory $controllerConfigurationFactory,
+        FeatureInterface $multistoreFeature
+    ) {
+        $this->controllerConfigurationFactory = $controllerConfigurationFactory;
+        $this->multistoreFeature = $multistoreFeature;
     }
 
     /**
-     * @return ControllerConfiguration
+     * @param int $tabId
+     * @param string $objectModelClassName
+     * @param string $controllerNameLegacy
+     * @param string $tableName
+     *
+     * @return LegacyControllerBridgeInterface
      */
-    protected function getControllerConfiguration(): ControllerConfiguration
-    {
-        return $this->getLegacyControllerBridge()->getConfiguration();
+    public function create(
+        int $tabId,
+        string $objectModelClassName,
+        string $controllerNameLegacy,
+        string $tableName
+    ): LegacyControllerBridgeInterface {
+        $controllerConfiguration = $this->controllerConfigurationFactory->create(
+            $tabId,
+            $objectModelClassName,
+            $controllerNameLegacy,
+            $tableName
+        );
+
+        return new LegacyControllerBridge(
+            $controllerConfiguration,
+            $this->multistoreFeature
+        );
     }
 }

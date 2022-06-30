@@ -51,25 +51,25 @@ class ControllerConfigurationFactory
     }
 
     /**
-     * @param int $id
+     * @param int $tabId
      * @param string $objectModelClassName
      * @param string $controllerNameLegacy
-     * @param string $table
+     * @param string $tableName
      *
      * @return ControllerConfiguration
      */
     public function create(
-        int $id,
+        int $tabId,
         string $objectModelClassName,
         string $controllerNameLegacy,
-        string $table
+        string $tableName
     ): ControllerConfiguration {
         $controllerConfiguration = new ControllerConfiguration();
-        $controllerConfiguration->id = $id;
+        $controllerConfiguration->tabId = $tabId;
         $controllerConfiguration->objectModelClassName = $objectModelClassName;
         $controllerConfiguration->php_self = $objectModelClassName;
         $controllerConfiguration->controllerNameLegacy = $controllerNameLegacy;
-        $controllerConfiguration->table = $table;
+        $controllerConfiguration->tableName = $tableName;
         $controllerConfiguration->user = $this->userProvider->getUser();
         $controllerConfiguration->folderTemplate = Tools::toUnderscoreCase(substr($controllerConfiguration->controllerNameLegacy, 5)) . '/';
 
@@ -101,7 +101,7 @@ class ControllerConfigurationFactory
     {
         $controllerConfiguration->token = Tools::getAdminToken(
             $controllerConfiguration->controllerNameLegacy .
-            (int) $controllerConfiguration->id .
+            (int) $controllerConfiguration->tabId .
             (int) $controllerConfiguration->user->getData()->id
         );
     }
