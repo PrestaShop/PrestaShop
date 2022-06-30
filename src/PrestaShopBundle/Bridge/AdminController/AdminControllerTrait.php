@@ -33,7 +33,6 @@ use PrestaShopBundle\Bridge\AdminController\Action\HeaderToolbarAction;
 use PrestaShopBundle\Bridge\Exception\BridgeException;
 use PrestaShopBundle\Bridge\Exception\NotAllowedGenericActionTypeException;
 use Tab;
-use Tools;
 
 /**
  * Contains reusable methods for horizontally migrated controllers
@@ -86,8 +85,6 @@ trait AdminControllerTrait
         );
 
         $this->legacyControllerBridge = new LegacyControllerBridge($this->container, $controllerConfiguration);
-        $this->setLegacyCurrentIndex($controllerConfiguration);
-        $this->initToken($controllerConfiguration);
 
         return $this->legacyControllerBridge;
     }
@@ -98,32 +95,5 @@ trait AdminControllerTrait
         $factory = $this->container->get('prestashop.core.bridge.controller_configuration_factory');
 
         return $factory;
-    }
-
-    /**
-     * @param ControllerConfiguration $controllerConfiguration
-     *
-     * @return void
-     */
-    private function setLegacyCurrentIndex(ControllerConfiguration $controllerConfiguration): void
-    {
-        $legacyCurrentIndex = 'index.php' . '?controller=' . $controllerConfiguration->controllerNameLegacy;
-        if ($back = Tools::getValue('back')) {
-            $legacyCurrentIndex .= '&back=' . urlencode($back);
-        }
-
-        $controllerConfiguration->legacyCurrentIndex = $legacyCurrentIndex;
-    }
-
-    /**
-     * @return void
-     */
-    private function initToken(ControllerConfiguration $controllerConfiguration): void
-    {
-        $controllerConfiguration->token = Tools::getAdminToken(
-            $controllerConfiguration->controllerNameLegacy .
-            (int) $controllerConfiguration->id .
-            (int) $controllerConfiguration->user->getData()->id
-        );
     }
 }
