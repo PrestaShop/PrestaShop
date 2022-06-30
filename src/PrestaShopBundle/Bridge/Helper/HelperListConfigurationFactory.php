@@ -36,8 +36,6 @@ use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 class HelperListConfigurationFactory
 {
     /**
-     * @param string $table
-     * @param string $className
      * @param ControllerConfiguration $controllerConfiguration
      * @param string $identifier
      * @param string|null $positionIdentifier
@@ -50,8 +48,6 @@ class HelperListConfigurationFactory
      * @return HelperListConfiguration
      */
     public function create(
-        string $table,
-        string $className,
         ControllerConfiguration $controllerConfiguration,
         string $identifier = 'id',
         string $positionIdentifier = null,
@@ -66,9 +62,9 @@ class HelperListConfigurationFactory
         }
         $helperListConfiguration = new HelperListConfiguration();
 
-        $helperListConfiguration->table = $table;
-        $helperListConfiguration->listId = $table;
-        $helperListConfiguration->className = $className;
+        $helperListConfiguration->table = $controllerConfiguration->table;
+        $helperListConfiguration->listId = $controllerConfiguration->table;
+        $helperListConfiguration->className = $controllerConfiguration->controllerName;
         $helperListConfiguration->identifier = $identifier;
         $helperListConfiguration->positionIdentifier = $positionIdentifier;
         $helperListConfiguration->isJoinLanguageTableAuto = $isJoinLanguageTableAuto;

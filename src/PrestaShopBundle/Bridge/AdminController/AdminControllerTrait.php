@@ -65,23 +65,29 @@ trait AdminControllerTrait
     /**
      * @return LegacyControllerBridgeInterface
      */
-    public function initLegacyControllerBridge(): LegacyControllerBridgeInterface
-    {
-        $legacyControllerName = $this->getLegacyControllerName();
+    protected function buildControllerBridge(
+        string $tableName,
+        string $controllerName,
+        string $legacyControllerName
+    ): LegacyControllerBridgeInterface {
+        if ($this->legacyControllerBridge) {
+            return $this->legacyControllerBridge;
+        }
+
         $tabId = Tab::getIdFromClassName($legacyControllerName);
 
         if (!$tabId) {
             throw new BridgeException(sprintf(
-                'Tab not found by className "%s". Make sure legacyControllerName is correct',
+                'Tab not found by className "%s". Make sure that $legacyControllerName is correct',
                 $legacyControllerName
             ));
         }
 
         $controllerConfiguration = $this->getControllerConfigurationFactory()->create(
             $tabId,
-            get_class($this),
+            $controllerName,
             $legacyControllerName,
-            $this->getTableName()
+            $tableName
         );
 
         $this->legacyControllerBridge = new LegacyControllerBridge($this->container, $controllerConfiguration);
