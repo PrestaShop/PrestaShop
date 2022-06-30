@@ -28,10 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Bridge\AdminController;
 
-use PrestaShopBundle\Bridge\AdminController\Action\ActionInterface;
-use PrestaShopBundle\Bridge\AdminController\Action\HeaderToolbarAction;
 use PrestaShopBundle\Bridge\Exception\BridgeException;
-use PrestaShopBundle\Bridge\Exception\NotAllowedGenericActionTypeException;
 use Tab;
 
 /**
@@ -43,24 +40,6 @@ trait AdminControllerTrait
      * @var LegacyControllerBridge
      */
     private $legacyControllerBridge;
-
-    /**
-     * This method add action for the page.
-     *
-     * @param ActionInterface $action
-     *
-     * @return void
-     */
-    public function addAction(ActionInterface $action): void
-    {
-        if ($action instanceof HeaderToolbarAction) {
-            $this->legacyControllerBridge->getControllerConfiguration()->pageHeaderToolbarButton[$action->getLabel()] = $action->getConfig();
-
-            return;
-        }
-
-        throw new NotAllowedGenericActionTypeException(sprintf('This action %s doesn\'t exist', get_class($action)));
-    }
 
     /**
      * @return LegacyControllerBridgeInterface
@@ -95,6 +74,17 @@ trait AdminControllerTrait
         return $this->legacyControllerBridge;
     }
 
+    /**
+     * @return ControllerConfiguration
+     */
+    protected function getControllerConfiguration(): ControllerConfiguration
+    {
+        return $this->getControllerBridge()->getControllerConfiguration();
+    }
+
+    /**
+     * @return ControllerConfigurationFactory
+     */
     private function getControllerConfigurationFactory(): ControllerConfigurationFactory
     {
         /** @var ControllerConfigurationFactory $factory */

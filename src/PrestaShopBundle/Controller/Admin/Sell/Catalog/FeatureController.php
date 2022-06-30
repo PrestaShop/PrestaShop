@@ -40,6 +40,7 @@ use PrestaShopBundle\Bridge\AdminController\AdminControllerTrait;
 use PrestaShopBundle\Bridge\AdminController\AdminListControllerTrait;
 use PrestaShopBundle\Bridge\AdminController\BridgeControllerInterface;
 use PrestaShopBundle\Bridge\AdminController\BridgeListControllerInterface;
+use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 use PrestaShopBundle\Bridge\AdminController\Field\Field;
 use PrestaShopBundle\Bridge\AdminController\LegacyControllerBridgeInterface;
 use PrestaShopBundle\Bridge\Helper\HelperListConfiguration;
@@ -63,18 +64,20 @@ class FeatureController extends FrameworkBundleAdminController implements Bridge
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request): Response
     {
-        $this->buildGenericAction();
+        $controllerConfig = $this->getControllerConfiguration();
+        $this->addToolbarActions($controllerConfig);
+
         $helperListConfiguration = $this->get('prestashop.core.bridge.helper_list_configuration_factory')->create(
-            $this->legacyControllerBridge->getControllerConfiguration(),
+            $controllerConfig,
             $this->getIdentifier(),
             $this->getPositionIdentifier(),
             'position',
             true
         );
         $this->setListFields($helperListConfiguration);
-        $this->buildActionList($helperListConfiguration);
+        $this->buildActionList($controllerConfig, $helperListConfiguration);
 
         if ($request->request->has('submitResetfeature')) {
             $this->getResetFiltersHelper()->resetFilters($helperListConfiguration, $request);
@@ -101,7 +104,7 @@ class FeatureController extends FrameworkBundleAdminController implements Bridge
      *
      * @return Response
      */
-    public function createAction(Request $request)
+    public function createAction(Request $request): Response
     {
         if (!$this->isFeatureEnabled()) {
             return $this->render('@PrestaShop/Admin/Sell/Catalog/Features/create.html.twig', [
@@ -121,8 +124,7 @@ class FeatureController extends FrameworkBundleAdminController implements Bridge
             if (null !== $handlerResult->getIdentifiableObjectId()) {
                 $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
-                //@todo change route to index when it's migrated
-                return $this->redirectToRoute('admin_features_create');
+                return $this->redirectToRoute('admin_features_index');
             }
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -143,15 +145,14 @@ class FeatureController extends FrameworkBundleAdminController implements Bridge
      *
      * @return Response
      */
-    public function editAction($featureId, Request $request)
+    public function editAction($featureId, Request $request): Response
     {
         try {
             $editableFeature = $this->getQueryBus()->handle(new GetFeatureForEditing((int) $featureId));
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
 
-            // @todo change route to features index when it's migrated
-            return $this->redirectToRoute('admin_features_create');
+            return $this->redirectToRoute('admin_features_index');
         }
 
         if (!$this->isFeatureEnabled()) {
@@ -213,17 +214,24 @@ class FeatureController extends FrameworkBundleAdminController implements Bridge
         return 'id_feature';
     }
 
-    private function buildGenericAction(): void
+    /**
+     * @param ControllerConfiguration $controllerConfig
+     *
+     * @return void
+     */
+    private function addToolbarActions(ControllerConfiguration $controllerConfig): void
     {
-        $this->addAction(new HeaderToolbarAction('new_feature', [
-            //Used $this->generateUrl('admin_features_add')
-            'href' => $this->legacyControllerBridge->getControllerConfiguration()->legacyCurrentIndex . '&addfeature&token=' . $this->legacyControllerBridge->getControllerConfiguration()->token,
+        $index = $controllerConfig->legacyCurrentIndex;
+        $token = $controllerConfig->token;
+
+        $controllerConfig->addToolbarAction(new HeaderToolbarAction('new_feature', [
+            //@todo: replace by $this->generateUrl('admin_features_add') when creation is fully migrated
+            'href' => $index . '&addfeature&token=' . $token,
             'desc' => $this->trans('Add new feature', 'Admin.Catalog.Feature'),
             'icon' => 'process-icon-new',
         ]));
-        $this->addAction(new HeaderToolbarAction('new_feature_value', [
-            //Used $this->generateUrl('admin_features_add_value')
-            'href' => $this->legacyControllerBridge->getControllerConfiguration()->legacyCurrentIndex . '&addfeature_value&id_feature=' . (int) Tools::getValue('id_feature') . '&token=' . $this->legacyControllerBridge->getControllerConfiguration()->token,
+        $controllerConfig->addToolbarAction(new HeaderToolbarAction('new_feature_value', [
+            'href' => $index . '&addfeature_value&id_feature=' . (int) Tools::getValue('id_feature') . '&token=' . $token,
             'desc' => $this->trans('Add new feature value', 'Admin.Catalog.Help'),
             'icon' => 'process-icon-new',
         ]));
@@ -233,14 +241,13 @@ class FeatureController extends FrameworkBundleAdminController implements Bridge
      * Build actions for list.
      *
      * @return void
-     *
-     * @throws \Exception
      */
-    private function buildActionList(HelperListConfiguration $helperListConfiguration): void
+    private function buildActionList(ControllerConfiguration $controllerConfig, HelperListConfiguration $helperListConfiguration): void
     {
+        //@todo: do we need this action at all if we have the same at the top of the page?
         $this->addActionList(new ListHeaderToolbarAction('new', [
-            //Replace by $this->generateUrl('admin_features_add')
-            'href' => $this->legacyControllerBridge->getControllerConfiguration()->legacyCurrentIndex . '&addfeature&token=' . $this->legacyControllerBridge->getControllerConfiguration()->token,
+            //@todo: replace by $this->generateUrl('admin_features_add') when creation is fully migrated
+            'href' => $controllerConfig->legacyCurrentIndex . '&addfeature&token=' . $controllerConfig->token,
             'desc' => $this->trans('Add new', 'Admin.Actions'),
         ]), $helperListConfiguration);
 

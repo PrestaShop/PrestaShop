@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Bridge\AdminController;
 
+use PrestaShopBundle\Bridge\AdminController\Action\HeaderToolbarAction;
 use PrestaShopBundle\Security\Admin\Employee;
 use Shop;
 
@@ -212,4 +213,18 @@ class ControllerConfiguration
      * @var bool
      */
     public $multishop_context_group = true;
+
+    /**
+     * Adds toolbar action to the page
+     *
+     * @param HeaderToolbarAction $action
+     *
+     * @return ControllerConfiguration
+     */
+    public function addToolbarAction(HeaderToolbarAction $action): ControllerConfiguration
+    {
+        $this->pageHeaderToolbarButton[$action->getLabel()] = $action->getConfig();
+
+        return $this;
+    }
 }
