@@ -16,6 +16,9 @@ env:
   NIGHTLY_TOKEN: ${{ secrets.NIGHTLY_TOKEN }}  # Nightly token to validate the import
   TESTS_DIR: 'tests/UI'  # Where UI tests are
 
+permissions:
+  contents: read
+
 jobs:
 
   # First job: Run tests in parallel
@@ -169,6 +172,8 @@ jobs:
 
   # Add pushed reports to GCp on nightly
   push-nightly-reports:
+    permissions:
+      contents: none
     name: Push reports to nightly.prestashop.com
     if: ${{ always() }}
     needs:

@@ -1,5 +1,8 @@
 name: Lint
 on: [ push, pull_request ]
+permissions:
+  contents: read
+
 jobs:
   stylelint:
     name: SCSS Lint
