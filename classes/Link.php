@@ -919,7 +919,7 @@ class LinkCore
             if (null !== $idShop) {
                 $shop = new Shop($idShop);
             } else {
-                $shop = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
+                $shop = new Shop((int)Configuration::get('PS_SHOP_DEFAULT'));
             }
             $domainSSL = $shop->domain_ssl;
             $domain = $shop->domain;
@@ -946,7 +946,7 @@ class LinkCore
         if ($relativeProtocol) {
             $base = '//' . ($ssl && $this->ssl_enable ? $domainSSL : $domain);
         } else {
-            $base = (($ssl && $this->ssl_enable) ? 'https://' .$domainSSL : 'http://' . $domain);
+            $base = (($ssl && $this->ssl_enable) ? 'https://' . $domainSSL : 'http://' . $domain);
         }
 
         return $base . $shop->getBaseURI();
