@@ -32,7 +32,6 @@ use Language;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Environment;
 use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
-use Symfony\Component\Routing\RouterInterface;
 use Tools;
 
 /**

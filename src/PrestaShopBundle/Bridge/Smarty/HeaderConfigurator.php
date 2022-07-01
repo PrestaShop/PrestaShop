@@ -45,7 +45,6 @@ use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecific
 use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 use QuickAccess;
 use Shop;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Tab;
 use Tools;
