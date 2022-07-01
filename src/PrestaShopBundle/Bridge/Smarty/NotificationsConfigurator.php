@@ -69,7 +69,7 @@ class NotificationsConfigurator implements ConfiguratorInterface
             'show_new_orders' => $this->configuration->get('PS_SHOW_NEW_ORDERS') && isset($accesses['AdminOrders']) && $accesses['AdminOrders']['view'] ? '1' : false,
         ];
 
-        $controllerConfiguration->templatesVars = array_merge($controllerConfiguration->templatesVars, $notificationsSettings);
+        $controllerConfiguration->templateVars = array_merge($controllerConfiguration->templateVars, $notificationsSettings);
 
         Media::addJsDef($notificationsSettings);
     }

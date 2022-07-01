@@ -147,17 +147,17 @@ class HeaderConfigurator implements ConfiguratorInterface
      */
     public function configure(ControllerConfiguration $controllerConfiguration): void
     {
-        $controllerConfiguration->templatesVars['table'] = $controllerConfiguration->tableName;
-        $controllerConfiguration->templatesVars['current'] = $this->router->generate('admin_features_index');
-        $controllerConfiguration->templatesVars['token'] = $controllerConfiguration->token;
-        $controllerConfiguration->templatesVars['host_mode'] = (int) defined('_PS_HOST_MODE_');
-        $controllerConfiguration->templatesVars['stock_management'] = (int) $this->configuration->get('PS_STOCK_MANAGEMENT');
-        $controllerConfiguration->templatesVars['no_order_tip'] = $this->getNotificationTip('order');
-        $controllerConfiguration->templatesVars['no_customer_tip'] = $this->getNotificationTip('customer');
-        $controllerConfiguration->templatesVars['no_customer_message_tip'] = $this->getNotificationTip('customer_message');
+        $controllerConfiguration->templateVars['table'] = $controllerConfiguration->tableName;
+        $controllerConfiguration->templateVars['current'] = $this->router->generate('admin_features_index');
+        $controllerConfiguration->templateVars['token'] = $controllerConfiguration->token;
+        $controllerConfiguration->templateVars['host_mode'] = (int) defined('_PS_HOST_MODE_');
+        $controllerConfiguration->templateVars['stock_management'] = (int) $this->configuration->get('PS_STOCK_MANAGEMENT');
+        $controllerConfiguration->templateVars['no_order_tip'] = $this->getNotificationTip('order');
+        $controllerConfiguration->templateVars['no_customer_tip'] = $this->getNotificationTip('customer');
+        $controllerConfiguration->templateVars['no_customer_message_tip'] = $this->getNotificationTip('customer_message');
 
         if ($controllerConfiguration->displayHeader) {
-            $controllerConfiguration->templatesVars['displayBackOfficeHeader'] = $this->getDisplayHookRender(
+            $controllerConfiguration->templateVars['displayBackOfficeHeader'] = $this->getDisplayHookRender(
                 $this->hookDispatcher->dispatchRenderingWithParameters('displayBackOfficeHeader', [])
             );
         }
@@ -171,11 +171,11 @@ class HeaderConfigurator implements ConfiguratorInterface
             ]
         );
 
-        $controllerConfiguration->templatesVars['displayBackOfficeTop'] = $this->getDisplayHookRender(
+        $controllerConfiguration->templateVars['displayBackOfficeTop'] = $this->getDisplayHookRender(
             $this->hookDispatcher->dispatchRenderingWithParameters('displayBackOfficeTop', [])
         );
-        $controllerConfiguration->templatesVars['displayBackOfficeEmployeeMenu'] = $menuLinksCollections;
-        $controllerConfiguration->templatesVars['submit_form_ajax'] = (int) Tools::getValue('submitFormAjax');
+        $controllerConfiguration->templateVars['displayBackOfficeEmployeeMenu'] = $menuLinksCollections;
+        $controllerConfiguration->templateVars['submit_form_ajax'] = (int) Tools::getValue('submitFormAjax');
 
         $tabs = $this->getTabs($controllerConfiguration);
         $currentTabLevel = 0;
@@ -183,36 +183,36 @@ class HeaderConfigurator implements ConfiguratorInterface
             $currentTabLevel = isset($tab['current_level']) ? $tab['current_level'] : $currentTabLevel;
         }
 
-        $controllerConfiguration->templatesVars['bo_query'] = Tools::safeOutput(Tools::stripslashes(Tools::getValue('bo_query')));
-        $controllerConfiguration->templatesVars['collapse_menu'] = isset($this->cookie->collapse_menu) ? (int) $this->cookie->collapse_menu : 0;
-        $controllerConfiguration->templatesVars['default_tab_link'] = $this->link->getAdminLink(Tab::getClassNameById((int) $controllerConfiguration->user->getData()->default_tab));
-        $controllerConfiguration->templatesVars['employee'] = $controllerConfiguration->user->getData();
-        $controllerConfiguration->templatesVars['help_box'] = $this->configuration->get('PS_HELPBOX');
-        $controllerConfiguration->templatesVars['is_multishop'] = Shop::isFeatureActive();
-        $controllerConfiguration->templatesVars['login_link'] = $this->link->getAdminLink('AdminLogin');
-        $controllerConfiguration->templatesVars['logout_link'] = $this->link->getAdminLink('AdminLogin', true, [], ['logout' => 1]);
-        $controllerConfiguration->templatesVars['multi_shop'] = Shop::isFeatureActive();
-        $controllerConfiguration->templatesVars['quick_access'] = QuickAccess::getQuickAccessesWithToken($this->language->id, (int) $controllerConfiguration->user->getData()->id);
-        $controllerConfiguration->templatesVars['round_mode'] = $this->configuration->get('PS_PRICE_ROUND_MODE');
-        $controllerConfiguration->templatesVars['base_url'] = $this->shop->getBaseURL(true);
-        $controllerConfiguration->templatesVars['bootstrap'] = $controllerConfiguration->bootstrap;
-        $controllerConfiguration->templatesVars['controller_name'] = $controllerConfiguration->controllerNameLegacy;
-        $controllerConfiguration->templatesVars['country_iso_code'] = $this->country->iso_code;
-        $controllerConfiguration->templatesVars['currentIndex'] = $this->router->generate('admin_features_index');
-        $controllerConfiguration->templatesVars['current_tab_level'] = $currentTabLevel;
-        $controllerConfiguration->templatesVars['default_language'] = (int) $this->configuration->get('PS_LANG_DEFAULT');
-        $controllerConfiguration->templatesVars['full_language_code'] = $this->language->language_code;
-        $controllerConfiguration->templatesVars['full_cldr_language_code'] = $this->currentLocale->getCode();
-        $controllerConfiguration->templatesVars['img_dir'] = _PS_IMG_;
-        $controllerConfiguration->templatesVars['install_dir_exists'] = file_exists(_PS_ADMIN_DIR_ . '/../install');
-        $controllerConfiguration->templatesVars['iso'] = $this->language->iso_code;
-        $controllerConfiguration->templatesVars['iso_user'] = $this->language->iso_code;
-        $controllerConfiguration->templatesVars['lang_is_rtl'] = $this->language->is_rtl;
-        $controllerConfiguration->templatesVars['link'] = $this->link;
-        $controllerConfiguration->templatesVars['shop_name'] = $this->configuration->get('PS_SHOP_NAME');
-        $controllerConfiguration->templatesVars['tabs'] = $tabs;
-        $controllerConfiguration->templatesVars['version'] = _PS_VERSION_;
-        $controllerConfiguration->templatesVars['multishop_context'] = $controllerConfiguration->multishop_context;
+        $controllerConfiguration->templateVars['bo_query'] = Tools::safeOutput(Tools::stripslashes(Tools::getValue('bo_query')));
+        $controllerConfiguration->templateVars['collapse_menu'] = isset($this->cookie->collapse_menu) ? (int) $this->cookie->collapse_menu : 0;
+        $controllerConfiguration->templateVars['default_tab_link'] = $this->link->getAdminLink(Tab::getClassNameById((int) $controllerConfiguration->user->getData()->default_tab));
+        $controllerConfiguration->templateVars['employee'] = $controllerConfiguration->user->getData();
+        $controllerConfiguration->templateVars['help_box'] = $this->configuration->get('PS_HELPBOX');
+        $controllerConfiguration->templateVars['is_multishop'] = Shop::isFeatureActive();
+        $controllerConfiguration->templateVars['login_link'] = $this->link->getAdminLink('AdminLogin');
+        $controllerConfiguration->templateVars['logout_link'] = $this->link->getAdminLink('AdminLogin', true, [], ['logout' => 1]);
+        $controllerConfiguration->templateVars['multi_shop'] = Shop::isFeatureActive();
+        $controllerConfiguration->templateVars['quick_access'] = QuickAccess::getQuickAccessesWithToken($this->language->id, (int) $controllerConfiguration->user->getData()->id);
+        $controllerConfiguration->templateVars['round_mode'] = $this->configuration->get('PS_PRICE_ROUND_MODE');
+        $controllerConfiguration->templateVars['base_url'] = $this->shop->getBaseURL(true);
+        $controllerConfiguration->templateVars['bootstrap'] = $controllerConfiguration->bootstrap;
+        $controllerConfiguration->templateVars['controller_name'] = $controllerConfiguration->legacyControllerName;
+        $controllerConfiguration->templateVars['country_iso_code'] = $this->country->iso_code;
+        $controllerConfiguration->templateVars['currentIndex'] = $this->router->generate('admin_features_index');
+        $controllerConfiguration->templateVars['current_tab_level'] = $currentTabLevel;
+        $controllerConfiguration->templateVars['default_language'] = (int) $this->configuration->get('PS_LANG_DEFAULT');
+        $controllerConfiguration->templateVars['full_language_code'] = $this->language->language_code;
+        $controllerConfiguration->templateVars['full_cldr_language_code'] = $this->currentLocale->getCode();
+        $controllerConfiguration->templateVars['img_dir'] = _PS_IMG_;
+        $controllerConfiguration->templateVars['install_dir_exists'] = file_exists(_PS_ADMIN_DIR_ . '/../install');
+        $controllerConfiguration->templateVars['iso'] = $this->language->iso_code;
+        $controllerConfiguration->templateVars['iso_user'] = $this->language->iso_code;
+        $controllerConfiguration->templateVars['lang_is_rtl'] = $this->language->is_rtl;
+        $controllerConfiguration->templateVars['link'] = $this->link;
+        $controllerConfiguration->templateVars['shop_name'] = $this->configuration->get('PS_SHOP_NAME');
+        $controllerConfiguration->templateVars['tabs'] = $tabs;
+        $controllerConfiguration->templateVars['version'] = _PS_VERSION_;
+        $controllerConfiguration->templateVars['multishop_context'] = $controllerConfiguration->multiShopContext;
 
         Media::addJsDef(
             [
@@ -301,7 +301,7 @@ class HeaderConfigurator implements ConfiguratorInterface
             }
 
             // tab[class_name] does not contains the "Controller" suffix
-            if (($tab['class_name'] . 'Controller' == $controllerConfiguration->controllerNameLegacy) || ($current_id == $tab['id_tab']) || $tab['class_name'] == $controllerConfiguration->controllerNameLegacy) {
+            if (($tab['class_name'] . 'Controller' == $controllerConfiguration->legacyControllerName) || ($current_id == $tab['id_tab']) || $tab['class_name'] == $controllerConfiguration->legacyControllerName) {
                 $tabs[$index]['current'] = true;
                 $tabs[$index]['current_level'] = $level;
             } else {

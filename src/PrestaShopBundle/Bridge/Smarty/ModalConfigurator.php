@@ -42,9 +42,9 @@ class ModalConfigurator implements ConfiguratorInterface
      */
     public function configure(ControllerConfiguration $controllerConfiguration): void
     {
-        $controllerConfiguration->templatesVars['img_base_path'] = __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/';
-        $controllerConfiguration->templatesVars['check_url_fopen'] = (ini_get('allow_url_fopen') ? 'ok' : 'ko');
-        $controllerConfiguration->templatesVars['check_openssl'] = (extension_loaded('openssl') ? 'ok' : 'ko');
-        $controllerConfiguration->templatesVars['add_permission'] = 1;
+        $controllerConfiguration->templateVars['img_base_path'] = __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/';
+        $controllerConfiguration->templateVars['check_url_fopen'] = (ini_get('allow_url_fopen') ? 'ok' : 'ko');
+        $controllerConfiguration->templateVars['check_openssl'] = (extension_loaded('openssl') ? 'ok' : 'ko');
+        $controllerConfiguration->templateVars['add_permission'] = 1;
     }
 }
