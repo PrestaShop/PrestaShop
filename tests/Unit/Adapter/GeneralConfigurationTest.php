@@ -52,8 +52,8 @@ class GeneralConfigurationTest extends AbstractConfigurationTestCase
     private const VALID_CONFIGURATION = [
         GeneralType::FIELD_CHECK_MODULES_UPDATE => true,
         GeneralType::FIELD_CHECK_IP_ADDRESS => true,
-        GeneralType::FIELD_FRONT_COOKIE_LIFETIME => Cookie::FRONT_LIFETIME,
-        GeneralType::FIELD_BACK_COOKIE_LIFETIME => Cookie::BACK_LIFETIME,
+        GeneralType::FIELD_FRONT_COOKIE_LIFETIME => 480,
+        GeneralType::FIELD_BACK_COOKIE_LIFETIME => 480,
         GeneralType::FIELD_COOKIE_SAMESITE => Cookie::SAMESITE_LAX,
     ];
 
@@ -95,15 +95,19 @@ class GeneralConfigurationTest extends AbstractConfigurationTestCase
             ->method('getShopConstraint')
             ->willReturn($shopConstraint);
 
+        $getConfigurationRow = function (string $configurationKey, string $field) use ($shopConstraint): array {
+            return [$configurationKey, null, $shopConstraint, self::VALID_CONFIGURATION[$field]];
+        };
+
         $this->mockConfiguration
             ->method('get')
             ->willReturnMap(
                 [
-                    ['PRESTASTORE_LIVE', null, $shopConstraint, true],
-                    ['PS_COOKIE_CHECKIP', null, $shopConstraint, true],
-                    ['PS_COOKIE_LIFETIME_FO', null, $shopConstraint, Cookie::FRONT_LIFETIME],
-                    ['PS_COOKIE_LIFETIME_BO', null, $shopConstraint, Cookie::BACK_LIFETIME],
-                    ['PS_COOKIE_SAMESITE', null, $shopConstraint, Cookie::SAMESITE_LAX],
+                    $getConfigurationRow('PRESTASTORE_LIVE', GeneralType::FIELD_CHECK_MODULES_UPDATE),
+                    $getConfigurationRow('PS_COOKIE_CHECKIP', GeneralType::FIELD_CHECK_IP_ADDRESS),
+                    $getConfigurationRow('PS_COOKIE_LIFETIME_FO', GeneralType::FIELD_FRONT_COOKIE_LIFETIME),
+                    $getConfigurationRow('PS_COOKIE_LIFETIME_BO', GeneralType::FIELD_BACK_COOKIE_LIFETIME),
+                    $getConfigurationRow('PS_COOKIE_SAMESITE', GeneralType::FIELD_COOKIE_SAMESITE),
                 ]
             );
 
