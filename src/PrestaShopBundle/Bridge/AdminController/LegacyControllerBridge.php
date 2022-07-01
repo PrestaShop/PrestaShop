@@ -289,6 +289,7 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
      */
     public function __get(string $name)
     {
+        //@todo: when doing smth like $controller->foo[] = 'test' it calls getter and fails and wouldn't probably ever work.
         if (!isset($this->propertiesMap[$name])) {
             return $this->{$name};
         }
