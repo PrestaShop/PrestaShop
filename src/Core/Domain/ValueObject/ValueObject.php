@@ -37,7 +37,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 /**
  * Class ValueObject is responsible for providing valid value.
  */
-class ValueObject
+abstract class ValueObject
 {
     /**
      * @var ValidatorInterface
