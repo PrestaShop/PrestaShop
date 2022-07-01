@@ -185,6 +185,12 @@ class CarrierCore extends ObjectModel
     {
         parent::__construct($id, $id_lang);
         $this->image_dir = _PS_SHIP_IMG_DIR_;
+        /*
+         * keep retrocompatibility SHIPPING_METHOD_DEFAULT
+         */
+        if ($this->shipping_method == Carrier::SHIPPING_METHOD_DEFAULT) {
+            $this->shipping_method = ((int) Configuration::get('PS_SHIPPING_METHOD') ? Carrier::SHIPPING_METHOD_WEIGHT : Carrier::SHIPPING_METHOD_PRICE);
+        }
     }
 
     public static function resetStaticCache()
