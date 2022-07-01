@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Form\Admin\Product;
 
 use Currency;
-use Tools;
 use PrestaShop\PrestaShop\Adapter\Country\CountryDataProvider;
 use PrestaShop\PrestaShop\Adapter\Customer\CustomerDataProvider;
 use PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider;
@@ -244,8 +243,7 @@ class ProductSpecificPrice extends CommonAbstractType
                 [
                     'required' => false,
                     'label' => $this->translator->trans('Available from', [], 'Admin.Catalog.Feature'),
-                    'attr' => ['placeholder' => Tools::getDateFormat() . ' HH:mm:ss'],
-                    'date_format' => Tools::getDateFormat() . ' HH:mm:ss',
+                    'attr' => ['placeholder' => 'YYYY-MM-DD'],
                 ]
             )
             ->add(
@@ -254,8 +252,7 @@ class ProductSpecificPrice extends CommonAbstractType
                 [
                     'required' => false,
                     'label' => $this->translator->trans('to', [], 'Admin.Global'),
-                    'attr' => ['placeholder' => Tools::getDateFormat() . ' HH:mm:ss'],
-                    'date_format' => Tools::getDateFormat() . ' HH:mm:ss',
+                    'attr' => ['placeholder' => 'YYYY-MM-DD'],
                 ]
             )
             ->add(

@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
+use Context;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DateRange;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceException;
@@ -45,6 +46,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
+use Tools;
 
 class SpecificPriceType extends TranslatorAwareType
 {
@@ -69,13 +71,14 @@ class SpecificPriceType extends TranslatorAwareType
      * @param ConfigurableFormChoiceProviderInterface $combinationIdChoiceProvider
      * @param UrlGeneratorInterface $urlGenerator
      * @param ProductRepository $productRepository
+     * @param string $dateFormatFull
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         ConfigurableFormChoiceProviderInterface $combinationIdChoiceProvider,
         UrlGeneratorInterface $urlGenerator,
-        ProductRepository $productRepository
+        ProductRepository $productRepository,
     ) {
         parent::__construct($translator, $locales);
         $this->combinationIdChoiceProvider = $combinationIdChoiceProvider;
@@ -148,6 +151,7 @@ class SpecificPriceType extends TranslatorAwareType
                 'label_tag_name' => 'h4',
                 'required' => false,
                 'has_unlimited_checkbox' => true,
+                'date_format' => Tools::getDateFormat() . ' HH:mm:ss',
                 'constraints' => [
                     new DateRange([
                         'message' => $this->trans(
@@ -157,6 +161,7 @@ class SpecificPriceType extends TranslatorAwareType
                     ]),
                 ],
                 'columns_number' => 2,
+                'attr' => ['placeholder' => Context::getContext()->language->date_format_full],
             ])
             ->add('impact', SpecificPriceImpactType::class)
         ;

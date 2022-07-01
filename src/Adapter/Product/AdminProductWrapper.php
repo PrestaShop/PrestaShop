@@ -33,7 +33,6 @@ use Combination;
 use Configuration;
 use Context;
 use Customer;
-use DateTime;
 use Db;
 use Hook;
 use Image;
@@ -297,18 +296,10 @@ class AdminProductWrapper
         $from = $specificPriceValues['sp_from'];
         if (!$from) {
             $from = '0000-00-00 00:00:00';
-        } else {
-            $format = Context::getContext()->language->date_format_full;
-            $dateTime = DateTime::createFromFormat($format, $from);
-            $from = $dateTime->format('Y-m-d H:m:s');
         }
         $to = $specificPriceValues['sp_to'];
         if (!$to) {
             $to = '0000-00-00 00:00:00';
-        } else {
-            $format = Context::getContext()->language->date_format_full;
-            $dateTime = DateTime::createFromFormat($format, $to);
-            $to = $dateTime->format('Y-m-d H:m:s');
         }
         $isThisAnUpdate = (null !== $idSpecificPrice);
 
@@ -403,8 +394,8 @@ class AdminProductWrapper
             $this->errors[] = 'Invalid quantity';
         } elseif ($reduction && !Validate::isReductionType($reduction_type)) {
             $this->errors[] = 'Please select a discount type (amount or percentage).';
-        //} elseif ($from && $to && (!Validate::isDateFormat($from) || !Validate::isDateFormat($to))) {
-        //    $this->errors[] = 'The from/to date is invalid.';
+        } elseif ($from && $to && (!Validate::isDateFormat($from) || !Validate::isDateFormat($to))) {
+            $this->errors[] = 'The from/to date is invalid.';
         } elseif (!$isThisAnUpdate && SpecificPrice::exists((int) $id_product, $id_combination, $id_shop, $id_group, $id_country, $id_currency, $id_customer, $from_quantity, $from, $to, false)) {
             $this->errors[] = 'A specific price already exists for these parameters.';
         } else {

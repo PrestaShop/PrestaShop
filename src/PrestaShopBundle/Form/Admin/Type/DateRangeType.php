@@ -26,10 +26,12 @@
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
+use Context;
 use DateTime;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShopBundle\Form\FormCloner;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Event\PreSetDataEvent;
 use Symfony\Component\Form\Event\PreSubmitEvent;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -73,17 +75,18 @@ class DateRangeType extends AbstractType
                 'required' => false,
                 'label' => $this->translator->trans('Start date', [], 'Admin.Global'),
                 'attr' => [
-                    'placeholder' => $this->translator->trans('YY-MM-DD', [], 'Admin.Global'),
+                    'placeholder' => $options['attr']['placeholder'] ? $options['attr']['placeholder'] : $this->translator->trans('YY-MM-DD', [], 'Admin.Global'),
                     'class' => 'from date-range-start-date',
+                    'data-default-value' => $now->format(Context::getContext()->language->date_format_full),
                 ],
                 'date_format' => $options['date_format'],
             ])
             ->add('to', DatePickerType::class, [
                 'required' => false,
                 'attr' => [
-                    'placeholder' => $this->translator->trans('YY-MM-DD', [], 'Admin.Global'),
+                    'placeholder' => $options['attr']['placeholder'] ? $options['attr']['placeholder'] : $this->translator->trans('YY-MM-DD', [], 'Admin.Global'),
                     'class' => 'to date-range-end-date',
-                    'data-default-value' => $now->format('Y-m-d'),
+                    'data-default-value' => $now->format(Context::getContext()->language->date_format_full),
                 ],
                 'label' => $this->translator->trans('End date', [], 'Admin.Global'),
                 'date_format' => $options['date_format'],
@@ -102,6 +105,44 @@ class DateRangeType extends AbstractType
             $builder->addEventListener(FormEvents::PRE_SET_DATA, [$this, 'adaptUnlimited']);
             $builder->addEventListener(FormEvents::PRE_SUBMIT, [$this, 'adaptUnlimited']);
         }
+
+        $builder->get('from')->addModelTransformer(new CallbackTransformer(
+            function ($from) {
+                if ($from !== null) {
+                    $dateTime = DateTime::createFromFormat('Y-m-d h:i:s', $from);
+                    $newDate = $dateTime->format(Context::getContext()->language->date_format_full);
+
+                    return $newDate;
+                }
+            },
+            function ($from) {
+                if ($from !== null) {
+                    $dateTime = DateTime::createFromFormat(Context::getContext()->language->date_format_full, $from);
+                    $newDate = $dateTime->format('Y-m-d h:i:s');
+
+                    return $newDate;
+                }
+            }
+        ));
+
+        $builder->get('to')->addModelTransformer(new CallbackTransformer(
+            function ($to) {
+                if ($to !== null) {
+                    $dateTime = DateTime::createFromFormat('Y-m-d h:i:s', $to);
+                    $newDate = $dateTime->format(Context::getContext()->language->date_format_full);
+
+                    return $newDate;
+                }
+            },
+            function ($to) {
+                if ($to !== null) {
+                    $dateTime = DateTime::createFromFormat(Context::getContext()->language->date_format_full, $to);
+                    $newDate = $dateTime->format('Y-m-d h:i:s');
+
+                    return $newDate;
+                }
+            }
+        ));
     }
 
     public function adaptUnlimited(FormEvent $event): void
