@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Adapter\Image\ImageManipulator;
+
 /**
  * Class ImageManagerCore.
  *
@@ -85,7 +87,7 @@ class ImageManagerCore
         }
 
         if ($regenerate || !file_exists(_PS_TMP_IMG_DIR_ . $cacheImage)) {
-            $infos = getimagesize($image);
+            $infos = (new ImageManipulator())->getImageSize($image);
 
             // Evaluate the memory required to resize the image: if it's too much, you can't resize it.
             if (!ImageManager::checkImageMemoryLimit($image)) {
@@ -141,7 +143,7 @@ class ImageManagerCore
      */
     public static function checkImageMemoryLimit($image)
     {
-        $infos = @getimagesize($image);
+        $infos = (new ImageManipulator())->getImageSize($image);
 
         if (!is_array($infos) || !isset($infos['bits'])) {
             return true;
@@ -205,7 +207,7 @@ class ImageManagerCore
             return false;
         }
 
-        list($tmpWidth, $tmpHeight, $type) = getimagesize($sourceFile);
+        list($tmpWidth, $tmpHeight, $type) = (new ImageManipulator())->getImageSize($sourceFile);
         $rotate = 0;
         if (function_exists('exif_read_data')) {
             $exif = @exif_read_data($sourceFile);
@@ -302,6 +304,7 @@ class ImageManagerCore
         $targetWidth = $destinationWidth;
         $targetHeight = $destinationHeight;
 
+        #@todo
         $destImage = imagecreatetruecolor($destinationWidth, $destinationHeight);
 
         // If the output is PNG, fill with transparency. Else fill with white background.
@@ -384,6 +387,7 @@ class ImageManagerCore
         if ($quality <= 0) {
             return false;
         }
+        #@todo
         if ($quality < 5 && (($dstW * $quality) < $srcW || ($dstH * $quality) < $srcH)) {
             $temp = imagecreatetruecolor($dstW * $quality + 1, $dstH * $quality + 1);
             imagecopyresized($temp, $srcImage, 0, 0, $srcX, $srcY, $dstW * $quality + 1, $dstH * $quality + 1, $srcW, $srcH);
@@ -570,7 +574,7 @@ class ImageManagerCore
         }
 
         // Source information
-        $srcInfo = getimagesize($srcFile);
+        $srcInfo = (new ImageManipulator())->getImageSize($srcFile);
         $src = [
             'width' => $srcInfo[0],
             'height' => $srcInfo[1],
@@ -583,8 +587,10 @@ class ImageManagerCore
         $dest['y'] = $dstY;
         $dest['width'] = null !== $dstWidth ? $dstWidth : $src['width'];
         $dest['height'] = null !== $dstHeight ? $dstHeight : $src['height'];
+        #@todo
         $dest['ressource'] = ImageManager::createWhiteImage($dest['width'], $dest['height']);
 
+        #@todo
         $white = imagecolorallocate($dest['ressource'], 255, 255, 255);
         // @phpstan-ignore-next-line
         imagecopyresampled($dest['ressource'], $src['ressource'], 0, 0, $dest['x'], $dest['y'], $dest['width'], $dest['height'], $dest['width'], $dest['height']);
@@ -607,6 +613,7 @@ class ImageManagerCore
      */
     public static function create($type, $filename)
     {
+        #@todo
         switch ($type) {
             case IMAGETYPE_GIF:
                 return imagecreatefromgif($filename);
@@ -632,6 +639,7 @@ class ImageManagerCore
      */
     public static function createWhiteImage($width, $height)
     {
+        #@todo
         $image = imagecreatetruecolor($width, $height);
         $white = imagecolorallocate($image, 255, 255, 255);
         imagefill($image, 0, 0, $white);
@@ -667,6 +675,7 @@ class ImageManagerCore
             $psWebpQuality = Configuration::get('PS_WEBP_QUALITY');
         }
 
+        #@todo
         switch ($type) {
             case 'gif':
                 // @phpstan-ignore-next-line
