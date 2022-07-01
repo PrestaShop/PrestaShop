@@ -5,8 +5,8 @@ admin_features_index:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureController::indexAction
     _legacy_controller: AdminFeatures
 #    _legacy_link: AdminFeatures
-
-#admin_features_add:
+#
+# admin_features_add:
 #  path: /add
 #  methods: [ GET, POST ]
 #  defaults:

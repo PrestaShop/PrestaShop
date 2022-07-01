@@ -2,7 +2,7 @@ services:
   _defaults:
     public: true
 
-# @todo: services naming should follow classnames
+  # @todo: services naming should follow classnames
   prestashop.core.bridge.smarty_bridge:
     class: PrestaShopBundle\Bridge\Smarty\SmartyBridge
     arguments:
