@@ -147,7 +147,7 @@ class SmartyBridge
         $this->toolbarFlagsConfigurator->configure($controllerConfiguration);
         $this->headerConfigurator->configure($controllerConfiguration);
         $this->footerConfigurator->configure($controllerConfiguration);
-        $this->smarty->assign($controllerConfiguration->templatesVars);
+        $this->smarty->assign($controllerConfiguration->templateVars);
 
         if ($response === null) {
             $response = new Response();
@@ -191,20 +191,20 @@ class SmartyBridge
         $template_dirs = $this->smarty->getTemplateDir() ?: [];
 
         // Check if header/footer have been overridden
-        $dir = $this->smarty->getTemplateDir(0) . 'controllers' . DIRECTORY_SEPARATOR . trim($controllerConfiguration->folderTemplate, '\\/') . DIRECTORY_SEPARATOR;
+        $dir = $this->smarty->getTemplateDir(0) . 'controllers' . DIRECTORY_SEPARATOR . trim($controllerConfiguration->templateFolder, '\\/') . DIRECTORY_SEPARATOR;
         $module_list_dir = $this->smarty->getTemplateDir(0) . 'helpers' . DIRECTORY_SEPARATOR . 'modules_list' . DIRECTORY_SEPARATOR;
 
         $header_tpl = file_exists($dir . 'header.tpl') ? $dir . 'header.tpl' : 'header.tpl';
         $page_header_toolbar = file_exists($dir . 'page_header_toolbar.tpl') ? $dir . 'page_header_toolbar.tpl' : 'page_header_toolbar.tpl';
         $footer_tpl = file_exists($dir . 'footer.tpl') ? $dir . 'footer.tpl' : 'footer.tpl';
         $modal_module_list = file_exists($module_list_dir . 'modal.tpl') ? $module_list_dir . 'modal.tpl' : '';
-        $tpl_action = $controllerConfiguration->folderTemplate . $controllerConfiguration->display . '.tpl';
+        $tpl_action = $controllerConfiguration->templateFolder . $controllerConfiguration->display . '.tpl';
 
         // Check if action template has been overridden
         foreach ($template_dirs as $template_dir) {
             if (file_exists($template_dir . DIRECTORY_SEPARATOR . $tpl_action) && $controllerConfiguration->display != 'view' && $controllerConfiguration->display != 'options') {
-                if (method_exists($this, $controllerConfiguration->display . Tools::toCamelCase($controllerConfiguration->controllerNameLegacy))) {
-                    $this->{$controllerConfiguration->display . Tools::toCamelCase($controllerConfiguration->controllerNameLegacy)}();
+                if (method_exists($this, $controllerConfiguration->display . Tools::toCamelCase($controllerConfiguration->legacyControllerName))) {
+                    $this->{$controllerConfiguration->display . Tools::toCamelCase($controllerConfiguration->legacyControllerName)}();
                 }
                 $this->smarty->assign('content', $this->smarty->fetch($tpl_action));
 
@@ -261,11 +261,11 @@ class SmartyBridge
      */
     private function createTemplate(ControllerConfiguration $controllerConfiguration, $templateName)
     {
-        if ($controllerConfiguration->folderTemplate) {
-            if (!$this->configuration->get('PS_DISABLE_OVERRIDES') && file_exists($this->smarty->getTemplateDir(1) . DIRECTORY_SEPARATOR . $controllerConfiguration->folderTemplate . $templateName)) {
-                return $this->smarty->createTemplate($controllerConfiguration->folderTemplate . $templateName, $this->smarty);
-            } elseif (file_exists($this->smarty->getTemplateDir(0) . 'controllers' . DIRECTORY_SEPARATOR . $controllerConfiguration->folderTemplate . $templateName)) {
-                return $this->smarty->createTemplate('controllers' . DIRECTORY_SEPARATOR . $controllerConfiguration->folderTemplate . $templateName, $this->smarty);
+        if ($controllerConfiguration->templateFolder) {
+            if (!$this->configuration->get('PS_DISABLE_OVERRIDES') && file_exists($this->smarty->getTemplateDir(1) . DIRECTORY_SEPARATOR . $controllerConfiguration->templateFolder . $templateName)) {
+                return $this->smarty->createTemplate($controllerConfiguration->templateFolder . $templateName, $this->smarty);
+            } elseif (file_exists($this->smarty->getTemplateDir(0) . 'controllers' . DIRECTORY_SEPARATOR . $controllerConfiguration->templateFolder . $templateName)) {
+                return $this->smarty->createTemplate('controllers' . DIRECTORY_SEPARATOR . $controllerConfiguration->templateFolder . $templateName, $this->smarty);
             }
         }
 

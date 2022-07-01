@@ -72,11 +72,11 @@ class FiltersHelper
         Request $request,
         HelperListConfiguration $helperListConfiguration
     ): void {
-        $this->hookDispatcher->dispatchWithParameters('action' . $helperListConfiguration->controllerNameLegacy . 'ListingFieldsModifier', [
+        $this->hookDispatcher->dispatchWithParameters('action' . $helperListConfiguration->legacyControllerName . 'ListingFieldsModifier', [
             'fields' => &$helperListConfiguration->fieldsList,
         ]);
 
-        $prefix = FilterPrefix::getByClassName($helperListConfiguration->controllerNameLegacy);
+        $prefix = FilterPrefix::getByClassName($helperListConfiguration->legacyControllerName);
 
         if (!empty($helperListConfiguration->listId)) {
             foreach ($request->request->all() as $key => $value) {

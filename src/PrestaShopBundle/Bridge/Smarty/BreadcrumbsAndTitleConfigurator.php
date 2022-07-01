@@ -78,12 +78,12 @@ class BreadcrumbsAndTitleConfigurator implements ConfiguratorInterface
 
         $controllerConfiguration->breadcrumbs[] = $breadcrumbs['tab']['name'] ?? '';
 
-        $controllerConfiguration->templatesVars['breadcrumbs2'] = $breadcrumbs;
-        $controllerConfiguration->templatesVars['quick_access_current_link_name'] = Tools::safeOutput($breadcrumbs['tab']['name'] . (isset($breadcrumbs['action']) ? ' - ' . $breadcrumbs['action']['name'] : ''));
-        $controllerConfiguration->templatesVars['quick_access_current_link_icon'] = $breadcrumbs['container']['icon'];
+        $controllerConfiguration->templateVars['breadcrumbs2'] = $breadcrumbs;
+        $controllerConfiguration->templateVars['quick_access_current_link_name'] = Tools::safeOutput($breadcrumbs['tab']['name'] . (isset($breadcrumbs['action']) ? ' - ' . $breadcrumbs['action']['name'] : ''));
+        $controllerConfiguration->templateVars['quick_access_current_link_icon'] = $breadcrumbs['container']['icon'];
 
         $navigationPipe = $this->configuration->get('PS_NAVIGATION_PIPE') ?: '>';
-        $controllerConfiguration->templatesVars['navigationPipe'] = $navigationPipe;
+        $controllerConfiguration->templateVars['navigationPipe'] = $navigationPipe;
     }
 
     /**

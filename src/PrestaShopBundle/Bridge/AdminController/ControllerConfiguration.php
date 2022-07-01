@@ -53,7 +53,7 @@ class ControllerConfiguration
     /**
      * @var string|null
      */
-    public $controllerNameLegacy;
+    public $legacyControllerName;
 
     /**
      * @var string|null
@@ -153,7 +153,7 @@ class ControllerConfiguration
     /**
      * @var string|null
      */
-    public $folderTemplate;
+    public $templateFolder;
 
     /**
      * @var array
@@ -188,7 +188,7 @@ class ControllerConfiguration
     /**
      * @var array
      */
-    public $templatesVars = [];
+    public $templateVars = [];
 
     /**
      * @var array
@@ -200,21 +200,14 @@ class ControllerConfiguration
      *
      * @var int
      */
-    public $multishop_context = Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP | Shop::CONTEXT_SHOP;
-
-    /**
-     * This parameter is needed by legacy hook, so we can't remove it.
-     *
-     * @var string
-     */
-    public $php_self;
+    public $multiShopContext = Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP | Shop::CONTEXT_SHOP;
 
     /**
      * This parameter is needed by legacy helper shop, so we can't remove it.
      *
      * @var bool
      */
-    public $multishop_context_group = true;
+    public $multiShopContextGroup = true;
 
     /**
      * Adds toolbar action to the page

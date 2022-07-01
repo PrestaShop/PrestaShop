@@ -78,7 +78,7 @@ class HelperListConfigurator
         $helper->identifier = $helperListConfiguration->identifier;
         $helper->token = $helperListConfiguration->token;
         $helper->position_identifier = $helperListConfiguration->positionIdentifier;
-        $helper->controller_name = $helperListConfiguration->controllerNameLegacy;
+        $helper->controller_name = $helperListConfiguration->legacyControllerName;
         $helper->list_id = $helperListConfiguration->listId ?? $helperListConfiguration->table;
         $helper->bootstrap = $helperListConfiguration->bootstrap;
     }
