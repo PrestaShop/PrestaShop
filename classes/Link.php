@@ -925,14 +925,32 @@ class LinkCore
             } else {
                 $shop = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
             }
+            $domainSSL = $shop->domain_ssl;
+            $domain = $shop->domain;
+            if ((Shop::getContext() === Shop::CONTEXT_ALL || Shop::getContext() === Shop::CONTEXT_GROUP) && empty($idShop)) {
+                if (Shop::getContext() === Shop::CONTEXT_GROUP) {
+                    $allShops = Shop::getShops(true, $shop->id_shop_group);
+                } else {
+                    $allShops = Shop::getShops();
+                }
+                foreach ($allShops as $shopDomain) {
+                    if ($shopDomain['domain_ssl'] === Tools::getHttpHost() || $shopDomain['domain'] === Tools::getHttpHost()) {
+                        $domainSSL = $shopDomain['domain_ssl'];
+                        $domain = $shopDomain['domain'];
+                        break;
+                    }
+                }
+            }
         } else {
             $shop = Context::getContext()->shop;
+            $domainSSL = $shop->domain_ssl;
+            $domain = $shop->domain;
         }
 
         if ($relativeProtocol) {
-            $base = '//' . ($ssl && $this->ssl_enable ? $shop->domain_ssl : $shop->domain);
+            $base = '//' . ($ssl && $this->ssl_enable ? $domainSSL : $domain);
         } else {
-            $base = (($ssl && $this->ssl_enable) ? 'https://' . $shop->domain_ssl : 'http://' . $shop->domain);
+            $base = (($ssl && $this->ssl_enable) ? 'https://' .$domainSSL : 'http://' . $domain);
         }
 
         return $base . $shop->getBaseURI();
