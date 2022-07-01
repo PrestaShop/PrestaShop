@@ -8,9 +8,15 @@ defaults:
   run:
     working-directory: ./tests/UI/
 
+permissions:
+  contents: read
+
 jobs:
 
   ESLint:
+    permissions:
+      actions: write  # for styfle/cancel-workflow-action to cancel/stop running workflows
+      contents: read  # for actions/checkout to fetch code
     runs-on: ubuntu-latest
     name: ESLint
     if: contains(github.event.pull_request.labels.*.name, 'TE')
@@ -45,6 +51,9 @@ jobs:
         run: npm run lint
 
   Steps-identifiers:
+    permissions:
+      actions: write  # for styfle/cancel-workflow-action to cancel/stop running workflows
+      contents: read  # for actions/checkout to fetch code
     runs-on: ubuntu-latest
     name: Checking doubles in steps identifiers
     if: contains(github.event.pull_request.labels.*.name, 'TE')

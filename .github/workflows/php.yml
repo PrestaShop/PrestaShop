@@ -1,7 +1,13 @@
 name: PHP
 on: [ push, pull_request ]
+permissions:
+  contents: read
+
 jobs:
   php-cs-fixer:
+    permissions:
+      actions: write  # for styfle/cancel-workflow-action to cancel/stop running workflows
+      contents: read  # for actions/checkout to fetch code
     name: PHP CS Fixer
     runs-on: ubuntu-latest
     steps:
@@ -41,6 +47,9 @@ jobs:
         run: composer normalize --dry-run --no-check-lock
 
   phpstan:
+    permissions:
+      actions: write  # for styfle/cancel-workflow-action to cancel/stop running workflows
+      contents: read  # for actions/checkout to fetch code
     name: PHP Static Analysis
     runs-on: ubuntu-latest
     strategy:
@@ -82,6 +91,9 @@ jobs:
         run: ./vendor/bin/phpstan analyse -c phpstan.neon.dist
 
   phpunit:
+    permissions:
+      actions: write  # for styfle/cancel-workflow-action to cancel/stop running workflows
+      contents: read  # for actions/checkout to fetch code
     name: PHPUnit
     runs-on: ubuntu-latest
     strategy:
