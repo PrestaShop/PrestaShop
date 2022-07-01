@@ -53,7 +53,7 @@ class ControllerConfigurationFactory
     /**
      * @param int $tabId
      * @param string $objectModelClassName
-     * @param string $controllerNameLegacy
+     * @param string $legacyControllerName
      * @param string $tableName
      *
      * @return ControllerConfiguration
@@ -61,17 +61,16 @@ class ControllerConfigurationFactory
     public function create(
         int $tabId,
         string $objectModelClassName,
-        string $controllerNameLegacy,
+        string $legacyControllerName,
         string $tableName
     ): ControllerConfiguration {
         $controllerConfiguration = new ControllerConfiguration();
         $controllerConfiguration->tabId = $tabId;
         $controllerConfiguration->objectModelClassName = $objectModelClassName;
-        $controllerConfiguration->php_self = $objectModelClassName;
-        $controllerConfiguration->controllerNameLegacy = $controllerNameLegacy;
+        $controllerConfiguration->legacyControllerName = $legacyControllerName;
         $controllerConfiguration->tableName = $tableName;
         $controllerConfiguration->user = $this->userProvider->getUser();
-        $controllerConfiguration->folderTemplate = Tools::toUnderscoreCase(substr($controllerConfiguration->controllerNameLegacy, 5)) . '/';
+        $controllerConfiguration->templateFolder = Tools::toUnderscoreCase(substr($controllerConfiguration->legacyControllerName, 5)) . '/';
 
         $this->setLegacyCurrentIndex($controllerConfiguration);
         $this->initToken($controllerConfiguration);
@@ -86,7 +85,7 @@ class ControllerConfigurationFactory
      */
     private function setLegacyCurrentIndex(ControllerConfiguration $controllerConfiguration): void
     {
-        $legacyCurrentIndex = 'index.php' . '?controller=' . $controllerConfiguration->controllerNameLegacy;
+        $legacyCurrentIndex = 'index.php' . '?controller=' . $controllerConfiguration->legacyControllerName;
         if ($back = Tools::getValue('back')) {
             $legacyCurrentIndex .= '&back=' . urlencode($back);
         }
@@ -100,7 +99,7 @@ class ControllerConfigurationFactory
     private function initToken(ControllerConfiguration $controllerConfiguration): void
     {
         $controllerConfiguration->token = Tools::getAdminToken(
-            $controllerConfiguration->controllerNameLegacy .
+            $controllerConfiguration->legacyControllerName .
             (int) $controllerConfiguration->tabId .
             (int) $controllerConfiguration->user->getData()->id
         );

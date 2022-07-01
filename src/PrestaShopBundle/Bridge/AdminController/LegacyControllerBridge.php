@@ -31,6 +31,7 @@ use Context;
 use Hook;
 use Media;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Tools;
 
 class LegacyControllerBridge implements LegacyControllerBridgeInterface
@@ -46,15 +47,23 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
     private $multistoreFeature;
 
     /**
+     * @var string[]
+     */
+    private $propertiesMap;
+
+    /**
      * @param ControllerConfiguration $controllerConfiguration
+     * @param array<string, string> $propertiesMap maps legacy controller properties with bridge
      * @param FeatureInterface $multistoreFeature
      */
     public function __construct(
         ControllerConfiguration $controllerConfiguration,
+        array $propertiesMap,
         FeatureInterface $multistoreFeature
     ) {
         $this->controllerConfiguration = $controllerConfiguration;
         $this->multistoreFeature = $multistoreFeature;
+        $this->propertiesMap = $propertiesMap;
     }
 
     /**
@@ -223,6 +232,7 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
 
             if ($jsPath && !in_array($jsPath, $this->controllerConfiguration->jsFiles)) {
                 $this->controllerConfiguration->jsFiles[] = $jsPath . ($version ? '?' . $version : '');
+                $this->controllerConfiguration->jsFiles = [$jsPath . ($version ? '?' . $version : '')];
             }
         }
     }
@@ -270,7 +280,8 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
 
     /**
      * This whole bridge is used as legacy $context->controller, but all properties are held in configuration,
-     * so we use a "magic" getter to allow legacy code retrieving properties from configuration as if it would be in legacy controller
+     * so we use a "magic" getter with a help of properties map and property accessor
+     * to allow legacy code retrieving properties from configuration as if it would be in legacy controller
      *
      * @param string $name
      *
@@ -278,29 +289,35 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
      */
     public function __get(string $name)
     {
-        if (property_exists($this, $name)) {
+        if (!isset($this->propertiesMap[$name])) {
             return $this->{$name};
         }
 
-        return $this->controllerConfiguration->{$name};
+        $propertyAccessor = new PropertyAccessor();
+
+        return $propertyAccessor->getValue($this, $this->propertiesMap[$name]);
     }
 
     /**
      * This whole bridge is used as legacy $context->controller, but all properties are held in configuration,
-     * so we use a "magic" setter to allow legacy code setting properties in configuration as if it would be in legacy controller.
-     *
-     * @todo: for setter "property_exists" will probably raise issues, because legacy used to set previously not defined properties in controller too (so this wouldn't work)
+     * so we use a "magic" setter with a help of properties map and property accessor
+     * to allow legacy code setting properties in configuration as if it would be in legacy controller.
      *
      * @param string $name
+     * @param $value
      *
-     * @return mixed
+     * @return void
      */
-    public function __set(string $name, $value)
+    public function __set(string $name, $value): void
     {
-        if (property_exists($this, $name)) {
-            return $this->{$name};
+        if (!isset($this->propertiesMap[$name])) {
+            $this->{$name} = $value;
+
+            return;
         }
 
-        return $this->controllerConfiguration->{$name};
+        $propertyAccessor = new PropertyAccessor();
+
+        $propertyAccessor->setValue($this, $this->propertiesMap[$name], $value);
     }
 }

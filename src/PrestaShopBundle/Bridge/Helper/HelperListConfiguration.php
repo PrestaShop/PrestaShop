@@ -58,7 +58,7 @@ class HelperListConfiguration
     /**
      * @var string
      */
-    public $controllerNameLegacy;
+    public $legacyControllerName;
 
     /**
      * @var string

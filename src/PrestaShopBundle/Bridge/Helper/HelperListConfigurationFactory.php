@@ -73,11 +73,11 @@ class HelperListConfigurationFactory
         $helperListConfiguration->explicitSelect = $explicitSelect;
         $helperListConfiguration->useFoundRows = $useFoundRows;
         $helperListConfiguration->id = $controllerConfiguration->tabId;
-        $helperListConfiguration->controllerNameLegacy = $controllerConfiguration->controllerNameLegacy;
+        $helperListConfiguration->legacyControllerName = $controllerConfiguration->legacyControllerName;
         $helperListConfiguration->token = $controllerConfiguration->token;
         $helperListConfiguration->bootstrap = $controllerConfiguration->bootstrap;
         $helperListConfiguration->legacyCurrentIndex = $controllerConfiguration->legacyCurrentIndex;
-        $helperListConfiguration->multishopContext = $controllerConfiguration->multishop_context;
+        $helperListConfiguration->multishopContext = $controllerConfiguration->multiShopContext;
 
         return $helperListConfiguration;
     }
