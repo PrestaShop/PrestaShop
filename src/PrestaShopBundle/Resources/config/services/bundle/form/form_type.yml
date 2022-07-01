@@ -27,6 +27,15 @@ services:
     tags:
       - { name: form.type }
 
+  form.type.date_range_local:
+    class: PrestaShopBundle\Form\Admin\Type\DateRangeLocalType
+    arguments:
+      - "@translator"
+      - "@form.form_cloner"
+      - '@=service("prestashop.adapter.legacy.context").getLanguage().date_format_full'
+    tags:
+      - { name: form.type }
+
   form.type.product.simple_category:
     class: PrestaShopBundle\Form\Admin\Category\SimpleCategory
     arguments:

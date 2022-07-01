@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Sell\Customer\SearchedCustomerType;
-use PrestaShopBundle\Form\Admin\Type\DateRangeType;
+use PrestaShopBundle\Form\Admin\Type\DateRangeLocalType;
 use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -71,14 +71,13 @@ class SpecificPriceType extends TranslatorAwareType
      * @param ConfigurableFormChoiceProviderInterface $combinationIdChoiceProvider
      * @param UrlGeneratorInterface $urlGenerator
      * @param ProductRepository $productRepository
-     * @param string $dateFormatFull
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         ConfigurableFormChoiceProviderInterface $combinationIdChoiceProvider,
         UrlGeneratorInterface $urlGenerator,
-        ProductRepository $productRepository,
+        ProductRepository $productRepository
     ) {
         parent::__construct($translator, $locales);
         $this->combinationIdChoiceProvider = $combinationIdChoiceProvider;
@@ -146,7 +145,7 @@ class SpecificPriceType extends TranslatorAwareType
                     ]),
                 ],
             ])
-            ->add('date_range', DateRangeType::class, [
+            ->add('date_range', DateRangeLocalType::class, [
                 'label' => $this->trans('Duration', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h4',
                 'required' => false,
