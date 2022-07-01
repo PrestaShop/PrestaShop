@@ -135,7 +135,7 @@ class UploadQuotaType extends TranslatorAwareType
             new LessThanOrEqual(
                 [
                     'value' => $serverMaxSize,
-                    'message' => $this->trans('The limit chosen is larger than the server\'s maximum upload limit. Please increase the limits of your server.', 'Admin.Notifications.Error'),
+                    'message' => $this->trans('The limit chosen is larger than the server\'s maximum upload limit. Please increase the limits of your server.', 'Admin.Advparameters.Notification'),
                 ]
             ),
         ];
