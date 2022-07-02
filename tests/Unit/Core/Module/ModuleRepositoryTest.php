@@ -50,8 +50,12 @@ class ModuleRepositoryTest extends TestCase
         'demo',
     ];
 
+    private const ACTIVED_MODULES = [
+        'bankwire',
+    ];
+
     private const CONFIGURABLE_MODULES = [
-        'ps_banner',
+        'bankwire',
     ];
 
     /** @var ModuleRepository */
@@ -110,6 +114,7 @@ class ModuleRepositoryTest extends TestCase
 
         $module->method('getInstance')->willReturn($moduleInstance);
         $module->method('isInstalled')->willReturn(in_array($moduleName, self::INSTALLED_MODULES));
+        $module->method('isActive')->willReturn(in_array($moduleName, self::ACTIVED_MODULES));
         $module->method('isConfigurable')->willReturn(in_array($moduleName, self::CONFIGURABLE_MODULES));
         $module->method('canBeUpgraded')->willReturn(in_array($moduleName, self::UPGRADABLE_MODULES));
         $module->method('hasValidInstance')->willReturn(in_array($moduleName, self::CONFIGURABLE_MODULES));
