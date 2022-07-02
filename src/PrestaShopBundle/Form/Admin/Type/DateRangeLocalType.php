@@ -114,7 +114,7 @@ class DateRangeLocalType extends AbstractType
 
         $builder->get('from')->addModelTransformer(new CallbackTransformer(
             function ($from) {
-                if ($from !== null) {
+                if ($from !== null && $from != '0000-00-00 00:00:00') {
                     $dateTime = DateTime::createFromFormat('Y-m-d h:i:s', $from);
                     $newDate = $dateTime->format($this->dateFormatFull);
 
