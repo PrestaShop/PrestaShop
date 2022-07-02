@@ -115,7 +115,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     public function getMustBeConfiguredModules(): ModuleCollection
     {
         return $this->getList()->filter(static function (Module $module) {
-            return $module->isConfigurable() && $module->hasValidInstance() && !empty($module->getInstance()->warning);
+            return $module->isConfigurable() && $module->isActive() && $module->hasValidInstance() && !empty($module->getInstance()->warning);
         });
     }
 
