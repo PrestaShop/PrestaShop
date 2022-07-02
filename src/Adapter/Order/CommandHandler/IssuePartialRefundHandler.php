@@ -140,7 +140,12 @@ final class IssuePartialRefundHandler extends AbstractOrderCommandHandler implem
 
         // @todo This part should probably be in a share abstract class as it will probably be common with other handlers
         // Update order details and reinject quantities
-        $shouldReinjectProducts = !$order->hasBeenDelivered() || $command->restockRefundedProducts();
+        $shouldReinjectProducts = !$order->hasBeenDelivered();
+
+        if (!$command->restockRefundedProducts()) {
+            $shouldReinjectProducts = false;
+        }
+
         foreach ($orderRefundSummary->getProductRefunds() as $orderDetailId => $productRefund) {
             $orderDetail = $orderRefundSummary->getOrderDetailById($orderDetailId);
             if ($shouldReinjectProducts) {
