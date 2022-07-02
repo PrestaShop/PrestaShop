@@ -27,7 +27,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
-use Context;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DateRange;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceException;
@@ -66,6 +65,11 @@ class SpecificPriceType extends TranslatorAwareType
     private $productRepository;
 
     /**
+     * @var string
+     */
+    protected $dateFormatFull;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param ConfigurableFormChoiceProviderInterface $combinationIdChoiceProvider
@@ -77,12 +81,14 @@ class SpecificPriceType extends TranslatorAwareType
         array $locales,
         ConfigurableFormChoiceProviderInterface $combinationIdChoiceProvider,
         UrlGeneratorInterface $urlGenerator,
-        ProductRepository $productRepository
+        ProductRepository $productRepository,
+        string $dateFormatFull
     ) {
         parent::__construct($translator, $locales);
         $this->combinationIdChoiceProvider = $combinationIdChoiceProvider;
         $this->urlGenerator = $urlGenerator;
         $this->productRepository = $productRepository;
+        $this->dateFormatFull = $dateFormatFull;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -160,7 +166,7 @@ class SpecificPriceType extends TranslatorAwareType
                     ]),
                 ],
                 'columns_number' => 2,
-                'attr' => ['placeholder' => Context::getContext()->language->date_format_full],
+                'attr' => ['placeholder' => $this->dateFormatFull],
             ])
             ->add('impact', SpecificPriceImpactType::class)
         ;
