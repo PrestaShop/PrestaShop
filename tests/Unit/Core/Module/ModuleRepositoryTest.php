@@ -55,6 +55,11 @@ class ModuleRepositoryTest extends TestCase
     ];
 
     private const CONFIGURABLE_MODULES = [
+        'ps_banner',
+        'bankwire',
+    ];
+
+    private const MUST_BE_CONFIGURED_MODULES = [
         'bankwire',
     ];
 
@@ -94,7 +99,7 @@ class ModuleRepositoryTest extends TestCase
 
     public function testGetMustBeConfiguredModules(): void
     {
-        $this->assertCount(count(self::CONFIGURABLE_MODULES), $this->moduleRepository->getMustBeConfiguredModules());
+        $this->assertCount(count(self::MUST_BE_CONFIGURED_MODULES), $this->moduleRepository->getMustBeConfiguredModules());
     }
 
     public function testGetModulePath(): void
