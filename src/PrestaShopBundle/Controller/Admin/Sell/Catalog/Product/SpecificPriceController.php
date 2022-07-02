@@ -282,13 +282,15 @@ class SpecificPriceController extends FrameworkBundleAdminController
             return null;
         }
 
+        $dateFormatFull = $this->get('prestashop.adapter.legacy.context')->getLanguage()->date_format_full;
+
         return [
             'from' => DateTimeUtil::isNull($from) ?
                 $this->trans('Always', 'Admin.Global') :
-                $from->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
+                $from->format($dateFormatFull),
             'to' => DateTimeUtil::isNull($to) ?
                 $this->trans('Always', 'Admin.Global') :
-                $to->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
+                $to->format($dateFormatFull),
         ];
     }
 }
