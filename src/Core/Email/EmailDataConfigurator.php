@@ -146,7 +146,6 @@ final class EmailDataConfigurator extends AbstractMultistoreConfiguration
             ->setAllowedTypes(EmailConfigurationType::FIELD_LOG_EMAILS, 'bool')
             ->setAllowedTypes(EmailConfigurationType::FIELD_MAIL_DKIM_ENABLE, 'bool');
 
-
         $resolver->setNormalizer('dkim_config', function (Options $options, $value) {
             return $this->getDkimResolver()->resolve($value ?? []);
         });
