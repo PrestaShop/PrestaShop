@@ -64,6 +64,7 @@ final class EmailDataConfigurator extends AbstractMultistoreConfiguration
         SmtpConfigurationType::FIELD_MAIL_PASSWD,
         SmtpConfigurationType::FIELD_MAIL_SMTP_ENCRYPTION,
         SmtpConfigurationType::FIELD_MAIL_SMTP_PORT,
+        'multistore_server'
     ];
 
     /**
@@ -178,7 +179,8 @@ final class EmailDataConfigurator extends AbstractMultistoreConfiguration
             ->setAllowedTypes('username', 'string')
             ->setAllowedTypes('encryption', 'string')
             ->setAllowedTypes('port', 'string')
-            ->setAllowedTypes('password', 'string');
+            ->setAllowedTypes('password', 'string')
+            ->setAllowedTypes('multistore_server', 'bool');
 
         return $smtpResolver;
     }
