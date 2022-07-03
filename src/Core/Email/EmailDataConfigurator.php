@@ -64,7 +64,13 @@ final class EmailDataConfigurator extends AbstractMultistoreConfiguration
         SmtpConfigurationType::FIELD_MAIL_PASSWD,
         SmtpConfigurationType::FIELD_MAIL_SMTP_ENCRYPTION,
         SmtpConfigurationType::FIELD_MAIL_SMTP_PORT,
-        'multistore_server'
+
+        'multistore_' .SmtpConfigurationType::FIELD_MAIL_DOMAIN,
+        'multistore_' .SmtpConfigurationType::FIELD_MAIL_SERVER,
+        'multistore_' .SmtpConfigurationType::FIELD_MAIL_USER,
+        'multistore_' .SmtpConfigurationType::FIELD_MAIL_PASSWD,
+        'multistore_' .SmtpConfigurationType::FIELD_MAIL_SMTP_ENCRYPTION,
+        'multistore_' .SmtpConfigurationType::FIELD_MAIL_SMTP_PORT,
     ];
 
     /**
@@ -136,9 +142,8 @@ final class EmailDataConfigurator extends AbstractMultistoreConfiguration
             ->setAllowedTypes(EmailConfigurationType::FIELD_MAIL_METHOD, 'int')
             ->setAllowedTypes(EmailConfigurationType::FIELD_MAIL_TYPE, 'int')
             ->setAllowedTypes(EmailConfigurationType::FIELD_LOG_EMAILS, 'bool')
-            ->setAllowedTypes(EmailConfigurationType::FIELD_MAIL_DKIM_ENABLE, 'bool')
-            ->setAllowedTypes('smtp_config', 'array')
-            ->setAllowedTypes('dkim_config', 'array');
+            ->setAllowedTypes(EmailConfigurationType::FIELD_MAIL_DKIM_ENABLE, 'bool');
+
 
         $resolver->setNormalizer('dkim_config', function (Options $options, $value) {
             return $this->getDkimResolver()->resolve($value ?? []);
@@ -158,7 +163,7 @@ final class EmailDataConfigurator extends AbstractMultistoreConfiguration
     {
         $dkimResolver = new OptionsResolver();
         $dkimResolver
-            ->setRequired(self::CONFIGURATION_FIELDS_DKIM)
+            ->setDefined(self::CONFIGURATION_FIELDS_DKIM)
             ->setAllowedTypes(DkimConfigurationType::FIELD_MAIL_DKIM_DOMAIN, 'string')
             ->setAllowedTypes(DkimConfigurationType::FIELD_MAIL_DKIM_SELECTOR, 'string')
             ->setAllowedTypes(DkimConfigurationType::FIELD_MAIL_DKIM_KEY, 'string');
@@ -173,14 +178,19 @@ final class EmailDataConfigurator extends AbstractMultistoreConfiguration
     {
         $smtpResolver = new OptionsResolver();
         $smtpResolver
-            ->setRequired(self::CONFIGURATION_FIELDS_SMTP)
+            ->setDefined(self::CONFIGURATION_FIELDS_SMTP)
             ->setAllowedTypes('domain', 'string')
             ->setAllowedTypes('server', 'string')
             ->setAllowedTypes('username', 'string')
             ->setAllowedTypes('encryption', 'string')
             ->setAllowedTypes('port', 'string')
             ->setAllowedTypes('password', 'string')
-            ->setAllowedTypes('multistore_server', 'bool');
+            ->setAllowedTypes('multistore_domain', 'bool')
+            ->setAllowedTypes('multistore_server', 'bool')
+            ->setAllowedTypes('multistore_username', 'bool')
+            ->setAllowedTypes('multistore_encryption', 'bool')
+            ->setAllowedTypes('multistore_port', 'bool')
+            ->setAllowedTypes('multistore_password', 'bool');
 
         return $smtpResolver;
     }
