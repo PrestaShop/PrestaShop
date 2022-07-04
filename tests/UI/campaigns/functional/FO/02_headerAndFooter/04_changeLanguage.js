@@ -26,11 +26,11 @@ let browserContext;
 let page;
 
 /*
-Pre-condition:
-- Delete the french language
 Scenario:
+- Disable french language
 - Go to FO and check that there is only one language
-
+- Enable french language
+- Go to Fo and change language
  */
 describe('FO - Header and Footer : Change language', async () => {
   // before and after functions
@@ -44,13 +44,13 @@ describe('FO - Header and Footer : Change language', async () => {
   });
 
   // 1 - Disable language
-  describe('Disable \'Français\' language', async () => {
+  describe('Disable \'French\' language', async () => {
     it('should login in BO', async function () {
       await loginCommon.loginBO(this, page);
     });
 
     it('should go to \'International > Localization\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage1', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -65,7 +65,7 @@ describe('FO - Header and Footer : Change language', async () => {
     });
 
     it('should go to \'Languages\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToLanguagesPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToLanguagesPage1', baseContext);
 
       await localizationPage.goToSubTabLanguages(page);
       const pageTitle = await languagesPage.getPageTitle(page);
@@ -73,14 +73,14 @@ describe('FO - Header and Footer : Change language', async () => {
     });
 
     it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst1', baseContext);
 
       const numberOfLanguages = await languagesPage.resetAndGetNumberOfLines(page);
       await expect(numberOfLanguages).to.be.above(0);
     });
 
     it('should filter by iso_code \'fr\'', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit1', baseContext);
 
       // Filter table
       await languagesPage.filterTable(page, 'input', 'iso_code', Languages.french.isoCode);
@@ -107,16 +107,17 @@ describe('FO - Header and Footer : Change language', async () => {
     });
 
     it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'quickEditReset', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'quickEditReset1', baseContext);
 
       const numberOfLanguages = await languagesPage.resetAndGetNumberOfLines(page);
       await expect(numberOfLanguages).to.be.above(0);
     });
   });
 
+  // 2 - Check that languages list is not visible
   describe('Check that the languages list is not visible', async () => {
     it('should go to FO home page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFO1', baseContext);
 
       await homePage.goToFo(page);
 
@@ -139,11 +140,10 @@ describe('FO - Header and Footer : Change language', async () => {
     });
   });
 
-
-  // Enable language
-  describe('Enable \'Français\' language', async () => {
+  // 3 - Enable language
+  describe('Enable \'French\' language', async () => {
     it('should go to BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'openBOPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'openBOPage2', baseContext);
 
       await homePage.goToBO(page);
 
@@ -152,7 +152,7 @@ describe('FO - Header and Footer : Change language', async () => {
     });
 
     it('should go to \'International > Localization\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToLocalizationPage2', baseContext);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -167,7 +167,7 @@ describe('FO - Header and Footer : Change language', async () => {
     });
 
     it('should go to \'Languages\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToLanguagesPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToLanguagesPage2', baseContext);
 
       await localizationPage.goToSubTabLanguages(page);
       const pageTitle = await languagesPage.getPageTitle(page);
@@ -175,7 +175,7 @@ describe('FO - Header and Footer : Change language', async () => {
     });
 
     it('should filter by iso_code \'fr\'', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToQuickEdit2', baseContext);
 
       // Filter table
       await languagesPage.filterTable(page, 'input', 'iso_code', Languages.french.isoCode);
@@ -189,7 +189,7 @@ describe('FO - Header and Footer : Change language', async () => {
     });
 
     it('should enable language', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'disableLanguage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'enableLanguage', baseContext);
 
       const isActionPerformed = await languagesPage.setStatus(page, 1, true);
 
@@ -200,17 +200,19 @@ describe('FO - Header and Footer : Change language', async () => {
       const languageStatus = await languagesPage.getStatus(page, 1);
       await expect(languageStatus).to.be.true;
     });
+
     it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'quickEditReset', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'quickEditReset2', baseContext);
 
       const numberOfLanguages = await languagesPage.resetAndGetNumberOfLines(page);
       await expect(numberOfLanguages).to.be.above(0);
     });
   });
 
+  // 4 - Change language and check it
   describe('Change language and check it', async () => {
     it('should go to FO home page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToFO2', baseContext);
 
       await homePage.goToFo(page);
 
@@ -225,22 +227,22 @@ describe('FO - Header and Footer : Change language', async () => {
       await expect(isVisible, 'Language list is not visible!').to.be.true;
     });
 
-    it('should change the shop language to \'Français\'', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkLanguagesLink', baseContext);
+    it('should change the shop language to \'French\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'ChangeLanguageToFrench', baseContext);
 
       await homePage.changeLanguage(page, 'fr');
 
       const language = await homePage.getDefaultShopLanguage(page);
-      expect(language).to.equal('Français');
+      expect(language, 'Language is not changed to French!').to.equal('Français');
     });
 
     it('should change the shop language to \'English\'', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkLanguagesLink', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'ChangeLanguageToEnglish', baseContext);
 
       await homePage.changeLanguage(page, 'en');
 
       const language = await homePage.getDefaultShopLanguage(page);
-      expect(language).to.equal('English');
+      expect(language, 'Language is not changed to English!').to.equal('English');
     });
   });
 });
