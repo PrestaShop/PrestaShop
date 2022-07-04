@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use DateTime;
-use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\FormCloner;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
