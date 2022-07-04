@@ -167,10 +167,7 @@ final class EmailDataConfigurator extends AbstractMultistoreConfiguration
             ->setDefined(self::CONFIGURATION_FIELDS_DKIM)
             ->setAllowedTypes(DkimConfigurationType::FIELD_MAIL_DKIM_DOMAIN, 'string')
             ->setAllowedTypes(DkimConfigurationType::FIELD_MAIL_DKIM_SELECTOR, 'string')
-            ->setAllowedTypes(DkimConfigurationType::FIELD_MAIL_DKIM_KEY, 'string')
-            ->setAllowedTypes('multistore_' . DkimConfigurationType::FIELD_MAIL_DKIM_DOMAIN, 'bool')
-            ->setAllowedTypes('multistore_' . DkimConfigurationType::FIELD_MAIL_DKIM_SELECTOR, 'bool')
-            ->setAllowedTypes('multistore_' . DkimConfigurationType::FIELD_MAIL_DKIM_KEY, 'bool');
+            ->setAllowedTypes(DkimConfigurationType::FIELD_MAIL_DKIM_KEY, 'string');
 
         return $dkimResolver;
     }
@@ -188,13 +185,7 @@ final class EmailDataConfigurator extends AbstractMultistoreConfiguration
             ->setAllowedTypes(SmtpConfigurationType::FIELD_MAIL_USER, 'string')
             ->setAllowedTypes(SmtpConfigurationType::FIELD_MAIL_SMTP_ENCRYPTION, 'string')
             ->setAllowedTypes(SmtpConfigurationType::FIELD_MAIL_SMTP_PORT, 'string')
-            ->setAllowedTypes(SmtpConfigurationType::FIELD_MAIL_PASSWD, 'string')
-            ->setAllowedTypes('multistore_' . SmtpConfigurationType::FIELD_MAIL_DOMAIN, 'bool')
-            ->setAllowedTypes('multistore_' . SmtpConfigurationType::FIELD_MAIL_SERVER, 'bool')
-            ->setAllowedTypes('multistore_' . SmtpConfigurationType::FIELD_MAIL_USER, 'bool')
-            ->setAllowedTypes('multistore_' . SmtpConfigurationType::FIELD_MAIL_SMTP_ENCRYPTION, 'bool')
-            ->setAllowedTypes('multistore_' . SmtpConfigurationType::FIELD_MAIL_SMTP_PORT, 'bool')
-            ->setAllowedTypes('multistore_' . SmtpConfigurationType::FIELD_MAIL_PASSWD, 'bool');
+            ->setAllowedTypes(SmtpConfigurationType::FIELD_MAIL_PASSWD, 'string');
 
         return $smtpResolver;
     }
