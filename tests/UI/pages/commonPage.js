@@ -23,6 +23,24 @@ class CommonPage {
   }
 
   /**
+   * Go to FO page
+   * @param page {Page} Browser tab
+   * @return {Promise<void>}
+   */
+  async goToFo(page) {
+    await this.goTo(page, global.FO.URL);
+  }
+
+  /**
+   * Go to BO page
+   * @param page {Page} Browser tab
+   * @return {Promise<void>}
+   */
+  async goToBO(page) {
+    await this.goTo(page, global.BO.URL);
+  }
+
+  /**
    * Get current url
    * @param page {Page} Browser tab
    * @returns {Promise<string>}

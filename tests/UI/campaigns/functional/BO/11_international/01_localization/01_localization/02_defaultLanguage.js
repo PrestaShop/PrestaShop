@@ -94,7 +94,7 @@ describe('BO - International - Localization : Update default language', async ()
         it('should go to FO and check the language', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `checkLanguageInFO_${index}`, baseContext);
 
-          const defaultLanguage = await homePage.getShopLanguage(page);
+          const defaultLanguage = await homePage.getDefaultShopLanguage(page);
           expect(defaultLanguage).to.equal(test.args.languageToCheck);
         });
       });
