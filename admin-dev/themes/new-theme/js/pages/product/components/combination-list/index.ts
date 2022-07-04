@@ -231,7 +231,11 @@ export default class CombinationsList {
     this.productAttributeGroups = await getProductAttributeGroups(this.productId);
 
     if (this.filtersApp) {
-      this.filtersApp.filters = this.productAttributeGroups;
+      this.filtersApp = initFilters(
+        CombinationsMap.combinationsFiltersContainer,
+        this.eventEmitter,
+        this.productAttributeGroups,
+      );
     }
 
     // We trigger the clearFilters which will be handled by the filters app, after clean the component will trigger
