@@ -65,7 +65,7 @@ class ProductTypeListener implements EventSubscriberInterface
         if (ProductType::TYPE_COMBINATIONS === $productType) {
             $this->removeSuppliers($form);
             $this->removeStock($form);
-        } else {
+        } elseif ($initialProductType !== ProductType::TYPE_COMBINATIONS) {
             $this->removeCombinations($form);
         }
 
