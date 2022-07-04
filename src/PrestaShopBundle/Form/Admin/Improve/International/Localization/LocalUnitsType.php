@@ -30,6 +30,8 @@ use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * Class LocalUnitsType is responsible for building 'Improve > International > Localization' page
@@ -37,6 +39,7 @@ use Symfony\Component\Form\FormBuilderInterface;
  */
 class LocalUnitsType extends TranslatorAwareType
 {
+    public const LOCAL_UNIT_LENGTH = 5;
     /**
      * {@inheritdoc}
      */
@@ -53,6 +56,21 @@ class LocalUnitsType extends TranslatorAwareType
                     'Admin.International.Help'
                 ),
                 'multistore_configuration_key' => 'PS_WEIGHT_UNIT',
+                'attr' => ['maxlength' => self::LOCAL_UNIT_LENGTH],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans('This field is required.', 'Admin.Notifications.Error'),
+                    ]),
+                    new Length([
+                        'max' => self::LOCAL_UNIT_LENGTH,
+                        'maxMessage' => $this->trans(
+                            'This field cannot be longer than %limit% characters',
+                            'Admin.Notifications.Error',
+                            ['%limit%' => self::LOCAL_UNIT_LENGTH]
+                        ),
+                    ]),
+                ],
+
             ])
             ->add('distance_unit', TextType::class, [
                 'label' => $this->trans(
@@ -64,6 +82,20 @@ class LocalUnitsType extends TranslatorAwareType
                     'Admin.International.Help'
                 ),
                 'multistore_configuration_key' => 'PS_DISTANCE_UNIT',
+                'attr' => ['maxlength' => self::LOCAL_UNIT_LENGTH],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans('This field is required.', 'Admin.Notifications.Error'),
+                    ]),
+                    new Length([
+                        'max' => self::LOCAL_UNIT_LENGTH,
+                        'maxMessage' => $this->trans(
+                            'This field cannot be longer than %limit% characters',
+                            'Admin.Notifications.Error',
+                            ['%limit%' => self::LOCAL_UNIT_LENGTH]
+                        ),
+                    ]),
+                ],
             ])
             ->add('volume_unit', TextType::class, [
                 'label' => $this->trans(
@@ -75,6 +107,20 @@ class LocalUnitsType extends TranslatorAwareType
                     'Admin.International.Help'
                 ),
                 'multistore_configuration_key' => 'PS_VOLUME_UNIT',
+                'attr' => ['maxlength' => self::LOCAL_UNIT_LENGTH],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans('This field is required.', 'Admin.Notifications.Error'),
+                    ]),
+                    new Length([
+                        'max' => self::LOCAL_UNIT_LENGTH,
+                        'maxMessage' => $this->trans(
+                            'This field cannot be longer than %limit% characters',
+                            'Admin.Notifications.Error',
+                            ['%limit%' => self::LOCAL_UNIT_LENGTH]
+                        ),
+                    ]),
+                ],
             ])
             ->add('dimension_unit', TextType::class, [
                 'label' => $this->trans(
@@ -86,6 +132,20 @@ class LocalUnitsType extends TranslatorAwareType
                     'Admin.International.Help'
                 ),
                 'multistore_configuration_key' => 'PS_DIMENSION_UNIT',
+                'attr' => ['maxlength' => self::LOCAL_UNIT_LENGTH],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => $this->trans('This field is required.', 'Admin.Notifications.Error'),
+                    ]),
+                    new Length([
+                        'max' => self::LOCAL_UNIT_LENGTH,
+                        'maxMessage' => $this->trans(
+                            'This field cannot be longer than %limit% characters',
+                            'Admin.Notifications.Error',
+                            ['%limit%' => self::LOCAL_UNIT_LENGTH]
+                        ),
+                    ]),
+                ],
             ]);
     }
 
