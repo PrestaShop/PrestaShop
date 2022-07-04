@@ -146,7 +146,7 @@ export default class BulkDeleteHandler {
           progressModal.interruptProgress();
           stopProcess = true;
         }
-      } catch (e) {
+      } catch (e: any) {
         data = {
           error: `Something went wrong with IDs ${chunkIds.join(', ')}: ${e.message ?? ''}`,
         };
