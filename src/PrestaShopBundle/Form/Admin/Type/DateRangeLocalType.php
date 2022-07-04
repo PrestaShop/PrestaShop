@@ -27,20 +27,15 @@
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use DateTime;
-use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
+use PrestaShopBundle\Form\Admin\Type\DateRangeType;
 use PrestaShopBundle\Form\FormCloner;
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
-use Symfony\Component\Form\Event\PreSetDataEvent;
-use Symfony\Component\Form\Event\PreSubmitEvent;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class DateRangeLocalType extends AbstractType
+class DateRangeLocalType extends DateRangeType
 {
     /**
      * @var TranslatorInterface
@@ -157,45 +152,5 @@ class DateRangeLocalType extends AbstractType
                 }
             }
         ));
-    }
-
-    public function adaptUnlimited(FormEvent $event): void
-    {
-        $data = $event->getData();
-        $form = $event->getForm();
-        if (DateTimeUtil::isNull($data['to'] ?? null)) {
-            $data['unlimited'] = true;
-            $data['to'] = null;
-            $event->setData($data);
-
-            // Force disable state on end date field only on first rendering not submit
-            if ($event instanceof PreSetDataEvent) {
-                $form->add($this->formCloner->cloneForm($form->get('to'), [
-                    'disabled' => true,
-                ]));
-            }
-        } elseif ($event instanceof PreSubmitEvent) {
-            // Re-enable state on end date field on submit in case it was previously disabled on pre-set data event
-            $form->add($this->formCloner->cloneForm($form->get('to'), [
-                'disabled' => false,
-            ]));
-        }
-    }
-
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'date_format' => 'YYYY-MM-DD',
-            'has_unlimited_checkbox' => false,
-        ]);
-        $resolver->setAllowedTypes('date_format', 'string');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getBlockPrefix()
-    {
-        return 'date_range';
     }
 }
