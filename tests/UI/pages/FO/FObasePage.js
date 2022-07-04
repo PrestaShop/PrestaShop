@@ -80,17 +80,6 @@ class FOBasePage extends CommonPage {
     this.notificationsBlock = '#notifications';
   }
 
-  // Methods
-
-  /**
-   * Go to Fo page
-   * @param page {Page} Browser tab
-   * @return {Promise<void>}
-   */
-  async goToFo(page) {
-    await this.goTo(page, global.FO.URL);
-  }
-
   // Header methods
   /**
    * Go to header link
@@ -172,6 +161,24 @@ class FOBasePage extends CommonPage {
   }
 
   /**
+   * Is language list visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  isLanguageListVisible(page) {
+    return this.elementVisible(page, this.languageSelectorExpandIcon, 1000);
+  }
+
+  /**
+   * Get shop language
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  getShopLanguage(page) {
+    return this.getAttributeContent(page, 'html[lang]', 'lang');
+  }
+
+  /**
    * Change language in FO
    * @param page {Page} Browser tab
    * @param lang {string} Language to choose on the select (ex: en or fr)
@@ -186,11 +193,11 @@ class FOBasePage extends CommonPage {
   }
 
   /**
-   * Get shop language
+   * Get default shop language
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getShopLanguage(page) {
+  getDefaultShopLanguage(page) {
     return this.getTextContent(page, this.defaultLanguageSpan);
   }
 
