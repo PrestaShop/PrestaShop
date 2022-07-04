@@ -217,7 +217,6 @@ $isLanguageDefinedFromSession = (isset($language) && $language->isAssociatedToSh
 
 $useDefaultLanguage = $isNotValidLanguage || !$isLanguageDefinedFromSession;
 if ($useDefaultLanguage) {
-
     // Default value for most cases
     $language = new Language(Configuration::get('PS_LANG_DEFAULT'));
 
@@ -234,6 +233,10 @@ if ($useDefaultLanguage) {
             }
         }
     }
+}
+if (!isset($language)) {
+    // Default value for most cases
+    $language = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
 }
 
 $context->language = $language;
