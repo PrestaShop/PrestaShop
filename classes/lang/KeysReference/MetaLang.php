@@ -75,7 +75,7 @@ trans('new-products', 'Shop.Navigation');
 trans('password-recovery', 'Shop.Navigation');
 trans('prices-drop', 'Shop.Navigation');
 trans('sitemap', 'Shop.Navigation');
-trans('supplier', 'Shop.Navigation');
+trans('suppliers', 'Shop.Navigation');
 trans('address', 'Shop.Navigation');
 trans('addresses', 'Shop.Navigation');
 trans('login', 'Shop.Navigation');
