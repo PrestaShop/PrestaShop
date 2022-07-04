@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
 use PrestaShopBundle\Form\Admin\Sell\Product\Options\ProductSupplierCollectionType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Specification\ReferencesType;
+use PrestaShopBundle\Form\Admin\Type\ImagePreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -69,11 +70,16 @@ class CombinationFormType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('cover_thumbnail_url', ImagePreviewType::class, [
+                'label' => false,
+            ])
             ->add('is_default', CheckboxType::class, [
                 'label' => $this->trans('Set as default combination', 'Admin.Catalog.Feature'),
             ])
             ->add('name', HiddenType::class)
-            ->add('stock', CombinationStockType::class)
+            ->add('stock', CombinationStockType::class, [
+                'product_id' => $options['product_id'],
+            ])
             ->add('price_impact', CombinationPriceImpactType::class)
             ->add('references', ReferencesType::class)
             ->add('default_supplier_id', HiddenType::class)
