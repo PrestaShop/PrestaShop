@@ -33,6 +33,7 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
 use PrestaShop\PrestaShop\Adapter\Product\Image\Repository\ProductImageRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
@@ -111,6 +112,11 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
     private $configuration;
 
     /**
+     * @var ProductImagePathFactory
+     */
+    private $productImageUrlFactory;
+
+    /**
      * @param CombinationRepository $combinationRepository
      * @param CombinationNameBuilderInterface $combinationNameBuilder
      * @param StockAvailableRepository $stockAvailableRepository
@@ -121,6 +127,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
      * @param TaxComputer $taxComputer
      * @param int $contextLanguageId
      * @param Configuration $configuration
+     * @param ProductImagePathFactory $productImageUrlFactory
      */
     public function __construct(
         CombinationRepository $combinationRepository,
@@ -132,7 +139,8 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
         NumberExtractor $numberExtractor,
         TaxComputer $taxComputer,
         int $contextLanguageId,
-        Configuration $configuration
+        Configuration $configuration,
+        ProductImagePathFactory $productImageUrlFactory
     ) {
         $this->combinationRepository = $combinationRepository;
         $this->combinationNameBuilder = $combinationNameBuilder;
@@ -144,6 +152,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
         $this->taxComputer = $taxComputer;
         $this->contextLanguageId = $contextLanguageId;
         $this->configuration = $configuration;
+        $this->productImageUrlFactory = $productImageUrlFactory;
     }
 
     /**
@@ -155,6 +164,7 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
         $productId = new ProductId((int) $combination->id_product);
         $defaultCombinationId = $this->combinationRepository->getDefaultCombinationId($productId);
         $product = $this->productRepository->get($productId);
+        $images = $this->getImages($combination);
 
         return new CombinationForEditing(
             $query->getCombinationId()->getValue(),
@@ -163,7 +173,8 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
             $this->getDetails($combination),
             $this->getPrices($combination, $product),
             $this->getStock($combination),
-            $this->getImages($combination),
+            $images,
+            $this->getCoverUrl($images, $productId),
             $defaultCombinationId && $defaultCombinationId->getValue() === (int) $combination->id
         );
     }
@@ -296,5 +307,25 @@ class GetCombinationForEditingHandler implements GetCombinationForEditingHandler
         return array_map(function (ImageId $imageId) {
             return $imageId->getValue();
         }, $combinationImageIds[$combinationIdValue]);
+    }
+
+    /**
+     * @param array $imageIds
+     * @param ProductId $productId
+     *
+     * @return string
+     */
+    private function getCoverUrl(array $imageIds, ProductId $productId): string
+    {
+        if (!empty($imageIds)) {
+            return $this->productImageUrlFactory->getPathByType(new ImageId((int) $imageIds[0]), ProductImagePathFactory::IMAGE_TYPE_CART_DEFAULT);
+        }
+
+        $productImageIds = $this->productImageRepository->getImagesIds($productId);
+        if (!empty($productImageIds)) {
+            return $this->productImageUrlFactory->getPathByType($productImageIds[0], ProductImagePathFactory::IMAGE_TYPE_CART_DEFAULT);
+        }
+
+        return $this->productImageUrlFactory->getNoImagePath(ProductImagePathFactory::IMAGE_TYPE_CART_DEFAULT);
     }
 }
