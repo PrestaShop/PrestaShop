@@ -40,6 +40,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 class LocalUnitsType extends TranslatorAwareType
 {
     public const LOCAL_UNIT_LENGTH = 5;
+
     /**
      * {@inheritdoc}
      */
@@ -70,7 +71,6 @@ class LocalUnitsType extends TranslatorAwareType
                         ),
                     ]),
                 ],
-
             ])
             ->add('distance_unit', TextType::class, [
                 'label' => $this->trans(
