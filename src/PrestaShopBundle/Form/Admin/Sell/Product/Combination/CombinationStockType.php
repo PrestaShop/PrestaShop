@@ -43,7 +43,9 @@ class CombinationStockType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('quantities', QuantityType::class)
+            ->add('quantities', QuantityType::class, [
+                'product_id' => $options['product_id'],
+            ])
             ->add('options', StockOptionsType::class)
             ->add('available_date', DatePickerType::class, [
                 'label' => $this->trans('Availability date', 'Admin.Catalog.Feature'),
@@ -61,8 +63,14 @@ class CombinationStockType extends TranslatorAwareType
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-        $resolver->setDefaults([
-            'label' => false,
-        ]);
+        $resolver
+            ->setDefaults([
+                'label' => false,
+            ])
+            ->setRequired([
+                'product_id',
+            ])
+            ->setAllowedTypes('product_id', 'int')
+        ;
     }
 }
