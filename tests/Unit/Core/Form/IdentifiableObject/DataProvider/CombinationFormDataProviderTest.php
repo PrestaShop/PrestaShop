@@ -322,7 +322,7 @@ class CombinationFormDataProviderTest extends TestCase
             $expectedOutputData,
         ];
 
-        $expectedOutputData['is_default'] = true;
+        $expectedOutputData['header']['is_default'] = true;
         $combinationData = ['is_default' => true];
 
         $datasets[] = [
@@ -502,9 +502,11 @@ class CombinationFormDataProviderTest extends TestCase
         return [
             'id' => self::COMBINATION_ID,
             'product_id' => self::PRODUCT_ID,
-            'name' => self::DEFAULT_NAME,
             'cover_thumbnail_url' => self::COVER_URL,
-            'is_default' => self::IS_DEFAULT,
+            'header' => [
+                'name' => self::DEFAULT_NAME,
+                'is_default' => self::IS_DEFAULT,
+            ],
             'stock' => [
                 'quantities' => [
                     'delta_quantity' => [
