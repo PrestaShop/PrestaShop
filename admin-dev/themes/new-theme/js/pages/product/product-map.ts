@@ -91,7 +91,7 @@ export default {
     combinationsTableBody: `${combinationListFormId} tbody`,
     combinationIdInputsSelector: '.combination-id-input',
     deleteCombinationSelector: '.delete-combination-item',
-    combinationName: 'form .card-header span',
+    combinationName: 'form .combination-name-row .text-preview',
     paginationContainer: '#combinations-pagination',
     loadingSpinner: '#productCombinationsLoading',
     impactOnPriceInputWrapper: '.combination-impact-on-price',
