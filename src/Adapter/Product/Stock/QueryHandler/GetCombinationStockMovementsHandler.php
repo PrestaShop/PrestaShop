@@ -32,10 +32,13 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetCombinationStockMov
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryHandler\GetCombinationStockMovementsHandlerInterface;
 
 /**
- * Handles @see GetCombinationStockMovements
+ * Handles @see GetCombinationStockMovements using the adapter repositories.
  */
 class GetCombinationStockMovementsHandler extends AbstractGetStockMovementsHandler implements GetCombinationStockMovementsHandlerInterface
 {
+    /**
+     * {@inheritDoc}
+     */
     public function handle(GetCombinationStockMovements $query): array
     {
         return $this->getStockMovements(
