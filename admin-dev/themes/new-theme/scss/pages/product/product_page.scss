@@ -1242,7 +1242,6 @@ $product-page-padding-bottom: 80px !default;
     list-style: none;
   }
 
-  #product_stock_options,
   #product_specifications_references {
     input {
       max-width: 415px;
@@ -1806,6 +1805,7 @@ $product-page-padding-bottom: 80px !default;
   .combination-cover-row {
     display: inline-block;
   }
+
   .combination-header-row {
     display: inline-block;
     margin-left: 1rem;
@@ -1881,6 +1881,14 @@ $product-page-padding-bottom: 80px !default;
     .product-suppliers-collection-row {
       max-width: 100%;
     }
+  }
+
+  .small-input {
+    max-width: 210px;
+  }
+
+  .medium-input {
+    max-width: 540px;
   }
 }
 

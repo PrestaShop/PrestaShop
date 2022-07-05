@@ -78,7 +78,7 @@ final class StockCommandsBuilder implements MultiShopProductCommandsBuilderInter
             ->addMultiShopField('[stock][quantities][minimal_quantity]', 'setMinimalQuantity', DataField::TYPE_INT)
             ->addMultiShopField('[stock][options][stock_location]', 'setLocation', DataField::TYPE_STRING)
             ->addMultiShopField('[stock][options][low_stock_threshold]', 'setLowStockThreshold', DataField::TYPE_INT)
-            ->addMultiShopField('[stock][options][low_stock_alert]', 'setLowStockAlert', DataField::TYPE_BOOL)
+            ->addMultiShopField('[stock][options][disabling_switch_low_stock_threshold]', 'setLowStockAlert', DataField::TYPE_BOOL)
             ->addMultiShopField('[stock][pack_stock_type]', 'setPackStockType', DataField::TYPE_INT)
             ->addMultiShopField('[stock][availability][out_of_stock_type]', 'setOutOfStockType', DataField::TYPE_INT)
             ->addMultiShopField('[stock][availability][available_now_label]', 'setLocalizedAvailableNowLabels', DataField::TYPE_ARRAY)
