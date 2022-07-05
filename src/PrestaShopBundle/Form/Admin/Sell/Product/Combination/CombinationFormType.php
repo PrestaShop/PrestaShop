@@ -80,7 +80,9 @@ class CombinationFormType extends TranslatorAwareType
                 'product_id' => $options['product_id'],
             ])
             ->add('price_impact', CombinationPriceImpactType::class)
-            ->add('references', ReferencesType::class)
+            ->add('references', ReferencesType::class, [
+                'columns_number' => 3,
+            ])
             ->add('default_supplier_id', HiddenType::class)
             ->add('product_suppliers', ProductSupplierCollectionType::class, [
                 'alert_message' => $this->trans('This interface allows you to specify the suppliers of the current combination.', 'Admin.Catalog.Help'),
