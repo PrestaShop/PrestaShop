@@ -122,7 +122,7 @@ class StockCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [
                 'stock' => [
                     'options' => [
-                        'low_stock_alert' => '0',
+                        'disabling_switch_low_stock_threshold' => '0',
                     ],
                 ],
             ],
