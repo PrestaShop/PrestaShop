@@ -83,6 +83,11 @@ abstract class AbstractGetStockMovementsHandler
         );
     }
 
+    /**
+     * @param array<string, string|int|null> $historyRow
+     *
+     * @return StockMovementEvent
+     */
     protected function createEditionStockMovementEvent(array $historyRow): StockMovementEvent
     {
         $employeeName = $this->translator->trans('%firstname% %lastname%', [
@@ -103,6 +108,11 @@ abstract class AbstractGetStockMovementsHandler
         );
     }
 
+    /**
+     * @param array<string, string|int|null> $historyRow
+     *
+     * @return StockMovementEvent
+     */
     protected function createOrdersStockMovementEvent(array $historyRow): StockMovementEvent
     {
         return StockMovementEvent::createOrdersEvent(

@@ -31,8 +31,14 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Stock\QueryHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetProductStockMovements;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryHandler\GetProductStockMovementsHandlerInterface;
 
+/**
+ * Handles @see GetProductStockMovements using the adapter repositories.
+ */
 class GetProductStockMovementsHandler extends AbstractGetStockMovementsHandler implements GetProductStockMovementsHandlerInterface
 {
+    /**
+     * {@inheritDoc}
+     */
     public function handle(GetProductStockMovements $query): array
     {
         return $this->getStockMovements(
