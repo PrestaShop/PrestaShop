@@ -25,7 +25,7 @@
 {% set legacyBaseLayout = lightDisplay|default(false) ? 'light_display_layout.tpl' : 'layout.tpl' %}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
-{% form_theme combinationForm '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/combination.html.twig' %}
+{% form_theme combinationForm with ['@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/combination.html.twig'] only %}
 {% form_theme combinationForm.product_suppliers '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/product_suppliers.html.twig' %}
 
 {% block stylesheets %}
@@ -34,18 +34,7 @@
 
 {% block content %}
   {{ form_start(combinationForm, {'attr': {'class': 'form-horizontal combination-page', 'novalidate': 'novalidate'}}) }}
-  <div class="card">
-    <div class="card-header">
-      {{ 'Combination details'|trans({}, 'Admin.Catalog.Feature') }}
-      -
-      <span>{{ combinationForm.vars.value.name }}</span>
-    </div>
-    <div class="card-body">
-      <div id="{{ combinationForm.vars.id }}">
-        {{ form_row(combinationForm) }}
-      </div>
-    </div>
-  </div>
+    {{ form_row(combinationForm) }}
   {{ form_end(combinationForm) }}
 {% endblock %}
 
