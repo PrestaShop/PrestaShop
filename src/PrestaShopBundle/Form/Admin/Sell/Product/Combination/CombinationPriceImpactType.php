@@ -286,7 +286,7 @@ class CombinationPriceImpactType extends TranslatorAwareType
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([
-            'label' => $this->trans('Price and impact', 'Admin.Catalog.Feature'),
+            'label' => $this->trans('Retail price', 'Admin.Catalog.Feature'),
             'label_tag_name' => 'h3',
             'columns_number' => 3,
         ]);
