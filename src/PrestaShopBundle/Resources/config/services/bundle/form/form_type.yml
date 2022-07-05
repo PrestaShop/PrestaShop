@@ -1812,6 +1812,13 @@ services:
     tags:
       - { name: form.type }
 
+  form.type.sell.product.combination.combination_header_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationHeaderType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+
   form.type.sell.product.combination.combination_stock_type:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationStockType'
     parent: 'form.type.translatable.aware'

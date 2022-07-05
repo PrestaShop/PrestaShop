@@ -33,7 +33,6 @@ use PrestaShopBundle\Form\Admin\Sell\Product\Specification\ReferencesType;
 use PrestaShopBundle\Form\Admin\Type\ImagePreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -72,11 +71,11 @@ class CombinationFormType extends TranslatorAwareType
         $builder
             ->add('cover_thumbnail_url', ImagePreviewType::class, [
                 'label' => false,
+                'row_attr' => [
+                    'class' => 'combination-cover-row',
+                ],
             ])
-            ->add('is_default', CheckboxType::class, [
-                'label' => $this->trans('Set as default combination', 'Admin.Catalog.Feature'),
-            ])
-            ->add('name', HiddenType::class)
+            ->add('header', CombinationHeaderType::class)
             ->add('stock', CombinationStockType::class, [
                 'product_id' => $options['product_id'],
             ])

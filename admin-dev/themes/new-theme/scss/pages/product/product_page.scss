@@ -1799,6 +1799,22 @@ $product-page-padding-bottom: 80px !default;
 }
 
 .combination-page {
+  #combination_form {
+    padding-top: 1rem;
+  }
+
+  .combination-cover-row {
+    display: inline-block;
+  }
+  .combination-header-row {
+    display: inline-block;
+    margin-left: 1rem;
+
+    .combination-name-row {
+      font-weight: 600;
+    }
+  }
+
   .combination-images-selector:not(.disabled) {
     .combination-image-choice {
       cursor: pointer;
