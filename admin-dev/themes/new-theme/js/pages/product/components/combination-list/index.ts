@@ -53,45 +53,45 @@ const CombinationsMap = ProductMap.combinations;
   * are driven via the event system.
   */
 export default class CombinationsList {
-   private readonly productId: number;
+  private readonly productId: number;
 
-   private readonly eventEmitter: EventEmitter;
+  private readonly eventEmitter: EventEmitter;
 
-   private readonly combinationManagerWidget: HTMLDivElement;
+  private readonly combinationManagerWidget: HTMLDivElement;
 
-   private readonly $productForm: JQuery;
+  private readonly $productForm: JQuery;
 
-   private readonly $combinationsFormContainer: JQuery;
+  private readonly $combinationsFormContainer: JQuery;
 
-   private readonly $preloader: JQuery;
+  private readonly $preloader: JQuery;
 
-   private readonly $paginatedList: JQuery;
+  private readonly $paginatedList: JQuery;
 
-   private readonly $emptyState: JQuery;
+  private readonly $emptyState: JQuery;
 
-   private readonly $emptyFiltersState: JQuery;
+  private readonly $emptyFiltersState: JQuery;
 
-   private readonly combinationsService: CombinationsService;
+  private readonly combinationsService: CombinationsService;
 
-   private readonly paginatedCombinationsService: PaginatedCombinationsService;
+  private readonly paginatedCombinationsService: PaginatedCombinationsService;
 
-   private readonly productFormModel: ProductFormModel;
+  private readonly productFormModel: ProductFormModel;
 
-   private filtersApp?: App | null;
+  private filtersApp?: App | null;
 
-   private combinationModalApp?: App | null;
+  private combinationModalApp?: App | null;
 
-   private combinationGeneratorApp?: App | null;
+  private combinationGeneratorApp?: App | null;
 
-   private paginator?: DynamicPaginator;
+  private paginator?: DynamicPaginator;
 
-   private renderer?: CombinationsListRenderer;
+  private renderer?: CombinationsListRenderer;
 
-   private editor?: CombinationsListEditor;
+  private editor?: CombinationsListEditor;
 
-   private initialized: boolean;
+  private initialized: boolean;
 
-   private productAttributeGroups: Array<AttributeGroup>;
+  private productAttributeGroups: Array<AttributeGroup>;
 
   constructor(productId: number, productFormModel: ProductFormModel, shopId: number) {
     this.productId = productId;
