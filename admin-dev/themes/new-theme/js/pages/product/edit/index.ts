@@ -109,7 +109,7 @@ $(() => {
     $productFormNewProductButton,
     $productFormGoToCatalogButton,
     $productFormCancelButton,
-  ).watch();
+  );
 
   // From here we init component specific to edition
   initDropzone(ProductMap.dropzoneImagesContainer);

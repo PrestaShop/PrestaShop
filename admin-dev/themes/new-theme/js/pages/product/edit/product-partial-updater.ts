@@ -40,23 +40,25 @@ const {$} = window;
  * modified by the user.
  */
 export default class ProductPartialUpdater {
-  eventEmitter: EventEmitter;
+  private eventEmitter: EventEmitter;
 
-  $productForm: JQuery;
+  private $productForm: JQuery;
 
-  $productFormSubmitButton: JQuery;
+  private $productFormSubmitButton: JQuery;
 
-  $productFormPreviewButton: JQuery;
+  private $productFormPreviewButton: JQuery;
 
-  $productFormDuplicateButton: JQuery;
+  private $productFormDuplicateButton: JQuery;
 
-  $productFormNewProductButton: JQuery;
+  private $productFormNewProductButton: JQuery;
 
-  $productFormGoToCatalogButton: JQuery;
+  private $productFormGoToCatalogButton: JQuery;
 
-  $productFormCancelButton: JQuery;
+  private $productFormCancelButton: JQuery;
 
-  initialData: Record<string, any>;
+  private initialData: Record<string, any>;
+
+  private listEditionMode: boolean = false;
 
   /**
    * @param eventEmitter {EventEmitter}
@@ -65,7 +67,8 @@ export default class ProductPartialUpdater {
    * @param $productFormPreviewButton {JQuery}
    * @param $productFormDuplicateButton {JQuery}
    * @param $productFormNewProductButton {JQuery}
-   * @param $productFormGoToCatalogButton
+   * @param $productFormGoToCatalogButton {JQuery}
+   * @param $productFormCancelButton {JQuery}
    */
   constructor(
     eventEmitter: EventEmitter,
@@ -86,13 +89,15 @@ export default class ProductPartialUpdater {
     this.$productFormGoToCatalogButton = $productFormGoToCatalogButton;
     this.$productFormCancelButton = $productFormCancelButton;
     this.initialData = {};
+
+    this.watch();
   }
 
   /**
    * This the public method you need to use to start this component
    * ex: new ProductPartialUpdater($productForm, $productFormSubmitButton).watch();
    */
-  watch(): void {
+  private watch(): void {
     // Avoid submitting form when pressing Enter
     this.$productForm.keypress((e) => e.which !== 13);
     this.$productFormSubmitButton.prop('disabled', true);
@@ -101,6 +106,10 @@ export default class ProductPartialUpdater {
     // 'dp.change' event allows tracking datepicker input changes
     this.$productForm.on('keyup change dp.change', ':input', () => this.updateFooterButtonStates());
     this.eventEmitter.on(ProductEventMap.updateSubmitButtonState, () => this.updateFooterButtonStates());
+    this.eventEmitter.on(ProductEventMap.combinations.listEditionMode, (editionMode) => {
+      this.listEditionMode = editionMode;
+      this.updateFooterButtonStates();
+    });
 
     this.watchCustomizations();
     this.watchCategories();
@@ -217,7 +226,14 @@ export default class ProductPartialUpdater {
   private updateFooterButtonStates(): void {
     const updatedData = this.getUpdatedFormData();
 
-    if (updatedData === null) {
+    if (this.listEditionMode) {
+      this.$productFormSubmitButton.prop('disabled', true);
+      this.$productFormCancelButton.addClass('disabled');
+      this.$productFormGoToCatalogButton.addClass('disabled');
+      this.$productFormPreviewButton.addClass('disabled');
+      this.$productFormDuplicateButton.addClass('disabled');
+      this.$productFormNewProductButton.addClass('disabled');
+    } else if (updatedData === null) {
       this.$productFormSubmitButton.prop('disabled', true);
       this.$productFormCancelButton.addClass('disabled');
       this.$productFormGoToCatalogButton.removeClass('disabled');
