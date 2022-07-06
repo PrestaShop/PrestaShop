@@ -32,6 +32,7 @@ use Behat\Gherkin\Node\TableNode;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductBasicInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use Product;
 
 class UpdateBasicInformationFeatureContext extends AbstractProductFeatureContext
 {
@@ -46,6 +47,27 @@ class UpdateBasicInformationFeatureContext extends AbstractProductFeatureContext
         $shopId = $this->getSharedStorage()->get(trim($shopReference));
         $shopConstraint = ShopConstraint::shop($shopId);
         $this->updateProductBasicInfo($productReference, $table, $shopConstraint);
+    }
+
+    /**
+     * This method is created just for specific cases when product name needs to be updated
+     * using legacy object model, but not cqrs commands, to avoid some side effects while testing.
+     * For example when testing how cqrs command auto-fills link_rewrite in certain cases.
+     *
+     * @When /^I update product "([^"]*)" name \(not using commands\) with following localized values:$/
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     *
+     * @return void
+     */
+    public function updateProductName(string $productReference, TableNode $table): void
+    {
+        $productId = $this->getSharedStorage()->get($productReference);
+        $product = new Product($productId, true);
+        $product->name = $this->localizeByRows($table)['name'];
+
+        $product->update();
     }
 
     /**

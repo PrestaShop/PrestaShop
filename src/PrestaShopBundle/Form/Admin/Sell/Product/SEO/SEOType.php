@@ -163,6 +163,10 @@ class SEOType extends TranslatorAwareType
                 ),
                 'alert_message' => $this->getFriendlyAlterMessages(),
                 'options' => [
+                    'constraints' => [
+                        new TypedRegex(TypedRegex::TYPE_LINK_REWRITE),
+                        new Length(['max' => ProductSettings::MAX_LINK_REWRITE_LENGTH]),
+                    ],
                     'attr' => [
                         'class' => 'serp-watched-url',
                     ],

@@ -22,8 +22,11 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-{% form_theme productForm.seo '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/product_seo.html.twig' %}
 
-<div role="tabpanel" class="form-contenttab tab-pane container-fluid" id="seo-tab">
-  {{ form_row(productForm.seo) }}
-</div>
+{# This form theme is the root one for all the product form so we define here which base theme is used for all the children #}
+{% use '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
+
+{% block _product_seo_link_rewrite_widget %}
+  {{ form_widget(form) }}
+  <button type="button" class="reset-link-rewrite btn btn-outline-secondary">{{ 'Reset URL'|trans({}, 'Admin.Catalog.Feature') }}</button>
+{% endblock %}
