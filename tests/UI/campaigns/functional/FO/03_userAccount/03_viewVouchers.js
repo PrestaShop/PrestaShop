@@ -22,17 +22,19 @@ const foVouchersPage = require('@pages/FO/myAccount/vouchers');
 const CustomerFaker = require('@data/faker/customer');
 const CartRuleFaker = require('@data/faker/cartRule');
 
-const baseContext = 'functional_FO_userAccount_userDiscounts';
+const baseContext = 'functional_FO_userAccount_viewVouchers';
 
 let browserContext;
 let page;
 
+// Data to create a date format
 const pastDate = getDateFormat('yyyy-mm-dd', 'past');
 const futureDate = getDateFormat('yyyy-mm-dd', 'future');
 const expirationDate = getDateFormat('mm/dd/yyyy', 'future');
 
 const customerData = new CustomerFaker({});
 
+// Data to create 2 cart rules
 const firstCartRule = new CartRuleFaker(
   {
     code: 'promo20',
@@ -43,7 +45,6 @@ const firstCartRule = new CartRuleFaker(
     dateTo: futureDate,
   },
 );
-
 const secondCartRule = new CartRuleFaker(
   {
     code: 'freeShipping',
@@ -66,11 +67,11 @@ Post-condition:
  */
 describe('FO - Account : View vouchers', async () => {
   // Pre-condition: Create new account on FO
-  createAccountTest(customerData, `${baseContext}_preTest1`);
+  createAccountTest(customerData, `${baseContext}_preTest_1`);
 
   // Pre-condition: Create 2 cart rules for the created customer
   [firstCartRule, secondCartRule].forEach((cartRule, index) => {
-    createCartRuleTest(cartRule, `${baseContext}_preTest_${index + 1}`);
+    createCartRuleTest(cartRule, `${baseContext}_preTest_${index + 2}`);
   });
 
   // before and after functions
@@ -135,7 +136,7 @@ describe('FO - Account : View vouchers', async () => {
       {args: {column: 'expiration_date', row: 2, value: expirationDate}},
     ].forEach((cartRule, index) => {
       it(`should check the voucher ${cartRule.args.column} n°${cartRule.args.row}`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `checkCode${index}`, baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', `checkVoucher${index}`, baseContext);
 
         const cartRuleTextColumn = await foVouchersPage.getTextColumnFromTableVouchers(
           page,

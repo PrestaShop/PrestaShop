@@ -21,8 +21,6 @@ class Vouchers extends FOBasePage {
     this.vouchersTableBody = `${this.vouchersTable} tbody`;
     this.vouchersTableRows = `${this.vouchersTableBody} tr`;
     this.vouchersTableRow = row => `${this.vouchersTableRows}:nth-child(${row})`;
-    this.vouchersTableCodeColumn = row => `${this.vouchersTableRow(row)} th`;
-
     this.tableColumnCode = row => `${this.vouchersTableRow(row)} th:nth-child(1)`;
     this.tableColumnDescription = row => `${this.vouchersTableRow(row)} td:nth-child(2)`;
     this.tableColumnQuantity = row => `${this.vouchersTableRow(row)} td:nth-child(3)`;
