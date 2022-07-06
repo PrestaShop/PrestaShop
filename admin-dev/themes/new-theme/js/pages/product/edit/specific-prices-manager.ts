@@ -80,7 +80,7 @@ export default class SpecificPricesManager {
     // Enable/disabled the priority selectors depending on the priority type selected (global or custom)
     new FormFieldDisabler({
       disablingInputSelector: PriorityMap.priorityTypeCheckboxesSelector,
-      matchingValue: '0',
+      matchingValue: '1',
       targetSelector: PriorityMap.priorityListWrapper,
     });
   }
