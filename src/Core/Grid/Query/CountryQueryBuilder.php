@@ -115,6 +115,7 @@ class CountryQueryBuilder extends AbstractDoctrineQueryBuilder
                 'z',
                 'z.id_zone = c.id_zone'
             )
+            ->groupBy('c.id_country')
             ->setParameter('contextLangId', $this->contextLangId)
         ;
 
