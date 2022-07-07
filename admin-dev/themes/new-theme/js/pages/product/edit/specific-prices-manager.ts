@@ -38,6 +38,7 @@ import ClickEvent = JQuery.ClickEvent;
 
 const SpecificPriceMap = ProductMap.specificPrice;
 const PriorityMap = SpecificPriceMap.priority;
+const FORM_FIELD_CUSTOM_VALUE = '1'
 
 export default class SpecificPricesManager {
   eventEmitter: EventEmitter;
@@ -80,7 +81,7 @@ export default class SpecificPricesManager {
     // Enable/disabled the priority selectors depending on the priority type selected (global or custom)
     new FormFieldDisabler({
       disablingInputSelector: PriorityMap.priorityTypeCheckboxesSelector,
-      matchingValue: '1',
+      matchingValue: FORM_FIELD_CUSTOM_VALUE,
       targetSelector: PriorityMap.priorityListWrapper,
     });
   }
