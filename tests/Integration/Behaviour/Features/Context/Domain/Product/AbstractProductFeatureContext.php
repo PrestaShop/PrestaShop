@@ -311,12 +311,4 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
 
         return $propertyAccessor->getValue($productForEditing, $pathsByNames[$propertyName]);
     }
-
-    /**
-     * @return int
-     */
-    protected function getDefaultShopId(): int
-    {
-        return (int) Configuration::get('PS_SHOP_DEFAULT');
-    }
 }

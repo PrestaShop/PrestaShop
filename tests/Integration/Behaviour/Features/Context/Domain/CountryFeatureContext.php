@@ -33,22 +33,10 @@ use PrestaShop\PrestaShop\Core\Domain\Country\Command\AddCountryCommand;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryException;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
 use RuntimeException;
-use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class CountryFeatureContext extends AbstractDomainFeatureContext
 {
-    /**
-     * @var int default shop id from configs
-     */
-    private $defaultShopId;
-
-    public function __construct()
-    {
-        $configuration = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration');
-        $this->defaultShopId = $configuration->get('PS_SHOP_DEFAULT');
-    }
-
     /**
      * Random integer representing country id which should never exist in test database
      */
@@ -100,9 +88,9 @@ class CountryFeatureContext extends AbstractDomainFeatureContext
                 (bool) $data['contains_states'],
                 (bool) $data['need_identification_number'],
                 (bool) $data['display_tax_label'],
-                [$this->defaultShopId]
+                [$this->getDefaultShopId()]
             ));
-            $this->getSharedStorage()->set($countryReference, new Country($countryId->getValue()));
+            $this->getSharedStorage()->set($countryReference, $countryId->getValue());
         } catch (CountryException $e) {
             $this->setLastException($e);
         }
@@ -116,7 +104,7 @@ class CountryFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertCountryName(string $countryReference, string $name): void
     {
-        $country = SharedStorage::getStorage()->get($countryReference);
+        $country = new Country(SharedStorage::getStorage()->get($countryReference));
 
         if (!in_array($name, $country->name)) {
             throw new RuntimeException(sprintf('Country "%s" has "%s" name, but "%s" was expected.', $countryReference, $country->name, $name));
@@ -132,8 +120,7 @@ class CountryFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertStatus(string $countryReference, string $expectedStatus): void
     {
-        /** @var Country $country */
-        $country = SharedStorage::getStorage()->get($countryReference);
+        $country = new Country(SharedStorage::getStorage()->get($countryReference));
 
         $isEnabled = 'enabled' === $expectedStatus;
         $actualStatus = (bool) $country->active;
