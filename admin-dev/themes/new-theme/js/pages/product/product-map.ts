@@ -197,6 +197,7 @@ export default {
   },
   options: {
     availableForOrderInput: 'input[name="product[options][visibility][available_for_order]"]',
+    showPriceInput: 'input[name="product[options][visibility][show_price]"]',
     showPriceSwitchContainer: '.show-price-switch-container',
   },
   suppliers: {
