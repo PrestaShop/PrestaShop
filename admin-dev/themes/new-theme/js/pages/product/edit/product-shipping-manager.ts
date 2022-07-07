@@ -36,7 +36,7 @@ export default class ProductShippingManager {
       matchingValue: '2',
       disableOnMatch: false,
       targetSelector: ProductMap.shipping.deliveryTimeNotesBlock,
-      toggleType: ToggleType.visibility,
+      toggleType: ToggleType.availability,
     });
   }
 }
