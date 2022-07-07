@@ -88,6 +88,10 @@ $product-description-height: 70px;
         content: "";
         border-top: $gray 1px solid;
         opacity: 0.25;
+
+        @include media-breakpoint-down(xs) {
+          display: none;
+        }
       }
     }
 
@@ -146,6 +150,10 @@ $product-description-height: 70px;
     text-align: center;
     background: $white;
     transition: 0.3s;
+
+    @include media-breakpoint-down(xs) {
+      display: none;
+    }
 
     .quick-view {
       font-size: $base-font-size;
