@@ -98,6 +98,7 @@
         this.value = '';
         this.product.qty = null;
       },
+      // @see Preventing decimal numbers inside input: https://github.com/PrestaShop/PrestaShop/pull/28510
       onKeydown(event: KeyboardEvent): void {
         if (event.key === '.' || event.key === ',') {
           event.preventDefault();
