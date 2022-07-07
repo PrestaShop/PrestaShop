@@ -1,0 +1,17 @@
+#modal-create-product {
+  //modal loader
+  @import "~bootstrap/scss/mixins/border-radius";
+  @import "../../config/settings";
+  @import "~prestakit/scss/spinners";
+  @import "../../components/modal";
+  @import "create_product_modal";
+
+  .d-none {
+    display: none !important;
+  }
+
+  .modal-header .close {
+    float: right;
+    margin: -1.5rem 0 -1.25rem auto;
+  }
+}

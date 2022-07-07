@@ -140,7 +140,7 @@ module.exports = {
     country: './js/pages/country',
     country_form: './js/pages/country/form',
     create_product: './js/pages/product/components/create-product',
-    new_product_modal: './scss/pages/product/new_product_modal.scss',
+    create_product_default_theme: './scss/pages/product/create_product_default_theme.scss',
   },
   output: {
     path: path.resolve(__dirname, '../public'),
