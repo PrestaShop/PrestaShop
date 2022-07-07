@@ -4288,6 +4288,10 @@
       <name>displayAddressSelectorBottom</name>
       <title>After address selection on checkout page</title>
       <description>This hook is displayed after the address selection in checkout step.</description>
+    <hook id="actionLoggerLogMessage">
+      <name>actionLoggerLogMessage</name>
+      <title>Allows to make extra action while a log is triggered</title>
+      <description>This hook allows to make an extra action while an exception is thrown and the logger logs it</description>
     </hook>
   </entities>
 </entity_hook>
