@@ -1,4 +1,4 @@
-const faker = require('faker');
+const faker = require('@faker-js/faker');
 const {countries} = require('@data/demo/countries');
 
 const countriesNames = Object.values(countries).map(country => country.name);
@@ -23,10 +23,10 @@ class SupplierData {
     this.descriptionFr = supplierToCreate.descriptionFr || this.description;
 
     /** @type {string} Home phone number of the supplier (default format 01########) */
-    this.homePhone = supplierToCreate.homePhone || faker.phone.phoneNumber('01########');
+    this.homePhone = supplierToCreate.homePhone || faker.phone.number('01########');
 
     /** @type {string} Mobile phone number of the supplier (default format 01########) */
-    this.mobilePhone = supplierToCreate.mobilePhone || faker.phone.phoneNumber('06########');
+    this.mobilePhone = supplierToCreate.mobilePhone || faker.phone.number('06########');
 
     /** @type {string} First line address of the supplier */
     this.address = supplierToCreate.address || faker.address.streetAddress();

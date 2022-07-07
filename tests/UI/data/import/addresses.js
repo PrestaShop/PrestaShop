@@ -1,4 +1,4 @@
-const faker = require('faker');
+const faker = require('@faker-js/faker');
 const {DefaultCustomer} = require('@data/demo/customer');
 const {countries} = require('@data/demo/countries');
 
@@ -26,8 +26,8 @@ function createRecord() {
       country: faker.random.arrayElement(countriesNames),
       state: '',
       other: '',
-      phone: faker.phone.phoneNumber('01########'),
-      mobilePhone: faker.phone.phoneNumber('01########'),
+      phone: faker.phone.number('01########'),
+      mobilePhone: faker.phone.number('01########'),
       vatNumber: '',
       dni: '',
     });

@@ -1,4 +1,4 @@
-const faker = require('faker');
+const faker = require('@faker-js/faker');
 const {countries} = require('@data/demo/countries');
 const {states} = require('@data/demo/states');
 
@@ -55,7 +55,7 @@ class AddressData {
     this.state = addressToCreate.state || faker.random.arrayElement(statesNames);
 
     /** @type {string} Phone number */
-    this.phone = addressToCreate.homePhone || faker.phone.phoneNumber('01########');
+    this.phone = addressToCreate.homePhone || faker.phone.number('01########');
 
     /** @type {string} Other information to add on address */
     this.other = addressToCreate.other || '';

@@ -1,4 +1,4 @@
-const faker = require('faker');
+const faker = require('@faker-js/faker');
 const {Profiles} = require('@data/demo/profiles');
 const {Languages} = require('@data/demo/languages');
 const {Pages} = require('@data/demo/pages');
