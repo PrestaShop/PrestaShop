@@ -109,11 +109,11 @@ final class UpdateProductOptionsHandler implements UpdateProductOptionsHandlerIn
         }
         $availableForOrder = $product->available_for_order;
 
-        if (null !== $command->showPrice() && $availableForOrder) {
+        if (null !== $command->showPrice() && !$availableForOrder) {
             $product->show_price = $command->showPrice();
             $updatableProperties[] = 'show_price';
-        } elseif (!$availableForOrder && $product->show_price) {
-            $product->show_price = false;
+        } elseif ($availableForOrder && !$product->show_price) {
+            $product->show_price = true;
             $updatableProperties[] = 'show_price';
         }
 
