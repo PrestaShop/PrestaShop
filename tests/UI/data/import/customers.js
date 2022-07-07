@@ -18,7 +18,7 @@ function createRecord() {
       firstName: faker.name.firstName(),
       newsletter: faker.datatype.number({min: 0, max: 1}),
       optIn: faker.datatype.number({min: 0, max: 1}),
-      registrationDate: faker.date.between('2022-01-01', '2000-12-31').toISOString().slice(0, 10),
+      registrationDate: faker.date.past(2).toISOString().slice(0, 10),
       groups: faker.helpers.arrayElement(groups),
       defaultGroup: faker.helpers.arrayElement(groups),
     });
