@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "559aa893c10b591d4fa882d8b7cffbc2",
+    "content-hash": "f4f3b2f5524fc846bd30aac388a606e9",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -4209,16 +4209,16 @@
         },
         {
             "name": "prestashop/blockwishlist",
-            "version": "v2.1.0",
+            "version": "v2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/blockwishlist.git",
-                "reference": "4feccca6f5f01baa8cc2d70afa71e2da898c9207"
+                "reference": "a11c76e8cbf50622096c4411a3dc93ecba78cd03"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/blockwishlist/zipball/4feccca6f5f01baa8cc2d70afa71e2da898c9207",
-                "reference": "4feccca6f5f01baa8cc2d70afa71e2da898c9207",
+                "url": "https://api.github.com/repos/PrestaShop/blockwishlist/zipball/a11c76e8cbf50622096c4411a3dc93ecba78cd03",
+                "reference": "a11c76e8cbf50622096c4411a3dc93ecba78cd03",
                 "shasum": ""
             },
             "require-dev": {
@@ -4248,9 +4248,9 @@
             "description": "PrestaShop module blockwishlist",
             "homepage": "https://github.com/PrestaShop/blockwishlist",
             "support": {
-                "source": "https://github.com/PrestaShop/blockwishlist/tree/v2.1.0"
+                "source": "https://github.com/PrestaShop/blockwishlist/tree/v2.1.1"
             },
-            "time": "2022-04-25T16:13:04+00:00"
+            "time": "2022-06-24T08:16:27+00:00"
         },
         {
             "name": "prestashop/circuit-breaker",
