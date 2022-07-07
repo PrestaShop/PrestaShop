@@ -1,1 +1,5 @@
-@import "@scss/components/_new_product_modal";
+//modal loader
+@import "~bootstrap/scss/mixins/border-radius";
+@import "../../config/settings";
+@import "~prestakit/scss/spinners";
+@import "../../components/modal";
