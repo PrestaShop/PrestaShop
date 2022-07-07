@@ -85,7 +85,7 @@ class JsRouterMetadataExtension extends AbstractExtension
     {
         return [
             // base url for javascript router
-            'base_url' => $this->requestStack->getCurrentRequest() ? $this->requestStack->getCurrentRequest()->getBaseUrl() : '',
+            'base_url' => $this->requestStack->getCurrentRequest()->getBaseUrl(),
             //security token for javascript router
             'token' => $this->tokenManager->getToken($this->username)->getValue(),
         ];
