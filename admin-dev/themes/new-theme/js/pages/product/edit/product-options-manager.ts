@@ -59,14 +59,15 @@ export default class ProductOptionsManager {
       toggleType: ToggleType.availability,
     });
 
-    const availableInputs = document.querySelectorAll<HTMLInputElement>(ProductMap.options.availableForOrderInput);
-    availableInputs.forEach((availableInput: HTMLInputElement) => {
+    const availableInput = document.querySelector<HTMLInputElement>(`${ProductMap.options.availableForOrderInput}[value="1"]`);
+
+    if (availableInput) {
       availableInput.addEventListener('change', () => {
-        if (availableInput.value) {
+        if (availableInput.checked) {
           this.switchShowPrice(true);
         }
       });
-    });
+    }
   }
 
   private switchShowPrice(switchOn: boolean): void {
