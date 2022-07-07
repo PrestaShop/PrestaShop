@@ -49,8 +49,8 @@ build_asset() {
       build "$PROJECT_PATH/themes/classic/_dev"
     ;;
     all)
-      build_asset admin-new-theme
       build_asset admin-default
+      build_asset admin-new-theme
       build_asset front-core
       build_asset front-classic
     ;;
