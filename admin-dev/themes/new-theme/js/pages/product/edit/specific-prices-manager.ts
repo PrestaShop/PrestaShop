@@ -38,7 +38,7 @@ import ClickEvent = JQuery.ClickEvent;
 
 const SpecificPriceMap = ProductMap.specificPrice;
 const PriorityMap = SpecificPriceMap.priority;
-const FORM_FIELD_CUSTOM_VALUE = '1'
+const FORM_FIELD_CUSTOM_VALUE = '1';
 
 export default class SpecificPricesManager {
   eventEmitter: EventEmitter;
