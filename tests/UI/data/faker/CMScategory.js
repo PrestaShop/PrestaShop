@@ -1,4 +1,4 @@
-const faker = require('@faker-js/faker');
+const {faker} = require('@faker-js/faker');
 
 /**
  * Create new cms category to use on creation cms category form on BO
@@ -20,7 +20,7 @@ class CMSCategoryData {
     this.description = faker.lorem.sentence();
 
     /** @type {string} Meta title of the category */
-    this.metaTitle = categoryToCreate.metaTitle || faker.name.title();
+    this.metaTitle = categoryToCreate.metaTitle || faker.lorem.word();
 
     /** @type {string} Meta description of the category */
     this.metaDescription = faker.lorem.sentence();

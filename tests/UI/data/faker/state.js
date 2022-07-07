@@ -1,4 +1,4 @@
-const faker = require('@faker-js/faker');
+const {faker} = require('@faker-js/faker');
 const {Zones} = require('@data/demo/zones');
 
 const zones = Object.values(Zones).map(zone => zone.name);
@@ -21,13 +21,13 @@ class StateData {
     this.name = stateToCreate.name || `test ${faker.address.state()}`;
 
     /** @type {string} Iso code of the state */
-    this.isoCode = stateToCreate.isoCode || faker.random.arrayElement(statesIsoCodes);
+    this.isoCode = stateToCreate.isoCode || faker.helpers.arrayElement(statesIsoCodes);
 
     /** @type {string} Country of the state */
-    this.country = stateToCreate.country || faker.random.arrayElement(countriesWithState);
+    this.country = stateToCreate.country || faker.helpers.arrayElement(countriesWithState);
 
     /** @type {string} Zone of the state */
-    this.zone = stateToCreate.zone || faker.random.arrayElement(zones);
+    this.zone = stateToCreate.zone || faker.helpers.arrayElement(zones);
 
     /** @type {boolean} Status of the state */
     this.status = stateToCreate.active === undefined ? false : stateToCreate.status;

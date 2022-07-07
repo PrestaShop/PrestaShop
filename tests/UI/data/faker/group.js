@@ -1,4 +1,4 @@
-const faker = require('@faker-js/faker');
+const {faker} = require('@faker-js/faker');
 
 const priceDisplayMethod = ['Tax included', 'Tax excluded'];
 
@@ -22,7 +22,7 @@ class GroupData {
     this.discount = groupToCreate.discount || 0;
 
     /** @type {string} Price display method of the group */
-    this.priceDisplayMethod = groupToCreate.priceDisplayMethod || faker.random.arrayElement(priceDisplayMethod);
+    this.priceDisplayMethod = groupToCreate.priceDisplayMethod || faker.helpers.arrayElement(priceDisplayMethod);
 
     /** @type {boolean} True to show prices for the group */
     this.shownPrices = groupToCreate.shownPrices === undefined ? true : groupToCreate.shownPrices;

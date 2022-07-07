@@ -1,4 +1,4 @@
-const faker = require('@faker-js/faker');
+const {faker} = require('@faker-js/faker');
 
 const records = [];
 
@@ -6,7 +6,7 @@ function createRecord() {
   for (let i = 0; i < 10; i++) {
     records.push({
       id: i + 2,
-      active: faker.random.number({min: 0, max: 1}),
+      active: faker.datatype.number({min: 0, max: 1}),
       name: `todelete ${faker.company.companyName()}`,
       description: faker.lorem.sentence(),
       shortDescription: faker.lorem.sentence(),

@@ -1,4 +1,4 @@
-const faker = require('@faker-js/faker');
+const {faker} = require('@faker-js/faker');
 const {DefaultCustomer} = require('@data/demo/customer');
 const {countries} = require('@data/demo/countries');
 
@@ -11,7 +11,7 @@ function createRecord() {
     records.push({
       id: i + 3,
       alias: faker.address.streetAddress(),
-      active: faker.random.number({min: 0, max: 1}),
+      active: faker.datatype.number({min: 0, max: 1}),
       email: DefaultCustomer.email,
       customerID: DefaultCustomer.id,
       manufacturer: '',
@@ -23,7 +23,7 @@ function createRecord() {
       address2: faker.address.secondaryAddress(),
       zipCode: faker.address.zipCode('#####'),
       city: faker.address.city(),
-      country: faker.random.arrayElement(countriesNames),
+      country: faker.helpers.arrayElement(countriesNames),
       state: '',
       other: '',
       phone: faker.phone.number('01########'),

@@ -1,4 +1,4 @@
-const faker = require('@faker-js/faker');
+const {faker} = require('@faker-js/faker');
 
 /**
  * Create new cms page to use on creation cms page form on BO
@@ -14,7 +14,7 @@ class CMSPageData {
     this.title = pageToCreate.title || faker.random.word();
 
     /** @type {string} Meta title of the page */
-    this.metaTitle = pageToCreate.metaTitle || faker.name.title();
+    this.metaTitle = pageToCreate.metaTitle || faker.lorem.word();
 
     /** @type {string} Meta description for the page */
     this.metaDescription = faker.lorem.sentence();

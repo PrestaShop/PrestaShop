@@ -1,4 +1,4 @@
-const faker = require('@faker-js/faker');
+const {faker} = require('@faker-js/faker');
 const {Products} = require('@data/demo/products');
 const {Languages} = require('@data/demo/languages');
 
@@ -19,10 +19,10 @@ class TagData {
     this.name = tagsToCreate.name || `new_tag_${faker.lorem.word()}`;
 
     /** @type {string} Language in which the tag should be used */
-    this.language = tagsToCreate.language || faker.random.arrayElement(languagesNames);
+    this.language = tagsToCreate.language || faker.helpers.arrayElement(languagesNames);
 
     /** @type {Array/string} Products linked to the tag */
-    this.products = tagsToCreate.products || faker.random.arrayElement(productsNames);
+    this.products = tagsToCreate.products || faker.helpers.arrayElement(productsNames);
   }
 }
 

@@ -1,4 +1,4 @@
-const faker = require('@faker-js/faker');
+const {faker} = require('@faker-js/faker');
 const {Profiles} = require('@data/demo/profiles');
 const {Languages} = require('@data/demo/languages');
 const {Pages} = require('@data/demo/pages');
@@ -26,17 +26,17 @@ class EmployeeData {
     this.password = employeeToCreate.password || 'prestashop_demo';
 
     /** @type {string} Default page where employee should access after login */
-    this.defaultPage = employeeToCreate.defaultPage || faker.random.arrayElement(Pages);
+    this.defaultPage = employeeToCreate.defaultPage || faker.helpers.arrayElement(Pages);
 
     /** @type {string} Default BO language for the employee */
     this.language = employeeToCreate.language
-      || faker.random.arrayElement((Object.values(Languages).map(lang => lang.name)).slice(0, 2));
+      || faker.helpers.arrayElement((Object.values(Languages).map(lang => lang.name)).slice(0, 2));
 
     /** @type {string} Status of the employee */
     this.active = employeeToCreate.active === undefined ? true : employeeToCreate.active;
 
     /** @type {string} Permission profile to set on the employee */
-    this.permissionProfile = employeeToCreate.permissionProfile || faker.random.arrayElement(Profiles);
+    this.permissionProfile = employeeToCreate.permissionProfile || faker.helpers.arrayElement(Profiles);
   }
 }
 

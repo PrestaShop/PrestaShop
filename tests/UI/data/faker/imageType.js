@@ -1,4 +1,4 @@
-const faker = require('@faker-js/faker');
+const {faker} = require('@faker-js/faker');
 
 /**
  * Create new image type to use on creation form on image type page on BO
@@ -14,10 +14,10 @@ class ImageTypeData {
     this.name = imageTypeToCreate.name || faker.lorem.word();
 
     /** @type {number} Image width */
-    this.width = imageTypeToCreate.width || faker.random.number({min: 100, max: 200});
+    this.width = imageTypeToCreate.width || faker.datatype.number({min: 100, max: 200});
 
     /** @type {number} Image height */
-    this.height = imageTypeToCreate.height || faker.random.number({min: 100, max: 200});
+    this.height = imageTypeToCreate.height || faker.datatype.number({min: 100, max: 200});
 
     /** @type {boolean} To activate type for products */
     this.productsStatus = imageTypeToCreate.productsStatus === undefined

@@ -1,4 +1,4 @@
-const faker = require('@faker-js/faker');
+const {faker} = require('@faker-js/faker');
 
 const {Features} = require('@data/demo/features');
 
@@ -39,7 +39,7 @@ class ValueData {
    */
   constructor(valueToCreate = {}) {
     /** @type {string} Name of the parent feature */
-    this.featureName = valueToCreate.featureName || faker.random.arrayElement(featuresNames);
+    this.featureName = valueToCreate.featureName || faker.helpers.arrayElement(featuresNames);
 
     /** @type {string} Name of the value */
     this.value = valueToCreate.value || `${faker.lorem.word()}${faker.commerce.productMaterial()}`;

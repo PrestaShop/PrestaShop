@@ -1,4 +1,4 @@
-const faker = require('@faker-js/faker');
+const {faker} = require('@faker-js/faker');
 
 /**
  * Create new tax to use on tax form on BO
@@ -11,7 +11,7 @@ class TaxData {
    */
   constructor(taxToCreate = {}) {
     /** @type {number} Tax of the rate */
-    this.rate = taxToCreate.rate || faker.random.number({min: 1, max: 40}).toString();
+    this.rate = taxToCreate.rate || faker.datatype.number({min: 1, max: 40}).toString();
 
     /** @type {string} Name of the tax */
     this.name = taxToCreate.name || `TVA test ${this.rate}%`;

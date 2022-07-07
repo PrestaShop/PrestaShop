@@ -1,4 +1,4 @@
-const faker = require('@faker-js/faker');
+const {faker} = require('@faker-js/faker');
 
 const behavior = ['Deny orders', 'Allow orders', 'Default behavior'];
 
@@ -38,16 +38,16 @@ class ProductData {
 
     /** @type {number} Quantity available of the product */
     this.quantity = productToCreate.quantity === undefined
-      ? faker.random.number({min: 1, max: 9})
+      ? faker.datatype.number({min: 1, max: 9})
       : productToCreate.quantity;
 
     /** @type {number} Tax for the product */
     this.tax = productToCreate.tax === undefined
-      ? faker.random.number({min: 1, max: 100})
+      ? faker.datatype.number({min: 1, max: 100})
       : productToCreate.tax;
 
     /** @type {string} Price tax included of the product */
-    this.price = productToCreate.price === undefined ? faker.random.number({min: 10, max: 20}) : productToCreate.price;
+    this.price = productToCreate.price === undefined ? faker.datatype.number({min: 10, max: 20}) : productToCreate.price;
 
     /** @type {string} Price tax excluded of the product */
     this.priceTaxExcluded = productToCreate.priceTaxExcluded || (this.price * 100) / (100 + this.tax);
@@ -63,8 +63,8 @@ class ProductData {
 
     /** @type {Object} Pack of products to add to the product */
     this.pack = productToCreate.pack || {
-      demo_1: faker.random.number({min: 10, max: 100}),
-      demo_2: faker.random.number({min: 10, max: 100}),
+      demo_1: faker.datatype.number({min: 10, max: 100}),
+      demo_2: faker.datatype.number({min: 10, max: 100}),
     };
 
     /** @type {string} Tac rule to apply the product */
@@ -72,19 +72,19 @@ class ProductData {
 
     /** @type {number} EcoTax tax included of the product */
     this.ecoTax = productToCreate.ecoTax === undefined
-      ? faker.random.number({min: 1, max: 5})
+      ? faker.datatype.number({min: 1, max: 5})
       : productToCreate.ecoTax;
 
     /** @type {Object|{combinations: ?string, discount: ?number, startingAt: ?number}} Specific price of the product */
     this.specificPrice = productToCreate.specificPrice || {
       combinations: 'Size - S, Color - White',
-      discount: faker.random.number({min: 10, max: 100}),
-      startingAt: faker.random.number({min: 2, max: 5}),
+      discount: faker.datatype.number({min: 10, max: 100}),
+      startingAt: faker.datatype.number({min: 2, max: 5}),
     };
 
     /** @type {number} Minimum quantity to buy for the product */
     this.minimumQuantity = productToCreate.minimumQuantity === undefined
-      ? faker.random.number({min: 1, max: 9})
+      ? faker.datatype.number({min: 1, max: 9})
       : productToCreate.minimumQuantity;
 
     /** @type {string} Stock location of the product */
@@ -92,7 +92,7 @@ class ProductData {
 
     /** @type {number} Low stock level of the product */
     this.lowStockLevel = productToCreate.lowStockLevel === undefined
-      ? faker.random.number({min: 1, max: 9})
+      ? faker.datatype.number({min: 1, max: 9})
       : productToCreate.lowStockLevel;
 
     /** @type {string} Label to add if product is in stock */
@@ -102,7 +102,7 @@ class ProductData {
     this.LabelWhenOutOfStock = productToCreate.LabelWhenOutOfStock || 'Label when out of stock';
 
     /** @type {string} Product behavior when it's out of stock */
-    this.behaviourOutOfStock = productToCreate.behaviourOutOfStock || faker.random.arrayElement(behavior);
+    this.behaviourOutOfStock = productToCreate.behaviourOutOfStock || faker.helpers.arrayElement(behavior);
 
     /** @type {Object|{label: ?string, type: ?string, required: ?boolean}} Customized value of the product */
     this.customization = productToCreate.customization || {

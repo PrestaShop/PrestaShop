@@ -1,4 +1,4 @@
-const faker = require('@faker-js/faker');
+const {faker} = require('@faker-js/faker');
 
 const {Products} = require('@data/demo/products');
 
@@ -85,7 +85,7 @@ class CartRuleData {
     this.discountAmount = undefined;
 
     if (this.discountType === 'Percent') {
-      this.discountPercent = cartRuleToCreate.discountPercent || faker.random.number({min: 10, max: 80});
+      this.discountPercent = cartRuleToCreate.discountPercent || faker.datatype.number({min: 10, max: 80});
     } else if (this.discountType === 'Amount') {
       this.discountAmount = {
         /** @type {number} Value of the discount amount */
@@ -105,7 +105,7 @@ class CartRuleData {
     /** @type {string|undefined} Name of the product to apply cart rule */
     this.product = undefined;
     if (this.applyDiscountTo === 'Specific product') {
-      this.product = cartRuleToCreate.product || faker.random.arrayElement(ProductsNames);
+      this.product = cartRuleToCreate.product || faker.helpers.arrayElement(ProductsNames);
     }
 
     /** @type {boolean} True to exclude discount of specific products */

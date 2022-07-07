@@ -1,4 +1,4 @@
-const faker = require('@faker-js/faker');
+const {faker} = require('@faker-js/faker');
 
 const {behaviour} = require('@data/demo/taxRule');
 const {tax} = require('@data/demo/tax');
@@ -17,13 +17,13 @@ class TaxRuleData {
    */
   constructor(taxRulesToCreate = {}) {
     /** @type {string} Country to apply the tax */
-    this.country = taxRulesToCreate.country || faker.random.arrayElement(countriesNames);
+    this.country = taxRulesToCreate.country || faker.helpers.arrayElement(countriesNames);
 
     /** @type {string} Postal code of the country */
     this.zipCode = taxRulesToCreate.zipCode || faker.address.zipCode();
 
     /** @type {string} Behavior of the tax rule */
-    this.behaviour = taxRulesToCreate.behaviour || faker.random.arrayElement(behaviour);
+    this.behaviour = taxRulesToCreate.behaviour || faker.helpers.arrayElement(behaviour);
 
     /** @type {string} Name of the tax to use on the rule */
     this.tax = taxRulesToCreate.tax || tax.DefaultFrTax.name;

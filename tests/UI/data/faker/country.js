@@ -1,4 +1,4 @@
-const faker = require('@faker-js/faker');
+const {faker} = require('@faker-js/faker');
 const {Zones} = require('@data/demo/zones');
 const {Currencies} = require('@data/demo/currencies');
 
@@ -25,10 +25,10 @@ class CountryData {
     this.callPrefix = countryToCreate.callPrefix;
 
     /** @type {string} Currency used in the country */
-    this.currency = countryToCreate.currency || faker.random.arrayElement(currencies);
+    this.currency = countryToCreate.currency || faker.helpers.arrayElement(currencies);
 
     /** @type {string} In which zone the country belongs */
-    this.zone = countryToCreate.zone || faker.random.arrayElement(zones);
+    this.zone = countryToCreate.zone || faker.helpers.arrayElement(zones);
 
     /** @type {string} True if the country used zip codes */
     this.needZipCode = countryToCreate.needZipCode === undefined ? false : countryToCreate.needZipCode;

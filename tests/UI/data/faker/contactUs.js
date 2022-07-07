@@ -1,4 +1,4 @@
-const faker = require('@faker-js/faker');
+const {faker} = require('@faker-js/faker');
 
 const subject = ['Customer service', 'Webmaster'];
 
@@ -13,7 +13,7 @@ class MessageData {
    */
   constructor(messageToCreate = {}) {
     /** @type {string} Subject of the message */
-    this.subject = messageToCreate.subject || faker.random.arrayElement(subject);
+    this.subject = messageToCreate.subject || faker.helpers.arrayElement(subject);
 
     /** @type {string} Firstname of the customer */
     this.firstName = messageToCreate.firstName || faker.name.firstName();

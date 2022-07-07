@@ -1,4 +1,4 @@
-const faker = require('@faker-js/faker');
+const {faker} = require('@faker-js/faker');
 
 /**
  * Create new invoice to use on option form on invoice page on BO
@@ -11,7 +11,7 @@ class InvoiceData {
    */
   constructor(invoiceOptions = {}) {
     /** @type {number} Invoice number to set on form */
-    this.invoiceNumber = invoiceOptions.invoiceNumber || faker.random.number({min: 100, max: 200}).toString();
+    this.invoiceNumber = invoiceOptions.invoiceNumber || faker.datatype.number({min: 100, max: 200}).toString();
 
     /** @type {string} legal free text to add to invoice */
     this.legalFreeText = invoiceOptions.legalFreeText || faker.lorem.sentence().substring(0, 10);
