@@ -1,4 +1,4 @@
-const faker = require('faker');
+const faker = require('@faker-js/faker');
 const {countries} = require('@data/demo/countries');
 
 const countriesNames = Object.values(countries).map(country => country.name);
@@ -38,10 +38,10 @@ class BrandAddressData {
     this.country = brandAddressToCreate.country || faker.random.arrayElement(countriesNames);
 
     /** @type {string} Home phone number linked to the address */
-    this.homePhone = brandAddressToCreate.homePhone || faker.phone.phoneNumber('01########');
+    this.homePhone = brandAddressToCreate.homePhone || faker.phone.number('01########');
 
     /** @type {string} Mobile phone number linked to the address */
-    this.mobilePhone = brandAddressToCreate.mobilePhone || faker.phone.phoneNumber('06########');
+    this.mobilePhone = brandAddressToCreate.mobilePhone || faker.phone.number('06########');
 
     /** @type {string} Other information to add on address */
     this.other = brandAddressToCreate.other || '';

@@ -1,4 +1,4 @@
-const faker = require('faker');
+const faker = require('@faker-js/faker');
 
 const {behaviour} = require('@data/demo/taxRule');
 const {tax} = require('@data/demo/tax');

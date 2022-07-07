@@ -1,4 +1,4 @@
-const faker = require('faker');
+const faker = require('@faker-js/faker');
 
 /**
  * Create new store to use on store creation form on BO
@@ -35,10 +35,10 @@ class StoreData {
     this.longitude = storeToCreate.longitude || faker.address.longitude();
 
     /** @type {string} Phone number of the store (default format 01########) */
-    this.phone = storeToCreate.phone || faker.phone.phoneNumber('01########');
+    this.phone = storeToCreate.phone || faker.phone.number('01########');
 
     /** @type {string} Fax number of the store default format 01########) */
-    this.fax = storeToCreate.fax || faker.phone.phoneNumber('01########');
+    this.fax = storeToCreate.fax || faker.phone.number('01########');
 
     /** @type {string} Registration number of the store */
     this.registrationNumber = storeToCreate.registrationNumber || faker.finance.account();

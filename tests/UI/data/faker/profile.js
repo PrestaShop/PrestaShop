@@ -1,4 +1,4 @@
-const faker = require('faker');
+const faker = require('@faker-js/faker');
 
 /**
  * Create new profile to use on creation form on profile page on BO

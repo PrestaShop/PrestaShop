@@ -1,4 +1,4 @@
-const faker = require('faker');
+const faker = require('@faker-js/faker');
 
 /**
  * Create new order return status to use on creation form on order return status page on BO

@@ -1,4 +1,4 @@
-const faker = require('faker');
+const faker = require('@faker-js/faker');
 
 /**
  * Create new order message to use on creation form on order message page on BO
