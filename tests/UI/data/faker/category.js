@@ -1,4 +1,4 @@
-const faker = require('@faker-js/faker');
+const {faker} = require('@faker-js/faker');
 
 const {groupAccess} = require('@data/demo/groupAccess');
 
@@ -13,7 +13,7 @@ class CategoryData {
    */
   constructor(categoryToCreate = {}) {
     /** @type {string} Name of the category */
-    this.name = categoryToCreate.name || `${faker.commerce.color()} ${faker.commerce.department()}`;
+    this.name = categoryToCreate.name || `${faker.color.human()} ${faker.commerce.department()}`;
 
     /** @type {boolean} True to display the category on FO */
     this.displayed = categoryToCreate.displayed === undefined ? true : categoryToCreate.displayed;
@@ -22,14 +22,14 @@ class CategoryData {
     this.description = faker.lorem.sentence();
 
     /** @type {string} Meta title of the category */
-    this.metaTitle = categoryToCreate.metaTitle || faker.name.title();
+    this.metaTitle = categoryToCreate.metaTitle || faker.lorem.word();
 
     /** @type {string} Meta description of the category */
     this.metaDescription = faker.lorem.sentence();
 
     /** @type {string} Customer group that could access to the category */
     this.groupAccess = categoryToCreate.groupAccess
-      || faker.random.arrayElement(groupAccess);
+      || faker.helpers.arrayElement(groupAccess);
   }
 }
 

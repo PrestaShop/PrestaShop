@@ -1,4 +1,4 @@
-const faker = require('@faker-js/faker');
+const {faker} = require('@faker-js/faker');
 
 /**
  * Create new webservice to use on webservice form on BO
@@ -11,7 +11,7 @@ class WebserviceData {
    */
   constructor(webserviceToCreate = {}) {
     /** @type {string} Key of the webservice */
-    this.key = webserviceToCreate.key || faker.random.uuid().substring(0, 32);
+    this.key = webserviceToCreate.key || faker.datatype.uuid().substring(0, 32);
 
     /** @type {string} Key description of the webservice */
     this.keyDescription = webserviceToCreate.keyDescription || faker.lorem.sentence();

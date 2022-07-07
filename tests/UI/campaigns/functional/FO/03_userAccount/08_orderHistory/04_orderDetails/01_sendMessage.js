@@ -4,7 +4,7 @@ const {expect} = require('chai');
 const helper = require('@utils/helpers');
 const loginCommon = require('@commonTests/BO/loginBO');
 const {Statuses} = require('@data/demo/orderStatuses');
-const faker = require('@faker-js/faker');
+const {faker} = require('@faker-js/faker');
 
 // Import data
 const {PaymentMethods} = require('@data/demo/paymentMethods');

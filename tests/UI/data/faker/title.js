@@ -1,4 +1,4 @@
-const faker = require('@faker-js/faker');
+const {faker} = require('@faker-js/faker');
 
 const genders = ['Male', 'Female', 'Neutral'];
 
@@ -20,7 +20,7 @@ class TitleData {
     this.frName = titleToCreate.frName || this.name;
 
     /** @type {string} Gender type of the title */
-    this.gender = titleToCreate.gender || faker.random.arrayElement(genders);
+    this.gender = titleToCreate.gender || faker.helpers.arrayElement(genders);
 
     /** @type {string} Name of the image to add to the title */
     this.imageName = titleToCreate.imageName || faker.system.commonFileName('png');

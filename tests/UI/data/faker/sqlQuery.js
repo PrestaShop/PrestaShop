@@ -1,4 +1,4 @@
-const faker = require('@faker-js/faker');
+const {faker} = require('@faker-js/faker');
 const {Tables} = require('@data/demo/sqlTables');
 
 /**
@@ -16,7 +16,7 @@ class SqlQueryData {
 
     /** @type {string} Table to use on the query */
     this.tableName = sqlQueryToCreate.tableName
-      || faker.random.arrayElement((Object.values(Tables).map(table => table.key)));
+      || faker.helpers.arrayElement((Object.values(Tables).map(table => table.key)));
 
     /** @type {string} Value of the query */
     this.sqlQuery = sqlQueryToCreate.sqlQuery || `select * from ${this.tableName}`;

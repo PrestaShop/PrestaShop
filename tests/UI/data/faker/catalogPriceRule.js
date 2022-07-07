@@ -1,4 +1,4 @@
-const faker = require('@faker-js/faker');
+const {faker} = require('@faker-js/faker');
 
 const {groupAccess} = require('@data/demo/groupAccess');
 const {countries} = require('@data/demo/countries');
@@ -24,17 +24,17 @@ class CatalogPriceRuleData {
     this.name = priceRuleToCreate.name || faker.commerce.department();
 
     /** @type {string} Currency of the price rule */
-    this.currency = priceRuleToCreate.currency || faker.random.arrayElement(currencies);
+    this.currency = priceRuleToCreate.currency || faker.helpers.arrayElement(currencies);
 
     /** @type {string} Country that could use the cart rule */
-    this.country = priceRuleToCreate.country || faker.random.arrayElement(countriesNames);
+    this.country = priceRuleToCreate.country || faker.helpers.arrayElement(countriesNames);
 
     /** @type {string} Customer group that could use the price rule */
-    this.group = priceRuleToCreate.group || faker.random.arrayElement(groupAccessNames);
+    this.group = priceRuleToCreate.group || faker.helpers.arrayElement(groupAccessNames);
 
     /** @type {number} Minimum quantity to apply price rule */
     this.fromQuantity = priceRuleToCreate.fromQuantity === undefined
-      ? faker.random.number({min: 1, max: 9})
+      ? faker.datatype.number({min: 1, max: 9})
       : priceRuleToCreate.fromQuantity;
 
     /** @type {string} Starting date to apply the price rule  */
@@ -44,13 +44,13 @@ class CatalogPriceRuleData {
     this.toDate = priceRuleToCreate.toDate || '';
 
     /** @type {string} Reduction type of the price rule */
-    this.reductionType = priceRuleToCreate.reductionType || faker.random.arrayElement(reductionType);
+    this.reductionType = priceRuleToCreate.reductionType || faker.helpers.arrayElement(reductionType);
 
     /** @type {string} Reduction tax for the price rule */
-    this.reductionTax = priceRuleToCreate.reductionTax || faker.random.arrayElement(reductionTax);
+    this.reductionTax = priceRuleToCreate.reductionTax || faker.helpers.arrayElement(reductionTax);
 
     /** @type {number} Reduction value of the price rule */
-    this.reduction = priceRuleToCreate.reduction || faker.random.number({min: 20, max: 30});
+    this.reduction = priceRuleToCreate.reduction || faker.datatype.number({min: 20, max: 30});
   }
 }
 

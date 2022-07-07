@@ -1,4 +1,4 @@
-const faker = require('@faker-js/faker');
+const {faker} = require('@faker-js/faker');
 const {groupAccess} = require('@data/demo/groupAccess');
 
 const groups = Object.values(groupAccess).map(group => group.name);
@@ -9,18 +9,18 @@ function createRecord() {
   for (let i = 0; i < 10; i++) {
     records.push({
       id: i + 3,
-      active: faker.random.number({min: 0, max: 1}),
-      title: faker.random.number({min: 1, max: 2}),
+      active: faker.datatype.number({min: 0, max: 1}),
+      title: faker.datatype.number({min: 1, max: 2}),
       email: `test.${this.lastName}@prestashop.com`,
       password: faker.internet.password(),
       birthdate: faker.date.between('1950-01-01', '2000-12-31').toISOString().slice(0, 10),
       lastName: faker.name.lastName(),
       firstName: faker.name.firstName(),
-      newsletter: faker.random.number({min: 0, max: 1}),
-      optIn: faker.random.number({min: 0, max: 1}),
+      newsletter: faker.datatype.number({min: 0, max: 1}),
+      optIn: faker.datatype.number({min: 0, max: 1}),
       registrationDate: faker.date.between('2022-01-01', '2000-12-31').toISOString().slice(0, 10),
-      groups: faker.random.arrayElement(groups),
-      defaultGroup: faker.random.arrayElement(groups),
+      groups: faker.helpers.arrayElement(groups),
+      defaultGroup: faker.helpers.arrayElement(groups),
     });
   }
   return records;

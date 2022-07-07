@@ -1,4 +1,4 @@
-const faker = require('@faker-js/faker');
+const {faker} = require('@faker-js/faker');
 
 const {Titles} = require('@data/demo/titles');
 const {groupAccess} = require('@data/demo/groupAccess');
@@ -17,7 +17,7 @@ class CustomerData {
    */
   constructor(customerToCreate = {}) {
     /** @type {string} Social title of the customer (Mr, Mrs) */
-    this.socialTitle = customerToCreate.socialTitle || faker.random.arrayElement(genders);
+    this.socialTitle = customerToCreate.socialTitle || faker.helpers.arrayElement(genders);
 
     /** @type {string} Firstname of the customer */
     this.firstName = customerToCreate.firstName || faker.name.firstName();
@@ -50,7 +50,7 @@ class CustomerData {
     this.partnerOffers = customerToCreate.partnerOffers === undefined ? true : customerToCreate.partnerOffers;
 
     /** @type {string} Default group for the customer */
-    this.defaultCustomerGroup = customerToCreate.defaultCustomerGroup || faker.random.arrayElement(groups);
+    this.defaultCustomerGroup = customerToCreate.defaultCustomerGroup || faker.helpers.arrayElement(groups);
 
     /** @type {boolean} True to enable sending newsletter to the customer */
     this.newsletter = customerToCreate.newsletter === undefined ? false : customerToCreate.newsletter;

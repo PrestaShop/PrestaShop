@@ -1,4 +1,4 @@
-const faker = require('@faker-js/faker');
+const {faker} = require('@faker-js/faker');
 const {countries} = require('@data/demo/countries');
 
 const countriesNames = Object.values(countries).map(country => country.name);
@@ -41,7 +41,7 @@ class SupplierData {
     this.city = supplierToCreate.city || faker.address.city();
 
     /** @type {string} Country for the address of the supplier */
-    this.country = supplierToCreate.country || faker.random.arrayElement(countriesNames);
+    this.country = supplierToCreate.country || faker.helpers.arrayElement(countriesNames);
 
     /** @type {string} Logo name/path of the supplier */
     this.logo = supplierToCreate.logo || `${this.name.replace(/[^\w\s]/gi, '')}.png`;

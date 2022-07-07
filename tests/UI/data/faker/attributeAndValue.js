@@ -1,4 +1,4 @@
-const faker = require('@faker-js/faker');
+const {faker} = require('@faker-js/faker');
 
 const {Attributes} = require('@data/demo/attributes');
 
@@ -32,7 +32,7 @@ class AttributeData {
     this.indexable = attributeToCreate.indexable === undefined ? true : attributeToCreate.indexable;
 
     /** @type {string} Type of the attribute 'Drop-down list'/'Radio buttons'/'Color or texture' */
-    this.attributeType = attributeToCreate.attributeType || faker.random.arrayElement(attributeTypes);
+    this.attributeType = attributeToCreate.attributeType || faker.helpers.arrayElement(attributeTypes);
   }
 }
 
@@ -47,7 +47,7 @@ class ValueData {
    */
   constructor(valueToCreate = {}) {
     /** @type {string} Name of the parent attribute */
-    this.attributeName = valueToCreate.attributeName || faker.random.arrayElement(attributesNames);
+    this.attributeName = valueToCreate.attributeName || faker.helpers.arrayElement(attributesNames);
 
     /** @type {string} Name of the value */
     this.value = valueToCreate.value || `${faker.lorem.word()}${faker.commerce.productMaterial()}`;
