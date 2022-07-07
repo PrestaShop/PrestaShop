@@ -53,10 +53,28 @@ export default class ProductOptionsManager {
   private initShowPriceToggler(): void {
     new FormFieldToggler({
       disablingInputSelector: ProductMap.options.availableForOrderInput,
-      matchingValue: '0',
+      matchingValue: '1',
       disableOnMatch: true,
       targetSelector: ProductMap.options.showPriceSwitchContainer,
-      toggleType: ToggleType.visibility,
+      toggleType: ToggleType.availability,
+    });
+
+    const availableInputs = document.querySelectorAll<HTMLInputElement>(ProductMap.options.availableForOrderInput);
+    availableInputs.forEach((availableInput: HTMLInputElement) => {
+      availableInput.addEventListener('change', () => {
+        if (availableInput.value) {
+          this.switchShowPrice(true);
+        }
+      });
+    });
+  }
+
+  private switchShowPrice(switchOn: boolean): void {
+    const showPriceInputs: NodeListOf<HTMLInputElement> = document.querySelectorAll(ProductMap.options.showPriceInput);
+
+    showPriceInputs.forEach((input) => {
+      // eslint-disable-next-line no-param-reassign
+      input.checked = input.value === '1' ? switchOn : !switchOn;
     });
   }
 
