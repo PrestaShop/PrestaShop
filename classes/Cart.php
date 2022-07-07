@@ -3552,6 +3552,53 @@ class CartCore extends ObjectModel
         $id_zone = null,
         bool $keepOrderPrices = false
     ) {
+        $shippingCost = $this->getPackageShippingCostValue(
+            $id_carrier,
+            $use_tax,
+            $default_country,
+            $product_list,
+            $id_zone,
+            $keepOrderPrices
+        );
+
+        Hook::exec(
+            'actionCartGetPackageShippingCost',
+            [
+                'cart' => $this,
+                'id_carrier' => $id_carrier,
+                'use_tax' => $use_tax,
+                'default_country' => $default_country,
+                'product_list' => $product_list,
+                'id_zone' => $id_zone,
+                'keepOrderPrices' => $keepOrderPrices,
+                'shippingCost' => &$shippingCost,
+            ]
+        );
+
+        return $shippingCost;
+    }
+
+    /**
+     * Return calculated package shipping cost.
+     *
+     * @param int $id_carrier Carrier ID (default : current carrier)
+     * @param bool $use_tax
+     * @param Country|null $default_country
+     * @param array|null $product_list list of product concerned by the shipping.
+     *                                 If null, all the product of the cart are used to calculate the shipping cost
+     * @param int|null $id_zone Zone ID
+     * @param bool $keepOrderPrices When true use the Order saved prices instead of the most recent ones from catalog (if Order exists)
+     *
+     * @return float|bool Shipping total, false if not possible to ship with the given carrier
+     */
+    protected function getPackageShippingCostValue(
+        $id_carrier = null,
+        $use_tax = true,
+        Country $default_country = null,
+        $product_list = null,
+        $id_zone = null,
+        bool $keepOrderPrices = false
+    ) {
         if ($this->isVirtualCart()) {
             return 0;
         }
