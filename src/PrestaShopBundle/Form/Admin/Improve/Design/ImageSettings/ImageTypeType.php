@@ -29,8 +29,8 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings;
 
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -66,7 +66,7 @@ class ImageTypeType extends TranslatorAwareType
                     ]),
                 ],
             ])
-            ->add('width', TextWithUnitType::class, [
+            ->add('width', IntegerType::class, [
                 'label' => $this->trans('Width', 'Admin.Global'),
                 'help' => $this->trans('Maximum image width in pixels.', 'Admin.Design.Help'),
                 'unit' => $this->trans('pixels', 'Admin.Design.Feature'),
@@ -92,7 +92,7 @@ class ImageTypeType extends TranslatorAwareType
                     ]),
                 ],
             ])
-            ->add('height', TextWithUnitType::class, [
+            ->add('height', IntegerType::class, [
                 'label' => $this->trans('Height', 'Admin.Global'),
                 'help' => $this->trans('Maximum image height in pixels.', 'Admin.Design.Help'),
                 'unit' => $this->trans('pixels', 'Admin.Design.Feature'),

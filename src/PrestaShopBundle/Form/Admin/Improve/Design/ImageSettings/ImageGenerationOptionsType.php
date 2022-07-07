@@ -29,9 +29,9 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Improve\Design\ImageSettings;
 
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -133,7 +133,7 @@ class ImageGenerationOptionsType extends TranslatorAwareType
                         $this->trans('Height', 'Admin.Global') => 2,
                     ],
                 ])
-                ->add('product_picture_max_size', TextWithUnitType::class, [
+                ->add('product_picture_max_size', IntegerType::class, [
                     'label' => $this->trans('Maximum file size of product customization pictures', 'Admin.Design.Feature'),
                     'help' => $this->trans('The maximum file size of pictures that customers can upload to customize a product (in bytes).', 'Admin.Design.Help'),
                     'required' => true,
@@ -148,7 +148,7 @@ class ImageGenerationOptionsType extends TranslatorAwareType
                     ],
                     'unit' => $this->trans('bytes', 'Admin.Design.Feature'),
                 ])
-                ->add('product_picture_width', TextWithUnitType::class, [
+                ->add('product_picture_width', IntegerType::class, [
                     'label' => $this->trans('Product picture width', 'Admin.Design.Feature'),
                     'help' => $this->trans('Width of product customization pictures that customers can upload (in pixels).', 'Admin.Design.Help'),
                     'required' => true,
@@ -163,7 +163,7 @@ class ImageGenerationOptionsType extends TranslatorAwareType
                     ],
                     'unit' => $this->trans('pixels', 'Admin.Design.Feature'),
                 ])
-                ->add('product_picture_height', TextWithUnitType::class, [
+                ->add('product_picture_height', IntegerType::class, [
                     'label' => $this->trans('Product picture height', 'Admin.Design.Feature'),
                     'help' => $this->trans('Height of product customization pictures that customers can upload (in pixels).', 'Admin.Design.Help'),
                     'required' => true,
