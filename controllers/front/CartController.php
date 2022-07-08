@@ -430,12 +430,14 @@ class CartControllerCore extends FrontController
         }
 
         // Check product quantity availability
-        if ('update' !== $mode && $this->shouldAvailabilityErrorBeRaised($product, $qty_to_check)) {
-            $this->{$ErrorKey}[] = $this->trans(
+        if ($this->shouldAvailabilityErrorBeRaised($product, $qty_to_check)) {
+            $this->errors[] = $this->trans(
                 'The product is no longer available in this quantity.',
                 [],
                 'Shop.Notifications.Error'
             );
+
+            return;
         }
 
         // Check minimal_quantity
