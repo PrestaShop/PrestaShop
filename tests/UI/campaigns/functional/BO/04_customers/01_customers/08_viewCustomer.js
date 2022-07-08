@@ -183,7 +183,7 @@ describe('BO - Customers - Customers : View information about customer', async (
       {args: {blockName: 'Carts', number: 0}},
       {args: {blockName: 'Messages', number: 0}},
       {args: {blockName: 'Vouchers', number: 0}},
-      {args: {blockName: 'Groups', number: 3}},
+      {args: {blockName: 'Groups', number: 1}},
     ].forEach((test) => {
       it(`should check ${test.args.blockName} number`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `check${test.args.blockName}Number`, baseContext);
@@ -345,7 +345,7 @@ describe('BO - Customers - Customers : View information about customer', async (
       {args: {blockName: 'Vouchers', number: 0}},
       {args: {blockName: 'Last emails', number: 2}},
       {args: {blockName: 'Last connections', number: 1}},
-      {args: {blockName: 'Groups', number: 3}},
+      {args: {blockName: 'Groups', number: 1}},
     ].forEach((test) => {
       it(`should check ${test.args.blockName} number`, async function () {
         await testContext.addContextItem(
