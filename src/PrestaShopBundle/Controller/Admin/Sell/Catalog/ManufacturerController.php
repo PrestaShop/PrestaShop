@@ -681,7 +681,7 @@ class ManufacturerController extends FrameworkBundleAdminController
                         $iniConfig->getUploadMaxSizeInBytes(),
                     ]),
                 UploadedImageConstraintException::UNRECOGNIZED_FORMAT => $this->trans(
-                    'Image format not recognized, allowed formats are: .gif, .jpg, .png .webp',
+                    'Image format not recognized, allowed formats are: .gif, .jpg, .png, .webp',
                     'Admin.Notifications.Error'
                 ),
             ],
