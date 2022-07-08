@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
-use \ImageManager;
+use ImageManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\JsonResponse;
