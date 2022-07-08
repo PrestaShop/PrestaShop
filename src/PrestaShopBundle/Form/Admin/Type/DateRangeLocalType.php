@@ -110,22 +110,20 @@ class DateRangeLocalType extends DateRangeType
             function ($from) {
                 if ($from !== null && $from != '0000-00-00 00:00:00') {
                     $dateTime = DateTime::createFromFormat('Y-m-d h:i:s', $from);
-                    $newDate = $dateTime->format($this->dateFormatFull);
 
-                    return $newDate;
-                } else {
-                    return $from;
+                    return $dateTime->format($this->dateFormatFull);
                 }
+
+                return $from;
             },
             function ($from) {
                 if ($from !== null) {
                     $dateTime = DateTime::createFromFormat($this->dateFormatFull, $from);
-                    $newDate = $dateTime->format('Y-m-d h:i:s');
 
-                    return $newDate;
-                } else {
-                    return $from;
+                    return $dateTime->format('Y-m-d h:i:s');
                 }
+
+                return $from;
             }
         ));
 
@@ -133,22 +131,20 @@ class DateRangeLocalType extends DateRangeType
             function ($to) {
                 if ($to !== null) {
                     $dateTime = DateTime::createFromFormat('Y-m-d h:i:s', $to);
-                    $newDate = $dateTime->format($this->dateFormatFull);
 
-                    return $newDate;
-                } else {
-                    return $to;
+                    return $dateTime->format($this->dateFormatFull);
                 }
+
+                return $to;
             },
             function ($to) {
                 if ($to !== null) {
                     $dateTime = DateTime::createFromFormat($this->dateFormatFull, $to);
-                    $newDate = $dateTime->format('Y-m-d h:i:s');
 
-                    return $newDate;
-                } else {
-                    return $to;
+                    return $dateTime->format('Y-m-d h:i:s');
                 }
+
+                return $to;
             }
         ));
     }
