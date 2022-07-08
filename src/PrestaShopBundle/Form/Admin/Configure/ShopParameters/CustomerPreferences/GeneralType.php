@@ -68,7 +68,7 @@ class GeneralType extends TranslatorAwareType
             ])
             ->add('password_reset_delay', IntegerType::class, [
                 'label' => $this->trans(
-                    'Password reset delay (in minutes)',
+                    'Password reset delay',
                     'Admin.Shopparameters.Feature'
                 ),
                 'constraints' => [
@@ -89,6 +89,7 @@ class GeneralType extends TranslatorAwareType
                     'Minimum time required between two requests for a password reset.',
                     'Admin.Shopparameters.Help'
                 ),
+                'unit' => $this->trans('minutes', 'Admin.Shopparameters.Feature'),
                 'multistore_configuration_key' => 'PS_PASSWD_TIME_FRONT',
             ])
             ->add('enable_b2b_mode', SwitchType::class, [
