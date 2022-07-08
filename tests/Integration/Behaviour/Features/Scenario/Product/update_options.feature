@@ -258,7 +258,7 @@ Feature: Update product options from Back Office (BO)
     And product "product1" should not be indexed
 
   Scenario: Price should always be shown when product is available for ordering
-    # Based on previous changes in previous scenarios we already now that order can be disabled and prices hidden
+    # Based on previous changes in previous scenarios we already know that order can be disabled and prices hidden
     Given product "product1" should have following options:
       | product option      | value        |
       | visibility          | both         |

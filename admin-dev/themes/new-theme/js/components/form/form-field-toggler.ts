@@ -40,8 +40,8 @@ export enum ToggleType {
  * @param {string} matchingValue - value which should match with disablingInput value to enable/disable related element
  * @param {string} targetSelector - selector of element which is toggled by the disablingInput.
  * @param {boolean} disableOnMatch - once disablingInput & matchingValue values match, then
- *                  if true - related element is disabled if toggle type is "availability" or hidden - if ToggleType is "visibility"
- *                  if false - related element is enabled if toggle type is "availability" or visible - if ToggleType is "visibility".
+ *                  if true - when ToggleType is "availability", then the related element is disabled. When ToggleType is "visibility", then the related element is hidden.
+ *                  if false - when ToggleType is "availability", then the related element is enabled. When ToggleType is "visibility", then the related element is visible.
  * @param {ToggleType} toggleType - whether to toggle between enable/disable (availability) or show/hide (visibility)
  *
  * Important Note: the component can be configured on construction via the parameters object, but its behaviour
