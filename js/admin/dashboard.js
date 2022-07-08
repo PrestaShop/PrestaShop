@@ -278,9 +278,11 @@ $(document).ready( function () {
 			},
 			success : function(result) {
 				if ($('#page-header-desc-configuration-switch_demo i').hasClass('process-icon-toggle-on')) {
-					$('#page-header-desc-configuration-switch_demo i').removeClass('process-icon-toggle-on').addClass('process-icon-toggle-off');
+					$('#page-header-desc-configuration-switch_demo i').removeClass('process-icon-toggle-on');
+					$('#page-header-desc-configuration-switch_demo i').attr('class', 'process-icon-toggle-off '+$('#page-header-desc-configuration-switch_demo i').attr('class'));
 				} else {
-					$('#page-header-desc-configuration-switch_demo i').removeClass('process-icon-toggle-off').addClass('process-icon-toggle-on');
+					$('#page-header-desc-configuration-switch_demo i').removeClass('process-icon-toggle-off');
+					$('#page-header-desc-configuration-switch_demo i').attr('class', 'process-icon-toggle-on '+$('#page-header-desc-configuration-switch_demo i').attr('class'));
 				}
 				refreshDashboard(false);
 			}
