@@ -11,7 +11,8 @@ class ProductReviewData {
    */
   constructor(productReviewToCreate = {}) {
     /** @type {string} Title of the review */
-    this.reviewTitle = productReviewToCreate.reviewTitle || faker.lorem.sentence(faker.datatype.number({min: 3, max: 7}));
+    this.reviewTitle = productReviewToCreate.reviewTitle
+      || faker.lorem.sentence(faker.datatype.number({min: 3, max: 7}));
 
     /** @type {string} Content of the review */
     this.reviewContent = productReviewToCreate.reviewContent
