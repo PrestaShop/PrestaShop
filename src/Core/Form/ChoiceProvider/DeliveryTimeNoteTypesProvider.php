@@ -93,7 +93,7 @@ final class DeliveryTimeNoteTypesProvider implements FormChoiceProviderInterface
 
         return [
             $this->translator->trans('None', [], 'Admin.Catalog.Feature') => DeliveryTimeNoteType::TYPE_NONE,
-            $this->translator->trans('Default delivery time: [1]%delivery_time% - %oos_delivery_time%[/1] [2]Manage default settings[/2]', [
+            $this->translator->trans('Default delivery time: [1]%delivery_time% - %oos_delivery_time%[/1] [2]Edit delivery time[/2]', [
                 '%delivery_time%' => $deliveryTimeLabel,
                 '%oos_delivery_time%' => $outOfStockDeliveryTimeLabel,
                 '[1]' => '&nbsp;<strong>',
