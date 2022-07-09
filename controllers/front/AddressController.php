@@ -58,6 +58,7 @@ class AddressControllerCore extends FrontController
      */
     public function postProcess()
     {
+    	Tools::clearAllCache();
         $this->context->smarty->assign('editing', false);
         $id_address = (int) Tools::getValue('id_address');
         // Initialize address if an id exists
@@ -78,7 +79,6 @@ class AddressControllerCore extends FrontController
                 } else {
                     $this->success[] = $this->trans('Address successfully added!', [], 'Shop.Notifications.Success');
                 }
-
                 $this->should_redirect = true;
             }
         }
@@ -107,6 +107,7 @@ class AddressControllerCore extends FrontController
                 new Address($id_address, $this->context->language->id),
                 Tools::getValue('token')
             );
+
             if ($ok) {
                 $this->success[] = $this->trans('Address successfully deleted!', [], 'Shop.Notifications.Success');
                 $this->should_redirect = true;
