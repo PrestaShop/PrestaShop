@@ -486,7 +486,7 @@ class AdminModuleController {
       self.findModuleUsed = true;
     } else if (findModule !== null) {
       self.currentTagsList.pop(findModule);
-    }    
+    }
 
     const modulesListLength = self.modulesList.length;
     const counter = {};
