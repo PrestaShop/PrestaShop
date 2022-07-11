@@ -88,13 +88,11 @@ export default class VirtualProductManager {
       let fullPath = $(ProductMap.virtualProduct.fileUploadField).val();
 
       if (Array.isArray(fullPath) || typeof fullPath === 'undefined') {
-        throw new Error('Full path of the file is not supposed to be an array');
+        console.error('Full path of the file is not supposed to be an array');
       } else {
         // Convert to string in any other case
         fullPath = fullPath.toString();
       }
-
-      alert(fullPath);
 
       // get file name from full path
       const startIndex = (fullPath.indexOf('\\') >= 0 ? fullPath.lastIndexOf('\\') : fullPath.lastIndexOf('/'));

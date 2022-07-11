@@ -38,6 +38,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -48,7 +49,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class VirtualProductFileType extends TranslatorAwareType
 {
-    const ASSOCIATED_FILE_VALIDATION_GROUP = 'associated_file';
+    private const ASSOCIATED_FILE_VALIDATION_GROUP = 'associated_file';
 
     /**
      * @var int
@@ -198,7 +199,7 @@ class VirtualProductFileType extends TranslatorAwareType
                 'class' => 'virtual-product-file-content',
             ],
             'columns_number' => 3,
-            'validation_groups' => function ($form) {
+            'validation_groups' => function (FormInterface $form): array {
                 $groups = ['Default'];
                 $data = $form->getData();
 
