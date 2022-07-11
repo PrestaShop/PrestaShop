@@ -431,9 +431,13 @@ class CartControllerCore extends FrontController
 
         // Check product quantity availability
         if ($this->shouldAvailabilityErrorBeRaised($product, $qty_to_check)) {
+            $availableProductQuantity = StockAvailable::getQuantityAvailableByProduct(
+                $this->id_product,
+                $this->id_product_attribute
+            );
             $this->errors[] = $this->trans(
-                'The product is no longer available in this quantity.',
-                [],
+                'The available purchase order quantity for this product is %quantity%.',
+                ['%quantity%' => $availableProductQuantity],
                 'Shop.Notifications.Error'
             );
 
@@ -585,7 +589,13 @@ class CartControllerCore extends FrontController
             $this->id_product,
             $this->id_product_attribute
         );
+
         if ($availableProductQuantity <= 0) {
+            return true;
+        }
+
+        // Check for product without attribute
+        if ((!$this->id_product_attribute) && $qtyToCheck > $availableProductQuantity) {
             return true;
         }
 
