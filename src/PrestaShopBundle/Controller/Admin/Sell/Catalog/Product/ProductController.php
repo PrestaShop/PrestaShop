@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
 use Exception;
+use PrestaShop\PrestaShop\Adapter\Shop\Url\ProductPreviewProvider;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDuplicateProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkUpdateProductStatusCommand;
@@ -139,6 +140,27 @@ class ProductController extends FrameworkBundleAdminController
             'lightDisplay' => $request->query->has('liteDisplaying'),
             'productLightGrid' => $this->presentGrid($grid),
         ]);
+    }
+
+    /**
+     * The redirection URL is generation thanks to the ProductPreviewProvider however it can't be used in the grid
+     * since the LinkRowAction expects a symfony route, so this action is merely used as a proxy for symfony routing
+     * and redirects to the appropriate product preview url.
+     *
+     * @AdminSecurity("is_granted('read', 'AdminProducts')")
+     *
+     * @return RedirectResponse
+     */
+    public function previewAction(int $productId): RedirectResponse
+    {
+        /** @var bool $isEnabled */
+        $isEnabled = $this->getQueryBus()->handle(new GetProductIsEnabled((int) $productId));
+
+        /** @var ProductPreviewProvider $previewUrlProvider */
+        $previewUrlProvider = $this->get('prestashop.adapter.shop.url.product_preview_provider');
+        $previewUrl = $previewUrlProvider->getUrl($productId, $isEnabled);
+
+        return $this->redirect($previewUrl);
     }
 
     /**
