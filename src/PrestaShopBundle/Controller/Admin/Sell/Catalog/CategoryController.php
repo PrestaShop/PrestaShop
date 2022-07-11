@@ -193,8 +193,7 @@ class CategoryController extends FrameworkBundleAdminController
                 'allowMenuThumbnailsUpload' => true,
                 'categoryForm' => $categoryForm->createView(),
                 'defaultGroups' => $defaultGroups,
-                'categoryUrl' => $this->get('prestashop.adapter.shop.url.category_provider')
-                    ->getUrl(0, '{friendly-url}'),
+                'categoryUrl' => null,
             ]
         );
     }
