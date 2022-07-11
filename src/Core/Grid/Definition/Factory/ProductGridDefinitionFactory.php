@@ -239,6 +239,16 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                 'route_param_field' => 'id_product',
             ])
             )
+            ->add((new LinkRowAction('preview'))
+            ->setName($this->trans('Preview', [], 'Admin.Actions'))
+            ->setIcon('remove_red_eye')
+            ->setOptions([
+                'route' => 'admin_products_v2_preview',
+                'route_param_name' => 'productId',
+                'route_param_field' => 'id_product',
+                'target' => '_blank',
+            ])
+            )
             ->add((new SubmitRowAction('duplicate'))
             ->setName($this->trans('Duplicate', [], 'Admin.Actions'))
             ->setIcon('content_copy')
