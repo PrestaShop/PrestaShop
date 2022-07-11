@@ -28,8 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\ChoiceProvider;
 
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -43,12 +45,36 @@ final class DeliveryTimeNoteTypesProvider implements FormChoiceProviderInterface
     private $translator;
 
     /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    /**
+     * @var ConfigurationInterface
+     */
+    private $configuration;
+
+    /**
+     * @var int
+     */
+    private $contextLanguageId;
+
+    /**
      * @param TranslatorInterface $translator
+     * @param RouterInterface $router
+     * @param ConfigurationInterface $configuration
+     * @param int $contextLanguageId
      */
     public function __construct(
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        RouterInterface $router,
+        ConfigurationInterface $configuration,
+        int $contextLanguageId
     ) {
         $this->translator = $translator;
+        $this->router = $router;
+        $this->configuration = $configuration;
+        $this->contextLanguageId = $contextLanguageId;
     }
 
     /**
@@ -56,10 +82,36 @@ final class DeliveryTimeNoteTypesProvider implements FormChoiceProviderInterface
      */
     public function getChoices()
     {
+        $linkOpeningTag = sprintf(
+            '&nbsp;<a target="_blank" href="%s"><i class="material-icons">open_in_new</i>',
+            $this->router->generate('admin_product_preferences') . '#stock_delivery_time'
+        );
+        $linkClosingTag = '</a>';
+
+        $deliveryTimeLabel = $this->getConfigurationLabel('PS_LABEL_DELIVERY_TIME_AVAILABLE');
+        $outOfStockDeliveryTimeLabel = $this->getConfigurationLabel('PS_LABEL_DELIVERY_TIME_OOSBOA');
+
         return [
             $this->translator->trans('None', [], 'Admin.Catalog.Feature') => DeliveryTimeNoteType::TYPE_NONE,
-            $this->translator->trans('Default delivery time', [], 'Admin.Catalog.Feature') => DeliveryTimeNoteType::TYPE_DEFAULT,
+            $this->translator->trans('Default delivery time: [1]%delivery_time% - %oos_delivery_time%[/1] [2]Edit delivery time[/2]', [
+                '%delivery_time%' => $deliveryTimeLabel,
+                '%oos_delivery_time%' => $outOfStockDeliveryTimeLabel,
+                '[1]' => '&nbsp;<strong>',
+                '[/1]' => '</strong>',
+                '[2]' => $linkOpeningTag,
+                '[/2]' => $linkClosingTag,
+            ], 'Admin.Catalog.Feature') => DeliveryTimeNoteType::TYPE_DEFAULT,
             $this->translator->trans('Specific delivery time to this product', [], 'Admin.Catalog.Feature') => DeliveryTimeNoteType::TYPE_SPECIFIC,
         ];
+    }
+
+    private function getConfigurationLabel(string $configurationName): string
+    {
+        $config = $this->configuration->get($configurationName);
+        if (!empty($config[$this->contextLanguageId])) {
+            return $config[$this->contextLanguageId];
+        }
+
+        return $this->translator->trans('N/A', [], 'Admin.Global');
     }
 }
