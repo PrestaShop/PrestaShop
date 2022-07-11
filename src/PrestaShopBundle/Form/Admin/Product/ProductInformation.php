@@ -58,6 +58,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class ProductInformation extends CommonAbstractType
 {
+    //Min and Max Product Name length
+    public const MAX_PRODUCT_NAME = 128;
+    public const MIN_PRODUCT_NAME = 3;
+
     /**
      * @var array
      */
@@ -220,7 +224,20 @@ class ProductInformation extends CommonAbstractType
                             'match' => false,
                         ]),
                         new Assert\NotBlank(),
-                        new Assert\Length(['min' => 3, 'max' => 128]),
+                        new Assert\Length([
+                            'max' => static::MAX_PRODUCT_NAME,
+                            'min' => static::MIN_PRODUCT_NAME,
+                            'maxMessage' => $this->translator->trans(
+                                'This value is too long. It should have %limit% characters or less.',
+                                ['%limit%' => static::MAX_PRODUCT_NAME],
+                                'Admin.Catalog.Error'
+                            ),
+                            'minMessage' => $this->translator->trans(
+                                'This value is too short. It should have %limit% characters or more.',
+                                ['%limit%' => static::MIN_PRODUCT_NAME],
+                                'Admin.Catalog.Error'
+                            ),
+                        ]),
                     ],
                     'attr' => [
                         'placeholder' => $this->translator->trans('Enter your product name', [], 'Admin.Catalog.Help'),
