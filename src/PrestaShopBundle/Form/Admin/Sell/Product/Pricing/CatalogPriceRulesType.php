@@ -28,45 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
-use PrestaShopBundle\Form\Admin\Type\IconButtonType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use PrestaShopBundle\Service\Routing\Router;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class CatalogPriceRulesType extends TranslatorAwareType
 {
-    /**
-     * @var Router
-     */
-    private $router;
-
-    /**
-     * CatalogPriceRulesType constructor.
-     *
-     * @param TranslatorInterface $translator
-     * @param array<string> $locales
-     * @param Router $router
-     */
-    public function __construct(TranslatorInterface $translator, array $locales, Router $router)
-    {
-        parent::__construct($translator, $locales);
-        $this->router = $router;
-    }
-
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
-            ->add('manage_catalog_price_rules', IconButtonType::class, [
-                'label' => $this->trans('Manage catalog price rules', 'Admin.Catalog.Feature'),
-                'type' => 'link',
-                'attr' => [
-                    'class' => 'btn btn-link px-0 align-right',
-                    'href' => $this->router->generate('admin_catalog_price_rules_index'),
-                    'target' => '_blank',
-                ],
-                'icon' => 'open_in_new',
-            ])
-        ;
-    }
 }
