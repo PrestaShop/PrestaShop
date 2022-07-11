@@ -273,6 +273,13 @@ describe('FO - product page : Product quick view', async () => {
 
       await homePage.proceedToCheckout(page);
 
+      const pageTitle = await cartPage.getPageTitle(page);
+      await expect(pageTitle).to.equal(cartPage.pageTitle);
+    });
+
+    it('should check the products number in the cart', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkProductsNumber', baseContext);
+
       const notificationsNumber = await homePage.getCartNotificationsNumber(page);
       await expect(notificationsNumber).to.be.equal(combination.quantity);
     });
