@@ -31,6 +31,8 @@ use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
+use Symfony\Component\Validator\Constraints\Type;
 
 /**
  * Class EmployeeOptionsType defines form for employee options.
@@ -67,6 +69,20 @@ class EmployeeOptionsType extends TranslatorAwareType
                 'required' => false,
                 'unit' => $this->trans('minutes', 'Admin.Advparameters.Feature'),
                 'disabled' => !$this->canOptionsBeChanged,
+                'constraints' => [
+                    new GreaterThanOrEqual(
+                        [
+                            'value' => 0,
+                            'message' => $this->trans('The field is invalid. Please enter a positive integer.', 'Admin.Notifications.Error'),
+                        ]
+                    ),
+                    new Type(
+                        [
+                            'value' => 'numeric',
+                            'message' => $this->trans('The field is invalid. Please enter a positive integer.', 'Admin.Notifications.Error'),
+                        ]
+                    ),
+                ],
             ])
             ->add('allow_employee_specific_language', SwitchType::class, [
                 'required' => false,
