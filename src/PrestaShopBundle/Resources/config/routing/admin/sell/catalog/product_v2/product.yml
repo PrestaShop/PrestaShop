@@ -21,6 +21,18 @@ admin_products_v2_light_list:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::lightListAction
     _legacy_controller: AdminProducts
 
+admin_products_v2_preview:
+  path: /{productId}/preview
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::previewAction
+    _legacy_controller: AdminProducts
+    _legacy_link: AdminProducts:preview
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
+
 admin_products_search:
   path: /
   methods: [ POST ]
