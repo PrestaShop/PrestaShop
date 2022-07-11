@@ -70,8 +70,11 @@ class CombinationFormDataProvider implements FormDataProviderInterface
         return array_merge([
             'id' => $combinationId,
             'product_id' => $combinationForEditing->getProductId(),
-            'name' => $combinationForEditing->getName(),
-            'is_default' => $combinationForEditing->isDefault(),
+            'cover_thumbnail_url' => $combinationForEditing->getCoverThumbnailUrl(),
+            'header' => [
+                'name' => $combinationForEditing->getName(),
+                'is_default' => $combinationForEditing->isDefault(),
+            ],
             'stock' => $this->extractStockData($combinationForEditing),
             'price_impact' => $this->extractPriceImpactData($combinationForEditing),
             'references' => $this->extractReferencesData($combinationForEditing),

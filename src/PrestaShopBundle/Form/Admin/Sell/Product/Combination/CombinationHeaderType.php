@@ -28,30 +28,32 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
-use PrestaShopBundle\Form\Admin\Sell\Product\Stock\QuantityType;
-use PrestaShopBundle\Form\Admin\Sell\Product\Stock\StockOptionsType;
-use PrestaShopBundle\Form\Admin\Type\DatePickerType;
+use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CombinationStockType extends TranslatorAwareType
+class CombinationHeaderType extends TranslatorAwareType
 {
     /**
      * {@inheritDoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        parent::buildForm($builder, $options);
         $builder
-            ->add('quantities', QuantityType::class, [
-                'product_id' => $options['product_id'],
+            ->add('name', TextPreviewType::class, [
+                'label' => false,
+                'prefix' => $this->trans('Edit combination: ', 'Admin.Catalog.Feature'),
+                'row_attr' => [
+                    'class' => 'combination-name-row',
+                ],
             ])
-            ->add('options', StockOptionsType::class)
-            ->add('available_date', DatePickerType::class, [
-                'label' => $this->trans('Availability date', 'Admin.Catalog.Feature'),
-                'required' => false,
-                'attr' => [
-                    'placeholder' => 'YYYY-MM-DD',
+            ->add('is_default', CheckboxType::class, [
+                'label' => $this->trans('Set as default combination', 'Admin.Catalog.Feature'),
+                'row_attr' => [
+                    'class' => 'combination-default-row',
                 ],
             ])
         ;
@@ -66,11 +68,11 @@ class CombinationStockType extends TranslatorAwareType
         $resolver
             ->setDefaults([
                 'label' => false,
+                'required' => false,
+                'row_attr' => [
+                    'class' => 'combination-header-row',
+                ],
             ])
-            ->setRequired([
-                'product_id',
-            ])
-            ->setAllowedTypes('product_id', 'int')
         ;
     }
 }

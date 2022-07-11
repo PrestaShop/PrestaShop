@@ -88,6 +88,23 @@ class UpdateCombinationImagesFeatureContext extends AbstractCombinationFeatureCo
     }
 
     /**
+     * @Then combination :combinationReference should have the following cover :coverUrl
+     *
+     * @param string $combinationReference
+     * @param string $coverUrl
+     */
+    public function assertCombinationCover(string $combinationReference, string $coverUrl): void
+    {
+        $combinationCoverUrl = $this->getCombinationForEditing($combinationReference)->getCoverThumbnailUrl();
+        $realImageUrl = $this->getRealImageUrl($coverUrl);
+        Assert::assertEquals(
+            $realImageUrl,
+            $combinationCoverUrl,
+            'Unexpected combination cover image url'
+        );
+    }
+
+    /**
      * @Then combination :combinationReference should have no images
      *
      * @param string $combinationReference
