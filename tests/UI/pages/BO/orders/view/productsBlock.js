@@ -454,7 +454,7 @@ class ProductsBlock extends ViewOrderBasePage.constructor {
     await this.selectByVisibleText(page, this.addOrderCartRuleTypeSelect, discountData.type);
 
     await this.waitForVisibleSelector(page, `${this.addOrderCartRuleAddButton}:not([disabled])`);
-    await page.$eval(this.addOrderCartRuleAddButton, el => el.click());
+    await this.clickAndWaitForNavigation(page, this.addOrderCartRuleAddButton);
 
     return this.getTextContent(page, this.alertBlock);
   }

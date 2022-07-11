@@ -594,7 +594,7 @@ class Order extends BOBasePage {
    * @returns {Promise<void>}
    */
   async openOrderDetails(page) {
-    await this.waitForSelectorAndClick(page, this.previewOrderButton);
+    await this.clickAndWaitForNavigation(page, this.previewOrderButton);
   }
 }
 
