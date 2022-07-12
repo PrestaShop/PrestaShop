@@ -481,7 +481,7 @@ class AdminModuleController {
     const paramsUrl = (new URL(document.location)).searchParams;
     const findModule = paramsUrl.get('find');
 
-    if (findModule !== null && self.findModuleUsed !== true) {
+    if (findModule && self.findModuleUsed !== true) {
       self.currentTagsList.push(findModule);
       self.findModuleUsed = true;
     } else if (findModule !== null) {
