@@ -773,14 +773,6 @@ abstract class ControllerCore
             $method = $bt[1]['function'];
         }
 
-        /* @deprecated deprecated since 1.6.1.1 */
-        Hook::exec('actionAjaxDieBefore', ['controller' => $controller, 'method' => $method, 'value' => $value]);
-
-        /*
-         * @deprecated deprecated since 1.6.1.1
-         * use 'actionAjaxDie'.$controller.$method.'Before' instead
-         */
-        Hook::exec('actionBeforeAjaxDie' . $controller . $method, ['value' => $value]);
         Hook::exec('actionAjaxDie' . $controller . $method . 'Before', ['value' => $value]);
         header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-check=0');
 
