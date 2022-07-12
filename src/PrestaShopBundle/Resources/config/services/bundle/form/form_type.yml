@@ -168,6 +168,8 @@ services:
       - "@prestashop.adapter.legacy.context"
       - "@prestashop.adapter.data_provider.warehouse"
       - "@prestashop.adapter.data_provider.carrier"
+      - "@=service('prestashop.adapter.legacy.configuration').get('PS_DIMENSION_UNIT')"
+      - "@=service('prestashop.adapter.legacy.configuration').get('PS_WEIGHT_UNIT')"
     parent: 'form.type.common_type'
     public: true
     tags:
