@@ -19,3 +19,13 @@
 a.btn.auto-pointer-events {
   pointer-events: auto;
 }
+
+.btn-primary:not(:disabled):not(.disabled).active:focus,
+.btn-primary:not(:disabled):not(.disabled):active:focus,
+.show>.btn-primary.dropdown-toggle:focus,
+.btn-primary.focus:active,
+.btn-primary:focus:active,
+.btn-primary.focus,
+.btn-primary:focus {
+  box-shadow: none;
+}
