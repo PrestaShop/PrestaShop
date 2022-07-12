@@ -150,7 +150,7 @@ class EditProductFormType extends TranslatorAwareType
                 'active' => false,
                 'allow_extra_fields' => true,
                 'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/product.html.twig',
-                'use_default_theme' => false,
+                'use_default_themes' => false,
                 'toolbar_buttons' => [],
             ])
             ->setRequired([
