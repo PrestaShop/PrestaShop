@@ -484,7 +484,7 @@ class AdminModuleController {
     if (findModule && self.findModuleUsed !== true) {
       self.currentTagsList.push(findModule);
       self.findModuleUsed = true;
-    } else if (findModule !== null) {
+    } else if (findModule) {
       self.currentTagsList.pop(findModule);
     }
 
