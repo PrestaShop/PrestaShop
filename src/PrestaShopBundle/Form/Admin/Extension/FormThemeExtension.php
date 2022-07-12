@@ -53,12 +53,12 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * form is automatic with a single form_row it is hard to define the form theme from twig that's one of the
  * use cases of this extension.
  *
- * An addition option exist with this extension use_default_theme which is the equivalent of the only keyword
+ * An addition option exist with this extension use_default_themes which is the equivalent of the only keyword
  * used in twig:
  *
  *     {% form_theme productForm with ['@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/product.html.twig'] only %}
  *
- * It is true by default, meaning to get the same behaviour as the twig keyword only you need to specify use_default_theme
+ * It is true by default, meaning to get the same behaviour as the twig keyword only you need to specify use_default_themes
  * to false.
  */
 class FormThemeExtension extends AbstractTypeExtension
@@ -86,9 +86,10 @@ class FormThemeExtension extends AbstractTypeExtension
                 // Define the form theme template path for the form
                 'form_theme' => null,
                 // Specify if default theme should be used as well
-                'use_default_theme' => true,
+                'use_default_themes' => true,
             ])
             ->setAllowedTypes('form_theme', ['null', 'string', 'array'])
+            ->setAllowedTypes('use_default_themes', 'bool')
         ;
     }
 
@@ -99,7 +100,7 @@ class FormThemeExtension extends AbstractTypeExtension
     {
         if (!empty($options['form_theme'])) {
             $formThemes = is_array($options['form_theme']) ? $options['form_theme'] : [$options['form_theme']];
-            $this->formRenderer->setTheme($view, $formThemes, $options['use_default_theme']);
+            $this->formRenderer->setTheme($view, $formThemes, $options['use_default_themes']);
         }
     }
 
