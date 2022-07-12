@@ -130,7 +130,7 @@ class StockType extends TranslatorAwareType
     {
         $resolver
             ->setDefaults([
-                'label' => $this->trans('Stock', 'Admin.Catalog.Feature'),
+                'label' => $this->trans('Stocks', 'Admin.Catalog.Feature'),
                 'required' => false,
                 'virtual_product_file_id' => null,
                 // Suppliers can be removed so there might be extra data during type switching
@@ -148,7 +148,7 @@ class StockType extends TranslatorAwareType
                 if ($productType === ProductType::TYPE_VIRTUAL) {
                     return $this->trans('Virtual product', 'Admin.Catalog.Feature');
                 } else {
-                    return $this->trans('Stock', 'Admin.Catalog.Feature');
+                    return $this->trans('Stocks', 'Admin.Catalog.Feature');
                 }
             })
         ;
