@@ -27,9 +27,20 @@
     <PSTable class="mt-1">
       <thead>
         <tr>
+          <th
+            scope="col"
+          >
+            <PSSort
+              order="product_id"
+              @sort="sort"
+              :current-sort="currentSort"
+            >
+              {{ trans('title_product_id') }}
+            </PSSort>
+          </th>
           <th width="30%">
             <PSSort
-              order="product"
+              order="product_name"
               @sort="sort"
               :current-sort="currentSort"
             >
