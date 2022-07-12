@@ -41,6 +41,7 @@
       :value="getQuantity()"
       @change="onChange"
       @keyup="onKeyup($event)"
+      @keydown="onKeydown($event)"
       @focus="focusIn"
       @blur="focusOut($event)"
     />
@@ -96,6 +97,12 @@
         this.isEnabled = false;
         this.value = '';
         this.product.qty = null;
+      },
+      // @see Preventing decimal numbers inside input: https://github.com/PrestaShop/PrestaShop/pull/28510
+      onKeydown(event: KeyboardEvent): void {
+        if (event.key === '.' || event.key === ',') {
+          event.preventDefault();
+        }
       },
       onKeyup(event: Event): void {
         const val = (<HTMLInputElement>event.target).value;
