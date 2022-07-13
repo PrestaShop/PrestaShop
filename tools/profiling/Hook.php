@@ -63,6 +63,14 @@ class Hook extends HookCore
 
         $result = parent::coreRenderWidget($module, $registeredHookName, $params);
 
+        /*
+         * It's not a hook which has been triggered but
+         * it's a widget
+         */
+        if (empty($registeredHookName)) {
+            $registeredHookName = 'renderWidget';
+        }
+
         Profiler::getInstance()->interceptHook(
             $registeredHookName,
             [
