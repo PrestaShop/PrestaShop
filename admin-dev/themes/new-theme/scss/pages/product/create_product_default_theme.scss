@@ -1,3 +1,4 @@
+
 #modal-create-product {
   //modal loader
   @import "~bootstrap/scss/mixins/border-radius";
@@ -7,7 +8,9 @@
   @import "create_product_modal";
 
   .d-none {
+    /* stylelint-disable declaration-no-important */
     display: none !important;
+    /* stylelint-enable declaration-no-important */
   }
 
   .modal-header .close {
