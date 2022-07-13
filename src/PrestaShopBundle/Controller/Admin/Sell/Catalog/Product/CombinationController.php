@@ -79,7 +79,11 @@ class CombinationController extends FrameworkBundleAdminController
         try {
             $combinationForm = $this->getCombinationFormBuilder()->getFormFor($combinationId);
         } catch (CombinationNotFoundException $e) {
-            return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/Combination/not_found.html.twig');
+            return $this->render(
+                '@PrestaShop/Admin/Sell/Catalog/Product/Combination/not_found.html.twig',
+                [],
+                new Response('',404)
+            );
         }
 
         try {
