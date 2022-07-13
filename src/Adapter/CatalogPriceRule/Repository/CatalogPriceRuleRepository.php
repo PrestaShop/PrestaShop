@@ -75,11 +75,10 @@ class CatalogPriceRuleRepository
     }
 
     /**
-     * @param ProductId $productId
      * @param LanguageId $langId
-     * @param array<string, mixed> $filters
      *
      * @return int
+     * @throws \Doctrine\DBAL\Exception
      */
     public function countCatalogPriceRules(LanguageId $langId): int
     {
