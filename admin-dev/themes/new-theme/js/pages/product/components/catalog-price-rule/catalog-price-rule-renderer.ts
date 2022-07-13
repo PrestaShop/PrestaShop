@@ -101,7 +101,7 @@ export default class CatalogPriceRuleRenderer implements RendererType {
     });
   }
 
-  public toggleListVisibility(show: boolean): void {
+  private toggleListVisibility(show: boolean): void {
     this.listContainer.classList.toggle('d-none', !show);
   }
 

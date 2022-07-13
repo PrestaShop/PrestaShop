@@ -36,6 +36,7 @@ import FormFieldDisabler from '@components/form/form-field-disabler';
 import {isUndefined} from '@PSTypes/typeguard';
 import PaginatedSpecificPricesService from '@pages/product/services/paginated-specific-prices-service';
 import DynamicPaginator from '@components/pagination/dynamic-paginator';
+
 import ClickEvent = JQuery.ClickEvent;
 
 const SpecificPriceMap = ProductMap.specificPrice;
@@ -100,12 +101,13 @@ export default class SpecificPricesManager {
 
     const showCatalogPriceRulesButton = document.querySelector<HTMLElement>(CatalogPriceRulesMap.showCatalogPriceRules);
     const catalogPriceRulesContainer = document.querySelector<HTMLElement>(CatalogPriceRulesMap.blockContainer);
-
     let listRendered = false;
+    let listShown = false;
 
     if (showCatalogPriceRulesButton === null || catalogPriceRulesContainer === null) {
       return;
     }
+
 
     /** This should be the form container for the whole form element, so we can hide the whole block */
     const formContainer = <HTMLElement>catalogPriceRulesContainer.parentNode;
@@ -115,12 +117,21 @@ export default class SpecificPricesManager {
     }
 
     showCatalogPriceRulesButton.addEventListener('click', () => {
-      formContainer.classList.remove('d-none');
-      showCatalogPriceRulesButton.classList.add('d-none');
+      formContainer.classList.toggle('d-none');
+      if (!listShown) {
+        if (showCatalogPriceRulesButton.dataset.hideName !== undefined) {
+          showCatalogPriceRulesButton.innerHTML = '<i class="material-icons">visibility_off</i> ' + showCatalogPriceRulesButton.dataset.hideName;
+        }
+        listShown = true;
+      } else {
+        if (showCatalogPriceRulesButton.dataset.hideName !== undefined) {
+          showCatalogPriceRulesButton.innerHTML = '<i class="material-icons">visibility</i> ' + showCatalogPriceRulesButton.dataset.showName;
+        }
+        listShown = false;
+      }
+
       if (!listRendered) {
         catalogPriceRulePaginator.paginate(1);
-      } else {
-        priceRuleRenderer.toggleListVisibility(true);
       }
       listRendered = true;
     });
