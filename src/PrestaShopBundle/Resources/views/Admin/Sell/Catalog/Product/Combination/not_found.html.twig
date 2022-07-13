@@ -32,8 +32,8 @@
         <div class="row justify-content-center">
             <img src="{{ asset('themes/new-theme/img/empty_state/missing_combination.png') }}">
         </div>
-      <div class="row justify-content-center">
-        <p>{{ 'This combination doesn\'t exist anymore'|trans({}, 'Admin.Catalog.Feature') }}</p>
+      <div class="row justify-content-center combination-not-found-description">
+        <h2>{{ 'This combination doesn\'t exist anymore'|trans({}, 'Admin.Catalog.Feature') }}</h2>
       </div>
         <div class="row justify-content-center">
             <button type="button" aria-label="Close" class="btn btn-primary" onClick="document.location.reload()">
