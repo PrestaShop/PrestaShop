@@ -145,7 +145,7 @@
   import Vue from 'vue';
   import PaginatedCombinationsService from '@pages/product/services/paginated-combinations-service';
   import History from './History.vue';
-  import PsModal, {InputModalParams} from '@components/modal/modal';
+  import PsModal from '@components/modal/modal';
 
   export interface Combination {
     id: number;
