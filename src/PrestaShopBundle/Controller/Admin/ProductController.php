@@ -99,6 +99,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * URL example: /product/catalog/40/20/id_product/asc
      *
+     * @AdminSecurity("is_granted('create', 'ADMINPRODUCTS_') || is_granted('update', 'ADMINPRODUCTS_') || is_granted('read', 'ADMINPRODUCTS_')")
      * @Template("@PrestaShop/Admin/Product/CatalogPage/catalog.html.twig")
      *
      * @param Request $request
@@ -126,12 +127,6 @@ class ProductController extends FrameworkBundleAdminController
     ) {
         if ($this->shouldRedirectToV2()) {
             return $this->redirectToRoute('admin_products_v2_index');
-        }
-
-        foreach ([PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE] as $permission) {
-            if (!$this->isGranted($permission, self::PRODUCT_OBJECT)) {
-                return $this->redirect('admin_dashboard');
-            }
         }
 
         $language = $this->getContext()->language;
