@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Catalog\Product;
 
+use Combination;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Image\ProductImagePathFactory;
@@ -78,9 +79,7 @@ class CombinationController extends FrameworkBundleAdminController
         try {
             $combinationForm = $this->getCombinationFormBuilder()->getFormFor($combinationId);
         } catch (CombinationNotFoundException $e) {
-            return $this->render('@PrestaShop/Admin/Exception/not_found.html.twig', [
-                'errorMessage' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
-            ]);
+            return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/Combination/not_found.html.twig');
         }
 
         try {
