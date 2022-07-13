@@ -63,7 +63,7 @@ class GetCatalogPriceRuleList
     }
 
     /**
-     * @param int|null $limit
+     * @return  int|null
      */
     public function getLimit(): ?int
     {
@@ -71,7 +71,7 @@ class GetCatalogPriceRuleList
     }
 
     /**
-     * @param int|null $offset
+     * @return int|null
      */
     public function getOffset(): ?int
     {
