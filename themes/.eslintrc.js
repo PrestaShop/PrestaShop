@@ -18,7 +18,7 @@ module.exports = {
   parserOptions: {
     parser: 'babel-eslint',
   },
-  extends: ['prestashop'],
+  extends: ['airbnb-base'],
   plugins: ['import'],
   rules: {
     'class-methods-use-this': 0,
@@ -43,6 +43,32 @@ module.exports = {
       },
     ],
     'prefer-destructuring': ['error', {object: true, array: false}],
+    indent: ['error', 2, {SwitchCase: 1}],
+    'function-paren-newline': ['off', 'never'],
+    'object-curly-spacing': ['error', 'never'],
+    'padding-line-between-statements': [
+      'error',
+      {
+        blankLine: 'always',
+        prev: ['for', 'switch', 'var', 'let', 'const'],
+        next: 'return',
+      },
+      {
+        blankLine: 'always',
+        prev: ['for', 'switch'],
+        next: ['var', 'let', 'const'],
+      },
+      {
+        blankLine: 'always',
+        prev: ['var', 'let', 'const'],
+        next: ['switch', 'for', 'if'],
+      },
+    ],
+    'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0,
+    'no-console': process.env.NODE_ENV === 'production' ? 2 : 0,
+    'import/no-unresolved': 0,
+    'import/extensions': ['off', 'never'],
+    'no-use-before-define': 0,
   },
   settings: {
     'import/resolver': 'webpack',
