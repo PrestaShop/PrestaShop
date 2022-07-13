@@ -144,8 +144,8 @@
   import Router from '@components/router';
   import Vue from 'vue';
   import PaginatedCombinationsService from '@pages/product/services/paginated-combinations-service';
-  import History from './History.vue';
   import PsModal from '@components/modal/modal';
+  import History from './History.vue';
 
   export interface Combination {
     id: number;
