@@ -77,9 +77,10 @@ class PricingType extends TranslatorAwareType
          * %catalog_price_rule_id% can't be used in this function, because getAdminLink adds uneeded stuff to % while creating url
          * That's why catalog_price_rule_id is used and then string repalced.
          */
-        $catalogPriceRuleLink = $this->legacyContext->getAdminLink('AdminSpecificPriceRule', true, ['updatespecific_price_rule' => '', 'id_specific_price_rule' => 'catalog_price_rule_id']);
+        $catalogPriceRuleEditLink = $this->legacyContext->getAdminLink('AdminSpecificPriceRule', true, ['updatespecific_price_rule' => '', 'id_specific_price_rule' => 'catalog_price_rule_id']);
+        $catalogPriceRuleIndexLink = $this->legacyContext->getAdminLink('AdminSpecificPriceRule');
         /** Adding % to make link more unique */
-        $catalogPriceRuleLink = str_replace('catalog_price_rule_id', '%catalog_price_rule_id%', $catalogPriceRuleLink);
+        $catalogPriceRuleEditLink = str_replace('catalog_price_rule_id', '%catalog_price_rule_id%', $catalogPriceRuleEditLink);
 
         $builder
             ->add('retail_price', RetailPriceType::class, [
@@ -117,12 +118,21 @@ class PricingType extends TranslatorAwareType
             ->add('show_catalog_price_rules', IconButtonType::class, [
                 'icon' => 'visibility',
                 'label' => $this->trans('Show catalog price rules', 'Admin.Catalog.Feature'),
+                'attr' => [
+                    'data-hide-name' => $this->trans('Hide catalog price rules', 'Admin.Catalog.Feature'),
+                    'date-show-name' => $this->trans('Show catalog price rules', 'Admin.Catalog.Feature')
+                ]
             ])
             ->add('catalog_price_rules', CatalogPriceRulesType::class, [
                 'label' => $this->trans('Catalog price rules', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
                 'attr' => [
-                    'data-catalog-price-url' => $catalogPriceRuleLink,
+                    'data-catalog-price-url' => $catalogPriceRuleEditLink,
+                ],
+                'external_link' => [
+                    'text' => $this->trans('[1]Manage catalog price rules[/1]', 'Admin.Catalog.Feature'),
+                    'href' => $catalogPriceRuleIndexLink,
+                    'align' => 'left',
                 ],
                 'row_attr' => [
                     'class' => 'd-none',
