@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
-use NumberFormatter;
 use Symfony\Component\Form\Extension\Core\DataTransformer\NumberToLocalizedStringTransformer;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -47,6 +46,7 @@ class DeltaQuantityType extends TranslatorAwareType
 {
     public const MAX_QUANTITY_LENGTH = 10;
     public const INT_32_MAX = 2147483647;
+
     /**
      * {@inheritDoc}
      */
