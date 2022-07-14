@@ -115,8 +115,15 @@ class CountryQueryBuilder extends AbstractDoctrineQueryBuilder
                 'z',
                 'z.id_zone = c.id_zone'
             )
+            ->innerJoin(
+                'c',
+                $this->dbPrefix . 'country_shop',
+                'cs',
+                'c.id_country = cs.id_country AND cs.id_shop in (:contextShopIds)'
+            )
             ->groupBy('c.id_country')
             ->setParameter('contextLangId', $this->contextLangId)
+            ->setParameter('contextShopIds', $this->contextShopIds, Connection::PARAM_INT_ARRAY)
         ;
 
         $this->applyFilters($qb, $searchCriteria);
