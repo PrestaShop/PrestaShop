@@ -634,7 +634,7 @@ class CartControllerCore extends FrontController
 
             if ($currentProduct->hasAttributes() && $product['id_product_attribute'] === '0') {
                 return $this->translateProductNameWithAttributes(
-                   'The product [1]%product%[/1] in your cart is now a product with attributes. Please delete it and choose one of its combinations to proceed with your order.',
+                   'The product [1]%product%[/1] in your cart is now a product with combinations. Please delete it and choose one of its combination to proceed with your order.',
                    $product['name']
                 );
             }
@@ -647,10 +647,17 @@ class CartControllerCore extends FrontController
         }
 
         if ($product['active']) {
+            if((int)$product['quantity_available']>1 || (int)$product['quantity_available'] == 0)
+                $sentence = 'There are only [1]%quantity%[/1] items of the product [1]%product%[/1] left. Please adjust the quantity to proceed with your order.';
+            elseif((int)$product['quantity_available'] == 1)
+                $sentence = 'There is only [1]%quantity%[/1] item of the product [1]%product%[/1] left. Please adjust the quantity to proceed with your order.';
+            else
+                $sentence = 'The product [1]%product%[/1] in your cart is no longer available in this quantity. Please adjust the quantity to proceed with your order.';
             return $this->translateProductNameWithAttributes(
-                'The product [1]%product%[/1] in your cart is no longer available in this quantity. You cannot proceed with your order until the quantity is adjusted.',
+                $sentence,
                 $product['name'],
-                $product['attributes']
+                $product['attributes'],
+                $product['quantity_available']
             );
         }
 
