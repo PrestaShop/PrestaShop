@@ -87,10 +87,14 @@ export default class DeltaQuantityInput {
       const $updateElement = $container.find(this.config.updateQuantitySelector);
       $updateElement.toggleClass(this.config.modifiedQuantityClass, deltaQuantity !== 0);
     });
+
+    $(document).on('keyup', `${this.config.containerSelector} ${this.config.deltaInputSelector}`, (event) => {
+      $(event.currentTarget).trigger('change');
+    });
   }
 
   private getDeltaQuantity(deltaInput: HTMLElement): number {
-    let delta: number = parseInt(<string> $(deltaInput).val(), 10);
+    let delta: number = parseInt(Number($(deltaInput).val()).toString(), 10);
 
     if (Number.isNaN(delta)) {
       delta = 0;

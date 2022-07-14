@@ -28,11 +28,14 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
+use NumberFormatter;
 use Symfony\Component\Form\Extension\Core\DataTransformer\NumberToLocalizedStringTransformer;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Range;
 use Symfony\Component\Validator\Constraints\Type;
 
 /**
@@ -42,6 +45,8 @@ use Symfony\Component\Validator\Constraints\Type;
  */
 class DeltaQuantityType extends TranslatorAwareType
 {
+    public const MAX_QUANTITY_LENGTH = 10;
+    public const INT_32_MAX = 2147483647;
     /**
      * {@inheritDoc}
      */
@@ -58,6 +63,18 @@ class DeltaQuantityType extends TranslatorAwareType
                 'constraints' => [
                     new Type(['type' => 'numeric']),
                     new NotBlank(),
+                    new Range([
+                        'min' => -static::INT_32_MAX,
+                        'max' => static::INT_32_MAX,
+                    ]),
+                    new Length([
+                        'max' => static::MAX_QUANTITY_LENGTH,
+                        'maxMessage' => $this->trans(
+                            'The %1$s field is too long (%2$d chars max).',
+                            'Admin.Notifications.Error',
+                            ['%1$s' => 'quantity', '%2$d' => static::MAX_QUANTITY_LENGTH]
+                        ),
+                    ]),
                 ],
                 'required' => false,
                 'modify_all_shops' => $options['modify_delta_for_all_shops'],
