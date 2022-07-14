@@ -32,7 +32,6 @@ use Symfony\Component\Form\Extension\Core\DataTransformer\NumberToLocalizedStrin
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Range;
 use Symfony\Component\Validator\Constraints\Type;
@@ -66,14 +65,6 @@ class DeltaQuantityType extends TranslatorAwareType
                     new Range([
                         'min' => -static::INT_32_MAX,
                         'max' => static::INT_32_MAX,
-                    ]),
-                    new Length([
-                        'max' => static::MAX_QUANTITY_LENGTH,
-                        'maxMessage' => $this->trans(
-                            'The %1$s field is too long (%2$d chars max).',
-                            'Admin.Notifications.Error',
-                            ['%1$s' => 'quantity', '%2$d' => static::MAX_QUANTITY_LENGTH]
-                        ),
                     ]),
                 ],
                 'required' => false,
