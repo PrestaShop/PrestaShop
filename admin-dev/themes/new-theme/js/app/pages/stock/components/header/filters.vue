@@ -204,7 +204,7 @@
         this.categoriesFilterRef?.reset();
       },
       onClear(event: any): void {
-        delete this.date_add[<number>event.dateType];
+        delete this.date_add[<string>event.dateType];
         this.applyFilter();
       },
       onClick(): void {
@@ -239,7 +239,7 @@
         this.applyFilter();
       },
       onDpChange(event: any) {
-        this.date_add[<number>event.dateType] = event.date.unix();
+        this.date_add[<string>event.dateType] = <number>event.date.unix();
         if (event.oldDate) {
           this.applyFilter();
         }
@@ -256,18 +256,21 @@
       PSRadio,
     },
     mounted() {
-      this.date_add = [];
+      this.date_add = {};
       this.$store.dispatch('getSuppliers');
       this.$store.dispatch('getCategories');
     },
     data() {
+      type DateFilter = {
+        [key:string]: number;
+      }
       return {
         disabled: true,
         suppliers: [] as Array<any>,
         categories: [] as Array<any>,
         id_stock_mvt_reason: [] as Array<any>,
         id_employee: [] as Array<any>,
-        date_add: [] as Array<any>,
+        date_add: {} as DateFilter,
         active: null,
       };
     },
