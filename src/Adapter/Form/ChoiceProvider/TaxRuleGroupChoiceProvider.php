@@ -26,8 +26,11 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 
+use Address;
+use Context;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use TaxManagerFactory;
 use TaxRulesGroup;
 
 /**
@@ -53,19 +56,33 @@ final class TaxRuleGroupChoiceProvider implements FormChoiceProviderInterface, F
      */
     public function getChoicesAttributes(): array
     {
-        $attrs = [];
-        foreach ($this->getRules() as $rule) {
-            // Keep first one found
-            if (!empty($attrs[$rule['name']]['data-tax-rate'])) {
-                continue;
-            }
+        $address = new Address();
+        $address->id_country = (int) Context::getContext()->country->id;
 
-            $attrs[$rule['name']] = [
-                'data-tax-rate' => !empty($rule['rate']) ? $rule['rate'] : 0,
+        $tax_rates = [];
+        foreach ($this->getRules() as $rule) {
+            $id_tax_rules_group = (int) $rule['id_tax_rules_group'];
+            $tax_calculator = TaxManagerFactory::getManager($address, $id_tax_rules_group)->getTaxCalculator();
+            $tax_rates[$id_tax_rules_group] = [
+                'id_tax_rules_group' => $id_tax_rules_group,
+                'rates' => [],
+                'computation_method' => (int) $tax_calculator->computation_method,
             ];
+
+            if (!empty($tax_calculator->taxes)) {
+                foreach ($tax_calculator->taxes as $tax) {
+                    $tax_rates[$rule['name']] = [
+                        'data-tax-rate' => (float) $tax->rate,
+                    ];
+                }
+            } else {
+                $tax_rates[$rule['name']] = [
+                    'data-tax-rate' => 0,
+                ];
+            }
         }
 
-        return $attrs;
+        return $tax_rates;
     }
 
     /**
