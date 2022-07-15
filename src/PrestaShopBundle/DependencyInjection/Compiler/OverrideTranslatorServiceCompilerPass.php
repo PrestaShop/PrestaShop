@@ -38,6 +38,7 @@ class OverrideTranslatorServiceCompilerPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
+        return;
         $definition = $container->getDefinition('translator.default');
         $definition->setClass($container->getParameter('translator.class'));
 
