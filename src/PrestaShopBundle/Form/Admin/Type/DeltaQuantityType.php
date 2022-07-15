@@ -60,7 +60,7 @@ class DeltaQuantityType extends TranslatorAwareType
                 'label' => $options['delta_label'],
                 'block_prefix' => 'delta_quantity_delta',
                 'constraints' => [
-                    new Type(['type' => 'integer']),
+                    new Type(['type' => 'numeric']),
                     new NotBlank(),
                     new Range([
                         'min' => -static::INT_32_MAX,
