@@ -165,6 +165,7 @@ class AppKernel extends Kernel
 
         // Add translation paths to load into the translator. The paths are loaded by the Symfony's FrameworkExtension
         $loader->load(function (ContainerBuilder $container) {
+            /** @var array $moduleTranslationsPaths */
             $moduleTranslationsPaths = $container->getParameter('modules_translation_paths');
             foreach ($this->getActiveModules() as $activeModulePath) {
                 $translationsDir = _PS_MODULE_DIR_ . $activeModulePath . '/translations';

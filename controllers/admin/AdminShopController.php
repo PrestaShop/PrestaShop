@@ -270,6 +270,11 @@ class AdminShopControllerCore extends AdminController
         return $result;
     }
 
+    /**
+     * @return bool
+     *
+     * @throws PrestaShopException
+     */
     public function processDelete()
     {
         if (!Validate::isLoadedObject($object = $this->loadObject())) {
@@ -289,7 +294,7 @@ class AdminShopControllerCore extends AdminController
     /**
      * @param Shop $new_shop
      *
-     * @return bool
+     * @return ObjectModel|bool
      */
     protected function afterAdd($new_shop)
     {
@@ -361,6 +366,13 @@ class AdminShopControllerCore extends AdminController
         $this->context->smarty->assign('shops_having_dependencies', $shop_delete_list);
     }
 
+    /**
+     * @return string|void
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     * @throws SmartyException
+     */
     public function renderForm()
     {
         if (!($obj = $this->loadObject(true))) {
@@ -653,7 +665,12 @@ class AdminShopControllerCore extends AdminController
     }
 
     /**
-     * Object creation.
+     * Object creation
+     *
+     * @return Shop|void
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
      */
     public function processAdd()
     {

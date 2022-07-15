@@ -516,16 +516,6 @@ class SpecificPriceContext extends AbstractProductFeatureContext
     }
 
     /**
-     * @param int $specificPriceId
-     *
-     * @return DeleteSpecificPriceCommand
-     */
-    private function createDeleteSpecificPriceCommand(int $specificPriceId): DeleteSpecificPriceCommand
-    {
-        return new DeleteSpecificPriceCommand($specificPriceId);
-    }
-
-    /**
      * @param string $input
      *
      * @return DateTimeInterface

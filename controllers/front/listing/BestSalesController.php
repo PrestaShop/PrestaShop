@@ -63,6 +63,9 @@ class BestSalesControllerCore extends ProductListingFrontController
         $this->doProductSearch('catalog/listing/best-sales', ['entity' => 'best-sales']);
     }
 
+    /**
+     * @return ProductSearchQuery
+     */
     protected function getProductSearchQuery()
     {
         $query = new ProductSearchQuery();
@@ -73,6 +76,9 @@ class BestSalesControllerCore extends ProductListingFrontController
         return $query;
     }
 
+    /**
+     * @return BestSalesProductSearchProvider
+     */
     protected function getDefaultProductSearchProvider()
     {
         return new BestSalesProductSearchProvider(

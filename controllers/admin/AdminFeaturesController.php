@@ -115,9 +115,15 @@ class AdminFeaturesControllerCore extends AdminController
         $this->identifier = 'id_feature';
     }
 
+    /**
+     * @return false|string|void
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     */
     public function renderView()
     {
-        if (($id = (int) Tools::getValue('id_feature'))) {
+        if ($id = (int) Tools::getValue('id_feature')) {
             $this->setTypeValue();
             $this->list_id = 'feature_value';
             $this->lang = true;
