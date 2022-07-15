@@ -43,7 +43,9 @@ use Symfony\Component\Validator\Constraints\Type;
  */
 class DeltaQuantityType extends TranslatorAwareType
 {
-    public const MAX_QUANTITY_LENGTH = 10;
+    /**
+     * this is the biggest int number that can be saved in database, bigger than this will throw error
+     */
     public const INT_32_MAX = 2147483647;
 
     /**
