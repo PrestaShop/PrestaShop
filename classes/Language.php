@@ -827,7 +827,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
 
             Cache::store($key, $id_lang);
 
-            return (int) $id_lang ?: null;
+            return (int) $id_lang;
         }
 
         return (int) Cache::retrieve($key);

@@ -387,6 +387,8 @@ class AdminSearchConfControllerCore extends AdminController
 
     /**
      * Function used to render the options for this controller.
+     *
+     * @return string|void
      */
     public function renderOptions()
     {

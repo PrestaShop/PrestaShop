@@ -442,7 +442,10 @@ class LinkCore
             $params['id'] = $category->id;
         } elseif (isset($category['id_category'])) {
             $params['id'] = $category['id_category'];
-        } elseif (is_int($category) or ctype_digit($category)) {
+        } elseif (
+            is_int($category)
+            || (!is_array($category) && !is_a($category, CategoryCore::class) && ctype_digit($category))
+        ) {
             $params['id'] = (int) $category;
         } else {
             throw new \InvalidArgumentException('Invalid category parameter');

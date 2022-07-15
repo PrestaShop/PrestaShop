@@ -110,6 +110,7 @@ final class EntityFieldCollection implements EntityFieldCollectionInterface
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->entityFields[$offset];

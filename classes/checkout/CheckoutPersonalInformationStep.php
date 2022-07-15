@@ -38,6 +38,12 @@ class CheckoutPersonalInformationStepCore extends AbstractCheckoutStep
      */
     public $logged_in;
 
+    /**
+     * @param Context $context
+     * @param TranslatorInterface $translator
+     * @param CustomerLoginForm $loginForm
+     * @param CustomerForm $registerForm
+     */
     public function __construct(
         Context $context,
         TranslatorInterface $translator,

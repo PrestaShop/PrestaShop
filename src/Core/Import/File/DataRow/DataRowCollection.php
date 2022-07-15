@@ -60,6 +60,7 @@ final class DataRowCollection implements DataRowCollectionInterface
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         if (!$this->offsetExists($offset)) {

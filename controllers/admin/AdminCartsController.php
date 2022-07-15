@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
+
 /**
  * @property Cart $object
  */
@@ -219,6 +221,13 @@ class AdminCartsControllerCore extends AdminController
         return $helper->generate();
     }
 
+    /**
+     * @return string|void
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException
+     * @throws LocalizationException
+     */
     public function renderView()
     {
         if (!($cart = $this->loadObject(true))) {

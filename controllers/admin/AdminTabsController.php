@@ -112,6 +112,10 @@ class AdminTabsControllerCore extends AdminController
      * AdminController::renderForm() override.
      *
      * @see AdminController::renderForm()
+     *
+     * @return string
+     *
+     * @throws SmartyException
      */
     public function renderForm()
     {
@@ -241,9 +245,14 @@ class AdminTabsControllerCore extends AdminController
         return parent::initProcess();
     }
 
+    /**
+     * @return false|string|void
+     *
+     * @throws PrestaShopException
+     */
     public function renderDetails()
     {
-        if (($id = Tools::getValue('id_tab'))) {
+        if ($id = Tools::getValue('id_tab')) {
             $this->lang = false;
             $this->list_id = 'details';
             $this->addRowAction('edit');
@@ -343,6 +352,9 @@ class AdminTabsControllerCore extends AdminController
         }
     }
 
+    /**
+     * @return bool|void
+     */
     protected function afterImageUpload()
     {
         if (!($obj = $this->loadObject(true))) {

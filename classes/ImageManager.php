@@ -149,11 +149,11 @@ class ImageManagerCore
 
         $memoryLimit = Tools::getMemoryLimit();
         // memory_limit == -1 => unlimited memory
-        if (isset($infos['bits']) && function_exists('memory_get_usage') && (int) $memoryLimit != -1) {
+        if (function_exists('memory_get_usage') && (int) $memoryLimit != -1) {
             $currentMemory = memory_get_usage();
 
             $bits = $infos['bits'] / 8;
-            $channel = isset($infos['channels']) ? $infos['channels'] : 1;
+            $channel = $infos['channels'] ?? 1;
 
             // Evaluate the memory required to resize the image: if it's too much, you can't resize it.
             // For perfs, avoid computing static maths formulas in the code. pow(2, 16) = 65536 ; 1024 * 1024 = 1048576

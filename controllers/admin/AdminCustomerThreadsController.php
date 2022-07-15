@@ -610,6 +610,12 @@ class AdminCustomerThreadsControllerCore extends AdminController
         return $helper->generate();
     }
 
+    /**
+     * @return string|void
+     *
+     * @throws PrestaShopException
+     * @throws \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
+     */
     public function renderView()
     {
         if (!$id_customer_thread = (int) Tools::getValue('id_customer_thread')) {

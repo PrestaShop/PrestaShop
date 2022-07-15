@@ -277,6 +277,13 @@ class AdminCartRulesControllerCore extends AdminController
         return $res;
     }
 
+    /**
+     * @param $current_object
+     *
+     * @return bool|void
+     *
+     * @throws PrestaShopDatabaseException
+     */
     protected function afterUpdate($current_object)
     {
         // All the associations are deleted for an update, then recreated when we call the "afterAdd" method
@@ -314,6 +321,8 @@ class AdminCartRulesControllerCore extends AdminController
      * @TODO Move this function into CartRule
      *
      * @param ObjectModel $currentObject
+     *
+     * @return bool|void
      *
      * @throws PrestaShopDatabaseException
      */

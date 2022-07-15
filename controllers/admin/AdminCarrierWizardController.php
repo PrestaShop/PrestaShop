@@ -107,6 +107,11 @@ class AdminCarrierWizardControllerCore extends AdminController
         }
     }
 
+    /**
+     * @return string|void
+     *
+     * @throws SmartyException
+     */
     public function renderView()
     {
         $this->initWizard();

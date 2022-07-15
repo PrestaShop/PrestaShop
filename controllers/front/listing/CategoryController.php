@@ -163,6 +163,11 @@ class CategoryControllerCore extends ProductListingFrontController
         return $data;
     }
 
+    /**
+     * @return ProductSearchQuery
+     *
+     * @throws \PrestaShop\PrestaShop\Core\Product\Search\Exception\InvalidSortOrderDirectionException
+     */
     protected function getProductSearchQuery()
     {
         $query = new ProductSearchQuery();
@@ -174,6 +179,9 @@ class CategoryControllerCore extends ProductListingFrontController
         return $query;
     }
 
+    /**
+     * @return CategoryProductSearchProvider
+     */
     protected function getDefaultProductSearchProvider()
     {
         return new CategoryProductSearchProvider(

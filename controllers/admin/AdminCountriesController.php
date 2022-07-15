@@ -153,6 +153,11 @@ class AdminCountriesControllerCore extends AdminController
         return parent::renderList();
     }
 
+    /**
+     * @return string|void
+     *
+     * @throws SmartyException
+     */
     public function renderForm()
     {
         if (!($obj = $this->loadObject(true))) {
@@ -449,6 +454,11 @@ class AdminCountriesControllerCore extends AdminController
         return $country;
     }
 
+    /**
+     * @return bool|ObjectModel|null
+     *
+     * @throws PrestaShopException
+     */
     public function processStatus()
     {
         parent::processStatus();
@@ -464,6 +474,8 @@ class AdminCountriesControllerCore extends AdminController
 
     /**
      * Allow the assignation of zone only if the form is displayed.
+     *
+     * @return bool|void
      */
     protected function processBulkAffectZone()
     {

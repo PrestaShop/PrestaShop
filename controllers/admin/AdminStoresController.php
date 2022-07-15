@@ -130,6 +130,12 @@ class AdminStoresControllerCore extends AdminController
         return parent::renderList();
     }
 
+    /**
+     * @return string|void
+     *
+     * @throws PrestaShopDatabaseException
+     * @throws SmartyException
+     */
     public function renderForm()
     {
         if (!($obj = $this->loadObject(true))) {
@@ -378,6 +384,7 @@ class AdminStoresControllerCore extends AdminController
                 $this->errors[] = $this->trans('The Zip/Postal code is invalid.', [], 'Admin.Notifications.Error');
             }
             /* Store hours */
+            $encodedHours = [];
             foreach ($langs as $lang) {
                 $hours = [];
                 for ($i = 1; $i < 8; ++$i) {

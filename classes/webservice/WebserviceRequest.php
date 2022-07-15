@@ -1128,9 +1128,8 @@ class WebserviceRequestCore
         $i18n_available_filters = [];
         foreach ($this->resourceConfiguration['fields'] as $fieldName => $field) {
             if ((!isset($this->resourceConfiguration['hidden_fields']) ||
-                (isset($this->resourceConfiguration['hidden_fields']) && !in_array($fieldName, $this->resourceConfiguration['hidden_fields'])))) {
-                if ((!isset($field['i18n']) ||
-                (isset($field['i18n']) && !$field['i18n']))) {
+                (!in_array($fieldName, $this->resourceConfiguration['hidden_fields'])))) {
+                if ((!isset($field['i18n']) || (isset($field['i18n']) && !$field['i18n']))) {
                     $available_filters[] = $fieldName;
                 } else {
                     $i18n_available_filters[] = $fieldName;

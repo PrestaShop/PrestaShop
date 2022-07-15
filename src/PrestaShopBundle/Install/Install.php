@@ -874,16 +874,14 @@ class Install extends AbstractInstall
         }
 
         // Update default contact
-        if (isset($data['admin_email'])) {
-            Configuration::updateGlobalValue('PS_SHOP_EMAIL', $data['admin_email']);
-            Configuration::updateGlobalValue('PS_LOGS_EMAIL_RECEIVERS', $data['admin_email']);
+        Configuration::updateGlobalValue('PS_SHOP_EMAIL', $data['admin_email']);
+        Configuration::updateGlobalValue('PS_LOGS_EMAIL_RECEIVERS', $data['admin_email']);
 
-            $contacts = new PrestaShopCollection('Contact');
-            /** @var \Contact $contact */
-            foreach ($contacts as $contact) {
-                $contact->email = $data['admin_email'];
-                $contact->update();
-            }
+        $contacts = new PrestaShopCollection('Contact');
+        /** @var \Contact $contact */
+        foreach ($contacts as $contact) {
+            $contact->email = $data['admin_email'];
+            $contact->update();
         }
 
         if (!@Tools::generateHtaccess(null, $data['rewrite_engine'])) {
