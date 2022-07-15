@@ -359,6 +359,7 @@ class OrderController extends FrameworkBundleAdminController
     {
         $isB2bEnabled = $this->get('prestashop.adapter.legacy.configuration')->get('PS_B2B_ENABLE');
 
+        $filters = new OrderFilters(['limit' => null] + $filters->all());
         $orderGrid = $this->get('prestashop.core.grid.factory.order')->getGrid($filters);
 
         $headers = [
