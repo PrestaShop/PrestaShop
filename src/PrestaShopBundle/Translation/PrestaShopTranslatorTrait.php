@@ -58,7 +58,7 @@ trait PrestaShopTranslatorTrait
             $locale = null;
         }
 
-        $translated = parent::trans($id, [], $this->normalizeDomain($domain), $locale);
+        $translated = parent::trans($id, $parameters, $this->normalizeDomain($domain), $locale);
 
         // @todo to remove after the legacy translation system has ben phased out
         if ($this->shouldFallbackToLegacyModuleTranslation($id, $domain, $translated)) {
