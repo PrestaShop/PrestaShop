@@ -75,7 +75,16 @@ class AdminSearchConfControllerCore extends AdminController
         }
 
         // Search options
-        $cron_url = Context::getContext()->link->getAdminLink(
+        $cronUrlFullIndex = Context::getContext()->link->getAdminLink(
+            'AdminSearch',
+            false,
+            [],
+            $params
+        );
+
+        unset($params['full']);
+
+        $conUrlMissingProduct = Context::getContext()->link->getAdminLink(
             'AdminSearch',
             false,
             [],
@@ -106,11 +115,18 @@ class AdminSearchConfControllerCore extends AdminController
 					</a><br /><br />
 					<p>
 						' . $this->trans('You can set a cron job that will rebuild your index using the following URL:', [], 'Admin.Shopparameters.Feature') . '<br />
-						<a href="' . Tools::safeOutput($cron_url) . '">
+						<a href="' . Tools::safeOutput($cronUrlFullIndex) . '">
 							<i class="icon-external-link-sign"></i>
-							' . Tools::safeOutput($cron_url) . '
+							' . Tools::safeOutput($cronUrlFullIndex) . '
 						</a>
-					</p><br />',
+					</p>
+                    <p>
+                        ' . $this->trans('You can set a cron job that will index your missing products using the following URL:', [], 'Admin.Shopparameters.Feature') . '<br />
+                        <a href="' . Tools::safeOutput($conUrlMissingProduct) . '">
+                            <i class="icon-external-link-sign"></i>
+                            ' . Tools::safeOutput($conUrlMissingProduct) . '
+                        </a>
+                    </p><br />',
                 'fields' => [
                     'PS_SEARCH_INDEXATION' => [
                         'title' => $this->trans('Indexing', [], 'Admin.Shopparameters.Feature'),
