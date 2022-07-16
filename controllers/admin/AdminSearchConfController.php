@@ -84,7 +84,7 @@ class AdminSearchConfControllerCore extends AdminController
 
         unset($params['full']);
 
-        $conUrlMissingProduct = Context::getContext()->link->getAdminLink(
+        $cronUrlMissingProduct = Context::getContext()->link->getAdminLink(
             'AdminSearch',
             false,
             [],
@@ -122,9 +122,9 @@ class AdminSearchConfControllerCore extends AdminController
 					</p>
                     <p>
                         ' . $this->trans('You can set a cron job that will index your missing products using the following URL:', [], 'Admin.Shopparameters.Feature') . '<br />
-                        <a href="' . Tools::safeOutput($conUrlMissingProduct) . '">
+                        <a href="' . Tools::safeOutput($cronUrlMissingProduct) . '">
                             <i class="icon-external-link-sign"></i>
-                            ' . Tools::safeOutput($conUrlMissingProduct) . '
+                            ' . Tools::safeOutput($cronUrlMissingProduct) . '
                         </a>
                     </p><br />',
                 'fields' => [
