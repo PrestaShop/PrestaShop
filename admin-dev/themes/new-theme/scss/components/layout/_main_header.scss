@@ -790,8 +790,8 @@ $header-text-color: #4e6167 !default;
       &:active,
       &:hover {
         color: $primary;
-        border-color: $primary;
         background-color: inherit;
+        border-color: $primary;
 
         .material-icons {
           color: $primary;
