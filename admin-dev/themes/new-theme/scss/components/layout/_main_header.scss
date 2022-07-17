@@ -737,9 +737,11 @@ $header-text-color: #4e6167 !default;
       border: 1px solid #899ea5;
       @include border-radius(1px);
 
+      &:active,
       &:hover {
         color: $primary;
         border-color: $primary;
+        background-color: inherit;
 
         .material-icons {
           color: $primary;
