@@ -109,13 +109,12 @@
       onKeyup(event: Event): void {
         const val = (<HTMLInputElement>event.target).value;
 
-          if (parseInt(val, 10) === 0) {
-            this.deActivate();
-          } else {
-            this.isActive = true;
-            this.isEnabled = true;
-            this.value = parseInt(val, 10);
-          }
+        if (parseInt(val, 10) === 0) {
+          this.deActivate();
+        } else {
+          this.isActive = true;
+          this.isEnabled = true;
+          this.value = parseInt(val, 10);
         }
       },
       focusIn(): void {
