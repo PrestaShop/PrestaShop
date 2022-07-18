@@ -99,7 +99,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * URL example: /product/catalog/40/20/id_product/asc
      *
-     * @AdminSecurity("is_granted('create', 'ADMINPRODUCTS_') || is_granted('update', 'ADMINPRODUCTS_') || is_granted('read', 'ADMINPRODUCTS_')")
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")
      * @Template("@PrestaShop/Admin/Product/CatalogPage/catalog.html.twig")
      *
      * @param Request $request
