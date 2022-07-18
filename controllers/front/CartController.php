@@ -634,7 +634,7 @@ class CartControllerCore extends FrontController
 
             if ($currentProduct->hasAttributes() && $product['id_product_attribute'] === '0') {
                 return $this->translateProductNameWithAttributes(
-                   'The product [1]%product%[/1] in your cart is now a product with combinations. Please delete it and choose one of its combination to proceed with your order.',
+                    'The product [1]%product%[/1] is now a product with combinations. Please choose one to proceed with your order.',
                    $product['name']
                 );
             }
