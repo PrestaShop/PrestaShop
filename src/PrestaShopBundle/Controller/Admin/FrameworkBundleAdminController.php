@@ -270,19 +270,19 @@ class FrameworkBundleAdminController extends AbstractController
      */
     protected function authorizationLevel($controller)
     {
-        if ($this->isGranted(PageVoter::DELETE, $controller . '_')) {
+        if ($this->isGranted(PageVoter::DELETE, $controller)) {
             return PageVoter::LEVEL_DELETE;
         }
 
-        if ($this->isGranted(PageVoter::CREATE, $controller . '_')) {
+        if ($this->isGranted(PageVoter::CREATE, $controller)) {
             return PageVoter::LEVEL_CREATE;
         }
 
-        if ($this->isGranted(PageVoter::UPDATE, $controller . '_')) {
+        if ($this->isGranted(PageVoter::UPDATE, $controller)) {
             return PageVoter::LEVEL_UPDATE;
         }
 
-        if ($this->isGranted(PageVoter::READ, $controller . '_')) {
+        if ($this->isGranted(PageVoter::READ, $controller)) {
             return PageVoter::LEVEL_READ;
         }
 
