@@ -647,12 +647,14 @@ class CartControllerCore extends FrontController
         }
 
         if ($product['active']) {
-            if((int)$product['quantity_available']>1 || (int)$product['quantity_available'] == 0)
+            if ((int) $product['quantity_available'] > 1 || (int) $product['quantity_available'] == 0) {
                 $sentence = 'There are only [1]%quantity%[/1] items of the product [1]%product%[/1] left. Please adjust the quantity to proceed with your order.';
-            elseif((int)$product['quantity_available'] == 1)
+            } elseif ((int) $product['quantity_available'] == 1) {
                 $sentence = 'There is only [1]%quantity%[/1] item of the product [1]%product%[/1] left. Please adjust the quantity to proceed with your order.';
-            else
+            } else {
                 $sentence = 'The product [1]%product%[/1] in your cart is no longer available in this quantity. Please adjust the quantity to proceed with your order.';
+            }
+
             return $this->translateProductNameWithAttributes(
                 $sentence,
                 $product['name'],
