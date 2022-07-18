@@ -82,7 +82,7 @@ class GroupController extends FrameworkBundleAdminController implements LegacyCo
     {
         $this->addAction(new HeaderToolbarAction('new_feature', [
             'href' => $this->controllerConfiguration->legacyCurrentIndex . '&addgroup&token=' . $this->controllerConfiguration->token,
-            'desc' => $this->trans('Add new group', 'Admin.Catalog.Feature'),
+            'desc' => $this->trans('Add new group', 'Admin.Shopparameters.Feature'),
             'icon' => 'process-icon-new',
         ]));
 
