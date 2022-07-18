@@ -37,7 +37,7 @@ use Tab;
 trait AdminControllerTrait
 {
     /**
-     * @var LegacyControllerBridgeInterface
+     * @var LegacyControllerBridgeInterface|null
      */
     private $legacyControllerBridge;
 
