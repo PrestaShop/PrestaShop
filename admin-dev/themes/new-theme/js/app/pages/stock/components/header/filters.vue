@@ -168,6 +168,13 @@
     visible: boolean;
   }
 
+  type DateFilter = {
+    [key:string]: number;
+  }
+
+  const DATE_TYPE_SUP = 'sup';
+  const DATE_TYPE_INF = 'inf';
+
   const Filters = Vue.extend({
     computed: {
       locale(): string {
@@ -239,7 +246,14 @@
         this.applyFilter();
       },
       onDpChange(event: any) {
+        if (event.dateType === DATE_TYPE_SUP) {
+          event.date.minutes(0).hours(0).seconds(1);
+        } else if (event.dateType === DATE_TYPE_INF) {
+          event.date.minutes(59).hours(23).seconds(59);
+        }
+
         this.date_add[<string>event.dateType] = <number>event.date.unix();
+
         if (event.oldDate) {
           this.applyFilter();
         }
@@ -260,17 +274,22 @@
       this.$store.dispatch('getSuppliers');
       this.$store.dispatch('getCategories');
     },
-    data() {
-      type DateFilter = {
-        [key:string]: number;
-      }
+    data(): {
+      disabled: boolean,
+      suppliers: Array<any>,
+      categories: Array<any>,
+      id_stock_mvt_reason: Array<any>,
+      id_employee: Array<any>,
+      date_add: DateFilter,
+      active: boolean | null,
+    } {
       return {
         disabled: true,
-        suppliers: [] as Array<any>,
-        categories: [] as Array<any>,
-        id_stock_mvt_reason: [] as Array<any>,
-        id_employee: [] as Array<any>,
-        date_add: {} as DateFilter,
+        suppliers: [],
+        categories: [],
+        id_stock_mvt_reason: [],
+        id_employee: [],
+        date_add: {},
         active: null,
       };
     },
