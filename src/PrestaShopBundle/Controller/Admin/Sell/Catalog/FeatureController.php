@@ -68,7 +68,7 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
     public function indexAction(Request $request): Response
     {
         $controllerConfiguration = $this->getControllerConfiguration();
-        $this->addToolbarActions($controllerConfiguration);
+        $this->setToolbarActions($controllerConfiguration);
 
         $helperListConfiguration = $this->get('prestashop.core.bridge.helper_list_configuration_factory')->create(
             $controllerConfiguration,
@@ -78,7 +78,7 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
             true
         );
         $this->setListFields($helperListConfiguration);
-        $this->buildActionList($controllerConfiguration, $helperListConfiguration);
+        $this->setListActions($controllerConfiguration, $helperListConfiguration);
 
         if ($request->request->has('submitResetfeature')) {
             $this->getResetFiltersHelper()->resetFilters($helperListConfiguration, $request);
@@ -213,7 +213,7 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
      *
      * @return void
      */
-    private function addToolbarActions(ControllerConfiguration $controllerConfig): void
+    private function setToolbarActions(ControllerConfiguration $controllerConfig): void
     {
         $index = $controllerConfig->legacyCurrentIndex;
         $token = $controllerConfig->token;
@@ -236,9 +236,8 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
      *
      * @return void
      */
-    private function buildActionList(ControllerConfiguration $controllerConfig, HelperListConfiguration $helperListConfiguration): void
+    private function setListActions(ControllerConfiguration $controllerConfig, HelperListConfiguration $helperListConfiguration): void
     {
-        //@todo: do we need this action at all if we have the same at the top of the page?
         $this->addActionList(new ListHeaderToolbarAction('new', [
             //@todo: replace by $this->generateUrl('admin_features_add') when creation is fully migrated
             'href' => $controllerConfig->legacyCurrentIndex . '&addfeature&token=' . $controllerConfig->token,
