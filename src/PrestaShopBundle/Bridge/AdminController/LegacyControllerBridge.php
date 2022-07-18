@@ -30,14 +30,59 @@ namespace PrestaShopBundle\Bridge\AdminController;
 use Context;
 use Hook;
 use Media;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
-use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Tools;
 
+/**
+ * The bridge class is used as a proxy between the internal controller configuration and the legacy code.
+ *
+ * It is accessible via the Context and/or the hooks, but to avoid legacy code accessing the controller configuration
+ * directly this object provides access to the configuration fields via a whitelist thus protecting th other elements
+ * of the ControllerConfiguration which shouldn't be accessed directly.
+ *
+ * It also allows integrating legacy functions that were usable on AdminController thus we don't need to implement them
+ * in the framework controller.
+ *
+ * @property int $id
+ * @property string $className
+ * @property string $controller_name
+ * @property string $php_self
+ * @property string $current_index
+ * @property string|null $position_identifier
+ * @property string $table
+ * @property string $token
+ * @property Employee $user
+ * @property array $meta_title
+ * @property array $breadcrumbs
+ * @property bool $lite_display
+ * @property string $display
+ * @property bool $show_page_header_toolbar
+ * @property string $page_header_toolbar_title
+ * @property array $toolbar_btn
+ * @property array $toolbar_title
+ * @property bool $display_header
+ * @property bool $display_header_javascript
+ * @property bool $display_footer
+ * @property bool $bootstrap
+ * @property array $css_files
+ * @property array $js_files
+ * @property string $tpl_folder
+ * @property array $errors
+ * @property array $warnings
+ * @property array $confirmations
+ * @property array $informations
+ * @property bool $json
+ * @property string $template
+ * @property array $tpl_vars
+ * @property array $modals
+ * @property int $multishop_context
+ * @property bool $multishop_context_group
+ */
 class LegacyControllerBridge implements LegacyControllerBridgeInterface
 {
     /**
-     * @var ControllerConfiguration|null
+     * @var ControllerConfiguration
      */
     private $controllerConfiguration;
 
@@ -287,16 +332,9 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
      *
      * @return mixed
      */
-    public function __get(string $name)
+    public function &__get(string $name)
     {
-        //@todo: when doing smth like $controller->foo[] = 'test' it calls getter and fails and wouldn't probably ever work.
-        if (!isset($this->propertiesMap[$name])) {
-            return $this->{$name};
-        }
-
-        $propertyAccessor = new PropertyAccessor();
-
-        return $propertyAccessor->getValue($this, $this->propertiesMap[$name]);
+        return $this->getPropertyReference($name);
     }
 
     /**
@@ -305,20 +343,43 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
      * to allow legacy code setting properties in configuration as if it would be in legacy controller.
      *
      * @param string $name
-     * @param $value
+     * @param mixed $value
      *
      * @return void
      */
     public function __set(string $name, $value): void
     {
-        if (!isset($this->propertiesMap[$name])) {
-            $this->{$name} = $value;
+        $modifiedField = &$this->getPropertyReference($name);
+        $modifiedField = $value;
+    }
 
-            return;
+    /**
+     * We need to return a reference in order for legacy codes to do manipulation like:
+     *    $controller->toolbar_button['new_product'] = ['text' => 'New Product'];
+     *
+     * That's why we can't use a PropertyAccessor component because it does not return references, only values.
+     *
+     * @param string $name
+     *
+     * @return mixed
+     *
+     * @throws InvalidArgumentException
+     */
+    private function &getPropertyReference(string $name)
+    {
+        if (!isset($this->propertiesMap[$name])) {
+            throw new InvalidArgumentException(sprintf('No mapping found for %s', $name));
         }
 
-        $propertyAccessor = new PropertyAccessor();
+        $propertyPath = explode('.', $this->propertiesMap[$name]);
+        $currentReference = &$this;
+        foreach ($propertyPath as $property) {
+            if (!property_exists($currentReference, $property)) {
+                throw new InvalidArgumentException(sprintf('Could not find property %s', implode('.', $propertyPath)));
+            }
+            $currentReference = &$currentReference->{$property};
+        }
 
-        $propertyAccessor->setValue($this, $this->propertiesMap[$name], $value);
+        return $currentReference;
     }
 }
