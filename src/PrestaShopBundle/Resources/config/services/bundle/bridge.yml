@@ -7,13 +7,8 @@ services:
     class: PrestaShopBundle\Bridge\Smarty\SmartyBridge
     arguments:
       - "@prestashop.adapter.legacy.context"
-      - "@prestashop.core.bridge.breadcrumbs_and_title_configurator"
-      - "@prestashop.core.bridge.footer_configurator"
-      - "@prestashop.core.bridge.header_configurator"
-      - "@prestashop.core.bridge.modal_configurator"
-      - "@prestashop.core.bridge.notification_configurator"
-      - "@prestashop.core.bridge.toolbar_flags_configurator"
       - "@prestashop.adapter.legacy.configuration"
+      - !tagged core.bridge.smarty_configurator
 
   prestashop.core.bridge.controller_configuration_factory:
     class: PrestaShopBundle\Bridge\AdminController\ControllerConfigurationFactory
@@ -31,11 +26,13 @@ services:
     arguments:
       - "@prestashop.adapter.legacy.context"
       - "@prestashop.adapter.legacy.configuration"
+    tags: [ 'core.bridge.smarty_configurator' ]
 
   prestashop.core.bridge.footer_configurator:
     class: PrestaShopBundle\Bridge\Smarty\FooterConfigurator
     arguments:
       - "@prestashop.adapter.legacy.context"
+    tags: [ 'core.bridge.smarty_configurator' ]
 
   prestashop.core.bridge.header_configurator:
     class: PrestaShopBundle\Bridge\Smarty\HeaderConfigurator
@@ -45,20 +42,24 @@ services:
       - "@prestashop.adapter.legacy.context"
       - "@prestashop.hook.dispatcher"
       - "@prestashop.adapter.legacy.configuration"
+    tags: [ 'core.bridge.smarty_configurator' ]
 
   prestashop.core.bridge.modal_configurator:
     class: PrestaShopBundle\Bridge\Smarty\ModalConfigurator
+    tags: [ 'core.bridge.smarty_configurator' ]
 
   prestashop.core.bridge.notification_configurator:
     class: PrestaShopBundle\Bridge\Smarty\NotificationsConfigurator
     arguments:
       - "@prestashop.adapter.legacy.configuration"
+    tags: [ 'core.bridge.smarty_configurator' ]
 
   prestashop.core.bridge.toolbar_flags_configurator:
     class: PrestaShopBundle\Bridge\Smarty\ToolbarFlagsConfigurator
     arguments:
       - "@prestashop.router"
       - "@prestashop.adapter.legacy.configuration"
+    tags: [ 'core.bridge.smarty_configurator' ]
 
   prestashop.core.bridge.helper_list_bridge:
     class: PrestaShopBundle\Bridge\Helper\HelperListBridge

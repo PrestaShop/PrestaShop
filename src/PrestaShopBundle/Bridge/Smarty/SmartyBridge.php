@@ -35,6 +35,7 @@ use Media;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
+use PrestaShopBundle\Bridge\Exception\BridgeException;
 use Smarty;
 use Symfony\Component\HttpFoundation\Response;
 use Tools;
@@ -63,34 +64,9 @@ class SmartyBridge
     private $cookie;
 
     /**
-     * @var BreadcrumbsAndTitleConfigurator
+     * @var ConfiguratorInterface[]
      */
-    private $breadcrumbsAndTitleConfigurator;
-
-    /**
-     * @var FooterConfigurator
-     */
-    private $footerConfigurator;
-
-    /**
-     * @var HeaderConfigurator
-     */
-    private $headerConfigurator;
-
-    /**
-     * @var ModalConfigurator
-     */
-    private $modalConfigurator;
-
-    /**
-     * @var NotificationsConfigurator
-     */
-    private $notificationsConfigurator;
-
-    /**
-     * @var ToolbarFlagsConfigurator
-     */
-    private $toolbarFlagsConfigurator;
+    private $configurators;
 
     /**
      * @var Configuration
@@ -99,34 +75,20 @@ class SmartyBridge
 
     /**
      * @param LegacyContext $legacyContext
-     * @param BreadcrumbsAndTitleConfigurator $breadcrumbsAndTitleConfigurator
-     * @param FooterConfigurator $footerConfigurator
-     * @param HeaderConfigurator $headerConfigurator
-     * @param ModalConfigurator $modalConfigurator
-     * @param NotificationsConfigurator $notificationsConfigurator
-     * @param ToolbarFlagsConfigurator $toolbarFlagsConfigurator
      * @param Configuration $configuration
+     * @param ConfiguratorInterface[] $configurators
      */
     public function __construct(
         LegacyContext $legacyContext,
-        BreadcrumbsAndTitleConfigurator $breadcrumbsAndTitleConfigurator,
-        FooterConfigurator $footerConfigurator,
-        HeaderConfigurator $headerConfigurator,
-        ModalConfigurator $modalConfigurator,
-        NotificationsConfigurator $notificationsConfigurator,
-        ToolbarFlagsConfigurator $toolbarFlagsConfigurator,
-        Configuration $configuration
+        Configuration $configuration,
+        iterable $configurators
     ) {
+        $this->assertConfiguratorsType($configurators);
+        $this->configurators = $configurators;
+        $this->configuration = $configuration;
         $this->smarty = $legacyContext->getSmarty();
         $this->link = $legacyContext->getContext()->link;
         $this->cookie = $legacyContext->getContext()->cookie;
-        $this->breadcrumbsAndTitleConfigurator = $breadcrumbsAndTitleConfigurator;
-        $this->footerConfigurator = $footerConfigurator;
-        $this->headerConfigurator = $headerConfigurator;
-        $this->modalConfigurator = $modalConfigurator;
-        $this->notificationsConfigurator = $notificationsConfigurator;
-        $this->toolbarFlagsConfigurator = $toolbarFlagsConfigurator;
-        $this->configuration = $configuration;
     }
 
     /**
@@ -141,12 +103,10 @@ class SmartyBridge
         ControllerConfiguration $controllerConfiguration,
         Response $response = null
     ): Response {
-        $this->breadcrumbsAndTitleConfigurator->configure($controllerConfiguration);
-        $this->modalConfigurator->configure($controllerConfiguration);
-        $this->notificationsConfigurator->configure($controllerConfiguration);
-        $this->toolbarFlagsConfigurator->configure($controllerConfiguration);
-        $this->headerConfigurator->configure($controllerConfiguration);
-        $this->footerConfigurator->configure($controllerConfiguration);
+        foreach ($this->configurators as $configurator) {
+            $configurator->configure($controllerConfiguration);
+        }
+
         $this->smarty->assign($controllerConfiguration->templateVars);
 
         if ($response === null) {
@@ -312,5 +272,31 @@ class SmartyBridge
         }
 
         return $modalRender;
+    }
+
+    /**
+     * Validates the type of configurators
+     *
+     * @param iterable $configurators
+     *
+     * @return void
+     *
+     * @throws BridgeException
+     */
+    private function assertConfiguratorsType(iterable $configurators): void
+    {
+        foreach ($configurators as $configurator) {
+            if ($configurator instanceof ConfiguratorInterface) {
+                continue;
+            }
+
+            throw new BridgeException(
+                sprintf(
+                    '%s expected, but got %s',
+                    ConfiguratorInterface::class,
+                    var_export($configurator, true)
+                )
+            );
+        }
     }
 }
