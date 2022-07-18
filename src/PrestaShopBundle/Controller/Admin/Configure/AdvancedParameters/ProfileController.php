@@ -224,7 +224,7 @@ class ProfileController extends FrameworkBundleAdminController
      * Delete a profile.
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller')~'_')",
+     *     "is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this."
      * )
      * @DemoRestricted(redirectRoute="admin_profiles_index")
@@ -252,7 +252,7 @@ class ProfileController extends FrameworkBundleAdminController
      * Bulk delete profiles.
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller')~'_')",
+     *     "is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this."
      * )
      * @DemoRestricted(redirectRoute="admin_profiles_index")

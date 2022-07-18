@@ -125,7 +125,7 @@ class TranslationsController extends FrameworkBundleAdminController
     /**
      * Modify translations action.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -150,7 +150,7 @@ class TranslationsController extends FrameworkBundleAdminController
     /**
      * Add language pack for new languages and updates for the existing ones action.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')~'_')"))
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))"))
      *
      * @param Request $request
      *
@@ -189,7 +189,7 @@ class TranslationsController extends FrameworkBundleAdminController
     /**
      * Extract catalogues using locale.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')~'_')")
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -286,7 +286,7 @@ class TranslationsController extends FrameworkBundleAdminController
     /**
      * Copy language action.
      *
-     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')~'_')")
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
