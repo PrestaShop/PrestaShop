@@ -46,17 +46,17 @@ class ControllerConfiguration
     /**
      * ClassName of related object model. E.g. "Feature", "Category", "Product" etc.
      *
-     * @var string|null
+     * @var string
      */
     public $objectModelClassName;
 
     /**
-     * @var string|null
+     * @var string
      */
     public $legacyControllerName;
 
     /**
-     * @var string|null
+     * @var string
      */
     public $legacyCurrentIndex;
 
@@ -66,7 +66,7 @@ class ControllerConfiguration
     public $positionIdentifier;
 
     /**
-     * @var string|null
+     * @var string
      */
     public $tableName;
 
@@ -151,7 +151,7 @@ class ControllerConfiguration
     public $jsFiles = [];
 
     /**
-     * @var string|null
+     * @var string
      */
     public $templateFolder;
 
