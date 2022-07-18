@@ -93,7 +93,7 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * Shows products listing.
      *
-     * @AdminSecurity("is_granted('create', 'ADMINPRODUCTS_') || is_granted('update', 'ADMINPRODUCTS_') || is_granted('read', 'ADMINPRODUCTS_')")
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param ProductFilters $filters
