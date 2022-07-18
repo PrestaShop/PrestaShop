@@ -700,7 +700,7 @@ services:
     tags:
       - { name: form.type }
 
-  from.type.yes_and_no_choice:
+  form.type.yes_and_no_choice:
     class: 'PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType'
     parent: 'form.type.translatable.aware'
     public: true
@@ -1914,7 +1914,7 @@ services:
     tags:
       - { name: form.type }
 
-  from.type.log_severity_choice_type:
+  form.type.log_severity_choice_type:
     class: 'PrestaShopBundle\Form\Admin\Type\LogSeverityChoiceType'
     parent: 'form.type.translatable.aware'
     public: true
