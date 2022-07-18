@@ -218,7 +218,6 @@
        * on save.
        */
       selectedFiles(value: Array<PSDropzoneFile>): void {
-        console.log(this.selectedFiles.length, 'prout');
         if (value.length > 1) {
           this.captionValue = {};
           this.locales.forEach((locale: string) => {
