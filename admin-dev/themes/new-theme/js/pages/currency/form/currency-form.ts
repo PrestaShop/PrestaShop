@@ -100,7 +100,6 @@ export default class CurrencyForm {
     this.initCurrencyFormatter();
 
     EventEmitter.on('refreshCurrencyApp', (currencyData) => {
-      console.log(currencyData);
       this.state.currencyData = currencyData;
       this.fillCurrencyCustomData(currencyData);
       this.initCurrencyFormatter();

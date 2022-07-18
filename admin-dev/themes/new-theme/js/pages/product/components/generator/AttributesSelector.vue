@@ -121,7 +121,6 @@
 
 <script lang="ts">
   import {defineComponent, PropType} from 'vue';
-
   import isSelected from '@pages/product/mixins/is-attribute-selected';
   import ProductMap from '@pages/product/product-map';
   import PerfectScrollbar from 'perfect-scrollbar';
