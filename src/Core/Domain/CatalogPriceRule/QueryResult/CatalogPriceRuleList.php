@@ -41,18 +41,18 @@ class CatalogPriceRuleList
     /**
      * @var int
      */
-    private $totalCatalogPriceRulesCount;
+    private $totalCount;
 
     /**
      * @param CatalogPriceRuleForListing[] $catalogPriceRules
-     * @param int $totalCatalogPriceRulesCount
+     * @param int $totalCount;
      */
     public function __construct(
         array $catalogPriceRules,
-        int $totalCatalogPriceRulesCount
+        int $totalCount
     ) {
         $this->catalogPriceRules = $catalogPriceRules;
-        $this->totalCatalogPriceRulesCount = $totalCatalogPriceRulesCount;
+        $this->totalCount = $totalCount;
     }
 
     /**
@@ -66,8 +66,8 @@ class CatalogPriceRuleList
     /**
      * @return int
      */
-    public function getTotalCatalogPriceRulesCount(): int
+    public function getTotalCount(): int
     {
-        return $this->totalCatalogPriceRulesCount;
+        return $this->totalCount;
     }
 }
