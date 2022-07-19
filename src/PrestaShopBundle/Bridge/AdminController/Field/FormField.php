@@ -31,12 +31,17 @@ namespace PrestaShopBundle\Bridge\AdminController\Field;
 /**
  * @todo: unsure if we need separate interface or no. Will see later
  */
-class FormField implements FieldInterface
+class FormField
 {
+    /**
+     * @todo - this is not the actual html input type, but the legacy form type, idk how to represent the difference in naming
+     */
+    public const TYPE_INPUT = 'input';
+
     /**
      * @var string
      */
-    private $label;
+    private $type;
 
     /**
      * @var array
@@ -44,22 +49,31 @@ class FormField implements FieldInterface
     private $config;
 
     /**
-     * @param string $label
-     * @param array<string, mixed>> $config
+     * @var string
      */
-    public function __construct(string $label, array $config = [])
+    private $value;
+
+    /**
+     * @param string $type
+     * @param array<string, mixed>> $config
+     * @param string $value the value of the input
+     */
+    public function __construct(string $type, array $config, string $value = '')
     {
-        $this->label = $label;
+        $this->type = $type;
         $this->config = $config;
-        //@todo: add options resolver
+        //@todo: add options resolver?
+        $this->value = $value;
     }
 
     /**
+     * @todo: define existing types as constants?
+     *
      * @return string
      */
-    public function getLabel(): string
+    public function getType(): string
     {
-        return $this->label;
+        return $this->type;
     }
 
     /**
@@ -68,5 +82,13 @@ class FormField implements FieldInterface
     public function getConfig(): array
     {
         return $this->config;
+    }
+
+    /**
+     * @return string
+     */
+    public function getValue(): string
+    {
+        return $this->value;
     }
 }

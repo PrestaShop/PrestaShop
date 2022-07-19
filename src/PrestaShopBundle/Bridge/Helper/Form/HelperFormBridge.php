@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Bridge\Helper\Form;
 
 use HelperForm;
+use PrestaShopBundle\Bridge\AdminController\Field\FormField;
 
 class HelperFormBridge
 {
@@ -42,9 +43,38 @@ class HelperFormBridge
         //@todo: transform FormField classes to legacy supported array
         $formFields = $helperFormConfiguration->getFormFields();
 
-        //@todo: see getFieldsValue() in AdminController. That one probably fills up form fields with entity data
-        $helperForm->fields_value = [];
+        $legacyFormFields = [];
+        foreach ($formFields as $formField) {
+            $type = $formField->getType();
+            $config = $formField->getConfig();
 
-        return $helperForm->generateForm($formFields);
+            // @todo: need to investigate if any other fields acted like this
+            // legacy type "input" could contain multiple fields configs inside it like this:
+            //            'input' => [
+            //                [
+            //                    'type' => 'text',
+            //                    'label' => $this->trans('Alias', [], 'Admin.Shopparameters.Feature'),
+            //                    'name' => 'alias',
+            //                ],
+            //                [
+            //                    'type' => 'text',
+            //                    'label' => $this->trans('Result', [], 'Admin.Shopparameters.Feature'),
+            //                    'name' => 'search',
+            //                ],
+            //            ],
+            if (FormField::TYPE_INPUT === $type) {
+                $legacyFormFields[$type][] = $config;
+
+                //@todo: without this smarty fails. Each field name  must exist in fields_value list as index key
+                $helperForm->fields_value[$config['name']] = $formField->getValue();
+
+                continue;
+            }
+
+            $legacyFormFields[$type] = $config;
+        }
+
+        /* @see \AdminController::renderForm() */
+        return $helperForm->generateForm([['form' => $legacyFormFields]]);
     }
 }

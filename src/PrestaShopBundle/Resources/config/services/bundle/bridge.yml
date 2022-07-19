@@ -94,3 +94,9 @@ services:
     class: PrestaShopBundle\Bridge\Helper\HelperListCustomizer\HelperListFeatureBridge
     parent: prestashop.core.bridge.helper_list_bridge
     public: true
+
+  prestashop.core.bridge.helper.form.helper_form_configuration_factory:
+    class: PrestaShopBundle\Bridge\Helper\Form\HelperFormConfigurationFactory
+
+  prestashop.core.bridge.helper.form.helper_form_bridge:
+    class: PrestaShopBundle\Bridge\Helper\Form\HelperFormBridge

@@ -40,15 +40,18 @@ class HelperFormConfiguration
     /**
      * @var FormField[]
      */
-    private $formFields = [];
+    private $formFields;
 
     /**
      * @param ObjectModelCore $objectModel
+     * @param FormField[] $formFields
      */
     public function __construct(
-        ObjectModelCore $objectModel
+        ObjectModelCore $objectModel,
+        array $formFields = []
     ) {
         $this->objectModel = $objectModel;
+        $this->formFields = $formFields;
     }
 
     public function getObjectModel(): ObjectModelCore

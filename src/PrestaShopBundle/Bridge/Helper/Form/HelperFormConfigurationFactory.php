@@ -28,13 +28,14 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Bridge\Helper\Form;
 
 use ObjectModelCore;
+use PrestaShopBundle\Bridge\AdminController\Field\FormField;
 
 class HelperFormConfigurationFactory
 {
     /**
      * @param int|null $objectModelId
      * @param string $className
-     * @param array $formFields
+     * @param FormField[] $formFields
      *
      * @return HelperFormConfiguration
      */
@@ -45,7 +46,7 @@ class HelperFormConfigurationFactory
     ): HelperFormConfiguration {
         return new HelperFormConfiguration(
             $this->loadObjectModel($objectModelId, $className),
-            $className
+            $formFields
         );
     }
 
@@ -55,6 +56,6 @@ class HelperFormConfigurationFactory
             return new $className($objectModelId);
         }
 
-        return new $className;
+        return new $className();
     }
 }
