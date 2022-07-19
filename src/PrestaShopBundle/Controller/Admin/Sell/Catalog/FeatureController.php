@@ -44,7 +44,7 @@ use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerListTrait;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerTrait;
 use PrestaShopBundle\Bridge\AdminController\LegacyControllerBridgeInterface;
 use PrestaShopBundle\Bridge\Helper\HelperListConfiguration;
-use PrestaShopBundle\Bridge\Helper\HelperListCustomizer\HelperListFeatureBridge;
+use PrestaShopBundle\Bridge\Helper\ListCustomizer\FeatureHelperListBridge;
 use PrestaShopBundle\Bridge\Smarty\SmartyTrait;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -185,9 +185,9 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
         return $this->buildLegacyControllerBridge('feature', Feature::class, 'AdminFeatures');
     }
 
-    public function getHelperListBridge(): HelperListFeatureBridge
+    public function getHelperListBridge(): FeatureHelperListBridge
     {
-        return $this->get('prestashop.core.bridge.helper_list_feature');
+        return $this->get('prestashop.bridge.helper.list_customizer.feature_helper_list_bridge');
     }
 
     /**

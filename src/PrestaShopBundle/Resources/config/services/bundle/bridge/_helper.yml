@@ -1,0 +1,34 @@
+imports:
+  - { resource: helper/*.yml }
+
+services:
+  _defaults:
+    public: true
+
+  prestashop.bridge.helper.helper_list_bridge:
+    class: PrestaShopBundle\Bridge\Helper\HelperListBridge
+    arguments:
+      - "@prestashop.adapter.legacy.context"
+      - "@prestashop.user_provider"
+      - "@prestashop.bridge.helper.helper_list_configurator"
+      - "@prestashop.hook.dispatcher"
+      - "@prestashop.adapter.legacy.configuration"
+
+  prestashop.bridge.helper.helper_list_configuration_factory:
+    class: PrestaShopBundle\Bridge\Helper\HelperListConfigurationFactory
+
+  prestashop.bridge.helper.helper_list_configurator:
+    class: PrestaShopBundle\Bridge\Helper\HelperListConfigurator
+    arguments:
+      - '@prestashop.bridge.smarty.breadcrumbs_and_title_configurator'
+
+  prestashop.bridge.helper.filters_helper:
+    class: PrestaShopBundle\Bridge\Helper\FiltersHelper
+    arguments:
+      - "@prestashop.adapter.legacy.context"
+      - "@prestashop.hook.dispatcher"
+
+  prestashop.bridge.helper.reset_filters_helper:
+    class: PrestaShopBundle\Bridge\Helper\ResetFiltersHelper
+    arguments:
+      - "@prestashop.adapter.legacy.context"
