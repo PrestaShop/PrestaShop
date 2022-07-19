@@ -304,6 +304,9 @@ class StockManager
         }
         $templateVars = [
             '{qty}' => $newQuantity,
+            '{product_id}' => $product->id,
+            '{product_attribute_id}' => $id_product_attribute,
+            '{product_reference}' => $product->reference,
             '{last_qty}' => $lowStockThreshold,
             '{product}' => $productName,
         ];
