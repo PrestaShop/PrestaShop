@@ -30,6 +30,11 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 
+/**
+ * This form type is needed to display custom list of Catalog Price Rules.
+ * Check src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/Discounts/FormTheme/discounts.html.twig
+ * for implementation.
+ */
 class CatalogPriceRulesType extends TranslatorAwareType
 {
 }
