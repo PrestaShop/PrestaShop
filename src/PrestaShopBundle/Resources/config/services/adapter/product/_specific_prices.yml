@@ -67,6 +67,8 @@ services:
       - '@doctrine.dbal.default_connection'
       - '%database_prefix%'
       - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
 
   prestashop.adapter.product.specific_price.validate.specific_price_validator:
     class: PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Validate\SpecificPriceValidator

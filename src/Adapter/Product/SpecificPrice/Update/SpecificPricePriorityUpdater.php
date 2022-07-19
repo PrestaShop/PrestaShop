@@ -30,11 +30,14 @@ namespace PrestaShop\PrestaShop\Adapter\Product\SpecificPrice\Update;
 
 use Doctrine\DBAL\Connection;
 use Exception;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\CannotSetSpecificPricePrioritiesException;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use SpecificPrice;
 
 /**
@@ -53,21 +56,41 @@ class SpecificPricePriorityUpdater
     private $dbPrefix;
 
     /**
-     * @var ConfigurationInterface
+     * @var Configuration
      */
     private $configuration;
 
     /**
-     * @param ConfigurationInterface $configuration
+     * @var Context
+     */
+    private $shopContext;
+
+    /**
+     * @var FeatureInterface
+     */
+    private $multistoreFeature;
+
+    /**
+     * SpecificPricePriorityUpdater constructor.
+     *
+     * @param Connection $connection
+     * @param string $dbPrefix
+     * @param Configuration $configuration
+     * @param Context $shopContext
+     * @param FeatureInterface $multistoreFeature
      */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
-        ConfigurationInterface $configuration
+        Configuration $configuration,
+        Context $shopContext,
+        FeatureInterface $multistoreFeature
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
         $this->configuration = $configuration;
+        $this->shopContext = $shopContext;
+        $this->multistoreFeature = $multistoreFeature;
     }
 
     /**
@@ -95,14 +118,25 @@ class SpecificPricePriorityUpdater
 
     /**
      * @param PriorityList $priorityList
+     * @param ShopConstraint $shopConstraint
+     * @param bool $isMultistoreChecked
+     *
+     * @throws CoreException
      */
-    public function updateDefaultPriorities(PriorityList $priorityList): void
+    public function updateDefaultPriorities(PriorityList $priorityList, ShopConstraint $shopConstraint, bool $isMultistoreChecked): void
     {
         try {
-            $this->configuration->set(
-                'PS_SPECIFIC_PRICE_PRIORITIES',
-                implode(';', $priorityList->getPriorities())
-            );
+            // If we are in multistore context (not all shop) and the multistore checkbox value is absent (it was unchecked),
+            // then the field multistore value must be removed from DB for current context
+            if ($this->multistoreFeature->isUsed() && !$this->shopContext->isAllShopContext() && !$isMultistoreChecked) {
+                $this->configuration->deleteFromContext('PS_SPECIFIC_PRICE_PRIORITIES', $shopConstraint);
+            } else {
+                $this->configuration->set(
+                    'PS_SPECIFIC_PRICE_PRIORITIES',
+                    implode(';', $priorityList->getPriorities()),
+                    $shopConstraint
+                );
+            }
         } catch (Exception $e) {
             throw new CoreException('Error occurred when trying to update default specific price priorities');
         }
