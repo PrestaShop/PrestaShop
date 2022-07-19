@@ -128,7 +128,7 @@ class SearchCombinationsForAssociationHandler implements SearchCombinationsForAs
             (int) $foundCombination['id_product'],
             $combinationId,
             $this->buildName($foundCombination['name'], $combinationId, $languageId),
-            $foundCombination['combination_reference'] ?? ($foundCombination['product_reference'] ?? ''),
+            $foundCombination['combination_reference'] ?: ($foundCombination['product_reference'] ?: ''),
             $imagePath
         );
     }
