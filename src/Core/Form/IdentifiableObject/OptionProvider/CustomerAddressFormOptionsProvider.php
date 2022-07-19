@@ -45,7 +45,6 @@ class CustomerAddressFormOptionsProvider implements FormOptionsProviderInterface
 
     /**
      * @param CommandBusInterface $queryBus
-     * @param int $defaultCountryId
      */
     public function __construct(CommandBusInterface $queryBus)
     {
@@ -57,9 +56,7 @@ class CustomerAddressFormOptionsProvider implements FormOptionsProviderInterface
      */
     public function getOptions(int $id, array $data): array
     {
-        $requiredFields = $this->queryBus->handle(new GetRequiredFieldsForAddress());
-
-        return ['requiredFields' => $requiredFields];
+        return ['requiredFields' => $this->queryBus->handle(new GetRequiredFieldsForAddress())];
     }
 
     /**
@@ -67,8 +64,6 @@ class CustomerAddressFormOptionsProvider implements FormOptionsProviderInterface
      */
     public function getDefaultOptions(array $data): array
     {
-        $requiredFields = $this->queryBus->handle(new GetRequiredFieldsForAddress());
-
-        return ['requiredFields' => $requiredFields];
+        return ['requiredFields' => $this->queryBus->handle(new GetRequiredFieldsForAddress())];
     }
 }
