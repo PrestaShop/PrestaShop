@@ -55,7 +55,7 @@ trait FrameworkBridgeControllerListTrait
     ): HelperListConfiguration {
         $controllerConfiguration = $this->getControllerConfiguration();
 
-        return $this->get('prestashop.core.bridge.helper_list_configuration_factory')->create(
+        return $this->get('prestashop.bridge.helper.helper_list_configuration_factory')->create(
             $controllerConfiguration,
             $identifierKey,
             $positionIdentifierKey,
@@ -72,7 +72,7 @@ trait FrameworkBridgeControllerListTrait
      */
     public function getResetFiltersHelper(): ResetFiltersHelper
     {
-        return $this->get('prestashop.core.bridge.processor.reset_filters_helper');
+        return $this->get('prestashop.bridge.helper.reset_filters_helper');
     }
 
     /**
@@ -80,7 +80,7 @@ trait FrameworkBridgeControllerListTrait
      */
     public function getFiltersHelper(): FiltersHelper
     {
-        return $this->get('prestashop.core.bridge.processor.filters_helper');
+        return $this->get('prestashop.bridge.helper.filters_helper');
     }
 
     /**
@@ -88,7 +88,7 @@ trait FrameworkBridgeControllerListTrait
      */
     public function getHelperListBridge(): HelperListBridge
     {
-        return $this->get('prestashop.core.bridge.helper_list_bridge');
+        return $this->get('prestashop.bridge.helper.helper_list_bridge');
     }
 
     /**
