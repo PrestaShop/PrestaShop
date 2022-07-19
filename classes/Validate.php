@@ -811,7 +811,7 @@ class ValidateCore
      */
     public static function isOrderWay($way)
     {
-        return !empty($way) && in_array(strtoupper($way), ['ASC', 'DESC']);
+        return !empty($way) && in_array(strtolower($way), ['asc', 'desc', 'random']);
     }
 
     /**

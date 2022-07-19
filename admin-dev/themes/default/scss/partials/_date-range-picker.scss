@@ -20,12 +20,12 @@ $color-calendar-range-compare: lighten($color-calendar-compare, 10%);
 
   #date-start.input-selected,
   #date-end.input-selected {
-    border: solid 3px $color-calendar-day-selected;
+    border: solid 1px $color-calendar-day-selected;
   }
 
   #date-start-compare.input-selected,
   #date-end-compare.input-selected {
-    border: solid 3px $color-calendar-day-selected-compare;
+    border: solid 1px $color-calendar-day-selected-compare;
   }
 
   div#datepicker-form {
@@ -52,6 +52,7 @@ $color-calendar-range-compare: lighten($color-calendar-compare, 10%);
 
       .title,
       .checkbox-title label {
+        margin-top: 0;
         font-size: 1.15em;
         font-weight: 200;
         line-height: 2em;
@@ -68,6 +69,9 @@ $color-calendar-range-compare: lighten($color-calendar-compare, 10%);
 
       select {
         @include margin(2px,2px,0,0);
+        @include padding(2px, 4px, 2px, 4px);
+        height: 1.625rem;
+        line-height: 1;
       }
     }
 
@@ -80,7 +84,12 @@ $color-calendar-range-compare: lighten($color-calendar-compare, 10%);
     }
 
     .form-date-actions {
+      background-color: #fcfdfe;
       border: solid 1px #ccc;
+
+      .btn.pull-right {
+        @extend .btn-primary;
+      }
     }
 
     .form-date-group {
@@ -89,6 +98,7 @@ $color-calendar-range-compare: lighten($color-calendar-compare, 10%);
       clear: both;
 
       label {
+        margin-top: 5px;
         font-size: 0.8em;
         font-weight: 700;
         color: #666;
@@ -96,11 +106,13 @@ $color-calendar-range-compare: lighten($color-calendar-compare, 10%);
       }
 
       input {
-        @include margin(4px, 4px, 0, 0);
+        @include margin(0, 2px, 0, 0);
       }
 
       input[type="text"] {
+        @include margin(0, 8px, 0, 0);
         width: 35%;
+        height: 2.25rem;
       }
 
       button {
@@ -347,6 +359,12 @@ $color-calendar-range-compare: lighten($color-calendar-compare, 10%);
         }
       }
     }
+  }
+}
+
+#datepickerExpand {
+  i {
+    vertical-align: middle;
   }
 }
 

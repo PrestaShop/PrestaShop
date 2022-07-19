@@ -120,12 +120,14 @@
                                     <tbody>
                                       <tr>
                                         <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                                          <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">{{ 'You have received a new message regarding order with the reference'|trans({}, 'Emails.Body', locale)|raw }} <span class="label">{order_name}</span>.</div>
+                                          <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">{{ 'You have received a new message.'|trans({}, 'Emails.Body', locale)|raw }}</div>
                                         </td>
                                       </tr>
                                       <tr>
                                         <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
                                           <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;"><span style=" font-size:16px" class="label">{{ 'Customer:'|trans({}, 'Emails.Body', locale)|raw }}</span> {firstname} {lastname} ({email})</div>
+                                          <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;"><span style=" font-size:16px" class="label">{{ 'Order reference:'|trans({}, 'Emails.Body', locale)|raw }}</span> {order_name}</div>
+                                          <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;"><span style=" font-size:16px" class="label">{{ 'Product:'|trans({}, 'Emails.Body', locale)|raw }}</span> {product_name}</div>
                                         </td>
                                       </tr>
                                     </tbody>

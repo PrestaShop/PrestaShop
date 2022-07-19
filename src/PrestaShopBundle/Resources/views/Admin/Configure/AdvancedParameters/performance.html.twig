@@ -104,7 +104,14 @@
               </label>
 
               <div class="col-sm input-container">
-                <a class="btn btn-primary pointer" href="{{ path('admin_performance_module_disable_non_builtin') }}" title="Clear cache">
+                <a
+                  class="btn btn-primary pointer"
+                  href="{{ path('admin_performance_module_disable_non_builtin') }}"
+                  id="disableNonBuiltInModulesBtn"
+                  data-confirm-title="{{ 'Disable all non-built-in modules?'|trans({}, 'Advparameters.Feature') }}"
+                  data-confirm-button-label="{{ 'Disable'|trans({}, 'Admin.Actions') }}"
+                  data-close-button-label="{{ 'Cancel'|trans({}, 'Admin.Actions') }}"
+                >
                   {{ 'Disable'|trans({}, 'Admin.Actions') }}
                 </a>
               </div>
@@ -239,6 +246,7 @@
 
 {% block javascripts %}
   {{ parent() }}
+  <script src="{{ asset('themes/new-theme/public/performance_preferences.bundle.js') }}"></script>
   <script src="{{ asset('themes/default/js/bundle/admin_parameters/performancePage.js') }}"></script>
   <script>
     var configuration = {

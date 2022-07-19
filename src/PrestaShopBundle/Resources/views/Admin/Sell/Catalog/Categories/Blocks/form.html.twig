@@ -136,17 +136,20 @@
 
       {{ renderhook('displayBackOfficeCategory') }}
 
-      {% block category_tool_serp %}
-        <div class="form-group row">
-          <label class="form-control-label">{{ 'SEO preview'|trans({}, 'Admin.Global') }}</label>
-          <div class="col-sm">
-            <div id="serp-app" data-category-url="{{ categoryUrl }}"></div>
-            <small class="form-text">
-              {{ 'Here is a preview of how your page will appear in search engine results.'|trans({}, 'Admin.Global') }}
-            </small>
+      {# Do not display category preview while creating a category #}
+      {% if categoryUrl is not null %}
+        {% block category_tool_serp %}
+          <div class="form-group row">
+            <label class="form-control-label">{{ 'SEO preview'|trans({}, 'Admin.Global') }}</label>
+            <div class="col-sm">
+              <div id="serp-app" data-category-url="{{ categoryUrl }}"></div>
+              <small class="form-text">
+                {{ 'Here is a preview of how your page will appear in search engine results.'|trans({}, 'Admin.Global') }}
+              </small>
+            </div>
           </div>
-        </div>
-      {% endblock %}
+        {% endblock %}
+      {% endif %}
 
       <div class="form-group row">
         {{ ps.label_with_help(('Meta title'|trans({}, 'Admin.Global')), ('Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}')) }}

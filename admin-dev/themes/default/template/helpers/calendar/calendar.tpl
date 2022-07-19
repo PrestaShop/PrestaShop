@@ -92,12 +92,10 @@
 							</div>
 						</div>
 						<div class='form-date-actions'>
-							<button class='btn btn-link' type='button' id="datepicker-cancel" tabindex="7">
-								<i class='icon-remove'></i>
+							<button class='btn btn-default' type='button' id="datepicker-cancel" tabindex="7">
 								{l s='Cancel' d='Admin.Actions'}
 							</button>
 							<button class='btn btn-default pull-right' type='submit' name="submitDateRange" tabindex="6">
-								<i class='icon-ok text-success'></i>
 								{l s='Apply' d='Admin.Actions'}
 							</button>
 						</div>

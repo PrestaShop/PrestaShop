@@ -451,6 +451,16 @@ class ToolsCore
     }
 
     /**
+     * Get the current url
+     *
+     * @return string current url
+     */
+    public static function getCurrentUrl(): string
+    {
+        return Tools::getCurrentUrlProtocolPrefix() . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+    }
+
+    /**
      * Returns a safe URL referrer.
      *
      * @param string $referrer URL referrer

@@ -22,17 +22,29 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import '../scss/font.scss';
-import '../scss/admin-theme.scss';
-import 'perfect-scrollbar/css/perfect-scrollbar.css';
-import '@openfonts/ubuntu-condensed_latin';
 
-import PerfectScrollBar from 'perfect-scrollbar';
+import ConfirmModal from '@components/modal/confirm-modal';
+import PerformancePreferencesPageMap from '@pages/performance-preferences/PerformancePreferencesPageMap';
 
-$(document).ready(() => {
-  const $navBarOverflow = $('.nav-bar-overflow');
+const {$} = window;
 
-  if ($navBarOverflow.length > 0) {
-    new PerfectScrollBar('.nav-bar-overflow');
-  }
+$(() => {
+  const $submitBtn = $(PerformancePreferencesPageMap.disableNonBuiltInModulesBtn);
+  $submitBtn.on('click', (event: JQueryEventObject) => {
+    event.preventDefault();
+
+    const modal = new ConfirmModal(
+      {
+        confirmTitle: $submitBtn.data('confirmTitle'),
+        confirmMessage: '',
+        confirmButtonLabel: $submitBtn.data('confirmButtonLabel'),
+        closeButtonLabel: $submitBtn.data('closeButtonLabel'),
+      },
+      () => {
+        window.location.href = <string> $submitBtn.attr('href');
+      },
+    );
+
+    modal.show();
+  });
 });

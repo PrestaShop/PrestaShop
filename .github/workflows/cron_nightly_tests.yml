@@ -16,6 +16,9 @@ env:
   NIGHTLY_TOKEN: ${{ secrets.NIGHTLY_TOKEN }}  # Nightly token to validate the import
   TESTS_DIR: 'tests/UI'  # Where UI tests are
 
+permissions:
+  contents: read
+
 jobs:
 
   # First job: Run tests in parallel
@@ -27,6 +30,7 @@ jobs:
       matrix:
         BRANCH:
           - develop
+          - 8.0.x
         CAMPAIGN:
           - 'sanity'
           - 'regression'
@@ -119,6 +123,7 @@ jobs:
       matrix:
         BRANCH:
           - develop
+          - 8.0.x
 
     env:
       GH_BRANCH: ${{ matrix.branch }}  # Branch to test
@@ -167,6 +172,8 @@ jobs:
 
   # Add pushed reports to GCp on nightly
   push-nightly-reports:
+    permissions:
+      contents: none
     name: Push reports to nightly.prestashop.com
     if: ${{ always() }}
     needs:
@@ -178,6 +185,7 @@ jobs:
       matrix:
         BRANCH:
           - develop
+          - 8.0.x
 
     env:
       GH_BRANCH: ${{ matrix.branch }}

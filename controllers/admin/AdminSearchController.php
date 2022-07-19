@@ -179,7 +179,7 @@ class AdminSearchControllerCore extends AdminController
 
             /* Invoices */
             if ($searchType == 4) {
-                if (Validate::isOrderInvoiceNumber($this->query) && ($invoice = OrderInvoice::getInvoiceByNumber($this->query))) {
+                if ($invoice = OrderInvoice::getInvoiceByNumber($this->query)) {
                     Tools::redirectAdmin($this->context->link->getAdminLink('AdminPdf') . '&submitAction=generateInvoicePDF&id_order=' . (int) ($invoice->id_order));
                 }
                 $this->errors[] = $this->trans('No invoice was found with this ID:', [], 'Admin.Orderscustomers.Notification') . ' ' . Tools::htmlentitiesUTF8($this->query);

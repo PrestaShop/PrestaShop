@@ -4,6 +4,10 @@ name: Nightly Build
 on:
   schedule:
     - cron: '0 1 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   nightly-build:
@@ -16,11 +20,19 @@ jobs:
       matrix:
         BRANCH:
           - develop
+          - 8.0.x
           - 1.7.8.x
+        include:
+          - BRANCH: develop
+            node: 16
+          - BRANCH: 8.0.x
+            node: 16
+          - BRANCH: 1.7.8.x
+            node: 14
 
     env:
       PHP_VERSION: '7.4'
-      NODE_VERSION: '14'
+      NODE_VERSION: ${{ matrix.node }}
       RELEASE_DIR: '/tmp/ps-release'
       GH_BRANCH: ${{ matrix.BRANCH }}
       GC_PROJECT_ID: ${{ secrets.GC_PROJECT_ID }}
@@ -42,6 +54,9 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ env.NODE_VERSION }}
+
+      - name: Setup NPM
+        run: npm install -g npm@7
 
       - name: Create Release directory
         run: mkdir -p ${{ env.RELEASE_DIR }}

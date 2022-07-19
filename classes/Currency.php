@@ -1126,7 +1126,7 @@ class CurrencyCore extends ObjectModel
             self::$countActiveCurrencies[$idShop] = Db::getInstance()->getValue('
 				SELECT COUNT(DISTINCT c.id_currency) FROM `' . _DB_PREFIX_ . 'currency` c
 				LEFT JOIN ' . _DB_PREFIX_ . 'currency_shop cs ON (cs.id_currency = c.id_currency AND cs.id_shop = ' . (int) $idShop . ')
-				WHERE c.`active` = 1
+				WHERE c.`active` = 1 AND c.`deleted` = 0
 			');
         }
 
