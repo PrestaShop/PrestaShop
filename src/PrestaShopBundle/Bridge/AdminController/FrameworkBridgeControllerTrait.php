@@ -63,7 +63,7 @@ trait FrameworkBridgeControllerTrait
         }
 
         /** @var LegacyControllerBridgeFactory $legacyControllerBridgeFactory */
-        $legacyControllerBridgeFactory = $this->get('prestashop.core.bridge.admin_controller.legacy_controller_bridge_factory');
+        $legacyControllerBridgeFactory = $this->get('prestashop.bridge.admin_controller.legacy_controller_bridge_factory');
 
         $this->legacyControllerBridge = $legacyControllerBridgeFactory->create(
             $tabId,
