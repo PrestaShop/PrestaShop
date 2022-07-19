@@ -37,11 +37,11 @@ use PrestaShopBundle\Bridge\AdminController\Action\HeaderToolbarAction;
 use PrestaShopBundle\Bridge\AdminController\Action\ListBulkAction;
 use PrestaShopBundle\Bridge\AdminController\Action\ListHeaderToolbarAction;
 use PrestaShopBundle\Bridge\AdminController\Action\ListRowAction;
-use PrestaShopBundle\Bridge\AdminController\AdminControllerTrait;
-use PrestaShopBundle\Bridge\AdminController\AdminListControllerTrait;
 use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 use PrestaShopBundle\Bridge\AdminController\Field\Field;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerInterface;
+use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerListTrait;
+use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerTrait;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeListControllerInterface;
 use PrestaShopBundle\Bridge\AdminController\LegacyControllerBridgeInterface;
 use PrestaShopBundle\Bridge\Helper\HelperListConfiguration;
@@ -58,8 +58,8 @@ use Tools;
  */
 class FeatureController extends FrameworkBundleAdminController implements FrameworkBridgeControllerInterface, FrameworkBridgeListControllerInterface
 {
-    use AdminControllerTrait;
-    use AdminListControllerTrait;
+    use FrameworkBridgeControllerTrait;
+    use FrameworkBridgeControllerListTrait;
     use SmartyTrait;
 
     /**

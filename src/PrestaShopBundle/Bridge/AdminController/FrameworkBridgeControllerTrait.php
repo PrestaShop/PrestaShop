@@ -34,7 +34,7 @@ use Tab;
 /**
  * Contains reusable methods for horizontally migrated controllers
  */
-trait AdminControllerTrait
+trait FrameworkBridgeControllerTrait
 {
     /**
      * @var LegacyControllerBridgeInterface|null

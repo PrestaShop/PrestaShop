@@ -42,7 +42,7 @@ use PrestaShopBundle\Bridge\Helper\ResetFiltersHelper;
 /**
  * Contains the principal methods you need to horizontally migrate a controller which has a list.
  */
-trait AdminListControllerTrait
+trait FrameworkBridgeControllerListTrait
 {
     /**
      * @return ResetFiltersHelper
