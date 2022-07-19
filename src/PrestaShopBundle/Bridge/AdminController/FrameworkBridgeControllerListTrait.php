@@ -44,6 +44,29 @@ use PrestaShopBundle\Bridge\Helper\ResetFiltersHelper;
  */
 trait FrameworkBridgeControllerListTrait
 {
+    public function buildListConfiguration(
+        string $identifierKey,
+        string $positionIdentifierKey,
+        string $defaultOrderBy,
+        bool $autoJoinLangTable = true,
+        bool $deleted = false,
+        bool $explicitSelect = false,
+        bool $useFoundRows = true
+    ): HelperListConfiguration {
+        $controllerConfiguration = $this->getControllerConfiguration();
+
+        return $this->get('prestashop.core.bridge.helper_list_configuration_factory')->create(
+            $controllerConfiguration,
+            $identifierKey,
+            $positionIdentifierKey,
+            $defaultOrderBy,
+            $autoJoinLangTable,
+            $deleted,
+            $explicitSelect,
+            $useFoundRows
+        );
+    }
+
     /**
      * @return ResetFiltersHelper
      */
