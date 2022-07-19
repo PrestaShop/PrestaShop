@@ -26,7 +26,6 @@ Feature: Search combinations to associate them in the BO
     And attribute "Blue" named "Blue" in en language exists
     And attribute "Red" named "Red" in en language exists
 
-
   Scenario: I can search combinations by name
     When I add product "beer_bottle" with following information:
       | name[en-US] | bottle of beer     |
@@ -141,6 +140,16 @@ Feature: Search combinations to associate them in the BO
       | mpn                | mpn3white         |
       | reference          | ref3white         |
       | upc                | 354321354321      |
+    # General reference on product will be used for pink wine which has no reference on the combination
+    When I update product "wine_bottle" details with following values:
+      | reference | ref3wine |
+    Then product "wine_bottle" should have following details:
+      | product detail | value    |
+      | isbn           |          |
+      | upc            |          |
+      | ean13          |          |
+      | mpn            |          |
+      | reference      | ref3wine |
     # Search by all types of references matching wine_bottle_red combination
     When I search for combinations with locale "english" matching "154867313573" I should get following results:
       | product     | combination     | name                        | reference | image url                                             |
@@ -173,7 +182,7 @@ Feature: Search combinations to associate them in the BO
     And I search for combinations with locale "english" matching "354321354321" I should get following results:
       | product     | combination       | name                          | reference | image url                                             |
       | wine_bottle | wine_bottle_white | bottle of wine: Color - White | ref3white | http://myshop.com/img/p/{no_picture}-home_default.jpg |
-    # Search by types that match both combinations, both are returned
+    # Search by types that match multiple combinations
     When I search for combinations with locale "english" matching "mpn3" I should get following results:
       | product     | combination       | name                          | reference | image url                                             |
       | wine_bottle | wine_bottle_red   | bottle of wine: Color - Red   | ref3red   | http://myshop.com/img/p/{no_picture}-home_default.jpg |
@@ -182,7 +191,8 @@ Feature: Search combinations to associate them in the BO
       | product     | combination       | name                          | reference | image url                                             |
       | wine_bottle | wine_bottle_red   | bottle of wine: Color - Red   | ref3red   | http://myshop.com/img/p/{no_picture}-home_default.jpg |
       | wine_bottle | wine_bottle_white | bottle of wine: Color - White | ref3white | http://myshop.com/img/p/{no_picture}-home_default.jpg |
-    # Search by types that match two combinations and a product
+      | wine_bottle | wine_bottle_pink  | bottle of wine: Color - Pink  | ref3wine  | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+    # Search by types that match multiple combinations and a product
     When I search for combinations with locale "english" matching "mpn" I should get following results:
       | product          | combination       | name                          | reference | image url                                             |
       | champaign_bottle |                   | bottle of champaign           | ref1      | http://myshop.com/img/p/{no_picture}-home_default.jpg |
@@ -193,6 +203,7 @@ Feature: Search combinations to associate them in the BO
       | champaign_bottle |                   | bottle of champaign           | ref1      | http://myshop.com/img/p/{no_picture}-home_default.jpg |
       | wine_bottle      | wine_bottle_red   | bottle of wine: Color - Red   | ref3red   | http://myshop.com/img/p/{no_picture}-home_default.jpg |
       | wine_bottle      | wine_bottle_white | bottle of wine: Color - White | ref3white | http://myshop.com/img/p/{no_picture}-home_default.jpg |
+      | wine_bottle      | wine_bottle_pink  | bottle of wine: Color - Pink  | ref3wine  | http://myshop.com/img/p/{no_picture}-home_default.jpg |
 
   Scenario: Search results include the appropriate images
     Given following image types should be applicable to products:
