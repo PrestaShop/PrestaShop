@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Address;
 
-
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressStateRequired;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressZipCode;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
