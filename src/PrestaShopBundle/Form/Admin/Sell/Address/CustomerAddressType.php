@@ -34,7 +34,6 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\ExistingCustomerE
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShop\PrestaShop\Core\Domain\Address\Configuration\AddressConstraint;
-use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetRequiredFieldsForAddress;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
 use PrestaShopBundle\Form\Admin\Type\EmailType;
@@ -49,6 +48,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Form type for address add/edit
@@ -114,11 +114,9 @@ class CustomerAddressType extends TranslatorAwareType
             'Admin.Notifications.Info'
         ) . ' ' . TypedRegexValidator::GENERIC_NAME_CHARS;
         $stateChoices = $this->stateChoiceProvider->getChoices(['id_country' => $countryId]);
-
         $showStates = !empty($stateChoices);
-
-        $requiredFields = $this->commandBus->handle(new GetRequiredFieldsForAddress());
-
+        $requiredFields = $options['requiredFields'];
+        
         if (!isset($data['id_customer'])) {
             $builder->add('customer_email', EmailType::class, [
                 'label' => $this->trans('Customer email', 'Admin.Orderscustomers.Feature'),
@@ -466,4 +464,12 @@ class CustomerAddressType extends TranslatorAwareType
                 ],
             ]);
     }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'requiredFields' => [],
+        ]);
+    }
+
 }
