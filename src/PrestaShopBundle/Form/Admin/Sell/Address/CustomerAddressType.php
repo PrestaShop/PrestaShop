@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Address;
 
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressStateRequired;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressZipCode;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
@@ -71,11 +71,6 @@ class CustomerAddressType extends TranslatorAwareType
     private $router;
 
     /**
-     * @var CommandBusInterface
-     */
-    private $commandBus;
-
-    /**
      * CustomerAddressType constructor.
      *
      * Backwards compatibility break introduced in 1.7.8.0 due to addition of Router as mandatory constructor argument
@@ -92,14 +87,12 @@ class CustomerAddressType extends TranslatorAwareType
         array $locales,
         ConfigurableFormChoiceProviderInterface $stateChoiceProvider,
         $contextCountryId,
-        RouterInterface $router,
-        CommandBusInterface $commandBus
+        RouterInterface $router
     ) {
         parent::__construct($translator, $locales);
         $this->stateChoiceProvider = $stateChoiceProvider;
         $this->contextCountryId = $contextCountryId;
         $this->router = $router;
-        $this->commandBus = $commandBus;
     }
 
     /**
@@ -116,7 +109,7 @@ class CustomerAddressType extends TranslatorAwareType
         $stateChoices = $this->stateChoiceProvider->getChoices(['id_country' => $countryId]);
         $showStates = !empty($stateChoices);
         $requiredFields = $options['requiredFields'];
-        
+
         if (!isset($data['id_customer'])) {
             $builder->add('customer_email', EmailType::class, [
                 'label' => $this->trans('Customer email', 'Admin.Orderscustomers.Feature'),
