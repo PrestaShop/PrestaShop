@@ -464,7 +464,6 @@ services:
     arguments:
       - '@=service("prestashop.adapter.data_provider.currency").getDefaultCurrencyIsoCode()'
       - '@=service("prestashop.adapter.data_provider.tax").getTaxRulesGroupChoices()'
-      - "@router"
     tags:
       - { name: form.type }
 

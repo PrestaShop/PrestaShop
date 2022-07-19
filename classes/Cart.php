@@ -268,9 +268,6 @@ class CartCore extends ObjectModel
         if (!$this->id_shop) {
             $this->id_shop = Context::getContext()->shop->id;
         }
-        if (!$this->id_shop_group) {
-            $this->id_shop_group = Context::getContext()->shop->id_shop_group;
-        }
 
         $return = parent::add($autoDate, $nullValues);
         Hook::exec('actionCartSave', ['cart' => $this]);

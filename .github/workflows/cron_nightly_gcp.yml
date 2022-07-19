@@ -7,9 +7,6 @@ on:
     types:
       - requested
 
-permissions:
-  contents: read
-
 jobs:
   nightly:
     runs-on: ubuntu-latest

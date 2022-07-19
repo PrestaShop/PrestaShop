@@ -1834,7 +1834,7 @@ class FrontControllerCore extends Controller
 
     protected function getCurrentURL()
     {
-        return Tools::getCurrentUrl();
+        return Tools::getCurrentUrlProtocolPrefix() . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
     }
 
     public function getPageName()

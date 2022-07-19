@@ -447,7 +447,9 @@ $(document).ready(() => {
       .closest('li')
       .addClass('active');
     $('#bo_search_type').val($(this).data('value'));
-    $('#search_type_icon').text($(this).find('.material-icons').text());
+    $('#search_type_icon')
+      .removeAttr('class')
+      .addClass($(this).data('icon'));
     $('#bo_query').attr('placeholder', $(this).data('placeholder'));
     $('#bo_query').focus();
   });

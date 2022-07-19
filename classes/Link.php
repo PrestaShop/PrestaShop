@@ -448,10 +448,6 @@ class LinkCore
             throw new \InvalidArgumentException('Invalid category parameter');
         }
 
-        if ((int) $params['id'] === 0) {
-            Tools::displayAsDeprecated('Generating URL with id 0 is deprecated');
-        }
-
         $rule = 'category_rule';
 
         if (!$alias) {
