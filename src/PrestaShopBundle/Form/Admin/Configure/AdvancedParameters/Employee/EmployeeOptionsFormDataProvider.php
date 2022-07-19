@@ -23,11 +23,13 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee;
 
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class EmployeeOptionsFormDataProvider manages data for employee options form.
@@ -40,11 +42,20 @@ final class EmployeeOptionsFormDataProvider implements FormDataProviderInterface
     private $employeeOptionsConfiguration;
 
     /**
-     * @param DataConfigurationInterface $employeeOptionsConfiguration
+     * @var TranslatorInterface
      */
-    public function __construct(DataConfigurationInterface $employeeOptionsConfiguration)
-    {
+    private $translator;
+
+    /**
+     * @param DataConfigurationInterface $employeeOptionsConfiguration
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(
+        DataConfigurationInterface $employeeOptionsConfiguration,
+        TranslatorInterface $translator
+    ) {
         $this->employeeOptionsConfiguration = $employeeOptionsConfiguration;
+        $this->translator = $translator;
     }
 
     /**
@@ -60,6 +71,33 @@ final class EmployeeOptionsFormDataProvider implements FormDataProviderInterface
      */
     public function setData(array $data)
     {
+        if ($errors = $this->validate($data)) {
+            return $errors;
+        }
+
         return $this->employeeOptionsConfiguration->updateConfiguration($data);
+    }
+
+    /**
+     * Perform validation on form data before saving it.
+     *
+     * @param array $data
+     *
+     * @return array Returns array of errors
+     */
+    protected function validate(array $data)
+    {
+        $errors = [];
+
+        $passwordChangeTime = $data['password_change_time'];
+        if (!is_numeric($passwordChangeTime) || 0 > $passwordChangeTime) {
+            $errors[] = [
+                'key' => 'The %s field is invalid.',
+                'domain' => 'Admin.Notifications.Error',
+                'parameters' => [$this->translator->trans('Password regeneration', [], 'Admin.Advparameters.Feature')],
+            ];
+        }
+
+        return $errors;
     }
 }
