@@ -63,7 +63,7 @@ class GetCatalogPriceRuleList
     }
 
     /**
-     * @return  int|null
+     * @return int|null
      */
     public function getLimit(): ?int
     {

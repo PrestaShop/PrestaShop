@@ -107,7 +107,10 @@ export default class SpecificPricesManager {
     if (showCatalogPriceRulesButton === null || catalogPriceRulesContainer === null) {
       return;
     }
-
+    const showIcon = showCatalogPriceRulesButton.dataset.showIcon || 'visibility';
+    const hideIcon = showCatalogPriceRulesButton.dataset.hideIcon || 'visibility_off';
+    const showLabel = showCatalogPriceRulesButton.dataset.showLabel || 'Show catalog price rules';
+    const hideLabel = showCatalogPriceRulesButton.dataset.hideLabel || 'Hide catalog price rules';
 
     /** This should be the form container for the whole form element, so we can hide the whole block */
     const formContainer = <HTMLElement>catalogPriceRulesContainer.parentNode;
@@ -119,20 +122,10 @@ export default class SpecificPricesManager {
     showCatalogPriceRulesButton.addEventListener('click', () => {
       formContainer.classList.toggle('d-none');
       if (!listShown) {
-        if (showCatalogPriceRulesButton.dataset.hideName !== undefined
-          && showCatalogPriceRulesButton.dataset.hideIcon !== undefined) {
-          showCatalogPriceRulesButton.innerHTML = '<i class="material-icons">'
-            + showCatalogPriceRulesButton.dataset.hideIcon + '</i> '
-            + showCatalogPriceRulesButton.dataset.hideName;
-        }
+        showCatalogPriceRulesButton.innerHTML = `<i class="material-icons"> ${hideIcon}</i> ${hideLabel}`;
         listShown = true;
       } else {
-        if (showCatalogPriceRulesButton.dataset.showName !== undefined
-          && showCatalogPriceRulesButton.dataset.showIcon !== undefined) {
-          showCatalogPriceRulesButton.innerHTML = '<i class="material-icons">'
-            + showCatalogPriceRulesButton.dataset.showIcon + '</i> '
-            + showCatalogPriceRulesButton.dataset.showName;
-        }
+        showCatalogPriceRulesButton.innerHTML = `<i class="material-icons"> ${showIcon}</i> ${showLabel}`;
         listShown = false;
       }
 

@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Adapter\CatalogPriceRule\Repository;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 class CatalogPriceRuleRepository
 {
@@ -78,6 +77,7 @@ class CatalogPriceRuleRepository
      * @param LanguageId $langId
      *
      * @return int
+     *
      * @throws \Doctrine\DBAL\Exception
      */
     public function countCatalogPriceRules(LanguageId $langId): int

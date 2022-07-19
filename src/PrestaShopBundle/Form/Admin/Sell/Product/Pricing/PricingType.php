@@ -119,12 +119,11 @@ class PricingType extends TranslatorAwareType
                 'icon' => 'visibility',
                 'label' => $this->trans('Show catalog price rules', 'Admin.Catalog.Feature'),
                 'attr' => [
-                    'data-hide-name' => $this->trans('Hide catalog price rules', 'Admin.Catalog.Feature'),
-                    'data-show-name' => $this->trans('Show catalog price rules', 'Admin.Catalog.Feature'),
+                    'data-hide-label' => $this->trans('Hide catalog price rules', 'Admin.Catalog.Feature'),
+                    'data-show-label' => $this->trans('Show catalog price rules', 'Admin.Catalog.Feature'),
                     'data-show-icon' => 'visibility',
                     'data-hide-icon' => 'visibility_off',
-
-                ]
+                ],
             ])
             ->add('catalog_price_rules', CatalogPriceRulesType::class, [
                 'label' => $this->trans('Catalog price rules', 'Admin.Catalog.Feature'),
@@ -138,6 +137,7 @@ class PricingType extends TranslatorAwareType
                     'align' => 'left',
                 ],
                 'row_attr' => [
+                    'id' => 'catalog-price-rules-container',
                     'class' => 'd-none',
                 ],
             ])

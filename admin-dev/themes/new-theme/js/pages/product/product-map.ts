@@ -382,14 +382,13 @@ export default {
     searchInput: '#product_stock_packed_products',
   },
   catalogPriceRule: {
-    blockContainer: '#catalog-price-rules-container',
     listContainer: '#catalog-price-rule-list-container',
     paginationContainer: '#catalog-price-rules-pagination',
     loadingSpinner: '#catalog-price-rules-loading',
     listTable: '#catalog-price-rules-list-table',
     listRowTemplate: '#catalog-price-rule-tr-template',
     showCatalogPriceRules: '#product_pricing_show_catalog_price_rules',
-    catalogPriceRuleRow: '#product_pricing_catalog_price_rules',
+    blockContainer: '#product_pricing_catalog_price_rules',
     listFields: {
       catalogPriceRuleId: '.catalog-price-rule-id',
       shop: '.shop',
