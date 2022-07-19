@@ -42,7 +42,6 @@ use PrestaShopBundle\Bridge\AdminController\Field\Field;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerInterface;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerListTrait;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerTrait;
-use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeListControllerInterface;
 use PrestaShopBundle\Bridge\AdminController\LegacyControllerBridgeInterface;
 use PrestaShopBundle\Bridge\Helper\HelperListConfiguration;
 use PrestaShopBundle\Bridge\Helper\HelperListCustomizer\HelperListFeatureBridge;
@@ -56,7 +55,7 @@ use Tools;
 /**
  * Controller responsible for "Sell > Catalog > Attributes & Features > Features" page
  */
-class FeatureController extends FrameworkBundleAdminController implements FrameworkBridgeControllerInterface, FrameworkBridgeListControllerInterface
+class FeatureController extends FrameworkBundleAdminController implements FrameworkBridgeControllerInterface
 {
     use FrameworkBridgeControllerTrait;
     use FrameworkBridgeControllerListTrait;
@@ -70,13 +69,12 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
         $controllerConfiguration = $this->getControllerConfiguration();
         $this->setToolbarActions($controllerConfiguration);
 
-        $helperListConfiguration = $this->get('prestashop.core.bridge.helper_list_configuration_factory')->create(
-            $controllerConfiguration,
-            $this->getIdentifier(),
-            $this->getPositionIdentifier(),
-            'position',
-            true
+        $helperListConfiguration = $this->buildListConfiguration(
+            'id_feature',
+            'id_feature',
+            'position'
         );
+
         $this->setListFields($helperListConfiguration);
         $this->setListActions($controllerConfiguration, $helperListConfiguration);
 
@@ -193,22 +191,6 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
     }
 
     /**
-     * {@inheritdoc}
-     */
-    public function getIdentifier(): string
-    {
-        return 'id_feature';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getPositionIdentifier(): string
-    {
-        return 'id_feature';
-    }
-
-    /**
      * @param ControllerConfiguration $controllerConfig
      *
      * @return void
@@ -240,6 +222,7 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
     {
         $this->addActionList(new ListHeaderToolbarAction('new', [
             //@todo: replace by $this->generateUrl('admin_features_add') when creation is fully migrated
+            //@todo: can i generate link without using controller config?
             'href' => $controllerConfig->legacyCurrentIndex . '&addfeature&token=' . $controllerConfig->token,
             'desc' => $this->trans('Add new', 'Admin.Actions'),
         ]), $helperListConfiguration);

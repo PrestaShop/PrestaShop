@@ -49,10 +49,11 @@ class HelperListConfigurationFactory
      */
     public function create(
         ControllerConfiguration $controllerConfiguration,
-        string $identifier = 'id',
+        string $identifier,
         string $positionIdentifier = null,
         string $defaultOrderBy = null,
         bool $isJoinLanguageTableAuto = false,
+        // @todo: investigate what these options actually do and maybe rename them to reflect it better
         bool $deleted = false,
         bool $explicitSelect = false,
         bool $useFoundRows = true
