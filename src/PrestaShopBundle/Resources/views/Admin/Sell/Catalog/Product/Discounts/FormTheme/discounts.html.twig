@@ -26,12 +26,7 @@
 {% extends '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
 
 {% block catalog_price_rules_widget %}
-  <div id="catalog-price-rules-container">
-    {{ block('catalog_price_rules_list') }}
-    {{ form_widget(form) }}
+  <div {{ block('widget_container_attributes') }}>
+    {% include '@PrestaShop/Admin/Sell/Catalog/Product/Discounts/catalog_price_rules.html.twig' %}
   </div>
-{% endblock %}
-
-{% block catalog_price_rules_list %}
-  {% include '@PrestaShop/Admin/Sell/Catalog/Product/Discounts/catalog_price_rules.html.twig' %}
 {% endblock %}
