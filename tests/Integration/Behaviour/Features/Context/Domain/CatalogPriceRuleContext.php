@@ -165,7 +165,7 @@ class CatalogPriceRuleContext extends AbstractDomainFeatureContext
         $transformedList = $this->transformCatalogPriceRuleList($expectedList, $langId);
         Assert::assertEquals(
             $total,
-            $actualList->getTotalCatalogPriceRulesCount(),
+            $actualList->getTotalCount(),
             'Unexpected count of catalog price rules for listing'
         );
         $actualCatalogPriceRules = $actualList->getCatalogPriceRules();

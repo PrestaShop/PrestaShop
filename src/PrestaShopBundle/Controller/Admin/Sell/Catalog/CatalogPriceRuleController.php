@@ -99,7 +99,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
         return $this->json(
             [
                 'catalogPriceRules' => $this->formatCatalogPriceRule($catalogPriceRuleList),
-                'total' => $catalogPriceRuleList->getTotalCatalogPriceRulesCount(),
+                'total' => $catalogPriceRuleList->getTotalCount(),
             ]
         );
     }
