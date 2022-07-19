@@ -336,7 +336,6 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
         $this->is_hydrated = true;
 
         $alias = $this->generateAlias();
-        //$this->query->select($alias.'.*');
         $this->query->from($this->definition['table'], $alias);
 
         // If multilang, create association to lang table
@@ -344,6 +343,9 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
             $this->join(self::LANG_ALIAS);
             if ($this->id_lang) {
                 $this->where(self::LANG_ALIAS . '.id_lang', '=', $this->id_lang);
+            }
+            if (!empty($this->definition['multilang_shop'])) {
+                $this->sqlWhere($this->join_list[self::LANG_ALIAS]['alias'] . '.`id_shop` = ' . (int) Context::getContext()->shop->id);
             }
         }
 
