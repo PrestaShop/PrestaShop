@@ -26,11 +26,15 @@
 
 namespace PrestaShopBundle\Bridge\AdminController;
 
+use PrestaShopBundle\Bridge\Helper\HelperListConfiguration;
+
 /**
  * This interface will be shared with legacy and expose legacy methods needed for modules.
  */
 interface FrameworkBridgeListControllerInterface
 {
+    public function getHelperListConfiguration(): HelperListConfiguration;
+
     /**
      * Get position identifier for legacy list request.
      *
