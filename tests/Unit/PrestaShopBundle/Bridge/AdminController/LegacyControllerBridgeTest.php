@@ -32,6 +32,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 use PrestaShopBundle\Bridge\AdminController\LegacyControllerBridge;
+use PrestaShopBundle\Security\Admin\Employee as SecurityEmployee;
 
 class LegacyControllerBridgeTest extends TestCase
 {
@@ -48,10 +49,79 @@ class LegacyControllerBridgeTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->controllerConfiguration = new ControllerConfiguration();
+        $this->controllerConfiguration = new ControllerConfiguration($this->mockSecurityUser());
         $this->controllerConfiguration->tabId = 42;
         $this->controllerConfiguration->objectModelClassName = 'ObjectModel';
+        $this->controllerConfiguration->legacyControllerName = 'AdminController';
+        $this->controllerConfiguration->legacyCurrentIndex = 'index.php?controller=AdminFoo';
+        $this->controllerConfiguration->positionIdentifierKey = 'id_object';
+        $this->controllerConfiguration->tableName = 'object';
+        $this->controllerConfiguration->token = 'tokenFooBar';
         $this->controllerConfiguration->metaTitle = [1 => 'french title', 2 => 'english title'];
+        $this->controllerConfiguration->breadcrumbs = [1 => 'foo', 2 => 'bar'];
+        $this->controllerConfiguration->liteDisplay = true;
+        $this->controllerConfiguration->displayType = 'edit';
+        $this->controllerConfiguration->showPageHeaderToolbar = true;
+        $this->controllerConfiguration->pageHeaderToolbarTitle = 'Foo Header';
+        $this->controllerConfiguration->pageHeaderToolbarButtons = [
+            'add_new_foo' => [
+                'href' => 'prestashop.com/admin-dev/foo/new',
+                'desc' => 'Add new foo',
+                'icon' => 'process-icon-new',
+            ],
+        ];
+        $this->controllerConfiguration->toolbarButtons = [
+            'cancel' => [
+                'href' => 'prestashop.com/admin-dev/foo',
+                'desc' => 'Cancel',
+            ],
+        ];
+        $this->controllerConfiguration->toolbarTitle = 'Foo Title';
+        $this->controllerConfiguration->displayHeader = false;
+        $this->controllerConfiguration->displayHeaderJavascript = false;
+        $this->controllerConfiguration->displayFooter = false;
+        $this->controllerConfiguration->bootstrap = false;
+        $this->controllerConfiguration->cssFiles = [
+            'css1.css',
+            'css2.css',
+        ];
+        $this->controllerConfiguration->jsFiles = [
+            'js1.js',
+            'js2.js',
+        ];
+        $this->controllerConfiguration->templateFolder = '/templates';
+        $this->controllerConfiguration->errors = [
+            'error1',
+            'error2',
+        ];
+        $this->controllerConfiguration->warnings = [
+            'warning1',
+            'warning2',
+        ];
+        $this->controllerConfiguration->confirmations = [
+            'confirmation1',
+            'confirmation2',
+        ];
+        $this->controllerConfiguration->informations = [
+            'information1',
+            'information2',
+        ];
+        $this->controllerConfiguration->json = true;
+        $this->controllerConfiguration->template = 'foo_template.tpl';
+        $this->controllerConfiguration->templateVars = [
+            'foo' => 'var1',
+            'bar' => 2,
+        ];
+        $this->controllerConfiguration->modals = [
+            [
+                'modal_id' => 'importProgress',
+                'modal_class' => 'modal-md',
+                'modal_title' => 'Importing your data...',
+                'modal_content' => '<div>some html</div>',
+            ],
+        ];
+        $this->controllerConfiguration->multiShopContext = 1;
+        $this->controllerConfiguration->multiShopContextGroup = false;
 
         $multistoreFeature = $this->getMockBuilder(FeatureInterface::class)
             ->disableOriginalConstructor()
@@ -80,11 +150,123 @@ class LegacyControllerBridgeTest extends TestCase
         $this->assertEquals($expectedValue, $configurationValue);
     }
 
+    /**
+     * @return iterable
+     */
     public function magicGetterValues(): iterable
     {
         yield 'test tabId' => ['id', 42, 'tabId'];
         yield 'test objectModelClassName' => ['className', 'ObjectModel', 'objectModelClassName'];
+        yield 'test legacyControllerName' => ['controller_name', 'AdminController', 'legacyControllerName'];
+        yield 'test legacyControllerName2' => ['php_self', 'AdminController', 'legacyControllerName'];
         yield 'test metaTitle' => ['meta_title', [1 => 'french title', 2 => 'english title'], 'metaTitle'];
+        yield 'test legacyCurrentIndex' => ['current_index', 'index.php?controller=AdminFoo', 'legacyCurrentIndex'];
+        yield 'test positionIdentifierKey' => ['position_identifier', 'id_object', 'positionIdentifierKey'];
+        yield 'test tableName' => ['table', 'object', 'tableName'];
+        yield 'test token' => ['token', 'tokenFooBar', 'token'];
+        yield 'test breadcrumbs' => ['breadcrumbs', [1 => 'foo', 2 => 'bar'], 'breadcrumbs'];
+        yield 'test liteDisplay' => ['lite_display', true, 'liteDisplay'];
+        yield 'test displayType' => ['display', 'edit', 'displayType'];
+        yield 'test showPageHeaderToolbar' => ['show_page_header_toolbar', true, 'showPageHeaderToolbar'];
+        yield 'test pageHeaderToolbarTitle' => ['page_header_toolbar_title', 'Foo Header', 'pageHeaderToolbarTitle'];
+        yield 'test pageHeaderToolbarButtons' => [
+            'page_header_toolbar_btn',
+            [
+                'add_new_foo' => [
+                    'href' => 'prestashop.com/admin-dev/foo/new',
+                    'desc' => 'Add new foo',
+                    'icon' => 'process-icon-new',
+                ],
+            ],
+            'pageHeaderToolbarButtons',
+        ];
+        yield 'test toolbarButtons' => [
+            'toolbar_btn',
+            [
+                'cancel' => [
+                    'href' => 'prestashop.com/admin-dev/foo',
+                    'desc' => 'Cancel',
+                ],
+            ],
+            'toolbarButtons',
+        ];
+        yield 'test displayHeader' => ['display_header', false, 'displayHeader'];
+        yield 'test displayHeaderJavascript' => ['display_header_javascript', false, 'displayHeaderJavascript'];
+        yield 'test displayFooter' => ['display_footer', false, 'displayFooter'];
+        yield 'test bootstrap' => ['bootstrap', false, 'bootstrap'];
+        yield 'test cssFiles' => [
+            'css_files',
+            [
+                'css1.css',
+                'css2.css',
+            ],
+            'cssFiles',
+        ];
+        yield 'test jsFiles' => [
+            'js_files',
+            [
+                'js1.js',
+                'js2.js',
+            ],
+            'jsFiles',
+        ];
+        yield 'test templateFolder' => ['tpl_folder', '/templates', 'templateFolder'];
+        yield 'test errors' => [
+            'errors',
+            [
+                'error1',
+                'error2',
+            ],
+            'errors',
+        ];
+        yield 'test warnings' => [
+            'warnings',
+            [
+                'warning1',
+                'warning2',
+            ],
+            'warnings',
+        ];
+        yield 'test confirmations' => [
+            'confirmations',
+            [
+                'confirmation1',
+                'confirmation2',
+            ],
+            'confirmations',
+        ];
+        yield 'test informations' => [
+            'informations',
+            [
+                'information1',
+                'information2',
+            ],
+            'informations',
+        ];
+        yield 'test json' => ['json', true, 'json'];
+        yield 'test template' => ['template', 'foo_template.tpl', 'template'];
+        yield 'test templateVars' => [
+            'tpl_vars',
+            [
+                'foo' => 'var1',
+                'bar' => 2,
+            ],
+            'templateVars',
+        ];
+        yield 'test modals' => [
+            'modals',
+            [
+                [
+                    'modal_id' => 'importProgress',
+                    'modal_class' => 'modal-md',
+                    'modal_title' => 'Importing your data...',
+                    'modal_content' => '<div>some html</div>',
+                ],
+            ],
+            'modals',
+        ];
+        yield 'test multiShopContext' => ['multishop_context', 1, 'multiShopContext'];
+        yield 'test multiShopContextGroup' => ['multishop_context_group', false, 'multiShopContextGroup'];
     }
 
     /**
@@ -120,6 +302,8 @@ class LegacyControllerBridgeTest extends TestCase
     public function testAssociativeArray(): void
     {
         $this->assertIsArray($this->legacyBridge->toolbar_btn);
+        // Reset to an empty array to have clean state for both values before checking
+        $this->legacyBridge->toolbar_btn = [];
         $this->assertEmpty($this->legacyBridge->toolbar_btn);
 
         // First init the bridge with same array value, so both values should be equal
@@ -146,7 +330,8 @@ class LegacyControllerBridgeTest extends TestCase
 
     public function testIntegerArray(): void
     {
-        $this->assertEmpty($this->legacyBridge->toolbar_title);
+        // Reset to an empty array to have clean state for both values before checking
+        $this->legacyBridge->toolbar_title = [];
 
         $this->legacyBridge->toolbar_title[] = 'Product';
         $this->assertEquals(['Product'], $this->legacyBridge->toolbar_title);
@@ -155,5 +340,17 @@ class LegacyControllerBridgeTest extends TestCase
         $this->legacyBridge->toolbar_title[] = 'Edit';
         $this->assertEquals(['Product', 'Edit'], $this->legacyBridge->toolbar_title);
         $this->assertEquals(['Product', 'Edit'], $this->controllerConfiguration->toolbarTitle);
+    }
+
+    /**
+     * @return SecurityEmployee
+     */
+    private function mockSecurityUser(): SecurityEmployee
+    {
+        return $this
+            ->getMockBuilder(SecurityEmployee::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
     }
 }

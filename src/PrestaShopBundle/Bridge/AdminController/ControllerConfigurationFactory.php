@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Bridge\AdminController;
 
+use PrestaShopBundle\Bridge\Exception\BridgeException;
+use PrestaShopBundle\Security\Admin\Employee;
 use PrestaShopBundle\Service\DataProvider\UserProvider;
 use Tools;
 
@@ -64,12 +66,21 @@ class ControllerConfigurationFactory
         string $legacyControllerName,
         string $tableName
     ): ControllerConfiguration {
-        $controllerConfiguration = new ControllerConfiguration();
+        $employee = $this->userProvider->getUser();
+        if (!$employee instanceof Employee) {
+            throw new BridgeException(
+                sprintf(
+                    'Unexpected user type. Expected "%s", got "%s',
+                    Employee::class,
+                    get_class($employee))
+            );
+        }
+
+        $controllerConfiguration = new ControllerConfiguration($employee);
         $controllerConfiguration->tabId = $tabId;
         $controllerConfiguration->objectModelClassName = $objectModelClassName;
         $controllerConfiguration->legacyControllerName = $legacyControllerName;
         $controllerConfiguration->tableName = $tableName;
-        $controllerConfiguration->user = $this->userProvider->getUser();
         $controllerConfiguration->templateFolder = Tools::toUnderscoreCase(substr($controllerConfiguration->legacyControllerName, 5)) . '/';
 
         $this->setLegacyCurrentIndex($controllerConfiguration);
@@ -101,7 +112,7 @@ class ControllerConfigurationFactory
         $controllerConfiguration->token = Tools::getAdminToken(
             $controllerConfiguration->legacyControllerName .
             (int) $controllerConfiguration->tabId .
-            (int) $controllerConfiguration->user->getData()->id
+            (int) $controllerConfiguration->getUser()->getData()->id
         );
     }
 }

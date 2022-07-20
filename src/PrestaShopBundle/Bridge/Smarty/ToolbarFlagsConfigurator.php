@@ -79,10 +79,10 @@ class ToolbarFlagsConfigurator implements ConfiguratorInterface
         $controllerConfiguration->templateVars['show_page_header_toolbar'] = $controllerConfiguration->showPageHeaderToolbar;
         $controllerConfiguration->templateVars['page_header_toolbar_title'] = $controllerConfiguration->pageHeaderToolbarTitle;
         $controllerConfiguration->templateVars['title'] = $controllerConfiguration->pageHeaderToolbarTitle;
-        $controllerConfiguration->templateVars['toolbar_btn'] = $controllerConfiguration->pageHeaderToolbarButton;
-        $controllerConfiguration->templateVars['page_header_toolbar_btn'] = $controllerConfiguration->pageHeaderToolbarButton;
-        $controllerConfiguration->templateVars['help_link'] = self::HELP_URL . Language::getIsoById($controllerConfiguration->user->getData()->id_lang) . '/doc/'
-            . Tools::getValue('controller') . '?version=' . _PS_VERSION_ . '&country=' . Language::getIsoById($controllerConfiguration->user->getData()->id_lang);
+        $controllerConfiguration->templateVars['toolbar_btn'] = $controllerConfiguration->pageHeaderToolbarButtons;
+        $controllerConfiguration->templateVars['page_header_toolbar_btn'] = $controllerConfiguration->pageHeaderToolbarButtons;
+        $controllerConfiguration->templateVars['help_link'] = self::HELP_URL . Language::getIsoById($controllerConfiguration->getUser()->getData()->id_lang) . '/doc/'
+            . Tools::getValue('controller') . '?version=' . _PS_VERSION_ . '&country=' . Language::getIsoById($controllerConfiguration->getUser()->getData()->id_lang);
     }
 
     /**
