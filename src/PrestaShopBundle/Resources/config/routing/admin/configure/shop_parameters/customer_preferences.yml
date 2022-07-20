@@ -8,7 +8,7 @@ admin_customer_preferences:
 
 admin_customer_preferences_process:
   path: /
-  methods: [ POST ]
+  methods: [ PATCH, POST ]
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\CustomerPreferencesController::processAction'
     _legacy_controller: AdminCustomerPreferences
