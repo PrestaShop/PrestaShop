@@ -37,7 +37,7 @@ use Symfony\Component\HttpFoundation\Response;
  * Developers must use this trait in a controller migrated horizontally to render a smarty template as a Symfony response.
  * He can also be used to add CSS, js, jquery plugin, and jquery UI to a response.
  */
-trait SmartyTrait
+trait FrameworkControllerSmartyTrait
 {
     /**
      * @param string $content
@@ -52,7 +52,7 @@ trait SmartyTrait
 
         return $this
             ->get('prestashop.bridge.smarty.smarty_bridge')
-            ->render($content, $controllerBridge->getConfiguration(), $response)
+            ->render($content, $this->getControllerConfiguration(), $response)
         ;
     }
 }

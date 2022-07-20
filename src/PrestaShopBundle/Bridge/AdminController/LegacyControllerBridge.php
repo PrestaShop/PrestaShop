@@ -146,14 +146,6 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
     }
 
     /**
-     * @return ControllerConfiguration
-     */
-    public function getConfiguration(): ControllerConfiguration
-    {
-        return $this->controllerConfiguration;
-    }
-
-    /**
      * {@intheritedoc}
      */
     public function setMedia($isNewTheme = false): void

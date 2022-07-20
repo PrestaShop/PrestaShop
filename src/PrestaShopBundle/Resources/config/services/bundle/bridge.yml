@@ -13,7 +13,6 @@ services:
   prestashop.bridge.admin_controller.legacy_controller_bridge_factory:
     class: PrestaShopBundle\Bridge\AdminController\LegacyControllerBridgeFactory
     arguments:
-      - "@prestashop.bridge.admin_controller.controller_configuration_factory"
       - "@prestashop.adapter.multistore_feature"
 
   prestashop.bridge.admin_controller.listener.init_framework_bridge_controller_listener:

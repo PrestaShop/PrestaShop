@@ -35,4 +35,9 @@ interface FrameworkBridgeControllerInterface
      * @return LegacyControllerBridgeInterface
      */
     public function getLegacyControllerBridge(): LegacyControllerBridgeInterface;
+
+    /**
+     * @return ControllerConfiguration
+     */
+    public function getControllerConfiguration(): ControllerConfiguration;
 }
