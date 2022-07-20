@@ -34,11 +34,6 @@ interface LegacyControllerBridgeInterface
     const DEFAULT_THEME = 'default';
 
     /**
-     * @return ControllerConfiguration
-     */
-    public function getConfiguration(): ControllerConfiguration;
-
-    /**
      * Sets default media list for this controller.
      *
      * @param bool $isNewTheme

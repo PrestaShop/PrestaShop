@@ -32,48 +32,25 @@ use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 class LegacyControllerBridgeFactory
 {
     /**
-     * @var ControllerConfigurationFactory
-     */
-    private $controllerConfigurationFactory;
-
-    /**
      * @var FeatureInterface
      */
     private $multistoreFeature;
 
     /**
-     * @param ControllerConfigurationFactory $controllerConfigurationFactory
      * @param FeatureInterface $multistoreFeature
      */
     public function __construct(
-        ControllerConfigurationFactory $controllerConfigurationFactory,
         FeatureInterface $multistoreFeature
     ) {
-        $this->controllerConfigurationFactory = $controllerConfigurationFactory;
         $this->multistoreFeature = $multistoreFeature;
     }
 
     /**
-     * @param int $tabId
-     * @param string $objectModelClassName
-     * @param string $controllerNameLegacy
-     * @param string $tableName
-     *
      * @return LegacyControllerBridgeInterface
      */
     public function create(
-        int $tabId,
-        string $objectModelClassName,
-        string $controllerNameLegacy,
-        string $tableName
+        ControllerConfiguration $controllerConfiguration
     ): LegacyControllerBridgeInterface {
-        $controllerConfiguration = $this->controllerConfigurationFactory->create(
-            $tabId,
-            $objectModelClassName,
-            $controllerNameLegacy,
-            $tableName
-        );
-
         return new LegacyControllerBridge(
             $controllerConfiguration,
             $this->multistoreFeature
