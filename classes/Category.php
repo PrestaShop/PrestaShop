@@ -952,11 +952,20 @@ class CategoryCore extends ObjectModel
 
         /* Return only the number of products */
         if ($getTotal) {
-            $sql = 'SELECT COUNT(cp.`id_product`) AS total
+            $items = Db::getInstance(_PS_USE_SQL_SLAVE_)
+                ->executeS("SELECT cp.`id_product`
+                    FROM `" . _DB_PREFIX_ . "category_product` cp
+                    WHERE cp.`id_category` = " . (int) $this->id );
+            $pIds = [];
+            foreach ($items as $item) {
+                $pIds[] = $item['id_product'];
+            }
+
+            $sql = 'SELECT COUNT(p.`id_product`) AS total
 					FROM `' . _DB_PREFIX_ . 'product` p
 					' . Shop::addSqlAssociation('product', 'p') . '
-					LEFT JOIN `' . _DB_PREFIX_ . 'category_product` cp ON p.`id_product` = cp.`id_product`
-					WHERE cp.`id_category` = ' . (int) $this->id .
+					WHERE 1' .
+                (!empty($pIds) ? ' AND p.`id_product` IN ('.(implode(',', $pIds)).')' : '') .
                 ($front ? ' AND product_shop.`visibility` IN ("both", "catalog")' : '') .
                 ($active ? ' AND product_shop.`active` = 1' : '') .
                 ($idSupplier ? ' AND p.id_supplier = ' . (int) $idSupplier : '');
