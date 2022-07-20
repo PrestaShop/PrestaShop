@@ -296,7 +296,170 @@ class LegacyControllerBridgeTest extends TestCase
     {
         yield 'test tabId' => ['id', 42, 51, 'tabId'];
         yield 'test objectModelClassName' => ['className', 'ObjectModel', 'CustomObjectModel', 'objectModelClassName'];
+        yield 'test legacyControllerName' => ['controller_name', 'AdminController', 'AdminFooController', 'legacyControllerName'];
+        yield 'test legacyControllerName2' => ['php_self', 'AdminController', 'AdminBarController', 'legacyControllerName'];
         yield 'test metaTitle' => ['meta_title', [1 => 'french title', 2 => 'english title'], [3 => 'ukrainian title', 4 => 'japan title'], 'metaTitle'];
+        yield 'test legacyCurrentIndex' => ['current_index', 'index.php?controller=AdminFoo', 'index.php?controller=AdminBar', 'legacyCurrentIndex'];
+        yield 'test positionIdentifierKey' => ['position_identifier', 'id_object', 'id', 'positionIdentifierKey'];
+        yield 'test tableName' => ['table', 'object', 'foo', 'tableName'];
+        yield 'test token' => ['token', 'tokenFooBar', 'tokenBarBar', 'token'];
+        yield 'test breadcrumbs' => ['breadcrumbs', [1 => 'foo', 2 => 'bar'], [1 => 'Home', 2 => 'Accessories'], 'breadcrumbs'];
+        yield 'test liteDisplay' => ['lite_display', true, false, 'liteDisplay'];
+        yield 'test displayType' => ['display', 'edit', 'view', 'displayType'];
+        yield 'test showPageHeaderToolbar' => ['show_page_header_toolbar', true, false, 'showPageHeaderToolbar'];
+        yield 'test pageHeaderToolbarTitle' => ['page_header_toolbar_title', 'Foo Header', 'bar header', 'pageHeaderToolbarTitle'];
+        yield 'test pageHeaderToolbarButtons' => [
+            'page_header_toolbar_btn',
+            [
+                'add_new_foo' => [
+                    'href' => 'prestashop.com/admin-dev/foo/new',
+                    'desc' => 'Add new foo',
+                    'icon' => 'process-icon-new',
+                ],
+            ],
+            [
+                'delete_foo' => [
+                    'href' => 'prestashop.com/admin-dev/foo/delete',
+                    'desc' => 'Delete foo',
+                    'icon' => 'icon-trash',
+                ],
+            ],
+            'pageHeaderToolbarButtons',
+        ];
+        yield 'test toolbarButtons' => [
+            'toolbar_btn',
+            [
+                'cancel' => [
+                    'href' => 'prestashop.com/admin-dev/foo',
+                    'desc' => 'Cancel',
+                ],
+            ],
+            [
+                'Save' => [
+                    'href' => 'prestashop.com/admin-dev/foo',
+                    'desc' => 'Save',
+                ],
+            ],
+            'toolbarButtons',
+        ];
+        yield 'test displayHeader' => ['display_header', false, true, 'displayHeader'];
+        yield 'test displayHeaderJavascript' => ['display_header_javascript', false, true, 'displayHeaderJavascript'];
+        yield 'test displayFooter' => ['display_footer', false, true, 'displayFooter'];
+        yield 'test bootstrap' => ['bootstrap', false, true, 'bootstrap'];
+        yield 'test cssFiles' => [
+            'css_files',
+            [
+                'css1.css',
+                'css2.css',
+            ],
+            [
+                'css3.css',
+                'css4.css',
+            ],
+            'cssFiles',
+        ];
+        yield 'test jsFiles' => [
+            'js_files',
+            [
+                'js1.js',
+                'js2.js',
+            ],
+            [
+                'js3.js',
+                'js4.js',
+            ],
+            'jsFiles',
+        ];
+        yield 'test templateFolder' => ['tpl_folder', '/templates', 'custom/templates', 'templateFolder'];
+        yield 'test errors' => [
+            'errors',
+            [
+                'error1',
+                'error2',
+            ],
+            [
+                'error3',
+                'error4',
+            ],
+            'errors',
+        ];
+        yield 'test warnings' => [
+            'warnings',
+            [
+                'warning1',
+                'warning2',
+            ],
+            [
+                'warning3',
+                'warning4',
+            ],
+            'warnings',
+        ];
+        yield 'test confirmations' => [
+            'confirmations',
+            [
+                'confirmation1',
+                'confirmation2',
+            ],
+            [
+                'confirmation3',
+                'confirmation4',
+            ],
+            'confirmations',
+        ];
+        yield 'test informations' => [
+            'informations',
+            [
+                'information1',
+                'information2',
+            ],
+            [
+                'information3',
+                'information4',
+            ],
+            'informations',
+        ];
+        yield 'test json' => ['json', true, false, 'json'];
+        yield 'test template' => ['template', 'foo_template.tpl', 'bar_tpl.tpl', 'template'];
+        yield 'test templateVars' => [
+            'tpl_vars',
+            [
+                'foo' => 'var1',
+                'bar' => 2,
+            ],
+            [
+                'value' => 'value1',
+            ],
+            'templateVars',
+        ];
+        yield 'test modals' => [
+            'modals',
+            [
+                [
+                    'modal_id' => 'importProgress',
+                    'modal_class' => 'modal-md',
+                    'modal_title' => 'Importing your data...',
+                    'modal_content' => '<div>some html</div>',
+                ],
+            ],
+            [
+                [
+                    'modal_id' => 'importProgress',
+                    'modal_class' => 'modal-md',
+                    'modal_title' => 'Importing your data...',
+                    'modal_content' => '<div>some html</div>',
+                ],
+                [
+                    'modal_id' => 'importError',
+                    'modal_class' => 'modal-md',
+                    'modal_title' => 'Error occurred',
+                    'modal_content' => '<div>Error</div>',
+                ],
+            ],
+            'modals',
+        ];
+        yield 'test multiShopContext' => ['multishop_context', 1, 2, 'multiShopContext'];
+        yield 'test multiShopContextGroup' => ['multishop_context_group', false, true, 'multiShopContextGroup'];
     }
 
     public function testAssociativeArray(): void
