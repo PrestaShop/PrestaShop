@@ -32,8 +32,8 @@ use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetRequiredFieldsForAddress;
 
 /**
- * Provide dynamic complex options to the product type (like preview data that depend
- * on product current data, or specific options for inputs that are deep in the form
+ * Provide dynamic complex options to the address type (like preview data that depend
+ * on address current data, or specific options for inputs that are deep in the form
  * structure).
  */
 class CustomerAddressFormOptionsProvider implements FormOptionsProviderInterface
