@@ -308,7 +308,7 @@ class CustomerAddressType extends TranslatorAwareType
             ])
             ->add('address2', TextType::class, [
                 'label' => $this->trans('Address (2)', 'Admin.Global'),
-                'required' => false,
+                'required' => in_array('address2', $requiredFields) ? true : false,
                 'empty_data' => '',
                 'constraints' => [
                     new CleanHtml(),
