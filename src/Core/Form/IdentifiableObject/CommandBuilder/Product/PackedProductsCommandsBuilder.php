@@ -26,49 +26,34 @@
 
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Pack\Query;
+namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command\RemoveAllProductsFromPackCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command\SetPackProductsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 
-/**
- * Retrieves product from a pack
- */
-class GetPackedProducts
+class PackedProductsCommandsBuilder implements ProductCommandsBuilderInterface
 {
     /**
-     * @var PackId
+     * {@inheritDoc}
      */
-    private $packId;
-
-    /**
-     * @var LanguageId
-     */
-    protected $languageId;
-
-    /**
-     * @param int $packId
-     * @param int $languageId
-     */
-    public function __construct(int $packId, int $languageId)
+    public function buildCommands(ProductId $productId, array $formData): array
     {
-        $this->packId = new PackId($packId);
-        $this->languageId = new LanguageId($languageId);
-    }
+        $initialType = $formData['header']['initial_type'] ?? null;
+        if ($initialType !== ProductType::TYPE_PACK || !isset($formData['stock']['packed_products'])) {
+            return [];
+        }
 
-    /**
-     * @return PackId
-     */
-    public function getPackId(): PackId
-    {
-        return $this->packId;
-    }
+        $packedProducts = $formData['stock']['packed_products'];
+        if (empty($packedProducts)) {
+            return [new RemoveAllProductsFromPackCommand($productId->getValue())];
+        }
+        $command = new SetPackProductsCommand(
+            $productId->getValue(),
+            $packedProducts
+        );
 
-    /**
-     * @return LanguageId
-     */
-    public function getLanguageId(): LanguageId
-    {
-        return $this->languageId;
+        return [$command];
     }
 }

@@ -141,6 +141,7 @@ class CombinationCore extends ObjectModel
         }
 
         $this->deleteFromSupplier($this->id_product);
+        $this->deleteFromPack();
         Product::updateDefaultAttribute($this->id_product);
         Tools::clearColorListCache((int) $this->id_product);
 
@@ -158,6 +159,17 @@ class CombinationCore extends ObjectModel
     {
         return Db::getInstance()->delete('product_supplier', 'id_product = ' . (int) $idProduct
             . ' AND id_product_attribute = ' . (int) $this->id);
+    }
+
+    /**
+     * Delete association with Pack.
+     *
+     * @return bool
+     */
+    protected function deleteFromPack(): bool
+    {
+        return Db::getInstance()->delete('pack', 'id_product_item = ' . (int) $this->id_product
+            . ' AND id_product_attribute_item = ' . (int) $this->id);
     }
 
     /**

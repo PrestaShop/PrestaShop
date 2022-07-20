@@ -23,52 +23,47 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShop\PrestaShop\Core\Domain\Product\Pack\Query;
+namespace Tests\Resources\Translator;
 
-use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackId;
+use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * Retrieves product from a pack
- */
-class GetPackedProducts
+class DummyTranslator implements TranslatorInterface
 {
     /**
-     * @var PackId
+     * {@inheritdoc}
      */
-    private $packId;
-
-    /**
-     * @var LanguageId
-     */
-    protected $languageId;
-
-    /**
-     * @param int $packId
-     * @param int $languageId
-     */
-    public function __construct(int $packId, int $languageId)
+    public function transChoice($id, $number, array $parameters = [], $domain = null, $locale = null): string
     {
-        $this->packId = new PackId($packId);
-        $this->languageId = new LanguageId($languageId);
+        return 'not implemented yet';
     }
 
     /**
-     * @return PackId
+     * {@inheritdoc}
      */
-    public function getPackId(): PackId
+    public function setLocale($locale)
     {
-        return $this->packId;
+        // not implemented yet
     }
 
     /**
-     * @return LanguageId
+     * {@inheritdoc}
      */
-    public function getLanguageId(): LanguageId
+    public function getLocale()
     {
-        return $this->languageId;
+        return 'not implemented yet';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function trans($id, array $parameters = [], $domain = null, $locale = null)
+    {
+        return str_replace(
+            array_keys($parameters),
+            array_values($parameters),
+            $id
+        );
     }
 }

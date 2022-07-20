@@ -1453,6 +1453,8 @@ services:
     public: true
     arguments:
       - '@prestashop.core.form.choice_provider.pack_stock_type_choice_provider'
+      - '@router'
+      - '@=service("prestashop.adapter.legacy.context").getEmployeeLanguageIso()'
     tags:
       - { name: form.type }
 
@@ -1648,6 +1650,13 @@ services:
 
   form.type.sell.product.seo.serp_type:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\SEO\SerpType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+
+  form.type.sell.product.stock.packed_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Stock\PackedProductType'
     parent: 'form.type.translatable.aware'
     public: true
     tags:
