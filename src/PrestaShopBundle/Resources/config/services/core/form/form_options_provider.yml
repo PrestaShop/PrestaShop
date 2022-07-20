@@ -7,3 +7,8 @@ services:
 
   prestashop.core.form.identifiable_object.option_provider.product_form_options_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\ProductFormOptionsProvider'
+
+  prestashop.core.form.identifiable_object.option_provider.customer_address_form_options_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\OptionProvider\CustomerAddressFormOptionsProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
