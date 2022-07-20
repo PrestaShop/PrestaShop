@@ -1774,16 +1774,22 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ezyang/htmlpurifier.git",
-                "reference": "1dd3e52365c32a142fb7c9c9f8f038f18e353270"
+                "reference": "3fc193c7553ca9eb3431a48708c17ad081cc1e64"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ezyang/htmlpurifier/zipball/1dd3e52365c32a142fb7c9c9f8f038f18e353270",
-                "reference": "1dd3e52365c32a142fb7c9c9f8f038f18e353270",
+                "url": "https://api.github.com/repos/ezyang/htmlpurifier/zipball/3fc193c7553ca9eb3431a48708c17ad081cc1e64",
+                "reference": "3fc193c7553ca9eb3431a48708c17ad081cc1e64",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.2"
+            },
+            "suggest": {
+                "cerdic/css-tidy": "If you want to use the filter 'Filter.ExtractStyleBlocks'.",
+                "ext-bcmath": "Used for unit conversion and imagecrash protection",
+                "ext-iconv": "Converts text to and from non-UTF-8 encodings",
+                "ext-tidy": "Used for pretty-printing HTML"
             },
             "default-branch": true,
             "type": "library",
@@ -1818,7 +1824,7 @@
                 "issues": "https://github.com/ezyang/htmlpurifier/issues",
                 "source": "https://github.com/ezyang/htmlpurifier/tree/master"
             },
-            "time": "2022-04-08T17:48:12+00:00"
+            "time": "2022-06-27T21:20:36+00:00"
         },
         {
             "name": "friendsofphp/proxy-manager-lts",
