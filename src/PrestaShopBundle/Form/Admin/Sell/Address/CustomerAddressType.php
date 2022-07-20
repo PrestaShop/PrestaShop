@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Address;
 
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressStateRequired;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressZipCode;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\CleanHtml;
@@ -34,7 +33,6 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\ExistingCustomerE
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShop\PrestaShop\Core\Domain\Address\Configuration\AddressConstraint;
-use PrestaShop\PrestaShop\Core\Domain\Address\Query\GetRequiredFieldsForAddress;
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\CountryChoiceType;
 use PrestaShopBundle\Form\Admin\Type\EmailType;
@@ -44,6 +42,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Email;
@@ -71,11 +70,6 @@ class CustomerAddressType extends TranslatorAwareType
     private $router;
 
     /**
-     * @var CommandBusInterface
-     */
-    private $commandBus;
-
-    /**
      * CustomerAddressType constructor.
      *
      * Backwards compatibility break introduced in 1.7.8.0 due to addition of Router as mandatory constructor argument
@@ -92,14 +86,12 @@ class CustomerAddressType extends TranslatorAwareType
         array $locales,
         ConfigurableFormChoiceProviderInterface $stateChoiceProvider,
         $contextCountryId,
-        RouterInterface $router,
-        CommandBusInterface $commandBus
+        RouterInterface $router
     ) {
         parent::__construct($translator, $locales);
         $this->stateChoiceProvider = $stateChoiceProvider;
         $this->contextCountryId = $contextCountryId;
         $this->router = $router;
-        $this->commandBus = $commandBus;
     }
 
     /**
@@ -114,10 +106,8 @@ class CustomerAddressType extends TranslatorAwareType
             'Admin.Notifications.Info'
         ) . ' ' . TypedRegexValidator::GENERIC_NAME_CHARS;
         $stateChoices = $this->stateChoiceProvider->getChoices(['id_country' => $countryId]);
-
         $showStates = !empty($stateChoices);
-
-        $requiredFields = $this->commandBus->handle(new GetRequiredFieldsForAddress());
+        $requiredFields = $options['requiredFields'];
 
         if (!isset($data['id_customer'])) {
             $builder->add('customer_email', EmailType::class, [
@@ -465,5 +455,12 @@ class CustomerAddressType extends TranslatorAwareType
                     ]),
                 ],
             ]);
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'requiredFields' => [],
+        ]);
     }
 }
