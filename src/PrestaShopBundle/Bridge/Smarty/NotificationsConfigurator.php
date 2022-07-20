@@ -61,7 +61,7 @@ class NotificationsConfigurator implements ConfiguratorInterface
      */
     public function configure(ControllerConfiguration $controllerConfiguration)
     {
-        $accesses = Profile::getProfileAccesses($controllerConfiguration->user->getData()->id_profile, 'class_name');
+        $accesses = Profile::getProfileAccesses($controllerConfiguration->getUser()->getData()->id_profile, 'class_name');
 
         $notificationsSettings = [
             'show_new_customers' => $this->configuration->get('PS_SHOW_NEW_CUSTOMERS') && isset($accesses['AdminCustomers']) && $accesses['AdminCustomers']['view'] ? '1' : false,

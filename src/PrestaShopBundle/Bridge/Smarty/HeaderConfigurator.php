@@ -185,14 +185,14 @@ class HeaderConfigurator implements ConfiguratorInterface
 
         $controllerConfiguration->templateVars['bo_query'] = Tools::safeOutput(Tools::stripslashes(Tools::getValue('bo_query')));
         $controllerConfiguration->templateVars['collapse_menu'] = isset($this->cookie->collapse_menu) ? (int) $this->cookie->collapse_menu : 0;
-        $controllerConfiguration->templateVars['default_tab_link'] = $this->link->getAdminLink(Tab::getClassNameById((int) $controllerConfiguration->user->getData()->default_tab));
-        $controllerConfiguration->templateVars['employee'] = $controllerConfiguration->user->getData();
+        $controllerConfiguration->templateVars['default_tab_link'] = $this->link->getAdminLink(Tab::getClassNameById((int) $controllerConfiguration->getUser()->getData()->default_tab));
+        $controllerConfiguration->templateVars['employee'] = $controllerConfiguration->getUser()->getData();
         $controllerConfiguration->templateVars['help_box'] = $this->configuration->get('PS_HELPBOX');
         $controllerConfiguration->templateVars['is_multishop'] = Shop::isFeatureActive();
         $controllerConfiguration->templateVars['login_link'] = $this->link->getAdminLink('AdminLogin');
         $controllerConfiguration->templateVars['logout_link'] = $this->link->getAdminLink('AdminLogin', true, [], ['logout' => 1]);
         $controllerConfiguration->templateVars['multi_shop'] = Shop::isFeatureActive();
-        $controllerConfiguration->templateVars['quick_access'] = QuickAccess::getQuickAccessesWithToken($this->language->id, (int) $controllerConfiguration->user->getData()->id);
+        $controllerConfiguration->templateVars['quick_access'] = QuickAccess::getQuickAccessesWithToken($this->language->id, (int) $controllerConfiguration->getUser()->getData()->id);
         $controllerConfiguration->templateVars['round_mode'] = $this->configuration->get('PS_PRICE_ROUND_MODE');
         $controllerConfiguration->templateVars['base_url'] = $this->shop->getBaseURL(true);
         $controllerConfiguration->templateVars['bootstrap'] = $controllerConfiguration->bootstrap;
