@@ -88,7 +88,7 @@ class PaginationConfigurationTest extends AbstractConfigurationTestCase
         $pageConfiguration = new PaginationConfiguration(
             $this->mockConfiguration,
             $this->mockShopConfiguration,
-            $this->mockMultistoreFeature,
+            $this->mockMultistoreFeature
         );
 
         $this->expectException($exception);
@@ -100,7 +100,7 @@ class PaginationConfigurationTest extends AbstractConfigurationTestCase
         $pageConfiguration = new PaginationConfiguration(
             $this->mockConfiguration,
             $this->mockShopConfiguration,
-            $this->mockMultistoreFeature,
+            $this->mockMultistoreFeature
         );
 
         $res = $pageConfiguration->updateConfiguration(

@@ -90,7 +90,7 @@ class PageConfigurationTest extends AbstractConfigurationTestCase
         $pageConfiguration = new PageConfiguration(
             $this->mockConfiguration,
             $this->mockShopConfiguration,
-            $this->mockMultistoreFeature,
+            $this->mockMultistoreFeature
         );
 
         $this->expectException($exception);
@@ -102,7 +102,7 @@ class PageConfigurationTest extends AbstractConfigurationTestCase
         $pageConfiguration = new PageConfiguration(
             $this->mockConfiguration,
             $this->mockShopConfiguration,
-            $this->mockMultistoreFeature,
+            $this->mockMultistoreFeature
         );
 
         $res = $pageConfiguration->updateConfiguration(

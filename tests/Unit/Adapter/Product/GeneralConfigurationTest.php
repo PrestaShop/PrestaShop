@@ -51,7 +51,7 @@ class GeneralConfigurationTest extends AbstractConfigurationTestCase
             $this->mockConfiguration,
             $this->mockShopConfiguration,
             $this->mockMultistoreFeature,
-            $this->createSpecificPricePriorityUpdaterMock(),
+            $this->createSpecificPricePriorityUpdaterMock()
         );
 
         $this->mockShopConfiguration
@@ -112,7 +112,7 @@ class GeneralConfigurationTest extends AbstractConfigurationTestCase
             $this->mockConfiguration,
             $this->mockShopConfiguration,
             $this->mockMultistoreFeature,
-            $this->createSpecificPricePriorityUpdaterMock(),
+            $this->createSpecificPricePriorityUpdaterMock()
         );
 
         $this->expectException($exception);
@@ -125,7 +125,7 @@ class GeneralConfigurationTest extends AbstractConfigurationTestCase
             $this->mockConfiguration,
             $this->mockShopConfiguration,
             $this->mockMultistoreFeature,
-            $this->createSpecificPricePriorityUpdaterMock(),
+            $this->createSpecificPricePriorityUpdaterMock()
         );
 
         $res = $generalConfiguration->updateConfiguration([
