@@ -158,13 +158,13 @@ class SmartyBridge
         $page_header_toolbar = file_exists($dir . 'page_header_toolbar.tpl') ? $dir . 'page_header_toolbar.tpl' : 'page_header_toolbar.tpl';
         $footer_tpl = file_exists($dir . 'footer.tpl') ? $dir . 'footer.tpl' : 'footer.tpl';
         $modal_module_list = file_exists($module_list_dir . 'modal.tpl') ? $module_list_dir . 'modal.tpl' : '';
-        $tpl_action = $controllerConfiguration->templateFolder . $controllerConfiguration->display . '.tpl';
+        $tpl_action = $controllerConfiguration->templateFolder . $controllerConfiguration->displayType . '.tpl';
 
         // Check if action template has been overridden
         foreach ($template_dirs as $template_dir) {
-            if (file_exists($template_dir . DIRECTORY_SEPARATOR . $tpl_action) && $controllerConfiguration->display != 'view' && $controllerConfiguration->display != 'options') {
-                if (method_exists($this, $controllerConfiguration->display . Tools::toCamelCase($controllerConfiguration->legacyControllerName))) {
-                    $this->{$controllerConfiguration->display . Tools::toCamelCase($controllerConfiguration->legacyControllerName)}();
+            if (file_exists($template_dir . DIRECTORY_SEPARATOR . $tpl_action) && $controllerConfiguration->displayType != 'view' && $controllerConfiguration->displayType != 'options') {
+                if (method_exists($this, $controllerConfiguration->displayType . Tools::toCamelCase($controllerConfiguration->legacyControllerName))) {
+                    $this->{$controllerConfiguration->displayType . Tools::toCamelCase($controllerConfiguration->legacyControllerName)}();
                 }
                 $this->smarty->assign('content', $this->smarty->fetch($tpl_action));
 

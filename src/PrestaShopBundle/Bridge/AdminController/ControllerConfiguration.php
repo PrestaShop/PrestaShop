@@ -35,6 +35,8 @@ use Shop;
 /**
  * This object holds the configuration of a Controller that is being migrated horizontally.
  * Its properties reflect the properties of a legacy PrestaShop controller.
+ *
+ * @todo: get rid of public properties and use getters + constructor arguments to secure the contract in dedicated PR.
  */
 class ControllerConfiguration
 {
@@ -63,7 +65,7 @@ class ControllerConfiguration
     /**
      * @var string|null
      */
-    public $positionIdentifier;
+    public $positionIdentifierKey;
 
     /**
      * @var string
@@ -74,11 +76,6 @@ class ControllerConfiguration
      * @var string|null
      */
     public $token;
-
-    /**
-     * @var Employee|null
-     */
-    public $user;
 
     /**
      * @var array
@@ -97,8 +94,13 @@ class ControllerConfiguration
 
     /**
      * @var string
+     *
+     * @see \AdminController::$display
+     *
+     * @todo: investigate possible values and if it can be custom.
+     *      Following seems to be used: list,edit,view,options,editAttributes,editFeatureValue
      */
-    public $display = 'list';
+    public $displayType = 'list';
 
     /**
      * @var bool
@@ -113,7 +115,12 @@ class ControllerConfiguration
     /**
      * @var array
      */
-    public $pageHeaderToolbarButton = [];
+    public $pageHeaderToolbarButtons = [];
+
+    /**
+     * @var array
+     */
+    public $toolbarButtons = [];
 
     /**
      * @var array
@@ -210,6 +217,20 @@ class ControllerConfiguration
     public $multiShopContextGroup = true;
 
     /**
+     * @var Employee
+     */
+    private $user;
+
+    /**
+     * @param Employee $user the current user
+     */
+    public function __construct(
+        Employee $user
+    ) {
+        $this->user = $user;
+    }
+
+    /**
      * Adds toolbar action to the page
      *
      * @param HeaderToolbarAction $action
@@ -218,8 +239,16 @@ class ControllerConfiguration
      */
     public function addToolbarAction(HeaderToolbarAction $action): ControllerConfiguration
     {
-        $this->pageHeaderToolbarButton[$action->getLabel()] = $action->getConfig();
+        $this->pageHeaderToolbarButtons[$action->getLabel()] = $action->getConfig();
 
         return $this;
+    }
+
+    /**
+     * @return Employee
+     */
+    public function getUser(): Employee
+    {
+        return $this->user;
     }
 }
