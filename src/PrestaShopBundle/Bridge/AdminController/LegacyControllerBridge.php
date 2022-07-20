@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Bridge\AdminController;
 
 use Context;
+use Employee;
 use Hook;
 use Media;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
@@ -92,23 +93,55 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
     private $multistoreFeature;
 
     /**
-     * @var string[]
+     * @var string[] maps legacy controller properties with the bridge
      */
-    private $propertiesMap;
+    private $propertiesMap = [
+        'id' => 'controllerConfiguration.tabId',
+        'className' => 'controllerConfiguration.objectModelClassName',
+        'controller_name' => 'controllerConfiguration.legacyControllerName',
+        'php_self' => 'controllerConfiguration.legacyControllerName',
+        'current_index' => 'controllerConfiguration.legacyCurrentIndex',
+        'position_identifier' => 'controllerConfiguration.positionIdentifier',
+        'table' => 'controllerConfiguration.tableName',
+        'token' => 'controllerConfiguration.token',
+        'meta_title' => 'controllerConfiguration.metaTitle',
+        'breadcrumbs' => 'controllerConfiguration.breadcrumbs',
+        'lite_display' => 'controllerConfiguration.liteDisplay',
+        'display' => 'controllerConfiguration.display',
+        'show_page_header_toolbar' => 'controllerConfiguration.showPageHeaderToolbar',
+        'title' => 'controllerConfiguration.pageHeaderToolbarTitle',
+        'page_header_toolbar_title' => 'controllerConfiguration.pageHeaderToolbarTitle',
+        'toolbar_btn' => 'controllerConfiguration.pageHeaderToolbarButton',
+        'toolbar_title' => 'controllerConfiguration.toolbarTitle',
+        'display_header' => 'controllerConfiguration.displayHeader',
+        'display_header_javascript' => 'controllerConfiguration.displayHeaderJavascript',
+        'display_footer' => 'controllerConfiguration.displayFooter',
+        'bootstrap' => 'controllerConfiguration.bootstrap',
+        'css_files' => 'controllerConfiguration.cssFiles',
+        'js_files' => 'controllerConfiguration.jsFiles',
+        'tpl_folder' => 'controllerConfiguration.templateFolder',
+        'errors' => 'controllerConfiguration.errors',
+        'warnings' => 'controllerConfiguration.warnings',
+        'confirmations' => 'controllerConfiguration.confirmations',
+        'informations' => 'controllerConfiguration.informations',
+        'json' => 'controllerConfiguration.json',
+        'template' => 'controllerConfiguration.template',
+        'tpl_vars' => 'controllerConfiguration.templateVars',
+        'modals' => 'controllerConfiguration.modals',
+        'multishop_context' => 'controllerConfiguration.multiShopContext',
+        'multishop_context_group' => 'controllerConfiguration.multiShopContextGroup',
+    ];
 
     /**
      * @param ControllerConfiguration $controllerConfiguration
-     * @param array<string, string> $propertiesMap maps legacy controller properties with bridge
      * @param FeatureInterface $multistoreFeature
      */
     public function __construct(
         ControllerConfiguration $controllerConfiguration,
-        array $propertiesMap,
         FeatureInterface $multistoreFeature
     ) {
         $this->controllerConfiguration = $controllerConfiguration;
         $this->multistoreFeature = $multistoreFeature;
-        $this->propertiesMap = $propertiesMap;
     }
 
     /**
