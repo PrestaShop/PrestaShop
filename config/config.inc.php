@@ -206,6 +206,9 @@ if (defined('_PS_ADMIN_DIR_')) {
     $cookie->id_lang = (int) $employee->id_lang;
 }
 
+/* Preset $language to null mainly so that PHPStan doesn't consider it unset, bug the following checks will make sure it is always set anyway */
+$language = null;
+
 /* if the language stored in the cookie is not available language, use default language */
 if (isset($cookie->id_lang) && $cookie->id_lang) {
     $language = new Language((int) $cookie->id_lang);
