@@ -123,7 +123,7 @@ class ControllerConfiguration
     public $toolbarButtons = [];
 
     /**
-     * @var array
+     * @var string[]|string
      */
     public $toolbarTitle = [];
 
