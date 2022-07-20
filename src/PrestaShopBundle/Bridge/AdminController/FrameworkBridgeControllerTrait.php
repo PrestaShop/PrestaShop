@@ -42,6 +42,23 @@ trait FrameworkBridgeControllerTrait
     private $legacyControllerBridge;
 
     /**
+     * @var ControllerConfiguration|null
+     */
+    private $controllerConfiguration;
+
+    /**
+     * @return ControllerConfiguration
+     */
+    public function getControllerConfiguration(): ControllerConfiguration
+    {
+        if (!$this->controllerConfiguration) {
+            throw new BridgeException(sprintf('Something went wrong. "%s" is not initialized yet.', ControllerConfiguration::class));
+        }
+
+        return $this->controllerConfiguration;
+    }
+
+    /**
      * @return LegacyControllerBridgeInterface
      */
     protected function buildLegacyControllerBridge(
@@ -62,24 +79,16 @@ trait FrameworkBridgeControllerTrait
             ));
         }
 
-        /** @var LegacyControllerBridgeFactory $legacyControllerBridgeFactory */
-        $legacyControllerBridgeFactory = $this->get('prestashop.bridge.admin_controller.legacy_controller_bridge_factory');
+        $this->controllerConfiguration = $this
+            ->get('prestashop.bridge.admin_controller.controller_configuration_factory')
+            ->create($tabId, $objectModelClassName, $legacyControllerName, $tableName)
+        ;
 
-        $this->legacyControllerBridge = $legacyControllerBridgeFactory->create(
-            $tabId,
-            $objectModelClassName,
-            $legacyControllerName,
-            $tableName
-        );
+        $this->legacyControllerBridge = $this
+            ->get('prestashop.bridge.admin_controller.legacy_controller_bridge_factory')
+            ->create($this->controllerConfiguration)
+        ;
 
         return $this->legacyControllerBridge;
-    }
-
-    /**
-     * @return ControllerConfiguration
-     */
-    protected function getControllerConfiguration(): ControllerConfiguration
-    {
-        return $this->getLegacyControllerBridge()->getConfiguration();
     }
 }

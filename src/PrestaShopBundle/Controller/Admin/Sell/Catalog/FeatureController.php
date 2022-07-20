@@ -37,7 +37,6 @@ use PrestaShopBundle\Bridge\AdminController\Action\HeaderToolbarAction;
 use PrestaShopBundle\Bridge\AdminController\Action\ListBulkAction;
 use PrestaShopBundle\Bridge\AdminController\Action\ListHeaderToolbarAction;
 use PrestaShopBundle\Bridge\AdminController\Action\ListRowAction;
-use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 use PrestaShopBundle\Bridge\AdminController\Field\Field;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerInterface;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerListTrait;
@@ -45,7 +44,7 @@ use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerTrait;
 use PrestaShopBundle\Bridge\AdminController\LegacyControllerBridgeInterface;
 use PrestaShopBundle\Bridge\Helper\HelperListConfiguration;
 use PrestaShopBundle\Bridge\Helper\ListCustomizer\FeatureHelperListBridge;
-use PrestaShopBundle\Bridge\Smarty\SmartyTrait;
+use PrestaShopBundle\Bridge\Smarty\FrameworkControllerSmartyTrait;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use Symfony\Component\HttpFoundation\Request;
@@ -59,15 +58,14 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
 {
     use FrameworkBridgeControllerTrait;
     use FrameworkBridgeControllerListTrait;
-    use SmartyTrait;
+    use FrameworkControllerSmartyTrait;
 
     /**
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      */
     public function indexAction(Request $request): Response
     {
-        $controllerConfiguration = $this->getControllerConfiguration();
-        $this->setToolbarActions($controllerConfiguration);
+        $this->setToolbarActions();
 
         $helperListConfiguration = $this->buildListConfiguration(
             'id_feature',
@@ -76,7 +74,7 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
         );
 
         $this->setListFields($helperListConfiguration);
-        $this->setListActions($controllerConfiguration, $helperListConfiguration);
+        $this->setListActions($helperListConfiguration);
 
         if ($request->request->has('submitResetfeature')) {
             $this->getResetFiltersHelper()->resetFilters($helperListConfiguration, $request);
@@ -191,22 +189,21 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
     }
 
     /**
-     * @param ControllerConfiguration $controllerConfig
-     *
      * @return void
      */
-    private function setToolbarActions(ControllerConfiguration $controllerConfig): void
+    private function setToolbarActions(): void
     {
-        $index = $controllerConfig->legacyCurrentIndex;
-        $token = $controllerConfig->token;
+        $controllerConfiguration = $this->getControllerConfiguration();
+        $index = $controllerConfiguration->legacyCurrentIndex;
+        $token = $controllerConfiguration->token;
 
-        $controllerConfig->addToolbarAction(new HeaderToolbarAction('new_feature', [
+        $controllerConfiguration->addToolbarAction(new HeaderToolbarAction('new_feature', [
             //@todo: replace by $this->generateUrl('admin_features_add') when creation is fully migrated
             'href' => $index . '&addfeature&token=' . $token,
             'desc' => $this->trans('Add new feature', 'Admin.Catalog.Feature'),
             'icon' => 'process-icon-new',
         ]));
-        $controllerConfig->addToolbarAction(new HeaderToolbarAction('new_feature_value', [
+        $controllerConfiguration->addToolbarAction(new HeaderToolbarAction('new_feature_value', [
             'href' => $index . '&addfeature_value&id_feature=' . (int) Tools::getValue('id_feature') . '&token=' . $token,
             'desc' => $this->trans('Add new feature value', 'Admin.Catalog.Help'),
             'icon' => 'process-icon-new',
@@ -218,12 +215,14 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
      *
      * @return void
      */
-    private function setListActions(ControllerConfiguration $controllerConfig, HelperListConfiguration $helperListConfiguration): void
+    private function setListActions(HelperListConfiguration $helperListConfiguration): void
     {
+        $controllerConfiguration = $this->getControllerConfiguration();
+
         $this->addActionList(new ListHeaderToolbarAction('new', [
             //@todo: replace by $this->generateUrl('admin_features_add') when creation is fully migrated
             //@todo: can i generate link without using controller config?
-            'href' => $controllerConfig->legacyCurrentIndex . '&addfeature&token=' . $controllerConfig->token,
+            'href' => $controllerConfiguration->legacyCurrentIndex . '&addfeature&token=' . $controllerConfiguration->token,
             'desc' => $this->trans('Add new', 'Admin.Actions'),
         ]), $helperListConfiguration);
 
