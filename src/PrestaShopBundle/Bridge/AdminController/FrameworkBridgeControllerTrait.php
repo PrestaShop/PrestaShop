@@ -81,9 +81,11 @@ trait FrameworkBridgeControllerTrait
             );
         }
 
-        return $this
+        $this->controllerConfiguration = $this
             ->get('prestashop.bridge.admin_controller.controller_configuration_factory')
             ->create($tabId, $objectModelClassName, $legacyControllerName, $tableName)
         ;
+
+        return $this->controllerConfiguration;
     }
 }
