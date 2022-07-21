@@ -61,11 +61,11 @@ class StockConfiguration extends AbstractMultistoreConfiguration
         return [
             'allow_ordering_oos' => (bool) $this->configuration->get('PS_ORDER_OUT_OF_STOCK', false, $shopConstraint),
             'stock_management' => (bool) $this->configuration->get('PS_STOCK_MANAGEMENT', false, $shopConstraint),
-            'in_stock_label' => $this->configuration->get('PS_LABEL_IN_STOCK_PRODUCTS', null, $shopConstraint),
-            'oos_allowed_backorders' => $this->configuration->get('PS_LABEL_OOS_PRODUCTS_BOA', null, $shopConstraint),
-            'oos_denied_backorders' => $this->configuration->get('PS_LABEL_OOS_PRODUCTS_BOD', null, $shopConstraint),
-            'delivery_time' => $this->configuration->get('PS_LABEL_DELIVERY_TIME_AVAILABLE', null, $shopConstraint),
-            'oos_delivery_time' => $this->configuration->get('PS_LABEL_DELIVERY_TIME_OOSBOA', null, $shopConstraint),
+            'in_stock_label' => (array) $this->configuration->get('PS_LABEL_IN_STOCK_PRODUCTS', [], $shopConstraint),
+            'oos_allowed_backorders' => (array) $this->configuration->get('PS_LABEL_OOS_PRODUCTS_BOA', [], $shopConstraint),
+            'oos_denied_backorders' => (array) $this->configuration->get('PS_LABEL_OOS_PRODUCTS_BOD', [], $shopConstraint),
+            'delivery_time' => (array) $this->configuration->get('PS_LABEL_DELIVERY_TIME_AVAILABLE', [], $shopConstraint),
+            'oos_delivery_time' => (array) $this->configuration->get('PS_LABEL_DELIVERY_TIME_OOSBOA', [], $shopConstraint),
             'pack_stock_management' => (int) $this->configuration->get('PS_PACK_STOCK_TYPE', 0, $shopConstraint),
             'oos_show_label_listing_pages' => (bool) $this->configuration->get('PS_SHOW_LABEL_OOS_LISTING_PAGES', false, $shopConstraint),
             'display_last_quantities' => (int) $this->configuration->get('PS_LAST_QTIES', 0, $shopConstraint),
@@ -108,11 +108,11 @@ class StockConfiguration extends AbstractMultistoreConfiguration
             ->setDefined(self::CONFIGURATION_FIELDS)
             ->setAllowedTypes('allow_ordering_oos', 'bool')
             ->setAllowedTypes('stock_management', 'bool')
-            ->setAllowedTypes('in_stock_label', 'string')
-            ->setAllowedTypes('oos_allowed_backorders', 'string')
-            ->setAllowedTypes('oos_denied_backorders', 'string')
-            ->setAllowedTypes('delivery_time', 'string')
-            ->setAllowedTypes('oos_delivery_time', 'string')
+            ->setAllowedTypes('in_stock_label', 'array')
+            ->setAllowedTypes('oos_allowed_backorders', 'array')
+            ->setAllowedTypes('oos_denied_backorders', 'array')
+            ->setAllowedTypes('delivery_time', 'array')
+            ->setAllowedTypes('oos_delivery_time', 'array')
             ->setAllowedTypes('pack_stock_management', 'int')
             ->setAllowedTypes('oos_show_label_listing_pages', 'bool')
             ->setAllowedTypes('display_last_quantities', 'int')
