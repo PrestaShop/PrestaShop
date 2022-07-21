@@ -409,7 +409,10 @@ class AdminControllerCore extends Controller
     protected $tabSlug;
 
     /** @var int Auth cookie lifetime */
-    public $AUTH_COOKIE_LIFETIME = 3600;
+    const AUTH_COOKIE_LIFETIME = 3600;
+    
+    /** @var int Auth cookie lifetime */
+    public $AUTH_COOKIE_LIFETIME = self::AUTH_COOKIE_LIFETIME;
 
     /** @var array */
     public $_conf;
