@@ -148,6 +148,7 @@ class HeaderConfigurator implements ConfiguratorInterface
     public function configure(ControllerConfiguration $controllerConfiguration): void
     {
         $controllerConfiguration->templateVars['table'] = $controllerConfiguration->tableName;
+        // @todo: hardcoded route. Should be replaced with some value from configuration
         $controllerConfiguration->templateVars['current'] = $this->router->generate('admin_features_index');
         $controllerConfiguration->templateVars['token'] = $controllerConfiguration->token;
         $controllerConfiguration->templateVars['host_mode'] = (int) defined('_PS_HOST_MODE_');
