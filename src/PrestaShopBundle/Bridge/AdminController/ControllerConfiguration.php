@@ -205,6 +205,8 @@ class ControllerConfiguration
     /**
      * This parameter is needed by legacy helper shop, we can't remove it.
      *
+     * @todo: values are copied from legacy, but the bitwise operators probably shouldn't be used here
+     *
      * @var int
      */
     public $multiShopContext = Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP | Shop::CONTEXT_SHOP;
