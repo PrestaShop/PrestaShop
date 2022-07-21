@@ -55,8 +55,10 @@ class InitFrameworkBridgeControllerListener
      * @param LegacyContext $legacyContext
      * @param Repository $localeRepository
      */
-    public function __construct(LegacyContext $legacyContext, Repository $localeRepository)
-    {
+    public function __construct(
+        LegacyContext $legacyContext,
+        Repository $localeRepository
+    ) {
         $this->context = $legacyContext->getContext();
         $this->localeRepository = $localeRepository;
     }
@@ -96,8 +98,7 @@ class InitFrameworkBridgeControllerListener
             $this->context->language->getLocale()
         );
 
-        $legacyControllerBridge = $controller->getLegacyControllerBridge();
-        $this->context->controller = $legacyControllerBridge;
+        $this->context->controller = $controller->getLegacyControllerBridge();
     }
 
     /**
