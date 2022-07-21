@@ -69,7 +69,7 @@ class HelperFormBridge
                 $legacyFormFields[$type][] = $config;
 
                 //@todo: without this smarty fails. Each field name  must exist in fields_value list as index key
-                $helperForm->fields_value[$config['name']] = $formField->getValue();
+                $helperForm->fields_value[$config['name']] = $helperFormConfiguration->getFormData()[$config['name']] ?? null;
 
                 continue;
             }

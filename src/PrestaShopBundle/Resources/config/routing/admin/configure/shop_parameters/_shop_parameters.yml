@@ -42,6 +42,6 @@ _title:
   resource: "title.yml"
   prefix: /title/
 
-_search_config:
-  resource: "search_config.yml"
-  prefix: /search-configs
+_aliases:
+  resource: "search_configs.yml"
+  prefix: /search-configs/

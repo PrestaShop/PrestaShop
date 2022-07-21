@@ -1,8 +1,0 @@
-# @todo: naming. Create/edit form separation
-admin_search_alias_form:
-  path: /form
-  methods: [ GET, POST ]
-  defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchConfigController::formAction'
-    _legacy_controller: AdminSearchEngines
-    _legacy_link: AdminSearchEngines

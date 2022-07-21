@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\ShopParameters;
 use PrestaShopBundle\Bridge\AdminController\AdminControllerTrait;
 use PrestaShopBundle\Bridge\AdminController\Field\FormField;
 use PrestaShopBundle\Bridge\AdminController\LegacyControllerBridgeInterface;
+use PrestaShopBundle\Bridge\Helper\Form\HelperFormConfiguration;
 use PrestaShopBundle\Bridge\Smarty\SmartyTrait;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,18 +51,60 @@ class SearchConfigController extends FrameworkBundleAdminController implements L
         return 'Alias';
     }
 
+    public function createAction(Request $request): Response
+    {
+        $formConfig = $this->buildFormConfiguration();
+        $formHandlerResult = $this->handleBridgeForm($request, $formConfig);
+
+        if (null !== $formHandlerResult->getIdentifiableObjectId()) {
+            //@todo: how to redirect to legacy index page and add some kind of flash messages?
+//            $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+            return $this->redirect($this->getAdminLink('AdminSearchConf', []));
+        }
+
+        return $this->renderSmarty($this->get('prestashop.core.bridge.helper.form.helper_form_bridge')->generate($formConfig));
+    }
+
     /**
      * @todo: its actually now for search aliases crud. Need separate controller for it SearchAliasController instead of this one?
      * @todo: separate create/edit action, but keep allowing to define common form
      *
-     * @param int|null $searchConfigId
+     * @param int $aliasId
      *
      * @return Response
      */
-    public function formAction(Request $request, ?int $searchConfigId): Response
+    public function editAction(Request $request, int $aliasId): Response
+    {
+        $formConfig = $this->buildFormConfiguration($aliasId);
+        $formHandlerResult = $this->handleBridgeForm($request, $formConfig);
+
+        if (null !== $formHandlerResult->getIdentifiableObjectId()) {
+            //@todo: how to redirect to legacy index page and add some kind of flash messages?
+//            $this->addFlash('success', $this->trans('Successful edition.', 'Admin.Notifications.Success'));
+
+            return $this->redirect($this->getAdminLink('AdminSearchConf', []));
+        }
+
+        return $this->renderSmarty($this->get('prestashop.core.bridge.helper.form.helper_form_bridge')->generate($formConfig));
+    }
+
+    //@todo: move to data provider similar as in vertical migration indentifiableObject
+    private function getDataForEditing(int $aliasId): array
+    {
+        $alias = new \Alias($aliasId);
+
+        return [
+            'alias' => $alias->alias,
+            'search' => $alias->search,
+        ];
+    }
+
+    private function buildFormConfiguration(?int $id = null): HelperFormConfiguration
     {
         $formConfigFactory = $this->get('prestashop.core.bridge.helper.form.helper_form_configuration_factory');
-        $formConfig = $formConfigFactory->create($searchConfigId, $this->getClassName(), [
+
+        return $formConfigFactory->create($id, $this->getClassName(), [
             new FormField('legend', [
                 'title' => $this->trans('Aliases', 'Admin.Shopparameters.Feature'),
                 'icon' => 'icon-search',
@@ -86,18 +129,6 @@ class SearchConfigController extends FrameworkBundleAdminController implements L
             new FormField('submit', [
                 'title' => $this->trans('Save', 'Admin.Actions'),
             ]),
-        ]);
-
-        $formHandlerResult = $this->handleBridgeForm($request, $formConfig);
-
-        if (null !== $formHandlerResult->getIdentifiableObjectId()) {
-            //@todo: should be able to identify wording swhen create/edit actions are separated
-            //@todo: how to redirect to legacy index page and add some kind of flash messages?
-//            $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
-
-            return $this->redirect($this->getAdminLink('AdminSearchConf', []));
-        }
-
-        return $this->renderSmarty($this->get('prestashop.core.bridge.helper.form.helper_form_bridge')->generate($formConfig));
+        ], $id ? $this->getDataForEditing($id) : []);
     }
 }

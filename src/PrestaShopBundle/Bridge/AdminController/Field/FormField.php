@@ -50,21 +50,14 @@ class FormField
     private $config;
 
     /**
-     * @var string
-     */
-    private $value;
-
-    /**
      * @param string $type
      * @param array<string, mixed>> $config
-     * @param string $value the value of the input
      */
-    public function __construct(string $type, array $config, string $value = '')
+    public function __construct(string $type, array $config)
     {
         $this->type = $type;
         $this->config = $config;
         //@todo: add options resolver?
-        $this->value = $value;
     }
 
     /**
@@ -83,13 +76,5 @@ class FormField
     public function getConfig(): array
     {
         return $this->config;
-    }
-
-    /**
-     * @return string
-     */
-    public function getValue(): string
-    {
-        return $this->value;
     }
 }

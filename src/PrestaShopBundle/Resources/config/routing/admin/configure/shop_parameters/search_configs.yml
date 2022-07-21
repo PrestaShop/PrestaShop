@@ -1,0 +1,17 @@
+admin_search_aliases_edit:
+  path: aliases/{aliasId}/edit
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchConfigController::editAction'
+    _legacy_controller: AdminSearchEngines
+    _legacy_link: AdminSearchEngines
+  requirements:
+    aliasId: \d+
+
+admin_search_aliases_add:
+  path: aliases/new
+  methods: [ GET, POST ]
+  defaults:
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\SearchConfigController::createAction'
+    _legacy_controller: AdminSearchEngines
+    _legacy_link: AdminSearchEngines

@@ -30,23 +30,27 @@ namespace PrestaShopBundle\Bridge\Helper\Form;
 use ObjectModel;
 use PrestaShopBundle\Bridge\AdminController\Field\FormField;
 
+//@todo: this service doesn't seem to be very useful now, but maybe we can enrich it with data providers and create/edit methods later
 class HelperFormConfigurationFactory
 {
     /**
      * @param int|null $objectModelId
      * @param string $className
      * @param FormField[] $formFields
+     * @param array<string, mixed> $formData
      *
      * @return HelperFormConfiguration
      */
     public function create(
         ?int $objectModelId,
         string $className,
-        array $formFields
+        array $formFields,
+        array $formData
     ): HelperFormConfiguration {
         return new HelperFormConfiguration(
             $this->loadObjectModel($objectModelId, $className),
-            $formFields
+            $formFields,
+            $formData
         );
     }
 

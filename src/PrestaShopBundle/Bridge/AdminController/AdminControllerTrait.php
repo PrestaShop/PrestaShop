@@ -143,7 +143,7 @@ trait AdminControllerTrait
     }
 
     /**
-     * @todo: idk what to return yet. Probably need dedicated result object which contains errors or smth (similar to indentifiable object form handling)
+     * @todo: not sure if FormHandlerResultInterface is ok here, or should we create additional similar class (which could maybe contain errors too?)
      */
     public function handleBridgeForm(Request $request, HelperFormConfiguration $helperFormConfiguration): FormHandlerResultInterface
     {

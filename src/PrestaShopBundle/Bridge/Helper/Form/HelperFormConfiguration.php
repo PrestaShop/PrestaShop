@@ -48,17 +48,25 @@ class HelperFormConfiguration
     private $submitAction;
 
     /**
+     * @var array<string, mixed>
+     */
+    private $formData;
+
+    /**
      * @param ObjectModel $objectModel
      * @param FormField[] $formFields
+     * @param array $formData
      * @param string|null $submitAction override this value for a custom submit action name in request
      */
     public function __construct(
         ObjectModel $objectModel,
         array $formFields = [],
+        array $formData = [],
         ?string $submitAction = null
     ) {
         $this->objectModel = $objectModel;
         $this->formFields = $formFields;
+        $this->formData = $formData;
         $this->submitAction = $submitAction;
     }
 
@@ -73,6 +81,14 @@ class HelperFormConfiguration
     public function getFormFields(): array
     {
         return $this->formFields;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getFormData(): array
+    {
+        return $this->formData;
     }
 
     /**
