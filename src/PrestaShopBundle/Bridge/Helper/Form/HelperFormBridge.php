@@ -40,6 +40,9 @@ class HelperFormBridge
     public function generate(HelperFormConfiguration $helperFormConfiguration): ?string
     {
         $helperForm = new HelperForm();
+        $objectModelDefinition = $helperFormConfiguration->getObjectModel()::$definition;
+        $helperForm->table = $objectModelDefinition['table'];
+
         //@todo: transform FormField classes to legacy supported array
         $formFields = $helperFormConfiguration->getFormFields();
 

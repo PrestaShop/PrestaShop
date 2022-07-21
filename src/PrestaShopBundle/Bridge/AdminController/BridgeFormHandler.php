@@ -28,8 +28,12 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Bridge\AdminController;
 
 //@todo: naming.
-//@todo: add other methods if accepted poc
+//@todo: add other methods if accepted poc (delete/status etc.)
+// @todo: not sure about return types yet. Maybe return errors or some dedicated dto during save/edit?
+// @todo: missing validation
+use Language;
 use ObjectModel;
+use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerResult;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerResultInterface;
 use PrestaShopBundle\Bridge\AdminController\Field\FormField;
@@ -38,6 +42,20 @@ use Symfony\Component\HttpFoundation\Request;
 
 class BridgeFormHandler
 {
+    /**
+     * @var Hashing
+     */
+    private $hashing;
+
+    /**
+     * @param Hashing $hashing
+     */
+    public function __construct(
+        Hashing $hashing
+    ) {
+        $this->hashing = $hashing;
+    }
+
     //@todo: formHandlerResult dediacted instead of using existing one that was made for vertical migration?
     public function handleRequest(Request $request, HelperFormConfiguration $helperFormConfiguration): FormHandlerResultInterface
     {
@@ -45,38 +63,32 @@ class BridgeFormHandler
             return FormHandlerResult::createNotSubmitted();
         }
 
-        //@todo: where/how do i fill object models with data?
-        $objectModel = $this->processSave($helperFormConfiguration);
+        $objectModel = $helperFormConfiguration->getObjectModel();
+
+        if ($objectModel->id) {
+            $objectModel = $this->processUpdate($request, $objectModel);
+        } else {
+            $objectModel = $this->processAdd($request, $objectModel);
+        }
 //        pseudo code
 //        if ($errors) {
 //            return FormHandlerResult::createSubmittedButNotValid();
 //        }
 
+        if (!$objectModel || !$objectModel->id) {
+            return FormHandlerResult::createSubmittedButNotValid();
+        }
+
         return FormHandlerResult::createWithId($objectModel->id);
     }
 
-    /**
-     * @param HelperFormConfiguration $helperFormConfiguration
-     */
-    protected function processSave(HelperFormConfiguration $helperFormConfiguration): ?ObjectModel
+    protected function processAdd(Request $request, ObjectModel $objectModel): ?ObjectModel
     {
-        $objectModel = $helperFormConfiguration->getObjectModel();
-
-        if ($objectModel->id) {
-            return $this->processUpdate($objectModel);
-        } else {
-            return $this->processAdd($objectModel);
-        }
-    }
-
-    protected function processAdd(ObjectModel $objectModel): ?ObjectModel
-    {
-//        @todo:
 //        $this->validateRules();
 //        if (count($this->errors) <= 0) {
 //            $this->object = new $this->className();
 //
-//            $this->copyFromPost($this->object, $this->table);
+        $this->fillObjectModelData($request, $objectModel);
 //            $this->beforeAdd($this->object);
 //            if (method_exists($this->object, 'add') && !$this->object->add()) {
 //                $this->errors[] = $this->trans('An error occurred while creating an object.', [], 'Admin.Notifications.Error') .
@@ -127,11 +139,12 @@ class BridgeFormHandler
     }
 
     /**
+     * @param Request $request
      * @param ObjectModel $objectModel
      *
      * @return ObjectModel|null
      */
-    protected function processUpdate(ObjectModel $objectModel): ?ObjectModel
+    protected function processUpdate(Request $request, ObjectModel $objectModel): ?ObjectModel
     {
         /* Checking fields validity */
 //        $this->validateRules();
@@ -162,7 +175,7 @@ class BridgeFormHandler
 //                            }
 //                        }
 //                    } else {
-//                        $this->copyFromPost($object, $this->table);
+        $this->fillObjectModelData($request, $objectModel);
 //                        $result = $object->update();
 //                        $this->afterUpdate($object);
 //                    }
@@ -181,7 +194,7 @@ class BridgeFormHandler
 //                            $this->redirect_after = rawurldecode($back) . '&conf=4';
 //                        }
 //                        // Save and stay on same form
-//                        // @todo on the to following if, we may prefer to avoid override redirect_after previous value
+//                        // @todo (this todo is from legacy) on the to following if, we may prefer to avoid override redirect_after previous value
 //                        if (Tools::isSubmit('submitAdd' . $this->table . 'AndStay')) {
 //                            $this->redirect_after = self::$currentIndex . '&' . $this->identifier . '=' . $object->id . '&conf=4&update' . $this->table . '&token=' . $this->token;
 //                        }
@@ -245,5 +258,50 @@ class BridgeFormHandler
         $objectModelDefinition = $formConfiguration->getObjectModel()::$definition;
 
         return 'submitAdd' . $objectModelDefinition['table'];
+    }
+
+    /**
+     * @param Request $request
+     * @param ObjectModel $objectModel
+     *
+     * @see \AdminController::copyFromPost()
+     */
+    protected function fillObjectModelData(Request $request, ObjectModel $objectModel)
+    {
+        $definition = $objectModel::$definition;
+        $table = $definition['table'];
+
+        /* Classical fields */
+        foreach ($request->request as $key => $value) {
+            if (array_key_exists($key, get_object_vars($objectModel)) && $key != 'id_' . $table) {
+                /* Do not take care of password field if empty */
+                if ($key == 'passwd' && $request->get('id_' . $table) && empty($value)) {
+                    continue;
+                }
+                /* Automatically hash password in MD5 */
+                if ($key == 'passwd' && !empty($value)) {
+                    $value = $this->hashing->hash($value, _COOKIE_KEY_);
+                }
+                $objectModel->{$key} = $value;
+            }
+        }
+
+        /* Multilingual fields */
+        $class_vars = get_class_vars(get_class($objectModel));
+        $fields = [];
+        if (isset($class_vars['definition']['fields'])) {
+            $fields = $class_vars['definition']['fields'];
+        }
+
+        foreach ($fields as $field => $params) {
+            if (array_key_exists('lang', $params) && $params['lang']) {
+                foreach (Language::getIDs(false) as $id_lang) {
+                    $submittedValue = $request->get($field . '_' . (int) $id_lang);
+                    if (null !== $submittedValue) {
+                        $objectModel->{$field}[(int) $id_lang] = $submittedValue;
+                    }
+                }
+            }
+        }
     }
 }

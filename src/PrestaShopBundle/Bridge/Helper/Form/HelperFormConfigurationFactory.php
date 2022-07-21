@@ -28,7 +28,6 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Bridge\Helper\Form;
 
 use ObjectModel;
-use ObjectModelCore;
 use PrestaShopBundle\Bridge\AdminController\Field\FormField;
 
 class HelperFormConfigurationFactory

@@ -103,3 +103,5 @@ services:
 
   prestashop.bridge.admin_controller.bridge_form_handler:
     class: PrestaShopBundle\Bridge\AdminController\BridgeFormHandler
+    arguments:
+      - '@prestashop.core.crypto.hashing'

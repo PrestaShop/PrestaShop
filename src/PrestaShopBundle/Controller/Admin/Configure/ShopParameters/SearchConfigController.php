@@ -91,8 +91,9 @@ class SearchConfigController extends FrameworkBundleAdminController implements L
         $formHandlerResult = $this->handleBridgeForm($request, $formConfig);
 
         if (null !== $formHandlerResult->getIdentifiableObjectId()) {
-            //@todo: should be able to identify wording swhen create/edit actions are seprated
-            $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+            //@todo: should be able to identify wording swhen create/edit actions are separated
+            //@todo: how to redirect to legacy index page and add some kind of flash messages?
+//            $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
 
             return $this->redirect($this->getAdminLink('AdminSearchConf', []));
         }
