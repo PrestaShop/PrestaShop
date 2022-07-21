@@ -37,6 +37,7 @@ class FormField
      * @todo - this is not the actual html input type, but the legacy form type, idk how to represent the difference in naming
      */
     public const TYPE_INPUT = 'input';
+    public const TYPE_SUBMIT = 'submit';
 
     /**
      * @var string

@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Bridge\Helper\Form;
 
+use ObjectModel;
 use ObjectModelCore;
 use PrestaShopBundle\Bridge\AdminController\Field\FormField;
 
@@ -50,7 +51,7 @@ class HelperFormConfigurationFactory
         );
     }
 
-    private function loadObjectModel(?int $objectModelId, string $className): ObjectModelCore
+    private function loadObjectModel(?int $objectModelId, string $className): ObjectModel
     {
         if ($objectModelId) {
             return new $className($objectModelId);

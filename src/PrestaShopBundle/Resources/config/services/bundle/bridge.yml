@@ -100,3 +100,6 @@ services:
 
   prestashop.core.bridge.helper.form.helper_form_bridge:
     class: PrestaShopBundle\Bridge\Helper\Form\HelperFormBridge
+
+  prestashop.bridge.admin_controller.bridge_form_handler:
+    class: PrestaShopBundle\Bridge\AdminController\BridgeFormHandler

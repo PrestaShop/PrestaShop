@@ -27,13 +27,13 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Bridge\Helper\Form;
 
-use ObjectModelCore;
+use ObjectModel;
 use PrestaShopBundle\Bridge\AdminController\Field\FormField;
 
 class HelperFormConfiguration
 {
     /**
-     * @var ObjectModelCore
+     * @var ObjectModel
      */
     private $objectModel;
 
@@ -43,18 +43,26 @@ class HelperFormConfiguration
     private $formFields;
 
     /**
-     * @param ObjectModelCore $objectModel
+     * @var string|null
+     */
+    private $submitAction;
+
+    /**
+     * @param ObjectModel $objectModel
      * @param FormField[] $formFields
+     * @param string|null $submitAction override this value for a custom submit action name in request
      */
     public function __construct(
-        ObjectModelCore $objectModel,
-        array $formFields = []
+        ObjectModel $objectModel,
+        array $formFields = [],
+        ?string $submitAction = null
     ) {
         $this->objectModel = $objectModel;
         $this->formFields = $formFields;
+        $this->submitAction = $submitAction;
     }
 
-    public function getObjectModel(): ObjectModelCore
+    public function getObjectModel(): ObjectModel
     {
         return $this->objectModel;
     }
@@ -77,5 +85,13 @@ class HelperFormConfiguration
         $this->formFields[] = $formField;
 
         return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSubmitAction(): ?string
+    {
+        return $this->submitAction;
     }
 }

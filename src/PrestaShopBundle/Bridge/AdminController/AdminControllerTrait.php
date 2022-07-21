@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Bridge\AdminController;
 
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandlerResultInterface;
 use PrestaShopBundle\Bridge\AdminController\Action\ActionInterface;
 use PrestaShopBundle\Bridge\AdminController\Action\HeaderToolbarAction;
 use PrestaShopBundle\Bridge\AdminController\Action\ListBulkAction;
@@ -37,9 +38,11 @@ use PrestaShopBundle\Bridge\AdminController\Field\FieldInterface;
 use PrestaShopBundle\Bridge\Exception\NotAllowedActionTypeForListException;
 use PrestaShopBundle\Bridge\Exception\NotAllowedGenericActionTypeException;
 use PrestaShopBundle\Bridge\Helper\FiltersHelper;
+use PrestaShopBundle\Bridge\Helper\Form\HelperFormConfiguration;
 use PrestaShopBundle\Bridge\Helper\HelperListBridge;
 use PrestaShopBundle\Bridge\Helper\HelperListConfiguration;
 use PrestaShopBundle\Bridge\Helper\ResetFiltersHelper;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * This trait contains the principal methods you need when you want to migrate a controller horizontally.
@@ -137,5 +140,15 @@ trait AdminControllerTrait
     public function addListField(FieldInterface $field, HelperListConfiguration $helperListConfiguration): void
     {
         $helperListConfiguration->fieldsList[$field->getLabel()] = $field->getConfig();
+    }
+
+    /**
+     * @todo: idk what to return yet. Probably need dedicated result object which contains errors or smth (similar to indentifiable object form handling)
+     */
+    public function handleBridgeForm(Request $request, HelperFormConfiguration $helperFormConfiguration): FormHandlerResultInterface
+    {
+        $bridgeFormHandler = $this->get('prestashop.bridge.admin_controller.bridge_form_handler');
+
+        return $bridgeFormHandler->handleRequest($request, $helperFormConfiguration);
     }
 }

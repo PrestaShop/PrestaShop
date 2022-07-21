@@ -32,6 +32,7 @@ use PrestaShopBundle\Bridge\AdminController\Field\FormField;
 use PrestaShopBundle\Bridge\AdminController\LegacyControllerBridgeInterface;
 use PrestaShopBundle\Bridge\Smarty\SmartyTrait;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class SearchConfigController extends FrameworkBundleAdminController implements LegacyControllerBridgeInterface
@@ -57,7 +58,7 @@ class SearchConfigController extends FrameworkBundleAdminController implements L
      *
      * @return Response
      */
-    public function formAction(?int $searchConfigId): Response
+    public function formAction(Request $request, ?int $searchConfigId): Response
     {
         $formConfigFactory = $this->get('prestashop.core.bridge.helper.form.helper_form_configuration_factory');
         $formConfig = $formConfigFactory->create($searchConfigId, $this->getClassName(), [
@@ -86,6 +87,15 @@ class SearchConfigController extends FrameworkBundleAdminController implements L
                 'title' => $this->trans('Save', 'Admin.Actions'),
             ]),
         ]);
+
+        $formHandlerResult = $this->handleBridgeForm($request, $formConfig);
+
+        if (null !== $formHandlerResult->getIdentifiableObjectId()) {
+            //@todo: should be able to identify wording swhen create/edit actions are seprated
+            $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+
+            return $this->redirect($this->getAdminLink('AdminSearchConf', []));
+        }
 
         return $this->renderSmarty($this->get('prestashop.core.bridge.helper.form.helper_form_bridge')->generate($formConfig));
     }
