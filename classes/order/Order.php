@@ -2141,7 +2141,7 @@ class OrderCore extends ObjectModel
             }
         }
 
-        return Tools::ps_round($total, Context::getContext()->getComputingPrecision());
+        return Tools::ps_round($total, $currency->precision);
     }
 
     /**
