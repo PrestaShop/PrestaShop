@@ -37,58 +37,53 @@ use Tab;
 trait FrameworkBridgeControllerTrait
 {
     /**
-     * @var LegacyControllerBridgeInterface|null
-     */
-    private $legacyControllerBridge;
-
-    /**
      * @var ControllerConfiguration|null
      */
     private $controllerConfiguration;
 
     /**
-     * @return ControllerConfiguration
+     * @return LegacyControllerBridgeInterface
      */
-    public function getControllerConfiguration(): ControllerConfiguration
+    public function getLegacyControllerBridge(): LegacyControllerBridgeInterface
     {
-        if (!$this->controllerConfiguration) {
-            throw new BridgeException(sprintf('Something went wrong. "%s" is not initialized yet.', ControllerConfiguration::class));
-        }
-
-        return $this->controllerConfiguration;
+        return $this
+            ->get('prestashop.bridge.admin_controller.legacy_controller_bridge_factory')
+            ->create($this->getControllerConfiguration())
+        ;
     }
 
     /**
-     * @return LegacyControllerBridgeInterface
+     * @param string $tableName
+     * @param string $objectModelClassName
+     * @param string $legacyControllerName
+     *
+     * @return ControllerConfiguration
+     *
+     * @throws BridgeException
      */
-    protected function buildLegacyControllerBridge(
+    protected function buildControllerConfiguration(
         string $tableName,
         string $objectModelClassName,
         string $legacyControllerName
-    ): LegacyControllerBridgeInterface {
-        if ($this->legacyControllerBridge) {
-            return $this->legacyControllerBridge;
+    ): ControllerConfiguration {
+        if ($this->controllerConfiguration) {
+            return $this->controllerConfiguration;
         }
 
         $tabId = Tab::getIdFromClassName($legacyControllerName);
 
         if (!$tabId) {
-            throw new BridgeException(sprintf(
-                'Tab not found by className "%s". Make sure that $legacyControllerName is correct',
-                $legacyControllerName
-            ));
+            throw new BridgeException(
+                sprintf(
+                    'Tab not found by className "%s". Make sure that $legacyControllerName is correct',
+                    $legacyControllerName
+                )
+            );
         }
 
-        $this->controllerConfiguration = $this
+        return $this
             ->get('prestashop.bridge.admin_controller.controller_configuration_factory')
             ->create($tabId, $objectModelClassName, $legacyControllerName, $tableName)
         ;
-
-        $this->legacyControllerBridge = $this
-            ->get('prestashop.bridge.admin_controller.legacy_controller_bridge_factory')
-            ->create($this->controllerConfiguration)
-        ;
-
-        return $this->legacyControllerBridge;
     }
 }

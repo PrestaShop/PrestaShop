@@ -37,11 +37,11 @@ use PrestaShopBundle\Bridge\AdminController\Action\HeaderToolbarAction;
 use PrestaShopBundle\Bridge\AdminController\Action\ListBulkAction;
 use PrestaShopBundle\Bridge\AdminController\Action\ListHeaderToolbarAction;
 use PrestaShopBundle\Bridge\AdminController\Action\ListRowAction;
+use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 use PrestaShopBundle\Bridge\AdminController\Field\Field;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerInterface;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerListTrait;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerTrait;
-use PrestaShopBundle\Bridge\AdminController\LegacyControllerBridgeInterface;
 use PrestaShopBundle\Bridge\Helper\HelperListConfiguration;
 use PrestaShopBundle\Bridge\Helper\ListCustomizer\FeatureHelperListBridge;
 use PrestaShopBundle\Bridge\Smarty\FrameworkControllerSmartyTrait;
@@ -178,11 +178,21 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
         ]);
     }
 
-    public function getLegacyControllerBridge(): LegacyControllerBridgeInterface
+    /**
+     * @return ControllerConfiguration
+     */
+    public function getControllerConfiguration(): ControllerConfiguration
     {
-        return $this->buildLegacyControllerBridge('feature', Feature::class, 'AdminFeatures');
+        return $this->buildControllerConfiguration(
+            'feature',
+            Feature::class,
+            'AdminFeatures'
+        );
     }
 
+    /**
+     * @return FeatureHelperListBridge
+     */
     public function getHelperListBridge(): FeatureHelperListBridge
     {
         return $this->get('prestashop.bridge.helper.list_customizer.feature_helper_list_bridge');

@@ -44,7 +44,7 @@ use PrestaShopBundle\Bridge\Helper\ResetFiltersHelper;
  */
 trait FrameworkBridgeControllerListTrait
 {
-    public function buildListConfiguration(
+    protected function buildListConfiguration(
         string $identifierKey,
         string $positionIdentifierKey,
         string $defaultOrderBy,
@@ -70,7 +70,7 @@ trait FrameworkBridgeControllerListTrait
     /**
      * @return ResetFiltersHelper
      */
-    public function getResetFiltersHelper(): ResetFiltersHelper
+    protected function getResetFiltersHelper(): ResetFiltersHelper
     {
         return $this->get('prestashop.bridge.helper.reset_filters_helper');
     }
@@ -78,7 +78,7 @@ trait FrameworkBridgeControllerListTrait
     /**
      * @return FiltersHelper
      */
-    public function getFiltersHelper(): FiltersHelper
+    protected function getFiltersHelper(): FiltersHelper
     {
         return $this->get('prestashop.bridge.helper.filters_helper');
     }
@@ -86,7 +86,7 @@ trait FrameworkBridgeControllerListTrait
     /**
      * @return HelperListBridge
      */
-    public function getHelperListBridge(): HelperListBridge
+    protected function getHelperListBridge(): HelperListBridge
     {
         return $this->get('prestashop.bridge.helper.helper_list_bridge');
     }
@@ -99,7 +99,7 @@ trait FrameworkBridgeControllerListTrait
      *
      * @return void
      */
-    public function addActionList(ActionInterface $action, HelperListConfiguration $helperListConfiguration): void
+    protected function addActionList(ActionInterface $action, HelperListConfiguration $helperListConfiguration): void
     {
         if ($action instanceof ListBulkAction) {
             $helperListConfiguration->bulkActions[$action->getLabel()] = $action->getConfig();
@@ -129,7 +129,7 @@ trait FrameworkBridgeControllerListTrait
      *
      * @return void
      */
-    public function addListField(FieldInterface $field, HelperListConfiguration $helperListConfiguration): void
+    protected function addListField(FieldInterface $field, HelperListConfiguration $helperListConfiguration): void
     {
         $helperListConfiguration->fieldsList[$field->getLabel()] = $field->getConfig();
     }
