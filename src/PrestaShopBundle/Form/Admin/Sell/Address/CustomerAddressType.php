@@ -139,7 +139,7 @@ class CustomerAddressType extends TranslatorAwareType
                 'The national ID card number of this person, or a unique tax identification number.',
                 'Admin.Orderscustomers.Feature'
             ),
-            'required' => in_array('dni', $requiredFields) ? true : false,
+            'required' => in_array('dni', $requiredFields),
             'empty_data' => '',
             'constraints' => [
                 new CleanHtml(),
@@ -237,7 +237,7 @@ class CustomerAddressType extends TranslatorAwareType
             ->add('company', TextType::class, [
                 'label' => $this->trans('Company', 'Admin.Global'),
                 'help' => $genericInvalidCharsMessage,
-                'required' => in_array('company', $requiredFields) ? true : false,
+                'required' => in_array('company', $requiredFields),
                 'empty_data' => '',
                 'constraints' => [
                     new CleanHtml(),
@@ -256,7 +256,7 @@ class CustomerAddressType extends TranslatorAwareType
             ])
             ->add('vat_number', TextType::class, [
                 'label' => $this->trans('VAT number', 'Admin.Orderscustomers.Feature'),
-                'required' => in_array('vat_number', $requiredFields) ? true : false,
+                'required' => in_array('vat_number', $requiredFields),
                 'empty_data' => '',
                 'constraints' => [
                     new CleanHtml(),
@@ -298,7 +298,7 @@ class CustomerAddressType extends TranslatorAwareType
             ])
             ->add('address2', TextType::class, [
                 'label' => $this->trans('Address (2)', 'Admin.Global'),
-                'required' => in_array('address2', $requiredFields) ? true : false,
+                'required' => in_array('address2', $requiredFields),
                 'empty_data' => '',
                 'constraints' => [
                     new CleanHtml(),
@@ -397,7 +397,7 @@ class CustomerAddressType extends TranslatorAwareType
                 ],
             ])->add('phone', TextType::class, [
                 'label' => $this->trans('Phone', 'Admin.Global'),
-                'required' => in_array('phone', $requiredFields) ? true : false,
+                'required' => in_array('phone', $requiredFields),
                 'empty_data' => '',
                 'constraints' => [
                     new CleanHtml(),
@@ -416,7 +416,7 @@ class CustomerAddressType extends TranslatorAwareType
             ])
             ->add('phone_mobile', TextType::class, [
                 'label' => $this->trans('Mobile phone', 'Admin.Global'),
-                'required' => in_array('phone_mobile', $requiredFields) ? true : false,
+                'required' => in_array('phone_mobile', $requiredFields),
                 'constraints' => [
                     new CleanHtml(),
                     new TypedRegex([
@@ -433,7 +433,7 @@ class CustomerAddressType extends TranslatorAwareType
                 ],
             ])
             ->add('other', TextareaType::class, [
-                'required' => in_array('other', $requiredFields) ? true : false,
+                'required' => in_array('other', $requiredFields),
                 'label' => $this->trans('Other', 'Admin.Global'),
                 'help' => $this->trans(
                     'Invalid characters:',
