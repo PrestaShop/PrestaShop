@@ -38,7 +38,7 @@ export default class CatalogPriceRuleRenderer implements RendererType {
   private $listTable: JQuery;
 
   constructor() {
-    this.listContainer = document.querySelector(CatalogPriceRuleMap.listContainer) as HTMLElement;
+    this.listContainer = <HTMLElement>document.querySelector(CatalogPriceRuleMap.listContainer);
     this.eventEmitter = window.prestashop.instance.eventEmitter;
     this.$loadingSpinner = $(ProductMap.catalogPriceRule.loadingSpinner);
     this.$listTable = $(ProductMap.catalogPriceRule.listTable);
@@ -51,12 +51,25 @@ export default class CatalogPriceRuleRenderer implements RendererType {
 
   public render(data: Record<string, any>): void {
     const {listFields} = CatalogPriceRuleMap;
-    const tbody = this.listContainer.querySelector(`${CatalogPriceRuleMap.listContainer} tbody`) as HTMLElement;
-    const trTemplateContainer = this.listContainer.querySelector(CatalogPriceRuleMap.listRowTemplate) as HTMLScriptElement;
-    const rowContainer = document.querySelector(CatalogPriceRuleMap.catalogPriceRuleRow) as HTMLElement;
+    const tbody = this.listContainer.querySelector<HTMLElement>(`${CatalogPriceRuleMap.listContainer} tbody`);
+    if (!tbody) {
+      console.log(`Error: ${CatalogPriceRuleMap.listContainer} element not found`)
+      return;
+    }
+    const trTemplateContainer =  this.listContainer.querySelector<HTMLScriptElement>(CatalogPriceRuleMap.listRowTemplate);
+    if (!trTemplateContainer) {
+      console.log(`Error: ${CatalogPriceRuleMap.listRowTemplate} element not found`)
+      return;
+    }
+    const rowContainer = document.querySelector<HTMLElement>(CatalogPriceRuleMap.blockContainer);
+    if (!rowContainer) {
+      console.log(`Error: ${CatalogPriceRuleMap.blockContainer} element not found`)
+      return;
+    }
     const editCatalogPriceRuleUrl = rowContainer.dataset.catalogPriceUrl;
 
     if (!editCatalogPriceRuleUrl) {
+      console.log(`Error: Catalog price rule url not found`)
       return;
     }
 
@@ -68,36 +81,41 @@ export default class CatalogPriceRuleRenderer implements RendererType {
     this.toggleListVisibility(catalogPriceRules.length > 0);
 
     catalogPriceRules.forEach((catalogPriceRule: CatalogPriceRuleForListing) => {
-      const temporaryContainer = document.createElement('tbody');
-      temporaryContainer.innerHTML = trTemplate.trim();
+      try {
+        const temporaryContainer = document.createElement('tbody');
+        temporaryContainer.innerHTML = trTemplate.trim();
 
-      const trClone = temporaryContainer.firstChild as HTMLElement;
-      const idField = this.selectListField(trClone, listFields.catalogPriceRuleId);
-      const shopField = this.selectListField(trClone, listFields.shop);
-      const currencyField = this.selectListField(trClone, listFields.currency);
-      const countryField = this.selectListField(trClone, listFields.country);
-      const groupField = this.selectListField(trClone, listFields.group);
-      const nameField = this.selectListField(trClone, listFields.name);
-      const fromQuantityField = this.selectListField(trClone, listFields.fromQuantity);
-      const reductionTypeField = this.selectListField(trClone, listFields.reductionType);
-      const reductionField = this.selectListField(trClone, listFields.reduction);
-      const startDateField = this.selectListField(trClone, listFields.from);
-      const endDateField = this.selectListField(trClone, listFields.to);
+        const trClone = <HTMLElement>temporaryContainer.firstChild;
+        const idField = this.selectListField(trClone, listFields.catalogPriceRuleId);
+        const shopField = this.selectListField(trClone, listFields.shop);
+        const currencyField = this.selectListField(trClone, listFields.currency);
+        const countryField = this.selectListField(trClone, listFields.country);
+        const groupField = this.selectListField(trClone, listFields.group);
+        const nameField = this.selectListField(trClone, listFields.name);
+        const fromQuantityField = this.selectListField(trClone, listFields.fromQuantity);
+        const reductionTypeField = this.selectListField(trClone, listFields.reductionType);
+        const reductionField = this.selectListField(trClone, listFields.reduction);
+        const startDateField = this.selectListField(trClone, listFields.from);
+        const endDateField = this.selectListField(trClone, listFields.to);
 
-      const editBtn = this.selectLink(trClone, listFields.editBtn);
-      idField.textContent = String(catalogPriceRule.id);
-      shopField.textContent = catalogPriceRule.shop;
-      currencyField.textContent = catalogPriceRule.currency;
-      countryField.textContent = catalogPriceRule.country;
-      groupField.textContent = catalogPriceRule.group;
-      nameField.textContent = catalogPriceRule.name;
-      fromQuantityField.textContent = catalogPriceRule.fromQuantity;
-      reductionTypeField.textContent = catalogPriceRule.reductionType;
-      reductionField.textContent = catalogPriceRule.reduction;
-      startDateField.textContent = catalogPriceRule.startDate;
-      endDateField.textContent = catalogPriceRule.endDate;
-      editBtn.href = editCatalogPriceRuleUrl.replace('%catalog_price_rule_id%', String(catalogPriceRule.id));
-      tbody.append(trClone);
+        const editBtn = this.selectLink(trClone, listFields.editBtn);
+        idField.textContent = String(catalogPriceRule.id);
+        shopField.textContent = catalogPriceRule.shop;
+        currencyField.textContent = catalogPriceRule.currency;
+        countryField.textContent = catalogPriceRule.country;
+        groupField.textContent = catalogPriceRule.group;
+        nameField.textContent = catalogPriceRule.name;
+        fromQuantityField.textContent = catalogPriceRule.fromQuantity;
+        reductionTypeField.textContent = catalogPriceRule.reductionType;
+        reductionField.textContent = catalogPriceRule.reduction;
+        startDateField.textContent = catalogPriceRule.startDate;
+        endDateField.textContent = catalogPriceRule.endDate;
+        editBtn.href = editCatalogPriceRuleUrl.replace('%catalog_price_rule_id%', String(catalogPriceRule.id));
+        tbody.append(trClone);
+      } catch (e) {
+        console.log(e);
+        return;
+      }
     });
   }
 
@@ -106,10 +124,18 @@ export default class CatalogPriceRuleRenderer implements RendererType {
   }
 
   private selectListField(templateTrClone: HTMLElement, selector: string): HTMLElement {
-    return templateTrClone.querySelector(selector) as HTMLElement;
+    let field = templateTrClone.querySelector<HTMLElement>(selector);
+    if (field === null) {
+      throw new Error(`Error: ${selector} element not found`);
+    }
+    return field;
   }
 
   private selectLink(templateTrClone: HTMLElement, selector: string): HTMLLinkElement {
-    return templateTrClone.querySelector(selector) as HTMLLinkElement;
+    let field = templateTrClone.querySelector<HTMLLinkElement>(selector);
+    if (field === null) {
+      throw new Error(`Error: ${selector} element not found`);
+    }
+    return field;
   }
 }

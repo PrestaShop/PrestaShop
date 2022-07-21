@@ -104,18 +104,24 @@ export default class SpecificPricesManager {
     let listRendered = false;
     let listShown = false;
 
-    if (showCatalogPriceRulesButton === null || catalogPriceRulesContainer === null) {
+    if (showCatalogPriceRulesButton === null) {
+      console.log(`Error: ${CatalogPriceRulesMap.showCatalogPriceRules} element not found`)
       return;
     }
-    const showIcon = showCatalogPriceRulesButton.dataset.showIcon || 'visibility';
-    const hideIcon = showCatalogPriceRulesButton.dataset.hideIcon || 'visibility_off';
-    const showLabel = showCatalogPriceRulesButton.dataset.showLabel || 'Show catalog price rules';
-    const hideLabel = showCatalogPriceRulesButton.dataset.hideLabel || 'Hide catalog price rules';
+    if (catalogPriceRulesContainer === null) {
+      console.log(`Error: ${CatalogPriceRulesMap.blockContainer} element not found`)
+      return;
+    }
+    const showIcon = showCatalogPriceRulesButton.dataset.showIcon ?? 'visibility';
+    const hideIcon = showCatalogPriceRulesButton.dataset.hideIcon ?? 'visibility_off';
+    const showLabel = showCatalogPriceRulesButton.dataset.showLabel ?? 'Show catalog price rules';
+    const hideLabel = showCatalogPriceRulesButton.dataset.hideLabel ?? 'Hide catalog price rules';
 
     /** This should be the form container for the whole form element, so we can hide the whole block */
     const formContainer = <HTMLElement>catalogPriceRulesContainer.parentNode;
 
     if (formContainer === null) {
+      console.log(`Error: ${CatalogPriceRulesMap.blockContainer} parent element not found`)
       return;
     }
 
