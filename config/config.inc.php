@@ -218,7 +218,7 @@ $isLanguageDefinedFromSession = (isset($language) && $language->isAssociatedToSh
 $useDefaultLanguage = $isNotValidLanguage || !$isLanguageDefinedFromSession;
 if ($useDefaultLanguage) {
     // Default value for most cases
-    $language = new Language(Configuration::get('PS_LANG_DEFAULT'));
+    $language = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
 
     // if `PS_LANG_DEFAULT` not a valid language for current shop then 
     // use first valid language of the shop as default language.
