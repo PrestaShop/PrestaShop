@@ -185,19 +185,52 @@ class AddressControllerTest extends FormGridControllerTestCase
     {
         // We validate that the request return an address with valid offset
         $addresses = $this->getEntitiesFromGrid(
-            ['address[offset]' => 0]
+            [
+                'address[offset]' => 0,
+                'address[limit]' => 100,
+            ]
         );
-        $this->assertGreaterThanOrEqual(1, count($addresses), 'Expected at least one address with valid offset');
+        $addressesCount = count($addresses);
+        $offsetOutOfRange = 10 * $addressesCount;
+
+        $this->assertGreaterThanOrEqual(1, $addressesCount, 'Expected at least one address with a valid offset');
+        $this->assertLessThan(100, $addressesCount, 'Expected less addresses than request used limit');
         // Preceding filter parameters should be applied here.
         $this->assertCollectionContainsEntity($addresses, $addressId);
 
-        // We should get an address even with offset out of range
+        // We should get an address even with out of range offset and without limit
         $addresses = $this->getEntitiesFromGrid(
-            ['address[offset]' => 10]
+            [
+                'address[offset]' => $offsetOutOfRange,
+            ]
         );
-        $this->assertGreaterThanOrEqual(1, count($addresses), 'Should return last element even if offset out of range.');
-        // Preceding filter parameters should be applied here.
-        $this->assertCollectionContainsEntity($addresses, $addressId);
+        $this->assertGreaterThanOrEqual(1, count($addresses), 'Should return at least an address even if offset out of range.');
+
+        // We should get addresses with regular limit given even with out of range offset
+        $addresses = $this->getEntitiesFromGrid(
+            [
+                'address[offset]' => $offsetOutOfRange,
+                'address[limit]' => 5 * $offsetOutOfRange,
+            ]
+        );
+        $this->assertEquals($addressesCount, count($addresses), 'Should return all available addresses within given limit range even if offset out of range.');
+
+        // We should get an address even with out of range offset if invalid limit given
+        $addresses = $this->getEntitiesFromGrid(
+            [
+                'address[offset]' => $offsetOutOfRange,
+                'address[limit]' => 0,
+            ]
+        );
+        $this->assertGreaterThanOrEqual(1, count($addresses), 'Expected at least one address with a valid offset');
+
+        // We should get an address even with offset and limit at the same value and offset out of range.
+        $addresses = $this->getEntitiesFromGrid(
+            [
+                'address[offset]' => $offsetOutOfRange,
+                'address[limit]' => $offsetOutOfRange,
+            ]
+        );
 
         return $addressId;
     }

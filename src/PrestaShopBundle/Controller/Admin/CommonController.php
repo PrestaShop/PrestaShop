@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\AbstractGridDefinitionFac
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FilterableGridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
+use PrestaShop\PrestaShop\Core\Search\Pagination;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Service\Grid\ControllerResponseBuilder;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
@@ -111,6 +112,13 @@ class CommonController extends FrameworkBundleAdminController
      */
     public function paginationAction(Request $request, $limit = 10, $offset = 0, $total = 0, $view = 'full', $prefix = '')
     {
+        // DoctrineGridDataFactory::getData(...)
+        // offset is dynamically changed by getData method if invalid offset given,
+        // so we need to apply the same change here.
+        if (Pagination::isOffsetOutOfRange($total, $offset)) {
+            $offset = Pagination::computeValidOffset($total, $offset, $limit);
+        }
+
         $offsetParam = empty($prefix) ? 'offset' : sprintf('%s[offset]', $prefix);
         $limitParam = empty($prefix) ? 'limit' : sprintf('%s[limit]', $prefix);
 
