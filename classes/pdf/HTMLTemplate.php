@@ -42,7 +42,7 @@ abstract class HTMLTemplateCore
     /**
      * @var bool
      */
-    public $available_in_your_account = true;
+    public $available_in_your_account = false;
 
     /**
      * @var Smarty

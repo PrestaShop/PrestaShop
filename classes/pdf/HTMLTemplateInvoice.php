@@ -42,7 +42,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
     /**
      * @var bool
      */
-    public $available_in_your_account = false;
+    public $available_in_your_account = true;
 
     /**
      * @param OrderInvoice $order_invoice
