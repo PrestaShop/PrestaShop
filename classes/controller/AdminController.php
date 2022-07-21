@@ -409,7 +409,7 @@ class AdminControllerCore extends Controller
     protected $tabSlug;
 
     /** @var int Auth cookie lifetime */
-    const AUTH_COOKIE_LIFETIME = 3600;
+    public $AUTH_COOKIE_LIFETIME = 3600;
 
     /** @var array */
     public $_conf;
@@ -2748,7 +2748,7 @@ class AdminControllerCore extends Controller
             $this->context->employee->logout();
         }
         if (isset(Context::getContext()->cookie->last_activity)) {
-            if (((int) $this->context->cookie->last_activity) + self::AUTH_COOKIE_LIFETIME < time()) {
+            if (((int) $this->context->cookie->last_activity) + $this->AUTH_COOKIE_LIFETIME < time()) {
                 $this->context->employee->logout();
             } else {
                 $this->context->cookie->last_activity = time();
