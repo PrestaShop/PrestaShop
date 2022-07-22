@@ -2226,6 +2226,7 @@ class ProductCore extends ObjectModel
                 'default_on' => null !== $default,
                 'minimal_quantity' => null !== $minimal_quantity,
                 'available_date' => null !== $available_date,
+                'reference' => null !== $reference,
             ]);
         }
 
