@@ -26,11 +26,12 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Bridge\Helper;
+namespace PrestaShopBundle\Bridge\Listing;
 
 use Context;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShopBundle\Bridge\AdminController\FilterPrefix;
+use PrestaShopBundle\Bridge\Listing\FilterPrefix;
+use PrestaShopBundle\Bridge\Listing\Configuration\ListHelperConfiguration;
 use Symfony\Component\HttpFoundation\Request;
 use Tools;
 
@@ -53,12 +54,12 @@ class ResetFiltersHelper
     }
 
     /**
-     * @param HelperListConfiguration $helperListConfiguration
+     * @param ListHelperConfiguration $helperListConfiguration
      * @param Request|null $request
      *
      * @return void
      */
-    public function resetFilters(HelperListConfiguration $helperListConfiguration, Request $request = null): void
+    public function resetFilters(ListHelperConfiguration $helperListConfiguration, Request $request = null): void
     {
         $prefix = FilterPrefix::getByClassName($helperListConfiguration->legacyControllerName);
         $filters = $this->context->cookie->getFamily($prefix . $helperListConfiguration->listId . 'Filter_');

@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Bridge\AdminController;
 
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
+use PrestaShopBundle\Bridge\AdminController\Configuration\ControllerConfiguration;
 
 class LegacyControllerBridgeFactory
 {

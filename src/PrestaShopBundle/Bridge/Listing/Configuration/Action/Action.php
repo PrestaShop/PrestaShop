@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Bridge\AdminController\Action;
+namespace PrestaShopBundle\Bridge\Listing\Configuration\Action;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 

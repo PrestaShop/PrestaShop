@@ -28,16 +28,16 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Bridge\AdminController;
 
-use PrestaShopBundle\Bridge\AdminController\Action\ActionInterface;
-use PrestaShopBundle\Bridge\AdminController\Action\ListBulkAction;
-use PrestaShopBundle\Bridge\AdminController\Action\ListHeaderToolbarAction;
-use PrestaShopBundle\Bridge\AdminController\Action\ListRowAction;
-use PrestaShopBundle\Bridge\AdminController\Field\FieldInterface;
+use PrestaShopBundle\Bridge\Listing\Configuration\Action\ActionInterface;
+use PrestaShopBundle\Bridge\Listing\Configuration\Action\ListBulkAction;
+use PrestaShopBundle\Bridge\Listing\Configuration\Action\ListHeaderToolbarAction;
+use PrestaShopBundle\Bridge\Listing\Configuration\Action\ListRowAction;
+use PrestaShopBundle\Bridge\Listing\Configuration\Field\FieldInterface;
 use PrestaShopBundle\Bridge\Exception\NotAllowedActionTypeForListException;
-use PrestaShopBundle\Bridge\Helper\FiltersHelper;
-use PrestaShopBundle\Bridge\Helper\HelperListBridge;
-use PrestaShopBundle\Bridge\Helper\HelperListConfiguration;
-use PrestaShopBundle\Bridge\Helper\ResetFiltersHelper;
+use PrestaShopBundle\Bridge\Listing\FiltersHelper;
+use PrestaShopBundle\Bridge\Listing\ListHelperBridge\ListHelperBridge;
+use PrestaShopBundle\Bridge\Listing\Configuration\ListHelperConfiguration;
+use PrestaShopBundle\Bridge\Listing\ResetFiltersHelper;
 
 /**
  * Contains the principal methods you need to horizontally migrate a controller which has a list.
@@ -52,7 +52,7 @@ trait FrameworkBridgeControllerListTrait
         bool $deleted = false,
         bool $explicitSelect = false,
         bool $useFoundRows = true
-    ): HelperListConfiguration {
+    ): ListHelperConfiguration {
         $controllerConfiguration = $this->getControllerConfiguration();
 
         return $this->get('prestashop.bridge.helper.helper_list_configuration_factory')->create(
@@ -84,9 +84,9 @@ trait FrameworkBridgeControllerListTrait
     }
 
     /**
-     * @return HelperListBridge
+     * @return ListHelperBridge
      */
-    protected function getHelperListBridge(): HelperListBridge
+    protected function getHelperListBridge(): ListHelperBridge
     {
         return $this->get('prestashop.bridge.helper.helper_list_bridge');
     }
@@ -95,11 +95,11 @@ trait FrameworkBridgeControllerListTrait
      * This method add action specific for the list.
      *
      * @param ActionInterface $action
-     * @param HelperListConfiguration $helperListConfiguration
+     * @param ListHelperConfiguration $helperListConfiguration
      *
      * @return void
      */
-    protected function addActionList(ActionInterface $action, HelperListConfiguration $helperListConfiguration): void
+    protected function addActionList(ActionInterface $action, ListHelperConfiguration $helperListConfiguration): void
     {
         if ($action instanceof ListBulkAction) {
             $helperListConfiguration->bulkActions[$action->getLabel()] = $action->getConfig();
@@ -129,7 +129,7 @@ trait FrameworkBridgeControllerListTrait
      *
      * @return void
      */
-    protected function addListField(FieldInterface $field, HelperListConfiguration $helperListConfiguration): void
+    protected function addListField(FieldInterface $field, ListHelperConfiguration $helperListConfiguration): void
     {
         $helperListConfiguration->fieldsList[$field->getLabel()] = $field->getConfig();
     }

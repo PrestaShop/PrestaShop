@@ -33,17 +33,17 @@ use Feature;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
-use PrestaShopBundle\Bridge\AdminController\Action\HeaderToolbarAction;
-use PrestaShopBundle\Bridge\AdminController\Action\ListBulkAction;
-use PrestaShopBundle\Bridge\AdminController\Action\ListHeaderToolbarAction;
-use PrestaShopBundle\Bridge\AdminController\Action\ListRowAction;
-use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
-use PrestaShopBundle\Bridge\AdminController\Field\Field;
+use PrestaShopBundle\Bridge\AdminController\Configuration\HeaderToolbarAction;
+use PrestaShopBundle\Bridge\Listing\Configuration\Action\ListBulkAction;
+use PrestaShopBundle\Bridge\Listing\Configuration\Action\ListHeaderToolbarAction;
+use PrestaShopBundle\Bridge\Listing\Configuration\Action\ListRowAction;
+use PrestaShopBundle\Bridge\AdminController\Configuration\ControllerConfiguration;
+use PrestaShopBundle\Bridge\Listing\Configuration\Field\Field;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerInterface;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerListTrait;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerTrait;
-use PrestaShopBundle\Bridge\Helper\HelperListConfiguration;
-use PrestaShopBundle\Bridge\Helper\ListCustomizer\FeatureHelperListBridge;
+use PrestaShopBundle\Bridge\Listing\Configuration\ListHelperConfiguration;
+use PrestaShopBundle\Bridge\Listing\ListHelperBridge\FeatureListHelperBridge;
 use PrestaShopBundle\Bridge\Smarty\FrameworkControllerSmartyTrait;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -191,9 +191,9 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
     }
 
     /**
-     * @return FeatureHelperListBridge
+     * @return FeatureListHelperBridge
      */
-    public function getHelperListBridge(): FeatureHelperListBridge
+    public function getHelperListBridge(): FeatureListHelperBridge
     {
         return $this->get('prestashop.bridge.helper.list_customizer.feature_helper_list_bridge');
     }
@@ -225,7 +225,7 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
      *
      * @return void
      */
-    private function setListActions(HelperListConfiguration $helperListConfiguration): void
+    private function setListActions(ListHelperConfiguration $helperListConfiguration): void
     {
         $controllerConfiguration = $this->getControllerConfiguration();
 
@@ -252,7 +252,7 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
      *
      * @return void
      */
-    private function setListFields(HelperListConfiguration $helperListConfiguration): void
+    private function setListFields(ListHelperConfiguration $helperListConfiguration): void
     {
         $this->addListField(new Field(
             'id_feature', [

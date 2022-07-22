@@ -24,19 +24,21 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Bridge\Smarty;
-
-use PrestaShopBundle\Bridge\AdminController\Configuration\ControllerConfiguration;
+declare(strict_types=1);
 
 /**
- * Define contract for configurator.
+ * @todo: "AdminController\Action" is misleading namespace as it could easily be confused with Controller Action
+ *        (while its actually only the toolbar action in a header)
+ *        not yet sure if these actions going to evolve much, but probably this class belongs elsewhere (need to double-check legacy behavior),
  */
-interface ConfiguratorInterface
+namespace PrestaShopBundle\Bridge\AdminController\Configuration;
+
+/**
+ * This class is the object to instantiate if you want to add an action in the header toolbar of your page.
+ * @todo: this is the only action not related to the list,
+ *      not sure if it needs an interface at all, but it probably shouldn't use the same interface that is used for list actions
+ *      (even though for now they seem to be similar, but the purpose is different and they shouldn't be coupled)
+ */
+class HeaderToolbarAction
 {
-    /**
-     * @param ControllerConfiguration $controllerConfiguration
-     *
-     * @return void
-     */
-    public function configure(ControllerConfiguration $controllerConfiguration);
 }

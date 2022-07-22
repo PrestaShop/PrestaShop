@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Bridge\AdminController;
 
+use PrestaShopBundle\Bridge\AdminController\Configuration\ControllerConfiguration;
 use PrestaShopBundle\Bridge\Exception\BridgeException;
 use Tab;
 

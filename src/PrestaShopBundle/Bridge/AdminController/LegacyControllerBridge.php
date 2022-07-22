@@ -33,6 +33,7 @@ use Hook;
 use Media;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
+use PrestaShopBundle\Bridge\AdminController\Configuration\ControllerConfiguration;
 use Tools;
 
 /**

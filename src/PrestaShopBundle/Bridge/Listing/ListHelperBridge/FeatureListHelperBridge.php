@@ -26,20 +26,19 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Bridge\Helper\ListCustomizer;
+namespace PrestaShopBundle\Bridge\Listing\ListHelperBridge;
 
 use Db;
 use DbQuery;
-use PrestaShopBundle\Bridge\Helper\HelperListBridge;
-use PrestaShopBundle\Bridge\Helper\HelperListConfiguration;
+use PrestaShopBundle\Bridge\Listing\Configuration\ListHelperConfiguration;
 
 /**
  * This class customize the result of the list for the feature controller.
  */
-class FeatureHelperListBridge extends HelperListBridge
+class FeatureListHelperBridge extends ListHelperBridge
 {
-    public function generateListQuery(
-        HelperListConfiguration $helperListConfiguration,
+    protected function generateListQuery(
+        ListHelperConfiguration $helperListConfiguration,
         int $idLang
     ): void {
         parent::generateListQuery($helperListConfiguration, $idLang);

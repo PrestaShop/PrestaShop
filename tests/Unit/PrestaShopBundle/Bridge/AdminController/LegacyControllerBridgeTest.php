@@ -30,7 +30,7 @@ namespace Tests\Unit\PrestaShopBundle\Bridge\AdminController;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
-use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
+use PrestaShopBundle\Bridge\AdminController\Configuration\ControllerConfiguration;
 use PrestaShopBundle\Bridge\AdminController\LegacyControllerBridge;
 use PrestaShopBundle\Security\Admin\Employee as SecurityEmployee;
 

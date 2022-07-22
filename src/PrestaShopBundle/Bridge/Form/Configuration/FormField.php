@@ -23,26 +23,43 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-namespace PrestaShopBundle\Bridge\AdminController\Action;
+namespace PrestaShopBundle\Bridge\Form\Configuration;
 
-/**
- * Defines the contract for actions class and needed constant to know available action.
- */
-interface ActionInterface
+//copied pseudo class from another pr.
+class FormField
 {
-    public const AVAILABLE_ACTION_VIEW = 'view';
-    public const AVAILABLE_ACTION_EDIT = 'edit';
-    public const AVAILABLE_ACTION_DUPLICATE = 'duplicate';
-    public const AVAILABLE_ACTION_DELETE = 'delete';
+    public const TYPE_INPUT = 'input';
+    public const TYPE_SUBMIT = 'submit';
 
     /**
-     * @return array
+     * @var string
      */
-    public function getConfig(): array;
+    private $type;
 
     /**
-     * @return string
+     * @var array
      */
-    public function getLabel(): string;
+    private $config;
+
+    /**
+     * @param string $type
+     * @param array<string, mixed>> $config
+     */
+    public function __construct(string $type, array $config)
+    {
+        $this->type = $type;
+        $this->config = $config;
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    public function getConfig(): array
+    {
+        return $this->config;
+    }
 }

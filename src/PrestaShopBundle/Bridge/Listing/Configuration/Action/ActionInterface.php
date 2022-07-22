@@ -24,19 +24,25 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Bridge\Smarty;
-
-use PrestaShopBundle\Bridge\AdminController\Configuration\ControllerConfiguration;
+namespace PrestaShopBundle\Bridge\Listing\Configuration\Action;
 
 /**
- * Define contract for configurator.
+ * Defines the contract for actions class and needed constant to know available action.
  */
-interface ConfiguratorInterface
+interface ActionInterface
 {
+    public const AVAILABLE_ACTION_VIEW = 'view';
+    public const AVAILABLE_ACTION_EDIT = 'edit';
+    public const AVAILABLE_ACTION_DUPLICATE = 'duplicate';
+    public const AVAILABLE_ACTION_DELETE = 'delete';
+
     /**
-     * @param ControllerConfiguration $controllerConfiguration
-     *
-     * @return void
+     * @return array
      */
-    public function configure(ControllerConfiguration $controllerConfiguration);
+    public function getConfig(): array;
+
+    /**
+     * @return string
+     */
+    public function getLabel(): string;
 }

@@ -23,14 +23,16 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Bridge\AdminController\Action;
+namespace PrestaShopBundle\Bridge\Form\FormHelperBridge;
 
-/**
- * This class is the object to instantiate if you want to add an action on each row of your list.
- */
-class ListRowAction extends Action
+// reflects a custom form helper similarly as in the listing. Helps seeing whole picture, even though its possible it won't be needed
+class FooBarFormHelperBridge extends FormHelperBridge
 {
+    public function generate(): ?string
+    {
+        // pseudo code only to reflect possible classes structure
+        return parent::generate();
+    }
 }

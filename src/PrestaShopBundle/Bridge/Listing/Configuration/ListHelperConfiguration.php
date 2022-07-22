@@ -26,14 +26,14 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Bridge\Helper;
+namespace PrestaShopBundle\Bridge\Listing\Configuration;
 
-use PrestaShopBundle\Bridge\AdminController\Action\ActionInterface;
+use PrestaShopBundle\Bridge\Listing\Configuration\Action\ActionInterface;
 
 /**
  * This object contains the configuration needed to generate a list using the helper list.
  */
-class HelperListConfiguration
+class ListHelperConfiguration
 {
     /**
      * @var int

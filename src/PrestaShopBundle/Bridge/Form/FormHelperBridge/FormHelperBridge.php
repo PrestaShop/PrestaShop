@@ -23,20 +23,17 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
-namespace PrestaShopBundle\Bridge\Smarty;
+namespace PrestaShopBundle\Bridge\Form\FormHelperBridge;
 
-use PrestaShopBundle\Bridge\AdminController\Configuration\ControllerConfiguration;
-
-/**
- * Define contract for configurator.
- */
-interface ConfiguratorInterface
+class FormHelperBridge
 {
-    /**
-     * @param ControllerConfiguration $controllerConfiguration
-     *
-     * @return void
-     */
-    public function configure(ControllerConfiguration $controllerConfiguration);
+//pseudo class for structure visibility
+    public function generate(): ?string
+    {
+        $helper = new \HelperForm();
+        //... pseudo
+        return $helper->generate();
+    }
 }

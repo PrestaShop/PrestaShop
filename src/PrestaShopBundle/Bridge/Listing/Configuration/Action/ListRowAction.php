@@ -26,11 +26,11 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Bridge\AdminController\Action;
+namespace PrestaShopBundle\Bridge\Listing\Configuration\Action;
 
 /**
- * This class is the object to instantiate if you want to add an action in the header toolbar of your list.
+ * This class is the object to instantiate if you want to add an action on each row of your list.
  */
-class ListHeaderToolbarAction extends Action
+class ListRowAction extends Action
 {
 }

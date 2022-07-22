@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Bridge\AdminController\Action;
+namespace PrestaShopBundle\Bridge\Listing\Configuration\Action;
 
 /**
  * This class is the object to instantiate if you want to add a bulk action for your list.

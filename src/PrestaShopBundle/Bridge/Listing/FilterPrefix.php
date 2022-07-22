@@ -24,20 +24,24 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Bridge\AdminController\Field;
+declare(strict_types=1);
+
+namespace PrestaShopBundle\Bridge\Listing;
+
+use Tools;
 
 /**
- * Define contract for field class.
+ * This class allow you to get filter prefix in different way.
  */
-interface FieldInterface
+class FilterPrefix
 {
     /**
-     * @return array
+     * @param string $className
+     *
+     * @return string|null
      */
-    public function getConfig(): array;
-
-    /**
-     * @return string
-     */
-    public function getLabel(): string;
+    public static function getByClassName(string $className): ?string
+    {
+        return str_replace(['admin', 'controller'], '', Tools::strtolower($className));
+    }
 }
