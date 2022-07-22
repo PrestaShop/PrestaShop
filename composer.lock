@@ -4594,12 +4594,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/classic-theme.git",
-                "reference": "f7ea7f67912a4d145645fc59491099faf79455aa"
+                "reference": "8152275f69b826c6022c0b4fd392074743f153c4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/classic-theme/zipball/f7ea7f67912a4d145645fc59491099faf79455aa",
-                "reference": "f7ea7f67912a4d145645fc59491099faf79455aa",
+                "url": "https://api.github.com/repos/PrestaShop/classic-theme/zipball/8152275f69b826c6022c0b4fd392074743f153c4",
+                "reference": "8152275f69b826c6022c0b4fd392074743f153c4",
                 "shasum": ""
             },
             "require-dev": {
@@ -4626,7 +4626,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/classic-theme/tree/develop"
             },
-            "time": "2022-05-03T14:27:05+00:00"
+            "time": "2022-07-22T13:07:56+00:00"
         },
         {
             "name": "prestashop/contactform",
