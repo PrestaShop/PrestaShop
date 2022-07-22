@@ -52,24 +52,27 @@ export default class CatalogPriceRuleRenderer implements RendererType {
   public render(data: Record<string, any>): void {
     const {listFields} = CatalogPriceRuleMap;
     const tbody = this.listContainer.querySelector<HTMLElement>(`${CatalogPriceRuleMap.listContainer} tbody`);
+
     if (!tbody) {
-      console.log(`Error: ${CatalogPriceRuleMap.listContainer} element not found`)
+      console.log(`Error: ${CatalogPriceRuleMap.listContainer} element not found`);
       return;
     }
-    const trTemplateContainer =  this.listContainer.querySelector<HTMLScriptElement>(CatalogPriceRuleMap.listRowTemplate);
+    const trTemplateContainer = this.listContainer.querySelector<HTMLScriptElement>(CatalogPriceRuleMap.listRowTemplate);
+
     if (!trTemplateContainer) {
-      console.log(`Error: ${CatalogPriceRuleMap.listRowTemplate} element not found`)
+      console.log(`Error: ${CatalogPriceRuleMap.listRowTemplate} element not found`);
       return;
     }
     const rowContainer = document.querySelector<HTMLElement>(CatalogPriceRuleMap.blockContainer);
+
     if (!rowContainer) {
-      console.log(`Error: ${CatalogPriceRuleMap.blockContainer} element not found`)
+      console.log(`Error: ${CatalogPriceRuleMap.blockContainer} element not found`);
       return;
     }
     const editCatalogPriceRuleUrl = rowContainer.dataset.catalogPriceUrl;
 
     if (!editCatalogPriceRuleUrl) {
-      console.log(`Error: Catalog price rule url not found`)
+      console.log('Error: Catalog price rule url not found');
       return;
     }
 
@@ -79,9 +82,8 @@ export default class CatalogPriceRuleRenderer implements RendererType {
     const catalogPriceRules = data.catalogPriceRules as Array<CatalogPriceRuleForListing>;
 
     this.toggleListVisibility(catalogPriceRules.length > 0);
-
-    catalogPriceRules.forEach((catalogPriceRule: CatalogPriceRuleForListing) => {
-      try {
+    try {
+      catalogPriceRules.forEach((catalogPriceRule: CatalogPriceRuleForListing) => {
         const temporaryContainer = document.createElement('tbody');
         temporaryContainer.innerHTML = trTemplate.trim();
 
@@ -112,11 +114,10 @@ export default class CatalogPriceRuleRenderer implements RendererType {
         endDateField.textContent = catalogPriceRule.endDate;
         editBtn.href = editCatalogPriceRuleUrl.replace('%catalog_price_rule_id%', String(catalogPriceRule.id));
         tbody.append(trClone);
-      } catch (e) {
-        console.log(e);
-        return;
-      }
-    });
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   private toggleListVisibility(show: boolean): void {
@@ -124,7 +125,8 @@ export default class CatalogPriceRuleRenderer implements RendererType {
   }
 
   private selectListField(templateTrClone: HTMLElement, selector: string): HTMLElement {
-    let field = templateTrClone.querySelector<HTMLElement>(selector);
+    const field = templateTrClone.querySelector<HTMLElement>(selector);
+
     if (field === null) {
       throw new Error(`Error: ${selector} element not found`);
     }
@@ -132,7 +134,8 @@ export default class CatalogPriceRuleRenderer implements RendererType {
   }
 
   private selectLink(templateTrClone: HTMLElement, selector: string): HTMLLinkElement {
-    let field = templateTrClone.querySelector<HTMLLinkElement>(selector);
+    const field = templateTrClone.querySelector<HTMLLinkElement>(selector);
+
     if (field === null) {
       throw new Error(`Error: ${selector} element not found`);
     }
