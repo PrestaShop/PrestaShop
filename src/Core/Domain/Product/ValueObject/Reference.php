@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintExcepti
 class Reference
 {
     /**
-     * Valid ean regex pattern
+     * Valid reference regex pattern
      */
     public const VALID_PATTERN = '/^[^<>;={}]*$/u';
 
