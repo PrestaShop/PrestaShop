@@ -40,7 +40,7 @@ $smarty->use_sub_dirs = true;
 $smarty->setConfigDir(_PS_SMARTY_DIR_.'configs');
 $smarty->caching = false;
 
-if (Configuration::get('PS_SMARTY_CACHING_TYPE') == 'mysql') {
+if (_PS_SMARTY_CACHING_TYPE_ == 'mysql') {
     include _PS_CLASS_DIR_.'Smarty/SmartyCacheResourceMysql.php';
     $smarty->caching_type = 'mysql';
 }
