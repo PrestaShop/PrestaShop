@@ -70,3 +70,9 @@ services:
   prestashop.core.search.builder.typed_builder.product_combination_filters_builder:
     class: 'PrestaShop\PrestaShop\Core\Search\Builder\TypedBuilder\ProductCombinationFiltersBuilder'
     tags: [ 'core.typed_filters_builder' ]
+
+  prestashop.core.search.panel:
+    class: 'PrestaShop\PrestaShop\Core\Search\Row\HookableSearchPanel'
+    arguments:
+      [ '@prestashop.core.hook.dispatcher', '@translator' ]
+
