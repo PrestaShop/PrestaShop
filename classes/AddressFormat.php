@@ -439,7 +439,7 @@ class AddressFormatCore extends ObjectModel
         $addressFormatedValues = AddressFormat::getFormattedAddressFieldsValues($address, $addressFields);
 
         Hook::exec('addressFormatGenerateAddressBefore', [
-            'controller' => Context::getContext()->controller,
+            'address' => $address,
             'patternRules' => &$patternRules
         ]);
         
