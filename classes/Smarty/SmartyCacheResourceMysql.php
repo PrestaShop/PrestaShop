@@ -25,6 +25,14 @@
  */
 class Smarty_CacheResource_Mysql extends Smarty_CacheResource_Custom
 {
+    /** @var PhpEncryption */
+    private $phpEncryption;
+
+    public function __construct()
+    {
+        $this->phpEncryption = new PhpEncryption(_NEW_COOKIE_KEY_);
+    }
+
     /**
      * fetch cached content and its modification time from data source.
      *
@@ -39,7 +47,7 @@ class Smarty_CacheResource_Mysql extends Smarty_CacheResource_Custom
     {
         $row = Db::getInstance()->getRow('SELECT modified, content FROM ' . _DB_PREFIX_ . 'smarty_cache WHERE id_smarty_cache = "' . pSQL($id, true) . '"');
         if ($row) {
-            $content = $row['content'];
+            $content = $this->phpEncryption->decrypt($row['content']);
             $mtime = strtotime($row['modified']);
         } else {
             $content = null;
@@ -87,7 +95,7 @@ class Smarty_CacheResource_Mysql extends Smarty_CacheResource_Custom
 			"' . pSQL($id, true) . '",
 			"' . pSQL(sha1($name)) . '",
 			"' . pSQL($cache_id, true) . '",
-			"' . pSQL($content, true) . '"
+			"' . $this->phpEncryption->encrypt($content) . '"
 		)');
 
         return (bool) Db::getInstance()->Affected_Rows();
