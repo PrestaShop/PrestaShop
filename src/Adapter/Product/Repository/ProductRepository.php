@@ -285,17 +285,28 @@ class ProductRepository extends AbstractObjectModelRepository
         return $this->loadProduct($product);
     }
 
+    /**
+     * @param ProductId $productId
+     *
+     * @return ProductType
+     *
+     * @throws CoreException
+     * @throws Exception
+     * @throws ExceptionAlias
+     * @throws ProductConstraintException
+     * @throws ProductNotFoundException
+     */
     public function getProductType(ProductId $productId): ProductType
     {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->addSelect('p.product_type')
+        $result = $this->connection->createQueryBuilder()
+            ->addSelect('p.product_type, p.cache_is_pack, p.is_virtual, p.cache_default_attribute')
             ->from($this->dbPrefix . 'product', 'p')
             ->where('p.id_product = :productId')
             ->setParameter('productId', $productId->getValue())
+            ->execute()
+            ->fetchAssociative()
         ;
 
-        $result = $qb->execute()->fetchAssociative();
         if (empty($result)) {
             throw new ProductNotFoundException(sprintf(
                 'Cannot find product type for product %d because it does not exist',
@@ -303,7 +314,12 @@ class ProductRepository extends AbstractObjectModelRepository
             ));
         }
 
-        return new ProductType($result['product_type']);
+        if (!empty($result['product_type'])) {
+            return new ProductType($result['product_type']);
+        }
+
+        // Older products that were created before product page v2, might have no type, so we determine it dynamically
+        return new ProductType($this->get($productId)->getDynamicProductType());
     }
 
     /**
