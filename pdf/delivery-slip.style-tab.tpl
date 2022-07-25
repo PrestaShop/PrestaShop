@@ -23,147 +23,151 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *}
 
-{assign var=color_header value="#F0F0F0"}
-{assign var=color_border value="#000000"}
-{assign var=color_border_lighter value="#CCCCCC"}
-{assign var=color_line_even value="#FFFFFF"}
-{assign var=color_line_odd value="#F9F9F9"}
-{assign var=font_size_text value="9pt"}
-{assign var=font_size_header value="9pt"}
-{assign var=font_size_product value="9pt"}
-{assign var=height_header value="20px"}
-{assign var=table_padding value="4px"}
+{block name="variables"}
+	{assign var=color_header value="#F0F0F0"}
+	{assign var=color_border value="#000000"}
+	{assign var=color_border_lighter value="#CCCCCC"}
+	{assign var=color_line_even value="#FFFFFF"}
+	{assign var=color_line_odd value="#F9F9F9"}
+	{assign var=font_size_text value="9pt"}
+	{assign var=font_size_header value="9pt"}
+	{assign var=font_size_product value="9pt"}
+	{assign var=height_header value="20px"}
+	{assign var=table_padding value="4px"}
+{/block}
 
-<style>
-	table, th, td {
-		margin: 0!important;
-		padding: 0!important;
-		vertical-align: middle;
-		font-size: {$font_size_text};
-		white-space: nowrap;
-	}
+{block name="styles"}
+	<style>
+		table, th, td {
+			margin: 0!important;
+			padding: 0!important;
+			vertical-align: middle;
+			font-size: {$font_size_text};
+			white-space: nowrap;
+		}
 
-	table.product {
-		border: 1px solid {$color_border};
-		border-collapse: collapse;
-	}
+		table.product {
+			border: 1px solid {$color_border};
+			border-collapse: collapse;
+		}
 
-	table#addresses-tab tr td {
-		font-size: large;
-	}
+		table#addresses-tab tr td {
+			font-size: large;
+		}
 
-	table#summary-tab {
-		padding: {$table_padding};
-		border: 1pt solid {$color_border};
-	}
+		table#summary-tab {
+			padding: {$table_padding};
+			border: 1pt solid {$color_border};
+		}
 
-	table#payment-tab {
-		padding: {$table_padding};
-		border: 1px solid {$color_border};
-	}
+		table#payment-tab {
+			padding: {$table_padding};
+			border: 1px solid {$color_border};
+		}
 
-	th.product {
-		border-bottom: 1px solid {$color_border};
-	}
+		th.product {
+			border-bottom: 1px solid {$color_border};
+		}
 
-	tr.discount th.header {
-		border-top: 1px solid {$color_border};
-	}
+		tr.discount th.header {
+			border-top: 1px solid {$color_border};
+		}
 
-	tr.product td {
-		border-bottom: 1px solid {$color_border_lighter};
-	}
+		tr.product td {
+			border-bottom: 1px solid {$color_border_lighter};
+		}
 
-	tr.color_line_even {
-		background-color: {$color_line_even};
-	}
+		tr.color_line_even {
+			background-color: {$color_line_even};
+		}
 
-	tr.color_line_odd {
-		background-color: {$color_line_odd};
-	}
+		tr.color_line_odd {
+			background-color: {$color_line_odd};
+		}
 
-	tr.customization_data td {
-	}
+		tr.customization_data td {
+		}
 
-	td.product {
-		vertical-align: middle;
-		font-size: {$font_size_product};
-	}
+		td.product {
+			vertical-align: middle;
+			font-size: {$font_size_product};
+		}
 
-	th.header {
-		font-size: {$font_size_header};
-		height: {$height_header};
-		background-color: {$color_header};
-		vertical-align: middle;
-		text-align: center;
-		font-weight: bold;
-	}
+		th.header {
+			font-size: {$font_size_header};
+			height: {$height_header};
+			background-color: {$color_header};
+			vertical-align: middle;
+			text-align: center;
+			font-weight: bold;
+		}
 
-	th.header-right {
-		font-size: {$font_size_header};
-		height: {$height_header};
-		background-color: {$color_header};
-		vertical-align: middle;
-		text-align: right;
-		font-weight: bold;
-	}
+		th.header-right {
+			font-size: {$font_size_header};
+			height: {$height_header};
+			background-color: {$color_header};
+			vertical-align: middle;
+			text-align: right;
+			font-weight: bold;
+		}
 
-	th.payment {
-		background-color: {$color_header};
-		vertical-align: middle;
-		font-weight: bold;
-	}
+		th.payment {
+			background-color: {$color_header};
+			vertical-align: middle;
+			font-weight: bold;
+		}
 
-	tr.separator td {
-		border-top: 1px solid #000000;
-	}
+		tr.separator td {
+			border-top: 1px solid #000000;
+		}
 
-	.left {
-		text-align: left;
-	}
+		.left {
+			text-align: left;
+		}
 
-	.fright {
-		float: right;
-	}
+		.fright {
+			float: right;
+		}
 
-	.right {
-		text-align: right;
-	}
+		.right {
+			text-align: right;
+		}
 
-	.center {
-		text-align: center;
-	}
+		.center {
+			text-align: center;
+		}
 
-	.bold {
-		font-weight: bold;
-	}
+		.bold {
+			font-weight: bold;
+		}
 
-	.border {
-		border: 1px solid black;
-	}
+		.border {
+			border: 1px solid black;
+		}
 
-	.no_top_border {
-		border-top:hidden;
-		border-bottom:1px solid black;
-		border-left:1px solid black;
-		border-right:1px solid black;
-	}
+		.no_top_border {
+			border-top:hidden;
+			border-bottom:1px solid black;
+			border-left:1px solid black;
+			border-right:1px solid black;
+		}
 
-	.grey {
-		background-color: {$color_header};
+		.grey {
+			background-color: {$color_header};
 
-	}
+		}
 
-	/* This is used for the border size */
-	.white {
-		background-color: #FFFFFF;
-	}
+		/* This is used for the border size */
+		.white {
+			background-color: #FFFFFF;
+		}
 
-	.big,
-	tr.big td{
-		font-size: 110%;
-	}
-	.small {
-		font-size:small;
-	}
-</style>
+		.big,
+		tr.big td{
+			font-size: 110%;
+		}
+		.small {
+			font-size:small;
+		}
+	</style>
+{/block}
