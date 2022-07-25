@@ -391,7 +391,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      */
     public function getAssociatedLanguage(): Language
     {
-        if (!is_null($this->lang_associated)) {
+        if (null !== $this->lang_associated) {
             return $this->lang_associated;
         }
         $this->lang_associated = new Language($this->id_lang);
