@@ -31,16 +31,15 @@ namespace PrestaShopBundle\Bridge\Smarty;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * This trait adds methods to get a response object with the HTML passed as parameters and with all stuff needed,
- * like header, footer, notifications.
- *
- * Developers must use this trait in a controller migrated horizontally to render a smarty template as a Symfony response.
- * He can also be used to add CSS, js, jquery plugin, and jquery UI to a response.
+ * This trait allows rendering smarty template through Symfony response,
+ * therefore it is handy to use it in horizontally migrated controllers.
  */
 trait FrameworkControllerSmartyTrait
 {
     /**
-     * @param string $content
+     * Builds Symfony response from provided HTML string using smarty bridge.
+     *
+     * @param string $content HTML string containing everything that needs to be rendered (including the header, footer, notifications etc.)
      * @param Response|null $response
      *
      * @return Response
