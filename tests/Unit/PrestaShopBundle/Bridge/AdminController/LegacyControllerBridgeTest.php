@@ -36,6 +36,16 @@ use PrestaShopBundle\Security\Admin\Employee as SecurityEmployee;
 
 class LegacyControllerBridgeTest extends TestCase
 {
+    private const DEFAULT_CSS_FILES_VALUE = [
+        'css1.css' => 'all',
+        'css2.css' => 'all',
+    ];
+
+    private const DEFAULT_JS_FILES_VALUE = [
+        'js1.js',
+        'js2.js',
+    ];
+
     /**
      * @var ControllerConfiguration
      */
@@ -81,14 +91,8 @@ class LegacyControllerBridgeTest extends TestCase
         $this->controllerConfiguration->displayHeaderJavascript = false;
         $this->controllerConfiguration->displayFooter = false;
         $this->controllerConfiguration->bootstrap = false;
-        $this->controllerConfiguration->cssFiles = [
-            'css1.css',
-            'css2.css',
-        ];
-        $this->controllerConfiguration->jsFiles = [
-            'js1.js',
-            'js2.js',
-        ];
+        $this->controllerConfiguration->cssFiles = self::DEFAULT_CSS_FILES_VALUE;
+        $this->controllerConfiguration->jsFiles = self::DEFAULT_JS_FILES_VALUE;
         $this->controllerConfiguration->templateFolder = '/templates';
         $this->controllerConfiguration->errors = [
             'error1',
@@ -194,22 +198,8 @@ class LegacyControllerBridgeTest extends TestCase
         yield 'test displayHeaderJavascript' => ['display_header_javascript', false, 'displayHeaderJavascript'];
         yield 'test displayFooter' => ['display_footer', false, 'displayFooter'];
         yield 'test bootstrap' => ['bootstrap', false, 'bootstrap'];
-        yield 'test cssFiles' => [
-            'css_files',
-            [
-                'css1.css',
-                'css2.css',
-            ],
-            'cssFiles',
-        ];
-        yield 'test jsFiles' => [
-            'js_files',
-            [
-                'js1.js',
-                'js2.js',
-            ],
-            'jsFiles',
-        ];
+        yield 'test cssFiles' => ['css_files', self::DEFAULT_CSS_FILES_VALUE, 'cssFiles'];
+        yield 'test jsFiles' => ['js_files', self::DEFAULT_JS_FILES_VALUE, 'jsFiles'];
         yield 'test templateFolder' => ['tpl_folder', '/templates', 'templateFolder'];
         yield 'test errors' => [
             'errors',
@@ -348,10 +338,7 @@ class LegacyControllerBridgeTest extends TestCase
         yield 'test bootstrap' => ['bootstrap', false, true, 'bootstrap'];
         yield 'test cssFiles' => [
             'css_files',
-            [
-                'css1.css',
-                'css2.css',
-            ],
+            self::DEFAULT_CSS_FILES_VALUE,
             [
                 'css3.css',
                 'css4.css',
@@ -360,10 +347,7 @@ class LegacyControllerBridgeTest extends TestCase
         ];
         yield 'test jsFiles' => [
             'js_files',
-            [
-                'js1.js',
-                'js2.js',
-            ],
+            self::DEFAULT_JS_FILES_VALUE,
             [
                 'js3.js',
                 'js4.js',
@@ -503,6 +487,38 @@ class LegacyControllerBridgeTest extends TestCase
         $this->legacyBridge->toolbar_title[] = 'Edit';
         $this->assertEquals(['Product', 'Edit'], $this->legacyBridge->toolbar_title);
         $this->assertEquals(['Product', 'Edit'], $this->controllerConfiguration->toolbarTitle);
+    }
+
+    public function testAddCss(): void
+    {
+        $this->assertSame(self::DEFAULT_CSS_FILES_VALUE, $this->legacyBridge->css_files);
+        // checkPath = false to avoid loading Media::getCssPath inside
+        $this->legacyBridge->addCSS('/themes/css/custom.css', 'all', null, false);
+
+        $expectedValue = array_merge(self::DEFAULT_CSS_FILES_VALUE, ['/themes/css/custom.css' => 'all']);
+        $this->assertSame(
+            $expectedValue,
+            $this->legacyBridge->css_files
+        );
+
+        $this->legacyBridge->addCSS('/themes/css/custom1.css', 'all', 0, false);
+        // provided offset 0, so we expect that new file is added to the top of the array
+        $this->assertSame(
+            array_merge(['/themes/css/custom1.css' => 'all'], $expectedValue),
+            $this->legacyBridge->css_files
+        );
+    }
+
+    public function testAddJs(): void
+    {
+        $this->assertSame(self::DEFAULT_JS_FILES_VALUE, $this->legacyBridge->js_files);
+        // checkPath = false to avoid loading Media::getJsPath inside
+        $this->legacyBridge->addJS('/themes/js/custom.js', false);
+
+        $this->assertSame(
+            array_merge(self::DEFAULT_JS_FILES_VALUE, ['/themes/js/custom.js']),
+            $this->legacyBridge->js_files
+        );
     }
 
     /**
