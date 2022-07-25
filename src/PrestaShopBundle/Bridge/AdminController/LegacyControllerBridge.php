@@ -303,7 +303,6 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
 
             if ($jsPath && !in_array($jsPath, $this->controllerConfiguration->jsFiles)) {
                 $this->controllerConfiguration->jsFiles[] = $jsPath . ($version ? '?' . $version : '');
-                $this->controllerConfiguration->jsFiles = [$jsPath . ($version ? '?' . $version : '')];
             }
         }
     }

@@ -42,10 +42,19 @@ trait FrameworkBridgeControllerTrait
     private $controllerConfiguration;
 
     /**
+     * @var LegacyControllerBridgeInterface|null
+     */
+    private $legacyControllerBridge;
+
+    /**
      * @return LegacyControllerBridgeInterface
      */
     public function getLegacyControllerBridge(): LegacyControllerBridgeInterface
     {
+        if ($this->legacyControllerBridge) {
+            return $this->legacyControllerBridge;
+        }
+
         return $this
             ->get('prestashop.bridge.admin_controller.legacy_controller_bridge_factory')
             ->create($this->getControllerConfiguration())
