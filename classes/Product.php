@@ -7062,18 +7062,20 @@ class ProductCore extends ObjectModel
             'ORDER BY `position`'
         );
 
-        if ($position > count($result)) {
-            WebserviceRequest::getInstance()->setError(
-                500,
-                $this->trans(
-                    'You cannot set a position greater than the total number of products in the category, starting at 1.',
-                    [],
-                    'Admin.Catalog.Notification'
-                ),
-                135
-            );
+        if (count($result)!= 0) {
+            if ($position > count($result)) {
+                WebserviceRequest::getInstance()->setError(
+                    500,
+                    $this->trans(
+                        'You cannot set a position greater than the total number of products in the category, starting at 1.',
+                        [],
+                        'Admin.Catalog.Notification'
+                    ),
+                    135
+                );
 
-            return false;
+                return false;
+            }
         }
 
         // result is indexed by recordset order and not position. positions start at index 1 so we need an empty element
