@@ -290,16 +290,12 @@ class ProductRepository extends AbstractObjectModelRepository
      *
      * @return ProductType
      *
-     * @throws CoreException
-     * @throws Exception
-     * @throws ExceptionAlias
-     * @throws ProductConstraintException
      * @throws ProductNotFoundException
      */
     public function getProductType(ProductId $productId): ProductType
     {
         $result = $this->connection->createQueryBuilder()
-            ->addSelect('p.product_type, p.cache_is_pack, p.is_virtual, p.cache_default_attribute')
+            ->select('p.product_type')
             ->from($this->dbPrefix . 'product', 'p')
             ->where('p.id_product = :productId')
             ->setParameter('productId', $productId->getValue())
