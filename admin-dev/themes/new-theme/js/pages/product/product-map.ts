@@ -309,6 +309,8 @@ export default {
     searchAttributeInput: `${attachmentsBlockId}_attached_files`,
     addAttachmentBtn: '.add-attachment',
   },
+  conditionSwitch: 'input[name="product[specifications][show_condition]"]',
+  conditionChoiceSelect: '#product_specifications_condition',
   relatedProducts: {
     searchInput: '#product_description_related_products',
   },
