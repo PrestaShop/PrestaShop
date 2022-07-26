@@ -24,6 +24,13 @@ needs please refer to https://devdocs.prestashop.com/ for more information.
 Release Notes for PrestaShop 1.7
 
 ####################################
+#   v1.7.8.7 - (2022-07-20)
+####################################
+- Core:
+  - Bug fix:
+    - #GHSA-hrgx-p36p-89q4: Chain: SQL Injection (CWE-89) and Eval Injection (CWE-95) (by @atomiix)
+
+####################################
 #   v1.7.8.6 - (2022-05-07)
 ####################################
 - Back Office:
