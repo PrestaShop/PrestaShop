@@ -116,6 +116,7 @@ final class UpdateProductPricesHandler implements UpdateProductPricesHandlerInte
      */
     private function fillUpdatableProperties(Product $product, UpdateProductPricesCommand $command): array
     {
+        //@todo: I think show_price field handling is missing. Need to double check
         $updatableProperties = $this->productPricePropertiesFiller->fillWithPrices(
             $product,
             $command->getPrice(),

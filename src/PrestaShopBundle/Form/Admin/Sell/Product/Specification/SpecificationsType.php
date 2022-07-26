@@ -47,7 +47,6 @@ class SpecificationsType extends TranslatorAwareType
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
-     * @param FormChoiceProviderInterface $productConditionChoiceProvider
      */
     public function __construct(
         TranslatorInterface $translator,
