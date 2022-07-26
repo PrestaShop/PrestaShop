@@ -38,7 +38,6 @@ use Message;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Cart\AbstractCartHandler;
 use PrestaShop\PrestaShop\Adapter\ContextStateManager;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Exception\CartNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation;
 use PrestaShop\PrestaShop\Core\Domain\Cart\QueryHandler\GetCartForOrderCreationHandlerInterface;
@@ -83,29 +82,29 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
     private $contextStateManager;
 
     /**
-     * @var ConfigurationInterface
+     * @var int
      */
-    private $configuration;
+    private $defaultCarrierId;
 
     /**
      * @param LocaleInterface $locale
      * @param int $contextLangId
      * @param Link $contextLink
      * @param ContextStateManager $contextStateManager
-     * @param ConfigurationInterface $configuration
+     * @param int $defaultCarrierId
      */
     public function __construct(
         LocaleInterface $locale,
         int $contextLangId,
         Link $contextLink,
         ContextStateManager $contextStateManager,
-        ConfigurationInterface $configuration
+        int $defaultCarrierId
     ) {
         $this->locale = $locale;
         $this->contextLangId = $contextLangId;
         $this->contextLink = $contextLink;
         $this->contextStateManager = $contextStateManager;
-        $this->configuration = $configuration;
+        $this->defaultCarrierId = $defaultCarrierId;
     }
 
     /**
@@ -372,7 +371,7 @@ final class GetCartForOrderCreationHandler extends AbstractCartHandler implement
             $isFreeShipping && $hideDiscounts ? '0' : (string) $legacySummary['total_shipping'],
             $isFreeShipping,
             $this->fetchCartDeliveryOptions($deliveryOptionsByAddress, $deliveryAddress),
-            (int) $carrier->id ?: $this->configuration->get('PS_CARRIER_DEFAULT') ?: null,
+            (int) $carrier->id ?: $this->defaultCarrierId ?: null,
             (bool) $cart->gift,
             (bool) $cart->recyclable,
             $cart->gift_message
