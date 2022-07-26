@@ -1287,25 +1287,6 @@ services:
     tags:
       - { name: form.type }
 
-    form.type.order_return:
-        class: 'PrestaShopBundle\Form\Admin\Sell\CustomerService\MerchandiseReturn\OrderReturnType'
-        parent: 'form.type.translatable.aware'
-        public: true
-        arguments:
-            - '@=service("prestashop.adapter.form.choice_provider.order_return_state").getChoices()'
-        tags:
-            - { name: form.type }
-
-    form.type.order.customer_service_message:
-        class: 'PrestaShopBundle\Form\Admin\Sell\Order\OrderMessageType'
-        arguments:
-            - '@prestashop.core.form.choice_provider.customer_service_order_messages_name'
-            - '@prestashop.core.form.choice_provider.customer_service_order_messages'
-        calls:
-            - { method: setTranslator, arguments: ['@translator'] }
-        tags:
-            - { name: form.type }
-
   form.type.order.customer_service_message:
     class: 'PrestaShopBundle\Form\Admin\Sell\Order\OrderMessageType'
     arguments:
