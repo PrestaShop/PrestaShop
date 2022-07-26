@@ -44,17 +44,11 @@ class CustomerAddressFormOptionsProvider implements FormOptionsProviderInterface
     private $queryBus;
 
     /**
-     * @var array
-     */
-    private $requiredFields;
-
-    /**
      * @param CommandBusInterface $queryBus
      */
     public function __construct(CommandBusInterface $queryBus)
     {
         $this->queryBus = $queryBus;
-        $this->requiredFields = $this->queryBus->handle(new GetRequiredFieldsForAddress());
     }
 
     /**
@@ -62,7 +56,7 @@ class CustomerAddressFormOptionsProvider implements FormOptionsProviderInterface
      */
     public function getOptions(int $id, array $data): array
     {
-        return ['requiredFields' => $this->requiredFields];
+        return $this->getRequiredFields();
     }
 
     /**
@@ -70,6 +64,11 @@ class CustomerAddressFormOptionsProvider implements FormOptionsProviderInterface
      */
     public function getDefaultOptions(array $data): array
     {
-        return ['requiredFields' => $this->requiredFields];
+        return $this->getRequiredFields();
+    }
+
+    private function getRequiredFields(): array
+    {
+        return ['requiredFields' => $this->queryBus->handle(new GetRequiredFieldsForAddress())];
     }
 }
