@@ -37,13 +37,13 @@ use Context;
 use Customization;
 use CustomizationField;
 use Pack;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationDetails;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Exception;
 use Product;
 use RuntimeException;
 use SpecificPrice;
 use StockAvailable;
 use TaxRulesGroup;
-use Tests\Integration\Behaviour\Features\Context\Util\CombinationDetails;
 use Tests\Integration\Behaviour\Features\Context\Util\ProductCombinationFactory;
 
 class LegacyProductFeatureContext extends AbstractPrestaShopFeatureContext
@@ -994,5 +994,28 @@ class LegacyProductFeatureContext extends AbstractPrestaShopFeatureContext
     public static function clearProductPrices()
     {
         Product::flushPriceCache();
+    }
+
+    /**
+     * @When I update combination :combinationReference details the legacy way with following values:
+     *
+     * @param string $combinationReference
+     * @param TableNode $tableNode
+     */
+    public function updateDetails(string $combinationReference, TableNode $tableNode): void
+    {
+        $expectedDetails = $tableNode->getRowsHash();
+
+        $scalarDetailNames = ['ean13', 'isbn', 'mpn', 'reference', 'upc', 'weight'];
+
+        $combinationId = SharedStorage::getStorage()->get($combinationReference);
+
+        $combination = new Combination($combinationId);
+
+        foreach ($scalarDetailNames as $property) {
+            $combination->{$property} = $expectedDetails[$property];
+        }
+
+        $combination->update();
     }
 }
