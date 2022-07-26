@@ -412,7 +412,7 @@ class AdminControllerCore extends Controller
     const AUTH_COOKIE_LIFETIME = 3600;
     
     /** @var int Auth cookie lifetime */
-    public $AUTH_COOKIE_LIFETIME = self::AUTH_COOKIE_LIFETIME;
+    public $authCookieLifetime = self::AUTH_COOKIE_LIFETIME;
 
     /** @var array */
     public $_conf;
