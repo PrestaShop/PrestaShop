@@ -27,7 +27,7 @@
     <input
       ref="datepicker"
       type="text"
-      class="form-control"
+      :class="['form-control', `datepicker-${type}`]"
     >
     <div class="input-group-append">
       <span class="input-group-text">
@@ -56,6 +56,7 @@
       $(<HTMLInputElement> this.$refs.datepicker).datetimepicker({
         format: 'YYYY-MM-DD',
         showClear: true,
+        useCurrent: false,
       }).on('dp.change', (infos: Record<string, any>) => {
         infos.dateType = this.type;
         this.$emit(
