@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_dataprivacy/ps_dataprivacy.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e0de5a06213f21c55ca3283c009e0907">
+        <source>Customer data privacy block</source>
+        <target>Customer data privacy block</target>
+        <note>Line: 47</note>
+      </trans-unit>
+      <trans-unit id="c0f626b429ab661f117d642f42fca905">
+        <source>Reassure your customers, display a short notice to let them know you care about privacy.</source>
+        <target>Reassure your customers, display a short notice to let them know you care about privacy.</target>
+        <note>Line: 49</note>
+      </trans-unit>
+      <trans-unit id="c9feeeafca864c811737aad664ca87b6">
+        <source>Customer data privacy message for customer form:</source>
+        <target>Customer data privacy message for customer form:</target>
+        <note>Line: 159</note>
+      </trans-unit>
+      <trans-unit id="6562c511e606e80f19436ed84b2a83b4">
+        <source>The customer data privacy message will be displayed in the customer form</source>
+        <target>The customer data privacy message will be displayed in the customer form</target>
+        <note>Line: 164</note>
+      </trans-unit>
+      <trans-unit id="84115963f315793b00e8ee0a83c85a2a">
+        <source>Tip: If the customer privacy message is too long to be written directly in the form, you can add a link to one of your pages. This can easily be created via the "Pages" page under the "Design" menu.</source>
+        <target>Tip: If the customer privacy message is too long to be written directly in the form, you can add a link to one of your pages. This can easily be created via the "Pages" page under the "Design" menu.</target>
+        <note>Line: 168</note>
+      </trans-unit>
+      <trans-unit id="e9a16ce4e994539e94fab8c2d30b0811">
+        <source>The personal data you provide is used to answer queries, process orders or allow access to specific information. You have the right to modify and delete all the personal information found in the "My Account" page.</source>
+        <target>The personal data you provide is used to answer queries, process orders or allow access to specific information. You have the right to modify and delete all the personal information found in the "My Account" page.</target>
+        <note>Line: 224</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

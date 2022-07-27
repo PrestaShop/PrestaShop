@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/blockwishlist/blockwishlist.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="641254d77e7a473aa5910574f3f9453c">
+        <source>Wishlist</source>
+        <target>Wishlist</target>
+        <note>Line: 81</note>
+      </trans-unit>
+      <trans-unit id="38293ed85898c2774399fe6761edf452">
+        <source>Allow customers to create wishlists to save their favorite products for later.</source>
+        <target>Allow customers to create wishlists to save their favorite products for later.</target>
+        <note>Line: 82</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/blockwishlist/src/Database/Install.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7ec9cceb94985909c6994e95c31c1aa8">
+        <source>My wishlists</source>
+        <target>My wishlists</target>
+        <note>Line: 108</note>
+      </trans-unit>
+      <trans-unit id="9ae79c1fccd231ac7fbbf3235dbf6326">
+        <source>My wishlist</source>
+        <target>My wishlist</target>
+        <note>Line: 109</note>
+      </trans-unit>
+      <trans-unit id="7d7f5ad872e3fb9328bce15bad9c2cd5">
+        <source>Create new list</source>
+        <target>Create new list</target>
+        <note>Line: 110</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/blockwishlist/src/Grid/Definition/AllTimeStatisticsGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5de662b12004efc2f373d07b0c2fa91b">
+        <source>All Time Statistics</source>
+        <target>All Time Statistics</target>
+        <note>Line: 32</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/blockwishlist/src/Grid/Definition/BaseStatisticsGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="deb10517653c255364175796ace3553f">
+        <source>Product</source>
+        <target>Product</target>
+        <note>Line: 46</note>
+      </trans-unit>
+      <trans-unit id="63d5049791d9d79d86e9a108b0a999ca">
+        <source>Reference</source>
+        <target>Reference</target>
+        <note>Line: 67</note>
+      </trans-unit>
+      <trans-unit id="47ac923d219501859fb68fed8c8db77b">
+        <source>Combination</source>
+        <target>Combination</target>
+        <note>Line: 73</note>
+      </trans-unit>
+      <trans-unit id="3adbdb3ac060038aa0e6e6c138ef9873">
+        <source>Category</source>
+        <target>Category</target>
+        <note>Line: 79</note>
+      </trans-unit>
+      <trans-unit id="e192956d901dff59c35fd2c477ed28d6">
+        <source>Price (tax excl.)</source>
+        <target>Price (tax excl.)</target>
+        <note>Line: 85</note>
+      </trans-unit>
+      <trans-unit id="07682d2c509f6990f4d7c963027e097d">
+        <source>Available Qty</source>
+        <target>Available Qty</target>
+        <note>Line: 91</note>
+      </trans-unit>
+      <trans-unit id="d311128c6b9f34f85e6b0e29bcbcd165">
+        <source>Conversion rate</source>
+        <target>Conversion rate</target>
+        <note>Line: 97</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/blockwishlist/src/Grid/Definition/CurrentDayStatisticsGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="bde6c714c26e5a5f3b02fee504b90a50">
+        <source>Current Day Statistics</source>
+        <target>Current Day Statistics</target>
+        <note>Line: 32</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/blockwishlist/src/Grid/Definition/CurrentMonthStatisticsGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4e15c7b8e499e5246f1cb1aabc7f55f6">
+        <source>Current Month Statistics</source>
+        <target>Current Month Statistics</target>
+        <note>Line: 32</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/blockwishlist/src/Grid/Definition/CurrentYearStatisticsGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="792479dca5d30f4193ec57c25878f8b9">
+        <source>Current Year Statistics</source>
+        <target>Current Year Statistics</target>
+        <note>Line: 32</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/blockwishlist/views/templates/admin/home.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e0f19919476adfb83acbba4852907b54">
+        <source>Wording</source>
+        <target>Wording</target>
+        <note>Line: 27</note>
+      </trans-unit>
+      <trans-unit id="c9cc8cce247e49bae79f15173ce97354">
+        <source>Save</source>
+        <target>Save</target>
+        <note>Line: 38</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/blockwishlist/views/templates/admin/statistics.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="53631b7bf03eeb02267cf90f057ce96f">
+        <source>You need to choose a specific shop to display the top 10 most added products</source>
+        <target>You need to choose a specific shop to display the top 10 most added products</target>
+        <note>Line: 25</note>
+      </trans-unit>
+      <trans-unit id="64b6d93d6e0875e2ecd74d1c7bc639cd">
+        <source>Top 10 most added products</source>
+        <target>Top 10 most added products</target>
+        <note>Line: 34</note>
+      </trans-unit>
+      <trans-unit id="63a6a88c066880c5ac42394a22803ca6">
+        <source>Refresh</source>
+        <target>Refresh</target>
+        <note>Line: 48</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

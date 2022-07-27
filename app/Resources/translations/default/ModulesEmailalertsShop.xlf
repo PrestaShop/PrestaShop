@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_emailalerts/views/templates/front/mailalerts-account.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8bb23c2ae698681ebb650f43acb54dab">
+        <source>No mail alerts yet.</source>
+        <target>No mail alerts yet.</target>
+        <note>Line: 39</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailalerts/views/templates/hook/my-account-footer.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="4edfd10d0bb5f51e0fd2327df608b5a8">
+        <source>My alerts</source>
+        <target>My alerts</target>
+        <note>Line: 27</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_emailalerts/views/templates/hook/product.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="67135a14d3ac4f1369633dd006d6efec">
+        <source>your@email.com</source>
+        <target>your@email.com</target>
+        <note>Line: 29</note>
+      </trans-unit>
+      <trans-unit id="546e02eaa9a986c83cc347e273269f2c">
+        <source>Notify me when available</source>
+        <target>Notify me when available</target>
+        <note>Line: 42</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

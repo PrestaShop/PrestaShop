@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_customeraccountlinks/ps_customeraccountlinks.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="ecf3e4f8f34a293099620cc25d5b4d93">
+        <source>My Account block</source>
+        <target>My Account block</target>
+        <note>Line: 45</note>
+      </trans-unit>
+      <trans-unit id="a8db2cf030f2420cc62c04c275422a01">
+        <source>Enrich your stats, add a registration progress tab to analyze your visitors’ behavior.</source>
+        <target>Enrich your stats, add a registration progress tab to analyze your visitors’ behavior.</target>
+        <note>Line: 46</note>
+      </trans-unit>
+      <trans-unit id="d1a365ea7809ae5831c6d9f86886630c">
+        <source>Credit slips</source>
+        <target>Credit slips</target>
+        <note>Line: 105</note>
+      </trans-unit>
+      <trans-unit id="0fd8dc8abb2404ad11af4182f10643c1">
+        <source>Personal info</source>
+        <target>Personal info</target>
+        <note>Line: 113</note>
+      </trans-unit>
+      <trans-unit id="e06d7593c1cd6dabef450be6c3da7091">
+        <source>Merchandise returns</source>
+        <target>Merchandise returns</target>
+        <note>Line: 120</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

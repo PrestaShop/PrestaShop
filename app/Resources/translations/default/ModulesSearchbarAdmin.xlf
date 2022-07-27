@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_searchbar/ps_searchbar.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="eacd852cc1f621763dccbda3f3c15081">
+        <source>Search bar</source>
+        <target>Search bar</target>
+        <note>Line: 56</note>
+      </trans-unit>
+      <trans-unit id="12b97f0b9792cd7046a2512f0d5438f1">
+        <source>Help your visitors find what they are looking for, add a quick search field to your store.</source>
+        <target>Help your visitors find what they are looking for, add a quick search field to your store.</target>
+        <note>Line: 57</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
