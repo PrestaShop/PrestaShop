@@ -34,7 +34,7 @@ let page;
 let numberOutstanding;
 
 // Const used to get the least number of outstanding to display pagination
-
+const firstPagination = 11;
 
 const orderByCustomerData = {
   customer: DefaultCustomer,
@@ -56,11 +56,46 @@ describe('BO - Customers - Outstanding : Pagination of the outstanding page', as
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
-  describe('Pagination next and previous', async () => {
+  describe('PRE-TEST: Create outstanding', async () => {
     it('should login to BO', async function () {
       await loginCommon.loginBO(this, page);
     });
 
+    for (let i = 1; i <= firstPagination; i++) {
+      createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_${i}`);
+
+      // Pre-condition: Update order status to payment accepted
+      describe(`PRE-TEST_${i}: Update order status to payment accepted`, async () => {
+        it(`should go to 'Orders > Orders' page ${i}`, async function () {
+          await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
+
+          await dashboardPage.goToSubMenu(
+            page,
+            dashboardPage.ordersParentLink,
+            dashboardPage.ordersLink,
+          );
+
+          const pageTitle = await ordersPage.getPageTitle(page);
+          await expect(pageTitle).to.contains(ordersPage.pageTitle);
+        });
+
+        it('should update order status', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
+
+          const textResult = await ordersPage.setOrderStatus(page, 1, Statuses.paymentAccepted);
+          await expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
+        });
+
+        it('should check that the status is updated successfully', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', 'checkStatusBO', baseContext);
+
+          const orderStatus = await ordersPage.getTextColumn(page, 'osname', 1);
+          await expect(orderStatus, 'Order status was not updated').to.equal(Statuses.paymentAccepted.status);
+        });
+      });
+    }
+  });
+  describe('Pagination next and previous', async () => {
     it('should go to BO > Customers > Outstanding page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOutstandingPage', baseContext);
 
@@ -77,47 +112,9 @@ describe('BO - Customers - Outstanding : Pagination of the outstanding page', as
       await outstandingPage.resetFilter(page);
 
       numberOutstanding = await outstandingPage.getNumberOutstanding(page);
-      // console.log(numberOutstanding, firstPagination, firstPagination - numberOutstanding);
       await expect(numberOutstanding).to.be.above(0);
     });
 
-    const firstPagination = 11;
-    if (numberOutstanding < firstPagination) {
-      console.log(numberOutstanding, firstPagination, firstPagination - numberOutstanding);
-      for (let i = 1; i <= firstPagination - numberOutstanding; i++) {
-        createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_${i}`);
-
-        // Pre-condition: Update order status to payment accepted
-        describe(`PRE-TEST_${i}: Update order status to payment accepted`, async () => {
-          it(`should go to 'Orders > Orders' page ${i}`, async function () {
-            await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
-
-            await dashboardPage.goToSubMenu(
-              page,
-              dashboardPage.ordersParentLink,
-              dashboardPage.ordersLink,
-            );
-
-            const pageTitle = await ordersPage.getPageTitle(page);
-            await expect(pageTitle).to.contains(ordersPage.pageTitle);
-          });
-
-          it('should update order status', async function () {
-            await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
-
-            const textResult = await ordersPage.setOrderStatus(page, 1, Statuses.paymentAccepted);
-            await expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
-          });
-
-          it('should check that the status is updated successfully', async function () {
-            await testContext.addContextItem(this, 'testIdentifier', 'checkStatusBO', baseContext);
-
-            const orderStatus = await ordersPage.getTextColumn(page, 'osname', 1);
-            await expect(orderStatus, 'Order status was not updated').to.equal(Statuses.paymentAccepted.status);
-          });
-        });
-      }
-    }
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemsNumberTo10', baseContext);
 
@@ -149,4 +146,7 @@ describe('BO - Customers - Outstanding : Pagination of the outstanding page', as
       expect(paginationNumber, 'Number of pages is not correct').to.contains('(page 1 / 1)');
     });
   });
+
+  // POST-Condition : Enable B2B
+  disableB2BTest(baseContext);
 });

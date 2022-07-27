@@ -70,6 +70,55 @@ function createCustomerTest(customerData, baseContext = 'commonTests-createCusto
 }
 
 /**
+ * Function to create customer
+ * @param customerData {CustomerData} Data to set to create customer
+ * @param baseContext {string} String to identify the test
+ */
+function createCustomerB2BTest(customerData, baseContext = 'commonTests-createCustomerB2BTest') {
+  describe('PRE-TEST: Create customer', async () => {
+    // before and after functions
+    before(async function () {
+      browserContext = await helper.createBrowserContext(this.browser);
+      page = await helper.newTab(browserContext);
+    });
+
+    after(async () => {
+      await helper.closeBrowserContext(browserContext);
+    });
+
+    it('should login in BO', async function () {
+      await loginCommon.loginBO(this, page);
+    });
+
+    it('should go \'Customers > Customers\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPage', baseContext);
+
+      await dashboardPage.goToSubMenu(page, dashboardPage.customersParentLink, dashboardPage.customersLink);
+
+      await customersPage.closeSfToolBar(page);
+
+      const pageTitle = await customersPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(customersPage.pageTitle);
+    });
+
+    it('should go to add new customer page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAddNewCustomerPage', baseContext);
+
+      await customersPage.goToAddNewCustomerPage(page);
+      const pageTitle = await addCustomerPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addCustomerPage.pageTitleCreate);
+    });
+
+    it('should create B2B customer and check result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createCustomer', baseContext);
+
+      const textResult = await addCustomerPage.createEditB2BCustomer(page, customerData);
+      await expect(textResult).to.equal(customersPage.successfulCreationMessage);
+    });
+  });
+}
+
+/**
  * Function to delete customer
  * @param customerData {CustomerData} Data to set to delete customer
  * @param baseContext {string} String to identify the test
@@ -198,4 +247,4 @@ function bulkDeleteCustomersTest(filterBy, value, baseContext = 'commonTests-del
   });
 }
 
-module.exports = {deleteCustomerTest, createCustomerTest, bulkDeleteCustomersTest};
+module.exports = {deleteCustomerTest, createCustomerTest, createCustomerB2BTest, bulkDeleteCustomersTest};
