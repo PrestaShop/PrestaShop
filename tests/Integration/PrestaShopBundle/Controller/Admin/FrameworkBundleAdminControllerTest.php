@@ -85,6 +85,7 @@ class FrameworkBundleAdminControllerTest extends WebTestCase
         // Country
         $countryMock = $this->getMockBuilder(Country::class)->getMock();
         $countryMock->iso_code = 'en';
+        $countryMock->id = 1;
         // Employee
         $employeeMock = $this->getMockBuilder(Employee::class)->getMock();
         $employeeMock->id_profile = 1;
