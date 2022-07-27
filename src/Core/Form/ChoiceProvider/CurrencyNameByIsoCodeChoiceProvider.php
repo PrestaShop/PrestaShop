@@ -61,7 +61,11 @@ final class CurrencyNameByIsoCodeChoiceProvider implements FormChoiceProviderInt
             }
             $currencyNames = $cldrCurrency->getDisplayNames();
             $isoCode = $cldrCurrency->getIsoCode();
-            $displayName = sprintf('%s (%s)', $currencyNames['default'], $isoCode);
+            if (!empty($currencyNames['default'])) {
+                $displayName = sprintf('%s (%s)', $currencyNames['default'], $isoCode);
+            } else {
+                $displayName = $isoCode;
+            }
 
             $result[$displayName] = $isoCode;
         }

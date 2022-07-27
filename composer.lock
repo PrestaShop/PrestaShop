@@ -4488,16 +4488,16 @@
         },
         {
             "name": "prestashop/blockwishlist",
-            "version": "v2.1.0",
+            "version": "v2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/blockwishlist.git",
-                "reference": "4feccca6f5f01baa8cc2d70afa71e2da898c9207"
+                "reference": "a11c76e8cbf50622096c4411a3dc93ecba78cd03"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/blockwishlist/zipball/4feccca6f5f01baa8cc2d70afa71e2da898c9207",
-                "reference": "4feccca6f5f01baa8cc2d70afa71e2da898c9207",
+                "url": "https://api.github.com/repos/PrestaShop/blockwishlist/zipball/a11c76e8cbf50622096c4411a3dc93ecba78cd03",
+                "reference": "a11c76e8cbf50622096c4411a3dc93ecba78cd03",
                 "shasum": ""
             },
             "require-dev": {
@@ -4527,9 +4527,9 @@
             "description": "PrestaShop module blockwishlist",
             "homepage": "https://github.com/PrestaShop/blockwishlist",
             "support": {
-                "source": "https://github.com/PrestaShop/blockwishlist/tree/v2.1.0"
+                "source": "https://github.com/PrestaShop/blockwishlist/tree/v2.1.1"
             },
-            "time": "2022-04-25T16:13:04+00:00"
+            "time": "2022-06-24T08:16:27+00:00"
         },
         {
             "name": "prestashop/circuit-breaker",
@@ -4594,12 +4594,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/classic-theme.git",
-                "reference": "f7ea7f67912a4d145645fc59491099faf79455aa"
+                "reference": "8152275f69b826c6022c0b4fd392074743f153c4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/classic-theme/zipball/f7ea7f67912a4d145645fc59491099faf79455aa",
-                "reference": "f7ea7f67912a4d145645fc59491099faf79455aa",
+                "url": "https://api.github.com/repos/PrestaShop/classic-theme/zipball/8152275f69b826c6022c0b4fd392074743f153c4",
+                "reference": "8152275f69b826c6022c0b4fd392074743f153c4",
                 "shasum": ""
             },
             "require-dev": {
@@ -4626,7 +4626,7 @@
             "support": {
                 "source": "https://github.com/PrestaShop/classic-theme/tree/develop"
             },
-            "time": "2022-05-03T14:27:05+00:00"
+            "time": "2022-07-22T13:07:56+00:00"
         },
         {
             "name": "prestashop/contactform",
