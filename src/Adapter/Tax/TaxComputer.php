@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Adapter\Tax;
 use Address;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\Decimal\Operation\Division;
-use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use TaxManagerFactory;
@@ -43,20 +42,6 @@ class TaxComputer
      * so we increase the default precision (6) to avoid losing two digits by diving by 100 (two decimal factors).
      */
     protected const DIVISION_PRECISION = Division::DEFAULT_PRECISION + 2;
-
-    /**
-     * @var TaxRulesGroupRepository
-     */
-    private $taxRulesGroupRepository;
-
-    /**
-     * @param TaxRulesGroupRepository $taxRulesGroupRepository
-     */
-    public function __construct(
-        TaxRulesGroupRepository $taxRulesGroupRepository
-    ) {
-        $this->taxRulesGroupRepository = $taxRulesGroupRepository;
-    }
 
     /**
      * @param DecimalNumber $priceTaxExcluded
