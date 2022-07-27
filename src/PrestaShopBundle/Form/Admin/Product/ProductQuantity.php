@@ -235,7 +235,7 @@ class ProductQuantity extends CommonAbstractType
                     'locales' => $this->locales,
                     'hideTabs' => true,
                     'label' => $this->translator->trans(
-                        'Label when out of stock (and back order allowed)',
+                        'Label when out of stock (and backorders allowed)',
                         [],
                         'Admin.Catalog.Feature'
                     ),
@@ -256,7 +256,7 @@ class ProductQuantity extends CommonAbstractType
                 [
                     'required' => false,
                     'label' => $this->translator->trans(
-                        'Does this product have an associated file?',
+                        'Add downloadable file',
                         [],
                         'Admin.Catalog.Feature'
                     ),

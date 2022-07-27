@@ -90,7 +90,7 @@ final class EmployeeGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getName(): string
     {
-        return $this->trans('Employee sessions', [], 'Admin.Navigation.Menu');
+        return $this->trans('Employee Sessions', [], 'Admin.Navigation.Menu');
     }
 
     /**

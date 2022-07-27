@@ -14,7 +14,7 @@ class AddValue extends BOBasePage {
   constructor() {
     super();
 
-    this.createPageTitle = 'Attributes > Add New Value • ';
+    this.createPageTitle = 'Attributes > Add new value • ';
     this.editPageTitle = 'Attributes > Edit:';
 
     this.alertSuccessBlockParagraph = '.alert-success';

@@ -15,7 +15,7 @@ class BOBasePage extends CommonPage {
     super();
 
     // Successful Messages
-    this.successfulCreationMessage = 'Successful creation.';
+    this.successfulCreationMessage = 'Successful creation';
     this.successfulUpdateMessage = 'Successful update.';
     this.successfulDeleteMessage = 'Successful deletion.';
     this.successfulMultiDeleteMessage = 'The selection has been successfully deleted.';

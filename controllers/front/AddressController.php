@@ -108,7 +108,7 @@ class AddressControllerCore extends FrontController
                 Tools::getValue('token')
             );
             if ($ok) {
-                $this->success[] = $this->trans('Address successfully deleted!', [], 'Shop.Notifications.Success');
+                $this->success[] = $this->trans('Address successfully deleted.', [], 'Shop.Notifications.Success');
                 $this->should_redirect = true;
             } else {
                 $this->errors[] = $this->trans('Could not delete address.', [], 'Shop.Notifications.Error');

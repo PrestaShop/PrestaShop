@@ -177,7 +177,7 @@ class FeatureController extends FrameworkBundleAdminController implements Legacy
             $handlerResult = $featureFormHandler->handle($featureForm);
 
             if (null !== $handlerResult->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 //@todo change route to index when it's migrated
                 return $this->redirectToRoute('admin_features_create');

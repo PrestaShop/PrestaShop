@@ -91,7 +91,7 @@ class SearchEnginesController extends FrameworkBundleAdminController
             $result = $searchEngineFormHandler->handle($searchEngineForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_search_engines_index');
             }
