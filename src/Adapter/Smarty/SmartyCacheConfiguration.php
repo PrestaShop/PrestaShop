@@ -53,7 +53,6 @@ class SmartyCacheConfiguration implements DataConfigurationInterface
             'template_compilation' => $this->configuration->get('PS_SMARTY_FORCE_COMPILE'),
             'cache' => $this->configuration->getBoolean('PS_SMARTY_CACHE'),
             'multi_front_optimization' => $this->configuration->getBoolean('PS_SMARTY_LOCAL'),
-            'caching_type' => $this->configuration->get('PS_SMARTY_CACHING_TYPE'),
             'clear_cache' => $this->configuration->get('PS_SMARTY_CLEAR_CACHE'),
             'smarty_console' => $this->configuration->get('PS_SMARTY_CONSOLE'),
             'smarty_console_key' => $this->configuration->get('PS_SMARTY_CONSOLE_KEY'),
@@ -71,7 +70,6 @@ class SmartyCacheConfiguration implements DataConfigurationInterface
             $this->configuration->set('PS_SMARTY_FORCE_COMPILE', $configuration['template_compilation']);
             $this->configuration->set('PS_SMARTY_CACHE', $configuration['cache']);
             $this->configuration->set('PS_SMARTY_LOCAL', $configuration['multi_front_optimization']);
-            $this->configuration->set('PS_SMARTY_CACHING_TYPE', $configuration['caching_type']);
             $this->configuration->set('PS_SMARTY_CLEAR_CACHE', $configuration['clear_cache']);
         }
 
@@ -87,7 +85,6 @@ class SmartyCacheConfiguration implements DataConfigurationInterface
             $configuration['template_compilation'],
             $configuration['cache'],
             $configuration['multi_front_optimization'],
-            $configuration['caching_type'],
             $configuration['clear_cache'],
             $configuration['smarty_console'],
             $configuration['smarty_console_key']
