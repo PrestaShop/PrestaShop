@@ -19,6 +19,11 @@ class Outstanding extends BOBasePage {
     this.filterSearchButton = `${this.gridTable} .grid-search-button`;
     this.filterResetButton = `${this.gridTable} .grid-reset-button`;
 
+    // Sort Selectors
+    this.tableHead = `${this.gridTable} thead`;
+    this.sortColumnDiv = column => `${this.tableHead} div.ps-sortable-column[data-sort-col-name='${column}']`;
+    this.sortColumnSpanButton = column => `${this.sortColumnDiv(column)} span.ps-sort`;
+
     // Table rows and columns
     this.tableBody = `${this.gridTable} tbody`;
     this.tableRow = row => `${this.tableBody} tr:nth-child(${row})`;
@@ -133,6 +138,68 @@ class Outstanding extends BOBasePage {
     return this.getPaginationLabel(page);
   }
 
+  /* Sort functions */
+  /**
+   * Sort table by clicking on column name
+   * @param page {Page} Browser tab
+   * @param sortBy {string} Column to sort with
+   * @param sortDirection {string} Sort direction asc or desc
+   * @returns {Promise<void>}
+   */
+  async sortTable(page, sortBy, sortDirection) {
+    const sortColumnDiv = `${this.sortColumnDiv(sortBy)}[data-sort-direction='${sortDirection}']`;
+    const sortColumnSpanButton = this.sortColumnSpanButton(sortBy);
+
+    let i = 0;
+    while (await this.elementNotVisible(page, sortColumnDiv, 2000) && i < 2) {
+      await this.clickAndWaitForNavigation(page, sortColumnSpanButton);
+      i += 1;
+    }
+
+    await this.waitForVisibleSelector(page, sortColumnDiv, 20000);
+  }
+
+  /**
+   * Get number of orders in page
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getNumberOfOutstandingInPage(page) {
+    return (await page.$$(`${this.tableBody} tr`)).length;
+  }
+
+  /**
+   * Get order total price
+   * @param page {Page} Browser tab
+   * @param row {number} Order row on table
+   * @returns {Promise<number>}
+   */
+  async getOutstandingAllowancePrice(page, row) {
+    // Delete the first character (currency symbol) before getting price ATI
+    return parseFloat((await this.getTextColumn(page, 'outstanding_allow_amount', row)).substring(1));
+  }
+
+  /**
+   * Get column content in all rows
+   * @param page {Page} Browser tab
+   * @param column {string} Column name on table
+   * @returns {Promise<Array<string>>}
+   */
+  async getAllRowsColumnContent(page, column) {
+    let rowContent;
+    const rowsNumber = await this.getNumberOfOutstandingInPage(page);
+    const allRowsContentTable = [];
+    for (let i = 1; i <= rowsNumber; i++) {
+      if (column === 'outstanding_allow_amount') {
+        rowContent = await this.getOutstandingAllowancePrice(page, i);
+      } else {
+        rowContent = await this.getTextColumn(page, column, i);
+      }
+      allRowsContentTable.push(rowContent);
+    }
+
+    return allRowsContentTable;
+  }
 }
 
 module.exports = new Outstanding();
