@@ -118,6 +118,7 @@ class InstallControllerConsoleProcess extends InstallControllerConsole implement
             $steps = ['database', 'modules', 'theme', 'fixtures', 'postInstall'];
         }
         if (!file_exists(PS_INSTALLATION_LOCK_FILE)) {
+            // Set the install lock file
             file_put_contents(PS_INSTALLATION_LOCK_FILE, '1');
         }
 

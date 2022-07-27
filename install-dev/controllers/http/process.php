@@ -80,8 +80,6 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
 
         if (!$this->session->process_validated) {
             $this->session->process_validated = [];
-
-            file_put_contents(PS_INSTALLATION_LOCK_FILE, '1');
         }
 
         try {
@@ -140,6 +138,9 @@ class InstallControllerHttpProcess extends InstallControllerHttp implements Http
      */
     public function processGenerateSettingsFile()
     {
+        // Set the install lock file
+        file_put_contents(PS_INSTALLATION_LOCK_FILE, '1');
+
         $success = $this->model_install->generateSettingsFile(
             $this->session->database_server,
             $this->session->database_login,
