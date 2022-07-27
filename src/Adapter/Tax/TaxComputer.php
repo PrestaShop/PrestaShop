@@ -28,11 +28,13 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Tax;
 
+use Address;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\Decimal\Operation\Division;
 use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
+use TaxManagerFactory;
 
 class TaxComputer
 {
@@ -100,15 +102,11 @@ class TaxComputer
      */
     public function getTaxRate(TaxRulesGroupId $taxRulesGroupId, CountryId $countryId): DecimalNumber
     {
-        $taxRulesGroup = $this->taxRulesGroupRepository->getTaxRulesGroupDetails($taxRulesGroupId);
-        if (!empty($taxRulesGroup['rates'])) {
-            // Use the tax rate associated to context country, or the first one as fallback
-            $countryTaxRate = $taxRulesGroup['rates'][$countryId->getValue()] ?? reset($taxRulesGroup['rates']);
-        } else {
-            $countryTaxRate = 0;
-        }
+        $address = new Address();
+        $address->id_country = $countryId->getValue();
+        $taxCalculator = TaxManagerFactory::getManager($address, $taxRulesGroupId->getValue())->getTaxCalculator();
 
-        return new DecimalNumber((string) $countryTaxRate);
+        return new DecimalNumber((string) $taxCalculator->getTotalRate());
     }
 
     /**
