@@ -1173,6 +1173,10 @@ services:
     tags:
       - { name: form.type }
 
+  PrestaShopBundle\Form\Admin\Type\AmountCurrencyType:
+    tags:
+      - { name: form.type }
+
   form.type.feature:
     class: 'PrestaShopBundle\Form\Admin\Sell\Catalog\FeatureType'
     arguments:

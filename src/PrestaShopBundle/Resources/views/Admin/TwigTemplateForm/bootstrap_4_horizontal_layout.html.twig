@@ -176,3 +176,17 @@
     </div>
   {% endif %}
 {% endblock form_unit_prepend %}
+
+{% block amount_currency_widget %}
+  <div class="input-group">
+    <input type="text" class="form-control" name="{{ form.amount.vars.full_name }}" required>
+    <div class="input-group-append">
+      {% if form.amount.vars.unit is defined %}
+        <span class="input-group-text">{{ form.amount.vars.unit }}</span>
+        {{ form_widget(form.id_currency) }}
+      {% else %}
+        {{ form_widget(form.id_currency, {'attr': {'class': 'form-control'}}) }}
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

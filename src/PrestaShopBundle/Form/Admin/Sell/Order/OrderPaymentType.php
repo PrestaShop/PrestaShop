@@ -28,15 +28,16 @@ namespace PrestaShopBundle\Form\Admin\Sell\Order;
 
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShopBundle\Form\Admin\Type\AmountCurrencyType;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\GreaterThan;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 class OrderPaymentType extends AbstractType
 {
@@ -109,8 +110,9 @@ class OrderPaymentType extends AbstractType
             ->add('transaction_id', TextType::class, [
                 'required' => false,
             ])
-            ->add('amount', NumberType::class, [
-                'constraints' => [
+            ->add('amount_currency', AmountCurrencyType::class, [
+                'amount_constraints' => [
+                    new NotNull(),
                     new GreaterThan([
                         'value' => 0,
                         'message' => $this->translator->trans(
@@ -118,9 +120,7 @@ class OrderPaymentType extends AbstractType
                         ),
                     ]),
                 ],
-            ])
-            ->add('id_currency', ChoiceType::class, [
-                'choices' => $this->currencySymbolByIdChoiceProvider->getChoices([
+                'currencies' => $this->currencySymbolByIdChoiceProvider->getChoices([
                     'id_shop' => $this->contextShopId,
                 ]),
             ])
