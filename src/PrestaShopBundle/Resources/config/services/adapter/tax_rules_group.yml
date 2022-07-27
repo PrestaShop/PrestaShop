@@ -34,6 +34,3 @@ services:
 
   prestashop.adapter.tax_rules_group.repository.tax_rules_group_repository:
     class: 'PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository'
-    arguments:
-      - '@doctrine.dbal.default_connection'
-      - '%database_prefix%'
