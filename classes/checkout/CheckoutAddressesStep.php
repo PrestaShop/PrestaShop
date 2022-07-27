@@ -141,7 +141,7 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
             );
             if ($deletionResult) {
                 $this->context->controller->success[] = $this->getTranslator()->trans(
-                    'Address successfully deleted!',
+                    'Address successfully deleted.',
                     [],
                     'Shop.Notifications.Success'
                 );

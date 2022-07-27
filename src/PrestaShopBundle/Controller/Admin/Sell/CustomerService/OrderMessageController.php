@@ -101,7 +101,7 @@ class OrderMessageController extends FrameworkBundleAdminController
             $result = $formHandler->handle($form);
 
             if ($result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_order_messages_index');
             }

@@ -103,7 +103,7 @@ class AttachmentController extends FrameworkBundleAdminController
             $handlerResult = $attachmentFormHandler->handle($attachmentForm);
 
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 if ($request->get('saveAndStay') !== null) {
                     // Keep the initial query parameters (to keep liteDisplay or saveAndStay for example)

@@ -146,7 +146,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             $result = $this->getFormHandler()->handle($manufacturerForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_manufacturers_index');
             }
@@ -541,7 +541,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             $result = $addressFormHandler->handle($addressForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_manufacturers_index');
             }

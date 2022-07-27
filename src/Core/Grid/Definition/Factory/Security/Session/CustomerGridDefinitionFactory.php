@@ -90,7 +90,7 @@ final class CustomerGridDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getName(): string
     {
-        return $this->trans('Customer sessions', [], 'Admin.Navigation.Menu');
+        return $this->trans('Customer Sessions', [], 'Admin.Navigation.Menu');
     }
 
     /**

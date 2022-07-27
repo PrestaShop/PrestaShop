@@ -74,7 +74,7 @@ class StockOptionsType extends TranslatorAwareType
                 'modify_all_shops' => true,
             ])
             ->add('low_stock_threshold', NumberType::class, [
-                'label' => $this->trans('Receive a low stock alert by email ', 'Admin.Catalog.Feature'),
+                'label' => $this->trans('Receive a low stock alert by email', 'Admin.Catalog.Feature'),
                 'label_help_box' => $this->trans(
                     'The email will be sent to all users who have access to the Stock page. To modify permissions, go to [1]Advanced Parameters > Team[/1].',
                     'Admin.Catalog.Help',

@@ -491,7 +491,7 @@ class AdminControllerCore extends Controller
         $this->_conf = [
             1 => $this->trans('Successful deletion.', [], 'Admin.Notifications.Success'),
             2 => $this->trans('The selection has been successfully deleted.', [], 'Admin.Notifications.Success'),
-            3 => $this->trans('Successful creation.', [], 'Admin.Notifications.Success'),
+            3 => $this->trans('Successful creation', [], 'Admin.Notifications.Success'),
             4 => $this->trans('Successful update.', [], 'Admin.Notifications.Success'),
             5 => $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success'),
             6 => $this->trans('The settings have been successfully updated.', [], 'Admin.Notifications.Success'),

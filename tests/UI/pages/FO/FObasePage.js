@@ -57,7 +57,7 @@ class FOBasePage extends CommonPage {
     this.footerAccountList = '#footer_account_list';
     this.informationLink = `${this.footerAccountList} a[title='Information']`;
     this.orderTrackingLink = `${this.footerAccountList} a[title='Order tracking']`;
-    this.signInLink = `${this.footerAccountList} a[title='Log in to your customer account']`;
+    this.signInLink = `${this.footerAccountList} a[title='Sign in to your customer account']`;
     this.createAccountLink = `${this.footerAccountList} a[title='Create account']`;
     this.addressesLink = `${this.footerAccountList} a[title='Addresses']`;
     this.ordersLink = `${this.footerAccountList} a[title='Orders']`;

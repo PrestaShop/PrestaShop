@@ -128,7 +128,7 @@ class LanguageController extends FrameworkBundleAdminController
             $result = $languageFormHandler->handle($languageForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_languages_index');
             }

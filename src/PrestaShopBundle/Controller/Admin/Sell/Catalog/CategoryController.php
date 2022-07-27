@@ -175,7 +175,7 @@ class CategoryController extends FrameworkBundleAdminController
             $handlerResult = $categoryFormHandler->handle($categoryForm);
 
             if (null !== $handlerResult->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_categories_index', [
                     'categoryId' => $categoryForm->getData()['id_parent'],
@@ -224,7 +224,7 @@ class CategoryController extends FrameworkBundleAdminController
             $handlerResult = $rootCategoryFormHandler->handle($rootCategoryForm);
 
             if (null !== $handlerResult->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_categories_index', [
                     'categoryId' => $this->configuration->getInt('PS_ROOT_CATEGORY'),

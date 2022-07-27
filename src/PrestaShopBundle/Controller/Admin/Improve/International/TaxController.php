@@ -172,7 +172,7 @@ class TaxController extends FrameworkBundleAdminController
             if (null !== $result->getIdentifiableObjectId()) {
                 $this->addFlash(
                     'success',
-                    $this->trans('Successful creation.', 'Admin.Notifications.Success')
+                    $this->trans('Successful creation', 'Admin.Notifications.Success')
                 );
 
                 return $this->redirectToRoute('admin_taxes_index');

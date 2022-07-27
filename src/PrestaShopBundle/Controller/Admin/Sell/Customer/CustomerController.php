@@ -168,7 +168,7 @@ class CustomerController extends AbstractAdminController
             $result = $customerFormHandler->handle($customerForm);
 
             if ($customerId = $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 if ($request->query->has('submitFormAjax')) {
                     /** @var ViewableCustomer $customerInformation */
@@ -382,7 +382,7 @@ class CustomerController extends AbstractAdminController
         try {
             $this->getCommandBus()->handle(new TransformGuestToCustomerCommand((int) $customerId));
 
-            $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
         } catch (CustomerException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }

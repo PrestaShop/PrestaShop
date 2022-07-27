@@ -204,7 +204,7 @@ class CmsPageController extends FrameworkBundleAdminController
             if (null !== $cmsPageId) {
                 $this->addFlash(
                     'success',
-                    $this->trans('Successful creation.', 'Admin.Notifications.Success')
+                    $this->trans('Successful creation', 'Admin.Notifications.Success')
                 );
                 if (!$request->request->has('save-and-preview')) {
                     return $this->redirectToParentIndexPageByCmsPageId($cmsPageId);
@@ -337,7 +337,7 @@ class CmsPageController extends FrameworkBundleAdminController
             if (null !== $result->getIdentifiableObjectId()) {
                 $this->addFlash(
                     'success',
-                    $this->trans('Successful creation.', 'Admin.Notifications.Success')
+                    $this->trans('Successful creation', 'Admin.Notifications.Success')
                 );
 
                 return $this->redirectToIndexPageById($result->getIdentifiableObjectId());

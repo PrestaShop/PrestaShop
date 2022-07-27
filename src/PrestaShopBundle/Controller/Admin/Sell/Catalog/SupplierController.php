@@ -116,7 +116,7 @@ class SupplierController extends FrameworkBundleAdminController
             $result = $this->getFormHandler()->handle($supplierForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_suppliers_index');
             }

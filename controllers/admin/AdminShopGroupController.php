@@ -112,13 +112,13 @@ class AdminShopGroupControllerCore extends AdminController
         $shops_tree->setNodeFolderTemplate('shop_tree_node_folder.tpl')->setNodeItemTemplate('shop_tree_node_item.tpl')
             ->setHeaderTemplate('shop_tree_header.tpl')->setActions([
                 new TreeToolbarLink(
-                    'Collapse All',
+                    'Collapse all',
                     '#',
                     '$(\'#' . $shops_tree->getId() . '\').tree(\'collapseAll\'); return false;',
                     'icon-collapse-alt'
                 ),
                 new TreeToolbarLink(
-                    'Expand All',
+                    'Expand all',
                     '#',
                     '$(\'#' . $shops_tree->getId() . '\').tree(\'expandAll\'); return false;',
                     'icon-expand-alt'

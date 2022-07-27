@@ -467,7 +467,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                 'modal_back_to_processing' => $this->trans('Back to processing', [], 'Admin.Actions'),
                 'modal_download_error_log' => $this->trans('Download error log', [], 'Admin.Actions'),
                 'modal_view_error_log' => $this->trans('View %error_count% error logs', [], 'Admin.Actions'),
-                'modal_error_title' => $this->trans('Error log', [], 'Admin.Actions'),
+                'modal_error_title' => $this->trans('Error log', [], 'Admin.Catalog.Feature'),
             ])
             ->setIcon($icon)
         ;
