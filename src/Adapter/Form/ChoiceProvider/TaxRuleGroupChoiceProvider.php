@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 
 use Address;
-use Context;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use TaxManagerFactory;
@@ -38,6 +37,14 @@ use TaxRulesGroup;
  */
 final class TaxRuleGroupChoiceProvider implements FormChoiceProviderInterface, FormChoiceAttributeProviderInterface
 {
+    /** @var int */
+    private $countryId;
+
+    public function __construct(int $countryId)
+    {
+        $this->countryId = $countryId;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -57,32 +64,19 @@ final class TaxRuleGroupChoiceProvider implements FormChoiceProviderInterface, F
     public function getChoicesAttributes(): array
     {
         $address = new Address();
-        $address->id_country = (int) Context::getContext()->country->id;
+        $address->id_country = $this->countryId;
 
-        $tax_rates = [];
+        $taxRates = [];
         foreach ($this->getRules() as $rule) {
-            $id_tax_rules_group = (int) $rule['id_tax_rules_group'];
-            $tax_calculator = TaxManagerFactory::getManager($address, $id_tax_rules_group)->getTaxCalculator();
-            $tax_rates[$id_tax_rules_group] = [
-                'id_tax_rules_group' => $id_tax_rules_group,
-                'rates' => [],
-                'computation_method' => (int) $tax_calculator->computation_method,
-            ];
+            $taxRulesGroupId = (int) $rule['id_tax_rules_group'];
+            $taxCalculator = TaxManagerFactory::getManager($address, $taxRulesGroupId)->getTaxCalculator();
 
-            if (!empty($tax_calculator->taxes)) {
-                foreach ($tax_calculator->taxes as $tax) {
-                    $tax_rates[$rule['name']] = [
-                        'data-tax-rate' => (float) $tax->rate,
-                    ];
-                }
-            } else {
-                $tax_rates[$rule['name']] = [
-                    'data-tax-rate' => 0,
-                ];
-            }
+            $taxRates[$rule['name']] = [
+                'data-tax-rate' => $taxCalculator->getTotalRate(),
+            ];
         }
 
-        return $tax_rates;
+        return $taxRates;
     }
 
     /**
@@ -90,6 +84,6 @@ final class TaxRuleGroupChoiceProvider implements FormChoiceProviderInterface, F
      */
     private function getRules(): array
     {
-        return TaxRulesGroup::getTaxRulesGroupsForOptions();
+        return TaxRulesGroup::getTaxRulesGroups();
     }
 }
