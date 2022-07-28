@@ -52,11 +52,13 @@ class ProductSimplePresenter
     /** @var ProductPresentationSettings */
     private $presentationSettings;
 
+    /** @var self */
+    private static $instance;
+
     /** @var ProductListingLazyArray[]  */
     static $presentedProducts = array();
 
-
-    public function __construct(Context $context = null)
+    private function __construct(Context $context = null)
     {
         $this->context = $context ?? Context::getContext();
 
@@ -70,6 +72,15 @@ class ProductSimplePresenter
             $context->getTranslator()
         );
 
+    }
+
+    public static function getInstance(Context $context = null)
+    {
+        if (empty(self::$instance)) {
+            self::$instance = new self($context);
+        }
+
+        return self::$instance;
     }
 
     /**
