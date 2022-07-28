@@ -37,6 +37,7 @@ use Product;
 use ProductAssembler;
 use ProductPresenterFactory;
 use ReflectionException;
+use Validate;
 
 class ProductSimplePresenter
 {
@@ -90,6 +91,10 @@ class ProductSimplePresenter
      */
     public function present(Product $product)
     {
+        if (!Validate::isLoadedObject($product)) {
+            return null;
+        }
+
         if (empty(self::$presentedProducts[(int)$product->id])) {
             self::$presentedProducts[$product->id] = $this->presenter->present(
                 $this->presentationSettings,
@@ -110,7 +115,9 @@ class ProductSimplePresenter
         $result = [];
 
         foreach ($products as $product) {
-            $result[] = $this->present($product);
+            if ($presentedProduct = $this->present($product)) {
+                $result[] = $presentedProduct;
+            }
         }
 
         return $result;
