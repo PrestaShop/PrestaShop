@@ -407,8 +407,11 @@ class AdminControllerCore extends Controller
 
     /** @var string */
     protected $tabSlug;
-// @deprecated
-    /** @var int Auth cookie lifetime */
+
+    /** 
+     * @deprecated use $this->authCookieLifetime
+     * @var int Auth cookie lifetime
+     */
     const AUTH_COOKIE_LIFETIME = 3600;
     
     /** @var int Auth cookie lifetime */
