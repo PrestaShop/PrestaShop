@@ -448,7 +448,6 @@ class AddressFormatCore extends ObjectModel
               'patternRules' => &$patternRules
             ]
         );
-
         
         $addressText = '';
         foreach ($addressFields as $line) {
