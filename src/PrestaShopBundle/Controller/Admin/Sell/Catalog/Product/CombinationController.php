@@ -81,7 +81,7 @@ class CombinationController extends FrameworkBundleAdminController
             return $this->render(
                 '@PrestaShop/Admin/Sell/Catalog/Product/Combination/not_found.html.twig',
                 [],
-                new Response('', 404)
+                new Response('', Response::HTTP_NOT_FOUND)
             );
         }
 
