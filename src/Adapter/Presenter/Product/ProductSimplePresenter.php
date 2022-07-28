@@ -115,11 +115,24 @@ class ProductSimplePresenter
         $result = [];
 
         foreach ($products as $product) {
+            if (!$this->isProduct($product)) {
+                continue;
+            }
+
             if ($presentedProduct = $this->present($product)) {
                 $result[] = $presentedProduct;
             }
         }
 
         return $result;
+    }
+
+    /**
+     * @param mixed $product
+     * @return bool
+     */
+    public function isProduct($product)
+    {
+        return $product instanceof Product;
     }
 }
