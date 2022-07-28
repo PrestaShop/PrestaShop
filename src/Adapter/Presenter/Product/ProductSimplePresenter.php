@@ -86,7 +86,7 @@ class ProductSimplePresenter
 
     /**
      * @param Product $product
-     * @return ProductListingLazyArray
+     * @return ProductListingLazyArray|null
      * @throws ReflectionException
      */
     public function present(Product $product)
