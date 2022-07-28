@@ -1881,7 +1881,10 @@ class AdminProductsControllerCore extends AdminController
                 $object->indexed = 0;
 
                 if (Shop::isFeatureActive() && Shop::getContext() != Shop::CONTEXT_SHOP) {
-                    $object->setFieldsToUpdate((array) Tools::getValue('multishop_check', []));
+                    $values = (array) Tools::getValue('multishop_check', []);
+                    $values['state'] = Product::STATE_SAVED;
+
+                    $object->setFieldsToUpdate($values);
                 }
 
                 // Duplicate combinations if not associated to shop
