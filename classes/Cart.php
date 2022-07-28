@@ -2383,7 +2383,7 @@ class CartCore extends ObjectModel
         }
 
         // Get delivery address of the product from the cart
-        if (!$this->addressFactory->addressExists($addressId)) {
+        if (!$this->addressFactory->addressExists($addressId, true)) {
             $addressId = null;
         }
 

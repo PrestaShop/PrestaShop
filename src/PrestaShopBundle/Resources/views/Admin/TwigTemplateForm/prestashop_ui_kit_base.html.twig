@@ -926,7 +926,7 @@
         {% if default_locale.id_lang != translateField.vars.name %}
           {% set classes = classes ~ ' d-none' %}
         {% endif %}
-        <div class="{{ classes }}" style="flex-grow: 1;">
+        <div data-lang-id="{{ translateField.vars.name }}" class="{{ classes }}" style="flex-grow: 1;">
           {{ form_widget(translateField) }}
         </div>
       {% endfor %}

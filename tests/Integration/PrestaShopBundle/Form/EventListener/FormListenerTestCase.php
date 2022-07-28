@@ -95,6 +95,29 @@ class FormListenerTestCase extends KernelTestCase
     /**
      * @param FormInterface $form
      * @param string $typeName
+     * @param bool $shouldExist
+     */
+    protected function assertDataExistsInForm(FormInterface $form, string $typeName, bool $shouldExist): void
+    {
+        $levels = explode('.', $typeName);
+        $data = $form->getData();
+
+        if ($shouldExist) {
+            foreach ($levels as $level) {
+                $this->assertArrayHasKey($level, $data);
+                $data = $data[$level];
+            }
+        } else {
+            foreach ($levels as $level) {
+                $data = $data[$level];
+            }
+            $this->assertNull($data);
+        }
+    }
+
+    /**
+     * @param FormInterface $form
+     * @param string $typeName
      *
      * @return FormInterface
      */

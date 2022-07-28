@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationsType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Description\DescriptionType;
 use PrestaShopBundle\Form\Admin\Sell\Product\Options\OptionsType;
@@ -74,7 +73,7 @@ class EditProductFormType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $productId = $options['product_id'] ?? null;
+        $productId = $options['product_id'];
         $builder
             ->add('header', HeaderType::class, [
                 'active' => $options['active'],
@@ -114,12 +113,9 @@ class EditProductFormType extends TranslatorAwareType
      */
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        // Important to get data from form and not options as it's the most up to date
-        $formData = $form->getData();
-        $productType = $formData['header']['type'] ?? ProductType::TYPE_STANDARD;
         $formVars = [
-            'product_type' => $productType,
-            'product_id' => $options['product_id'] ?? null,
+            'product_type' => $options['product_type'],
+            'product_id' => $options['product_id'],
         ];
 
         $view->vars = array_replace($view->vars, $formVars);
@@ -135,14 +131,16 @@ class EditProductFormType extends TranslatorAwareType
         // We must allow extra fields because when we switch product type some former fields may be present in request
         $resolver
             ->setDefaults([
-                'product_id' => null,
-                'product_type' => null,
                 'virtual_product_file_id' => null,
                 'active' => false,
                 'allow_extra_fields' => true,
             ])
-            ->setAllowedTypes('product_id', ['null', 'int'])
-            ->setAllowedTypes('product_type', ['null', 'string'])
+            ->setRequired([
+                'product_id',
+                'product_type',
+            ])
+            ->setAllowedTypes('product_id', 'int')
+            ->setAllowedTypes('product_type', 'string')
             ->setAllowedTypes('virtual_product_file_id', ['null', 'int'])
             ->setAllowedTypes('active', ['bool'])
         ;

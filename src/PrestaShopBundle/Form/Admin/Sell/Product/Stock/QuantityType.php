@@ -74,8 +74,7 @@ class QuantityType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         if ($this->stockManagementEnabled) {
-            $urlParameters = !empty($options['product_id']) ? ['productId' => (int) $options['product_id']] : [];
-            $stockMovementsUrl = $this->router->generate('admin_stock_movements_overview', $urlParameters);
+            $stockMovementsUrl = $this->router->generate('admin_stock_movements_overview', ['productId' => $options['product_id']]);
 
             $builder
                 ->add('delta_quantity', DeltaQuantityType::class, [
@@ -103,7 +102,7 @@ class QuantityType extends TranslatorAwareType
 
         $builder
             ->add('minimal_quantity', NumberType::class, [
-                'label' => $this->trans('Minimum order quantity', 'Admin.Catalog.Feature'),
+                'label' => $this->trans('Minimum quantity for sale', 'Admin.Catalog.Feature'),
                 'constraints' => [
                     new NotBlank(),
                     new Type(['type' => 'numeric']),
@@ -111,6 +110,9 @@ class QuantityType extends TranslatorAwareType
                 'required' => false,
                 'default_empty_data' => 0,
                 'modify_all_shops' => true,
+                'attr' => [
+                    'class' => 'small-input',
+                ],
             ])
         ;
     }
@@ -123,12 +125,14 @@ class QuantityType extends TranslatorAwareType
         parent::configureOptions($resolver);
         $resolver
             ->setDefaults([
-                'label' => $this->trans('Quantities', 'Admin.Catalog.Feature'),
+                'label' => $this->trans('Stocks', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h3',
                 'required' => false,
-                'product_id' => null,
             ])
-            ->setAllowedTypes('product_id', ['null', 'int'])
+            ->setRequired([
+                'product_id',
+            ])
+            ->setAllowedTypes('product_id', 'int')
         ;
     }
 }

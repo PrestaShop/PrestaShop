@@ -247,7 +247,7 @@ class AdminSearchControllerCore extends AdminController
                 || (isset($module->displayName) && stripos($module->displayName, $this->query) !== false)
                 || (isset($module->description) && stripos($module->description, $this->query) !== false)
             ) {
-                $module->linkto = 'index.php?tab=AdminModules&tab_module=' . $module->tab . '&module_name=' . $module->name . '&anchor=' . ucfirst($module->name) . '&token=' . Tools::getAdminTokenLite('AdminModules');
+                $module->linkto = Context::getContext()->link->getAdminLink('ADMINMODULESSF') . '&find=' . $module->name;
                 $this->_list['modules'][] = $module;
             }
         }
@@ -373,9 +373,7 @@ class AdminSearchControllerCore extends AdminController
         $this->tpl_view_vars['query'] = $searchedExpression;
         $this->tpl_view_vars['show_toolbar'] = true;
 
-        if (count($this->errors)) {
-            return parent::renderView();
-        } else {
+        if (!count($this->errors)) {
             $nb_results = 0;
             foreach ($this->_list as $list) {
                 if ($list != false) {
@@ -474,11 +472,10 @@ class AdminSearchControllerCore extends AdminController
             if ($this->isCountableAndNotEmpty($this->_list, 'modules')) {
                 $this->tpl_view_vars['modules'] = $this->_list['modules'];
             }
-
-            $this->getSearchPanels($searchedExpression);
-
-            return parent::renderView();
         }
+        $this->getSearchPanels($searchedExpression);
+
+        return parent::renderView();
     }
 
     protected function getSearchPanels(string $searchedExpression): void

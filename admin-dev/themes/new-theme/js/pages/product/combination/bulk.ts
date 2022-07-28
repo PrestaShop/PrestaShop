@@ -24,7 +24,7 @@
  */
 
 import ImageSelector from '@pages/product/combination/form/image-selector';
-import QuantityModeSwitcher from '@pages/product/combination/QuantityModeSwitcher';
+import QuantityModeSwitcher from '@pages/product/combination/quantity-mode-switcher';
 
 // @ts-ignore
 const {$} = window;

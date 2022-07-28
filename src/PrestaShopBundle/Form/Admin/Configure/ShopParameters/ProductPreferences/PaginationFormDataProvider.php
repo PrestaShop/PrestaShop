@@ -86,9 +86,9 @@ class PaginationFormDataProvider implements FormDataProviderInterface
     {
         $errors = [];
         $productsPerPage = $data['products_per_page'];
-        if (!is_numeric($productsPerPage) || 0 > $productsPerPage) {
+        if (!is_numeric($productsPerPage) || 0 >= $productsPerPage) {
             $errors[] = [
-                'key' => 'The %s field is invalid.',
+                'key' => 'The %s field is invalid. Please enter a positive integer.',
                 'domain' => 'Admin.Notifications.Error',
                 'parameters' => [$this->translator->trans('Products per page', [], 'Admin.Shopparameters.Feature')],
             ];

@@ -163,6 +163,10 @@ class SEOType extends TranslatorAwareType
                 ),
                 'alert_message' => $this->getFriendlyAlterMessages(),
                 'options' => [
+                    'constraints' => [
+                        new TypedRegex(TypedRegex::TYPE_LINK_REWRITE),
+                        new Length(['max' => ProductSettings::MAX_LINK_REWRITE_LENGTH]),
+                    ],
                     'attr' => [
                         'class' => 'serp-watched-url',
                     ],
@@ -249,13 +253,15 @@ class SEOType extends TranslatorAwareType
         parent::configureOptions($resolver);
         $resolver
             ->setDefaults([
-                'product_id' => null,
                 'label' => $this->trans('Search engine optimization', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h3',
                 'label_subtitle' => $this->trans('Improve your ranking and how your product page will appear in search engines results.', 'Admin.Catalog.Feature'),
                 'required' => false,
             ])
-            ->setAllowedTypes('product_id', ['null', 'int'])
+            ->setRequired([
+                'product_id',
+            ])
+            ->setAllowedTypes('product_id', 'int')
         ;
     }
 }

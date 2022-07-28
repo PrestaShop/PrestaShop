@@ -55,7 +55,10 @@ class CurrencyTest extends TestCase
         $currencyData->setNumericIsoCode('333');
         $currencyData->setDecimalDigits(2);
         $currencyData->setDisplayNames(['default' => 'PrestaShop Peace', 'one' => 'peace', 'other' => 'peaces']);
-        $currencyData->setSymbols([CurrencyInterface::SYMBOL_TYPE_DEFAULT => 'PS☮', CurrencyInterface::SYMBOL_TYPE_NARROW => '☮']);
+        $currencyData->setSymbols([
+            CurrencyInterface::SYMBOL_TYPE_DEFAULT => 'PS☮',
+            CurrencyInterface::SYMBOL_TYPE_NARROW => '☮',
+        ]);
 
         $this->cldrCurrency = new Currency($currencyData);
     }
@@ -144,5 +147,46 @@ class CurrencyTest extends TestCase
         $this->expectException(LocalizationException::class);
 
         $this->cldrCurrency->getSymbol('foobar');
+    }
+
+    /**
+     * @dataProvider getEmptyDisplayNames
+     */
+    public function testFallbackWhenEmptyDisplayNames($displayNamesData): void
+    {
+        $currencyData = new CurrencyData();
+        $currencyData->setIsoCode('PCE');
+        $currencyData->setNumericIsoCode('333');
+        $currencyData->setDecimalDigits(2);
+        $currencyData->setDisplayNames($displayNamesData);
+        $currencyData->setSymbols([
+            CurrencyInterface::SYMBOL_TYPE_DEFAULT => 'PS☮',
+            CurrencyInterface::SYMBOL_TYPE_NARROW => '☮',
+        ]);
+
+        $cldrCurrency = new Currency($currencyData);
+        $this->assertEquals(
+            'PCE',
+            $cldrCurrency->getDisplayName()
+        );
+        $this->assertEquals(
+            'PCE',
+            $cldrCurrency->getDisplayName(CurrencyInterface::DISPLAY_NAME_COUNT_DEFAULT)
+        );
+        $this->assertEquals(
+            'PCE',
+            $cldrCurrency->getDisplayName(CurrencyInterface::DISPLAY_NAME_COUNT_ONE)
+        );
+        $this->assertEquals(
+            'PCE',
+            $cldrCurrency->getDisplayName(CurrencyInterface::DISPLAY_NAME_COUNT_OTHER)
+        );
+    }
+
+    public function getEmptyDisplayNames(): iterable
+    {
+        yield 'empty array' => [[]];
+        yield 'null values' => [null];
+        yield 'array without proper context' => [['useless_context' => 'toto']];
     }
 }

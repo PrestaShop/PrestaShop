@@ -165,6 +165,32 @@ describe('FO - Login : Password reminder', async () => {
       const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
     });
+
+    it('should logout from FO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'signOutFO2', baseContext);
+
+      await myAccountPage.logout(page);
+      const isCustomerConnected = await myAccountPage.isCustomerConnected(page);
+      await expect(isCustomerConnected, 'Customer is connected').to.be.false;
+    });
+
+    it('should click on \'Forgot your password?\' link', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'clickOnForgetPassword2', baseContext);
+
+      await loginPage.goToPasswordReminderPage(page);
+
+      const pageTitle = await passwordReminderPage.getPageTitle(page);
+      await expect(pageTitle).to.equal(passwordReminderPage.pageTitle);
+    });
+
+    it('should set the customer email and check the error alert', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkErrorMessage', baseContext);
+
+      await passwordReminderPage.sendResetPasswordLink(page, customerData.email);
+
+      const regeneratePasswordAlert = await passwordReminderPage.getErrorMessage(page);
+      await expect(regeneratePasswordAlert).to.contains(passwordReminderPage.errorMessage);
+    });
   });
 
   // Post-condition : Delete created customer

@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\BulkProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductPositionException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\DuplicateFeatureValueAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidAssociatedFeatureException;
@@ -93,7 +94,7 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * Shows products listing.
      *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param ProductFilters $filters
@@ -203,7 +204,6 @@ class ProductController extends FrameworkBundleAdminController
 
         try {
             $productForm->handleRequest($request);
-
             $result = $this->getProductFormHandler()->handleFor($productId, $productForm);
 
             if ($result->isSubmitted()) {
@@ -520,8 +520,8 @@ class ProductController extends FrameworkBundleAdminController
             'href' => $this->generateUrl('admin_products_v2_create'),
             'desc' => $this->trans('New product', 'Admin.Actions'),
             'icon' => 'add_circle_outline',
-            'class' => 'btn-primary new-product',
-            'floating_class' => 'new-product',
+            'class' => 'btn-primary new-product-button',
+            'floating_class' => 'new-product-button',
         ];
 
         return $toolbarButtons;
@@ -775,6 +775,12 @@ class ProductController extends FrameworkBundleAdminController
             SpecificPriceConstraintException::class => [
                 SpecificPriceConstraintException::DUPLICATE_PRIORITY => $this->trans(
                     'The selected condition must be different in each field to set an order of priority.',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+            InvalidProductTypeException::class => [
+                InvalidProductTypeException::EXPECTED_NO_EXISTING_PACK_ASSOCIATIONS => $this->trans(
+                    'This product cannot be changed into a pack because it is already associated to another pack.',
                     'Admin.Notifications.Error'
                 ),
             ],

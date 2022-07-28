@@ -33,6 +33,8 @@ const progressModalId = 'bulk-combination-progress-modal';
 
 export default {
   productForm: 'form[name=product]',
+  productLocalizedNameInput: 'input[name^="product[header][name]"]',
+  productLocalizedLinkRewriteInput: 'input[name^="product[seo][link_rewrite]"]',
   productTypePreview: '.product-type-preview',
   productType: {
     headerSelector: '#product_header_type',
@@ -50,7 +52,7 @@ export default {
     },
   },
   create: {
-    newProductButton: 'a.new-product',
+    newProductButton: '.new-product-button',
     createModalSelector: '#product_type',
   },
   invalidField: '.is-invalid',
@@ -91,7 +93,7 @@ export default {
     combinationsTableBody: `${combinationListFormId} tbody`,
     combinationIdInputsSelector: '.combination-id-input',
     deleteCombinationSelector: '.delete-combination-item',
-    combinationName: 'form .card-header span',
+    combinationName: 'form .combination-name-row .text-preview',
     paginationContainer: '#combinations-pagination',
     loadingSpinner: '#productCombinationsLoading',
     impactOnPriceInputWrapper: '.combination-impact-on-price',
@@ -193,10 +195,19 @@ export default {
     coveredPreview: '.dz-preview.is-cover',
     windowFileManager: '.dropzone-window-filemanager',
   },
+  options: {
+    availableForOrderInput: 'input[name="product[options][visibility][available_for_order]"]',
+    showPriceInput: 'input[name="product[options][visibility][show_price]"]',
+    showPriceSwitchContainer: '.show-price-switch-container',
+  },
   suppliers: {
     productSuppliers: '#product_options_product_suppliers',
     supplierIdsInput: '#product_options_suppliers_supplier_ids',
     defaultSupplierInput: '#product_options_suppliers_default_supplier_id',
+  },
+  shipping: {
+    deliveryTimeTypeInput: 'input[name="product[shipping][delivery_time_note_type]"]',
+    deliveryTimeNotesBlock: '#product_shipping_delivery_time_notes',
   },
   seo: {
     container: '#product_seo_serp',
@@ -215,6 +226,7 @@ export default {
       labelSelector: 'label',
       helpSelector: 'small.form-text',
     },
+    resetLinkRewriteBtn: '.reset-link-rewrite',
   },
   jsTabs: '.js-tabs',
   jsArrow: '.js-arrow',
@@ -226,6 +238,12 @@ export default {
   footer: {
     previewUrlButton: '.preview-url-button',
     deleteProductButton: '.delete-product-button',
+    deleteProductModalId: 'delete-product-footer-modal',
+    duplicateProductButton: '.duplicate-product-button',
+    duplicateProductModalId: 'duplicate-product-footer-modal',
+    newProductButton: '.new-product-button',
+    goToCatalogButton: '.go-to-catalog-button',
+    cancelButton: '.cancel-button',
   },
   categories: {
     categoriesContainer: '#product_description_categories',
@@ -336,5 +354,8 @@ export default {
       priorityListWrapper: '.specific-price-priority-list',
       priorityTypeCheckboxesSelector: 'input[name="product[pricing][priority_management][use_custom_priority]"]',
     },
+  },
+  packedProducts: {
+    searchInput: '#product_stock_packed_products',
   },
 };

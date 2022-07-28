@@ -35,7 +35,6 @@ import SubmitGridExtension from '@components/grid/extension/submit-grid-action-e
 import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
 import LinkableItem from '@components/linkable-item';
-import ChoiceTable from '@components/choice-table';
 import DeleteCustomersBulkActionExtension
   from '@components/grid/extension/action/bulk/customer/delete-customers-bulk-action-extension';
 import DeleteCustomerRowActionExtension
@@ -75,9 +74,6 @@ $(() => {
 
   const showcaseCard = new ShowcaseCard('customersShowcaseCard');
   showcaseCard.addExtension(new ShowcaseCardCloseExtension());
-
-  // needed for "Group access" input in Add/Edit customer forms
-  new ChoiceTable();
 
   // in customer view page
   // there are a lot of tables

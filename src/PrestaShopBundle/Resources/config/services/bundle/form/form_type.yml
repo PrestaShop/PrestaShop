@@ -168,6 +168,8 @@ services:
       - "@prestashop.adapter.legacy.context"
       - "@prestashop.adapter.data_provider.warehouse"
       - "@prestashop.adapter.data_provider.carrier"
+      - "@=service('prestashop.adapter.legacy.configuration').get('PS_DIMENSION_UNIT')"
+      - "@=service('prestashop.adapter.legacy.configuration').get('PS_WEIGHT_UNIT')"
     parent: 'form.type.common_type'
     public: true
     tags:
@@ -1454,6 +1456,8 @@ services:
     public: true
     arguments:
       - '@prestashop.core.form.choice_provider.pack_stock_type_choice_provider'
+      - '@router'
+      - '@=service("prestashop.adapter.legacy.context").getEmployeeLanguageIso()'
     tags:
       - { name: form.type }
 
@@ -1654,6 +1658,13 @@ services:
     tags:
       - { name: form.type }
 
+  form.type.sell.product.stock.packed_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Stock\PackedProductType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+
   form.type.sell.product.seo.redirect_option_type:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\SEO\RedirectOptionType'
     parent: 'form.type.translatable.aware'
@@ -1727,6 +1738,7 @@ services:
     public: true
     arguments:
       - '@prestashop.adapter.shop.url.product_provider'
+      - '@prestashop.adapter.shop.url.product_preview_provider'
       - '@router'
     tags:
       - { name: form.type }
@@ -1809,6 +1821,13 @@ services:
     public: true
     arguments:
       - '@form.type.sell.product.event_listener.combination_listener'
+    tags:
+      - { name: form.type }
+
+  form.type.sell.product.combination.combination_header_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationHeaderType'
+    parent: 'form.type.translatable.aware'
+    public: true
     tags:
       - { name: form.type }
 
