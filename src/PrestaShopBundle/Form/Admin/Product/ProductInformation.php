@@ -219,13 +219,13 @@ class ProductInformation extends CommonAbstractType
                             'pattern' => '/[<>;=#{}]/',
                             'match' => false,
                         ]),
-                        new Assert\NotBlank(),
                         new Assert\Length(['min' => 3, 'max' => 128]),
                     ],
                     'attr' => [
                         'placeholder' => $this->translator->trans('Enter your product name', [], 'Admin.Catalog.Help'),
                         'class' => 'edit js-edit serp-default-title',
                     ],
+                    'default_empty_data' => ' ', // This is made to ensure no blank value given ( Assert\Length won't be applied if empty field )
                 ],
                 'locales' => $this->locales,
                 'hideTabs' => true,
