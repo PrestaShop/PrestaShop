@@ -39,10 +39,13 @@ final class TaxRuleGroupChoiceProvider implements FormChoiceProviderInterface, F
 {
     /** @var int */
     private $countryId;
+    /** @var int */
+    private $langId;
 
-    public function __construct(int $countryId)
+    public function __construct(int $countryId, int $langId)
     {
         $this->countryId = $countryId;
+        $this->langId = $langId;
     }
 
     /**
@@ -65,9 +68,20 @@ final class TaxRuleGroupChoiceProvider implements FormChoiceProviderInterface, F
     {
         $address = new Address();
         $address->id_country = $this->countryId;
+        $country = new \Country($this->countryId);
+        if ($country->contains_states) {
+            $states = \State::getStatesByIdCountry($this->countryId, true);
+            $firstState = reset($states);
+            $address->id_state = $firstState['id_state'];
+        }
 
         $taxRates = [];
         foreach ($this->getRules() as $rule) {
+            if ($country->contains_states) {
+                $taxRules = \TaxRule::getTaxRulesByGroupId($this->langId, $rule['id_tax_rules_group']);
+                $firstTaxRule = reset($taxRules);
+                $address->id_state = $firstTaxRule['id_state'];
+            }
             $taxRulesGroupId = (int) $rule['id_tax_rules_group'];
             $taxCalculator = TaxManagerFactory::getManager($address, $taxRulesGroupId)->getTaxCalculator();
 
