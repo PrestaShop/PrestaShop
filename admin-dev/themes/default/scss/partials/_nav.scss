@@ -365,10 +365,6 @@
         color: #fff;
         background: $gray-dark-active-menu;
         transition: background 300ms ease;
-
-        @include media-breakpoint-down(md) {
-          background: $gray-dark-menu;
-        }
       }
 
       &.has_submenu {
@@ -396,7 +392,6 @@
           a.link {
             padding-top: 0.5rem;
             padding-bottom: 0.5rem;
-            color: $gray-dark-secondary-link;
 
             &:hover {
               color: #fff;
