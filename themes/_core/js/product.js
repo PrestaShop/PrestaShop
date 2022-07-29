@@ -228,7 +228,7 @@ function updateProduct(event, eventType, updateUrl) {
         $(prestashop.selectors.product.customization)
           .first()
           .replaceWith(data.product_customization);
-        if (!eventType) { //Only when product is added to cart (eventType undefined)
+        if (eventType!=='updatedProductQuantity' && eventType!=='updatedProductCombination') { //Only when product is added to cart
           $(prestashop.selectors.product.inputCustomization).val(0);
         }
         $(prestashop.selectors.product.variantsUpdate)
