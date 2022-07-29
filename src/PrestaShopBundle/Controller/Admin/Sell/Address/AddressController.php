@@ -439,6 +439,7 @@ class AddressController extends FrameworkBundleAdminController
             // Address type required for EditOrderAddressCommand
             $formData = [
                 'address_type' => $addressType,
+                'id_address'   => $addressId,
             ];
             // Country needs to be preset before building form type because it is used to build state field choices
             if ($request->request->has('customer_address') && isset($request->request->get('customer_address')['id_country'])) {
