@@ -50,7 +50,7 @@ class TaxComputer
     private $langId;
 
     /**
-     * @param TaxRulesGroupRepository $taxRulesGroupRepository
+     * @param int $langId
      */
     public function __construct(
         int $langId
