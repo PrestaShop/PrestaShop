@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Tax;
 use Address;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\Decimal\Operation\Division;
+use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use TaxManagerFactory;
@@ -42,6 +43,27 @@ class TaxComputer
      * so we increase the default precision (6) to avoid losing two digits by diving by 100 (two decimal factors).
      */
     protected const DIVISION_PRECISION = Division::DEFAULT_PRECISION + 2;
+
+    /**
+     * @var TaxRulesGroupRepository
+     */
+    private $taxRulesGroupRepository;
+
+    /**
+     * @var int
+     */
+    private $langId;
+
+    /**
+     * @param TaxRulesGroupRepository $taxRulesGroupRepository
+     */
+    public function __construct(
+        TaxRulesGroupRepository $taxRulesGroupRepository,
+        int $langId
+    ) {
+        $this->taxRulesGroupRepository = $taxRulesGroupRepository;
+        $this->langId = $langId;
+    }
 
     /**
      * @param DecimalNumber $priceTaxExcluded
@@ -87,8 +109,16 @@ class TaxComputer
      */
     public function getTaxRate(TaxRulesGroupId $taxRulesGroupId, CountryId $countryId): DecimalNumber
     {
+        $country = new \Country($countryId->getValue());
+
         $address = new Address();
         $address->id_country = $countryId->getValue();
+        if ($country->contains_states) {
+            $taxRules = \TaxRule::getTaxRulesByGroupId($this->langId, $taxRulesGroupId->getValue());
+            $firstTaxRule = reset($taxRules);
+            $address->id_state = $firstTaxRule['id_state'];
+        }
+
         $taxCalculator = TaxManagerFactory::getManager($address, $taxRulesGroupId->getValue())->getTaxCalculator();
 
         return new DecimalNumber((string) $taxCalculator->getTotalRate());
