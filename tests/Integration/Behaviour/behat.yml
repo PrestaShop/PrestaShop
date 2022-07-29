@@ -360,6 +360,7 @@ default:
                 - Tests\Integration\Behaviour\Features\Transform\LocalizedArrayTransformContext
                 - Tests\Integration\Behaviour\Features\Transform\StringToArrayTransformContext
                 - Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext
+                - Tests\Integration\Behaviour\Features\Context\Domain\TaxFeatureContext
         legacy_product:
             paths:
                 - "%paths.base%/Features/Scenario/Product"
