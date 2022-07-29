@@ -45,11 +45,6 @@ class TaxComputer
     protected const DIVISION_PRECISION = Division::DEFAULT_PRECISION + 2;
 
     /**
-     * @var TaxRulesGroupRepository
-     */
-    private $taxRulesGroupRepository;
-
-    /**
      * @var int
      */
     private $langId;
@@ -58,10 +53,8 @@ class TaxComputer
      * @param TaxRulesGroupRepository $taxRulesGroupRepository
      */
     public function __construct(
-        TaxRulesGroupRepository $taxRulesGroupRepository,
         int $langId
     ) {
-        $this->taxRulesGroupRepository = $taxRulesGroupRepository;
         $this->langId = $langId;
     }
 

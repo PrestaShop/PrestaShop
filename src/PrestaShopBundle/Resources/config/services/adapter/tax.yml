@@ -8,7 +8,6 @@ services:
   prestashop.adapter.tax.tax_computer:
     class: 'PrestaShop\PrestaShop\Adapter\Tax\TaxComputer'
     arguments:
-      - '@prestashop.adapter.tax_rules_group.repository.tax_rules_group_repository'
       - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
 
   # Command handlers
