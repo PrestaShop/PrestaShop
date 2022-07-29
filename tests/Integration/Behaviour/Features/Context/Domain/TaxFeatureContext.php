@@ -66,9 +66,12 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
      */
     public function createTax(string $taxReference, TableNode $table): void
     {
-        $data = $table->getRowsHash();
+        // we don't want to duplicate taxes if they already exist
+        if (SharedStorage::getStorage()->exists($taxReference)) {
+            return;
+        }
 
-        $this->createTaxUsingCommand($taxReference, $data);
+        $this->createTaxUsingCommand($taxReference, $table->getRowsHash());
     }
 
     /**
@@ -264,6 +267,11 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
      */
     public function addTaxRuleGroupToTax(string $taxGroupReference, string $taxReference, TableNode $table)
     {
+        // we don't want to duplicate taxes if they already exist
+        if (SharedStorage::getStorage()->exists($taxGroupReference)) {
+            return;
+        }
+
         $data = $table->getRowsHash();
 
         $taxRulesGroup = new TaxRulesGroup();
