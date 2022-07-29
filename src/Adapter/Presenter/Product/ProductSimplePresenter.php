@@ -53,11 +53,11 @@ class ProductSimplePresenter
     /** @var ProductPresentationSettings */
     private $presentationSettings;
 
-    /** @var self */
+    /** @var self|null */
     private static $instance;
 
-    /** @var ProductListingLazyArray[]  */
-    static $presentedProducts = array();
+    /** @var ProductLazyArray[]|array  */
+    static $presentedProducts = [];
 
     private function __construct(Context $context = null)
     {
@@ -86,7 +86,7 @@ class ProductSimplePresenter
 
     /**
      * @param Product $product
-     * @return ProductListingLazyArray|null
+     * @return ProductLazyArray|null
      * @throws ReflectionException
      */
     public function present(Product $product)
@@ -108,7 +108,7 @@ class ProductSimplePresenter
 
     /**
      * @param Product[] $products
-     * @return ProductListingLazyArray[]
+     * @return ProductLazyArray[]|array
      */
     public function presentProducts(array $products)
     {
