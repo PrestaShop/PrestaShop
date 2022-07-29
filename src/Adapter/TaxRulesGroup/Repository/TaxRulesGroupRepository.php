@@ -74,4 +74,3 @@ class TaxRulesGroupRepository extends AbstractObjectModelRepository
         );
     }
 }
-
