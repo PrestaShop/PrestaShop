@@ -156,7 +156,7 @@ class SpecificPriceType extends TranslatorAwareType
                 'label_tag_name' => 'h4',
                 'required' => false,
                 'has_unlimited_checkbox' => true,
-                'date_format' => Tools::getDateFormat() . ' HH:mm:ss',
+                'date_format' => Tools::getDateFormat(false) . ' HH:mm:ss',
                 'constraints' => [
                     new DateRange([
                         'message' => $this->trans(

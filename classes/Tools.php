@@ -955,15 +955,20 @@ class ToolsCore
      *
      * @return string Date format
      */
-    public static function getDateFormat()
+    public static function getDateFormat($translate = true)
     {
         $format = Context::getContext()->language->date_format_lite;
         $search = ['d', 'm', 'Y'];
-        $replace = [
-            Context::getContext()->getTranslator()->trans('DD', [], 'Shop.Forms.Help'),
-            Context::getContext()->getTranslator()->trans('MM', [], 'Shop.Forms.Help'),
-            Context::getContext()->getTranslator()->trans('YYYY', [], 'Shop.Forms.Help'),
-        ];
+
+        if ($translate === true) {
+            $replace = [
+                Context::getContext()->getTranslator()->trans('DD', [], 'Shop.Forms.Help'),
+                Context::getContext()->getTranslator()->trans('MM', [], 'Shop.Forms.Help'),
+                Context::getContext()->getTranslator()->trans('YYYY', [], 'Shop.Forms.Help'),
+            ];
+        } else {
+            $replace = ['DD', 'MM', 'YYYY'];
+        }
         $format = str_replace($search, $replace, $format);
 
         return $format;
