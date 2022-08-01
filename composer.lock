@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f4f3b2f5524fc846bd30aac388a606e9",
+    "content-hash": "34304ec3822572e9f85ba5384dbd7b9d",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -8784,16 +8784,16 @@
         },
         {
             "name": "tecnickcom/tcpdf",
-            "version": "6.3.5",
+            "version": "dev-6.4.4-patch",
             "source": {
                 "type": "git",
-                "url": "https://github.com/tecnickcom/TCPDF.git",
-                "reference": "19a535eaa7fb1c1cac499109deeb1a7a201b4549"
+                "url": "https://github.com/PrestaShop/TCPDF.git",
+                "reference": "0e11c4ab626bcd2036c56aaffa5f67b4337aa5a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tecnickcom/TCPDF/zipball/19a535eaa7fb1c1cac499109deeb1a7a201b4549",
-                "reference": "19a535eaa7fb1c1cac499109deeb1a7a201b4549",
+                "url": "https://api.github.com/repos/PrestaShop/TCPDF/zipball/0e11c4ab626bcd2036c56aaffa5f67b4337aa5a7",
+                "reference": "0e11c4ab626bcd2036c56aaffa5f67b4337aa5a7",
                 "shasum": ""
             },
             "require": {
@@ -8820,7 +8820,6 @@
                     "include/barcodes/qrcode.php"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "LGPL-3.0-only"
             ],
@@ -8834,19 +8833,24 @@
             "description": "TCPDF is a PHP class for generating PDF documents and barcodes.",
             "homepage": "http://www.tcpdf.org/",
             "keywords": [
+                "PDF",
                 "PDFD32000-2008",
-                "TCPDF",
                 "barcodes",
                 "datamatrix",
-                "pdf",
                 "pdf417",
-                "qrcode"
+                "qrcode",
+                "tcpdf"
             ],
             "support": {
-                "issues": "https://github.com/tecnickcom/TCPDF/issues",
-                "source": "https://github.com/tecnickcom/TCPDF/tree/6.3.5"
+                "source": "https://github.com/PrestaShop/TCPDF/tree/main"
             },
-            "time": "2020-02-14T14:20:12+00:00"
+            "funding": [
+                {
+                    "type": "custom",
+                    "url": "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&currency_code=GBP&business=paypal@tecnick.com&item_name=donation%20for%20tcpdf%20project"
+                }
+            ],
+            "time": "2022-04-21T08:12:24+00:00"
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",
@@ -11344,6 +11348,7 @@
     "stability-flags": {
         "csa/guzzle-bundle": 20,
         "cssjanus/cssjanus": 20,
+        "tecnickcom/tcpdf": 20,
         "phake/phake": 0
     },
     "prefer-stable": true,
