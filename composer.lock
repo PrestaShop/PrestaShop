@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f2af86ecf482f4abc48350fc40e22a2d",
+    "content-hash": "08f67990fadc666315e5a4cc28f66816",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -5234,25 +5234,34 @@
         },
         {
             "name": "prestashop/ps_cashondelivery",
-            "version": "v1.0.6",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_cashondelivery.git",
-                "reference": "7d503ff1f573ab5400fac6dcf0d50be971154af5"
+                "reference": "1f80133e367cdffb5f3321ff1b47d014b537223c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_cashondelivery/zipball/7d503ff1f573ab5400fac6dcf0d50be971154af5",
-                "reference": "7d503ff1f573ab5400fac6dcf0d50be971154af5",
+                "url": "https://api.github.com/repos/PrestaShop/ps_cashondelivery/zipball/1f80133e367cdffb5f3321ff1b47d014b537223c",
+                "reference": "1f80133e367cdffb5f3321ff1b47d014b537223c",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4"
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "prestashop/php-dev-tools": "~3.0"
             },
             "type": "prestashop-module",
+            "autoload": {
+                "classmap": [
+                    "ps_cashondelivery.php",
+                    "controllers"
+                ]
+            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -5263,9 +5272,9 @@
             "description": "PrestaShop module ps_cashondelivery",
             "homepage": "https://github.com/PrestaShop/ps_cashondelivery",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_cashondelivery/tree/dev"
+                "source": "https://github.com/PrestaShop/ps_cashondelivery/tree/v2.0.1"
             },
-            "time": "2017-03-16T10:24:54+00:00"
+            "time": "2022-07-15T15:20:08+00:00"
         },
         {
             "name": "prestashop/ps_categoryproducts",
