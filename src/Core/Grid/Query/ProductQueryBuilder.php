@@ -184,6 +184,7 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
                    'pc',
                    'p.`id_product` = pc.`id_product` AND pc.id_category = :categoryId'
                )
+            ->andWhere('pc.id_category', ':categoryId')
             ->setParameter('categoryId', $this->getFilteredCategoryId($filterValues))
         ;
 
