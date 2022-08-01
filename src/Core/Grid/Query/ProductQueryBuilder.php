@@ -185,7 +185,6 @@ final class ProductQueryBuilder extends AbstractDoctrineQueryBuilder
                    'p.`id_product` = pc.`id_product` AND pc.id_category = :categoryId'
                )
             ->setParameter('categoryId', $this->getFilteredCategoryId($filterValues))
-            ->andWhere('p.`state`=1')
         ;
 
         $isStockManagementEnabled = $this->configuration->getBoolean('PS_STOCK_MANAGEMENT');
