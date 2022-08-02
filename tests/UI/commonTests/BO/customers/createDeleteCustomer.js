@@ -70,7 +70,7 @@ function createCustomerTest(customerData, baseContext = 'commonTests-createCusto
 }
 
 /**
- * Function to create customer
+ * Function to create B2B customer
  * @param customerData {CustomerData} Data to set to create customer
  * @param baseContext {string} String to identify the test
  */
@@ -247,4 +247,9 @@ function bulkDeleteCustomersTest(filterBy, value, baseContext = 'commonTests-del
   });
 }
 
-module.exports = {deleteCustomerTest, createCustomerTest, createCustomerB2BTest, bulkDeleteCustomersTest};
+module.exports = {
+  deleteCustomerTest,
+  createCustomerTest,
+  createCustomerB2BTest,
+  bulkDeleteCustomersTest,
+};

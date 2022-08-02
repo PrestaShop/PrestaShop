@@ -62,7 +62,7 @@ class CustomerData {
     /** @type {Number} Allowed outstanding amount for the customer */
     this.allowedOutstandingAmount = customerToCreate.allowedOutstandingAmount || faker.random.number({
       min: 0,
-      max: 4294967295,
+      max: 100,
     });
 
     /** @type {string} Risk rating for the customer */

@@ -61,7 +61,7 @@ function createAccountTest(customerData, baseContext = 'commonTests-createAccoun
     it('should create new account', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createAccount', baseContext);
 
-      await foCreateAccountPage.createB2BAccount(page, customerData);
+      await foCreateAccountPage.createAccount(page, customerData);
 
       const isCustomerConnected = await homePage.isCustomerConnected(page);
       await expect(isCustomerConnected).to.be.true;

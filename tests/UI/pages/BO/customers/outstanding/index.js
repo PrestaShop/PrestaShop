@@ -53,12 +53,17 @@ class Outstanding extends BOBasePage {
    * Get text from Column
    * @param page {Page} Browser tab
    * @param columnName {string} Column name on table
-   * @param row {number} Outstanding row in table
+   * @param row {number} Order row in table
    * @returns {Promise<string|number>}
    */
   async getTextColumn(page, columnName, row) {
-    return this.getNumberFromText(page, this.tableColumn(row, 'id_invoice'));
+    if (columnName === 'id_invoice') {
+      return this.getNumberFromText(page, this.tableColumn(row, 'id_invoice'));
+    }
+
+    return this.getTextContent(page, this.tableColumn(row, columnName));
   }
+
 
   /**
    * Click on view order
