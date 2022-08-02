@@ -133,7 +133,7 @@
       },
       onKeyUp(event: Event): void {
         this.isFocused = true;
-        this.$store.dispatch('updateBulkEditQty', (<HTMLInputElement>event.target).value);
+        this.$store.dispatch('updateBulkEditQty', parseInt((<HTMLInputElement>event.target).value, 10));
       },
     },
     data() {

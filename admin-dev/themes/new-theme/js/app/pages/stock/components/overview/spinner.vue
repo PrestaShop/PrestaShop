@@ -133,7 +133,8 @@
         const postUrl = this.product.edit_url;
 
         if (
-          parseInt(this.product.qty, 10) !== 0
+          this.value !== ''
+          && parseInt(this.product.qty, 10) !== 0
           && !Number.isNaN(Math.round(<number> this.value))
         ) {
           this.$store.dispatch('updateQtyByProductId', {

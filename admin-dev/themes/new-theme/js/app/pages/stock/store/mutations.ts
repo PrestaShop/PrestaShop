@@ -158,6 +158,14 @@ export default {
         }
       });
       state.hasQty = true;
+      return;
+    }
+    if (value === 0) {
+      _.forEach(state.selectedProducts, (product) => {
+        product.qty = 0;
+      });
+      state.hasQty = false;
+      return;
     }
     if (value === null) {
       _.forEach(state.selectedProducts, (product) => {
