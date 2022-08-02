@@ -73,33 +73,6 @@ class CreateAccount extends FOBasePage {
   }
 
   /**
-   * Create new B2B customer account
-   * @param page {Page} Browser tab
-   * @param customer {object} Customer's information (email and password)
-   * @returns {Promise<void>}
-   */
-  async createB2BAccount(page, customer) {
-    await this.waitForSelectorAndClick(page, this.genderRadioButton(customer.socialTitle === 'Mr.' ? 1 : 2));
-    await this.setValue(page, this.firstNameInput, customer.firstName);
-    await this.setValue(page, this.lastNameInput, customer.lastName);
-    await this.setValue(page, this.newEmailInput, customer.email);
-    await this.setValue(page, this.newPasswordInput, customer.password);
-    await this.setValue(page, this.companyInput, customer.company);
-
-    await this.setValue(
-      page,
-      this.birthdateInput,
-      `${customer.monthOfBirth}/${customer.dayOfBirth}/${customer.yearOfBirth}`,
-    );
-
-    await page.click(this.customerPrivacyCheckbox);
-    if (await this.elementVisible(page, this.psgdprCheckbox, 500)) {
-      await page.click(this.psgdprCheckbox);
-    }
-    await page.click(this.saveButton);
-  }
-
-  /**
    * Is partner offer required
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}

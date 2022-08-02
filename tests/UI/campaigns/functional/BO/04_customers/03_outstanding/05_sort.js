@@ -10,14 +10,14 @@ const basicHelper = require('@utils/basicHelper');
 const {enableB2BTest, disableB2BTest} = require('@commonTests/BO/shopParameters/enableDisableB2B');
 const {createCustomerB2BTest} = require('@commonTests/BO/customers/createDeleteCustomer');
 const {createAddressTest} = require('@commonTests/BO/customers/createDeleteAddress');
-
-// const {createAccountTest, createAddressTest} = require('@commonTests/FO/createAccount');
 const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
 
 
-// Import data
+// Import faker data
 const CustomerFaker = require('@data/faker/customer');
 const AddressFaker = require('@data/faker/address');
+
+// Import demo data
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {Statuses} = require('@data/demo/orderStatuses');
 
@@ -40,13 +40,14 @@ let page;
 // Variable used to get the number of outstanding
 let numberOutstanding;
 
-// Const used to get the least number of outstanding to display pagination
-const firstPagination = 1;
+// Const used to get the least number of outstanding to do the sort
+const firstPagination = 3;
 
 describe('BO - Customers - Outstanding : Sort of the outstanding page', async () => {
   // Pre-Condition : Enable B2B
   enableB2BTest(baseContext);
 
+  // Pre-Condition : Create Outstanding
   describe('PRE-TEST: Create outstanding', async () => {
     it('should login to BO', async function () {
       await loginCommon.loginBO(this, page);
@@ -66,6 +67,7 @@ describe('BO - Customers - Outstanding : Sort of the outstanding page', async ()
         address: addressData,
         paymentMethod: PaymentMethods.wirePayment.moduleName,
       };
+
       // Pre-condition: Create new customer
       createCustomerB2BTest(customerData, `${baseContext}_preTest_createB2BAccount_${index}`);
 
@@ -76,8 +78,8 @@ describe('BO - Customers - Outstanding : Sort of the outstanding page', async ()
       createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_createOrder_${index}`);
 
       // Pre-condition: Update order status to payment accepted
-      describe(`PRE-TEST_${index}: Update order status to payment accepted`, async () => {
-        it(`should go to 'Orders > Orders' page ${index}`, async function () {
+      describe('PRE-TEST: Update order status to payment accepted', async () => {
+        it('should go to Orders > Orders page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
           await dashboardPage.goToSubMenu(
@@ -117,6 +119,10 @@ describe('BO - Customers - Outstanding : Sort of the outstanding page', async ()
     await helper.closeBrowserContext(browserContext);
   });
 
+  /*
+  Sort outstanding by:
+  ID, Date, Customer, Company, Outstanding allowance DESC and ASC
+   */
   describe('Sort outstanding table', async () => {
     it('should go to BO > Customers > Outstanding page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOutstandingPage', baseContext);
@@ -170,12 +176,12 @@ describe('BO - Customers - Outstanding : Sort of the outstanding page', async ()
       },
       {
         args: {
-          testIdentifier: 'sortByIdAsc', sortBy: 'id_invoice', sortDirection: 'asc', isNumber: true,
+          testIdentifier: 'sortByIdAsc', sortBy: 'id_invoice', sortDirection: 'asc', isFloat: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByIdDesc', sortBy: 'id_invoice', sortDirection: 'desc', isNumber: true,
+          testIdentifier: 'sortByIdDesc', sortBy: 'id_invoice', sortDirection: 'desc', isFloat: true,
         },
       },
     ];
@@ -184,7 +190,6 @@ describe('BO - Customers - Outstanding : Sort of the outstanding page', async ()
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
         let nonSortedTable = await outstandingPage.getAllRowsColumnContent(page, test.args.sortBy);
-        console.log(outstandingPage.getAllRowsColumnContent(page, test.args.sortBy));
 
         await outstandingPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
 
@@ -205,4 +210,7 @@ describe('BO - Customers - Outstanding : Sort of the outstanding page', async ()
       });
     });
   });
+
+  // POST-Condition : Enable B2B
+  disableB2BTest(baseContext);
 });

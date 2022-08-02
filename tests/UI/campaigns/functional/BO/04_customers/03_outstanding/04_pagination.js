@@ -61,12 +61,13 @@ describe('BO - Customers - Outstanding : Pagination of the outstanding page', as
       await loginCommon.loginBO(this, page);
     });
 
-    for (let i = 1; i <= firstPagination; i++) {
-      createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_${i}`);
+    const creationTests = new Array(firstPagination).fill(0, 0, firstPagination);
+    creationTests.forEach((value, index) => {
+      createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_${index}`);
 
       // Pre-condition: Update order status to payment accepted
-      describe(`PRE-TEST_${i}: Update order status to payment accepted`, async () => {
-        it(`should go to 'Orders > Orders' page ${i}`, async function () {
+      describe(`PRE-TEST_${index}: Update order status to payment accepted`, async () => {
+        it(`should go to 'Orders > Orders' page ${index}`, async function () {
           await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
 
           await dashboardPage.goToSubMenu(
@@ -93,7 +94,7 @@ describe('BO - Customers - Outstanding : Pagination of the outstanding page', as
           await expect(orderStatus, 'Order status was not updated').to.equal(Statuses.paymentAccepted.status);
         });
       });
-    }
+    });
   });
   describe('Pagination next and previous', async () => {
     it('should go to BO > Customers > Outstanding page', async function () {
