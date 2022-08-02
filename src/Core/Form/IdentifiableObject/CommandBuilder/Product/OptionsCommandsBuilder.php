@@ -69,8 +69,12 @@ final class OptionsCommandsBuilder implements MultiShopProductCommandsBuilderInt
             ->addMultiShopField('[options][visibility][available_for_order]', 'setAvailableForOrder', DataField::TYPE_BOOL)
             ->addMultiShopField('[options][visibility][show_price]', 'setShowPrice', DataField::TYPE_BOOL)
             ->addMultiShopField('[specifications][show_condition]', 'setShowCondition', DataField::TYPE_BOOL)
-            ->addMultiShopField('[specifications][condition]', 'setCondition', DataField::TYPE_STRING)
         ;
+
+        // based on show_condition value, the condition field can be disabled, in that case "condition" won't exist in request
+        if (!empty($formData['specifications']['condition'])) {
+            $config->addMultiShopField('[specifications][condition]', 'setCondition', DataField::TYPE_STRING);
+        }
 
         $commandBuilder = new CommandBuilder($config);
         $shopCommand = new UpdateProductOptionsCommand($productId->getValue(), $singleShopConstraint);
