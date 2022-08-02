@@ -37,14 +37,14 @@ class AddPaymentCommandTest extends TestCase
     {
         $this->expectException(NegativePaymentAmountException::class);
         $this->expectExceptionMessage('The amount should be greater than 0.');
-        new AddPaymentCommand(1, date('Y-m-d'), 'Check', '-1', 2);
+        new AddPaymentCommand(1, date('Y-m-d'), 'Check', '-1', 2, 3);
     }
 
     public function testPaymentMethodIsEmpty(): void
     {
         $this->expectException(OrderConstraintException::class);
         $this->expectExceptionMessage('The selected payment method is invalid.');
-        new AddPaymentCommand(1, date('Y-m-d'), '', '0', 2);
+        new AddPaymentCommand(1, date('Y-m-d'), '', '0', 2, 3);
     }
 
     /**
@@ -56,7 +56,7 @@ class AddPaymentCommandTest extends TestCase
     {
         $this->expectException(OrderConstraintException::class);
         $this->expectExceptionMessage('The selected payment method is invalid.');
-        new AddPaymentCommand(1, date('Y-m-d'), $invalidChar . 'Check', '0', 2);
+        new AddPaymentCommand(1, date('Y-m-d'), $invalidChar . 'Check', '0', 2, 3);
     }
 
     public function getInvalidChars(): iterable
@@ -68,19 +68,6 @@ class AddPaymentCommandTest extends TestCase
 
     public function testConstruct(): void
     {
-        $instance = new AddPaymentCommand(1, date('Y-m-d'), 'Check', '0', 2);
-
-        $this->assertEquals(1, $instance->getOrderId()->getValue());
-        $this->assertEquals(date('Y-m-d'), $instance->getPaymentDate()->format('Y-m-d'));
-        $this->assertEquals('Check', $instance->getPaymentMethod());
-        $this->assertEquals('0', $instance->getPaymentAmount()->__toString());
-        $this->assertEquals(2, $instance->getPaymentCurrencyId()->getValue());
-        $this->assertNull($instance->getOrderInvoiceId());
-        $this->assertNull($instance->getPaymentTransactionId());
-    }
-
-    public function testConstructWithOrderInvoiceId(): void
-    {
         $instance = new AddPaymentCommand(1, date('Y-m-d'), 'Check', '0', 2, 3);
 
         $this->assertEquals(1, $instance->getOrderId()->getValue());
@@ -88,20 +75,36 @@ class AddPaymentCommandTest extends TestCase
         $this->assertEquals('Check', $instance->getPaymentMethod());
         $this->assertEquals('0', $instance->getPaymentAmount()->__toString());
         $this->assertEquals(2, $instance->getPaymentCurrencyId()->getValue());
-        $this->assertEquals(3, $instance->getOrderInvoiceId());
+        $this->assertEquals(3, $instance->getEmployeeId()->getValue());
+        $this->assertNull($instance->getOrderInvoiceId());
         $this->assertNull($instance->getPaymentTransactionId());
     }
 
-    public function testConstructWithTransactionId(): void
+    public function testConstructWithOrderInvoiceId(): void
     {
-        $instance = new AddPaymentCommand(1, date('Y-m-d'), 'Check', '0', 2, 3, 'TransactionId');
+        $instance = new AddPaymentCommand(1, date('Y-m-d'), 'Check', '0', 2, 3, 4);
 
         $this->assertEquals(1, $instance->getOrderId()->getValue());
         $this->assertEquals(date('Y-m-d'), $instance->getPaymentDate()->format('Y-m-d'));
         $this->assertEquals('Check', $instance->getPaymentMethod());
         $this->assertEquals('0', $instance->getPaymentAmount()->__toString());
         $this->assertEquals(2, $instance->getPaymentCurrencyId()->getValue());
-        $this->assertEquals(3, $instance->getOrderInvoiceId());
+        $this->assertEquals(3, $instance->getEmployeeId()->getValue());
+        $this->assertEquals(4, $instance->getOrderInvoiceId());
+        $this->assertNull($instance->getPaymentTransactionId());
+    }
+
+    public function testConstructWithTransactionId(): void
+    {
+        $instance = new AddPaymentCommand(1, date('Y-m-d'), 'Check', '0', 2, 3, 4, 'TransactionId');
+
+        $this->assertEquals(1, $instance->getOrderId()->getValue());
+        $this->assertEquals(date('Y-m-d'), $instance->getPaymentDate()->format('Y-m-d'));
+        $this->assertEquals('Check', $instance->getPaymentMethod());
+        $this->assertEquals('0', $instance->getPaymentAmount()->__toString());
+        $this->assertEquals(2, $instance->getPaymentCurrencyId()->getValue());
+        $this->assertEquals(3, $instance->getEmployeeId()->getValue());
+        $this->assertEquals(4, $instance->getOrderInvoiceId());
         $this->assertEquals('TransactionId', $instance->getPaymentTransactionId());
     }
 }
