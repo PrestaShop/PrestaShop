@@ -28,6 +28,7 @@ import {EventEmitter} from 'events';
 import FormObjectMapper, {FormUpdateEvent} from '@components/form/form-object-mapper';
 import ProductFormMapping from '@pages/product/edit/product-form-mapping';
 import {NumberFormatter} from '@app/cldr';
+import ProductMap from '@pages/product/product-map';
 
 export default class ProductFormModel {
   private eventEmitter: EventEmitter;
@@ -38,6 +39,8 @@ export default class ProductFormModel {
 
   private numberFormatter: NumberFormatter;
 
+  private $taxRuleGroupHelpLabel: JQuery;
+
   constructor($form: JQuery, eventEmitter: EventEmitter) {
     this.eventEmitter = eventEmitter;
 
@@ -46,6 +49,8 @@ export default class ProductFormModel {
       $form,
       ProductFormMapping,
     );
+
+    this.$taxRuleGroupHelpLabel = $(ProductMap.priceSummary.taxRuleGroupHelpLabel);
 
     // For now we get precision only in the component, but maybe it would deserve a more global configuration
     // BigNumber.set({DECIMAL_PLACES: someConfig}) But where can we define/inject this global config?
@@ -221,6 +226,12 @@ export default class ProductFormModel {
           'price.priceTaxIncluded',
           priceTaxExcluded.times(taxRatio).plus(ecotaxTaxIncluded).toFixed(this.precision),
         );
+        const placeHolder = $('.js-tax-rule-help').data('place-holder');
+        const newString = placeHolder.replace(
+          new RegExp('_TAX_RATE_HELP_PLACEHOLDER_', 'g'),
+          taxRatio.minus(1).times(100).toPrecision(),
+        );
+        this.$taxRuleGroupHelpLabel.html(newString);
         const unitPriceTaxExcluded = this.mapper.getBigNumber('price.unitPriceTaxExcluded') ?? new BigNumber(0);
         this.mapper.set('price.unitPriceTaxIncluded', this.addTax(unitPriceTaxExcluded));
         break;

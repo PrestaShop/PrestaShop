@@ -1167,7 +1167,7 @@
 
 {% block form_help %}
   {% if help is not null %}
-    <small class="form-text">{{ help|raw }}</small>
+    <small class="form-text {% if help_attr.class is defined %}{{ help_attr.class }}{% endif %}" {% if help_attr.placeholder is defined %} data-place-holder="{{ help_attr.placeholder }}" {% endif%}>{{ help|raw }}</small>
   {% endif %}
   {% if warning is defined %}
     {{ warning }}
