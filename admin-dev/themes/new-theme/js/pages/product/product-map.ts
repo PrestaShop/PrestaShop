@@ -321,6 +321,7 @@ export default {
     margin: '.margin-value',
     marginRate: '.margin-rate-value',
     wholesalePrice: '.wholesale-price-value',
+    taxRuleGroupHelpLabel: '.js-tax-rule-help',
   },
   specificPrice: {
     container: '#specific-prices-container',
