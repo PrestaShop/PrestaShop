@@ -40,16 +40,6 @@ use Validate;
 final class AddPaymentHandler extends AbstractOrderHandler implements AddPaymentHandlerInterface
 {
     /**
-     * @var int
-     */
-    private $idEmployee;
-
-    public function __construct(int $idEmployee)
-    {
-        $this->idEmployee = $idEmployee;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function handle(AddPaymentCommand $command)
@@ -80,7 +70,7 @@ final class AddPaymentHandler extends AbstractOrderHandler implements AddPayment
             $currency,
             $command->getPaymentDate()->format('Y-m-d H:i:s'),
             $orderInvoice,
-            $this->idEmployee
+            $command->getEmployeeId()->getValue()
         );
 
         if (!$paymentAdded) {
