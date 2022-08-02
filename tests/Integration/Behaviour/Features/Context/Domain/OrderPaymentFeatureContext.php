@@ -27,6 +27,7 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
+use Context;
 use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\NegativePaymentAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderConstraintException;
@@ -59,6 +60,7 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
                 $data['payment_method'],
                 $data['amount'],
                 SharedStorage::getStorage()->get($data['currency']),
+                (int) Context::getContext()->employee->id,
                 isset($data['id_invoice']) ? (int) $data['id_invoice'] : null,
                 $data['transaction_id']
             )
@@ -168,6 +170,7 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
                     $data['payment_method'],
                     $data['amount'],
                     SharedStorage::getStorage()->get($data['currency']),
+                    (int) Context::getContext()->employee->id,
                     isset($data['id_invoice']) ? (int) $data['id_invoice'] : null,
                     $data['transaction_id']
                 )
