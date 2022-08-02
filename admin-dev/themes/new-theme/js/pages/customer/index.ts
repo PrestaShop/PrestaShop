@@ -88,10 +88,43 @@ $(() => {
   new FormSubmitButton();
 
   // Scroll to the block
-  const documentURL = new URL(document.URL);
-  const documentHash = documentURL.hash.slice(1);
+  scrollToBlock();
 
-  if (documentHash !== '') {
-    document.getElementById(documentHash)?.scrollIntoView();
+  function scrollToBlock(): void {
+    const documentURL = new URL(document.URL);
+    const documentHash = documentURL.hash.slice(1);
+
+    if (documentHash === '') {
+      return;
+    }
+
+    const element = document.getElementById(documentHash);
+
+    if (!element) {
+      return;
+    }
+
+    // Fetch its position
+    let positionTop = 0;
+
+    if (element.offsetParent) {
+      let elementParent: HTMLElement|null = element;
+      do {
+        positionTop += elementParent.offsetTop;
+        elementParent = elementParent.offsetParent ? <HTMLElement> (elementParent.offsetParent) : null;
+      } while (elementParent !== null);
+    }
+
+    // Remove the header height
+    positionTop -= document.querySelector('#header_infos')?.getBoundingClientRect()?.height ?? 0;
+    // Remove the title bar height
+    positionTop -= document.querySelector('.header-toolbar')?.getBoundingClientRect()?.height ?? 0;
+    // Remove the  height of the header of the card
+    positionTop -= document.querySelector('.card-header')?.getBoundingClientRect()?.height ?? 0;
+    // Remove the margin-bottom of the card
+    positionTop -= 10;
+
+    // Scroll to the block
+    window.scroll(0, positionTop);
   }
 });
