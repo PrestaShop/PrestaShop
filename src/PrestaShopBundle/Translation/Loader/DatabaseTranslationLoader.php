@@ -72,6 +72,10 @@ class DatabaseTranslationLoader implements LoaderInterface
             $langs[$locale] = $this->entityManager->getRepository('PrestaShopBundle:Lang')->findOneBy(['locale' => $locale]);
         }
 
+        if ($langs[$locale] === null) {
+            return $catalogue;
+        }
+
         /** @var EntityRepository $translationRepository */
         $translationRepository = $this->entityManager->getRepository('PrestaShopBundle:Translation');
 
