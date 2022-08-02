@@ -226,14 +226,30 @@ class AdminShopControllerCore extends AdminController
     public function displayAjaxGetCategoriesFromRootCategory()
     {
         if (Tools::isSubmit('id_category')) {
-            $selected_cat = [(int) Tools::getValue('id_category')];
-            $children = Category::getChildren((int) Tools::getValue('id_category'), $this->context->language->id);
-            foreach ($children as $child) {
-                $selected_cat[] = $child['id_category'];
-            }
+            // Array responsible of selected categories storage.
+            // To make this array construction easier, we use [ (int) 'category_id' => (int) 'category_id'] format.
+            $selected_categories = [];
+
+            // This recursive anonymous function is in charge of building categories tree.
+            $add_children_categories = function (int $category_id) use (&$selected_categories, &$add_children_categories): void {
+                $children = Category::getChildren($category_id, $this->context->language->id);
+                foreach ($children as $child) {
+                    $child_id = (int) $child['id_category'];
+                    // Test made to ensure avoiding unecessary recursive call
+                    if (!isset($selected_categories[$child_id])) {
+                        $selected_categories[$child_id] = $child_id;
+                        $add_children_categories($child_id);
+                    }
+                }
+            };
+
+            $root_category_id = (int) Tools::getValue('id_category');
+            $selected_categories[$root_category_id] = $root_category_id;
+
+            $add_children_categories($root_category_id);
 
             $helper = new HelperTreeCategories('categories-tree', null, (int) Tools::getValue('id_category'), null, false);
-            $this->content = $helper->setSelectedCategories($selected_cat)->setUseSearch(true)->setUseCheckBox(true)
+            $this->content = $helper->setSelectedCategories($selected_categories)->setUseSearch(true)->setUseCheckBox(true)
                 ->render();
         }
         parent::displayAjax();
