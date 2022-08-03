@@ -9,6 +9,7 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Tax\TaxComputer'
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+      - '@prestashop.adapter.country.repository.country_repository'
 
   # Command handlers
   prestashop.adapter.tax.command_handler.delete_tax_handler:

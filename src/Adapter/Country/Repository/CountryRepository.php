@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Country\Repository;
 
+use Country;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
@@ -48,5 +49,24 @@ class CountryRepository extends AbstractObjectModelRepository
             'country',
             CountryNotFoundException::class
         );
+    }
+
+    /**
+     * @param CountryId $countryId
+     *
+     * @return Country
+     *
+     * @throws CountryNotFoundException
+     */
+    public function get(CountryId $countryId): Country
+    {
+        /** @var Country $country */
+        $country = $this->getObjectModel(
+            $countryId->getValue(),
+            Country::class,
+            CountryNotFoundException::class
+        );
+
+        return $country;
     }
 }

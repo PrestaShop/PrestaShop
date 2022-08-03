@@ -10,7 +10,7 @@ Feature: Update product price fields from Back Office (BO).
   As a BO user I want to be able to update product fields associated with price.
 
   Background:
-    Given shop configuration for default shop fr
+    Given shop configuration for default shop is set to fr
     And I add product "product1" with following information:
       | name[en-US] | magic staff |
       | type        | standard    |
