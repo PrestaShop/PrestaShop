@@ -35,6 +35,10 @@ use PrestaShopBundle\Form\Admin\Type\IconButtonType;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * This provider generates the list of buttons available in the toolbar on the product form page, these buttons
+ * are displayed in the header part of the tab navigation component.
+ */
 class ProductToolbarButtonsProvider implements ToolbarButtonsProviderInterface
 {
     /**
