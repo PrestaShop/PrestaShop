@@ -70,7 +70,7 @@ class DeleteTitleException extends TitleException
     public static function createBulkDeleteFailure(TitleId $titleId, Throwable $previous = null): self
     {
         return new static(
-            sprintf('An error occurred when deleting title with id "%d"', $titleId->getValue()),
+            sprintf('Cannot delete title with id "%d"', $titleId->getValue()),
             static::FAILED_BULK_DELETE,
             $previous
         );
