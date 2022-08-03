@@ -2,9 +2,10 @@
 @restore-all-tables-before-feature
 @reboot-kernel-before-feature
 @clear-cache-before-feature
-@restore-products-before-feature
 @update-product-prices
 @update-prices-without-states
+@reboot-kernel-after-feature
+@clear-cache-after-feature
 Feature: Update product price fields from Back Office (BO).
   As a BO user I want to be able to update product fields associated with price.
 
