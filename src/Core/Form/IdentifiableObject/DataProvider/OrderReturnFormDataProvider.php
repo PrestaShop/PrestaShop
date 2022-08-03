@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\Query\GetOrderReturnForEditing;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\OrderReturnForEditing;
-use PrestaShopBundle\Service\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -45,7 +45,7 @@ class OrderReturnFormDataProvider implements FormDataProviderInterface
     private $queryBus;
 
     /**
-     * @var Router
+     * @var RouterInterface
      */
     private $router;
 
@@ -64,7 +64,7 @@ class OrderReturnFormDataProvider implements FormDataProviderInterface
      */
     public function __construct(
         CommandBusInterface $queryBus,
-        Router $router,
+        RouterInterface $router,
         TranslatorInterface $translator,
         string $dateFormat
     ) {
