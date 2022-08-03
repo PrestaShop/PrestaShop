@@ -193,7 +193,7 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
     /**
      * @return FeatureHelperListBridge
      */
-    public function getHelperListBridge(): FeatureHelperListBridge
+    private function getHelperListBridge(): FeatureHelperListBridge
     {
         return $this->get('prestashop.bridge.helper.list_customizer.feature_helper_list_bridge');
     }

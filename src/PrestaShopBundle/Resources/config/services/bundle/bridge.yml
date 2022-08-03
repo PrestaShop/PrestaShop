@@ -14,6 +14,8 @@ services:
     class: PrestaShopBundle\Bridge\AdminController\LegacyControllerBridgeFactory
     arguments:
       - '@prestashop.adapter.multistore_feature'
+      - '@prestashop.adapter.legacy.context'
+      - '@prestashop.core.hook.dispatcher'
 
   prestashop.bridge.admin_controller.listener.init_framework_bridge_controller_listener:
     class: PrestaShopBundle\Bridge\AdminController\Listener\InitFrameworkBridgeControllerListener
