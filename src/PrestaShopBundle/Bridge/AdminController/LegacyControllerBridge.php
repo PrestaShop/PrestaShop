@@ -29,10 +29,11 @@ namespace PrestaShopBundle\Bridge\AdminController;
 
 use Context;
 use Employee;
-use Hook;
 use Media;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Tools;
 
 /**
@@ -93,6 +94,16 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
     private $multistoreFeature;
 
     /**
+     * @var LegacyContext
+     */
+    private $legacyContext;
+
+    /**
+     * @var HookDispatcherInterface
+     */
+    private $hookDispatcher;
+
+    /**
      * @var string[] maps legacy controller properties with the bridge
      */
     private $propertiesMap = [
@@ -136,13 +147,19 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
     /**
      * @param ControllerConfiguration $controllerConfiguration
      * @param FeatureInterface $multistoreFeature
+     * @param LegacyContext $legacyContext
+     * @param HookDispatcherInterface $hookDispatcher
      */
     public function __construct(
         ControllerConfiguration $controllerConfiguration,
-        FeatureInterface $multistoreFeature
+        FeatureInterface $multistoreFeature,
+        LegacyContext $legacyContext,
+        HookDispatcherInterface $hookDispatcher
     ) {
         $this->controllerConfiguration = $controllerConfiguration;
         $this->multistoreFeature = $multistoreFeature;
+        $this->legacyContext = $legacyContext;
+        $this->hookDispatcher = $hookDispatcher;
     }
 
     /**
@@ -159,7 +176,7 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
             );
         }
 
-        if (Context::getContext()->language->is_rtl) {
+        if ($this->getContext()->language->is_rtl) {
             $this->addJS(_PS_JS_DIR_ . 'rtl.js');
             $this->addCSS(__PS_BASE_URI__ . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/css/' . Context::getContext()->language->iso_code . '.css');
         }
@@ -242,7 +259,7 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
             ],
         ]);
 
-        Hook::exec('actionAdminControllerSetMedia');
+        $this->hookDispatcher->dispatchWithParameters('actionAdminControllerSetMedia');
     }
 
     /**
@@ -406,5 +423,13 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
         }
 
         return $currentReference;
+    }
+
+    /**
+     * @return Context
+     */
+    private function getContext(): Context
+    {
+        return $this->legacyContext->getContext();
     }
 }

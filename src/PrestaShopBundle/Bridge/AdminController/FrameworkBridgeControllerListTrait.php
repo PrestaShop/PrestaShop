@@ -35,7 +35,6 @@ use PrestaShopBundle\Bridge\AdminController\Action\ListRowAction;
 use PrestaShopBundle\Bridge\AdminController\Field\FieldInterface;
 use PrestaShopBundle\Bridge\Exception\NotAllowedActionTypeForListException;
 use PrestaShopBundle\Bridge\Helper\FiltersHelper;
-use PrestaShopBundle\Bridge\Helper\HelperListBridge;
 use PrestaShopBundle\Bridge\Helper\HelperListConfiguration;
 use PrestaShopBundle\Bridge\Helper\ResetFiltersHelper;
 
@@ -81,14 +80,6 @@ trait FrameworkBridgeControllerListTrait
     protected function getFiltersHelper(): FiltersHelper
     {
         return $this->get('prestashop.bridge.helper.filters_helper');
-    }
-
-    /**
-     * @return HelperListBridge
-     */
-    protected function getHelperListBridge(): HelperListBridge
-    {
-        return $this->get('prestashop.bridge.helper.helper_list_bridge');
     }
 
     /**

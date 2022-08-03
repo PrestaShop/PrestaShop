@@ -27,7 +27,9 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Bridge\AdminController;
 
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 
 class LegacyControllerBridgeFactory
 {
@@ -37,15 +39,31 @@ class LegacyControllerBridgeFactory
     private $multistoreFeature;
 
     /**
+     * @var LegacyContext
+     */
+    private $legacyContext;
+
+    /**
+     * @var HookDispatcherInterface
+     */
+    private $hookDispatcher;
+
+    /**
      * @param FeatureInterface $multistoreFeature
      */
     public function __construct(
-        FeatureInterface $multistoreFeature
+        FeatureInterface $multistoreFeature,
+        LegacyContext $legacyContext,
+        HookDispatcherInterface $hookDispatcher
     ) {
         $this->multistoreFeature = $multistoreFeature;
+        $this->legacyContext = $legacyContext;
+        $this->hookDispatcher = $hookDispatcher;
     }
 
     /**
+     * @param ControllerConfiguration $controllerConfiguration
+     *
      * @return LegacyControllerBridgeInterface
      */
     public function create(
@@ -53,7 +71,9 @@ class LegacyControllerBridgeFactory
     ): LegacyControllerBridgeInterface {
         return new LegacyControllerBridge(
             $controllerConfiguration,
-            $this->multistoreFeature
+            $this->multistoreFeature,
+            $this->legacyContext,
+            $this->hookDispatcher
         );
     }
 }

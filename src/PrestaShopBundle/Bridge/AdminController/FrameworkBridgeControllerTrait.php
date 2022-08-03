@@ -32,7 +32,10 @@ use PrestaShopBundle\Bridge\Exception\BridgeException;
 use Tab;
 
 /**
- * Contains reusable methods for horizontally migrated controllers
+ * Contains reusable methods for horizontally migrated controllers, this trait is used to help implement the
+ *
+ * @see FrameworkBridgeControllerInterface that is used for horizontal controllers and is required to be used by the
+ * @see InitFrameworkBridgeControllerListener which is responsible for initializing horizontal controllers.
  */
 trait FrameworkBridgeControllerTrait
 {
@@ -55,10 +58,11 @@ trait FrameworkBridgeControllerTrait
             return $this->legacyControllerBridge;
         }
 
-        return $this
-            ->get('prestashop.bridge.admin_controller.legacy_controller_bridge_factory')
+        $this->legacyControllerBridge = $this->get('prestashop.bridge.admin_controller.legacy_controller_bridge_factory')
             ->create($this->getControllerConfiguration())
         ;
+
+        return $this->legacyControllerBridge;
     }
 
     /**
