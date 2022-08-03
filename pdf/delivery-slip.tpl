@@ -66,7 +66,7 @@
 	</tr>
 
 	<tr>
-		<td colspan="7" class="left">
+		<td colspan="7" class="text-start">
 
 			{$payment_tab}
 

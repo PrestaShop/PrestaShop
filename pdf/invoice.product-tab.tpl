@@ -61,7 +61,7 @@
       <td class="product center">
         {$order_detail.product_reference}
       </td>
-      <td class="product left">
+      <td class="product text-start">
         {if $display_product_images}
           <table width="100%">
             <tr>
@@ -97,7 +97,7 @@
         </td>
       {/if}
 
-      <td class="product right">
+      <td class="product text-end">
         {displayPrice currency=$order->id_currency price=$order_detail.unit_price_tax_excl_including_ecotax}
         {if $order_detail.ecotax_tax_excl > 0}
           <br>
@@ -107,7 +107,7 @@
       <td class="product center">
         {$order_detail.product_quantity}
       </td>
-      <td  class="product right">
+      <td  class="product text-end">
         {displayPrice currency=$order->id_currency price=$order_detail.total_price_tax_excl_including_ecotax}
       </td>
     </tr>
@@ -167,10 +167,10 @@
       </tr>
     {/if}
     <tr class="discount">
-      <td class="white right" colspan="{$layout._colCount - 1}">
+      <td class="white text-end" colspan="{$layout._colCount - 1}">
         {$cart_rule.name}
       </td>
-      <td class="right white">
+      <td class="text-end white">
         - {displayPrice currency=$order->id_currency price=$cart_rule.value_tax_excl}
       </td>
     </tr>

@@ -76,13 +76,13 @@
             </td>
 
             {if $display_tax_bases_in_breakdowns}
-              <td class="right white">
+              <td class="text-end white">
                 {if isset($is_order_slip) && $is_order_slip}- {/if}
                 {displayPrice currency=$order->id_currency price=$line.total_tax_excl}
               </td>
             {/if}
 
-            <td class="right white">
+            <td class="text-end white">
               {if isset($is_order_slip) && $is_order_slip}- {/if}
               {displayPrice currency=$order->id_currency price=$line.total_amount}
             </td>

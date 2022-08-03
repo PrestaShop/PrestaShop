@@ -31,7 +31,7 @@
 			{else}
 				<td class="grey" width="70%">{l s='Shipping (Tax Incl.)' d='Shop.Pdf' pdf='true'}</td>
 			{/if}
-			<td class="white" width="30%">
+			<td class="white" style="text-align: right !important;" width="30%">
 				- {displayPrice currency=$order->id_currency price=$order_slip->shipping_cost_amount}
 			</td>
 		</tr>
@@ -44,7 +44,7 @@
 					<td class="grey" width="70%">
 						{l s='Product Total (Tax Excl.)' d='Shop.Pdf' pdf='true'}
 					</td>
-					<td class="white" width="30%">
+					<td class="white" style="text-align: right !important;" width="30%">
 						- {displayPrice currency=$order->id_currency price=$order->total_products}
 					</td>
 				</tr>
@@ -53,7 +53,7 @@
 					<td class="grey" width="70%">
 						{l s='Product Total (Tax Incl.)' d='Shop.Pdf' pdf='true'}
 					</td>
-					<td class="white" width="30%">
+					<td class="white" style="text-align: right !important;" width="30%">
 						- {displayPrice currency=$order->id_currency price=$order->total_products_wt}
 					</td>
 				</tr>
@@ -63,7 +63,7 @@
 				<td class="grey" width="70%">
 					{l s='Product Total' d='Shop.Pdf' pdf='true'}
 				</td>
-				<td class="white" width="30%">
+				<td class="white" style="text-align: right !important;" width="30%">
 					- {displayPrice currency=$order->id_currency price=$order->total_products}
 				</td>
 			</tr>
@@ -75,7 +75,7 @@
 			<td class="grey" width="70%">
 				{l s='Total Tax' d='Shop.Pdf' pdf='true'}
 			</td>
-			<td class="white" width="30%">
+			<td class="white" style="text-align: right !important;" width="30%">
 				- {displayPrice currency=$order->id_currency price=($order->total_paid_tax_incl - $order->total_paid_tax_excl)}
 			</td>
 		</tr>
@@ -86,7 +86,7 @@
       <td class="grey" width="70%">
         {l s='Total (Tax Excl.)' d='Shop.Pdf' pdf='true'}
       </td>
-      <td class="white" width="30%">
+      <td class="white" style="text-align: right !important;" width="30%">
         {if $total_cart_rule}
           {assign var=total_paid value=0}
           {$total_paid = $order->total_paid_tax_excl - $total_cart_rule}

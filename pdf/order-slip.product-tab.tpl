@@ -45,20 +45,20 @@
 			{foreach $order_details as $order_detail}
 				{cycle values=["color_line_even", "color_line_odd"] assign=bgcolor_class}
 				<tr class="product {$bgcolor_class}">
-					<td class="product left">
+					<td class="product text-start">
 						{$order_detail.product_name}
 					</td>
 					<td class="product center">
 						{$order_detail.product_quantity}
 					</td>
-					<td class="product right">
+					<td class="product text-end">
 						{if $tax_excluded_display}
 							- {displayPrice currency=$order->id_currency price=$order_detail.unit_price_tax_excl}
 						{else}
 							- {displayPrice currency=$order->id_currency price=$order_detail.unit_price_tax_incl}
 						{/if}
 					</td>
-					<td class="product right">
+					<td class="product text-end">
 						{if $tax_excluded_display}
 							- {displayPrice currency=$order->id_currency price=$order_detail.total_price_tax_excl}
 						{else}
@@ -100,8 +100,8 @@
 		{if is_array($cart_rules) && count($cart_rules)}
 			{foreach $cart_rules as $cart_rule}
 				<tr class="discount">
-					<td class="white left" colspan="3">{$cart_rule.name}</td>
-					<td class="white right">
+					<td class="white text-start" colspan="3">{$cart_rule.name}</td>
+					<td class="white text-end">
 						{if $tax_excluded_display}
 							+ {$cart_rule.value_tax_excl}
 						{else}

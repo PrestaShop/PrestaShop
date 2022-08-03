@@ -28,7 +28,7 @@
     <td class="grey" width="50%">
       {l s='Total Products' d='Shop.Pdf' pdf='true'}
     </td>
-    <td class="white" width="50%">
+    <td class="white" style="text-align: right !important;" width="50%">
       {displayPrice currency=$order->id_currency price=$footer.products_before_discounts_tax_excl}
     </td>
   </tr>
@@ -39,7 +39,7 @@
       <td class="grey" width="50%">
         {l s='Total Discounts' d='Shop.Pdf' pdf='true'}
       </td>
-      <td class="white" width="50%">
+      <td class="white" style="text-align: right !important;" width="50%">
         - {displayPrice currency=$order->id_currency price=$footer.product_discounts_tax_excl}
       </td>
     </tr>
@@ -50,7 +50,7 @@
     <td class="grey" width="50%">
       {l s='Shipping Costs' d='Shop.Pdf' pdf='true'}
     </td>
-    <td class="white" width="50%">
+    <td class="white" style="text-align: right !important;" width="50%">
       {if $footer.shipping_tax_excl > 0}
         {displayPrice currency=$order->id_currency price=$footer.shipping_tax_excl}
       {else}
@@ -65,7 +65,7 @@
       <td class="grey">
         {l s='Wrapping Costs' d='Shop.Pdf' pdf='true'}
       </td>
-      <td class="white">{displayPrice currency=$order->id_currency price=$footer.wrapping_tax_excl}</td>
+      <td class="white" style="text-align: right !important;">{displayPrice currency=$order->id_currency price=$footer.wrapping_tax_excl}</td>
     </tr>
   {/if}
 
@@ -77,7 +77,7 @@
         {l s='Total' d='Shop.Pdf' pdf='true'}
       {/if}
     </td>
-    <td class="white">
+    <td class="white" style="text-align: right !important;">
       {displayPrice currency=$order->id_currency price=$footer.total_paid_tax_excl}
     </td>
   </tr>
@@ -87,7 +87,7 @@
         <td class="grey">
           {l s='Total Tax' d='Shop.Pdf' pdf='true'}
         </td>
-        <td class="white">
+        <td class="white" style="text-align: right !important;">
           {displayPrice currency=$order->id_currency price=$footer.total_taxes}
         </td>
       </tr>
@@ -96,7 +96,7 @@
       <td class="grey">
         {l s='Total' d='Shop.Pdf' pdf='true'}
       </td>
-      <td class="white">
+      <td class="white" style="text-align: right !important;">
         {displayPrice currency=$order->id_currency price=$footer.total_paid_tax_incl}
       </td>
     </tr>

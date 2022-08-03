@@ -146,6 +146,10 @@ abstract class HTMLTemplateCore
             $width *= $ratio;
         }
 
+        $lang_is_rtl = Context::getContext()->language->is_rtl;
+        $align_start = ($lang_is_rtl) ? 'right' : 'left';
+        $align_end = ($lang_is_rtl) ? 'left' : 'right';
+
         $this->smarty->assign([
             'logo_path' => Tools::getShopProtocol() . Tools::getMediaServer(_PS_IMG_) . _PS_IMG_ . $logo,
             'img_ps_dir' => Tools::getShopProtocol() . Tools::getMediaServer(_PS_IMG_) . _PS_IMG_,
@@ -156,6 +160,8 @@ abstract class HTMLTemplateCore
             'shop_details' => Configuration::get('PS_SHOP_DETAILS', null, null, (int) $id_shop),
             'width_logo' => $width,
             'height_logo' => $height,
+            'align_start' => $align_start,
+            'align_end' => $align_end,
         ]);
     }
 

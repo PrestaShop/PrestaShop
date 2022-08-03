@@ -28,7 +28,7 @@
 	</tr>
 
 	<tr>
-		<td colspan="6" class="left">
+		<td colspan="6" class="text-start">
 			<table id="note-tab" style="width: 100%">
 				<tr>
 					<td class="grey">{l s='Note' d='Shop.Pdf' pdf='true'}</td>

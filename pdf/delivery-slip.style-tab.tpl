@@ -107,7 +107,7 @@
 			height: {$height_header};
 			background-color: {$color_header};
 			vertical-align: middle;
-			text-align: right;
+			text-align: {$align_end};
 			font-weight: bold;
 		}
 
@@ -121,16 +121,16 @@
 			border-top: 1px solid #000000;
 		}
 
-		.left {
-			text-align: left;
+		.text-start {
+			text-align: {$align_start};
 		}
 
-		.fright {
-			float: right;
+		.float-end {
+			float: {$align_end};
 		}
 
-		.right {
-			text-align: right;
+		.text-end {
+			text-align: {$align_end};
 		}
 
 		.center {

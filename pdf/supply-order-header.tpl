@@ -33,7 +33,7 @@
 			<img src="{$logo_path}" />
 		{/if}
 	</td>
-	<td style="width: 50%; text-align: right;">
+	<td style="width: 50%; text-align: {$align_end};">
 		<table style="width: 100%">
 			<tr>
 				<td style="font-weight: bold; font-size: 13pt; color: #444; width: 100%">{$shop_name|escape:'html':'UTF-8'}</td>

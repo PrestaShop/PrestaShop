@@ -69,14 +69,14 @@
 	<!-- TVA -->
 	<tr>
 		<!-- Code TVA -->
-		<td colspan="6" class="left">
+		<td colspan="6" class="text-start">
 
 			{$tax_tab}
 
 		</td>
 		<td colspan="1">&nbsp;</td>
 		<!-- Calcule TVA -->
-		<td colspan="5" rowspan="5" class="right">
+		<td colspan="5" rowspan="5" class="text-end">
 
 			{$total_tab}
 
@@ -88,7 +88,7 @@
 	</tr>
 
 	<tr>
-		<td colspan="6" class="left">
+		<td colspan="6" class="text-start">
 
 			{$payment_tab}
 

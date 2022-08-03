@@ -38,9 +38,9 @@
 		{foreach $tax_order_summary as $entry}
 			{assign var=has_line value=true}
 			<tr>
-				<td class="right white">{$currency->prefix} {$entry['base_te']} {$currency->suffix}</td>
-				<td class="right white">{$entry['tax_rate']}</td>
-				<td class="right white">{$currency->prefix} {$entry['total_tax_value']} {$currency->suffix}</td>
+				<td class="text-end white">{$currency->prefix} {$entry['base_te']} {$currency->suffix}</td>
+				<td class="text-end white">{$entry['tax_rate']}</td>
+				<td class="text-end white">{$currency->prefix} {$entry['total_tax_value']} {$currency->suffix}</td>
 			</tr>
 		{/foreach}
 

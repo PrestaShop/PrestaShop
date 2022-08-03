@@ -22,4 +22,4 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *}
-<p style="text-align: right; vertical-align: text-top;">{literal} {:png:} / {:ptg:} {/literal}</p>
+<p style="text-align: {$align_end}; vertical-align: text-top;">{literal} {:png:} / {:ptg:} {/literal}</p>

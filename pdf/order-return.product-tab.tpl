@@ -37,10 +37,10 @@
 		{foreach $products as $product}
 			{cycle values=["color_line_even", "color_line_odd"] assign=bgcolor_class}
 			<tr class="product {$bgcolor_class}">
-				<td class="product left">
+				<td class="product text-start">
 					{$product.product_name}
 				</td>
-				<td class="product left">
+				<td class="product text-start">
 					{if empty($product.product_reference)}
 						---
 					{else}
