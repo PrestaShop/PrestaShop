@@ -80,7 +80,7 @@ final class TaxRuleGroupChoiceProvider implements FormChoiceProviderInterface, F
             if ($country->contains_states) {
                 $taxRules = \TaxRule::getTaxRulesByGroupId($this->langId, $rule['id_tax_rules_group']);
                 $firstTaxRule = reset($taxRules);
-                $address->id_state = $firstTaxRule['id_state'];
+                $address->id_state = $firstTaxRule['id_state'] ?? null;
             }
             $taxRulesGroupId = (int) $rule['id_tax_rules_group'];
             $taxCalculator = TaxManagerFactory::getManager($address, $taxRulesGroupId)->getTaxCalculator();
