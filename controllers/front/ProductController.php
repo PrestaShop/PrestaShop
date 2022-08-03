@@ -487,6 +487,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             'product_minimal_quantity' => $minimalProductQuantity,
             'product_has_combinations' => !empty($this->combinations),
             'id_product_attribute' => $product['id_product_attribute'],
+            'id_customization' => $product['id_customization'],
             'product_title' => $this->getProductPageTitle(
                 $this->getTemplateVarPage()['meta'] ?? []
             ),
