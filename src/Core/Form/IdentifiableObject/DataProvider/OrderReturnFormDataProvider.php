@@ -104,7 +104,7 @@ class OrderReturnFormDataProvider implements FormDataProviderInterface
         return [];
     }
 
-    private function buildOrderReturnInformation(OrderReturnForEditing $orderReturnForEditing)
+    private function buildOrderReturnInformation(OrderReturnForEditing $orderReturnForEditing): string
     {
         return sprintf(
             '#%s %s %s',
