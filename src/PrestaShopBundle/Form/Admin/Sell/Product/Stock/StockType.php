@@ -147,6 +147,8 @@ class StockType extends TranslatorAwareType
                 $productType = $resolver->offsetGet('product_type');
                 if ($productType === ProductType::TYPE_VIRTUAL) {
                     return $this->trans('Virtual product', 'Admin.Catalog.Feature');
+                } elseif ($productType === ProductType::TYPE_PACK) {
+                    return $this->trans('Pack', 'Admin.Catalog.Feature');
                 } else {
                     return $this->trans('Stocks', 'Admin.Catalog.Feature');
                 }
