@@ -39,7 +39,6 @@ use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Throwable;
 
 /**
  * Controller responsible of "Configure > Shop Parameters > Customer Settings > Titles" page.
