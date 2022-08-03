@@ -164,7 +164,7 @@ class TitleController extends FrameworkBundleAdminController
                 $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (TitleException $e) {
-            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
 
         return $this->redirectToRoute('admin_title_index');
@@ -191,11 +191,9 @@ class TitleController extends FrameworkBundleAdminController
     }
 
     /**
-     * @param Throwable|null $e
-     *
      * @return array
      */
-    private function getErrorMessages(?Throwable $e = null): array
+    private function getErrorMessages(): array
     {
         return [
             TitleNotFoundException::class => $this->trans(
