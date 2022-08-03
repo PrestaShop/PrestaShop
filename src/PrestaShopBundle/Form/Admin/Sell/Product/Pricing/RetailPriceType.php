@@ -95,7 +95,10 @@ class RetailPriceType extends TranslatorAwareType
      * @var int
      */
     protected $contextCountryId;
-    /** @var int */
+
+    /**
+     * @var int
+     */
     private $contextLangId;
 
     public function __construct(

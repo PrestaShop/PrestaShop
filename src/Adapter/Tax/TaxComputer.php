@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Tax;
 use Address;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\Decimal\Operation\Division;
+use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use TaxManagerFactory;
@@ -49,12 +50,20 @@ class TaxComputer
     private $langId;
 
     /**
+     * @var CountryRepository
+     */
+    private $countryRepository;
+
+    /**
      * @param int $langId
+     * @param CountryRepository $countryRepository
      */
     public function __construct(
-        int $langId
+        int $langId,
+        CountryRepository $countryRepository
     ) {
         $this->langId = $langId;
+        $this->countryRepository = $countryRepository;
     }
 
     /**
@@ -101,7 +110,7 @@ class TaxComputer
      */
     public function getTaxRate(TaxRulesGroupId $taxRulesGroupId, CountryId $countryId): DecimalNumber
     {
-        $country = new \Country($countryId->getValue());
+        $country = $this->countryRepository->get($countryId);
 
         $address = new Address();
         $address->id_country = $countryId->getValue();

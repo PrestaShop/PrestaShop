@@ -65,10 +65,9 @@ class PricingType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('retail_price', RetailPriceType::class,
-                [
-                    'tax_rules_group_id' => $options['tax_rules_group_id'],
-                ]
+            ->add('retail_price', RetailPriceType::class, [
+                'tax_rules_group_id' => $options['tax_rules_group_id'],
+            ]
             )
             ->add('wholesale_price', MoneyType::class, [
                 'required' => false,

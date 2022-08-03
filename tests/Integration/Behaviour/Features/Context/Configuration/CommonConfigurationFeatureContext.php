@@ -103,7 +103,7 @@ class CommonConfigurationFeatureContext extends AbstractConfigurationFeatureCont
     }
 
     /**
-     * @Given /^shop configuration for default shop (.+)$/
+     * @Given /^shop configuration for default shop is set to (.+)$/
      */
     public function shopConfigurationSetDefaultCountry(string $isoCode): void
     {

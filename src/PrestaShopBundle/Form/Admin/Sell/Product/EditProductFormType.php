@@ -102,8 +102,7 @@ class EditProductFormType extends TranslatorAwareType
                 'virtual_product_file_id' => $options['virtual_product_file_id'],
             ])
             ->add('shipping', ShippingType::class)
-            ->add('pricing', PricingType::class,
-            [
+            ->add('pricing', PricingType::class, [
                 'tax_rules_group_id' => $options['tax_rules_group_id'],
             ])
             ->add('seo', SEOType::class, [
