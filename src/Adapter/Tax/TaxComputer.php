@@ -108,7 +108,7 @@ class TaxComputer
         if ($country->contains_states) {
             $taxRules = \TaxRule::getTaxRulesByGroupId($this->langId, $taxRulesGroupId->getValue());
             $firstTaxRule = reset($taxRules);
-            $address->id_state = $firstTaxRule['id_state'];
+            $address->id_state = $firstTaxRule['id_state'] ?? null;
         }
 
         $taxCalculator = TaxManagerFactory::getManager($address, $taxRulesGroupId->getValue())->getTaxCalculator();
