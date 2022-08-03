@@ -1,4 +1,7 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-prices-without-states
+@restore-all-tables-before-feature
+@reboot-kernel-before-feature
+@clear-cache-before-feature
 @restore-products-before-feature
 @update-product-prices
 @update-prices-without-states
