@@ -52,16 +52,16 @@ class OrderReturnValidator extends AbstractObjectModelValidator
     }
 
     /**
-     * @param OrderReturn $product
+     * @param OrderReturn $orderReturn
      * @param string $propertyName
      * @param int $errorCode
      *
      * @throws CoreException
      */
-    private function validateOrderReturnProperty(OrderReturn $product, string $propertyName, int $errorCode = 0): void
+    private function validateOrderReturnProperty(OrderReturn $orderReturn, string $propertyName, int $errorCode = 0): void
     {
         $this->validateObjectModelProperty(
-            $product,
+            $orderReturn,
             $propertyName,
             ProductConstraintException::class,
             $errorCode
