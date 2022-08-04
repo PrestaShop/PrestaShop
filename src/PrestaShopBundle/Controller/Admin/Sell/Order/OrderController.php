@@ -1191,6 +1191,7 @@ class OrderController extends FrameworkBundleAdminController
                             $data['payment_method'],
                             $data['amount'],
                             $data['id_currency'],
+                            (int) $this->getContext()->employee->id,
                             $data['id_invoice'],
                             $data['transaction_id']
                         )
