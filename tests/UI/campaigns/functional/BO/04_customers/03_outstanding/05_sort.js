@@ -68,7 +68,7 @@ describe('BO - Customers - Outstanding : Sort of the outstanding page', async ()
         paymentMethod: PaymentMethods.wirePayment.moduleName,
       };
 
-      // Pre-condition: Create new customer
+      // Pre-condition: Create new B2B customer
       createCustomerB2BTest(customerData, `${baseContext}_preTest_createB2BAccount_${index}`);
 
       // Pre-condition: Create new address
