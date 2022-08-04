@@ -345,7 +345,7 @@ class ModuleManager implements ModuleManagerInterface
                 return !count($legacy_instance->getErrors());
             }
 
-            return LegacyModule::getUpgradeStatus($name);
+            return true;
         }
 
         return false;
