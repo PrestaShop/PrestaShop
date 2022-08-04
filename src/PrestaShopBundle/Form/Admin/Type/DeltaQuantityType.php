@@ -56,6 +56,12 @@ class DeltaQuantityType extends TranslatorAwareType
         $builder
             ->add('quantity', TextPreviewType::class, [
                 'block_prefix' => 'delta_quantity_quantity',
+                'constraints' => [
+                    new Range([
+                        'min' => -static::INT_32_MAX,
+                        'max' => static::INT_32_MAX,
+                    ]),
+                ],
             ])
             ->add('delta', IntegerType::class, [
                 'default_empty_data' => 0,
@@ -67,7 +73,7 @@ class DeltaQuantityType extends TranslatorAwareType
                     new Range([
                         'min' => -static::INT_32_MAX,
                         'max' => static::INT_32_MAX,
-                    ]),
+                    ])
                 ],
                 'required' => false,
                 'modify_all_shops' => $options['modify_delta_for_all_shops'],

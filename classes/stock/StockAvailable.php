@@ -80,7 +80,7 @@ class StockAvailableCore extends ObjectModel
             'id_product_attribute' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'id_shop' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'id_shop_group' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
-            'quantity' => ['type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true, 'size' => 10],
+            'quantity' => ['type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true, 'size' => 10, ''],
             'depends_on_stock' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool', 'required' => true],
             'out_of_stock' => ['type' => self::TYPE_INT, 'validate' => 'isInt', 'required' => true],
             'location' => ['type' => self::TYPE_STRING, 'validate' => 'isString', 'size' => 255],

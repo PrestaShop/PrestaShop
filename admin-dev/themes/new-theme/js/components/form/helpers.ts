@@ -38,9 +38,17 @@
 export function notifyFormErrors(jsonResponse: any): void {
   Object.keys(jsonResponse.errors).forEach((field: string) => {
     if (Object.prototype.hasOwnProperty.call(jsonResponse.errors, field)) {
-      const fieldErrors: string[] = jsonResponse.errors[field];
-      const errors: string = fieldErrors.join(' ');
-      $.growl.error({message: `${field}: ${errors}`});
+      let fieldErrors: string[];
+
+      if (Array.isArray(jsonResponse.errors[field])) {
+        fieldErrors = jsonResponse.errors[field];
+      } else {
+        fieldErrors = [jsonResponse.errors[field]];
+      }
+
+      fieldErrors.forEach((error: string) => {
+        $.growl.error({message: `${field}: ${error}`});
+      });
     }
   });
 };
