@@ -39,6 +39,11 @@ use StockAvailable;
 class StockAvailableValidator extends AbstractObjectModelValidator
 {
     /**
+     * this is the biggest int number that can be saved in database, bigger than this will throw error
+     */
+    private const INT_32_MAX = 2147483647;
+
+    /**
      * @param StockAvailable $stockAvailable
      *
      * @throws CoreException
@@ -53,6 +58,7 @@ class StockAvailableValidator extends AbstractObjectModelValidator
         $this->validateStockAvailableProperty($stockAvailable, 'id_product_attribute');
         $this->validateStockAvailableProperty($stockAvailable, 'id_shop');
         $this->validateStockAvailableProperty($stockAvailable, 'id_shop_group');
+        $this->validateMaxQuantity($stockAvailable->quantity);
     }
 
     /**
@@ -70,5 +76,14 @@ class StockAvailableValidator extends AbstractObjectModelValidator
             ProductStockConstraintException::class,
             $errorCode
         );
+    }
+
+    private function validateMaxQuantity(int $quantity)
+    {
+        if ($quantity <= self::INT_32_MAX && $quantity >= -self::INT_32_MAX) {
+            return;
+        }
+
+        throw new ProductStockConstraintException('Quantity is out of INT boundaries', ProductStockConstraintException::INVALID_QUANTITY);
     }
 }
