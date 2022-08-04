@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -38,7 +38,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * It is based on a hidden input so it could be changed programmatically, or be used just to display
  * a data in a form.
  */
-class TextPreviewType extends HiddenType
+class TextPreviewType extends TextType
 {
     /**
      * {@inheritDoc}
