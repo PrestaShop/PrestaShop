@@ -42,9 +42,8 @@ return (new PhpCsFixer\Config())
         ],
         'phpdoc_summary' => false,
         'protected_to_private' => false,
-        'psr4' => false,
+        'psr_autoloading' => false,
         'self_accessor' => false,
-        'yoda_style' => null,
         'single_line_throw' => false,
         'no_alias_language_construct_call' => false,
     ])
