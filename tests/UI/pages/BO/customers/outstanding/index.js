@@ -16,6 +16,9 @@ class Outstanding extends BOBasePage {
 
     this.pageTitle = 'Outstanding • PrestaShop';
     this.gridTable = '#outstanding_grid_table';
+
+    // Filters
+    this.outstandingFilterColumnInput = filterBy => `#outstanding_${filterBy}`;
     this.filterSearchButton = `${this.gridTable} .grid-search-button`;
     this.filterResetButton = `${this.gridTable} .grid-reset-button`;
 
@@ -53,7 +56,7 @@ class Outstanding extends BOBasePage {
    * Get text from Column
    * @param page {Page} Browser tab
    * @param columnName {string} Column name on table
-   * @param row {number} Order row in table
+   * @param row {number} Outstanding row in table
    * @returns {Promise<string|number>}
    */
   async getTextColumn(page, columnName, row) {
@@ -165,7 +168,7 @@ class Outstanding extends BOBasePage {
   }
 
   /**
-   * Get number of orders in page
+   * Get number of outstanding in page
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
    */
@@ -174,9 +177,9 @@ class Outstanding extends BOBasePage {
   }
 
   /**
-   * Get order total price
+   * Get outstanding allowance total price
    * @param page {Page} Browser tab
-   * @param row {number} Order row on table
+   * @param row {number} Outstanding row on table
    * @returns {Promise<number>}
    */
   async getOutstandingAllowancePrice(page, row) {
@@ -204,6 +207,48 @@ class Outstanding extends BOBasePage {
     }
 
     return allRowsContentTable;
+  }
+
+  /* Filter methods */
+  /**
+   * Filter table outstanding
+   * @param page {Page} Browser tab
+   * @param filterType {string} Input or select to choose method of filter
+   * @param columnName {string} Column name on table
+   * @param value {?string|number} Column name on table
+   * @returns {Promise<void>}
+   */
+  async filterTable(page, filterType, columnName, value) {
+    switch (filterType) {
+      case 'input':
+        await this.setValue(page, this.outstandingFilterColumnInput(columnName), value);
+        break;
+      case 'select':
+        await this.selectByVisibleText(
+          page,
+          this.outstandingFilterColumnInput(columnName),
+          value,
+        );
+        break;
+      default:
+      // Do nothing
+    }
+
+    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
+  }
+
+  /**
+   * Filter outstanding by date from and date to
+   * @param page {Page} Browser tab
+   * @param dateFrom {string} Date from to filter with
+   * @param dateTo {string} Date to to filter with
+   * @returns {Promise<void>}
+   */
+  async filterOutstandingByDate(page, dateFrom, dateTo) {
+    await page.type(this.outstandingFilterColumnInput('date_add_from'), dateFrom);
+    await page.type(this.outstandingFilterColumnInput('date_add_to'), dateTo);
+    // click on search
+    await this.clickAndWaitForNavigation(page, this.filterSearchButton);
   }
 }
 
