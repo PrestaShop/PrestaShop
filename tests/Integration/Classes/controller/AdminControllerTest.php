@@ -35,7 +35,6 @@ use Link;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\EntityMapper;
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
-use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container;
 use PrestaShop\PrestaShop\Core\Foundation\IoC\Container as LegacyContainer;
@@ -66,16 +65,12 @@ class AdminControllerTest extends TestCase
         parent::setUpBeforeClass();
         self::declareRequiredConstants();
         self::requireAliasesFunctions();
-        $kernel = new \AppKernel('test', true);
-        $kernel->boot();
-        SymfonyContainer::setKernel($kernel);
     }
 
     public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
         Tools::resetRequest();
-        SymfonyContainer::setKernel(null);
     }
 
     protected function setUp(): void

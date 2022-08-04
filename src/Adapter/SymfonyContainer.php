@@ -38,8 +38,6 @@ final class SymfonyContainer
 {
     /** @var ContainerInterface|null */
     private static $instance = null;
-    /** @var KernelInterface|null */
-    private static $kernel = null;
 
     /**
      * Get a singleton instance of SymfonyContainer.
@@ -49,8 +47,10 @@ final class SymfonyContainer
     public static function getInstance()
     {
         if (!isset(self::$instance)) {
-            if (null !== self::$kernel) {
-                self::$instance = self::$kernel->getContainer();
+            global $kernel;
+
+            if (null !== $kernel && $kernel instanceof KernelInterface) {
+                self::$instance = $kernel->getContainer();
             }
         }
 
@@ -60,10 +60,5 @@ final class SymfonyContainer
     public static function resetStaticCache()
     {
         self::$instance = null;
-    }
-
-    public static function setKernel(?KernelInterface $kernel): void
-    {
-        self::$kernel = $kernel;
     }
 }
