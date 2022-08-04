@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Country\Exception;
 
 /**
- * Is thrown on failure to add new country
+ * Is thrown when adding new country fails
  */
 class CannotAddCountryException extends CountryException
 {

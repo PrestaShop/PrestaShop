@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -23,21 +22,19 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+import FormFieldToggler, {ToggleType} from '@components/form/form-field-toggler';
+import CountryMap from '@pages/country/country-map';
 
-namespace PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler;
+export default class ProductSpecificationsManager {
+  constructor() {
+    this.initConditionToggler();
+  }
 
-use PrestaShop\PrestaShop\Core\Domain\Country\Command\AddCountryCommand;
-use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
-
-/**
- * Defines a contract for AddCountryHandler
- */
-interface AddCountryHandlerInterface
-{
-    /**
-     * @param AddCountryCommand $command
-     *
-     * @return CountryId
-     */
-    public function handle(AddCountryCommand $command): CountryId;
+  private initConditionToggler(): void {
+    new FormFieldToggler({
+      disablingInputSelector: CountryMap.isZopCodeNeededSwitch,
+      targetSelector: CountryMap.zipCodeFormatInput,
+      toggleType: ToggleType.availability,
+    });
+  }
 }

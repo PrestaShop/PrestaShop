@@ -23,7 +23,7 @@ admin_countries_create:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\CountryController::createAction'
     _legacy_controller: AdminCountries
-#    _legacy_link: AdminZones:addCountry
+#    _legacy_link: AdminCountries:addCountry
 
 admin_country_edit:
   path: /{countryId}/edit
@@ -36,15 +36,3 @@ admin_country_edit:
       id_country: countryId
   requirements:
     countryId: \d+
-
-# admin_zones_delete:
-#  path: /{zoneId}/delete
-#  methods: [ POST, DELETE ]
-#  defaults:
-#    _controller: 'PrestaShopBundle\Controller\Admin\Improve\International\ZoneController::deleteAction'
-#    _legacy_controller: AdminZones
-#    _legacy_link: AdminZones:deletezone
-#    _legacy_parameters:
-#      id_zone: zoneId
-#  requirements:
-#    zoneId: \d+
