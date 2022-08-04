@@ -110,14 +110,6 @@ class CountryType extends AbstractType
                 'required' => true,
                 'label' => $this->translator->trans('ISO code', [], 'Admin.International.Feature'),
                 'constraints' => [
-                    new Length([
-                        'max' => 2,
-                        'maxMessage' => $this->translator->trans(
-                            'This field cannot be longer than %limit% characters.',
-                            ['%limit%' => 2],
-                            'Admin.Notifications.Error'
-                        ),
-                    ]),
                     new TypedRegex([
                         'type' => TypedRegex::TYPE_LANGUAGE_ISO_CODE,
                     ]),

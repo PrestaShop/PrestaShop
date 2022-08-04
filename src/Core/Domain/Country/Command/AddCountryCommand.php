@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\Country\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryZipCodeFormat;
+use PrestaShop\PrestaShop\Core\Domain\Zone\ValueObject\ZoneId;
 use Tools;
 
 /**
@@ -57,7 +58,7 @@ class AddCountryCommand
     protected $defaultCurrency = 0;
 
     /**
-     * @var int|null
+     * @var ZoneId|null
      */
     protected $zoneId;
 
@@ -108,7 +109,7 @@ class AddCountryCommand
         int $defaultCurrency,
         ?int $zoneId,
         bool $needZipCode,
-        string $zipCodeFormat,
+        ?string $zipCodeFormat,
         string $addressFormat,
         bool $enabled,
         bool $containsStates,
@@ -120,9 +121,9 @@ class AddCountryCommand
         $this->isoCode = Tools::strtoupper(Tools::substr($isoCode, 0, 2));
         $this->callPrefix = $callPrefix;
         $this->defaultCurrency = $defaultCurrency;
-        $this->zoneId = $zoneId;
+        $this->zoneId = $zoneId ? new ZoneId($zoneId) : null;
         $this->needZipCode = $needZipCode;
-        $this->zipCodeFormat = new CountryZipCodeFormat($zipCodeFormat);
+        $this->zipCodeFormat = $zipCodeFormat ? new CountryZipCodeFormat($zipCodeFormat) : null;
         $this->addressFormat = $addressFormat;
         $this->enabled = $enabled;
         $this->containsStates = $containsStates;
@@ -154,7 +155,7 @@ class AddCountryCommand
         return $this->defaultCurrency;
     }
 
-    public function getZoneId(): ?int
+    public function getZoneId(): ?ZoneId
     {
         return $this->zoneId;
     }

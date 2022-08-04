@@ -31,7 +31,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Country\ValueObject;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 
 /**
- * Provides valid country zip code
+ * Contains a valid zip code format for country
  */
 class CountryZipCodeFormat
 {

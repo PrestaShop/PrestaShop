@@ -36,6 +36,7 @@ import FormSubmitButton from '@components/form-submit-button';
 import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
 import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
 import TranslatableInput from '../../components/translatable-input';
+import ProductSpecificationsManager from '@pages/country/components/zip-code-manager';
 
 const {$} = window;
 
@@ -56,4 +57,6 @@ $(() => {
   new TranslatableInput();
 
   new FormSubmitButton();
+
+  new ProductSpecificationsManager();
 });

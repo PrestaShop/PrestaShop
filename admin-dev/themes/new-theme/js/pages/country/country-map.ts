@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -24,20 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler;
-
-use PrestaShop\PrestaShop\Core\Domain\Country\Command\AddCountryCommand;
-use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
-
-/**
- * Defines a contract for AddCountryHandler
- */
-interface AddCountryHandlerInterface
-{
-    /**
-     * @param AddCountryCommand $command
-     *
-     * @return CountryId
-     */
-    public function handle(AddCountryCommand $command): CountryId;
-}
+export default {
+  isZopCodeNeededSwitch: 'input[name="country[need_zip_code]"]',
+  zipCodeFormatInput: '#country_zip_code_format',
+};

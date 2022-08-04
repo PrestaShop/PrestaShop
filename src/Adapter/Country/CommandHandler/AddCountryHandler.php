@@ -59,18 +59,22 @@ class AddCountryHandler extends AbstractCountryHandler implements AddCountryHand
             $country->iso_code = $command->getIsoCode();
             $country->call_prefix = $command->getCallPrefix();
             $country->need_zip_code = $command->needZipCode();
-            $country->zip_code_format = $command->getZipCodeFormat()->getValue();
             $country->active = $command->isEnabled();
             $country->need_identification_number = $command->needIdNumber();
             $country->display_tax_label = $command->displayTaxLabel();
             $country->id_shop_list = $command->getShopAssociation();
             $country->contains_states = $command->containsStates();
+
+            if (null !== $command->getZipCodeFormat()) {
+                $country->zip_code_format = $command->getZipCodeFormat()->getValue();
+            }
+
             if (null !== $command->getDefaultCurrency()) {
                 $country->id_currency = $command->getDefaultCurrency();
             }
 
             if (null !== $command->getZoneId()) {
-                $country->id_zone = $command->getZoneId();
+                $country->id_zone = $command->getZoneId()->getValue();
             }
 
             $this->validateCountryFields($country);
