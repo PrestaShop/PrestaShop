@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Form\Admin\Type;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Exception\InvalidConfigurationException;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -46,11 +47,20 @@ class NavigationTabType extends AbstractType
     private $logger;
 
     /**
-     * {@inheritDoc}
+     * @var bool
      */
-    public function __construct(LoggerInterface $logger)
-    {
+    private $isDebug;
+
+    /**
+     * @param LoggerInterface $logger
+     * @param bool $isDebug
+     */
+    public function __construct(
+        LoggerInterface $logger,
+        bool $isDebug
+    ) {
         $this->logger = $logger;
+        $this->isDebug = $isDebug;
     }
 
     /**
@@ -60,11 +70,15 @@ class NavigationTabType extends AbstractType
     {
         parent::buildForm($builder, $options);
         if (!empty($options['toolbar_buttons'])) {
-            if ($builder->has('toolbar_buttons')) {
-                $this->logger->warning('You should not add a field which name is toolbar_buttons on this component as it is used internally.');
+            if ($builder->has('_toolbar_buttons')) {
+                if ($this->isDebug) {
+                    throw new InvalidConfigurationException('You cannot add a field which name is _toolbar_buttons on this component as it is used internally.');
+                } else {
+                    $this->logger->warning('You should not add a field which name is _toolbar_buttons on this component as it is used internally.');
+                }
             }
 
-            $builder->add('toolbar_buttons', ButtonCollectionType::class, array_merge([
+            $builder->add('_toolbar_buttons', ButtonCollectionType::class, array_merge([
                 'buttons' => $options['toolbar_buttons'],
             ], $options['toolbar_options']));
         }

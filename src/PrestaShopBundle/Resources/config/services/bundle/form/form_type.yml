@@ -16,6 +16,7 @@ services:
     class: PrestaShopBundle\Form\Admin\Type\NavigationTabType
     arguments:
       - '@logger'
+      - '@=service("prestashop.adapter.environment").isDebug()'
     tags:
       - { name: form.type }
 
