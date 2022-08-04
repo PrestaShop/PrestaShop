@@ -41,7 +41,7 @@ class StockAvailableValidator extends AbstractObjectModelValidator
     /**
      * this is the biggest int number that can be saved in database, bigger than this will throw error
      */
-    private const INT_32_MAX = 2147483647;
+    private const INT_32_MAX = 2147483648;
 
     /**
      * @param StockAvailable $stockAvailable
@@ -51,6 +51,7 @@ class StockAvailableValidator extends AbstractObjectModelValidator
     public function validate(StockAvailable $stockAvailable): void
     {
         $this->validateStockAvailableProperty($stockAvailable, 'quantity', ProductStockConstraintException::INVALID_QUANTITY);
+        $this->validateMaxQuantity($stockAvailable->quantity);
         $this->validateStockAvailableProperty($stockAvailable, 'location', ProductStockConstraintException::INVALID_LOCATION);
         $this->validateStockAvailableProperty($stockAvailable, 'out_of_stock', ProductStockConstraintException::INVALID_OUT_OF_STOCK);
         $this->validateStockAvailableProperty($stockAvailable, 'depends_on_stock');
@@ -58,7 +59,6 @@ class StockAvailableValidator extends AbstractObjectModelValidator
         $this->validateStockAvailableProperty($stockAvailable, 'id_product_attribute');
         $this->validateStockAvailableProperty($stockAvailable, 'id_shop');
         $this->validateStockAvailableProperty($stockAvailable, 'id_shop_group');
-        $this->validateMaxQuantity($stockAvailable->quantity);
     }
 
     /**
@@ -80,10 +80,8 @@ class StockAvailableValidator extends AbstractObjectModelValidator
 
     private function validateMaxQuantity(int $quantity)
     {
-        if ($quantity <= self::INT_32_MAX && $quantity >= -self::INT_32_MAX) {
-            return;
+        if ($quantity < -self::INT_32_MAX || $quantity >= self::INT_32_MAX) {
+            throw new ProductStockConstraintException('Quantity is out of INT boundaries', ProductStockConstraintException::INVALID_QUANTITY);
         }
-
-        throw new ProductStockConstraintException('Quantity is out of INT boundaries', ProductStockConstraintException::INVALID_QUANTITY);
     }
 }

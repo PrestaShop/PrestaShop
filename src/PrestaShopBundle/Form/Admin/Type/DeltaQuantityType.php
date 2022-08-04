@@ -46,7 +46,7 @@ class DeltaQuantityType extends TranslatorAwareType
     /**
      * this is the biggest int number that can be saved in database, bigger than this will throw error
      */
-    public const INT_32_MAX = 2147483647;
+    public const INT_32_MAX = 2147483648;
 
     /**
      * {@inheritDoc}
@@ -59,7 +59,7 @@ class DeltaQuantityType extends TranslatorAwareType
                 'constraints' => [
                     new Range([
                         'min' => -static::INT_32_MAX,
-                        'max' => static::INT_32_MAX,
+                        'max' => static::INT_32_MAX - 1,
                     ]),
                 ],
             ])
@@ -72,8 +72,8 @@ class DeltaQuantityType extends TranslatorAwareType
                     new NotBlank(),
                     new Range([
                         'min' => -static::INT_32_MAX,
-                        'max' => static::INT_32_MAX,
-                    ])
+                        'max' => static::INT_32_MAX - 1,
+                    ]),
                 ],
                 'required' => false,
                 'modify_all_shops' => $options['modify_delta_for_all_shops'],
