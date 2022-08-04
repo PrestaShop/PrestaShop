@@ -72,8 +72,9 @@ class TaxRulesGroupType extends TranslatorAwareType
             ->add('name', TextType::class, [
                 'label' => $this->trans('Name', 'Admin.Global'),
                 'help' => sprintf(
-                    '%s ' . TypedRegexValidator::CATALOG_CHARS,
-                    $this->trans('Invalid characters:', 'Admin.Notifications.Info')
+                    '%s %s',
+                    $this->trans('Invalid characters:', 'Admin.Notifications.Info'),
+                    TypedRegexValidator::CATALOG_CHARS
                 ),
                 'constraints' => [
                     new Length([
