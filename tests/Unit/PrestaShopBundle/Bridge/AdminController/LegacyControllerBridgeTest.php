@@ -29,7 +29,9 @@ declare(strict_types=1);
 namespace Tests\Unit\PrestaShopBundle\Bridge\AdminController;
 
 use PHPUnit\Framework\TestCase;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 use PrestaShopBundle\Bridge\AdminController\LegacyControllerBridge;
 use PrestaShopBundle\Security\Admin\Employee as SecurityEmployee;
@@ -135,7 +137,12 @@ class LegacyControllerBridgeTest extends TestCase
             ->willReturn(false)
         ;
 
-        $this->legacyBridge = new LegacyControllerBridge($this->controllerConfiguration, $multistoreFeature);
+        $this->legacyBridge = new LegacyControllerBridge(
+            $this->controllerConfiguration,
+            $multistoreFeature,
+            $this->mockLegacyContext(),
+            $this->mockHookDispatcher()
+        );
     }
 
     /**
@@ -531,5 +538,25 @@ class LegacyControllerBridgeTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock()
         ;
+    }
+
+    /**
+     * @return LegacyContext
+     */
+    private function mockLegacyContext(): LegacyContext
+    {
+        return $this
+            ->getMockBuilder(LegacyContext::class)
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+    }
+
+    /**
+     * @return HookDispatcherInterface
+     */
+    private function mockHookDispatcher(): HookDispatcherInterface
+    {
+        return $this->getMockBuilder(HookDispatcherInterface::class)->getMock();
     }
 }
