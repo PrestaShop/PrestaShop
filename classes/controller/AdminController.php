@@ -1666,12 +1666,8 @@ class AdminControllerCore extends Controller
             $this->page_header_toolbar_title = $this->toolbar_title[count($this->toolbar_title) - 1];
         }
 
-        $help_link = SymfonyContainer::getInstance()->get('prestashop.core.help.documentation')->generateLink(
-            Tools::getValue('controller'),
-            Language::getIsoById($this->context->employee->id_lang)
-        );
-
-        $this->context->smarty->assign('help_link', $help_link);
+        $this->context->smarty->assign('help_link', 'https://help.prestashop-project.org/' . Language::getIsoById($this->context->employee->id_lang) . '/doc/'
+            . Tools::getValue('controller') . '?version=' . _PS_VERSION_ . '&country=' . Language::getIsoById($this->context->employee->id_lang));
     }
 
     /**
@@ -4061,7 +4057,6 @@ class AdminControllerCore extends Controller
                 <script>
                     help_class_name='" . addslashes($help_class_name) . "';
                     iso_user = '" . addslashes($this->context->language->iso_code) . "'
-                    _PS_VERSION_ = '" ._PS_VERSION_ . "'
                 </script>
                 <script src='themes/default/js/help.js'></script>
                 <script>
