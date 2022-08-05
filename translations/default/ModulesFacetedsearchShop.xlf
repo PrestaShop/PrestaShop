@@ -37,6 +37,11 @@
         <target>Not available</target>
         <note>Line: 278</note>
       </trans-unit>
+      <trans-unit id="78945de8de090e90045d299651a68a9b">
+        <source>Available</source>
+        <target>Available</target>
+        <note>Line: 283</note>
+      </trans-unit>
       <trans-unit id="fcebe56087b9373f15514831184fa572">
         <source>In stock</source>
         <target>In stock</target>
@@ -57,24 +62,19 @@
         <target>Categories</target>
         <note>Line: 452</note>
       </trans-unit>
-      <trans-unit id="78945de8de090e90045d299651a68a9b">
-        <source>Available</source>
-        <target>Available</target>
-        <note>Line: 283</note>
-      </trans-unit>
     </body>
   </file>
   <file original="modules/ps_facetedsearch/src/Product/SearchProvider.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="ad24ffca4f9e9c0c7e80fe1512df6db9">
-        <source>Relevance</source>
-        <target>Relevance</target>
-        <note>Line: 96</note>
-      </trans-unit>
       <trans-unit id="01f7ac959c1e6ebbb2e0ee706a7a5255">
         <source>Best sellers</source>
         <target>Best sellers</target>
         <note>Line: 93</note>
+      </trans-unit>
+      <trans-unit id="ad24ffca4f9e9c0c7e80fe1512df6db9">
+        <source>Relevance</source>
+        <target>Relevance</target>
+        <note>Line: 96</note>
       </trans-unit>
     </body>
   </file>

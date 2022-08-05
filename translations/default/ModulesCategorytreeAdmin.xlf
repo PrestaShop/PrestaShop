@@ -7,10 +7,10 @@
         <target>Category tree links</target>
         <note>Line: 49</note>
       </trans-unit>
-      <trans-unit id="15a6f5841d9e4d7e62bec3319b4b7036">
-        <source>Adds a block featuring product categories.</source>
-        <target>Adds a block featuring product categories.</target>
-        <note>Line: 46</note>
+      <trans-unit id="5c5a3db3392d54af6de32be695cf4c9a">
+        <source>Help navigation on your store, show your visitors current category and subcategories.</source>
+        <target>Help navigation on your store, show your visitors current category and subcategories.</target>
+        <note>Line: 50</note>
       </trans-unit>
       <trans-unit id="1379a6b19242372c1f23cc9adedfcdd6">
         <source>Category root</source>
@@ -51,11 +51,6 @@
         <source>Set the maximum depth of category sublevels displayed in this block (0 = infinite).</source>
         <target>Set the maximum depth of category sublevels displayed in this block (0 = infinite).</target>
         <note>Line: 230</note>
-      </trans-unit>
-      <trans-unit id="5c5a3db3392d54af6de32be695cf4c9a">
-        <source>Help navigation on your store, show your visitors current category and subcategories.</source>
-        <target>Help navigation on your store, show your visitors current category and subcategories.</target>
-        <note>Line: 50</note>
       </trans-unit>
     </body>
   </file>

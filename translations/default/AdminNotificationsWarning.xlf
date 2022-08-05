@@ -18,15 +18,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/header.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="358cc9ee3a3d23d3390e5043122d9bea">
-        <source>PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.</source>
-        <target>PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.</target>
-        <note>Line: 84</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="admin-dev/themes/default/template/invalid_token.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="db26e10564e958809d798e8048fcbc0a">
@@ -60,7 +51,7 @@
       <trans-unit id="85265e940fbb820dd2475946e7bc48d9">
         <source>Invalid configuration</source>
         <target>Invalid configuration</target>
-        <note>Line: 76</note>
+        <note>Line: 86</note>
       </trans-unit>
     </body>
   </file>
@@ -96,16 +87,16 @@
       <trans-unit id="5887e86df08049bc0eab95e975e057c4">
         <source>Please select theme's import source.</source>
         <target>Please select theme's import source.</target>
-        <note>Line: 231</note>
+        <note>Line: 215</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Basic/FeatureValueType.php" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Form/Admin/Type/EntitySearchInputType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="e8cf85cec621489ec026f7e06c67eb4e">
         <source>Delete item</source>
         <target>Delete item</target>
-        <note>Line: 113</note>
+        <note>Line: 228</note>
       </trans-unit>
     </body>
   </file>
@@ -123,26 +114,21 @@
       <trans-unit id="043f2b6920e5c8a140301051d18d8618">
         <source>Since December 30, 2019, you need to register for a [1]MaxMind[/1] account to get a license key to be able to download the geolocation data. Once downloaded, extract the data using Winrar or Gzip into the /app/Resources/geoip/ directory.</source>
         <target>Since December 30, 2019, you need to register for a [1]MaxMind[/1] account to get a license key to be able to download the geolocation data. Once downloaded, extract the data using Winrar or Gzip into the /app/Resources/geoip/ directory.</target>
-        <note>Line: 35</note>
+        <note>Line: 34</note>
       </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/product.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="71a0384942a58e7418c2098eaea4fe0f">
-        <source>Are you sure to delete this?</source>
-        <target>Are you sure to delete this?</target>
-        <note>Line: 345</note>
+      <trans-unit id="80ebdccece38141cd9c0f9b3b623091f">
+        <source>Are you sure you want to delete this item?</source>
+        <target>Are you sure you want to delete this item?</target>
+        <note>Line: 326</note>
       </trans-unit>
       <trans-unit id="0eaadb4fcb48a0a0ed7bc9868be9fbaa">
         <source>Warning</source>
         <target>Warning</target>
-        <note>Line: 275</note>
-      </trans-unit>
-      <trans-unit id="80ebdccece38141cd9c0f9b3b623091f">
-        <source>Are you sure you want to delete this item?</source>
-        <target>Are you sure you want to delete this item?</target>
-        <note>Line: 353</note>
+        <note>Line: 251</note>
       </trans-unit>
     </body>
   </file>

@@ -21,29 +21,20 @@
   </file>
   <file original="controllers/admin/AdminCarriersController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="d3b206d196cd6be3a2764c1fb90b200f">
-        <source>Delete selected</source>
-        <target>Delete selected</target>
-        <note>Line: 55</note>
+      <trans-unit id="1412292b09d3cd39f32549afb1f5f102">
+        <source>Delete selected item?</source>
+        <target>Delete selected item?</target>
+        <note>Line: 683</note>
       </trans-unit>
       <trans-unit id="e25f0ecd41211b01c83e5fec41df4fe7">
         <source>Delete selected items?</source>
         <target>Delete selected items?</target>
+        <note>Line: 57</note>
+      </trans-unit>
+      <trans-unit id="d3b206d196cd6be3a2764c1fb90b200f">
+        <source>Delete selected</source>
+        <target>Delete selected</target>
         <note>Line: 56</note>
-      </trans-unit>
-      <trans-unit id="1412292b09d3cd39f32549afb1f5f102">
-        <source>Delete selected item?</source>
-        <target>Delete selected item?</target>
-        <note>Line: 709</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminCustomersController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="b3ebc4fbc081856600b6b9ecbb0a99fb">
-        <source>Delete the selected item?</source>
-        <target>Delete the selected item?</target>
-        <note>Line: 1048</note>
       </trans-unit>
     </body>
   </file>
@@ -94,10 +85,24 @@
   </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="f5f44b1ee53a0290d59d54a5f0b95f59">
-        <source>This page is not yet compatible with the multistore feature. To access the page, please [1]disable the multistore feature[/1].</source>
-        <target>This page is not yet compatible with the multistore feature. To access the page, please [1]disable the multistore feature[/1].</target>
-        <note>Line: 295</note>
+      <trans-unit id="d522a12a111ad26cc15c16da99cebef6">
+        <source>This product is not associated with the store selected in the multistore header, please select another one.</source>
+        <target>This product is not associated with the store selected in the multistore header, please select another one.</target>
+        <note>Line: 800</note>
+      </trans-unit>
+      <trans-unit id="2c7dae12339ce3e31db32f7b78288369">
+        <source>This page is only compatible in a single store context. To access the page, please select a store or [1]disable the multistore feature[/1].</source>
+        <target>This page is only compatible in a single store context. To access the page, please select a store or [1]disable the multistore feature[/1].</target>
+        <note>Line: 819</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/AdvancedParameters/Webservice/WebserviceKeyType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b301c8aef90c7c10a397070ba7f12d2b">
+        <source>Key should be at least %length% characters long.</source>
+        <target>Key should be at least %length% characters long.</target>
+        <note>Line: 95</note>
       </trans-unit>
     </body>
   </file>
@@ -106,16 +111,25 @@
       <trans-unit id="f6916f4f1a268d4d0014ce47a2dfc3e4">
         <source>Password should be at least %length% characters long.</source>
         <target>Password should be at least %length% characters long.</target>
-        <note>Line: 186</note>
+        <note>Line: 207</note>
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Payment/Preferences/payment_preferences.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6fe11d39747aff42159920688f59f575">
+        <source>Invalid characters: %s</source>
+        <target>Invalid characters: %s</target>
+        <note>Line: 187</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/Payment/PaymentMethods/payment_methods.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="178a5f69a18bd94dc2bbafbd074be1f2">
         <source>Note that this page is available in a single shop context only. Switch context to work on it.</source>
         <target>Note that this page is available in a single shop context only. Switch context to work on it.</target>
-        <note>Line: 35</note>
+        <note>Line: 49</note>
       </trans-unit>
     </body>
   </file>
@@ -124,7 +138,7 @@
       <trans-unit id="6252c0f2c2ed83b7b06dfca86d4650bb">
         <source>Invalid characters:</source>
         <target>Invalid characters:</target>
-        <note>Line: 160</note>
+        <note>Line: 167</note>
       </trans-unit>
     </body>
   </file>
