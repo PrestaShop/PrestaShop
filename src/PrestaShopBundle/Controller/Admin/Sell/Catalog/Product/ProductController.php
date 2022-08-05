@@ -162,7 +162,7 @@ class ProductController extends FrameworkBundleAdminController
             $result = $this->getProductFormHandler()->handle($productForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_products_v2_edit', ['productId' => $result->getIdentifiableObjectId()]);
             }
@@ -208,7 +208,7 @@ class ProductController extends FrameworkBundleAdminController
 
             if ($result->isSubmitted()) {
                 if ($result->isValid()) {
-                    $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                    $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                     return $this->redirectToRoute('admin_products_v2_edit', ['productId' => $productId]);
                 } else {

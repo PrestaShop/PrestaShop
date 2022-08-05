@@ -141,7 +141,7 @@ class AddressController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new DeleteAddressCommand($addressId));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -173,7 +173,7 @@ class AddressController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new BulkDeleteAddressCommand($addressIds));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));

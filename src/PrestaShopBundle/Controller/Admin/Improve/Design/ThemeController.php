@@ -257,7 +257,7 @@ class ThemeController extends AbstractAdminController
     {
         try {
             $this->getCommandBus()->handle(new EnableThemeCommand(new ThemeName($themeName)));
-            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
         } catch (ThemeException $e) {
             $this->addFlash(
                 'error',
@@ -294,7 +294,7 @@ class ThemeController extends AbstractAdminController
 
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (ThemeException $e) {
             $this->addFlash('error', $this->handleDeleteThemeException($e));
@@ -415,7 +415,7 @@ class ThemeController extends AbstractAdminController
             $themePageLayoutsCustomizer = $this->get('prestashop.core.addon.theme.theme.page_layouts_customizer');
             $themePageLayoutsCustomizer->customize($pageLayoutCustomizationForm->getData()['layouts']);
 
-            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
             return $this->redirectToRoute('admin_themes_index');
         }

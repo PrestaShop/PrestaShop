@@ -123,7 +123,7 @@ class WebserviceController extends FrameworkBundleAdminController
             $result = $formHandler->handleFor((int) $webserviceKeyId, $form);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_webservice_keys_index');
             }
@@ -188,7 +188,7 @@ class WebserviceController extends FrameworkBundleAdminController
         } else {
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         }
 
@@ -217,7 +217,7 @@ class WebserviceController extends FrameworkBundleAdminController
         } else {
             $this->addFlash(
                 'success',
-                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+                $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
             );
         }
 

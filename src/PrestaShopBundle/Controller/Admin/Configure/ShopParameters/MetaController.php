@@ -160,7 +160,7 @@ class MetaController extends FrameworkBundleAdminController
             $result = $this->getMetaFormHandler()->handleFor($metaId, $metaForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_metas_index');
             }
@@ -196,7 +196,7 @@ class MetaController extends FrameworkBundleAdminController
         } else {
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         }
 
@@ -225,7 +225,7 @@ class MetaController extends FrameworkBundleAdminController
         } else {
             $this->addFlash(
                 'success',
-                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+                $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
             );
         }
 
@@ -392,7 +392,7 @@ class MetaController extends FrameworkBundleAdminController
 
         $this->addFlash(
             'success',
-            $this->trans('Successful update.', 'Admin.Notifications.Success')
+            $this->trans('Successful update', 'Admin.Notifications.Success')
         );
 
         return $this->redirectToRoute('admin_metas_index');

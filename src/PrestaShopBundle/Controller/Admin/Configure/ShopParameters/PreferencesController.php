@@ -92,7 +92,7 @@ class PreferencesController extends FrameworkBundleAdminController
                     )
                 );
 
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_preferences');
             }

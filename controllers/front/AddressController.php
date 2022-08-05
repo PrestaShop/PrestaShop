@@ -74,9 +74,9 @@ class AddressControllerCore extends FrontController
                 $this->errors[] = $this->trans('Please fix the error below.', [], 'Shop.Notifications.Error');
             } else {
                 if ($id_address) {
-                    $this->success[] = $this->trans('Address successfully updated!', [], 'Shop.Notifications.Success');
+                    $this->success[] = $this->trans('Address successfully updated.', [], 'Shop.Notifications.Success');
                 } else {
-                    $this->success[] = $this->trans('Address successfully added!', [], 'Shop.Notifications.Success');
+                    $this->success[] = $this->trans('Address successfully added.', [], 'Shop.Notifications.Success');
                 }
 
                 $this->should_redirect = true;

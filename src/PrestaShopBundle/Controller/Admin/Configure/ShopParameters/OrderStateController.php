@@ -175,7 +175,7 @@ class OrderStateController extends FrameworkBundleAdminController
 
             if ($result->isSubmitted()) {
                 if ($result->isValid()) {
-                    $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                    $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
                 } else {
                     $this->addFlashFormErrors($orderStateForm);
                 }
@@ -257,7 +257,7 @@ class OrderStateController extends FrameworkBundleAdminController
 
             if ($result->isSubmitted()) {
                 if ($result->isValid()) {
-                    $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                    $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
                 } else {
                     $this->addFlashFormErrors($orderReturnStateForm);
                 }
