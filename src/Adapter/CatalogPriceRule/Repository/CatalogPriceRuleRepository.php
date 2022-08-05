@@ -66,10 +66,9 @@ class CatalogPriceRuleRepository
         ?int $limit = null,
         ?int $offset = null
     ): array {
-        $qb = $this->getCatalogPriceRulesQueryBuilder($langId)
+        $qb = $this->getCatalogPriceRulesQueryBuilder($langId, $productId)
             ->select('spr.id_specific_price_rule, spr.name as specific_price_rule_name, currency_lang.symbol, country_lang.name as lang_name, shop.name as shop_name, group_lang.name as group_name, spr.from_quantity, spr.reduction_type, spr.reduction, spr.from, spr.to')
         ;
-        $qb = $this->addCatalogPriceRuleCondition($qb, $productId);
         $qb->setFirstResult($offset)
             ->setMaxResults($limit)
         ;
@@ -85,97 +84,13 @@ class CatalogPriceRuleRepository
      */
     public function countByProductId(ProductId $productId, LanguageId $langId): int
     {
-        $qb = $this->getCatalogPriceRulesQueryBuilder($langId)
-        ;
+        $qb = $this->getCatalogPriceRulesQueryBuilder($langId, $productId)
+            ->select('COUNT(spr.id_specific_price_rule) as total_catalog_price_rules');
 
-        $qb = $this->addCatalogPriceRuleCondition($qb, $productId);
-        /** I can't select only count because I need meets_condition for having clause,
-         * thus all price rules needs to be caunted afterwards
-         */
-        return count($qb->execute()->fetchAll());
-    }
-
-    /**
-     * @return array<int, array<string, string|null>>
-     */
-    public function getAll(
-        LanguageId $langId,
-        ?int $limit = null,
-        ?int $offset = null
-    ): array {
-        $qb = $this->getCatalogPriceRulesQueryBuilder($langId)
-            ->select('spr.id_specific_price_rule, spr.name as specific_price_rule_name, currency_lang.symbol, country_lang.name as lang_name, shop.name as shop_name, group_lang.name as group_name, spr.from_quantity, spr.reduction_type, spr.reduction, spr.from, spr.to')
-            ->setFirstResult($offset)
-            ->setMaxResults($limit)
-        ;
-
-        return $qb->execute()->fetchAllAssociative();
-    }
-
-    /**
-     * @param LanguageId $langId
-     *
-     * @return int
-     *
-     * @throws \Doctrine\DBAL\Exception
-     */
-    public function countCatalogPriceRules(LanguageId $langId): int
-    {
-        $qb = $this->getCatalogPriceRulesQueryBuilder($langId)
-            ->select('COUNT(spr.id_specific_price_rule) AS total_catalog_price_rules')
-        ;
 
         return (int) $qb->execute()->fetch()['total_catalog_price_rules'];
     }
-
-    /**
-     * @param QueryBuilder $qb
-     * @param ProductId $productId
-     *
-     * @return QueryBuilder
-     */
-    private function addCatalogPriceRuleCondition(QueryBuilder $qb, ProductId $productId): QueryBuilder
-    {
-        /**
-         * This selects checks whether or not conditions for product ID are met. Valid results are either 1(meets at least one of condition groups) or null meaning no conditions
-         * Sum in subselect checks if number of conditions met for each group is equal to number of conditions in group. If it's not at least one of conditions in the group is not met.
-         * The outer Sum checks if at least one of the condition groups is met.
-         */
-        $qb->addSelect('
-                SUM(
-                    (SELECT
-                        SUM(
-                            CASE
-                                WHEN sprc.type  = \'manufacturer\' AND p.id_manufacturer = sprc.value THEN 1
-                                WHEN sprc.type  = \'supplier\' AND p.id_supplier = sprc.value THEN 1
-                                WHEN sprc.type  = \'attribute\' AND (SELECT id_product_attribute FROM ps_product_attribute pa WHERE pa.id_product = p.id_product AND pa.id_product_attribute = sprc.value) THEN 1
-                                WHEN sprc.type  = \'feature\' AND (SELECT id_feature FROM ps_feature_product fp WHERE fp.id_product = p.id_product AND fp.id_feature_value = sprc.value) THEN 1
-                                WHEN sprc.type  = \'category\' AND (SELECT id_category FROM ps_category_product cp WHERE cp.id_product = p.id_product AND cp.id_category = sprc.value) THEN 1
-                                ELSE 0
-                            END
-                    ) = COUNT(*)
-                    FROM ps_specific_price_rule_condition_group AS sprcg
-                    LEFT JOIN ps_specific_price_rule_condition sprc
-                        ON sprcg.id_specific_price_rule_condition_group = sprc.id_specific_price_rule_condition_group
-                    LEFT JOIN ps_product p
-                        ON id_product = :productId
-                    WHERE sprcg.id_specific_price_rule_condition_group = sprcgouter.id_specific_price_rule_condition_group
-                    )
-                ) > 0 as meets_condition'
-        )
-            ->leftJoin('spr',
-                $this->dbPrefix . 'specific_price_rule_condition_group',
-                'sprcgouter',
-                'spr.id_specific_price_rule = sprcgouter.id_specific_price_rule'
-            )
-            ->setParameter('productId', $productId->getValue())
-            ->groupBy('spr.id_specific_price_rule')
-            ->having('(meets_condition = 1 OR meets_condition IS NULL)');
-
-        return $qb;
-    }
-
-    private function getCatalogPriceRulesQueryBuilder(LanguageId $langId): QueryBuilder
+    private function getCatalogPriceRulesQueryBuilder(LanguageId $langId, ProductId $productId): QueryBuilder
     {
         return $this->connection->createQueryBuilder()
             ->from($this->dbPrefix . 'specific_price_rule', 'spr')
@@ -203,7 +118,14 @@ class CatalogPriceRuleRepository
                 'group_lang',
                 'spr.id_group = group_lang.id_group AND group_lang.id_lang = :langId'
             )
+            ->innerJoin(
+                'spr',
+                $this->dbPrefix . 'specific_price',
+                'sp',
+                'spr.id_specific_price_rule = sp.id_specific_price_rule AND (id_product = :productId OR id_product = 0)'
+            )
             ->orderBy('spr.id_specific_price_rule', 'asc')
-            ->setParameter('langId', $langId->getValue());
+            ->setParameter('langId', $langId->getValue())
+            ->setParameter('productId', $productId->getValue());
     }
 }
