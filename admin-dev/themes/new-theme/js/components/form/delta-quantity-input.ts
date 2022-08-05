@@ -24,7 +24,6 @@
  */
 import ComponentsMap from '@components/components-map';
 
-import ChangeEvent = JQuery.ChangeEvent;
 import TriggeredEvent = JQuery.TriggeredEvent;
 
 const {$} = window;
