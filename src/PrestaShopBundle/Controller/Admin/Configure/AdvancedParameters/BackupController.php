@@ -242,7 +242,7 @@ class BackupController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_backups_index');
         }
 
-        $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
+        $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
 
         return $this->redirectToRoute('admin_backups_index');
     }
@@ -302,7 +302,7 @@ class BackupController extends FrameworkBundleAdminController
 
         $this->addFlash(
             'success',
-            $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+            $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
         );
 
         return $this->redirectToRoute('admin_backups_index');

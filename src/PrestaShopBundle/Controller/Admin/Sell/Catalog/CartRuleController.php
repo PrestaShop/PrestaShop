@@ -121,7 +121,7 @@ class CartRuleController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new DeleteCartRuleCommand($cartRuleId));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -148,7 +148,7 @@ class CartRuleController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new BulkDeleteCartRuleCommand($cartRuleIds));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));

@@ -298,7 +298,7 @@ class CategoryController extends FrameworkBundleAdminController
             $handlerResult = $categoryFormHandler->handleFor((int) $categoryId, $categoryForm);
 
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_categories_index', [
                     'categoryId' => $categoryForm->getData()['id_parent'],
@@ -376,7 +376,7 @@ class CategoryController extends FrameworkBundleAdminController
             $handlerResult = $rootCategoryFormHandler->handleFor((int) $categoryId, $rootCategoryForm);
 
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_categories_index', [
                     'categoryId' => $this->configuration->getInt('PS_ROOT_CATEGORY'),
@@ -637,7 +637,7 @@ class CategoryController extends FrameworkBundleAdminController
 
                 $this->addFlash(
                     'success',
-                    $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+                    $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
                 );
             } catch (CategoryException $e) {
                 $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -679,7 +679,7 @@ class CategoryController extends FrameworkBundleAdminController
 
                 $this->getCommandBus()->handle($command);
 
-                $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
             } catch (CategoryException $e) {
                 $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
             }
@@ -765,7 +765,7 @@ class CategoryController extends FrameworkBundleAdminController
 
         return $this->json([
             'success' => true,
-            'message' => $this->trans('Successful update.', 'Admin.Notifications.Success'),
+            'message' => $this->trans('Successful update', 'Admin.Notifications.Success'),
         ]);
     }
 

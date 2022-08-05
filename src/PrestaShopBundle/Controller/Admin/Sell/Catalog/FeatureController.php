@@ -229,7 +229,7 @@ class FeatureController extends FrameworkBundleAdminController implements Legacy
             $handlerResult = $featureFormHandler->handleFor($featureId, $featureForm);
 
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_features_edit', [
                     'featureId' => $featureId,

@@ -16,8 +16,8 @@ class Addresses extends FOBasePage {
 
     this.pageTitle = 'Addresses';
     this.addressPageTitle = 'Address';
-    this.addAddressSuccessfulMessage = 'Address successfully added!';
-    this.updateAddressSuccessfulMessage = 'Address successfully updated!';
+    this.addAddressSuccessfulMessage = 'Address successfully added.';
+    this.updateAddressSuccessfulMessage = 'Address successfully updated.';
     this.deleteAddressSuccessfulMessage = 'Address successfully deleted.';
 
     // Selectors
