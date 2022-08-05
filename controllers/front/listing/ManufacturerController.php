@@ -225,4 +225,14 @@ class ManufacturerControllerCore extends ProductListingFrontController
 
         return $breadcrumb;
     }
+
+    public function getTemplateVarPage()
+    {
+        $page = parent::getTemplateVarPage();
+
+        $page['body_classes']['manufacturer-id-' . $this->manufacturer->id] = true;
+        $page['body_classes']['manufacturer-' . $this->manufacturer->name] = true;
+
+        return $page;
+    }
 }
