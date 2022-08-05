@@ -566,8 +566,8 @@ class TranslationCatalogueBuilderTest extends TestCase
                             'Feature',
                         ],
                     ],
-                    'Delivery time' => [
-                        'default' => 'Delivery time',
+                    'Delivery Time' => [
+                        'default' => 'Delivery Time',
                         'project' => 'Delai de livraison',
                         'user' => null,
                         'tree_domain' => [
