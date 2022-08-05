@@ -120,7 +120,6 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
         'lite_display' => 'controllerConfiguration.liteDisplay',
         'display' => 'controllerConfiguration.displayType',
         'show_page_header_toolbar' => 'controllerConfiguration.showPageHeaderToolbar',
-        'title' => 'controllerConfiguration.pageHeaderToolbarTitle',
         'page_header_toolbar_title' => 'controllerConfiguration.pageHeaderToolbarTitle',
         'page_header_toolbar_btn' => 'controllerConfiguration.pageHeaderToolbarButtons',
         'toolbar_btn' => 'controllerConfiguration.toolbarButtons',
