@@ -178,7 +178,7 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
 
         if ($this->getContext()->language->is_rtl) {
             $this->addJS(_PS_JS_DIR_ . 'rtl.js');
-            $this->addCSS(__PS_BASE_URI__ . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/css/' . Context::getContext()->language->iso_code . '.css');
+            $this->addCSS(__PS_BASE_URI__ . $adminWebpath . '/themes/' . self::DEFAULT_THEME . '/css/' . $this->getContext()->language->iso_code . '.css');
         }
 
         if ($isNewTheme) {
@@ -236,7 +236,7 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
         ]);
 
         Media::addJsDef([
-            'changeFormLanguageUrl' => Context::getContext()->link->getAdminLink(
+            'changeFormLanguageUrl' => $this->getContext()->link->getAdminLink(
                 'AdminEmployees',
                 true,
                 [],
@@ -247,10 +247,10 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
         Media::addJsDef(['baseDir' => __PS_BASE_URI__]);
         Media::addJsDef(['baseAdminDir' => __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/']);
         Media::addJsDef(['currency' => [
-            'iso_code' => Context::getContext()->currency->iso_code,
-            'sign' => Context::getContext()->currency->sign,
-            'name' => Context::getContext()->currency->name,
-            'format' => Context::getContext()->currency->format,
+            'iso_code' => $this->getContext()->currency->iso_code,
+            'sign' => $this->getContext()->currency->sign,
+            'name' => $this->getContext()->currency->name,
+            'format' => $this->getContext()->currency->format,
         ]]);
 
         Media::addJsDef([
