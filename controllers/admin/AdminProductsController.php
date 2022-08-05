@@ -893,7 +893,7 @@ class AdminProductsControllerCore extends AdminController
                     foreach ($features as $feature) {
                         if (!empty($feature['value'])) {
                             $product->addFeaturesToDB($feature['feature'], $feature['value']);
-                        } elseif ($defaultValue = $this->checkFeatures($languages, $feature)) {
+                        } elseif ($defaultValue = $this->checkFeatures($languages, $feature) !== 0) {
                             $idValue = $product->addFeaturesToDB($feature['feature'], 0, 1);
                             foreach ($languages as $language) {
                                 $valueToAdd = (isset($feature['custom_value'][$language['id_lang']]))
