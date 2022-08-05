@@ -7,10 +7,10 @@
         <target>Catalog statistics</target>
         <note>Line: 51</note>
       </trans-unit>
-      <trans-unit id="08a7c3cf820979d2c8d4de4f47abb5e6">
-        <source>Adds a tab containing general statistics about your catalog to the Stats dashboard.</source>
-        <target>Adds a tab containing general statistics about your catalog to the Stats dashboard.</target>
-        <note>Line: 47</note>
+      <trans-unit id="020439554b871a3d6dc200f838daa280">
+        <source>Enrich your stats, have a look at your catalog’s general statistics.</source>
+        <target>Enrich your stats, have a look at your catalog’s general statistics.</target>
+        <note>Line: 52</note>
       </trans-unit>
       <trans-unit id="74cda5a02df704cc5c3e8fee7fc0f7bc">
         <source>(1 purchase / %d visits)</source>
@@ -86,11 +86,6 @@
         <source>Edit / View</source>
         <target>Edit / View</target>
         <note>Line: 231</note>
-      </trans-unit>
-      <trans-unit id="020439554b871a3d6dc200f838daa280">
-        <source>Enrich your stats, have a look at your catalog’s general statistics.</source>
-        <target>Enrich your stats, have a look at your catalog’s general statistics.</target>
-        <note>Line: 52</note>
       </trans-unit>
     </body>
   </file>

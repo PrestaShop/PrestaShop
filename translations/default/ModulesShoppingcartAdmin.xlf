@@ -7,10 +7,10 @@
         <target>Shopping cart</target>
         <note>Line: 47</note>
       </trans-unit>
-      <trans-unit id="32114c6d4529db62a4703c4b04a3f214">
-        <source>Adds a block containing the customer's shopping cart.</source>
-        <target>Adds a block containing the customer's shopping cart.</target>
-        <note>Line: 49</note>
+      <trans-unit id="43041578d56a73cbb8692b81ed5f0147">
+        <source>Display a shopping cart icon on your pages and the number of items it contains.</source>
+        <target>Display a shopping cart icon on your pages and the number of items it contains.</target>
+        <note>Line: 48</note>
       </trans-unit>
       <trans-unit id="a21e5718d2a196280b729438933501c7">
         <source>Ajax: Invalid choice.</source>
@@ -26,11 +26,6 @@
         <source>Activate Ajax mode for the cart (compatible with the default theme).</source>
         <target>Activate Ajax mode for the cart (compatible with the default theme).</target>
         <note>Line: 225</note>
-      </trans-unit>
-      <trans-unit id="43041578d56a73cbb8692b81ed5f0147">
-        <source>Display a shopping cart icon on your pages and the number of items it contains.</source>
-        <target>Display a shopping cart icon on your pages and the number of items it contains.</target>
-        <note>Line: 48</note>
       </trans-unit>
     </body>
   </file>

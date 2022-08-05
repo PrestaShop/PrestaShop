@@ -7,11 +7,6 @@
         <target>Wishlist</target>
         <note>Line: 81</note>
       </trans-unit>
-      <trans-unit id="df5e3f6daca5e1aa63c0ad63caf9be06">
-        <source>Adds a block containing the customer's wishlists.</source>
-        <target>Adds a block containing the customer's wishlists.</target>
-        <note>Line: 79</note>
-      </trans-unit>
       <trans-unit id="38293ed85898c2774399fe6761edf452">
         <source>Allow customers to create wishlists to save their favorite products for later.</source>
         <target>Allow customers to create wishlists to save their favorite products for later.</target>
@@ -59,6 +54,11 @@
         <target>Reference</target>
         <note>Line: 67</note>
       </trans-unit>
+      <trans-unit id="47ac923d219501859fb68fed8c8db77b">
+        <source>Combination</source>
+        <target>Combination</target>
+        <note>Line: 73</note>
+      </trans-unit>
       <trans-unit id="3adbdb3ac060038aa0e6e6c138ef9873">
         <source>Category</source>
         <target>Category</target>
@@ -78,11 +78,6 @@
         <source>Conversion rate</source>
         <target>Conversion rate</target>
         <note>Line: 97</note>
-      </trans-unit>
-      <trans-unit id="47ac923d219501859fb68fed8c8db77b">
-        <source>Combination</source>
-        <target>Combination</target>
-        <note>Line: 73</note>
       </trans-unit>
     </body>
   </file>
@@ -129,6 +124,11 @@
   </file>
   <file original="modules/blockwishlist/views/templates/admin/statistics.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="53631b7bf03eeb02267cf90f057ce96f">
+        <source>You need to choose a specific shop to display the top 10 most added products</source>
+        <target>You need to choose a specific shop to display the top 10 most added products</target>
+        <note>Line: 25</note>
+      </trans-unit>
       <trans-unit id="64b6d93d6e0875e2ecd74d1c7bc639cd">
         <source>Top 10 most added products</source>
         <target>Top 10 most added products</target>
@@ -138,11 +138,6 @@
         <source>Refresh</source>
         <target>Refresh</target>
         <note>Line: 48</note>
-      </trans-unit>
-      <trans-unit id="53631b7bf03eeb02267cf90f057ce96f">
-        <source>You need to choose a specific shop to display the top 10 most added products</source>
-        <target>You need to choose a specific shop to display the top 10 most added products</target>
-        <note>Line: 25</note>
       </trans-unit>
     </body>
   </file>

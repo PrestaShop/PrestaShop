@@ -7,9 +7,9 @@
         <target>Product details</target>
         <note>Line: 48</note>
       </trans-unit>
-      <trans-unit id="15944ce3356cfd0513cbc76e7df9d233">
-        <source>Adds detailed statistics for each product to the Stats dashboard.</source>
-        <target>Adds detailed statistics for each product to the Stats dashboard.</target>
+      <trans-unit id="89b71e1d3b7597d4f99a9e33b0cc5581">
+        <source>Enrich your stats, add detailed statistics for each product of your catalog.</source>
+        <target>Enrich your stats, add detailed statistics for each product of your catalog.</target>
         <note>Line: 49</note>
       </trans-unit>
       <trans-unit id="f083d0403991f2b0ae72ea8782518f36">
@@ -101,11 +101,6 @@
         <source>Stock</source>
         <target>Stock</target>
         <note>Line: 428</note>
-      </trans-unit>
-      <trans-unit id="89b71e1d3b7597d4f99a9e33b0cc5581">
-        <source>Enrich your stats, add detailed statistics for each product of your catalog.</source>
-        <target>Enrich your stats, add detailed statistics for each product of your catalog.</target>
-        <note>Line: 49</note>
       </trans-unit>
     </body>
   </file>
