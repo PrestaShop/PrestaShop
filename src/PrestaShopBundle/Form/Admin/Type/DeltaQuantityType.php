@@ -31,6 +31,8 @@ namespace PrestaShopBundle\Form\Admin\Type;
 use Symfony\Component\Form\Extension\Core\DataTransformer\NumberToLocalizedStringTransformer;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Range;
@@ -85,6 +87,28 @@ class DeltaQuantityType extends TranslatorAwareType
             ]);
 
         $builder->get('quantity')->addViewTransformer(new NumberToLocalizedStringTransformer(0, false));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function buildView(FormView $view, FormInterface $form, array $options)
+    {
+        parent::buildView($view, $form, $options);
+
+        // We always need to compute the initial quantity based on data because if submit is invalid quantity value is changed,
+        // so we can't rely on it to initialize the data attributes containing the initial value which is used in FO later. If
+        // we don't handle this the quantity will keep increasing (or decreasing) on each submit.
+        $formData = $form->getData();
+        if (isset($formData['quantity'], $formData['delta'])) {
+            $deltaQuantity = (int) $formData['delta'];
+            $initialQuantity = (int) $formData['quantity'] - $deltaQuantity;
+        } else {
+            $deltaQuantity = 0;
+            $initialQuantity = null;
+        }
+        $view->vars['deltaQuantity'] = $deltaQuantity;
+        $view->vars['initialQuantity'] = $initialQuantity;
     }
 
     public function configureOptions(OptionsResolver $resolver)
