@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Stock\Validate;
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShopBundle\Form\Admin\Type\DeltaQuantityType;
 use StockAvailable;
 
 /**
@@ -38,11 +39,6 @@ use StockAvailable;
  */
 class StockAvailableValidator extends AbstractObjectModelValidator
 {
-    /**
-     * this is the biggest int number that can be saved in database, bigger than this will throw error
-     */
-    private const INT_32_MAX = 2147483648;
-
     /**
      * @param StockAvailable $stockAvailable
      *
@@ -80,7 +76,7 @@ class StockAvailableValidator extends AbstractObjectModelValidator
 
     private function validateMaxQuantity(int $quantity)
     {
-        if ($quantity < -self::INT_32_MAX || $quantity >= self::INT_32_MAX) {
+        if ($quantity < DeltaQuantityType::INT_32_MAX_NEGATIVE || $quantity >= DeltaQuantityType::INT_32_MAX_POSITIVE) {
             throw new ProductStockConstraintException('Quantity is out of INT boundaries', ProductStockConstraintException::INVALID_QUANTITY);
         }
     }
