@@ -1422,6 +1422,9 @@
     {% for child in form.children %}
       {% if not child.rendered and child.vars.name != '_token' %}
       <div role="tabpanel" class="form-contenttab tab-pane container-fluid{% if firstRenderedChild %} active{% endif %}" id="{{ child.vars.id }}-tab">
+        {% if child.vars.label_tab is defined %}
+          {{ form_label(child, child.vars.label_tab) }}
+        {% endif %}
         {{ form_widget(child) }}
         {{ form_errors(child) }}
       </div>
