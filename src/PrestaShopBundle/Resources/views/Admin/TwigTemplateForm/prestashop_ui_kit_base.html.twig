@@ -1395,7 +1395,7 @@
     <ul class="nav nav-tabs js-nav-tabs" id="form-nav" role="tablist">
     {% set firstRenderedChild = true %}
     {% for child in form.children %}
-      {% if not child.rendered and child.vars.name != '_toolbar_buttons' %}
+      {% if not child.rendered and child.vars.name != '_toolbar_buttons' and child.vars.name != '_token' %}
       <li id="{{ child.vars.id }}-tab-nav" class="nav-item{% if not child.vars.valid %} has-error{% endif %}">
         <a href="#{{ child.vars.id }}-tab" role="tab" data-toggle="tab" class="nav-link{% if firstRenderedChild %} active{% endif %}">
           {{ child.vars.label }}
@@ -1420,7 +1420,7 @@
   <div id="{{ form.vars.id }}-tabs-content" class="tab-content">
     {% set firstRenderedChild = true %}
     {% for child in form.children %}
-      {% if not child.rendered %}
+      {% if not child.rendered and child.vars.name != '_token' %}
       <div role="tabpanel" class="form-contenttab tab-pane container-fluid{% if firstRenderedChild %} active{% endif %}" id="{{ child.vars.id }}-tab">
         {{ form_widget(child) }}
         {{ form_errors(child) }}
