@@ -53,7 +53,7 @@ export default {
   },
   create: {
     newProductButton: '.new-product-button',
-    createModalSelector: '#product_type',
+    createModalSelector: '#create_product_type',
   },
   invalidField: '.is-invalid',
   productFormSubmitButton: '.product-form-save-button',
