@@ -66,6 +66,10 @@ class CategoriesListener implements EventSubscriberInterface
         $form = $event->getForm();
         $data = $event->getData();
 
+        if (empty($data)) {
+            return;
+        }
+
         // Update choices list to contain all selected categories, because extra choice might have been added by javascript
         $newChoicesForm = $this->formCloner->cloneForm($form->get('default_category_id'), [
             'choices' => $this->formatNewChoices($data),
