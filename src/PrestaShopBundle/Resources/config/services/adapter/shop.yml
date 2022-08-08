@@ -22,7 +22,7 @@ services:
       - '@prestashop.adapter.legacy.context'
       - '@translator'
       - '@router'
-      - "@=service('prestashop.core.foundation.version').getSemVersion()"
+      - '@prestashop.core.help.documentation'
 
   prestashop.adapter.shop.url.category_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Shop\Url\CategoryProvider'

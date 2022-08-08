@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Shop\Url;
 
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Help\Documentation;
 use PrestaShop\PrestaShop\Core\Shop\Url\UrlProviderInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -54,20 +55,20 @@ class HelpProvider implements UrlProviderInterface
     private $router;
 
     /**
-     * @var string
+     * @var Documentation
      */
-    private $version;
+    private $documentation;
 
     public function __construct(
         LegacyContext $legacyContext,
         TranslatorInterface $translator,
         RouterInterface $router,
-        string $version
+        Documentation $documentation
     ) {
         $this->legacyContext = $legacyContext;
         $this->translator = $translator;
         $this->router = $router;
-        $this->version = $version;
+        $this->documentation = $documentation;
     }
 
     /**
@@ -79,11 +80,8 @@ class HelpProvider implements UrlProviderInterface
             $title = $this->translator->trans('Help', [], 'Admin.Global');
         }
 
-        $docLink = urlencode('https://help.prestashop.com/' . $this->legacyContext->getEmployeeLanguageIso() . '/doc/'
-            . $section . '?version=' . $this->version . '&country=' . $this->legacyContext->getEmployeeLanguageIso());
-
         return $this->router->generate('admin_common_sidebar', [
-            'url' => $docLink,
+            'url' => $this->documentation->generateLink($section, $this->legacyContext->getEmployeeLanguageIso()),
             'title' => $title,
         ]);
     }

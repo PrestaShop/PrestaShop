@@ -31,11 +31,15 @@ namespace Tests\Unit\Adapter\Shop\Url;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Adapter\Shop\Url\HelpProvider;
+use PrestaShop\PrestaShop\Core\Foundation\Version;
+use PrestaShop\PrestaShop\Core\Help\Documentation;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class HelpProviderTest extends TestCase
 {
+    private const HELP_HOST = 'https://help.prestashop.com/';
+
     public function testGetUrl(): void
     {
         $legacyContextMock = $this->getMockBuilder(LegacyContext::class)
@@ -57,12 +61,19 @@ class HelpProviderTest extends TestCase
             $legacyContextMock,
             $translatorMock,
             $routerMock,
-            'v8.0.0'
+            $this->buildDocumentation()
         );
 
         /** @var array $urlParameters */
         $urlParameters = $provider->getUrl('products');
-        $this->assertEquals('https://help.prestashop.com/en/doc/products?version=v8.0.0&country=en', urldecode($urlParameters['url']));
+        $this->assertEquals('https://help.prestashop.com/en/doc/products?version=8.0.0&country=en', urldecode($urlParameters['url']));
         $this->assertEquals('Help', $urlParameters['title']);
+    }
+
+    private function buildDocumentation(): Documentation
+    {
+        $version = new Version('8.0.0', '8', 8);
+
+        return new Documentation($version, self::HELP_HOST);
     }
 }
