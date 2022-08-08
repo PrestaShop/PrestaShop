@@ -69,8 +69,8 @@ export default class TagsRenderer {
 
         const tagRemoveBtn = frag.querySelector(ProductCategoryMap.tagRemoveBtn) as HTMLElement;
 
-        if (category.id === defaultCategoryId) {
-          // don't show the tag removal element for main category
+        // don't show the tag removal element for main category or when it is the last category
+        if (category.id === defaultCategoryId || categories.length === 1) {
           tagRemoveBtn.classList.add('d-none');
         } else {
           tagRemoveBtn.classList.remove('d-none');

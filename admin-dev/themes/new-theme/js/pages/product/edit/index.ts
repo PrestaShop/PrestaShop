@@ -88,7 +88,15 @@ $(() => {
 
   // Product type has strong impact on the page rendering so when it is modified it must be submitted right away
   new ProductTypeSwitcher($productForm);
-  new CategoriesManager(eventEmitter);
+
+  // try-catch block prevents javascript termination when error is thrown.
+  // So only the related component won't work instead of breaking whole product page
+  try {
+    new CategoriesManager(eventEmitter);
+  } catch (e: any) {
+    console.error('Failed to initialize categories manager');
+  }
+
   new ProductFooterManager();
   new ProductModulesManager();
   new RelatedProductsManager(eventEmitter);

@@ -478,8 +478,8 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData = $this->getDefaultOutputData();
         $productData = [
             'categories' => [
-                ['id' => 42, 'name' => 'test1', 'display_name' => 'test > test1'],
-                ['id' => 51, 'name' => 'test22', 'display_name' => 'test > test22'],
+                ['id' => 42, 'name' => 'test1', 'display_name' => 'test > test1', 'removable' => true],
+                ['id' => 51, 'name' => 'test22', 'display_name' => 'test > test22', 'removable' => false],
             ],
             'default_category' => 51,
         ];
@@ -489,12 +489,14 @@ class ProductFormDataProviderTest extends TestCase
                 'id' => 42,
                 'name' => 'test1',
                 'display_name' => 'test > test1',
+                'removable' => true,
             ],
         ];
         $expectedOutputData['description']['categories']['product_categories'][] = [
             'id' => 51,
             'name' => 'test22',
             'display_name' => 'test > test22',
+            'removable' => false,
         ];
 
         $expectedOutputData['description']['categories']['default_category_id'] = 51;
