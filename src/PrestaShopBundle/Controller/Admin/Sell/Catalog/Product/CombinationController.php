@@ -426,7 +426,7 @@ class CombinationController extends FrameworkBundleAdminController
         foreach ($bulkCombinationException->getBulkExceptions() as $productId => $productException) {
             $errors[] = $this->trans(
                 'Error for combination %combination_id%: %error_message%',
-                'Admin.Notification.Error',
+                'Admin.Notifications.Error',
                 [
                     '%combination_id%' => $productId,
                     '%error_message%' => $this->getErrorMessageForException($productException, $this->getErrorMessages($productException)),
