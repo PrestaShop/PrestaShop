@@ -32,9 +32,9 @@
         <target>Number of customer accounts created</target>
         <note>Line: 173</note>
       </trans-unit>
-      <trans-unit id="76dcf557776c2b40d47b72ebcd9ac6b7">
-        <source>The total number of accounts created is not in itself important information. However, it is beneficial to analyze the number created over time. This will indicate whether or not things are on the right track. You feel me?</source>
-        <target>The total number of accounts created is not in itself important information. However, it is beneficial to analyze the number created over time. This will indicate whether or not things are on the right track. You feel me?</target>
+      <trans-unit id="a286f4eaef73a0b4f955c42b84472444">
+        <source>The total number of accounts created is not in itself important information. However, it is beneficial to analyze the number created over time. This will indicate whether or not things are on the right track.</source>
+        <target>The total number of accounts created is not in itself important information. However, it is beneficial to analyze the number created over time. This will indicate whether or not things are on the right track.</target>
         <note>Line: 135</note>
       </trans-unit>
       <trans-unit id="f66b3e4b23c60dd713bee1aa7d90ff85">
@@ -76,11 +76,6 @@
         <source>CSV Export</source>
         <target>CSV Export</target>
         <note>Line: 156</note>
-      </trans-unit>
-      <trans-unit id="a286f4eaef73a0b4f955c42b84472444">
-        <source>The total number of accounts created is not in itself important information. However, it is beneficial to analyze the number created over time. This will indicate whether or not things are on the right track.</source>
-        <target>The total number of accounts created is not in itself important information. However, it is beneficial to analyze the number created over time. This will indicate whether or not things are on the right track.</target>
-        <note>Line: 135</note>
       </trans-unit>
     </body>
   </file>

@@ -112,7 +112,7 @@ class SpecificPriceType extends TranslatorAwareType
                     return empty($data[0]['id_customer']);
                 },
                 'remote_url' => $this->urlGenerator->generate('admin_customers_search', ['customer_search' => '__QUERY__']),
-                'placeholder' => $this->trans('Search customer', 'Admin.Global'),
+                'placeholder' => $this->trans('Search customer', 'Admin.Actions'),
                 'suggestion_field' => 'fullname_and_email',
                 'required' => false,
             ])

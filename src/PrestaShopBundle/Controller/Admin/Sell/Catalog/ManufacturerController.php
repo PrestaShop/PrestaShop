@@ -146,7 +146,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             $result = $this->getFormHandler()->handle($manufacturerForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_manufacturers_index');
             }
@@ -217,7 +217,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             $result = $this->getFormHandler()->handleFor((int) $manufacturerId, $manufacturerForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_manufacturers_index');
             }
@@ -258,7 +258,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new DeleteManufacturerCommand((int) $manufacturerId));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (ManufacturerException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -283,7 +283,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new BulkDeleteManufacturerCommand($manufacturerIds));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (ManufacturerException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -435,7 +435,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new DeleteAddressCommand((int) $addressId));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (AddressException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -507,7 +507,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new BulkDeleteAddressCommand($addressIds));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (AddressException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -541,7 +541,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             $result = $addressFormHandler->handle($addressForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_manufacturers_index');
             }
@@ -591,7 +591,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             $result = $addressFormHandler->handleFor($addressId, $addressForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_manufacturers_index');
             }

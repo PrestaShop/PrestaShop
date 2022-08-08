@@ -7,10 +7,10 @@
         <target>Featured products</target>
         <note>Line: 55</note>
       </trans-unit>
-      <trans-unit id="6d37ec35b5b6820f90394e5ee49e8cec">
-        <source>Displays featured products in the central column of your homepage.</source>
-        <target>Displays featured products in the central column of your homepage.</target>
-        <note>Line: 61</note>
+      <trans-unit id="9dd45d7a2af90e742d1f736c2a752d73">
+        <source>Pick a category and highlight its items, enhance customer experience with a lively homepage.</source>
+        <target>Pick a category and highlight its items, enhance customer experience with a lively homepage.</target>
+        <note>Line: 56</note>
       </trans-unit>
       <trans-unit id="fddb8a1881e39ad11bfe0d0aca5becc3">
         <source>The number of products is invalid. Please enter a positive number.</source>
@@ -47,11 +47,6 @@
         <target>Category from which to pick products to be displayed</target>
         <note>Line: 178</note>
       </trans-unit>
-      <trans-unit id="0db2d53545e2ee088cfb3f45e618ba68">
-        <source>Choose the category ID of the products that you would like to display on homepage (default: 2 for "Home").</source>
-        <target>Choose the category ID of the products that you would like to display on homepage (default: 2 for "Home").</target>
-        <note>Line: 182</note>
-      </trans-unit>
       <trans-unit id="49417670345173e7b95018b7bf976fc7">
         <source>Randomly display featured products</source>
         <target>Randomly display featured products</target>
@@ -61,11 +56,6 @@
         <source>Enable if you wish the products to be displayed randomly (default: no).</source>
         <target>Enable if you wish the products to be displayed randomly (default: no).</target>
         <note>Line: 186</note>
-      </trans-unit>
-      <trans-unit id="9dd45d7a2af90e742d1f736c2a752d73">
-        <source>Pick a category and highlight its items, enhance customer experience with a lively homepage.</source>
-        <target>Pick a category and highlight its items, enhance customer experience with a lively homepage.</target>
-        <note>Line: 56</note>
       </trans-unit>
     </body>
   </file>

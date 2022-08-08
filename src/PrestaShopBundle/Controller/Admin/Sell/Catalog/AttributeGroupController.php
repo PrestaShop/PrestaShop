@@ -142,7 +142,7 @@ class AttributeGroupController extends FrameworkBundleAdminController
             $positionUpdate = $positionUpdateFactory->buildPositionUpdate($positionsData, $positionDefinition);
             $updater = $this->get('prestashop.core.grid.position.doctrine_grid_position_updater');
             $updater->update($positionUpdate);
-            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
         } catch (TranslatableCoreException $e) {
             $errors = [$e->toArray()];
             $this->flashErrors($errors);
@@ -170,7 +170,7 @@ class AttributeGroupController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new DeleteAttributeGroupCommand((int) $attributeGroupId));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -198,7 +198,7 @@ class AttributeGroupController extends FrameworkBundleAdminController
             );
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));

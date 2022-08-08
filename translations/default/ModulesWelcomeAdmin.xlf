@@ -82,16 +82,6 @@
         <target>These payment methods are already available to your customers.</target>
         <note>Line: 175</note>
       </trans-unit>
-      <trans-unit id="2f612032b9e1b60bd7b569e99c1e9ee4">
-        <source>Adapt your offer to your market: add the most popular payment methods for your customers!</source>
-        <target>Adapt your offer to your market: add the most popular payment methods for your customers!</target>
-        <note>Line: 181</note>
-      </trans-unit>
-      <trans-unit id="5bb5e61f625be5604d26e93ce35bf820">
-        <source>And you can choose to add other payment methods from here!</source>
-        <target>And you can choose to add other payment methods from here!</target>
-        <note>Line: 187</note>
-      </trans-unit>
       <trans-unit id="2eda6b6f1c298d51960ba299fbb9b2c3">
         <source>Choose your shipping solutions</source>
         <target>Choose your shipping solutions</target>
@@ -106,36 +96,6 @@
         <source>Here are the shipping methods available on your shop today.</source>
         <target>Here are the shipping methods available on your shop today.</target>
         <note>Line: 194</note>
-      </trans-unit>
-      <trans-unit id="d769ab532918e6ff5f39d12c0f21ba42">
-        <source>Select the shipping solutions the most likely to suit your customers! Create your own carrier or add a ready-made module.</source>
-        <target>Select the shipping solutions the most likely to suit your customers! Create your own carrier or add a ready-made module.</target>
-        <note>Line: 216</note>
-      </trans-unit>
-      <trans-unit id="369cb52120a70dd8568cb6529ed6c765">
-        <source>You can offer more delivery options by setting up additional carriers</source>
-        <target>You can offer more delivery options by setting up additional carriers</target>
-        <note>Line: 223</note>
-      </trans-unit>
-      <trans-unit id="8e0dbde341d9f7ee07f245d2434b3285">
-        <source>Improve your shop with modules</source>
-        <target>Improve your shop with modules</target>
-        <note>Line: 232</note>
-      </trans-unit>
-      <trans-unit id="ee566ba0c5af0554cf89c9fc12699986">
-        <source>Add new features and manage existing ones thanks to modules.</source>
-        <target>Add new features and manage existing ones thanks to modules.</target>
-        <note>Line: 234</note>
-      </trans-unit>
-      <trans-unit id="8f2dd8cbf2ed7e2edf0a56c63fe7f8c9">
-        <source>Some modules are already pre-installed, others may be free or paid modules - browse our selection and find out what is available!</source>
-        <target>Some modules are already pre-installed, others may be free or paid modules - browse our selection and find out what is available!</target>
-        <note>Line: 235</note>
-      </trans-unit>
-      <trans-unit id="9ef9b18a610d823a8a3555acb879c686">
-        <source>Discover our module selection in the first tab. Manage your modules on the second one and be aware of notifications in the third tab.</source>
-        <target>Discover our module selection in the first tab. Manage your modules on the second one and be aware of notifications in the third tab.</target>
-        <note>Line: 240</note>
       </trans-unit>
     </body>
   </file>
@@ -252,6 +212,11 @@
   </file>
   <file original="modules/welcome/views/templates/lost.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="a0bfb8e59e6c13fc8d990781f77694fe">
+        <source>Continue</source>
+        <target>Continue</target>
+        <note>Line: 25</note>
+      </trans-unit>
       <trans-unit id="c1971ccebcf29ddc64c66218a75ea67d">
         <source>Hey! Are you lost?</source>
         <target>Hey! Are you lost?</target>
@@ -271,11 +236,6 @@
         <source>Quit the Welcome tutorial</source>
         <target>Quit the Welcome tutorial</target>
         <note>Line: 29</note>
-      </trans-unit>
-      <trans-unit id="a0bfb8e59e6c13fc8d990781f77694fe">
-        <source>Continue</source>
-        <target>Continue</target>
-        <note>Line: 25</note>
       </trans-unit>
     </body>
   </file>
@@ -299,11 +259,6 @@
         <source>Welcome</source>
         <target>Welcome</target>
         <note>Line: 65</note>
-      </trans-unit>
-      <trans-unit id="bf2e8e9545a7aa0e8279986eea30e2db">
-        <source>Help the user to create his first product.</source>
-        <target>Help the user to create his first product.</target>
-        <note>Line: 60</note>
       </trans-unit>
       <trans-unit id="660b1a2162902bb6acd01d09adb6da64">
         <source>Sell your first product quicker than you would have expected with our nice onboarding process.</source>

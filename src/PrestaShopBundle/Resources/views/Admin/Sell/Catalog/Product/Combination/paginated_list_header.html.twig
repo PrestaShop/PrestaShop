@@ -49,7 +49,7 @@
         id="combination-bulk-delete-btn" class="dropdown-item bulk-action-btn" type="button"
         data-btn-label="{{ 'Delete %combinations_number% combinations'|trans({}, 'Admin.Catalog.Feature') }}"
         data-form-url="{{ url('admin_products_combinations_bulk_delete', { 'productId': productId }) }}"
-        data-modal-message="{{ 'Are you sure you want to delete selected combinations?'|trans({}, 'Admin.Catalog.Feature') }}"
+        data-modal-message="{{ 'Are you sure you want to delete selected combinations?'|trans({}, 'Admin.Catalog.Notification') }}"
         data-modal-confirm-label="{{ 'Delete %combinations_number% combinations'|trans({}, 'Admin.Catalog.Feature') }}"
         data-modal-cancel-label="{{ 'Cancel'|trans({}, 'Admin.Actions') }}"
         data-bulk-chunk-size="10"

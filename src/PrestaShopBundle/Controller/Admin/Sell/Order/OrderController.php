@@ -337,7 +337,7 @@ class OrderController extends FrameworkBundleAdminController
                 new BulkChangeOrderStatusCommand($data['order_ids'], (int) $data['new_order_status_id'])
             );
 
-            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
         } catch (ChangeOrderStatusException $e) {
             $this->handleChangeOrderStatusException($e);
         } catch (Exception $e) {
@@ -918,7 +918,7 @@ class OrderController extends FrameworkBundleAdminController
                     )
                 );
 
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
             } catch (TransistEmailSendingException $e) {
                 $this->addFlash(
                     'error',
@@ -956,7 +956,7 @@ class OrderController extends FrameworkBundleAdminController
             new DeleteCartRuleFromOrderCommand($orderId, $orderCartRuleId)
         );
 
-        $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+        $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
         return $this->redirectToRoute('admin_orders_view', [
             'orderId' => $orderId,
@@ -1091,7 +1091,7 @@ class OrderController extends FrameworkBundleAdminController
                         )
                     );
 
-                    $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                    $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
                 } catch (Exception $e) {
                     $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
                 }
@@ -1197,7 +1197,7 @@ class OrderController extends FrameworkBundleAdminController
                         )
                     );
 
-                    $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                    $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
                 } catch (Exception $e) {
                     $this->addFlash('error', $this->getErrorMessageForException($e, $this->getPaymentErrorMessages($e)));
                 }
@@ -1386,7 +1386,7 @@ class OrderController extends FrameworkBundleAdminController
 
             $this->getCommandBus()->handle($command);
 
-            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
@@ -1427,7 +1427,7 @@ class OrderController extends FrameworkBundleAdminController
                 new ChangeOrderCurrencyCommand($orderId, (int) $data['new_currency_id'])
             );
 
-            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
@@ -1627,7 +1627,7 @@ class OrderController extends FrameworkBundleAdminController
         try {
             $this->getCommandBus()->handle(new GenerateInvoiceCommand($orderId));
 
-            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
@@ -1870,7 +1870,7 @@ class OrderController extends FrameworkBundleAdminController
                     $orderStatusId
                 )
             );
-            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
         } catch (ChangeOrderStatusException $e) {
             $this->handleChangeOrderStatusException($e);
         } catch (Exception $e) {

@@ -91,7 +91,7 @@ class SearchEnginesController extends FrameworkBundleAdminController
             $result = $searchEngineFormHandler->handle($searchEngineForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_search_engines_index');
             }
@@ -139,7 +139,7 @@ class SearchEnginesController extends FrameworkBundleAdminController
             $result = $searchEngineFormHandler->handleFor($searchEngineId, $searchEngineForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_search_engines_index');
             }
@@ -179,7 +179,7 @@ class SearchEnginesController extends FrameworkBundleAdminController
         try {
             $this->getCommandBus()->handle(new DeleteSearchEngineCommand($searchEngineId));
 
-            $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
         } catch (SearchEngineException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
         }
@@ -208,7 +208,7 @@ class SearchEnginesController extends FrameworkBundleAdminController
 
             $this->addFlash(
                 'success',
-                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+                $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
             );
         } catch (SearchEngineException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));

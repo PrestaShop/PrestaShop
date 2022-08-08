@@ -99,7 +99,7 @@ class CountryGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add(
                 (new DataColumn('iso_code'))
-                    ->setName($this->trans('ISO Code', [], 'Admin.International.Feature'))
+                    ->setName($this->trans('ISO code', [], 'Admin.International.Feature'))
                     ->setOptions([
                         'field' => 'iso_code',
                     ])
