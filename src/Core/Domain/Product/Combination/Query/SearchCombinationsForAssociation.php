@@ -38,7 +38,7 @@ class SearchCombinationsForAssociation
     /**
      * This is the minimum length of search phrase
      */
-    const SEARCH_PHRASE_MIN_LENGTH = 3;
+    public const SEARCH_PHRASE_MIN_LENGTH = 3;
 
     /**
      * @var string

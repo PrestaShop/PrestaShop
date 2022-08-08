@@ -49,7 +49,7 @@ class GetPermissionsForConfigurationHandler implements GetPermissionsForConfigur
     /**
      * @internal Max nesting level for building tabs tree
      */
-    const MAX_NESTING_LEVEL = 12;
+    public const MAX_NESTING_LEVEL = 12;
 
     /**
      * @var AuthorizationCheckerInterface

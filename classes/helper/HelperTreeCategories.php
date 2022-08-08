@@ -25,9 +25,9 @@
  */
 class HelperTreeCategoriesCore extends TreeCore
 {
-    const DEFAULT_TEMPLATE = 'tree_categories.tpl';
-    const DEFAULT_NODE_FOLDER_TEMPLATE = 'tree_node_folder_radio.tpl';
-    const DEFAULT_NODE_ITEM_TEMPLATE = 'tree_node_item_radio.tpl';
+    public const DEFAULT_TEMPLATE = 'tree_categories.tpl';
+    public const DEFAULT_NODE_FOLDER_TEMPLATE = 'tree_node_folder_radio.tpl';
+    public const DEFAULT_NODE_ITEM_TEMPLATE = 'tree_node_item_radio.tpl';
 
     private $_disabled_categories;
     private $_input_name;

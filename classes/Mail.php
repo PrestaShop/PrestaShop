@@ -92,19 +92,19 @@ class MailCore extends ObjectModel
     /**
      * Mail content type.
      */
-    const TYPE_HTML = 1;
-    const TYPE_TEXT = 2;
-    const TYPE_BOTH = 3;
+    public const TYPE_HTML = 1;
+    public const TYPE_TEXT = 2;
+    public const TYPE_BOTH = 3;
 
     /**
      * Send mail under SMTP server.
      */
-    const METHOD_SMTP = 2;
+    public const METHOD_SMTP = 2;
 
     /**
      * Disable mail, will return immediately after calling send method.
      */
-    const METHOD_DISABLE = 3;
+    public const METHOD_DISABLE = 3;
 
     /**
      * Send Email.

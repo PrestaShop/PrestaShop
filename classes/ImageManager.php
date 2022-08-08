@@ -33,10 +33,10 @@
  */
 class ImageManagerCore
 {
-    const ERROR_FILE_NOT_EXIST = 1;
-    const ERROR_FILE_WIDTH = 2;
-    const ERROR_MEMORY_LIMIT = 3;
-    const MIME_TYPE_SUPPORTED = [
+    public const ERROR_FILE_NOT_EXIST = 1;
+    public const ERROR_FILE_WIDTH = 2;
+    public const ERROR_MEMORY_LIMIT = 3;
+    public const MIME_TYPE_SUPPORTED = [
         'image/gif',
         'image/jpg',
         'image/jpeg',

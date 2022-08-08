@@ -49,12 +49,12 @@ class ValidateCore
     /**
      * @deprecated since 8.0.0 use PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH
      */
-    const ADMIN_PASSWORD_LENGTH = 8;
+    public const ADMIN_PASSWORD_LENGTH = 8;
 
     /**
      * @deprecated since 8.0.0 use PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH
      */
-    const PASSWORD_LENGTH = 5;
+    public const PASSWORD_LENGTH = 5;
 
     public static function isIp2Long($ip)
     {
