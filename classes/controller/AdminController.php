@@ -1666,7 +1666,7 @@ class AdminControllerCore extends Controller
             $this->page_header_toolbar_title = $this->toolbar_title[count($this->toolbar_title) - 1];
         }
 
-        $this->context->smarty->assign('help_link', 'https://help.prestashop.com/' . Language::getIsoById($this->context->employee->id_lang) . '/doc/'
+        $this->context->smarty->assign('help_link', 'https://help.prestashop-project.org/' . Language::getIsoById($this->context->employee->id_lang) . '/doc/'
             . Tools::getValue('controller') . '?version=' . _PS_VERSION_ . '&country=' . Language::getIsoById($this->context->employee->id_lang));
     }
 
