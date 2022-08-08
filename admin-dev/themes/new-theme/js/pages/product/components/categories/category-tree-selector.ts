@@ -88,7 +88,15 @@ export default class CategoryTreeSelector {
     });
 
     modal.render(modalContent.html());
-    this.initModal();
+
+    try {
+      this.initModal();
+    } catch (e: any) {
+      // catch and log fatal errors to avoid breaking other components
+      console.error('Category tree selector component stopped working due to fatal error.');
+      return;
+    }
+
     modal.show();
     this.modal = modal;
   }
@@ -146,7 +154,7 @@ export default class CategoryTreeSelector {
     }
 
     this.treeCategories.forEach((treeCategory) => {
-      const treeCategoryElement = this.generateCategoryTree(treeCategory, null);
+      const treeCategoryElement = this.generateCategoryTree(treeCategory);
       categoryTree.append(treeCategoryElement);
     });
 
@@ -192,31 +200,23 @@ export default class CategoryTreeSelector {
   /**
    * Used to recursively create items of the category tree
    */
-  private generateCategoryTree(treeCategory: TreeCategory, parentNode: HTMLElement|null): HTMLElement {
+  private generateCategoryTree(treeCategory: TreeCategory): HTMLElement {
     const categoryNode = this.generateTreeElement(treeCategory) as HTMLElement;
     const childrenList = categoryNode.querySelector(ProductCategoryMap.childrenList) as HTMLElement;
     const hasChildren = treeCategory.children && treeCategory.children.length > 0;
-    const parentInput = parentNode?.querySelector<HTMLInputElement>(ProductCategoryMap.treeCheckboxInput);
-
-    //@todo: check if needed. WIP - commiting progress
-    // // Show child list only if parent is checked
-    // childrenList.classList.toggle(
-    //   'd-none',
-    //   hasChildren && !parentInput?.checked,
-    // );
 
     const checkboxInput = categoryNode.querySelector<HTMLInputElement>(ProductCategoryMap.treeCheckboxInput);
 
     if (!checkboxInput) {
-      // checkbox input is mandatory. If there is none, it's something fatally wrong already. Returning empty HTML to respect return type.
-      // eslint-disable-next-line no-throw-literal
-      throw 'Checkbox input not found in category tree. It is mandatory detail for category tree to work.';
+      // checkbox input is mandatory. If there is none, it's something fatally wrong already.
+      throw new Error('Checkbox input not found in category tree. It is mandatory element for category tree to work.');
     }
 
-    // force show parent checkbox tree if at least one of childs are checked
-    parentInput?.classList.toggle('d-none', !checkboxInput.checked);
+    // check if this category is selected
+    const isSelected = this.selectedCategories.some((selectedCategory: Category) => selectedCategory.id === treeCategory.id);
 
     categoryNode.classList.toggle('more', hasChildren);
+
     if (hasChildren) {
       const inputsContainer = categoryNode.querySelector(ProductCategoryMap.treeElementInputs) as HTMLElement;
       checkboxInput.value = String(treeCategory.id);
@@ -235,11 +235,20 @@ export default class CategoryTreeSelector {
       });
 
       // Recursively build the children trees
+      let containsSelectedChild = false;
       treeCategory.children.forEach((childCategory) => {
-        const childTree = this.generateCategoryTree(childCategory, checkboxInput);
+        const childTree = this.generateCategoryTree(childCategory);
 
         childrenList.append(childTree);
+
+        // check if at least one child is selected in child categories tree. Do not perform the check if at least one is found already
+        if (!containsSelectedChild) {
+          containsSelectedChild = this.selectedCategories.some((selectedCategory: Category) => selectedCategory.id === childCategory.id);
+        }
       });
+
+      // Expanding trees which contains at least one selected category or its parent category is selected
+      childrenList.classList.toggle('d-none', !(isSelected || containsSelectedChild));
     }
 
     return categoryNode;
