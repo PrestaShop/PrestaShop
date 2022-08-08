@@ -156,21 +156,24 @@ class ProductFormDataProvider implements FormDataProviderInterface
     private function extractCategoriesData(ProductForEditing $productForEditing): array
     {
         $categoriesInformation = $productForEditing->getCategoriesInformation();
+        $categories = $categoriesInformation->getCategoriesInformation();
         $defaultCategoryId = $categoriesInformation->getDefaultCategoryId();
 
-        $categories = [];
-        foreach ($categoriesInformation->getCategoriesInformation() as $categoryInformation) {
-            $categoryId = $categoryInformation->getId();
+        $categoriesData = [];
+        foreach ($categories as $category) {
+            $categoryId = $category->getId();
 
-            $categories[] = [
+            $categoriesData[] = [
                 'id' => $categoryId,
-                'name' => $categoryInformation->getName(),
-                'display_name' => $categoryInformation->getDisplayName(),
+                'name' => $category->getName(),
+                'display_name' => $category->getDisplayName(),
+                // do not allow removing default category or if it is the last one
+                'removable' => $defaultCategoryId !== $category->getId() && 1 !== count($categories),
             ];
         }
 
         return [
-            'product_categories' => $categories,
+            'product_categories' => $categoriesData,
             'default_category_id' => $defaultCategoryId,
         ];
     }
