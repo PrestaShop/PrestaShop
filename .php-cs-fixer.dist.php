@@ -44,6 +44,7 @@ return (new PhpCsFixer\Config())
         'protected_to_private' => false,
         'psr_autoloading' => false,
         'self_accessor' => false,
+        'yoda_style' => false,
         'single_line_throw' => false,
         'no_alias_language_construct_call' => false,
     ])
