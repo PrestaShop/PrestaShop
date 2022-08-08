@@ -716,7 +716,7 @@ class ProductController extends FrameworkBundleAdminController
         foreach ($bulkProductException->getBulkExceptions() as $productId => $productException) {
             $errors[] = $this->trans(
                 'Error for product %product_id%: %error_message%',
-                'Admin.Notification.Error',
+                'Admin.Notifications.Error',
                 [
                     '%product_id%' => $productId,
                     '%error_message%' => $this->getErrorMessageForException($productException, $this->getErrorMessages($productException)),
