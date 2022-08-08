@@ -81,7 +81,7 @@ class UpdateProductsPositionsHandler implements UpdateProductsPositionsHandlerIn
         try {
             $positionUpdate = $this->positionUpdateFactory->buildPositionUpdate($positionsData, $this->positionDefinition);
             $this->positionUpdater->update($positionUpdate);
-        } catch (PositionUpdateException | PositionDataException $e) {
+        } catch (PositionUpdateException|PositionDataException $e) {
             throw new CannotUpdateProductPositionException($e->getMessage(), 0, $e);
         }
     }

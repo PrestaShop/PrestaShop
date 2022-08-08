@@ -59,16 +59,16 @@ use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class CategoryFeatureContext extends AbstractDomainFeatureContext
 {
-    const EMPTY_VALUE = '';
-    const DEFAULT_ROOT_CATEGORY_ID = 1;
-    const JPG_IMAGE_TYPE = '.jpg';
-    const THUMB0 = '0_thumb';
-    const JPG_IMAGE_STRING = 'iVBORw0KGgoAAAANSUhEUgAAABwAAAASCAMAAAB/2U7WAAAABl'
+    public const EMPTY_VALUE = '';
+    public const DEFAULT_ROOT_CATEGORY_ID = 1;
+    public const JPG_IMAGE_TYPE = '.jpg';
+    public const THUMB0 = '0_thumb';
+    public const JPG_IMAGE_STRING = 'iVBORw0KGgoAAAANSUhEUgAAABwAAAASCAMAAAB/2U7WAAAABl'
         . 'BMVEUAAAD///+l2Z/dAAAASUlEQVR4XqWQUQoAIAxC2/0vXZDr'
         . 'EX4IJTRkb7lobNUStXsB0jIXIAMSsQnWlsV+wULF4Avk9fLq2r'
         . '8a5HSE35Q3eO2XP1A1wQkZSgETvDtKdQAAAABJRU5ErkJggg==';
 
-    const CATEGORY_POSITION_WAYS_MAP = [
+    public const CATEGORY_POSITION_WAYS_MAP = [
         0 => 'Up',
         1 => 'Down',
     ];

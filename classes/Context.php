@@ -137,25 +137,25 @@ class ContextCore
     protected $is_tablet = null;
 
     /** @var int */
-    const DEVICE_COMPUTER = 1;
+    public const DEVICE_COMPUTER = 1;
 
     /** @var int */
-    const DEVICE_TABLET = 2;
+    public const DEVICE_TABLET = 2;
 
     /** @var int */
-    const DEVICE_MOBILE = 4;
+    public const DEVICE_MOBILE = 4;
 
     /** @var int */
-    const MODE_STD = 1;
+    public const MODE_STD = 1;
 
     /** @var int */
-    const MODE_STD_CONTRIB = 2;
+    public const MODE_STD_CONTRIB = 2;
 
     /** @var int */
-    const MODE_HOST_CONTRIB = 4;
+    public const MODE_HOST_CONTRIB = 4;
 
     /** @var int */
-    const MODE_HOST = 8;
+    public const MODE_HOST = 8;
 
     /**
      * Sets Mobile_Detect tool object.
@@ -464,7 +464,7 @@ class ContextCore
                 $containerFinder = new ContainerFinder($this);
                 $container = $containerFinder->getContainer();
                 $translatorLoader = $container->get('prestashop.translation.translator_language_loader');
-            } catch (ContainerNotFoundException | ServiceNotFoundException $exception) {
+            } catch (ContainerNotFoundException|ServiceNotFoundException $exception) {
                 $translatorLoader = null;
             }
 

@@ -25,12 +25,12 @@
  */
 class HelperUploaderCore extends Uploader
 {
-    const DEFAULT_TEMPLATE_DIRECTORY = 'helpers/uploader';
-    const DEFAULT_TEMPLATE = 'simple.tpl';
-    const DEFAULT_AJAX_TEMPLATE = 'ajax.tpl';
+    public const DEFAULT_TEMPLATE_DIRECTORY = 'helpers/uploader';
+    public const DEFAULT_TEMPLATE = 'simple.tpl';
+    public const DEFAULT_AJAX_TEMPLATE = 'ajax.tpl';
 
-    const TYPE_IMAGE = 'image';
-    const TYPE_FILE = 'file';
+    public const TYPE_IMAGE = 'image';
+    public const TYPE_FILE = 'file';
 
     private $_context;
     private $_drop_zone;

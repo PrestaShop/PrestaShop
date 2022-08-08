@@ -31,12 +31,12 @@ class CartRuleCore extends ObjectModel
 {
     /* Filters used when retrieving the cart rules applied to a cart of when calculating the value of a reduction */
 
-    const FILTER_ACTION_ALL = 1;
-    const FILTER_ACTION_SHIPPING = 2;
-    const FILTER_ACTION_REDUCTION = 3;
-    const FILTER_ACTION_GIFT = 4;
-    const FILTER_ACTION_ALL_NOCAP = 5;
-    const BO_ORDER_CODE_PREFIX = 'BO_ORDER_';
+    public const FILTER_ACTION_ALL = 1;
+    public const FILTER_ACTION_SHIPPING = 2;
+    public const FILTER_ACTION_REDUCTION = 3;
+    public const FILTER_ACTION_GIFT = 4;
+    public const FILTER_ACTION_ALL_NOCAP = 5;
+    public const BO_ORDER_CODE_PREFIX = 'BO_ORDER_';
 
     /**
      * This variable controls that a free gift is offered only once, even when multi-shippping is activated

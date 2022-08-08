@@ -33,10 +33,10 @@ abstract class AbstractLoggerCore
         3 => 'ERROR',
     ];
 
-    const DEBUG = 0;
-    const INFO = 1;
-    const WARNING = 2;
-    const ERROR = 3;
+    public const DEBUG = 0;
+    public const INFO = 1;
+    public const WARNING = 2;
+    public const ERROR = 3;
 
     public function __construct($level = self::INFO)
     {

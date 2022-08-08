@@ -33,11 +33,11 @@ class DispatcherCore
     /**
      * List of available front controllers types.
      */
-    const FC_FRONT = 1;
-    const FC_ADMIN = 2;
-    const FC_MODULE = 3;
+    public const FC_FRONT = 1;
+    public const FC_ADMIN = 2;
+    public const FC_MODULE = 3;
 
-    const REWRITE_PATTERN = '[_a-zA-Z0-9\x{0600}-\x{06FF}\pL\pS-]*?';
+    public const REWRITE_PATTERN = '[_a-zA-Z0-9\x{0600}-\x{06FF}\pL\pS-]*?';
 
     /**
      * @var Dispatcher|null
