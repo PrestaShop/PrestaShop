@@ -26,6 +26,8 @@
 
 namespace PrestaShopBundle\Bridge\AdminController;
 
+use PrestaShopBundle\Bridge\AdminController\Configuration\ControllerConfiguration;
+
 /**
  * Interface for horizontally migrated controllers
  */

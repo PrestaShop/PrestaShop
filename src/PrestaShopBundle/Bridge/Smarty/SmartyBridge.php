@@ -34,7 +34,7 @@ use Link;
 use Media;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
+use PrestaShopBundle\Bridge\AdminController\Configuration\ControllerConfiguration;
 use PrestaShopBundle\Bridge\Exception\BridgeException;
 use Smarty;
 use Symfony\Component\HttpFoundation\Response;

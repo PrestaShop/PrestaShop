@@ -30,7 +30,7 @@ namespace PrestaShopBundle\Bridge\Smarty;
 
 use Language;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
+use PrestaShopBundle\Bridge\AdminController\Configuration\ControllerConfiguration;
 
 /**
  * This class assign css files, js files, prestashop version,
