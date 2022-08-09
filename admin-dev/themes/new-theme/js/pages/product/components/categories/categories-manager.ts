@@ -164,8 +164,8 @@ export default class CategoriesManager {
     $(`#${this.defaultCategoryInput.id}`).on('change', (e) => {
       const {currentTarget} = e;
 
-      if (!(currentTarget instanceof HTMLInputElement)) {
-        console.error('currentTarget expected to be HTMLInputElement');
+      if (!(currentTarget instanceof HTMLSelectElement)) {
+        console.error('currentTarget expected to be HTMLSelectElement');
 
         return;
       }
