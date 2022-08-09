@@ -78,7 +78,7 @@ class DeltaQuantityType extends TranslatorAwareType
                     new Type(['type' => 'numeric']),
                     new NotBlank(),
                     new Range([
-                        'min' => static::INT_32_MAX_NEGATIVE * 2,
+                        'min' => static::INT_32_MAX_NEGATIVE * 2, //because stock_mvt doesn't use negative numbers it can save 2x the size.
                         'max' => static::INT_32_MAX_POSITIVE * 2,
                     ]),
                 ],
@@ -118,7 +118,8 @@ class DeltaQuantityType extends TranslatorAwareType
             ->setDefaults([
                 'delta_label' => $this->trans('Add or subtract items', 'Admin.Global'),
             ])
-            ->setAllowedTypes('delta_label', ['string', 'boolean', 'null']);
+            ->setAllowedTypes('delta_label', ['string', 'boolean', 'null'])
+        ;
     }
 
     /**

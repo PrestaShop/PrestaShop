@@ -132,7 +132,7 @@ class StockMvtCore extends ObjectModel
             'employee_firstname' => ['type' => self::TYPE_STRING, 'validate' => 'isName'],
             'employee_lastname' => ['type' => self::TYPE_STRING, 'validate' => 'isName'],
             'id_stock' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
-            'physical_quantity' => ['type' => self::TYPE_INT,  'validate' => 'isUnsignedId', 'required' => true],
+            'physical_quantity' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'id_stock_mvt_reason' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'id_order' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'id_supply_order' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
