@@ -294,7 +294,13 @@ export default class CategoryTreeSelector {
       ? nameElement
       : document.createElement('i').appendChild(nameElement).parentNode;
 
-    if (!(element instanceof HTMLElement && checkboxInput.parentNode instanceof HTMLElement)) {
+    if (!(element instanceof HTMLElement || element instanceof Text)) {
+      console.error('Unexpected element type. Expected HTMLElement or Text.');
+
+      return categoryNode;
+    }
+
+    if (!(checkboxInput.parentNode instanceof HTMLElement)) {
       console.error('Unexpected element type. Expected HTMLElement.');
 
       return categoryNode;
