@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Bridge\AdminController\Configuration;
 
-use PrestaShopBundle\Bridge\AdminController\Action\HeaderToolbarAction;
+use PrestaShopBundle\Bridge\AdminController\Configuration\Action\HeaderToolbarAction;
 use PrestaShopBundle\Security\Admin\Employee;
 use Shop;
 

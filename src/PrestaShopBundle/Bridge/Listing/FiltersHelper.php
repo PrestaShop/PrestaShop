@@ -32,7 +32,7 @@ use Context;
 use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
-use PrestaShopBundle\Bridge\AdminController\FilterPrefix;
+use PrestaShopBundle\Bridge\Listing\FilterPrefix;
 use PrestaShopBundle\Bridge\Listing\Configuration\ListHelperConfiguration;
 use Symfony\Component\HttpFoundation\Request;
 use Tools;
@@ -40,6 +40,8 @@ use Validate;
 
 /**
  * This class processes filters, stores them in cookies and updates the list's SQL query.
+ *
+ * @todo: rename to handler/processor?
  */
 class FiltersHelper
 {
@@ -174,6 +176,43 @@ class FiltersHelper
                 }
             }
         }
+    }
+
+    /**
+     * @param ListHelperConfiguration $helperListConfiguration
+     * @param Request|null $request
+     *
+     * @return void
+     */
+    public function resetFilters(ListHelperConfiguration $helperListConfiguration, Request $request = null): void
+    {
+        $prefix = FilterPrefix::getByClassName($helperListConfiguration->legacyControllerName);
+        $filters = $this->context->cookie->getFamily($prefix . $helperListConfiguration->listId . 'Filter_');
+        foreach ($filters as $cookie_key => $filter) {
+            if (strncmp($cookie_key, $prefix . $helperListConfiguration->listId . 'Filter_', 7 + Tools::strlen($prefix . $helperListConfiguration->listId)) == 0) {
+                $key = substr($cookie_key, 7 + Tools::strlen($prefix . $helperListConfiguration->listId));
+                if (is_array($helperListConfiguration->fieldsList) && array_key_exists($key, $helperListConfiguration->fieldsList)) {
+                    $this->context->cookie->$cookie_key = null;
+                }
+                $request->request->remove(str_replace($prefix, '', $cookie_key));
+                unset($this->context->cookie->$cookie_key);
+            }
+        }
+
+        if (isset($this->context->cookie->{'submitFilter' . $helperListConfiguration->listId})) {
+            unset($this->context->cookie->{'submitFilter' . $helperListConfiguration->listId});
+        }
+        if (isset($this->context->cookie->{$prefix . $helperListConfiguration->listId . 'Orderby'})) {
+            unset($this->context->cookie->{$prefix . $helperListConfiguration->listId . 'Orderby'});
+        }
+        if (isset($this->context->cookie->{$prefix . $helperListConfiguration->listId . 'Orderway'})) {
+            unset($this->context->cookie->{$prefix . $helperListConfiguration->listId . 'Orderway'});
+        }
+
+        unset(
+            $helperListConfiguration->filterHaving,
+            $helperListConfiguration->having
+        );
     }
 
     /**

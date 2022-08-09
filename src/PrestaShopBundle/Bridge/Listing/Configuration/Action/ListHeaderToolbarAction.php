@@ -24,25 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Bridge\AdminController\Action;
+declare(strict_types=1);
+
+namespace PrestaShopBundle\Bridge\Listing\Configuration\Action;
 
 /**
- * Defines the contract for actions class and needed constant to know available action.
+ * This class is the object to instantiate if you want to add an action in the header toolbar of your list.
  */
-interface ActionInterface
+class ListHeaderToolbarAction extends Action
 {
-    public const AVAILABLE_ACTION_VIEW = 'view';
-    public const AVAILABLE_ACTION_EDIT = 'edit';
-    public const AVAILABLE_ACTION_DUPLICATE = 'duplicate';
-    public const AVAILABLE_ACTION_DELETE = 'delete';
-
-    /**
-     * @return array
-     */
-    public function getConfig(): array;
-
-    /**
-     * @return string
-     */
-    public function getLabel(): string;
 }

@@ -24,20 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Bridge\AdminController\Field;
+declare(strict_types=1);
+
+namespace PrestaShopBundle\Bridge\Listing\Configuration\Action;
 
 /**
- * Define contract for field class.
+ * Represents a list row action. E.g. edit, view
  */
-interface FieldInterface
+class ListRowAction extends Action
 {
-    /**
-     * @return array
-     */
-    public function getConfig(): array;
-
-    /**
-     * @return string
-     */
-    public function getLabel(): string;
 }
