@@ -28,39 +28,30 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Bridge\Smarty;
 
-use Language;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
- * This class assign css files, js files, prestashop version,
- * and if the language is FR to the controller configuration.
+ * This trait allows rendering smarty template through Symfony response,
+ * therefore it is handy to use it in horizontally migrated controllers.
  */
-class FooterConfigurator implements ConfiguratorInterface
+trait FrameworkControllerSmartyTrait
 {
     /**
-     * @var Language
-     */
-    private $language;
-
-    /**
-     * @param LegacyContext $legacyContext
-     */
-    public function __construct(LegacyContext $legacyContext)
-    {
-        $this->language = $legacyContext->getLanguage();
-    }
-
-    /**
-     * @param ControllerConfiguration $controllerConfiguration
+     * Builds Symfony response from provided HTML string using smarty bridge.
      *
-     * @return void
+     * @param string $content HTML string containing everything that needs to be rendered (including the header, footer, notifications etc.)
+     * @param Response|null $response
+     *
+     * @return Response
      */
-    public function configure(ControllerConfiguration $controllerConfiguration): void
+    public function renderSmarty(string $content, Response $response = null, bool $isNewTheme = false): Response
     {
-        $controllerConfiguration->templateVars['css_files'] = $controllerConfiguration->cssFiles;
-        $controllerConfiguration->templateVars['js_files'] = array_unique($controllerConfiguration->jsFiles);
-        $controllerConfiguration->templateVars['ps_version'] = _PS_VERSION_;
-        $controllerConfiguration->templateVars['iso_is_fr'] = strtoupper($this->language->iso_code) == 'FR';
+        $controllerBridge = $this->getLegacyControllerBridge();
+        $controllerBridge->setMedia($isNewTheme);
+
+        return $this
+            ->get('prestashop.bridge.smarty.smarty_bridge')
+            ->render($content, $this->getControllerConfiguration(), $response)
+        ;
     }
 }

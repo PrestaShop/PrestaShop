@@ -29,71 +29,57 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Bridge\AdminController;
 
 use PrestaShopBundle\Bridge\AdminController\Action\ActionInterface;
-use PrestaShopBundle\Bridge\AdminController\Action\HeaderToolbarAction;
 use PrestaShopBundle\Bridge\AdminController\Action\ListBulkAction;
 use PrestaShopBundle\Bridge\AdminController\Action\ListHeaderToolbarAction;
 use PrestaShopBundle\Bridge\AdminController\Action\ListRowAction;
 use PrestaShopBundle\Bridge\AdminController\Field\FieldInterface;
 use PrestaShopBundle\Bridge\Exception\NotAllowedActionTypeForListException;
-use PrestaShopBundle\Bridge\Exception\NotAllowedGenericActionTypeException;
 use PrestaShopBundle\Bridge\Helper\FiltersHelper;
-use PrestaShopBundle\Bridge\Helper\HelperListBridge;
 use PrestaShopBundle\Bridge\Helper\HelperListConfiguration;
 use PrestaShopBundle\Bridge\Helper\ResetFiltersHelper;
 
 /**
- * This trait contains the principal methods you need when you want to migrate a controller horizontally.
- *
- * This trait adds methods to:
- *     - add a general action
- *     - add a specific action to list
- *     - add a field to a controller
- *     - get reset filter helpers
- *     - get filter helpers
- *     - get helper list bridge
+ * Contains the principal methods you need to horizontally migrate a controller which has a list.
  */
-trait AdminControllerTrait
+trait FrameworkBridgeControllerListTrait
 {
+    protected function buildListConfiguration(
+        string $identifierKey,
+        string $positionIdentifierKey,
+        string $defaultOrderBy,
+        bool $autoJoinLangTable = true,
+        bool $deleted = false,
+        bool $explicitSelect = false,
+        bool $useFoundRows = true
+    ): HelperListConfiguration {
+        $controllerConfiguration = $this->getControllerConfiguration();
+
+        return $this->get('prestashop.bridge.helper.helper_list_configuration_factory')->create(
+            $controllerConfiguration,
+            $identifierKey,
+            $positionIdentifierKey,
+            $defaultOrderBy,
+            $autoJoinLangTable,
+            $deleted,
+            $explicitSelect,
+            $useFoundRows
+        );
+    }
+
     /**
      * @return ResetFiltersHelper
      */
-    public function getResetFiltersHelper(): ResetFiltersHelper
+    protected function getResetFiltersHelper(): ResetFiltersHelper
     {
-        return $this->get('prestashop.core.bridge.processor.reset_filters_helper');
+        return $this->get('prestashop.bridge.helper.reset_filters_helper');
     }
 
     /**
      * @return FiltersHelper
      */
-    public function getFiltersHelper(): FiltersHelper
+    protected function getFiltersHelper(): FiltersHelper
     {
-        return $this->get('prestashop.core.bridge.processor.filters_helper');
-    }
-
-    /**
-     * @return HelperListBridge
-     */
-    public function getHelperListBridge(): HelperListBridge
-    {
-        return $this->get('prestashop.core.bridge.helper_list_bridge');
-    }
-
-    /**
-     * This method add action for the page.
-     *
-     * @param ActionInterface $action
-     *
-     * @return void
-     */
-    public function addAction(ActionInterface $action): void
-    {
-        if ($action instanceof HeaderToolbarAction) {
-            $this->controllerConfiguration->pageHeaderToolbarButton[$action->getLabel()] = $action->getConfig();
-
-            return;
-        }
-
-        throw new NotAllowedGenericActionTypeException(sprintf('This action %s doesn\'t exist', get_class($action)));
+        return $this->get('prestashop.bridge.helper.filters_helper');
     }
 
     /**
@@ -104,7 +90,7 @@ trait AdminControllerTrait
      *
      * @return void
      */
-    public function addActionList(ActionInterface $action, HelperListConfiguration $helperListConfiguration): void
+    protected function addActionList(ActionInterface $action, HelperListConfiguration $helperListConfiguration): void
     {
         if ($action instanceof ListBulkAction) {
             $helperListConfiguration->bulkActions[$action->getLabel()] = $action->getConfig();
@@ -134,7 +120,7 @@ trait AdminControllerTrait
      *
      * @return void
      */
-    public function addListField(FieldInterface $field, HelperListConfiguration $helperListConfiguration): void
+    protected function addListField(FieldInterface $field, HelperListConfiguration $helperListConfiguration): void
     {
         $helperListConfiguration->fieldsList[$field->getLabel()] = $field->getConfig();
     }

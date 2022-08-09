@@ -23,44 +23,57 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Bridge\Smarty;
+namespace PrestaShopBundle\Bridge\AdminController;
 
-use Language;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 
-/**
- * This class assign css files, js files, prestashop version,
- * and if the language is FR to the controller configuration.
- */
-class FooterConfigurator implements ConfiguratorInterface
+class LegacyControllerBridgeFactory
 {
     /**
-     * @var Language
+     * @var FeatureInterface
      */
-    private $language;
+    private $multistoreFeature;
 
     /**
-     * @param LegacyContext $legacyContext
+     * @var LegacyContext
      */
-    public function __construct(LegacyContext $legacyContext)
-    {
-        $this->language = $legacyContext->getLanguage();
+    private $legacyContext;
+
+    /**
+     * @var HookDispatcherInterface
+     */
+    private $hookDispatcher;
+
+    /**
+     * @param FeatureInterface $multistoreFeature
+     */
+    public function __construct(
+        FeatureInterface $multistoreFeature,
+        LegacyContext $legacyContext,
+        HookDispatcherInterface $hookDispatcher
+    ) {
+        $this->multistoreFeature = $multistoreFeature;
+        $this->legacyContext = $legacyContext;
+        $this->hookDispatcher = $hookDispatcher;
     }
 
     /**
      * @param ControllerConfiguration $controllerConfiguration
      *
-     * @return void
+     * @return LegacyControllerBridgeInterface
      */
-    public function configure(ControllerConfiguration $controllerConfiguration): void
-    {
-        $controllerConfiguration->templateVars['css_files'] = $controllerConfiguration->cssFiles;
-        $controllerConfiguration->templateVars['js_files'] = array_unique($controllerConfiguration->jsFiles);
-        $controllerConfiguration->templateVars['ps_version'] = _PS_VERSION_;
-        $controllerConfiguration->templateVars['iso_is_fr'] = strtoupper($this->language->iso_code) == 'FR';
+    public function create(
+        ControllerConfiguration $controllerConfiguration
+    ): LegacyControllerBridgeInterface {
+        return new LegacyControllerBridge(
+            $controllerConfiguration,
+            $this->multistoreFeature,
+            $this->legacyContext,
+            $this->hookDispatcher
+        );
     }
 }

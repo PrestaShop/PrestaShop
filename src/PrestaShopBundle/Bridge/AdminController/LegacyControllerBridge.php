@@ -23,35 +23,142 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Bridge\Smarty;
+namespace PrestaShopBundle\Bridge\AdminController;
 
+use Context;
+use Employee;
 use Media;
-use Symfony\Component\HttpFoundation\Response;
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
+use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use Tools;
 
 /**
- * This trait adds methods to get a response object with the HTML passed as parameters and with all stuff needed,
- * like header, footer, notifications.
+ * The bridge class is used as a proxy between the internal controller configuration and the legacy code.
  *
- * Developers must use this trait in a controller migrated horizontally to render a smarty template as a Symfony response.
- * He can also be used to add CSS, js, jquery plugin, and jquery UI to a response.
+ * It is accessible via the Context and/or the hooks, but to avoid legacy code accessing the controller configuration
+ * directly this object provides access to the configuration fields via a whitelist thus protecting th other elements
+ * of the ControllerConfiguration which shouldn't be accessed directly.
+ *
+ * It also allows integrating legacy functions that were usable on AdminController thus we don't need to implement them
+ * in the framework controller.
+ *
+ * @property int $id
+ * @property string $className
+ * @property string $controller_name
+ * @property string $php_self
+ * @property string $current_index
+ * @property string|null $position_identifier
+ * @property string $table
+ * @property string $token
+ * @property Employee $user
+ * @property array $meta_title
+ * @property array $breadcrumbs
+ * @property bool $lite_display
+ * @property string $display
+ * @property bool $show_page_header_toolbar
+ * @property string $page_header_toolbar_title
+ * @property array $toolbar_btn
+ * @property array $toolbar_title
+ * @property bool $display_header
+ * @property bool $display_header_javascript
+ * @property bool $display_footer
+ * @property bool $bootstrap
+ * @property array $css_files
+ * @property array $js_files
+ * @property string $tpl_folder
+ * @property array $errors
+ * @property array $warnings
+ * @property array $confirmations
+ * @property array $informations
+ * @property bool $json
+ * @property string $template
+ * @property array $tpl_vars
+ * @property array $modals
+ * @property int $multishop_context
+ * @property bool $multishop_context_group
  */
-trait SmartyTrait
+class LegacyControllerBridge implements LegacyControllerBridgeInterface
 {
     /**
-     * @param string $content
-     * @param Response|null $response
-     *
-     * @return Response
+     * @var ControllerConfiguration
      */
-    public function renderSmarty(string $content, Response $response = null, bool $isNewTheme = false): Response
-    {
-        $this->setMedia($isNewTheme);
+    private $controllerConfiguration;
 
-        return $this->get('prestashop.core.bridge.smarty_bridge')->render($content, $this->controllerConfiguration, $response);
+    /**
+     * @var FeatureInterface
+     */
+    private $multistoreFeature;
+
+    /**
+     * @var LegacyContext
+     */
+    private $legacyContext;
+
+    /**
+     * @var HookDispatcherInterface
+     */
+    private $hookDispatcher;
+
+    /**
+     * @var string[] maps legacy controller properties with the bridge
+     */
+    private $propertiesMap = [
+        'id' => 'controllerConfiguration.tabId',
+        'className' => 'controllerConfiguration.objectModelClassName',
+        'controller_name' => 'controllerConfiguration.legacyControllerName',
+        'php_self' => 'controllerConfiguration.legacyControllerName',
+        'current_index' => 'controllerConfiguration.legacyCurrentIndex',
+        'position_identifier' => 'controllerConfiguration.positionIdentifierKey',
+        'table' => 'controllerConfiguration.tableName',
+        'token' => 'controllerConfiguration.token',
+        'meta_title' => 'controllerConfiguration.metaTitle',
+        'breadcrumbs' => 'controllerConfiguration.breadcrumbs',
+        'lite_display' => 'controllerConfiguration.liteDisplay',
+        'display' => 'controllerConfiguration.displayType',
+        'show_page_header_toolbar' => 'controllerConfiguration.showPageHeaderToolbar',
+        'page_header_toolbar_title' => 'controllerConfiguration.pageHeaderToolbarTitle',
+        'page_header_toolbar_btn' => 'controllerConfiguration.pageHeaderToolbarButtons',
+        'toolbar_btn' => 'controllerConfiguration.toolbarButtons',
+        'toolbar_title' => 'controllerConfiguration.toolbarTitle',
+        'display_header' => 'controllerConfiguration.displayHeader',
+        'display_header_javascript' => 'controllerConfiguration.displayHeaderJavascript',
+        'display_footer' => 'controllerConfiguration.displayFooter',
+        'bootstrap' => 'controllerConfiguration.bootstrap',
+        'css_files' => 'controllerConfiguration.cssFiles',
+        'js_files' => 'controllerConfiguration.jsFiles',
+        'tpl_folder' => 'controllerConfiguration.templateFolder',
+        'errors' => 'controllerConfiguration.errors',
+        'warnings' => 'controllerConfiguration.warnings',
+        'confirmations' => 'controllerConfiguration.confirmations',
+        'informations' => 'controllerConfiguration.informations',
+        'json' => 'controllerConfiguration.json',
+        'template' => 'controllerConfiguration.template',
+        'tpl_vars' => 'controllerConfiguration.templateVars',
+        'modals' => 'controllerConfiguration.modals',
+        'multishop_context' => 'controllerConfiguration.multiShopContext',
+        'multishop_context_group' => 'controllerConfiguration.multiShopContextGroup',
+    ];
+
+    /**
+     * @param ControllerConfiguration $controllerConfiguration
+     * @param FeatureInterface $multistoreFeature
+     * @param LegacyContext $legacyContext
+     * @param HookDispatcherInterface $hookDispatcher
+     */
+    public function __construct(
+        ControllerConfiguration $controllerConfiguration,
+        FeatureInterface $multistoreFeature,
+        LegacyContext $legacyContext,
+        HookDispatcherInterface $hookDispatcher
+    ) {
+        $this->controllerConfiguration = $controllerConfiguration;
+        $this->multistoreFeature = $multistoreFeature;
+        $this->legacyContext = $legacyContext;
+        $this->hookDispatcher = $hookDispatcher;
     }
 
     /**
@@ -78,7 +185,7 @@ trait SmartyTrait
             $this->addJS(__PS_BASE_URI__ . $adminWebpath . '/themes/new-theme/public/main.bundle.js');
 
             // the multistore dropdown should be called only once, and only if multistore is used
-            if ($this->get('prestashop.adapter.multistore_feature')->isUsed()) {
+            if ($this->multistoreFeature->isUsed()) {
                 $this->addJs(__PS_BASE_URI__ . $adminWebpath . '/themes/new-theme/public/multistore_dropdown.bundle.js');
             }
             $this->addJqueryPlugin(['chosen', 'fancybox']);
@@ -151,7 +258,7 @@ trait SmartyTrait
             ],
         ]);
 
-        $this->dispatchHook('actionAdminControllerSetMedia', []);
+        $this->hookDispatcher->dispatchWithParameters('actionAdminControllerSetMedia');
     }
 
     /**
@@ -255,5 +362,73 @@ trait SmartyTrait
             $this->addCSS($uiPath['css'], 'all');
             $this->addJS($uiPath['js'], false);
         }
+    }
+
+    /**
+     * This whole bridge is used as legacy $context->controller, but all properties are held in configuration,
+     * so we use a "magic" getter with a help of properties map and property accessor
+     * to allow legacy code retrieving properties from configuration as if it would be in legacy controller
+     *
+     * @param string $name
+     *
+     * @return mixed
+     */
+    public function &__get(string $name)
+    {
+        return $this->getPropertyReference($name);
+    }
+
+    /**
+     * This whole bridge is used as legacy $context->controller, but all properties are held in configuration,
+     * so we use a "magic" setter with a help of properties map and property accessor
+     * to allow legacy code setting properties in configuration as if it would be in legacy controller.
+     *
+     * @param string $name
+     * @param mixed $value
+     *
+     * @return void
+     */
+    public function __set(string $name, $value): void
+    {
+        $modifiedField = &$this->getPropertyReference($name);
+        $modifiedField = $value;
+    }
+
+    /**
+     * We need to return a reference in order for legacy codes to do manipulation like:
+     *    $controller->toolbar_button['new_product'] = ['text' => 'New Product'];
+     *
+     * That's why we can't use a PropertyAccessor component because it does not return references, only values.
+     *
+     * @param string $name
+     *
+     * @return mixed
+     *
+     * @throws InvalidArgumentException
+     */
+    private function &getPropertyReference(string $name)
+    {
+        if (!isset($this->propertiesMap[$name])) {
+            throw new InvalidArgumentException(sprintf('No mapping found for %s', $name));
+        }
+
+        $propertyPath = explode('.', $this->propertiesMap[$name]);
+        $currentReference = &$this;
+        foreach ($propertyPath as $property) {
+            if (!property_exists($currentReference, $property)) {
+                throw new InvalidArgumentException(sprintf('Could not find property %s', implode('.', $propertyPath)));
+            }
+            $currentReference = &$currentReference->{$property};
+        }
+
+        return $currentReference;
+    }
+
+    /**
+     * @return Context
+     */
+    private function getContext(): Context
+    {
+        return $this->legacyContext->getContext();
     }
 }
