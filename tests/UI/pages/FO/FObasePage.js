@@ -462,6 +462,15 @@ class FOBasePage extends CommonPage {
   async getCopyright(page) {
     return this.getTextContent(page, this.copyrightLink);
   }
+
+  /**
+   * Check that currency is visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async isCurrencyVisible(page) {
+    return this.elementVisible(page, this.currencySelectorDiv, 1000);
+  }
 }
 
 module.exports = FOBasePage;

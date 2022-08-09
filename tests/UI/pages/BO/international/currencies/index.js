@@ -150,7 +150,7 @@ class Currencies extends LocalizationBasePage {
    * @returns {Promise<number>}
    */
   async getExchangeRateValue(page, row) {
-    return this.getNumberFromText(page, this.tableColumn(row, 'conversion_rate'));
+    return this.getPriceFromText(page, this.tableColumn(row, 'conversion_rate'));
   }
 
   /**
