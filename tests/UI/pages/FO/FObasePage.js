@@ -77,7 +77,7 @@ class FOBasePage extends CommonPage {
     this.wrapperSubmenuItemLink = position => `${this.wrapperSubmenu(position)} li a`;
 
     // Copyright
-    this.copyrightLink = '#footer div.footer-container a[href*="www.prestashop.com"]';
+    this.copyrightLink = '#footer div.footer-container a[href*="www.prestashop-project.org"]';
 
     // Alert block selectors
     this.alertSuccessBlock = '.alert-success ul li';
