@@ -54,7 +54,7 @@ module.exports = {
    * Check text in PDF
    * @param filePath {string} Path of the PDF file
    * @param text {string} Text to check on the file
-   * @return {boolean}
+   * @returns {Promise<boolean>}
    */
   async isTextInPDF(filePath, text) {
     const pdf = await pdfJs.getDocument(filePath).promise;
@@ -73,7 +73,7 @@ module.exports = {
   /**
    * Get quantity of images on the PDF
    * @param filePath {string} FilePath of the PDF file
-   * @return {number}
+   * @return {Promise<number>}
    */
   async getImageNumberInPDF(filePath) {
     const pdf = await pdfJs.getDocument(filePath).promise;
