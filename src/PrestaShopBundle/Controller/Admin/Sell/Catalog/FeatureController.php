@@ -42,8 +42,8 @@ use PrestaShopBundle\Bridge\AdminController\Field\Field;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerInterface;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerListTrait;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerTrait;
-use PrestaShopBundle\Bridge\Helper\HelperListConfiguration;
-use PrestaShopBundle\Bridge\Helper\ListCustomizer\FeatureHelperListBridge;
+use PrestaShopBundle\Bridge\Listing\Configuration\ListHelperConfiguration;
+use PrestaShopBundle\Bridge\Listing\HelperBridge\FeatureListHelperBridge;
 use PrestaShopBundle\Bridge\Smarty\FrameworkControllerSmartyTrait;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -191,11 +191,11 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
     }
 
     /**
-     * @return FeatureHelperListBridge
+     * @return FeatureListHelperBridge
      */
-    private function getHelperListBridge(): FeatureHelperListBridge
+    private function getHelperListBridge(): FeatureListHelperBridge
     {
-        return $this->get('prestashop.bridge.helper.list_customizer.feature_helper_list_bridge');
+        return $this->get('prestashop.bridge.listing.helper_bridge.feature_list_helper_bridge');
     }
 
     /**
@@ -225,7 +225,7 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
      *
      * @return void
      */
-    private function setListActions(HelperListConfiguration $helperListConfiguration): void
+    private function setListActions(ListHelperConfiguration $helperListConfiguration): void
     {
         $controllerConfiguration = $this->getControllerConfiguration();
 
@@ -252,7 +252,7 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
      *
      * @return void
      */
-    private function setListFields(HelperListConfiguration $helperListConfiguration): void
+    private function setListFields(ListHelperConfiguration $helperListConfiguration): void
     {
         $this->addListField(new Field(
             'id_feature', [

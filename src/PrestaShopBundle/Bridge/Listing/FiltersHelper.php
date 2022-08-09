@@ -26,14 +26,14 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Bridge\Listing\HelperBridge;
+namespace PrestaShopBundle\Bridge\Listing;
 
 use Context;
 use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Bridge\AdminController\FilterPrefix;
-use PrestaShopBundle\Bridge\Helper\HelperListConfiguration;
+use PrestaShopBundle\Bridge\Listing\Configuration\ListHelperConfiguration;
 use Symfony\Component\HttpFoundation\Request;
 use Tools;
 use Validate;
@@ -65,13 +65,13 @@ class FiltersHelper
 
     /**
      * @param Request $request
-     * @param HelperListConfiguration $helperListConfiguration
+     * @param ListHelperConfiguration $helperListConfiguration
      *
      * @return void
      */
     public function processFilter(
         Request $request,
-        HelperListConfiguration $helperListConfiguration
+        ListHelperConfiguration $helperListConfiguration
     ): void {
         $this->hookDispatcher->dispatchWithParameters('action' . $helperListConfiguration->legacyControllerName . 'ListingFieldsModifier', [
             'fields' => &$helperListConfiguration->fieldsList,
@@ -177,13 +177,13 @@ class FiltersHelper
     }
 
     /**
-     * @param HelperListConfiguration $helperListConfiguration
+     * @param ListHelperConfiguration $helperListConfiguration
      * @param string $key
      * @param string $filter
      *
      * @return false|mixed
      */
-    private function filterToField(HelperListConfiguration $helperListConfiguration, $key, $filter)
+    private function filterToField(ListHelperConfiguration $helperListConfiguration, $key, $filter)
     {
         if (empty($helperListConfiguration->fieldsList)) {
             return false;

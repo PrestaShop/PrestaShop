@@ -5,30 +5,30 @@ services:
   _defaults:
     public: true
 
-  prestashop.bridge.listing.helper_bridge.helper_list_bridge:
-    class: PrestaShopBundle\Bridge\Listing\HelperBridge\HelperListBridge
+  prestashop.bridge.listing.helper_bridge.list_helper_bridge:
+    class: PrestaShopBundle\Bridge\Listing\HelperBridge\ListHelperBridge
     arguments:
-      - "@prestashop.adapter.legacy.context"
-      - "@prestashop.user_provider"
-      - "@prestashop.bridge.helper.helper_list_configurator"
-      - "@prestashop.hook.dispatcher"
-      - "@prestashop.adapter.legacy.configuration"
+      - '@prestashop.adapter.legacy.context'
+      - '@prestashop.user_provider'
+      - '@prestashop.bridge.listing.configuration.list_helper_configurator'
+      - '@prestashop.hook.dispatcher'
+      - '@prestashop.adapter.legacy.configuration'
 
-  prestashop.bridge.helper.helper_list_configuration_factory:
-    class: PrestaShopBundle\Bridge\Helper\HelperListConfigurationFactory
+  prestashop.bridge.listing.configuration.list_helper_configuration_factory:
+    class: PrestaShopBundle\Bridge\Listing\Configuration\ListHelperConfigurationFactory
 
-  prestashop.bridge.helper.helper_list_configurator:
-    class: PrestaShopBundle\Bridge\Helper\HelperListConfigurator
+  prestashop.bridge.listing.configuration.list_helper_configurator:
+    class: PrestaShopBundle\Bridge\Listing\Configuration\ListHelperConfigurator
     arguments:
       - '@prestashop.bridge.smarty.breadcrumbs_and_title_configurator'
 
-  prestashop.bridge.listing.helper_bridge.filters_helper:
-    class: PrestaShopBundle\Bridge\Listing\HelperBridge\FiltersHelper
+  prestashop.bridge.listing.filters_helper:
+    class: PrestaShopBundle\Bridge\Listing\FiltersHelper
     arguments:
       - "@prestashop.adapter.legacy.context"
       - "@prestashop.hook.dispatcher"
 
-  prestashop.bridge.listing.helper_bridge.reset_filters_helper:
-    class: PrestaShopBundle\Bridge\Listing\HelperBridge\ResetFiltersHelper
+  prestashop.bridge.listing.reset_filters_helper:
+    class: PrestaShopBundle\Bridge\Listing\ResetFiltersHelper
     arguments:
       - "@prestashop.adapter.legacy.context"
