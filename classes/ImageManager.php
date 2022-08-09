@@ -744,7 +744,7 @@ class ImageManagerCore
     {
         return in_array($mimeType, self::SVG_MIMETYPES);
     }
-    
+
     /**
      * copyImg copy an image located in $url and save it in a path
      * according to $entity->$id_entity .
