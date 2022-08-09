@@ -109,6 +109,7 @@ class CombinationItemType extends TranslatorAwareType
                     'class' => 'combination-reference',
                 ],
                 'label' => $this->trans('Reference', 'Admin.Global'),
+                'empty_data' => '',
             ])
             ->add('impact_on_price_te', MoneyType::class, [
                 'attr' => [
