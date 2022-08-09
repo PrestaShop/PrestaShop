@@ -53,6 +53,16 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     public const HAS_ONE = 1;
     public const HAS_MANY = 2;
 
+    /**
+     * this is the biggest int number that can be saved in database, bigger than this will throw error
+     */
+    public const INT_32_MAX_POSITIVE = 2147483647;
+
+    /**
+     * this is the smallest int number that can be saved in database, smaller than this will throw error
+     */
+    public const INT_32_MAX_NEGATIVE = -2147483648;
+
     /** @var int|null Object ID */
     public $id;
 
@@ -1223,6 +1233,10 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             }
 
             $length = Tools::strlen($value);
+            if (isset($data['validate']) && Tools::strtolower($data['validate']) === 'isint') {
+                $length = Tools::strlen(str_replace('-', '', $value));
+            }
+
             if ($length < $size['min'] || $length > $size['max']) {
                 if ($human_errors) {
                     if (isset($data['lang']) && $data['lang']) {
@@ -1255,13 +1269,18 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
 
             if (!empty($value)) {
                 $res = true;
-                if (Tools::strtolower($data['validate']) == 'iscleanhtml') {
+                if (Tools::strtolower($data['validate']) === 'iscleanhtml') {
                     if (!call_user_func(['Validate', $data['validate']], $value, $ps_allow_html_iframe)) {
                         $res = false;
                     }
                 } else {
                     if (!call_user_func(['Validate', $data['validate']], $value)) {
                         $res = false;
+                    }
+                    if (Tools::strtolower($data['validate']) === 'isint') {
+                        if ($value < self::INT_32_MAX_NEGATIVE || $value > self::INT_32_MAX_POSITIVE) {
+                            $res = false;
+                        }
                     }
                 }
                 if (!$res) {
