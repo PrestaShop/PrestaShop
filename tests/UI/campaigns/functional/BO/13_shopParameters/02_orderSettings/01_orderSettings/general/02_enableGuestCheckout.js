@@ -55,8 +55,16 @@ describe('BO - Shop Parameters - Order Settings : Enable/Disable guest checkout'
   });
 
   const tests = [
-    {args: {action: 'disable', exist: false, tabName: 'Create an account', pwdRequired: true}},
-    {args: {action: 'enable', exist: true, tabName: 'Order as a guest', pwdRequired: false}},
+    {
+      args: {
+        action: 'disable', exist: false, tabName: 'Create an account', pwdRequired: true,
+      },
+    },
+    {
+      args: {
+        action: 'enable', exist: true, tabName: 'Order as a guest', pwdRequired: false,
+      },
+    },
   ];
 
   tests.forEach((test, index) => {
