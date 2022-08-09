@@ -5,8 +5,8 @@ services:
   _defaults:
     public: true
 
-  prestashop.bridge.helper.helper_list_bridge:
-    class: PrestaShopBundle\Bridge\Helper\HelperListBridge
+  prestashop.bridge.listing.helper_bridge.helper_list_bridge:
+    class: PrestaShopBundle\Bridge\Listing\HelperBridge\HelperListBridge
     arguments:
       - "@prestashop.adapter.legacy.context"
       - "@prestashop.user_provider"
@@ -22,13 +22,13 @@ services:
     arguments:
       - '@prestashop.bridge.smarty.breadcrumbs_and_title_configurator'
 
-  prestashop.bridge.helper.filters_helper:
-    class: PrestaShopBundle\Bridge\Helper\FiltersHelper
+  prestashop.bridge.listing.helper_bridge.filters_helper:
+    class: PrestaShopBundle\Bridge\Listing\HelperBridge\FiltersHelper
     arguments:
       - "@prestashop.adapter.legacy.context"
       - "@prestashop.hook.dispatcher"
 
-  prestashop.bridge.helper.reset_filters_helper:
-    class: PrestaShopBundle\Bridge\Helper\ResetFiltersHelper
+  prestashop.bridge.listing.helper_bridge.reset_filters_helper:
+    class: PrestaShopBundle\Bridge\Listing\HelperBridge\ResetFiltersHelper
     arguments:
       - "@prestashop.adapter.legacy.context"

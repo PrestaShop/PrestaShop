@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Bridge\Helper;
+namespace PrestaShopBundle\Bridge\Listing\HelperBridge;
 
 use Context;
 use Db;
@@ -35,6 +35,8 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Bridge\AdminController\FilterPrefix;
+use PrestaShopBundle\Bridge\Helper\HelperListConfiguration;
+use PrestaShopBundle\Bridge\Helper\HelperListConfigurator;
 use PrestaShopBundle\Service\DataProvider\UserProvider;
 use PrestaShopException;
 use Shop;

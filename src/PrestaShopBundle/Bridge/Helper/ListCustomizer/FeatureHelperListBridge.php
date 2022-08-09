@@ -30,7 +30,7 @@ namespace PrestaShopBundle\Bridge\Helper\ListCustomizer;
 
 use Db;
 use DbQuery;
-use PrestaShopBundle\Bridge\Helper\HelperListBridge;
+use PrestaShopBundle\Bridge\Listing\HelperBridge\HelperListBridge;
 use PrestaShopBundle\Bridge\Helper\HelperListConfiguration;
 
 /**

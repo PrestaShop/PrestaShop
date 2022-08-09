@@ -26,11 +26,12 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Bridge\Helper;
+namespace PrestaShopBundle\Bridge\Listing\HelperBridge;
 
 use Context;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShopBundle\Bridge\AdminController\FilterPrefix;
+use PrestaShopBundle\Bridge\Helper\HelperListConfiguration;
 use Symfony\Component\HttpFoundation\Request;
 use Tools;
 

@@ -34,9 +34,9 @@ use PrestaShopBundle\Bridge\AdminController\Action\ListHeaderToolbarAction;
 use PrestaShopBundle\Bridge\AdminController\Action\ListRowAction;
 use PrestaShopBundle\Bridge\AdminController\Field\FieldInterface;
 use PrestaShopBundle\Bridge\Exception\NotAllowedActionTypeForListException;
-use PrestaShopBundle\Bridge\Helper\FiltersHelper;
+use PrestaShopBundle\Bridge\Listing\HelperBridge\FiltersHelper;
 use PrestaShopBundle\Bridge\Helper\HelperListConfiguration;
-use PrestaShopBundle\Bridge\Helper\ResetFiltersHelper;
+use PrestaShopBundle\Bridge\Listing\HelperBridge\ResetFiltersHelper;
 
 /**
  * Contains the principal methods you need to horizontally migrate a controller which has a list.
@@ -71,7 +71,7 @@ trait FrameworkBridgeControllerListTrait
      */
     protected function getResetFiltersHelper(): ResetFiltersHelper
     {
-        return $this->get('prestashop.bridge.helper.reset_filters_helper');
+        return $this->get('prestashop.bridge.listing.helper_bridge.reset_filters_helper');
     }
 
     /**
@@ -79,7 +79,7 @@ trait FrameworkBridgeControllerListTrait
      */
     protected function getFiltersHelper(): FiltersHelper
     {
-        return $this->get('prestashop.bridge.helper.filters_helper');
+        return $this->get('prestashop.bridge.listing.helper_bridge.filters_helper');
     }
 
     /**
