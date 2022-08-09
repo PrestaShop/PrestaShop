@@ -43,6 +43,7 @@ class ShoppingCarts extends BOBasePage {
     this.tableColumnId = row => `${this.tableBodyColumn(row)}:nth-child(1)`;
     this.tableColumnOrderId = row => `${this.tableBodyColumn(row)}:nth-child(2)`;
     this.tableColumnCustomer = row => `${this.tableBodyColumn(row)}:nth-child(3)`;
+    this.tableColumnTotal = row => `${this.tableBodyColumn(row)}:nth-child(4)`;
     this.tableColumnCarrier = row => `${this.tableBodyColumn(row)}:nth-child(5)`;
     this.tableColumnDate = row => `${this.tableBodyColumn(row)}:nth-child(6)`;
     this.tableColumnOnline = row => `${this.tableBodyColumn(row)}:nth-child(7)`;
@@ -165,6 +166,10 @@ class ShoppingCarts extends BOBasePage {
 
       case 'c!lastname':
         columnSelector = this.tableColumnCustomer(row);
+        break;
+
+      case 'total':
+        columnSelector = this.tableColumnTotal(row);
         break;
 
       case 'ca!name':

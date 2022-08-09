@@ -27,6 +27,7 @@ class MyAccount extends FOBasePage {
     this.merchandiseReturnsLink = '#returns-link';
     this.successMessageAlert = '#notifications article.alert-success';
     this.logoutFooterLink = '#main footer a[href*="mylogout"]';
+    this.psgdprLink = '#psgdpr-link';
   }
 
   /*
@@ -106,6 +107,15 @@ class MyAccount extends FOBasePage {
    */
   async logout(page) {
     await this.clickAndWaitForNavigation(page, this.logoutFooterLink);
+  }
+
+  /**
+   * Go to my GDPR personal data page
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async goToMyGDPRPersonalDataPage(page) {
+    await this.clickAndWaitForNavigation(page, this.psgdprLink);
   }
 }
 
