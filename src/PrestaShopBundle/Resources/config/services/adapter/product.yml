@@ -102,6 +102,7 @@ services:
       - '@prestashop.core.localization.locale.repository'
       - '@=service("prestashop.adapter.legacy.context").getContext().language.getLocale()'
       - '@=service("prestashop.adapter.legacy.configuration").get("PS_CURRENCY_DEFAULT")'
+      - '@=service("prestashop.adapter.legacy.configuration").get("PS_STOCK_MANAGEMENT")'
 
   prestashop.adapter.product.command_handler.get_product_for_editing_handler:
     class: PrestaShop\PrestaShop\Adapter\Product\QueryHandler\GetProductForEditingHandler
