@@ -1,18 +1,6 @@
-imports:
-  - { resource: helper/*.yml }
-
 services:
   _defaults:
     public: true
-
-  prestashop.bridge.listing.helper_bridge.list_helper_bridge:
-    class: PrestaShopBundle\Bridge\Listing\HelperBridge\ListHelperBridge
-    arguments:
-      - '@prestashop.adapter.legacy.context'
-      - '@prestashop.user_provider'
-      - '@prestashop.bridge.listing.configuration.list_helper_configurator'
-      - '@prestashop.hook.dispatcher'
-      - '@prestashop.adapter.legacy.configuration'
 
   prestashop.bridge.listing.configuration.list_helper_configuration_factory:
     class: PrestaShopBundle\Bridge\Listing\Configuration\ListHelperConfigurationFactory
@@ -27,3 +15,17 @@ services:
     arguments:
       - "@prestashop.adapter.legacy.context"
       - "@prestashop.hook.dispatcher"
+
+  prestashop.bridge.listing.helper_bridge.list_helper_bridge:
+    class: PrestaShopBundle\Bridge\Listing\HelperBridge\ListHelperBridge
+    arguments:
+      - '@prestashop.adapter.legacy.context'
+      - '@prestashop.user_provider'
+      - '@prestashop.bridge.listing.configuration.list_helper_configurator'
+      - '@prestashop.hook.dispatcher'
+      - '@prestashop.adapter.legacy.configuration'
+
+  prestashop.bridge.listing.helper_bridge.feature_list_helper_bridge:
+    class: PrestaShopBundle\Bridge\Listing\HelperBridge\FeatureListHelperBridge
+    parent: prestashop.bridge.listing.helper_bridge.list_helper_bridge
+    public: true

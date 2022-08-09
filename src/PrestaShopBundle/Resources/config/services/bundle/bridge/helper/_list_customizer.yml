@@ -1,8 +1,0 @@
-services:
-  _defaults:
-    public: true
-
-  prestashop.bridge.listing.helper_bridge.feature_list_helper_bridge:
-    class: PrestaShopBundle\Bridge\Listing\HelperBridge\FeatureListHelperBridge
-    parent: prestashop.bridge.listing.helper_bridge.list_helper_bridge
-    public: true
