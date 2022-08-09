@@ -28,15 +28,14 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Bridge\AdminController;
 
+use PrestaShopBundle\Bridge\Exception\NotAllowedActionTypeForListException;
 use PrestaShopBundle\Bridge\Listing\Configuration\Action\ActionInterface;
 use PrestaShopBundle\Bridge\Listing\Configuration\Action\ListBulkAction;
 use PrestaShopBundle\Bridge\Listing\Configuration\Action\ListHeaderToolbarAction;
 use PrestaShopBundle\Bridge\Listing\Configuration\Action\ListRowAction;
 use PrestaShopBundle\Bridge\Listing\Configuration\Field\FieldInterface;
-use PrestaShopBundle\Bridge\Exception\NotAllowedActionTypeForListException;
-use PrestaShopBundle\Bridge\Listing\FiltersHelper;
 use PrestaShopBundle\Bridge\Listing\Configuration\ListHelperConfiguration;
-use PrestaShopBundle\Bridge\Listing\ResetFiltersHelper;
+use PrestaShopBundle\Bridge\Listing\FiltersHelper;
 
 /**
  * Contains the principal methods you need to horizontally migrate a controller which has a list.

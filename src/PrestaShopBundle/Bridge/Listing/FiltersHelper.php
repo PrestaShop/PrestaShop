@@ -32,7 +32,6 @@ use Context;
 use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
-use PrestaShopBundle\Bridge\Listing\FilterPrefix;
 use PrestaShopBundle\Bridge\Listing\Configuration\ListHelperConfiguration;
 use Symfony\Component\HttpFoundation\Request;
 use Tools;
