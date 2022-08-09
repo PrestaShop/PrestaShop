@@ -1284,7 +1284,7 @@ class FrontControllerCore extends Controller
     }
 
     /**
-     * Returns the layout corresponding to the current page by using the override system
+     * Returns the layout's full path corresponding to the current page by using the override system
      * Ex:
      * On the url: http://localhost/index.php?id_product=1&controller=product, this method will
      * check if the layout exists in the following files (in that order), and return the first found:
@@ -1298,15 +1298,20 @@ class FrontControllerCore extends Controller
      */
     public function getLayout()
     {
+        // Primary identifier to search for a template is php_self property,
+        // For modules, we will use page_name
         $entity = $this->php_self;
         if (empty($entity)) {
             $entity = $this->getPageName();
         }
 
-        $layout = $this->context->shop->theme->getLayoutRelativePathForPage($entity);
+        // Get layout set in prestashop configuration
+        $layout = $this->context->shop->theme->getLayoutNameForPage($entity);
 
+        // Check if we are in content_only mode (used for displaying terms and conditions in a popup for example)
         $content_only = (int) Tools::getValue('content_only');
 
+        // If a module provides its own custom layout, we ignore what is set in configuration
         if ($overridden_layout = Hook::exec(
             'overrideLayoutTemplate',
             [
@@ -1320,11 +1325,22 @@ class FrontControllerCore extends Controller
             return $overridden_layout;
         }
 
+        // When using content_only, there will be no header, footer and sidebars
         if ($content_only) {
-            $layout = 'layouts/layout-content-only.tpl';
+            $layout = 'layout-content-only';
         }
 
-        return $layout;
+        return $this->context->shop->theme->getLayoutPath($layout);
+    }
+
+    /**
+     * Returns layout name for the current controller. Used to display layout name in <body> tag.
+     *
+     * @return string layout name
+     */
+    protected function getLayoutName()
+    {
+        return str_replace(['.tpl'], '', basename($this->getLayout()));
     }
 
     /**
@@ -1674,7 +1690,7 @@ class FrontControllerCore extends Controller
             'lang-rtl' => (bool) $this->context->language->is_rtl,
             'country-' . $this->context->country->iso_code => true,
             'currency-' . $this->context->currency->iso_code => true,
-            $this->context->shop->theme->getLayoutNameForPage($this->php_self) => true,
+            $this->getLayoutName() => true,
             'page-' . $this->php_self => true,
             'tax-display-' . ($this->getDisplayTaxesLabel() ? 'enabled' : 'disabled') => true,
             'page-customer-account' => false,
