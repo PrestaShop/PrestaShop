@@ -34,7 +34,8 @@ use HelperList;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
-use PrestaShopBundle\Bridge\AdminController\FilterPrefix;
+use PrestaShopBundle\Bridge\Listing\FilterPrefix;
+use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerInterface;
 use PrestaShopBundle\Bridge\Listing\Configuration\ListHelperConfiguration;
 use PrestaShopBundle\Bridge\Listing\Configuration\ListHelperConfigurator;
 use PrestaShopBundle\Service\DataProvider\UserProvider;
@@ -44,7 +45,10 @@ use Tools;
 use Validate;
 
 /**
- * A bridge to use helper list to render list in Controller migrate horizontally.
+ * Acts as a bridge between symfony controller and the legacy HelperList to allow rendering the list
+ *
+ * @see HelperList
+ * @see FrameworkBridgeControllerInterface
  */
 class ListHelperBridge
 {
@@ -95,7 +99,7 @@ class ListHelperBridge
     }
 
     /**
-     * Generate the html for list using HelperList helper.
+     * Generate the html for list using HelperList class
      *
      * @param ListHelperConfiguration $helperListConfiguration
      *

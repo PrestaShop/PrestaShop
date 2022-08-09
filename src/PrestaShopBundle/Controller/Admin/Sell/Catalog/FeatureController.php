@@ -33,12 +33,12 @@ use Feature;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
-use PrestaShopBundle\Bridge\AdminController\Action\HeaderToolbarAction;
-use PrestaShopBundle\Bridge\AdminController\Action\ListBulkAction;
-use PrestaShopBundle\Bridge\AdminController\Action\ListHeaderToolbarAction;
-use PrestaShopBundle\Bridge\AdminController\Action\ListRowAction;
+use PrestaShopBundle\Bridge\AdminController\Configuration\Action\HeaderToolbarAction;
+use PrestaShopBundle\Bridge\Listing\Configuration\Action\ListBulkAction;
+use PrestaShopBundle\Bridge\Listing\Configuration\Action\ListHeaderToolbarAction;
+use PrestaShopBundle\Bridge\Listing\Configuration\Action\ListRowAction;
 use PrestaShopBundle\Bridge\AdminController\Configuration\ControllerConfiguration;
-use PrestaShopBundle\Bridge\AdminController\Field\Field;
+use PrestaShopBundle\Bridge\Listing\Configuration\Field\Field;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerInterface;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerListTrait;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerTrait;
@@ -76,11 +76,13 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
         $this->setListFields($helperListConfiguration);
         $this->setListActions($helperListConfiguration);
 
+        //@todo: seems this actually isn't used. List filters url directs to legacy controller and FiltersHelper never runs
+        $filtersHelper = $this->getFiltersHelper();
         if ($request->request->has('submitResetfeature')) {
-            $this->getResetFiltersHelper()->resetFilters($helperListConfiguration, $request);
+            $filtersHelper->resetFilters($helperListConfiguration, $request);
         }
 
-        $this->getFiltersHelper()->processFilter($request, $helperListConfiguration);
+        $filtersHelper->processFilter($request, $helperListConfiguration);
 
         return $this->renderSmarty($this->getHelperListBridge()->generateList($helperListConfiguration));
     }

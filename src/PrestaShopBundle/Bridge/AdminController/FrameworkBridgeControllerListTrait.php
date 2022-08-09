@@ -28,11 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Bridge\AdminController;
 
-use PrestaShopBundle\Bridge\AdminController\Action\ActionInterface;
-use PrestaShopBundle\Bridge\AdminController\Action\ListBulkAction;
-use PrestaShopBundle\Bridge\AdminController\Action\ListHeaderToolbarAction;
-use PrestaShopBundle\Bridge\AdminController\Action\ListRowAction;
-use PrestaShopBundle\Bridge\AdminController\Field\FieldInterface;
+use PrestaShopBundle\Bridge\Listing\Configuration\Action\ActionInterface;
+use PrestaShopBundle\Bridge\Listing\Configuration\Action\ListBulkAction;
+use PrestaShopBundle\Bridge\Listing\Configuration\Action\ListHeaderToolbarAction;
+use PrestaShopBundle\Bridge\Listing\Configuration\Action\ListRowAction;
+use PrestaShopBundle\Bridge\Listing\Configuration\Field\FieldInterface;
 use PrestaShopBundle\Bridge\Exception\NotAllowedActionTypeForListException;
 use PrestaShopBundle\Bridge\Listing\FiltersHelper;
 use PrestaShopBundle\Bridge\Listing\Configuration\ListHelperConfiguration;
@@ -64,14 +64,6 @@ trait FrameworkBridgeControllerListTrait
             $explicitSelect,
             $useFoundRows
         );
-    }
-
-    /**
-     * @return ResetFiltersHelper
-     */
-    protected function getResetFiltersHelper(): ResetFiltersHelper
-    {
-        return $this->get('prestashop.bridge.listing.reset_filters_helper');
     }
 
     /**

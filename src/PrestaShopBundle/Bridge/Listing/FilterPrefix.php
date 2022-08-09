@@ -26,11 +26,22 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Bridge\AdminController\Action;
+namespace PrestaShopBundle\Bridge\Listing;
+
+use Tools;
 
 /**
- * This class is the object to instantiate if you want to add an action in the header toolbar of your list.
+ * This class allow you to get filter prefix in different way.
  */
-class ListHeaderToolbarAction extends Action
+class FilterPrefix
 {
+    /**
+     * @param string $className
+     *
+     * @return string|null
+     */
+    public static function getByClassName(string $className): ?string
+    {
+        return str_replace(['admin', 'controller'], '', Tools::strtolower($className));
+    }
 }

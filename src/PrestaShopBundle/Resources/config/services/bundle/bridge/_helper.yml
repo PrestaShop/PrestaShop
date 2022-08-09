@@ -27,8 +27,3 @@ services:
     arguments:
       - "@prestashop.adapter.legacy.context"
       - "@prestashop.hook.dispatcher"
-
-  prestashop.bridge.listing.reset_filters_helper:
-    class: PrestaShopBundle\Bridge\Listing\ResetFiltersHelper
-    arguments:
-      - "@prestashop.adapter.legacy.context"
