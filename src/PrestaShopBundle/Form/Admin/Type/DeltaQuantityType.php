@@ -78,8 +78,8 @@ class DeltaQuantityType extends TranslatorAwareType
                     new Type(['type' => 'numeric']),
                     new NotBlank(),
                     new Range([
-                        'min' => static::INT_32_MAX_NEGATIVE,
-                        'max' => static::INT_32_MAX_POSITIVE,
+                        'min' => static::INT_32_MAX_NEGATIVE * 2,
+                        'max' => static::INT_32_MAX_POSITIVE * 2,
                     ]),
                 ],
                 'required' => false,
