@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Bridge\AdminController;
 
+use PrestaShopBundle\Bridge\AdminController\Configuration\ControllerConfiguration;
 use PrestaShopBundle\Bridge\Exception\BridgeException;
 use Tab;
 
@@ -95,7 +96,7 @@ trait FrameworkBridgeControllerTrait
         }
 
         $this->controllerConfiguration = $this
-            ->get('prestashop.bridge.admin_controller.controller_configuration_factory')
+            ->get('prestashop.bridge.admin_controller.configuration.controller_configuration_factory')
             ->create($tabId, $objectModelClassName, $legacyControllerName, $tableName)
         ;
 

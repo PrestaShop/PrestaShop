@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
+use PrestaShopBundle\Bridge\AdminController\Configuration\ControllerConfiguration;
 use Tools;
 
 /**

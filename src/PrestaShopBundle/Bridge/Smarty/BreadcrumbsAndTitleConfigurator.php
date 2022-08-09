@@ -31,7 +31,7 @@ namespace PrestaShopBundle\Bridge\Smarty;
 use Link;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
-use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
+use PrestaShopBundle\Bridge\AdminController\Configuration\ControllerConfiguration;
 use Tab;
 use Tools;
 

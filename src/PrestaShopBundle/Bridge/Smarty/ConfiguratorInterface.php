@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Bridge\Smarty;
 
-use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
+use PrestaShopBundle\Bridge\AdminController\Configuration\ControllerConfiguration;
 
 /**
  * Define contract for configurator.

@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Bridge\Helper;
 
-use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
+use PrestaShopBundle\Bridge\AdminController\Configuration\ControllerConfiguration;
 
 /**
  * Create an instance of the helper configuration object, using controller configuration.

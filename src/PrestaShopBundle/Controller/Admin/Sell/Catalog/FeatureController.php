@@ -37,7 +37,7 @@ use PrestaShopBundle\Bridge\AdminController\Action\HeaderToolbarAction;
 use PrestaShopBundle\Bridge\AdminController\Action\ListBulkAction;
 use PrestaShopBundle\Bridge\AdminController\Action\ListHeaderToolbarAction;
 use PrestaShopBundle\Bridge\AdminController\Action\ListRowAction;
-use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
+use PrestaShopBundle\Bridge\AdminController\Configuration\ControllerConfiguration;
 use PrestaShopBundle\Bridge\AdminController\Field\Field;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerInterface;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerListTrait;
