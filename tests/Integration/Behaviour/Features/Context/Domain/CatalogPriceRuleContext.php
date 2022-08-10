@@ -39,7 +39,7 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Command\AddCatalogPriceRuleCommand;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Exception\CatalogPriceRuleException;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleForEditing;
-use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleList;
+use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query\GetCatalogPriceRuleListForProduct;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult\CatalogPriceRuleForListing;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult\CatalogPriceRuleList;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult\EditableCatalogPriceRule;
@@ -142,19 +142,20 @@ class CatalogPriceRuleContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Then I should be able to see following list of catalog price rules with language :langIso with limit :limit offset :offset and total :total:
+     * @Then I should be able to see following list of catalog price rules with language :langIso with limit :limit offset :offset and total :total and product :productReference:
      *
      * @param TableNode $expectedList
      *
      * @see transformCatalogPriceRuleList
      */
-    public function assertCatalogPriceRuleList(string $langIso, int $limit, int $offset, int $total, TableNode $expectedList): void
+    public function assertCatalogPriceRuleList(string $productReference, string $langIso, int $limit, int $offset, int $total, TableNode $expectedList): void
     {
         $langId = (int) Language::getIdByIso($langIso);
 
         /** @var CatalogPriceRuleList $actualList */
         $actualList = $this->getQueryBus()->handle(
-            new GetCatalogPriceRuleList(
+            new GetCatalogPriceRuleListForProduct(
+                $this->getSharedStorage()->get($productReference),
                 $langId,
                 $limit,
                 $offset
