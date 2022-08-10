@@ -4,6 +4,7 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const basicHelper = require('@utils/basicHelper');
 const testContext = require('@utils/testContext');
 const {getDateFormat} = require('@utils/date');
 
@@ -34,20 +35,35 @@ const baseContext = 'functional_BO_customers_outstanding_sort';
 let browserContext;
 let page;
 
-const leastNumberOutstanding = 1;
-
-// Variable for the last outstanding ID created
-let outstandingId;
-
 // Variable used to get the number of outstanding
 let numberOutstanding;
 
-let customerData;
+// New B2B customers
+const createCustomerData1 = new CustomerFaker();
+const createCustomerData2 = new CustomerFaker();
+const createCustomerData3 = new CustomerFaker();
+
+const customersData = [createCustomerData1, createCustomerData2, createCustomerData3];
+
 
 const today = getDateFormat('yyyy-mm-dd');
 const dateToCheck = getDateFormat('mm/dd/yyyy');
 
-describe('BO - Customers - Outstanding : Filter the Outstanding table', async () => {
+/*
+Pre-condition:
+- Enable B2B
+- Create 3 B2B customers
+- Create 3 addresses
+- Create 3 orders in FO
+- Update orders status to payment accepted
+Scenario:
+- Sort outstanding by: ID, Date, Customer, Company, Outstanding allowance DESC and ASC
+- Filter outstanding by: ID, Date, Customer, Company, Risk, Outstanding allowance
+Post-condition:
+- Delete created customers by bulk actions
+- Disable B2B
+*/
+describe('BO - Customers - Outstanding : Sort and filter the Outstanding table', async () => {
   // Pre-Condition : Enable B2B
   enableB2BTest(baseContext);
 
@@ -55,10 +71,7 @@ describe('BO - Customers - Outstanding : Filter the Outstanding table', async ()
     it('should login to BO', async function () {
       await loginCommon.loginBO(this, page);
     });
-
-    const creationTests = new Array(leastNumberOutstanding).fill(0, 0, leastNumberOutstanding);
-    creationTests.forEach((value, index) => {
-      customerData = new CustomerFaker();
+    customersData.forEach((customerData, index = 1) => {
       const addressData = new AddressFaker({
         email: customerData.email,
         country: 'France',
@@ -81,7 +94,7 @@ describe('BO - Customers - Outstanding : Filter the Outstanding table', async ()
       createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_createOrder_${index}`);
 
       // Pre-Condition : Update order status to payment accepted
-      describe(`Pre-Test : Update order status to payment accepted ${index}`, async () => {
+      describe('PRE-TEST : Update order status to payment accepted', async () => {
         it('should go to Orders > Orders page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToOrdersPage_${index}`, baseContext);
 
@@ -122,8 +135,9 @@ describe('BO - Customers - Outstanding : Filter the Outstanding table', async ()
     await helper.closeBrowserContext(browserContext);
   });
 
-  describe('Filter outstanding table', async () => {
-    it('should got to BO > Customers > Outstanding page', async function () {
+  // Go to the outstanding page
+  describe('Go to the outstanding page', async () => {
+    it('should go to BO > Customers > Outstanding page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOutstandingPage', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -137,19 +151,97 @@ describe('BO - Customers - Outstanding : Filter the Outstanding table', async ()
 
       await outstandingPage.resetFilter(page);
 
-      outstandingId = await outstandingPage.getTextColumn(page, 'id_invoice', 1);
-      await expect(outstandingId).to.be.at.least(1);
       numberOutstanding = await outstandingPage.getNumberOutstanding(page);
       await expect(numberOutstanding).to.be.above(0);
     });
+  });
 
+  /*
+    Sort outstanding by:
+    ID, Date, Customer, Company, Outstanding allowance DESC and ASC
+ */
+  describe('Sort outstanding table', async () => {
+    const sortTests = [
+      {
+        args: {
+          testIdentifier: 'sortByDateDesc', sortBy: 'date_add', sortDirection: 'desc', isDate: true,
+        },
+      },
+      {args: {testIdentifier: 'sortByCustomerDesc', sortBy: 'customer', sortDirection: 'desc'}},
+      {args: {testIdentifier: 'sortByCompanyDesc', sortBy: 'company', sortDirection: 'desc'}},
+      {
+        args: {
+          testIdentifier: 'sortByOutstandingAllowanceDesc',
+          sortBy: 'outstanding_allow_amount',
+          sortDirection: 'desc',
+          isFloat: true,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByDateAsc', sortBy: 'date_add', sortDirection: 'asc', isDate: true,
+        },
+      },
+      {args: {testIdentifier: 'sortByCustomerAsc', sortBy: 'customer', sortDirection: 'asc'}},
+      {args: {testIdentifier: 'sortByCompanyAsc', sortBy: 'company', sortDirection: 'asc'}},
+      {
+        args: {
+          testIdentifier: 'sortByOutstandingAllowanceAsc',
+          sortBy: 'outstanding_allow_amount',
+          sortDirection: 'asc',
+          isFloat: true,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByIdAsc', sortBy: 'id_invoice', sortDirection: 'asc', isFloat: true,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByIdDesc', sortBy: 'id_invoice', sortDirection: 'desc', isFloat: true,
+        },
+      },
+    ];
+    sortTests.forEach((test) => {
+      it(`should sort by ${test.args.sortBy} ${test.args.sortDirection}`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+
+        let nonSortedTable = await outstandingPage.getAllRowsColumnContent(page, test.args.sortBy);
+
+        await outstandingPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+
+        let sortedTable = await outstandingPage.getAllRowsColumnContent(page, test.args.sortBy);
+
+        if (test.args.isFloat) {
+          nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
+          sortedTable = await sortedTable.map(text => parseFloat(text));
+        }
+
+        const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
+
+        if (test.args.sortDirection === 'asc') {
+          await expect(sortedTable).to.deep.equal(expectedResult);
+        } else {
+          await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+        }
+      });
+    });
+  });
+
+
+  /*
+    Filter outstanding by:
+    ID, Date, Customer, Company, Risk, Outstanding allowance
+ */
+  describe('Filter outstanding table', async () => {
     const filterTests = [
       {
         args: {
           filterType: 'input',
           testIdentifier: 'filterByID',
           filterBy: 'id_invoice',
-          filterValue: outstandingId,
+          filterValue: '2',
         },
       },
       {
@@ -157,7 +249,7 @@ describe('BO - Customers - Outstanding : Filter the Outstanding table', async ()
           filterType: 'input',
           testIdentifier: 'filterByCustomer',
           filterBy: 'customer',
-          filterValue: customerData.lastName,
+          filterValue: createCustomerData1.lastName,
         },
       },
       {
@@ -165,7 +257,7 @@ describe('BO - Customers - Outstanding : Filter the Outstanding table', async ()
           filterType: 'input',
           testIdentifier: 'filterByCompany',
           filterBy: 'company',
-          filterValue: customerData.company,
+          filterValue: createCustomerData2.company,
         },
       },
       {
@@ -173,7 +265,7 @@ describe('BO - Customers - Outstanding : Filter the Outstanding table', async ()
           filterType: 'select',
           testIdentifier: 'filterByRisk',
           filterBy: 'risk',
-          filterValue: customerData.riskRating,
+          filterValue: createCustomerData3.riskRating,
         },
       },
       {
@@ -181,7 +273,7 @@ describe('BO - Customers - Outstanding : Filter the Outstanding table', async ()
           filterType: 'input',
           testIdentifier: 'filterOutstandingAllowance',
           filterBy: 'outstanding_allow_amount',
-          filterValue: customerData.allowedOutstandingAmount,
+          filterValue: createCustomerData1.allowedOutstandingAmount,
         },
       },
     ];
@@ -230,9 +322,13 @@ describe('BO - Customers - Outstanding : Filter the Outstanding table', async ()
       await expect(numberOutstandingAfterReset).to.be.equal(numberOutstanding);
     });
   });
-  // Post-Condition : Disable B2B
-  disableB2BTest(browserContext);
 
-  // Post-condition: Delete created customers by bulk action
-  bulkDeleteCustomersTest('email', customerData.email, `${baseContext}_postTest_1`);
+
+  // Post-Condition: Delete created customers by bulk action
+  customersData.forEach((customerData, index = 1) => {
+    bulkDeleteCustomersTest('email', customerData.email, `${baseContext}_postTest_${index}`);
+  });
+
+  // Post-Condition : Disable B2B
+  disableB2BTest(`${baseContext}_postTest_3`);
 });
