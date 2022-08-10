@@ -28,14 +28,14 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Bridge\AdminController;
 
+use PrestaShopBundle\Bridge\AdminController\Action\ActionInterface;
 use PrestaShopBundle\Bridge\Exception\NotAllowedActionTypeForListException;
-use PrestaShopBundle\Bridge\Listing\Configuration\Action\ActionInterface;
-use PrestaShopBundle\Bridge\Listing\Configuration\Action\ListBulkAction;
-use PrestaShopBundle\Bridge\Listing\Configuration\Action\ListHeaderToolbarAction;
-use PrestaShopBundle\Bridge\Listing\Configuration\Action\ListRowAction;
-use PrestaShopBundle\Bridge\Listing\Configuration\Field\FieldInterface;
-use PrestaShopBundle\Bridge\Listing\Configuration\ListHelperConfiguration;
+use PrestaShopBundle\Bridge\Listing\Action\ListBulkAction;
+use PrestaShopBundle\Bridge\Listing\Action\ListHeaderToolbarAction;
+use PrestaShopBundle\Bridge\Listing\Action\ListRowAction;
+use PrestaShopBundle\Bridge\Listing\Field\FieldInterface;
 use PrestaShopBundle\Bridge\Listing\FiltersHelper;
+use PrestaShopBundle\Bridge\Listing\HelperListConfiguration;
 
 /**
  * Contains the principal methods you need to horizontally migrate a controller which has a list.
@@ -50,10 +50,10 @@ trait FrameworkBridgeControllerListTrait
         bool $deleted = false,
         bool $explicitSelect = false,
         bool $useFoundRows = true
-    ): ListHelperConfiguration {
+    ): HelperListConfiguration {
         $controllerConfiguration = $this->getControllerConfiguration();
 
-        return $this->get('prestashop.bridge.listing.configuration.list_helper_configuration_factory')->create(
+        return $this->get('prestashop.bridge.listing.helper_list_configuration_factory')->create(
             $controllerConfiguration,
             $identifierKey,
             $positionIdentifierKey,
@@ -77,11 +77,11 @@ trait FrameworkBridgeControllerListTrait
      * This method add action specific for the list.
      *
      * @param ActionInterface $action
-     * @param ListHelperConfiguration $helperListConfiguration
+     * @param HelperListConfiguration $helperListConfiguration
      *
      * @return void
      */
-    protected function addActionList(ActionInterface $action, ListHelperConfiguration $helperListConfiguration): void
+    protected function addActionList(ActionInterface $action, HelperListConfiguration $helperListConfiguration): void
     {
         if ($action instanceof ListBulkAction) {
             $helperListConfiguration->bulkActions[$action->getLabel()] = $action->getConfig();
@@ -111,7 +111,7 @@ trait FrameworkBridgeControllerListTrait
      *
      * @return void
      */
-    protected function addListField(FieldInterface $field, ListHelperConfiguration $helperListConfiguration): void
+    protected function addListField(FieldInterface $field, HelperListConfiguration $helperListConfiguration): void
     {
         $helperListConfiguration->fieldsList[$field->getLabel()] = $field->getConfig();
     }

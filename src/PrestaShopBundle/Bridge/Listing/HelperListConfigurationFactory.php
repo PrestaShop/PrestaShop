@@ -26,14 +26,14 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Bridge\Listing\Configuration;
+namespace PrestaShopBundle\Bridge\Listing;
 
-use PrestaShopBundle\Bridge\AdminController\Configuration\ControllerConfiguration;
+use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 
 /**
  * Create an instance of the helper configuration object, using controller configuration.
  */
-class ListHelperConfigurationFactory
+class HelperListConfigurationFactory
 {
     /**
      * @param ControllerConfiguration $controllerConfiguration
@@ -45,7 +45,7 @@ class ListHelperConfigurationFactory
      * @param bool $explicitSelect
      * @param bool $useFoundRows
      *
-     * @return ListHelperConfiguration
+     * @return HelperListConfiguration
      */
     public function create(
         ControllerConfiguration $controllerConfiguration,
@@ -57,11 +57,11 @@ class ListHelperConfigurationFactory
         bool $deleted = false,
         bool $explicitSelect = false,
         bool $useFoundRows = true
-    ): ListHelperConfiguration {
+    ): HelperListConfiguration {
         if (empty($defaultOrderBy)) {
             $defaultOrderBy = $identifier;
         }
-        $helperListConfiguration = new ListHelperConfiguration();
+        $helperListConfiguration = new HelperListConfiguration();
 
         $helperListConfiguration->table = $controllerConfiguration->tableName;
         $helperListConfiguration->listId = $controllerConfiguration->tableName;

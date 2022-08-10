@@ -35,9 +35,9 @@ use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerInterface;
-use PrestaShopBundle\Bridge\Listing\Configuration\ListHelperConfiguration;
-use PrestaShopBundle\Bridge\Listing\Configuration\ListHelperConfigurator;
 use PrestaShopBundle\Bridge\Listing\FilterPrefix;
+use PrestaShopBundle\Bridge\Listing\HelperListConfiguration;
+use PrestaShopBundle\Bridge\Listing\HelperListConfigurator;
 use PrestaShopBundle\Service\DataProvider\UserProvider;
 use PrestaShopException;
 use Shop;
@@ -50,7 +50,7 @@ use Validate;
  * @see HelperList
  * @see FrameworkBridgeControllerInterface
  */
-class ListHelperBridge
+class HelperListBridge
 {
     /**
      * @var Context
@@ -63,7 +63,7 @@ class ListHelperBridge
     private $userProvider;
 
     /**
-     * @var ListHelperConfigurator
+     * @var HelperListConfigurator
      */
     private $helperListConfigurator;
 
@@ -80,14 +80,14 @@ class ListHelperBridge
     /**
      * @param LegacyContext $legacyContext
      * @param UserProvider $userProvider
-     * @param ListHelperConfigurator $helperListVarsAssigner
+     * @param HelperListConfigurator $helperListVarsAssigner
      * @param HookDispatcherInterface $hookDispatcher
      * @param Configuration $configuration
      */
     public function __construct(
         LegacyContext $legacyContext,
         UserProvider $userProvider,
-        ListHelperConfigurator $helperListVarsAssigner,
+        HelperListConfigurator $helperListVarsAssigner,
         HookDispatcherInterface $hookDispatcher,
         Configuration $configuration
     ) {
@@ -101,12 +101,12 @@ class ListHelperBridge
     /**
      * Generate the html for list using HelperList class
      *
-     * @param ListHelperConfiguration $helperListConfiguration
+     * @param HelperListConfiguration $helperListConfiguration
      *
      * @return string|null
      */
     public function generateList(
-        ListHelperConfiguration $helperListConfiguration
+        HelperListConfiguration $helperListConfiguration
     ): ?string {
         if (!($helperListConfiguration->fieldsList && is_array($helperListConfiguration->fieldsList))) {
             return null;
@@ -134,13 +134,13 @@ class ListHelperBridge
     }
 
     /**
-     * @param ListHelperConfiguration $helperListConfiguration
+     * @param HelperListConfiguration $helperListConfiguration
      * @param int $idLang
      *
      * @return void
      */
     protected function generateListQuery(
-        ListHelperConfiguration $helperListConfiguration,
+        HelperListConfiguration $helperListConfiguration,
         int $idLang
     ): void {
         if ($helperListConfiguration->table == 'feature_value') {
@@ -283,12 +283,12 @@ class ListHelperBridge
     }
 
     /**
-     * @param ListHelperConfiguration $helperListConfiguration
+     * @param HelperListConfiguration $helperListConfiguration
      * @param string|null $limit
      *
      * @return int
      */
-    private function checkSqlLimit(ListHelperConfiguration $helperListConfiguration, ?string $limit = null): int
+    private function checkSqlLimit(HelperListConfiguration $helperListConfiguration, ?string $limit = null): int
     {
         if (empty($limit)) {
             if (
@@ -316,11 +316,11 @@ class ListHelperBridge
     }
 
     /**
-     * @param ListHelperConfiguration $helperListConfiguration
+     * @param HelperListConfiguration $helperListConfiguration
      *
      * @return string
      */
-    private function getFromClause(ListHelperConfiguration $helperListConfiguration)
+    private function getFromClause(HelperListConfiguration $helperListConfiguration)
     {
         $sqlTable = $helperListConfiguration->table == 'order' ? 'orders' : $helperListConfiguration->table;
 
@@ -328,13 +328,13 @@ class ListHelperBridge
     }
 
     /**
-     * @param ListHelperConfiguration $helperListConfiguration
+     * @param HelperListConfiguration $helperListConfiguration
      * @param int $idLang
      * @param int|bool $idLangShop
      *
      * @return string
      */
-    private function getJoinClause(ListHelperConfiguration $helperListConfiguration, $idLang, $idLangShop = false)
+    private function getJoinClause(HelperListConfiguration $helperListConfiguration, $idLang, $idLangShop = false)
     {
         $shopJoinClause = '';
         if ($helperListConfiguration->shopLinkType) {
@@ -348,13 +348,13 @@ class ListHelperBridge
     }
 
     /**
-     * @param ListHelperConfiguration $helperListConfiguration
+     * @param HelperListConfiguration $helperListConfiguration
      * @param int $idLang
      * @param int $idLangShop
      *
      * @return string
      */
-    private function getLanguageJoinClause(ListHelperConfiguration $helperListConfiguration, $idLang, $idLangShop)
+    private function getLanguageJoinClause(HelperListConfiguration $helperListConfiguration, $idLang, $idLangShop)
     {
         $languageJoinClause = '';
         if ($helperListConfiguration->isJoinLanguageTableAuto) {
@@ -377,11 +377,11 @@ class ListHelperBridge
     }
 
     /**
-     * @param ListHelperConfiguration $helperListConfiguration
+     * @param HelperListConfiguration $helperListConfiguration
      *
      * @return string
      */
-    private function getWhereClause(ListHelperConfiguration $helperListConfiguration): string
+    private function getWhereClause(HelperListConfiguration $helperListConfiguration): string
     {
         $whereShop = '';
         if ($helperListConfiguration->shopLinkType) {
@@ -416,13 +416,13 @@ class ListHelperBridge
     }
 
     /**
-     * @param ListHelperConfiguration $helperListConfiguration
+     * @param HelperListConfiguration $helperListConfiguration
      * @param string $orderBy
      * @param string $orderDirection
      *
      * @return string
      */
-    private function getOrderByClause(ListHelperConfiguration $helperListConfiguration, $orderBy, $orderDirection)
+    private function getOrderByClause(HelperListConfiguration $helperListConfiguration, $orderBy, $orderDirection)
     {
         $helperListConfiguration->orderBy = $this->checkOrderBy($helperListConfiguration, $orderBy);
         $helperListConfiguration->orderWay = $this->checkOrderDirection($helperListConfiguration, $orderDirection);
@@ -435,12 +435,12 @@ class ListHelperBridge
     }
 
     /**
-     * @param ListHelperConfiguration $helperListConfiguration
+     * @param HelperListConfiguration $helperListConfiguration
      * @param string $orderBy
      *
      * @return false|string
      */
-    private function checkOrderBy(ListHelperConfiguration $helperListConfiguration, $orderBy)
+    private function checkOrderBy(HelperListConfiguration $helperListConfiguration, $orderBy)
     {
         if (empty($orderBy)) {
             $prefix = FilterPrefix::getByClassName($helperListConfiguration->legacyControllerName);
@@ -478,12 +478,12 @@ class ListHelperBridge
     }
 
     /**
-     * @param ListHelperConfiguration $helperListConfiguration
+     * @param HelperListConfiguration $helperListConfiguration
      * @param string $orderDirection
      *
      * @return mixed|string
      */
-    private function checkOrderDirection(ListHelperConfiguration $helperListConfiguration, $orderDirection)
+    private function checkOrderDirection(HelperListConfiguration $helperListConfiguration, $orderDirection)
     {
         $prefix = FilterPrefix::getByClassName($helperListConfiguration->legacyControllerName);
         if (empty($orderDirection)) {

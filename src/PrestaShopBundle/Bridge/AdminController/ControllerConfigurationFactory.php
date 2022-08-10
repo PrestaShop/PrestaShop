@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Bridge\AdminController\Configuration;
+namespace PrestaShopBundle\Bridge\AdminController;
 
 use PrestaShopBundle\Bridge\Exception\BridgeException;
 use PrestaShopBundle\Security\Admin\Employee;

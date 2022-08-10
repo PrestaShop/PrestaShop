@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Bridge\Listing\Configuration;
+namespace PrestaShopBundle\Bridge\Listing;
 
 use HelperList;
 use PrestaShopBundle\Bridge\Smarty\BreadcrumbsAndTitleConfigurator;
@@ -35,7 +35,7 @@ use PrestaShopBundle\Bridge\Smarty\BreadcrumbsAndTitleConfigurator;
  * Assign variables needed by the legacy helper list to render a list using Smarty.
  * These variables come from the helper list configuration.
  */
-class ListHelperConfigurator
+class HelperListConfigurator
 {
     /**
      * @var BreadcrumbsAndTitleConfigurator
@@ -54,13 +54,13 @@ class ListHelperConfigurator
     /**
      * This function sets various display options for helper list.
      *
-     * @param ListHelperConfiguration $helperListConfiguration
+     * @param HelperListConfiguration $helperListConfiguration
      * @param HelperList $helper
      *
      * @return void
      */
     public function setHelperDisplay(
-        ListHelperConfiguration $helperListConfiguration,
+        HelperListConfiguration $helperListConfiguration,
         HelperList $helper
     ): void {
         $breadcrumbs = $this->breadcrumbsAndTitleHydrator->getBreadcrumbs($helperListConfiguration->id);

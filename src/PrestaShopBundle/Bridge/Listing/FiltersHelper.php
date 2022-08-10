@@ -32,7 +32,6 @@ use Context;
 use ObjectModel;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
-use PrestaShopBundle\Bridge\Listing\Configuration\ListHelperConfiguration;
 use Symfony\Component\HttpFoundation\Request;
 use Tools;
 use Validate;
@@ -66,13 +65,13 @@ class FiltersHelper
 
     /**
      * @param Request $request
-     * @param ListHelperConfiguration $helperListConfiguration
+     * @param HelperListConfiguration $helperListConfiguration
      *
      * @return void
      */
     public function processFilter(
         Request $request,
-        ListHelperConfiguration $helperListConfiguration
+        HelperListConfiguration $helperListConfiguration
     ): void {
         $this->hookDispatcher->dispatchWithParameters('action' . $helperListConfiguration->legacyControllerName . 'ListingFieldsModifier', [
             'fields' => &$helperListConfiguration->fieldsList,
@@ -178,12 +177,12 @@ class FiltersHelper
     }
 
     /**
-     * @param ListHelperConfiguration $helperListConfiguration
+     * @param HelperListConfiguration $helperListConfiguration
      * @param Request|null $request
      *
      * @return void
      */
-    public function resetFilters(ListHelperConfiguration $helperListConfiguration, Request $request = null): void
+    public function resetFilters(HelperListConfiguration $helperListConfiguration, Request $request = null): void
     {
         $prefix = FilterPrefix::getByClassName($helperListConfiguration->legacyControllerName);
         $filters = $this->context->cookie->getFamily($prefix . $helperListConfiguration->listId . 'Filter_');
@@ -215,13 +214,13 @@ class FiltersHelper
     }
 
     /**
-     * @param ListHelperConfiguration $helperListConfiguration
+     * @param HelperListConfiguration $helperListConfiguration
      * @param string $key
      * @param string $filter
      *
      * @return false|mixed
      */
-    private function filterToField(ListHelperConfiguration $helperListConfiguration, $key, $filter)
+    private function filterToField(HelperListConfiguration $helperListConfiguration, $key, $filter)
     {
         if (empty($helperListConfiguration->fieldsList)) {
             return false;

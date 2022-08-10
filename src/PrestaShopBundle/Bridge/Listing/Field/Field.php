@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Bridge\Listing\Configuration\Field;
+namespace PrestaShopBundle\Bridge\Listing\Field;
 
 use Symfony\Component\OptionsResolver\OptionsResolver;
 

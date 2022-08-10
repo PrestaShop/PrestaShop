@@ -24,20 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Bridge\AdminController;
+declare(strict_types=1);
+
+namespace PrestaShopBundle\Bridge\AdminController\Action;
 
 /**
- * Interface for horizontally migrated controllers
+ * Represents an action in the header toolbar of the page
  */
-interface FrameworkBridgeControllerInterface
+class HeaderToolbarAction extends Action
 {
-    /**
-     * @return LegacyControllerBridgeInterface
-     */
-    public function getLegacyControllerBridge(): LegacyControllerBridgeInterface;
-
-    /**
-     * @return ControllerConfiguration
-     */
-    public function getControllerConfiguration(): ControllerConfiguration;
 }
