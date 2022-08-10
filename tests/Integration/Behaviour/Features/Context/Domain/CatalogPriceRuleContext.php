@@ -32,6 +32,7 @@ use Behat\Gherkin\Node\TableNode;
 use Country;
 use Currency;
 use DateTimeInterface;
+use Exception;
 use Group;
 use Language;
 use PHPUnit\Framework\Assert;
@@ -171,6 +172,9 @@ class CatalogPriceRuleContext extends AbstractDomainFeatureContext
         );
         $actualCatalogPriceRules = $actualList->getCatalogPriceRules();
         foreach ($transformedList->getCatalogPriceRules() as $key => $expectedItem) {
+            if (!isset($actualCatalogPriceRules[$key])) {
+                throw new RuntimeException(sprintf('Catalog price rule "%s" not found', $propertyAccessor->getValue($expectedItem, 'catalogPriceRuleName')));
+            }
             $actualItem = $actualCatalogPriceRules[$key];
 
             $scalarPropertyNames = ['catalogPriceRuleName', 'currencyName', 'countryName', 'groupName', 'fromQuantity', 'reductionType', 'shopName'];
