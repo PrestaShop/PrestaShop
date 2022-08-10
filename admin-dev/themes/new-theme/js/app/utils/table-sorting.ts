@@ -32,6 +32,8 @@ const {$} = window;
 class TableSorting {
   selector: string;
 
+  idTable: string;
+
   columns: JQuery;
 
   /**
@@ -39,7 +41,8 @@ class TableSorting {
    */
   constructor(table: JQuery) {
     this.selector = '.ps-sortable-column';
-    this.columns = $(table).find(this.selector);
+    this.idTable = table.attr('id') ?? '';
+    this.columns = table.find(this.selector);
   }
 
   /**
@@ -110,6 +113,7 @@ class TableSorting {
       params.set('orderBy', colName);
       params.set('sortOrder', direction);
     }
+    url.hash = this.idTable;
 
     return url.toString();
   }
