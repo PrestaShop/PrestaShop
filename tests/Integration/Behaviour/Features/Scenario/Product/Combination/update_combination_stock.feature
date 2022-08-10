@@ -309,7 +309,7 @@ Feature: Update product combination stock information in Back Office (BO)
       | low stock threshold        | 0           |
       | low stock alert is enabled | false       |
       | available date             | 2021-10-10  |
-    Then I should get error that the stock available quantity is invalid
+    Then I should get error that stock available quantity is invalid
     When I update combination "product1MBlack" stock with following details:
       | delta quantity             | -2147483649 |
       | minimal quantity           | 1           |
@@ -317,7 +317,7 @@ Feature: Update product combination stock information in Back Office (BO)
       | low stock threshold        | 0           |
       | low stock alert is enabled | false       |
       | available date             | 2021-10-10  |
-    Then I should get error that the stock available quantity is invalid
+    Then I should get error that stock available quantity is invalid
 
   Scenario: Adding biggest and smallest possible combination quantities
     When I update combination "product1MBlue" stock with following details:
