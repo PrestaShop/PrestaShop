@@ -4,12 +4,6 @@ type Category = {
   displayName: string,
 }
 
-type TypeaheadCategory = {
-  id: number,
-  name: string,
-  breadcrumb: string,
-}
-
 type TreeCategory = {
   id: number,
   name: string,

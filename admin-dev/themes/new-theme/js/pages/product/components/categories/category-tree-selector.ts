@@ -45,7 +45,7 @@ export default class CategoryTreeSelector {
 
   treeCategories: Array<TreeCategory>;
 
-  typeaheadCategories: Array<TypeaheadCategory>;
+  typeaheadCategories: Array<Category>;
 
   defaultCategoryId: number;
 
@@ -59,9 +59,9 @@ export default class CategoryTreeSelector {
 
   constructor(eventEmitter: EventEmitter) {
     this.eventEmitter = eventEmitter;
-    this.treeCategories = [];
-    this.typeaheadCategories = [];
     this.selectedCategories = [];
+    this.typeaheadCategories = [];
+    this.treeCategories = [];
     this.defaultCategoryId = 0;
     this.modalContentContainer = null;
     this.modal = null;
@@ -118,7 +118,7 @@ export default class CategoryTreeSelector {
     this.tagsRenderer.render(this.selectedCategories, this.defaultCategoryId);
     this.treeCategories = await getCategories();
 
-    this.initTypeaheadData(this.treeCategories, '');
+    this.initTypeaheadData(this.treeCategories);
     this.initTypeahead();
     this.initTree();
     this.listenCancelChanges();
@@ -359,20 +359,17 @@ export default class CategoryTreeSelector {
     return parentItem;
   }
 
-  private initTypeaheadData(
-    treeCategories: Array<TreeCategory>,
-    parentBreadcrumb: string,
-  ) {
+  private initTypeaheadData(treeCategories: Array<TreeCategory>) {
     treeCategories.forEach((treeCategory) => {
-      const typeaheadCategory: TypeaheadCategory = {
+      this.typeaheadCategories.push({
         id: treeCategory.id,
         name: treeCategory.name,
-        breadcrumb: parentBreadcrumb ? `${parentBreadcrumb} > ${treeCategory.name}` : treeCategory.name,
-      };
-      this.typeaheadCategories.push(typeaheadCategory);
+        displayName: treeCategory.displayName,
+      });
 
       if (treeCategory.children) {
-        this.initTypeaheadData(treeCategory.children, typeaheadCategory.breadcrumb);
+        // Unfold the category tree, so that every child and parent categories stays on same level
+        this.initTypeaheadData(treeCategory.children);
       }
     });
   }
@@ -380,14 +377,14 @@ export default class CategoryTreeSelector {
   private initTypeahead(): void {
     const source: Bloodhound = new Bloodhound({
       // @ts-ignore
-      datumTokenizer: Tokenizers.obj.letters('breadcrumb'),
+      datumTokenizer: Tokenizers.obj.letters('displayName'),
       queryTokenizer: Bloodhound.tokenizers.nonword,
       local: this.typeaheadCategories,
     });
 
     const searchConfig: InputAutoCompleteSearchConfig = {
       source,
-      display: 'breadcrumb',
+      display: 'displayName',
       value: 'id',
       onSelect: (selectedItem: any, e: JQueryEventObject, searchInput: JQuery): boolean => {
         this.updateCategory(Number(selectedItem.id), true);
