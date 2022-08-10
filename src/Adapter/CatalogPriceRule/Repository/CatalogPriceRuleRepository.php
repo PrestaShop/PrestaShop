@@ -68,8 +68,7 @@ class CatalogPriceRuleRepository
     ): array {
         $qb = $this->getCatalogPriceRulesQueryBuilder($langId, $productId)
             ->select('spr.id_specific_price_rule, spr.name as specific_price_rule_name, currency_lang.symbol, country_lang.name as lang_name, shop.name as shop_name, group_lang.name as group_name, spr.from_quantity, spr.reduction_type, spr.reduction, spr.from, spr.to')
-        ;
-        $qb->setFirstResult($offset)
+            ->setFirstResult($offset)
             ->setMaxResults($limit)
         ;
 

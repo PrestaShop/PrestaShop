@@ -55,7 +55,7 @@ class CatalogPriceRuleContext extends AbstractPrestaShopFeatureContext
     /**
      * @return SharedStorage
      */
-    protected function getSharedStorage()
+    protected function getSharedStorage(): SharedStorage
     {
         return SharedStorage::getStorage();
     }
