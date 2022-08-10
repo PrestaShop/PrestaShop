@@ -256,6 +256,11 @@ default:
             - Tests\Integration\Behaviour\Features\Context\CountryFeatureContext
             - Tests\Integration\Behaviour\Features\Context\Domain\CustomerFeatureContext
             - Tests\Integration\Behaviour\Features\Context\LanguageFeatureContext
+            - Tests\Integration\Behaviour\Features\Context\Domain\FeatureFeatureContext
+            - Tests\Integration\Behaviour\Features\Context\Domain\FeatureValueFeatureContext
+            - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductFeatureValuesFeatureContext
+
+
         meta:
             paths:
                 - "%paths.base%/Features/Scenario/Meta"
