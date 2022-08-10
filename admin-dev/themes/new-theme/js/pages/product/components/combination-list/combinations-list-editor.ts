@@ -242,9 +242,9 @@ export default class CombinationsListEditor {
       // If formContent is available we can replace the content to display the inline errors
       if (jsonResponse.formContent) {
         this.updateForm(jsonResponse.formContent);
-      } else {
-        notifyFormErrors(jsonResponse);
       }
+      notifyFormErrors(jsonResponse);
+
       this.renderer.setLoading(false);
     } else if (jsonResponse.message) {
       $.growl({message: jsonResponse.message});
