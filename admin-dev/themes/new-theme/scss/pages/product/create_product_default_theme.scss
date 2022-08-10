@@ -13,8 +13,29 @@
     /* stylelint-enable declaration-no-important */
   }
 
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+  }
+
   .modal-header .close {
     float: right;
-    margin: -1.5rem 0 -1.25rem auto;
+    margin: -1rem 0 0 auto;
+  }
+
+  button.close {
+    padding: 0;
+    margin: initial;
+    font-size: 2rem;
+    background-color: transparent;
+    border: 0;
+  }
+
+  .modal-title {
+    font-size: 1rem;
+  }
+
+  .loader {
+    position: absolute;
   }
 }
