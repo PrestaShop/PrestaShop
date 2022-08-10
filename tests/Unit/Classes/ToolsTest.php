@@ -830,6 +830,8 @@ class ToolsTest extends TestCase
     /**
      * This test verifies the rewrite rules to be written in the .htaccess file against the expected url segments
      *
+     * @see Tools::generateHtaccess
+     *
      * @dataProvider provideHtaccessRules
      */
     public function testHtaccessRewriteRules(string $rule, string $replacement, array $testCases)
@@ -853,8 +855,8 @@ class ToolsTest extends TestCase
     {
         return [
             'legacy product images 1' => [
-                '^([a-z0-9]+)\-([a-z0-9]+)(\-[_a-zA-Z0-9-]*)(-[0-9]+)?/.+\.jpg$',
-                '%{ENV:REWRITEBASE}img/p/$1-$2$3.jpg',
+                '^([a-z\d]+\-[a-z\d]+\-[-\w]*)/.+(\.(?:jpe?g|webp|png|avif))$',
+                '%{ENV:REWRITEBASE}img/p/$1$2',
                 [
                     [
                         'uri' => '123-something-foobar/totally-ignored.jpg',
@@ -914,8 +916,8 @@ class ToolsTest extends TestCase
             ],
 
             'legacy product images 2' => [
-                '^([0-9]+)\-([0-9]+)(-[0-9]+)?/.+\.jpg$',
-                '%{ENV:REWRITEBASE}img/p/$1-$2$3.jpg',
+                '^([\d]+(?:\-[\d]+){1,2})/.+(\.(?:jpe?g|webp|png|avif))$',
+                '%{ENV:REWRITEBASE}img/p/$1$2',
                 [
                     [
                         'uri' => '123-456-7/totally-ignored.jpg',
@@ -939,8 +941,8 @@ class ToolsTest extends TestCase
             ],
 
             'product images (single digit)' => [
-                '^([0-9])(\-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$',
-                '%{ENV:REWRITEBASE}img/p/$1/$1$2$3.jpg',
+                '^(([\d])(?:\-[\w-]*)?)/.+(\.(?:jpe?g|webp|png|avif))$$',
+                '%{ENV:REWRITEBASE}img/p/$2/$1$3',
                 [
                     [
                         'uri' => '1-soMeTh1ng_cool22-99/totally-ignored.jpg',
@@ -971,8 +973,8 @@ class ToolsTest extends TestCase
             ],
 
             'product images (7 digits)' => [
-                '^([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])(\-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$',
-                '%{ENV:REWRITEBASE}img/p/$1/$2/$3/$4/$5/$6/$7/$1$2$3$4$5$6$7$8$9.jpg',
+                '^(([\d])([\d])([\d])([\d])([\d])([\d])([\d])(?:\-[\w-]*)?)/.+(\.(?:jpe?g|webp|png|avif))$',
+                '%{ENV:REWRITEBASE}img/p/$2/$3/$4/$5/$6/$7/$8/$1$9',
                 [
                     [
                         'uri' => '1234567-soMeTh1ng_cool22-99/totally-ignored.jpg',
@@ -1007,8 +1009,8 @@ class ToolsTest extends TestCase
             ],
 
             'category images 1' => [
-                '^c/([0-9]+)(\-[\.*_a-zA-Z0-9-]*)(-[0-9]+)?/.+\.jpg$',
-                '%{ENV:REWRITEBASE}img/c/$1$2$3.jpg',
+                '^c/([\d]+)(\-[\.*\w-]*)/.+(\.(?:jpe?g|webp|png|avif))$',
+                '%{ENV:REWRITEBASE}img/c/$1$2.jpg',
                 [
                     [
                         'uri' => 'c/1234567-soMe.Th1n*g_cool22-99/totally-ignored.jpg',
@@ -1051,8 +1053,8 @@ class ToolsTest extends TestCase
             ],
 
             'category images 2' => [
-                '^c/([a-zA-Z_-]+)(-[0-9]+)?/.+\.jpg$',
-                '%{ENV:REWRITEBASE}img/c/$1$2.jpg',
+                '^c/([a-zA-Z_-]+)(-[\d]+)?/.+(\.(?:jpe?g|webp|png|avif))$',
+                '%{ENV:REWRITEBASE}img/c/$1$2$3',
                 [
                     [
                         'uri' => 'c/soMeThing_cool-test-99/totally-ignored.jpg',
