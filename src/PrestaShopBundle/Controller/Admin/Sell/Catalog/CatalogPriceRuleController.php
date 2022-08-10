@@ -322,6 +322,11 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
         return $this->get('prestashop.core.form.identifiable_object.builder.catalog_price_rule_form_builder');
     }
 
+    /**
+     * @param CatalogPriceRuleList $catalogPriceRuleList
+     *
+     * @return array
+     */
     private function formatCatalogPriceRule(CatalogPriceRuleList $catalogPriceRuleList): array
     {
         $list = [];

@@ -90,6 +90,12 @@ class CatalogPriceRuleRepository
         return (int) $qb->execute()->fetch()['total_catalog_price_rules'];
     }
 
+    /**
+     * @param LanguageId $langId
+     * @param ProductId $productId
+     *
+     * @return QueryBuilder
+     */
     private function getCatalogPriceRulesQueryBuilder(LanguageId $langId, ProductId $productId): QueryBuilder
     {
         return $this->connection->createQueryBuilder()

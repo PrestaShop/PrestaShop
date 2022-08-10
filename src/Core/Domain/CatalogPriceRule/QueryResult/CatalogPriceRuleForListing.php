@@ -88,6 +88,21 @@ class CatalogPriceRuleForListing
      */
     private $dateEnd;
 
+    /**
+     * CatalogPriceRuleForListing constructor.
+     *
+     * @param int $catalogPriceRuleId
+     * @param string $catalogPriceRuleName
+     * @param int $fromQuantity
+     * @param string $reductionType
+     * @param DecimalNumber $reduction
+     * @param DateTimeInterface $dateStart
+     * @param DateTimeInterface $dateEnd
+     * @param string|null $shopName
+     * @param string|null $currencyName
+     * @param string|null $countryName
+     * @param string|null $groupName
+     */
     public function __construct(
         int $catalogPriceRuleId,
         string $catalogPriceRuleName,

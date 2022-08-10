@@ -56,6 +56,14 @@ class PricingType extends TranslatorAwareType
      */
     private $legacyContext;
 
+    /**
+     * PricingType constructor.
+     *
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param Currency $defaultCurrency
+     * @param LegacyContext $legacyContext
+     */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
