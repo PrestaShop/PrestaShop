@@ -263,8 +263,6 @@ default:
             - Tests\Integration\Behaviour\Features\Context\Domain\AttributeFeatureContext
             - Tests\Integration\Behaviour\Features\Context\Domain\AttributeGroupFeatureContext
 
-
-
         meta:
             paths:
                 - "%paths.base%/Features/Scenario/Meta"

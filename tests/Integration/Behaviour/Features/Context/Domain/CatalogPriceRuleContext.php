@@ -32,7 +32,6 @@ use Behat\Gherkin\Node\TableNode;
 use Country;
 use Currency;
 use DateTimeInterface;
-use Exception;
 use Group;
 use Language;
 use PHPUnit\Framework\Assert;
@@ -46,8 +45,10 @@ use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult\CatalogPriceR
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\QueryResult\EditableCatalogPriceRule;
 use PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\ValueObject\CatalogPriceRuleId;
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\ValueObject\Reduction;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
+use PrestaShopException;
 use RuntimeException;
 use Shop;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -145,8 +146,15 @@ class CatalogPriceRuleContext extends AbstractDomainFeatureContext
     /**
      * @Then I should be able to see following list of catalog price rules with language :langIso with limit :limit offset :offset and total :total and product :productReference:
      *
+     * @param string $productReference
+     * @param string $langIso
+     * @param int $limit
+     * @param int $offset
+     * @param int $total
      * @param TableNode $expectedList
      *
+     * @throws PrestaShopException
+     * @throws ProductConstraintException
      * @see transformCatalogPriceRuleList
      */
     public function assertCatalogPriceRuleList(string $productReference, string $langIso, int $limit, int $offset, int $total, TableNode $expectedList): void

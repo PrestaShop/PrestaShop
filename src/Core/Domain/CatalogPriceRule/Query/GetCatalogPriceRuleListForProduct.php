@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Core\Domain\CatalogPriceRule\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 class GetCatalogPriceRuleListForProduct
@@ -53,6 +54,16 @@ class GetCatalogPriceRuleListForProduct
      */
     private $offset;
 
+    /**
+     * GetCatalogPriceRuleListForProduct constructor.
+     *
+     * @param int $productId
+     * @param int $langId
+     * @param int|null $limit
+     * @param int|null $offset
+     *
+     * @throws ProductConstraintException
+     */
     public function __construct(int $productId, int $langId, ?int $limit = null, ?int $offset = null)
     {
         $this->productId = new ProductId($productId);
