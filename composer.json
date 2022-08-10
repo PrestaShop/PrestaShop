@@ -114,11 +114,16 @@
     "symfony/polyfill-php73": "^1.10",
     "symfony/swiftmailer-bundle": "^3.1",
     "symfony/symfony": "^3.4.37",
-    "tecnickcom/tcpdf": "^6.2.12",
+    "tecnickcom/tcpdf": "dev-6.4.4-patch",
     "tijsverkoyen/css-to-inline-styles": "^2.2",
     "twig/twig": "^1.38"
   },
   "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/PrestaShop/CsaGuzzleBundle",
+      "canonical": false
+    },
     {
       "type": "vcs",
       "url": "https://github.com/PrestaShop/php-cssjanus",
@@ -126,7 +131,7 @@
     },
     {
       "type": "vcs",
-      "url": "https://github.com/PrestaShop/CsaGuzzleBundle",
+      "url": "https://github.com/PrestaShop/TCPDF",
       "canonical": false
     }
   ],
