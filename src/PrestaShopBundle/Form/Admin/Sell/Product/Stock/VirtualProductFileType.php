@@ -224,6 +224,7 @@ class VirtualProductFileType extends TranslatorAwareType implements EventSubscri
                 'class' => 'virtual-product-file-content',
             ],
             'columns_number' => 3,
+            'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/virtual_product_file.html.twig',
         ]);
         $resolver->setAllowedTypes('virtual_product_file_id', ['int', 'null']);
     }

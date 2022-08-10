@@ -28,8 +28,11 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Form\EventListener;
 
+use PHPUnit\Framework\MockObject\MockObject;
+use PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShopBundle\Form\Admin\Sell\Product\EventListener\ProductTypeListener;
+use PrestaShopBundle\Form\Admin\Sell\Product\ExtraModulesType;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Tests\Integration\PrestaShopBundle\Form\TestProductFormType;
@@ -250,18 +253,69 @@ class ProductTypeListenerTest extends FormListenerTestCase
     }
 
     /**
+     * @dataProvider getProductTypes
+     *
+     * @param string $productType
+     */
+    public function testExtraModules(string $productType): void
+    {
+        $form = $this->createForm(TestProductFormType::class);
+
+        $this->assertFormTypeExistsInForm($form, 'extra_modules', true);
+        $this->adaptProductFormBasedOnProductType($form, $productType);
+        $this->assertFormTypeExistsInForm($form, 'extra_modules', false);
+
+        $form = $this->createForm(TestProductFormType::class);
+        $this->assertFormTypeExistsInForm($form, 'extra_modules', true);
+        $this->adaptProductFormBasedOnProductType($form, $productType, [], [
+            [
+                'module' => 'test',
+            ],
+        ]);
+        $this->assertFormTypeExistsInForm($form, 'extra_modules', true);
+    }
+
+    public function getProductTypes(): iterable
+    {
+        yield 'combinations product' => [ProductType::TYPE_COMBINATIONS];
+        yield 'standard product' => [ProductType::TYPE_STANDARD];
+        yield 'pack product' => [ProductType::TYPE_PACK];
+        yield 'virtual product' => [ProductType::TYPE_VIRTUAL];
+    }
+
+    /**
      * @param FormInterface $form
      * @param string $productType
      * @param array $extraData
+     * @param array $registeredModules
      */
-    private function adaptProductFormBasedOnProductType(FormInterface $form, string $productType, array $extraData = []): void
+    private function adaptProductFormBasedOnProductType(FormInterface $form, string $productType, array $extraData = [], array $registeredModules = []): void
     {
-        $listener = new ProductTypeListener();
+        $listener = new ProductTypeListener($this->buildHookInformationProvider($registeredModules));
 
         $formData = empty($extraData) ? [] : $extraData;
         $formData['header']['type'] = $productType;
 
         $eventMock = $this->createEventMock($formData, $form);
         $listener->adaptProductForm($eventMock);
+    }
+
+    /**
+     * @param array $registeredModules
+     *
+     * @return mixed|MockObject|HookInformationProvider
+     */
+    private function buildHookInformationProvider(array $registeredModules = [])
+    {
+        $hookInformationProvider = $this->getMockBuilder(HookInformationProvider::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $hookInformationProvider
+            ->method('getRegisteredModulesByHookName')
+            ->with(ExtraModulesType::HOOK_NAME)
+            ->willReturn($registeredModules)
+        ;
+
+        return $hookInformationProvider;
     }
 }

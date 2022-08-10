@@ -56,6 +56,7 @@ class CombinationManagerType extends TranslatorAwareType
             ->setDefaults([
                 'label' => $this->trans('Manage product combinations', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
+                'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/combination.html.twig',
             ])
             ->setRequired([
                 'product_id',

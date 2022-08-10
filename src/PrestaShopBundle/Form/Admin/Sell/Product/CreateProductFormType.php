@@ -62,6 +62,8 @@ class CreateProductFormType extends TranslatorAwareType
             'attr' => [
                 'data-modal-title' => $this->trans('Add new product', 'Admin.Catalog.Feature'),
             ],
+            'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/product.html.twig',
+            'use_default_themes' => false,
         ]);
     }
 
@@ -70,6 +72,6 @@ class CreateProductFormType extends TranslatorAwareType
      */
     public function getBlockPrefix()
     {
-        return 'product';
+        return 'create_product';
     }
 }

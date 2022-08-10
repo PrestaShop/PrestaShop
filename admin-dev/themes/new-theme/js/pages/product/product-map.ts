@@ -53,7 +53,7 @@ export default {
   },
   create: {
     newProductButton: '.new-product-button',
-    createModalSelector: '#product_type',
+    createModalSelector: '#create_product_type',
   },
   invalidField: '.is-invalid',
   productFormSubmitButton: '.product-form-save-button',
@@ -78,8 +78,7 @@ export default {
     customizationFieldRow: '.customization-field-row',
   },
   combinations: {
-    navigationTab: '#combinations-tab-nav',
-    externalCombinationTab: '#external-combination-tab',
+    navigationTab: '#product_combinations-tab-nav',
     combinationManager: '#product_combinations_combination_manager',
     preloader: '#combinations-preloader',
     emptyState: '#combinations-empty-state',
@@ -232,7 +231,7 @@ export default {
   jsArrow: '.js-arrow',
   jsNavTabs: '.js-nav-tabs',
   toggleTab: '[data-toggle="tab"]',
-  formContentTab: '#form_content > .form-contenttab',
+  formContentTab: '#product-tabs-content > .form-contenttab',
   leftArrow: '.left-arrow',
   rightArrow: '.right-arrow',
   footer: {

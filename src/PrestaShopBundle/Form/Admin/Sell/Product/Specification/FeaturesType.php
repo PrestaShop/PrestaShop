@@ -32,6 +32,7 @@ use PrestaShopBundle\Form\Admin\Type\IconButtonType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class FeaturesType extends TranslatorAwareType
 {
@@ -56,5 +57,16 @@ class FeaturesType extends TranslatorAwareType
                 ],
             ])
         ;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+        $resolver->setDefaults([
+            'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/features.html.twig',
+        ]);
     }
 }

@@ -113,6 +113,8 @@ class CombinationFormType extends TranslatorAwareType
             ->setDefaults([
                 'required' => false,
                 'label' => false,
+                'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/combination.html.twig',
+                'use_default_themes' => false,
             ])
         ;
     }

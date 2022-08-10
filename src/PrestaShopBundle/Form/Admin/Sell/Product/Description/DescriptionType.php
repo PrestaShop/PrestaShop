@@ -168,7 +168,7 @@ class DescriptionType extends TranslatorAwareType
         $resolver
             ->setDefaults([
                 'required' => false,
-                'label' => false,
+                'label' => $this->trans('Description', 'Admin.Catalog.Feature'),
             ])
             ->setRequired([
                 'product_id',

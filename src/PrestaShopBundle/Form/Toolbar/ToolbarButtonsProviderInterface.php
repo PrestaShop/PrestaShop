@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,9 +22,18 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
-{% form_theme productForm.pricing.specific_prices '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/specific_prices.html.twig' %}
+ */
 
-<div role="tabpanel" class="form-contenttab tab-pane container-fluid" id="pricing-tab">
-  {{ form_row(productForm.pricing) }}
-</div>
+declare(strict_types=1);
+
+namespace PrestaShopBundle\Form\Toolbar;
+
+/**
+ * This interface is used for form relaying on ButtonCollectionType component, you can handle the options expected
+ * by this component via this interface thus allowing you to extract this logic in a dedicated service, for more
+ * information about the expected format @see ButtonCollectionType
+ */
+interface ToolbarButtonsProviderInterface
+{
+    public function getToolbarButtonsOptions(array $parameters): array;
+}

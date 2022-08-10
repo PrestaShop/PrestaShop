@@ -66,6 +66,7 @@ class BulkCombinationType extends TranslatorAwareType
                 'attr' => [
                     'class' => 'bulk-combination-form',
                 ],
+                'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/combination.html.twig',
             ])
             ->setRequired([
                 'product_id',
