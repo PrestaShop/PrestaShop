@@ -155,6 +155,7 @@ class CatalogPriceRuleContext extends AbstractDomainFeatureContext
      *
      * @throws PrestaShopException
      * @throws ProductConstraintException
+     *
      * @see transformCatalogPriceRuleList
      */
     public function assertCatalogPriceRuleList(string $productReference, string $langIso, int $limit, int $offset, int $total, TableNode $expectedList): void
