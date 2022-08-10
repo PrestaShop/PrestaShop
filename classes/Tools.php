@@ -2511,8 +2511,8 @@ class ToolsCore
 
                     // Rewrite product images < 10 millions
                     $path_components = [];
-                    for ($i = 1; $i <= 7; $i++) {
-                        $path_components[] = "$" . ($i + 1); // paths start on 2
+                    for ($i = 1; $i <= 7; ++$i) {
+                        $path_components[] = '$' . ($i + 1); // paths start on 2
                         $path = implode('/', $path_components);
                         fwrite($write_fd, $media_domains);
                         fwrite($write_fd, $domain_rewrite_cond);
