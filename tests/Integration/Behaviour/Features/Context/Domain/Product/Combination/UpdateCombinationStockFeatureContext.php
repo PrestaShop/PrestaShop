@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinat
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationStock;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
+use Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateStockFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class UpdateCombinationStockFeatureContext extends AbstractCombinationFeatureContext
@@ -142,6 +143,19 @@ class UpdateCombinationStockFeatureContext extends AbstractCombinationFeatureCon
         $this->assertLastErrorIs(
             ProductStockConstraintException::class,
             ProductStockConstraintException::FIXED_AND_DELTA_QUANTITY_PROVIDED
+        );
+    }
+
+    /**
+     * @Then I should get error that the stock available quantity is invalid
+     *
+     * @return void
+     */
+    public function assertLastErrorIsInvalidStockAvailableQuantity(): void
+    {
+        $this->assertLastErrorIs(
+            ProductStockConstraintException::class,
+            ProductStockConstraintException::INVALID_QUANTITY
         );
     }
 
