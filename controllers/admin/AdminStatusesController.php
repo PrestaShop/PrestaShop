@@ -712,6 +712,12 @@ class AdminStatusesControllerCore extends AdminController
 
     public function ajaxProcessSendEmailOrderState()
     {
+        if ($this->access('edit') != '1') {
+            echo json_encode(['success' => 0, 'text' => $this->trans('You do not have permission to edit this.', [], 'Admin.Notifications.Error')]);
+
+            return;
+        }
+
         $id_order_state = (int) Tools::getValue('id_order_state');
 
         $sql = 'UPDATE ' . _DB_PREFIX_ . 'order_state SET `send_email`= NOT `send_email` WHERE id_order_state=' . $id_order_state;
@@ -726,6 +732,12 @@ class AdminStatusesControllerCore extends AdminController
 
     public function ajaxProcessDeliveryOrderState()
     {
+        if ($this->access('edit') != '1') {
+            echo json_encode(['success' => 0, 'text' => $this->trans('You do not have permission to edit this.', [], 'Admin.Notifications.Error')]);
+
+            return;
+        }
+
         $id_order_state = (int) Tools::getValue('id_order_state');
 
         $sql = 'UPDATE ' . _DB_PREFIX_ . 'order_state SET `delivery`= NOT `delivery` WHERE id_order_state=' . $id_order_state;
@@ -740,6 +752,11 @@ class AdminStatusesControllerCore extends AdminController
 
     public function ajaxProcessInvoiceOrderState()
     {
+        if ($this->access('edit') != '1') {
+            echo json_encode(['success' => 0, 'text' => $this->trans('You do not have permission to edit this.', [], 'Admin.Notifications.Error')]);
+
+            return;
+        }
         $id_order_state = (int) Tools::getValue('id_order_state');
 
         $sql = 'UPDATE ' . _DB_PREFIX_ . 'order_state SET `invoice`= NOT `invoice` WHERE id_order_state=' . $id_order_state;
