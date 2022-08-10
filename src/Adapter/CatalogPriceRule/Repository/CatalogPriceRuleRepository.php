@@ -87,9 +87,9 @@ class CatalogPriceRuleRepository
         $qb = $this->getCatalogPriceRulesQueryBuilder($langId, $productId)
             ->select('COUNT(spr.id_specific_price_rule) as total_catalog_price_rules');
 
-
         return (int) $qb->execute()->fetch()['total_catalog_price_rules'];
     }
+
     private function getCatalogPriceRulesQueryBuilder(LanguageId $langId, ProductId $productId): QueryBuilder
     {
         return $this->connection->createQueryBuilder()

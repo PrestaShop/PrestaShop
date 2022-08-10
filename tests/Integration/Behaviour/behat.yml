@@ -259,6 +259,10 @@ default:
             - Tests\Integration\Behaviour\Features\Context\Domain\FeatureFeatureContext
             - Tests\Integration\Behaviour\Features\Context\Domain\FeatureValueFeatureContext
             - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductFeatureValuesFeatureContext
+            - Tests\Integration\Behaviour\Features\Context\Domain\Product\Combination\GenerateCombinationFeatureContext
+            - Tests\Integration\Behaviour\Features\Context\Domain\AttributeFeatureContext
+            - Tests\Integration\Behaviour\Features\Context\Domain\AttributeGroupFeatureContext
+
 
 
         meta:
