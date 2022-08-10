@@ -1184,7 +1184,7 @@ class AdminImportControllerCore extends AdminController
      */
     protected static function copyImg($id_entity, $id_image = null, $url = '', $entity = 'products', $regenerate = true)
     {
-        return ImageManager::copyImg($$id_entity, $$id_image, $$url, $$entity, $$regenerate);
+        return ImageManager::copyImg($id_entity, $id_image, $url, $entity, $regenerate);
     }
 
     protected static function get_best_path($tgt_width, $tgt_height, $path_infos)
