@@ -42,7 +42,7 @@ use PrestaShop\PrestaShop\Core\Hook\RenderedHookInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecification;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
-use PrestaShopBundle\Bridge\AdminController\Configuration\ControllerConfiguration;
+use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 use QuickAccess;
 use Shop;
 use Symfony\Component\Routing\RouterInterface;

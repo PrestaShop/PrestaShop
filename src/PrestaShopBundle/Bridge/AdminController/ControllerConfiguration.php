@@ -26,17 +26,15 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Bridge\AdminController\Configuration;
+namespace PrestaShopBundle\Bridge\AdminController;
 
-use PrestaShopBundle\Bridge\AdminController\Configuration\Action\HeaderToolbarAction;
+use PrestaShopBundle\Bridge\AdminController\Action\HeaderToolbarAction;
 use PrestaShopBundle\Security\Admin\Employee;
 use Shop;
 
 /**
  * This object holds the configuration of a Controller that is being migrated horizontally.
  * Its properties reflect the properties of a legacy PrestaShop controller.
- *
- * @todo: get rid of public properties and use getters + constructor arguments to secure the contract in dedicated PR.
  */
 class ControllerConfiguration
 {

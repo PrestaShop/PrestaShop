@@ -2,8 +2,8 @@ services:
   _defaults:
     public: true
 
-  prestashop.bridge.admin_controller.configuration.controller_configuration_factory:
-    class: PrestaShopBundle\Bridge\AdminController\Configuration\ControllerConfigurationFactory
+  prestashop.bridge.admin_controller.controller_configuration_factory:
+    class: PrestaShopBundle\Bridge\AdminController\ControllerConfigurationFactory
     arguments:
       - '@prestashop.user_provider'
 

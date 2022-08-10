@@ -24,13 +24,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShopBundle\Bridge\Listing\Configuration\Field;
+namespace PrestaShopBundle\Bridge\AdminController\Action;
 
 /**
- * Define contract for field class.
+ * Defines the contract for actions class and needed constant to know available action.
  */
-interface FieldInterface
+interface ActionInterface
 {
+    public const AVAILABLE_ACTION_VIEW = 'view';
+    public const AVAILABLE_ACTION_EDIT = 'edit';
+    public const AVAILABLE_ACTION_DUPLICATE = 'duplicate';
+    public const AVAILABLE_ACTION_DELETE = 'delete';
+
     /**
      * @return array
      */

@@ -26,35 +26,13 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Bridge\Listing\HelperBridge;
+namespace PrestaShopBundle\Bridge\Listing\Action;
 
-use Db;
-use DbQuery;
-use PrestaShopBundle\Bridge\Listing\Configuration\ListHelperConfiguration;
+use PrestaShopBundle\Bridge\AdminController\Action\Action;
 
 /**
- * This class customize the result of the list for the feature controller.
+ * This class is the object to instantiate if you want to add a bulk action for your list.
  */
-class FeatureListHelperBridge extends ListHelperBridge
+class ListBulkAction extends Action
 {
-    public function generateListQuery(
-        ListHelperConfiguration $helperListConfiguration,
-        int $idLang
-    ): void {
-        parent::generateListQuery($helperListConfiguration, $idLang);
-
-        $nbItems = count($helperListConfiguration->list);
-        for ($i = 0; $i < $nbItems; ++$i) {
-            $item = &$helperListConfiguration->list[$i];
-
-            $query = new DbQuery();
-            $query->select('COUNT(fv.id_feature_value) as count_values');
-            $query->from('feature_value', 'fv');
-            $query->where('fv.id_feature =' . (int) $item['id_feature']);
-            $query->where('(fv.custom=0 OR fv.custom IS NULL)');
-            $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
-            $item['value'] = (int) $res;
-            unset($query);
-        }
-    }
 }

@@ -30,7 +30,7 @@ namespace PrestaShopBundle\Bridge\Smarty;
 
 use Media;
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShopBundle\Bridge\AdminController\Configuration\ControllerConfiguration;
+use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 use Profile;
 
 /**

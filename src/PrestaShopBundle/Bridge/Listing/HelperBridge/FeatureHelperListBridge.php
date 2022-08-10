@@ -26,11 +26,35 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Bridge\Listing\Configuration\Action;
+namespace PrestaShopBundle\Bridge\Listing\HelperBridge;
+
+use Db;
+use DbQuery;
+use PrestaShopBundle\Bridge\Listing\HelperListConfiguration;
 
 /**
- * This class is the object to instantiate if you want to add an action in the header toolbar of your list.
+ * This class customize the result of the list for the feature controller.
  */
-class ListHeaderToolbarAction extends Action
+class FeatureHelperListBridge extends HelperListBridge
 {
+    public function generateListQuery(
+        HelperListConfiguration $helperListConfiguration,
+        int $idLang
+    ): void {
+        parent::generateListQuery($helperListConfiguration, $idLang);
+
+        $nbItems = count($helperListConfiguration->list);
+        for ($i = 0; $i < $nbItems; ++$i) {
+            $item = &$helperListConfiguration->list[$i];
+
+            $query = new DbQuery();
+            $query->select('COUNT(fv.id_feature_value) as count_values');
+            $query->from('feature_value', 'fv');
+            $query->where('fv.id_feature =' . (int) $item['id_feature']);
+            $query->where('(fv.custom=0 OR fv.custom IS NULL)');
+            $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+            $item['value'] = (int) $res;
+            unset($query);
+        }
+    }
 }

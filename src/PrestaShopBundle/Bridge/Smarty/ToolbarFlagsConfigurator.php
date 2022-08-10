@@ -31,7 +31,7 @@ namespace PrestaShopBundle\Bridge\Smarty;
 use Language;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Help\Documentation;
-use PrestaShopBundle\Bridge\AdminController\Configuration\ControllerConfiguration;
+use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 use Symfony\Component\Routing\RouterInterface;
 use Tools;
 
