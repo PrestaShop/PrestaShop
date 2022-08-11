@@ -138,6 +138,7 @@ module.exports = {
     webservice: './js/pages/webservice',
     zone: './js/pages/zone',
     country: './js/pages/country',
+    country_form: './js/pages/country/form',
   },
   output: {
     path: path.resolve(__dirname, '../public'),

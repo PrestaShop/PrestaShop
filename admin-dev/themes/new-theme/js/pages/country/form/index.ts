@@ -22,19 +22,14 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-import FormFieldToggler, {ToggleType} from '@components/form/form-field-toggler';
-import CountryMap from '@pages/country/country-map';
 
-export default class ZipCodeManager {
-  constructor() {
-    this.initZipCodeToggler();
-  }
+import ZipCodeManager from '@pages/country/components/zip-code-manager';
+import FormSubmitButton from "@components/form-submit-button";
 
-  private initZipCodeToggler(): void {
-    new FormFieldToggler({
-      disablingInputSelector: CountryMap.isZopCodeNeededSwitch,
-      targetSelector: CountryMap.zipCodeFormatInput,
-      toggleType: ToggleType.availability,
-    });
-  }
-}
+const {$} = window;
+
+$(() => {
+  new FormSubmitButton();
+
+  new ZipCodeManager();
+});
