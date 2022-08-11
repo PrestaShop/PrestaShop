@@ -617,10 +617,44 @@ class AdminModuleController {
   }
 
   initAddModuleAction() {
-    const self = this;
-    const addModuleButton = $(self.importModalBtnSelector);
-    addModuleButton.attr('data-toggle', 'modal');
-    addModuleButton.attr('data-target', self.dropZoneModalSelector);
+    const body = $('body');
+    const isMaintenanceMode = window.isShopMaintenance;
+    const modal = $(`#${$(this).data('confirm_modal')}`);
+
+    body.on('click', this.importModalBtnSelector, () => {
+      if (modal.length !== 1) {
+        const maintenanceLink = document.createElement('a');
+        maintenanceLink.classList.add('btn', 'btn-primary', 'btn-lg');
+        maintenanceLink.setAttribute('href', window.moduleURLs.maintenancePage);
+        maintenanceLink.innerHTML = window.moduleTranslations.moduleModalUpdateMaintenance;
+
+        const importConfirmModal = new ConfirmModal(
+          {
+            id: 'confirm-module-import-modal',
+            confirmTitle:
+            window.moduleTranslations.singleModuleModalImportTitle,
+            closeButtonLabel: window.moduleTranslations.moduleModalCancel,
+            confirmButtonLabel: isMaintenanceMode
+              ? window.moduleTranslations.moduleModalImport
+              : window.moduleTranslations.importAnywayButtonText,
+            confirmButtonClass: isMaintenanceMode
+              ? 'btn-primary'
+              : 'btn-secondary',
+            confirmMessage: isMaintenanceMode
+              ? ''
+              : window.moduleTranslations.moduleModalConfirmMessage,
+            closable: true,
+            customButtons: isMaintenanceMode ? [] : [maintenanceLink],
+          },
+
+          () => $(this.dropZoneModalSelector).modal({show: true}),
+        );
+
+        importConfirmModal.show();
+      }
+
+      return false;
+    });
   }
 
   initDropzone() {

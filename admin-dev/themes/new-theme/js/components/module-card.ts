@@ -155,7 +155,7 @@ export default class ModuleCard {
                 : 'btn-secondary',
               confirmMessage: isMaintenanceMode
                 ? ''
-                : window.moduleTranslations.moduleModalInstallConfirmMessage,
+                : window.moduleTranslations.moduleModalConfirmMessage,
               closable: true,
               customButtons: isMaintenanceMode ? [] : [maintenanceLink],
             },
@@ -274,7 +274,7 @@ export default class ModuleCard {
               : 'btn-secondary',
             confirmMessage: isMaintenanceMode
               ? ''
-              : window.moduleTranslations.moduleModalUpdateConfirmMessage,
+              : window.moduleTranslations.moduleModalConfirmMessage,
             closable: true,
             customButtons: isMaintenanceMode ? [] : [maintenanceLink],
           },
