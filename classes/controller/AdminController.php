@@ -2721,8 +2721,6 @@ class AdminControllerCore extends Controller
             ->getValue();
 
         $this->context->smarty->assign([
-            'context_mode' => $this->context->mode,
-            'can_import' => $this->can_import,
             'js_router_metadata' => [
                 'base_url' => __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_),
                 'token' => $token,
