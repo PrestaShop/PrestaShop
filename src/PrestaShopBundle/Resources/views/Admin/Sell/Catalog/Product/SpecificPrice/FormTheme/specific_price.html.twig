@@ -36,6 +36,11 @@
   </li>
 {% endblock %}
 
+{#
+  these widgets are the prototype templates (that are handled by js later) and they are rendered as disabled by default
+  on page load because of disablingSwitch component behavior. But they must not be disabled
+  or else will not be submitted to the form, so we remove "disabled" attribute if it exists.
+#}
 {% block searched_customer_id_customer_widget %}
   {% set attr = attr|filter((value, key) => key != 'disabled') %}
   {{ block('hidden_widget') }}
