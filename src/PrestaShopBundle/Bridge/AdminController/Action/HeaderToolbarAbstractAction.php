@@ -26,13 +26,11 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Bridge\Listing\Action;
-
-use PrestaShopBundle\Bridge\AdminController\Action\Action;
+namespace PrestaShopBundle\Bridge\AdminController\Action;
 
 /**
- * This class is the object to instantiate if you want to add a bulk action for your list.
+ * Represents an action in the header toolbar of the page
  */
-class ListBulkAction extends Action
+class HeaderToolbarAbstractAction extends AbstractAction
 {
 }

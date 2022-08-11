@@ -33,14 +33,14 @@ use Feature;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
-use PrestaShopBundle\Bridge\AdminController\Action\HeaderToolbarAction;
+use PrestaShopBundle\Bridge\AdminController\Action\HeaderToolbarAbstractAction;
 use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerInterface;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerListTrait;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerTrait;
-use PrestaShopBundle\Bridge\Listing\Action\ListBulkAction;
-use PrestaShopBundle\Bridge\Listing\Action\ListHeaderToolbarAction;
-use PrestaShopBundle\Bridge\Listing\Action\ListRowAction;
+use PrestaShopBundle\Bridge\Listing\Action\ListBulkAbstractAction;
+use PrestaShopBundle\Bridge\Listing\Action\ListHeaderToolbarAbstractAction;
+use PrestaShopBundle\Bridge\Listing\Action\ListRowAbstractAction;
 use PrestaShopBundle\Bridge\Listing\Field\Field;
 use PrestaShopBundle\Bridge\Listing\HelperBridge\FeatureHelperListBridge;
 use PrestaShopBundle\Bridge\Listing\HelperListConfiguration;
@@ -77,7 +77,7 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
         $this->setListActions($helperListConfiguration);
 
         //@todo: seems this actually isn't used. List filters url directs to legacy controller and FiltersHelper never runs
-        $filtersHelper = $this->getFiltersHelper();
+        $filtersHelper = $this->getFiltersProcessor();
         if ($request->request->has('submitResetfeature')) {
             $filtersHelper->resetFilters($helperListConfiguration, $request);
         }
@@ -209,13 +209,13 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
         $index = $controllerConfiguration->legacyCurrentIndex;
         $token = $controllerConfiguration->token;
 
-        $controllerConfiguration->addToolbarAction(new HeaderToolbarAction('new_feature', [
+        $controllerConfiguration->addToolbarAction(new HeaderToolbarAbstractAction('new_feature', [
             //@todo: replace by $this->generateUrl('admin_features_add') when creation is fully migrated
             'href' => $index . '&addfeature&token=' . $token,
             'desc' => $this->trans('Add new feature', 'Admin.Catalog.Feature'),
             'icon' => 'process-icon-new',
         ]));
-        $controllerConfiguration->addToolbarAction(new HeaderToolbarAction('new_feature_value', [
+        $controllerConfiguration->addToolbarAction(new HeaderToolbarAbstractAction('new_feature_value', [
             'href' => $index . '&addfeature_value&id_feature=' . (int) Tools::getValue('id_feature') . '&token=' . $token,
             'desc' => $this->trans('Add new feature value', 'Admin.Catalog.Help'),
             'icon' => 'process-icon-new',
@@ -231,18 +231,18 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
     {
         $controllerConfiguration = $this->getControllerConfiguration();
 
-        $this->addActionList(new ListHeaderToolbarAction('new', [
+        $this->addActionList(new ListHeaderToolbarAbstractAction('new', [
             //@todo: replace by $this->generateUrl('admin_features_add') when creation is fully migrated
             //@todo: can i generate link without using controller config?
             'href' => $controllerConfiguration->legacyCurrentIndex . '&addfeature&token=' . $controllerConfiguration->token,
             'desc' => $this->trans('Add new', 'Admin.Actions'),
         ]), $helperListConfiguration);
 
-        $this->addActionList(new ListRowAction('view'), $helperListConfiguration);
-        $this->addActionList(new ListRowAction('edit'), $helperListConfiguration);
-        $this->addActionList(new ListRowAction('delete'), $helperListConfiguration);
+        $this->addActionList(new ListRowAbstractAction('view'), $helperListConfiguration);
+        $this->addActionList(new ListRowAbstractAction('edit'), $helperListConfiguration);
+        $this->addActionList(new ListRowAbstractAction('delete'), $helperListConfiguration);
 
-        $this->addActionList(new ListBulkAction('delete', [
+        $this->addActionList(new ListBulkAbstractAction('delete', [
             'text' => $this->trans('Delete selected', 'Admin.Actions'),
             'icon' => 'icon-trash',
             'confirm' => $this->trans('Delete selected items?', 'Admin.Notifications.Warning'),

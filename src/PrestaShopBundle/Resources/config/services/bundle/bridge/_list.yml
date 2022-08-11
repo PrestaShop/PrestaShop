@@ -10,8 +10,8 @@ services:
     arguments:
       - '@prestashop.bridge.smarty.breadcrumbs_and_title_configurator'
 
-  prestashop.bridge.listing.filters_helper:
-    class: PrestaShopBundle\Bridge\Listing\FiltersHelper
+  prestashop.bridge.listing.filters_processor:
+    class: PrestaShopBundle\Bridge\Listing\FiltersProcessor
     arguments:
       - "@prestashop.adapter.legacy.context"
       - "@prestashop.hook.dispatcher"

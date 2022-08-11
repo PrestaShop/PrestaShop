@@ -38,10 +38,8 @@ use Validate;
 
 /**
  * This class processes filters, stores them in cookies and updates the list's SQL query.
- *
- * @todo: rename to handler/processor?
  */
-class FiltersHelper
+class FiltersProcessor
 {
     /**
      * @var Context
