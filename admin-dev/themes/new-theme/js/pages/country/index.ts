@@ -32,11 +32,9 @@ import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-
 import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
 import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
-import FormSubmitButton from '@components/form-submit-button';
 import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
 import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
 import TranslatableInput from '../../components/translatable-input';
-import ProductSpecificationsManager from '@pages/country/components/zip-code-manager';
 
 const {$} = window;
 
@@ -55,8 +53,4 @@ $(() => {
   countryGrid.addExtension(new ColumnTogglingExtension());
 
   new TranslatableInput();
-
-  new FormSubmitButton();
-
-  new ProductSpecificationsManager();
 });
