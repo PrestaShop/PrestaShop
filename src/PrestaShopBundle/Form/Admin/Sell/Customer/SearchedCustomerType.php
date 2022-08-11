@@ -49,6 +49,7 @@ class SearchedCustomerType extends CommonAbstractType
             ])
             ->add('fullname_and_email', TextPreviewType::class, [
                 'label' => false,
+                'block_prefix' => 'searched_customer_fullname_and_email',
             ])
         ;
     }
