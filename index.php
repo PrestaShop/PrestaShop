@@ -24,5 +24,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-require dirname(__FILE__).'/config/config.inc.php';
-Dispatcher::getInstance()->dispatch();
+use Symfony\Component\HttpFoundation\Request;
+
+require dirname(__FILE__) . '/config/config.inc.php';
+
+$kernel = new AppKernel(_PS_ENV_, true);
+$kernel->boot();
+Dispatcher::getInstance(Request::createFromGlobals())->dispatch();
