@@ -37,9 +37,13 @@ use TaxRulesGroup;
  */
 final class TaxRuleGroupChoiceProvider implements FormChoiceProviderInterface, FormChoiceAttributeProviderInterface
 {
-    /** @var int */
+    /**
+     * @var int
+     */
     private $countryId;
-    /** @var int */
+    /**
+     * @var int
+     */
     private $langId;
 
     public function __construct(int $countryId, int $langId)
