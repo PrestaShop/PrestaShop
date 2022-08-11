@@ -41,6 +41,11 @@
   {{ block('hidden_widget') }}
 {% endblock %}
 
+{% block searched_customer_fullname_and_email_widget %}
+  {% set attr = attr|filter((value, key) => key != 'disabled') %}
+  {{ block('text_preview_widget') }}
+{% endblock %}
+
 {% block specific_price_impact_row %}
   {{ form_label(form) }}
   {{ form_errors(form) }}
