@@ -45,6 +45,7 @@ class SearchedCustomerType extends CommonAbstractType
         $builder
             ->add('id_customer', HiddenType::class, [
                 'label' => false,
+                'block_prefix' => 'searched_customer_id_customer',
             ])
             ->add('fullname_and_email', TextPreviewType::class, [
                 'label' => false,
