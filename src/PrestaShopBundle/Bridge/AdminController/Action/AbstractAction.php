@@ -33,10 +33,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * This class is a base class for action, which are actions the user can do.
  * For example, add a new entity, or update it.
- *
- * @todo: shouldn't it be abstract?
  */
-class Action implements ActionInterface
+abstract class AbstractAction implements ActionInterface
 {
     /**
      * @var string

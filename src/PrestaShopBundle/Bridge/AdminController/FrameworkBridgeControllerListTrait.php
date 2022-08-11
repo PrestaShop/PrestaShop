@@ -30,11 +30,11 @@ namespace PrestaShopBundle\Bridge\AdminController;
 
 use PrestaShopBundle\Bridge\AdminController\Action\ActionInterface;
 use PrestaShopBundle\Bridge\Exception\NotAllowedActionTypeForListException;
-use PrestaShopBundle\Bridge\Listing\Action\ListBulkAction;
-use PrestaShopBundle\Bridge\Listing\Action\ListHeaderToolbarAction;
-use PrestaShopBundle\Bridge\Listing\Action\ListRowAction;
+use PrestaShopBundle\Bridge\Listing\Action\ListBulkAbstractAction;
+use PrestaShopBundle\Bridge\Listing\Action\ListHeaderToolbarAbstractAction;
+use PrestaShopBundle\Bridge\Listing\Action\ListRowAbstractAction;
 use PrestaShopBundle\Bridge\Listing\Field\FieldInterface;
-use PrestaShopBundle\Bridge\Listing\FiltersHelper;
+use PrestaShopBundle\Bridge\Listing\FiltersProcessor;
 use PrestaShopBundle\Bridge\Listing\HelperListConfiguration;
 
 /**
@@ -66,11 +66,11 @@ trait FrameworkBridgeControllerListTrait
     }
 
     /**
-     * @return FiltersHelper
+     * @return FiltersProcessor
      */
-    protected function getFiltersHelper(): FiltersHelper
+    protected function getFiltersProcessor(): FiltersProcessor
     {
-        return $this->get('prestashop.bridge.listing.filters_helper');
+        return $this->get('prestashop.bridge.listing.filters_processor');
     }
 
     /**
@@ -83,19 +83,19 @@ trait FrameworkBridgeControllerListTrait
      */
     protected function addActionList(ActionInterface $action, HelperListConfiguration $helperListConfiguration): void
     {
-        if ($action instanceof ListBulkAction) {
+        if ($action instanceof ListBulkAbstractAction) {
             $helperListConfiguration->bulkActions[$action->getLabel()] = $action->getConfig();
 
             return;
         }
 
-        if ($action instanceof ListRowAction) {
+        if ($action instanceof ListRowAbstractAction) {
             $helperListConfiguration->actions[] = $action->getLabel();
 
             return;
         }
 
-        if ($action instanceof ListHeaderToolbarAction) {
+        if ($action instanceof ListHeaderToolbarAbstractAction) {
             $helperListConfiguration->toolbarButton[$action->getLabel()] = $action->getConfig();
 
             return;
