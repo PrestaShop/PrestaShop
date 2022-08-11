@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\StockSettings;
 use Symfony\Component\Form\Extension\Core\DataTransformer\NumberToLocalizedStringTransformer;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -46,16 +47,6 @@ use Symfony\Component\Validator\Constraints\Type;
 class DeltaQuantityType extends TranslatorAwareType
 {
     /**
-     * this is the biggest int number that can be saved in database, bigger than this will throw error
-     */
-    public const INT_32_MAX_POSITIVE = 2147483647;
-
-    /**
-     * this is the smallest int number that can be saved in database, smaller than this will throw error
-     */
-    public const INT_32_MAX_NEGATIVE = -2147483648;
-
-    /**
      * {@inheritDoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -65,8 +56,8 @@ class DeltaQuantityType extends TranslatorAwareType
                 'block_prefix' => 'delta_quantity_quantity',
                 'constraints' => [
                     new Range([
-                        'min' => static::INT_32_MAX_NEGATIVE,
-                        'max' => static::INT_32_MAX_POSITIVE,
+                        'min' => StockSettings::INT_32_MAX_NEGATIVE,
+                        'max' => StockSettings::INT_32_MAX_POSITIVE,
                     ]),
                 ],
             ])
@@ -78,8 +69,8 @@ class DeltaQuantityType extends TranslatorAwareType
                     new Type(['type' => 'numeric']),
                     new NotBlank(),
                     new Range([
-                        'min' => static::INT_32_MAX_NEGATIVE * 2, //because stock_mvt doesn't use negative numbers it can save 2x the size.
-                        'max' => static::INT_32_MAX_POSITIVE * 2,
+                        'min' => StockSettings::INT_32_MAX_NEGATIVE * 2, //because stock_mvt doesn't use negative numbers it can save 2x the size.
+                        'max' => StockSettings::INT_32_MAX_POSITIVE * 2,
                     ]),
                 ],
                 'required' => false,
