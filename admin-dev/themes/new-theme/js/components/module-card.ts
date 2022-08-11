@@ -129,12 +129,52 @@ export default class ModuleCard {
     $(document).on(
       'click',
       this.moduleActionMenuInstallLinkSelector,
-      function () {
-        return (
-          self.dispatchPreEvent('install', this)
-          && self.confirmAction('install', this)
-          && self.requestToController('install', $(this))
-        );
+      function (event) {
+        event.preventDefault();
+        const modal = $(`#${$(this).data('confirm_modal')}`);
+        const isMaintenanceMode = window.isShopMaintenance;
+
+        if (modal.length !== 1) {
+          // Modal body element
+          const maintenanceLink = document.createElement('a');
+          maintenanceLink.classList.add('btn', 'btn-primary', 'btn-lg');
+          maintenanceLink.setAttribute('href', window.moduleURLs.maintenancePage);
+          maintenanceLink.innerHTML = window.moduleTranslations.moduleModalUpdateMaintenance;
+
+          const installConfirmModal = new ConfirmModal(
+            {
+              id: 'confirm-module-install-modal',
+              confirmTitle:
+              window.moduleTranslations.singleModuleModalInstallTitle,
+              closeButtonLabel: window.moduleTranslations.moduleModalCancel,
+              confirmButtonLabel: isMaintenanceMode
+                ? window.moduleTranslations.moduleModalInstall
+                : window.moduleTranslations.installAnywayButtonText,
+              confirmButtonClass: isMaintenanceMode
+                ? 'btn-primary'
+                : 'btn-secondary',
+              confirmMessage: isMaintenanceMode
+                ? ''
+                : window.moduleTranslations.moduleModalInstallConfirmMessage,
+              closable: true,
+              customButtons: isMaintenanceMode ? [] : [maintenanceLink],
+            },
+
+            () => self.dispatchPreEvent('install', this)
+              && self.confirmAction('install', this)
+              && self.requestToController('install', $(this)),
+          );
+
+          installConfirmModal.show();
+        } else {
+          return (
+            self.dispatchPreEvent('install', this)
+            && self.confirmAction('install', this)
+            && self.requestToController('install', $(this))
+          );
+        }
+
+        return false;
       },
     );
 
@@ -225,7 +265,7 @@ export default class ModuleCard {
             id: 'confirm-module-update-modal',
             confirmTitle:
               window.moduleTranslations.singleModuleModalUpdateTitle,
-            closeButtonLabel: window.moduleTranslations.moduleModalUpdateCancel,
+            closeButtonLabel: window.moduleTranslations.moduleModalCancel,
             confirmButtonLabel: isMaintenanceMode
               ? window.moduleTranslations.moduleModalUpdateUpgrade
               : window.moduleTranslations.upgradeAnywayButtonText,

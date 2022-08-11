@@ -1060,7 +1060,7 @@ class AdminModuleController {
         {
           id: 'confirm-module-update-modal',
           confirmTitle: window.moduleTranslations.singleModuleModalUpdateTitle,
-          closeButtonLabel: window.moduleTranslations.moduleModalUpdateCancel,
+          closeButtonLabel: window.moduleTranslations.moduleModalCancel,
           confirmButtonLabel: isMaintenanceMode
             ? window.moduleTranslations.moduleModalUpdateUpgrade
             : window.moduleTranslations.upgradeAnywayButtonText,
