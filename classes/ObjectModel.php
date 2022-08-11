@@ -24,6 +24,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\StockSettings;
 use PrestaShopBundle\Translation\TranslatorComponent;
 
 abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation\Database\EntityInterface
@@ -52,16 +53,6 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      */
     public const HAS_ONE = 1;
     public const HAS_MANY = 2;
-
-    /**
-     * this is the biggest int number that can be saved in database, bigger than this will throw error
-     */
-    public const INT_32_MAX_POSITIVE = 2147483647;
-
-    /**
-     * this is the smallest int number that can be saved in database, smaller than this will throw error
-     */
-    public const INT_32_MAX_NEGATIVE = -2147483648;
 
     /** @var int|null Object ID */
     public $id;
@@ -1233,9 +1224,6 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
             }
 
             $length = Tools::strlen($value);
-            if (isset($data['validate']) && Tools::strtolower($data['validate']) === 'isint') {
-                $length = Tools::strlen(str_replace('-', '', $value));
-            }
 
             if ($length < $size['min'] || $length > $size['max']) {
                 if ($human_errors) {
@@ -1260,6 +1248,29 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 }
             }
         }
+        // use range for int numbers, it doesn't count "-" as extra char
+        // check field range
+        if (!in_array('range', $skip) && !empty($data['range'])) {
+            $range = $data['range'];
+            if (!is_array($data['range'])) {
+                $range = ['min' => 0, 'max' => $data['range']];
+            }
+
+            $length = Tools::strlen(str_replace('-', '', $value));
+
+            if ($length < $range['min'] || $length > $range['max']) {
+                return $this->trans(
+                    'The range of property %1$s is currently %2$d. It must be between %3$d and %4$d.',
+                    [
+                        get_class($this) . '->' . $field,
+                        $length,
+                        $range['min'],
+                        $range['max'],
+                    ],
+                    'Admin.Notifications.Error'
+                );
+            }
+        }
 
         // Check field validator
         if (!in_array('validate', $skip) && !empty($data['validate'])) {
@@ -1278,7 +1289,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                         $res = false;
                     }
                     if (Tools::strtolower($data['validate']) === 'isint') {
-                        if ($value < self::INT_32_MAX_NEGATIVE || $value > self::INT_32_MAX_POSITIVE) {
+                        if ($value < StockSettings::INT_32_MAX_NEGATIVE || $value > StockSettings::INT_32_MAX_POSITIVE) {
                             $res = false;
                         }
                     }
