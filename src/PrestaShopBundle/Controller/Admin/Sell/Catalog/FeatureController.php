@@ -38,12 +38,12 @@ use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerInterface;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerListTrait;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerTrait;
-use PrestaShopBundle\Bridge\Listing\Action\ListBulkAction;
-use PrestaShopBundle\Bridge\Listing\Action\ListHeaderToolbarAction;
-use PrestaShopBundle\Bridge\Listing\Action\ListRowAction;
-use PrestaShopBundle\Bridge\Listing\Field\Field;
-use PrestaShopBundle\Bridge\Listing\HelperBridge\FeatureHelperListBridge;
-use PrestaShopBundle\Bridge\Listing\HelperListConfiguration;
+use PrestaShopBundle\Bridge\Helper\Listing\Action\ListBulkAction;
+use PrestaShopBundle\Bridge\Helper\Listing\Action\ListHeaderToolbarAction;
+use PrestaShopBundle\Bridge\Helper\Listing\Action\ListRowAction;
+use PrestaShopBundle\Bridge\Helper\Listing\Field\Field;
+use PrestaShopBundle\Bridge\Helper\Listing\HelperBridge\FeatureHelperListBridge;
+use PrestaShopBundle\Bridge\Helper\Listing\HelperListConfiguration;
 use PrestaShopBundle\Bridge\Smarty\FrameworkControllerSmartyTrait;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -197,7 +197,7 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
      */
     private function getHelperListBridge(): FeatureHelperListBridge
     {
-        return $this->get('prestashop.bridge.listing.helper_bridge.feature_helper_list_bridge');
+        return $this->get('prestashop.bridge.helper.listing.helper_bridge.feature_helper_list_bridge');
     }
 
     /**
