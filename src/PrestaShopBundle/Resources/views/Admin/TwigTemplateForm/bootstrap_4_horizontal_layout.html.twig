@@ -179,7 +179,7 @@
 
 {% block amount_currency_widget %}
   <div class="input-group">
-    <input type="text" class="form-control" name="{{ form.amount.vars.full_name }}" required>
+    <input id="{{ form.amount.vars.id }}" type="text" class="form-control" name="{{ form.amount.vars.full_name }}" required>
     <div class="input-group-append">
       {% if form.amount.vars.unit is defined %}
         <span class="input-group-text">{{ form.amount.vars.unit }}</span>
