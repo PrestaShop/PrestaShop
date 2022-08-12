@@ -7,6 +7,7 @@ const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
 
 // Import common tests
+const {deleteCacheTest} = require('@commonTests/BO/advancedParameters/deleteCache');
 const {createAccountTest} = require('@commonTests/FO/createAccount');
 const {deleteCustomerTest} = require('@commonTests/BO/customers/createDeleteCustomer');
 
@@ -18,6 +19,7 @@ const addressesPage = require('@pages/FO/myAccount/addresses');
 const addAddressPage = require('@pages/FO/myAccount/addAddress');
 const productPage = require('@pages/FO/product');
 const cartPage = require('@pages/FO/cart');
+const checkoutPage = require('@pages/FO/checkout');
 
 // Import Faker data
 const CustomerFaker = require('@data/faker/customer');
@@ -28,9 +30,8 @@ const {Products} = require('@data/demo/products');
 
 const newCustomerData = new CustomerFaker();
 const createAddressData = new FakerAddress({country: 'France'});
-const secondAddressData = new FakerAddress({country: 'France'});
 const editAddressData = new FakerAddress({country: 'France'});
-const checkoutPage = require('@pages/FO/checkout');
+const secondAddressData = new FakerAddress({country: 'France'});
 
 const baseContext = 'functional_FO_userAccount_CRUDAddress';
 
@@ -38,12 +39,24 @@ let browserContext;
 let page;
 
 /*
-Create address in FO
-Update the created address in FO
-Delete the address in FO
-Check that the address is deleted
+Pre-condition:
+- Clear cache
+- Create account test
+Scenario:
+- Create first address
+- Edit address
+- Create second address
+- Add a product to cart
+- Try to delete first address and check error message
+- go to checkout page and choose the second address
+- Delete the first address and check success message
+Post-condition:
+- Delete customer account
  */
 describe('FO - Account : CRUD address', async () => {
+  // Pre-condition: Delete cache
+  deleteCacheTest(baseContext);
+
   // Pre-condition
   createAccountTest(newCustomerData, baseContext);
 
@@ -94,12 +107,12 @@ describe('FO - Account : CRUD address', async () => {
     });
 
     it('should go to \'Add first address\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAddFirstAddressPage', baseContext);
 
       await myAccountPage.goToAddressesPage(page);
 
       const pageHeaderTitle = await addressesPage.getPageTitle(page);
-      await expect(pageHeaderTitle).to.equal(addressesPage.pageTitle);
+      await expect(pageHeaderTitle).to.equal(addressesPage.addressPageTitle);
     });
 
     it('should create new address', async function () {
@@ -146,7 +159,7 @@ describe('FO - Account : CRUD address', async () => {
   });
 
   describe('Create a second address', async () => {
-    it('should go to addresses page', async function () {
+    it('should go to \'Addresses\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage', baseContext);
 
       await myAccountPage.goToAddressesPage(page);
@@ -165,7 +178,7 @@ describe('FO - Account : CRUD address', async () => {
     });
 
     it('should create new address', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createAddress', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'createAddress2', baseContext);
 
       const textResult = await addAddressPage.setAddress(page, secondAddressData);
       await expect(textResult).to.equal(addressesPage.addAddressSuccessfulMessage);
@@ -200,22 +213,108 @@ describe('FO - Account : CRUD address', async () => {
       await expect(notificationsNumber).to.be.equal(1);
     });
 
-    it('should check that the two created addresses are displayed', async function(){
-      await testContext.addContextItem(this, 'testIdentifier', 'checkCreatedAddresses', baseContext);
+    it('should check that the two created addresses are displayed', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCreatedAddresses1', baseContext);
 
       // Proceed to checkout the shopping cart
       await cartPage.clickOnProceedToCheckout(page);
 
-      const number = await checkoutPage.getNumberOfAddresses(page);
-      console.log(number);
+      const addressesNumber = await checkoutPage.getNumberOfAddresses(page);
+      await expect(addressesNumber, 'The addresses number is not equal to 2!').to.equal(2);
     });
   });
 
   describe('Delete the address on FO', async () => {
-    it('should delete the address', async function () {
+    it('should go to home page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToHomePageToDeleteAddress', baseContext);
+
+      await homePage.goToHomePage(page);
+
+      const isHomePage = await homePage.isHomePage(page);
+      await expect(isHomePage, 'Home page is not displayed').to.be.true;
+    });
+
+    it('should go to \'My Account\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToMyAccountPageToDeleteAddress', baseContext);
+
+      await homePage.goToMyAccountPage(page);
+
+      const pageHeaderTitle = await myAccountPage.getPageTitle(page);
+      await expect(pageHeaderTitle).to.equal(myAccountPage.pageTitle);
+    });
+
+    it('should go to addresses page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPageToDeleteAddress', baseContext);
+
+      await myAccountPage.goToAddressesPage(page);
+
+      const pageHeaderTitle = await addressesPage.getPageTitle(page);
+      await expect(pageHeaderTitle).to.equal(addressesPage.pageTitle);
+    });
+
+    it('should try to delete the first address and check the error message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteAddress', baseContext);
 
       const addressPosition = await addressesPage.getAddressPosition(page, editAddressData.alias);
+
+      const textResult = await addressesPage.deleteAddress(page, addressPosition);
+      await expect(textResult).to.equal(addressesPage.deleteAddressErrorMessage);
+    });
+
+    it('should go to cart page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToShoppingCartPage', baseContext);
+
+      await addressesPage.goToCartPage(page);
+
+      const pageTitle = await cartPage.getPageTitle(page);
+      await expect(pageTitle).to.equal(cartPage.pageTitle);
+    });
+
+    it('should select the second address and continue', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'selectSecondAddress', baseContext);
+
+      // Proceed to checkout the shopping cart
+      await cartPage.clickOnProceedToCheckout(page);
+
+      await checkoutPage.chooseDeliveryAddress(page, 2);
+
+      // Address step - Go to delivery step
+      const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
+      await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
+    });
+
+    it('should go to home page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToHomePageToDeleteAddress2', baseContext);
+
+      await homePage.goToHomePage(page);
+
+      const isHomePage = await homePage.isHomePage(page);
+      await expect(isHomePage, 'Home page is not displayed').to.be.true;
+    });
+
+    it('should go to \'My Account\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToMyAccountPageToDeleteAddress2', baseContext);
+
+      await homePage.goToMyAccountPage(page);
+
+      const pageHeaderTitle = await myAccountPage.getPageTitle(page);
+      await expect(pageHeaderTitle).to.equal(myAccountPage.pageTitle);
+    });
+
+    it('should go to addresses page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPageToDeleteAddress2', baseContext);
+
+      await myAccountPage.goToAddressesPage(page);
+
+      const pageHeaderTitle = await addressesPage.getPageTitle(page);
+      await expect(pageHeaderTitle).to.equal(addressesPage.pageTitle);
+    });
+
+    it('should delete the first address and check the success message', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteAddress2', baseContext);
+
+      const addressPosition = await addressesPage.getAddressPosition(page, secondAddressData.alias);
+
       const textResult = await addressesPage.deleteAddress(page, addressPosition);
       await expect(textResult).to.equal(addressesPage.deleteAddressSuccessfulMessage);
     });
