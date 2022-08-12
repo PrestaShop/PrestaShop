@@ -26,13 +26,11 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Bridge\Listing\Action;
-
-use PrestaShopBundle\Bridge\AdminController\Action\AbstractAction;
+namespace PrestaShopBundle\Bridge\AdminController\Action;
 
 /**
- * Represents a list row action. E.g. edit, view
+ * Represents an action in the header toolbar of the page
  */
-class ListRowAbstractAction extends AbstractAction
+class HeaderToolbarAction extends AbstractAction
 {
 }

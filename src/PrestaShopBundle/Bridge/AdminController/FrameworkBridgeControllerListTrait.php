@@ -30,9 +30,9 @@ namespace PrestaShopBundle\Bridge\AdminController;
 
 use PrestaShopBundle\Bridge\AdminController\Action\ActionInterface;
 use PrestaShopBundle\Bridge\Exception\NotAllowedActionTypeForListException;
-use PrestaShopBundle\Bridge\Listing\Action\ListBulkAbstractAction;
-use PrestaShopBundle\Bridge\Listing\Action\ListHeaderToolbarAbstractAction;
-use PrestaShopBundle\Bridge\Listing\Action\ListRowAbstractAction;
+use PrestaShopBundle\Bridge\Listing\Action\ListBulkAction;
+use PrestaShopBundle\Bridge\Listing\Action\ListHeaderToolbarAction;
+use PrestaShopBundle\Bridge\Listing\Action\ListRowAction;
 use PrestaShopBundle\Bridge\Listing\Field\FieldInterface;
 use PrestaShopBundle\Bridge\Listing\FiltersProcessor;
 use PrestaShopBundle\Bridge\Listing\HelperListConfiguration;
@@ -83,19 +83,19 @@ trait FrameworkBridgeControllerListTrait
      */
     protected function addActionList(ActionInterface $action, HelperListConfiguration $helperListConfiguration): void
     {
-        if ($action instanceof ListBulkAbstractAction) {
+        if ($action instanceof ListBulkAction) {
             $helperListConfiguration->bulkActions[$action->getLabel()] = $action->getConfig();
 
             return;
         }
 
-        if ($action instanceof ListRowAbstractAction) {
+        if ($action instanceof ListRowAction) {
             $helperListConfiguration->actions[] = $action->getLabel();
 
             return;
         }
 
-        if ($action instanceof ListHeaderToolbarAbstractAction) {
+        if ($action instanceof ListHeaderToolbarAction) {
             $helperListConfiguration->toolbarButton[$action->getLabel()] = $action->getConfig();
 
             return;

@@ -33,6 +33,6 @@ use PrestaShopBundle\Bridge\AdminController\Action\AbstractAction;
 /**
  * This class is the object to instantiate if you want to add a bulk action for your list.
  */
-class ListBulkAbstractAction extends AbstractAction
+class ListBulkAction extends AbstractAction
 {
 }
