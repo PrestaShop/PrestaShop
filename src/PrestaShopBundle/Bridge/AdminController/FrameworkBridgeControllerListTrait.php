@@ -30,12 +30,12 @@ namespace PrestaShopBundle\Bridge\AdminController;
 
 use PrestaShopBundle\Bridge\AdminController\Action\ActionInterface;
 use PrestaShopBundle\Bridge\Exception\NotAllowedActionTypeForListException;
-use PrestaShopBundle\Bridge\Listing\Action\ListBulkAction;
-use PrestaShopBundle\Bridge\Listing\Action\ListHeaderToolbarAction;
-use PrestaShopBundle\Bridge\Listing\Action\ListRowAction;
-use PrestaShopBundle\Bridge\Listing\Field\FieldInterface;
-use PrestaShopBundle\Bridge\Listing\FiltersProcessor;
-use PrestaShopBundle\Bridge\Listing\HelperListConfiguration;
+use PrestaShopBundle\Bridge\Helper\Listing\Action\ListBulkAction;
+use PrestaShopBundle\Bridge\Helper\Listing\Action\ListHeaderToolbarAction;
+use PrestaShopBundle\Bridge\Helper\Listing\Action\ListRowAction;
+use PrestaShopBundle\Bridge\Helper\Listing\Field\FieldInterface;
+use PrestaShopBundle\Bridge\Helper\Listing\FiltersProcessor;
+use PrestaShopBundle\Bridge\Helper\Listing\HelperListConfiguration;
 
 /**
  * Contains the principal methods you need to horizontally migrate a controller which has a list.
@@ -53,7 +53,7 @@ trait FrameworkBridgeControllerListTrait
     ): HelperListConfiguration {
         $controllerConfiguration = $this->getControllerConfiguration();
 
-        return $this->get('prestashop.bridge.listing.helper_list_configuration_factory')->create(
+        return $this->get('prestashop.bridge.helper.listing.helper_list_configuration_factory')->create(
             $controllerConfiguration,
             $identifierKey,
             $positionIdentifierKey,
@@ -70,7 +70,7 @@ trait FrameworkBridgeControllerListTrait
      */
     protected function getFiltersProcessor(): FiltersProcessor
     {
-        return $this->get('prestashop.bridge.listing.filters_processor');
+        return $this->get('prestashop.bridge.helper.listing.filters_processor');
     }
 
     /**

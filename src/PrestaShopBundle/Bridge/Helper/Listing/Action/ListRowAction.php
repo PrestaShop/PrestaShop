@@ -26,35 +26,13 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Bridge\Listing\HelperBridge;
+namespace PrestaShopBundle\Bridge\Helper\Listing\Action;
 
-use Db;
-use DbQuery;
-use PrestaShopBundle\Bridge\Listing\HelperListConfiguration;
+use PrestaShopBundle\Bridge\AdminController\Action\AbstractAction;
 
 /**
- * This class customize the result of the list for the feature controller.
+ * Represents a list row action. E.g. edit, view
  */
-class FeatureHelperListBridge extends HelperListBridge
+class ListRowAction extends AbstractAction
 {
-    public function generateListQuery(
-        HelperListConfiguration $helperListConfiguration,
-        int $idLang
-    ): void {
-        parent::generateListQuery($helperListConfiguration, $idLang);
-
-        $nbItems = count($helperListConfiguration->list);
-        for ($i = 0; $i < $nbItems; ++$i) {
-            $item = &$helperListConfiguration->list[$i];
-
-            $query = new DbQuery();
-            $query->select('COUNT(fv.id_feature_value) as count_values');
-            $query->from('feature_value', 'fv');
-            $query->where('fv.id_feature =' . (int) $item['id_feature']);
-            $query->where('(fv.custom=0 OR fv.custom IS NULL)');
-            $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
-            $item['value'] = (int) $res;
-            unset($query);
-        }
-    }
 }

@@ -26,22 +26,35 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Bridge\Listing;
+namespace PrestaShopBundle\Bridge\Helper\Listing\HelperBridge;
 
-use Tools;
+use Db;
+use DbQuery;
+use PrestaShopBundle\Bridge\Helper\Listing\HelperListConfiguration;
 
 /**
- * This class allow you to get filter prefix in different way.
+ * This class customize the result of the list for the feature controller.
  */
-class FilterPrefix
+class FeatureHelperListBridge extends HelperListBridge
 {
-    /**
-     * @param string $className
-     *
-     * @return string|null
-     */
-    public static function getByClassName(string $className): ?string
-    {
-        return str_replace(['admin', 'controller'], '', Tools::strtolower($className));
+    public function generateListQuery(
+        HelperListConfiguration $helperListConfiguration,
+        int $idLang
+    ): void {
+        parent::generateListQuery($helperListConfiguration, $idLang);
+
+        $nbItems = count($helperListConfiguration->list);
+        for ($i = 0; $i < $nbItems; ++$i) {
+            $item = &$helperListConfiguration->list[$i];
+
+            $query = new DbQuery();
+            $query->select('COUNT(fv.id_feature_value) as count_values');
+            $query->from('feature_value', 'fv');
+            $query->where('fv.id_feature =' . (int) $item['id_feature']);
+            $query->where('(fv.custom=0 OR fv.custom IS NULL)');
+            $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+            $item['value'] = (int) $res;
+            unset($query);
+        }
     }
 }
