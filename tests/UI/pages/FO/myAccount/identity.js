@@ -61,7 +61,6 @@ class AccountIdentity extends FOBasePage {
     await this.setValue(page, this.firstNameInput, customer.firstName);
     await this.setValue(page, this.lastNameInput, customer.lastName);
     await this.setValue(page, this.newEmailInput, customer.email);
-    await this.setValue(page, this.newEmailInput, customer.email);
     await this.setValue(page, this.passwordInput, oldPassword);
     await this.setValue(page, this.newPasswordInput, customer.password);
 
