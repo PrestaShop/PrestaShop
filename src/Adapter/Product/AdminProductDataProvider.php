@@ -36,11 +36,13 @@ use Doctrine\ORM\EntityManager;
 use Hook;
 use PrestaShop\PrestaShop\Adapter\Admin\AbstractAdminQueryBuilder;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
+use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Adapter\Validate;
 use PrestaShopBundle\Entity\AdminFilter;
 use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface;
 use Product;
 use Psr\Cache\CacheItemPoolInterface;
+use Shop;
 use StockAvailable;
 use Tools;
 
@@ -206,6 +208,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         $limit = (int) $limit;
         $orderBy = Validate::isOrderBy($orderBy) ? $orderBy : 'id_product';
         $sortOrder = Validate::isOrderWay($sortOrder) ? $sortOrder : 'desc';
+        $sqlWhere = ['AND', 1];
 
         $filterParams = $this->combinePersistentCatalogProductFilter(array_merge(
             $post,
@@ -225,7 +228,31 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
             $orderBy = 'position';
         }
 
-        $idShop = Context::getContext()->shop->id;
+        $shopContext = SymfonyContainer::getInstance()->get('prestashop.adapter.shop.context');
+        $idShop = $shopContext->getContextShopID();
+        $sqlJoinProductLang = ' AND pl.`id_shop` = ' . $idShop;
+        $sqlJoinProductShop = ' AND sa.`id_shop` = ' . $idShop;
+        $sqlJoinCategoryLang = ' AND cl.`id_shop` = ' . $idShop;
+        $sqlJoinShop = 'shop.`id_shop` = ' . $idShop;
+        $sqlJoinImageShop = ' AND image_shop.`id_shop` = ' . $idShop;
+        if ($shopContext->isAllContext()) {
+            $sqlJoinProductLang = ' AND pl.`id_shop` = p.id_shop_default';
+            $sqlJoinProductShop = ' AND sa.`id_shop` = p.id_shop_default';
+            $sqlJoinCategoryLang = ' AND cl.`id_shop` = p.id_shop_default';
+            $sqlJoinShop = 'shop.`id_shop` = p.id_shop_default';
+            $sqlJoinImageShop = ' AND image_shop.`id_shop` = p.id_shop_default';
+            $idShop = null;
+        } elseif ($shopContext->isShopGroupContext()) {
+            $sqlJoinProductLang = ' AND pl.`id_shop` = p.id_shop_default';
+            $sqlJoinProductShop = '';
+            $sqlJoinCategoryLang = ' AND cl.`id_shop` = p.id_shop_default';
+            $sqlJoinShop = 'shop.`id_shop` = p.id_shop_default';
+            $sqlJoinImageShop = ' AND image_shop.`id_shop` = p.id_shop_default';
+            $idShop = null;
+            $shopList = implode(',', $shopContext->getContextListShopID());
+            $sqlWhere[] = 'sa.id_shop IN (' . $shopList . ')';
+        }
+
         $idLang = Context::getContext()->language->id;
 
         $sqlSelect = [
@@ -250,7 +277,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
             'pl' => [
                 'table' => 'product_lang',
                 'join' => 'LEFT JOIN',
-                'on' => 'pl.`id_product` = p.`id_product` AND pl.`id_lang` = ' . $idLang . ' AND pl.`id_shop` = ' . $idShop,
+                'on' => 'pl.`id_product` = p.`id_product` AND pl.`id_lang` = ' . $idLang . $sqlJoinProductLang,
             ],
             'sav' => [
                 'table' => 'stock_available',
@@ -261,12 +288,12 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
             'sa' => [
                 'table' => 'product_shop',
                 'join' => 'JOIN',
-                'on' => 'p.`id_product` = sa.`id_product` AND sa.id_shop = ' . $idShop,
+                'on' => 'p.`id_product` = sa.`id_product`' . $sqlJoinProductShop,
             ],
             'cl' => [
                 'table' => 'category_lang',
                 'join' => 'LEFT JOIN',
-                'on' => 'sa.`id_category_default` = cl.`id_category` AND cl.`id_lang` = ' . $idLang . ' AND cl.id_shop = ' . $idShop,
+                'on' => 'sa.`id_category_default` = cl.`id_category` AND cl.`id_lang` = ' . $idLang . $sqlJoinCategoryLang,
             ],
             'c' => [
                 'table' => 'category',
@@ -276,12 +303,12 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
             'shop' => [
                 'table' => 'shop',
                 'join' => 'LEFT JOIN',
-                'on' => 'shop.id_shop = ' . $idShop,
+                'on' => $sqlJoinShop,
             ],
             'image_shop' => [
                 'table' => 'image_shop',
                 'join' => 'LEFT JOIN',
-                'on' => 'image_shop.`id_product` = p.`id_product` AND image_shop.`cover` = 1 AND image_shop.id_shop = ' . $idShop,
+                'on' => 'image_shop.`id_product` = p.`id_product` AND image_shop.`cover` = 1' . $sqlJoinImageShop,
             ],
             'i' => [
                 'table' => 'image',
@@ -294,7 +321,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
                 'on' => 'pd.`id_product` = p.`id_product`',
             ],
         ];
-        $sqlWhere = ['AND', 1];
+
         $sqlOrder = [$orderBy . ' ' . $sortOrder];
         if ($orderBy != 'id_product') {
             $sqlOrder[] = 'id_product asc'; // secondary order by (useful when ordering by active, quantity, price, etc...)
@@ -356,11 +383,16 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         // post treatment
         $currency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
         $localeCldr = Tools::getContextLocale(Context::getContext());
+        $context = Context::getContext();
 
         /**
          * @var array{id_product: int, reference: string, price: string, id_shop_default: int, link_rewrite: string, id_image: int} $product
          */
         foreach ($products as &$product) {
+            if (!$shopContext->isSingleShopContext()) {
+                $context->shop = new Shop((int) $product['id_shop_default']);
+            }
+
             $product['total'] = $total; // total product count (filtered)
             $product['price_final'] = Product::getPriceStatic(
                 $product['id_product'],
@@ -377,12 +409,15 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
                 null,
                 $nothing,
                 true,
-                true
+                true,
+                $context
             );
 
             if ($formatCldr) {
                 $product['price'] = $localeCldr->formatPrice($product['price'], $currency->iso_code);
-                $product['price_final'] = $localeCldr->formatPrice($product['price_final'], $currency->iso_code);
+                if (null !== $product['price_final']) {
+                    $product['price_final'] = $localeCldr->formatPrice($product['price_final'], $currency->iso_code);
+                }
             }
             $product['image'] = $this->imageManager->getThumbnailForListing($product['id_image']);
             $product['image_link'] = Context::getContext()->link->getImageLink(
