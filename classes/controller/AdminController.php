@@ -849,7 +849,7 @@ class AdminControllerCore extends Controller
      */
     protected function getCookieFilterPrefix()
     {
-        return str_replace(['admin', 'controller'], '', Tools::strtolower(get_class($this)));
+        return str_replace(['admin', 'controller', 'override'], '', Tools::strtolower(get_class($this)));
     }
 
     public function processFilter()
