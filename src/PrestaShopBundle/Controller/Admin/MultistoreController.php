@@ -96,7 +96,6 @@ class MultistoreController extends FrameworkBundleAdminController
         $associatedShops = $this->getContext()->employee->getAssociatedShops();
 
         foreach ($groupList as $group) {
-            $group = $group;
             foreach ($group->getShops() as $key => $shop) {
                 if(!in_array($shop->getId(), $associatedShops)) {
                     $group->getShops()->offsetUnset($key);
