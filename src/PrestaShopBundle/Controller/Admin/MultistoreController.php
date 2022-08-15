@@ -93,6 +93,17 @@ class MultistoreController extends FrameworkBundleAdminController
             $groupList = $this->entityManager->getRepository(ShopGroup::class)->findBy(['active' => true]);
         }
 
+        $associatedShops = $this->getContext()->employee->getAssociatedShops();
+
+        foreach ($groupList as $group) {
+            $group = $group;
+            foreach ($group->getShops() as $key => $shop) {
+                if(!in_array($shop->getId(), $associatedShops)) {
+                    $group->getShops()->offsetUnset($key);
+                }
+            }
+        }
+
         $colorBrightnessCalculator = $this->get('prestashop.core.util.color_brightness_calculator');
 
         return $this->render('@PrestaShop/Admin/Multistore/header.html.twig', [
