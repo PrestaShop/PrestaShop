@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Bridge\Helper;
+namespace PrestaShopBundle\Bridge\Helper\Listing;
 
 use HelperList;
 use PrestaShopBundle\Bridge\Smarty\BreadcrumbsAndTitleConfigurator;

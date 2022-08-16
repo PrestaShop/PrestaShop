@@ -29,14 +29,13 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Bridge\AdminController;
 
 use PrestaShopBundle\Bridge\AdminController\Action\ActionInterface;
-use PrestaShopBundle\Bridge\AdminController\Action\ListBulkAction;
-use PrestaShopBundle\Bridge\AdminController\Action\ListHeaderToolbarAction;
-use PrestaShopBundle\Bridge\AdminController\Action\ListRowAction;
-use PrestaShopBundle\Bridge\AdminController\Field\FieldInterface;
 use PrestaShopBundle\Bridge\Exception\NotAllowedActionTypeForListException;
-use PrestaShopBundle\Bridge\Helper\FiltersHelper;
-use PrestaShopBundle\Bridge\Helper\HelperListConfiguration;
-use PrestaShopBundle\Bridge\Helper\ResetFiltersHelper;
+use PrestaShopBundle\Bridge\Helper\Listing\Action\ListBulkAction;
+use PrestaShopBundle\Bridge\Helper\Listing\Action\ListHeaderToolbarAction;
+use PrestaShopBundle\Bridge\Helper\Listing\Action\ListRowAction;
+use PrestaShopBundle\Bridge\Helper\Listing\Field\FieldInterface;
+use PrestaShopBundle\Bridge\Helper\Listing\FiltersProcessor;
+use PrestaShopBundle\Bridge\Helper\Listing\HelperListConfiguration;
 
 /**
  * Contains the principal methods you need to horizontally migrate a controller which has a list.
@@ -54,7 +53,7 @@ trait FrameworkBridgeControllerListTrait
     ): HelperListConfiguration {
         $controllerConfiguration = $this->getControllerConfiguration();
 
-        return $this->get('prestashop.bridge.helper.helper_list_configuration_factory')->create(
+        return $this->get('prestashop.bridge.helper.listing.helper_list_configuration_factory')->create(
             $controllerConfiguration,
             $identifierKey,
             $positionIdentifierKey,
@@ -67,19 +66,11 @@ trait FrameworkBridgeControllerListTrait
     }
 
     /**
-     * @return ResetFiltersHelper
+     * @return FiltersProcessor
      */
-    protected function getResetFiltersHelper(): ResetFiltersHelper
+    protected function getFiltersProcessor(): FiltersProcessor
     {
-        return $this->get('prestashop.bridge.helper.reset_filters_helper');
-    }
-
-    /**
-     * @return FiltersHelper
-     */
-    protected function getFiltersHelper(): FiltersHelper
-    {
-        return $this->get('prestashop.bridge.helper.filters_helper');
+        return $this->get('prestashop.bridge.helper.listing.filters_processor');
     }
 
     /**
