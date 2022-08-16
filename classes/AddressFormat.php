@@ -438,6 +438,11 @@ class AddressFormatCore extends ObjectModel
         $addressFields = AddressFormat::getOrderedAddressFields($address->id_country);
         $addressFormatedValues = AddressFormat::getFormattedAddressFieldsValues($address, $addressFields);
 
+        Hook::exec('addressFormatGenerateAddressBefore', [
+            'controller' => Context::getContext()->controller,
+            'patternRules' => &$patternRules
+        ]);
+        
         $addressText = '';
         foreach ($addressFields as $line) {
             if (($patternsList = preg_split(self::_CLEANING_REGEX_, $line, -1, PREG_SPLIT_NO_EMPTY))) {
