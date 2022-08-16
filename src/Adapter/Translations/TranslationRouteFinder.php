@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Translations;
 
 use Link;
-use Module;
+use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Core\Module\ModuleRepositoryInterface;
 use PrestaShopBundle\Exception\InvalidModuleException;
 use PrestaShopBundle\Service\TranslationService;
@@ -210,6 +210,6 @@ class TranslationRouteFinder
             throw new InvalidModuleException($moduleName);
         }
 
-        return $module->isUsingNewTranslationSystem();
+        return $module->getInstance()->isUsingNewTranslationSystem();
     }
 }
