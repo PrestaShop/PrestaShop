@@ -24,12 +24,17 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
+namespace PrestaShop\PrestaShop\Core\Domain\State\CommandHandler;
 
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('Cache-Control: post-check=0, pre-check=0', false);
-header('Pragma: no-cache');
+use PrestaShop\PrestaShop\Core\Domain\State\Command\AddStateCommand;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 
-header('Location: ../../../../../../');
-exit;
+interface AddStateHandlerInterface
+{
+    /**
+     * @param AddStateCommand $command
+     *
+     * @return StateId
+     */
+    public function handle(AddStateCommand $command): StateId;
+}

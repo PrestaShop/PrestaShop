@@ -59,6 +59,12 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     /** @var int|null Language ID */
     protected $id_lang = null;
 
+    /** @var Language|null Language ID
+     * This is the same Language as the $id_lang except in the following case:
+     * If $id_lang is invalid (e.g. due to a removed language) $lang_associated is the default language
+     */
+    protected $lang_associated = null;
+
     /** @var int|null Shop ID */
     protected $id_shop = null;
 
@@ -385,12 +391,15 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      */
     public function getAssociatedLanguage(): Language
     {
-        $language = new Language($this->id_lang);
-        if (null === $language->id) {
-            $language = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
+        if (null !== $this->lang_associated) {
+            return $this->lang_associated;
+        }
+        $this->lang_associated = new Language($this->id_lang);
+        if (null === $this->lang_associated->id) {
+            $this->lang_associated = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
         }
 
-        return $language;
+        return $this->lang_associated;
     }
 
     /**
@@ -1737,7 +1746,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @since 1.5.0.1
      *
-     * @return array
+     * @return array<int, int>
      *
      * @throws PrestaShopDatabaseException
      */
