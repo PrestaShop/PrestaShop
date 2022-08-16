@@ -85,18 +85,4 @@ interface LegacyControllerBridgeInterface
      * @return void
      */
     public function addJqueryUI($component, $theme = 'base', $checkDependencies = true): void;
-
-    /**
-     * Get table name.
-     *
-     * @return string
-     */
-    public function getTable(): string;
-
-    /**
-     * Get legacy class object name.
-     *
-     * @return string
-     */
-    public function getClassName(): string;
 }

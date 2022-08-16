@@ -29,7 +29,10 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShopBundle\Form\Admin\Type\ImagePreviewType;
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -37,6 +40,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\Length;
 
 class HeaderType extends TranslatorAwareType
 {
@@ -71,7 +75,6 @@ class HeaderType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $nameConstraints = $options['active'] ? [new DefaultLanguage()] : [];
         $builder
             ->add('cover_thumbnail', ImagePreviewType::class, [
                 'label' => false,
@@ -79,8 +82,12 @@ class HeaderType extends TranslatorAwareType
             ->add('name', TranslatableType::class, [
                 'label' => $this->trans('Product name', 'Admin.Catalog.Feature'),
                 'type' => TextType::class,
-                'constraints' => $nameConstraints,
+                'constraints' => $options['active'] ? [new DefaultLanguage()] : [],
                 'options' => [
+                    'constraints' => [
+                        new TypedRegex(TypedRegex::TYPE_CATALOG_NAME),
+                        new Length(['max' => ProductSettings::MAX_NAME_LENGTH]),
+                    ],
                     'attr' => [
                         'class' => 'serp-default-title',
                     ],
@@ -107,6 +114,13 @@ class HeaderType extends TranslatorAwareType
                     'class' => 'header-product-type-selector',
                 ],
             ])
+            ->add('active', SwitchType::class, [
+                'label' => false,
+                'choices' => [
+                    $this->trans('Offline', 'Admin.Global') => false,
+                    $this->trans('Online', 'Admin.Global') => true,
+                ],
+            ])
             ->add('initial_type', HiddenType::class)
         ;
     }
@@ -123,6 +137,7 @@ class HeaderType extends TranslatorAwareType
                 'active' => false,
                 'required' => false,
                 'label' => false,
+                'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/header.html.twig',
             ])
             ->setAllowedTypes('active', ['bool'])
         ;

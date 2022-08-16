@@ -187,7 +187,7 @@
         {% if multiple -%}
             <div class="checkbox">
                 <label>
-                    <input type="checkbox" name="{{ form.vars.full_name }}[tree][]" value="{{ child.id_category }}"{% if checked %} checked="checked"{% endif %}>
+                    <input type="checkbox" name="{{ form.vars.full_name }}[tree][]" value="{{ child.id_category }}"{% if checked %} checked="checked"{% endif %} class="category">
                     {% if child.active is defined and child.active == 0 %}
                         <i>{{ child.name }}</i>
                     {%- else -%}

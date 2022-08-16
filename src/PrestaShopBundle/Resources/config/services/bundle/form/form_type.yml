@@ -12,6 +12,14 @@ services:
     tags:
       - { name: form.type }
 
+  form.type.navigation_tab:
+    class: PrestaShopBundle\Form\Admin\Type\NavigationTabType
+    arguments:
+      - '@logger'
+      - '@=service("prestashop.adapter.environment").isDebug()'
+    tags:
+      - { name: form.type }
+
   form.type.email:
     class: PrestaShopBundle\Form\Admin\Type\EmailType
     arguments:
@@ -168,6 +176,8 @@ services:
       - "@prestashop.adapter.legacy.context"
       - "@prestashop.adapter.data_provider.warehouse"
       - "@prestashop.adapter.data_provider.carrier"
+      - "@=service('prestashop.adapter.legacy.configuration').get('PS_DIMENSION_UNIT')"
+      - "@=service('prestashop.adapter.legacy.configuration').get('PS_WEIGHT_UNIT')"
     parent: 'form.type.common_type'
     public: true
     tags:
@@ -1171,6 +1181,10 @@ services:
     tags:
       - { name: form.type }
 
+  PrestaShopBundle\Form\Admin\Type\AmountCurrencyType:
+    tags:
+      - { name: form.type }
+
   form.type.feature:
     class: 'PrestaShopBundle\Form\Admin\Sell\Catalog\FeatureType'
     arguments:
@@ -1318,8 +1332,18 @@ services:
     public: true
     arguments:
       - '@form.type.sell.product.event_listener.product_type_listener'
+      - '@form.type.sell.product.toolbar_buttons_provider'
     tags:
       - { name: form.type }
+
+  form.type.sell.product.toolbar_buttons_provider:
+    class: 'PrestaShopBundle\Form\Toolbar\ProductToolbarButtonsProvider'
+    arguments:
+      - '@translator'
+      - '@router'
+      - '@prestashop.adapter.shop.url.help_provider'
+      - '@prestashop.adapter.data_provider.module'
+      - '@prestashop.adapter.legacy.context'
 
   form.type.sell.product.product_type_type:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\ProductTypeType'
@@ -1454,6 +1478,8 @@ services:
     public: true
     arguments:
       - '@prestashop.core.form.choice_provider.pack_stock_type_choice_provider'
+      - '@router'
+      - '@=service("prestashop.adapter.legacy.context").getEmployeeLanguageIso()'
     tags:
       - { name: form.type }
 
@@ -1654,6 +1680,13 @@ services:
     tags:
       - { name: form.type }
 
+  form.type.sell.product.stock.packed_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Stock\PackedProductType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    tags:
+      - { name: form.type }
+
   form.type.sell.product.seo.redirect_option_type:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\SEO\RedirectOptionType'
     parent: 'form.type.translatable.aware'
@@ -1721,12 +1754,24 @@ services:
     tags:
       - { name: form.type }
 
+  form.type.sell.product.extra_modules_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\ExtraModulesType'
+    parent: 'form.type.translatable.aware'
+    public: true
+    arguments:
+      - '@prestashop.core.hook.dispatcher'
+      - '@prestashop.adapter.data_provider.module'
+      - '@prestashop.core.admin.module.repository'
+    tags:
+      - { name: form.type }
+
   form.type.sell.product.footer_type:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\FooterType'
     parent: 'form.type.translatable.aware'
     public: true
     arguments:
       - '@prestashop.adapter.shop.url.product_provider'
+      - '@prestashop.adapter.shop.url.product_preview_provider'
       - '@router'
     tags:
       - { name: form.type }
@@ -1750,6 +1795,8 @@ services:
   form.type.sell.product.event_listener.product_type_listener:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\ProductTypeListener'
     public: true
+    arguments:
+      - '@prestashop.adapter.legacy.hook'
 
   form.type.sell.product.event_listener.redirect_option_listener:
     class: 'PrestaShopBundle\Form\Admin\Sell\Product\EventListener\RedirectOptionListener'
@@ -1809,6 +1856,13 @@ services:
     public: true
     arguments:
       - '@form.type.sell.product.event_listener.combination_listener'
+    tags:
+      - { name: form.type }
+
+  form.type.sell.product.combination.combination_header_type:
+    class: 'PrestaShopBundle\Form\Admin\Sell\Product\Combination\CombinationHeaderType'
+    parent: 'form.type.translatable.aware'
+    public: true
     tags:
       - { name: form.type }
 

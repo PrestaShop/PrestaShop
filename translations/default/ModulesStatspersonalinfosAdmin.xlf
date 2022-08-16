@@ -7,9 +7,9 @@
         <target>Registered customer information</target>
         <note>Line: 46</note>
       </trans-unit>
-      <trans-unit id="b0cb4ea4e89c2107cb100be8417fd94e">
-        <source>Adds information about your registered customers (such as gender and age) to the Stats dashboard.</source>
-        <target>Adds information about your registered customers (such as gender and age) to the Stats dashboard.</target>
+      <trans-unit id="22d21ea28d12643341e353ef2abfa988">
+        <source>Enrich your stats, add information about your registered customers and learn more about them!</source>
+        <target>Enrich your stats, add information about your registered customers and learn more about them!</target>
         <note>Line: 47</note>
       </trans-unit>
       <trans-unit id="3ca26e413e485538a7f3e610c0324636">
@@ -141,11 +141,6 @@
         <source>Language distribution</source>
         <target>Language distribution</target>
         <note>Line: 377</note>
-      </trans-unit>
-      <trans-unit id="22d21ea28d12643341e353ef2abfa988">
-        <source>Enrich your stats, add information about your registered customers and learn more about them!</source>
-        <target>Enrich your stats, add information about your registered customers and learn more about them!</target>
-        <note>Line: 47</note>
       </trans-unit>
     </body>
   </file>

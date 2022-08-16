@@ -63,7 +63,7 @@
             'label': 'Email address'|trans({}, 'Admin.Global')
             }) }}
 
-          {% set passwordHelpMessage = 'Password should be at least %num% characters .'|trans({ '%num%': ('PS_SECURITY_PASSWORD_POLICY_MINIMUM_LENGTH'|configuration|intCast) }, 'Admin.Advparameters.Help') %}
+          {% set passwordHelpMessage = 'Password should be at least %num% characters long.'|trans({ '%num%': ('PS_SECURITY_PASSWORD_POLICY_MINIMUM_LENGTH'|configuration|intCast) }, 'Admin.Advparameters.Help') %}
 
           {% if isRestrictedAccess %}
             {% set oldPasswordVars = employeeForm.change_password.old_password.vars|merge(old_password|default({})) %}
@@ -152,7 +152,7 @@
 
           {{ ps.form_group_row(employeeForm.default_page, {'attr': {'data-minimumResultsForSearch': '7', 'data-toggle': 'select2'}}, {
             'label': 'Default page'|trans,
-            'help': 'This page will be displayed just after login.'|trans({}, 'Admin.Advparameters.Help')
+            'help': 'This page will be displayed right after signing in.'|trans({}, 'Admin.Advparameters.Help')
             }) }}
 
           {% block employee_form_rest %}

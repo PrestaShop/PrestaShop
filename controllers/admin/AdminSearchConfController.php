@@ -125,11 +125,7 @@ class AdminSearchConfControllerCore extends AdminController
             'search' => [
                 'title' => $this->trans('Search', [], 'Admin.Shopparameters.Feature'),
                 'icon' => 'icon-search',
-                'info' => '<div class="alert alert-info">' .
-                    $this->trans('We are thrilled to introduce you to the fuzzy search, one of the new features from 1.7.7! Please note that it is still in beta version, so feel free to share improvement ideas on GitHub to have it enhanced.',
-                        [],
-                        'Admin.Shopparameters.Notification') .
-                    '</div>' . '<p><a href="https://github.com/PrestaShop/PrestaShop/issues/new?template=bug_report.md" target="_blank" class="btn-link"><i class="icon-external-link-sign"></i> Signaler un problème sur GitHub</a><br>'
+                'info' => '<p><a href="https://github.com/PrestaShop/PrestaShop/issues/new?template=bug_report.md" target="_blank" class="btn-link"><i class="icon-external-link-sign"></i> Signaler un problème sur GitHub</a><br>'
                     . '<a href="https://github.com/PrestaShop/PrestaShop/issues/new?template=feature_request.md" target="_blank"><i class="icon-external-link-sign"></i> Proposer une idée d\'amélioration sur GitHub</a>',
                 'fields' => [
                     'PS_SEARCH_START' => [

@@ -222,7 +222,7 @@ class AdminCartRulesControllerCore extends AdminController
                             break;
                         case 'shop':
                         default:
-                            $restriction_name = $this->trans('Shop selection', [], 'Admin.Catalog.Feature');
+                            $restriction_name = $this->trans('Store selection', [], 'Admin.Catalog.Feature');
                             break;
                     }
                     $this->errors[] = $this->trans('The "%s" restriction is checked, but no item is selected.', [$restriction_name], 'Admin.Catalog.Notification');

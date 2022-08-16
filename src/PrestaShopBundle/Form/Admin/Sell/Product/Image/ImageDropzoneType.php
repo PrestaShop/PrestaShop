@@ -77,7 +77,7 @@ class ImageDropzoneType extends TranslatorAwareType
                 'modal.close' => $this->trans('Cancel', 'Admin.Actions'),
                 'modal.accept' => $this->trans('Delete', 'Admin.Actions'),
                 'modal.title' => $this->trans('Are you sure you want to delete the selected image?|Are you sure you want to delete the %filesNb% selected images?', 'Admin.Catalog.Notification'),
-                'delete.success' => $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success'),
+                'delete.success' => $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success'),
                 'window.fileisTooLarge' => $this->trans(
                     'The file is too large. The maximum size allowed is [1] MB. The file you are trying to upload is [2] MB.',
                     'Admin.Notifications.Error',
@@ -90,7 +90,6 @@ class ImageDropzoneType extends TranslatorAwareType
                 'window.cover' => $this->trans('Cover', 'Admin.Catalog.Feature'),
                 'window.caption' => $this->trans('Caption', 'Admin.Catalog.Feature'),
             ],
-            'product_id' => null,
             'update_form_type' => null,
             'attr' => [
                 'class' => 'product-image-dropzone',
@@ -99,9 +98,14 @@ class ImageDropzoneType extends TranslatorAwareType
             'label' => false,
         ]);
 
-        $resolver->setAllowedTypes('product_id', ['int', 'null']);
-        $resolver->setAllowedTypes('update_form_type', ['string', 'null']);
-        $resolver->setAllowedTypes('translations', ['array']);
+        $resolver
+            ->setRequired([
+                'product_id',
+            ])
+            ->setAllowedTypes('product_id', 'int')
+            ->setAllowedTypes('update_form_type', ['string', 'null'])
+            ->setAllowedTypes('translations', ['array'])
+        ;
     }
 
     /**

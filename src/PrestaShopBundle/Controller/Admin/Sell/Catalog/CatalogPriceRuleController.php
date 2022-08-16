@@ -113,7 +113,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new DeleteCatalogPriceRuleCommand((int) $catalogPriceRuleId));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -140,7 +140,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new BulkDeleteCatalogPriceRuleCommand($catalogPriceRuleIds));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -166,7 +166,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
 
         try {
             if (null !== $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_catalog_price_rules_index');
             }
@@ -210,7 +210,7 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
         }
 
         if ($result->isSubmitted() && $result->isValid()) {
-            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
             return $this->redirectToRoute('admin_catalog_price_rules_index');
         }

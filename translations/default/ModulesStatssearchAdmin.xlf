@@ -7,9 +7,9 @@
         <target>Shop search</target>
         <note>Line: 57</note>
       </trans-unit>
-      <trans-unit id="61e73a44bd33933e4d4f85ad339de086">
-        <source>Adds a tab to the Stats dashboard, showing which keywords have been searched by your store's visitors.</source>
-        <target>Adds a tab to the Stats dashboard, showing which keywords have been searched by your store's visitors.</target>
+      <trans-unit id="2c5ae599abe1d523b46b791c955a9888">
+        <source>Enrich your stats, add a tab showing what keywords have been searched by your visitors.</source>
+        <target>Enrich your stats, add a tab showing what keywords have been searched by your visitors.</target>
         <note>Line: 58</note>
       </trans-unit>
       <trans-unit id="867343577fa1f33caa632a19543bd252">
@@ -46,11 +46,6 @@
         <source>Others</source>
         <target>Others</target>
         <note>Line: 165</note>
-      </trans-unit>
-      <trans-unit id="2c5ae599abe1d523b46b791c955a9888">
-        <source>Enrich your stats, add a tab showing what keywords have been searched by your visitors.</source>
-        <target>Enrich your stats, add a tab showing what keywords have been searched by your visitors.</target>
-        <note>Line: 58</note>
       </trans-unit>
     </body>
   </file>

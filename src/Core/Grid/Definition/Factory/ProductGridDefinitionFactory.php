@@ -157,7 +157,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'route' => 'admin_products_v2_edit',
                         'route_param_name' => 'productId',
                         'route_param_field' => 'id_product',
-                        'fragment' => 'tab-pricing-tab',
+                        'route_fragment' => 'tab-product_pricing-tab',
                     ])
             )
             ->add(
@@ -169,7 +169,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'route' => 'admin_products_v2_edit',
                         'route_param_name' => 'productId',
                         'route_param_field' => 'id_product',
-                        'fragment' => 'tab-pricing-tab',
+                        'route_fragment' => 'tab-product_pricing-tab',
                     ])
             )
             ->add(
@@ -218,7 +218,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                         'route' => 'admin_products_v2_edit',
                         'route_param_name' => 'productId',
                         'route_param_field' => 'id_product',
-                        'fragment' => 'tab-stock-tab',
+                        'route_fragment' => 'tab-product_stock-tab',
                     ])
             );
         }
@@ -467,7 +467,7 @@ final class ProductGridDefinitionFactory extends AbstractGridDefinitionFactory
                 'modal_back_to_processing' => $this->trans('Back to processing', [], 'Admin.Actions'),
                 'modal_download_error_log' => $this->trans('Download error log', [], 'Admin.Actions'),
                 'modal_view_error_log' => $this->trans('View %error_count% error logs', [], 'Admin.Actions'),
-                'modal_error_title' => $this->trans('Error log', [], 'Admin.Actions'),
+                'modal_error_title' => $this->trans('Error log', [], 'Admin.Catalog.Feature'),
             ])
             ->setIcon($icon)
         ;

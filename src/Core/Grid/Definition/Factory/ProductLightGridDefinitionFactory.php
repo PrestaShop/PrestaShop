@@ -106,7 +106,7 @@ class ProductLightGridDefinitionFactory extends AbstractGridDefinitionFactory
                 'route' => 'admin_products_v2_edit',
                 'route_param_name' => 'productId',
                 'route_param_field' => 'id_product',
-                'fragment' => 'tab-pricing-tab',
+                'route_fragment' => 'tab-product_pricing-tab',
                 'sortable' => false,
             ])
             );
@@ -119,7 +119,7 @@ class ProductLightGridDefinitionFactory extends AbstractGridDefinitionFactory
                     'route' => 'admin_products_v2_edit',
                     'route_param_name' => 'productId',
                     'route_param_field' => 'id_product',
-                    'fragment' => 'tab-stock-tab',
+                    'route_fragment' => 'tab-product_stock-tab',
                     'sortable' => false,
                     'color_template_field' => 'quantity_color',
                 ])

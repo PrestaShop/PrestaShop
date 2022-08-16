@@ -5,8 +5,7 @@
       <trans-unit id="e18a22d145b38e4fff582663b5b4ec1e">
         <source>All brands</source>
         <target>All brands</target>
-        <note>Context:
-File: modules/ps_brandlist/views/templates/_partials/brand_form.tpl:3</note>
+        <note>Line: 8</note>
       </trans-unit>
     </body>
   </file>
@@ -15,8 +14,12 @@ File: modules/ps_brandlist/views/templates/_partials/brand_form.tpl:3</note>
       <trans-unit id="84be54bb4bd1b755a27d86388700d097">
         <source>Brands</source>
         <target>Brands</target>
-        <note>Context:
-File: modules/ps_brandlist/views/templates/hook/ps_brandlist.tpl:29</note>
+        <note>Line: 29</note>
+      </trans-unit>
+      <trans-unit id="8e41eae149ff3fa38cc9c4fde945f2c3">
+        <source>No brand</source>
+        <target>No brand</target>
+        <note>Line: 36</note>
       </trans-unit>
     </body>
   </file>

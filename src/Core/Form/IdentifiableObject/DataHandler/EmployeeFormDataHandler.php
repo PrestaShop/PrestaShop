@@ -169,12 +169,6 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
      */
     public function update($id, array $data)
     {
-        /** @var UploadedFile $uploadedAvatar */
-        $uploadedAvatar = $data['avatarUrl'];
-        if ($uploadedAvatar instanceof UploadedFile) {
-            $this->imageUploader->upload($id, $uploadedAvatar);
-        }
-
         $command = (new EditEmployeeCommand($id))
             ->setFirstName($data['firstname'])
             ->setLastName($data['lastname'])
@@ -207,6 +201,29 @@ final class EmployeeFormDataHandler implements FormDataHandlerInterface
         }
 
         $this->bus->handle($command);
+
+        /**
+         * IMPORTANT : Apply all validations before file upload
+         *
+         * During avatar upload, EmployeeController::editAction takes image path
+         * from `$_FILES["employee"]["tmp_name"]["avatarUrl"]`
+         * But AbstractImageUploader::createTemporaryImage($image) executes
+         * `move_uploaded_file($image->getPathname(), $temporaryImageName))`
+         * that removes the image but keep $_FILES["employee"]["tmp_name"]["avatarUrl"] value.
+         *
+         * During data validation (`setXXX($value)` apply validation),
+         * any error would break the workflow and call `render(...)`
+         * (cf. EmployeeController::editAction).
+         * But `DispatcherCore::getInstance(...)` runs
+         * `$request = SymfonyRequest::createFromGlobals()` that take `$_FILES` global variable.
+         * Then during Request object creation,
+         * `$_FILES["employee"]["tmp_name"]["avatarUrl"]` is detected as invalid.
+         */
+        /** @var UploadedFile $uploadedAvatar */
+        $uploadedAvatar = $data['avatarUrl'];
+        if ($uploadedAvatar instanceof UploadedFile) {
+            $this->imageUploader->upload($id, $uploadedAvatar);
+        }
     }
 
     /**

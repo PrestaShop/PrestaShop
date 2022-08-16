@@ -58,9 +58,9 @@ class FooterConfigurator implements ConfiguratorInterface
      */
     public function configure(ControllerConfiguration $controllerConfiguration): void
     {
-        $controllerConfiguration->templatesVars['css_files'] = $controllerConfiguration->cssFiles;
-        $controllerConfiguration->templatesVars['js_files'] = array_unique($controllerConfiguration->jsFiles);
-        $controllerConfiguration->templatesVars['ps_version'] = _PS_VERSION_;
-        $controllerConfiguration->templatesVars['iso_is_fr'] = strtoupper($this->language->iso_code) == 'FR';
+        $controllerConfiguration->templateVars['css_files'] = $controllerConfiguration->cssFiles;
+        $controllerConfiguration->templateVars['js_files'] = array_unique($controllerConfiguration->jsFiles);
+        $controllerConfiguration->templateVars['ps_version'] = _PS_VERSION_;
+        $controllerConfiguration->templateVars['iso_is_fr'] = strtoupper($this->language->iso_code) == 'FR';
     }
 }

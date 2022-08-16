@@ -51,6 +51,7 @@ services:
       - '@prestashop.adapter.tax.tax_computer'
       - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
       - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.product.image.product_image_url_factory'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationForEditing
@@ -72,7 +73,9 @@ services:
     class: PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler\SearchCombinationsForAssociationHandler
     arguments:
       - '@prestashop.adapter.product.repository.product_repository'
+      - '@prestashop.adapter.attribute.repository.attribute_repository'
       - '@prestashop.adapter.product.image.product_image_url_factory'
+      - '@prestashop.core.product.combination.name_builder.combination_name_builder'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\SearchCombinationsForAssociation

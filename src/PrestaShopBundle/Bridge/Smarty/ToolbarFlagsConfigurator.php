@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Bridge\Smarty;
 
 use Language;
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShop\PrestaShop\Core\Help\Documentation;
 use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 use Symfony\Component\Routing\RouterInterface;
 use Tools;
@@ -39,9 +40,6 @@ use Tools;
  */
 class ToolbarFlagsConfigurator implements ConfiguratorInterface
 {
-    //todo This url must be replace after split
-    private const HELP_URL = 'https://help.prestashop.com/';
-
     /**
      * @var RouterInterface
      */
@@ -53,13 +51,20 @@ class ToolbarFlagsConfigurator implements ConfiguratorInterface
     private $configuration;
 
     /**
+     * @var Documentation
+     */
+    private $documentation;
+
+    /**
      * @param RouterInterface $router
      * @param Configuration $configuration
+     * @param Documentation $documentation
      */
-    public function __construct(RouterInterface $router, Configuration $configuration)
+    public function __construct(RouterInterface $router, Configuration $configuration, Documentation $documentation)
     {
         $this->router = $router;
         $this->configuration = $configuration;
+        $this->documentation = $documentation;
     }
 
     /**
@@ -72,17 +77,20 @@ class ToolbarFlagsConfigurator implements ConfiguratorInterface
         $this->initToolbar($controllerConfiguration);
         $this->initPageHeaderToolbar($controllerConfiguration);
 
-        $controllerConfiguration->templatesVars['maintenance_mode'] = !(bool) $this->configuration->get('PS_SHOP_ENABLE');
-        $controllerConfiguration->templatesVars['debug_mode'] = (bool) _PS_MODE_DEV_;
-        $controllerConfiguration->templatesVars['lite_display'] = $controllerConfiguration->liteDisplay;
-        $controllerConfiguration->templatesVars['url_post'] = $this->router->generate('admin_features_index');
-        $controllerConfiguration->templatesVars['show_page_header_toolbar'] = $controllerConfiguration->showPageHeaderToolbar;
-        $controllerConfiguration->templatesVars['page_header_toolbar_title'] = $controllerConfiguration->pageHeaderToolbarTitle;
-        $controllerConfiguration->templatesVars['title'] = $controllerConfiguration->pageHeaderToolbarTitle;
-        $controllerConfiguration->templatesVars['toolbar_btn'] = $controllerConfiguration->pageHeaderToolbarButton;
-        $controllerConfiguration->templatesVars['page_header_toolbar_btn'] = $controllerConfiguration->pageHeaderToolbarButton;
-        $controllerConfiguration->templatesVars['help_link'] = self::HELP_URL . Language::getIsoById($controllerConfiguration->user->getData()->id_lang) . '/doc/'
-            . Tools::getValue('controller') . '?version=' . _PS_VERSION_ . '&country=' . Language::getIsoById($controllerConfiguration->user->getData()->id_lang);
+        $controllerConfiguration->templateVars['maintenance_mode'] = !(bool) $this->configuration->get('PS_SHOP_ENABLE');
+        $controllerConfiguration->templateVars['debug_mode'] = (bool) _PS_MODE_DEV_;
+        $controllerConfiguration->templateVars['lite_display'] = $controllerConfiguration->liteDisplay;
+        // @todo: fix hardcoded route
+        $controllerConfiguration->templateVars['url_post'] = $this->router->generate('admin_features_index');
+        $controllerConfiguration->templateVars['show_page_header_toolbar'] = $controllerConfiguration->showPageHeaderToolbar;
+        $controllerConfiguration->templateVars['page_header_toolbar_title'] = $controllerConfiguration->pageHeaderToolbarTitle;
+        $controllerConfiguration->templateVars['title'] = $controllerConfiguration->pageHeaderToolbarTitle;
+        $controllerConfiguration->templateVars['toolbar_btn'] = $controllerConfiguration->pageHeaderToolbarButtons;
+        $controllerConfiguration->templateVars['page_header_toolbar_btn'] = $controllerConfiguration->pageHeaderToolbarButtons;
+        $controllerConfiguration->templateVars['help_link'] = $this->documentation->generateLink(
+            Tools::getValue('controller'),
+            (string) Language::getIsoById($controllerConfiguration->getUser()->getData()->id_lang)
+        );
     }
 
     /**

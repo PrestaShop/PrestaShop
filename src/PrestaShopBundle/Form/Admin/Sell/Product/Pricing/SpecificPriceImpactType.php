@@ -75,12 +75,12 @@ class SpecificPriceImpactType extends TranslatorAwareType
                 'constraints' => [
                     new Reduction([
                         'invalidPercentageValueMessage' => $this->trans(
-                            'Reduction value "%value%" is invalid. Value must be more than zero and maximum %max%.',
+                            'Reduction value "%value%" is invalid. It must be greater than 0 and maximum %max%.',
                             'Admin.Notifications.Error',
                             ['%max%' => ReductionVO::MAX_ALLOWED_PERCENTAGE . '%']
                         ),
                         'invalidAmountValueMessage' => $this->trans(
-                            'Reduction value "%value%" is invalid. Value must be more than zero.',
+                            'Reduction value "%value%" is invalid. It must be greater than 0.',
                             'Admin.Notifications.Error'
                         ),
                         'groups' => [self::REDUCTION_GROUP],
@@ -150,7 +150,7 @@ class SpecificPriceImpactType extends TranslatorAwareType
         $isUsingReduction = $this->isUsingReduction($impactData);
         if (!$isUsingFixedPrice && !$isUsingReduction) {
             $context
-                ->buildViolation($this->trans('You must select at least one impact on price.', 'Admin.Catalog.Feature'))
+                ->buildViolation($this->trans('Apply a discount to the initial price or set a specific price.', 'Admin.Catalog.Feature'))
                 ->addViolation()
             ;
         }

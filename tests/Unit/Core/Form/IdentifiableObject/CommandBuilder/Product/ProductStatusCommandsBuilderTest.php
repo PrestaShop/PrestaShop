@@ -58,7 +58,7 @@ class ProductStatusCommandsBuilderTest extends AbstractProductCommandBuilderTest
         $command = new UpdateProductStatusCommand($this->getProductId()->getValue(), true);
         yield [
             [
-                'footer' => [
+                'header' => [
                     'active' => true,
                 ],
             ],
@@ -68,7 +68,7 @@ class ProductStatusCommandsBuilderTest extends AbstractProductCommandBuilderTest
         $command = new UpdateProductStatusCommand($this->getProductId()->getValue(), false);
         yield [
             [
-                'footer' => [
+                'header' => [
                     'active' => false,
                 ],
             ],

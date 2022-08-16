@@ -53,6 +53,28 @@
   </li>
 {% endblock %}
 
+{% block packed_product_row %}
+  <li class="packed-product entity-item">
+    <div class="packed-product-image">
+      {{ form_widget(form.image) }}
+    </div>
+    <div class="packed-product-legend">
+      {{ form_widget(form.name, {prefix: '<i class="material-icons entity-item-delete">delete</i>'}) }}
+      {{ form_widget(form.reference)}}
+    </div>
+    <div class="form-group">
+      <div class="packed-product-quantity">
+        {{ form_widget(form.quantity) }}
+        {{ form_errors(form.quantity) }}
+      </div>
+    </div>
+    {{ form_widget(form.product_id) }}
+    {{ form_widget(form.unique_identifier) }}
+    {{ form_widget(form.combination_id) }}
+  </li>
+{% endblock %}
+
+
 {% block product_type_row %}
   <div class="product-type-selector">
     <div class="product-type-choices">

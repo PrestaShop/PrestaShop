@@ -56,7 +56,7 @@ class OptionsType extends TranslatorAwareType
         parent::configureOptions($resolver);
         $resolver->setDefaults([
             'required' => false,
-            'label' => false,
+            'label' => $this->trans('Options', 'Admin.Catalog.Feature'),
             // Suppliers can be removed so there might be extra data in the request during type switching
             'allow_extra_fields' => true,
         ]);

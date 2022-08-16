@@ -8,9 +8,9 @@
                 <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
                   <tbody>
                     <tr>
-                      <td style="direction:ltr;font-size:0px;padding:0 25px;text-align:center;">
+                      <td style="direction:{{ direction }};font-size:0px;padding:0 25px;text-align:center;">
                         <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:554px;" ><![endif]-->
-                        <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                        <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:{{ align_left }};direction:{{ direction }};display:inline-block;vertical-align:top;width:100%;">
                           <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
                             <tbody>
                               <tr>
@@ -19,15 +19,15 @@
                                     <tbody>
                                       <!-- TITLE BEGINING -->
                                       <tr>
-                                        <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0;padding-bottom:20px;word-break:break-word;">
-                                          <div style="font-family:Open sans, arial, sans-serif;font-size:20px;font-weight:600;line-height:25px;text-align:left;color:#363A41;">{{ 'Hi {firstname} {lastname},'|trans({}, 'Emails.Body', locale) }}</div>
+                                        <td align="{{ align_left }}" style="font-size:0px;padding:10px 25px;padding-top:0;padding-bottom:20px;word-break:break-word;">
+                                          <div style="font-family:Open sans, arial, sans-serif;font-size:20px;font-weight:600;line-height:25px;text-align:{{ align_left }};color:#363A41;">{{ 'Hi {firstname} {lastname},'|trans({}, 'Emails.Body', locale) }}</div>
                                         </td>
                                       </tr>
                                       <!-- TITLE ENDING -->
                                       <!-- SUBTITLE BEGINING -->
                                       <tr>
-                                        <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:20px;word-break:break-word;">
-                                          <div style="font-family:Open sans, arial, sans-serif;font-size:16px;line-height:25px;text-align:left;color:#363A41;">{{ 'Thank you for shopping with {shop_name}!'|trans({}, 'Emails.Body', locale) }}</div>
+                                        <td align="{{ align_left }}" style="font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:20px;word-break:break-word;">
+                                          <div style="font-family:Open sans, arial, sans-serif;font-size:16px;line-height:25px;text-align:{{ align_left }};color:#363A41;">{{ 'Thank you for shopping with {shop_name}!'|trans({}, 'Emails.Body', locale) }}</div>
                                         </td>
                                       </tr>
                                       <!-- SUBTITLE ENDING -->
@@ -51,9 +51,9 @@
                 <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
                   <tbody>
                     <tr>
-                      <td style="direction:ltr;font-size:0px;padding:0 50px 40px;text-align:left;">
+                      <td style="direction:{{ direction }};font-size:0px;padding:0 50px 40px;text-align:{{ align_left }};">
                         <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:25px;" ><![endif]-->
-                        <div class="mj-column-px-25 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                        <div class="mj-column-px-25 mj-outlook-group-fix" style="font-size:0px;text-align:{{ align_left }};direction:{{ direction }};display:inline-block;vertical-align:top;width:100%;">
                           <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
                             <tbody>
                               <tr>
@@ -81,9 +81,9 @@
                 <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
                   <tbody>
                     <tr>
-                      <td style="direction:ltr;font-size:0px;padding:0 25px;text-align:center;">
+                      <td style="direction:{{ direction }};font-size:0px;padding:0 25px;text-align:center;">
                         <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:554px;" ><![endif]-->
-                        <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                        <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:{{ align_left }};direction:{{ direction }};display:inline-block;vertical-align:top;width:100%;">
                           <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
                             <tbody>
                               <tr>
@@ -91,8 +91,8 @@
                                   <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="" width="100%">
                                     <tbody>
                                       <tr>
-                                        <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:0px;word-break:break-word;">
-                                          <div style="font-family:Open sans, arial, sans-serif;font-size:16px;font-weight:600;line-height:25px;text-align:left;color:#363A41;">{{ 'Order ID {order_name}'|trans({}, 'Emails.Body', locale) }} - {{ 'Pending payment'|trans({}, 'Emails.Body', locale)|raw }}</div>
+                                        <td align="{{ align_left }}" style="font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:0px;word-break:break-word;">
+                                          <div style="font-family:Open sans, arial, sans-serif;font-size:16px;font-weight:600;line-height:25px;text-align:{{ align_left }};color:#363A41;">{{ 'Order ID {order_name}'|trans({}, 'Emails.Body', locale) }} - {{ 'Pending payment'|trans({}, 'Emails.Body', locale)|raw }}</div>
                                         </td>
                                       </tr>
                                     </tbody>
@@ -116,9 +116,9 @@
                 <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
                   <tbody>
                     <tr>
-                      <td style="direction:ltr;font-size:0px;padding:15px 50px 40px;text-align:center;">
+                      <td style="direction:{{ direction }};font-size:0px;padding:15px 50px 40px;text-align:center;">
                         <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:504px;" ><![endif]-->
-                        <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                        <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:{{ align_left }};direction:{{ direction }};display:inline-block;vertical-align:top;width:100%;">
                           <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
                             <tbody>
                               <tr>
@@ -126,8 +126,8 @@
                                   <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="" width="100%">
                                     <tbody>
                                       <tr>
-                                        <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                                          <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">{{ 'Your order with the reference [1]{order_name}[/1] has been placed successfully. You can expect [1]delivery as soon as your payment is received[/1].'|trans({'[1]': '<span class="label">', '[/1]': '</span>'}, 'Emails.Body', locale)|raw }}</div>
+                                        <td align="{{ align_left }}" style="font-size:0px;padding:10px 25px;word-break:break-word;">
+                                          <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:{{ align_left }};color:#363A41;">{{ 'Your order with the reference [1]{order_name}[/1] has been placed successfully. You can expect [1]delivery as soon as your payment is received[/1].'|trans({'[1]': '<span class="label">', '[/1]': '</span>'}, 'Emails.Body', locale)|raw }}</div>
                                         </td>
                                       </tr>
                                     </tbody>
@@ -151,9 +151,9 @@
                 <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
                   <tbody>
                     <tr>
-                      <td style="direction:ltr;font-size:0px;padding:0 25px;text-align:center;">
+                      <td style="direction:{{ direction }};font-size:0px;padding:0 25px;text-align:center;">
                         <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:554px;" ><![endif]-->
-                        <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                        <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:{{ align_left }};direction:{{ direction }};display:inline-block;vertical-align:top;width:100%;">
                           <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
                             <tbody>
                               <tr>
@@ -161,8 +161,8 @@
                                   <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="" width="100%">
                                     <tbody>
                                       <tr>
-                                        <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:0px;word-break:break-word;">
-                                          <div style="font-family:Open sans, arial, sans-serif;font-size:16px;font-weight:600;line-height:25px;text-align:left;color:#363A41;">{{ 'Payment method: bank wire'|trans({}, 'Emails.Body', locale)|raw }}</div>
+                                        <td align="{{ align_left }}" style="font-size:0px;padding:10px 25px;padding-top:0px;padding-bottom:0px;word-break:break-word;">
+                                          <div style="font-family:Open sans, arial, sans-serif;font-size:16px;font-weight:600;line-height:25px;text-align:{{ align_left }};color:#363A41;">{{ 'Payment method: bank wire'|trans({}, 'Emails.Body', locale)|raw }}</div>
                                         </td>
                                       </tr>
                                     </tbody>
@@ -186,9 +186,9 @@
                 <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
                   <tbody>
                     <tr>
-                      <td style="direction:ltr;font-size:0px;padding:15px 50px 40px;text-align:center;">
+                      <td style="direction:{{ direction }};font-size:0px;padding:15px 50px 40px;text-align:center;">
                         <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:504px;" ><![endif]-->
-                        <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                        <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:{{ align_left }};direction:{{ direction }};display:inline-block;vertical-align:top;width:100%;">
                           <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
                             <tbody>
                               <tr>
@@ -196,39 +196,39 @@
                                   <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="" width="100%">
                                     <tbody>
                                       <tr>
-                                        <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                                          <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">{{ 'You have decided to pay by bank wire.'|trans({}, 'Emails.Body', locale)|raw }}
+                                        <td align="{{ align_left }}" style="font-size:0px;padding:10px 25px;word-break:break-word;">
+                                          <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:{{ align_left }};color:#363A41;">{{ 'You have decided to pay by bank wire.'|trans({}, 'Emails.Body', locale)|raw }}
                                             {{ 'Here is the information you need for your transfer:'|trans({}, 'Emails.Body', locale)|raw }}
                                           </div>
                                         </td>
                                       </tr>
                                       <tr>
-                                        <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;word-break:break-word;">
-                                          <div style="font-family:Open sans, arial, sans-serif;font-size:16px;line-height:25px;text-align:left;color:#363A41;"><span class="label">{{ 'Amount:'|trans({}, 'Emails.Body', locale)|raw }}</span>
+                                        <td align="{{ align_left }}" style="font-size:0px;padding:10px 25px;padding-top:0px;word-break:break-word;">
+                                          <div style="font-family:Open sans, arial, sans-serif;font-size:16px;line-height:25px;text-align:{{ align_left }};color:#363A41;"><span class="label">{{ 'Amount:'|trans({}, 'Emails.Body', locale)|raw }}</span>
                                             <span> {total_paid}</span>
                                           </div>
                                         </td>
                                       </tr>
                                       <tr>
-                                        <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;word-break:break-word;">
-                                          <div style="font-family:Open sans, arial, sans-serif;font-size:16px;line-height:25px;text-align:left;color:#363A41;"><span class="label">{{ 'Account owner:'|trans({}, 'Emails.Body', locale)|raw }}</span>
+                                        <td align="{{ align_left }}" style="font-size:0px;padding:10px 25px;padding-top:0px;word-break:break-word;">
+                                          <div style="font-family:Open sans, arial, sans-serif;font-size:16px;line-height:25px;text-align:{{ align_left }};color:#363A41;"><span class="label">{{ 'Account owner:'|trans({}, 'Emails.Body', locale)|raw }}</span>
                                             <span> {bankwire_owner}</span>
                                           </div>
                                         </td>
                                       </tr>
                                       <tr>
-                                        <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;word-break:break-word;">
-                                          <div style="font-family:Open sans, arial, sans-serif;font-size:16px;line-height:25px;text-align:left;color:#363A41;"><span class="label">{{ 'Account details:'|trans({}, 'Emails.Body', locale)|raw }}</span><span> {bankwire_details}</span></div>
+                                        <td align="{{ align_left }}" style="font-size:0px;padding:10px 25px;padding-top:0px;word-break:break-word;">
+                                          <div style="font-family:Open sans, arial, sans-serif;font-size:16px;line-height:25px;text-align:{{ align_left }};color:#363A41;"><span class="label">{{ 'Account details:'|trans({}, 'Emails.Body', locale)|raw }}</span><span> {bankwire_details}</span></div>
                                         </td>
                                       </tr>
                                       <tr>
-                                        <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0px;word-break:break-word;">
-                                          <div style="font-family:Open sans, arial, sans-serif;font-size:16px;line-height:25px;text-align:left;color:#363A41;"><span class="label">{{ 'Bank address:'|trans({}, 'Emails.Body', locale)|raw }}</span><span> {bankwire_address}</span></div>
+                                        <td align="{{ align_left }}" style="font-size:0px;padding:10px 25px;padding-top:0px;word-break:break-word;">
+                                          <div style="font-family:Open sans, arial, sans-serif;font-size:16px;line-height:25px;text-align:{{ align_left }};color:#363A41;"><span class="label">{{ 'Bank address:'|trans({}, 'Emails.Body', locale)|raw }}</span><span> {bankwire_address}</span></div>
                                         </td>
                                       </tr>
                                       <tr>
-                                        <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                                          <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">{{ 'Please specify your order reference in the bankwire description.'|trans({}, 'Emails.Body', locale)|raw }}</div>
+                                        <td align="{{ align_left }}" style="font-size:0px;padding:10px 25px;word-break:break-word;">
+                                          <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:{{ align_left }};color:#363A41;">{{ 'Please specify your order reference in the bankwire description.'|trans({}, 'Emails.Body', locale)|raw }}</div>
                                         </td>
                                       </tr>
                                     </tbody>
@@ -252,14 +252,14 @@
                 <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
                   <tbody>
                     <tr>
-                      <td style="direction:ltr;font-size:0px;padding:0 25px 20px;text-align:center;">
+                      <td style="direction:{{ direction }};font-size:0px;padding:0 25px 20px;text-align:center;">
                         <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:554px;" ><![endif]-->
-                        <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                        <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:{{ align_left }};direction:{{ direction }};display:inline-block;vertical-align:top;width:100%;">
                           <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
                             <tbody>
                               <tr>
-                                <td align="left" style="font-size:0px;padding:10px 25px;word-break:break-word;">
-                                  <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">{{ 'Follow your order and download your invoice on our shop, go to the <a href="{history_url}" target="_blank">%order_history_label%</a> section of your customer account.'|trans({'%order_history_label%': 'Order history and details'|trans({}, 'Shop.Theme.Customeraccount', locale)}, 'Emails.Body', locale)|raw }}</div>
+                                <td align="{{ align_left }}" style="font-size:0px;padding:10px 25px;word-break:break-word;">
+                                  <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:{{ align_left }};color:#363A41;">{{ 'Follow your order and download your invoice on our shop, go to the <a href="{history_url}" target="_blank">%order_history_label%</a> section of your customer account.'|trans({'%order_history_label%': 'Order history and details'|trans({}, 'Shop.Theme.Customeraccount', locale)}, 'Emails.Body', locale)|raw }}</div>
                                 </td>
                               </tr>
                             </tbody>
@@ -279,14 +279,14 @@
                 <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
                   <tbody>
                     <tr>
-                      <td style="direction:ltr;font-size:0px;padding:0 25px;text-align:center;">
+                      <td style="direction:{{ direction }};font-size:0px;padding:0 25px;text-align:center;">
                         <!--[if mso | IE]><table role="presentation" border="0" cellpadding="0" cellspacing="0"><tr><td class="" style="vertical-align:top;width:554px;" ><![endif]-->
-                        <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                        <div class="mj-column-per-100 mj-outlook-group-fix" style="font-size:0px;text-align:{{ align_left }};direction:{{ direction }};display:inline-block;vertical-align:top;width:100%;">
                           <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;" width="100%">
                             <tbody>
                               <tr>
-                                <td align="left" style="font-size:0px;padding:10px 25px;padding-top:0;word-break:break-word;">
-                                  <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:left;color:#363A41;">{{ 'If you have a guest account, you can follow your order via the <a href="{guest_tracking_url}" target="_blank">%guest_tracking_label%</a> section on our shop.'|trans({'%guest_tracking_label%': 'Guest Tracking'|trans({}, 'Shop.Theme.Customeraccount', locale)}, 'Emails.Body', locale)|raw }}</div>
+                                <td align="{{ align_left }}" style="font-size:0px;padding:10px 25px;padding-top:0;word-break:break-word;">
+                                  <div style="font-family:Open sans, arial, sans-serif;font-size:14px;line-height:25px;text-align:{{ align_left }};color:#363A41;">{{ 'If you have a guest account, you can follow your order via the <a href="{guest_tracking_url}" target="_blank">%guest_tracking_label%</a> section on our shop.'|trans({'%guest_tracking_label%': 'Guest Tracking'|trans({}, 'Shop.Theme.Customeraccount', locale)}, 'Emails.Body', locale)|raw }}</div>
                                 </td>
                               </tr>
                             </tbody>

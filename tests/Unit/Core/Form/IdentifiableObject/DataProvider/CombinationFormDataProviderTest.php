@@ -54,6 +54,7 @@ class CombinationFormDataProviderTest extends TestCase
     private const COMBINATION_ID = 42;
     private const PRODUCT_ID = 69;
     private const DEFAULT_QUANTITY = 51;
+    private const COVER_URL = 'http://localhost/cover.jpg';
 
     public function testGetDefaultData(): void
     {
@@ -294,9 +295,11 @@ class CombinationFormDataProviderTest extends TestCase
 
         $expectedOutputData = $this->getDefaultOutputData();
         $expectedOutputData['images'] = [42, 51];
+        $expectedOutputData['cover_thumbnail_url'] = 'http://custom.combination.url';
 
         $combinationData = [
             'image_ids' => [42, 51],
+            'cover_url' => 'http://custom.combination.url',
         ];
 
         $datasets[] = [
@@ -319,7 +322,7 @@ class CombinationFormDataProviderTest extends TestCase
             $expectedOutputData,
         ];
 
-        $expectedOutputData['is_default'] = true;
+        $expectedOutputData['header']['is_default'] = true;
         $combinationData = ['is_default' => true];
 
         $datasets[] = [
@@ -390,6 +393,7 @@ class CombinationFormDataProviderTest extends TestCase
             $this->createPrices($combination),
             $this->createStock($combination),
             $combination['image_ids'] ?? [],
+            $combination['cover_url'] ?? self::COVER_URL,
             $combination['is_default'] ?? self::IS_DEFAULT
         );
     }
@@ -498,8 +502,11 @@ class CombinationFormDataProviderTest extends TestCase
         return [
             'id' => self::COMBINATION_ID,
             'product_id' => self::PRODUCT_ID,
-            'name' => self::DEFAULT_NAME,
-            'is_default' => self::IS_DEFAULT,
+            'cover_thumbnail_url' => self::COVER_URL,
+            'header' => [
+                'name' => self::DEFAULT_NAME,
+                'is_default' => self::IS_DEFAULT,
+            ],
             'stock' => [
                 'quantities' => [
                     'delta_quantity' => [

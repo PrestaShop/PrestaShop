@@ -134,7 +134,7 @@ class ProfileController extends FrameworkBundleAdminController
             $handlerResult = $formHandler->handle($form);
 
             if (null !== $handlerResult->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_profiles_index');
             }
@@ -190,7 +190,7 @@ class ProfileController extends FrameworkBundleAdminController
             $handlerResult = $formHandler->handleFor((int) $profileId, $form);
 
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_profiles_index');
             }

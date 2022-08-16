@@ -926,7 +926,7 @@
         {% if default_locale.id_lang != translateField.vars.name %}
           {% set classes = classes ~ ' d-none' %}
         {% endif %}
-        <div class="{{ classes }}" style="flex-grow: 1;">
+        <div data-lang-id="{{ translateField.vars.name }}" class="{{ classes }}" style="flex-grow: 1;">
           {{ form_widget(translateField) }}
         </div>
       {% endfor %}
@@ -1126,6 +1126,7 @@
 {%- block number_widget -%}
   {%- set type = type|default('text') -%}
   <div class="input-group">
+    {{- block('form_unit_prepend') -}}
     {{- block('form_widget_simple') -}}
     {{- block('form_unit') -}}
   </div>
@@ -1135,6 +1136,7 @@
 {%- block integer_widget -%}
   {%- set type = type|default('number') -%}
   <div class="input-group">
+    {{- block('form_unit_prepend') -}}
     {{- block('form_widget_simple') -}}
     {{- block('form_unit') -}}
   </div>
@@ -1142,12 +1144,20 @@
 {%- endblock integer_widget -%}
 
 {% block form_unit %}
-  {% if form.vars.unit is defined %}
+  {% if form.vars.unit is defined and not form.vars.prepend_unit %}
     <div class="input-group-append">
       <span class="input-group-text">{{ form.vars.unit }}</span>
     </div>
   {% endif %}
 {% endblock form_unit %}
+
+{% block form_unit_prepend %}
+  {% if form.vars.unit is defined and form.vars.prepend_unit %}
+    <div class="input-group-prepend">
+      <span class="input-group-text">{{ form.vars.unit }}</span>
+    </div>
+  {% endif %}
+{% endblock form_unit_prepend %}
 
 {% block form_help %}
   {% if help is not null %}
@@ -1374,6 +1384,57 @@
   </div>
 {% endblock %}
 
+{%- block navigation_tab_widget -%}
+{% set attr = attr|merge({class: (attr.class|default('') ~ ' navigation-tab-widget')|trim}) %}
+<div {{ block('widget_container_attributes') }}>
+  <div id="{{ form.vars.id }}-tabs" class="tabs js-tabs">
+    <div class="arrow d-xl-none js-arrow left-arrow float-left">
+      <i class="material-icons rtl-flip hide">chevron_left</i>
+    </div>
+
+    <ul class="nav nav-tabs js-nav-tabs" id="form-nav" role="tablist">
+    {% set firstRenderedChild = true %}
+    {% for child in form.children %}
+      {% if not child.rendered and child.vars.name != '_toolbar_buttons' and child.vars.name != '_token' %}
+      <li id="{{ child.vars.id }}-tab-nav" class="nav-item{% if not child.vars.valid %} has-error{% endif %}">
+        <a href="#{{ child.vars.id }}-tab" role="tab" data-toggle="tab" class="nav-link{% if firstRenderedChild %} active{% endif %}">
+          {{ child.vars.label }}
+        </a>
+      </li>
+      {% set firstRenderedChild = false %}
+      {% endif %}
+    {% endfor %}
+    </ul>
+
+    <div class="arrow d-xl-none js-arrow right-arrow visible float-right">
+      <i class="material-icons rtl-flip hide">chevron_right</i>
+    </div>
+
+    {% if form.offsetExists('_toolbar_buttons') %}
+    <div class="navigation-tab-widget-toolbar toolbar text-md-right">
+      {{ form_widget(form._toolbar_buttons) }}
+    </div>
+    {% endif %}
+  </div>
+
+  <div id="{{ form.vars.id }}-tabs-content" class="tab-content">
+    {% set firstRenderedChild = true %}
+    {% for child in form.children %}
+      {% if not child.rendered and child.vars.name != '_token' %}
+      <div role="tabpanel" class="form-contenttab tab-pane container-fluid{% if firstRenderedChild %} active{% endif %}" id="{{ child.vars.id }}-tab">
+        {% if child.vars.label_tab is defined %}
+          {{ form_label(child, child.vars.label_tab) }}
+        {% endif %}
+        {{ form_widget(child) }}
+        {{ form_errors(child) }}
+      </div>
+      {% set firstRenderedChild = false %}
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
+
 {%- block accordion_widget -%}
   <div class="accordion accordion-form" id="{{ form.vars.id }}">
     {% set firstChild = true %}
@@ -1414,7 +1475,7 @@
   </div>
 {%- endblock -%}
 
-{% block button_collection_row %}
+{% block button_collection_widget %}
   {%- set attr = attr|merge({
     class: (attr.class|default('') ~ ' form-group btn-collection btn-toolbar')|trim,
     role: 'group',

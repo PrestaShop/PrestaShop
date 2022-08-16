@@ -9,38 +9,6 @@
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/_discount_form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="576e650084068ed747fb3b22196dcd70">
-        <source>If you chooses to create this discount for all invoices, only one discount will be created per order invoice.</source>
-        <target>If you chooses to create this discount for all invoices, only one discount will be created per order invoice.</target>
-        <note>Line: 92</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/_new_product.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="dca6b819ed4897f93a1a8531df9b282a">
-        <source>If you don't select "Free shipping," the normal shipping costs will be applied.</source>
-        <target>If you don't select "Free shipping," the normal shipping costs will be applied.</target>
-        <note>Line: 121</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="admin-dev/themes/default/template/controllers/orders/helpers/view/view.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="f741fe9d353085c596e3c3610101e245">
-        <source>Resend this email to the customer</source>
-        <target>Resend this email to the customer</target>
-        <note>Line: 229</note>
-      </trans-unit>
-      <trans-unit id="883370e6a8360f9ffe2e658db153fd74">
-        <source>This feature will generate a random password and send an email to the customer.</source>
-        <target>This feature will generate a random password and send an email to the customer.</target>
-        <note>Line: 600</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="admin-dev/themes/default/template/controllers/return/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="d17f6ab68839ef4a39ead0638cae47a2">
@@ -55,45 +23,37 @@
       </trans-unit>
     </body>
   </file>
-  <file original="controllers/admin/AdminCustomersController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="a43fd5e0338751959686921566de352e">
-        <source>Leave this field blank if there's no change.</source>
-        <target>Leave this field blank if there's no change.</target>
-        <note>Line: 401</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="controllers/admin/AdminReturnController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="2bf0a7ee96f0cba7f7d530ff08f01bf8">
-        <source>Merchandise return (RMA) status.</source>
-        <target>Merchandise return (RMA) status.</target>
-        <note>Line: 129</note>
+      <trans-unit id="ed4bfa76b661f4b6bc94d32fe6147d57">
+        <source>Would you like to allow merchandise returns in your shop?</source>
+        <target>Would you like to allow merchandise returns in your shop?</target>
+        <note>Line: 61</note>
       </trans-unit>
-      <trans-unit id="a3d008a6e1f75882761e48de1b001497">
-        <source>List of products in return package.</source>
-        <target>List of products in return package.</target>
-        <note>Line: 137</note>
-      </trans-unit>
-      <trans-unit id="db21428a343da97c41ced5ad9ef17d56">
-        <source>The link is only available after validation and before the parcel gets delivered.</source>
-        <target>The link is only available after validation and before the parcel gets delivered.</target>
-        <note>Line: 145</note>
+      <trans-unit id="c503a53add0f47d2497ca363f9ad1b76">
+        <source>How many days after the delivery date does the customer have to return a product?</source>
+        <target>How many days after the delivery date does the customer have to return a product?</target>
+        <note>Line: 65</note>
       </trans-unit>
       <trans-unit id="095fcccad5a4585fdc2fe1f97fc89561">
         <source>Prefix used for return name (e.g. RE00001).</source>
         <target>Prefix used for return name (e.g. RE00001).</target>
-        <note>Line: 69</note>
+        <note>Line: 71</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="controllers/admin/AdminSlipController.php" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e07ffcdf6051874b295597fb64b62635">
-        <source>Format: 2012-12-31 (inclusive).</source>
-        <target>Format: 2012-12-31 (inclusive).</target>
-        <note>Line: 126</note>
+      <trans-unit id="2bf0a7ee96f0cba7f7d530ff08f01bf8">
+        <source>Merchandise return (RMA) status.</source>
+        <target>Merchandise return (RMA) status.</target>
+        <note>Line: 131</note>
+      </trans-unit>
+      <trans-unit id="a3d008a6e1f75882761e48de1b001497">
+        <source>List of products in return package.</source>
+        <target>List of products in return package.</target>
+        <note>Line: 139</note>
+      </trans-unit>
+      <trans-unit id="db21428a343da97c41ced5ad9ef17d56">
+        <source>The link is only available after validation and before the parcel gets delivered.</source>
+        <target>The link is only available after validation and before the parcel gets delivered.</target>
+        <note>Line: 147</note>
       </trans-unit>
     </body>
   </file>
@@ -111,46 +71,60 @@
       <trans-unit id="f6916f4f1a268d4d0014ce47a2dfc3e4">
         <source>Password should be at least %length% characters long.</source>
         <target>Password should be at least %length% characters long.</target>
-        <note>Line: 921</note>
+        <note>Line: 932</note>
       </trans-unit>
     </body>
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Sell/Customer/CustomerType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="ae12c6cc3c51c7dfc05571539d8980d9">
+        <source>Only letters and the dot (.) character, followed by a space, are allowed.</source>
+        <target>Only letters and the dot (.) character, followed by a space, are allowed.</target>
+        <note>Line: 164</note>
+      </trans-unit>
       <trans-unit id="6010127763b917fdc47eb0c50a86a6f6">
         <source>Enable or disable customer login.</source>
         <target>Enable or disable customer login.</target>
-        <note>Line: 219</note>
+        <note>Line: 240</note>
       </trans-unit>
       <trans-unit id="8c7a8f24423b8519d38fb3ff380e020f">
         <source>This customer will receive your ads via email.</source>
         <target>This customer will receive your ads via email.</target>
-        <note>Line: 227</note>
+        <note>Line: 248</note>
       </trans-unit>
       <trans-unit id="e7608efcc5a10b78e3a98c438c2a1b7f">
         <source>Select all the groups that you would like to apply to this customer.</source>
         <target>Select all the groups that you would like to apply to this customer.</target>
-        <note>Line: 236</note>
+        <note>Line: 257</note>
       </trans-unit>
       <trans-unit id="395b64636636e968c756f7514313f760">
         <source>This group will be the user's default group.</source>
         <target>This group will be the user's default group.</target>
-        <note>Line: 247</note>
+        <note>Line: 268</note>
       </trans-unit>
       <trans-unit id="8b7fc06b213f4fb343c72af878e5c64b">
         <source>Only the discount for the selected group will be applied to this customer.</source>
         <target>Only the discount for the selected group will be applied to this customer.</target>
-        <note>Line: 251</note>
+        <note>Line: 272</note>
       </trans-unit>
       <trans-unit id="75bf7b6b951d3183f7c8f96bdb4fa74c">
         <source>Valid characters:</source>
         <target>Valid characters:</target>
-        <note>Line: 303</note>
+        <note>Line: 328</note>
       </trans-unit>
-      <trans-unit id="ae12c6cc3c51c7dfc05571539d8980d9">
-        <source>Only letters and the dot (.) character, followed by a space, are allowed.</source>
-        <target>Only letters and the dot (.) character, followed by a space, are allowed.</target>
-        <note>Line: 148</note>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/CustomerService/MerchandiseReturn/MerchandiseReturnOptionsType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2c63abfb167f5934474544f8093b1ba9">
+        <source>Maximum number of days to return a product after the delivery date.</source>
+        <target>Maximum number of days to return a product after the delivery date.</target>
+        <note>Line: 66</note>
+      </trans-unit>
+      <trans-unit id="bd0a7bfae2c92edb50a9201ca47a1157">
+        <source>Prefix used for merchandise returns (e.g. RE00001).</source>
+        <target>Prefix used for merchandise returns (e.g. RE00001).</target>
+        <note>Line: 81</note>
       </trans-unit>
     </body>
   </file>
@@ -163,12 +137,31 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Address/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Order/Delivery/SlipOptionsType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="e03982ee543fe69d4954d587f1f2a338">
-        <source>The national ID card number of this person, or a unique tax identification number.</source>
-        <target>The national ID card number of this person, or a unique tax identification number.</target>
-        <note>Line: 66</note>
+      <trans-unit id="67342320cb8798c3a911e0c6d8bd026a">
+        <source>Prefix used for delivery slips.</source>
+        <target>Prefix used for delivery slips.</target>
+        <note>Line: 53</note>
+      </trans-unit>
+      <trans-unit id="6998acbd3739a7200586b4421d0ca508">
+        <source>The next delivery slip will begin with this number and then increase with each additional slip.</source>
+        <target>The next delivery slip will begin with this number and then increase with each additional slip.</target>
+        <note>Line: 62</note>
+      </trans-unit>
+      <trans-unit id="ac0ea97486388b2b153381c5fb10e147">
+        <source>Add an image before the product name on delivery slips.</source>
+        <target>Add an image before the product name on delivery slips.</target>
+        <note>Line: 73</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Order/Delivery/SlipPdfType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a4bfd4a1978f2c945e8317cce6b5fab1">
+        <source>Format: %s (inclusive).</source>
+        <target>Format: %s (inclusive).</target>
+        <note>Line: 72</note>
       </trans-unit>
     </body>
   </file>
@@ -213,51 +206,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/CustomerService/MerchandiseReturn/Blocks/options.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="ed4bfa76b661f4b6bc94d32fe6147d57">
-        <source>Would you like to allow merchandise returns in your shop?</source>
-        <target>Would you like to allow merchandise returns in your shop?</target>
-        <note>Line: 37</note>
-      </trans-unit>
-      <trans-unit id="c503a53add0f47d2497ca363f9ad1b76">
-        <source>How many days after the delivery date does the customer have to return a product?</source>
-        <target>How many days after the delivery date does the customer have to return a product?</target>
-        <note>Line: 42</note>
-      </trans-unit>
-      <trans-unit id="bd0a7bfae2c92edb50a9201ca47a1157">
-        <source>Prefix used for merchandise returns (e.g. RE00001).</source>
-        <target>Prefix used for merchandise returns (e.g. RE00001).</target>
-        <note>Line: 47</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Delivery/slip.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Invoices/Blocks/generate_by_date.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="8a7a048a67746f3877ab6cb1bc1d4afd">
         <source>Format: 2011-12-31 (inclusive).</source>
         <target>Format: 2011-12-31 (inclusive).</target>
-        <note>Line: 51</note>
-      </trans-unit>
-      <trans-unit id="67342320cb8798c3a911e0c6d8bd026a">
-        <source>Prefix used for delivery slips.</source>
-        <target>Prefix used for delivery slips.</target>
-        <note>Line: 82</note>
-      </trans-unit>
-      <trans-unit id="6998acbd3739a7200586b4421d0ca508">
-        <source>The next delivery slip will begin with this number and then increase with each additional slip.</source>
-        <target>The next delivery slip will begin with this number and then increase with each additional slip.</target>
-        <note>Line: 89</note>
-      </trans-unit>
-      <trans-unit id="8cf7df5b4b5858e73a7f4e75cc658cc3">
-        <source>Adds an image before product name on Delivery-slip</source>
-        <target>Adds an image before product name on Delivery-slip</target>
-        <note>Line: 93</note>
-      </trans-unit>
-      <trans-unit id="65cfe404ab66672f26d6bef8d56c3ee1">
-        <source>Add an image before product name on delivery slip</source>
-        <target>Add an image before product name on delivery slip</target>
-        <note>Line: 96</note>
+        <note>Line: 46</note>
       </trans-unit>
     </body>
   </file>
@@ -266,7 +220,7 @@
       <trans-unit id="fef8859b22e06e4d4918f091612bf958">
         <source>You can also export orders which have not been charged yet.</source>
         <target>You can also export orders which have not been charged yet.</target>
-        <note>Line: 41</note>
+        <note>Line: 42</note>
       </trans-unit>
     </body>
   </file>
@@ -324,7 +278,7 @@
       <trans-unit id="c78ba40a94a132dc170cba2f8c66f310">
         <source>Search for an existing product by typing the first letters of its name.</source>
         <target>Search for an existing product by typing the first letters of its name.</target>
-        <note>Line: 39</note>
+        <note>Line: 37</note>
       </trans-unit>
     </body>
   </file>
@@ -335,28 +289,10 @@
         <target>Search for an existing customer by typing the first letters of his/her name.</target>
         <note>Line: 39</note>
       </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/Create/summary.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="73af90a8372beea9f81a3c3ca77a4aa8">
-        <source>Send an email to the customer with the link to process the payment.</source>
-        <target>Send an email to the customer with the link to process the payment.</target>
-        <note>Line: 97</note>
-      </trans-unit>
-      <trans-unit id="9f38710d8e9ee2338dafa9ae484b0d85">
-        <source>Go on payment page to process the payment.</source>
-        <target>Go on payment page to process the payment.</target>
-        <note>Line: 100</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Order/Order/Blocks/View/Modal/add_order_discount_modal.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="4b492d24743e697b3639c862b351d1c4">
-        <source>If you choose to create this discount for all invoices, only one discount will be created per order invoice.</source>
-        <target>If you choose to create this discount for all invoices, only one discount will be created per order invoice.</target>
-        <note>Line: 100</note>
+      <trans-unit id="284ae371db0671532eca9ac96b9179d8">
+        <source>Use OR to broaden your search</source>
+        <target>Use OR to broaden your search</target>
+        <note>Line: 40</note>
       </trans-unit>
     </body>
   </file>
