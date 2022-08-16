@@ -27,7 +27,9 @@
 namespace PrestaShopBundle\Form\Admin\Type;
 
 use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Core\Localization\Currency\PatternTransformer;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Localization\Specification\NumberInterface;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormInterface;
@@ -37,17 +39,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class CustomMoneyType extends AbstractTypeExtension
 {
     public const PRESTASHOP_DECIMALS = 6;
-
-    protected const PATTERN_MAP = [
-        "¤\u{a0}#,##0.00" => "¤\u{a0}{{ widget }}",
-        '¤#,##0.00' => '¤{{ widget }}',
-        "#,##0.00\u{a0}¤" => "{{ widget }}\u{a0}¤",
-        '#,##0.00¤' => '{{ widget }}¤',
-        "-¤\u{a0}#,##0.00" => "-¤\u{a0}{{ widget }}",
-        '-¤#,##0.00' => '-¤{{ widget }}',
-        "-#,##0.00\u{a0}¤" => "-{{ widget }}\u{a0}¤",
-        '-#,##0.00¤' => '-{{ widget }}¤',
-    ];
 
     /**
      * @var Locale
@@ -96,7 +87,6 @@ class CustomMoneyType extends AbstractTypeExtension
 
         $priceSpecification = $this->locale->getPriceSpecification($currency);
         $value = new DecimalNumber((string) (float) $view->vars['value']);
-        $pricePattern = $value->isPositive() ? $priceSpecification->getPositivePattern() : $priceSpecification->getNegativePattern();
 
         // inspired by symfony MoneyType
         preg_match('/^([^\s\xc2\xa0]*)[\s\xc2\xa0]*{{ widget }}(?:[,.]0+)?[\s\xc2\xa0]*([^\s\xc2\xa0]*)$/u', $moneyPattern, $matches);
@@ -105,10 +95,42 @@ class CustomMoneyType extends AbstractTypeExtension
             $symbol = trim($matches[1]);
         }
 
-        if (!isset($this::PATTERN_MAP[$pricePattern])) {
+        $frameworkPattern = $this->getFrameworkPattern($priceSpecification, $value->isPositive());
+
+        if (!$frameworkPattern) {
             return;
         }
 
-        $view->vars['money_pattern'] = str_replace('¤', $symbol ?? $currency, $this::PATTERN_MAP[$pricePattern]);
+        $view->vars['money_pattern'] = str_replace(PatternTransformer::CURRENCY_SYMBOL, $symbol ?? $currency, $frameworkPattern);
+    }
+
+    /**
+     * @return string
+     */
+    protected function getFrameworkPattern(NumberInterface $priceSpecification, bool $isPositive): ?string
+    {
+        $patternTransformer = new PatternTransformer();
+        $patternType = $patternTransformer->getTransformationType($priceSpecification->getPositivePattern());
+
+        $positivePatternMap = [
+            PatternTransformer::TYPE_LEFT_SYMBOL_WITH_SPACE => sprintf(
+                '%s%s{{ widget }}',
+                PatternTransformer::CURRENCY_SYMBOL,
+                PatternTransformer::NO_BREAK_SPACE
+            ),
+            PatternTransformer::TYPE_RIGHT_SYMBOL_WITH_SPACE => sprintf(
+                '{{ widget }}%s%s',
+                PatternTransformer::NO_BREAK_SPACE,
+                PatternTransformer::CURRENCY_SYMBOL
+            ),
+            PatternTransformer::TYPE_LEFT_SYMBOL_WITHOUT_SPACE => sprintf('%s{{ widget }}', PatternTransformer::CURRENCY_SYMBOL),
+            PatternTransformer::TYPE_RIGHT_SYMBOL_WITHOUT_SPACE => sprintf('{{ widget }}%s', PatternTransformer::CURRENCY_SYMBOL),
+        ];
+
+        if (empty($positivePatternMap[$patternType])) {
+            return null;
+        }
+
+        return $isPositive ? $positivePatternMap[$patternType] : sprintf('-%s', $positivePatternMap[$patternType]);
     }
 }
