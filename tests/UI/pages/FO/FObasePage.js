@@ -234,6 +234,15 @@ class FOBasePage extends CommonPage {
   }
 
   /**
+   * Is currency dropdownExist
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  isCurrencyDropdownExist(page) {
+    return this.elementVisible(page, this.currencySelectorExpandIcon, 1000);
+  }
+
+  /**
    * Get if currency exists on dropdown
    * @param page {Page} Browser tab
    * @param currencyName {string} Name of the currency to check

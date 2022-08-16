@@ -256,8 +256,8 @@ describe('BO - Orders : Preview order', async () => {
         {args: {product: Products.demo_6, productPrice: Products.demo_6.priceTaxIncl}},
         {args: {product: Products.demo_7, productPrice: Products.demo_7.price}},
         {args: {product: Products.demo_8, productPrice: Products.demo_8.price}},
-        {args: {product: Products.demo_12, productPrice: Products.demo_12.price_ttc}},
         {args: {product: Products.demo_11, productPrice: Products.demo_11.finalPrice}},
+        {args: {product: Products.demo_12, productPrice: Products.demo_12.price_ttc}},
         {args: {product: Products.demo_13, productPrice: Products.demo_13.price}},
         {args: {product: Products.demo_14, productPrice: Products.demo_14.priceTaxIncl}},
       ].forEach((test, index) => {
@@ -412,8 +412,8 @@ describe('BO - Orders : Preview order', async () => {
           {args: {product: Products.demo_6, productPrice: Products.demo_6.priceTaxIncl}},
           {args: {product: Products.demo_7, productPrice: Products.demo_7.price}},
           {args: {product: Products.demo_8, productPrice: Products.demo_8.price}},
-          {args: {product: Products.demo_12, productPrice: Products.demo_12.price_ttc}},
           {args: {product: Products.demo_11, productPrice: Products.demo_11.finalPrice}},
+          {args: {product: Products.demo_12, productPrice: Products.demo_12.price_ttc}},
           {args: {product: Products.demo_13, productPrice: Products.demo_13.price}},
           {args: {product: Products.demo_14, productPrice: Products.demo_14.priceTaxIncl}},
         ].forEach((test, index) => {

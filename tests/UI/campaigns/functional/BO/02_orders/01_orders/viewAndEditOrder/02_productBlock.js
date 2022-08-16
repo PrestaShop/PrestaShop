@@ -55,6 +55,7 @@ const orderData = {
 };
 const productOutOfStockAllowed = new ProductFaker({
   name: `Out of stock allowed ${prefixNewProduct}`,
+  reference: 'd12345',
   type: 'Standard product',
   taxRule: 'No tax',
   quantity: -12,
@@ -64,6 +65,7 @@ const productOutOfStockAllowed = new ProductFaker({
 });
 const productOutOfStockNotAllowed = new ProductFaker({
   name: `Out of stock not allowed ${prefixNewProduct}`,
+  reference: 'e12345',
   type: 'Standard product',
   taxRule: 'No tax',
   quantity: -36,
@@ -74,6 +76,7 @@ const productOutOfStockNotAllowed = new ProductFaker({
 });
 const packOfProducts = new ProductFaker({
   name: `Pack of products ${prefixNewProduct}`,
+  reference: 'c12345',
   type: 'Pack of products',
   pack: {demo_13: 1, demo_7: 1},
   taxRule: 'No tax',
@@ -85,12 +88,14 @@ const packOfProducts = new ProductFaker({
 });
 const virtualProduct = new ProductFaker({
   name: `Virtual product ${prefixNewProduct}`,
+  reference: 'b12345',
   type: 'Virtual product',
   taxRule: 'No tax',
   quantity: 20,
 });
 const combinationProduct = new ProductFaker({
   name: `Product with combination ${prefixNewProduct}`,
+  reference: 'a12345',
   type: 'Standard product',
   productHasCombinations: true,
   taxRule: 'No tax',
@@ -101,6 +106,7 @@ const combinationProduct = new ProductFaker({
 });
 const simpleProduct = new ProductFaker({
   name: `Simple product ${prefixNewProduct}`,
+  reference: 'i12345',
   type: 'Standard product',
   taxRule: 'No tax',
   quantity: 50,
@@ -113,6 +119,7 @@ const simpleProduct = new ProductFaker({
 
 const productWithSpecificPrice = new ProductFaker({
   name: `Product with specific price ${prefixNewProduct}`,
+  reference: 'f12345',
   type: 'Standard product',
   taxRule: 'No tax',
   quantity: 20,
@@ -125,6 +132,7 @@ const productWithSpecificPrice = new ProductFaker({
 
 const productWithEcoTax = new ProductFaker({
   name: `Product with ecotax ${prefixNewProduct}`,
+  reference: 'g12345',
   type: 'Standard product',
   taxRule: 'No tax',
   quantity: 20,
@@ -134,6 +142,7 @@ const productWithEcoTax = new ProductFaker({
 
 const productWithCartRule = new ProductFaker({
   name: `Product with cart rule ${prefixNewProduct}`,
+  reference: 'h12345',
   type: 'Standard product',
   taxRule: 'No tax',
   quantity: 50,
@@ -477,7 +486,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       it('should check the ordered product details', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkVirtualProductDetails', baseContext);
 
-        const result = await orderPageProductsBlock.getProductDetails(page, 1);
+        const result = await orderPageProductsBlock.getProductDetails(page, 2);
         await Promise.all([
           expect(result.name).to.equal(virtualProduct.name),
           expect(result.reference).to.equal(`Reference number: ${virtualProduct.reference}`),
@@ -516,7 +525,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
         const textResult = await orderPageProductsBlock.addProductToCart(page, packOfProducts.minimumQuantity);
         await expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
 
-        const result = await orderPageProductsBlock.getProductDetails(page, 1);
+        const result = await orderPageProductsBlock.getProductDetails(page, 3);
         await Promise.all([
           expect(result.name).to.equal(packOfProducts.name),
           expect(result.reference).to.equal(`Reference number: ${packOfProducts.reference}`),
@@ -552,7 +561,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       it('should check the ordered product details', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkCustomizedProductDetails', baseContext);
 
-        const result = await orderPageProductsBlock.getProductDetails(page, 1);
+        const result = await orderPageProductsBlock.getProductDetails(page, 4);
         await Promise.all([
           expect(result.name).to.equal(Products.demo_14.name),
           expect(result.reference).to.equal(`Reference number: ${Products.demo_14.reference}`),
@@ -587,7 +596,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       it('should check the ordered product details', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkProductOutOfStockAllowedDetails', baseContext);
 
-        const result = await orderPageProductsBlock.getProductDetails(page, 1);
+        const result = await orderPageProductsBlock.getProductDetails(page, 4);
         await Promise.all([
           expect(result.name).to.equal(productOutOfStockAllowed.name),
           expect(result.basePrice).to.equal(productOutOfStockAllowed.price),
@@ -667,7 +676,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       it('should check the ordered product details', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkProductWithSpecificPriceDetails', baseContext);
 
-        const result = await orderPageProductsBlock.getProductDetails(page, 1);
+        const result = await orderPageProductsBlock.getProductDetails(page, 6);
         await Promise.all([
           expect(result.name).to.equal(productWithSpecificPrice.name),
           expect(result.basePrice).to.equal(productWithSpecificPrice.price),
@@ -702,7 +711,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       it('should check the ordered product details', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkProductWithEcoTaxDetails', baseContext);
 
-        const result = await orderPageProductsBlock.getProductDetails(page, 1);
+        const result = await orderPageProductsBlock.getProductDetails(page, 7);
         await Promise.all([
           expect(result.name).to.equal(productWithEcoTax.name),
           expect(result.basePrice).to.equal(productWithEcoTax.price),
@@ -713,9 +722,9 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       });
     });
 
-    describe('Add \'Product with tax rule\'', async () => {
+    describe('Add \'Product with cart rule\'', async () => {
       it(`should search for the product '${productWithCartRule.name}'`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'searchProductWithTaxRule', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'searchProductWithCartRule', baseContext);
 
         await orderPageProductsBlock.searchProduct(page, productWithCartRule.name);
         const result = await orderPageProductsBlock.getSearchedProductDetails(page);
@@ -727,7 +736,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       });
 
       it('should add the product to the cart', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'addProductWithTaxRuleToThecart', baseContext);
+        await testContext.addContextItem(this, 'testIdentifier', 'addProductWithCartRuleToTheCart', baseContext);
 
         const textResult = await orderPageProductsBlock.addProductToCart(page);
         await expect(textResult).to.contains(orderPageProductsBlock.successfulAddProductMessage);
@@ -737,7 +746,7 @@ describe('BO - Orders - View and edit order : Check product block in view order 
       it('should check the ordered product details', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'checkProductWithCartRuleDetails', baseContext);
 
-        const result = await orderPageProductsBlock.getProductDetails(page, 1);
+        const result = await orderPageProductsBlock.getProductDetails(page, 8);
         await Promise.all([
           expect(result.name).to.equal(productWithCartRule.name),
           expect(result.basePrice).to.equal(productWithCartRule.price),
