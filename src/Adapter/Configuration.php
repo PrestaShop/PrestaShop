@@ -265,7 +265,7 @@ class Configuration extends ParameterBag implements ShopConfigurationInterface
         );
 
         if (!$success) {
-            throw new \Exception('Could not update configuration');
+            throw new \Exception('Could not delete configuration');
         }
 
         return $this;
