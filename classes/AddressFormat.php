@@ -443,7 +443,7 @@ class AddressFormatCore extends ObjectModel
             [
               'controller' => Context::getContext()->controller,
               'address' => $address,
-              'addreasFields' => $addressFields,
+              'addressFields' => $addressFields,
               'addressFormatedValues' => $addressFormatedValues,
               'patternRules' => &$patternRules
             ]
