@@ -1308,6 +1308,25 @@ class CartCore extends ObjectModel
     }
 
     /**
+     * Test if current cart contains cart rule
+     *
+     * @param int $id_cart_rule CartRule ID
+     *
+     * @return bool true if current cart contains the CartRule
+     */
+    public function containsCartRule($id_cart_rule)
+    {
+        $return = (bool) Db::getInstance()->getValue(
+            'SELECT 1
+            FROM `' . _DB_PREFIX_ . 'cart_cart_rule`
+            WHERE `id_cart` = ' . (int) $this->id . '
+            AND `id_cart_rule` = ' . (int) $id_cart_rule
+        );
+
+        return $return;
+    }
+
+    /**
      * Add a CartRule to the Cart.
      *
      * @param int $id_cart_rule CartRule ID
@@ -1324,7 +1343,7 @@ class CartCore extends ObjectModel
             return false;
         }
 
-        if (Db::getInstance()->getValue('SELECT id_cart_rule FROM ' . _DB_PREFIX_ . 'cart_cart_rule WHERE id_cart_rule = ' . (int) $id_cart_rule . ' AND id_cart = ' . (int) $this->id)) {
+        if ($this->containsCartRule($id_cart_rule)) {
             return false;
         }
 

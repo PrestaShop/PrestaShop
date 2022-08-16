@@ -76,14 +76,20 @@
 		{/foreach}
 		displayFlags(languages, {$id_lang_default});
 
-    {if isset($refresh_cart) }
-      if (typeof window.parent.order_create !== "undefined") {
-        window.parent.order_create.refreshCart();
-      }
-      window.parent.$.fancybox.close();
-    {/if}
-
-  </script>
+		{if isset($created_cart_rule_id) }
+			if (typeof window.parent.order_create !== "undefined") {
+				{*
+				 * In order creation, we can add new cart rules to apply to the current cart
+				 * This cart rule creation is done through a Fancy box.
+				 * The cart rule is created and then we need to apply it to the cart
+				 * This need to be done in JS before refreshing the cart
+				 *}
+				window.parent.order_create.addCreatedCartRuleToCart({$created_cart_rule_id});
+			}
+			window.parent.$.fancybox.close();
+		{/if}
+	</script>
+	
 	<script type="text/javascript" src="themes/default/template/controllers/cart_rules/form.js"></script>
 	{include file="footer_toolbar.tpl"}
 </div>

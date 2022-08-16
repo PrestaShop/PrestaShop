@@ -61,10 +61,22 @@ function refreshCart() {
   orderPageManager.refreshCart();
 }
 
+/**
+ * proxy to allow other scripts within the Create Order page to refresh cart
+ */
+function addCreatedCartRuleToCart(cartRuleId) {
+  if (orderPageManager === null) {
+    console.log('Error: Cannot apply created cart rule to the current cart as orderPageManager is not available');
+    return;
+  }
+  orderPageManager.addCreatedCartRuleToCart(cartRuleId);
+}
+
 $(document).ready(() => {
   orderPageManager = new CreateOrderPage();
 });
 
+export {addCreatedCartRuleToCart};
 export {searchCustomerByString};
 export {refreshAddressesList};
 export {refreshCart};

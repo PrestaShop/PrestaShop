@@ -75,6 +75,12 @@ final class AddCartRuleToCartHandler extends AbstractCartHandler implements AddC
     {
         $cart = $this->getCart($command->getCartId());
         $cartRule = new CartRule($command->getCartRuleId()->getValue());
+        $cartRuleId = $cartRule->id;
+
+        // If CartRule already in cart, nothing to do
+        if ($cart->containsCartRule($cartRuleId)) {
+            return;
+        }
 
         $this->contextStateManager
             ->setCart($cart)
@@ -86,19 +92,15 @@ final class AddCartRuleToCartHandler extends AbstractCartHandler implements AddC
 
         $errorMessage = $this->validateCartRule($cartRule, $cart);
 
-        if ($errorMessage) {
-            $this->contextStateManager->restorePreviousContext();
+        $this->contextStateManager->restorePreviousContext();
 
+        if ($errorMessage) {
             throw new CartRuleValidityException($errorMessage);
         }
 
         if (!$cart->addCartRule($cartRule->id)) {
-            $this->contextStateManager->restorePreviousContext();
-
             throw new CartException('Failed to add cart rule to cart.');
         }
-
-        $this->contextStateManager->restorePreviousContext();
     }
 
     /**
@@ -113,9 +115,15 @@ final class AddCartRuleToCartHandler extends AbstractCartHandler implements AddC
      */
     private function validateCartRule(CartRule $cartRule, Cart $cart): ?string
     {
-        Context::getContext()->cart = $cart;
-        $previousCartRules = $cart->getCartRules();
-        $isValid = $cartRule->checkValidity(Context::getContext(), false, true);
+        $context = Context::getContext();
+        $context->cart = $cart;
+        $cartRuleId = $cartRule->id;
+
+        // Don't add cart rule during validation step !!
+        $previousCartRules = $cart->getCartRules(CartRule::FILTER_ACTION_ALL, false);
+        $alreadyInCart = $cart->containsCartRule($cartRuleId);
+
+        $isValid = $cartRule->checkValidity($context, $alreadyInCart, true);
 
         foreach ($previousCartRules as $previousCartRule) {
             Cache::clean('getContextualValue_' . $previousCartRule['id_discount'] . '_*');
