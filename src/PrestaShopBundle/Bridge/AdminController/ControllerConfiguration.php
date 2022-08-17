@@ -38,7 +38,7 @@ use Shop;
 class ControllerConfiguration
 {
     /**
-     * @var int|null
+     * @var int
      */
     public $tabId;
 
@@ -222,9 +222,19 @@ class ControllerConfiguration
      * @param Employee $user the current user
      */
     public function __construct(
-        Employee $user
+        Employee $user,
+        int $tabId,
+        string $objectModelClassName,
+        string $legacyControllerName,
+        string $tableName,
+        string $templateFolder
     ) {
         $this->user = $user;
+        $this->tabId = $tabId;
+        $this->objectModelClassName = $objectModelClassName;
+        $this->legacyControllerName = $legacyControllerName;
+        $this->tableName = $tableName;
+        $this->templateFolder = $templateFolder;
     }
 
     /**

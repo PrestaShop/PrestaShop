@@ -63,7 +63,7 @@ class HelperListConfigurator
         HelperListConfiguration $helperListConfiguration,
         HelperList $helper
     ): void {
-        $breadcrumbs = $this->breadcrumbsAndTitleHydrator->getBreadcrumbs($helperListConfiguration->id);
+        $breadcrumbs = $this->breadcrumbsAndTitleHydrator->getBreadcrumbs($helperListConfiguration->getTabId());
 
         $helper->title = $breadcrumbs['tab']['name'];
         //@todo: probably we can add optionsResolver here to check array structure of actions/fields at least

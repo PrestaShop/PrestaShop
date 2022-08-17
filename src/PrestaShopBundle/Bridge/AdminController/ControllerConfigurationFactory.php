@@ -76,12 +76,14 @@ class ControllerConfigurationFactory
             );
         }
 
-        $controllerConfiguration = new ControllerConfiguration($employee);
-        $controllerConfiguration->tabId = $tabId;
-        $controllerConfiguration->objectModelClassName = $objectModelClassName;
-        $controllerConfiguration->legacyControllerName = $legacyControllerName;
-        $controllerConfiguration->tableName = $tableName;
-        $controllerConfiguration->templateFolder = Tools::toUnderscoreCase(substr($controllerConfiguration->legacyControllerName, 5)) . '/';
+        $controllerConfiguration = new ControllerConfiguration(
+            $employee,
+            $tabId,
+            $objectModelClassName,
+            $legacyControllerName,
+            $tableName,
+            Tools::toUnderscoreCase(substr($legacyControllerName, 5)) . '/'
+        );
 
         $this->setLegacyCurrentIndex($controllerConfiguration);
         $this->initToken($controllerConfiguration);

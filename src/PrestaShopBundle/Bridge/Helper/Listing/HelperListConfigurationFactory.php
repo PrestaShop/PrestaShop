@@ -73,7 +73,7 @@ class HelperListConfigurationFactory
         $helperListConfiguration->defaultOrderBy = $defaultOrderBy;
         $helperListConfiguration->explicitSelect = $explicitSelect;
         $helperListConfiguration->useFoundRows = $useFoundRows;
-        $helperListConfiguration->id = $controllerConfiguration->tabId;
+        $helperListConfiguration->setTabId($controllerConfiguration->tabId);
         $helperListConfiguration->legacyControllerName = $controllerConfiguration->legacyControllerName;
         $helperListConfiguration->token = $controllerConfiguration->token;
         $helperListConfiguration->bootstrap = $controllerConfiguration->bootstrap;
