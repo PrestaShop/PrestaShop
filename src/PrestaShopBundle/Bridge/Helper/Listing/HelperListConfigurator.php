@@ -68,9 +68,9 @@ class HelperListConfigurator
         $helper->title = $breadcrumbs['tab']['name'];
         //@todo: probably we can add optionsResolver here to check array structure of actions/fields at least
         $helper->toolbar_btn = $helperListConfiguration->getToolbarActions();
+        $helper->actions = $helperListConfiguration->getRowActions();
+        $helper->bulk_actions = $helperListConfiguration->getBulkActions();
         $helper->show_toolbar = true;
-        $helper->actions = $helperListConfiguration->actions;
-        $helper->bulk_actions = $helperListConfiguration->bulkActions;
         $helper->currentIndex = $helperListConfiguration->legacyCurrentIndex;
         $helper->table = $helperListConfiguration->table;
         $helper->orderBy = $helperListConfiguration->orderBy;

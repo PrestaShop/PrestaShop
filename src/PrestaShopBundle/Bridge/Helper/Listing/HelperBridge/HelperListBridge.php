@@ -121,12 +121,6 @@ class HelperListBridge
         $helper->_pagination = $helperListConfiguration->pagination;
         $helper->tpl_delete_link_vars = $helperListConfiguration->deleteLinksVariableTemplate;
 
-        foreach ($helperListConfiguration->actionsAvailable as $action) {
-            if (!in_array($action, $helperListConfiguration->actions) && isset($helperListConfiguration->$action) && $helperListConfiguration->$action) {
-                $helperListConfiguration->actions[] = $action;
-            }
-        }
-
         /* @phpstan-ignore-next-line */
         $helper->sql = $helperListConfiguration->listsql;
 
