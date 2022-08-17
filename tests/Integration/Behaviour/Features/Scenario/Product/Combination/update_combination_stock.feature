@@ -350,3 +350,18 @@ Feature: Update product combination stock information in Back Office (BO)
       | low stock alert is enabled | false       |
       | location                   | Storage nr1 |
       | available date             | 2021-10-10  |
+    When I update combination "product1MBlue" stock with following details:
+      | delta quantity             | 4294967295  |
+      | minimal quantity           | 1           |
+      | location                   | Storage nr1 |
+      | low stock threshold        | 0           |
+      | low stock alert is enabled | false       |
+      | available date             | 2021-10-10  |
+    Then combination "product1MBlue" should have following stock details:
+      | combination stock detail   | value       |
+      | quantity                   | 2147483647  |
+      | minimal quantity           | 1           |
+      | low stock threshold        | 0           |
+      | low stock alert is enabled | false       |
+      | location                   | Storage nr1 |
+      | available date             | 2021-10-10  |

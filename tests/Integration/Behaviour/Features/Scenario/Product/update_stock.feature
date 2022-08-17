@@ -252,3 +252,33 @@ Feature: Update product stock from Back Office (BO)
     And product "product1" localized "available_later_labels" should be:
       | locale | value |
       | en-US  |       |
+
+  Scenario: I update product to max and min stock
+    Given I add product "product2" with following information:
+      | name[en-US] | product2 |
+      | type        | standard |
+    And product "product2" type should be standard
+    And product "product2" should have following stock information:
+      | quantity | 0 |
+    When I update product "product2" stock with following information:
+      | delta_quantity | -2147483648 |
+    And product "product2" should have following stock information:
+      | quantity | -2147483648 |
+    When I update product "product2" stock with following information:
+      | delta_quantity | 4294967295 |
+    And product "product2" should have following stock information:
+      | quantity | 2147483647 |
+
+  Scenario: I try to update product quantity with to big numbers
+    Given I add product "product3" with following information:
+      | name[en-US] | product3 |
+      | type        | standard |
+    And product "product3" type should be standard
+    And product "product3" should have following stock information:
+      | quantity | 0 |
+    When I update product "product3" stock with following information:
+      | delta_quantity | -2147483649 |
+    Then I should get error that stock available quantity is invalid
+    When I update product "product3" stock with following information:
+      | delta_quantity | 4294967297 |
+    Then I should get error that stock available quantity is invalid

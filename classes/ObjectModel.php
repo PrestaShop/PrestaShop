@@ -24,7 +24,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 use PrestaShop\PrestaShop\Adapter\ServiceLocator;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\StockSettings;
 use PrestaShopBundle\Translation\TranslatorComponent;
 
 abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation\Database\EntityInterface
@@ -1248,22 +1247,16 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 }
             }
         }
-        // use range for int numbers, it doesn't count "-" as extra char
+
         // check field range
-        if (!in_array('range', $skip) && !empty($data['range'])) {
+        if (!in_array('range', $skip) && isset($data['range']['min'], $data['range']['max'])) {
             $range = $data['range'];
-            if (!is_array($data['range'])) {
-                $range = ['min' => 0, 'max' => $data['range']];
-            }
-
-            $length = Tools::strlen(str_replace('-', '', $value));
-
-            if ($length < $range['min'] || $length > $range['max']) {
+            if ($value < $range['min'] || $value > $range['max']) {
                 return $this->trans(
                     'The range of property %1$s is currently %2$d. It must be between %3$d and %4$d.',
                     [
                         get_class($this) . '->' . $field,
-                        $length,
+                        $value,
                         $range['min'],
                         $range['max'],
                     ],
@@ -1287,11 +1280,6 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
                 } else {
                     if (!call_user_func(['Validate', $data['validate']], $value)) {
                         $res = false;
-                    }
-                    if (Tools::strtolower($data['validate']) === 'isint') {
-                        if ($value < StockSettings::INT_32_MAX_NEGATIVE || $value > StockSettings::INT_32_MAX_POSITIVE) {
-                            $res = false;
-                        }
                     }
                 }
                 if (!$res) {
