@@ -31,6 +31,7 @@ namespace PrestaShopBundle\Bridge\AdminController\Action;
  */
 interface ActionInterface
 {
+    //@todo: not used anymore, probably actions will be validated by some options resolver
     public const AVAILABLE_ACTION_VIEW = 'view';
     public const AVAILABLE_ACTION_EDIT = 'edit';
     public const AVAILABLE_ACTION_DUPLICATE = 'duplicate';

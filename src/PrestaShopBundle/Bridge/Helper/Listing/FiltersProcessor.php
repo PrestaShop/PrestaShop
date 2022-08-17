@@ -71,17 +71,17 @@ class FiltersProcessor
         Request $request,
         HelperListConfiguration $helperListConfiguration
     ): void {
-        $this->hookDispatcher->dispatchWithParameters('action' . $helperListConfiguration->legacyControllerName . 'ListingFieldsModifier', [
+        $this->hookDispatcher->dispatchWithParameters('action' . $helperListConfiguration->getLegacyControllerName() . 'ListingFieldsModifier', [
             'fields' => &$helperListConfiguration->fieldsList,
         ]);
 
-        $prefix = FilterPrefix::getByClassName($helperListConfiguration->legacyControllerName);
+        $prefix = FilterPrefix::getByClassName($helperListConfiguration->getLegacyControllerName());
 
-        if (!empty($helperListConfiguration->listId)) {
+        if (!empty($helperListConfiguration->getListId())) {
             foreach ($request->request->all() as $key => $value) {
                 if ($value === '') {
                     unset($this->context->cookie->{$prefix . $key});
-                } elseif (stripos($key, $helperListConfiguration->listId . 'Filter_') === 0) {
+                } elseif (stripos($key, $helperListConfiguration->getListId() . 'Filter_') === 0) {
                     $this->context->cookie->{$prefix . $key} = !is_array($value) ? $value : json_encode($value);
                 } elseif (stripos($key, 'submitFilter') === 0) {
                     $this->context->cookie->$key = !is_array($value) ? $value : json_encode($value);
@@ -89,19 +89,19 @@ class FiltersProcessor
             }
 
             foreach ($request->query->all() as $key => $value) {
-                if (stripos($key, $helperListConfiguration->listId . 'Filter_') === 0) {
+                if (stripos($key, $helperListConfiguration->getListId() . 'Filter_') === 0) {
                     $this->context->cookie->{$prefix . $key} = !is_array($value) ? $value : json_encode($value);
                 } elseif (stripos($key, 'submitFilter') === 0) {
                     $this->context->cookie->$key = !is_array($value) ? $value : json_encode($value);
                 }
-                if (stripos($key, $helperListConfiguration->listId . 'Orderby') === 0 && Validate::isOrderBy($value)) {
-                    if ($value === '' || $value == $helperListConfiguration->defaultOrderBy) {
+                if (stripos($key, $helperListConfiguration->getListId() . 'Orderby') === 0 && Validate::isOrderBy($value)) {
+                    if ($value === '' || $value == $helperListConfiguration->getDefaultOrderBy()) {
                         unset($this->context->cookie->{$prefix . $key});
                     } else {
                         $this->context->cookie->{$prefix . $key} = $value;
                     }
-                } elseif (stripos($key, $helperListConfiguration->listId . 'Orderway') === 0 && Validate::isOrderWay($value)) {
-                    if ($value === '' || $value == $helperListConfiguration->defaultOrderWay) {
+                } elseif (stripos($key, $helperListConfiguration->getListId() . 'Orderway') === 0 && Validate::isOrderWay($value)) {
+                    if ($value === '' || $value == $helperListConfiguration->getDefaultOrderWay()) {
                         unset($this->context->cookie->{$prefix . $key});
                     } else {
                         $this->context->cookie->{$prefix . $key} = $value;
@@ -110,7 +110,7 @@ class FiltersProcessor
             }
         }
 
-        $filters = $this->context->cookie->getFamily($prefix . $helperListConfiguration->listId . 'Filter_');
+        $filters = $this->context->cookie->getFamily($prefix . $helperListConfiguration->getListId() . 'Filter_');
         $definition = false;
         if (isset($this->className) && $this->className) {
             $definition = ObjectModel::getDefinition($this->className);
@@ -118,8 +118,8 @@ class FiltersProcessor
 
         foreach ($filters as $key => $value) {
             /* Extracting filters from $_POST on key filter_ */
-            if ($value != null && !strncmp($key, $prefix . $helperListConfiguration->listId . 'Filter_', 7 + Tools::strlen($prefix . $helperListConfiguration->listId))) {
-                $key = Tools::substr($key, 7 + Tools::strlen($prefix . $helperListConfiguration->listId));
+            if ($value != null && !strncmp($key, $prefix . $helperListConfiguration->getListId() . 'Filter_', 7 + Tools::strlen($prefix . $helperListConfiguration->getListId()))) {
+                $key = Tools::substr($key, 7 + Tools::strlen($prefix . $helperListConfiguration->getListId()));
                 /* Table alias could be specified using a ! eg. alias!field */
                 $tmp_tab = explode('!', $key);
                 $filter = count($tmp_tab) > 1 ? $tmp_tab[1] : $tmp_tab[0];
@@ -153,7 +153,7 @@ class FiltersProcessor
                         }
                     } else {
                         $sql_filter .= ' AND ';
-                        $check_key = ($key == $helperListConfiguration->identifier || $key == '`' . $helperListConfiguration->identifier . '`');
+                        $check_key = ($key == $helperListConfiguration->getIdentifier() || $key == '`' . $helperListConfiguration->getIdentifier() . '`');
                         $alias = ($definition && !empty($definition['fields'][$filter]['shop'])) ? 'sa' : 'a';
 
                         if ($type == 'int' || $type == 'bool') {
@@ -182,11 +182,11 @@ class FiltersProcessor
      */
     public function resetFilters(HelperListConfiguration $helperListConfiguration, Request $request = null): void
     {
-        $prefix = FilterPrefix::getByClassName($helperListConfiguration->legacyControllerName);
-        $filters = $this->context->cookie->getFamily($prefix . $helperListConfiguration->listId . 'Filter_');
+        $prefix = FilterPrefix::getByClassName($helperListConfiguration->getLegacyControllerName());
+        $filters = $this->context->cookie->getFamily($prefix . $helperListConfiguration->getListId() . 'Filter_');
         foreach ($filters as $cookie_key => $filter) {
-            if (strncmp($cookie_key, $prefix . $helperListConfiguration->listId . 'Filter_', 7 + Tools::strlen($prefix . $helperListConfiguration->listId)) == 0) {
-                $key = substr($cookie_key, 7 + Tools::strlen($prefix . $helperListConfiguration->listId));
+            if (strncmp($cookie_key, $prefix . $helperListConfiguration->getListId() . 'Filter_', 7 + Tools::strlen($prefix . $helperListConfiguration->getListId())) == 0) {
+                $key = substr($cookie_key, 7 + Tools::strlen($prefix . $helperListConfiguration->getListId()));
                 if (is_array($helperListConfiguration->fieldsList) && array_key_exists($key, $helperListConfiguration->fieldsList)) {
                     $this->context->cookie->$cookie_key = null;
                 }
@@ -195,14 +195,14 @@ class FiltersProcessor
             }
         }
 
-        if (isset($this->context->cookie->{'submitFilter' . $helperListConfiguration->listId})) {
-            unset($this->context->cookie->{'submitFilter' . $helperListConfiguration->listId});
+        if (isset($this->context->cookie->{'submitFilter' . $helperListConfiguration->getListId()})) {
+            unset($this->context->cookie->{'submitFilter' . $helperListConfiguration->getListId()});
         }
-        if (isset($this->context->cookie->{$prefix . $helperListConfiguration->listId . 'Orderby'})) {
-            unset($this->context->cookie->{$prefix . $helperListConfiguration->listId . 'Orderby'});
+        if (isset($this->context->cookie->{$prefix . $helperListConfiguration->getListId() . 'Orderby'})) {
+            unset($this->context->cookie->{$prefix . $helperListConfiguration->getListId() . 'Orderby'});
         }
-        if (isset($this->context->cookie->{$prefix . $helperListConfiguration->listId . 'Orderway'})) {
-            unset($this->context->cookie->{$prefix . $helperListConfiguration->listId . 'Orderway'});
+        if (isset($this->context->cookie->{$prefix . $helperListConfiguration->getListId() . 'Orderway'})) {
+            unset($this->context->cookie->{$prefix . $helperListConfiguration->getListId() . 'Orderway'});
         }
 
         unset(

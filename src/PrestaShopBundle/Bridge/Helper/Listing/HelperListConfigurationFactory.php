@@ -56,30 +56,30 @@ class HelperListConfigurationFactory
         // @todo: investigate what these options actually do and maybe rename them to reflect it better
         bool $deleted = false,
         bool $explicitSelect = false,
-        bool $useFoundRows = true
+        bool $useFoundRows = true,
+        ?string $listId = null
     ): HelperListConfiguration {
         if (empty($defaultOrderBy)) {
             $defaultOrderBy = $identifier;
         }
-        $helperListConfiguration = new HelperListConfiguration();
 
-        $helperListConfiguration->table = $controllerConfiguration->tableName;
-        $helperListConfiguration->listId = $controllerConfiguration->tableName;
-        $helperListConfiguration->objectModelClassName = $controllerConfiguration->objectModelClassName;
-        $helperListConfiguration->identifier = $identifier;
-        $helperListConfiguration->positionIdentifier = $positionIdentifier;
-        $helperListConfiguration->isJoinLanguageTableAuto = $isJoinLanguageTableAuto;
-        $helperListConfiguration->deleted = $deleted;
-        $helperListConfiguration->defaultOrderBy = $defaultOrderBy;
-        $helperListConfiguration->explicitSelect = $explicitSelect;
-        $helperListConfiguration->useFoundRows = $useFoundRows;
-        $helperListConfiguration->setTabId($controllerConfiguration->tabId);
-        $helperListConfiguration->legacyControllerName = $controllerConfiguration->legacyControllerName;
-        $helperListConfiguration->token = $controllerConfiguration->token;
-        $helperListConfiguration->bootstrap = $controllerConfiguration->bootstrap;
-        $helperListConfiguration->legacyCurrentIndex = $controllerConfiguration->legacyCurrentIndex;
-        $helperListConfiguration->multishopContext = $controllerConfiguration->multiShopContext;
-
-        return $helperListConfiguration;
+        return new HelperListConfiguration(
+            $controllerConfiguration->tabId,
+            $controllerConfiguration->tableName,
+            $listId ?: $controllerConfiguration->tableName,
+            $controllerConfiguration->objectModelClassName,
+            $identifier,
+            $positionIdentifier,
+            $isJoinLanguageTableAuto,
+            $deleted,
+            $defaultOrderBy,
+            $explicitSelect,
+            $useFoundRows,
+            $controllerConfiguration->legacyControllerName,
+            $controllerConfiguration->token,
+            $controllerConfiguration->bootstrap,
+            $controllerConfiguration->legacyCurrentIndex,
+            $controllerConfiguration->multiShopContext
+        );
     }
 }

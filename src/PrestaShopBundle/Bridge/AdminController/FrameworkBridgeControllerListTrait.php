@@ -43,7 +43,8 @@ trait FrameworkBridgeControllerListTrait
         bool $autoJoinLangTable = true,
         bool $deleted = false,
         bool $explicitSelect = false,
-        bool $useFoundRows = true
+        bool $useFoundRows = true,
+        ?string $listId = null
     ): HelperListConfiguration {
         $controllerConfiguration = $this->getControllerConfiguration();
 
@@ -55,7 +56,8 @@ trait FrameworkBridgeControllerListTrait
             $autoJoinLangTable,
             $deleted,
             $explicitSelect,
-            $useFoundRows
+            $useFoundRows,
+            $listId
         );
     }
 
