@@ -29,7 +29,9 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Bridge\Helper\Listing;
 
 use HelperList;
+use PrestaShopBundle\Bridge\Exception\InvalidRowActionException;
 use PrestaShopBundle\Bridge\Smarty\BreadcrumbsAndTitleConfigurator;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Assign variables needed by the legacy helper list to render a list using Smarty.
@@ -67,9 +69,9 @@ class HelperListConfigurator
 
         $helper->title = $breadcrumbs['tab']['name'];
         //@todo: probably we can add optionsResolver here to check array structure of actions/fields at least
-        $helper->toolbar_btn = $helperListConfiguration->getToolbarActions();
-        $helper->actions = $helperListConfiguration->getRowActions();
-        $helper->bulk_actions = $helperListConfiguration->getBulkActions();
+        $helper->toolbar_btn = $this->resolveToolbarActions($helperListConfiguration->getToolbarActions());
+        $helper->actions = $this->resolveRowActions($helperListConfiguration->getRowActions());
+        $helper->bulk_actions = $this->resolveBulkActions($helperListConfiguration->getBulkActions());
         $helper->show_toolbar = true;
         $helper->currentIndex = $helperListConfiguration->getLegacyCurrentIndex();
         $helper->table = $helperListConfiguration->getTableName();
@@ -82,5 +84,78 @@ class HelperListConfigurator
         $helper->controller_name = $helperListConfiguration->getLegacyControllerName();
         $helper->list_id = $helperListConfiguration->getListId() ?? $helperListConfiguration->getTableName();
         $helper->bootstrap = $helperListConfiguration->isBootstrap();
+    }
+
+    //@todo: maybe resolvers could be moved to ListConfiguration::addBulkAction,
+    //      then IDE should autocomplete the options when filling them
+    //      and it would better follow "fail fast" principle
+    protected function resolveToolbarActions(array $toolbarActions): array
+    {
+        $optionsResolver = new OptionsResolver();
+        $optionsResolver
+            ->setDefined(['href', 'desc', 'class'])
+            ->setDefaults(['class' => ''])
+            ->setAllowedTypes('class', ['string'])
+            ->setAllowedTypes('href', ['string'])
+            ->setAllowedTypes('desc', ['string'])
+        ;
+
+        $resolvedActions = [];
+        foreach ($toolbarActions as $label => $actionConfig) {
+            $resolvedActions[$label] = $optionsResolver->resolve($actionConfig);
+        }
+
+        return $resolvedActions;
+    }
+
+    protected function resolveBulkActions(array $bulkActions): array
+    {
+        $optionsResolver = new OptionsResolver();
+        $optionsResolver
+            ->setDefaults([
+                'text' => '',
+                'icon' => null,
+                'confirm' => null,
+            ])
+            ->setAllowedTypes('text', ['string'])
+            ->setAllowedTypes('icon', ['string', 'null'])
+            ->setAllowedTypes('confirm', ['string', 'null'])
+        ;
+
+        $resolvedActions = [];
+        foreach ($bulkActions as $label => $actionConfig) {
+            $resolvedActions[$label] = $optionsResolver->resolve($actionConfig);
+        }
+
+        return $resolvedActions;
+    }
+
+    /**
+     * @param array $rowActions
+     *
+     * @return array
+     */
+    protected function resolveRowActions(array $rowActions): array
+    {
+        $availableRowActions = $this->getAvailableListRowActions();
+
+        foreach ($rowActions as $action) {
+            if (!in_array($action, $availableRowActions, true)) {
+                throw new InvalidRowActionException(sprintf('Invalid row action "%s"', $action));
+            }
+        }
+
+        return $rowActions;
+    }
+
+    // @todo: how are we planning to allow extending it? do we really need to validate them at all?
+    protected function getAvailableListRowActions(): array
+    {
+        return [
+            'view',
+            'edit',
+            'delete',
+            'duplicate',
+        ];
     }
 }
