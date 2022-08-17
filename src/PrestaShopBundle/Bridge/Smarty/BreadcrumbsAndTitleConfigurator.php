@@ -89,13 +89,12 @@ class BreadcrumbsAndTitleConfigurator implements ConfiguratorInterface
     /**
      * Get breadcrumbs configuration from tabs.
      *
-     * @param int $id
+     * @param int $tabId
      *
      * @return array
      */
-    public function getBreadcrumbs(int $id): array
+    public function getBreadcrumbs(int $tabId): array
     {
-        $tabId = $id;
         $tabs = Tab::recursiveTab($tabId, []);
 
         $dummy = ['name' => '', 'href' => '', 'icon' => ''];

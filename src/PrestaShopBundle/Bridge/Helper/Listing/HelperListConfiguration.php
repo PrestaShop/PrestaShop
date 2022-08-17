@@ -32,15 +32,13 @@ use PrestaShopBundle\Bridge\AdminController\Action\ActionInterface;
 
 /**
  * This object contains the configuration needed to generate a list using the helper list.
- *
- * @todo: is it worth adding getters/setters and making all properties private?
  */
 class HelperListConfiguration
 {
     /**
      * @var int
      */
-    public $id;
+    private $tabId;
 
     /**
      * @var string
@@ -198,6 +196,8 @@ class HelperListConfiguration
     public $deleteLinksVariableTemplate = [];
 
     /**
+     * @todo: whats the point of this prop?
+     *
      * @var array List of available actions for each list row - default actions are view, edit, delete, duplicate
      */
     public $actionsAvailable = [
@@ -236,6 +236,26 @@ class HelperListConfiguration
      * @var array<string, array<string, mixed>>
      */
     private $bulkActions = [];
+
+    /**
+     * @param int $tabId
+     *
+     * @return HelperListConfiguration
+     */
+    public function setTabId(int $tabId): self
+    {
+        $this->tabId = $tabId;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTabId(): int
+    {
+        return $this->tabId;
+    }
 
     /**
      * @param string $label
