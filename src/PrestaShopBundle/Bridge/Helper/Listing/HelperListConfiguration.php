@@ -32,6 +32,8 @@ use PrestaShopBundle\Bridge\AdminController\Action\ActionInterface;
 
 /**
  * This object contains the configuration needed to generate a list using the helper list.
+ *
+ * @todo: is it worth adding getters/setters and making all properties private?
  */
 class HelperListConfiguration
 {
@@ -206,11 +208,6 @@ class HelperListConfiguration
     ];
 
     /**
-     * @var array
-     */
-    public $bulkActions = [];
-
-    /**
      * @var string
      */
     public $positionIdentifier;
@@ -231,12 +228,21 @@ class HelperListConfiguration
     private $toolbarActions = [];
 
     /**
-     * @todo: should be separated here rowActions and others, because they have different structure.
-     *        Then they should be unified in configurator
-     * @var array
+     * @var string[]
      */
-    public $actions = [];
+    private $rowActions = [];
 
+    /**
+     * @var array<string, array<string, mixed>>
+     */
+    private $bulkActions = [];
+
+    /**
+     * @param string $label
+     * @param array $config
+     *
+     * @return $this
+     */
     public function addToolbarAction(string $label, array $config): self
     {
         $this->toolbarActions[$label] = $config;
@@ -245,7 +251,6 @@ class HelperListConfiguration
     }
 
     /**
-     *
      * @return array<string, array<string, mixed>>
      */
     public function getToolbarActions(): array
@@ -255,9 +260,17 @@ class HelperListConfiguration
 
     public function addRowAction(string $action): self
     {
-        $this->actions[] = $action;
+        $this->rowActions[] = $action;
 
         return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getRowActions(): array
+    {
+        return $this->rowActions;
     }
 
     public function addBulkAction(string $label, array $config): self
@@ -265,5 +278,13 @@ class HelperListConfiguration
         $this->bulkActions[$label] = $config;
 
         return $this;
+    }
+
+    /**
+     * @return array<string, array<string, mixed>>
+     */
+    public function getBulkActions(): array
+    {
+        return $this->bulkActions;
     }
 }
