@@ -22,7 +22,7 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-{% set isValid = record[column.id] is same as('1') %}
+{% set isValid = record[column.id] is same as(1) %}
 
 <i
   class="material-icons {% if isValid == true %}text-success{% else %}text-danger{% endif %}"

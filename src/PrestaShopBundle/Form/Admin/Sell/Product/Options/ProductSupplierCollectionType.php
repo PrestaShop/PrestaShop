@@ -66,6 +66,7 @@ class ProductSupplierCollectionType extends CollectionType
             ),
             'alert_position' => 'prepend',
             'block_prefix' => 'product_supplier_collection',
+            'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/product_suppliers.html.twig',
         ]);
     }
 }

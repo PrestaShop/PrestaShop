@@ -99,7 +99,7 @@ class SpecificationsType extends TranslatorAwareType
         $resolver
             ->setDefaults([
                 'required' => false,
-                'label' => false,
+                'label' => $this->trans('Details', 'Admin.Catalog.Feature'),
             ])
         ;
     }

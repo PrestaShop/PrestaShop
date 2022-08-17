@@ -54,7 +54,7 @@ class PositionsController extends FrameworkBundleAdminController
      *
      * @Template("@PrestaShop/Admin/Improve/Design/positions.html.twig")
      * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller')~'_') && is_granted('update', request.get('_legacy_controller')~'_') && is_granted('create', request.get('_legacy_controller')~'_') && is_granted('delete', request.get('_legacy_controller')~'_')",
+     *     "is_granted('read', request.get('_legacy_controller')~'_') || is_granted('update', request.get('_legacy_controller')~'_') || is_granted('create', request.get('_legacy_controller')~'_') || is_granted('delete', request.get('_legacy_controller')~'_')",
      *     message="Access denied.")
      *
      * @param Request $request

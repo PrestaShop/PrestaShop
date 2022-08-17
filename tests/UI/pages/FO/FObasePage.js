@@ -57,9 +57,10 @@ class FOBasePage extends CommonPage {
     this.footerAccountList = '#footer_account_list';
     this.informationLink = `${this.footerAccountList} a[title='Information']`;
     this.orderTrackingLink = `${this.footerAccountList} a[title='Order tracking']`;
-    this.signInLink = `${this.footerAccountList} a[title='Log in to your customer account']`;
+    this.signInLink = `${this.footerAccountList} a[href*='/my-account']`;
     this.createAccountLink = `${this.footerAccountList} a[title='Create account']`;
     this.addressesLink = `${this.footerAccountList} a[title='Addresses']`;
+    this.addFirstAddressLink = `${this.footerAccountList} a[title='Add first address']`;
     this.ordersLink = `${this.footerAccountList} a[title='Orders']`;
     this.creditSlipsLink = `${this.footerAccountList} a[title='Credit slips']`;
     this.vouchersLink = `${this.footerAccountList} a[title='Vouchers']`;
@@ -75,19 +76,12 @@ class FOBasePage extends CommonPage {
     this.wrapperSubmenu = position => `${this.wrapperDiv(position)} ul[id*='footer_sub_menu']`;
     this.wrapperSubmenuItemLink = position => `${this.wrapperSubmenu(position)} li a`;
 
+    // Copyright
+    this.copyrightLink = '#footer div.footer-container a[href*="www.prestashop-project.org"]';
+
     // Alert block selectors
     this.alertSuccessBlock = '.alert-success ul li';
-  }
-
-  // Methods
-
-  /**
-   * Go to Fo page
-   * @param page {Page} Browser tab
-   * @return {Promise<void>}
-   */
-  async goToFo(page) {
-    await this.goTo(page, global.FO.URL);
+    this.notificationsBlock = '#notifications';
   }
 
   // Header methods
@@ -171,6 +165,24 @@ class FOBasePage extends CommonPage {
   }
 
   /**
+   * Is language list visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  isLanguageListVisible(page) {
+    return this.elementVisible(page, this.languageSelectorExpandIcon, 1000);
+  }
+
+  /**
+   * Get shop language
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  getShopLanguage(page) {
+    return this.getAttributeContent(page, 'html[lang]', 'lang');
+  }
+
+  /**
    * Change language in FO
    * @param page {Page} Browser tab
    * @param lang {string} Language to choose on the select (ex: en or fr)
@@ -185,11 +197,11 @@ class FOBasePage extends CommonPage {
   }
 
   /**
-   * Get shop language
+   * Get default shop language
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
-  getShopLanguage(page) {
+  getDefaultShopLanguage(page) {
     return this.getTextContent(page, this.defaultLanguageSpan);
   }
 
@@ -412,6 +424,10 @@ class FOBasePage extends CommonPage {
         selector = this.addressesLink;
         break;
 
+      case 'Add first address':
+        selector = this.addFirstAddressLink;
+        break;
+
       case 'Orders':
         selector = this.ordersLink;
         break;
@@ -436,6 +452,24 @@ class FOBasePage extends CommonPage {
         throw new Error(`The page ${textSelector} was not found`);
     }
     return this.clickAndWaitForNavigation(page, selector);
+  }
+
+  /**
+   * Get copyright
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getCopyright(page) {
+    return this.getTextContent(page, this.copyrightLink);
+  }
+
+  /**
+   * Check that currency is visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async isCurrencyVisible(page) {
+    return this.elementVisible(page, this.currencySelectorDiv, 1000);
   }
 }
 

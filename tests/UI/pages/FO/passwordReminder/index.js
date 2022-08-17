@@ -15,6 +15,7 @@ class PasswordReminder extends FOBasePage {
     super();
 
     this.pageTitle = 'Forgot your password';
+    this.errorMessage = 'You can regenerate your password only every 360 minute(s)';
 
     // Selectors
     this.emailFormField = '#email';
@@ -27,6 +28,8 @@ class PasswordReminder extends FOBasePage {
 
     // Success message
     this.sendResetLinkSuccessAlert = '.ps-alert-success';
+    // Error message
+    this.errorMessageAlert = '.ps-alert-error';
   }
 
   /*
@@ -84,6 +87,15 @@ class PasswordReminder extends FOBasePage {
     await this.setValue(page, this.newPasswordInput, password);
     await this.setValue(page, this.confirmationPasswoedInput, password);
     await page.click(this.submitButton);
+  }
+
+  /**
+   * Get error message
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  getErrorMessage(page) {
+    return this.getTextContent(page, this.errorMessageAlert);
   }
 }
 

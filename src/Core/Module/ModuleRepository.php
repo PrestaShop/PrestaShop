@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Adapter\Module\ModuleDataProvider;
 use Symfony\Component\Finder\Finder;
+use Throwable;
 
 class ModuleRepository implements ModuleRepositoryInterface
 {
@@ -115,7 +116,7 @@ class ModuleRepository implements ModuleRepositoryInterface
     public function getMustBeConfiguredModules(): ModuleCollection
     {
         return $this->getList()->filter(static function (Module $module) {
-            return $module->isConfigurable() && $module->hasValidInstance() && !empty($module->getInstance()->warning);
+            return $module->isConfigurable() && $module->isActive() && $module->hasValidInstance() && !empty($module->getInstance()->warning);
         });
     }
 
@@ -151,6 +152,10 @@ class ModuleRepository implements ModuleRepositoryInterface
 
         $isValid = $filemtime > 0 && $this->moduleDataProvider->isModuleMainClassValid($moduleName);
         $attributes = $this->getModuleAttributes($moduleName, $isValid);
+        if (empty($attributes)) {
+            $isValid = false;
+        }
+        $attributes = array_merge(['name' => $moduleName], $attributes);
         $disk = $this->getModuleDiskAttributes($moduleName, $isValid, $filemtime);
         $database = $this->getModuleDatabaseAttributes($moduleName);
 
@@ -223,9 +228,13 @@ class ModuleRepository implements ModuleRepositoryInterface
 
     private function getModuleAttributes(string $moduleName, bool $isValid): array
     {
-        $attributes = ['name' => $moduleName];
+        $attributes = [];
         if ($isValid) {
-            $tmpModule = ModuleLegacy::getInstanceByName($moduleName);
+            try {
+                $tmpModule = ModuleLegacy::getInstanceByName($moduleName);
+            } catch (Throwable $e) {
+                return $attributes;
+            }
             foreach (self::MODULE_ATTRIBUTES as $attribute) {
                 if (isset($tmpModule->{$attribute})) {
                     $attributes[$attribute] = $tmpModule->{$attribute};

@@ -168,7 +168,7 @@ class CustomerController extends AbstractAdminController
             $result = $customerFormHandler->handle($customerForm);
 
             if ($customerId = $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 if ($request->query->has('submitFormAjax')) {
                     /** @var ViewableCustomer $customerInformation */
@@ -230,7 +230,7 @@ class CustomerController extends AbstractAdminController
             $customerFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.customer_form_handler');
             $result = $customerFormHandler->handleFor((int) $customerId, $customerForm);
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_customers_index');
             }
@@ -350,7 +350,7 @@ class CustomerController extends AbstractAdminController
                     (int) $customerId,
                     $data['note']
                 ));
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
             } catch (CustomerException $e) {
                 $this->addFlash(
                     'error',
@@ -382,7 +382,7 @@ class CustomerController extends AbstractAdminController
         try {
             $this->getCommandBus()->handle(new TransformGuestToCustomerCommand((int) $customerId));
 
-            $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
         } catch (CustomerException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
@@ -423,7 +423,7 @@ class CustomerController extends AbstractAdminController
 
             $this->getCommandBus()->handle(new SetRequiredFieldsForCustomerCommand($data['required_fields']));
 
-            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
         }
 
         return $this->redirectToRoute('admin_customers_index');
@@ -649,7 +649,7 @@ class CustomerController extends AbstractAdminController
 
                 $this->addFlash(
                     'success',
-                    $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+                    $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
                 );
             } catch (CustomerException $e) {
                 $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -690,7 +690,7 @@ class CustomerController extends AbstractAdminController
 
                 $this->getCommandBus()->handle($command);
 
-                $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
             } catch (CustomerException $e) {
                 $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
             }
@@ -723,7 +723,7 @@ class CustomerController extends AbstractAdminController
 
             $this->getCommandBus()->handle($command);
 
-            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
         } catch (CustomerException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
@@ -755,7 +755,7 @@ class CustomerController extends AbstractAdminController
 
             $this->getCommandBus()->handle($command);
 
-            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
         } catch (CustomerException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }

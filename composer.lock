@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f2af86ecf482f4abc48350fc40e22a2d",
+    "content-hash": "8ae8eba13734a89bc040a0e6e0234cb4",
     "packages": [
         {
             "name": "beberlei/doctrineextensions",
@@ -4488,16 +4488,16 @@
         },
         {
             "name": "prestashop/blockwishlist",
-            "version": "v2.1.0",
+            "version": "v2.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/blockwishlist.git",
-                "reference": "4feccca6f5f01baa8cc2d70afa71e2da898c9207"
+                "reference": "5d84188d2c37f8df66438eaae643bd192781c208"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/blockwishlist/zipball/4feccca6f5f01baa8cc2d70afa71e2da898c9207",
-                "reference": "4feccca6f5f01baa8cc2d70afa71e2da898c9207",
+                "url": "https://api.github.com/repos/PrestaShop/blockwishlist/zipball/5d84188d2c37f8df66438eaae643bd192781c208",
+                "reference": "5d84188d2c37f8df66438eaae643bd192781c208",
                 "shasum": ""
             },
             "require-dev": {
@@ -4527,9 +4527,9 @@
             "description": "PrestaShop module blockwishlist",
             "homepage": "https://github.com/PrestaShop/blockwishlist",
             "support": {
-                "source": "https://github.com/PrestaShop/blockwishlist/tree/v2.1.0"
+                "source": "https://github.com/PrestaShop/blockwishlist/tree/v2.1.2"
             },
-            "time": "2022-04-25T16:13:04+00:00"
+            "time": "2022-08-01T14:47:51+00:00"
         },
         {
             "name": "prestashop/circuit-breaker",
@@ -4590,23 +4590,22 @@
         },
         {
             "name": "prestashop/classic",
-            "version": "dev-develop",
+            "version": "2.0.0-beta",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/classic-theme.git",
-                "reference": "f7ea7f67912a4d145645fc59491099faf79455aa"
+                "reference": "82dc9b916aa9ae10eac6f4446f456bf1dc66aeeb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/classic-theme/zipball/f7ea7f67912a4d145645fc59491099faf79455aa",
-                "reference": "f7ea7f67912a4d145645fc59491099faf79455aa",
+                "url": "https://api.github.com/repos/PrestaShop/classic-theme/zipball/82dc9b916aa9ae10eac6f4446f456bf1dc66aeeb",
+                "reference": "82dc9b916aa9ae10eac6f4446f456bf1dc66aeeb",
                 "shasum": ""
             },
             "require-dev": {
                 "symfony/console": "~4.4 || ^5.0",
                 "symfony/yaml": "~4.4 || ^5.0"
             },
-            "default-branch": true,
             "type": "prestashop-theme",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -4624,9 +4623,9 @@
             ],
             "description": "Classic theme for PrestaShop 1.7",
             "support": {
-                "source": "https://github.com/PrestaShop/classic-theme/tree/develop"
+                "source": "https://github.com/PrestaShop/classic-theme/tree/2.0.0-beta"
             },
-            "time": "2022-05-03T14:27:05+00:00"
+            "time": "2022-08-01T09:39:49+00:00"
         },
         {
             "name": "prestashop/contactform",
@@ -5127,22 +5126,30 @@
         },
         {
             "name": "prestashop/ps_banner",
-            "version": "v2.1.1",
+            "version": "v2.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_banner.git",
-                "reference": "020a0ef7fc5732e18ede2a42ab1e8328fe98168e"
+                "reference": "1eceeb26a551001ba531c95b2645aa272a9e6278"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_banner/zipball/020a0ef7fc5732e18ede2a42ab1e8328fe98168e",
-                "reference": "020a0ef7fc5732e18ede2a42ab1e8328fe98168e",
+                "url": "https://api.github.com/repos/PrestaShop/ps_banner/zipball/1eceeb26a551001ba531c95b2645aa272a9e6278",
+                "reference": "1eceeb26a551001ba531c95b2645aa272a9e6278",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.4"
             },
+            "require-dev": {
+                "prestashop/php-dev-tools": "~3.0"
+            },
             "type": "prestashop-module",
+            "autoload": {
+                "classmap": [
+                    "ps_banner.php"
+                ]
+            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "AFL-3.0"
@@ -5156,9 +5163,9 @@
             "description": "PrestaShop module ps_banner",
             "homepage": "https://github.com/PrestaShop/ps_banner",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_banner/tree/v2.1.1"
+                "source": "https://github.com/PrestaShop/ps_banner/tree/v2.1.2"
             },
-            "time": "2021-02-08T08:29:06+00:00"
+            "time": "2022-07-18T14:20:33+00:00"
         },
         {
             "name": "prestashop/ps_bestsellers",
@@ -5234,25 +5241,34 @@
         },
         {
             "name": "prestashop/ps_cashondelivery",
-            "version": "v1.0.6",
+            "version": "v2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_cashondelivery.git",
-                "reference": "7d503ff1f573ab5400fac6dcf0d50be971154af5"
+                "reference": "1f80133e367cdffb5f3321ff1b47d014b537223c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_cashondelivery/zipball/7d503ff1f573ab5400fac6dcf0d50be971154af5",
-                "reference": "7d503ff1f573ab5400fac6dcf0d50be971154af5",
+                "url": "https://api.github.com/repos/PrestaShop/ps_cashondelivery/zipball/1f80133e367cdffb5f3321ff1b47d014b537223c",
+                "reference": "1f80133e367cdffb5f3321ff1b47d014b537223c",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.4"
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "prestashop/php-dev-tools": "~3.0"
             },
             "type": "prestashop-module",
+            "autoload": {
+                "classmap": [
+                    "ps_cashondelivery.php",
+                    "controllers"
+                ]
+            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "AFL - Academic Free License (AFL 3.0)"
+                "AFL-3.0"
             ],
             "authors": [
                 {
@@ -5263,9 +5279,9 @@
             "description": "PrestaShop module ps_cashondelivery",
             "homepage": "https://github.com/PrestaShop/ps_cashondelivery",
             "support": {
-                "source": "https://github.com/PrestaShop/ps_cashondelivery/tree/dev"
+                "source": "https://github.com/PrestaShop/ps_cashondelivery/tree/v2.0.1"
             },
-            "time": "2017-03-16T10:24:54+00:00"
+            "time": "2022-07-15T15:20:08+00:00"
         },
         {
             "name": "prestashop/ps_categoryproducts",
@@ -5677,16 +5693,16 @@
         },
         {
             "name": "prestashop/ps_distributionapiclient",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/ps_distributionapiclient.git",
-                "reference": "9373148a960b1e061d554385d89e6aa973901d32"
+                "reference": "65386686434b4b789b7f7935b1dfa96e3a80e9d5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/ps_distributionapiclient/zipball/9373148a960b1e061d554385d89e6aa973901d32",
-                "reference": "9373148a960b1e061d554385d89e6aa973901d32",
+                "url": "https://api.github.com/repos/PrestaShop/ps_distributionapiclient/zipball/65386686434b4b789b7f7935b1dfa96e3a80e9d5",
+                "reference": "65386686434b4b789b7f7935b1dfa96e3a80e9d5",
                 "shasum": ""
             },
             "require": {
@@ -5722,9 +5738,9 @@
             "homepage": "https://github.com/PrestaShop/ps_distributionapiclient",
             "support": {
                 "issues": "https://github.com/PrestaShop/ps_distributionapiclient/issues",
-                "source": "https://github.com/PrestaShop/ps_distributionapiclient/tree/v1.0.0"
+                "source": "https://github.com/PrestaShop/ps_distributionapiclient/tree/v1.0.1"
             },
-            "time": "2022-04-20T14:51:39+00:00"
+            "time": "2022-08-04T18:09:07+00:00"
         },
         {
             "name": "prestashop/ps_emailalerts",
@@ -9166,16 +9182,16 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "v4.4.41",
+            "version": "v4.4.44",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "6c95a4884f112aca0fa4042e6ef765617a8870c6"
+                "reference": "4a61fa7d89245ac0e8a8b8a44e05f4abd8f8f233"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/6c95a4884f112aca0fa4042e6ef765617a8870c6",
-                "reference": "6c95a4884f112aca0fa4042e6ef765617a8870c6",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/4a61fa7d89245ac0e8a8b8a44e05f4abd8f8f233",
+                "reference": "4a61fa7d89245ac0e8a8b8a44e05f4abd8f8f233",
                 "shasum": ""
             },
             "require": {
@@ -9353,7 +9369,7 @@
             ],
             "support": {
                 "issues": "https://github.com/symfony/symfony/issues",
-                "source": "https://github.com/symfony/symfony/tree/v4.4.41"
+                "source": "https://github.com/symfony/symfony/tree/v4.4.44"
             },
             "funding": [
                 {
@@ -9369,7 +9385,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-04-27T17:14:51+00:00"
+            "time": "2022-07-29T12:23:53+00:00"
         },
         {
             "name": "tecnickcom/tcpdf",
@@ -12614,7 +12630,6 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "ezyang/htmlpurifier": 20,
-        "prestashop/classic": 20,
         "prestashop/laminas-code-lts": 20
     },
     "prefer-stable": true,

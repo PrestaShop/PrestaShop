@@ -7,9 +7,9 @@
         <target>Catalog evaluation</target>
         <note>Line: 45</note>
       </trans-unit>
-      <trans-unit id="11c7290f636a816cbcffb9059958b5c0">
-        <source>Adds a quick evaluation of your catalog quality to the Stats dashboard.</source>
-        <target>Adds a quick evaluation of your catalog quality to the Stats dashboard.</target>
+      <trans-unit id="80bf50a3c43fa186661f32f53a1b7692">
+        <source>Enrich your stats, give your catalog a quick evaluation to better analyze your activity.</source>
+        <target>Enrich your stats, give your catalog a quick evaluation to better analyze your activity.</target>
         <note>Line: 46</note>
       </trans-unit>
       <trans-unit id="7ff3e75ce6aca348bc513ed3d5882946">
@@ -47,6 +47,11 @@
         <target>orders / month</target>
         <note>Line: 158</note>
       </trans-unit>
+      <trans-unit id="691d502cfd0e0626cd3b058e5682ad1c">
+        <source>items</source>
+        <target>items</target>
+        <note>Line: 159</note>
+      </trans-unit>
       <trans-unit id="dc270bcf468689b19074a5eef7581b52">
         <source>Not enough</source>
         <target>Not enough</target>
@@ -81,16 +86,6 @@
         <source>Global</source>
         <target>Global</target>
         <note>Line: 319</note>
-      </trans-unit>
-      <trans-unit id="691d502cfd0e0626cd3b058e5682ad1c">
-        <source>items</source>
-        <target>items</target>
-        <note>Line: 159</note>
-      </trans-unit>
-      <trans-unit id="80bf50a3c43fa186661f32f53a1b7692">
-        <source>Enrich your stats, give your catalog a quick evaluation to better analyze your activity.</source>
-        <target>Enrich your stats, give your catalog a quick evaluation to better analyze your activity.</target>
-        <note>Line: 46</note>
       </trans-unit>
     </body>
   </file>

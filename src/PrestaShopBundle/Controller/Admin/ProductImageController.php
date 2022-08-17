@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Controller\Admin;
 
+use ImageManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -62,6 +63,21 @@ class ProductImageController extends FrameworkBundleAdminController
                 'constraints' => [
                     new Assert\NotNull(['message' => $this->trans('Please select a file', 'Admin.Catalog.Feature')]),
                     new Assert\Image(['maxSize' => $this->configuration->get('PS_ATTACHMENT_MAXIMUM_SIZE') . 'M']),
+                    new Assert\File([
+                        'mimeTypes' => [
+                            'image/gif',
+                            'image/jpeg',
+                            'image/png',
+                            'image/webp',
+                        ],
+                        'mimeTypesMessage' => $this->trans(
+                            'Image format not recognized, allowed formats are: %s',
+                            'Admin.Notifications.Error',
+                            [
+                                implode(', ', ImageManager::EXTENSIONS_SUPPORTED),
+                            ]
+                        ),
+                    ]),
                 ],
             ])
             ->getForm();

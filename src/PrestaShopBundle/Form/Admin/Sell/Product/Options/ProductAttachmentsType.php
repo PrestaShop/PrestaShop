@@ -80,7 +80,7 @@ class ProductAttachmentsType extends TranslatorAwareType
                 'attr' => [
                     'data-success-create-message' => $this->trans(
                         'The file was successfully added.',
-                        'Admin.Catalog.Feature'
+                        'Admin.Catalog.Notification'
                     ),
                     'data-modal-title' => $this->trans('Add new file', 'Admin.Catalog.Feature'),
                     'class' => 'btn-outline-secondary add-attachment',

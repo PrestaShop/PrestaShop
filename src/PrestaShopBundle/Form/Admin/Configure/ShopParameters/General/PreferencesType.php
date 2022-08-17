@@ -200,7 +200,7 @@ class PreferencesType extends TranslatorAwareType
                 'disabled' => !$this->isContextDependantOptionEnabled(),
                 'label' => $this->trans('Enable Multistore', 'Admin.Shopparameters.Feature'),
                 'help' => $this->trans(
-                    'The multistore feature allows you to manage several e-shops with one Back Office. If this feature is enabled, a "Multistore" page will be available in the "Advanced Parameters" menu.',
+                    'The multistore feature allows you to manage several front offices from a single back office. If this feature is enabled, a Multistore page is available in the Advanced Parameters menu.',
                     'Admin.Shopparameters.Help'
                 ),
             ])

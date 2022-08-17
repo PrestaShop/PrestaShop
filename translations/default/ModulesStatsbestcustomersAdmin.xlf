@@ -22,10 +22,10 @@
         <target>Best customers</target>
         <note>Line: 96</note>
       </trans-unit>
-      <trans-unit id="9a1643c70b51526dd35d546ef8e17b87">
-        <source>Adds a list of the best customers to the Stats dashboard.</source>
-        <target>Adds a list of the best customers to the Stats dashboard.</target>
-        <note>Line: 98</note>
+      <trans-unit id="8381271f1fc8bfe06c6fb80b810ff4aa">
+        <source>Enrich your stats, add a list of the best customers to the dashboard.</source>
+        <target>Enrich your stats, add a list of the best customers to the dashboard.</target>
+        <note>Line: 97</note>
       </trans-unit>
       <trans-unit id="a32a87bb2fc40ac5e3701941fb715cb4">
         <source>Develop clients' loyalty</source>
@@ -61,11 +61,6 @@
         <source>These operations encourage clients to buy products and visit your online store more regularly.</source>
         <target>These operations encourage clients to buy products and visit your online store more regularly.</target>
         <note>Line: 137</note>
-      </trans-unit>
-      <trans-unit id="8381271f1fc8bfe06c6fb80b810ff4aa">
-        <source>Enrich your stats, add a list of the best customers to the dashboard.</source>
-        <target>Enrich your stats, add a list of the best customers to the dashboard.</target>
-        <note>Line: 97</note>
       </trans-unit>
     </body>
   </file>

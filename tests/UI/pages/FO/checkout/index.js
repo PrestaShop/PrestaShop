@@ -30,8 +30,7 @@ class Checkout extends FOBasePage {
 
     // Personal information form
     this.personalInformationStepForm = '#checkout-personal-information-step';
-    this.createAccountOptionalNotice = `${this.personalInformationStepForm} `
-      + '#customer-form .form-informations .form-informations-title';
+    this.activeLink = `${this.personalInformationStepForm} .nav-link.active`;
     this.signInLink = `${this.personalInformationStepForm} a[href="#checkout-login-form"]`;
     this.checkoutGuestForm = '#checkout-guest-form';
     this.checkoutGuestGenderInput = pos => `${this.checkoutGuestForm} input[name='id_gender'][value='${pos}']`;
@@ -285,12 +284,12 @@ class Checkout extends FOBasePage {
   }
 
   /**
-   * Is create account notice visible
+   * Get active link from personal information block
    * @param page {Page} Browser tab
-   * @returns {Promise<boolean>}
+   * @returns {Promise<string>}
    */
-  isCreateAnAccountNoticeVisible(page) {
-    return this.elementVisible(page, this.createAccountOptionalNotice, 1000);
+  getActiveLinkFromPersonalInformationBlock(page) {
+    return this.getTextContent(page, this.activeLink);
   }
 
   /**

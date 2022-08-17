@@ -58,6 +58,11 @@ class ProductLightGridDataFactoryDecorator implements GridDataFactoryInterface
     private $defaultCurrencyId;
 
     /**
+     * @var bool
+     */
+    private $stockManagementEnabled;
+
+    /**
      * @param GridDataFactoryInterface $productGridDataFactory
      * @param Repository $localeRepository
      * @param string $contextLocale
@@ -67,13 +72,15 @@ class ProductLightGridDataFactoryDecorator implements GridDataFactoryInterface
         GridDataFactoryInterface $productGridDataFactory,
         Repository $localeRepository,
         string $contextLocale,
-        int $defaultCurrencyId
+        int $defaultCurrencyId,
+        bool $stockManagementEnabled
     ) {
         $this->productGridDataFactory = $productGridDataFactory;
         $this->locale = $localeRepository->getLocale(
             $contextLocale
         );
         $this->defaultCurrencyId = $defaultCurrencyId;
+        $this->stockManagementEnabled = $stockManagementEnabled;
     }
 
     /**
@@ -110,7 +117,7 @@ class ProductLightGridDataFactoryDecorator implements GridDataFactoryInterface
                 $currency->iso_code
             );
 
-            if ($products[$i]['quantity'] <= 0) {
+            if ($this->stockManagementEnabled && $products[$i]['quantity'] <= 0) {
                 $products[$i]['quantity_color'] = 'danger';
             }
         }

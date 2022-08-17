@@ -264,6 +264,7 @@ class ProductSpecificPrice extends CommonAbstractType
                     'constraints' => [
                         new Assert\Type(['type' => 'numeric']),
                     ],
+                    'unit' => $this->translator->trans('Unit(s)', [], 'Admin.Catalog.Feature'),
                 ]
             )
             ->add(

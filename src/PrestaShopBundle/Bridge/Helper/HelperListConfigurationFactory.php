@@ -36,8 +36,6 @@ use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 class HelperListConfigurationFactory
 {
     /**
-     * @param string $table
-     * @param string $className
      * @param ControllerConfiguration $controllerConfiguration
      * @param string $identifier
      * @param string|null $positionIdentifier
@@ -50,13 +48,12 @@ class HelperListConfigurationFactory
      * @return HelperListConfiguration
      */
     public function create(
-        string $table,
-        string $className,
         ControllerConfiguration $controllerConfiguration,
-        string $identifier = 'id',
+        string $identifier,
         string $positionIdentifier = null,
         string $defaultOrderBy = null,
         bool $isJoinLanguageTableAuto = false,
+        // @todo: investigate what these options actually do and maybe rename them to reflect it better
         bool $deleted = false,
         bool $explicitSelect = false,
         bool $useFoundRows = true
@@ -66,9 +63,9 @@ class HelperListConfigurationFactory
         }
         $helperListConfiguration = new HelperListConfiguration();
 
-        $helperListConfiguration->table = $table;
-        $helperListConfiguration->listId = $table;
-        $helperListConfiguration->className = $className;
+        $helperListConfiguration->table = $controllerConfiguration->tableName;
+        $helperListConfiguration->listId = $controllerConfiguration->tableName;
+        $helperListConfiguration->objectModelClassName = $controllerConfiguration->objectModelClassName;
         $helperListConfiguration->identifier = $identifier;
         $helperListConfiguration->positionIdentifier = $positionIdentifier;
         $helperListConfiguration->isJoinLanguageTableAuto = $isJoinLanguageTableAuto;
@@ -76,12 +73,12 @@ class HelperListConfigurationFactory
         $helperListConfiguration->defaultOrderBy = $defaultOrderBy;
         $helperListConfiguration->explicitSelect = $explicitSelect;
         $helperListConfiguration->useFoundRows = $useFoundRows;
-        $helperListConfiguration->id = $controllerConfiguration->id;
-        $helperListConfiguration->controllerNameLegacy = $controllerConfiguration->controllerNameLegacy;
+        $helperListConfiguration->id = $controllerConfiguration->tabId;
+        $helperListConfiguration->legacyControllerName = $controllerConfiguration->legacyControllerName;
         $helperListConfiguration->token = $controllerConfiguration->token;
         $helperListConfiguration->bootstrap = $controllerConfiguration->bootstrap;
         $helperListConfiguration->legacyCurrentIndex = $controllerConfiguration->legacyCurrentIndex;
-        $helperListConfiguration->multishopContext = $controllerConfiguration->multishopContext;
+        $helperListConfiguration->multishopContext = $controllerConfiguration->multiShopContext;
 
         return $helperListConfiguration;
     }

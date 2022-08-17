@@ -2,9 +2,9 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="modules/statsnewsletter/statsnewsletter.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="5106250927c6e24c99601968284066de">
-        <source>Adds a tab with a graph showing newsletter registrations to the Stats dashboard.</source>
-        <target>Adds a tab with a graph showing newsletter registrations to the Stats dashboard.</target>
+      <trans-unit id="e4a878baf1fa9c172209ad7face7b695">
+        <source>Enrich your stats, display a graph showing newsletter registrations.</source>
+        <target>Enrich your stats, display a graph showing newsletter registrations.</target>
         <note>Line: 57</note>
       </trans-unit>
       <trans-unit id="61a898af87607e3f4d41c3613d8761c7">
@@ -36,11 +36,6 @@
         <source>Newsletter statistics</source>
         <target>Newsletter statistics</target>
         <note>Line: 122</note>
-      </trans-unit>
-      <trans-unit id="e4a878baf1fa9c172209ad7face7b695">
-        <source>Enrich your stats, display a graph showing newsletter registrations.</source>
-        <target>Enrich your stats, display a graph showing newsletter registrations.</target>
-        <note>Line: 57</note>
       </trans-unit>
     </body>
   </file>

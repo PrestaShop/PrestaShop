@@ -82,6 +82,9 @@ class VisibilityType extends TranslatorAwareType
                 'label' => $this->trans('Show price', 'Admin.Catalog.Feature'),
                 'required' => false,
                 'modify_all_shops' => true,
+                'row_attr' => [
+                    'class' => 'show-price-switch-container',
+                ],
             ])
             ->add('online_only', SwitchType::class, [
                 'label' => $this->trans('Web only (not sold in your retail store)', 'Admin.Catalog.Feature'),

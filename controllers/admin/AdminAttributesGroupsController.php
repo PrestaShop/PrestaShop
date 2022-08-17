@@ -577,7 +577,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
             case 'view':
                 $this->toolbar_btn['newAttributes'] = [
                     'href' => $this->context->link->getAdminLink('AdminAttributesGroups', true, [], ['updateattribute' => 1, 'id_attribute_group' => (int) Tools::getValue('id_attribute_group')]),
-                    'desc' => $this->trans('Add New Values', [], 'Admin.Catalog.Feature'),
+                    'desc' => $this->trans('Add new values', [], 'Admin.Catalog.Feature'),
                     'class' => 'toolbar-new',
                 ];
 
@@ -645,10 +645,10 @@ class AdminAttributesGroupsControllerCore extends AdminController
                             );
                         }
                     } else {
-                        $bread_extended[] = $this->trans('Edit Value', [], 'Admin.Catalog.Feature');
+                        $bread_extended[] = $this->trans('Edit value', [], 'Admin.Catalog.Feature');
                     }
                 } else {
-                    $bread_extended[] = $this->trans('Add New Value', [], 'Admin.Catalog.Feature');
+                    $bread_extended[] = $this->trans('Add new value', [], 'Admin.Catalog.Feature');
                 }
 
                 break;

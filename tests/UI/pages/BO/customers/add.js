@@ -31,9 +31,9 @@ class AddCustomer extends BOBasePage {
     this.partnerOffersToggleInput = toggle => `#customer_is_partner_offers_subscribed_${toggle}`;
     // Group access selector
     this.groupAccessCheckbox = id => `#customer_group_ids_${id}`;
-    this.visitorChecbox = this.groupAccessCheckbox(0);
-    this.guestChecbox = this.groupAccessCheckbox(1);
-    this.customerChecbox = this.groupAccessCheckbox(2);
+    this.visitorCheckbox = this.groupAccessCheckbox(0);
+    this.guestCheckbox = this.groupAccessCheckbox(1);
+    this.customerCheckbox = this.groupAccessCheckbox(2);
 
     this.selectAllGroupAccessCheckbox = 'input.js-choice-table-select-all';
     this.defaultCustomerGroupSelect = 'select#customer_default_group_id';
@@ -93,17 +93,19 @@ class AddCustomer extends BOBasePage {
   async setCustomerGroupAccess(page, customerGroup) {
     switch (customerGroup) {
       case 'Customer':
-        await this.setCheckedWithIcon(page, this.selectAllGroupAccessCheckbox);
+        await this.setCheckedWithIcon(page, this.visitorCheckbox, false);
+        await this.setCheckedWithIcon(page, this.customerCheckbox);
+        await this.setCheckedWithIcon(page, this.guestCheckbox, false);
         break;
       case 'Guest':
-        await this.setCheckedWithIcon(page, this.visitorChecbox, false);
-        await this.setCheckedWithIcon(page, this.customerChecbox, false);
-        await this.setCheckedWithIcon(page, this.guestChecbox);
+        await this.setCheckedWithIcon(page, this.visitorCheckbox, false);
+        await this.setCheckedWithIcon(page, this.customerCheckbox, false);
+        await this.setCheckedWithIcon(page, this.guestCheckbox);
         break;
       case 'Visitor':
-        await this.setCheckedWithIcon(page, this.guestChecbox, false);
-        await this.setCheckedWithIcon(page, this.customerChecbox, false);
-        await this.setCheckedWithIcon(page, this.visitorChecbox);
+        await this.setCheckedWithIcon(page, this.guestCheckbox, false);
+        await this.setCheckedWithIcon(page, this.customerCheckbox, false);
+        await this.setCheckedWithIcon(page, this.visitorCheckbox);
         break;
       default:
         throw new Error(`${customerGroup} was not found as a group access`);

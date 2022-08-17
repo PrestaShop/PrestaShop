@@ -28,54 +28,54 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Bridge\AdminController;
 
+use PrestaShopBundle\Bridge\AdminController\Action\HeaderToolbarAction;
 use PrestaShopBundle\Security\Admin\Employee;
 use Shop;
 
 /**
  * This object holds the configuration of a Controller that is being migrated horizontally.
  * Its properties reflect the properties of a legacy PrestaShop controller.
+ *
+ * @todo: get rid of public properties and use getters + constructor arguments to secure the contract in dedicated PR.
  */
 class ControllerConfiguration
 {
     /**
      * @var int|null
      */
-    public $id;
+    public $tabId;
 
     /**
-     * @var string|null
+     * ClassName of related object model. E.g. "Feature", "Category", "Product" etc.
+     *
+     * @var string
      */
-    public $controllerName;
+    public $objectModelClassName;
 
     /**
-     * @var string|null
+     * @var string
      */
-    public $controllerNameLegacy;
+    public $legacyControllerName;
 
     /**
-     * @var string|null
+     * @var string
      */
     public $legacyCurrentIndex;
 
     /**
      * @var string|null
      */
-    public $positionIdentifier;
+    public $positionIdentifierKey;
 
     /**
-     * @var string|null
+     * @var string
      */
-    public $table;
+    public $tableName;
 
     /**
      * @var string|null
      */
     public $token;
-
-    /**
-     * @var Employee|null
-     */
-    public $user;
 
     /**
      * @var array
@@ -94,8 +94,13 @@ class ControllerConfiguration
 
     /**
      * @var string
+     *
+     * @see \AdminController::$display
+     *
+     * @todo: investigate possible values and if it can be custom.
+     *      Following seems to be used: list,edit,view,options,editAttributes,editFeatureValue
      */
-    public $display = 'list';
+    public $displayType = 'list';
 
     /**
      * @var bool
@@ -110,10 +115,15 @@ class ControllerConfiguration
     /**
      * @var array
      */
-    public $pageHeaderToolbarButton = [];
+    public $pageHeaderToolbarButtons = [];
 
     /**
      * @var array
+     */
+    public $toolbarButtons = [];
+
+    /**
+     * @var string[]|string
      */
     public $toolbarTitle = [];
 
@@ -148,9 +158,9 @@ class ControllerConfiguration
     public $jsFiles = [];
 
     /**
-     * @var string|null
+     * @var string
      */
-    public $folderTemplate;
+    public $templateFolder;
 
     /**
      * @var array
@@ -185,7 +195,7 @@ class ControllerConfiguration
     /**
      * @var array
      */
-    public $templatesVars = [];
+    public $templateVars = [];
 
     /**
      * @var array
@@ -193,7 +203,52 @@ class ControllerConfiguration
     public $modals = [];
 
     /**
+     * This parameter is needed by legacy helper shop, we can't remove it.
+     *
      * @var int
      */
-    public $multishopContext = Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP | Shop::CONTEXT_SHOP;
+    public $multiShopContext = Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP | Shop::CONTEXT_SHOP;
+
+    /**
+     * This parameter is needed by legacy helper shop, so we can't remove it.
+     *
+     * @var bool
+     */
+    public $multiShopContextGroup = true;
+
+    /**
+     * @var Employee
+     */
+    private $user;
+
+    /**
+     * @param Employee $user the current user
+     */
+    public function __construct(
+        Employee $user
+    ) {
+        $this->user = $user;
+    }
+
+    /**
+     * Adds toolbar action to the page
+     *
+     * @param HeaderToolbarAction $action
+     *
+     * @return ControllerConfiguration
+     */
+    public function addToolbarAction(HeaderToolbarAction $action): ControllerConfiguration
+    {
+        $this->pageHeaderToolbarButtons[$action->getLabel()] = $action->getConfig();
+
+        return $this;
+    }
+
+    /**
+     * @return Employee
+     */
+    public function getUser(): Employee
+    {
+        return $this->user;
+    }
 }

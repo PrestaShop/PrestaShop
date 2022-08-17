@@ -60,7 +60,7 @@ class ResetFiltersHelper
      */
     public function resetFilters(HelperListConfiguration $helperListConfiguration, Request $request = null): void
     {
-        $prefix = FilterPrefix::getByClassName($helperListConfiguration->controllerNameLegacy);
+        $prefix = FilterPrefix::getByClassName($helperListConfiguration->legacyControllerName);
         $filters = $this->context->cookie->getFamily($prefix . $helperListConfiguration->listId . 'Filter_');
         foreach ($filters as $cookie_key => $filter) {
             if (strncmp($cookie_key, $prefix . $helperListConfiguration->listId . 'Filter_', 7 + Tools::strlen($prefix . $helperListConfiguration->listId)) == 0) {

@@ -141,7 +141,7 @@ class HelperListBridge
             $helperListConfiguration->where .= ' AND (a.custom = 0 OR a.custom IS NULL)';
         }
 
-        $this->hookDispatcher->dispatchWithParameters('action' . $helperListConfiguration->controllerNameLegacy . 'ListingFieldsModifier', [
+        $this->hookDispatcher->dispatchWithParameters('action' . $helperListConfiguration->legacyControllerName . 'ListingFieldsModifier', [
             'select' => &$helperListConfiguration->select,
             'join' => &$helperListConfiguration->join,
             'where' => &$helperListConfiguration->where,
@@ -181,7 +181,7 @@ class HelperListBridge
             $select_shop = ', shop.name as shop_name ';
         }
 
-        if ($helperListConfiguration->multishopContext && Shop::isTableAssociated($helperListConfiguration->table) && !empty($helperListConfiguration->className)) {
+        if ($helperListConfiguration->multishopContext && Shop::isTableAssociated($helperListConfiguration->table) && !empty($helperListConfiguration->objectModelClassName)) {
             if (Shop::getContext() != Shop::CONTEXT_ALL || !$this->userProvider->getUser()->getData()->isSuperAdmin()) {
                 $helperListConfiguration->where .= ' AND EXISTS (
                         SELECT 1
@@ -270,7 +270,7 @@ class HelperListBridge
             }
         } while (empty($this->_list));
 
-        $this->hookDispatcher->dispatchWithParameters('action' . $helperListConfiguration->controllerNameLegacy . 'ListingResultsModifier', [
+        $this->hookDispatcher->dispatchWithParameters('action' . $helperListConfiguration->legacyControllerName . 'ListingResultsModifier', [
             'list' => &$helperListConfiguration->list,
             'list_total' => &$helperListConfiguration->listTotal,
         ]);
@@ -437,7 +437,7 @@ class HelperListBridge
     private function checkOrderBy(HelperListConfiguration $helperListConfiguration, $orderBy)
     {
         if (empty($orderBy)) {
-            $prefix = FilterPrefix::getByClassName($helperListConfiguration->controllerNameLegacy);
+            $prefix = FilterPrefix::getByClassName($helperListConfiguration->legacyControllerName);
 
             if ($this->context->cookie->{$prefix . $helperListConfiguration->listId . 'Orderby'}) {
                 $orderBy = $this->context->cookie->{$prefix . $helperListConfiguration->listId . 'Orderby'};
@@ -479,7 +479,7 @@ class HelperListBridge
      */
     private function checkOrderDirection(HelperListConfiguration $helperListConfiguration, $orderDirection)
     {
-        $prefix = FilterPrefix::getByClassName($helperListConfiguration->controllerNameLegacy);
+        $prefix = FilterPrefix::getByClassName($helperListConfiguration->legacyControllerName);
         if (empty($orderDirection)) {
             if ($this->context->cookie->{$prefix . $helperListConfiguration->listId . 'Orderway'}) {
                 $orderDirection = $this->context->cookie->{$prefix . $helperListConfiguration->listId . 'Orderway'};

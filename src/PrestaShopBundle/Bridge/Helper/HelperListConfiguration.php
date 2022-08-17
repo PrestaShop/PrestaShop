@@ -53,12 +53,12 @@ class HelperListConfiguration
     /**
      * @var string
      */
-    public $className;
+    public $objectModelClassName;
 
     /**
      * @var string
      */
-    public $controllerNameLegacy;
+    public $legacyControllerName;
 
     /**
      * @var string

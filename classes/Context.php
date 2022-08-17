@@ -30,6 +30,7 @@ use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShopBundle\Bridge\AdminController\LegacyControllerBridgeInterface;
 use PrestaShopBundle\Install\Language as InstallLanguage;
 use PrestaShopBundle\Translation\TranslatorComponent as Translator;
 use PrestaShopBundle\Translation\TranslatorLanguageLoader;
@@ -71,7 +72,7 @@ class ContextCore
     /** @var Employee|null */
     public $employee;
 
-    /** @var AdminController|FrontController|null */
+    /** @var AdminController|FrontController|LegacyControllerBridgeInterface|null */
     public $controller;
 
     /** @var string */
@@ -102,7 +103,7 @@ class ContextCore
     /** @var Smarty|null */
     public $smarty;
 
-    /** @var \Mobile_Detect */
+    /** @var Mobile_Detect */
     public $mobile_detect;
 
     /** @var int */

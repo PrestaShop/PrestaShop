@@ -14,7 +14,7 @@ module.exports = {
       frName: 'dirham marocain',
       symbol: 'MAD',
       isoCode: 'MAD',
-      exchangeRate: 10.660642,
+      exchangeRate: 10.560000,
       decimals: 2,
       enabled: true,
     },
