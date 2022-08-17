@@ -127,7 +127,7 @@
 
   <div id="payment-confirmation" class="js-payment-confirmation">
     <div class="ps-shown-by-js">
-      <button type="submit" class="btn btn-primary center-block{if !$selected_payment_option} disabled{/if}">
+      <button type="submit" class="btn btn-primary center-block{if !$selected_payment_option || (!$all_conditions_approved && $conditions_to_approve)} disabled{/if}">
         {l s='Place order' d='Shop.Theme.Checkout'}
       </button>
       {if $show_final_summary}
@@ -146,11 +146,9 @@
       {/if}
     </div>
     <div class="ps-hidden-by-js">
-      {if $conditions_to_approve}
-        {if $selected_payment_option and $all_conditions_approved}
-          <label for="pay-with-{$selected_payment_option}">{l s='Order with an obligation to pay' d='Shop.Theme.Checkout'}</label>
-        {/if}
-      {/if}  
+      {if $selected_payment_option and $all_conditions_approved}
+        <label for="pay-with-{$selected_payment_option}">{l s='Order with an obligation to pay' d='Shop.Theme.Checkout'}</label>
+      {/if}
     </div>
   </div>
 
