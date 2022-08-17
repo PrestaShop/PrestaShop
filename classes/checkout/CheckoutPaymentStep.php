@@ -96,10 +96,6 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
         }
         unset($selectedDeliveryOption['product_list']);
 
-        if (count($paymentOptions) === 1) {
-            $this->selected_payment_option = 'payment-option-1';
-        }
-
         $assignedVars = [
             'is_free' => $isFree,
             'payment_options' => $paymentOptions,
@@ -107,7 +103,6 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
             'selected_payment_option' => $this->selected_payment_option,
             'selected_delivery_option' => $selectedDeliveryOption,
             'show_final_summary' => Configuration::get('PS_FINAL_SUMMARY_ENABLED'),
-            'all_conditions_approved' => false,
         ];
 
         return $this->renderTemplate($this->getTemplate(), $extraParams, $assignedVars);
