@@ -75,7 +75,7 @@ function createCustomerTest(customerData, baseContext = 'commonTests-createCusto
  * @param baseContext {string} String to identify the test
  */
 function createCustomerB2BTest(customerData, baseContext = 'commonTests-createCustomerB2BTest') {
-  describe('PRE-TEST: Create customer', async () => {
+  describe('PRE-TEST: Create B2B customer', async () => {
     // before and after functions
     before(async function () {
       browserContext = await helper.createBrowserContext(this.browser);
