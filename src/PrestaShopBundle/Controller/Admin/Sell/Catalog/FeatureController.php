@@ -209,17 +209,19 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
         $index = $controllerConfiguration->legacyCurrentIndex;
         $token = $controllerConfiguration->token;
 
-        $controllerConfiguration->addToolbarAction(new HeaderToolbarAction('new_feature', [
-            //@todo: replace by $this->generateUrl('admin_features_add') when creation is fully migrated
-            'href' => $index . '&addfeature&token=' . $token,
-            'desc' => $this->trans('Add new feature', 'Admin.Catalog.Feature'),
-            'icon' => 'process-icon-new',
-        ]));
-        $controllerConfiguration->addToolbarAction(new HeaderToolbarAction('new_feature_value', [
-            'href' => $index . '&addfeature_value&id_feature=' . (int) Tools::getValue('id_feature') . '&token=' . $token,
-            'desc' => $this->trans('Add new feature value', 'Admin.Catalog.Help'),
-            'icon' => 'process-icon-new',
-        ]));
+        $controllerConfiguration
+            ->addToolbarAction('new_feature', [
+                //@todo: replace by $this->generateUrl('admin_features_add') when creation is fully migrated
+                'href' => $index . '&addfeature&token=' . $token,
+                'desc' => $this->trans('Add new feature', 'Admin.Catalog.Feature'),
+                'icon' => 'process-icon-new',
+            ])
+            ->addToolbarAction('new_feature_value', [
+                'href' => $index . '&addfeature_value&id_feature=' . (int) Tools::getValue('id_feature') . '&token=' . $token,
+                'desc' => $this->trans('Add new feature value', 'Admin.Catalog.Help'),
+                'icon' => 'process-icon-new',
+            ])
+        ;
     }
 
     /**
@@ -231,63 +233,55 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
     {
         $controllerConfiguration = $this->getControllerConfiguration();
 
-        $this->addActionList(new ListHeaderToolbarAction('new', [
-            //@todo: replace by $this->generateUrl('admin_features_add') when creation is fully migrated
-            //@todo: can i generate link without using controller config?
-            'href' => $controllerConfiguration->legacyCurrentIndex . '&addfeature&token=' . $controllerConfiguration->token,
-            'desc' => $this->trans('Add new', 'Admin.Actions'),
-        ]), $helperListConfiguration);
-
-        $this->addActionList(new ListRowAction('view'), $helperListConfiguration);
-        $this->addActionList(new ListRowAction('edit'), $helperListConfiguration);
-        $this->addActionList(new ListRowAction('delete'), $helperListConfiguration);
-
-        $this->addActionList(new ListBulkAction('delete', [
-            'text' => $this->trans('Delete selected', 'Admin.Actions'),
-            'icon' => 'icon-trash',
-            'confirm' => $this->trans('Delete selected items?', 'Admin.Notifications.Warning'),
-        ]), $helperListConfiguration);
+        $helperListConfiguration
+            ->addRowAction('view')
+            ->addRowAction('edit')
+            ->addRowAction('delete')
+            ->addToolbarAction('new', [
+                //@todo: replace by $this->generateUrl('admin_features_add') when creation is fully migrated
+                //@todo: can i generate link without using controller config?
+                'href' => $controllerConfiguration->legacyCurrentIndex . '&addfeature&token=' . $controllerConfiguration->token,
+                'desc' => $this->trans('Add new', 'Admin.Actions'),
+            ])
+            ->addBulkAction('delete', [
+                'text' => $this->trans('Delete selected', 'Admin.Actions'),
+                'icon' => 'icon-trash',
+                'confirm' => $this->trans('Delete selected items?', 'Admin.Notifications.Warning'),
+            ])
+        ;
     }
 
     /**
-     * Define fields in the list.
-     *
-     * @return void
+     * @param HelperListConfiguration $helperListConfiguration
      */
     private function setListFields(HelperListConfiguration $helperListConfiguration): void
     {
-        $this->addListField(new Field(
-            'id_feature', [
-                'title' => $this->trans('ID', 'Admin.Global', []),
+        $helperListConfiguration->fieldsList = [
+            'id_feature' => [
+                'title' => $this->trans('ID', 'Admin.Global'),
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
-            ]
-        ), $helperListConfiguration);
-        $this->addListField(new Field(
-            'name', [
-                'title' => $this->trans('Name', 'Admin.Global', []),
+            ],
+            'name' => [
+                'title' => $this->trans('Name', 'Admin.Global'),
                 'width' => 'auto',
                 'filter_key' => 'b!name',
-            ]
-        ), $helperListConfiguration);
-        $this->addListField(new Field(
-            'value', [
-                'title' => $this->trans('Values', 'Admin.Global', []),
+            ],
+            'value' => [
+                'title' => $this->trans('Values', 'Admin.Global'),
                 'orderby' => false,
                 'search' => false,
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
-            ]
-        ), $helperListConfiguration);
-        $this->addListField(new Field(
-            'position', [
-                'title' => $this->trans('Position', 'Admin.Global', []),
+            ],
+            'position' => [
+                'title' => $this->trans('Position', 'Admin.Global'),
                 'filter_key' => 'a!position',
                 'align' => 'center',
                 'class' => 'fixed-width-xs',
                 'position' => 'position',
-            ]
-        ), $helperListConfiguration);
+            ],
+        ];
     }
 
     /**

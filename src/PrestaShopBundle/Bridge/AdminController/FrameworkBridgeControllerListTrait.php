@@ -28,12 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Bridge\AdminController;
 
-use PrestaShopBundle\Bridge\AdminController\Action\ActionInterface;
-use PrestaShopBundle\Bridge\Exception\NotAllowedActionTypeForListException;
-use PrestaShopBundle\Bridge\Helper\Listing\Action\ListBulkAction;
-use PrestaShopBundle\Bridge\Helper\Listing\Action\ListHeaderToolbarAction;
-use PrestaShopBundle\Bridge\Helper\Listing\Action\ListRowAction;
-use PrestaShopBundle\Bridge\Helper\Listing\Field\FieldInterface;
 use PrestaShopBundle\Bridge\Helper\Listing\FiltersProcessor;
 use PrestaShopBundle\Bridge\Helper\Listing\HelperListConfiguration;
 
@@ -71,48 +65,5 @@ trait FrameworkBridgeControllerListTrait
     protected function getFiltersProcessor(): FiltersProcessor
     {
         return $this->get('prestashop.bridge.helper.listing.filters_processor');
-    }
-
-    /**
-     * This method add action specific for the list.
-     *
-     * @param ActionInterface $action
-     * @param HelperListConfiguration $helperListConfiguration
-     *
-     * @return void
-     */
-    protected function addActionList(ActionInterface $action, HelperListConfiguration $helperListConfiguration): void
-    {
-        if ($action instanceof ListBulkAction) {
-            $helperListConfiguration->bulkActions[$action->getLabel()] = $action->getConfig();
-
-            return;
-        }
-
-        if ($action instanceof ListRowAction) {
-            $helperListConfiguration->actions[] = $action->getLabel();
-
-            return;
-        }
-
-        if ($action instanceof ListHeaderToolbarAction) {
-            $helperListConfiguration->toolbarButton[$action->getLabel()] = $action->getConfig();
-
-            return;
-        }
-
-        throw new NotAllowedActionTypeForListException(sprintf('This action %s doesn\'t exist', get_class($action)));
-    }
-
-    /**
-     * This methods allow you to add field to your list.
-     *
-     * @param FieldInterface $field
-     *
-     * @return void
-     */
-    protected function addListField(FieldInterface $field, HelperListConfiguration $helperListConfiguration): void
-    {
-        $helperListConfiguration->fieldsList[$field->getLabel()] = $field->getConfig();
     }
 }

@@ -66,7 +66,8 @@ class HelperListConfigurator
         $breadcrumbs = $this->breadcrumbsAndTitleHydrator->getBreadcrumbs($helperListConfiguration->id);
 
         $helper->title = $breadcrumbs['tab']['name'];
-        $helper->toolbar_btn = $helperListConfiguration->toolbarButton;
+        //@todo: probably we can add optionsResolver here to check array structure of actions/fields at least
+        $helper->toolbar_btn = $helperListConfiguration->getToolbarActions();
         $helper->show_toolbar = true;
         $helper->actions = $helperListConfiguration->actions;
         $helper->bulk_actions = $helperListConfiguration->bulkActions;
