@@ -98,10 +98,7 @@ class ProductTypeListener implements EventSubscriberInterface
             // Don't display the suppliers part if there are no suppliers
             if (count($suppliers) <= 0) {
                 $this->removeSuppliers($form);
-
-                if ($optionsField->has('product_suppliers')) {
-                  $this->removeProductSuppliers($form);
-                }
+                $this->removeProductSuppliers($form);
             }
         }
 
@@ -137,7 +134,10 @@ class ProductTypeListener implements EventSubscriberInterface
     {
         if ($form->has('options')) {
             $optionsForm = $form->get('options');
-            $optionsForm->remove('product_suppliers');
+
+            if ($optionsForm->has('product_suppliers')) {
+                $optionsForm->remove('product_suppliers');
+            }
         }
     }
 
@@ -145,7 +145,10 @@ class ProductTypeListener implements EventSubscriberInterface
     {
         if ($form->has('options')) {
             $optionsForm = $form->get('options');
-            $optionsForm->remove('suppliers');
+
+            if ($optionsForm->has('suppliers')) {
+                $optionsForm->remove('suppliers');
+            }
         }
     }
 
