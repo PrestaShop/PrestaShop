@@ -42,7 +42,9 @@ class Payment {
     $body.on('change', 'input[name="payment-option"]', $.proxy(this.toggleOrderButton, this));
     $body.on('click', `${this.confirmationSelector} button`, $.proxy(this.confirm, this));
 
-    this.collapseOptions();
+    if (!this.getSelectedOption()) {
+      this.collapseOptions();
+    }
   }
 
   collapseOptions() {
