@@ -43,7 +43,8 @@ const createCustomerData1 = new CustomerFaker();
 const createCustomerData2 = new CustomerFaker();
 const createCustomerData3 = new CustomerFaker();
 
-const customersData = [createCustomerData1, createCustomerData2, createCustomerData3];
+// const customersData = [createCustomerData1, createCustomerData2, createCustomerData3];
+const customersData = [createCustomerData1];
 
 
 const today = getDateFormat('yyyy-mm-dd');
@@ -157,83 +158,9 @@ describe('BO - Customers - Outstanding : Sort and filter the Outstanding table',
   });
 
   /*
-    Sort outstanding by:
-    ID, Date, Customer, Company, Outstanding allowance DESC and ASC
- */
-  describe('Sort outstanding table', async () => {
-    const sortTests = [
-      {
-        args: {
-          testIdentifier: 'sortByDateDesc', sortBy: 'date_add', sortDirection: 'desc', isDate: true,
-        },
-      },
-      {args: {testIdentifier: 'sortByCustomerDesc', sortBy: 'customer', sortDirection: 'desc'}},
-      {args: {testIdentifier: 'sortByCompanyDesc', sortBy: 'company', sortDirection: 'desc'}},
-      {
-        args: {
-          testIdentifier: 'sortByOutstandingAllowanceDesc',
-          sortBy: 'outstanding_allow_amount',
-          sortDirection: 'desc',
-          isFloat: true,
-        },
-      },
-      {
-        args: {
-          testIdentifier: 'sortByDateAsc', sortBy: 'date_add', sortDirection: 'asc', isDate: true,
-        },
-      },
-      {args: {testIdentifier: 'sortByCustomerAsc', sortBy: 'customer', sortDirection: 'asc'}},
-      {args: {testIdentifier: 'sortByCompanyAsc', sortBy: 'company', sortDirection: 'asc'}},
-      {
-        args: {
-          testIdentifier: 'sortByOutstandingAllowanceAsc',
-          sortBy: 'outstanding_allow_amount',
-          sortDirection: 'asc',
-          isFloat: true,
-        },
-      },
-      {
-        args: {
-          testIdentifier: 'sortByIdAsc', sortBy: 'id_invoice', sortDirection: 'asc', isFloat: true,
-        },
-      },
-      {
-        args: {
-          testIdentifier: 'sortByIdDesc', sortBy: 'id_invoice', sortDirection: 'desc', isFloat: true,
-        },
-      },
-    ];
-    sortTests.forEach((test) => {
-      it(`should sort by ${test.args.sortBy} ${test.args.sortDirection}`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
-
-        let nonSortedTable = await outstandingPage.getAllRowsColumnContent(page, test.args.sortBy);
-
-        await outstandingPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
-
-        let sortedTable = await outstandingPage.getAllRowsColumnContent(page, test.args.sortBy);
-
-        if (test.args.isFloat) {
-          nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
-          sortedTable = await sortedTable.map(text => parseFloat(text));
-        }
-
-        const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
-
-        if (test.args.sortDirection === 'asc') {
-          await expect(sortedTable).to.deep.equal(expectedResult);
-        } else {
-          await expect(sortedTable).to.deep.equal(expectedResult.reverse());
-        }
-      });
-    });
-  });
-
-
-  /*
-    Filter outstanding by:
-    ID, Date, Customer, Company, Risk, Outstanding allowance
- */
+  Filter outstanding by:
+  ID, Date, Customer, Company, Risk, Outstanding allowance
+*/
   describe('Filter outstanding table', async () => {
     const filterTests = [
       {
@@ -323,6 +250,119 @@ describe('BO - Customers - Outstanding : Sort and filter the Outstanding table',
     });
   });
 
+  /*
+    Sort outstanding by:
+    ID, Date, Customer, Company, Outstanding allowance DESC and ASC
+ */
+  describe('Sort outstanding table', async () => {
+    it('should filter outstanding table by outstanding allowance', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterByOutstandingAllowance');
+
+      await outstandingPage.filterTable(page, 'input', 'outstanding_allow_amount', '€');
+
+      const numberOutstandingAfterFilter = await outstandingPage.getNumberOutstanding(page);
+      await expect(numberOutstandingAfterFilter).to.be.at.most(numberOutstanding);
+    });
+    const sortByOutstandingAllowance = [
+      {
+        args: {
+          testIdentifier: 'sortByOutstandingAllowanceDesc',
+          sortBy: 'outstanding_allow_amount',
+          sortDirection: 'desc',
+          isFloat: true,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByOutstandingAllowanceAsc',
+          sortBy: 'outstanding_allow_amount',
+          sortDirection: 'asc',
+          isFloat: true,
+        },
+      },
+    ];
+    sortByOutstandingAllowance.forEach((test) => {
+      it(`should sort by outstanding allowance ${test.args.sortDirection}`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+
+        let nonSortedTable = await outstandingPage.getAllRowsColumnContent(page, 'outstanding_allow_amount');
+
+        await outstandingPage.sortTable(page, 'outstanding_allow_amount', test.args.sortDirection);
+
+        let sortedTable = await outstandingPage.getAllRowsColumnContent(page, 'outstanding_allow_amount');
+
+        nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
+        sortedTable = await sortedTable.map(text => parseFloat(text));
+
+        const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
+
+        if (test.args.sortDirection === 'asc') {
+          await expect(sortedTable).to.deep.equal(expectedResult);
+        } else {
+          await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+        }
+      });
+    });
+    it('should reset all filters and get the number of outstanding', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAndGetNumberOfOutstanding');
+
+      await outstandingPage.resetFilter(page);
+
+      const numberOutstandingAfterReset = await outstandingPage.getNumberOutstanding(page);
+      await expect(numberOutstandingAfterReset).to.be.equal(numberOutstanding);
+    });
+
+    const sortTests = [
+      {
+        args: {
+          testIdentifier: 'sortByDateDesc', sortBy: 'date_add', sortDirection: 'desc', isDate: true,
+        },
+      },
+      {args: {testIdentifier: 'sortByCustomerDesc', sortBy: 'customer', sortDirection: 'desc'}},
+      {args: {testIdentifier: 'sortByCompanyDesc', sortBy: 'company', sortDirection: 'desc'}},
+      {
+        args: {
+          testIdentifier: 'sortByDateAsc', sortBy: 'date_add', sortDirection: 'asc', isDate: true,
+        },
+      },
+      {args: {testIdentifier: 'sortByCustomerAsc', sortBy: 'customer', sortDirection: 'asc'}},
+      {args: {testIdentifier: 'sortByCompanyAsc', sortBy: 'company', sortDirection: 'asc'}},
+      {
+        args: {
+          testIdentifier: 'sortByIdAsc', sortBy: 'id_invoice', sortDirection: 'asc', isFloat: true,
+        },
+      },
+      {
+        args: {
+          testIdentifier: 'sortByIdDesc', sortBy: 'id_invoice', sortDirection: 'desc', isFloat: true,
+        },
+      },
+    ];
+    sortTests.forEach((test) => {
+      it(`should sort by ${test.args.sortBy} ${test.args.sortDirection}`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
+
+        let nonSortedTable = await outstandingPage.getAllRowsColumnContent(page, test.args.sortBy);
+
+        await outstandingPage.sortTable(page, test.args.sortBy, test.args.sortDirection);
+
+        let sortedTable = await outstandingPage.getAllRowsColumnContent(page, test.args.sortBy);
+
+        if (test.args.isFloat) {
+          nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
+          sortedTable = await sortedTable.map(text => parseFloat(text));
+        }
+
+        const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
+
+        if (test.args.sortDirection === 'asc') {
+          await expect(sortedTable).to.deep.equal(expectedResult);
+        } else {
+          await expect(sortedTable).to.deep.equal(expectedResult.reverse());
+        }
+      });
+    });
+  });
 
   // Post-Condition: Delete created customers by bulk action
   customersData.forEach((customerData, index = 1) => {
