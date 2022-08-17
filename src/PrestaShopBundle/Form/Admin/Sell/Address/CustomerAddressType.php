@@ -417,6 +417,7 @@ class CustomerAddressType extends TranslatorAwareType
             ->add('phone_mobile', TextType::class, [
                 'label' => $this->trans('Mobile phone', 'Admin.Global'),
                 'required' => in_array('phone_mobile', $requiredFields, true),
+                'empty_data' => '',
                 'constraints' => [
                     new CleanHtml(),
                     new TypedRegex([
