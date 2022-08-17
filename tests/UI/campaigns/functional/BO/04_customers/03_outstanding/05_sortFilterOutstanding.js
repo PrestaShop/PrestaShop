@@ -30,7 +30,7 @@ const AddressFaker = require('@data/faker/address');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {Statuses} = require('@data/demo/orderStatuses');
 
-const baseContext = 'functional_BO_customers_outstanding_sort';
+const baseContext = 'functional_BO_customers_outstanding_filter_and_sort';
 
 let browserContext;
 let page;
@@ -43,10 +43,9 @@ const createCustomerData1 = new CustomerFaker();
 const createCustomerData2 = new CustomerFaker();
 const createCustomerData3 = new CustomerFaker();
 
-// const customersData = [createCustomerData1, createCustomerData2, createCustomerData3];
-const customersData = [createCustomerData1];
+const customersData = [createCustomerData1, createCustomerData2, createCustomerData3];
 
-
+// Const used to get today date format
 const today = getDateFormat('yyyy-mm-dd');
 const dateToCheck = getDateFormat('mm/dd/yyyy');
 
@@ -58,13 +57,13 @@ Pre-condition:
 - Create 3 orders in FO
 - Update orders status to payment accepted
 Scenario:
-- Sort outstanding by: ID, Date, Customer, Company, Outstanding allowance DESC and ASC
 - Filter outstanding by: ID, Date, Customer, Company, Risk, Outstanding allowance
+- Sort outstanding by: ID, Date, Customer, Company, Outstanding allowance DESC and ASC
 Post-condition:
 - Delete created customers by bulk actions
 - Disable B2B
 */
-describe('BO - Customers - Outstanding : Sort and filter the Outstanding table', async () => {
+describe('BO - Customers - Outstanding : Filter and sort the Outstanding table', async () => {
   // Pre-Condition : Enable B2B
   enableB2BTest(baseContext);
 
@@ -198,7 +197,7 @@ describe('BO - Customers - Outstanding : Sort and filter the Outstanding table',
       {
         args: {
           filterType: 'input',
-          testIdentifier: 'filterOutstandingAllowance',
+          testIdentifier: 'filterOutstandingAllowance1',
           filterBy: 'outstanding_allow_amount',
           filterValue: createCustomerData1.allowedOutstandingAmount,
         },
@@ -215,7 +214,7 @@ describe('BO - Customers - Outstanding : Sort and filter the Outstanding table',
       });
 
       it('should reset all filters and get the number of outstanding', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAndGetNumberOfOutstanding');
+        await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAndGetNumberOfOutstanding1');
 
         await outstandingPage.resetFilter(page);
 
@@ -241,7 +240,7 @@ describe('BO - Customers - Outstanding : Sort and filter the Outstanding table',
     });
 
     it('should reset all filters and get the number of outstanding', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAndGetNumberOfOutstanding');
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAndGetNumberOfOutstanding2');
 
       await outstandingPage.resetFilter(page);
 
@@ -256,7 +255,7 @@ describe('BO - Customers - Outstanding : Sort and filter the Outstanding table',
  */
   describe('Sort outstanding table', async () => {
     it('should filter outstanding table by outstanding allowance', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterByOutstandingAllowance');
+      await testContext.addContextItem(this, 'testIdentifier', 'filterByOutstandingAllowance2');
 
       await outstandingPage.filterTable(page, 'input', 'outstanding_allow_amount', '€');
 
@@ -304,7 +303,7 @@ describe('BO - Customers - Outstanding : Sort and filter the Outstanding table',
       });
     });
     it('should reset all filters and get the number of outstanding', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAndGetNumberOfOutstanding');
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAndGetNumberOfOutstanding3');
 
       await outstandingPage.resetFilter(page);
 

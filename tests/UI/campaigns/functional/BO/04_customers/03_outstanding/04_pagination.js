@@ -43,6 +43,19 @@ const orderByCustomerData = {
   paymentMethod: PaymentMethods.wirePayment.moduleName,
 };
 
+/*
+Pre-condition:
+- Enable B2B
+- Create 11 orders in FO
+- Update orders status to payment accepted
+Scenario:
+- Change the items number to 10 per page
+- Click on next button
+- Click on previous
+- Change the items number to 50 per page
+Post-condition:
+- Disable B2B
+*/
 describe('BO - Customers - Outstanding : Pagination of the outstanding page', async () => {
   // Pre-Condition : Enable B2B
   enableB2BTest(baseContext);
@@ -66,9 +79,9 @@ describe('BO - Customers - Outstanding : Pagination of the outstanding page', as
       createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_${index}`);
 
       // Pre-condition: Update order status to payment accepted
-      describe(`PRE-TEST_${index}: Update order status to payment accepted`, async () => {
-        it(`should go to 'Orders > Orders' page ${index}`, async function () {
-          await testContext.addContextItem(this, 'testIdentifier', 'goToOrdersPage', baseContext);
+      describe('PRE-TEST: Update order status to payment accepted', async () => {
+        it('should go to Orders > Orders page', async function () {
+          await testContext.addContextItem(this, 'testIdentifier', `goToOrdersPage_${index}`, baseContext);
 
           await dashboardPage.goToSubMenu(
             page,
@@ -81,14 +94,14 @@ describe('BO - Customers - Outstanding : Pagination of the outstanding page', as
         });
 
         it('should update order status', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', `updateOrderStatus_${index}`, baseContext);
 
           const textResult = await ordersPage.setOrderStatus(page, 1, Statuses.paymentAccepted);
           await expect(textResult).to.equal(ordersPage.successfulUpdateMessage);
         });
 
         it('should check that the status is updated successfully', async function () {
-          await testContext.addContextItem(this, 'testIdentifier', 'checkStatusBO', baseContext);
+          await testContext.addContextItem(this, 'testIdentifier', `checkStatusBO_${index}`, baseContext);
 
           const orderStatus = await ordersPage.getTextColumn(page, 'osname', 1);
           await expect(orderStatus, 'Order status was not updated').to.equal(Statuses.paymentAccepted.status);
@@ -148,6 +161,6 @@ describe('BO - Customers - Outstanding : Pagination of the outstanding page', as
     });
   });
 
-  // POST-Condition : Enable B2B
+  // POST-Condition : Disable B2B
   disableB2BTest(baseContext);
 });
