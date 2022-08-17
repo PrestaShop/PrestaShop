@@ -220,6 +220,8 @@ class CurrencyController extends FrameworkBundleAdminController
         $localeRepository = $this->get('prestashop.core.localization.locale.repository');
         /** @var CldrLocaleRepository $cldrLocaleRepository */
         $cldrLocaleRepository = $this->get('prestashop.core.localization.cldr.locale_repository');
+        /** @var PatternTransformer $transformer */
+        $transformer = $this->get('prestashop.core.localization.currency.pattern_transformer');
 
         $languagesData = [];
         /** @var LanguageInterface $language */
@@ -229,7 +231,6 @@ class CurrencyController extends FrameworkBundleAdminController
             $cldrCurrency = $cldrLocale->getCurrency($currencyIsoCode);
             $priceSpecification = $locale->getPriceSpecification($currencyIsoCode);
 
-            $transformer = new PatternTransformer();
             $transformations = [];
             foreach (PatternTransformer::ALLOWED_TRANSFORMATIONS as $transformationType) {
                 $transformations[$transformationType] = $transformer->transform(
