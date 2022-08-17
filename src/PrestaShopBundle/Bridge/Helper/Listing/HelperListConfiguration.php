@@ -208,16 +208,6 @@ class HelperListConfiguration
     /**
      * @var array
      */
-    public $toolbarButton = [];
-
-    /**
-     * @var array
-     */
-    public $actions = [];
-
-    /**
-     * @var array
-     */
     public $bulkActions = [];
 
     /**
@@ -234,4 +224,46 @@ class HelperListConfiguration
      * @var string|null
      */
     public $legacyCurrentIndex;
+
+    /**
+     * @var array<string, array<string, mixed>>
+     */
+    private $toolbarActions = [];
+
+    /**
+     * @todo: should be separated here rowActions and others, because they have different structure.
+     *        Then they should be unified in configurator
+     * @var array
+     */
+    public $actions = [];
+
+    public function addToolbarAction(string $label, array $config): self
+    {
+        $this->toolbarActions[$label] = $config;
+
+        return $this;
+    }
+
+    /**
+     *
+     * @return array<string, array<string, mixed>>
+     */
+    public function getToolbarActions(): array
+    {
+        return $this->toolbarActions;
+    }
+
+    public function addRowAction(string $action): self
+    {
+        $this->actions[] = $action;
+
+        return $this;
+    }
+
+    public function addBulkAction(string $label, array $config): self
+    {
+        $this->bulkActions[$label] = $config;
+
+        return $this;
+    }
 }

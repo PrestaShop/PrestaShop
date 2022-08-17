@@ -231,13 +231,14 @@ class ControllerConfiguration
     /**
      * Adds toolbar action to the page
      *
-     * @param HeaderToolbarAction $action
+     * @param string $label
+     * @param array<string, mixed> $config
      *
      * @return ControllerConfiguration
      */
-    public function addToolbarAction(HeaderToolbarAction $action): ControllerConfiguration
+    public function addToolbarAction(string $label, array $config): self
     {
-        $this->pageHeaderToolbarButtons[$action->getLabel()] = $action->getConfig();
+        $this->pageHeaderToolbarButtons[$label] = $config;
 
         return $this;
     }
