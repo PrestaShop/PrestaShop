@@ -28,48 +28,11 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Bridge\Helper\Listing;
 
-use PrestaShopBundle\Bridge\AdminController\Action\ActionInterface;
-
 /**
  * This object contains the configuration needed to generate a list using the helper list.
  */
 class HelperListConfiguration
 {
-    /**
-     * @var int
-     */
-    private $tabId;
-
-    /**
-     * @var string
-     */
-    public $table;
-
-    /**
-     * @var string|null
-     */
-    public $listId;
-
-    /**
-     * @var string
-     */
-    public $objectModelClassName;
-
-    /**
-     * @var string
-     */
-    public $legacyControllerName;
-
-    /**
-     * @var string
-     */
-    public $identifier;
-
-    /**
-     * @var string
-     */
-    public $token;
-
     /**
      * @var string
      */
@@ -98,21 +61,6 @@ class HelperListConfiguration
     /**
      * @var string
      */
-    public $defaultOrderBy;
-
-    /**
-     * @var string
-     */
-    public $orderWay = '';
-
-    /**
-     * @var string
-     */
-    public $defaultOrderWay = 'ASC';
-
-    /**
-     * @var string
-     */
     public $having = '';
 
     /**
@@ -126,36 +74,6 @@ class HelperListConfiguration
     public $filter = '';
 
     /**
-     * @var bool
-     */
-    public $isJoinLanguageTableAuto = false;
-
-    /**
-     * @var int
-     */
-    public $defaultPagination = 50;
-
-    /**
-     * @var array
-     */
-    public $pagination = [20, 50, 100, 300, 1000];
-
-    /**
-     * @var string
-     */
-    public $shopLinkType = '';
-
-    /**
-     * @var int
-     */
-    public $multishopContext;
-
-    /**
-     * @var bool
-     */
-    public $deleted = false;
-
-    /**
      * @var array
      */
     public $fieldsList = [];
@@ -163,7 +81,7 @@ class HelperListConfiguration
     /**
      * @var string
      */
-    public $listsql;
+    public $listSql;
 
     /**
      * @var array
@@ -181,46 +99,114 @@ class HelperListConfiguration
     public $listError;
 
     /**
-     * @var bool
+     * @var string
      */
-    public $explicitSelect = false;
+    public $orderWay = '';
 
     /**
-     * @var bool Use SQL_CALC_FOUND_ROWS / FOUND_ROWS to count the number of records
+     * @var int
      */
-    public $useFoundRows = true;
-
-    /**
-     * @var array
-     */
-    public $deleteLinksVariableTemplate = [];
-
-    /**
-     * @todo: whats the point of this prop?
-     *
-     * @var array List of available actions for each list row - default actions are view, edit, delete, duplicate
-     */
-    public $actionsAvailable = [
-        ActionInterface::AVAILABLE_ACTION_VIEW,
-        ActionInterface::AVAILABLE_ACTION_EDIT,
-        ActionInterface::AVAILABLE_ACTION_DUPLICATE,
-        ActionInterface::AVAILABLE_ACTION_DELETE,
-    ];
+    private $tabId;
 
     /**
      * @var string
      */
-    public $positionIdentifier;
+    private $tableName;
+
+    /**
+     * @var string
+     */
+    private $listId;
+
+    /**
+     * @var string
+     */
+    private $objectModelClassName;
+
+    /**
+     * @var string
+     */
+    private $legacyControllerName;
+
+    /**
+     * @var string
+     */
+    private $identifier;
+
+    /**
+     * @var string
+     */
+    private $token;
+
+    /**
+     * @var string
+     */
+    private $defaultOrderBy;
+
+    /**
+     * @var string
+     */
+    private $defaultOrderWay = 'ASC';
 
     /**
      * @var bool
      */
-    public $bootstrap;
+    private $autoJoinLanguageTable;
+
+    /**
+     * @var int
+     */
+    private $multiShopContext;
+
+    /**
+     * @var bool
+     */
+    private $deleted;
+
+    /**
+     * @var bool
+     */
+    private $explicitSelect;
+
+    /**
+     * @var bool Use SQL_CALC_FOUND_ROWS / FOUND_ROWS to count the number of records
+     */
+    private $useFoundRows;
+
+    /**
+     * @var string
+     */
+    private $positionIdentifier;
+
+    /**
+     * @var bool
+     */
+    private $bootstrap;
 
     /**
      * @var string|null
      */
-    public $legacyCurrentIndex;
+    private $legacyCurrentIndex;
+
+    /**
+     * @var array<string, mixed>
+     */
+    private $deleteLinkVars = [];
+
+    /**
+     * @var string
+     */
+    private $shopLinkType = '';
+
+    /**
+     * @var int[]
+     */
+    private $paginationLimits = [20, 50, 100, 300, 1000];
+
+    /**
+     * @var int
+     */
+    private $defaultPaginationLimit = 50;
 
     /**
      * @var array<string, array<string, mixed>>
@@ -239,14 +225,41 @@ class HelperListConfiguration
 
     /**
      * @param int $tabId
-     *
-     * @return HelperListConfiguration
      */
-    public function setTabId(int $tabId): self
-    {
+    public function __construct(
+        int $tabId,
+        string $tableName,
+        string $listId,
+        string $objectModelClassName,
+        string $identifier,
+        string $positionIdentifier,
+        bool $isJoinLanguageTableAuto,
+        bool $deleted,
+        string $defaultOrderBy,
+        bool $explicitSelect,
+        bool $useFoundRows,
+        string $legacyControllerName,
+        string $token,
+        bool $bootstrap,
+        string $legacyCurrentIndex,
+        int $multiShopContext
+    ) {
         $this->tabId = $tabId;
-
-        return $this;
+        $this->tableName = $tableName;
+        $this->listId = $listId;
+        $this->objectModelClassName = $objectModelClassName;
+        $this->identifier = $identifier;
+        $this->positionIdentifier = $positionIdentifier;
+        $this->autoJoinLanguageTable = $isJoinLanguageTableAuto;
+        $this->deleted = $deleted;
+        $this->defaultOrderBy = $defaultOrderBy;
+        $this->explicitSelect = $explicitSelect;
+        $this->useFoundRows = $useFoundRows;
+        $this->legacyControllerName = $legacyControllerName;
+        $this->token = $token;
+        $this->bootstrap = $bootstrap;
+        $this->legacyCurrentIndex = $legacyCurrentIndex;
+        $this->multiShopContext = $multiShopContext;
     }
 
     /**
@@ -255,6 +268,228 @@ class HelperListConfiguration
     public function getTabId(): int
     {
         return $this->tabId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTableName(): string
+    {
+        return $this->tableName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getListId(): string
+    {
+        return $this->listId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getObjectModelClassName(): string
+    {
+        return $this->objectModelClassName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLegacyControllerName(): string
+    {
+        return $this->legacyControllerName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIdentifier(): string
+    {
+        return $this->identifier;
+    }
+
+    /**
+     * @return string
+     */
+    public function getToken(): string
+    {
+        return $this->token;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultOrderBy(): string
+    {
+        return $this->defaultOrderBy;
+    }
+
+    /**
+     * @return bool
+     */
+    public function autoJoinLanguageTable(): bool
+    {
+        return $this->autoJoinLanguageTable;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMultiShopContext(): int
+    {
+        return $this->multiShopContext;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDeleted(): bool
+    {
+        return $this->deleted;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isExplicitSelect(): bool
+    {
+        return $this->explicitSelect;
+    }
+
+    /**
+     * @return bool
+     */
+    public function useFoundRows(): bool
+    {
+        return $this->useFoundRows;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPositionIdentifier(): string
+    {
+        return $this->positionIdentifier;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isBootstrap(): bool
+    {
+        return $this->bootstrap;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getLegacyCurrentIndex(): ?string
+    {
+        return $this->legacyCurrentIndex;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultOrderWay(): string
+    {
+        return $this->defaultOrderWay;
+    }
+
+    /**
+     * @param string $defaultOrderWay
+     *
+     * @return HelperListConfiguration
+     */
+    public function setDefaultOrderWay(string $defaultOrderWay): self
+    {
+        $this->defaultOrderWay = $defaultOrderWay;
+
+        return $this;
+    }
+
+    /**
+     * list of vars for delete button
+     *
+     * @return array<string, mixed>
+     */
+    public function getDeleteLinkVars(): array
+    {
+        return $this->deleteLinkVars;
+    }
+
+    /**
+     * @param array<string, mixed> $deleteLinkVars
+     *
+     * @return HelperListConfiguration
+     */
+    public function setDeleteLinkVars(array $deleteLinkVars): HelperListConfiguration
+    {
+        $this->deleteLinkVars = $deleteLinkVars;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getShopLinkType(): string
+    {
+        return $this->shopLinkType;
+    }
+
+    /**
+     * @param string $shopLinkType
+     *
+     * @return HelperListConfiguration
+     */
+    public function setShopLinkType(string $shopLinkType): HelperListConfiguration
+    {
+        $this->shopLinkType = $shopLinkType;
+
+        return $this;
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getPaginationLimits(): array
+    {
+        return $this->paginationLimits;
+    }
+
+    /**
+     * @param int[] $paginationLimits
+     *
+     * @return HelperListConfiguration
+     */
+    public function setPaginationLimits(array $paginationLimits): HelperListConfiguration
+    {
+        $this->paginationLimits = $paginationLimits;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDefaultPaginationLimit(): int
+    {
+        return $this->defaultPaginationLimit;
+    }
+
+    /**
+     * @param int $defaultPaginationLimit
+     *
+     * @return HelperListConfiguration
+     */
+    public function setDefaultPaginationLimit(int $defaultPaginationLimit): HelperListConfiguration
+    {
+        $this->defaultPaginationLimit = $defaultPaginationLimit;
+
+        return $this;
     }
 
     /**

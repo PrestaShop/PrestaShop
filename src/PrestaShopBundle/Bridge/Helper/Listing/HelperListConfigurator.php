@@ -71,16 +71,16 @@ class HelperListConfigurator
         $helper->actions = $helperListConfiguration->getRowActions();
         $helper->bulk_actions = $helperListConfiguration->getBulkActions();
         $helper->show_toolbar = true;
-        $helper->currentIndex = $helperListConfiguration->legacyCurrentIndex;
-        $helper->table = $helperListConfiguration->table;
+        $helper->currentIndex = $helperListConfiguration->getLegacyCurrentIndex();
+        $helper->table = $helperListConfiguration->getTableName();
         $helper->orderBy = $helperListConfiguration->orderBy;
         $helper->orderWay = $helperListConfiguration->orderWay;
         $helper->listTotal = $helperListConfiguration->listTotal;
-        $helper->identifier = $helperListConfiguration->identifier;
-        $helper->token = $helperListConfiguration->token;
-        $helper->position_identifier = $helperListConfiguration->positionIdentifier;
-        $helper->controller_name = $helperListConfiguration->legacyControllerName;
-        $helper->list_id = $helperListConfiguration->listId ?? $helperListConfiguration->table;
-        $helper->bootstrap = $helperListConfiguration->bootstrap;
+        $helper->identifier = $helperListConfiguration->getIdentifier();
+        $helper->token = $helperListConfiguration->getToken();
+        $helper->position_identifier = $helperListConfiguration->getPositionIdentifier();
+        $helper->controller_name = $helperListConfiguration->getLegacyControllerName();
+        $helper->list_id = $helperListConfiguration->getListId() ?? $helperListConfiguration->getTableName();
+        $helper->bootstrap = $helperListConfiguration->isBootstrap();
     }
 }
