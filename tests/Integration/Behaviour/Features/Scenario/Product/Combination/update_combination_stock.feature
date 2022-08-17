@@ -235,7 +235,7 @@ Feature: Update product combination stock information in Back Office (BO)
       | available date             |       |
     And product "product1" should have no stock movements
 
-  Scenario: I shouldn't be able to add bigger quantity then 2147483647
+  Scenario: I try to update product combination quantity with to big numbers
     When I update combination "product1MBlack" stock with following details:
       | delta quantity             | 2147483648  |
       | minimal quantity           | 1           |
@@ -279,6 +279,21 @@ Feature: Update product combination stock information in Back Office (BO)
     Then combination "product1MBlue" should have following stock details:
       | combination stock detail   | value       |
       | quantity                   | -2147483648 |
+      | minimal quantity           | 1           |
+      | low stock threshold        | 0           |
+      | low stock alert is enabled | false       |
+      | location                   | Storage nr1 |
+      | available date             | 2021-10-10  |
+    When I update combination "product1MBlue" stock with following details:
+      | delta quantity             | 4294967295  |
+      | minimal quantity           | 1           |
+      | location                   | Storage nr1 |
+      | low stock threshold        | 0           |
+      | low stock alert is enabled | false       |
+      | available date             | 2021-10-10  |
+    Then combination "product1MBlue" should have following stock details:
+      | combination stock detail   | value       |
+      | quantity                   | 2147483647  |
       | minimal quantity           | 1           |
       | low stock threshold        | 0           |
       | low stock alert is enabled | false       |
