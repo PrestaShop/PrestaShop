@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Adapter\Tax;
 use Address;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\Decimal\Operation\Division;
-use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
 use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
@@ -51,8 +50,7 @@ class TaxComputer
     private $taxRulesGroupRepository;
 
     /**
-     * @param int $langId
-     * @param CountryRepository $countryRepository
+     * @param TaxRulesGroupRepository $taxRulesGroupRepository
      */
     public function __construct(
         TaxRulesGroupRepository $taxRulesGroupRepository
