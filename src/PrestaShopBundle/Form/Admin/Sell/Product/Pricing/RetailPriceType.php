@@ -32,6 +32,7 @@ use Country;
 use Currency;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
+use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
@@ -97,9 +98,9 @@ class RetailPriceType extends TranslatorAwareType
     protected $contextCountryId;
 
     /**
-     * @var int
+     * @var TaxRulesGroupRepository
      */
-    private $contextLangId;
+    private $taxRulesGroupRepository;
 
     public function __construct(
         TranslatorInterface $translator,
@@ -113,7 +114,7 @@ class RetailPriceType extends TranslatorAwareType
         int $ecoTaxGroupId,
         TaxComputer $taxComputer,
         int $contextCountryId,
-        int $contextLangId
+        TaxRulesGroupRepository $taxRulesGroupRepository
     ) {
         parent::__construct($translator, $locales);
         $this->contextLocale = $contextLocale;
@@ -125,7 +126,7 @@ class RetailPriceType extends TranslatorAwareType
         $this->ecoTaxGroupId = $ecoTaxGroupId;
         $this->taxComputer = $taxComputer;
         $this->contextCountryId = $contextCountryId;
-        $this->contextLangId = $contextLangId;
+        $this->taxRulesGroupRepository = $taxRulesGroupRepository;
     }
 
     /**
@@ -141,14 +142,36 @@ class RetailPriceType extends TranslatorAwareType
 
         $selectedTaxRate = $this->taxComputer->getTaxRate(new TaxRulesGroupId($options['tax_rules_group_id']), new CountryId($this->contextCountryId));
         $country = new Country($this->contextCountryId);
-        $taxGroupHelpText = 'Tax %1$s : %2$s%%';
-        $stateIsoCode = '';
+
+        $taxRatePlaceHolder = $this->trans(
+            'Tax %1$s : %2$s%%',
+            'Admin.Catalog.Feature',
+            ['%1$s' => Country::getIsoById($this->contextCountryId), '%2$s' => $selectedTaxRate]
+        );
+        $taxRateHelpPlaceholderWithoutTax = $this->trans(
+            'Tax %1$s : %2$s%%',
+            'Admin.Catalog.Feature',
+            ['%1$s' => Country::getIsoById($this->contextCountryId), '%2$s' => '_TAX_RATE_HELP_PLACEHOLDER_']
+        );
+        $taxRateHelpPlaceholderWithTax = $this->trans(
+            'Tax %1$s-%3$s: %2$s%%',
+            'Admin.Catalog.Feature',
+            ['%1$s' => Country::getIsoById($this->contextCountryId), '%2$s' => '_TAX_RATE_HELP_PLACEHOLDER_', '%3s$s' => '_STATE_ISO_CODE_HELP_PLACEHOLDER_']
+        );
+
         if ($country->contains_states) {
-            $taxRules = \TaxRule::getTaxRulesByGroupId($this->contextLangId, $options['tax_rules_group_id']);
-            $firstTaxRule = reset($taxRules);
-            $state = new State($firstTaxRule['id_state']);
-            $stateIsoCode = $state->iso_code;
-            $taxGroupHelpText = 'Tax %1$s-%3$s: %2$s%%';
+            $stateId = $this->taxRulesGroupRepository->getTaxRulesGroupDefaultStateId(
+                new TaxRulesGroupId($options['tax_rules_group_id']),
+                new CountryId($this->contextCountryId)
+            );
+            if ($stateId) {
+                $state = new State($stateId);
+                $taxRatePlaceHolder = $this->trans(
+                    'Tax %1$s-%3$s: %2$s%%',
+                    'Admin.Catalog.Feature',
+                    ['%1$s' => Country::getIsoById($this->contextCountryId), '%2$s' => $selectedTaxRate, '%3s$s' => $state->iso_code]
+                );
+            }
         }
 
         $builder
@@ -189,17 +212,14 @@ class RetailPriceType extends TranslatorAwareType
                 'label' => $this->trans('Tax rule', 'Admin.Catalog.Feature'),
                 'help' => !$this->isTaxEnabled ?
                     $this->trans('Tax feature is disabled, it will not affect price tax included.', 'Admin.Catalog.Feature')
-                    : $this->trans(
-                        $taxGroupHelpText,
-                        'Admin.Catalog.Feature',
-                        ['%1$s' => Country::getIsoById($this->contextCountryId), '%2$s' => $selectedTaxRate, '%3s$s' => $stateIsoCode]
-                    ),
-                'help_attr' => ['class' => 'js-tax-rule-help',
-                    'placeholder' => $this->trans(
-                        $taxGroupHelpText,
-                        'Admin.Catalog.Feature',
-                        ['%1$s' => Country::getIsoById($this->contextCountryId), '%2$s' => '_TAX_RATE_HELP_PLACEHOLDER_', '%3s$s' => $stateIsoCode]
-                    ), ],
+                    : $taxRatePlaceHolder,
+                'help_attr' => [
+                    'class' => 'js-tax-rule-help',
+                    'data' => [
+                        'place-holder-without-tax' => $taxRateHelpPlaceholderWithoutTax,
+                        'place-holder-with-tax' => $taxRateHelpPlaceholderWithTax,
+                    ],
+                ],
                 'external_link' => [
                     'text' => $this->trans('[1]Manage tax rules[/1]', 'Admin.Catalog.Feature'),
                     'href' => $this->router->generate('admin_taxes_index'),
@@ -282,7 +302,7 @@ class RetailPriceType extends TranslatorAwareType
         $resolver->setDefaults([
             'label' => $this->trans('Retail price', 'Admin.Catalog.Feature'),
             'label_tag_name' => 'h3',
-            'required' => ['tax_rules_group_id'],
+            'required' => false,
             'attr' => [
                 'class' => 'retail-price-widget',
             ],

@@ -1,7 +1,4 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-product-type
-@restore-all-tables-before-feature
-@reboot-kernel-before-feature
-@clear-cache-before-feature
 @restore-products-before-feature
 @clear-cache-before-feature
 @clear-cache-after-feature

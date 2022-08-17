@@ -27,8 +27,12 @@
 namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 
 use Address;
+use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use State;
 use TaxManagerFactory;
 use TaxRulesGroup;
 
@@ -41,15 +45,16 @@ final class TaxRuleGroupChoiceProvider implements FormChoiceProviderInterface, F
      * @var int
      */
     private $countryId;
-    /**
-     * @var int
-     */
-    private $langId;
 
-    public function __construct(int $countryId, int $langId)
+    /**
+     * @var TaxRulesGroupRepository
+     */
+    private $taxRulesGroupRepository;
+
+    public function __construct(int $countryId, TaxRulesGroupRepository $taxRulesGroupRepository)
     {
         $this->countryId = $countryId;
-        $this->langId = $langId;
+        $this->taxRulesGroupRepository = $taxRulesGroupRepository;
     }
 
     /**
@@ -72,25 +77,19 @@ final class TaxRuleGroupChoiceProvider implements FormChoiceProviderInterface, F
     {
         $address = new Address();
         $address->id_country = $this->countryId;
-        $country = new \Country($this->countryId);
-        if ($country->contains_states) {
-            $states = \State::getStatesByIdCountry($this->countryId, true);
-            $firstState = reset($states);
-            $address->id_state = $firstState['id_state'];
-        }
 
         $taxRates = [];
         foreach ($this->getRules() as $rule) {
-            if ($country->contains_states) {
-                $taxRules = \TaxRule::getTaxRulesByGroupId($this->langId, $rule['id_tax_rules_group']);
-                $firstTaxRule = reset($taxRules);
-                $address->id_state = $firstTaxRule['id_state'] ?? null;
-            }
-            $taxRulesGroupId = (int) $rule['id_tax_rules_group'];
-            $taxCalculator = TaxManagerFactory::getManager($address, $taxRulesGroupId)->getTaxCalculator();
+            $taxRulesGroupId = new TaxRulesGroupId((int) $rule['id_tax_rules_group']);
+            $stateId = $this->taxRulesGroupRepository->getTaxRulesGroupDefaultStateId($taxRulesGroupId, new CountryId($this->countryId));
+            $address->id_state = $stateId;
 
+            $taxManagerFactory = TaxManagerFactory::getManager($address, $taxRulesGroupId->getValue());
+            $taxRate = $taxManagerFactory->getTaxCalculator()->getTotalRate();
+            $state = new State($taxManagerFactory->getAddress()->id_state);
             $taxRates[$rule['name']] = [
-                'data-tax-rate' => $taxCalculator->getTotalRate(),
+                'data-tax-rate' => $taxRate,
+                'data-state-iso-code' => $state->iso_code ?: '',
             ];
         }
 
