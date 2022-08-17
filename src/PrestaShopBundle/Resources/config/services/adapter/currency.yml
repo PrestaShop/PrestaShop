@@ -54,6 +54,7 @@ services:
       - '@prestashop.core.localization.cldr.locale_repository'
       - "@=service('prestashop.core.admin.lang.repository').findAll()"
       - "@prestashop.adapter.currency.command_handler.command_validator"
+      - "@prestashop.core.localization.currency.pattern_transformer"
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditCurrencyCommand' }
 
@@ -63,6 +64,7 @@ services:
       - '@prestashop.core.localization.cldr.locale_repository'
       - "@=service('prestashop.core.admin.lang.repository').findAll()"
       - "@prestashop.adapter.currency.command_handler.command_validator"
+      - "@prestashop.core.localization.currency.pattern_transformer"
     tags:
       - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Currency\Command\EditUnofficialCurrencyCommand' }
 
