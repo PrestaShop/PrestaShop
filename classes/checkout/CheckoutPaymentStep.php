@@ -86,6 +86,10 @@ class CheckoutPaymentStepCore extends AbstractCheckoutStep
         }
         unset($selectedDeliveryOption['product_list']);
 
+        if (count($paymentOptions) === 1) {
+            $this->selected_payment_option = 'payment-option-1';
+        }
+
         $assignedVars = [
             'is_free' => $isFree,
             'payment_options' => $paymentOptions,
