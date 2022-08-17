@@ -44,4 +44,6 @@ interface TaxManagerInterface
      * @return TaxCalculator
      */
     public function getTaxCalculator();
+
+    public function getAddress(): Address;
 }

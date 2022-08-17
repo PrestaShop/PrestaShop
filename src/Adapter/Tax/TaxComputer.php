@@ -32,6 +32,7 @@ use Address;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\Decimal\Operation\Division;
 use PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository;
+use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use TaxManagerFactory;
@@ -45,25 +46,18 @@ class TaxComputer
     protected const DIVISION_PRECISION = Division::DEFAULT_PRECISION + 2;
 
     /**
-     * @var int
+     * @var TaxRulesGroupRepository
      */
-    private $langId;
-
-    /**
-     * @var CountryRepository
-     */
-    private $countryRepository;
+    private $taxRulesGroupRepository;
 
     /**
      * @param int $langId
      * @param CountryRepository $countryRepository
      */
     public function __construct(
-        int $langId,
-        CountryRepository $countryRepository
+        TaxRulesGroupRepository $taxRulesGroupRepository
     ) {
-        $this->langId = $langId;
-        $this->countryRepository = $countryRepository;
+        $this->taxRulesGroupRepository = $taxRulesGroupRepository;
     }
 
     /**
@@ -110,15 +104,10 @@ class TaxComputer
      */
     public function getTaxRate(TaxRulesGroupId $taxRulesGroupId, CountryId $countryId): DecimalNumber
     {
-        $country = $this->countryRepository->get($countryId);
-
         $address = new Address();
         $address->id_country = $countryId->getValue();
-        if ($country->contains_states) {
-            $taxRules = \TaxRule::getTaxRulesByGroupId($this->langId, $taxRulesGroupId->getValue());
-            $firstTaxRule = reset($taxRules);
-            $address->id_state = $firstTaxRule['id_state'] ?? null;
-        }
+        $stateId = $this->taxRulesGroupRepository->getTaxRulesGroupDefaultStateId($taxRulesGroupId, $countryId);
+        $address->id_state = $stateId;
 
         $taxCalculator = TaxManagerFactory::getManager($address, $taxRulesGroupId->getValue())->getTaxCalculator();
 

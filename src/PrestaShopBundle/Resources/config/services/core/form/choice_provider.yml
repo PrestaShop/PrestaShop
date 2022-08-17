@@ -192,7 +192,7 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\TaxRuleGroupChoiceProvider'
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
-      - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+      - '@prestashop.adapter.tax_rules_group.repository.tax_rules_group_repository'
 
   prestashop.core.form.choice_provider.cms_categories:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CmsCategoriesChoiceProvider'

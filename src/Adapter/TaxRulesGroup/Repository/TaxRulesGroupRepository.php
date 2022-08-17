@@ -28,6 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository;
 
+use Doctrine\DBAL\Connection;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -39,6 +41,60 @@ use TaxRulesGroup;
  */
 class TaxRulesGroupRepository extends AbstractObjectModelRepository
 {
+    /**
+     * @var Connection
+     */
+    private $connection;
+
+    /**
+     * @var string
+     */
+    private $dbPrefix;
+
+    /**
+     * @param Connection $connection
+     * @param string $dbPrefix
+     */
+    public function __construct(
+        Connection $connection,
+        string $dbPrefix
+    ) {
+        $this->connection = $connection;
+        $this->dbPrefix = $dbPrefix;
+    }
+
+    /**
+     * @param TaxRulesGroupId $taxRulesGroupId
+     * @param CountryId $countryId
+     *
+     * @return int
+     */
+    public function getTaxRulesGroupDefaultStateId(TaxRulesGroupId $taxRulesGroupId, CountryId $countryId): int
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('tr.id_state')
+            ->from($this->dbPrefix . 'tax_rules_group', 'trg')
+            ->innerJoin('trg', $this->dbPrefix . 'tax_rule', 'tr', 'tr.id_tax_rules_group = trg.id_tax_rules_group')
+            ->innerJoin('tr', $this->dbPrefix . 'tax', 't', 't.id_tax = tr.id_tax')
+            ->andWhere('trg.id_tax_rules_group = :taxRulesGroupId')
+            ->andWhere('tr.id_country = :countryId')
+            ->andWhere('trg.deleted = 0')
+            ->setParameters([
+                'taxRulesGroupId' => $taxRulesGroupId->getValue(),
+                'countryId' => $countryId->getValue(),
+            ])
+        ;
+
+        $rawData = $qb->execute()->fetchAll();
+        if (empty($rawData)) {
+            return 0;
+        }
+        $firstRow = reset($rawData);
+
+        return (int) $firstRow['id_state'];
+    }
+
     /**
      * @param TaxRulesGroupId $taxRulesGroupId
      *
