@@ -28,24 +28,128 @@ namespace Tests\Unit\Core\Localization\Currency;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Localization\Currency\PatternTransformer;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Localization\Locale\RepositoryInterface;
+use PrestaShop\PrestaShop\Core\Localization\Specification\Price;
 
 class PatternTransformerTest extends TestCase
 {
     /**
-     * @dataProvider getPatterns
+     * @dataProvider getDataForTestTransform
      *
      * @param string $basePattern
      * @param array $transformations
      */
     public function testTransform(string $basePattern, array $transformations)
     {
-        $transformer = new PatternTransformer();
+        $transformer = new PatternTransformer($this->mockLocaleRepository());
+
         foreach ($transformations as $transformationType => $expectedPattern) {
             $this->assertEquals($expectedPattern, $transformer->transform($basePattern, $transformationType), 'Invalid transformation ' . $transformationType);
         }
     }
 
-    public function getPatterns()
+    /**
+     * @dataProvider getDataForTestGetFrameworkPattern
+     *
+     * @param string $pattern
+     * @param string $currencySymbol
+     */
+    public function testGetFrameworkPattern(
+        string $pattern,
+        string $currencySymbol,
+        bool $isPatternPositive,
+        ?string $expectedResult
+    ): void {
+        $transformer = new PatternTransformer($this->mockLocaleRepository($pattern, $currencySymbol));
+
+        $this->assertSame(
+            $expectedResult,
+            $transformer->getFrameworkPattern(
+                // locale and currency code isn't relevant for this test
+            'en-US',
+                'EUR',
+                $isPatternPositive
+        ));
+    }
+
+    public function getDataForTestGetFrameworkPattern(): iterable
+    {
+        yield [
+            '#,##0.00¤',
+            '€',
+            true,
+            '{{ widget }}€',
+        ];
+
+        yield [
+            '#,##0.00¤',
+            '€',
+            false,
+            '-{{ widget }}€',
+        ];
+
+        yield [
+            '¤#,##0.00',
+            '€',
+            true,
+            '€{{ widget }}',
+        ];
+
+        yield [
+            '¤#,##0.00',
+            '€',
+            false,
+            '-€{{ widget }}',
+        ];
+
+        yield [
+            '#,##0.00¤',
+            '$',
+            true,
+            '{{ widget }}$',
+        ];
+
+        yield [
+            '#,##0.00 ¤',
+            '$',
+            false,
+            "-{{ widget }}\u{a0}\$",
+        ];
+
+        yield [
+            '¤ #,##0.00',
+            '$',
+            true,
+            "\$\u{a0}{{ widget }}",
+        ];
+
+        yield [
+            '¤ #,##0.00',
+            '$',
+            false,
+            "-\$\u{a0}{{ widget }}",
+        ];
+
+        yield [
+            '¤ #,##0.00',
+            'custom',
+            true,
+            "custom\u{a0}{{ widget }}",
+        ];
+
+        yield [
+            '#,##0.00¤',
+            'custom',
+            false,
+            '-{{ widget }}custom',
+        ];
+    }
+
+    /**
+     * @return array[]
+     */
+    public function getDataForTestTransform(): array
     {
         return [
             'fr' => [
@@ -128,11 +232,12 @@ class PatternTransformerTest extends TestCase
      * @param string $expectedTransformationType
      * @param array $patterns
      *
-     * @dataProvider getTransformationTypes
+     * @dataProvider getDataForTestGetTransformationType
      */
     public function testGetTransformationType(string $expectedTransformationType, array $patterns)
     {
-        $transformer = new PatternTransformer();
+        $transformer = new PatternTransformer($this->mockLocaleRepository());
+
         foreach ($patterns as $pattern) {
             $transformationType = $transformer->getTransformationType($pattern);
             $this->assertEquals($expectedTransformationType, $transformationType, 'Invalid pattern match ' . $pattern);
@@ -140,9 +245,9 @@ class PatternTransformerTest extends TestCase
     }
 
     /**
-     * @return array
+     * @return array[]
      */
-    public function getTransformationTypes()
+    public function getDataForTestGetTransformationType()
     {
         return [
             PatternTransformer::TYPE_LEFT_SYMBOL_WITH_SPACE => [
@@ -182,5 +287,71 @@ class PatternTransformerTest extends TestCase
                 ],
             ],
         ];
+    }
+
+    /**
+     * @param string $pattern
+     * @param string $currencySymbol
+     *
+     * @return RepositoryInterface
+     */
+    private function mockLocaleRepository(
+        string $pattern = '#,##0.00¤',
+        string $currencySymbol = '€'
+    ): RepositoryInterface {
+        $localeRepository = $this->getMockBuilder(RepositoryInterface::class)
+            ->onlyMethods(['getLocale'])
+            ->getMock()
+        ;
+
+        $localeRepository->method('getLocale')
+            ->willReturn($this->mockLocale($pattern, $currencySymbol));
+
+        return $localeRepository;
+    }
+
+    /**
+     * @param string $pattern
+     * @param string $currencySymbol
+     *
+     * @return Locale
+     */
+    private function mockLocale(
+        string $pattern,
+        string $currencySymbol
+    ): Locale {
+        $locale = $this->getMockBuilder(Locale::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getCode', 'getPriceSpecification'])
+            ->getMock()
+        ;
+
+        // currency code is not relevant in this test
+        $locale->method('getCode')->willReturn('EUR');
+        $locale->method('getPriceSpecification')->willReturn($this->mockPriceSpecification($pattern, $currencySymbol));
+
+        return $locale;
+    }
+
+    /**
+     * @param string $pattern
+     * @param string $currencySymbol
+     *
+     * @return Price
+     */
+    private function mockPriceSpecification(
+        string $pattern,
+        string $currencySymbol
+    ): Price {
+        $priceSpecification = $this->getMockBuilder(Price::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['getPositivePattern', 'getCurrencySymbol'])
+            ->getMock()
+        ;
+
+        $priceSpecification->method('getPositivePattern')->willReturn($pattern);
+        $priceSpecification->method('getCurrencySymbol')->willReturn($currencySymbol);
+
+        return $priceSpecification;
     }
 }
