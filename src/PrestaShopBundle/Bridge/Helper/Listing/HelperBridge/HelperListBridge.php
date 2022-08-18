@@ -206,7 +206,7 @@ class HelperListBridge
         $shouldLimitSqlResults = $this->shouldLimitSqlResults($limit);
 
         do {
-             $helperListConfiguration->listSql = '';
+            $helperListConfiguration->listSql = '';
 
             if ($helperListConfiguration->isExplicitSelect()) {
                 foreach ($helperListConfiguration->fieldsList as $key => $array_value) {

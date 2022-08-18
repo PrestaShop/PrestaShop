@@ -71,6 +71,12 @@ class FiltersProcessor
         Request $request,
         HelperListConfiguration $helperListConfiguration
     ): void {
+        if ($request->request->has('submitReset' . $helperListConfiguration->getListId())) {
+            $this->resetFilters($helperListConfiguration, $request);
+
+            return;
+        }
+
         $this->hookDispatcher->dispatchWithParameters('action' . $helperListConfiguration->getLegacyControllerName() . 'ListingFieldsModifier', [
             'fields' => &$helperListConfiguration->fieldsList,
         ]);
@@ -180,7 +186,7 @@ class FiltersProcessor
      *
      * @return void
      */
-    public function resetFilters(HelperListConfiguration $helperListConfiguration, Request $request = null): void
+    protected function resetFilters(HelperListConfiguration $helperListConfiguration, Request $request = null): void
     {
         $prefix = FilterPrefix::getByClassName($helperListConfiguration->getLegacyControllerName());
         $filters = $this->context->cookie->getFamily($prefix . $helperListConfiguration->getListId() . 'Filter_');

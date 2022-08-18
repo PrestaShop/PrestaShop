@@ -64,7 +64,7 @@ class HelperListConfigurationFactory
             $defaultOrderBy = $identifier;
         }
 
-        $helperListConfiguration =  new HelperListConfiguration(
+        $helperListConfiguration = new HelperListConfiguration(
             $controllerConfiguration->tabId,
             $controllerConfiguration->tableName,
             $listId ?: $controllerConfiguration->tableName,
