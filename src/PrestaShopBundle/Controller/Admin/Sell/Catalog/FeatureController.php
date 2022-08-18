@@ -70,14 +70,7 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
 
         $this->setListFields($helperListConfiguration);
         $this->setListActions($helperListConfiguration);
-
-        //@todo: seems this actually isn't used. List filters url directs to legacy controller and FiltersHelper never runs
-        $filtersHelper = $this->getFiltersProcessor();
-        if ($request->request->has('submitResetfeature')) {
-            $filtersHelper->resetFilters($helperListConfiguration, $request);
-        }
-
-        $filtersHelper->processFilter($request, $helperListConfiguration);
+        $this->processFilters($request, $helperListConfiguration);
 
         return $this->renderSmarty($this->getHelperListBridge()->generateList($helperListConfiguration, $request));
     }

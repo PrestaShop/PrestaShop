@@ -28,14 +28,26 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Bridge\AdminController;
 
-use PrestaShopBundle\Bridge\Helper\Listing\FiltersProcessor;
 use PrestaShopBundle\Bridge\Helper\Listing\HelperListConfiguration;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Contains the principal methods you need to horizontally migrate a controller which has a list.
  */
 trait FrameworkBridgeControllerListTrait
 {
+    /**
+     * @param string $identifierKey
+     * @param string $positionIdentifierKey
+     * @param string $defaultOrderBy
+     * @param bool $autoJoinLangTable
+     * @param bool $deleted
+     * @param bool $explicitSelect
+     * @param bool $useFoundRows
+     * @param string|null $listId
+     *
+     * @return HelperListConfiguration
+     */
     protected function buildListConfiguration(
         string $identifierKey,
         string $positionIdentifierKey,
@@ -62,10 +74,15 @@ trait FrameworkBridgeControllerListTrait
     }
 
     /**
-     * @return FiltersProcessor
+     * Handles filters submit and reset
+     *
+     * @param Request $request
+     * @param HelperListConfiguration $helperListConfiguration
      */
-    protected function getFiltersProcessor(): FiltersProcessor
+    protected function processFilters(Request $request, HelperListConfiguration $helperListConfiguration): void
     {
-        return $this->get('prestashop.bridge.helper.listing.filters_processor');
+        $this->get('prestashop.bridge.helper.listing.filters_processor')
+            ->processFilter($request, $helperListConfiguration)
+        ;
     }
 }
