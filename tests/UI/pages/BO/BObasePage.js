@@ -164,6 +164,8 @@ class BOBasePage extends CommonPage {
     this.webserviceLink = '#subtab-AdminWebservice';
     // Logs
     this.logsLink = '#subtab-AdminLogs';
+    // New & Experimental Features
+    this.featureFlagLink = '#subtab-AdminFeatureFlag';
     // Multistore
     this.multistoreLink = '#subtab-AdminShopGroup';
     // Deprecated tab used for regression test
