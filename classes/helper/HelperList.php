@@ -147,6 +147,11 @@ class HelperListCore extends Helper
     public $list_id;
 
     /**
+     * @var string|null
+     */
+    public $filtersSubmitUrl;
+
+    /**
      * You can use $controllerMapping to add entity/controller mapping in order to have migrated links
      * in a legacy list (this requires to have correctly set the _legacy_link in the routing of course)
      *
@@ -655,7 +660,11 @@ class HelperListCore extends Helper
 
         $identifier = Tools::getIsset($this->identifier) ? '&' . $this->identifier . '=' . (int) Tools::getValue($this->identifier) : '';
 
-        $action = $this->currentIndex . $identifier . '&token=' . $this->token . '#' . $this->list_id;
+        if ($this->filtersSubmitUrl) {
+            $action = $this->filtersSubmitUrl;
+        } else {
+            $action = $this->currentIndex . $identifier . '&token=' . $this->token . '#' . $this->list_id;
+        }
 
         /* Determine current page number */
         $page = (int) Tools::getValue('submitFilter' . $this->list_id);

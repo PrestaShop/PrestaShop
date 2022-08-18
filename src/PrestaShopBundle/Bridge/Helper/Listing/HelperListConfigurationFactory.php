@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Bridge\Helper\Listing;
 
 use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Create an instance of the helper configuration object, using controller configuration.
@@ -63,7 +64,7 @@ class HelperListConfigurationFactory
             $defaultOrderBy = $identifier;
         }
 
-        return new HelperListConfiguration(
+        $helperListConfiguration =  new HelperListConfiguration(
             $controllerConfiguration->tabId,
             $controllerConfiguration->tableName,
             $listId ?: $controllerConfiguration->tableName,
@@ -81,5 +82,10 @@ class HelperListConfigurationFactory
             $controllerConfiguration->legacyCurrentIndex,
             $controllerConfiguration->multiShopContext
         );
+
+        $request = Request::createFromGlobals();
+        $helperListConfiguration->setFiltersSubmitUrl($request->getRequestUri());
+
+        return $helperListConfiguration;
     }
 }
