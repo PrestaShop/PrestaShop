@@ -38,7 +38,7 @@ class CountryZipCodeFormat
     /**
      * Zip code format regexp validation pattern
      */
-    const ZIP_CODE_PATTERN = '/^[NLCnlc 0-9-]+$/';
+    public const ZIP_CODE_PATTERN = '/^[NLCnlc 0-9-]+$/';
 
     /**
      * @var string

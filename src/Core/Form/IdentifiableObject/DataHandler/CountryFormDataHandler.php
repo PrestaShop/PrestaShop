@@ -65,7 +65,7 @@ class CountryFormDataHandler implements FormDataHandlerInterface
             (string) $data['iso_code'],
             (int) $data['call_prefix'],
             (int) $data['default_currency'],
-            $data['zone'],
+            (int) $data['zone'],
             $data['need_zip_code'],
             $data['zip_code_format'],
             (string) $data['address_format'],
