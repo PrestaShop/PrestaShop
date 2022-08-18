@@ -60,13 +60,13 @@ class CustomerData {
     this.company = customerToCreate.company || faker.company.companyName();
 
     /** @type {Number} Allowed outstanding amount for the customer */
-    this.allowedOutstandingAmount = customerToCreate.allowedOutstandingAmount || faker.random.number({
+    this.allowedOutstandingAmount = customerToCreate.allowedOutstandingAmount || faker.datatype.number({
       min: 0,
       max: 100,
     });
 
     /** @type {string} Risk rating for the customer */
-    this.riskRating = customerToCreate.riskRating || faker.random.arrayElement(risksRating);
+    this.riskRating = customerToCreate.riskRating || faker.helpers.arrayElement(risksRating);
   }
 }
 

@@ -203,7 +203,7 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
         },
       },
     ];
-    filterTests.forEach((test) => {
+    filterTests.forEach((test, index) => {
       it(`should filter by ${test.args.filterBy}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier);
 
@@ -214,7 +214,7 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
       });
 
       it('should reset all filters and get the number of outstanding', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAndGetNumberOfOutstanding1');
+        await testContext.addContextItem(this, 'testIdentifier', `resetFilterAndGetNumberOfOutstanding1_${index}`);
 
         await outstandingPage.resetFilter(page);
 
