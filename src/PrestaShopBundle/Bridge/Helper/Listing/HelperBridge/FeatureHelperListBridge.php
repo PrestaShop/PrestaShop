@@ -31,6 +31,7 @@ namespace PrestaShopBundle\Bridge\Helper\Listing\HelperBridge;
 use Db;
 use DbQuery;
 use PrestaShopBundle\Bridge\Helper\Listing\HelperListConfiguration;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * This class customize the result of the list for the feature controller.
@@ -39,9 +40,10 @@ class FeatureHelperListBridge extends HelperListBridge
 {
     public function generateListQuery(
         HelperListConfiguration $helperListConfiguration,
+        Request $request,
         int $idLang
     ): void {
-        parent::generateListQuery($helperListConfiguration, $idLang);
+        parent::generateListQuery($helperListConfiguration, $request, $idLang);
 
         $nbItems = count($helperListConfiguration->list);
         for ($i = 0; $i < $nbItems; ++$i) {
