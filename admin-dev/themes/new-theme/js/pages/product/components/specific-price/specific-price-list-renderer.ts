@@ -37,7 +37,7 @@ export default class SpecificPriceListRenderer implements RendererType {
 
   private productId: number;
 
-  private listContainer: HTMLElement
+  private listContainer: HTMLElement;
 
   private $loadingSpinner: JQuery;
 

@@ -41,7 +41,7 @@ export default class BulkChoicesSelector {
 
   private tabContainer: HTMLDivElement;
 
-  private paginatedCombinationsService: PaginatedCombinationsService
+  private paginatedCombinationsService: PaginatedCombinationsService;
 
   private paginator: DynamicPaginator;
 

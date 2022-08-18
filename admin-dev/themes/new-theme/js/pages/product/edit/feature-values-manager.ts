@@ -40,7 +40,6 @@ export default class FeatureValuesManager {
 
   $collectionRowsContainer: JQuery;
 
-
   /**
    * @param eventEmitter {EventEmitter}
    */
