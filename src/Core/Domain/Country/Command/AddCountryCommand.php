@@ -58,7 +58,7 @@ class AddCountryCommand
     protected $defaultCurrency = 0;
 
     /**
-     * @var ZoneId|null
+     * @var ZoneId
      */
     protected $zoneId;
 
@@ -107,7 +107,7 @@ class AddCountryCommand
         string $isoCode,
         int $callPrefix,
         int $defaultCurrency,
-        ?int $zoneId,
+        int $zoneId,
         bool $needZipCode,
         ?string $zipCodeFormat,
         string $addressFormat,
@@ -121,7 +121,7 @@ class AddCountryCommand
         $this->isoCode = Tools::strtoupper(Tools::substr($isoCode, 0, 2));
         $this->callPrefix = $callPrefix;
         $this->defaultCurrency = $defaultCurrency;
-        $this->zoneId = $zoneId ? new ZoneId($zoneId) : null;
+        $this->zoneId = new ZoneId($zoneId);
         $this->needZipCode = $needZipCode;
         $this->zipCodeFormat = $zipCodeFormat ? new CountryZipCodeFormat($zipCodeFormat) : null;
         $this->addressFormat = $addressFormat;
@@ -155,7 +155,7 @@ class AddCountryCommand
         return $this->defaultCurrency;
     }
 
-    public function getZoneId(): ?ZoneId
+    public function getZoneId(): ZoneId
     {
         return $this->zoneId;
     }
