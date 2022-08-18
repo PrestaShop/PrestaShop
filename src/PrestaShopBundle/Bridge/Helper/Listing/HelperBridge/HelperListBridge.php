@@ -41,6 +41,7 @@ use PrestaShopBundle\Bridge\Helper\Listing\HelperListConfigurator;
 use PrestaShopBundle\Service\DataProvider\UserProvider;
 use PrestaShopException;
 use Shop;
+use Symfony\Component\HttpFoundation\Request;
 use Tools;
 use Validate;
 
@@ -102,17 +103,19 @@ class HelperListBridge
      * Generate the html for list using HelperList class
      *
      * @param HelperListConfiguration $helperListConfiguration
+     * @param Request $request
      *
      * @return string|null
      */
     public function generateList(
-        HelperListConfiguration $helperListConfiguration
+        HelperListConfiguration $helperListConfiguration,
+        Request $request
     ): ?string {
         if (!($helperListConfiguration->fieldsList && is_array($helperListConfiguration->fieldsList))) {
             return null;
         }
 
-        $this->generateListQuery($helperListConfiguration, $this->context->language->id);
+        $this->generateListQuery($helperListConfiguration, $request, $this->context->language->id);
 
         $helper = new HelperList();
 
@@ -136,6 +139,7 @@ class HelperListBridge
      */
     protected function generateListQuery(
         HelperListConfiguration $helperListConfiguration,
+        Request $request,
         int $idLang
     ): void {
         if ($helperListConfiguration->getTableName() == 'feature_value') {
@@ -160,11 +164,12 @@ class HelperListBridge
 
         /* Determine offset from current page */
         $start = 0;
-        if ((int) Tools::getValue('submitFilter' . $helperListConfiguration->getListId())) {
-            $start = ((int) Tools::getValue('submitFilter' . $helperListConfiguration->getListId()) - 1) * $limit;
+        $page = $request->request->getInt('submitFilter' . $helperListConfiguration->getListId());
+        if ($page) {
+            $start = ($page - 1) * $limit;
         } elseif (
             isset($this->context->cookie->{$helperListConfiguration->getListId() . '_start'})
-            && Tools::isSubmit('export' . $helperListConfiguration->getTableName())
+            && $request->request->get('export' . $helperListConfiguration->getTableName())
         ) {
             $start = $this->context->cookie->{$helperListConfiguration->getListId() . '_start'};
         }
