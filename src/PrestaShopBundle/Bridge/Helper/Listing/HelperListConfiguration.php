@@ -226,6 +226,11 @@ class HelperListConfiguration
     private $bulkActions = [];
 
     /**
+     * @var string|null
+     */
+    private $filtersSubmitUrl;
+
+    /**
      * @param int $tabId
      */
     public function __construct(
@@ -575,5 +580,25 @@ class HelperListConfiguration
     public function getBulkActions(): array
     {
         return $this->bulkActions;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getFiltersSubmitUrl(): ?string
+    {
+        return $this->filtersSubmitUrl;
+    }
+
+    /**
+     * @param string|null $filtersSubmitUrl
+     *
+     * @return $this
+     */
+    public function setFiltersSubmitUrl(?string $filtersSubmitUrl): self
+    {
+        $this->filtersSubmitUrl = $filtersSubmitUrl;
+
+        return $this;
     }
 }

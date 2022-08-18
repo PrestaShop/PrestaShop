@@ -120,6 +120,7 @@ class HelperListBridge
         $helper->_default_pagination = $helperListConfiguration->getDefaultPaginationLimit();
         $helper->_pagination = $helperListConfiguration->getPaginationLimits();
         $helper->tpl_delete_link_vars = $helperListConfiguration->getDeleteLinkVars();
+        $helper->filtersSubmitUrl = $helperListConfiguration->getFiltersSubmitUrl();
 
         /* @phpstan-ignore-next-line */
         $helper->sql = $helperListConfiguration->listSql;
@@ -200,7 +201,7 @@ class HelperListBridge
         $shouldLimitSqlResults = $this->shouldLimitSqlResults($limit);
 
         do {
-            $helperListConfiguration->listSql = '';
+             $helperListConfiguration->listSql = '';
 
             if ($helperListConfiguration->isExplicitSelect()) {
                 foreach ($helperListConfiguration->fieldsList as $key => $array_value) {
@@ -269,7 +270,7 @@ class HelperListBridge
             } else {
                 break;
             }
-        } while (empty($this->_list));
+        } while (empty($helperListConfiguration->list));
 
         $this->hookDispatcher->dispatchWithParameters('action' . $helperListConfiguration->getLegacyControllerName() . 'ListingResultsModifier', [
             'list' => &$helperListConfiguration->list,
