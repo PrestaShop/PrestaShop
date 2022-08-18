@@ -56,6 +56,11 @@ class Field implements FieldInterface
      * - title: which is required and represents the text, will be shown in the list's header
      * - width: define the width for the cell of this field
      *
+     * @todo: class unused. Options resolver should be moved.
+     *      Where could we put fieldsList options resolver? to configurator?
+     *      (if it would have a setter we could put it straight in configuration, but it doesn't because its used by reference in hook)
+     *      check HelperListConfiguration->fieldsList usage
+     *
      * @param string $label
      * @param array $config
      */
