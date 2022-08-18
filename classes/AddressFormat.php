@@ -441,14 +441,14 @@ class AddressFormatCore extends ObjectModel
         Hook::exec(
             'addressFormatGenerateAddressBefore',
             [
-              'controller' => Context::getContext()->controller,
-              'address' => $address,
-              'addressFields' => $addressFields,
-              'addressFormatedValues' => $addressFormatedValues,
-              'patternRules' => &$patternRules
+                'controller' => Context::getContext()->controller,
+                'address' => $address,
+                'addressFields' => $addressFields,
+                'addressFormatedValues' => $addressFormatedValues,
+                'patternRules' => &$patternRules,
             ]
         );
-        
+
         $addressText = '';
         foreach ($addressFields as $line) {
             if (($patternsList = preg_split(self::_CLEANING_REGEX_, $line, -1, PREG_SPLIT_NO_EMPTY))) {
