@@ -97,7 +97,7 @@ class MultistoreController extends FrameworkBundleAdminController
 
         foreach ($groupList as $group) {
             foreach ($group->getShops() as $key => $shop) {
-                if(!in_array($shop->getId(), $associatedShops)) {
+                if (!in_array($shop->getId(), $associatedShops)) {
                     $group->getShops()->offsetUnset($key);
                 }
             }
