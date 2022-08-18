@@ -30,7 +30,6 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Stock\Validate;
 
 use PrestaShop\PrestaShop\Adapter\AbstractObjectModelValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Stock\StockSettings;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use StockAvailable;
 
@@ -47,7 +46,6 @@ class StockAvailableValidator extends AbstractObjectModelValidator
     public function validate(StockAvailable $stockAvailable): void
     {
         $this->validateStockAvailableProperty($stockAvailable, 'quantity', ProductStockConstraintException::INVALID_QUANTITY);
-        $this->validateMaxQuantity((int) $stockAvailable->quantity);
         $this->validateStockAvailableProperty($stockAvailable, 'location', ProductStockConstraintException::INVALID_LOCATION);
         $this->validateStockAvailableProperty($stockAvailable, 'out_of_stock', ProductStockConstraintException::INVALID_OUT_OF_STOCK);
         $this->validateStockAvailableProperty($stockAvailable, 'depends_on_stock');
@@ -72,12 +70,5 @@ class StockAvailableValidator extends AbstractObjectModelValidator
             ProductStockConstraintException::class,
             $errorCode
         );
-    }
-
-    private function validateMaxQuantity(int $quantity)
-    {
-        if ($quantity < StockSettings::INT_32_MAX_NEGATIVE || $quantity > StockSettings::INT_32_MAX_POSITIVE) {
-            throw new ProductStockConstraintException('Quantity is out of INT boundaries', ProductStockConstraintException::INVALID_QUANTITY);
-        }
     }
 }
