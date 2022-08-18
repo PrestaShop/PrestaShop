@@ -13,9 +13,17 @@
     /* stylelint-enable declaration-no-important */
   }
 
+  .modal-dialog {
+    top: 50%;
+    width: 90%;
+    max-width: 810px;
+    transform: translateY(-50%);
+  }
+
   .modal-header {
     display: flex;
     justify-content: space-between;
+    border-bottom: none;
   }
 
   .modal-header .close {

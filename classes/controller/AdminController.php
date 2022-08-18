@@ -2713,18 +2713,6 @@ class AdminControllerCore extends Controller
             ],
         ]);
 
-        $username = $this->get('prestashop.user_provider')->getUsername();
-        $token = $this->get('security.csrf.token_manager')
-            ->getToken($username)
-            ->getValue();
-
-        $this->context->smarty->assign([
-            'js_router_metadata' => [
-                'base_url' => __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_),
-                'token' => $token,
-            ],
-        ]);
-
         // Execute Hook AdminController SetMedia
         Hook::exec('actionAdminControllerSetMedia');
     }
