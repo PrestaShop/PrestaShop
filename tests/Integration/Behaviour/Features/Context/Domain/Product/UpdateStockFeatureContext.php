@@ -388,6 +388,19 @@ class UpdateStockFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @Then I should get error that stock available quantity is invalid
+     *
+     * @return void
+     */
+    public function assertLastErrorIsInvalidStockAvailableQuantity(): void
+    {
+        $this->assertLastErrorIs(
+            ProductStockConstraintException::class,
+            ProductStockConstraintException::INVALID_QUANTITY
+        );
+    }
+
+    /**
      * @param array $data
      * @param UpdateProductStockInformationCommand $command
      */
