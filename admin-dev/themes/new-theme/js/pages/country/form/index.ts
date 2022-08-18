@@ -24,8 +24,8 @@
  */
 
 import ZipCodeManager from '@pages/country/components/zip-code-manager';
-import FormSubmitButton from "@components/form-submit-button";
-import TranslatableInput from "@components/translatable-input";
+import FormSubmitButton from '@components/form-submit-button';
+import TranslatableInput from '@components/translatable-input';
 
 const {$} = window;
 
