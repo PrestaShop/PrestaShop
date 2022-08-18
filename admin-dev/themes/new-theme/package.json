@@ -27,7 +27,7 @@
     "fos-routing": "0.0.6",
     "jets": "0.11.0",
     "jquery-serializejson": "^3.2.0",
-    "jquery-ui-dist": "^1.12.1",
+    "jquery-ui-dist": "^1.13.2",
     "jwerty": "^0.3.2",
     "lodash": "^4.17.21",
     "lodash.escaperegexp": "^4.1.2",
