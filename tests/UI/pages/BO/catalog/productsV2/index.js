@@ -72,12 +72,12 @@ class Products extends BOBasePage {
   }
 
   /**
-   * Is search button visible
+   * Is reset button visible
    * @param page {Page} Browser tab
    * @returns {Promise<boolean>}
    */
-  isSearchButtonVisible(page) {
-    return this.elementVisible(page, this.filterSearchButton, 1000);
+  isResetButtonVisible(page) {
+    return this.elementVisible(page, this.filterResetButton, 1000);
   }
 
   /**

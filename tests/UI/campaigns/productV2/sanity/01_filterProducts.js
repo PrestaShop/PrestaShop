@@ -59,8 +59,8 @@ describe('BO - Catalog - Products : Filter in Products Page', async () => {
     it('should check that no filter is applied by default', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkNoFilter', baseContext);
 
-      const isVisible = await productsPage.isSearchButtonVisible(page);
-      await expect(isVisible, 'Search button is not visible!').to.be.true;
+      const isVisible = await productsPage.isResetButtonVisible(page);
+      await expect(isVisible, 'Reset button is visible!').to.be.false;
     });
 
     it('should get number of products', async function () {
