@@ -53,28 +53,23 @@ trait PrestaShopTranslatorTrait
             $legacy = $parameters['legacy'];
             unset($parameters['legacy']);
         }
+        $emptyParams = empty($parameters);
+        $isSprintf = !$emptyParams && $this->isSprintfString($id);
 
         if (empty($locale)) {
             $locale = null;
         }
 
-        $translated = parent::trans($id, [], $this->normalizeDomain($domain), $locale);
+        $translated = parent::trans($id, $isSprintf ? [] : $parameters, $this->normalizeDomain($domain), $locale);
 
-        // @todo to remove after the legacy translation system has ben phased out
         if ($this->shouldFallbackToLegacyModuleTranslation($id, $domain, $translated)) {
             return $this->translateUsingLegacySystem($id, $parameters, $domain, $locale);
         }
 
-        if (isset($legacy) && 'htmlspecialchars' === $legacy) {
-            $translated = call_user_func($legacy, $translated, ENT_NOQUOTES);
-        } elseif (isset($legacy)) {
-            $translated = call_user_func($legacy, $translated);
-        }
+        $translated = isset($legacy) ? $this->replaceHtmlSpecialChars($translated, $legacy) : $translated;
 
-        if (!empty($parameters) && $this->isSprintfString($id)) {
+        if ($isSprintf) {
             $translated = vsprintf($translated, $parameters);
-        } elseif (!empty($parameters)) {
-            $translated = strtr($translated, $parameters);
         }
 
         return $translated;
@@ -208,5 +203,16 @@ trait PrestaShopTranslatorTrait
             : null;
 
         return $normalizedDomain;
+    }
+
+    private function replaceHtmlSpecialChars(string $message, string $functionName)
+    {
+        if ('htmlspecialchars' === $functionName) {
+            $translated = htmlspecialchars($message, ENT_NOQUOTES);
+        } else {
+            $translated = call_user_func($functionName, $message);
+        }
+
+        return $translated;
     }
 }
