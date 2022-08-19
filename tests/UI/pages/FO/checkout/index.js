@@ -71,6 +71,9 @@ class Checkout extends FOBasePage {
     this.deliveryOptionAllPricesSpan = '#js-delivery .delivery-option span.carrier-price';
     this.deliveryMessage = '#delivery_message';
     this.deliveryStepContinueButton = `${this.deliveryStepSection} button[name='confirmDeliveryOption']`;
+    this.deliveryAddressBlock = '#delivery-addresses';
+    this.deliveryAddressSection = `${this.deliveryAddressBlock} article.js-address-item`;
+    this.deliveryAddressPosition = position => `#delivery-addresses article:nth-child(${position})`;
 
     // Gift selectors
     this.giftCheckbox = '#input_gift';
@@ -111,6 +114,16 @@ class Checkout extends FOBasePage {
   async goToDeliveryStep(page) {
     await this.clickAndWaitForNavigation(page, this.addressStepContinueButton);
     return this.isStepCompleted(page, this.addressStepSection);
+  }
+
+  /**
+   * Choose delivery address
+   * @param page {Page} Browser tab
+   * @param position {number} Position of address to choose
+   * @returns {Promise<void>}
+   */
+  async chooseDeliveryAddress(page, position = 1) {
+    await this.waitForSelectorAndClick(page, this.deliveryAddressPosition(position));
   }
 
   /**
@@ -424,6 +437,17 @@ class Checkout extends FOBasePage {
 
     await page.click(this.addressStepContinueButton);
     return this.isStepCompleted(page, this.addressStepSection);
+  }
+
+  /**
+   * Get number od addresses
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getNumberOfAddresses(page) {
+    await this.waitForSelector(page, this.deliveryAddressBlock, 'visible');
+
+    return (await page.$$(this.deliveryAddressSection)).length;
   }
 
   /**
