@@ -141,7 +141,7 @@ export default class ProductFormModel {
 
     const $selectedTaxOption = $(':selected', $taxRulesGroupIdInput);
 
-    return $selectedTaxOption.data('stateIsoCode');
+    return $selectedTaxOption.data('stateIsoCode') ?? '';
   }
 
   removeTax(price: BigNumber): string {
@@ -268,8 +268,8 @@ export default class ProductFormModel {
       'price.priceTaxIncluded',
       priceTaxExcluded.times(taxRatio).plus(ecotaxTaxIncluded).toFixed(this.precision),
     );
-    const placeHolderWithoutTax = this.$taxRuleGroupHelpLabel.data('place-holder-without-tax');
-    const placeHolderWithTax = this.$taxRuleGroupHelpLabel.data('place-holder-with-tax');
+    const placeHolderWithoutTax = this.$taxRuleGroupHelpLabel.data('place-holder-without-state');
+    const placeHolderWithTax = this.$taxRuleGroupHelpLabel.data('place-holder-with-state');
 
     let newString;
 
