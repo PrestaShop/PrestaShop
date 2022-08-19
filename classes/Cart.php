@@ -460,7 +460,7 @@ class CartCore extends ObjectModel
         $virtual_context->cart = $this;
 
         // If the cart has not been saved, then there can't be any cart rule applied
-        if (!CartRule::isFeatureActive() || !$this->id) {
+        if (!CartRule::isFeatureActive() || !$this->id || !$this->_products) {
             return [];
         }
         if ($autoAdd) {
