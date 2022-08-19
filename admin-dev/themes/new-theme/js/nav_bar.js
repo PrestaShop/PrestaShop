@@ -26,7 +26,7 @@
 import PerfectScrollbar from 'perfect-scrollbar';
 import 'perfect-scrollbar/css/perfect-scrollbar.css';
 import getAnimationEvent from './app/utils/animations';
-import NavbarTransitionHandler from './components/navbar-transition-handler';
+import {MAX_MOBILE_WIDTH, NavbarTransitionHandler} from './components/navbar-transition-handler';
 
 const {$} = window;
 
@@ -154,7 +154,6 @@ export default class NavBar {
         });
 
         addMobileBodyClickListener();
-        const MAX_MOBILE_WIDTH = 1023;
 
         if ($(window).width() <= MAX_MOBILE_WIDTH) {
           this.mobileNav(MAX_MOBILE_WIDTH);
@@ -165,6 +164,7 @@ export default class NavBar {
             this.unbuildMobileMenu();
           } else if (!$('body').hasClass('mobile') && $(window).width() <= MAX_MOBILE_WIDTH) {
             this.mobileNav(MAX_MOBILE_WIDTH);
+            $('nav.nav-bar ul.main-menu').removeClass('sidebar-closed');
           }
         });
       }
