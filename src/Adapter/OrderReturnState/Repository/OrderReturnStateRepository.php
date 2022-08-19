@@ -29,11 +29,11 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\OrderReturnState\Repository;
 
 use OrderReturnState;
-use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\Exception\OrderReturnStateNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturnState\ValueObject\OrderReturnStateId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShopException;
+use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 
 class OrderReturnStateRepository extends AbstractObjectModelRepository
 {
