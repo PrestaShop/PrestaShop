@@ -14,6 +14,7 @@ Feature: List catalog price rules for product in Back Office (BO)
     And there is a currency named "usd" with iso code "USD" and exchange rate of 0.92
     And country "UnitedStates" with iso code "US" exists
     And group "visitor" named "Visitor" exists
+
   Scenario: I can see a list of catalog price rules
     When I add catalog price rule "catalogPriceRuleReference1" with following details:
       | name            | huge discount |
