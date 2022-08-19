@@ -32,14 +32,12 @@ use Country;
 use Currency;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
-use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use State;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -97,11 +95,6 @@ class RetailPriceType extends TranslatorAwareType
      */
     protected $contextCountryId;
 
-    /**
-     * @var TaxRulesGroupRepository
-     */
-    private $taxRulesGroupRepository;
-
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
@@ -113,8 +106,7 @@ class RetailPriceType extends TranslatorAwareType
         bool $isEcotaxEnabled,
         int $ecoTaxGroupId,
         TaxComputer $taxComputer,
-        int $contextCountryId,
-        TaxRulesGroupRepository $taxRulesGroupRepository
+        int $contextCountryId
     ) {
         parent::__construct($translator, $locales);
         $this->contextLocale = $contextLocale;
@@ -126,7 +118,6 @@ class RetailPriceType extends TranslatorAwareType
         $this->ecoTaxGroupId = $ecoTaxGroupId;
         $this->taxComputer = $taxComputer;
         $this->contextCountryId = $contextCountryId;
-        $this->taxRulesGroupRepository = $taxRulesGroupRepository;
     }
 
     /**
@@ -140,34 +131,16 @@ class RetailPriceType extends TranslatorAwareType
             $ecotaxRate = new DecimalNumber('0');
         }
 
-        $selectedTaxRate = $this->taxComputer->getTaxRate(new TaxRulesGroupId($options['tax_rules_group_id']), new CountryId($this->contextCountryId));
-        $country = new Country($this->contextCountryId);
-
-        $taxRateHelpPlaceholderWithoutTax = $this->trans(
+        $taxRateHelpPlaceholderWithoutState = $this->trans(
             'Tax %1$s : %2$s%%',
             'Admin.Catalog.Feature',
             ['%1$s' => Country::getIsoById($this->contextCountryId), '%2$s' => '_TAX_RATE_HELP_PLACEHOLDER_']
         );
-        $taxRateHelpPlaceholderWithTax = $this->trans(
+        $taxRateHelpPlaceholderWithState = $this->trans(
             'Tax %1$s-%3$s: %2$s%%',
             'Admin.Catalog.Feature',
             ['%1$s' => Country::getIsoById($this->contextCountryId), '%2$s' => '_TAX_RATE_HELP_PLACEHOLDER_', '%3s$s' => '_STATE_ISO_CODE_HELP_PLACEHOLDER_']
         );
-
-        if ($country->contains_states) {
-            $stateId = $this->taxRulesGroupRepository->getTaxRulesGroupDefaultStateId(
-                new TaxRulesGroupId($options['tax_rules_group_id']),
-                new CountryId($this->contextCountryId)
-            );
-            if ($stateId) {
-                $state = new State($stateId);
-                $taxRatePlaceHolder = $this->trans(
-                    'Tax %1$s-%3$s: %2$s%%',
-                    'Admin.Catalog.Feature',
-                    ['%1$s' => Country::getIsoById($this->contextCountryId), '%2$s' => $selectedTaxRate, '%3s$s' => $state->iso_code]
-                );
-            }
-        }
 
         $builder
             // @todo we should have DecimalType and MoneyDecimalType it was moved in a separate PR #22162
@@ -207,12 +180,12 @@ class RetailPriceType extends TranslatorAwareType
                 'label' => $this->trans('Tax rule', 'Admin.Catalog.Feature'),
                 'help' => !$this->isTaxEnabled ?
                     $this->trans('Tax feature is disabled, it will not affect price tax included.', 'Admin.Catalog.Feature')
-                    : '', //we replace help text in js on load
+                    : '', //we replace help text in js on load when tax is enabled
                 'help_attr' => [
                     'class' => 'js-tax-rule-help',
                     'data' => [
-                        'place-holder-without-tax' => $taxRateHelpPlaceholderWithoutTax,
-                        'place-holder-with-tax' => $taxRateHelpPlaceholderWithTax,
+                        'place-holder-without-state' => $taxRateHelpPlaceholderWithoutState,
+                        'place-holder-with-state' => $taxRateHelpPlaceholderWithState,
                         'is-tax-enabled' => $this->isTaxEnabled,
                     ],
                 ],
