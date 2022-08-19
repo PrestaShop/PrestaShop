@@ -53,29 +53,42 @@ trait PrestaShopTranslatorTrait
             $legacy = $parameters['legacy'];
             unset($parameters['legacy']);
         }
+        $emptyParams = empty($parameters);
 
         if (empty($locale)) {
             $locale = null;
         }
 
-        $translated = parent::trans($id, [], $this->normalizeDomain($domain), $locale);
-
-        // @todo to remove after the legacy translation system has ben phased out
-        if ($this->shouldFallbackToLegacyModuleTranslation($id, $domain, $translated)) {
-            return $this->translateUsingLegacySystem($id, $parameters, $domain, $locale);
+        if (!$emptyParams && $this->isSprintfString($id)) {
+            $translated = parent::trans(
+                $id,
+                 [],
+                $this->normalizeDomain($domain),
+                $locale
+            );
+        } else {
+            $translated = parent::trans(
+                $id,
+                $parameters,
+                $this->normalizeDomain($domain),
+                $locale
+            );
         }
 
-        if (isset($legacy) && 'htmlspecialchars' === $legacy) {
-            $translated = call_user_func($legacy, $translated, ENT_NOQUOTES);
-        } elseif (isset($legacy)) {
-            $translated = call_user_func($legacy, $translated);
+        if (isset($legacy)) {
+            if ('htmlspecialchars' === $legacy) {
+                $translated = call_user_func($legacy, $translated, ENT_NOQUOTES);
+            } else {
+                $translated = call_user_func($legacy, $translated);
+            }
         }
 
-        if (!empty($parameters) && $this->isSprintfString($id)) {
+        if (!$emptyParams && $this->isSprintfString($id)) {
             $translated = vsprintf($translated, $parameters);
-        } elseif (!empty($parameters)) {
+        } elseif (!$emptyParams) {
             $translated = strtr($translated, $parameters);
         }
+
 
         return $translated;
     }
