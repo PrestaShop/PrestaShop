@@ -39,6 +39,7 @@ import DynamicPaginator from '@components/pagination/dynamic-paginator';
 import ClickEvent = JQuery.ClickEvent;
 
 const SpecificPriceMap = ProductMap.specificPrice;
+const CatalogPriceRulesMap = ProductMap.catalogPriceRule;
 const PriorityMap = SpecificPriceMap.priority;
 
 export default class SpecificPricesManager {
@@ -66,7 +67,6 @@ export default class SpecificPricesManager {
     this.listContainer = document.querySelector<HTMLElement>(SpecificPriceMap.listContainer)!;
     this.initComponents();
     this.specificPriceList.renderList();
-    this.catalogPriceRuleList.renderList();
     this.initListeners();
   }
 
@@ -85,12 +85,43 @@ export default class SpecificPricesManager {
     );
 
     this.initSpecificPriceModals();
-
-    // Enable/disable the priority selectors depending on the priority type selected (global or custom)
-    new FormFieldToggler({
+    this.initCatalogPriceRules();
+    // Enable/disabled the priority selectors depending on the priority type selected (global or custom)
+    new FormFieldDisabler({
       disablingInputSelector: PriorityMap.priorityTypeCheckboxesSelector,
       matchingValue: '0',
       targetSelector: PriorityMap.priorityListWrapper,
+    });
+  }
+
+  private initCatalogPriceRules()
+  {
+    const showCatalogPriceRulesButton = document.querySelector<HTMLElement>(CatalogPriceRulesMap.showCatalogPriceRules);
+    const hideCatalogPriceRulesButton = document.querySelector<HTMLElement>(CatalogPriceRulesMap.hideCatalogPriceRules);
+    const catalogPriceRulesContainer = document.querySelector<HTMLElement>(CatalogPriceRulesMap.blockContainer);
+
+    let listRendered = false;
+
+    if (showCatalogPriceRulesButton === null || hideCatalogPriceRulesButton === null || catalogPriceRulesContainer === null) {
+      return;
+    }
+
+    showCatalogPriceRulesButton.addEventListener('click', (e) => {
+      if (!listRendered) {
+        this.catalogPriceRuleList.renderList();
+      } else {
+        this.catalogPriceRuleList.toggleListVisibility(true);
+      }
+      listRendered = true;
+
+    });
+
+    hideCatalogPriceRulesButton.addEventListener('click', (e) => {
+      this.catalogPriceRuleList.toggleListVisibility(false);
+      hideCatalogPriceRulesButton.classList.add('hide');
+      showCatalogPriceRulesButton.classList.remove('hide');
+      catalogPriceRulesContainer.classList.add('hide');
+
     });
   }
 

@@ -79,6 +79,13 @@ class CatalogPriceRuleController extends FrameworkBundleAdminController
         ]);
     }
 
+    /**
+     * Retrieves catalog prices rules for product form.
+     *
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     *
+     * @return JsonResponse
+     */
     public function productFormListAction(): JsonResponse
     {
         $catalogPriceRuleList = $this->getQueryBus()->handle(

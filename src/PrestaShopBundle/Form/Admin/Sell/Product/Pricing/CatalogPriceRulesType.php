@@ -50,7 +50,7 @@ class CatalogPriceRulesType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('add_catalog_price_rule_btn', IconButtonType::class, [
+            ->add('manage_catalog_price_rules', IconButtonType::class, [
                 'label' => $this->trans('Manage catalog price rules', 'Admin.Catalog.Feature'),
                 'type' => 'link',
                 'attr' => [
