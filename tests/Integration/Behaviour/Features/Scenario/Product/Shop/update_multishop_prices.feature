@@ -3,7 +3,6 @@
 @clear-cache-before-feature
 @restore-shops-after-feature
 @clear-cache-after-feature
-@update-product-prices
 @product-multi-shop
 @update-multi-shop-prices
 Feature: Update product price fields from Back Office (BO) for multiple shops.

@@ -2,7 +2,6 @@
 @restore-products-before-feature
 @clear-cache-before-feature
 @product-combination
-@update-product-prices
 @update-combination-prices
 Feature: Update product combination prices in Back Office (BO)
   As an employee

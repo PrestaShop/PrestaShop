@@ -74,6 +74,7 @@ export default class ProductFormModel {
       'price.wholesalePrice',
     ];
     this.mapper.watch(pricesFields, (event: FormUpdateEvent) => this.updateProductPrices(event));
+    this.updateTaxRulesGroupInfo(this.getTaxRatio());
   }
 
   getProduct(): any {
@@ -175,7 +176,6 @@ export default class ProductFormModel {
     }
 
     const taxRatio = this.getTaxRatio();
-    const stateIsoCode = this.getStateIsoCode();
 
     if (taxRatio.isNaN()) {
       return;
@@ -234,36 +234,7 @@ export default class ProductFormModel {
       }
 
       case 'price.taxRulesGroupId': {
-        const priceTaxExcluded = this.mapper.getBigNumber('price.priceTaxExcluded') ?? new BigNumber(0);
-        const ecotaxTaxIncluded = this.mapper.getBigNumber('price.ecotaxTaxIncluded') ?? new BigNumber(0);
-        this.mapper.set(
-          'price.priceTaxIncluded',
-          priceTaxExcluded.times(taxRatio).plus(ecotaxTaxIncluded).toFixed(this.precision),
-        );
-        const placeHolderWithoutTax = this.$taxRuleGroupHelpLabel.data('place-holder-without-tax');
-        const placeHolderWithTax = this.$taxRuleGroupHelpLabel.data('place-holder-with-tax');
-
-        let newString;
-
-        if (stateIsoCode) {
-          newString = placeHolderWithTax.replace(
-            new RegExp('_TAX_RATE_HELP_PLACEHOLDER_', 'g'),
-            taxRatio.minus(1).times(100).toPrecision(),
-          );
-          newString = newString.replace(
-            new RegExp('_STATE_ISO_CODE_HELP_PLACEHOLDER_', 'g'),
-            stateIsoCode,
-          );
-        } else {
-          newString = placeHolderWithoutTax.replace(
-            new RegExp('_TAX_RATE_HELP_PLACEHOLDER_', 'g'),
-            taxRatio.minus(1).times(100).toPrecision(),
-          );
-        }
-
-        this.$taxRuleGroupHelpLabel.html(newString);
-        const unitPriceTaxExcluded = this.mapper.getBigNumber('price.unitPriceTaxExcluded') ?? new BigNumber(0);
-        this.mapper.set('price.unitPriceTaxIncluded', this.addTax(unitPriceTaxExcluded));
+        this.updateTaxRulesGroupInfo(taxRatio);
         break;
       }
     }
@@ -281,5 +252,45 @@ export default class ProductFormModel {
     }
 
     return taxRate.dividedBy(100).plus(1);
+  }
+
+  // update tax included price and tax rates help label
+  private updateTaxRulesGroupInfo(taxRatio: BigNumber) {
+    const isTaxEnabled = this.$taxRuleGroupHelpLabel.data('is-tax-enabled');
+
+    if (!isTaxEnabled) {
+      return;
+    }
+    const stateIsoCode = this.getStateIsoCode();
+    const priceTaxExcluded = this.mapper.getBigNumber('price.priceTaxExcluded') ?? new BigNumber(0);
+    const ecotaxTaxIncluded = this.mapper.getBigNumber('price.ecotaxTaxIncluded') ?? new BigNumber(0);
+    this.mapper.set(
+      'price.priceTaxIncluded',
+      priceTaxExcluded.times(taxRatio).plus(ecotaxTaxIncluded).toFixed(this.precision),
+    );
+    const placeHolderWithoutTax = this.$taxRuleGroupHelpLabel.data('place-holder-without-tax');
+    const placeHolderWithTax = this.$taxRuleGroupHelpLabel.data('place-holder-with-tax');
+
+    let newString;
+
+    if (stateIsoCode) {
+      newString = placeHolderWithTax.replace(
+        new RegExp('_TAX_RATE_HELP_PLACEHOLDER_', 'g'),
+        taxRatio.minus(1).times(100).toPrecision(),
+      );
+      newString = newString.replace(
+        new RegExp('_STATE_ISO_CODE_HELP_PLACEHOLDER_', 'g'),
+        stateIsoCode,
+      );
+    } else {
+      newString = placeHolderWithoutTax.replace(
+        new RegExp('_TAX_RATE_HELP_PLACEHOLDER_', 'g'),
+        taxRatio.minus(1).times(100).toPrecision(),
+      );
+    }
+
+    this.$taxRuleGroupHelpLabel.html(newString);
+    const unitPriceTaxExcluded = this.mapper.getBigNumber('price.unitPriceTaxExcluded') ?? new BigNumber(0);
+    this.mapper.set('price.unitPriceTaxIncluded', this.addTax(unitPriceTaxExcluded));
   }
 }

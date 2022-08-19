@@ -143,11 +143,6 @@ class RetailPriceType extends TranslatorAwareType
         $selectedTaxRate = $this->taxComputer->getTaxRate(new TaxRulesGroupId($options['tax_rules_group_id']), new CountryId($this->contextCountryId));
         $country = new Country($this->contextCountryId);
 
-        $taxRatePlaceHolder = $this->trans(
-            'Tax %1$s : %2$s%%',
-            'Admin.Catalog.Feature',
-            ['%1$s' => Country::getIsoById($this->contextCountryId), '%2$s' => $selectedTaxRate]
-        );
         $taxRateHelpPlaceholderWithoutTax = $this->trans(
             'Tax %1$s : %2$s%%',
             'Admin.Catalog.Feature',
@@ -212,12 +207,13 @@ class RetailPriceType extends TranslatorAwareType
                 'label' => $this->trans('Tax rule', 'Admin.Catalog.Feature'),
                 'help' => !$this->isTaxEnabled ?
                     $this->trans('Tax feature is disabled, it will not affect price tax included.', 'Admin.Catalog.Feature')
-                    : $taxRatePlaceHolder,
+                    : '', //we replace help text in js on load
                 'help_attr' => [
                     'class' => 'js-tax-rule-help',
                     'data' => [
                         'place-holder-without-tax' => $taxRateHelpPlaceholderWithoutTax,
                         'place-holder-with-tax' => $taxRateHelpPlaceholderWithTax,
+                        'is-tax-enabled' => $this->isTaxEnabled,
                     ],
                 ],
                 'external_link' => [
