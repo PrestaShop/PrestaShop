@@ -122,13 +122,13 @@ class FrameworkBundleAdminController extends AbstractController
                     $error->getMessageTemplate(),
                     $error->getMessagePluralization(),
                     $error->getMessageParameters(),
-                    'form_error'
+                    'validators'
                 );
             } else {
                 $errors[$formId][] = $translator->trans(
                     $error->getMessageTemplate(),
                     $error->getMessageParameters(),
-                    'form_error'
+                    'validators'
                 );
             }
         }
