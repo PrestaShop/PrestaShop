@@ -26,7 +26,7 @@
 {% extends '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
 {% block catalog_price_rules_widget %}
-  <div id="catalog-price-rules-container">
+  <div id="catalog-price-rules-container" class="hide">
     {{ block('catalog_price_rules_list') }}
     {{ form_widget(form) }}
   </div>

@@ -54,6 +54,7 @@ export default class CatalogPriceRuleList {
       this.toggleListVisibility(catalogPriceRules.length > 0);
 
       catalogPriceRules.forEach((catalogPriceRule: CatalogPriceRuleForListing) => {
+        console.log(catalogPriceRule);
         const temporaryContainer = document.createElement('tbody');
         temporaryContainer.innerHTML = trTemplate.trim();
 
@@ -88,7 +89,11 @@ export default class CatalogPriceRuleList {
     });
   }
 
-  private toggleListVisibility(show: boolean): void {
+  public toggleBlockVisibility(show: boolean): void {
+    this.listContainer.classList.toggle('d-none', !show);
+  }
+
+  public toggleListVisibility(show: boolean): void {
     this.listContainer.classList.toggle('d-none', !show);
   }
 
