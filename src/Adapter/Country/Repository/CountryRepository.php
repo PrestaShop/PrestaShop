@@ -50,23 +50,4 @@ class CountryRepository extends AbstractObjectModelRepository
             CountryNotFoundException::class
         );
     }
-
-    /**
-     * @param CountryId $countryId
-     *
-     * @return Country
-     *
-     * @throws CountryNotFoundException
-     */
-    public function get(CountryId $countryId): Country
-    {
-        /** @var Country $country */
-        $country = $this->getObjectModel(
-            $countryId->getValue(),
-            Country::class,
-            CountryNotFoundException::class
-        );
-
-        return $country;
-    }
 }

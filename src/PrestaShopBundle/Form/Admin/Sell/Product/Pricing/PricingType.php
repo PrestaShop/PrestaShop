@@ -67,8 +67,7 @@ class PricingType extends TranslatorAwareType
         $builder
             ->add('retail_price', RetailPriceType::class, [
                 'tax_rules_group_id' => $options['tax_rules_group_id'],
-            ]
-            )
+            ])
             ->add('wholesale_price', MoneyType::class, [
                 'required' => false,
                 'label' => $this->trans('Cost price', 'Admin.Catalog.Feature'),
