@@ -985,17 +985,26 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      * Return id_product_attribute by id_product_attribute group parameter,
      * or request parameter, or the default attribute as a fallback.
      *
-     * @return int
+     * @return int|null
      *
      * @throws PrestaShopException
      */
     private function getIdProductAttributeByGroupOrRequestOrDefault()
     {
+        // If the product has no combinations, we return early
+        if (!$this->product->hasCombinations()) {
+            return null;
+        }
+
+        // Try to retrieve associated product combination id by group
         $idProductAttribute = $this->getIdProductAttributeByGroup();
+
+        // Try to retrieve associated product combination id in request (GET/POST)
         if (null === $idProductAttribute) {
             $idProductAttribute = (int) Tools::getValue('id_product_attribute');
         }
 
+        // Try to retrieve default associated product combination id
         if (0 === $idProductAttribute) {
             $idProductAttribute = (int) Product::getDefaultAttribute($this->product->id);
         }
@@ -1091,16 +1100,27 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      */
     private function getIdProductAttributeByGroup()
     {
-        $groups = Tools::getValue('group');
-        if (empty($groups)) {
-            return null;
+        try {
+            $groups = Tools::getValue('group');
+            if (empty($groups)) {
+                return null;
+            }
+
+            return (int) Product::getIdProductAttributeByIdAttributes(
+                $this->product->id,
+                $groups,
+                true
+            );
+        } catch (Exception $e) {
+            PrestaShopLogger::addLog(
+                'Error: ' . $e->getMessage(),
+                1,
+                $e->getCode(),
+                'Product'
+            );
         }
 
-        return (int) Product::getIdProductAttributeByIdAttributes(
-            $this->product->id,
-            $groups,
-            true
-        );
+        return 0;
     }
 
     public function getTemplateVarProduct()
