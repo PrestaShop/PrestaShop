@@ -7453,7 +7453,7 @@ class ProductCore extends ObjectModel
         }
 
         if (empty($idProductAttribute)) {
-            throw new PrestaShopObjectNotFoundException('Can not retrieve the id_product_attribute');
+            throw new PrestaShopObjectNotFoundException('Cannot retrieve the id_product_attribute');
         }
 
         return (int) $idProductAttribute;
