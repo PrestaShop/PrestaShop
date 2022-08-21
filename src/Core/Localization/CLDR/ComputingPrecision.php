@@ -38,8 +38,11 @@ final class ComputingPrecision implements ComputingPrecisionInterface
     /**
      * {@inheritdoc}
      */
-    public function getPrecision(int $displayPrecision)
+    public function getPrecision($displayPrecision)
     {
+        // Earlier, there was int type hint in this method; but in the process of developing one e-store with KRW currency that does not have analog of cents and does not need precision, it was found that sometimes null is passed to this method which causes some errors. Detailed testing is needed to reproduce errors, they were not logged fully; but this bugfix with replacing int type hint with intval() call worked fine and did not cause any visible issues. Obviously, the original issue and bugfix should be researched by some experienced PrestaShop core developer.
+        $displayPrecision = intval($displayPrecision);
+
         // the MULTIPLIER attribute is set to 1 for now, so that it matches display precision
         $computingPrecision = $displayPrecision * self::MULTIPLIER;
 
