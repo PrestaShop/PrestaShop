@@ -40,6 +40,7 @@ trait FrameworkBridgeControllerListTrait
      * @param string $identifierKey
      * @param string $positionIdentifierKey
      * @param string $defaultOrderBy
+     * @param string $postSubmitRoute
      * @param bool $autoJoinLangTable
      * @param bool $deleted
      * @param bool $explicitSelect
@@ -52,6 +53,7 @@ trait FrameworkBridgeControllerListTrait
         string $identifierKey,
         string $positionIdentifierKey,
         string $defaultOrderBy,
+        string $postSubmitRoute,
         bool $autoJoinLangTable = true,
         bool $deleted = false,
         bool $explicitSelect = false,
@@ -63,6 +65,7 @@ trait FrameworkBridgeControllerListTrait
         return $this->get('prestashop.bridge.helper.listing.helper_list_configuration_factory')->create(
             $controllerConfiguration,
             $identifierKey,
+            $postSubmitRoute,
             $positionIdentifierKey,
             $defaultOrderBy,
             $autoJoinLangTable,

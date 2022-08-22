@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Bridge\Helper\Listing;
 
 use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Create an instance of the helper configuration object, using controller configuration.
@@ -37,20 +37,36 @@ use Symfony\Component\HttpFoundation\Request;
 class HelperListConfigurationFactory
 {
     /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    /**
+     * @param RouterInterface $router
+     */
+    public function __construct(
+        RouterInterface $router
+    ) {
+        $this->router = $router;
+    }
+
+    /**
      * @param ControllerConfiguration $controllerConfiguration
      * @param string $identifier
+     * @param string $postSubmitRoute
      * @param string|null $positionIdentifier
      * @param string|null $defaultOrderBy
      * @param bool $isJoinLanguageTableAuto
      * @param bool $deleted
      * @param bool $explicitSelect
      * @param bool $useFoundRows
-     *
+     * @param string|null $listId
      * @return HelperListConfiguration
      */
     public function create(
         ControllerConfiguration $controllerConfiguration,
         string $identifier,
+        string $postSubmitRoute,
         string $positionIdentifier = null,
         string $defaultOrderBy = null,
         bool $isJoinLanguageTableAuto = false,
@@ -64,7 +80,7 @@ class HelperListConfigurationFactory
             $defaultOrderBy = $identifier;
         }
 
-        $helperListConfiguration = new HelperListConfiguration(
+        return new HelperListConfiguration(
             $controllerConfiguration->tabId,
             $controllerConfiguration->tableName,
             $listId ?: $controllerConfiguration->tableName,
@@ -80,12 +96,8 @@ class HelperListConfigurationFactory
             $controllerConfiguration->token,
             $controllerConfiguration->bootstrap,
             $controllerConfiguration->legacyCurrentIndex,
-            $controllerConfiguration->multiShopContext
+            $controllerConfiguration->multiShopContext,
+            $this->router->generate($postSubmitRoute)
         );
-
-        $request = Request::createFromGlobals();
-        $helperListConfiguration->setFiltersSubmitUrl($request->getRequestUri());
-
-        return $helperListConfiguration;
     }
 }

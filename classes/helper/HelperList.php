@@ -149,7 +149,7 @@ class HelperListCore extends Helper
     /**
      * @var string|null
      */
-    public $filtersSubmitUrl;
+    public $postSubmitUrl;
 
     /**
      * You can use $controllerMapping to add entity/controller mapping in order to have migrated links
@@ -660,8 +660,8 @@ class HelperListCore extends Helper
 
         $identifier = Tools::getIsset($this->identifier) ? '&' . $this->identifier . '=' . (int) Tools::getValue($this->identifier) : '';
 
-        if ($this->filtersSubmitUrl) {
-            $action = $this->filtersSubmitUrl;
+        if ($this->postSubmitUrl) {
+            $action = $this->postSubmitUrl;
         } else {
             $action = $this->currentIndex . $identifier . '&token=' . $this->token . '#' . $this->list_id;
         }

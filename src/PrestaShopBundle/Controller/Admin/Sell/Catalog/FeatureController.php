@@ -66,7 +66,8 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
             'id_feature',
             'id_feature',
             //@todo: position update is still handled by legacy ajax controller action. Need to handle in dedicated PR
-            'position'
+            'position',
+            'admin_features_index'
         );
 
         $this->setListFields($helperListConfiguration);
