@@ -199,13 +199,13 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
         $token = $controllerConfiguration->token;
 
         $controllerConfiguration
-            ->addToolbarAction('new_feature', [
+            ->addHeaderToolbarAction('new_feature', [
                 //@todo: replace by $this->generateUrl('admin_features_add') when creation is fully migrated
                 'href' => $index . '&addfeature&token=' . $token,
                 'desc' => $this->trans('Add new feature', 'Admin.Catalog.Feature'),
                 'icon' => 'process-icon-new',
             ])
-            ->addToolbarAction('new_feature_value', [
+            ->addHeaderToolbarAction('new_feature_value', [
                 'href' => $index . '&addfeature_value&id_feature=' . (int) Tools::getValue('id_feature') . '&token=' . $token,
                 'desc' => $this->trans('Add new feature value', 'Admin.Catalog.Help'),
                 'icon' => 'process-icon-new',
