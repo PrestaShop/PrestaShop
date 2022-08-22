@@ -42,8 +42,8 @@ class FeatureHelperListBridge extends HelperListBridge
         HelperListConfiguration $helperListConfiguration,
         Request $request,
         int $idLang
-    ): void {
-        parent::generateListQuery($helperListConfiguration, $request, $idLang);
+    ): string {
+        $listSql = parent::generateListQuery($helperListConfiguration, $request, $idLang);
 
         $nbItems = count($helperListConfiguration->list);
         for ($i = 0; $i < $nbItems; ++$i) {
@@ -58,5 +58,7 @@ class FeatureHelperListBridge extends HelperListBridge
             $item['value'] = (int) $res;
             unset($query);
         }
+
+        return $listSql;
     }
 }

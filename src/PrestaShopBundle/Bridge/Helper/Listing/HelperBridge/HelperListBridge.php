@@ -115,18 +115,16 @@ class HelperListBridge
             return null;
         }
 
-        $this->generateListQuery($helperListConfiguration, $request, $this->context->language->id);
-
         $helper = new HelperList();
+
+        /* @phpstan-ignore-next-line */
+        $helper->sql = $this->generateListQuery($helperListConfiguration, $request, $this->context->language->id);
 
         $this->helperListConfigurator->setHelperDisplay($helperListConfiguration, $helper);
         $helper->_default_pagination = $helperListConfiguration->getDefaultPaginationLimit();
         $helper->_pagination = $helperListConfiguration->getPaginationLimits();
         $helper->tpl_delete_link_vars = $helperListConfiguration->getDeleteLinkVars();
         $helper->postSubmitUrl = $helperListConfiguration->getPostSubmitUrl();
-
-        /* @phpstan-ignore-next-line */
-        $helper->sql = $helperListConfiguration->listSql;
 
         return $helper->generateList($helperListConfiguration->list, $helperListConfiguration->fieldsList);
     }
@@ -135,13 +133,13 @@ class HelperListBridge
      * @param HelperListConfiguration $helperListConfiguration
      * @param int $idLang
      *
-     * @return void
+     * @return string
      */
     protected function generateListQuery(
         HelperListConfiguration $helperListConfiguration,
         Request $request,
         int $idLang
-    ): void {
+    ): string {
         if ($helperListConfiguration->getTableName() == 'feature_value') {
             $helperListConfiguration->where .= ' AND (a.custom = 0 OR a.custom IS NULL)';
         }
@@ -206,7 +204,7 @@ class HelperListBridge
         $shouldLimitSqlResults = $this->shouldLimitSqlResults($limit);
 
         do {
-            $helperListConfiguration->listSql = '';
+            $listSql = '';
 
             if ($helperListConfiguration->isExplicitSelect()) {
                 foreach ($helperListConfiguration->fieldsList as $key => $array_value) {
@@ -215,25 +213,25 @@ class HelperListBridge
                     }
 
                     if (isset($array_value['filter_key'])) {
-                        $helperListConfiguration->listSql .= str_replace('!', '.`', $array_value['filter_key']) . '` AS `' . $key . '`, ';
+                        $listSql .= str_replace('!', '.`', $array_value['filter_key']) . '` AS `' . $key . '`, ';
                     } elseif ($key == 'id_' . $helperListConfiguration->getTableName()) {
-                        $helperListConfiguration->listSql .= 'a.`' . bqSQL($key) . '`, ';
+                        $listSql .= 'a.`' . bqSQL($key) . '`, ';
                     } elseif ($key != 'image' && !preg_match('/' . preg_quote($key, '/') . '/i', $helperListConfiguration->select)) {
-                        $helperListConfiguration->listSql .= '`' . bqSQL($key) . '`, ';
+                        $listSql .= '`' . bqSQL($key) . '`, ';
                     }
                 }
-                $helperListConfiguration->listSql = rtrim(trim($helperListConfiguration->listSql), ',');
+                $listSql = rtrim(trim($listSql), ',');
             } else {
-                $helperListConfiguration->listSql .= ($helperListConfiguration->autoJoinLanguageTable() ? 'b.*,' : '') . ' a.*';
+                $listSql .= ($helperListConfiguration->autoJoinLanguageTable() ? 'b.*,' : '') . ' a.*';
             }
 
-            $helperListConfiguration->listSql .= "\n" . (!empty($helperListConfiguration->select) ? ', ' . rtrim($helperListConfiguration->select, ', ') : '') . $select_shop;
+            $listSql .= "\n" . (!empty($helperListConfiguration->select) ? ', ' . rtrim($helperListConfiguration->select, ', ') : '') . $select_shop;
 
             $limitClause = ' ' . (($shouldLimitSqlResults) ? ' LIMIT ' . (int) $start . ', ' . (int) $limit : '');
 
             if ($helperListConfiguration->useFoundRows()) {
-                $helperListConfiguration->listSql = 'SELECT SQL_CALC_FOUND_ROWS ' .
-                    $helperListConfiguration->listSql .
+                $listSql = 'SELECT SQL_CALC_FOUND_ROWS ' .
+                    $listSql .
                     $fromClause .
                     $joinClause .
                     $whereClause .
@@ -242,8 +240,8 @@ class HelperListBridge
 
                 $list_count = 'SELECT FOUND_ROWS() AS `' . _DB_PREFIX_ . $helperListConfiguration->getTableName() . '`';
             } else {
-                $helperListConfiguration->listSql = 'SELECT ' .
-                    $helperListConfiguration->listSql .
+                $listSql = 'SELECT ' .
+                    $listSql .
                     $fromClause .
                     $joinClause .
                     $whereClause .
@@ -256,7 +254,7 @@ class HelperListBridge
                     $whereClause;
             }
 
-            $helperListConfiguration->list = Db::getInstance()->executeS($helperListConfiguration->listSql, true, false);
+            $helperListConfiguration->list = Db::getInstance()->executeS($listSql, true, false);
 
             if ($helperListConfiguration->list === false) {
                 // @todo: the listError doesn't seem to be used anywhere else yet. Do we need to add some additional list error handler?
@@ -281,6 +279,8 @@ class HelperListBridge
             'list' => &$helperListConfiguration->list,
             'list_total' => &$helperListConfiguration->listTotal,
         ]);
+
+        return $listSql;
     }
 
     /**
