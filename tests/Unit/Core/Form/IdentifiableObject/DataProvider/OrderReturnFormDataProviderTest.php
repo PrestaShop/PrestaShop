@@ -30,7 +30,6 @@ namespace Tests\Unit\Core\Form\IdentifiableObject\DataProvider;
 
 use DateTime;
 use Generator;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\OrderReturn\QueryResult\OrderReturnForEditing;
