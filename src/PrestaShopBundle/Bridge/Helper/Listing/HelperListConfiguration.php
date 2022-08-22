@@ -228,7 +228,7 @@ class HelperListConfiguration
     /**
      * @var string|null
      */
-    private $filtersSubmitUrl;
+    private $postSubmitUrl;
 
     /**
      * @param int $tabId
@@ -249,7 +249,8 @@ class HelperListConfiguration
         string $token,
         bool $bootstrap,
         string $legacyCurrentIndex,
-        int $multiShopContext
+        int $multiShopContext,
+        string $postSubmitUrl
     ) {
         $this->tabId = $tabId;
         $this->tableName = $tableName;
@@ -267,6 +268,7 @@ class HelperListConfiguration
         $this->bootstrap = $bootstrap;
         $this->legacyCurrentIndex = $legacyCurrentIndex;
         $this->multiShopContext = $multiShopContext;
+        $this->postSubmitUrl = $postSubmitUrl;
     }
 
     /**
@@ -585,20 +587,8 @@ class HelperListConfiguration
     /**
      * @return string|null
      */
-    public function getFiltersSubmitUrl(): ?string
+    public function getPostSubmitUrl(): ?string
     {
-        return $this->filtersSubmitUrl;
-    }
-
-    /**
-     * @param string|null $filtersSubmitUrl
-     *
-     * @return $this
-     */
-    public function setFiltersSubmitUrl(?string $filtersSubmitUrl): self
-    {
-        $this->filtersSubmitUrl = $filtersSubmitUrl;
-
-        return $this;
+        return $this->postSubmitUrl;
     }
 }

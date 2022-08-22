@@ -123,7 +123,7 @@ class HelperListBridge
         $helper->_default_pagination = $helperListConfiguration->getDefaultPaginationLimit();
         $helper->_pagination = $helperListConfiguration->getPaginationLimits();
         $helper->tpl_delete_link_vars = $helperListConfiguration->getDeleteLinkVars();
-        $helper->filtersSubmitUrl = $helperListConfiguration->getFiltersSubmitUrl();
+        $helper->postSubmitUrl = $helperListConfiguration->getPostSubmitUrl();
 
         /* @phpstan-ignore-next-line */
         $helper->sql = $helperListConfiguration->listSql;
