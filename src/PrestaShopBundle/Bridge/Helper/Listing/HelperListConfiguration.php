@@ -585,6 +585,38 @@ class HelperListConfiguration
     }
 
     /**
+     * @param array<string, array<string, mixed>> $fieldsList
+     *
+     * @return $this
+     */
+    public function setFieldsList(array $fieldsList): self
+    {
+        $optionsResolver = new OptionsResolver();
+        $optionsResolver->setRequired([
+            'title',
+        ]);
+
+        $optionsResolver->setDefined([
+            'align',
+            'class',
+            'filter_key',
+            'orderby',
+            'position',
+            'search',
+            'width',
+        ]);
+
+        $optionsResolver->addAllowedTypes('orderby', 'boolean');
+        $optionsResolver->addAllowedTypes('search', 'boolean');
+
+        foreach ($fieldsList as $field => $config) {
+            $this->fieldsList[$field] = $optionsResolver->resolve($config);
+        }
+
+        return $this;
+    }
+
+    /**
      * @return string|null
      */
     public function getPostSubmitUrl(): ?string

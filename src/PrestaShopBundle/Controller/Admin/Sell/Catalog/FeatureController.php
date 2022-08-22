@@ -246,7 +246,7 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
      */
     private function setListFields(HelperListConfiguration $helperListConfiguration): void
     {
-        $helperListConfiguration->fieldsList = [
+        $helperListConfiguration->setFieldsList([
             'id_feature' => [
                 'title' => $this->trans('ID', 'Admin.Global'),
                 'align' => 'center',
@@ -271,7 +271,7 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
                 'class' => 'fixed-width-xs',
                 'position' => 'position',
             ],
-        ];
+        ]);
     }
 
     /**
