@@ -76,14 +76,9 @@ class HelperListConfiguration
     public $filter = '';
 
     /**
-     * @var array
+     * @var array<string, array<string, mixed>>
      */
     public $fieldsList = [];
-
-    /**
-     * @var string
-     */
-    public $listSql;
 
     /**
      * @var array
