@@ -1753,6 +1753,15 @@ CREATE TABLE `PREFIX_product_attribute` (
   )
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
 
+/* Localized combination information */
+CREATE TABLE `PREFIX_product_attribute_lang` (
+  `id_product_attribute` int(10) unsigned NOT NULL,
+  `id_lang` int(10) unsigned NOT NULL,
+  `available_now` varchar(255) DEFAULT NULL,
+  `available_later` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id_product_attribute`, `id_lang`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4 COLLATION;
+
 /* shop specific attribute info */
 CREATE TABLE `PREFIX_product_attribute_shop` (
   `id_product` int(10) unsigned NOT NULL,

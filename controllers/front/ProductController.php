@@ -676,6 +676,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 } else {
                     $this->combinations[$row['id_product_attribute']]['available_date'] = $this->combinations[$row['id_product_attribute']]['date_formatted'] = '';
                 }
+                $this->combinations[$row['id_product_attribute']]['available_now'] = $row['available_now'];
+                $this->combinations[$row['id_product_attribute']]['available_later'] = $row['available_later'];
 
                 if (!isset($combination_images[$row['id_product_attribute']][0]['id_image'])) {
                     $this->combinations[$row['id_product_attribute']]['id_image'] = -1;
