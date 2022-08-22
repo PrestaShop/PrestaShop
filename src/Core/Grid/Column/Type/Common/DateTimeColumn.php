@@ -36,13 +36,13 @@ final class DateTimeColumn extends AbstractColumn
      * Default date format.
      * Note the use of non-breaking hyphens (U+2011)
      */
-    const DEFAULT_FORMAT = 'Y‑m‑d H:i:s';
+    public const DEFAULT_FORMAT = 'Y‑m‑d H:i:s';
 
     /**
      * Complete datetime format, without seconds.
      * Note the use of non-breaking hyphens (U+2011)
      */
-    const DATETIME_WITHOUT_SECONDS = 'Y‑m‑d H:i';
+    public const DATETIME_WITHOUT_SECONDS = 'Y‑m‑d H:i';
 
     private const FORMAT_NORMALIZATION_MAP = [
         '-' => '‑', // convert hyphens into non-breaking hyphens

@@ -256,16 +256,16 @@ class AdminControllerCore extends Controller
     public $override_folder;
 
     /** @var int DELETE access level */
-    const LEVEL_DELETE = 4;
+    public const LEVEL_DELETE = 4;
 
     /** @var int ADD access level */
-    const LEVEL_ADD = 3;
+    public const LEVEL_ADD = 3;
 
     /** @var int EDIT access level */
-    const LEVEL_EDIT = 2;
+    public const LEVEL_EDIT = 2;
 
     /** @var int VIEW access level */
-    const LEVEL_VIEW = 1;
+    public const LEVEL_VIEW = 1;
 
     /**
      * Actions to execute on multiple selections.
@@ -409,7 +409,7 @@ class AdminControllerCore extends Controller
     protected $tabSlug;
 
     /** @var int Auth cookie lifetime */
-    const AUTH_COOKIE_LIFETIME = 3600;
+    public const AUTH_COOKIE_LIFETIME = 3600;
 
     /** @var array */
     public $_conf;

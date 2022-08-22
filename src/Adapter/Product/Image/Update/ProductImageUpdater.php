@@ -161,7 +161,7 @@ class ProductImageUpdater
         try {
             $positionUpdate = $this->positionUpdateFactory->buildPositionUpdate($positionsData, $this->positionDefinition);
             $this->positionUpdater->update($positionUpdate);
-        } catch (PositionDataException | PositionUpdateException $e) {
+        } catch (PositionDataException|PositionUpdateException $e) {
             throw new CannotUpdateProductImageException(
                 'Cannot update image position',
                 CannotUpdateProductImageException::FAILED_UPDATE_POSITION,
