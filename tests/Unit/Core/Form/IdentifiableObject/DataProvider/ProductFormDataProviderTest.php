@@ -1517,7 +1517,7 @@ class ProductFormDataProviderTest extends TestCase
      * @param mixed $query
      * @param array $productData
      *
-     * @return ProductForEditing|ProductSupplierOptions|ProductFeatureValue[]|CustomizationField[]|StockMovementEvent[]|RelatedProduct[]
+     * @return ProductForEditing|ProductSupplierOptions|ProductFeatureValue[]|CustomizationField[]|StockMovementEvent[]|RelatedProduct[]|PackedProductDetails[]
      */
     private function createResultBasedOnQuery($query, array $productData)
     {
