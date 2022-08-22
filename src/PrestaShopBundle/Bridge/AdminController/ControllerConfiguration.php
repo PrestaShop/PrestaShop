@@ -30,6 +30,7 @@ namespace PrestaShopBundle\Bridge\AdminController;
 
 use PrestaShopBundle\Security\Admin\Employee;
 use Shop;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This object holds the configuration of a Controller that is being migrated horizontally.
@@ -245,9 +246,18 @@ class ControllerConfiguration
      *
      * @return ControllerConfiguration
      */
-    public function addToolbarAction(string $label, array $config): self
+    public function addHeaderToolbarAction(string $label, array $config): self
     {
-        $this->pageHeaderToolbarButtons[$label] = $config;
+        $optionsResolver = new OptionsResolver();
+        $optionsResolver
+            ->setDefined(['href', 'desc', 'icon', 'class'])
+            ->setDefaults(['class' => ''])
+            ->setAllowedTypes('class', ['string'])
+            ->setAllowedTypes('href', ['string'])
+            ->setAllowedTypes('desc', ['string'])
+        ;
+
+        $this->pageHeaderToolbarButtons[$label] = $optionsResolver->resolve($config);
 
         return $this;
     }
