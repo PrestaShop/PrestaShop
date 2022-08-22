@@ -30,7 +30,7 @@ const AddressFaker = require('@data/faker/address');
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {Statuses} = require('@data/demo/orderStatuses');
 
-const baseContext = 'functional_BO_customers_outstanding_filter_and_sort';
+const baseContext = 'functional_BO_customers_outstanding_filterSortOutstanding';
 
 let browserContext;
 let page;
@@ -66,6 +66,16 @@ Post-condition:
 describe('BO - Customers - Outstanding : Filter and sort the Outstanding table', async () => {
   // Pre-Condition : Enable B2B
   enableB2BTest(baseContext);
+
+  // before and after functions
+  before(async function () {
+    browserContext = await helper.createBrowserContext(this.browser);
+    page = await helper.newTab(browserContext);
+  });
+
+  after(async () => {
+    await helper.closeBrowserContext(browserContext);
+  });
 
   describe('PRE-TEST: Create outstanding', async () => {
     it('should login to BO', async function () {
@@ -125,19 +135,9 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
     });
   });
 
-  // before and after functions
-  before(async function () {
-    browserContext = await helper.createBrowserContext(this.browser);
-    page = await helper.newTab(browserContext);
-  });
-
-  after(async () => {
-    await helper.closeBrowserContext(browserContext);
-  });
-
   // Go to the outstanding page
   describe('Go to the outstanding page', async () => {
-    it('should go to BO > Customers > Outstanding page', async function () {
+    it('should go to \'Customers > Outstanding\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOutstandingPage', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -145,8 +145,11 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
         dashboardPage.customersParentLink,
         dashboardPage.outstandingLink,
       );
+
+      const pageTitle = await outstandingPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(outstandingPage.pageTitle);
     });
-    it('should reset filter and get the last outstanding ID', async function () {
+    it('should reset filter and get the outstanding number', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'resetFilterOutstanding', baseContext);
 
       await outstandingPage.resetFilter(page);
@@ -364,10 +367,10 @@ describe('BO - Customers - Outstanding : Filter and sort the Outstanding table',
   });
 
   // Post-Condition: Delete created customers by bulk action
-  customersData.forEach((customerData, index = 1) => {
-    bulkDeleteCustomersTest('email', customerData.email, `${baseContext}_postTest_${index}`);
+  customersData.forEach((customerData, index) => {
+    bulkDeleteCustomersTest('email', customerData.email, `${baseContext}_postTest_${index + 1}`);
   });
 
   // Post-Condition : Disable B2B
-  disableB2BTest(`${baseContext}_postTest_3`);
+  disableB2BTest(`${baseContext}_postTest_4`);
 });

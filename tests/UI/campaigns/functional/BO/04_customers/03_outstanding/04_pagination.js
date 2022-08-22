@@ -34,7 +34,7 @@ let page;
 let numberOutstanding;
 
 // Const used to get the least number of outstanding to display pagination
-const firstPagination = 11;
+const numberOfOrdersToCreate = 11;
 
 const orderByCustomerData = {
   customer: DefaultCustomer,
@@ -69,17 +69,17 @@ describe('BO - Customers - Outstanding : Pagination of the outstanding page', as
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
-  describe('PRE-TEST: Create outstanding', async () => {
+  describe('PRE-TEST: Create 11 orders on FO and change their status to payment accepted on BO', async () => {
     it('should login to BO', async function () {
       await loginCommon.loginBO(this, page);
     });
 
-    const creationTests = new Array(firstPagination).fill(0, 0, firstPagination);
+    const creationTests = new Array(numberOfOrdersToCreate).fill(0, 0, numberOfOrdersToCreate);
     creationTests.forEach((value, index) => {
       createOrderByCustomerTest(orderByCustomerData, `${baseContext}_preTest_${index}`);
 
       // Pre-condition: Update order status to payment accepted
-      describe('PRE-TEST: Update order status to payment accepted', async () => {
+      describe('Update order status to payment accepted', async () => {
         it('should go to Orders > Orders page', async function () {
           await testContext.addContextItem(this, 'testIdentifier', `goToOrdersPage_${index}`, baseContext);
 
@@ -118,6 +118,9 @@ describe('BO - Customers - Outstanding : Pagination of the outstanding page', as
         dashboardPage.customersParentLink,
         dashboardPage.outstandingLink,
       );
+
+      const pageTitle = await outstandingPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(outstandingPage.pageTitle);
     });
 
     it('should reset all filters and get the number of outstanding', async function () {
@@ -126,7 +129,7 @@ describe('BO - Customers - Outstanding : Pagination of the outstanding page', as
       await outstandingPage.resetFilter(page);
 
       numberOutstanding = await outstandingPage.getNumberOutstanding(page);
-      await expect(numberOutstanding).to.be.above(0);
+      await expect(numberOutstanding).to.be.above(numberOfOrdersToCreate);
     });
 
     it('should change the items number to 10 per page', async function () {
