@@ -61,6 +61,7 @@ class HelperListConfigurationFactory
      * @param bool $explicitSelect
      * @param bool $useFoundRows
      * @param string|null $listId
+     *
      * @return HelperListConfiguration
      */
     public function create(
