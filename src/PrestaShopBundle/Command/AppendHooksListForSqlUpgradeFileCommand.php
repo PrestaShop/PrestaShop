@@ -91,11 +91,6 @@ class AppendHooksListForSqlUpgradeFileCommand extends Command
      */
     private $formTypes;
 
-    /**
-     * @var string
-     */
-    private $sqlUpgradePath;
-
     public function __construct(
         string $env,
         LegacyContext $legacyContext,
@@ -105,8 +100,7 @@ class AppendHooksListForSqlUpgradeFileCommand extends Command
         HookDescriptionGenerator $hookDescriptionGenerator,
         array $serviceIds,
         array $optionFormHookNames,
-        array $formTypes,
-        string $sqlUpgradePath
+        array $formTypes
     ) {
         parent::__construct();
         $this->env = $env;
@@ -118,7 +112,6 @@ class AppendHooksListForSqlUpgradeFileCommand extends Command
         $this->serviceIds = $serviceIds;
         $this->optionFormHookNames = $optionFormHookNames;
         $this->formTypes = $formTypes;
-        $this->sqlUpgradePath = $sqlUpgradePath;
     }
 
     /**
@@ -135,6 +128,11 @@ class AppendHooksListForSqlUpgradeFileCommand extends Command
                 'ps-version',
                 InputArgument::REQUIRED,
                 'The prestashop version for which sql upgrade file will be searched'
+            )
+            ->addArgument(
+                'autoupgrade-path',
+                InputArgument::REQUIRED,
+                'The path to the autoupgrade module path which contains the upgrade scripts'
             )
         ;
     }
@@ -162,8 +160,12 @@ class AppendHooksListForSqlUpgradeFileCommand extends Command
 
         $hookDescriptions = $this->getHookDescriptions($hookNames);
 
+        $prestashopVersion = $input->getArgument('ps-version');
         try {
-            $sqlUpgradeFile = $this->getSqlUpgradeFileByPrestaShopVersion($input->getArgument('ps-version'));
+            $sqlUpgradeFile = $this->getSqlUpgradeFileByPrestaShopVersion(
+                $prestashopVersion,
+                $input->getArgument('autoupgrade-path')
+            );
         } catch (FileNotFoundException $exception) {
             $io->error($exception->getMessage());
 
@@ -173,7 +175,7 @@ class AppendHooksListForSqlUpgradeFileCommand extends Command
             return 1;
         }
 
-        $sqlInsertStatement = $this->getSqlInsertStatement($hookDescriptions);
+        $sqlInsertStatement = $this->getSqlInsertStatement($hookDescriptions, $prestashopVersion);
 
         $this->appendSqlToFile($sqlUpgradeFile, $sqlInsertStatement);
 
@@ -226,9 +228,9 @@ class AppendHooksListForSqlUpgradeFileCommand extends Command
      *
      * @return string
      */
-    private function getSqlUpgradeFileByPrestaShopVersion($version)
+    private function getSqlUpgradeFileByPrestaShopVersion($version, $autoUpgradeModulePath)
     {
-        $sqlUpgradeFile = $this->sqlUpgradePath . $version . '.sql';
+        $sqlUpgradeFile = "$autoUpgradeModulePath/upgrade/sql/$version.sql";
 
         if (!file_exists($sqlUpgradeFile)) {
             throw new FileNotFoundException(sprintf('File %s has not been found', $sqlUpgradeFile));
@@ -241,15 +243,16 @@ class AppendHooksListForSqlUpgradeFileCommand extends Command
      * Gets sql insert statement.
      *
      * @param HookDescription[] $hookDescriptions
+     * @param string $prestashopVersion
      *
      * @return string
      */
-    private function getSqlInsertStatement(array $hookDescriptions)
+    private function getSqlInsertStatement(array $hookDescriptions, string $prestashopVersion)
     {
         $valuesToInsert = [];
         foreach ($hookDescriptions as $hookDescription) {
             $valuesToInsert[] = sprintf(
-                '(NULL,"%s","%s","%s","1")',
+                "  (NULL, '%s', '%s', '%s', '1')",
                 pSQL($hookDescription->getName()),
                 pSQL($hookDescription->getTitle()),
                 pSQL($hookDescription->getDescription())
@@ -260,10 +263,12 @@ class AppendHooksListForSqlUpgradeFileCommand extends Command
             return '';
         }
 
-        return sprintf(
-            'INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`) VALUES %s;',
-            implode(',', $valuesToInsert)
-        );
+        $insertSQL = PHP_EOL . "/* Auto generated hooks added for version $prestashopVersion */" . PHP_EOL;
+        $insertSQL .= 'INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`) VALUES' . PHP_EOL;
+        $insertSQL .= implode(',' . PHP_EOL, $valuesToInsert);
+        $insertSQL .= PHP_EOL . ';';
+
+        return $insertSQL;
     }
 
     /**
