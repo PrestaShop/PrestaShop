@@ -120,6 +120,11 @@ class CombinationFormDataProviderTest extends TestCase
             $expectedOutputData,
         ];
 
+        $localizedValues = [
+            1 => 'english',
+            2 => 'french',
+        ];
+
         $expectedOutputData = $this->getDefaultOutputData();
         $combinationData = [
             'quantity' => 42,
@@ -180,6 +185,8 @@ class CombinationFormDataProviderTest extends TestCase
                     'delta_quantity' => -17,
                 ],
             ],
+            'available_now' => $localizedValues,
+            'available_later' => $localizedValues,
         ];
         $expectedOutputData['stock']['quantities']['delta_quantity']['quantity'] = 42;
         $expectedOutputData['stock']['quantities']['minimal_quantity'] = 7;
@@ -219,6 +226,8 @@ class CombinationFormDataProviderTest extends TestCase
                 'delta_quantity' => -17,
             ],
         ];
+        $expectedOutputData['stock']['available_now_label'] = $localizedValues;
+        $expectedOutputData['stock']['available_later_label'] = $localizedValues;
 
         $datasets[] = [
             $combinationData,
@@ -525,7 +534,9 @@ class CombinationFormDataProviderTest extends TestCase
             $combination['low_stock_threshold'] ?? 0,
             $combination['low_stock_alert'] ?? false,
             $combination['location'] ?? 'location',
-            $combination['available_date'] ?? null
+            $combination['available_date'] ?? null,
+            $combination['available_now'] ?? [],
+            $combination['available_later'] ?? []
         );
     }
 
@@ -654,6 +665,8 @@ class CombinationFormDataProviderTest extends TestCase
                     'low_stock_alert' => false,
                 ],
                 'available_date' => '',
+                'available_now_label' => [],
+                'available_later_label' => [],
             ],
             'price_impact' => [
                 'price_tax_excluded' => 51.00,

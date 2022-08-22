@@ -30,11 +30,13 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\Combinatio
 
 use Behat\Gherkin\Node\TableNode;
 use DateTime;
+use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationStock;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
+use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class UpdateCombinationStockFeatureContext extends AbstractCombinationFeatureContext
@@ -74,7 +76,9 @@ class UpdateCombinationStockFeatureContext extends AbstractCombinationFeatureCon
             (int) $dataRows['low stock threshold'],
             PrimitiveUtils::castStringBooleanIntoBoolean($dataRows['low stock alert is enabled']),
             $dataRows['location'],
-            '' === $dataRows['available date'] ? null : new DateTime($dataRows['available date'])
+            '' === $dataRows['available date'] ? null : new DateTime($dataRows['available date']),
+            !empty($dataRows['available now labels']) ? $dataRows['available now labels'] : [],
+            !empty($dataRows['available later labels']) ? $dataRows['available later labels'] : []
         );
     }
 
@@ -129,7 +133,6 @@ class UpdateCombinationStockFeatureContext extends AbstractCombinationFeatureCon
             $actualStock->getLocation(),
             sprintf('Unexpected combination "%s" location', $combinationReference)
         );
-
         if (null === $expectedStock->getAvailableDate()) {
             Assert::assertSame(
                 $expectedStock->getAvailableDate(),
@@ -145,6 +148,43 @@ class UpdateCombinationStockFeatureContext extends AbstractCombinationFeatureCon
                 $actualStock->getAvailableDate()->format(DateTimeUtil::DEFAULT_DATETIME_FORMAT),
                 sprintf('Unexpected combination "%s" availability date', $combinationReference)
             );
+        }
+        $this->assertLocalizedProperty(
+            $expectedStock->getLocalizedAvailableNowLabels(),
+            $actualStock->getLocalizedAvailableNowLabels(),
+            'available now label'
+        );
+        $this->assertLocalizedProperty(
+            $expectedStock->getLocalizedAvailableLaterLabels(),
+            $actualStock->getLocalizedAvailableLaterLabels(),
+            'available later label'
+        );
+    }
+
+    private function assertLocalizedProperty(array $expectedValues, array $actualValues, string $fieldName): void
+    {
+        foreach ($expectedValues as $langId => $expectedValue) {
+            $langIso = Language::getIsoById($langId);
+
+            if (!isset($actualValues[$langId])) {
+                throw new RuntimeException(sprintf(
+                    'Expected localized %s value is not set in %s language',
+                    $fieldName,
+                    $langIso
+                ));
+            }
+
+            if ($expectedValue !== $actualValues[$langId]) {
+                throw new RuntimeException(
+                    sprintf(
+                        'Expected %s in "%s" language was "%s", but got "%s"',
+                        $fieldName,
+                        $langIso,
+                        var_export($expectedValue, true),
+                        var_export($actualValues[$langId], true)
+                    )
+                );
+            }
         }
     }
 
@@ -187,6 +227,14 @@ class UpdateCombinationStockFeatureContext extends AbstractCombinationFeatureCon
         }
         if (isset($dataRows['available date'])) {
             $command->setAvailableDate(new DateTime($dataRows['available date']));
+        }
+        if (isset($dataRows['available now labels'])) {
+            $command->setLocalizedAvailableNowLabels($dataRows['available now labels']);
+            unset($dataRows['available now labels']);
+        }
+        if (isset($dataRows['available later labels'])) {
+            $command->setLocalizedAvailableLaterLabels($dataRows['available later labels']);
+            unset($dataRows['available later labels']);
         }
     }
 }

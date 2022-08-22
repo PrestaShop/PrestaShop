@@ -58,6 +58,16 @@ class CombinationStockProperties
     private $lowStockAlertEnabled;
 
     /**
+     * @var string[]|null key value pairs where key is the id of language
+     */
+    private $localizedAvailableNowLabels;
+
+    /**
+     * @var string[]|null key value pairs where key is the id of language
+     */
+    private $localizedAvailableLaterLabels;
+
+    /**
      * @var DateTimeInterface|null
      */
     private $availableDate;
@@ -69,6 +79,8 @@ class CombinationStockProperties
      * @param int|null $lowStockThreshold
      * @param bool|null $lowStockAlertEnabled
      * @param DateTimeInterface|null $availableDate
+     * @param string[]|null $localizedAvailableNowLabels
+     * @param string[]|null $localizedAvailableLaterLabels
      */
     public function __construct(
         ?StockModification $stockModification = null,
@@ -76,7 +88,9 @@ class CombinationStockProperties
         ?string $location = null,
         ?int $lowStockThreshold = null,
         ?bool $lowStockAlertEnabled = null,
-        ?DateTimeInterface $availableDate = null
+        ?DateTimeInterface $availableDate = null,
+        ?array $localizedAvailableNowLabels = null,
+        ?array $localizedAvailableLaterLabels = null
     ) {
         $this->stockModification = $stockModification;
         $this->minimalQuantity = $minimalQuantity;
@@ -85,6 +99,8 @@ class CombinationStockProperties
         $this->lowStockAlertEnabled = $lowStockAlertEnabled;
         $this->availableDate = $availableDate;
         $this->stockModification = $stockModification;
+        $this->localizedAvailableNowLabels = $localizedAvailableNowLabels;
+        $this->localizedAvailableLaterLabels = $localizedAvailableLaterLabels;
     }
 
     /**
@@ -133,5 +149,21 @@ class CombinationStockProperties
     public function getAvailableDate(): ?DateTimeInterface
     {
         return $this->availableDate;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getLocalizedAvailableNowLabels(): ?array
+    {
+        return $this->localizedAvailableNowLabels;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getLocalizedAvailableLaterLabels(): ?array
+    {
+        return $this->localizedAvailableLaterLabels;
     }
 }

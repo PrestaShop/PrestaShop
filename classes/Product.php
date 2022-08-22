@@ -1877,6 +1877,8 @@ class ProductCore extends ObjectModel
             if ($id_combination) {
                 $obj->minimal_quantity = 1;
                 $obj->available_date = '0000-00-00';
+                $obj->available_now = '';
+                $obj->available_later = '';
             }
 
             foreach ($combination as $field => $value) {
@@ -1943,6 +1945,8 @@ class ProductCore extends ObjectModel
      * @param int|null $low_stock_threshold Low stock for mail alert
      * @param bool $low_stock_alert Low stock mail alert activated
      * @param string|null $mpn
+     * @param string[]|string $available_now Combination available now labels
+     * @param string[]|string $available_later Combination available later labels
      *
      * @return int|false Attribute identifier if success, false if it fail
      */
@@ -1966,7 +1970,9 @@ class ProductCore extends ObjectModel
         $isbn = '',
         $low_stock_threshold = null,
         $low_stock_alert = false,
-        $mpn = null
+        $mpn = null,
+        $available_now = [],
+        $available_later = []
     ) {
         $id_product_attribute = $this->addAttribute(
             $price,
@@ -1986,7 +1992,9 @@ class ProductCore extends ObjectModel
             $isbn,
             $low_stock_threshold,
             $low_stock_alert,
-            $mpn
+            $mpn,
+            $available_now,
+            $available_later
         );
         $this->addSupplierReference($id_supplier, $id_product_attribute);
         $result = ObjectModel::updateMultishopTable('Combination', [
@@ -2093,6 +2101,8 @@ class ProductCore extends ObjectModel
      * @param int|null $low_stock_threshold Low stock for mail alert
      * @param bool $low_stock_alert Low stock mail alert activated
      * @param string|null $mpn
+     * @param string[]|string|null $available_now Combination available now labels
+     * @param string[]|string|null $available_later Combination available later labels
      *
      * @return bool
      */
@@ -2115,7 +2125,9 @@ class ProductCore extends ObjectModel
         $isbn = '',
         $low_stock_threshold = null,
         $low_stock_alert = false,
-        $mpn = null
+        $mpn = null,
+        $available_now = null,
+        $available_later = null
     ) {
         Tools::displayAsDeprecated('Use updateAttribute() instead');
 
@@ -2139,7 +2151,9 @@ class ProductCore extends ObjectModel
             $isbn,
             $low_stock_threshold,
             $low_stock_alert,
-            $mpn = null
+            $mpn = null,
+            $available_now,
+            $available_later
         );
         $this->addSupplierReference($id_supplier, $id_product_attribute);
 
@@ -2204,6 +2218,8 @@ class ProductCore extends ObjectModel
      * @param int|null $low_stock_threshold Low stock for mail alert
      * @param bool $low_stock_alert Low stock mail alert activated
      * @param string $mpn MPN
+     * @param string[]|string|null $available_now Combination available now labels
+     * @param string[]|string|null $available_later Combination available later labels
      *
      * @return bool Update result
      */
@@ -2227,12 +2243,14 @@ class ProductCore extends ObjectModel
         $isbn = '',
         $low_stock_threshold = null,
         $low_stock_alert = false,
-        $mpn = null
+        $mpn = null,
+        $available_now = null,
+        $available_later = null
     ) {
         $combination = new Combination($id_product_attribute);
 
         if (!$update_all_fields) {
-            $combination->setFieldsToUpdate([
+            $fieldsToUpdate = [
                 'price' => null !== $price,
                 'wholesale_price' => null !== $wholesale_price,
                 'ecotax' => null !== $ecotax,
@@ -2249,7 +2267,23 @@ class ProductCore extends ObjectModel
                 'low_stock_threshold' => null !== $low_stock_threshold,
                 'low_stock_alert' => null !== $low_stock_alert,
                 'id_shop_list' => !empty($id_shop_list),
-            ]);
+                'available_now' => is_string($available_now),
+                'available_later' => is_string($available_later),
+            ];
+            // Labels can be passed into this function both as array and string, as does the object model itself.
+            // If these values are passed as strings, they will be updated in all languages of the object.
+            if (is_array($available_now)) {
+                foreach ($available_now as $id_lang => $value) {
+                    $fieldsToUpdate['available_now'][$id_lang] = true;
+                }
+            }
+            if (is_array($available_later)) {
+                foreach ($available_later as $id_lang => $value) {
+                    $fieldsToUpdate['available_later'][$id_lang] = true;
+                }
+            }
+
+            $combination->setFieldsToUpdate($fieldsToUpdate);
         }
 
         $price = (float) str_replace(',', '.', (string) $price);
@@ -2270,6 +2304,8 @@ class ProductCore extends ObjectModel
         $combination->low_stock_threshold = empty($low_stock_threshold) && '0' != $low_stock_threshold ? null : (int) $low_stock_threshold;
         $combination->low_stock_alert = !empty($low_stock_alert);
         $combination->available_date = $available_date ? pSQL($available_date) : '0000-00-00';
+        $combination->available_now = $available_now;
+        $combination->available_later = $available_later;
 
         if (!empty($id_shop_list)) {
             $combination->id_shop_list = $id_shop_list;
@@ -2326,6 +2362,8 @@ class ProductCore extends ObjectModel
      * @param int|null $low_stock_threshold Low stock for mail alert
      * @param bool $low_stock_alert Low stock mail alert activated
      * @param string|null $mpn
+     * @param string[]|string $available_now Combination available now labels
+     * @param string[]|string $available_later Combination available later labels
      *
      * @return int|false|void Attribute identifier if success, false if failed to add Combination, void if Product identifier not set
      */
@@ -2347,7 +2385,9 @@ class ProductCore extends ObjectModel
         $isbn = '',
         $low_stock_threshold = null,
         $low_stock_alert = false,
-        $mpn = null
+        $mpn = null,
+        $available_now = [],
+        $available_later = []
     ) {
         if (!$this->id) {
             return;
@@ -2372,6 +2412,8 @@ class ProductCore extends ObjectModel
         $combination->low_stock_threshold = empty($low_stock_threshold) && '0' != $low_stock_threshold ? null : (int) $low_stock_threshold;
         $combination->low_stock_alert = !empty($low_stock_alert);
         $combination->available_date = $available_date;
+        $combination->available_now = $available_now;
+        $combination->available_later = $available_later;
 
         if (count($id_shop_list)) {
             $combination->id_shop_list = array_unique($id_shop_list);
@@ -4490,10 +4532,15 @@ class ProductCore extends ObjectModel
                     a.`id_attribute`, al.`name` AS attribute_name, a.`color` AS attribute_color, product_attribute_shop.`id_product_attribute`,
                     IFNULL(stock.quantity, 0) as quantity, product_attribute_shop.`price`, product_attribute_shop.`ecotax`, product_attribute_shop.`weight`,
                     product_attribute_shop.`default_on`, pa.`reference`, pa.`ean13`, pa.`mpn`, pa.`upc`, pa.`isbn`, product_attribute_shop.`unit_price_impact`,
-                    product_attribute_shop.`minimal_quantity`, product_attribute_shop.`available_date`, ag.`group_type`
+                    product_attribute_shop.`minimal_quantity`, product_attribute_shop.`available_date`, ag.`group_type`,
+                    pal.`available_now`, pal.`available_later`
                 FROM `' . _DB_PREFIX_ . 'product_attribute` pa
                 ' . Shop::addSqlAssociation('product_attribute', 'pa') . '
                 ' . Product::sqlStock('pa', 'pa') . '
+                LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_lang` pal
+                    ON (
+                        pa.`id_product_attribute` = pal.`id_product_attribute` AND 
+                        pal.`id_lang` = ' . (int) Context::getContext()->language->id . ')
                 LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_combination` pac ON (pac.`id_product_attribute` = pa.`id_product_attribute`)
                 LEFT JOIN `' . _DB_PREFIX_ . 'attribute` a ON (a.`id_attribute` = pac.`id_attribute`)
                 LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group` ag ON (ag.`id_attribute_group` = a.`id_attribute_group`)
@@ -7374,7 +7421,9 @@ class ProductCore extends ObjectModel
 
         if (!Cache::isStored($cache_id)) {
             $result = Db::getInstance()->executeS('
-            SELECT a.`id_attribute`, a.`id_attribute_group`, al.`name`, agl.`name` as `group`, pa.`reference`, pa.`ean13`, pa.`isbn`, pa.`upc`, pa.`mpn`
+            SELECT a.`id_attribute`, a.`id_attribute_group`, al.`name`, agl.`name` as `group`, 
+            pa.`reference`, pa.`ean13`, pa.`isbn`, pa.`upc`, pa.`mpn`,
+            pal.`available_now`, pal.`available_later`
             FROM `' . _DB_PREFIX_ . 'attribute` a
             LEFT JOIN `' . _DB_PREFIX_ . 'attribute_lang` al
                 ON (al.`id_attribute` = a.`id_attribute` AND al.`id_lang` = ' . (int) $id_lang . ')
@@ -7383,6 +7432,8 @@ class ProductCore extends ObjectModel
             LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute` pa
                 ON (pa.`id_product_attribute` = pac.`id_product_attribute`)
             ' . Shop::addSqlAssociation('product_attribute', 'pa') . '
+            LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_lang` pal
+                ON (pal.`id_product_attribute` = pac.`id_product_attribute` AND pal.`id_lang` = ' . (int) $id_lang . ')
             LEFT JOIN `' . _DB_PREFIX_ . 'attribute_group_lang` agl
                 ON (a.`id_attribute_group` = agl.`id_attribute_group` AND agl.`id_lang` = ' . (int) $id_lang . ')
             WHERE pa.`id_product` = ' . (int) $id_product . '

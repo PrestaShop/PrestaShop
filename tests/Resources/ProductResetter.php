@@ -41,6 +41,7 @@ class ProductResetter
             'product_attribute',
             'product_attribute_combination',
             'product_attribute_image',
+            'product_attribute_lang',
             'product_attribute_shop',
             'product_carrier',
             'product_country_tax',

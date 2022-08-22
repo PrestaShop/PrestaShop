@@ -234,3 +234,51 @@ Feature: Update product combination stock information in Back Office (BO)
       | location                   |       |
       | available date             |       |
     And product "product1" should have no stock movements
+
+  Scenario: I should be able to fill product availability labels
+    Given combination "product1SBlack" should have following stock details:
+      | combination stock detail   | value |
+      | quantity                   | 0     |
+      | minimal quantity           | 1     |
+      | low stock threshold        | 0     |
+      | low stock alert is enabled | false |
+      | location                   |       |
+      | available date             |       |
+    When I update combination "product1SBlack" stock with following details:
+      | available now labels[en-US]   | Get it now    |
+      | available later labels[en-US] | Too late dude |
+    Then combination "product1SBlack" should have following stock details:
+      | combination stock detail      | value         |
+      | quantity                      | 0             |
+      | minimal quantity              | 1             |
+      | low stock threshold           | 0             |
+      | low stock alert is enabled    | false         |
+      | location                      |               |
+      | available date                |               |
+      | available now labels[en-US]   | Get it now    |
+      | available later labels[en-US] | Too late dude |
+
+  Scenario: I should be able to delete product availability labels
+    Given combination "product1SBlack" should have following stock details:
+      | combination stock detail      | value         |
+      | quantity                      | 0             |
+      | minimal quantity              | 1             |
+      | low stock threshold           | 0             |
+      | low stock alert is enabled    | false         |
+      | location                      |               |
+      | available date                |               |
+      | available now labels[en-US]   | Get it now    |
+      | available later labels[en-US] | Too late dude |
+    When I update combination "product1SBlack" stock with following details:
+      | available now labels[en-US]   |               |
+      | available later labels[en-US] |               |
+    Then combination "product1SBlack" should have following stock details:
+      | combination stock detail      | value         |
+      | quantity                      | 0             |
+      | minimal quantity              | 1             |
+      | low stock threshold           | 0             |
+      | low stock alert is enabled    | false         |
+      | location                      |               |
+      | available date                |               |
+      | available now labels[en-US]   |               |
+      | available later labels[en-US] |               |

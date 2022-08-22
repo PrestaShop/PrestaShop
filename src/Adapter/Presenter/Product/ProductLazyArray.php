@@ -352,12 +352,9 @@ class ProductLazyArray extends AbstractLazyArray
      */
     public function getReferenceToDisplay()
     {
-        if (isset($this->product['attributes'])) {
-            foreach ($this->product['attributes'] as $attribute) {
-                if (isset($attribute['reference']) && $attribute['reference'] != null) {
-                    return $attribute['reference'];
-                }
-            }
+        $combinationData = $this->getCombinationSpecificData();
+        if (isset($combinationData['reference']) && !empty($combinationData['reference'])) {
+            return $combinationData['reference'];
         }
 
         if ('' !== $this->product['reference']) {
@@ -541,6 +538,29 @@ class ProductLazyArray extends AbstractLazyArray
     }
 
     /**
+     * Returns combination specific data, if assigned. This function should be rewritten because it
+     * loads the data from the first attribute found. See ProductController for more info.
+     *
+     * Also, on product page, $this->product['attributes'] contains a list of combinations, while in cart
+     * it contains only attribute pairs like Color-Black etc.
+     *
+     * @arrayAccess
+     *
+     * @return array|null
+     */
+    public function getCombinationSpecificData()
+    {
+        if (!isset($this->product['attributes']) || empty($this->product['attributes'])) {
+            return null;
+        }
+
+        return reset($this->product['attributes']);
+    }
+
+    /**
+     * This function returns current combination references, if set.
+     * Otherwise, it returns the base product references.
+     *
      * @arrayAccess
      *
      * @return array|null
@@ -551,39 +571,22 @@ class ProductLazyArray extends AbstractLazyArray
             return null;
         }
 
-        // If the product has no combinations then the `specific_references` must be filled in
-        if (isset($this->product['attributes'])) {
-            $specificReferences = array_slice($this->product['attributes'], 0)[0];
-        } else {
-            $specificReferences = [
-                'isbn' => $this->product['isbn'] ?? false,
-                'upc' => $this->product['upc'] ?? false,
-                'ean13' => $this->product['ean13'] ?? false,
-                'mpn' => $this->product['mpn'] ?? false,
-            ];
-        }
-        //this attributes should not be displayed in FO
-        unset(
-            $specificReferences['id_attribute'],
-            $specificReferences['id_attribute_group'],
-            $specificReferences['name'],
-            $specificReferences['group'],
-            $specificReferences['reference']
-        );
+        $specificReferences = null;
+        $referenceTypes = ['isbn', 'upc', 'ean13', 'mpn'];
+        $combinationData = $this->getCombinationSpecificData();
 
-        //if the attribute's references doesn't exist then get the product's references or unset it
-        foreach ($specificReferences as $key => $value) {
-            if (empty($value)) {
-                $translatedKey = $this->getTranslatedKey($key);
-                unset($specificReferences[$key]);
-                if (!empty($this->product[$key])) {
-                    $specificReferences[$translatedKey] = $this->product[$key];
-                }
+        foreach ($referenceTypes as $key) {
+            // First, we try to get the references of combination.
+            if (isset($combinationData[$key]) && !empty($combinationData[$key])) {
+                $value = $combinationData[$key];
+            // Otherwise, we check if something is set on the product itself
+            } elseif (!empty($this->product[$key])) {
+                $value = $this->product[$key];
+            } else {
+                continue;
             }
-        }
 
-        if (empty($specificReferences)) {
-            $specificReferences = null;
+            $specificReferences[$this->getTranslatedKey($key)] = $value;
         }
 
         return $specificReferences;
@@ -900,6 +903,7 @@ class ProductLazyArray extends AbstractLazyArray
             $product['quantity_wanted'] = $this->getQuantityWanted();
         }
 
+        // If availability date already passed, we don't want to show it
         if (isset($product['available_date'])) {
             $date = new DateTime($product['available_date']);
             if ($date < new DateTime()) {
@@ -907,74 +911,95 @@ class ProductLazyArray extends AbstractLazyArray
             }
         }
 
-        if ($show_availability) {
-            $availableQuantity = $product['quantity'] - $product['quantity_wanted'];
-            if (isset($product['stock_quantity'])) {
-                $availableQuantity = $product['stock_quantity'] - $product['quantity_wanted'];
-            }
+        // Default data
+        $this->product['availability_message'] = null;
+        $this->product['availability_submessage'] = null;
+        $this->product['availability_date'] = null;
+        $this->product['availability'] = null;
 
-            $remainingQuantityOfAlternativeCombinations = 0;
-            if ($product['cache_default_attribute'] && !empty($product['quantity_all_versions'])) {
-                $remainingQuantityOfAlternativeCombinations = $product['quantity_all_versions'];
-            }
+        // If we don't want to show availability, we return immediately
+        if (!$show_availability) {
+            return;
+        }
 
-            if ($availableQuantity >= 0) {
-                $this->product['availability_date'] = $product['available_date'];
+        // Quantity available we will display is reduced by amount we want to add to cart
+        $availableQuantity = $product['quantity'] - $product['quantity_wanted'];
+        if (isset($product['stock_quantity'])) {
+            $availableQuantity = $product['stock_quantity'] - $product['quantity_wanted'];
+        }
 
-                if ($availableQuantity < $settings->lastRemainingItems) {
-                    $this->applyLastItemsInStockDisplayRule();
+        // Combination labels
+        $combinationData = $this->getCombinationSpecificData();
+
+        // Now, let's generate a nice availability information. We will have 4 cases to go through.
+        // Case 1 - Product in stock
+        if ($availableQuantity >= 0) {
+            // If the products are the last items remaining, we show different message and exclamation mark
+            if ($availableQuantity < $settings->lastRemainingItems) {
+                $this->product['availability'] = 'last_remaining_items';
+                $this->product['availability_message'] = $this->translator->trans(
+                    'Last items in stock',
+                    [],
+                    'Shop.Theme.Catalog'
+                );
+            } else {
+                $this->product['availability'] = 'available';
+
+                // We will primarily use label from combination if set, then label on product, then the default label from PS settings
+                if (!empty($combinationData['available_now'])) {
+                    $this->product['availability_message'] = $combinationData['available_now'];
+                } elseif ($product['available_now']) {
+                    $this->product['availability_message'] = $product['available_now'];
                 } else {
                     $config = $this->configuration->get('PS_LABEL_IN_STOCK_PRODUCTS');
-                    $this->product['availability_message'] = $product['available_now'] ? $product['available_now']
-                        : ($config[$language->id] ?? null);
-                    $this->product['availability'] = 'available';
+                    $this->product['availability_message'] = $config[$language->id] ?? null;
                 }
-            } elseif ($product['allow_oosp']) {
+            }
+
+            // Case 2 - Product not in stock, available for order
+        } elseif ($product['allow_oosp']) {
+            $this->product['availability_date'] = $product['available_date'];
+            $this->product['availability'] = 'available';
+
+            // We will primarily use label from combination if set, then label on product, then the default label from PS settings
+            if (!empty($combinationData['available_later'])) {
+                $this->product['availability_message'] = $combinationData['available_later'];
+            } elseif ($product['available_now']) {
+                $this->product['availability_message'] = $product['available_later'];
+            } else {
                 $config = $this->configuration->get('PS_LABEL_OOS_PRODUCTS_BOA');
-                $this->product['availability_message'] = $product['available_later'] ? $product['available_later']
-                    : ($config[$language->id] ?? null);
-                $this->product['availability_date'] = $product['available_date'];
-                $this->product['availability'] = 'available';
-            } elseif ($product['quantity'] > 0) {
-                $this->product['availability_message'] = $this->translator->trans(
-                    'There are not enough products in stock',
-                    [],
-                    'Shop.Notifications.Error'
-                );
-                $this->product['availability'] = 'unavailable';
-                $this->product['availability_date'] = null;
-            } elseif ($remainingQuantityOfAlternativeCombinations > 0) {
+                $this->product['availability_message'] = $config[$language->id] ?? null;
+            }
+
+            // Case 3 - OOSP disabled and customer wants to add more items to cart than are in stock
+        } elseif ($product['quantity'] > 0) {
+            $this->product['availability_date'] = $product['available_date'];
+            $this->product['availability'] = 'unavailable';
+
+            $this->product['availability_message'] = $this->translator->trans(
+                'There are not enough products in stock',
+                [],
+                'Shop.Notifications.Error'
+            );
+
+        // Case 4 - Product not in stock, not available for order
+        } else {
+            $this->product['availability_date'] = $product['available_date'];
+            $this->product['availability'] = 'unavailable';
+
+            // If the product has combinations and other combination is in stock, we show a small hint about it
+            if ($product['cache_default_attribute'] && $product['quantity_all_versions'] > 0) {
                 $this->product['availability_message'] = $this->translator->trans(
                     'Product available with different options',
                     [],
                     'Shop.Theme.Catalog'
                 );
-                $this->product['availability_date'] = $product['available_date'];
-                $this->product['availability'] = 'unavailable';
             } else {
+                // We use label set in PS configuration - label is not customizable per product
                 $config = $this->configuration->get('PS_LABEL_OOS_PRODUCTS_BOD');
                 $this->product['availability_message'] = $config[$language->id] ?? null;
-                $this->product['availability_date'] = $product['available_date'];
-                $this->product['availability'] = 'unavailable';
             }
-        } else {
-            $this->product['availability_message'] = null;
-            $this->product['availability_date'] = null;
-            $this->product['availability'] = null;
         }
-    }
-
-    /**
-     * Override availability message.
-     */
-    protected function applyLastItemsInStockDisplayRule()
-    {
-        $this->product['availability_message'] = $this->translator->trans(
-            'Last items in stock',
-            [],
-            'Shop.Theme.Catalog'
-        );
-        $this->product['availability'] = 'last_remaining_items';
     }
 
     /**
@@ -1004,6 +1029,7 @@ class ProductLazyArray extends AbstractLazyArray
     protected function getProductAttributeWhitelist()
     {
         return [
+            'active',
             'add_to_cart_url',
             'additional_shipping_cost',
             'advanced_stock_management',

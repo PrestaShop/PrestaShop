@@ -48,6 +48,8 @@ class BulkCombinationFormDataProvider implements FormDataProviderInterface
                 'low_stock_threshold' => 0,
                 'low_stock_alert' => '',
                 'available_date' => '',
+                'available_now_label' => [],
+                'available_later_label' => [],
             ],
             'price' => [
                 'wholesale_price' => 0,
