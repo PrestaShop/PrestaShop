@@ -24,13 +24,10 @@
  *#}
 
 {% trans_default_domain "Admin.Orderscustomers.Feature" %}
-{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+{% form_theme invoiceOptionsForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
 
-{% form_theme invoiceOptionsForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
-
-{% block content %}
-  {{ form_start(invoiceOptionsForm, {action: path('admin_order_invoices_process'), attr: {id: 'form-invoices-options'}}) }}
-    {% block invoice_options %}
+{% block invoice_options %}
+  {{ form_start(invoiceOptionsForm, {method: 'POST', action: path('admin_order_invoices_process'), attr: {id: 'form-invoices-options'}}) }}
     <div class="card">
       <h3 class="card-header">
         <i class="material-icons">settings</i>
@@ -38,8 +35,9 @@
       </h3>
       <div class="card-body">
         <div class="form-wrapper">
-          {{ form_widget(invoiceOptionsForm) }}
-          {{ form_rest(invoiceOptionsForm) }}
+          {% block invoice_options_form_widget %}
+            {{ form_widget(invoiceOptionsForm) }}
+          {% endblock %}
         </div>
       </div>
       <div class="card-footer">
@@ -48,6 +46,5 @@
         </div>
       </div>
     </div>
-    {% endblock %}
   {{ form_end(invoiceOptionsForm) }}
 {% endblock %}
