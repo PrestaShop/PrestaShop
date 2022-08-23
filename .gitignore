@@ -1,6 +1,7 @@
 # Cache, temp and personal files
 
 /.htaccess
+/.htpasswd
 *.log
 npm-debug.log.*
 .sass-cache/
