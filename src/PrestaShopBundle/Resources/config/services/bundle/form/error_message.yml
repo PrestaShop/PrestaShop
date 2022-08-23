@@ -1,0 +1,9 @@
+services:
+    _defaults:
+        public: true
+
+    form.error_message.invalid_configuration_error_message_factory:
+        class: PrestaShopBundle\Form\ErrorMessage\InvalidConfigurationErrorMessageFactory
+        arguments:
+            - '@translator'
+            - '@prestashop.core.admin.lang.repository'
