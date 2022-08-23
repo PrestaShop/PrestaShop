@@ -80,8 +80,6 @@ class ToolbarFlagsConfigurator implements ConfiguratorInterface
         $controllerConfiguration->templateVars['maintenance_mode'] = !(bool) $this->configuration->get('PS_SHOP_ENABLE');
         $controllerConfiguration->templateVars['debug_mode'] = (bool) _PS_MODE_DEV_;
         $controllerConfiguration->templateVars['lite_display'] = $controllerConfiguration->liteDisplay;
-        // @todo: fix hardcoded route
-        $controllerConfiguration->templateVars['url_post'] = $this->router->generate('admin_features_index');
         $controllerConfiguration->templateVars['show_page_header_toolbar'] = $controllerConfiguration->showPageHeaderToolbar;
         $controllerConfiguration->templateVars['page_header_toolbar_title'] = $controllerConfiguration->pageHeaderToolbarTitle;
         $controllerConfiguration->templateVars['title'] = $controllerConfiguration->pageHeaderToolbarTitle;
