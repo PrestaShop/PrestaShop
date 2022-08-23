@@ -32,7 +32,6 @@ import {EventEmitter} from 'events';
 import SpecificPriceListRenderer from '@pages/product/components/specific-price/specific-price-list-renderer';
 import Router from '@components/router';
 import FormFieldToggler from '@components/form/form-field-toggler';
-import FormFieldDisabler from '@components/form/form-field-disabler';
 import {isUndefined} from '@PSTypes/typeguard';
 import PaginatedSpecificPricesService from '@pages/product/services/paginated-specific-prices-service';
 import DynamicPaginator from '@components/pagination/dynamic-paginator';
@@ -83,7 +82,7 @@ export default class SpecificPricesManager {
     this.initSpecificPriceModals();
     this.initCatalogPriceRules();
     // Enable/disabled the priority selectors depending on the priority type selected (global or custom)
-    new FormFieldDisabler({
+    new FormFieldToggler({
       disablingInputSelector: PriorityMap.priorityTypeCheckboxesSelector,
       matchingValue: '0',
       targetSelector: PriorityMap.priorityListWrapper,
