@@ -25,7 +25,6 @@ services:
   prestashop.bridge.smarty.header_configurator:
     class: PrestaShopBundle\Bridge\Smarty\HeaderConfigurator
     arguments:
-      - "@prestashop.router"
       - "@translator"
       - "@prestashop.adapter.legacy.context"
       - "@prestashop.hook.dispatcher"
