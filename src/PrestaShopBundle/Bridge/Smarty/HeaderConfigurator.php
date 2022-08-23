@@ -45,7 +45,6 @@ use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecific
 use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 use QuickAccess;
 use Shop;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Tab;
 use Tools;
@@ -87,11 +86,6 @@ class HeaderConfigurator implements ConfiguratorInterface
     private $link;
 
     /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
      * @var Shop
      */
     private $shop;
@@ -112,14 +106,12 @@ class HeaderConfigurator implements ConfiguratorInterface
     private $configuration;
 
     /**
-     * @param RouterInterface $router
      * @param TranslatorInterface $translator
      * @param LegacyContext $legacyContext
      * @param HookDispatcherInterface $hookDispatcher
      * @param Configuration $configuration
      */
     public function __construct(
-        RouterInterface $router,
         TranslatorInterface $translator,
         LegacyContext $legacyContext,
         HookDispatcherInterface $hookDispatcher,
@@ -131,7 +123,6 @@ class HeaderConfigurator implements ConfiguratorInterface
         $this->language = $legacyContext->getLanguage();
         $this->currency = $legacyContext->getContext()->currency;
         $this->currentLocale = $legacyContext->getContext()->getCurrentLocale();
-        $this->router = $router;
         $this->shop = $legacyContext->getContext()->shop;
         $this->translator = $translator;
         $this->hookDispatcher = $hookDispatcher;
