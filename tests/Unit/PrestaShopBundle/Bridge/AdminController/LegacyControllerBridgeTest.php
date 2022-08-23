@@ -61,13 +61,16 @@ class LegacyControllerBridgeTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->controllerConfiguration = new ControllerConfiguration($this->mockSecurityUser());
-        $this->controllerConfiguration->tabId = 42;
-        $this->controllerConfiguration->objectModelClassName = 'ObjectModel';
-        $this->controllerConfiguration->legacyControllerName = 'AdminController';
+        $this->controllerConfiguration = new ControllerConfiguration(
+            $this->mockSecurityUser(),
+            42,
+            'ObjectModel',
+            'AdminController',
+            'object',
+            '/templates'
+        );
         $this->controllerConfiguration->legacyCurrentIndex = 'index.php?controller=AdminFoo';
         $this->controllerConfiguration->positionIdentifierKey = 'id_object';
-        $this->controllerConfiguration->tableName = 'object';
         $this->controllerConfiguration->token = 'tokenFooBar';
         $this->controllerConfiguration->metaTitle = [1 => 'french title', 2 => 'english title'];
         $this->controllerConfiguration->breadcrumbs = [1 => 'foo', 2 => 'bar'];
@@ -95,7 +98,6 @@ class LegacyControllerBridgeTest extends TestCase
         $this->controllerConfiguration->bootstrap = false;
         $this->controllerConfiguration->cssFiles = self::DEFAULT_CSS_FILES_VALUE;
         $this->controllerConfiguration->jsFiles = self::DEFAULT_JS_FILES_VALUE;
-        $this->controllerConfiguration->templateFolder = '/templates';
         $this->controllerConfiguration->errors = [
             'error1',
             'error2',
