@@ -128,7 +128,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                 [
                     'options' => [
                         'constraints' => [
-                            new NoTags,
+                            new NoTags(),
                         ],
                     ],
                     'type' => TextType::class,
@@ -216,7 +216,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                 [
                     'options' => [
                         'constraints' => [
-                            new NoTags,
+                            new NoTags(),
                         ],
                     ],
                     'type' => TextareaType::class,
