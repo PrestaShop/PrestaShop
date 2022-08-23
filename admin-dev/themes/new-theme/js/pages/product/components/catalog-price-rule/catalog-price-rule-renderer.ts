@@ -50,6 +50,7 @@ export default class CatalogPriceRuleRenderer implements RendererType {
   }
 
   public render(data: Record<string, any>): void {
+    console.log(data);
     const {listFields} = CatalogPriceRuleMap;
     const tbody = this.listContainer.querySelector<HTMLElement>(`${CatalogPriceRuleMap.listContainer} tbody`);
 
