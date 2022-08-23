@@ -45,6 +45,7 @@ use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\AbstractComparison;
 use Symfony\Component\Validator\Constraints\PositiveOrZero;
 use Symfony\Component\Validator\Constraints\GreaterThan;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 
 /**
  * Class InvoiceOptionsType generates "Invoice options" form
@@ -181,7 +182,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                 [
                     'required' => false,
                     'constraints' => [
-                        new GreaterThan(
+                        new GreaterThanOrEqual(
                             [
                                 'value' => $this->nextInvoiceNumber,
                                 'message' => $this->trans(
@@ -250,6 +251,8 @@ class InvoiceOptionsType extends TranslatorAwareType
                 'invoice_model',
                 ChoiceType::class,
                 [
+                    'required' => false,
+                    'placeholder' => false,
                     'choices' => $this->invoiceModelChoiceProvider->getChoices(),
                     'translation_domain' => false,
                     'multistore_configuration_key' => 'PS_INVOICE_MODEL',
