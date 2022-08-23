@@ -171,7 +171,8 @@ class AdministrationController extends FrameworkBundleAdminController
             try {
                 $formHandler->save($data);
             } catch (DataProviderException $e) {
-                $this->flashErrors($this->getErrorMessages($e->getInvalidConfigurationDataErrors()));
+                $errorMessageFactory = $this->get('form.invalid_configuration_error_message_factory');
+                $this->flashErrors($errorMessageFactory->getErrorMessages($e->getInvalidConfigurationDataErrors(), $form));
 
                 return $this->redirectToRoute('admin_administration');
             }

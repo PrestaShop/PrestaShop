@@ -26,7 +26,6 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\NoTags;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -54,19 +53,18 @@ use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
  */
 class InvoiceOptionsType extends TranslatorAwareType
 {
-    public const ENABLE_INVOICES = 'enable_invoices';
-    public const ENABLE_TAX_BREAKDOWN = 'enable_tax_breakdown';
-    public const ENABLE_PRODUCT_IMAGES = 'enable_product_images';
-    public const INVOICE_PREFIX = 'invoice_prefix';
-    public const ADD_CURRENT_YEAR = 'add_current_year';
-    public const RESET_NUMBER_ANNUALLY = 'reset_number_annually';
-    public const YEAR_POSITION = 'year_position';
-    public const INVOICE_NUMBER = 'invoice_number';
-    public const LEGAL_FREE_TEXT = 'legal_free_text';
-    public const FOOTER_TEXT = 'footer_text';
-    public const INVOICE_MODEL = 'invoice_model';
-    public const USE_DISK_CACHE = 'use_disk_cache';
-
+    public const FIELD_ENABLE_INVOICES = 'enable_invoices';
+    public const FIELD_ENABLE_TAX_BREAKDOWN = 'enable_tax_breakdown';
+    public const FIELD_ENABLE_PRODUCT_IMAGES = 'enable_product_images';
+    public const FIELD_INVOICE_PREFIX = 'invoice_prefix';
+    public const FIELD_ADD_CURRENT_YEAR = 'add_current_year';
+    public const FIELD_RESET_NUMBER_ANNUALLY = 'reset_number_annually';
+    public const FIELD_YEAR_POSITION = 'year_position';
+    public const FIELD_INVOICE_NUMBER = 'invoice_number';
+    public const FIELD_LEGAL_FREE_TEXT = 'legal_free_text';
+    public const FIELD_FOOTER_TEXT = 'footer_text';
+    public const FIELD_INVOICE_MODEL = 'invoice_model';
+    public const FIELD_USE_DISK_CACHE = 'use_disk_cache';
     /**
      * @var FormChoiceProviderInterface
      */
@@ -101,7 +99,7 @@ class InvoiceOptionsType extends TranslatorAwareType
     {
         $builder
             ->add(
-                static::ENABLE_INVOICES,
+                static::FIELD_ENABLE_INVOICES,
                 SwitchType::class,
                 [
                     'required' => true,
@@ -114,7 +112,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                 ]
             )
             ->add(
-                static::ENABLE_TAX_BREAKDOWN,
+                static::FIELD_ENABLE_TAX_BREAKDOWN,
                 SwitchType::class,
                 [
                     'multistore_configuration_key' => 'PS_INVOICE_TAXES_BREAKDOWN',
@@ -126,7 +124,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                 ]
             )
             ->add(
-                static::ENABLE_PRODUCT_IMAGES,
+                static::FIELD_ENABLE_PRODUCT_IMAGES,
                 SwitchType::class,
                 [
                     'multistore_configuration_key' => 'PS_PDF_IMG_INVOICE',
@@ -138,7 +136,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                 ]
             )
             ->add(
-                static::INVOICE_PREFIX,
+                static::FIELD_INVOICE_PREFIX,
                 TranslatableType::class,
                 [
                     'options' => [
@@ -157,7 +155,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                 ]
             )
             ->add(
-                static::ADD_CURRENT_YEAR,
+                static::FIELD_ADD_CURRENT_YEAR,
                 SwitchType::class,
                 [
                     'multistore_configuration_key' => 'PS_INVOICE_USE_YEAR',
@@ -168,7 +166,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                 ]
             )
             ->add(
-                static::RESET_NUMBER_ANNUALLY,
+                static::FIELD_RESET_NUMBER_ANNUALLY,
                 SwitchType::class,
                 [
                     'multistore_configuration_key' => 'PS_INVOICE_RESET',
@@ -179,7 +177,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                 ]
             )
             ->add(
-                static::YEAR_POSITION,
+                static::FIELD_YEAR_POSITION,
                 ChoiceType::class,
                 [
                     'choices' => [
@@ -192,7 +190,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                 ]
             )
             ->add(
-                static::INVOICE_NUMBER,
+                static::FIELD_INVOICE_NUMBER,
                 NumberType::class,
                 [
                     'required' => false,
@@ -227,7 +225,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                 ]
             )
             ->add(
-                static::LEGAL_FREE_TEXT,
+                static::FIELD_LEGAL_FREE_TEXT,
                 TranslatableType::class,
                 [
                     'required' => false,
@@ -246,7 +244,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                 ]
             )
             ->add(
-                static::FOOTER_TEXT,
+                static::FIELD_FOOTER_TEXT,
                 TranslatableType::class,
                 [
                     'required' => false,
@@ -265,7 +263,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                 ]
             )
             ->add(
-                static::INVOICE_MODEL,
+                static::FIELD_INVOICE_MODEL,
                 ChoiceType::class,
                 [
                     'required' => false,
@@ -278,7 +276,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                 ]
             )
             ->add(
-                static::USE_DISK_CACHE,
+                static::FIELD_USE_DISK_CACHE,
                 SwitchType::class,
                 [
                     'multistore_configuration_key' => 'PS_PDF_USE_CACHE',

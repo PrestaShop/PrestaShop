@@ -81,14 +81,14 @@ final class UploadQuotaDataProvider implements FormDataProviderInterface
         if (isset($data[UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES])) {
             $maxSizeAttachedFile = $data[UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES];
             if (!is_numeric($maxSizeAttachedFile) || $maxSizeAttachedFile < 0) {
-                $errors->add(new InvalidConfigurationDataError(FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO, UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES));
+                $errors->add(new InvalidConfigurationDataError(InvalidConfigurationDataError::ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO, UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES));
             }
         }
 
         if (isset($data[UploadQuotaType::FIELD_MAX_SIZE_DOWNLOADABLE_FILE])) {
             $maxSizeDownloadableProduct = $data[UploadQuotaType::FIELD_MAX_SIZE_DOWNLOADABLE_FILE];
             if (!is_numeric($maxSizeDownloadableProduct) || $maxSizeDownloadableProduct < 0) {
-                $errors->add(new InvalidConfigurationDataError(FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO, UploadQuotaType::FIELD_MAX_SIZE_DOWNLOADABLE_FILE));
+                $errors->add(new InvalidConfigurationDataError(InvalidConfigurationDataError::ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO, UploadQuotaType::FIELD_MAX_SIZE_DOWNLOADABLE_FILE));
             }
         }
 
@@ -96,7 +96,7 @@ final class UploadQuotaDataProvider implements FormDataProviderInterface
             $maxSizeProductImage = $data[UploadQuotaType::FIELD_MAX_SIZE_PRODUCT_IMAGE];
 
             if (!is_numeric($maxSizeProductImage) || $maxSizeProductImage < 0) {
-                $errors->add(new InvalidConfigurationDataError(FormDataProvider::ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO, UploadQuotaType::FIELD_MAX_SIZE_PRODUCT_IMAGE));
+                $errors->add(new InvalidConfigurationDataError(InvalidConfigurationDataError::ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO, UploadQuotaType::FIELD_MAX_SIZE_PRODUCT_IMAGE));
             }
         }
 
