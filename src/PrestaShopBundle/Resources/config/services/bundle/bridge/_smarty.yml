@@ -46,4 +46,5 @@ services:
     arguments:
       - "@prestashop.adapter.legacy.configuration"
       - "@prestashop.core.help.documentation"
+      - "@prestashop.adapter.environment"
     tags: [ 'prestashop.bridge.smarty_configurator' ]
