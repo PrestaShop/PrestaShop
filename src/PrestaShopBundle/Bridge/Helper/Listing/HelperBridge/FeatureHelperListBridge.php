@@ -38,6 +38,9 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class FeatureHelperListBridge extends HelperListBridge
 {
+    /**
+     * {@inheritDoc}
+     */
     public function generateListQuery(
         HelperListConfiguration $helperListConfiguration,
         Request $request,
@@ -45,20 +48,30 @@ class FeatureHelperListBridge extends HelperListBridge
     ): string {
         $listSql = parent::generateListQuery($helperListConfiguration, $request, $idLang);
 
-        $nbItems = count($helperListConfiguration->list);
-        for ($i = 0; $i < $nbItems; ++$i) {
-            $item = &$helperListConfiguration->list[$i];
-
-            $query = new DbQuery();
-            $query->select('COUNT(fv.id_feature_value) as count_values');
-            $query->from('feature_value', 'fv');
-            $query->where('fv.id_feature =' . (int) $item['id_feature']);
-            $query->where('(fv.custom=0 OR fv.custom IS NULL)');
-            $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
-            $item['value'] = (int) $res;
-            unset($query);
+        // adds feature_value count to evey row of feature
+        foreach ($helperListConfiguration->list as &$featureRowRecord) {
+            $this->addFeatureValuesCount($featureRowRecord);
         }
 
         return $listSql;
+    }
+
+    /**
+     * Appends feature_value count to every record row
+     *
+     * @param array<string, mixed> $featureRowRecord
+     */
+    private function addFeatureValuesCount(array &$featureRowRecord): void
+    {
+        $query = new DbQuery();
+
+        $query
+            ->select('COUNT(fv.id_feature_value) as count_values')
+            ->from('feature_value', 'fv')
+            ->where('fv.id_feature =' . (int) $featureRowRecord['id_feature'])
+            ->where('(fv.custom=0 OR fv.custom IS NULL)')
+        ;
+
+        $featureRowRecord['value'] = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
     }
 }
