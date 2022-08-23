@@ -29,10 +29,11 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration;
 
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Form\ErrorMessage\AdministrationConfigurationError;
+use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorCollection;
+use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShopBundle\Form\Exception\DataProviderException;
-use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
-use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
 
 /**
  * This class is responsible of managing the data manipulated using Upload Quota form
@@ -76,19 +77,19 @@ final class UploadQuotaDataProvider implements FormDataProviderInterface
      */
     private function validate(array $data): void
     {
-        $errors = new InvalidConfigurationDataErrorCollection();
+        $errors = new ConfigurationErrorCollection();
 
         if (isset($data[UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES])) {
             $maxSizeAttachedFile = $data[UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES];
             if (!is_numeric($maxSizeAttachedFile) || $maxSizeAttachedFile < 0) {
-                $errors->add(new InvalidConfigurationDataError(InvalidConfigurationDataError::ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO, UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES));
+                $errors->add(new AdministrationConfigurationError(ConfigurationErrorInterface::ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO, UploadQuotaType::FIELD_MAX_SIZE_ATTACHED_FILES));
             }
         }
 
         if (isset($data[UploadQuotaType::FIELD_MAX_SIZE_DOWNLOADABLE_FILE])) {
             $maxSizeDownloadableProduct = $data[UploadQuotaType::FIELD_MAX_SIZE_DOWNLOADABLE_FILE];
             if (!is_numeric($maxSizeDownloadableProduct) || $maxSizeDownloadableProduct < 0) {
-                $errors->add(new InvalidConfigurationDataError(InvalidConfigurationDataError::ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO, UploadQuotaType::FIELD_MAX_SIZE_DOWNLOADABLE_FILE));
+                $errors->add(new AdministrationConfigurationError(ConfigurationErrorInterface::ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO, UploadQuotaType::FIELD_MAX_SIZE_DOWNLOADABLE_FILE));
             }
         }
 
@@ -96,7 +97,7 @@ final class UploadQuotaDataProvider implements FormDataProviderInterface
             $maxSizeProductImage = $data[UploadQuotaType::FIELD_MAX_SIZE_PRODUCT_IMAGE];
 
             if (!is_numeric($maxSizeProductImage) || $maxSizeProductImage < 0) {
-                $errors->add(new InvalidConfigurationDataError(InvalidConfigurationDataError::ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO, UploadQuotaType::FIELD_MAX_SIZE_PRODUCT_IMAGE));
+                $errors->add(new AdministrationConfigurationError(ConfigurationErrorInterface::ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO, UploadQuotaType::FIELD_MAX_SIZE_PRODUCT_IMAGE));
             }
         }
 

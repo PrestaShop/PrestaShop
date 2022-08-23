@@ -26,30 +26,43 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Exception;
+namespace PrestaShopBundle\Form\ErrorMessage;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
-use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorCollection;
-use Throwable;
+use PrestaShopBundle\Controller\Exception\FieldNotFoundException;
+use Symfony\Component\Form\FormInterface;
 
-class DataProviderException extends DomainException
+class LabelProvider
 {
     /**
-     * @var ConfigurationErrorCollection
+     * @param FormInterface $form
+     * @param string $fieldName
+     *
+     * @return string
+     * @throws FieldNotFoundException
      */
-    private $configurationErrors;
-
-    public function __construct($message = '', $code = 0, Throwable $previous = null, ?ConfigurationErrorCollection $configurationErrors = null)
+    public function getLabel(FormInterface $form, string $fieldName): string
     {
-        parent::__construct($message, $code, $previous);
-        $this->configurationErrors = $configurationErrors ?: new ConfigurationErrorCollection();
-    }
+        $view = $form->createView();
+        foreach ($view->children as $child) {
+            if ($fieldName === $child->vars['name']) {
+                if (!isset($child->vars['label'])) {
+                    throw new FieldNotFoundException(
+                        sprintf(
+                            'Field %s doesn\'t have a label set in Form Type',
+                            $fieldName
+                        )
+                    );
+                }
 
-    /**
-     * @return ConfigurationErrorCollection
-     */
-    public function getConfigurationErrors(): ConfigurationErrorCollection
-    {
-        return $this->configurationErrors;
+                return $child->vars['label'];
+            }
+        }
+
+        throw new FieldNotFoundException(
+            sprintf(
+                'Field name for field %s not found',
+                $fieldName
+            )
+        );
     }
 }

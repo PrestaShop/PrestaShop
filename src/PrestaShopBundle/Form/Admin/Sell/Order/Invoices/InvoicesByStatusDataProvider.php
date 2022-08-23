@@ -27,10 +27,10 @@
 namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 
 use PrestaShop\PrestaShop\Core\Exception\TypeException;
+use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorCollection;
+use PrestaShop\PrestaShop\Core\Form\ErrorMessage\InvoicesConfigurationError;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShopBundle\Form\Exception\DataProviderException;
-use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
-use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
 
 /**
  * Class is responsible of managing the data manipulated using invoice generation by order status form
@@ -71,11 +71,11 @@ final class InvoicesByStatusDataProvider implements FormDataProviderInterface
         if (!isset($data[GenerateByStatusType::FIELD_ORDER_STATES])
             || !is_array($data[GenerateByStatusType::FIELD_ORDER_STATES])
             || !count($data[GenerateByStatusType::FIELD_ORDER_STATES])) {
-            $errorCollection = new InvalidConfigurationDataErrorCollection();
+            $errorCollection = new ConfigurationErrorCollection();
 
             $errorCollection->add(
-                new InvalidConfigurationDataError(
-                    InvalidConfigurationDataError::ERROR_NO_ORDER_STATE_SELECTED,
+                new InvoicesConfigurationError(
+                    InvoicesConfigurationError::ERROR_NO_ORDER_STATE_SELECTED,
                     GenerateByStatusType::FIELD_ORDER_STATES
                 )
             );

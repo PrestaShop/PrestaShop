@@ -27,11 +27,11 @@
 namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 
 use DateTime;
+use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorCollection;
+use PrestaShop\PrestaShop\Core\Form\ErrorMessage\InvoicesConfigurationError;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Order\OrderInvoiceDataProviderInterface;
 use PrestaShopBundle\Form\Exception\DataProviderException;
-use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
-use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
 
 /**
  * Class is responsible of managing the data manipulated using invoice generation by date form
@@ -78,18 +78,20 @@ final class InvoicesByDateDataProvider implements FormDataProviderInterface
      *
      * @param array $data
      *
+     * @throws DataProviderException
+     *
      * @return void
      */
     private function validate(array $data)
     {
-        $errorCollection = new InvalidConfigurationDataErrorCollection();
+        $errorCollection = new ConfigurationErrorCollection();
 
         if (!isset($data[GenerateByDateType::FIELD_DATE_FROM]) || false === $data[GenerateByDateType::FIELD_DATE_FROM]) {
-            $errorCollection->add(new InvalidConfigurationDataError(InvalidConfigurationDataError::ERROR_INVALID_DATE_FROM, GenerateByDateType::FIELD_DATE_FROM));
+            $errorCollection->add(new InvoicesConfigurationError(InvoicesConfigurationError::ERROR_INVALID_DATE_FROM, GenerateByDateType::FIELD_DATE_FROM));
         }
 
         if (!isset($data[GenerateByDateType::FIELD_DATE_TO]) || false === $data[GenerateByDateType::FIELD_DATE_TO]) {
-            $errorCollection->add(new InvalidConfigurationDataError(InvalidConfigurationDataError::ERROR_INVALID_DATE_TO, GenerateByDateType::FIELD_DATE_TO));
+            $errorCollection->add(new InvoicesConfigurationError(InvoicesConfigurationError::ERROR_INVALID_DATE_TO, GenerateByDateType::FIELD_DATE_TO));
         }
 
         if (!$errorCollection->isEmpty()) {
@@ -101,8 +103,8 @@ final class InvoicesByDateDataProvider implements FormDataProviderInterface
 
         if (!$this->orderInvoiceDataProvider->getByDateInterval($dateFrom, $dateTo)) {
             $errorCollection->add(
-                new InvalidConfigurationDataError(
-                    InvalidConfigurationDataError::ERROR_NO_INVOICES_FOUND,
+                new InvoicesConfigurationError(
+                    InvoicesConfigurationError::ERROR_NO_INVOICES_FOUND,
                     GenerateByDateType::FIELD_DATE_TO
                 )
             );

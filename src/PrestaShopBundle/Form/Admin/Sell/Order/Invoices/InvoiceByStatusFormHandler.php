@@ -26,14 +26,15 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 
+use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorCollection;
+use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorInterface;
+use PrestaShop\PrestaShop\Core\Form\ErrorMessage\InvoicesConfigurationError;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\Handler;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Order\OrderInvoiceDataProviderInterface;
 use PrestaShop\PrestaShop\Core\PDF\PDFGeneratorInterface;
 use PrestaShopBundle\Form\Exception\DataProviderException;
-use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
-use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
 use Symfony\Component\Form\FormFactoryInterface;
 
 /**
@@ -95,11 +96,11 @@ final class InvoiceByStatusFormHandler extends Handler
         }
 
         if (empty($invoiceCollection)) {
-            $errorCollection = new InvalidConfigurationDataErrorCollection();
+            $errorCollection = new ConfigurationErrorCollection();
 
             $errorCollection->add(
-                new InvalidConfigurationDataError(
-                    InvalidConfigurationDataError::ERROR_NO_INVOICES_FOUND_FOR_STATUS,
+                new InvoicesConfigurationError(
+                    InvoicesConfigurationError::ERROR_NO_INVOICES_FOUND_FOR_STATUS,
                     GenerateByStatusType::FIELD_ORDER_STATES
                 )
             );
