@@ -119,6 +119,8 @@ class AdminModelAdapter extends \PrestaShopBundle\Model\AdminModelAdapter
         'low_stock_alert',
         'available_date',
         'ecotax',
+        'additional_shipping_cost',
+        'additional_delivery_times',
     ];
 
     /**
