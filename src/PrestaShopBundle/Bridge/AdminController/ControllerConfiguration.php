@@ -94,9 +94,6 @@ class ControllerConfiguration
      * @var string
      *
      * @see \AdminController::$display
-     *
-     * @todo: investigate possible values and if it can be custom.
-     *      Following seems to be used: list,edit,view,options,editAttributes,editFeatureValue
      */
     public $displayType = 'list';
 
