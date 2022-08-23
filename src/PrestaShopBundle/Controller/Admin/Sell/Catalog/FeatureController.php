@@ -60,7 +60,7 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
      */
     public function indexAction(Request $request): Response
     {
-        $this->setToolbarActions();
+        $this->setHeaderToolbarActions();
 
         $helperListConfiguration = $this->buildListConfiguration(
             'id_feature',
@@ -193,7 +193,7 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
     /**
      * @return void
      */
-    private function setToolbarActions(): void
+    private function setHeaderToolbarActions(): void
     {
         $controllerConfiguration = $this->getControllerConfiguration();
         $index = $controllerConfiguration->legacyCurrentIndex;
