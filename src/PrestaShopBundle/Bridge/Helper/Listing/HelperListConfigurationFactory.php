@@ -71,7 +71,6 @@ class HelperListConfigurationFactory
         string $positionIdentifier = null,
         string $defaultOrderBy = null,
         bool $isJoinLanguageTableAuto = false,
-        // @todo: investigate what these options actually do and maybe rename them to reflect it better
         bool $deleted = false,
         bool $explicitSelect = false,
         bool $useFoundRows = true,
