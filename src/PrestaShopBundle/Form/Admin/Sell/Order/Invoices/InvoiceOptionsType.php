@@ -191,7 +191,7 @@ class InvoiceOptionsType extends TranslatorAwareType
             )
             ->add(
                 static::FIELD_INVOICE_NUMBER,
-                NumberType::class,
+                IntegerType::class,
                 [
                     'required' => false,
                     'constraints' => [
