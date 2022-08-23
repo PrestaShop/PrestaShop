@@ -53,6 +53,19 @@ use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
  */
 class InvoiceOptionsType extends TranslatorAwareType
 {
+    public const ENABLE_INVOICES = 'enable_invoices';
+    public const ENABLE_TAX_BREAKDOWN = 'enable_tax_breakdown';
+    public const ENABLE_PRODUCT_IMAGES = 'enable_product_images';
+    public const INVOICE_PREFIX = 'invoice_prefix';
+    public const ADD_CURRENT_YEAR = 'add_current_year';
+    public const RESET_NUMBER_ANNUALLY = 'reset_number_annually';
+    public const YEAR_POSITION = 'year_position';
+    public const INVOICE_NUMBER = 'invoice_number';
+    public const LEGAL_FREE_TEXT = 'legal_free_text';
+    public const FOOTER_TEXT = 'footer_text';
+    public const INVOICE_MODEL = 'invoice_model';
+    public const USE_DISK_CACHE = 'use_disk_cache';
+
     /**
      * @var FormChoiceProviderInterface
      */
@@ -87,7 +100,7 @@ class InvoiceOptionsType extends TranslatorAwareType
     {
         $builder
             ->add(
-                'enable_invoices',
+                static::ENABLE_INVOICES,
                 SwitchType::class,
                 [
                     'required' => true,
@@ -100,7 +113,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                 ]
             )
             ->add(
-                'enable_tax_breakdown',
+                static::ENABLE_TAX_BREAKDOWN,
                 SwitchType::class,
                 [
                     'multistore_configuration_key' => 'PS_INVOICE_TAXES_BREAKDOWN',
@@ -112,7 +125,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                 ]
             )
             ->add(
-                'enable_product_images',
+                static::ENABLE_PRODUCT_IMAGES,
                 SwitchType::class,
                 [
                     'multistore_configuration_key' => 'PS_PDF_IMG_INVOICE',
@@ -124,7 +137,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                 ]
             )
             ->add(
-                'invoice_prefix',
+                static::INVOICE_PREFIX,
                 TranslatableType::class,
                 [
                     'options' => [
@@ -132,6 +145,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                             new NoTags(),
                         ],
                     ],
+                    'required' => false,
                     'type' => TextType::class,
                     'multistore_configuration_key' => 'PS_INVOICE_PREFIX',
                     'label' => $this->trans('Invoice prefix', 'Admin.Orderscustomers.Feature'),
@@ -142,7 +156,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                 ]
             )
             ->add(
-                'add_current_year',
+                static::ADD_CURRENT_YEAR,
                 SwitchType::class,
                 [
                     'multistore_configuration_key' => 'PS_INVOICE_USE_YEAR',
@@ -153,7 +167,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                 ]
             )
             ->add(
-                'reset_number_annually',
+                static::RESET_NUMBER_ANNUALLY,
                 SwitchType::class,
                 [
                     'multistore_configuration_key' => 'PS_INVOICE_RESET',
@@ -164,7 +178,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                 ]
             )
             ->add(
-                'year_position',
+                static::YEAR_POSITION,
                 ChoiceType::class,
                 [
                     'choices' => [
@@ -177,7 +191,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                 ]
             )
             ->add(
-                'invoice_number',
+                static::INVOICE_NUMBER,
                 IntegerType::class,
                 [
                     'required' => false,
@@ -212,9 +226,10 @@ class InvoiceOptionsType extends TranslatorAwareType
                 ]
             )
             ->add(
-                'legal_free_text',
+                static::LEGAL_FREE_TEXT,
                 TranslatableType::class,
                 [
+                    'required' => false,
                     'options' => [
                         'constraints' => [
                             new NoTags(),
@@ -230,13 +245,14 @@ class InvoiceOptionsType extends TranslatorAwareType
                 ]
             )
             ->add(
-                'footer_text',
+                static::FOOTER_TEXT,
                 TranslatableType::class,
                 [
+                    'required' => false,
                     'type' => TextType::class,
                     'options' => [
                         'constraints' => [
-                            new NoTags,
+                            new NoTags(),
                         ],
                     ],
                     'multistore_configuration_key' => 'PS_INVOICE_FREE_TEXT',
@@ -248,7 +264,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                 ]
             )
             ->add(
-                'invoice_model',
+                static::INVOICE_MODEL,
                 ChoiceType::class,
                 [
                     'required' => false,
@@ -261,7 +277,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                 ]
             )
             ->add(
-                'use_disk_cache',
+                static::USE_DISK_CACHE,
                 SwitchType::class,
                 [
                     'multistore_configuration_key' => 'PS_PDF_USE_CACHE',
