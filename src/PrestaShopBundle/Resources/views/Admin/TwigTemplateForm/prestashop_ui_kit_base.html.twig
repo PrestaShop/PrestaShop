@@ -1505,3 +1505,10 @@
     {% endfor -%}
   </div>
 {%- endblock -%}
+
+{%- block number_widget -%}
+  {# type="number" doesn't work with floats #}
+  {%- set type = type|default('text') -%}
+  {{ block('form_widget_simple') }}
+  {{ block('form_help') }}
+{%- endblock number_widget -%}
