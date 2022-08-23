@@ -34,6 +34,7 @@ use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -192,7 +193,7 @@ class InvoiceOptionsType extends TranslatorAwareType
             )
             ->add(
                 static::INVOICE_NUMBER,
-                IntegerType::class,
+                NumberType::class,
                 [
                     'required' => false,
                     'constraints' => [
