@@ -32,7 +32,6 @@ use Language;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Help\Documentation;
 use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
-use Symfony\Component\Routing\RouterInterface;
 use Tools;
 
 /**
@@ -40,11 +39,6 @@ use Tools;
  */
 class ToolbarFlagsConfigurator implements ConfiguratorInterface
 {
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
     /**
      * @var Configuration
      */
@@ -56,13 +50,11 @@ class ToolbarFlagsConfigurator implements ConfiguratorInterface
     private $documentation;
 
     /**
-     * @param RouterInterface $router
      * @param Configuration $configuration
      * @param Documentation $documentation
      */
-    public function __construct(RouterInterface $router, Configuration $configuration, Documentation $documentation)
+    public function __construct(Configuration $configuration, Documentation $documentation)
     {
-        $this->router = $router;
         $this->configuration = $configuration;
         $this->documentation = $documentation;
     }

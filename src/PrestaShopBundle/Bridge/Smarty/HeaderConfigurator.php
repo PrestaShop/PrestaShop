@@ -197,6 +197,7 @@ class HeaderConfigurator implements ConfiguratorInterface
         $controllerConfiguration->templateVars['bootstrap'] = $controllerConfiguration->bootstrap;
         $controllerConfiguration->templateVars['controller_name'] = $controllerConfiguration->legacyControllerName;
         $controllerConfiguration->templateVars['country_iso_code'] = $this->country->iso_code;
+        //@todo: still hardcoded. Is it needed?
         $controllerConfiguration->templateVars['currentIndex'] = $this->router->generate('admin_features_index');
         $controllerConfiguration->templateVars['current_tab_level'] = $currentTabLevel;
         $controllerConfiguration->templateVars['default_language'] = (int) $this->configuration->get('PS_LANG_DEFAULT');
