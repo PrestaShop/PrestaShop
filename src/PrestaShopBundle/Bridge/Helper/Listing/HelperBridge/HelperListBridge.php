@@ -319,6 +319,7 @@ class HelperListBridge
      */
     private function getFromClause(HelperListConfiguration $helperListConfiguration)
     {
+        // for some reason Order object model db table name is plural, so it is handled here (all other tables matches object model singular name)
         $sqlTable = $helperListConfiguration->getTableName() == 'order' ? 'orders' : $helperListConfiguration->getTableName();
 
         return "\n" . 'FROM `' . _DB_PREFIX_ . $sqlTable . '` a ';
@@ -382,8 +383,7 @@ class HelperListBridge
     {
         $whereShop = '';
         if ($helperListConfiguration->getShopLinkType()) {
-            //$whereShop = Shop::addSqlRestriction($this->shopShareDatas, 'a');
-            $whereShop = Shop::addSqlRestriction(false, 'a');
+            $whereShop = Shop::addSqlRestriction($helperListConfiguration->isShopShareData(), 'a');
         }
 
         return ' WHERE 1 ' . $helperListConfiguration->where . ' ' .

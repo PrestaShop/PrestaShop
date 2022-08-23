@@ -226,6 +226,11 @@ class HelperListConfiguration
     private $postSubmitUrl;
 
     /**
+     * @var bool
+     */
+    private $shopShareData = false;
+
+    /**
      * @param int $tabId
      */
     public function __construct(
@@ -617,5 +622,25 @@ class HelperListConfiguration
     public function getPostSubmitUrl(): ?string
     {
         return $this->postSubmitUrl;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isShopShareData(): bool
+    {
+        return $this->shopShareData;
+    }
+
+    /**
+     * @param bool $shopShareData
+     *
+     * @return HelperListConfiguration
+     */
+    public function setShopShareData(bool $shopShareData): self
+    {
+        $this->shopShareData = $shopShareData;
+
+        return $this;
     }
 }
