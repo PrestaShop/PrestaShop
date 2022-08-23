@@ -259,7 +259,6 @@ class AdministrationController extends FrameworkBundleAdminController
             'Admin.Notifications.Error',
             [
                 $this->getFieldLabel($error->getFieldName()),
-                GeneralDataProvider::MAX_COOKIE_VALUE,
             ]
         );
     }
