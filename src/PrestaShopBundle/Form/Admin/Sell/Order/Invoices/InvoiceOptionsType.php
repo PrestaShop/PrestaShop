@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\NoTags;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
@@ -40,7 +41,10 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\Constraints\AbstractComparison;
 use Symfony\Component\Validator\Constraints\PositiveOrZero;
+use Symfony\Component\Validator\Constraints\GreaterThan;
 
 /**
  * Class InvoiceOptionsType generates "Invoice options" form
@@ -122,6 +126,11 @@ class InvoiceOptionsType extends TranslatorAwareType
                 'invoice_prefix',
                 TranslatableType::class,
                 [
+                    'options' => [
+                        'constraints' => [
+                            new NoTags,
+                        ],
+                    ],
                     'type' => TextType::class,
                     'multistore_configuration_key' => 'PS_INVOICE_PREFIX',
                     'label' => $this->trans('Invoice prefix', 'Admin.Orderscustomers.Feature'),
@@ -171,8 +180,26 @@ class InvoiceOptionsType extends TranslatorAwareType
                 IntegerType::class,
                 [
                     'required' => false,
-                    'constraints' => [new PositiveOrZero()],
-                    'multistore_configuration_key' => 'PS_INVOICE_START_NUMBER',
+                    'constraints' => [
+                        new GreaterThan(
+                            [
+                                'value' => $this->nextInvoiceNumber,
+                                'message' => $this->trans(
+                                    'Invalid invoice number.',
+                                    'Admin.Orderscustomers.Notification'
+                                )
+                            ]
+                        ),
+                        new GreaterThan(
+                            [
+                                'value' => 0,
+                                'message' => $this->trans(
+                                    'Invalid invoice number.',
+                                    'Admin.Orderscustomers.Notification'
+                                )
+                            ]
+                        ),
+                    ],                    'multistore_configuration_key' => 'PS_INVOICE_START_NUMBER',
                     'label' => $this->trans('Invoice number', 'Admin.Orderscustomers.Feature'),
                     'help' => $this->trans(
                         'The next invoice will begin with this number, and then increase with each additional invoice. Set to 0 if you want to keep the current number (which is #%number%).',
@@ -187,6 +214,11 @@ class InvoiceOptionsType extends TranslatorAwareType
                 'legal_free_text',
                 TranslatableType::class,
                 [
+                    'options' => [
+                        'constraints' => [
+                            new NoTags,
+                        ],
+                    ],
                     'type' => TextareaType::class,
                     'multistore_configuration_key' => 'PS_INVOICE_LEGAL_FREE_TEXT',
                     'label' => $this->trans('Legal free text', 'Admin.Orderscustomers.Feature'),
@@ -201,6 +233,11 @@ class InvoiceOptionsType extends TranslatorAwareType
                 TranslatableType::class,
                 [
                     'type' => TextType::class,
+                    'options' => [
+                        'constraints' => [
+                            new NoTags,
+                        ],
+                    ],
                     'multistore_configuration_key' => 'PS_INVOICE_FREE_TEXT',
                     'label' => $this->trans('Footer text', 'Admin.Orderscustomers.Feature'),
                     'help' => $this->trans(
