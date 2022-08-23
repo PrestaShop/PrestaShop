@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This form type is needed to display custom list of Catalog Price Rules.
@@ -37,4 +38,14 @@ use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
  */
 class CatalogPriceRulesType extends TranslatorAwareType
 {
+    /**
+     * {@inheritDoc}
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+        $resolver->setDefaults([
+            'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/catalog_price_rules.html.twig',
+        ]);
+    }
 }
