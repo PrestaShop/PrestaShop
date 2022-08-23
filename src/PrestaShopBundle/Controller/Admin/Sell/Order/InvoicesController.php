@@ -137,7 +137,6 @@ class InvoicesController extends FrameworkBundleAdminController
      * @throws FieldNotFoundException
      *
      * @var InvalidConfigurationDataErrorCollection
-     *
      */
     private function getErrorMessages(InvalidConfigurationDataErrorCollection $errors): array
     {
@@ -166,7 +165,7 @@ class InvoicesController extends FrameworkBundleAdminController
                     'Invalid "%s" date.',
                     'Admin.Orderscustomers.Notification',
                     [
-                        $this->getFieldLabel($error->getFieldName())
+                        $this->getFieldLabel($error->getFieldName()),
                     ]
                 );
             case InvoicesByDateDataProvider::ERROR_NO_INVOICES_FOUND:
@@ -189,6 +188,19 @@ class InvoicesController extends FrameworkBundleAdminController
                     'Invoice number must be greater than the last invoice number, or 0 if you want to keep the current number.',
                     'Admin.Orderscustomers.Notification'
                 );
+            case InvoiceOptionsDataProvider::ERROR_CONTAINS_HTML_TAGS:
+                if ($error->getLanguageId()) {
+                    $langRepository = $this->get('prestashop.core.admin.lang.repository');
+                    $lang = $langRepository->findOneBy(['id' => $error->getLanguageId()]);
+                    return $this->trans(
+                        'Field "%s" in language "%s" is invalid. Field must not contain HTML tags.',
+                        'Admin.Orderscustomers.Notification',
+                        [
+                            $this->getFieldLabel($error->getFieldName()),
+                            $lang->getName()
+                        ]
+                    );
+                }
         }
 
         return $this->trans(

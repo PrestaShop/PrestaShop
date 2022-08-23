@@ -72,8 +72,7 @@ final class InvoicesByStatusDataProvider implements FormDataProviderInterface
 
         if (!isset($data[GenerateByStatusType::FIELD_ORDER_STATES])
             || !is_array($data[GenerateByStatusType::FIELD_ORDER_STATES])
-            || !count($data[GenerateByStatusType::FIELD_ORDER_STATES]))
-        {
+            || !count($data[GenerateByStatusType::FIELD_ORDER_STATES])) {
             $errorCollection = new InvalidConfigurationDataErrorCollection();
 
             $errorCollection->add(
