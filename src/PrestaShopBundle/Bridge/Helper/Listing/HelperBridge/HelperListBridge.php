@@ -140,10 +140,6 @@ class HelperListBridge
         Request $request,
         int $idLang
     ): string {
-        if ($helperListConfiguration->getTableName() == 'feature_value') {
-            $helperListConfiguration->where .= ' AND (a.custom = 0 OR a.custom IS NULL)';
-        }
-
         $this->hookDispatcher->dispatchWithParameters('action' . $helperListConfiguration->getLegacyControllerName() . 'ListingFieldsModifier', [
             'select' => &$helperListConfiguration->select,
             'join' => &$helperListConfiguration->join,
