@@ -75,7 +75,7 @@ abstract class AbstractCurrencyHandler extends AbstractObjectModelHandler
 
     /**
      * @param LocaleRepository $localeRepoCLDR
-     * @param array $languages
+     * @param LanguageInterface[] $languages
      * @param CurrencyCommandValidator $validator
      * @param PatternTransformer $patternTransformer
      */
