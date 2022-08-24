@@ -185,26 +185,7 @@ class InvoiceOptionsType extends TranslatorAwareType
                 IntegerType::class,
                 [
                     'required' => false,
-                    'constraints' => [
-                        new GreaterThanOrEqual(
-                            [
-                                'value' => $this->nextInvoiceNumber,
-                                'message' => $this->trans(
-                                    'Invalid invoice number.',
-                                    'Admin.Orderscustomers.Notification'
-                                )
-                            ]
-                        ),
-                        new GreaterThan(
-                            [
-                                'value' => 0,
-                                'message' => $this->trans(
-                                    'Invalid invoice number.',
-                                    'Admin.Orderscustomers.Notification'
-                                )
-                            ]
-                        ),
-                    ],                    'multistore_configuration_key' => 'PS_INVOICE_START_NUMBER',
+                    'multistore_configuration_key' => 'PS_INVOICE_START_NUMBER',
                     'label' => $this->trans('Invoice number', 'Admin.Orderscustomers.Feature'),
                     'help' => $this->trans(
                         'The next invoice will begin with this number, and then increase with each additional invoice. Set to 0 if you want to keep the current number (which is #%number%).',
