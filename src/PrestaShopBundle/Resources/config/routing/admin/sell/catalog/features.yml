@@ -20,7 +20,7 @@ admin_features_edit:
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\FeatureController::editAction
     _legacy_controller: AdminFeatures
-    # _legacy_link: AdminFeatures:updatefeature
+    _legacy_link: AdminFeatures:updatefeature
     _legacy_parameters:
       id_feature: featureId
   requirements:
