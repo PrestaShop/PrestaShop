@@ -31,7 +31,6 @@ namespace PrestaShopBundle\Bridge\Helper\Listing\HelperBridge;
 use Db;
 use DbQuery;
 use PrestaShopBundle\Bridge\Helper\Listing\HelperListConfiguration;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * This class customize the result of the list for the feature controller.
@@ -43,10 +42,9 @@ class FeatureHelperListBridge extends HelperListBridge
      */
     public function generateListQuery(
         HelperListConfiguration $helperListConfiguration,
-        Request $request,
         int $idLang
     ): string {
-        $listSql = parent::generateListQuery($helperListConfiguration, $request, $idLang);
+        $listSql = parent::generateListQuery($helperListConfiguration, $idLang);
 
         // adds feature_value count to evey row of feature
         foreach ($helperListConfiguration->list as &$featureRowRecord) {
