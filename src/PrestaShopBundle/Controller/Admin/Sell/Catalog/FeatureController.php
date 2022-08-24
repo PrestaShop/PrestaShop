@@ -221,16 +221,12 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
      */
     private function setListActions(HelperListConfiguration $helperListConfiguration): void
     {
-        $controllerConfiguration = $this->getControllerConfiguration();
-
         $helperListConfiguration
             ->addRowAction('view')
             ->addRowAction('edit')
             ->addRowAction('delete')
             ->addToolbarAction('new', [
-                //@todo: replace by $this->generateUrl('admin_features_add') when creation is fully migrated
-                //@todo: can i generate link without using controller config?
-                'href' => $controllerConfiguration->legacyCurrentIndex . '&addfeature&token=' . $controllerConfiguration->token,
+                'href' => $this->generateUrl('admin_features_add'),
                 'desc' => $this->trans('Add new', 'Admin.Actions'),
             ])
             ->addBulkAction('delete', [
