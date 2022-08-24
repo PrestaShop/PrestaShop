@@ -22,7 +22,7 @@ const foProductPage = require('@pages/FO/product');
 // Import faker data
 const ProductFaker = require('@data/faker/product');
 
-const baseContext = 'productV2_sanity_createStandardProduct';
+const baseContext = 'productV2_sanity_CRUDStandardProduct';
 
 let browserContext;
 let page;
@@ -43,7 +43,7 @@ const editProductData = new ProductFaker({
   status: true,
 });
 
-describe('BO - Catalog - Products : Create standard product', async () => {
+describe('BO - Catalog - Products : CRUD standard product', async () => {
   // Pre-condition: Enable new product page
   enableNewProductPageTest(`${baseContext}_enableNewProduct`);
 
