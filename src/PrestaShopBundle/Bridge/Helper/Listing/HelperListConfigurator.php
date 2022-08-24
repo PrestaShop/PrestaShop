@@ -40,15 +40,15 @@ class HelperListConfigurator
     /**
      * @var BreadcrumbsAndTitleConfigurator
      */
-    private $breadcrumbsAndTitleHydrator;
+    private $breadcrumbsAndTitleConfigurator;
 
     /**
-     * @param BreadcrumbsAndTitleConfigurator $breadcrumbsAndTitleHydrator
+     * @param BreadcrumbsAndTitleConfigurator $breadcrumbsAndTitleConfigurator
      */
     public function __construct(
-        BreadcrumbsAndTitleConfigurator $breadcrumbsAndTitleHydrator
+        BreadcrumbsAndTitleConfigurator $breadcrumbsAndTitleConfigurator
     ) {
-        $this->breadcrumbsAndTitleHydrator = $breadcrumbsAndTitleHydrator;
+        $this->breadcrumbsAndTitleConfigurator = $breadcrumbsAndTitleConfigurator;
     }
 
     /**
@@ -63,7 +63,7 @@ class HelperListConfigurator
         HelperListConfiguration $helperListConfiguration,
         HelperList $helper
     ): void {
-        $breadcrumbs = $this->breadcrumbsAndTitleHydrator->getBreadcrumbs($helperListConfiguration->getTabId());
+        $breadcrumbs = $this->breadcrumbsAndTitleConfigurator->getBreadcrumbs($helperListConfiguration->getTabId());
 
         $helper->title = $breadcrumbs['tab']['name'];
         $helper->toolbar_btn = $helperListConfiguration->getToolbarActions();
