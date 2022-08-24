@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Bridge\AdminController;
 
+use Link;
 use PrestaShopBundle\Bridge\Exception\BridgeException;
 use PrestaShopBundle\Security\Admin\Employee;
 use PrestaShopBundle\Service\DataProvider\UserProvider;
@@ -44,12 +45,20 @@ class ControllerConfigurationFactory
     private $userProvider;
 
     /**
+     * @var Link
+     */
+    private $link;
+
+    /**
      * @param UserProvider $userProvider
+     * @param Link $link
      */
     public function __construct(
-        UserProvider $userProvider
+        UserProvider $userProvider,
+        Link $link
     ) {
         $this->userProvider = $userProvider;
+        $this->link = $link;
     }
 
     /**
@@ -98,7 +107,8 @@ class ControllerConfigurationFactory
      */
     private function setLegacyCurrentIndex(ControllerConfiguration $controllerConfiguration): void
     {
-        $legacyCurrentIndex = 'index.php' . '?controller=' . $controllerConfiguration->legacyControllerName;
+        $legacyCurrentIndex = $this->link->getAdminLink($controllerConfiguration->legacyControllerName);
+
         if ($back = Tools::getValue('back')) {
             $legacyCurrentIndex .= '&back=' . urlencode($back);
         }
