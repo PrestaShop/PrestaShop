@@ -24,64 +24,52 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace Tests\Unit\Core\ConstraintValidator;
 
-namespace Tests\Unit\PrestaShopBundle\Form\Admin\Sell\Order\Invoices;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\NoTags;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\NoTagsValidator;
+use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
-use PHPUnit\Framework\TestCase;
-use PrestaShop\PrestaShop\Core\Form\ErrorMessage\InvoiceConfigurationError;
-use PrestaShop\PrestaShop\Core\Order\OrderInvoiceDataProviderInterface;
-use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\GenerateByDateType;
-use PrestaShopBundle\Form\Admin\Sell\Order\Invoices\InvoicesByDateDataProvider;
-use PrestaShopBundle\Form\Exception\DataProviderException;
-
-class InvoiceByDateDataProviderTest extends TestCase
+class NoTagsValidatorTest extends ConstraintValidatorTestCase
 {
-    /**
-     * Tests that exception is thrown if invoice number is incorrect
-     */
-    public function testValidateFailsOnIncorrectInvoiceNumber(): void
+    public function testItFailsWhenScriptTagsAreGiven()
     {
-        $orderInvoiceDataProvider = $this->getMockBuilder(OrderInvoiceDataProviderInterface::class)->getMock();
-        $orderInvoiceDataProvider->method('getByDateInterval')->willReturn(null);
-        $orderInvoiceByDateDataProvider = new InvoicesByDateDataProvider($orderInvoiceDataProvider);
-        $data = [
-            GenerateByDateType::FIELD_DATE_FROM => '2021-05-09',
-            GenerateByDateType::FIELD_DATE_TO => '2021-07-09',
-        ];
-        $exceptionThrown = false;
-        $error = new InvoiceConfigurationError(
-            InvoiceConfigurationError::ERROR_NO_INVOICES_FOUND,
-            GenerateByDateType::FIELD_DATE_TO
-        );
-        try {
-            $orderInvoiceByDateDataProvider->setData($data);
-        } catch (DataProviderException $e) {
-            $exceptionThrown = true;
-            $this->assertContainsEquals($error, $e->getConfigurationErrors());
-        }
+        $scriptTag = '<script></script>';
 
-        if (!$exceptionThrown) {
-            $this->fail('Expected exception DataProviderException was not thrown');
-        }
+        $this->validator->validate($scriptTag, new NoTags());
+
+        $this->buildViolation((new NoTags())->message)
+            ->setParameter('%s', '"' . $scriptTag . '"')
+            ->assertRaised()
+        ;
     }
 
-    /**
-     * Tests that no exceptions are thrown if data is correct
-     *
-     * @doesNotPerformAssertions
-     */
-    public function testValidatePassesWithCorrectData(): void
+    public function testItFailsWhenHTMLTagsGiven()
     {
-        $orderInvoiceDataProvider = $this->getMockBuilder(OrderInvoiceDataProviderInterface::class)->getMock();
-        $orderInvoiceDataProvider->method('getByDateInterval')->willReturn(
-            ['id_invoice' => 5]
-        );
-        $orderInvoiceByDateDataProvider = new InvoicesByDateDataProvider($orderInvoiceDataProvider);
-        $data = [
-            GenerateByDateType::FIELD_DATE_FROM => '2021-05-09',
-            GenerateByDateType::FIELD_DATE_TO => '2021-07-09',
-        ];
-        $orderInvoiceByDateDataProvider->setData($data);
+        $htmlTag = '<div class="btn">Button</div>';
+
+        $this->validator->validate($htmlTag, new NoTags());
+
+        $this->buildViolation((new NoTags())->message)
+            ->setParameter('%s', '"' . $htmlTag . '"')
+            ->assertRaised()
+        ;
+    }
+
+    public function testItFailsWhenPHPTagsGiven()
+    {
+        $phpTag = '<?php $_SERVER = "crash"; ?>';
+
+        $this->validator->validate($phpTag, new NoTags());
+
+        $this->buildViolation((new NoTags())->message)
+            ->setParameter('%s', '"' . $phpTag . '"')
+            ->assertRaised()
+        ;
+    }
+
+    protected function createValidator(): NoTagsValidator
+    {
+        return new NoTagsValidator();
     }
 }
