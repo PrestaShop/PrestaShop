@@ -263,3 +263,65 @@ class Products extends BOBasePage {
 }
 
 module.exports = new Products();
+require('module-alias/register');
+// Importing page
+const BOBasePage = require('@pages/BO/BObasePage');
+
+/**
+ * Products V2 page, contains functions that can be used on the page
+ * @class
+ * @extends BOBasePage
+ */
+class Products extends BOBasePage {
+  /**
+   * @constructs
+   * Setting up texts and selectors to use on products V2 page
+   */
+  constructor() {
+    super();
+
+    this.pageTitle = 'Products';
+
+    // Header selectors
+    this.newProductButton = '#page-header-desc-configuration-add';
+
+    // Modal create product selectors
+    this.modalCreateProduct = '#modal-create-product';
+    this.productTypeChoices = '#create_product div.product-type-choices';
+    this.productType = type => `${this.productTypeChoices} button.product-type-choice[data-value=${type}]`;
+    this.addNewProductButton = '#create_product_create';
+  }
+
+  /*
+  Methods
+   */
+
+  /**
+   * Click on new product button
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async clickOnNewProductButton(page) {
+    await this.waitForSelectorAndClick(page, this.newProductButton);
+
+    return this.elementVisible(page, this.modalCreateProduct, 1000);
+  }
+
+  /**
+   * Choose product type
+   * @param page {Page} Browser tab
+   * @param productType {string} Product type to select
+   * @returns {Promise<void>}
+   */
+  async chooseProductType(page, productType) {
+    await this.waitForVisibleSelector(page, '#modal-create-product iframe');
+    await this.waitForHiddenSelector(page, '#modal-create-product div.modal-iframe-loader');
+
+    const createProductFrame = await page.frame({url: new RegExp('sell/catalog/products-v2/create', 'gmi')});
+    await this.waitForSelectorAndClick(createProductFrame, this.productType(productType));
+
+    await this.waitForSelectorAndClick(createProductFrame, this.addNewProductButton);
+  }
+}
+
+module.exports = new Products();
