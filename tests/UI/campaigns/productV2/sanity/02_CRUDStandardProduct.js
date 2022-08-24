@@ -4,6 +4,7 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const basicHelper = require('@utils/basicHelper');
 const testContext = require('@utils/testContext');
 
 // Import login steps
@@ -18,9 +19,6 @@ const createProductsPage = require('@pages/BO/catalog/productsV2/add');
 // Import FO pages
 const foProductPage = require('@pages/FO/product');
 
-// Import demo data
-const taxRules = require('@data/demo/taxRule');
-
 // Import faker data
 const ProductFaker = require('@data/faker/product');
 
@@ -32,14 +30,14 @@ let page;
 // Data to create standard product
 const newProductData = new ProductFaker({
   type: 'standard',
-  taxRule: 'No tax',
+  taxRuleID: 0,
   quantity: 50,
   minimumQuantity: 1,
   status: true,
 });
 const editProductData = new ProductFaker({
   type: 'standard',
-  taxRule: 'No tax',
+  taxRuleID: 2,
   quantity: 100,
   minimumQuantity: 1,
   status: true,
@@ -73,6 +71,8 @@ describe('BO - Catalog - Products : Create standard product', async () => {
         dashboardPage.productsLink,
       );
 
+      await productsPage.closeSfToolBar(page);
+
       const pageTitle = await productsPage.getPageTitle(page);
       await expect(pageTitle).to.contains(productsPage.pageTitle);
     });
@@ -95,6 +95,8 @@ describe('BO - Catalog - Products : Create standard product', async () => {
 
     it('should create standard product', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createStandardProduct', baseContext);
+
+      await createProductsPage.closeSfToolBar(page);
 
       const createProductMessage = await createProductsPage.setProduct(page, newProductData);
       await expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
@@ -165,11 +167,12 @@ describe('BO - Catalog - Products : Create standard product', async () => {
     it('should check all product information', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkEditedProductInformation', baseContext);
 
+      const taxValue = await basicHelper.percentage(editProductData.price, 10);
+
       const result = await foProductPage.getProductInformation(page);
       await Promise.all([
         await expect(result.name).to.equal(editProductData.name),
-        await expect(result.price).to.equal(editProductData.price),
-        await expect(result.shortDescription).to.equal(editProductData.summary),
+        await expect(result.price).to.equal(editProductData.price + taxValue),
         await expect(result.description).to.equal(editProductData.description),
       ]);
     });
