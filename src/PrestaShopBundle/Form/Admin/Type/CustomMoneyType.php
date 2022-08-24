@@ -98,7 +98,7 @@ class CustomMoneyType extends AbstractTypeExtension
      *
      * @param string $currencyCode e.g. EUR, USD
      *
-     * @return string|null
+     * @return string
      *
      * @throws InvalidArgumentException
      * @throws LocalizationException
