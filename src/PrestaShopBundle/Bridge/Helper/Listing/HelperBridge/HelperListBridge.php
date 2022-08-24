@@ -41,7 +41,6 @@ use PrestaShopBundle\Bridge\Helper\Listing\HelperListConfigurator;
 use PrestaShopBundle\Service\DataProvider\UserProvider;
 use PrestaShopException;
 use Shop;
-use Symfony\Component\HttpFoundation\Request;
 use Tools;
 use Validate;
 
@@ -103,22 +102,19 @@ class HelperListBridge
      * Generate the html for list using HelperList class
      *
      * @param HelperListConfiguration $helperListConfiguration
-     * @param Request $request
      *
      * @return string|null
      */
     public function generateList(
-        HelperListConfiguration $helperListConfiguration,
-        Request $request
+        HelperListConfiguration $helperListConfiguration
     ): ?string {
         if (!($helperListConfiguration->fieldsList && is_array($helperListConfiguration->fieldsList))) {
             return null;
         }
-
         $helper = new HelperList();
 
         /* @phpstan-ignore-next-line */
-        $helper->sql = $this->generateListQuery($helperListConfiguration, $request, $this->context->language->id);
+        $helper->sql = $this->generateListQuery($helperListConfiguration, $this->context->language->id);
 
         $this->helperListConfigurator->setHelperDisplay($helperListConfiguration, $helper);
         $helper->_default_pagination = $helperListConfiguration->getDefaultPaginationLimit();
@@ -137,7 +133,6 @@ class HelperListBridge
      */
     protected function generateListQuery(
         HelperListConfiguration $helperListConfiguration,
-        Request $request,
         int $idLang
     ): string {
         $this->hookDispatcher->dispatchWithParameters('action' . $helperListConfiguration->getLegacyControllerName() . 'ListingFieldsModifier', [
@@ -158,12 +153,11 @@ class HelperListBridge
 
         /* Determine offset from current page */
         $start = 0;
-        $page = $request->request->getInt('submitFilter' . $helperListConfiguration->getListId());
-        if ($page) {
-            $start = ($page - 1) * $limit;
+        if ((int) Tools::getValue('submitFilter' . $helperListConfiguration->getListId())) {
+            $start = ((int) Tools::getValue('submitFilter' . $helperListConfiguration->getListId()) - 1) * $limit;
         } elseif (
             isset($this->context->cookie->{$helperListConfiguration->getListId() . '_start'})
-            && $request->request->get('export' . $helperListConfiguration->getTableName())
+            && Tools::isSubmit('export' . $helperListConfiguration->getTableName())
         ) {
             $start = $this->context->cookie->{$helperListConfiguration->getListId() . '_start'};
         }

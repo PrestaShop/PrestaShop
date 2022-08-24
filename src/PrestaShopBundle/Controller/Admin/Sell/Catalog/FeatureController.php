@@ -73,7 +73,7 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
         $this->setListActions($helperListConfiguration);
         $this->processFilters($request, $helperListConfiguration);
 
-        return $this->renderSmarty($this->getHelperListBridge()->generateList($helperListConfiguration, $request));
+        return $this->renderSmarty($this->getHelperListBridge()->generateList($helperListConfiguration));
     }
 
     /**
