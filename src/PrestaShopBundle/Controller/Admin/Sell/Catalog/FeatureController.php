@@ -201,8 +201,7 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
 
         $controllerConfiguration
             ->addHeaderToolbarAction('new_feature', [
-                //@todo: replace by $this->generateUrl('admin_features_add') when creation is fully migrated
-                'href' => $index . '&addfeature&token=' . $token,
+                'href' => $this->generateUrl('admin_features_add'),
                 'desc' => $this->trans('Add new feature', 'Admin.Catalog.Feature'),
                 'icon' => 'process-icon-new',
             ])
