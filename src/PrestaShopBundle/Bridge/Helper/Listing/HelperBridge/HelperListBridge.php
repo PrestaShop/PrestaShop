@@ -37,7 +37,7 @@ use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerInterface;
 use PrestaShopBundle\Bridge\Helper\Listing\FilterPrefix;
 use PrestaShopBundle\Bridge\Helper\Listing\HelperListConfiguration;
-use PrestaShopBundle\Bridge\Helper\Listing\HelperListConfigurator;
+use PrestaShopBundle\Bridge\Smarty\BreadcrumbsAndTitleConfigurator;
 use PrestaShopBundle\Service\DataProvider\UserProvider;
 use PrestaShopException;
 use Shop;
@@ -63,11 +63,6 @@ class HelperListBridge
     private $userProvider;
 
     /**
-     * @var HelperListConfigurator
-     */
-    private $helperListConfigurator;
-
-    /**
      * @var HookDispatcherInterface
      */
     private $hookDispatcher;
@@ -78,24 +73,29 @@ class HelperListBridge
     private $configuration;
 
     /**
+     * @var BreadcrumbsAndTitleConfigurator
+     */
+    private $breadcrumbsAndTitleConfigurator;
+
+    /**
      * @param LegacyContext $legacyContext
      * @param UserProvider $userProvider
-     * @param HelperListConfigurator $helperListVarsAssigner
      * @param HookDispatcherInterface $hookDispatcher
      * @param Configuration $configuration
+     * @param BreadcrumbsAndTitleConfigurator $breadcrumbsAndTitleConfigurator
      */
     public function __construct(
         LegacyContext $legacyContext,
         UserProvider $userProvider,
-        HelperListConfigurator $helperListVarsAssigner,
         HookDispatcherInterface $hookDispatcher,
-        Configuration $configuration
+        Configuration $configuration,
+        BreadcrumbsAndTitleConfigurator $breadcrumbsAndTitleConfigurator
     ) {
         $this->context = $legacyContext->getContext();
         $this->userProvider = $userProvider;
-        $this->helperListConfigurator = $helperListVarsAssigner;
         $this->hookDispatcher = $hookDispatcher;
         $this->configuration = $configuration;
+        $this->breadcrumbsAndTitleConfigurator = $breadcrumbsAndTitleConfigurator;
     }
 
     /**
@@ -116,7 +116,7 @@ class HelperListBridge
         /* @phpstan-ignore-next-line */
         $helper->sql = $this->generateListQuery($helperListConfiguration, $this->context->language->id);
 
-        $this->helperListConfigurator->setHelperDisplay($helperListConfiguration, $helper);
+        $this->setHelperDisplay($helperListConfiguration, $helper);
         $helper->_default_pagination = $helperListConfiguration->getDefaultPaginationLimit();
         $helper->_pagination = $helperListConfiguration->getPaginationLimits();
         $helper->tpl_delete_link_vars = $helperListConfiguration->getDeleteLinkVars();
@@ -502,5 +502,33 @@ class HelperListBridge
     private function shouldLimitSqlResults($limit): bool
     {
         return $limit !== false;
+    }
+
+    /**
+     * @param HelperListConfiguration $helperListConfiguration
+     * @param HelperList $helper
+     */
+    private function setHelperDisplay(
+        HelperListConfiguration $helperListConfiguration,
+        HelperList $helper
+    ): void {
+        $breadcrumbs = $this->breadcrumbsAndTitleConfigurator->getBreadcrumbs($helperListConfiguration->getTabId());
+
+        $helper->title = $breadcrumbs['tab']['name'];
+        $helper->toolbar_btn = $helperListConfiguration->getToolbarActions();
+        $helper->actions = $helperListConfiguration->getRowActions();
+        $helper->bulk_actions = $helperListConfiguration->getBulkActions();
+        $helper->show_toolbar = true;
+        $helper->currentIndex = $helperListConfiguration->getLegacyCurrentIndex();
+        $helper->table = $helperListConfiguration->getTableName();
+        $helper->orderBy = $helperListConfiguration->orderBy;
+        $helper->orderWay = $helperListConfiguration->orderWay;
+        $helper->listTotal = $helperListConfiguration->listTotal;
+        $helper->identifier = $helperListConfiguration->getIdentifier();
+        $helper->token = $helperListConfiguration->getToken();
+        $helper->position_identifier = $helperListConfiguration->getPositionIdentifier();
+        $helper->controller_name = $helperListConfiguration->getLegacyControllerName();
+        $helper->list_id = $helperListConfiguration->getListId();
+        $helper->bootstrap = $helperListConfiguration->isBootstrap();
     }
 }
