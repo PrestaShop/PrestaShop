@@ -514,7 +514,7 @@ class HelperListBridge
     ): void {
         $breadcrumbs = $this->breadcrumbsAndTitleConfigurator->getBreadcrumbs($helperListConfiguration->getTabId());
 
-        $helper->title = $breadcrumbs['tab']['name'];
+        $helper->title = $breadcrumbs['tab']['name'] ?? '';
         $helper->toolbar_btn = $helperListConfiguration->getToolbarActions();
         $helper->actions = $helperListConfiguration->getRowActions();
         $helper->bulk_actions = $helperListConfiguration->getBulkActions();
