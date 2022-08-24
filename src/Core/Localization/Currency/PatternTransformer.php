@@ -27,9 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\Localization\Currency;
 
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
-use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
-use PrestaShop\PrestaShop\Core\Localization\Locale\RepositoryInterface as LocaleRepositoryInterface;
-use PrestaShop\PrestaShop\Core\Localization\Specification\Price;
 
 /**
  * Transform a currency pattern by moving the symbol position, with or without
@@ -69,20 +66,6 @@ class PatternTransformer
     ];
 
     /**
-     * @var LocaleRepositoryInterface
-     */
-    private $localeRepository;
-
-    /**
-     * @param LocaleRepositoryInterface $localeRepository
-     */
-    public function __construct(
-        LocaleRepositoryInterface $localeRepository
-    ) {
-        $this->localeRepository = $localeRepository;
-    }
-
-    /**
      * @param string $currencyPattern
      * @param string $transformationType
      *
@@ -103,55 +86,6 @@ class PatternTransformer
         }
 
         return implode(';', $transformedPatterns);
-    }
-
-    /**
-     * Provides currency pattern understandable to symfony, but uses prestashop Locale.
-     * E.g. when passing options to render MoneyType widget
-     *
-     * @param string $localeIsoCode e.g. fr-FR, en-US
-     * @param string $currencyCode e.g. EUR, USD
-     * @param bool $isPatternPositive if false, then "-" is prepended to the pattern
-     *
-     * @return string|null
-     *
-     * @throws InvalidArgumentException
-     * @throws LocalizationException
-     */
-    public function getFrameworkPattern(string $localeIsoCode, string $currencyCode, bool $isPatternPositive): ?string
-    {
-        $priceSpecification = $this->localeRepository->getLocale($localeIsoCode)->getPriceSpecification($currencyCode);
-
-        if (!($priceSpecification instanceof Price)) {
-            throw new InvalidArgumentException(sprintf('Expected instance of %s', Price::class));
-        }
-
-        $patternType = $this->getTransformationType($priceSpecification->getPositivePattern());
-
-        $positivePatternMap = [
-            self::TYPE_LEFT_SYMBOL_WITH_SPACE => sprintf(
-                '%s%s{{ widget }}',
-                self::CURRENCY_SYMBOL,
-                self::NO_BREAK_SPACE
-            ),
-            self::TYPE_RIGHT_SYMBOL_WITH_SPACE => sprintf(
-                '{{ widget }}%s%s',
-                self::NO_BREAK_SPACE,
-                self::CURRENCY_SYMBOL
-            ),
-            self::TYPE_LEFT_SYMBOL_WITHOUT_SPACE => sprintf('%s{{ widget }}', self::CURRENCY_SYMBOL),
-            self::TYPE_RIGHT_SYMBOL_WITHOUT_SPACE => sprintf('{{ widget }}%s', self::CURRENCY_SYMBOL),
-        ];
-
-        if (empty($positivePatternMap[$patternType])) {
-            return null;
-        }
-
-        return str_replace(
-            self::CURRENCY_SYMBOL,
-            $priceSpecification->getCurrencySymbol(),
-            $isPatternPositive ? $positivePatternMap[$patternType] : sprintf('-%s', $positivePatternMap[$patternType])
-        );
     }
 
     /**

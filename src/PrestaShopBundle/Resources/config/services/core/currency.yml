@@ -35,5 +35,3 @@ services:
 
   prestashop.core.localization.currency.pattern_transformer:
     class: PrestaShop\PrestaShop\Core\Localization\Currency\PatternTransformer
-    arguments:
-      - '@prestashop.core.localization.locale.repository'

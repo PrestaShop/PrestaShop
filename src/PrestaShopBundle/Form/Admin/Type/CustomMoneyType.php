@@ -26,8 +26,11 @@
 
 namespace PrestaShopBundle\Form\Admin\Type;
 
-use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShop\PrestaShop\Core\Localization\Currency\PatternTransformer;
+use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
+use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Localization\Specification\Price;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormInterface;
@@ -39,25 +42,17 @@ class CustomMoneyType extends AbstractTypeExtension
     public const PRESTASHOP_DECIMALS = 6;
 
     /**
-     * @var PatternTransformer
+     * @var Locale
      */
-    private $patternTransformer;
+    private $locale;
 
     /**
-     * @var string
-     */
-    private $localeIsoCode;
-
-    /**
-     * @param PatternTransformer $patternTransformer
-     * @param string $localeIsoCode eg: fr-FR, en-US
+     * @param Locale $locale
      */
     public function __construct(
-        PatternTransformer $patternTransformer,
-        string $localeIsoCode
+        Locale $locale
     ) {
-        $this->localeIsoCode = $localeIsoCode;
-        $this->patternTransformer = $patternTransformer;
+        $this->locale = $locale;
     }
 
     public static function getExtendedTypes(): iterable
@@ -89,17 +84,45 @@ class CustomMoneyType extends AbstractTypeExtension
     {
         parent::buildView($view, $form, $options);
 
-        $value = new DecimalNumber((string) (float) $view->vars['value']);
-        $frameworkPattern = $this->patternTransformer->getFrameworkPattern(
-            $this->localeIsoCode,
-            $options['currency'],
-            $value->isPositive()
-        );
+        $frameworkPattern = $this->getFrameworkPattern($options['currency']);
 
         if (!$frameworkPattern) {
             return;
         }
 
         $view->vars['money_pattern'] = $frameworkPattern;
+    }
+
+    /**
+     * Provides currency pattern understandable to symfony, but uses prestashop Locale.
+     *
+     * @param string $currencyCode e.g. EUR, USD
+     *
+     * @return string|null
+     *
+     * @throws InvalidArgumentException
+     * @throws LocalizationException
+     */
+    private function getFrameworkPattern(string $currencyCode): string
+    {
+        $priceSpecification = $this->locale->getPriceSpecification($currencyCode);
+
+        if (!($priceSpecification instanceof Price)) {
+            throw new InvalidArgumentException(sprintf('Expected instance of %s', Price::class));
+        }
+
+        // replace CLDR pattern placeholder with one understandable for framework
+        $frameworkPattern = str_replace(
+            Price::PATTERN_BASE_PLACEHOLDER,
+            '{{ widget }}',
+            $priceSpecification->getPositivePattern()
+        );
+
+        // insert currency symbol from CLDR instead of symbol placeholder
+        return str_replace(
+            PatternTransformer::CURRENCY_SYMBOL,
+            $priceSpecification->getCurrencySymbol(),
+            $frameworkPattern
+        );
     }
 }
