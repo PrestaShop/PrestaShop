@@ -33,7 +33,6 @@ use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -41,9 +40,6 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
-use Symfony\Component\Validator\Constraint;
-use Symfony\Component\Validator\Constraints\AbstractComparison;
-use Symfony\Component\Validator\Constraints\PositiveOrZero;
 use Symfony\Component\Validator\Constraints\GreaterThan;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 
@@ -139,11 +135,6 @@ class InvoiceOptionsType extends TranslatorAwareType
                 static::FIELD_INVOICE_PREFIX,
                 TranslatableType::class,
                 [
-                    'options' => [
-                        'constraints' => [
-                            new NoTags(),
-                        ],
-                    ],
                     'required' => false,
                     'type' => TextType::class,
                     'multistore_configuration_key' => 'PS_INVOICE_PREFIX',
@@ -229,11 +220,6 @@ class InvoiceOptionsType extends TranslatorAwareType
                 TranslatableType::class,
                 [
                     'required' => false,
-                    'options' => [
-                        'constraints' => [
-                            new NoTags(),
-                        ],
-                    ],
                     'type' => TextareaType::class,
                     'multistore_configuration_key' => 'PS_INVOICE_LEGAL_FREE_TEXT',
                     'label' => $this->trans('Legal free text', 'Admin.Orderscustomers.Feature'),
@@ -249,11 +235,6 @@ class InvoiceOptionsType extends TranslatorAwareType
                 [
                     'required' => false,
                     'type' => TextType::class,
-                    'options' => [
-                        'constraints' => [
-                            new NoTags(),
-                        ],
-                    ],
                     'multistore_configuration_key' => 'PS_INVOICE_FREE_TEXT',
                     'label' => $this->trans('Footer text', 'Admin.Orderscustomers.Feature'),
                     'help' => $this->trans(
