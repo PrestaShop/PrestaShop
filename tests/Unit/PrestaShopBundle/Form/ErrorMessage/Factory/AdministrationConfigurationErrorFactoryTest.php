@@ -53,7 +53,7 @@ class AdministrationConfigurationErrorFactoryTest extends TestCase
                 [
                     '%s is invalid. Please enter an integer lower than %s.',
                     [
-                        static::COOKIE_FIELD_NAME,
+                        self::COOKIE_FIELD_NAME,
                         GeneralDataProvider::MAX_COOKIE_VALUE,
                     ],
                     'Admin.Notifications.Error',
@@ -74,7 +74,7 @@ class AdministrationConfigurationErrorFactoryTest extends TestCase
         $administrationConfigurationErrorFactory = new AdministrationConfigurationErrorFactory($translatorMock, $languageRepositoryMock);
 
         $error = new AdministrationConfigurationError(AdministrationConfigurationError::ERROR_COOKIE_LIFETIME_MAX_VALUE_EXCEEDED, 'field', 1);
-        $result = $administrationConfigurationErrorFactory->getErrorMessageForConfigurationError($error, static::COOKIE_FIELD_NAME);
+        $result = $administrationConfigurationErrorFactory->getErrorMessageForConfigurationError($error, self::COOKIE_FIELD_NAME);
         self::assertEquals(
             $expectedTranslation,
             $result
