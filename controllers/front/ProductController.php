@@ -29,7 +29,6 @@ use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductLazyArray;
 use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Product\ProductExtraContentFinder;
 
@@ -145,6 +144,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             header('Status: 404 Not Found');
             $this->errors[] = $this->trans('This product is no longer available.', [], 'Shop.Notifications.Error');
             $this->setTemplate('errors/404');
+
             return;
         }
 
@@ -156,7 +156,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         // Load product category
         $this->initializeCategory();
-        
+
         // Set proper template to product
         $this->setTemplate('catalog/product', [
             'entity' => 'product',
@@ -169,7 +169,6 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      */
     public function checkPermissionsToViewProduct()
     {
-
         /*
         * If the product is associated to the shop
         * and is active or not active but preview mode (need token + file_exists)
