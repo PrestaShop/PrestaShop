@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
       - .github/workflows/sanity-productV2.yml
+      - tests/UI/campaigns/productV2/**
       - admin-dev/themes/new-theme/js/pages/product/**
       - src/PrestaShopBundle/Form/Admin/Sell/Product/**
       - src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/**
