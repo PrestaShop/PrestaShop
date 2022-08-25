@@ -27,13 +27,14 @@
 namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 
 use Address;
+use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
 use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use State;
-use TaxManagerFactory;
 use TaxRulesGroup;
 
 /**
@@ -51,10 +52,16 @@ final class TaxRuleGroupChoiceProvider implements FormChoiceProviderInterface, F
      */
     private $taxRulesGroupRepository;
 
-    public function __construct(int $countryId, TaxRulesGroupRepository $taxRulesGroupRepository)
+    /**
+     * @var TaxComputer
+     */
+    private $taxComputer;
+
+    public function __construct(int $countryId, TaxRulesGroupRepository $taxRulesGroupRepository, TaxComputer $taxComputer)
     {
         $this->countryId = $countryId;
         $this->taxRulesGroupRepository = $taxRulesGroupRepository;
+        $this->taxComputer = $taxComputer;
     }
 
     /**
@@ -82,13 +89,14 @@ final class TaxRuleGroupChoiceProvider implements FormChoiceProviderInterface, F
         foreach ($this->getRules() as $rule) {
             $taxRulesGroupId = new TaxRulesGroupId((int) $rule['id_tax_rules_group']);
             $stateId = $this->taxRulesGroupRepository->getTaxRulesGroupDefaultStateId($taxRulesGroupId, new CountryId($this->countryId));
-            $address->id_state = $stateId;
-
-            $taxManagerFactory = TaxManagerFactory::getManager($address, $taxRulesGroupId->getValue());
-            $taxRate = $taxManagerFactory->getTaxCalculator()->getTotalRate();
+            if (!$stateId) {
+                $taxRate = $this->taxComputer->getTaxRate($taxRulesGroupId, new CountryId($this->countryId));
+            } else {
+                $taxRate = $this->taxComputer->getTaxRateByState($taxRulesGroupId, new CountryId($this->countryId), new StateId($stateId));
+            }
             $state = new State($stateId);
             $taxRates[$rule['name']] = [
-                'data-tax-rate' => $taxRate,
+                'data-tax-rate' => $taxRate->round(2),
                 'data-state-iso-code' => $state->iso_code ?: '',
             ];
         }
