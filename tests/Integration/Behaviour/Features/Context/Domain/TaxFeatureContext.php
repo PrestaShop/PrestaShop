@@ -275,9 +275,36 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
         $taxRule = new TaxRule();
         $taxRule->id_tax = $tax->id;
         $taxRule->id_tax_rules_group = $taxRulesGroup->id;
-        $taxRule->behavior = 1;
+        $taxRule->behavior = 0;
         $taxRule->id_country = Country::getByIso($data['country']);
         $taxRule->id_state = isset($data['state']) ? State::getIdByIso($data['state']) : 0;
         $taxRule->save();
+    }
+
+    /**
+     * @Then I add the tax rule :taxReference for tax rule group :taxGroupReference:
+     */
+    public function addTaxRuleToTaxRulesGroup(string $taxGroupReference, string $taxReference, TableNode $table)
+    {
+        $data = $table->getRowsHash();
+        $taxGroupId = SharedStorage::getStorage()->get($taxGroupReference);
+
+        $tax = SharedStorage::getStorage()->get($taxReference);
+        $taxRule = new TaxRule();
+        $taxRule->id_tax = $tax->id;
+        $taxRule->id_tax_rules_group = $taxGroupId;
+        $taxRule->behavior = 0;
+        $taxRule->id_country = Country::getByIso($data['country']);
+        $taxRule->id_state = isset($data['state']) ? State::getIdByIso($data['state']) : 0;
+        $taxRule->save();
+    }
+
+    /**
+     * @Then I delete tax rules that has tax :taxReference:
+     */
+    public function deleteTaxRuleFromTaxRulesGroup(string $taxReference)
+    {
+        $tax = SharedStorage::getStorage()->get($taxReference);
+        TaxRule::deleteTaxRuleByIdTax($tax->id);
     }
 }

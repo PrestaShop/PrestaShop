@@ -86,7 +86,7 @@ final class TaxRuleGroupChoiceProvider implements FormChoiceProviderInterface, F
 
             $taxManagerFactory = TaxManagerFactory::getManager($address, $taxRulesGroupId->getValue());
             $taxRate = $taxManagerFactory->getTaxCalculator()->getTotalRate();
-            $state = new State($taxManagerFactory->getAddress()->id_state);
+            $state = new State($stateId);
             $taxRates[$rule['name']] = [
                 'data-tax-rate' => $taxRate,
                 'data-state-iso-code' => $state->iso_code ?: '',
