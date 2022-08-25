@@ -64,6 +64,8 @@ final class InvoicesByDateDataProvider implements FormDataProviderInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @throws DataProviderException
      */
     public function setData(array $data)
     {
@@ -82,7 +84,7 @@ final class InvoicesByDateDataProvider implements FormDataProviderInterface
      *
      * @return void
      */
-    private function validate(array $data)
+    private function validate(array $data): void
     {
         $errorCollection = new ConfigurationErrorCollection();
 
@@ -108,9 +110,6 @@ final class InvoicesByDateDataProvider implements FormDataProviderInterface
                     GenerateByDateType::FIELD_DATE_TO
                 )
             );
-        }
-
-        if (!$errorCollection->isEmpty()) {
             throw new DataProviderException('Invalid invoices by date form', 0, null, $errorCollection);
         }
     }
