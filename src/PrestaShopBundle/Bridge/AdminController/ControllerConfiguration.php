@@ -39,7 +39,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ControllerConfiguration
 {
     /**
-     * Identifier of tab related to this configuration (tab is considered a single page and all of them are registered in database)
+     * Identifier of tab related to this configuration (tab is considered a single page and all of them are registered in database).
      *
      * @var int
      */
@@ -53,21 +53,22 @@ class ControllerConfiguration
     public $objectModelClassName;
 
     /**
-     * The name of related AdminController (e.g. AdminFeatures)
+     * The name of related AdminController (e.g. AdminFeatures).
      *
      * @var string
      */
     public $legacyControllerName;
 
     /**
-     * Url referring to related legacy page (e.g. http://prestashop.local/admin-dev/index.php?controller=AdminFeatures&token=fooBar)
+     * Url referring to related legacy page (e.g. http://prestashop.local/admin-dev/index.php?controller=AdminFeatures&token=fooBar).
      *
      * @var string
      */
     public $legacyCurrentIndex;
 
     /**
-     * Name of field by which position is supposed to be identified (usually it is the id field e.g. id_feature)
+     * Name of field by which position is supposed to be identified (usually it is the id field e.g. id_feature).
+     * Leave NULL to disable the positioning feature
      *
      * @var string|null
      */
@@ -89,28 +90,28 @@ class ControllerConfiguration
 
     /**
      * Meta title of single language if it is a string
-     * or array of localized meta title values where index is the id of the language
+     * or array of localized meta title values where index is the id of the language.
      *
      * @var string|array<int, string>
      */
     public $metaTitle = [];
 
     /**
-     * Array of parent tab names up to a current tab
+     * Array of parent tab names up to a current tab.
      *
      * @var array<int, string>
      */
     public $breadcrumbs = [];
 
     /**
-     * Defines if lite display should be used (lite display doesn't show header and footer)
+     * Defines if lite display should be used (lite display doesn't show header and footer).
      *
      * @var bool
      */
     public $liteDisplay = false;
 
     /**
-     * Provides information about the type of displayed page (e.g. list, form, view, edit, options)
+     * Provides information about the type of displayed page (e.g. list, form, view, edit, options).
      *
      * @var string
      *
@@ -119,21 +120,21 @@ class ControllerConfiguration
     public $displayType = 'list';
 
     /**
-     * Controls page header toolbar visibility
+     * Controls page header toolbar visibility.
      *
      * @var bool
      */
     public $showPageHeaderToolbar = true;
 
     /**
-     * Title of the page shown in page header toolbar
+     * Title of the page shown in page header toolbar.
      *
      * @var string
      */
     public $pageHeaderToolbarTitle = '';
 
     /**
-     * Action buttons rendered in page header (e.g. button to Add new feature)
+     * Action buttons rendered in page header (e.g. button to Add new feature).
      *
      * @var array<string, array{href?: string, desc?: string, icon?: string, class?: string}>
      */
