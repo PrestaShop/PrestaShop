@@ -38,7 +38,7 @@ use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 class CacheProviderTest extends TestCase
 {
-    const CACHE_KEY = 'test_cache_key';
+    public const CACHE_KEY = 'test_cache_key';
 
     /**
      * @var array

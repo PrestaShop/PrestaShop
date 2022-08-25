@@ -31,7 +31,7 @@ namespace PrestaShopBundle\Bridge\AdminController;
  */
 interface LegacyControllerBridgeInterface
 {
-    const DEFAULT_THEME = 'default';
+    public const DEFAULT_THEME = 'default';
 
     /**
      * Sets default media list for this controller.

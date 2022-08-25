@@ -19,6 +19,7 @@ class FOBasePage extends CommonPage {
     this.content = '#content';
     this.desktopLogo = '#_desktop_logo';
     this.desktopLogoLink = `${this.desktopLogo} a`;
+    this.breadCrumbLink = link => `#wrapper nav.breadcrumb a[href*=${link}]`;
     this.cartProductsCount = '#_desktop_cart .cart-products-count';
     this.cartLink = '#_desktop_cart a';
     this.userInfoLink = '#_desktop_user_info';
@@ -116,6 +117,16 @@ class FOBasePage extends CommonPage {
     }
 
     return this.clickAndWaitForNavigation(page, selector);
+  }
+
+  /**
+   * Click on bread crumb link
+   * @param page {Page} Browser tab
+   * @param link {string} Link to click on
+   * @returns {Promise<void>}
+   */
+  async clickOnBreadCrumbLink(page, link) {
+    await this.clickAndWaitForNavigation(page, this.breadCrumbLink(link));
   }
 
   /**

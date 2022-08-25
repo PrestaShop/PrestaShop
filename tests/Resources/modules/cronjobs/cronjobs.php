@@ -35,7 +35,7 @@ require_once dirname(__FILE__) . '/classes/CronJobsForms.php';
 
 class CronJobs extends Module
 {
-    const EACH = -1;
+    public const EACH = -1;
 
     protected $_successes;
     protected $_warnings;

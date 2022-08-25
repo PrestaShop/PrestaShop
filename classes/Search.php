@@ -122,13 +122,13 @@ class SearchCore
      */
     public static $targetLengthMax;
 
-    const PS_SEARCH_MAX_WORDS_IN_TABLE = 100000; /* Max numer of words in ps_search_word, above which $coefs for target length will be everytime equal to 1 */
-    const PS_DEFAULT_SEARCH_MAX_WORD_LENGTH = 30; /* default max word length, for when we are not in fuzzy search mode */
-    const PS_SEARCH_ORDINATE_MIN = 0.5;
-    const PS_SEARCH_ORDINATE_MAX = -1;
-    const PS_SEARCH_ABSCISSA_MIN = 0.5;
-    const PS_SEARCH_ABSCISSA_MAX = 2;
-    const PS_DISTANCE_MAX = 8;
+    public const PS_SEARCH_MAX_WORDS_IN_TABLE = 100000; /* Max numer of words in ps_search_word, above which $coefs for target length will be everytime equal to 1 */
+    public const PS_DEFAULT_SEARCH_MAX_WORD_LENGTH = 30; /* default max word length, for when we are not in fuzzy search mode */
+    public const PS_SEARCH_ORDINATE_MIN = 0.5;
+    public const PS_SEARCH_ORDINATE_MAX = -1;
+    public const PS_SEARCH_ABSCISSA_MIN = 0.5;
+    public const PS_SEARCH_ABSCISSA_MAX = 2;
+    public const PS_DISTANCE_MAX = 8;
 
     public static function extractKeyWords($string, $id_lang, $indexation = false, $iso_code = false)
     {

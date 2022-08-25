@@ -34,16 +34,16 @@ use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureConstraintExcepti
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\FeatureNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Query\GetFeatureForEditing;
 use PrestaShopBundle\Bridge\AdminController\Action\HeaderToolbarAction;
-use PrestaShopBundle\Bridge\AdminController\Action\ListBulkAction;
-use PrestaShopBundle\Bridge\AdminController\Action\ListHeaderToolbarAction;
-use PrestaShopBundle\Bridge\AdminController\Action\ListRowAction;
 use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
-use PrestaShopBundle\Bridge\AdminController\Field\Field;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerInterface;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerListTrait;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerTrait;
-use PrestaShopBundle\Bridge\Helper\HelperListConfiguration;
-use PrestaShopBundle\Bridge\Helper\ListCustomizer\FeatureHelperListBridge;
+use PrestaShopBundle\Bridge\Helper\Listing\Action\ListBulkAction;
+use PrestaShopBundle\Bridge\Helper\Listing\Action\ListHeaderToolbarAction;
+use PrestaShopBundle\Bridge\Helper\Listing\Action\ListRowAction;
+use PrestaShopBundle\Bridge\Helper\Listing\Field\Field;
+use PrestaShopBundle\Bridge\Helper\Listing\HelperBridge\FeatureHelperListBridge;
+use PrestaShopBundle\Bridge\Helper\Listing\HelperListConfiguration;
 use PrestaShopBundle\Bridge\Smarty\FrameworkControllerSmartyTrait;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -76,11 +76,13 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
         $this->setListFields($helperListConfiguration);
         $this->setListActions($helperListConfiguration);
 
+        //@todo: seems this actually isn't used. List filters url directs to legacy controller and FiltersHelper never runs
+        $filtersHelper = $this->getFiltersProcessor();
         if ($request->request->has('submitResetfeature')) {
-            $this->getResetFiltersHelper()->resetFilters($helperListConfiguration, $request);
+            $filtersHelper->resetFilters($helperListConfiguration, $request);
         }
 
-        $this->getFiltersHelper()->processFilter($request, $helperListConfiguration);
+        $filtersHelper->processFilter($request, $helperListConfiguration);
 
         return $this->renderSmarty($this->getHelperListBridge()->generateList($helperListConfiguration));
     }
@@ -195,7 +197,7 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
      */
     private function getHelperListBridge(): FeatureHelperListBridge
     {
-        return $this->get('prestashop.bridge.helper.list_customizer.feature_helper_list_bridge');
+        return $this->get('prestashop.bridge.helper.listing.helper_bridge.feature_helper_list_bridge');
     }
 
     /**

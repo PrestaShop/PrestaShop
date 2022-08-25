@@ -60,6 +60,15 @@ class MyAccount extends FOBasePage {
   }
 
   /**
+   * Is add first address link visible
+   * @param page page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async isAddFirstAddressLinkVisible(page) {
+    return this.elementVisible(page, this.accountFirstAddressLink);
+  }
+
+  /**
    * Go to addresses page
    * @param page {Page} Browser tab
    * @returns {Promise<void>}

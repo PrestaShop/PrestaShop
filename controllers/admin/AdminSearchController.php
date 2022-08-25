@@ -29,8 +29,8 @@ use PrestaShop\PrestaShop\Core\Search\SearchPanelInterface;
 
 class AdminSearchControllerCore extends AdminController
 {
-    const TOKEN_CHECK_START_POS = 34;
-    const TOKEN_CHECK_LENGTH = 8;
+    public const TOKEN_CHECK_START_POS = 34;
+    public const TOKEN_CHECK_LENGTH = 8;
 
     /**
      * @var string
