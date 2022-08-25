@@ -17,7 +17,10 @@ class Products extends BOBasePage {
 
     this.pageTitle = 'Products';
 
-    // Selectors
+    // Header selectors
+    this.newProductButton = '#page-header-desc-configuration-add';
+
+    // Products table selectors
     this.productGridPanel = '#product_grid_panel';
     this.productGridHeader = `${this.productGridPanel} div.js-grid-header`;
     this.headerTitle = `${this.productGridHeader} .card-header-title`;
@@ -38,7 +41,7 @@ class Products extends BOBasePage {
     this.productFilterQuantityMaxInput = '#product_quantity_max_field';
     this.productFilterSelectStatus = '#product_active';
 
-    // Product list
+    // Products list
     this.productRow = `${this.productGridTable} tbody tr`;
     this.productsListTableRow = row => `${this.productRow}:nth-child(${row})`;
     this.productsListTableColumnID = row => `${this.productsListTableRow(row)} td.column-id_product`;
@@ -52,6 +55,13 @@ class Products extends BOBasePage {
     this.productsListTableColumnQuantity = row => `${this.productsListTableRow(row)} td.column-quantity a`;
     this.productsListTableColumnStatusInput = row => `${this.productsListTableRow(row)} td.column-active input`;
 
+    // Modal create product selectors
+    this.modalCreateProduct = '#modal-create-product';
+    this.modalCreateProductLoader = `${this.modalCreateProduct} div.modal-iframe-loader`;
+    this.productTypeChoices = '#create_product div.product-type-choices';
+    this.productType = type => `${this.productTypeChoices} button.product-type-choice[data-value=${type}]`;
+    this.addNewProductButton = '#create_product_create';
+
     // pagination
     this.paginationBlock = `${this.productListForm} div.pagination-block`;
     this.productsNumberLabel = `${this.paginationBlock} label.col-form-label`;
@@ -61,6 +71,33 @@ class Products extends BOBasePage {
   /*
   Methods
    */
+
+  /**
+   * Click on new product button
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async clickOnNewProductButton(page) {
+    await this.waitForSelectorAndClick(page, this.newProductButton);
+
+    return this.elementVisible(page, this.modalCreateProduct, 1000);
+  }
+
+  /**
+   * Choose product type
+   * @param page {Page} Browser tab
+   * @param productType {string} Product type to select
+   * @returns {Promise<void>}
+   */
+  async chooseProductType(page, productType) {
+    await this.waitForVisibleSelector(page, `${this.modalCreateProduct} iframe`);
+    await this.waitForHiddenSelector(page, this.modalCreateProductLoader);
+
+    const createProductFrame = await page.frame({url: new RegExp('sell/catalog/products-v2/create', 'gmi')});
+    await this.waitForSelectorAndClick(createProductFrame, this.productType(productType));
+
+    await this.waitForSelectorAndClick(createProductFrame, this.addNewProductButton);
+  }
 
   /**
    * Get number of products from header
@@ -168,7 +205,6 @@ class Products extends BOBasePage {
     if (!(await this.elementNotVisible(page, this.filterResetButton, 2000))) {
       await this.clickAndWaitForNavigation(page, this.filterResetButton);
     }
-    await this.waitForVisibleSelector(page, this.filterSearchButton, 2000);
   }
 
   /**
