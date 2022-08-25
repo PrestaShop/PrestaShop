@@ -112,8 +112,6 @@ class HelperListBridge
             return null;
         }
         $helper = new HelperList();
-
-        /* @phpstan-ignore-next-line */
         $helper->sql = $this->generateListQuery($helperListConfiguration, $this->context->language->id);
 
         $this->setHelperDisplay($helperListConfiguration, $helper);
