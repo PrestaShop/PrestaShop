@@ -27,25 +27,28 @@ const baseContext = 'productV2_sanity_CRUDProductWithCombinations';
 let browserContext;
 let page;
 
-// Data to create standard product
+// Data to create product with combinations
 const newProductData = new ProductFaker({
   type: 'combinations',
-  taxRuleID: 0,
   quantity: 50,
   minimumQuantity: 1,
   status: true,
 });
+// Data to edit product with combinations
 const editProductData = new ProductFaker({
   type: 'combinations',
-  taxRuleID: 2,
   quantity: 100,
   minimumQuantity: 1,
   status: true,
+  combinations: {
+    color: ['Grey', 'Taupe', 'Red'],
+    size: ['L', 'XL'],
+  },
 });
 
 describe('BO - Catalog - Products : CRUD product with combinations', async () => {
   // Pre-condition: Enable new product page
-  //enableNewProductPageTest(`${baseContext}_enableNewProduct`);
+  enableNewProductPageTest(`${baseContext}_enableNewProduct`);
 
   // before and after functions
   before(async function () {
@@ -85,7 +88,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
     });
 
     it('should choose \'Product with combinations\'', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'chooseStandardProduct', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'chooseProductWithCombinations', baseContext);
 
       await productsPage.chooseProductType(page, newProductData.type);
 
@@ -112,11 +115,14 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
     it('should create combinations and check generate combinations button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createCombinations', baseContext);
 
-      const generateCombinationsButton = await createProductsPage.setProductCombinations(page, newProductData.combinations);
+      const generateCombinationsButton = await createProductsPage.setProductCombinations(
+        page,
+        newProductData.combinations,
+      );
       await expect(generateCombinationsButton).to.equal('Generate 4 combinations');
     });
 
-    it('should click on generate combinations button and check success message', async function () {
+    it('should click on generate combinations button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'generateCombinations', baseContext);
 
       const successMessage = await createProductsPage.generateCombinations(page);
@@ -178,59 +184,96 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
     });
   });
 
-  /* describe('Edit product', async () => {
-     it('should edit the created product', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'editProduct', baseContext);
+  describe('Edit product', async () => {
+    it('should edit the created product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'editProduct', baseContext);
 
-       const createProductMessage = await createProductsPage.setProduct(page, editProductData);
-       await expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
-     });
+      const createProductMessage = await createProductsPage.setProduct(page, editProductData);
+      await expect(createProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
+    });
 
-     it('should preview product', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'previewEditedProduct', baseContext);
+    it('should add combinations and check generate combinations button', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'addCombinations', baseContext);
 
-       // Click on preview button
-       page = await createProductsPage.previewProduct(page);
+      const generateCombinationsButton = await createProductsPage.setProductCombinations(
+        page,
+        editProductData.combinations,
+      );
+      await expect(generateCombinationsButton).to.equal('Generate 6 combinations');
+    });
 
-       await foProductPage.changeLanguage(page, 'en');
+    it('should click on generate combinations button', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'generateCombinations2', baseContext);
 
-       const pageTitle = await foProductPage.getPageTitle(page);
-       await expect(pageTitle).to.contains(editProductData.name);
-     });
+      const successMessage = await createProductsPage.generateCombinations(page);
+      await expect(successMessage).to.equal('Successfully generated 6 combinations.');
+    });
 
-     it('should check all product information', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'checkEditedProductInformation', baseContext);
+    it('should close generate combinations modal', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'closeGenerateCombinationsModal2', baseContext);
 
-       const taxValue = await basicHelper.percentage(editProductData.price, 10);
+      const isModalVisible = await createProductsPage.closeGenerateCombinationModal(page);
+      await expect(isModalVisible).to.be.true;
+    });
 
-       const result = await foProductPage.getProductInformation(page);
-       await Promise.all([
-         await expect(result.name).to.equal(editProductData.name),
-         await expect(result.price).to.equal(editProductData.price + taxValue),
-         await expect(result.description).to.equal(editProductData.description),
-       ]);
-     });
+    it('should save the product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'saveProduct2', baseContext);
 
-     it('should go back to BO', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO2', baseContext);
+      const updateProductMessage = await createProductsPage.saveProduct(page);
+      await expect(updateProductMessage).to.equal(createProductsPage.successfulUpdateMessage);
+    });
 
-       // Go back to BO
-       page = await foProductPage.closePage(browserContext, page, 0);
+    it('should preview product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'previewEditedProduct', baseContext);
 
-       const pageTitle = await createProductsPage.getPageTitle(page);
-       await expect(pageTitle).to.contains(createProductsPage.pageTitle);
-     });
-   });
+      // Click on preview button
+      page = await createProductsPage.previewProduct(page);
 
-   describe('Delete product', async () => {
-     it('should delete product', async function () {
-       await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
+      await foProductPage.changeLanguage(page, 'en');
 
-       const createProductMessage = await createProductsPage.deleteProduct(page);
-       await expect(createProductMessage).to.equal(productsPage.successfulDeleteMessage);
-     });
-   });
+      const pageTitle = await foProductPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(editProductData.name);
+    });
 
-   // Post-condition: Disable new product page
-   disableNewProductPageTest(`${baseContext}_disableNewProduct`);*/
+    it('should check all product information', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkEditedProductInformation', baseContext);
+
+      let result = await foProductPage.getProductInformation(page);
+      await Promise.all([
+        await expect(result.name).to.equal(editProductData.name),
+        await expect(result.price).to.equal(editProductData.price),
+        await expect(result.description).to.equal(editProductData.description),
+      ]);
+
+
+      result = await foProductPage.getProductAttributes(page);
+      await Promise.all([
+        await expect(result.size).to.equal(
+          `${newProductData.combinations.size.join(' ')} ${editProductData.combinations.size.join(' ')}`),
+        await expect(result.color).to.equal(newProductData.combinations.color.join(' ')),
+      ]);
+    });
+
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO2', baseContext);
+
+      // Go back to BO
+      page = await foProductPage.closePage(browserContext, page, 0);
+
+      const pageTitle = await createProductsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(createProductsPage.pageTitle);
+    });
+  });
+
+  describe('Delete product', async () => {
+    it('should delete product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
+
+      const createProductMessage = await createProductsPage.deleteProduct(page);
+      await expect(createProductMessage).to.equal(productsPage.successfulDeleteMessage);
+    });
+  });
+
+  // Post-condition: Disable new product page
+  disableNewProductPageTest(`${baseContext}_disableNewProduct`);
 });
