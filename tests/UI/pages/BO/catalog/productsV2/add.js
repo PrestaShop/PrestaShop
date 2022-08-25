@@ -33,7 +33,8 @@ class Products extends BOBasePage {
 
     // Selectors in combinations tab
     this.combinationsTabLink = '#product_combinations-tab-nav';
-    this.generateCombinationsButton = '#combinations-empty-state button.generate-combinations-button';
+    this.generateFirstCombinationsButton = '#combinations-empty-state button.generate-combinations-button';
+    this.generateCombinationButton = '#combination-list-actions button.generate-combinations-button';
     this.generateCombinationsModal = '#product-combinations-generate div.modal.show';
     this.searchAttributesButton = `${this.generateCombinationsModal} input.attributes-search`;
     this.generateCombinationsButtonOnModal = `${this.generateCombinationsModal} footer button.btn.btn-primary`;
@@ -123,11 +124,15 @@ class Products extends BOBasePage {
    * Set all combinations
    * @param page {Page} Browser tab
    * @param combinations {Object} Combinations of the product
-   * @returns {Promise<void>}
+   * @returns {Promise<string>}
    */
   async setProductCombinations(page, combinations) {
     await this.waitForSelectorAndClick(page, this.combinationsTabLink);
-    await this.waitForSelectorAndClick(page, this.generateCombinationsButton);
+    if (await this.elementVisible(page, this.generateCombinationButton, 2000)) {
+      await this.waitForSelectorAndClick(page, this.generateCombinationButton);
+    } else {
+      await this.waitForSelectorAndClick(page, this.generateFirstCombinationsButton);
+    }
 
     await this.waitForVisibleSelector(page, this.generateCombinationsModal);
     const keys = Object.keys(combinations);
@@ -155,13 +160,13 @@ class Products extends BOBasePage {
 
   /**
    * Close generateCombinations modal
-   * @param page
+   * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async closeGenerateCombinationModal(page) {
     await this.waitForSelectorAndClick(page, this.generateCombinationsCloseButton);
 
-    return this.elementNotVisible(page, this.generateCombinationsModal);
+    return this.elementNotVisible(page, this.generateCombinationsModal, 1000);
   }
 
   /**
