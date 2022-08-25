@@ -242,7 +242,7 @@ class HelperListBridge
                     $whereClause;
             }
 
-            $helperListConfiguration->list = Db::getInstance()->executeS($listSql, true, false);
+            $helperListConfiguration->list = Db::getInstance()->executeS($listSql, true, false) ?: null;
 
             if ($helperListConfiguration->list === false) {
                 // @todo: the listError doesn't seem to be used anywhere else yet. Do we need to add some additional list error handler?

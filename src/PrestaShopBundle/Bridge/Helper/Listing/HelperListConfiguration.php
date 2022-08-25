@@ -31,74 +31,102 @@ namespace PrestaShopBundle\Bridge\Helper\Listing;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * This object contains the configuration needed to generate a list using the helper list.
+ * This object contains the configuration needed to generate a list using the legacy HelperList class.
  */
 class HelperListConfiguration
 {
     /**
+     * Sql SELECT clause
+     *
      * @var string
      */
     public $select = '';
 
     /**
+     * Sql WHERE clause
+     *
      * @var string
      */
     public $where = '';
 
     /**
+     * Sql JOIN clause
+     *
      * @var string
      */
     public $join = '';
 
     /**
+     * Sql GROUP clause
+     *
      * @var string
      */
     public $group = '';
 
     /**
+     * Sql ORDER BY clause
+     *
      * @var string
      */
     public $orderBy = '';
 
     /**
+     * Sql value for ORDER BY clause argument e.g. ASC|DESC
+     *
+     * @var string
+     */
+    public $orderWay = '';
+
+    /**
+     * Sql HAVING clause
+     *
      * @var string
      */
     public $having = '';
 
     /**
+     * Sql HAVING clause for filters
+     *
      * @var string
      */
     public $filterHaving = '';
 
     /**
+     * Contains various sql clauses for filtering the list
+     *
      * @var string
      */
     public $filter = '';
 
     /**
+     * The definition of list fields
+     *
      * @var array<string, array<string, mixed>>
+     *
+     * @see self::setFieldsList() for defined array structure
      */
     public $fieldsList = [];
 
     /**
-     * @var array
+     * List record rows
+     *
+     * @var array<int, array<string, mixed>>|null
      */
     public $list;
 
     /**
+     * Total count of records found. Used for pagination.
+     *
      * @var int
      */
     public $listTotal;
 
     /**
+     * Text of the error message from previous database operation if any occurred when fetching the list
+     *
      * @var string
      */
     public $listError;
-
-    /**
-     * @var string
-     */
-    public $orderWay = '';
 
     /**
      * @var int
@@ -592,22 +620,31 @@ class HelperListConfiguration
     public function setFieldsList(array $fieldsList): self
     {
         $optionsResolver = new OptionsResolver();
-        $optionsResolver->setRequired([
-            'title',
-        ]);
 
-        $optionsResolver->setDefined([
-            'align',
-            'class',
-            'filter_key',
-            'orderby',
-            'position',
-            'search',
-            'width',
-        ]);
-
-        $optionsResolver->addAllowedTypes('orderby', 'boolean');
-        $optionsResolver->addAllowedTypes('search', 'boolean');
+        $optionsResolver
+            ->setRequired([
+                'title',
+            ])
+            ->setDefined([
+                'align',
+                'class',
+                'filter_type',
+                'filter_key',
+                'orderby',
+                'position',
+                'search',
+                'width',
+                'havingFilter',
+                'icon',
+                'list',
+            ])
+            ->addAllowedTypes('orderby', 'boolean')
+            ->addAllowedTypes('search', 'boolean')
+            ->addAllowedTypes('havingFilter', 'boolean')
+            ->setDefaults([
+                'havingFilter' => false,
+            ])
+        ;
 
         foreach ($fieldsList as $field => $config) {
             $this->fieldsList[$field] = $optionsResolver->resolve($config);
