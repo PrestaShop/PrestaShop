@@ -48,7 +48,7 @@ class DataProviderException extends DomainException
     /**
      * @return ConfigurationErrorCollection
      */
-    public function getConfigurationErrors(): ConfigurationErrorCollection
+    public function getInvalidConfigurationDataErrors(): ConfigurationErrorCollection
     {
         return $this->configurationErrors;
     }
