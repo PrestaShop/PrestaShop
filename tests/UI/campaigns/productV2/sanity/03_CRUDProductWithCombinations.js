@@ -4,7 +4,6 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const basicHelper = require('@utils/basicHelper');
 const testContext = require('@utils/testContext');
 
 // Import login steps
