@@ -152,6 +152,11 @@ class HelperListCore extends Helper
     public $postSubmitUrl;
 
     /**
+     * @var string|null
+     */
+    public $sql;
+
+    /**
      * You can use $controllerMapping to add entity/controller mapping in order to have migrated links
      * in a legacy list (this requires to have correctly set the _legacy_link in the routing of course)
      *
