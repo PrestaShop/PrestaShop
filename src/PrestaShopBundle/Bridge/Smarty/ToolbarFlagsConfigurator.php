@@ -30,7 +30,6 @@ namespace PrestaShopBundle\Bridge\Smarty;
 
 use Language;
 use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\EnvironmentInterface;
 use PrestaShop\PrestaShop\Core\Help\Documentation;
 use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 use Tools;
@@ -51,22 +50,23 @@ class ToolbarFlagsConfigurator implements ConfiguratorInterface
     private $documentation;
 
     /**
-     * @var EnvironmentInterface
+     * @var bool
      */
-    private $environment;
+    private $isDebugMode;
 
     /**
      * @param Configuration $configuration
      * @param Documentation $documentation
+     * @param bool $isDebugMode
      */
     public function __construct(
         Configuration $configuration,
         Documentation $documentation,
-        EnvironmentInterface $environment
+        bool $isDebugMode
     ) {
         $this->configuration = $configuration;
         $this->documentation = $documentation;
-        $this->environment = $environment;
+        $this->isDebugMode = $isDebugMode;
     }
 
     /**
@@ -80,7 +80,7 @@ class ToolbarFlagsConfigurator implements ConfiguratorInterface
         $this->initPageHeaderToolbar($controllerConfiguration);
 
         $controllerConfiguration->templateVars['maintenance_mode'] = !(bool) $this->configuration->get('PS_SHOP_ENABLE');
-        $controllerConfiguration->templateVars['debug_mode'] = $this->environment->isDebug();
+        $controllerConfiguration->templateVars['debug_mode'] = $this->isDebugMode;
         $controllerConfiguration->templateVars['lite_display'] = $controllerConfiguration->liteDisplay;
         $controllerConfiguration->templateVars['show_page_header_toolbar'] = $controllerConfiguration->showPageHeaderToolbar;
         $controllerConfiguration->templateVars['page_header_toolbar_title'] = $controllerConfiguration->pageHeaderToolbarTitle;
