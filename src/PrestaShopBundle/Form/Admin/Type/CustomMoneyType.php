@@ -84,13 +84,7 @@ class CustomMoneyType extends AbstractTypeExtension
     {
         parent::buildView($view, $form, $options);
 
-        $frameworkPattern = $this->getFrameworkPattern($options['currency']);
-
-        if (!$frameworkPattern) {
-            return;
-        }
-
-        $view->vars['money_pattern'] = $frameworkPattern;
+        $view->vars['money_pattern'] = $this->getFrameworkPattern($options['currency']);
     }
 
     /**
