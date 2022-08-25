@@ -19,6 +19,10 @@ inputs:
   npm-version:
     required: true
     description: NPM version
+  ps-auto-install:
+    required: false
+    description: True to install Prestashop
+    default: "false"
 
 runs:
   using: "composite"
@@ -49,6 +53,7 @@ runs:
           admin-dev/**/package-lock.json
           tests/**/package-lock.json
           themes/**/package-lock.json
+
     - name: Setup NPM
       shell: bash
       run: npm i -g npm@${{ inputs.npm-version }}
@@ -76,3 +81,14 @@ runs:
         sudo mkdir -p /var/lib/php/sessions && \
         sudo chown www-data:www-data -R /var/lib/php/sessions && \
         sudo service apache2 restart
+
+    - name: Install PrestaShop
+      if: inputs.ps-auto-install == 'true'
+      shell: bash
+      run : |
+        php install-dev/index_cli.php \
+        ---domain="localhost" --db_server="127.0.0.1:3306" --db_name="${{ inputs.mysql-database }}" \
+        --db_user="root" --db_password=${{ inputs.mysql-root-password }} \
+         --prefix="tst_" --firstname="Marc" --lastname="Beier" \
+        --password="$ADMIN_PASSWD" --email="demo@prestashop.com" \
+        --language="en" --country="fr"
