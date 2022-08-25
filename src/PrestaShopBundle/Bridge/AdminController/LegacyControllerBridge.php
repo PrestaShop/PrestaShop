@@ -122,7 +122,7 @@ class LegacyControllerBridge implements LegacyControllerBridgeInterface
         'show_page_header_toolbar' => 'controllerConfiguration.showPageHeaderToolbar',
         'page_header_toolbar_title' => 'controllerConfiguration.pageHeaderToolbarTitle',
         'page_header_toolbar_btn' => 'controllerConfiguration.pageHeaderToolbarButtons',
-        'toolbar_btn' => 'controllerConfiguration.toolbarButtons',
+        'toolbar_btn' => 'controllerConfiguration.pageHeaderToolbarButtons',
         'toolbar_title' => 'controllerConfiguration.toolbarTitle',
         'display_header' => 'controllerConfiguration.displayHeader',
         'display_header_javascript' => 'controllerConfiguration.displayHeaderJavascript',

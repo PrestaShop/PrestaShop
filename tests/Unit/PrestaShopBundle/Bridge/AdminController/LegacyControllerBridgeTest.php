@@ -85,12 +85,6 @@ class LegacyControllerBridgeTest extends TestCase
                 'icon' => 'process-icon-new',
             ],
         ];
-        $this->controllerConfiguration->toolbarButtons = [
-            'cancel' => [
-                'href' => 'prestashop.com/admin-dev/foo',
-                'desc' => 'Cancel',
-            ],
-        ];
         $this->controllerConfiguration->toolbarTitle = 'Foo Title';
         $this->controllerConfiguration->displayHeader = false;
         $this->controllerConfiguration->displayHeaderJavascript = false;
@@ -193,15 +187,17 @@ class LegacyControllerBridgeTest extends TestCase
             ],
             'pageHeaderToolbarButtons',
         ];
-        yield 'test toolbarButtons' => [
+        // toolbar_btn and page_header_toolbar_btn seems to be always set the same
+        yield 'test pageHeaderToolbarButtons' => [
             'toolbar_btn',
             [
-                'cancel' => [
-                    'href' => 'prestashop.com/admin-dev/foo',
-                    'desc' => 'Cancel',
+                'add_new_foo' => [
+                    'href' => 'prestashop.com/admin-dev/foo/new',
+                    'desc' => 'Add new foo',
+                    'icon' => 'process-icon-new',
                 ],
             ],
-            'toolbarButtons',
+            'pageHeaderToolbarButtons',
         ];
         yield 'test displayHeader' => ['display_header', false, 'displayHeader'];
         yield 'test displayHeaderJavascript' => ['display_header_javascript', false, 'displayHeaderJavascript'];
