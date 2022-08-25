@@ -147,11 +147,16 @@ class HelperListCore extends Helper
     public $list_id;
 
     /**
+     * Property introduced for horizontal migration.
+     * It ensures the list form (e.g. filters) can be submitted to custom url (most of the time the same index url of symfony controller)
+     *
      * @var string|null
      */
     public $postSubmitUrl;
 
     /**
+     * Raw sql query string of a list
+     *
      * @var string|null
      */
     public $sql;
