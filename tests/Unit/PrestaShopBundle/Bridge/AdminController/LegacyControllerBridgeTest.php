@@ -85,7 +85,7 @@ class LegacyControllerBridgeTest extends TestCase
                 'icon' => 'process-icon-new',
             ],
         ];
-        $this->controllerConfiguration->toolbarTitle = 'Foo Title';
+        $this->controllerConfiguration->toolbarTitle = ['Foo Title'];
         $this->controllerConfiguration->displayHeader = false;
         $this->controllerConfiguration->displayHeaderJavascript = false;
         $this->controllerConfiguration->displayFooter = false;

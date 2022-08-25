@@ -41,6 +41,8 @@ class ControllerConfiguration
     /**
      * Identifier of tab related to this configuration (tab is considered a single page and all of them are registered in database).
      *
+     * @see AdminController::$id
+     *
      * @var int
      */
     public $tabId;
@@ -48,12 +50,16 @@ class ControllerConfiguration
     /**
      * ClassName of related object model. E.g. "Feature", "Category", "Product" etc.
      *
+     * @see AdminController::$className
+     *
      * @var string
      */
     public $objectModelClassName;
 
     /**
-     * The name of related AdminController (e.g. AdminFeatures).
+     * The name of related legacy AdminController without "controller" suffix (e.g. AdminFeatures).
+     *
+     * @see AdminController::$controller_name
      *
      * @var string
      */
@@ -61,6 +67,8 @@ class ControllerConfiguration
 
     /**
      * Url referring to related legacy page (e.g. http://prestashop.local/admin-dev/index.php?controller=AdminFeatures&token=fooBar).
+     *
+     * @see AdminController::$currentIndex
      *
      * @var string
      */
@@ -70,6 +78,8 @@ class ControllerConfiguration
      * Name of field by which position is supposed to be identified (usually it is the id field e.g. id_feature).
      * Leave NULL to disable the positioning feature
      *
+     * @see AdminController::$position_identifier
+     *
      * @var string|null
      */
     public $positionIdentifierKey;
@@ -77,12 +87,16 @@ class ControllerConfiguration
     /**
      * Name of the related database table
      *
+     * @see AdminController::$table
+     *
      * @var string
      */
     public $tableName;
 
     /**
      * Security token
+     *
+     * @see AdminController::$token
      *
      * @var string|null
      */
@@ -92,6 +106,10 @@ class ControllerConfiguration
      * Meta title of single language if it is a string
      * or array of localized meta title values where index is the id of the language.
      *
+     * Rendered in <head> -> <title>
+     *
+     * @see AdminController::$meta_title
+     *
      * @var string|array<int, string>
      */
     public $metaTitle = [];
@@ -99,12 +117,16 @@ class ControllerConfiguration
     /**
      * Array of parent tab names up to a current tab.
      *
+     * @see AdminController::$breadcrumbs
+     *
      * @var array<int, string>
      */
     public $breadcrumbs = [];
 
     /**
      * Defines if lite display should be used (lite display doesn't show header and footer).
+     *
+     * @see AdminController::$lite_display
      *
      * @var bool
      */
@@ -115,12 +137,14 @@ class ControllerConfiguration
      *
      * @var string
      *
-     * @see \AdminController::$display
+     * @see AdminController::$display
      */
     public $displayType = 'list';
 
     /**
      * Controls page header toolbar visibility.
+     *
+     * @see AdminController::$show_page_header_toolbar
      *
      * @var bool
      */
@@ -129,6 +153,8 @@ class ControllerConfiguration
     /**
      * Title of the page shown in page header toolbar.
      *
+     * @see AdminController::$page_header_toolbar_title
+     *
      * @var string
      */
     public $pageHeaderToolbarTitle = '';
@@ -136,111 +162,184 @@ class ControllerConfiguration
     /**
      * Action buttons rendered in page header (e.g. button to Add new feature).
      *
+     * @see AdminController::$page_header_toolbar_btn
+     *
      * @var array<string, array{href?: string, desc?: string, icon?: string, class?: string}>
      */
     public $pageHeaderToolbarButtons = [];
 
     /**
-     * @var string[]|string
+     * Seems to work as a fallback for both - metaTitle and pageHeaderToolbarTitle.
+     * Usually it contains breadcrumbs.
+     *
+     * Even though in legacy AdminController $toolbar_title type
+     * is defined as array|string there are usages where string would throw error, so we type it as array
+     *
+     * @see self::$metaTitle
+     * @see self::$pageHeaderToolbarTitle
+     * @see AdminController::$toolbar_title
+     *
+     * @var string[]
      */
     public $toolbarTitle = [];
 
     /**
+     * Defines if header should be rendered or not
+     *
+     * @see AdminController::$display_header
+     *
      * @var bool
      */
     public $displayHeader = true;
 
     /**
+     * Defines if <script type="text/javascript"> should be rendered in header or not
+     *
+     * @see AdminController::$display_header_javascript
+     *
      * @var bool
      */
     public $displayHeaderJavascript = true;
 
     /**
+     * Defines if footer should be rendered or not
+     *
+     * @see AdminController::$display_footer
+     *
      * @var bool
      */
     public $displayFooter = true;
 
     /**
+     * Defines bootstrap variable for template (different css classes are used depending on it)
+     *
+     * @see AdminController::$bootstrap
+     *
      * @var bool
      */
     public $bootstrap = true;
 
     /**
-     * @var array
+     * Css files, where key of each file is the path to css file and value is the css media type
+     * e.g. ['all' => '/admin-dev/themes/default/css/foo.css'].
+     *
+     * @see AdminController::$css_files
+     *
+     * @var array<string, string>
      */
     public $cssFiles = [];
 
     /**
-     * @var array
+     * List of paths to javascript files
+     * e.g. ['/admin-dev/themes/new-theme/js/vendor/bootstrap.min.js'].
+     *
+     * @see AdminController::$js_files
+     *
+     * @var array<int, string>
      */
     public $jsFiles = [];
 
     /**
+     * @see AdminController::tpl_folder
+     *
      * @var string
      */
     public $templateFolder;
 
     /**
-     * @var array
+     * @see AdminController::$errors
+     *
+     * @var string[]
      */
     public $errors = [];
 
     /**
-     * @var array
+     * @see AdminController::$warnings
+     *
+     * @var string[]
      */
     public $warnings = [];
 
     /**
-     * @var array
+     * @see AdminController::$confirmations
+     *
+     * @var string[]
      */
     public $confirmations = [];
 
     /**
-     * @var array
+     * @see AdminController::$informations
+     *
+     * @var string[]
      */
     public $informations = [];
 
     /**
+     * Defines if page content should be encoded in json format
+     *
+     * @see AdminController::$json
+     *
      * @var bool
      */
     public $json = false;
 
     /**
+     * Template name
+     *
+     * @see AdminController::$template
+     *
      * @var string
      */
     public $template = 'content.tpl';
 
     /**
-     * @var array
+     * Template variables assigned to smarty
+     *
+     * @var array<string, mixed>
      */
     public $templateVars = [];
 
     /**
-     * @var array
+     * Template variables for modals
+     *
+     * @see AdminController::$modals
+     *
+     * @var array<int, array<string, mixed>>
      */
     public $modals = [];
 
     /**
-     * This parameter is needed by legacy helper shop, we can't remove it.
+     * Allows identifying multiShop context
+     *
+     * @see AdminController::$multishop_context
      *
      * @var int
      */
     public $multiShopContext = Shop::CONTEXT_ALL | Shop::CONTEXT_GROUP | Shop::CONTEXT_SHOP;
 
     /**
-     * This parameter is needed by legacy helper shop, so we can't remove it.
+     * Allows identifying multiShopGroup context
+     *
+     * @see AdminController::$multishop_context_group
      *
      * @var bool
      */
     public $multiShopContextGroup = true;
 
     /**
+     * Currently logged in employee (the current user)
+     *
      * @var Employee
      */
     private $user;
 
     /**
-     * @param Employee $user the current user
+     * @param Employee $user
+     * @param int $tabId
+     * @param string $objectModelClassName
+     * @param string $legacyControllerName
+     * @param string $tableName
+     * @param string $templateFolder
      */
     public function __construct(
         Employee $user,
@@ -262,7 +361,7 @@ class ControllerConfiguration
      * Adds toolbar action to the page
      *
      * @param string $label
-     * @param array<string, mixed> $config
+     * @param array{href?: string, desc?: string, icon?: string, class?: string} $config
      *
      * @return ControllerConfiguration
      */
