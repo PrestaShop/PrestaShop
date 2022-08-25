@@ -1,10 +1,19 @@
 name: UI tests
-on: [ push, pull_request ]
+on:
+  pull_request:
+    paths:
+      - .github/workflows/sanity-productV2.yml
+      - admin-dev/themes/new-theme/js/pages/product/**
+      - src/PrestaShopBundle/Form/Admin/Sell/Product/**
+      - src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/**
+      - src/Core/Domain/Product/**
+      - src/Adapter/Product/**
+      - src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/**
 jobs:
 
   sanity:
     runs-on: ubuntu-latest
-    name: Sanity
+    name: Sanity product V2
     strategy:
       matrix:
         php: [ '7.2', '7.3', '7.4', '8.0', '8.1' ]
@@ -35,7 +44,7 @@ jobs:
           key: ${{ runner.os }}-browsers
 
       - name: Run tests
-        run: npm install && npm run test:sanity:fast-fail
+        run: npm install && npm run test:sanity:productV2:fast-fail
         env:
           URL_FO: http://localhost/
           DB_NAME: prestashop
