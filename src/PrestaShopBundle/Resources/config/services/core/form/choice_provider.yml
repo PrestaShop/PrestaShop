@@ -193,6 +193,7 @@ services:
     arguments:
       - '@=service("prestashop.adapter.legacy.context").getContext().country.id'
       - '@prestashop.adapter.tax_rules_group.repository.tax_rules_group_repository'
+      - '@prestashop.adapter.tax.tax_computer'
 
   prestashop.core.form.choice_provider.cms_categories:
     class: 'PrestaShop\PrestaShop\Core\Form\ChoiceProvider\CmsCategoriesChoiceProvider'

@@ -33,6 +33,7 @@ use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\Decimal\Operation\Division;
 use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use TaxManagerFactory;
 
@@ -106,6 +107,26 @@ class TaxComputer
         $address->id_country = $countryId->getValue();
         $stateId = $this->taxRulesGroupRepository->getTaxRulesGroupDefaultStateId($taxRulesGroupId, $countryId);
         $address->id_state = $stateId;
+
+        $taxCalculator = TaxManagerFactory::getManager($address, $taxRulesGroupId->getValue())->getTaxCalculator();
+
+        return new DecimalNumber((string) $taxCalculator->getTotalRate());
+    }
+
+    /**
+     * Returns the tax rate for a group and a specific country and state. The value is the decimal rate (usually a float between 0 and 1)
+     *
+     * @param TaxRulesGroupId $taxRulesGroupId
+     * @param CountryId $countryId
+     * @param StateId $stateId
+     *
+     * @return DecimalNumber
+     */
+    public function getTaxRateByState(TaxRulesGroupId $taxRulesGroupId, CountryId $countryId, StateId $stateId): DecimalNumber
+    {
+        $address = new Address();
+        $address->id_country = $countryId->getValue();
+        $address->id_state = $stateId->getValue();
 
         $taxCalculator = TaxManagerFactory::getManager($address, $taxRulesGroupId->getValue())->getTaxCalculator();
 
