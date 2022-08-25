@@ -1,7 +1,9 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-prices-without-states
 @restore-products-before-feature
 @reboot-kernel-before-feature
+@clear-cache-before-feature
 @update-prices-without-states
+@update-product-prices
 @reboot-kernel-after-feature
 @restore-all-tables-after-feature
 Feature: Update product price fields from Back Office (BO) when default country has no states.

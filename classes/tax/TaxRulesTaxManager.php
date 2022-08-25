@@ -135,9 +135,4 @@ class TaxRulesTaxManagerCore implements TaxManagerInterface
 
         return Cache::retrieve($cache_id);
     }
-
-    public function getAddress(): Address
-    {
-        return $this->address;
-    }
 }
