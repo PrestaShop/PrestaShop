@@ -1167,11 +1167,8 @@
 
 {% block form_help %}
   {% if help is not null %}
-    <small class="form-text {% if help_attr.class is defined %}{{ help_attr.class }}{% endif %}"
-        {% if help_attr.data is defined %}
-          {% for data, value in help_attr.data %} data-{{ data }}="{{ value }}" {% endfor%}
-        {% endif%}>
-      {{ help|raw }}</small>
+    {%- set help_attr = help_attr|merge({class: (help_attr.class|default('') ~ ' form-text')|trim}) -%}
+      <small id="{{ id }}_help"{% with { attr: help_attr } %}{{ block('attributes') }}{% endwith %}>{{ help|raw }}</small>
   {% endif %}
   {% if warning is defined %}
     {{ warning }}

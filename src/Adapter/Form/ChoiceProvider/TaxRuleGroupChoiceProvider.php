@@ -109,6 +109,6 @@ final class TaxRuleGroupChoiceProvider implements FormChoiceProviderInterface, F
      */
     private function getRules(): array
     {
-        return TaxRulesGroup::getTaxRulesGroups();
+        return TaxRulesGroup::getTaxRulesGroupsForOptions();
     }
 }

@@ -130,16 +130,17 @@ class RetailPriceType extends TranslatorAwareType
         } else {
             $ecotaxRate = new DecimalNumber('0');
         }
+        $country = new Country($this->contextCountryId);
 
         $taxRateHelpPlaceholderWithoutState = $this->trans(
             'Tax %1$s : %2$s%%',
             'Admin.Catalog.Feature',
-            ['%1$s' => Country::getIsoById($this->contextCountryId), '%2$s' => '_TAX_RATE_HELP_PLACEHOLDER_']
+            ['%1$s' => $country->iso_code, '%2$s' => '_TAX_RATE_HELP_PLACEHOLDER_']
         );
         $taxRateHelpPlaceholderWithState = $this->trans(
             'Tax %1$s-%3$s: %2$s%%',
             'Admin.Catalog.Feature',
-            ['%1$s' => Country::getIsoById($this->contextCountryId), '%2$s' => '_TAX_RATE_HELP_PLACEHOLDER_', '%3s$s' => '_STATE_ISO_CODE_HELP_PLACEHOLDER_']
+            ['%1$s' => $country->iso_code, '%2$s' => '_TAX_RATE_HELP_PLACEHOLDER_', '%3s$s' => '_STATE_ISO_CODE_HELP_PLACEHOLDER_']
         );
 
         $builder
@@ -183,11 +184,9 @@ class RetailPriceType extends TranslatorAwareType
                     : '', //we replace help text in js on load when tax is enabled
                 'help_attr' => [
                     'class' => 'js-tax-rule-help',
-                    'data' => [
-                        'place-holder-without-state' => $taxRateHelpPlaceholderWithoutState,
-                        'place-holder-with-state' => $taxRateHelpPlaceholderWithState,
-                        'is-tax-enabled' => $this->isTaxEnabled,
-                    ],
+                    'data-place-holder-without-state' => $taxRateHelpPlaceholderWithoutState,
+                    'data-place-holder-with-state' => $taxRateHelpPlaceholderWithState,
+                    'data-is-tax-enabled' => $this->isTaxEnabled,
                 ],
                 'external_link' => [
                     'text' => $this->trans('[1]Manage tax rules[/1]', 'Admin.Catalog.Feature'),

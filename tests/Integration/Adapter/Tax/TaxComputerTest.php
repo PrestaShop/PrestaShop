@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use State;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Tax;
+use TaxCalculator;
 use TaxRule;
 use TaxRulesGroup;
 
@@ -89,12 +90,12 @@ class TaxComputerTest extends KernelTestCase
         $country = new Country($countryId);
 
         /* taxes for countries without states */
-        yield [20.0, $country->id, [0],  '10.00', '12.00', 0];
-        yield [6.0, $country->id, [0], '10.00', '10.60', 0];
-        yield [21.3, $country->id, [0], '10.00', '12.13', 0];
-        yield [14.7, $country->id, [0], '8.00', '9.176', 0];
+        yield [20.0, $country->id, [0],  '10.00', '12.00', TaxCalculator::COMBINE_METHOD];
+        yield [6.0, $country->id, [0], '10.00', '10.60', TaxCalculator::COMBINE_METHOD];
+        yield [21.3, $country->id, [0], '10.00', '12.13', TaxCalculator::COMBINE_METHOD];
+        yield [14.7, $country->id, [0], '8.00', '9.176', TaxCalculator::COMBINE_METHOD];
         // tax rate is rounded to 3.148
-        yield [3.14769, $country->id, [0], '8.666', '8.93880568', 0];
+        yield [3.14769, $country->id, [0], '8.666', '8.93880568', TaxCalculator::COMBINE_METHOD];
 
         $countryId = Country::getByIso('us');
         $country = new Country($countryId);
@@ -103,31 +104,31 @@ class TaxComputerTest extends KernelTestCase
         $stateId = (int) $state['id_state'];
 
         /* taxes for countries with state */
-        yield [20.0, $country->id, [$stateId],  '10.00', '12.00', 0];
-        yield [6.0, $country->id, [$stateId], '10.00', '10.60', 0];
-        yield [21.3, $country->id, [$stateId], '10.00', '12.13', 0];
-        yield [14.7, $country->id, [$stateId], '8.00', '9.176', 0];
+        yield [20.0, $country->id, [$stateId],  '10.00', '12.00', TaxCalculator::COMBINE_METHOD];
+        yield [6.0, $country->id, [$stateId], '10.00', '10.60', TaxCalculator::COMBINE_METHOD];
+        yield [21.3, $country->id, [$stateId], '10.00', '12.13', TaxCalculator::COMBINE_METHOD];
+        yield [14.7, $country->id, [$stateId], '8.00', '9.176', TaxCalculator::COMBINE_METHOD];
         // tax rate is rounded to 3.148
-        yield [3.14769, $country->id, [$stateId], '8.666', '8.93880568', 0];
+        yield [3.14769, $country->id, [$stateId], '8.666', '8.93880568', TaxCalculator::COMBINE_METHOD];
 
         $secondState = $states[1];
         $secondStateId = (int) $secondState['id_state'];
 
         /* taxes for countries with states and tax has multiple states and only first one should be taken */
-        yield [20.0, $country->id, [$stateId, $secondStateId],  '10.00', '12.00', 1];
-        yield [6.0, $country->id, [$stateId, $secondStateId], '10.00', '10.60', 1];
-        yield [21.3, $country->id, [$stateId, $secondStateId], '10.00', '12.13', 1];
-        yield [14.7, $country->id, [$stateId, $secondStateId], '8.00', '9.176', 1];
+        yield [20.0, $country->id, [$stateId, $secondStateId],  '10.00', '12.00', TaxCalculator::COMBINE_METHOD];
+        yield [6.0, $country->id, [$stateId, $secondStateId], '10.00', '10.60', TaxCalculator::COMBINE_METHOD];
+        yield [21.3, $country->id, [$stateId, $secondStateId], '10.00', '12.13', TaxCalculator::COMBINE_METHOD];
+        yield [14.7, $country->id, [$stateId, $secondStateId], '8.00', '9.176', TaxCalculator::COMBINE_METHOD];
         // tax rate is rounded to 3.148
-        yield [3.14769, $country->id, [$stateId, $secondStateId], '8.666', '8.93880568', 1];
+        yield [3.14769, $country->id, [$stateId, $secondStateId], '8.666', '8.93880568', TaxCalculator::COMBINE_METHOD];
 
         /* taxes for countries with states and have multiple combined taxes for same state so the taxes are combined */
-        yield [20.0, $country->id, [$stateId, $stateId],  '10.00', '14.00', 1];
-        yield [6.0, $country->id, [$stateId, $stateId], '10.00', '11.20', 1];
-        yield [21.3, $country->id, [$stateId, $stateId], '10.00', '14.26', 1];
-        yield [14.7, $country->id, [$stateId, $stateId], '8.00', '10.352', 1];
+        yield [20.0, $country->id, [$stateId, $stateId],  '10.00', '14.00', TaxCalculator::COMBINE_METHOD];
+        yield [6.0, $country->id, [$stateId, $stateId], '10.00', '11.20', TaxCalculator::COMBINE_METHOD];
+        yield [21.3, $country->id, [$stateId, $stateId], '10.00', '14.26', TaxCalculator::COMBINE_METHOD];
+        yield [14.7, $country->id, [$stateId, $stateId], '8.00', '10.352', TaxCalculator::COMBINE_METHOD];
         // tax rate is rounded to 3.148
-        yield [3.14769, $country->id, [$stateId, $stateId], '8.666', '9.21161136', 1];
+        yield [3.14769, $country->id, [$stateId, $stateId], '8.666', '9.21161136', TaxCalculator::COMBINE_METHOD];
     }
 
     /**
