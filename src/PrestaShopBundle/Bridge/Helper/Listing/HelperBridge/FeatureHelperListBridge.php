@@ -47,29 +47,27 @@ class FeatureHelperListBridge extends HelperListBridge
         $listSql = parent::generateListQuery($helperListConfiguration, $idLang);
 
         // adds feature_value count to evey row of feature
-        foreach ($helperListConfiguration->list as &$featureRowRecord) {
-            $this->addFeatureValuesCount($featureRowRecord);
+        foreach ($helperListConfiguration->list as $featureRowRecord) {
+            $featureRowRecord['value'] = $this->countFeatureValues((int) $featureRowRecord['id_feature']);
         }
 
         return $listSql;
     }
 
     /**
-     * Appends feature_value count to every record row
-     *
-     * @param array<string, mixed> $featureRowRecord
+     * Counts feature values of realated feature
      */
-    private function addFeatureValuesCount(array &$featureRowRecord): void
+    private function countFeatureValues(int $featureId): int
     {
         $query = new DbQuery();
 
         $query
             ->select('COUNT(fv.id_feature_value) as count_values')
             ->from('feature_value', 'fv')
-            ->where('fv.id_feature =' . (int) $featureRowRecord['id_feature'])
+            ->where('fv.id_feature =' . $featureId)
             ->where('(fv.custom=0 OR fv.custom IS NULL)')
         ;
 
-        $featureRowRecord['value'] = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
+        return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
     }
 }
