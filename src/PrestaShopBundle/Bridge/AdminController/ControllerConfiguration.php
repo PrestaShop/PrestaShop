@@ -140,13 +140,6 @@ class ControllerConfiguration
     public $pageHeaderToolbarButtons = [];
 
     /**
-     * @todo: this is duplicote from HelperListConfiguration. Should be removed here as its unused
-     *
-     * @var array
-     */
-    public $toolbarButtons = [];
-
-    /**
      * @var string[]|string
      */
     public $toolbarTitle = [];
