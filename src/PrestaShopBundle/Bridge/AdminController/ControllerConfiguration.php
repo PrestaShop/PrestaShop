@@ -166,7 +166,7 @@ class ControllerConfiguration
      *
      * @var array<string, array{href?: string, desc?: string, icon?: string, class?: string}>
      */
-    public $pageHeaderToolbarButtons = [];
+    public $pageHeaderToolbarActions = [];
 
     /**
      * Seems to work as a fallback for both - metaTitle and pageHeaderToolbarTitle.
@@ -376,7 +376,7 @@ class ControllerConfiguration
             ->setAllowedTypes('desc', ['string'])
         ;
 
-        $this->pageHeaderToolbarButtons[$label] = $optionsResolver->resolve($config);
+        $this->pageHeaderToolbarActions[$label] = $optionsResolver->resolve($config);
 
         return $this;
     }

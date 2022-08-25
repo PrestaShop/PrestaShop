@@ -85,8 +85,8 @@ class ToolbarFlagsConfigurator implements ConfiguratorInterface
         $controllerConfiguration->templateVars['show_page_header_toolbar'] = $controllerConfiguration->showPageHeaderToolbar;
         $controllerConfiguration->templateVars['page_header_toolbar_title'] = $controllerConfiguration->pageHeaderToolbarTitle;
         $controllerConfiguration->templateVars['title'] = $controllerConfiguration->pageHeaderToolbarTitle;
-        $controllerConfiguration->templateVars['toolbar_btn'] = $controllerConfiguration->pageHeaderToolbarButtons;
-        $controllerConfiguration->templateVars['page_header_toolbar_btn'] = $controllerConfiguration->pageHeaderToolbarButtons;
+        $controllerConfiguration->templateVars['toolbar_btn'] = $controllerConfiguration->pageHeaderToolbarActions;
+        $controllerConfiguration->templateVars['page_header_toolbar_btn'] = $controllerConfiguration->pageHeaderToolbarActions;
         $controllerConfiguration->templateVars['help_link'] = $this->documentation->generateLink(
             Tools::getValue('controller'),
             (string) Language::getIsoById($controllerConfiguration->getUser()->getData()->id_lang)
