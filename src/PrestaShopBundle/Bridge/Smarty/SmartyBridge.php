@@ -175,6 +175,10 @@ class SmartyBridge
         $template = $this->createTemplate($controllerConfiguration, $controllerConfiguration->template);
         $page = $template->fetch();
 
+        /* @see ControllerConfiguration::$errors */
+        /* @see ControllerConfiguration::$warnings */
+        /* @see ControllerConfiguration::$informations */
+        /* @see ControllerConfiguration::$confirmations */
         foreach (['errors', 'warnings', 'informations', 'confirmations'] as $type) {
             if (!is_array($controllerConfiguration->$type)) {
                 $controllerConfiguration->$type = (array) $controllerConfiguration->$type;
