@@ -720,6 +720,7 @@ class HelperListConfiguration
     {
         $optionsResolver = new OptionsResolver();
         $optionsResolver
+            ->setDefined(['text', 'icon', 'confirm'])
             ->setAllowedTypes('text', ['string'])
             ->setAllowedTypes('icon', ['string', 'null'])
             ->setAllowedTypes('confirm', ['string', 'null'])
