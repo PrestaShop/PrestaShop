@@ -163,8 +163,9 @@ class ControllerConfiguration
      * Action buttons rendered in page header (e.g. button to Add new feature).
      *
      * @see AdminController::$page_header_toolbar_btn
+     * @see self::addHeaderToolbarAction() for array structure definition.
      *
-     * @var array<string, array{href?: string, desc?: string, icon?: string, class?: string}>
+     * @var array<string, array<string, mixed>>
      */
     public $pageHeaderToolbarActions = [];
 
@@ -370,10 +371,10 @@ class ControllerConfiguration
         $optionsResolver = new OptionsResolver();
         $optionsResolver
             ->setDefined(['href', 'desc', 'icon', 'class'])
-            ->setDefaults(['class' => ''])
-            ->setAllowedTypes('class', ['string'])
-            ->setAllowedTypes('href', ['string'])
-            ->setAllowedTypes('desc', ['string'])
+            ->setAllowedTypes('class', ['string', 'null'])
+            ->setAllowedTypes('href', ['string', 'null'])
+            ->setAllowedTypes('icon', ['string', 'null'])
+            ->setAllowedTypes('desc', ['string', 'null'])
         ;
 
         $this->pageHeaderToolbarActions[$label] = $optionsResolver->resolve($config);

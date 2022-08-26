@@ -159,7 +159,7 @@ class FiltersProcessor
                         }
                     } else {
                         $sql_filter .= ' AND ';
-                        $check_key = ($key == $helperListConfiguration->getIdentifier() || $key == '`' . $helperListConfiguration->getIdentifier() . '`');
+                        $check_key = ($key == $helperListConfiguration->getIdentifierKey() || $key == '`' . $helperListConfiguration->getIdentifierKey() . '`');
                         $alias = ($definition && !empty($definition['fields'][$filter]['shop'])) ? 'sa' : 'a';
 
                         if ($type == 'int' || $type == 'bool') {

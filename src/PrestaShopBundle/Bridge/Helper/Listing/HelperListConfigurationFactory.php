@@ -52,7 +52,7 @@ class HelperListConfigurationFactory
 
     /**
      * @param ControllerConfiguration $controllerConfiguration
-     * @param string $identifier
+     * @param string $identifierKey
      * @param string $postSubmitRoute
      * @param string|null $positionIdentifier
      * @param string|null $defaultOrderBy
@@ -66,7 +66,7 @@ class HelperListConfigurationFactory
      */
     public function create(
         ControllerConfiguration $controllerConfiguration,
-        string $identifier,
+        string $identifierKey,
         string $postSubmitRoute,
         string $positionIdentifier = null,
         string $defaultOrderBy = null,
@@ -77,7 +77,7 @@ class HelperListConfigurationFactory
         ?string $listId = null
     ): HelperListConfiguration {
         if (empty($defaultOrderBy)) {
-            $defaultOrderBy = $identifier;
+            $defaultOrderBy = $identifierKey;
         }
 
         return new HelperListConfiguration(
@@ -85,7 +85,7 @@ class HelperListConfigurationFactory
             $controllerConfiguration->tableName,
             $listId ?: $controllerConfiguration->tableName,
             $controllerConfiguration->objectModelClassName,
-            $identifier,
+            $identifierKey,
             $positionIdentifier,
             $isJoinLanguageTableAuto,
             $deleted,

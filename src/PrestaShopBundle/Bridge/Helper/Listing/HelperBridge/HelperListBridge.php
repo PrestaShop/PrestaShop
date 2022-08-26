@@ -175,7 +175,7 @@ class HelperListBridge
                 $helperListConfiguration->where .= ' AND EXISTS (
                         SELECT 1
                         FROM `' . _DB_PREFIX_ . $helperListConfiguration->getTableName() . '_shop` sa
-                        WHERE a.`' . bqSQL($helperListConfiguration->getIdentifier()) . '` = sa.`' . bqSQL($helperListConfiguration->getIdentifier()) . '`
+                        WHERE a.`' . bqSQL($helperListConfiguration->getIdentifierKey()) . '` = sa.`' . bqSQL($helperListConfiguration->getIdentifierKey()) . '`
                          AND sa.id_shop IN (' . implode(', ', Shop::getContextListShopID()) . ')
                     )';
             }
@@ -355,7 +355,7 @@ class HelperListBridge
         $languageJoinClause = '';
         if ($helperListConfiguration->autoJoinLanguageTable()) {
             $languageJoinClause = 'LEFT JOIN `' . _DB_PREFIX_ . bqSQL($helperListConfiguration->getTableName()) . '_lang` b
-                ON (b.`' . bqSQL($helperListConfiguration->getIdentifier()) . '` = a.`' . bqSQL($helperListConfiguration->getIdentifier()) . '` AND b.`id_lang` = ' . (int) $idLang;
+                ON (b.`' . bqSQL($helperListConfiguration->getIdentifierKey()) . '` = a.`' . bqSQL($helperListConfiguration->getIdentifierKey()) . '` AND b.`id_lang` = ' . (int) $idLang;
 
             if ($idLangShop) {
                 if (!Shop::isFeatureActive()) {
@@ -423,7 +423,7 @@ class HelperListBridge
         $helperListConfiguration->orderWay = $this->checkOrderDirection($helperListConfiguration, $orderDirection);
 
         return ' ORDER BY '
-            . ((str_replace('`', '', $helperListConfiguration->orderBy) == $helperListConfiguration->getIdentifier()) ? 'a.' : '')
+            . ((str_replace('`', '', $helperListConfiguration->orderBy) == $helperListConfiguration->getIdentifierKey()) ? 'a.' : '')
             . $helperListConfiguration->orderBy
             . ' '
             . $helperListConfiguration->orderWay;
@@ -529,9 +529,9 @@ class HelperListBridge
         $helper->orderBy = $helperListConfiguration->orderBy;
         $helper->orderWay = $helperListConfiguration->orderWay;
         $helper->listTotal = $helperListConfiguration->listTotal;
-        $helper->identifier = $helperListConfiguration->getIdentifier();
+        $helper->identifier = $helperListConfiguration->getIdentifierKey();
         $helper->token = $helperListConfiguration->getToken();
-        $helper->position_identifier = $helperListConfiguration->getPositionIdentifier();
+        $helper->position_identifier = $helperListConfiguration->getPositionIdentifierKey();
         $helper->controller_name = $helperListConfiguration->getLegacyControllerName();
         $helper->list_id = $helperListConfiguration->getListId();
         $helper->bootstrap = $helperListConfiguration->isBootstrap();
