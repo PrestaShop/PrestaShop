@@ -30,11 +30,13 @@ namespace PrestaShopBundle\Bridge\Helper\Listing\HelperBridge;
 
 use Context;
 use Db;
+use Exception;
 use HelperList;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerInterface;
+use PrestaShopBundle\Bridge\Exception\FailedToFetchListRecordsException;
 use PrestaShopBundle\Bridge\Helper\Listing\FilterPrefix;
 use PrestaShopBundle\Bridge\Helper\Listing\HelperListConfiguration;
 use PrestaShopBundle\Bridge\Smarty\BreadcrumbsAndTitleConfigurator;
@@ -242,15 +244,24 @@ class HelperListBridge
                     $whereClause;
             }
 
-            $helperListConfiguration->list = Db::getInstance()->executeS($listSql, true, false) ?: null;
-
-            if ($helperListConfiguration->list === false) {
-                // @todo: the listError doesn't seem to be used anywhere else yet. Do we need to add some additional list error handler?
-                $helperListConfiguration->listError = Db::getInstance()->getMsgError();
-
-                break;
+            try {
+                $records = Db::getInstance()->executeS($listSql, true, false);
+            } catch (Exception $e) {
+                throw new FailedToFetchListRecordsException(
+                    'Failed to fetch list records from database.',
+                    0,
+                    $e
+                );
             }
 
+            if (!is_array($records)) {
+                throw new FailedToFetchListRecordsException(sprintf(
+                    'Fetched list records expected to be array. Got %s',
+                    var_export($records, true)
+                ));
+            }
+
+            $helperListConfiguration->list = $records;
             $helperListConfiguration->listTotal = (int) Db::getInstance()->getValue($list_count, false);
 
             if ($shouldLimitSqlResults) {

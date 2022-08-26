@@ -122,13 +122,6 @@ class HelperListConfiguration
     public $listTotal;
 
     /**
-     * Text of the error message from previous database operation if any occurred when fetching the list
-     *
-     * @var string
-     */
-    public $listError;
-
-    /**
      * @var int
      */
     private $tabId;
