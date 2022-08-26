@@ -102,7 +102,7 @@ class FrontControllerCore extends Controller
     protected $restrictedCountry = Country::GEOLOC_ALLOWED;
 
     /** @var bool If true, forces display to maintenance page. */
-    protected $maintenance = false;
+    public $maintenance = false;
 
     /** @var string[] Adds excluded `$_GET` keys for redirection */
     protected $redirectionExtraExcludedKeys = [];
