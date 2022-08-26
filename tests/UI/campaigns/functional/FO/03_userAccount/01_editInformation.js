@@ -147,11 +147,11 @@ describe('FO - Account : Edit information', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkErrorAlerts2', baseContext);
 
       let textResult = await accountIdentityPage.getInvalidEmailAlert(page);
-      await expect(textResult, 'Invalid email alert is not visible!').to
+      await expect(textResult, 'Invalid email/password alert is not visible!').to
         .equal(accountIdentityPage.invalidEmailAlertMessage);
 
       textResult = await accountIdentityPage.getInvalidPasswordAlert(page);
-      await expect(textResult, 'Invalid email alert is not visible!').to
+      await expect(textResult, 'Invalid email/password alert is not visible!').to
         .equal(accountIdentityPage.invalidEmailAlertMessage);
     });
 
