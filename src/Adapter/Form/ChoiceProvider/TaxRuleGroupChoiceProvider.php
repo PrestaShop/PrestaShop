@@ -96,7 +96,7 @@ final class TaxRuleGroupChoiceProvider implements FormChoiceProviderInterface, F
             }
             $state = new State($stateId);
             $taxRates[$rule['name']] = [
-                'data-tax-rate' => $taxRate->round(2),
+                'data-tax-rate' => (string) $taxRate,
                 'data-state-iso-code' => $state->iso_code ?: '',
             ];
         }
