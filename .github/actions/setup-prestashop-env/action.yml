@@ -86,7 +86,7 @@ runs:
       if: inputs.ps-auto-install == 'true'
       shell: bash
       run : |
-        php install-dev/index_cli.php \
+        runuser -g www-data -u www-data -- php install-dev/index_cli.php \
         ---domain="localhost" --db_server="127.0.0.1:3306" --db_name="${{ inputs.mysql-database }}" \
         --db_user="root" --db_password=${{ inputs.mysql-root-password }} \
          --prefix="tst_" --firstname="Marc" --lastname="Beier" \
