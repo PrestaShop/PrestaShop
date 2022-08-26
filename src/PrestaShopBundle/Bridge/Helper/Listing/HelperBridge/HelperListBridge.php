@@ -113,16 +113,11 @@ class HelperListBridge
         if (!($helperListConfiguration->fieldsList && is_array($helperListConfiguration->fieldsList))) {
             return null;
         }
-        $helper = new HelperList();
-        $helper->sql = $this->generateListQuery($helperListConfiguration, $this->context->language->id);
 
-        $this->setHelperDisplay($helperListConfiguration, $helper);
-        $helper->_default_pagination = $helperListConfiguration->getDefaultPaginationLimit();
-        $helper->_pagination = $helperListConfiguration->getPaginationLimits();
-        $helper->tpl_delete_link_vars = $helperListConfiguration->getDeleteLinkVars();
-        $helper->postSubmitUrl = $helperListConfiguration->getPostSubmitUrl();
-
-        return $helper->generateList($helperListConfiguration->list, $helperListConfiguration->fieldsList);
+        return $this
+            ->buildHelperList($helperListConfiguration)
+            ->generateList($helperListConfiguration->list, $helperListConfiguration->fieldsList)
+        ;
     }
 
     /**
@@ -515,14 +510,15 @@ class HelperListBridge
 
     /**
      * @param HelperListConfiguration $helperListConfiguration
-     * @param HelperList $helper
+     *
+     * @return HelperList
      */
-    private function setHelperDisplay(
-        HelperListConfiguration $helperListConfiguration,
-        HelperList $helper
-    ): void {
+    private function buildHelperList(
+        HelperListConfiguration $helperListConfiguration
+    ): HelperList {
+        $helper = new HelperList();
+        $helper->sql = $this->generateListQuery($helperListConfiguration, $this->context->language->id);
         $breadcrumbs = $this->breadcrumbsAndTitleConfigurator->getBreadcrumbs($helperListConfiguration->getTabId());
-
         $helper->title = $breadcrumbs['tab']['name'] ?? '';
         $helper->toolbar_btn = $helperListConfiguration->getToolbarActions();
         $helper->actions = $helperListConfiguration->getRowActions();
@@ -539,5 +535,11 @@ class HelperListBridge
         $helper->controller_name = $helperListConfiguration->getLegacyControllerName();
         $helper->list_id = $helperListConfiguration->getListId();
         $helper->bootstrap = $helperListConfiguration->isBootstrap();
+        $helper->_default_pagination = $helperListConfiguration->getDefaultPaginationLimit();
+        $helper->_pagination = $helperListConfiguration->getPaginationLimits();
+        $helper->tpl_delete_link_vars = $helperListConfiguration->getDeleteLinkVars();
+        $helper->postSubmitUrl = $helperListConfiguration->getPostSubmitUrl();
+
+        return $helper;
     }
 }

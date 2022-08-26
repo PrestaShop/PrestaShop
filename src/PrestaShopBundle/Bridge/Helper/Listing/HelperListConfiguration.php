@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Bridge\Helper\Listing;
 
+use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -122,26 +123,38 @@ class HelperListConfiguration
     public $listTotal;
 
     /**
+     * @see ControllerConfiguration::$tabId
+     *
      * @var int
      */
     private $tabId;
 
     /**
+     * @see ControllerConfiguration::$tableName
+     *
      * @var string
      */
     private $tableName;
 
     /**
+     * Identifier of the list.
+     * Based on this value the submit request key is built to allow identifying which list is performing certain action.
+     * Most of the time it matches table name, but custom value can be provided as well.
+     *
      * @var string
      */
     private $listId;
 
     /**
+     * @see ControllerConfiguration::$objectModelClassName
+     *
      * @var string
      */
     private $objectModelClassName;
 
     /**
+     * @see ControllerConfiguration::$legacyControllerName
+     *
      * @var string
      */
     private $legacyControllerName;
