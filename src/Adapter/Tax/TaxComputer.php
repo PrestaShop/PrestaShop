@@ -103,11 +103,13 @@ class TaxComputer
      */
     public function getTaxRate(TaxRulesGroupId $taxRulesGroupId, CountryId $countryId): DecimalNumber
     {
+        $stateId = $this->taxRulesGroupRepository->getTaxRulesGroupDefaultStateId($taxRulesGroupId, $countryId);
+        if ($stateId) {
+            return $this->getTaxRateByState($taxRulesGroupId, $countryId, new StateId($stateId));
+        }
+
         $address = new Address();
         $address->id_country = $countryId->getValue();
-        $stateId = $this->taxRulesGroupRepository->getTaxRulesGroupDefaultStateId($taxRulesGroupId, $countryId);
-        $address->id_state = $stateId;
-
         $taxCalculator = TaxManagerFactory::getManager($address, $taxRulesGroupId->getValue())->getTaxCalculator();
 
         return new DecimalNumber((string) $taxCalculator->getTotalRate());
