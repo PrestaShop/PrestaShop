@@ -114,7 +114,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
     it('should create combinations and check generate combinations button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createCombinations', baseContext);
 
-      const generateCombinationsButton = await createProductsPage.setProductCombinations(
+      const generateCombinationsButton = await createProductsPage.setProductAttributes(
         page,
         newProductData.combinations,
       );
@@ -194,7 +194,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
     it('should add combinations and check generate combinations button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addCombinations', baseContext);
 
-      const generateCombinationsButton = await createProductsPage.setProductCombinations(
+      const generateCombinationsButton = await createProductsPage.setProductAttributes(
         page,
         editProductData.combinations,
       );

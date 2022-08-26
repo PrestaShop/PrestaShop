@@ -114,19 +114,19 @@ class Products extends BOBasePage {
    * @param combination {string} Attribute to set
    * @returns {Promise<void>}
    */
-  async addCombination(page, combination) {
+  async selectAttribute(page, combination) {
     await page.type(this.searchAttributesButton, combination);
     await page.keyboard.press('ArrowDown');
     await page.keyboard.press('Enter');
   }
 
   /**
-   * Set all combinations
+   * Set product attributes
    * @param page {Page} Browser tab
-   * @param combinations {Object} Combinations of the product
+   * @param attributes {Object} Combinations of the product
    * @returns {Promise<string>}
    */
-  async setProductCombinations(page, combinations) {
+  async setProductAttributes(page, attributes) {
     await this.waitForSelectorAndClick(page, this.combinationsTabLink);
     if (await this.elementVisible(page, this.generateCombinationButton, 2000)) {
       await this.waitForSelectorAndClick(page, this.generateCombinationButton);
@@ -135,11 +135,11 @@ class Products extends BOBasePage {
     }
 
     await this.waitForVisibleSelector(page, this.generateCombinationsModal);
-    const keys = Object.keys(combinations);
+    const keys = Object.keys(attributes);
     /*eslint-disable*/
     for (const key of keys) {
-      for (const value of combinations[key]) {
-        await this.addCombination(page, `${key} : ${value}`);
+      for (const value of attributes[key]) {
+        await this.selectAttribute(page, `${key} : ${value}`);
       }
     }
     /* eslint-enable */
