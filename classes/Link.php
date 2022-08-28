@@ -882,7 +882,7 @@ class LinkCore
 
     /**
      * Used when you explicitly want to create a LEGACY admin link, this should be deprecated
-     * in 1.8.0.
+     * in 9.x
      *
      * @param string $controller
      * @param bool $withToken
