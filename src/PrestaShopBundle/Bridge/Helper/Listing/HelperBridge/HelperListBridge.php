@@ -404,14 +404,17 @@ class HelperListBridge
     private function getHavingClause(HelperListConfiguration $helperListConfiguration): string
     {
         $havingClause = '';
-        if (isset($helperListConfiguration->filterHaving) || isset($helperListConfiguration->having)) {
-            $havingClause = ' HAVING ';
-            if (isset($helperListConfiguration->filterHaving)) {
-                $havingClause .= ltrim($helperListConfiguration->filterHaving, ' AND ');
-            }
-            if (isset($helperListConfiguration->having)) {
-                $havingClause .= $helperListConfiguration->having . ' ';
-            }
+        if (!$helperListConfiguration->filterHaving && !$helperListConfiguration->having) {
+            return $havingClause;
+        }
+
+        $havingClause = ' HAVING ';
+        if ($helperListConfiguration->filterHaving) {
+            $havingClause .= ltrim($helperListConfiguration->filterHaving, ' AND ');
+        }
+
+        if ($helperListConfiguration->having) {
+            $havingClause .= $helperListConfiguration->having . ' ';
         }
 
         return $havingClause;
