@@ -231,11 +231,11 @@ class ModuleDataProvider
     }
 
     /**
-     * @param $name
+     * @param string $name
      *
      * @return bool
      */
-    public function isInstalledAndActive($name) {
+    public function isInstalledAndActive(string $name): bool {
         return (bool) $this->getModuleIdByName($name, true);
     }
 
