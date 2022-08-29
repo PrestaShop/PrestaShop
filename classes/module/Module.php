@@ -879,6 +879,10 @@ abstract class ModuleCore implements ModuleInterface
             }
         }
 
+        // set active to 1 in the module table
+        $sqlEnable = 'UPDATE %smodule SET active = 1 WHERE id_module = %s';
+        Db::getInstance()->execute(sprintf($sqlEnable, _DB_PREFIX_, (int) $this->id));
+
         if ($moduleActivated) {
             $this->loadBuiltInTranslations();
         }
@@ -982,8 +986,23 @@ abstract class ModuleCore implements ModuleInterface
 
         // Disable module for all shops
         $sql = 'DELETE FROM `' . _DB_PREFIX_ . 'module_shop` WHERE `id_module` = ' . (int) $this->id . ' ' . ((!$force_all) ? ' AND `id_shop` IN(' . implode(', ', Shop::getContextListShopID()) . ')' : '');
+        $resultDeletionQuery = Db::getInstance()->execute($sql);
 
-        return $result && Db::getInstance()->execute($sql);
+        // if module has no more shop associations, set module.active = 0
+        if (!$this->hasShopAssociations()) {
+            $disableQuery = 'UPDATE %smodule SET active = 0 WHERE id_module = %s';
+            $resultDisableQuery = Db::getInstance()->execute(sprintf($disableQuery, _DB_PREFIX_, $this->id));
+        }
+
+        return $resultDeletionQuery && $resultDisableQuery;
+    }
+
+    public function hasShopAssociations(): bool
+    {
+        $sql = "select m.id_module from %smodule m INNER JOIN %smodule_shop ms ON ms.id_module = m.id_module WHERE m.id_module = '%s'";
+        $result = Db::getInstance()->getRow(sprintf($sql, _DB_PREFIX_, _DB_PREFIX_, (int) $this->id));
+
+        return isset($result['id_module']);
     }
 
     /**
