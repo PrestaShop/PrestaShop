@@ -395,22 +395,22 @@ class HelperListBridge
             ($helperListConfiguration->isDeleted() ? 'AND a.`deleted` = 0 ' : '') .
             $helperListConfiguration->filter . $whereShop . "\n" .
             $helperListConfiguration->group . ' ' . "\n" .
-            $this->getHavingClause();
+            $this->getHavingClause($helperListConfiguration);
     }
 
     /**
      * @return string
      */
-    private function getHavingClause(): string
+    private function getHavingClause(HelperListConfiguration $helperListConfiguration): string
     {
         $havingClause = '';
-        if (isset($this->_filterHaving) || isset($this->_having)) {
+        if (isset($helperListConfiguration->filterHaving) || isset($helperListConfiguration->having)) {
             $havingClause = ' HAVING ';
-            if (isset($this->_filterHaving)) {
-                $havingClause .= ltrim($this->_filterHaving, ' AND ');
+            if (isset($helperListConfiguration->filterHaving)) {
+                $havingClause .= ltrim($helperListConfiguration->filterHaving, ' AND ');
             }
-            if (isset($this->_having)) {
-                $havingClause .= $this->_having . ' ';
+            if (isset($helperListConfiguration->having)) {
+                $havingClause .= $helperListConfiguration->having . ' ';
             }
         }
 

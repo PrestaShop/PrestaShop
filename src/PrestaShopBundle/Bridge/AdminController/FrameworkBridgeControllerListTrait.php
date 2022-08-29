@@ -85,7 +85,7 @@ trait FrameworkBridgeControllerListTrait
     protected function processFilters(Request $request, HelperListConfiguration $helperListConfiguration): void
     {
         $this->get('prestashop.bridge.helper.listing.filters_processor')
-            ->processFilter($request, $helperListConfiguration)
+            ->processFilters($request, $helperListConfiguration)
         ;
     }
 }
