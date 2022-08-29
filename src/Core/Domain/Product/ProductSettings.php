@@ -48,7 +48,8 @@ class ProductSettings
     public const MAX_MPN_LENGTH = 40;
     public const MAX_META_TITLE_LENGTH = 70;
     public const MAX_META_DESCRIPTION_LENGTH = 160;
-
     public const MAX_DESCRIPTION_SHORT_LENGTH = 800;
     public const MAX_DESCRIPTION_LENGTH = 21844;
+    public const MAX_AVAILABLE_NOW_LABEL_LENGTH = 255;
+    public const MAX_AVAILABLE_LATER_LABEL_LENGTH = 255;
 }
