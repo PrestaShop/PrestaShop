@@ -78,7 +78,7 @@ export default class SubmitRowActionExtension {
     if (!isGetOrPostMethod) {
       $form.append(
         $('<input>', {
-          type: '_hidden',
+          type: 'hidden',
           name: '_method',
           value: method,
         }),
