@@ -67,7 +67,7 @@ class FiltersProcessor
      *
      * @return void
      */
-    public function processFilter(
+    public function processFilters(
         Request $request,
         HelperListConfiguration $helperListConfiguration
     ): void {
@@ -139,7 +139,7 @@ class FiltersProcessor
 
                     // Assignment by reference
                     if (array_key_exists('havingFilter', $field)) {
-                        $sql_filter = $helperListConfiguration->filterHaving;
+                        $sql_filter = &$helperListConfiguration->filterHaving;
                     } else {
                         $sql_filter = &$helperListConfiguration->filter;
                     }
