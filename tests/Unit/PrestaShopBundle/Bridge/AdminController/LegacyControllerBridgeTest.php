@@ -188,7 +188,7 @@ class LegacyControllerBridgeTest extends TestCase
             'pageHeaderToolbarActions',
         ];
         // toolbar_btn and page_header_toolbar_btn seems to be always set the same
-        yield 'test pageHeaderToolbarActions' => [
+        yield 'test toolbar_btn gets pageHeaderToolbarActions' => [
             'toolbar_btn',
             [
                 'add_new_foo' => [
