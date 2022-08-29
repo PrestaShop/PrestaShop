@@ -51,6 +51,7 @@ class TitleController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))", message="Access denied.")
      *
      * @param Request $request
+     * @param TitleFilters $filters
      *
      * @return Response
      */
@@ -100,6 +101,8 @@ class TitleController extends FrameworkBundleAdminController
      *     message="You need permission to edit this."
      * )
      *
+     * @param int $titleId
+     *
      * @return Response
      */
     public function editAction(int $titleId): Response
@@ -127,6 +130,8 @@ class TitleController extends FrameworkBundleAdminController
      * )
      * @DemoRestricted(redirectRoute="admin_title_index")
      *
+     * @param int $titleId
+     *
      * @return RedirectResponse
      */
     public function deleteAction(int $titleId): RedirectResponse
@@ -150,6 +155,8 @@ class TitleController extends FrameworkBundleAdminController
      * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))", redirectRoute="admin_title_index")
      * @DemoRestricted(redirectRoute="admin_title_index")
      *
+     * @param Request $request
+     *
      * @return RedirectResponse
      */
     public function bulkDeleteAction(Request $request): RedirectResponse
@@ -172,7 +179,7 @@ class TitleController extends FrameworkBundleAdminController
     /**
      * @param Request $request
      *
-     * @return array
+     * @return array<int, int>
      */
     private function getBulkTitlesFromRequest(Request $request): array
     {
@@ -190,7 +197,7 @@ class TitleController extends FrameworkBundleAdminController
     }
 
     /**
-     * @return array
+     * @return array<string, string>
      */
     private function getErrorMessages(): array
     {
