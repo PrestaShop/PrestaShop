@@ -75,8 +75,7 @@ class BulkToggleModuleStatusHandler implements BulkToggleModuleStatusHandlerInte
     public function handle(BulkToggleModuleStatusCommand $command): void
     {
         foreach ($command->getModules() as $moduleName) {
-            $module = Module::getInstanceByName($moduleName);
-            if (!Validate::isLoadedObject($module) || !$this->moduleManager->isInstalled($moduleName)) {
+            if (!$this->moduleManager->isInstalledAndActive($moduleName) || !Validate::isLoadedObject(Module::getInstanceByName($moduleName))) {
                 continue;
             }
 
