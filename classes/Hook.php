@@ -591,6 +591,16 @@ class HookCore extends ObjectModel
             $shop_list_employee = Shop::getShops(true, null, true);
 
             foreach ($shop_list as $shop_id) {
+                $isModuleAlreadyRegisteredOnHook = static::isModuleRegisteredOnHook(
+                    $module_instance, 
+                    $hook_name, 
+                    (int)$shop_id
+                );
+
+                if ($isModuleAlreadyRegisteredOnHook) {
+                    continue;
+                }
+
                 // Check if already registered
                 $sql = 'SELECT hm.`id_module`
                     FROM `' . _DB_PREFIX_ . 'hook_module` hm, `' . _DB_PREFIX_ . 'hook` h
