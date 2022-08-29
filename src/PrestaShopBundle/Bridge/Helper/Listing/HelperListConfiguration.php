@@ -108,7 +108,7 @@ class HelperListConfiguration
      *
      * @var string
      */
-    public $filterHaving = '';
+    public $filterHaving;
 
     /**
      * Contains various sql clauses for filtering the list
