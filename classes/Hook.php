@@ -1075,13 +1075,12 @@ class HookCore extends ObjectModel
                     'module_shop.enable_device & ' . (int) Context::getContext()->getDevice()
                 )
             );
-            $sql->innerJoin('module_shop', 'ms', 'ms.`id_module` = m.`id_module`');
         }
         $sql->innerJoin('hook_module', 'hm', 'hm.`id_module` = m.`id_module`');
         $sql->innerJoin('hook', 'h', 'hm.`id_hook` = h.`id_hook`');
         $sql->innerJoin('module_shop', 'mshop', 'mshop.`id_module` = m.`id_module`');
         if ($hookName !== 'paymentOptions') {
-            $sql->where('h.`name` != "paymentOptions" and m.active = 1');
+            $sql->where('h.`name` != "paymentOptions"');
         } elseif ($frontend) {
             // For payment modules, we check that they are available in the contextual country
             if (Validate::isLoadedObject($context->country)) {
