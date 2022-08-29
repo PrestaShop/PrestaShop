@@ -585,7 +585,7 @@ class HookCore extends ObjectModel
                 $isModuleAlreadyRegisteredOnHook = static::isModuleRegisteredOnHook(
                     $module_instance, 
                     $hook_name, 
-                    (int)$shop_id
+                    (int) $shop_id
                 );
 
                 if ($isModuleAlreadyRegisteredOnHook) {
