@@ -553,8 +553,8 @@ class ProductCore extends ObjectModel
             'name' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isCatalogName', 'required' => false, 'size' => ProductSettings::MAX_NAME_LENGTH],
             'description' => ['type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'],
             'description_short' => ['type' => self::TYPE_HTML, 'lang' => true, 'validate' => 'isCleanHtml'],
-            'available_now' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => 255],
-            'available_later' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'IsGenericName', 'size' => 255],
+            'available_now' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'isGenericName', 'size' => ProductSettings::MAX_AVAILABLE_NOW_LABEL_LENGTH],
+            'available_later' => ['type' => self::TYPE_STRING, 'lang' => true, 'validate' => 'IsGenericName', 'size' => ProductSettings::MAX_AVAILABLE_LATER_LABEL_LENGTH],
         ],
         'associations' => [
             'manufacturer' => ['type' => self::HAS_ONE],
