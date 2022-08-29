@@ -662,7 +662,7 @@ class HelperListConfiguration
 
     /**
      * @param string $label
-     * @param array{href?:string, desc?:string, class:string} $config
+     * @param array{href?:string, desc?:string, class?:string} $config
      *
      * @return $this
      */
@@ -671,10 +671,9 @@ class HelperListConfiguration
         $optionsResolver = new OptionsResolver();
         $optionsResolver
             ->setDefined(['href', 'desc', 'class'])
-            ->setDefaults(['class' => ''])
-            ->setAllowedTypes('class', ['string'])
-            ->setAllowedTypes('href', ['string'])
-            ->setAllowedTypes('desc', ['string'])
+            ->setAllowedTypes('class', ['string', 'null'])
+            ->setAllowedTypes('href', ['string', 'null'])
+            ->setAllowedTypes('desc', ['string', 'null'])
         ;
 
         $this->toolbarActions[$label] = $optionsResolver->resolve($config);
