@@ -83,7 +83,12 @@ class AvailabilityType extends TranslatorAwareType
                         new TypedRegex(TypedRegex::TYPE_GENERIC_NAME),
                         new Length([
                             'max' => ProductSettings::MAX_AVAILABLE_NOW_LABEL_LENGTH,
-                        ])
+                            'maxMessage' => $this->trans(
+                                'This field cannot be longer than %limit% characters',
+                                'Admin.Notifications.Error',
+                                ['%limit%' => ProductSettings::MAX_AVAILABLE_NOW_LABEL_LENGTH]
+                            ),
+                        ]),
                     ],
                 ],
             ])
@@ -99,7 +104,12 @@ class AvailabilityType extends TranslatorAwareType
                         new TypedRegex(TypedRegex::TYPE_GENERIC_NAME),
                         new Length([
                             'max' => ProductSettings::MAX_AVAILABLE_LATER_LABEL_LENGTH,
-                        ])
+                            'maxMessage' => $this->trans(
+                                'This field cannot be longer than %limit% characters',
+                                'Admin.Notifications.Error',
+                                ['%limit%' => ProductSettings::MAX_AVAILABLE_LATER_LABEL_LENGTH]
+                            ),
+                        ]),
                     ],
                 ],
             ])
