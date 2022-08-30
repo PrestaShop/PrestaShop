@@ -34,3 +34,6 @@ doctrine:
     query_cache_driver:
       type: pool
       pool: "%cache.driver%"
+    result_cache_driver:
+      type: pool
+      pool: "%cache.driver%"
