@@ -62,13 +62,13 @@
         <td class="documents-table-column-download-link">
           {% if document.type == 'invoice' %}
             <a target="_blank" rel="noopener noreferrer nofollow"
-               href="{{ getAdminLink('AdminPdf', true, {'submitAction': 'generateInvoicePDF', 'id_order_invoice': document.id}) }}"
+               href="{{ path('admin_orders_generate_invoice_pdf', {'orderId': orderForViewing.id}) }}"
             >
               {{ document.referenceNumber }}
             </a>
           {% elseif document.type == 'delivery_slip' %}
             <a target="_blank" rel="noopener noreferrer nofollow"
-               href="{{ getAdminLink('AdminPdf', true, {'submitAction': 'generateDeliverySlipPDF', 'id_order_invoice': document.id}) }}"
+               href="{{ path('admin_orders_generate_delivery_slip_pdf', {'orderId': orderForViewing.id}) }}"
             >
               {{ document.referenceNumber }}
             </a>
