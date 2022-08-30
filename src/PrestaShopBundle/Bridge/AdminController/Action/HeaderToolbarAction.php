@@ -29,8 +29,8 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Bridge\AdminController\Action;
 
 /**
- * This class is the object to instantiate if you want to add an action in the header toolbar of your page.
+ * Represents an action in the header toolbar of the page
  */
-class HeaderToolbarAction extends Action
+class HeaderToolbarAction extends AbstractAction
 {
 }

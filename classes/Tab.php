@@ -64,7 +64,7 @@ class TabCore extends ObjectModel
     /**
      * @deprecated Since 1.7.7
      */
-    const TAB_MODULE_LIST_URL = '';
+    public const TAB_MODULE_LIST_URL = '';
 
     /**
      * @see ObjectModel::$definition

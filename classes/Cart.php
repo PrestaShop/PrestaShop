@@ -175,16 +175,16 @@ class CartCore extends ObjectModel
 
     protected $shouldExcludeGiftsDiscount = false;
 
-    const ONLY_PRODUCTS = 1;
-    const ONLY_DISCOUNTS = 2;
-    const BOTH = 3;
-    const BOTH_WITHOUT_SHIPPING = 4;
-    const ONLY_SHIPPING = 5;
-    const ONLY_WRAPPING = 6;
+    public const ONLY_PRODUCTS = 1;
+    public const ONLY_DISCOUNTS = 2;
+    public const BOTH = 3;
+    public const BOTH_WITHOUT_SHIPPING = 4;
+    public const ONLY_SHIPPING = 5;
+    public const ONLY_WRAPPING = 6;
 
     /** @deprecated since 1.7 **/
-    const ONLY_PRODUCTS_WITHOUT_SHIPPING = 7;
-    const ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING = 8;
+    public const ONLY_PRODUCTS_WITHOUT_SHIPPING = 7;
+    public const ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING = 8;
 
     private const DEFAULT_ATTRIBUTES_KEYS = ['attributes' => '', 'attributes_small' => ''];
 

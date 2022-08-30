@@ -32,8 +32,8 @@ class WebserviceOutputBuilderCore
     /**
      * @var int constant
      */
-    const VIEW_LIST = 1;
-    const VIEW_DETAILS = 2;
+    public const VIEW_LIST = 1;
+    public const VIEW_DETAILS = 2;
 
     protected $wsUrl;
     protected $output;

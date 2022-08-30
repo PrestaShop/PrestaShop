@@ -44,11 +44,11 @@ use PrestaShop\PrestaShop\Core\Session\SessionInterface;
  */
 class CookieCore
 {
-    const SAMESITE_NONE = 'None';
-    const SAMESITE_LAX = 'Lax';
-    const SAMESITE_STRICT = 'Strict';
+    public const SAMESITE_NONE = 'None';
+    public const SAMESITE_LAX = 'Lax';
+    public const SAMESITE_STRICT = 'Strict';
 
-    const SAMESITE_AVAILABLE_VALUES = [
+    public const SAMESITE_AVAILABLE_VALUES = [
         self::SAMESITE_NONE => self::SAMESITE_NONE,
         self::SAMESITE_LAX => self::SAMESITE_LAX,
         self::SAMESITE_STRICT => self::SAMESITE_STRICT,

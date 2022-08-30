@@ -86,7 +86,7 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
                 $this->buildSystemFileReference($productReference, $fileReference),
                 _PS_DOWNLOAD_DIR_ . $filename
             );
-        } catch (VirtualProductFileException | InvalidProductTypeException $e) {
+        } catch (VirtualProductFileException|InvalidProductTypeException $e) {
             $this->setLastException($e);
         }
     }

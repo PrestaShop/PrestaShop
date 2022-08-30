@@ -87,7 +87,7 @@ class StateFeatureContext extends AbstractDomainFeatureContext
             ));
 
             SharedStorage::getStorage()->set($stateReference, $stateId->getValue());
-        } catch (CannotAddStateException | StateConstraintException | StateException $e) {
+        } catch (CannotAddStateException|StateConstraintException|StateException $e) {
             $this->setLastException($e);
         }
     }
@@ -123,7 +123,7 @@ class StateFeatureContext extends AbstractDomainFeatureContext
 
         try {
             $this->getCommandBus()->handle($command);
-        } catch (CannotUpdateStateException | StateConstraintException | StateException | StateNotFoundException $e) {
+        } catch (CannotUpdateStateException|StateConstraintException|StateException|StateNotFoundException $e) {
             $this->setLastException($e);
         }
     }

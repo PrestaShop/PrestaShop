@@ -59,11 +59,11 @@ class PDFCore
      */
     protected $smarty;
 
-    const TEMPLATE_INVOICE = 'Invoice';
-    const TEMPLATE_ORDER_RETURN = 'OrderReturn';
-    const TEMPLATE_ORDER_SLIP = 'OrderSlip';
-    const TEMPLATE_DELIVERY_SLIP = 'DeliverySlip';
-    const TEMPLATE_SUPPLY_ORDER_FORM = 'SupplyOrderForm';
+    public const TEMPLATE_INVOICE = 'Invoice';
+    public const TEMPLATE_ORDER_RETURN = 'OrderReturn';
+    public const TEMPLATE_ORDER_SLIP = 'OrderSlip';
+    public const TEMPLATE_DELIVERY_SLIP = 'DeliverySlip';
+    public const TEMPLATE_SUPPLY_ORDER_FORM = 'SupplyOrderForm';
 
     /**
      * @param PrestaShopCollection|ObjectModel|array $objects

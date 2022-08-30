@@ -434,8 +434,8 @@ class ProductCore extends ObjectModel
     /**
      * Product can be temporary saved in database
      */
-    const STATE_TEMP = 0;
-    const STATE_SAVED = 1;
+    public const STATE_TEMP = 0;
+    public const STATE_SAVED = 1;
 
     /**
      * @var array Contains object definition
@@ -694,15 +694,15 @@ class ProductCore extends ObjectModel
         ],
     ];
 
-    const CUSTOMIZE_FILE = 0;
-    const CUSTOMIZE_TEXTFIELD = 1;
+    public const CUSTOMIZE_FILE = 0;
+    public const CUSTOMIZE_TEXTFIELD = 1;
 
     /**
      * Note:  prefix is "PTYPE" because TYPE_ is used in ObjectModel (definition).
      */
-    const PTYPE_SIMPLE = 0;
-    const PTYPE_PACK = 1;
-    const PTYPE_VIRTUAL = 2;
+    public const PTYPE_SIMPLE = 0;
+    public const PTYPE_PACK = 1;
+    public const PTYPE_VIRTUAL = 2;
 
     /**
      * @param int|null $id_product Product identifier

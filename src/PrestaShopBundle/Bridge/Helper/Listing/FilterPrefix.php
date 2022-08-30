@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Bridge\AdminController;
+namespace PrestaShopBundle\Bridge\Helper\Listing;
 
 use Tools;
 

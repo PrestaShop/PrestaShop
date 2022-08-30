@@ -28,11 +28,11 @@ use PrestaShopBundle\Translation\TranslatorComponent;
 
 class TreeCore
 {
-    const DEFAULT_TEMPLATE_DIRECTORY = 'helpers/tree';
-    const DEFAULT_TEMPLATE = 'tree.tpl';
-    const DEFAULT_HEADER_TEMPLATE = 'tree_header.tpl';
-    const DEFAULT_NODE_FOLDER_TEMPLATE = 'tree_node_folder.tpl';
-    const DEFAULT_NODE_ITEM_TEMPLATE = 'tree_node_item.tpl';
+    public const DEFAULT_TEMPLATE_DIRECTORY = 'helpers/tree';
+    public const DEFAULT_TEMPLATE = 'tree.tpl';
+    public const DEFAULT_HEADER_TEMPLATE = 'tree_header.tpl';
+    public const DEFAULT_NODE_FOLDER_TEMPLATE = 'tree_node_folder.tpl';
+    public const DEFAULT_NODE_ITEM_TEMPLATE = 'tree_node_item.tpl';
 
     protected $_attributes;
     private $_context;

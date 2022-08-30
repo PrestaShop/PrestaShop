@@ -30,8 +30,8 @@ use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 class AdminTranslationsControllerCore extends AdminController
 {
     /** Name of theme by default */
-    const DEFAULT_THEME_NAME = _PS_DEFAULT_THEME_NAME_;
-    const TEXTAREA_SIZED = 70;
+    public const DEFAULT_THEME_NAME = _PS_DEFAULT_THEME_NAME_;
+    public const TEXTAREA_SIZED = 70;
 
     /** @var string : Link which list all pack of language */
     protected $link_lang_pack = 'http://i18n.prestashop-project.org/translations/%ps_version%/available_languages.json';
