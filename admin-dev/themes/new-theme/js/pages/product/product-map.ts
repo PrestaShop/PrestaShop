@@ -52,7 +52,7 @@ export default {
     },
   },
   price: {
-    ecoTaxTaxIncluded: '#product_pricing_retail_price_ecotax_tax_included',
+    ecoTaxTaxExcluded: '#product_pricing_retail_price_ecotax_tax_excluded',
   },
   create: {
     newProductButton: '.new-product-button',
