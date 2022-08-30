@@ -601,15 +601,6 @@ class HookCore extends ObjectModel
                     continue;
                 }
 
-                // Check if already registered
-                $sql = 'SELECT hm.`id_module`
-                    FROM `' . _DB_PREFIX_ . 'hook_module` hm, `' . _DB_PREFIX_ . 'hook` h
-                    WHERE hm.`id_module` = ' . (int) $module_instance->id . ' AND h.`id_hook` = ' . $id_hook . '
-                    AND h.`id_hook` = hm.`id_hook` AND `id_shop` = ' . (int) $shop_id;
-                if (Db::getInstance()->getRow($sql)) {
-                    continue;
-                }
-
                 // Get module position in hook
                 $sql = 'SELECT MAX(`position`) AS position
                     FROM `' . _DB_PREFIX_ . 'hook_module`
