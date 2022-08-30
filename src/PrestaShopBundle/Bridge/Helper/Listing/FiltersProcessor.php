@@ -211,10 +211,7 @@ class FiltersProcessor
             unset($this->context->cookie->{$prefix . $helperListConfiguration->getListId() . 'Orderway'});
         }
 
-        unset(
-            $helperListConfiguration->filterHaving,
-            $helperListConfiguration->having
-        );
+        $helperListConfiguration->filterHaving = $helperListConfiguration->having = '';
     }
 
     /**
