@@ -35,6 +35,7 @@ class Products extends BOBasePage {
     // Footer modal
     this.deleteProductFooterModal = '#delete-product-footer-modal';
     this.deleteProductSubmitButton = `${this.deleteProductFooterModal} button.btn-confirm-submit`;
+    this.goToCatalogButton = '#product_footer_catalog';
   }
 
   /*
@@ -113,6 +114,15 @@ class Products extends BOBasePage {
     await this.clickAndWaitForNavigation(page, this.deleteProductSubmitButton);
 
     return productsPage.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Go to catalog page
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async goToCatalogPage(page) {
+    await this.clickAndWaitForNavigation(page, this.goToCatalogButton);
   }
 }
 

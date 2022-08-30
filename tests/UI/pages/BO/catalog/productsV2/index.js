@@ -54,6 +54,9 @@ class Products extends BOBasePage {
       + 'td.column-price_tax_included';
     this.productsListTableColumnQuantity = row => `${this.productsListTableRow(row)} td.column-quantity a`;
     this.productsListTableColumnStatusInput = row => `${this.productsListTableRow(row)} td.column-active input`;
+    this.productListTableDropDownList = row => `${this.productsListTableRow(row)} td.column-actions a.dropdown-toggle`;
+    this.productListTableDeleteButton = row => `${this.productsListTableRow(row)}`
+      + ' td.column-actions a.grid-delete-row-link';
 
     // Modal create product selectors
     this.modalCreateProduct = '#modal-create-product';
@@ -61,6 +64,11 @@ class Products extends BOBasePage {
     this.productTypeChoices = '#create_product div.product-type-choices';
     this.productType = type => `${this.productTypeChoices} button.product-type-choice[data-value=${type}]`;
     this.addNewProductButton = '#create_product_create';
+
+    // Modal dialog
+    this.modalDialog = '#product-grid-confirm-modal .modal-dialog';
+    this.modalDialogFooter = `${this.modalDialog} div.modal-footer`;
+    this.modalDialogDeleteButton = `${this.modalDialogFooter} button.btn-confirm-submit`;
 
     // pagination
     this.paginationBlock = `${this.productListForm} div.pagination-block`;
@@ -295,6 +303,30 @@ class Products extends BOBasePage {
       // Do nothing
     }
     throw new Error(`${columnName} was not found as column`);
+  }
+
+  /**
+   * Click on delete product button
+   * @param page {Page} Browser tab
+   * @param row {number} Row on table
+   * @returns {Promise<void>}
+   */
+  async clickOnDeleteProductButton(page, row = 1) {
+    await this.waitForSelectorAndClick(page, this.productListTableDropDownList(row));
+    await this.waitForSelectorAndClick(page, this.productListTableDeleteButton(row));
+
+    return this.elementVisible(page, this.modalDialog, 1000);
+  }
+
+  /**
+   * Delete product
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async deleteProduct(page) {
+    await this.waitForSelectorAndClick(page, this.modalDialogDeleteButton);
+
+    return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
 
