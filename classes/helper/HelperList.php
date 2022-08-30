@@ -816,6 +816,7 @@ class HelperListCore extends Helper
             'title' => array_key_exists('title', $this->tpl_vars) ? $this->tpl_vars['title'] : $this->title,
             'show_filters' => ((count($this->_list) > 1 && $has_search_field) || $has_value),
             'currentIndex' => $this->currentIndex,
+            'postSubmitUrl' => $this->postSubmitUrl,
             'action' => $action,
             'is_order_position' => $this->position_identifier && $this->orderBy == 'position',
             'order_way' => $this->orderWay,
