@@ -32,6 +32,12 @@ const {$} = window;
 const init = function initDatePickers() {
   $('.colorpicker input[type="text"]').each((i, picker) => {
     $(picker).colorpicker();
+    $(picker).on('colorpickerCreate', () => {
+      $(picker).css('background-color', $(picker).val());
+    });
+    $(picker).on('colorpickerChange', (event) => {
+      $(picker).css('background-color', event.color.toString());
+    });
   });
 };
 
