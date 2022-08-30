@@ -38,14 +38,40 @@ trait FrameworkBridgeControllerListTrait
 {
     /**
      * @param string $identifierKey
+     *
+     * @see HelperListConfiguration::$identifierKey
+     *
      * @param string $positionIdentifierKey
+     *
+     * @see HelperListConfiguration::$positionIdentifierKey
+     *
      * @param string $defaultOrderBy
-     * @param string $postSubmitRoute
+     *
+     * @see HelperListConfiguration::$defaultOrderBy
+     *
+     * @param string $postSubmitRoute route name used to generate post submit url
+     *
+     * @see HelperListConfiguration::$postSubmitUrl
+     *
      * @param bool $autoJoinLangTable
+     *
+     * @see HelperListConfiguration::$autoJoinLanguageTable
+     *
      * @param bool $deleted
+     *
+     * @see HelperListConfiguration::$deleted
+     *
      * @param bool $explicitSelect
+     *
+     * @see HelperListConfiguration::$explicitSelect
+     *
      * @param bool $useFoundRows
+     *
+     * @see HelperListConfiguration::$useFoundRows
+     *
      * @param string|null $listId
+     *
+     * @see HelperListConfiguration::$listId
      *
      * @return HelperListConfiguration
      */
