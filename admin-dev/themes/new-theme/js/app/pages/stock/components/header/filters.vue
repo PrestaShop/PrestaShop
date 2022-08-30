@@ -173,7 +173,11 @@
     [key:string]: number;
   }
 
-  type DatepickerEvent ={dateType: string, date: Moment, oldDate: Moment}
+  type DatepickerEvent = {
+    dateType: string;
+    date: Moment;
+    oldDate: Moment;
+  }
 
   // sup is the starting date while inf is the end date
   // Cf: src/PrestaShopBundle/Api/QueryParamsCollection::appendSqlDateAddFilter
