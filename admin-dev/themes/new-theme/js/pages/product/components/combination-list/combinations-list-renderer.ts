@@ -279,7 +279,7 @@ export default class CombinationsListRenderer {
     const $finalPricePreview = $finalPrice.siblings(CombinationsMap.list.finalPricePreview);
     let combinationPrice = productPrice.plus(priceImpactTaxExcluded);
 
-    const ecoTax = $(ProductPriceMap.ecoTaxTaxIncluded).val();
+    const ecoTax = $(ProductPriceMap.ecoTaxTaxExcluded).val();
 
     if (ecoTax) {
       combinationPrice = combinationPrice.plus(new BigNumber(ecoTax.toString()));
