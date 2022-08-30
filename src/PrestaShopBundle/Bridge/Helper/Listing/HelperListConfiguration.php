@@ -269,7 +269,7 @@ class HelperListConfiguration
      * @see ControllerConfiguration::$positionIdentifierKey
      * @see HelperList::$position_identifier
      *
-     * @var string
+     * @var string|null
      */
     private $positionIdentifierKey;
 
@@ -379,7 +379,7 @@ class HelperListConfiguration
      * @param string $listId
      * @param string $objectModelClassName
      * @param string $identifierKey
-     * @param string $positionIdentifierKey
+     * @param string|null $positionIdentifierKey
      * @param bool $isJoinLanguageTableAuto
      * @param bool $deleted
      * @param string $defaultOrderBy
@@ -398,7 +398,7 @@ class HelperListConfiguration
         string $listId,
         string $objectModelClassName,
         string $identifierKey,
-        string $positionIdentifierKey,
+        ?string $positionIdentifierKey,
         bool $isJoinLanguageTableAuto,
         bool $deleted,
         string $defaultOrderBy,
@@ -535,9 +535,9 @@ class HelperListConfiguration
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getPositionIdentifierKey(): string
+    public function getPositionIdentifierKey(): ?string
     {
         return $this->positionIdentifierKey;
     }

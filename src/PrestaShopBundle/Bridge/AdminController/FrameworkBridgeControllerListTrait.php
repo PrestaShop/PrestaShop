@@ -38,9 +38,9 @@ trait FrameworkBridgeControllerListTrait
 {
     /**
      * @param string $identifierKey @see HelperListConfiguration::$identifierKey
-     * @param string $positionIdentifierKey @see HelperListConfiguration::$positionIdentifierKey
      * @param string $defaultOrderBy @see HelperListConfiguration::$defaultOrderBy
      * @param string $postSubmitRoute route name used to generate post submit url. @see HelperListConfiguration::$postSubmitUrl
+     * @param string|null $positionIdentifierKey @see HelperListConfiguration::$positionIdentifierKey
      * @param bool $autoJoinLangTable @see HelperListConfiguration::$autoJoinLanguageTable
      * @param bool $deleted @see HelperListConfiguration::$deleted
      * @param bool $explicitSelect @see HelperListConfiguration::$explicitSelect
@@ -51,9 +51,9 @@ trait FrameworkBridgeControllerListTrait
      */
     protected function buildListConfiguration(
         string $identifierKey,
-        string $positionIdentifierKey,
         string $defaultOrderBy,
         string $postSubmitRoute,
+        ?string $positionIdentifierKey = null,
         bool $autoJoinLangTable = true,
         bool $deleted = false,
         bool $explicitSelect = false,
