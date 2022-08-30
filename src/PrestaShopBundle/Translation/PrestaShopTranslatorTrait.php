@@ -89,6 +89,7 @@ trait PrestaShopTranslatorTrait
             $translated = strtr($translated, $parameters);
         }
 
+        
 
         return $translated;
     }
