@@ -235,7 +235,7 @@ function updateProductListDOM(data) {
     productSelectors.removeClass().addClass(productSelectors.first().attr('class'));
   } else {
     productSelectors.removeClass().addClass(renderedProducts.first().attr('class'));
-  }  
+  }
 
   $(prestashop.themeSelectors.listing.list).replaceWith(renderedProducts);
 
