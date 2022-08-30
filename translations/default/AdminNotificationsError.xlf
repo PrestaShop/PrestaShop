@@ -562,7 +562,7 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="dc0614532e2b908e6c2d82cc0972af9d">
         <source>An error occurred while attempting to create a new folder.</source>
         <target>An error occurred while attempting to create a new folder.</target>
-        <note>Line: 2811</note>
+        <note>Line: 2826</note>
       </trans-unit>
       <trans-unit id="06b778accab7c14a499bc6e7a68138ec">
         <source>An error occurred while copying the image.</source>
@@ -577,7 +577,7 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="211ff814e7bf91c4548a61ba1c427c15">
         <source>Error while updating the status.</source>
         <target>Error while updating the status.</target>
-        <note>Line: 2869</note>
+        <note>Line: 2884</note>
       </trans-unit>
       <trans-unit id="be694d5db9d32c43014995441a5939c4">
         <source>Invalid file name</source>
@@ -662,7 +662,7 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="cbecc45ae8ccf1234657bd40ee4c55dd">
         <source>An error occurred while copying this image:</source>
         <target>An error occurred while copying this image:</target>
-        <note>Line: 2855</note>
+        <note>Line: 2870</note>
       </trans-unit>
     </body>
   </file>
@@ -1117,17 +1117,17 @@ Comment: check if some ids are in list_skip_actions and forbid deletion</note>
       <trans-unit id="11a257a80f8c8d76132470b171de6795">
         <source>You do not have permission to delete this.</source>
         <target>You do not have permission to delete this.</target>
-        <note>Line: 371</note>
+        <note>Line: 369</note>
       </trans-unit>
       <trans-unit id="5ab1978ae9ce868183a34316327be062">
         <source>An unexpected error occurred. [%type% code %code%]: %message%</source>
         <target>An unexpected error occurred. [%type% code %code%]: %message%</target>
-        <note>Line: 399</note>
+        <note>Line: 397</note>
       </trans-unit>
       <trans-unit id="e8ae00af8575f645bf6e4358f120cba3">
         <source>An unexpected error occurred. [%type% code %code%]</source>
         <target>An unexpected error occurred. [%type% code %code%]</target>
-        <note>Line: 410</note>
+        <note>Line: 408</note>
       </trans-unit>
     </body>
   </file>

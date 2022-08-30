@@ -87,17 +87,17 @@
       <trans-unit id="7c56f525288d680c6efa0c2d07d79d13">
         <source>Have you checked your [1][2]abandoned carts[/2][/1]?[3]Your next order could be hiding there!</source>
         <target>Have you checked your [1][2]abandoned carts[/2][/1]?[3]Your next order could be hiding there!</target>
-        <note>Line: 235</note>
+        <note>Line: 236</note>
       </trans-unit>
       <trans-unit id="70821661a53b31c40fdd6c9f3bbff741">
         <source>Are you active on social media these days?</source>
         <target>Are you active on social media these days?</target>
-        <note>Line: 247</note>
+        <note>Line: 248</note>
       </trans-unit>
       <trans-unit id="b5ffb1ab1fe4ad00831c65b8dab60c0c">
         <source>Seems like all your customers are happy :)</source>
         <target>Seems like all your customers are happy :)</target>
-        <note>Line: 250</note>
+        <note>Line: 251</note>
       </trans-unit>
     </body>
   </file>

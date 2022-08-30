@@ -317,7 +317,8 @@
       <trans-unit id="843afaeb1d84245d7cf7d0877a7258dd">
         <source>You can only display the page list in a shop context.</source>
         <target>You can only display the page list in a shop context.</target>
-        <note>Line: 34</note>
+        <note>Line: 34
+Comment: Stable feature flags form</note>
       </trans-unit>
     </body>
   </file>
