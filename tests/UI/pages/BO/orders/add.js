@@ -864,6 +864,7 @@ class AddOrder extends BOBasePage {
    */
   async setRecycledPackaging(page, isEnabled) {
     await this.setChecked(page, this.recycledPackagingToggleInput(isEnabled ? 1 : 0));
+    await page.waitForTimeout(2000);
   }
 
   /**
@@ -874,7 +875,7 @@ class AddOrder extends BOBasePage {
    */
   async setGift(page, isEnabled) {
     await this.setChecked(page, this.giftToggleInput(isEnabled ? 1 : 0));
-    await page.waitForTimeout(1000);
+    await page.waitForTimeout(2000);
   }
 
   /**
@@ -885,6 +886,7 @@ class AddOrder extends BOBasePage {
    */
   async setGiftMessage(page, giftMessage) {
     await this.setValue(page, this.giftMessageTextarea, giftMessage);
+    await page.waitForTimeout(2000);
   }
 
   /* Summary methods */

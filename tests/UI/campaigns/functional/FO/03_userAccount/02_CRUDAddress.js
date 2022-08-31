@@ -313,7 +313,7 @@ describe('FO - Account : CRUD address', async () => {
     it('should delete the first address and check the success message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteAddress2', baseContext);
 
-      const addressPosition = await addressesPage.getAddressPosition(page, secondAddressData.alias);
+      const addressPosition = await addressesPage.getAddressPosition(page, editAddressData.alias);
 
       const textResult = await addressesPage.deleteAddress(page, addressPosition);
       await expect(textResult).to.equal(addressesPage.deleteAddressSuccessfulMessage);
