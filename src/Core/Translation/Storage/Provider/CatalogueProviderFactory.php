@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Translation\Storage\Loader\DatabaseTranslationLoa
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\AbstractCoreProviderDefinition;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\FrontofficeProviderDefinition;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ModuleProviderDefinition;
+use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ModulesProviderDefinition;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ProviderDefinitionInterface;
 use PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition\ThemeProviderDefinition;
 use Symfony\Component\Filesystem\Filesystem;
@@ -97,6 +98,11 @@ class CatalogueProviderFactory
     private $themesDirectory;
 
     /**
+     * @var ModuleCatalogueProviderFactory
+     */
+    private $moduleCatalogueProviderFactory;
+
+    /**
      * @param DatabaseTranslationLoader $databaseTranslationLoader
      * @param LegacyModuleExtractorInterface $legacyModuleExtractor
      * @param LoaderInterface $legacyFileLoader
@@ -127,6 +133,13 @@ class CatalogueProviderFactory
         $this->themeRepository = $themeRepository;
         $this->filesystem = $filesystem;
         $this->themesDirectory = $themesDirectory;
+        $this->moduleCatalogueProviderFactory = new ModuleCatalogueProviderFactory(
+            $this->databaseTranslationLoader,
+            $this->legacyModuleExtractor,
+            $this->legacyFileLoader,
+            $this->modulesDirectory,
+            $this->translationsDirectory
+        );
     }
 
     /**
@@ -144,7 +157,7 @@ class CatalogueProviderFactory
         }
 
         if ($providerDefinition instanceof ModuleProviderDefinition) {
-            return $this->getModuleCatalogueProvider($providerDefinition);
+            return $this->moduleCatalogueProviderFactory->getModuleCatalogueProvider($providerDefinition);
         } elseif ($providerDefinition instanceof AbstractCoreProviderDefinition) {
             return $this->getCoreCatalogueProvider($providerDefinition);
         } elseif ($providerDefinition instanceof ThemeProviderDefinition) {
@@ -175,29 +188,6 @@ class CatalogueProviderFactory
     }
 
     /**
-     * @param ModuleProviderDefinition $providerDefinition
-     *
-     * @return CatalogueLayersProviderInterface
-     */
-    private function getModuleCatalogueProvider(ModuleProviderDefinition $providerDefinition): CatalogueLayersProviderInterface
-    {
-        if (!isset($this->providers[$providerDefinition->getType()])) {
-            $this->providers[$providerDefinition->getType()] = new ModuleCatalogueLayersProvider(
-                $this->databaseTranslationLoader,
-                $this->legacyModuleExtractor,
-                $this->legacyFileLoader,
-                $this->modulesDirectory,
-                $this->translationsDirectory,
-                $providerDefinition->getModuleName(),
-                $providerDefinition->getFilenameFilters(),
-                $providerDefinition->getTranslationDomains()
-            );
-        }
-
-        return $this->providers[$providerDefinition->getType()];
-    }
-
-    /**
      * @param ThemeProviderDefinition $providerDefinition
      *
      * @return CatalogueLayersProviderInterface
@@ -206,14 +196,22 @@ class CatalogueProviderFactory
     {
         if (!isset($this->providers[$providerDefinition->getType()])) {
             $coreFrontProviderDefinition = new FrontofficeProviderDefinition();
+            $modulesProviderDefinition = new ModulesProviderDefinition();
             $coreFrontProvider = new CoreCatalogueLayersProvider(
                 $this->databaseTranslationLoader,
                 $this->translationsDirectory,
-                $coreFrontProviderDefinition->getFilenameFilters(),
-                $coreFrontProviderDefinition->getTranslationDomains()
+                array_merge(
+                    $coreFrontProviderDefinition->getFilenameFilters(),
+                    $modulesProviderDefinition->getFilenameFilters()
+                ),
+                array_merge(
+                    $coreFrontProviderDefinition->getTranslationDomains(),
+                    $modulesProviderDefinition->getTranslationDomains()
+                )
             );
 
             $this->providers[$providerDefinition->getType()] = new ThemeCatalogueLayersProvider(
+                $this->moduleCatalogueProviderFactory,
                 $coreFrontProvider,
                 $this->databaseTranslationLoader,
                 $this->themeExtractor,
