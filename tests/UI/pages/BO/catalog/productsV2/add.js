@@ -31,6 +31,15 @@ class Products extends BOBasePage {
     this.detailsTabLink = '#product_specifications-tab-nav';
     this.productReferenceInput = '#product_specifications_references_reference';
 
+    // Selectors in combinations tab
+    this.combinationsTabLink = '#product_combinations-tab-nav';
+    this.generateFirstCombinationsButton = '#combinations-empty-state button.generate-combinations-button';
+    this.generateCombinationButton = '#combination-list-actions button.generate-combinations-button';
+    this.generateCombinationsModal = '#product-combinations-generate div.modal.show';
+    this.searchAttributesButton = `${this.generateCombinationsModal} input.attributes-search`;
+    this.generateCombinationsButtonOnModal = `${this.generateCombinationsModal} footer button.btn.btn-primary`;
+    this.generateCombinationsCloseButton = `${this.generateCombinationsModal} button.close`;
+
     // Selectors in stocks tab
     this.stocksTabLink = '#product_stock-tab-nav';
     this.productQuantityInput = '#product_stock_quantities_delta_quantity_delta';
@@ -100,6 +109,67 @@ class Products extends BOBasePage {
   }
 
   /**
+   * Add combination
+   * @param page {Page} Browser tab
+   * @param combination {string} Attribute to set
+   * @returns {Promise<void>}
+   */
+  async selectAttribute(page, combination) {
+    await page.type(this.searchAttributesButton, combination);
+    await page.keyboard.press('ArrowDown');
+    await page.keyboard.press('Enter');
+  }
+
+  /**
+   * Set product attributes
+   * @param page {Page} Browser tab
+   * @param attributes {Object} Combinations of the product
+   * @returns {Promise<string>}
+   */
+  async setProductAttributes(page, attributes) {
+    await this.waitForSelectorAndClick(page, this.combinationsTabLink);
+    if (await this.elementVisible(page, this.generateCombinationButton, 2000)) {
+      await this.waitForSelectorAndClick(page, this.generateCombinationButton);
+    } else {
+      await this.waitForSelectorAndClick(page, this.generateFirstCombinationsButton);
+    }
+
+    await this.waitForVisibleSelector(page, this.generateCombinationsModal);
+    const keys = Object.keys(attributes);
+    /*eslint-disable*/
+    for (const key of keys) {
+      for (const value of attributes[key]) {
+        await this.selectAttribute(page, `${key} : ${value}`);
+      }
+    }
+    /* eslint-enable */
+
+    return this.getTextContent(page, this.generateCombinationsButtonOnModal);
+  }
+
+  /**
+   * Generate combinations
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async generateCombinations(page) {
+    await this.waitForSelectorAndClick(page, this.generateCombinationsButtonOnModal);
+
+    return this.getGrowlMessageContent(page);
+  }
+
+  /**
+   * Close generateCombinations modal
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async closeGenerateCombinationModal(page) {
+    await this.waitForSelectorAndClick(page, this.generateCombinationsCloseButton);
+
+    return this.elementNotVisible(page, this.generateCombinationsModal, 1000);
+  }
+
+  /**
    * Set product stock
    * @param page {Page} Browser tab
    * @param productData {ProductData} Data to set in stock form
@@ -161,7 +231,9 @@ class Products extends BOBasePage {
 
     await this.setProductDetails(page, productData);
 
-    await this.setProductStock(page, productData);
+    if (productData.type !== 'combinations') {
+      await this.setProductStock(page, productData);
+    }
 
     await this.setProductPricing(page, productData);
 
