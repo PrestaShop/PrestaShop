@@ -35,6 +35,7 @@ class Products extends BOBasePage {
     // Footer modal
     this.deleteProductFooterModal = '#delete-product-footer-modal';
     this.deleteProductSubmitButton = `${this.deleteProductFooterModal} button.btn-confirm-submit`;
+    this.newProductButton = '#product_footer_new_product';
     this.goToCatalogButton = '#product_footer_catalog';
   }
 
