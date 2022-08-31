@@ -51,9 +51,6 @@ export default {
       typeDescription: '.product-type-description-content',
     },
   },
-  price: {
-    ecoTaxTaxExcluded: '#product_pricing_retail_price_ecotax_tax_excluded',
-  },
   create: {
     newProductButton: '.new-product-button',
     createModalSelector: '#create_product_type',
