@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
 use RuntimeException;
 use State;
 use Tax;
+use TaxCalculator;
 use TaxRule;
 use TaxRulesGroup;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
@@ -275,7 +276,7 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
         $taxRule = new TaxRule();
         $taxRule->id_tax = $tax->id;
         $taxRule->id_tax_rules_group = $taxRulesGroup->id;
-        $taxRule->behavior = 0;
+        $taxRule->behavior = TaxCalculator::ONE_TAX_ONLY_METHOD;
         $taxRule->id_country = Country::getByIso($data['country']);
         $taxRule->id_state = isset($data['state']) ? State::getIdByIso($data['state']) : 0;
         $taxRule->save();
@@ -293,7 +294,7 @@ class TaxFeatureContext extends AbstractDomainFeatureContext
         $taxRule = new TaxRule();
         $taxRule->id_tax = $tax->id;
         $taxRule->id_tax_rules_group = $taxGroupId;
-        $taxRule->behavior = 0;
+        $taxRule->behavior = TaxCalculator::ONE_TAX_ONLY_METHOD;
         $taxRule->id_country = Country::getByIso($data['country']);
         $taxRule->id_state = isset($data['state']) ? State::getIdByIso($data['state']) : 0;
         $taxRule->save();
