@@ -14,6 +14,7 @@ const {enableNewProductPageTest, disableNewProductPageTest} = require('@commonTe
 const dashboardPage = require('@pages/BO/dashboard');
 const productsPage = require('@pages/BO/catalog/productsV2');
 const createProductsPage = require('@pages/BO/catalog/productsV2/add');
+const combinationsTab = require('@pages/BO/catalog/productsV2/add/combinationsTab');
 
 // Import FO pages
 const foProductPage = require('@pages/FO/product');
@@ -114,7 +115,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
     it('should create combinations and check generate combinations button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'createCombinations', baseContext);
 
-      const generateCombinationsButton = await createProductsPage.setProductAttributes(
+      const generateCombinationsButton = await combinationsTab.setProductAttributes(
         page,
         newProductData.combinations,
       );
@@ -124,14 +125,14 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
     it('should click on generate combinations button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'generateCombinations', baseContext);
 
-      const successMessage = await createProductsPage.generateCombinations(page);
+      const successMessage = await combinationsTab.generateCombinations(page);
       await expect(successMessage).to.equal('Successfully generated 4 combinations.');
     });
 
     it('should close generate combinations modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeGenerateCombinationsModal', baseContext);
 
-      const isModalVisible = await createProductsPage.closeGenerateCombinationModal(page);
+      const isModalVisible = await combinationsTab.closeGenerateCombinationModal(page);
       await expect(isModalVisible).to.be.true;
     });
 
@@ -194,7 +195,7 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
     it('should add combinations and check generate combinations button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addCombinations', baseContext);
 
-      const generateCombinationsButton = await createProductsPage.setProductAttributes(
+      const generateCombinationsButton = await combinationsTab.setProductAttributes(
         page,
         editProductData.combinations,
       );
@@ -204,14 +205,14 @@ describe('BO - Catalog - Products : CRUD product with combinations', async () =>
     it('should click on generate combinations button', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'generateCombinations2', baseContext);
 
-      const successMessage = await createProductsPage.generateCombinations(page);
+      const successMessage = await combinationsTab.generateCombinations(page);
       await expect(successMessage).to.equal('Successfully generated 6 combinations.');
     });
 
     it('should close generate combinations modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeGenerateCombinationsModal2', baseContext);
 
-      const isModalVisible = await createProductsPage.closeGenerateCombinationModal(page);
+      const isModalVisible = await combinationsTab.closeGenerateCombinationModal(page);
       await expect(isModalVisible).to.be.true;
     });
 

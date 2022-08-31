@@ -76,7 +76,7 @@ class Products extends BOBasePage {
 
     if (productData.type === 'virtual') {
       await virtualProductTab.setVirtualProduct(page, productData);
-    } else {
+    } else if (productData.type !== 'combinations') {
       await stocksTab.setProductStock(page, productData);
     }
 
