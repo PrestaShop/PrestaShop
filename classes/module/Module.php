@@ -880,7 +880,7 @@ abstract class ModuleCore implements ModuleInterface
         }
 
         // set active to 1 in the module table
-        Db::getInstance()->update('module', ['active' => 1], 'id_module = '. (int) $this->id);
+        Db::getInstance()->update('module', ['active' => 1], 'id_module = ' . (int) $this->id);
 
         if ($moduleActivated) {
             $this->loadBuiltInTranslations();
@@ -984,14 +984,14 @@ abstract class ModuleCore implements ModuleInterface
         }
 
         // Disable module for all shops
-        $result &= Db::getInstance()->delete('module_shop', '`id_module` = ' . (int) $this->id );
+        $result &= Db::getInstance()->delete('module_shop', '`id_module` = ' . (int) $this->id);
 
         // if module has no more shop associations, set module.active = 0
         if (!$this->hasShopAssociations()) {
-            $result &= Db::getInstance()->update('module', ['active' => 0], 'id_module = '. (int) $this->id);
+            $result &= Db::getInstance()->update('module', ['active' => 0], 'id_module = ' . (int) $this->id);
         }
 
-        return $result;
+        return (bool) $result;
     }
 
     public function hasShopAssociations(): bool
