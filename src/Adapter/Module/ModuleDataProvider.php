@@ -235,7 +235,8 @@ class ModuleDataProvider
      *
      * @return bool
      */
-    public function isInstalledAndActive(string $name): bool {
+    public function isInstalledAndActive(string $name): bool
+    {
         return (bool) $this->getModuleIdByName($name, true);
     }
 
@@ -243,7 +244,7 @@ class ModuleDataProvider
      * Returns the Module Id
      *
      * @param string $name The technical module name
-     * @param bool   $activeModulesOnly Should we return the module only if it's active ?
+     * @param bool $activeModulesOnly Should we return the module only if it's active ?
      *
      * @return int the Module Id, or 0 if not found
      */
