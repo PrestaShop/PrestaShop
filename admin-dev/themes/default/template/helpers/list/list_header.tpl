@@ -297,7 +297,7 @@
                 {if $frameworkIndexUrl}
                     {assign var="baseSortUrl" value="$frameworkIndexUrl"}
                 {else}
-                    {assign var="baseSortUrl" value="{$currentIndex|escape:'html':'UTF-8'}&token={$token|escape:'html':'UTF-8'}"}
+                    {assign var="baseSortUrl" value="{$currentIndex}&token={$token}"}
                 {/if}
 								<a
                    class="{strip}desc-sort-column-{$key}-link
