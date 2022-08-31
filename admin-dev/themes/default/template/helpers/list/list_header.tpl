@@ -294,8 +294,8 @@
 								{$params.title}
 							{/if}
 							{if (!isset($params.orderby) || $params.orderby) && !$simple_header && $show_filters}
-                {if $postSubmitUrl}
-                    {assign var="baseSortUrl" value="$postSubmitUrl"}
+                {if $frameworkIndexUrl}
+                    {assign var="baseSortUrl" value="$frameworkIndexUrl"}
                 {else}
                     {assign var="baseSortUrl" value="{$currentIndex|escape:'html':'UTF-8'}&token={$token|escape:'html':'UTF-8'}"}
                 {/if}

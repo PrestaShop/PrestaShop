@@ -148,11 +148,11 @@ class HelperListCore extends Helper
 
     /**
      * Property introduced for horizontal migration.
-     * It ensures the list form (e.g. filters) can be submitted to custom url (most of the time the same index url of symfony controller)
+     * It ensures the list form filters and sorting can use framework index url instead of legacy one
      *
      * @var string|null
      */
-    public $postSubmitUrl;
+    public $frameworkIndexUrl;
 
     /**
      * Raw sql query string of a list
@@ -670,8 +670,8 @@ class HelperListCore extends Helper
 
         $identifier = Tools::getIsset($this->identifier) ? '&' . $this->identifier . '=' . (int) Tools::getValue($this->identifier) : '';
 
-        if ($this->postSubmitUrl) {
-            $action = $this->postSubmitUrl;
+        if ($this->frameworkIndexUrl) {
+            $action = $this->frameworkIndexUrl;
         } else {
             $action = $this->currentIndex . $identifier . '&token=' . $this->token . '#' . $this->list_id;
         }
@@ -816,7 +816,7 @@ class HelperListCore extends Helper
             'title' => array_key_exists('title', $this->tpl_vars) ? $this->tpl_vars['title'] : $this->title,
             'show_filters' => ((count($this->_list) > 1 && $has_search_field) || $has_value),
             'currentIndex' => $this->currentIndex,
-            'postSubmitUrl' => $this->postSubmitUrl,
+            'frameworkIndexUrl' => $this->frameworkIndexUrl,
             'action' => $action,
             'is_order_position' => $this->position_identifier && $this->orderBy == 'position',
             'order_way' => $this->orderWay,

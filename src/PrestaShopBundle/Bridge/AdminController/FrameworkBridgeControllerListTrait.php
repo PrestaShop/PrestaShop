@@ -39,7 +39,7 @@ trait FrameworkBridgeControllerListTrait
     /**
      * @param string $identifierKey @see HelperListConfiguration::$identifierKey
      * @param string $defaultOrderBy @see HelperListConfiguration::$defaultOrderBy
-     * @param string $postSubmitRoute route name used to generate post submit url. @see HelperListConfiguration::$postSubmitUrl
+     * @param string $indexRoute route name used to generate url for filters & sorting submissions. @see HelperListConfiguration::$indexUrl
      * @param string|null $positionIdentifierKey @see HelperListConfiguration::$positionIdentifierKey
      * @param bool $autoJoinLangTable @see HelperListConfiguration::$autoJoinLanguageTable
      * @param bool $deleted @see HelperListConfiguration::$deleted
@@ -52,7 +52,7 @@ trait FrameworkBridgeControllerListTrait
     protected function buildListConfiguration(
         string $identifierKey,
         string $defaultOrderBy,
-        string $postSubmitRoute,
+        string $indexRoute,
         ?string $positionIdentifierKey = null,
         bool $autoJoinLangTable = true,
         bool $deleted = false,
@@ -65,7 +65,7 @@ trait FrameworkBridgeControllerListTrait
         return $this->get('prestashop.bridge.helper.listing.helper_list_configuration_factory')->create(
             $controllerConfiguration,
             $identifierKey,
-            $postSubmitRoute,
+            $indexRoute,
             $positionIdentifierKey,
             $defaultOrderBy,
             $autoJoinLangTable,

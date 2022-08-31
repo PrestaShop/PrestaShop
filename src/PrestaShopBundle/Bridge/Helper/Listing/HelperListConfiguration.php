@@ -358,11 +358,11 @@ class HelperListConfiguration
      * Defines where list filters and other POST actions should be submitted.
      * Without this property, HelperList would always submit back to legacy controller.
      *
-     * @see HelperList::$postSubmitUrl
+     * @see HelperList::$frameworkIndexUrl
      *
      * @var string|null
      */
-    private $postSubmitUrl;
+    private $indexUrl;
 
     /**
      * If true - joins related shop tables when querying sql.
@@ -390,7 +390,7 @@ class HelperListConfiguration
      * @param bool $bootstrap
      * @param string $legacyCurrentIndex
      * @param int $multiShopContext
-     * @param string $postSubmitUrl
+     * @param string $indexUrl
      */
     public function __construct(
         int $tabId,
@@ -409,7 +409,7 @@ class HelperListConfiguration
         bool $bootstrap,
         string $legacyCurrentIndex,
         int $multiShopContext,
-        string $postSubmitUrl
+        string $indexUrl
     ) {
         $this->tabId = $tabId;
         $this->tableName = $tableName;
@@ -427,7 +427,7 @@ class HelperListConfiguration
         $this->bootstrap = $bootstrap;
         $this->legacyCurrentIndex = $legacyCurrentIndex;
         $this->multiShopContext = $multiShopContext;
-        $this->postSubmitUrl = $postSubmitUrl;
+        $this->indexUrl = $indexUrl;
     }
 
     /**
@@ -783,9 +783,9 @@ class HelperListConfiguration
     /**
      * @return string|null
      */
-    public function getPostSubmitUrl(): ?string
+    public function getIndexUrl(): ?string
     {
-        return $this->postSubmitUrl;
+        return $this->indexUrl;
     }
 
     /**

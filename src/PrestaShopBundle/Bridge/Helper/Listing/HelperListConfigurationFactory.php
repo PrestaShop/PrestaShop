@@ -52,23 +52,23 @@ class HelperListConfigurationFactory
 
     /**
      * @param ControllerConfiguration $controllerConfiguration
-     * @param string $identifierKey
-     * @param string $postSubmitRoute
-     * @param string|null $positionIdentifier
-     * @param string|null $defaultOrderBy
-     * @param bool $isJoinLanguageTableAuto
-     * @param bool $deleted
-     * @param bool $explicitSelect
-     * @param bool $useFoundRows
-     * @param string|null $listId
+     * @param string $identifierKey @see HelperListConfiguration::$identifierKey
+     * @param string $indexRoute used to generate indexUrl. @see HelperListConfiguration::$indexUrl
+     * @param string|null $positionIdentifierKey @see HelperListConfiguration::$positionIdentifierKey
+     * @param string|null $defaultOrderBy @see HelperListConfiguration::$defaultOrderBy
+     * @param bool $isJoinLanguageTableAuto @see HelperListConfiguration::$autoJoinLanguageTable
+     * @param bool $deleted @see HelperListConfiguration::$deleted
+     * @param bool $explicitSelect @see HelperListConfiguration::$explicitSelect
+     * @param bool $useFoundRows @see HelperListConfiguration::$useFoundRows
+     * @param string|null $listId @see HelperListConfiguration::$listId
      *
      * @return HelperListConfiguration
      */
     public function create(
         ControllerConfiguration $controllerConfiguration,
         string $identifierKey,
-        string $postSubmitRoute,
-        ?string $positionIdentifier = null,
+        string $indexRoute,
+        ?string $positionIdentifierKey = null,
         ?string $defaultOrderBy = null,
         bool $isJoinLanguageTableAuto = false,
         bool $deleted = false,
@@ -86,7 +86,7 @@ class HelperListConfigurationFactory
             $listId ?: $controllerConfiguration->tableName,
             $controllerConfiguration->objectModelClassName,
             $identifierKey,
-            $positionIdentifier,
+            $positionIdentifierKey,
             $isJoinLanguageTableAuto,
             $deleted,
             $defaultOrderBy,
@@ -97,7 +97,7 @@ class HelperListConfigurationFactory
             $controllerConfiguration->bootstrap,
             $controllerConfiguration->legacyCurrentIndex,
             $controllerConfiguration->multiShopContext,
-            $this->router->generate($postSubmitRoute)
+            $this->router->generate($indexRoute)
         );
     }
 }
