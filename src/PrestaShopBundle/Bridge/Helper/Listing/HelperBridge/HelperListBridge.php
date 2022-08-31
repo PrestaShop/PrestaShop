@@ -550,7 +550,7 @@ class HelperListBridge
         $helper->_default_pagination = $helperListConfiguration->getDefaultPaginationLimit();
         $helper->_pagination = $helperListConfiguration->getPaginationLimits();
         $helper->tpl_delete_link_vars = $helperListConfiguration->getDeleteLinkVars();
-        $helper->postSubmitUrl = $helperListConfiguration->getPostSubmitUrl();
+        $helper->frameworkIndexUrl = $helperListConfiguration->getIndexUrl();
 
         return $helper;
     }
