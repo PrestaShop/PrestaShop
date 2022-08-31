@@ -30,16 +30,14 @@ namespace Tests\Unit\PrestaShopBundle\Form\ErrorMessage\Factory;
 
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\AdministrationConfigurationError;
+use PrestaShop\PrestaShop\Core\Form\ErrorMessage\CommonConfigurationError;
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorCollection;
-use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorInterface;
-use PrestaShop\PrestaShop\Core\Form\ErrorMessage\InvoiceConfigurationError;
 use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Entity\Repository\LangRepository;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralDataProvider;
 use PrestaShopBundle\Form\ErrorMessage\Factory\AdministrationConfigurationErrorFactory;
 use PrestaShopBundle\Form\ErrorMessage\Factory\CommonConfigurationErrorFactory;
 use PrestaShopBundle\Form\ErrorMessage\Factory\ConfigurationErrorFactory;
-use PrestaShopBundle\Form\ErrorMessage\Factory\InvoiceConfigurationErrorFactory;
 use PrestaShopBundle\Form\ErrorMessage\LabelProvider;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Translation\Translator;
@@ -56,23 +54,13 @@ class ConfigurationErrorFactoryTest extends TestCase
         $translatorMock->method('trans')->willReturnMap(
             [
                 [
-                    'The "%s" field in %s is invalid. HTML tags are not allowed.',
-                    [
-                        'Field',
-                        'English',
-                    ],
-                    'Admin.Orderscustomers.Notification',
-                    null,
-                    'The "Field" field in English is invalid. HTML tags are not allowed.',
-                ],
-                [
-                    'The "%s" field is invalid. HTML tags are not allowed.',
+                    '%s is invalid. Please enter an integer greater than or equal to 0.',
                     [
                         'Field',
                     ],
                     'Admin.Notifications.Error',
                     null,
-                    'The "Field" field is invalid. HTML tags are not allowed.',
+                    'Field is invalid. Please enter an integer greater than or equal to 0.',
                 ],
                 [
                     '%s is invalid. Please enter an integer lower than %s.',
@@ -110,7 +98,6 @@ class ConfigurationErrorFactoryTest extends TestCase
             ->getMock();
         $labelProviderMock->method('getLabel')->willReturn('Field');
         $errorFactoryCollection = [];
-        $errorFactoryCollection[] = new InvoiceConfigurationErrorFactory($translatorMock, $languageRepositoryMock);
         $errorFactoryCollection[] = new AdministrationConfigurationErrorFactory($translatorMock, $languageRepositoryMock);
         $errorFactoryCollection[] = new CommonConfigurationErrorFactory($translatorMock, $languageRepositoryMock);
         $configurationErrorFactory = new ConfigurationErrorFactory($errorFactoryCollection, $labelProviderMock, $translatorMock);
@@ -118,16 +105,14 @@ class ConfigurationErrorFactoryTest extends TestCase
         $formMock = $this->getMockBuilder(FormInterface::class)->getMock();
 
         $errorCollection = new ConfigurationErrorCollection();
-        $errorCollection->add(new InvoiceConfigurationError(ConfigurationErrorInterface::ERROR_CONTAINS_HTML_TAGS, 'field', 1));
-        $errorCollection->add(new InvoiceConfigurationError(ConfigurationErrorInterface::ERROR_CONTAINS_HTML_TAGS, 'field'));
         $errorCollection->add(new AdministrationConfigurationError(AdministrationConfigurationError::ERROR_COOKIE_LIFETIME_MAX_VALUE_EXCEEDED, 'field'));
-        $errorCollection->add(new AdministrationConfigurationError('non_existing_error_code', 'field'));
+        $errorCollection->add(new CommonConfigurationError(CommonConfigurationError::ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO, 'field'));
+        $errorCollection->add(new AdministrationConfigurationError(35, 'field'));
 
         $errorMessages = $configurationErrorFactory->getErrorMessages($errorCollection, $formMock);
 
-        self::assertContains('The "Field" field in English is invalid. HTML tags are not allowed.', $errorMessages);
-        self::assertContains('The "Field" field is invalid. HTML tags are not allowed.', $errorMessages);
         self::assertContains('Field is invalid. Please enter an integer lower than 876000.', $errorMessages);
+        self::assertContains('Field is invalid. Please enter an integer greater than or equal to 0.', $errorMessages);
         self::assertContains('Field is invalid.', $errorMessages);
     }
 }
