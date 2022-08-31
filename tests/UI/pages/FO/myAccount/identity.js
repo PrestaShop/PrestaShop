@@ -18,14 +18,7 @@ class AccountIdentity extends FOBasePage {
     this.successfulUpdateMessage = 'Information successfully updated.';
     this.errorUpdateMessage = 'Could not update your information, please check your data.';
     this.invalidEmailAlertMessage = 'Invalid email/password combination';
-    this.invalidRepeatsPasswordAlertMessage = 'Repeats like "abcabcabc" are only slightly harder to guess than "abc"';
-    this.invalidRepeatedWordsPasswordAlertMessage = 'Avoid repeated words and characters';
-    this.invalidRepeatedCharacterPasswordAlertMessage = 'Repeats like "aaa" are easy to guess';
-    this.invalidUncommonPasswordAlertMessage = 'Add another word or two. Uncommon words are better.';
     this.invalidNumberOfCharacters = 'Password must be between 8 and 72 characters long';
-    this.veryCommonPasswordAlertMessage = 'This is a very common password';
-    this.topTenCommonPassword = 'This is a top-10 common password';
-    this.similarPasswordAlertMessage = 'This is similar to a commonly used password';
     this.minimumScoreAlertMessage = 'The minimum score must be: Strong';
 
     // Selectors
@@ -34,10 +27,10 @@ class AccountIdentity extends FOBasePage {
     this.firstNameInput = `${this.createAccountForm} #field-firstname`;
     this.lastNameInput = `${this.createAccountForm} #field-lastname`;
     this.newEmailInput = `${this.createAccountForm} #field-email`;
-    this.invalidEmailAlertDanger = `${this.createAccountForm} div:nth-child(4) li.alert-danger`;
+    this.invalidEmailAlertDanger = `${this.createAccountForm} div:nth-child(6) li.alert-danger`;
     this.passwordInput = `${this.createAccountForm} #field-password`;
-    this.invalidPasswordAlertDanger = `${this.createAccountForm} div:nth-child(5) div.help-block`;
-    this.invalidNewPasswordAlertDanger = `${this.createAccountForm} div:nth-child(6) div.help-block`;
+    this.invalidPasswordAlertDanger = `${this.createAccountForm} div.field-password-policy li.alert-danger`;
+    this.invalidNewPasswordAlertDanger = `${this.createAccountForm} div.col-md-6.js-input-column div.help-block`;
     this.newPasswordInput = `${this.createAccountForm} #field-new_password`;
     this.birthdateInput = `${this.createAccountForm} #field-birthday`;
     this.customerPrivacyCheckbox = `${this.createAccountForm} input[name='customer_privacy']`;
