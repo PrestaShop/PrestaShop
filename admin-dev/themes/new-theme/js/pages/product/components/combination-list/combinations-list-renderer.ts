@@ -34,7 +34,6 @@ import ChangeEvent = JQuery.ChangeEvent;
 
 const {$} = window;
 const CombinationsMap = ProductMap.combinations;
-const ProductPriceMap = ProductMap.price;
 
 export type SortGridCallback = (sortColumn: string, sortOrder: string) => void;
 export type EmptyStateCallback = (isEmpty: boolean) => void;
@@ -279,7 +278,7 @@ export default class CombinationsListRenderer {
     const $finalPricePreview = $finalPrice.siblings(CombinationsMap.list.finalPricePreview);
     let combinationPrice = productPrice.plus(priceImpactTaxExcluded);
 
-    const ecoTax = $(ProductPriceMap.ecoTaxTaxExcluded).val();
+    const ecoTax = this.productFormModel.getBigNumber('price.ecotaxTaxExcluded') ?? new BigNumber(0);
 
     if (ecoTax) {
       combinationPrice = combinationPrice.plus(new BigNumber(ecoTax.toString()));
