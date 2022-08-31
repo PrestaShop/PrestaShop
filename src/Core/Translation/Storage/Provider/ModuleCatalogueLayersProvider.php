@@ -157,12 +157,19 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
         // For non native modules, the catalogue is built from templates
 
         // First we search in translation directory in case the module is native
-        // If no translation file is found, we extract the catalogue from the module's templates
-
         try {
             $defaultCatalogue = $this->getDefaultCatalogueFinder()->getCatalogue($locale);
         } catch (TranslationFilesNotFoundException $e) {
-            $defaultCatalogue = $this->getDefaultCatalogueExtractedFromTemplates($locale);
+            $defaultCatalogue = new MessageCatalogue($locale);
+        }
+
+        // Then we extract the catalogue from the module's templates and add it to the initial default catalogue, this way
+        // even native modules will display wordings that may not be present in the XLF files
+        $extractedCatalogue = $this->getDefaultCatalogueExtractedFromTemplates($locale);
+
+        // We merge both catalogues
+        foreach ($extractedCatalogue->getDomains() as $domain) {
+            $defaultCatalogue->add($extractedCatalogue->all($domain), $domain);
         }
 
         return $defaultCatalogue;
