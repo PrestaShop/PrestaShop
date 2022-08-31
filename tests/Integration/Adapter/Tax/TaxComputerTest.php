@@ -90,12 +90,12 @@ class TaxComputerTest extends KernelTestCase
         $country = new Country($countryId);
 
         /* taxes for countries without states */
-        yield [20.0, $country->id, [0],  '10.00', '12.00', TaxCalculator::COMBINE_METHOD];
-        yield [6.0, $country->id, [0], '10.00', '10.60', TaxCalculator::COMBINE_METHOD];
-        yield [21.3, $country->id, [0], '10.00', '12.13', TaxCalculator::COMBINE_METHOD];
-        yield [14.7, $country->id, [0], '8.00', '9.176', TaxCalculator::COMBINE_METHOD];
+        yield [20.0, $country->id, [0],  '10.00', '12.00', TaxCalculator::ONE_TAX_ONLY_METHOD];
+        yield [6.0, $country->id, [0], '10.00', '10.60', TaxCalculator::ONE_TAX_ONLY_METHOD];
+        yield [21.3, $country->id, [0], '10.00', '12.13', TaxCalculator::ONE_TAX_ONLY_METHOD];
+        yield [14.7, $country->id, [0], '8.00', '9.176', TaxCalculator::ONE_TAX_ONLY_METHOD];
         // tax rate is rounded to 3.148
-        yield [3.14769, $country->id, [0], '8.666', '8.93880568', TaxCalculator::COMBINE_METHOD];
+        yield [3.14769, $country->id, [0], '8.666', '8.93880568', TaxCalculator::ONE_TAX_ONLY_METHOD];
 
         $countryId = Country::getByIso('us');
         $country = new Country($countryId);
@@ -104,12 +104,12 @@ class TaxComputerTest extends KernelTestCase
         $stateId = (int) $state['id_state'];
 
         /* taxes for countries with state */
-        yield [20.0, $country->id, [$stateId],  '10.00', '12.00', TaxCalculator::COMBINE_METHOD];
-        yield [6.0, $country->id, [$stateId], '10.00', '10.60', TaxCalculator::COMBINE_METHOD];
-        yield [21.3, $country->id, [$stateId], '10.00', '12.13', TaxCalculator::COMBINE_METHOD];
-        yield [14.7, $country->id, [$stateId], '8.00', '9.176', TaxCalculator::COMBINE_METHOD];
+        yield [20.0, $country->id, [$stateId],  '10.00', '12.00', TaxCalculator::ONE_TAX_ONLY_METHOD];
+        yield [6.0, $country->id, [$stateId], '10.00', '10.60', TaxCalculator::ONE_TAX_ONLY_METHOD];
+        yield [21.3, $country->id, [$stateId], '10.00', '12.13', TaxCalculator::ONE_TAX_ONLY_METHOD];
+        yield [14.7, $country->id, [$stateId], '8.00', '9.176', TaxCalculator::ONE_TAX_ONLY_METHOD];
         // tax rate is rounded to 3.148
-        yield [3.14769, $country->id, [$stateId], '8.666', '8.93880568', TaxCalculator::COMBINE_METHOD];
+        yield [3.14769, $country->id, [$stateId], '8.666', '8.93880568', TaxCalculator::ONE_TAX_ONLY_METHOD];
 
         $secondState = $states[1];
         $secondStateId = (int) $secondState['id_state'];
