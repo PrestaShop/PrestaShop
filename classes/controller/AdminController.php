@@ -2278,7 +2278,7 @@ class AdminControllerCore extends Controller
         $this->context->smarty->assign('js_files', array_unique($this->js_files));
 
         $this->context->smarty->assign([
-            'ps_version' => _PS_VERSION_,
+            'ps_version' => AppKernel::VERSION,
             'iso_is_fr' => strtoupper($this->context->language->iso_code) == 'FR',
             'modals' => $this->renderModal(),
         ]);

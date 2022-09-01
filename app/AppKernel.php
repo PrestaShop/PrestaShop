@@ -32,7 +32,7 @@ use Symfony\Component\HttpKernel\Kernel;
 
 class AppKernel extends Kernel
 {
-    const VERSION = '8.0.0';
+    const VERSION = '8.0.0-beta.1';
     const MAJOR_VERSION_STRING = '8';
     const MAJOR_VERSION = 8;
     const MINOR_VERSION = 0;

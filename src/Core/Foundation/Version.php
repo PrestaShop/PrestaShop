@@ -142,9 +142,11 @@ class Version
             $patch = isset($matches[3]) ? (int) $matches[3] : 0;
         }
 
+        $majorVersionString = $major >= 8 ? "$major" : "1.$major";
+
         return new self(
             $version,
-            "1.$major",
+            $majorVersionString,
             $major,
             $minor,
             $patch,
@@ -162,7 +164,7 @@ class Version
      */
     public function getVersion($full = false)
     {
-        $version = '1.' . $this->version;
+        $version = ($this->majorVersion < 8 ? '1.' : '') . $this->version;
 
         if (!$full) {
             // remove extra parts

@@ -24,7 +24,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-define('_PS_INSTALL_VERSION_', '8.0.0');
+use PrestaShop\PrestaShop\Core\Foundation\Version;
+
+define('_PS_INSTALL_VERSION_', Version::buildFromString(AppKernel::VERSION)->getVersion());
 define('_PS_INSTALL_MINIMUM_PHP_VERSION_ID_', 70205);
 define('_PS_INSTALL_MAXIMUM_PHP_VERSION_ID_', 81099);
 

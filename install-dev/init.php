@@ -27,8 +27,6 @@ use Doctrine\DBAL\DBALException;
 
 ob_start();
 
-require_once 'install_version.php';
-
 // Set execution time and time_limit to infinite if available
 @set_time_limit(0);
 @ini_set('max_execution_time', '0');
@@ -88,6 +86,7 @@ if ((!is_dir(_PS_CORE_DIR_.DIRECTORY_SEPARATOR.'vendor') ||
 
 require_once _PS_CORE_DIR_.'/config/defines.inc.php';
 require_once _PS_CORE_DIR_.'/config/autoload.php';
+require_once 'install_version.php';
 
 if (file_exists(_PS_CORE_DIR_.'/app/config/parameters.php')) {
     require_once _PS_CORE_DIR_.'/config/bootstrap.php';
