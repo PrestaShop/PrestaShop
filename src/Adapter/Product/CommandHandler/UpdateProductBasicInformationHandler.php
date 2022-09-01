@@ -110,7 +110,7 @@ class UpdateProductBasicInformationHandler implements UpdateProductBasicInformat
             // Go through all the product languages and make sure name is filled for each of them
             $productLanguages = array_keys($product->name);
             foreach ($productLanguages as $languageId) {
-                if (empty($product->name[$languageId]) && empty($localizedNames[$languageId])) {
+                if (empty($localizedNames[$languageId])) {
                     $localizedNames[$languageId] = $defaultName;
                 }
             }
