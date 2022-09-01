@@ -106,6 +106,13 @@ Feature: Update product basic information from Back Office (BO)
       | locale | value        |
       | en-US  | english name |
       | fr-FR  | english name |
+    When I update product "empty_product" basic information with following values:
+      | name[en-US] | english name |
+      | name[fr-FR] |              |
+    Then product "empty_product" localized "name" should be:
+      | locale | value        |
+      | en-US  | english name |
+      | fr-FR  | english name |
 
   Scenario: When product name is updated, empty friendly-urls are auto-filled
     Given language "fr" with locale "fr-FR" exists
