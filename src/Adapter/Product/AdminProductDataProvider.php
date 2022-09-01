@@ -34,10 +34,10 @@ use Currency;
 use Db;
 use DbQuery;
 use Doctrine\ORM\EntityManager;
-use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Adapter\Admin\AbstractAdminQueryBuilder;
 use PrestaShop\PrestaShop\Adapter\ImageManager;
 use PrestaShop\PrestaShop\Adapter\Validate;
+use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Entity\AdminFilter;
 use PrestaShopBundle\Service\DataProvider\Admin\ProductInterface;
 use Product;
@@ -93,7 +93,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         $employee = Context::getContext()->employee;
         $employeeId = $employee->id ?: 0;
 
-        $cachedFilters = $this->cache->getItem("app.product_filters_${employeeId}");
+        $cachedFilters = $this->cache->getItem("app.product_filters_{$employeeId}");
 
         if (!$cachedFilters->isHit()) {
             $shop = Context::getContext()->shop;
@@ -173,11 +173,11 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
 
         $this->entityManager->flush();
 
-        //Flush cache
+        // Flush cache
         $employee = Context::getContext()->employee;
         $employeeId = $employee->id ?: 0;
 
-        $this->cache->deleteItem("app.product_filters_${employeeId}");
+        $this->cache->deleteItem("app.product_filters_{$employeeId}");
     }
 
     /**
