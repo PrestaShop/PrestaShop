@@ -231,4 +231,14 @@ class SupplierControllerCore extends ProductListingFrontController
 
         return $breadcrumb;
     }
+
+    public function getTemplateVarPage()
+    {
+        $page = parent::getTemplateVarPage();
+
+        $page['body_classes']['supplier-id-' . $this->supplier->id] = true;
+        $page['body_classes']['supplier-' . $this->supplier->name] = true;
+
+        return $page;
+    }
 }
