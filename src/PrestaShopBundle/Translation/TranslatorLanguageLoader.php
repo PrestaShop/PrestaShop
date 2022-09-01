@@ -104,7 +104,6 @@ class TranslatorLanguageLoader
         }
 
         // Load the theme translations catalogue
-        $domains = [];
         foreach ($this->getTranslationResourcesDirectories($theme) as $type => $directory) {
             $finder = Finder::create()
                 ->files()
@@ -116,19 +115,15 @@ class TranslatorLanguageLoader
                 list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
                 $translator->addResource($format, $file, $locale, $domain);
                 if ($withDB) {
-                    $domains[] = $domain;
                     if ($type !== 'theme') {
                         // Load core user-translated wordings
                         $translator->addResource('db', $domain . '.' . $locale . '.db', $locale, $domain);
                     }
+                    if (!$this->isAdminContext && $theme !== null) {
+                        // Load theme user-translated wordings for core + theme wordings
+                        $translator->addResource('db.theme', $domain . '.' . $locale . '.db', $locale, $domain);
+                    }
                 }
-            }
-        }
-
-        // Load theme user-translated wordings for core + theme wordings
-        if (!$this->isAdminContext) {
-            foreach ($domains as $domain) {
-                $translator->addResource('db.theme', $domain . '.' . $locale . '.db', $locale, $domain);
             }
         }
 
