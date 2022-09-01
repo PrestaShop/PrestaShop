@@ -95,6 +95,11 @@ class ConfigurationErrorFactory
         return $messages;
     }
 
+    /**
+     * @param string $label
+     *
+     * @return string
+     */
     private function getDefaultErrorMessage(string $label): string
     {
         return $this->translator->trans(

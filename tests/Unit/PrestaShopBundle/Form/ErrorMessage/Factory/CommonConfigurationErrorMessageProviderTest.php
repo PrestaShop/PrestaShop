@@ -34,10 +34,10 @@ use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorInterface;
 use PrestaShop\PrestaShop\Core\Form\ErrorMessage\InvoiceConfigurationError;
 use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Entity\Repository\LangRepository;
-use PrestaShopBundle\Form\ErrorMessage\Factory\CommonConfigurationErrorFactory;
+use PrestaShopBundle\Form\ErrorMessage\Factory\CommonConfigurationErrorMessageProvider;
 use Symfony\Component\Translation\Translator;
 
-class CommonConfigurationErrorFactoryTest extends TestCase
+class CommonConfigurationErrorMessageProviderTest extends TestCase
 {
     public function testGetErrorMessageForConfigurationError(): void
     {
@@ -68,7 +68,7 @@ class CommonConfigurationErrorFactoryTest extends TestCase
         $language = new Lang();
         $language->setName('English');
         $languageRepositoryMock->method('findOneBy')->willReturn($language);
-        $commonConfigurationErrorFactory = new CommonConfigurationErrorFactory($translatorMock, $languageRepositoryMock);
+        $commonConfigurationErrorFactory = new CommonConfigurationErrorMessageProvider($translatorMock, $languageRepositoryMock);
 
         $error = new CommonConfigurationError(CommonConfigurationError::ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO, 'field', 1);
         $result = $commonConfigurationErrorFactory->getErrorMessageForConfigurationError($error, 'field');

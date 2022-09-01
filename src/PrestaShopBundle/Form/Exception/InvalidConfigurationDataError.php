@@ -26,60 +26,29 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Exception;
+namespace PrestaShopBundle\Form\ErrorMessage;
 
-class InvalidConfigurationDataError
+use Symfony\Component\Form\FormInterface;
+
+/** Responsible for finding what label is used for certain field in the form */
+class LabelProvider
 {
     /**
-     * @var int
-     */
-    private $errorCode;
-
-    /**
-     * @var string
-     */
-    private $fieldName;
-
-    /**
-     * @var int|null
-     */
-    private $languageId;
-
-    /**
-     * InvalidConfigurationDataError constructor.
-     *
-     * @param int $errorCode
+     * @param FormInterface $form
      * @param string $fieldName
-     * @param int|null $languageId
-     */
-    public function __construct(int $errorCode, string $fieldName, ?int $languageId = null)
-    {
-        $this->errorCode = $errorCode;
-        $this->fieldName = $fieldName;
-        $this->languageId = $languageId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getErrorCode(): int
-    {
-        return $this->errorCode;
-    }
-
-    /**
+     *
      * @return string
      */
-    public function getFieldName(): string
+    public function getLabel(FormInterface $form, string $fieldName): string
     {
-        return $this->fieldName;
-    }
+        $view = $form->createView();
+        foreach ($view->children as $child) {
+            if (isset($child->vars['name']) && $fieldName === $child->vars['name']) {
+                return $child->vars['label'] ?? $fieldName;
+            }
+        }
 
-    /**
-     * @return int|null
-     */
-    public function getLanguageId(): ?int
-    {
-        return $this->languageId;
+        /** If label not found return $fieldName as fallback */
+        return $fieldName;
     }
 }

@@ -33,10 +33,10 @@ use PrestaShop\PrestaShop\Core\Form\ErrorMessage\AdministrationConfigurationErro
 use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Entity\Repository\LangRepository;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralDataProvider;
-use PrestaShopBundle\Form\ErrorMessage\Factory\AdministrationConfigurationErrorFactory;
+use PrestaShopBundle\Form\ErrorMessage\Factory\AdministrationConfigurationErrorMessageProvider;
 use Symfony\Component\Translation\Translator;
 
-class AdministrationConfigurationErrorFactoryTest extends TestCase
+class AdministrationConfigurationErrorMessageProviderTest extends TestCase
 {
     private const COOKIE_FIELD_NAME = 'Max cookie value';
 
@@ -71,7 +71,7 @@ class AdministrationConfigurationErrorFactoryTest extends TestCase
         $language = new Lang();
         $language->setName('English');
         $languageRepositoryMock->method('findOneBy')->willReturn($language);
-        $administrationConfigurationErrorFactory = new AdministrationConfigurationErrorFactory($translatorMock, $languageRepositoryMock);
+        $administrationConfigurationErrorFactory = new AdministrationConfigurationErrorMessageProvider($translatorMock, $languageRepositoryMock);
 
         $error = new AdministrationConfigurationError(AdministrationConfigurationError::ERROR_COOKIE_LIFETIME_MAX_VALUE_EXCEEDED, 'field', 1);
         $result = $administrationConfigurationErrorFactory->getErrorMessageForConfigurationError($error, self::COOKIE_FIELD_NAME);
