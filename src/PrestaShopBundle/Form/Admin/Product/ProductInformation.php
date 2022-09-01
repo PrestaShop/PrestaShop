@@ -182,7 +182,7 @@ class ProductInformation extends CommonAbstractType
         $is_stock_management = $this->configuration->get('PS_STOCK_MANAGEMENT');
         $shortDescriptionLimit = (int) $this->configuration->get('PS_PRODUCT_SHORT_DESC_LIMIT');
         if ($shortDescriptionLimit <= 0) {
-            $shortDescriptionLimit = ProductSettings::MAX_DESCRIPTION_SHORT_LENGTH;
+            $shortDescriptionLimit = ProductSettings::DEFAULT_MAX_DESCRIPTION_SHORT_LENGTH;
         }
 
         $builder->add('type_product', FormType\ChoiceType::class, [
