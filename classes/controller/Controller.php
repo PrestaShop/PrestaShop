@@ -34,7 +34,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 abstract class ControllerCore
 {
-    const SERVICE_LOCALE_REPOSITORY = 'prestashop.core.localization.locale.repository';
+    public const SERVICE_LOCALE_REPOSITORY = 'prestashop.core.localization.locale.repository';
     public const SERVICE_MULTISTORE_FEATURE = 'prestashop.adapter.multistore_feature';
 
     /**

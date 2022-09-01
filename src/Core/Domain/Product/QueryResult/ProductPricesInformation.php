@@ -52,6 +52,11 @@ class ProductPricesInformation
     private $ecotax;
 
     /**
+     * @var DecimalNumber
+     */
+    private $ecotaxTaxIncluded;
+
+    /**
      * @var int
      */
     private $taxRulesGroupId;
@@ -95,6 +100,7 @@ class ProductPricesInformation
      * @param DecimalNumber $price
      * @param DecimalNumber $priceTaxIncluded
      * @param DecimalNumber $ecotax
+     * @param DecimalNumber $ecotaxTaxIncluded
      * @param int $taxRulesGroupId
      * @param bool $onSale
      * @param DecimalNumber $wholesalePrice
@@ -108,6 +114,7 @@ class ProductPricesInformation
         DecimalNumber $price,
         DecimalNumber $priceTaxIncluded,
         DecimalNumber $ecotax,
+        DecimalNumber $ecotaxTaxIncluded,
         int $taxRulesGroupId,
         bool $onSale,
         DecimalNumber $wholesalePrice,
@@ -120,6 +127,7 @@ class ProductPricesInformation
         $this->price = $price;
         $this->priceTaxIncluded = $priceTaxIncluded;
         $this->ecotax = $ecotax;
+        $this->ecotaxTaxIncluded = $ecotaxTaxIncluded;
         $this->taxRulesGroupId = $taxRulesGroupId;
         $this->onSale = $onSale;
         $this->wholesalePrice = $wholesalePrice;
@@ -152,6 +160,14 @@ class ProductPricesInformation
     public function getEcotax(): DecimalNumber
     {
         return $this->ecotax;
+    }
+
+    /**
+     * @return DecimalNumber
+     */
+    public function getEcotaxTaxIncluded(): DecimalNumber
+    {
+        return $this->ecotaxTaxIncluded;
     }
 
     /**

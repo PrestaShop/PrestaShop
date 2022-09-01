@@ -40,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Exception\BulkProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductPositionException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\InvalidProductTypeException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\DuplicateFeatureValueAssociationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Exception\InvalidAssociatedFeatureException;
@@ -93,7 +94,7 @@ class ProductController extends FrameworkBundleAdminController
     /**
      * Shows products listing.
      *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      * @param ProductFilters $filters
@@ -125,6 +126,22 @@ class ProductController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted('read', 'AdminProducts')")
+     *
+     * @return Response
+     */
+    public function lightListAction(ProductFilters $filters, Request $request): Response
+    {
+        $gridFactory = $this->get('prestashop.core.grid.factory.product_light');
+        $grid = $gridFactory->getGrid($filters);
+
+        return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/light_list.html.twig', [
+            'lightDisplay' => $request->query->has('liteDisplaying'),
+            'productLightGrid' => $this->presentGrid($grid),
+        ]);
+    }
+
+    /**
      * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))", message="You do not have permission to create this.")
      *
      * @param Request $request
@@ -145,7 +162,7 @@ class ProductController extends FrameworkBundleAdminController
             $result = $this->getProductFormHandler()->handle($productForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_products_v2_edit', ['productId' => $result->getIdentifiableObjectId()]);
             }
@@ -187,12 +204,11 @@ class ProductController extends FrameworkBundleAdminController
 
         try {
             $productForm->handleRequest($request);
-
             $result = $this->getProductFormHandler()->handleFor($productId, $productForm);
 
             if ($result->isSubmitted()) {
                 if ($result->isValid()) {
-                    $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                    $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                     return $this->redirectToRoute('admin_products_v2_edit', ['productId' => $productId]);
                 } else {
@@ -504,8 +520,8 @@ class ProductController extends FrameworkBundleAdminController
             'href' => $this->generateUrl('admin_products_v2_create'),
             'desc' => $this->trans('New product', 'Admin.Actions'),
             'icon' => 'add_circle_outline',
-            'class' => 'btn-primary new-product',
-            'floating_class' => 'new-product',
+            'class' => 'btn-primary new-product-button',
+            'floating_class' => 'new-product-button',
         ];
 
         return $toolbarButtons;
@@ -759,6 +775,12 @@ class ProductController extends FrameworkBundleAdminController
             SpecificPriceConstraintException::class => [
                 SpecificPriceConstraintException::DUPLICATE_PRIORITY => $this->trans(
                     'The selected condition must be different in each field to set an order of priority.',
+                    'Admin.Notifications.Error'
+                ),
+            ],
+            InvalidProductTypeException::class => [
+                InvalidProductTypeException::EXPECTED_NO_EXISTING_PACK_ASSOCIATIONS => $this->trans(
+                    'This product cannot be changed into a pack because it is already associated to another pack.',
                     'Admin.Notifications.Error'
                 ),
             ],

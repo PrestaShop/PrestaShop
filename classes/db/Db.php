@@ -29,16 +29,16 @@
 abstract class DbCore
 {
     /** @var int Constant used by insert() method */
-    const INSERT = 1;
+    public const INSERT = 1;
 
     /** @var int Constant used by insert() method */
-    const INSERT_IGNORE = 2;
+    public const INSERT_IGNORE = 2;
 
     /** @var int Constant used by insert() method */
-    const REPLACE = 3;
+    public const REPLACE = 3;
 
     /** @var int Constant used by insert() method */
-    const ON_DUPLICATE_KEY = 4;
+    public const ON_DUPLICATE_KEY = 4;
 
     /** @var string Server (eg. localhost) */
     protected $server;

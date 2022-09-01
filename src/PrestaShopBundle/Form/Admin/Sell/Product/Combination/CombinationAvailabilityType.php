@@ -90,7 +90,7 @@ class CombinationAvailabilityType extends TranslatorAwareType
             ->add('available_later_label', TranslatableType::class, [
                 'type' => TextType::class,
                 'label' => $this->trans(
-                    'Label when out of stock (and back order allowed)',
+                    'Label when out of stock (and backorders allowed)',
                     'Admin.Catalog.Feature'
                 ),
                 'required' => false,

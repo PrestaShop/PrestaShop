@@ -99,6 +99,7 @@ class ProductController extends FrameworkBundleAdminController
      *
      * URL example: /product/catalog/40/20/id_product/asc
      *
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('read', request.get('_legacy_controller'))")
      * @Template("@PrestaShop/Admin/Product/CatalogPage/catalog.html.twig")
      *
      * @param Request $request
@@ -126,12 +127,6 @@ class ProductController extends FrameworkBundleAdminController
     ) {
         if ($this->shouldRedirectToV2()) {
             return $this->redirectToRoute('admin_products_v2_index');
-        }
-
-        foreach ([PageVoter::READ, PageVoter::UPDATE, PageVoter::CREATE] as $permission) {
-            if (!$this->isGranted($permission, self::PRODUCT_OBJECT)) {
-                return $this->redirect('admin_dashboard');
-            }
         }
 
         $language = $this->getContext()->language;
@@ -216,7 +211,9 @@ class ProductController extends FrameworkBundleAdminController
         }
 
         $categoriesFormView = $categoriesForm->createView();
-        $selectedCategory = !empty($combinedFilterParameters['filter_category']) ? new Category($combinedFilterParameters['filter_category']) : null;
+        $selectedCategory = !empty($combinedFilterParameters['filter_category'])
+            ? new Category((int) $combinedFilterParameters['filter_category'])
+            : null;
 
         //Drag and drop is ONLY activated when EXPLICITLY requested by the user
         //Meaning a category is selected and the user clicks on REORDER button

@@ -25,6 +25,8 @@
  */
 use PrestaShop\PrestaShop\Adapter\Presenter\Object\ObjectPresenter;
 use PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderPresenter;
+use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
+use ZxcvbnPhp\Zxcvbn;
 
 class OrderConfirmationControllerCore extends FrontController
 {
@@ -129,16 +131,56 @@ class OrderConfirmationControllerCore extends FrontController
                     [],
                     'Shop.Forms.Help'
                 );
-            } elseif (strlen($password) < Validate::PASSWORD_LENGTH) {
-                $this->errors[] = $this->trans(
-                    'Your password must be at least %min% characters long.',
-                    ['%min%' => Validate::PASSWORD_LENGTH],
-                    'Shop.Forms.Help'
-                );
-            // Prevent error
-            // A) either on page refresh
-            // B) if we already transformed him in other window or through backoffice
-            } elseif ($this->customer->is_guest == 0) {
+            } else {
+                if (Validate::isAcceptablePasswordLength($password) === false) {
+                    $this->errors[] = $this->translator->trans(
+                        'Password must be between %d and %d characters long',
+                        [
+                            Configuration::get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH),
+                            Configuration::get(PasswordPolicyConfiguration::CONFIGURATION_MAXIMUM_LENGTH),
+                        ],
+                        'Shop.Notifications.Error'
+                    );
+                }
+                if (Validate::isAcceptablePasswordScore($password) === false) {
+                    $wordingsForScore = [
+                        $this->translator->trans('Very weak', [], 'Shop.Theme.Global'),
+                        $this->translator->trans('Weak', [], 'Shop.Theme.Global'),
+                        $this->translator->trans('Average', [], 'Shop.Theme.Global'),
+                        $this->translator->trans('Strong', [], 'Shop.Theme.Global'),
+                        $this->translator->trans('Very strong', [], 'Shop.Theme.Global'),
+                    ];
+                    $globalErrorMessage = $this->translator->trans(
+                        'The minimum score must be: %s',
+                        [
+                            $wordingsForScore[(int) Configuration::get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_SCORE)],
+                        ],
+                        'Shop.Notifications.Error'
+                    );
+                    if ($this->context->shop->theme->get('global_settings.new_password_policy_feature') !== true) {
+                        $zxcvbn = new Zxcvbn();
+                        $result = $zxcvbn->passwordStrength($password);
+                        if (!empty($result['feedback']['warning'])) {
+                            $this->errors[] = $this->translator->trans(
+                                $result['feedback']['warning'], [], 'Shop.Theme.Global'
+                            );
+                        } else {
+                            $this->errors[] = $globalErrorMessage;
+                        }
+                        foreach ($result['feedback']['suggestions'] as $suggestion) {
+                            $this->errors[] = $this->translator->trans($suggestion, [], 'Shop.Theme.Global');
+                        }
+                    } else {
+                        $this->errors[] = $globalErrorMessage;
+                    }
+                }
+            }
+
+            if (!empty($this->errors)) {
+                return;
+            }
+
+            if ($this->customer->is_guest == 0) {
                 $this->errors[] = $this->trans(
                     'A customer account has already been created from this guest account. Please sign in.',
                     [],

@@ -110,7 +110,7 @@ class PricingType extends TranslatorAwareType
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([
-            'label' => false,
+            'label' => $this->trans('Pricing', 'Admin.Catalog.Feature'),
             'required' => false,
         ]);
     }

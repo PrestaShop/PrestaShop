@@ -40,8 +40,6 @@ export default class ChangePasswordControl {
 
   hideButtonSelector: string;
 
-  generatePasswordButtonSelector: string;
-
   oldPasswordInputSelector: string;
 
   newPasswordInputSelector: string;
@@ -64,7 +62,6 @@ export default class ChangePasswordControl {
     inputsBlockSelector: string,
     showButtonSelector: string,
     hideButtonSelector: string,
-    generatePasswordButtonSelector: string,
     oldPasswordInputSelector: string,
     newPasswordInputSelector: string,
     confirmNewPasswordInputSelector: string,
@@ -79,9 +76,6 @@ export default class ChangePasswordControl {
 
     // Button that hides the password inputs block
     this.hideButtonSelector = hideButtonSelector;
-
-    // Button that generates a random password
-    this.generatePasswordButtonSelector = generatePasswordButtonSelector;
 
     // Input to enter old password
     this.oldPasswordInputSelector = oldPasswordInputSelector;
@@ -143,15 +137,6 @@ export default class ChangePasswordControl {
 
     // Watch and display feedback about password's strength
     this.passwordHandler.watchPasswordStrength(this.$newPasswordInputs);
-
-    $(document).on('click', this.generatePasswordButtonSelector, () => {
-      // Generate the password into main input.
-      this.passwordHandler.generatePassword(this.$newPasswordInputs);
-
-      // Copy the generated password from main input to additional inputs
-      this.$copyPasswordInputs.val(<string> this.$newPasswordInputs.val());
-      this.checkPasswordValidity();
-    });
 
     // Validate new password and it's confirmation when any of the inputs is changed
     $(document).on(

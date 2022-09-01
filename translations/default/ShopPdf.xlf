@@ -5,7 +5,7 @@
       <trans-unit id="e265492707dd0595fd1f399bb8a2690e">
         <source>: </source>
         <target>:</target>
-        <note>Line: 1228</note>
+        <note>Line: 1206</note>
       </trans-unit>
     </body>
   </file>
@@ -14,7 +14,7 @@
       <trans-unit id="065ab3a28ca4f16f55f103adc7d0226f">
         <source>Delivery</source>
         <target>Delivery</target>
-        <note>Line: 80</note>
+        <note>Line: 82</note>
       </trans-unit>
     </body>
   </file>
@@ -188,11 +188,6 @@
         <target>Invoice Date</target>
         <note>Line: 28</note>
       </trans-unit>
-      <trans-unit id="559e7ca805230fc80e3644f87bb3994d">
-        <source>Order date</source>
-        <target>Order date</target>
-        <note>Line: 30</note>
-      </trans-unit>
     </body>
   </file>
   <file original="pdf/invoice.tax-tab.tpl" source-language="en-US" target-language="en" datatype="plaintext">
@@ -202,10 +197,20 @@
         <target>Total Tax</target>
         <note>Line: 41</note>
       </trans-unit>
+      <trans-unit id="8fe77c2601e54f1aaef28cfde997bbad">
+        <source>Tax Rate</source>
+        <target>Tax Rate</target>
+        <note>Line: 37</note>
+      </trans-unit>
       <trans-unit id="ad0d28cdd9113d3ce911bc064b137cde">
         <source>Base price</source>
         <target>Base price</target>
         <note>Line: 39</note>
+      </trans-unit>
+      <trans-unit id="baf5d10866a7a240830dcf34f29d2d11">
+        <source>No taxes</source>
+        <target>No taxes</target>
+        <note>Line: 96</note>
       </trans-unit>
       <trans-unit id="8a2d7d9c237b2af40f2659aa76f0bd84">
         <source>Exempt of VAT according to section 259B of the General Tax Code.</source>
@@ -237,20 +242,15 @@
         <target>Wrapping</target>
         <note>Line: 68</note>
       </trans-unit>
-      <trans-unit id="8fe77c2601e54f1aaef28cfde997bbad">
-        <source>Tax Rate</source>
-        <target>Tax Rate</target>
-        <note>Line: 37</note>
-      </trans-unit>
-      <trans-unit id="baf5d10866a7a240830dcf34f29d2d11">
-        <source>No taxes</source>
-        <target>No taxes</target>
-        <note>Line: 96</note>
-      </trans-unit>
     </body>
   </file>
   <file original="pdf/invoice.total-tab.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="96b0141273eabab320119c467cdcaf17">
+        <source>Total</source>
+        <target>Total</target>
+        <note>Line: 97</note>
+      </trans-unit>
       <trans-unit id="b0f79042ac83c64f3ccc42268c8ade26">
         <source>Total Products</source>
         <target>Total Products</target>
@@ -280,11 +280,6 @@
         <source>Total (Tax excl.)</source>
         <target>Total (Tax excl.)</target>
         <note>Line: 75</note>
-      </trans-unit>
-      <trans-unit id="96b0141273eabab320119c467cdcaf17">
-        <source>Total</source>
-        <target>Total</target>
-        <note>Line: 97</note>
       </trans-unit>
     </body>
   </file>
@@ -411,15 +406,15 @@
   </file>
   <file original="pdf/order-slip.summary-tab.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="6fbc355a02359656f1e4540d58b784e1">
-        <source>Order Date</source>
-        <target>Order Date</target>
-        <note>Line: 28</note>
-      </trans-unit>
       <trans-unit id="1e860e56970a81a1ba3e1fcb7fccc846">
         <source>Order Reference</source>
         <target>Order Reference</target>
         <note>Line: 27</note>
+      </trans-unit>
+      <trans-unit id="559e7ca805230fc80e3644f87bb3994d">
+        <source>Order date</source>
+        <target>Order date</target>
+        <note>Line: 28</note>
       </trans-unit>
       <trans-unit id="c462960a6bd53db34f778d0562703ad3">
         <source>VAT Number</source>

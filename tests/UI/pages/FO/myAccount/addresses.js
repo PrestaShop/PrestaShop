@@ -16,9 +16,10 @@ class Addresses extends FOBasePage {
 
     this.pageTitle = 'Addresses';
     this.addressPageTitle = 'Address';
-    this.addAddressSuccessfulMessage = 'Address successfully added!';
-    this.updateAddressSuccessfulMessage = 'Address successfully updated!';
-    this.deleteAddressSuccessfulMessage = 'Address successfully deleted!';
+    this.addAddressSuccessfulMessage = 'Address successfully added.';
+    this.updateAddressSuccessfulMessage = 'Address successfully updated.';
+    this.deleteAddressSuccessfulMessage = 'Address successfully deleted.';
+    this.deleteAddressErrorMessage = 'Could not delete the address since it is used in the shopping cart.';
 
     // Selectors
     this.addressBlock = 'article.address';
@@ -87,7 +88,7 @@ class Addresses extends FOBasePage {
       deleteButtons[position === 'last' ? (deleteButtons.length - 1) : (position - 1)].click(),
     ]);
 
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getTextContent(page, this.notificationsBlock);
   }
 }
 

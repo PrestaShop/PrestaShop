@@ -246,6 +246,7 @@ class ContainerBuilder
         }
 
         $activeModules = $container->getParameter('kernel.active_modules');
+        /** @var array<string> $activeModules */
         foreach ($activeModules as $module) {
             $autoloader = _PS_MODULE_DIR_ . $module . '/vendor/autoload.php';
 

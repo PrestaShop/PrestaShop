@@ -175,16 +175,16 @@ class CartCore extends ObjectModel
 
     protected $shouldExcludeGiftsDiscount = false;
 
-    const ONLY_PRODUCTS = 1;
-    const ONLY_DISCOUNTS = 2;
-    const BOTH = 3;
-    const BOTH_WITHOUT_SHIPPING = 4;
-    const ONLY_SHIPPING = 5;
-    const ONLY_WRAPPING = 6;
+    public const ONLY_PRODUCTS = 1;
+    public const ONLY_DISCOUNTS = 2;
+    public const BOTH = 3;
+    public const BOTH_WITHOUT_SHIPPING = 4;
+    public const ONLY_SHIPPING = 5;
+    public const ONLY_WRAPPING = 6;
 
     /** @deprecated since 1.7 **/
-    const ONLY_PRODUCTS_WITHOUT_SHIPPING = 7;
-    const ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING = 8;
+    public const ONLY_PRODUCTS_WITHOUT_SHIPPING = 7;
+    public const ONLY_PHYSICAL_PRODUCTS_WITHOUT_SHIPPING = 8;
 
     private const DEFAULT_ATTRIBUTES_KEYS = ['attributes' => '', 'attributes_small' => ''];
 
@@ -267,6 +267,9 @@ class CartCore extends ObjectModel
         }
         if (!$this->id_shop) {
             $this->id_shop = Context::getContext()->shop->id;
+        }
+        if (!$this->id_shop_group) {
+            $this->id_shop_group = Context::getContext()->shop->id_shop_group;
         }
 
         $return = parent::add($autoDate, $nullValues);
@@ -881,7 +884,7 @@ class CartCore extends ObjectModel
         } else {
             $address_id = (int) $row['id_address_delivery'];
         }
-        if (!Address::addressExists($address_id)) {
+        if (!Address::addressExists($address_id, true)) {
             $address_id = null;
         }
 
@@ -2380,7 +2383,7 @@ class CartCore extends ObjectModel
         }
 
         // Get delivery address of the product from the cart
-        if (!$this->addressFactory->addressExists($addressId)) {
+        if (!$this->addressFactory->addressExists($addressId, true)) {
             $addressId = null;
         }
 
@@ -3576,7 +3579,7 @@ class CartCore extends ObjectModel
         } else {
             $address_id = null;
         }
-        if (!Address::addressExists($address_id)) {
+        if (!Address::addressExists($address_id, true)) {
             $address_id = null;
         }
 

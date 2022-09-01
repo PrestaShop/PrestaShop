@@ -729,7 +729,7 @@ class AdminProductsControllerCore extends AdminController
         }
 
         if (Validate::isLoadedObject($product = $this->object)) {
-            if ($this->isProductFieldUpdated('attribute_price') && (!Tools::getIsset('attribute_price') || Tools::getIsset('attribute_price') == null)) {
+            if ($this->isProductFieldUpdated('attribute_price') && !Tools::getIsset('attribute_price')) {
                 $this->errors[] = $this->trans('The price attribute is required.', [], 'Admin.Catalog.Notification');
             }
             if (!Tools::getIsset('attribute_combination_list') || Tools::isEmpty(Tools::getValue('attribute_combination_list'))) {
@@ -2446,7 +2446,22 @@ class AdminProductsControllerCore extends AdminController
             foreach ($associated_suppliers as $key => $associated_supplier) {
                 /** @var ProductSupplier $associated_supplier */
                 if (!in_array($associated_supplier->id_supplier, $suppliers_to_associate)) {
-                    $associated_supplier->delete();
+                    // Code taken from https://github.com/PrestaShop/PrestaShop/pull/26609/commits/e966aa7d3c2204ddb7318dd7203639845739137b
+                    // ProductSupplier objectModel is shared between v1 & v2 product pages.
+                    // This code ensures keeping old behavior in v1 product page without breaking v2 product page.
+
+                    $res = $associated_supplier->delete();
+
+                    if ($res && $associated_supplier->id_product_attribute == 0) {
+                        $items = ProductSupplier::getSupplierCollection($associated_supplier->id_product, false);
+                        foreach ($items as $item) {
+                            /** @var ProductSupplier $item */
+                            if ($item->id_product_attribute > 0) {
+                                $item->delete();
+                            }
+                        }
+                    }
+
                     unset($associated_suppliers[$key]);
                 }
             }
@@ -3302,6 +3317,7 @@ class AdminProductsControllerCore extends AdminController
 
         if ($items && ($disableCombination || $excludeIds)) {
             $results = $resultsJson = [];
+            /** @var array{id_product: int, link_rewrite: string, reference: string, name: string, id_image: string} $item */
             foreach ($items as $item) {
                 if (!$forceJson) {
                     $item['name'] = str_replace('|', '&#124;', $item['name']);

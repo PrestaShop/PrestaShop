@@ -43,6 +43,7 @@ class ProductsBlock extends ViewOrderBasePage.constructor {
 
     // Total order
     this.orderTotalPriceSpan = '#orderTotal';
+    this.orderWrappingTotal = '#orderWrappingTotal';
 
     // Add discount
     this.orderTotalDiscountsSpan = '#orderDiscountsTotal';
@@ -248,6 +249,15 @@ class ProductsBlock extends ViewOrderBasePage.constructor {
   }
 
   /**
+   * Get order wrapping total
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  getOrderWrappingTotal(page) {
+    return this.getPriceFromText(page, this.orderWrappingTotal);
+  }
+
+  /**
    * Get order total discounts
    * @param page {Page} Browser tab
    * @returns {Promise<number>}
@@ -444,7 +454,7 @@ class ProductsBlock extends ViewOrderBasePage.constructor {
     await this.selectByVisibleText(page, this.addOrderCartRuleTypeSelect, discountData.type);
 
     await this.waitForVisibleSelector(page, `${this.addOrderCartRuleAddButton}:not([disabled])`);
-    await page.$eval(this.addOrderCartRuleAddButton, el => el.click());
+    await this.clickAndWaitForNavigation(page, this.addOrderCartRuleAddButton);
 
     return this.getTextContent(page, this.alertBlock);
   }

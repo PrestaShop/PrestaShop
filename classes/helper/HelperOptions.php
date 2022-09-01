@@ -250,6 +250,7 @@ class HelperOptionsCore extends Helper
             'currency_right_sign' => $this->context->currency->getSign('right'),
             'use_multishop' => $use_multishop,
             'has_color_field' => $has_color_field,
+            'controller_name' => $this->controller_name,
         ]);
 
         return parent::generate();

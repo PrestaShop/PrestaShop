@@ -70,8 +70,11 @@ class CombinationFormDataProvider implements FormDataProviderInterface
         return array_merge([
             'id' => $combinationId,
             'product_id' => $combinationForEditing->getProductId(),
-            'name' => $combinationForEditing->getName(),
-            'is_default' => $combinationForEditing->isDefault(),
+            'cover_thumbnail_url' => $combinationForEditing->getCoverThumbnailUrl(),
+            'header' => [
+                'name' => $combinationForEditing->getName(),
+                'is_default' => $combinationForEditing->isDefault(),
+            ],
             'stock' => $this->extractStockData($combinationForEditing),
             'price_impact' => $this->extractPriceImpactData($combinationForEditing),
             'references' => $this->extractReferencesData($combinationForEditing),
@@ -115,12 +118,17 @@ class CombinationFormDataProvider implements FormDataProviderInterface
         $priceImpactInformation = $combinationForEditing->getPrices();
 
         return [
-            'wholesale_price' => (float) (string) $priceImpactInformation->getWholesalePrice(),
             'price_tax_excluded' => (float) (string) $priceImpactInformation->getImpactOnPrice(),
             'price_tax_included' => (float) (string) $priceImpactInformation->getImpactOnPriceTaxIncluded(),
-            'ecotax' => (float) (string) $priceImpactInformation->getEcoTax(),
-            'unit_price' => (float) (string) $priceImpactInformation->getImpactOnUnitPrice(),
+            'unit_price_tax_excluded' => (float) (string) $priceImpactInformation->getImpactOnUnitPrice(),
+            'unit_price_tax_included' => (float) (string) $priceImpactInformation->getImpactOnUnitPriceTaxIncluded(),
+            'ecotax_tax_excluded' => (float) (string) $priceImpactInformation->getEcotax(),
+            'ecotax_tax_included' => (float) (string) $priceImpactInformation->getEcotaxTaxIncluded(),
+            'wholesale_price' => (float) (string) $priceImpactInformation->getWholesalePrice(),
             'weight' => (float) (string) $combinationForEditing->getDetails()->getImpactOnWeight(),
+            'product_tax_rate' => (float) (string) $priceImpactInformation->getProductTaxRate(),
+            'product_price_tax_excluded' => (float) (string) $priceImpactInformation->getProductPrice(),
+            'product_ecotax_tax_excluded' => (float) (string) $priceImpactInformation->getProductEcotax(),
         ];
     }
 

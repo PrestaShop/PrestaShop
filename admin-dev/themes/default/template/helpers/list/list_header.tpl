@@ -59,12 +59,12 @@
 {/if}
 {* Display column names and arrows for ordering (ASC, DESC) *}
 {if $is_order_position}
-	<script type="text/javascript" src="../js/jquery/plugins/jquery.tablednd.js"></script>
+	<script type="text/javascript" src="{$js_dir}jquery/plugins/jquery.tablednd.js"></script>
 	<script type="text/javascript">
 		var come_from = '{$list_id|addslashes}';
 		var alternate = {if $order_way == 'DESC'}'1'{else}'0'{/if};
 	</script>
-	<script type="text/javascript" src="../js/admin/dnd.js"></script>
+	<script type="text/javascript" src="{$js_dir}admin/dnd.js"></script>
 {/if}
 {if !$simple_header}
 	<script type="text/javascript">
@@ -104,6 +104,9 @@
 
 {if isset($name_controller)}
 	{capture name=hookName assign=hookName}display{$name_controller|ucfirst}ListBefore{/capture}
+	{hook h=$hookName}
+{elseif isset($controller_name)}
+	{capture name=hookName assign=hookName}display{$controller_name|ucfirst}ListBefore{/capture}
 	{hook h=$hookName}
 {elseif isset($smarty.get.controller)}
 	{capture name=hookName assign=hookName}display{$smarty.get.controller|ucfirst|htmlentities}ListBefore{/capture}
@@ -377,7 +380,7 @@
 									</div>
 								{elseif $params.type == 'select'}
 									{if isset($params.filter_key)}
-										<select class="filter{if isset($params.align) && $params.align == 'center'}center{/if}" onchange="$('#submitFilterButton{$list_id}').focus();$('#submitFilterButton{$list_id}').click();" name="{$list_id}Filter_{$params.filter_key}" {if isset($params.width)} style="width:{$params.width}px"{/if}>
+										<select class="filter{if isset($params.align) && $params.align == 'center'} center{/if}{if isset($params.class)} {$params.class|escape:'html':'UTF-8'}{/if}" onchange="$('#submitFilterButton{$list_id}').focus();$('#submitFilterButton{$list_id}').click();" name="{$list_id}Filter_{$params.filter_key}" {if isset($params.width)} style="width:{$params.width}px"{/if}>
 											<option value="" {if $params.value == ''} selected="selected" {/if}>-</option>
 											{if isset($params.list) && is_array($params.list)}
 												{foreach $params.list AS $option_value => $option_display}

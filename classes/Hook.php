@@ -115,7 +115,7 @@ class HookCore extends ObjectModel
         'actionGetProductPropertiesAfter' => ['from' => '1.7.8.0'],
     ];
 
-    const MODULE_LIST_BY_HOOK_KEY = 'hook_module_exec_list_';
+    public const MODULE_LIST_BY_HOOK_KEY = 'hook_module_exec_list_';
 
     public function add($autodate = true, $null_values = false)
     {
@@ -1151,6 +1151,7 @@ class HookCore extends ObjectModel
 
         $allHookRegistrations = [];
         if ($result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql)) {
+            /** @var array{hook: string, id_module: int, id_hook: int, module: string} $row */
             foreach ($result as $row) {
                 $row['hook'] = strtolower($row['hook']);
                 if (!isset($allHookRegistrations[$row['hook']])) {

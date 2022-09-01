@@ -281,13 +281,13 @@ describe('BO - Orders - View and edit order: Check multi invoice', async () => {
       let result = await orderPageProductsBlock.getProductDetails(page, 1);
       await Promise.all([
         expect(result.basePrice, 'Base price was not updated').to.equal(secondNewProductPrice),
-        expect(result.total, 'Total price was not updated').to.equal(secondNewProductPrice * 2),
+        expect(result.total, 'Total price was not updated').to.equal(secondNewProductPrice),
       ]);
 
       result = await orderPageProductsBlock.getProductDetails(page, 2);
       await Promise.all([
         expect(result.basePrice, 'Base price was not updated').to.equal(secondNewProductPrice),
-        expect(result.total, 'Total price was not updated').to.equal(secondNewProductPrice),
+        expect(result.total, 'Total price was not updated').to.equal(secondNewProductPrice * 2),
       ]);
     });
   });

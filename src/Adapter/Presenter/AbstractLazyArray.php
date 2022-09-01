@@ -94,11 +94,13 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
         foreach ($methods as $method) {
             $methodDoc = $method->getDocComment();
             if (strpos($methodDoc, '@arrayAccess') !== false) {
-                $this->arrayAccessList[$this->convertMethodNameToIndex($method->getName())] =
+                $this->arrayAccessList->offsetSet(
+                    $this->convertMethodNameToIndex($method->getName()),
                     [
                         'type' => 'method',
                         'value' => $method->getName(),
-                    ];
+                    ]
+                );
             }
         }
         $this->arrayAccessIterator = $this->arrayAccessList->getIterator();

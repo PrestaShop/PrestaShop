@@ -27,7 +27,7 @@
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Behat\Gherkin\Node\TableNode;
-use DateTimeImmutable;
+use Context;
 use PHPUnit\Framework\Assert as Assert;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\NegativePaymentAmountException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderConstraintException;
@@ -60,6 +60,7 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
                 $data['payment_method'],
                 $data['amount'],
                 SharedStorage::getStorage()->get($data['currency']),
+                (int) Context::getContext()->employee->id,
                 isset($data['id_invoice']) ? (int) $data['id_invoice'] : null,
                 $data['transaction_id']
             )
@@ -132,6 +133,15 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
             unset($dataArray['date']);
         }
 
+        if (isset($dataArray['employee'])) {
+            Assert::assertEquals(
+                $dataArray['employee'],
+                $orderPaymentForViewing->getEmployeeName()
+            );
+
+            unset($dataArray['employee']);
+        }
+
         foreach ($dataArray as $key => $value) {
             Assert::assertEquals(
                 $value,
@@ -160,6 +170,7 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
                     $data['payment_method'],
                     $data['amount'],
                     SharedStorage::getStorage()->get($data['currency']),
+                    (int) Context::getContext()->employee->id,
                     isset($data['id_invoice']) ? (int) $data['id_invoice'] : null,
                     $data['transaction_id']
                 )
@@ -187,22 +198,6 @@ class OrderPaymentFeatureContext extends AbstractDomainFeatureContext
         $this->assertLastErrorIs(
             OrderConstraintException::class,
             OrderConstraintException::INVALID_PAYMENT_METHOD
-        );
-    }
-
-    private function mapToOrderPaymentForViewing(int $paymentId, array $data)
-    {
-        return new OrderPaymentForViewing(
-            $paymentId,
-            new DateTimeImmutable($data['date']),
-            $data['payment_method'],
-            $data['transaction_id'],
-            $data['amount'],
-            isset($data['id_invoice']) ? (string) $data['id_invoice'] : null,
-            '',
-            '',
-            '',
-            ''
         );
     }
 

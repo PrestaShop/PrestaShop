@@ -120,17 +120,14 @@ final class UpdateProductPricesHandler implements UpdateProductPricesHandlerInte
             $product,
             $command->getPrice(),
             $command->getUnitPrice(),
-            $command->getWholesalePrice()
+            $command->getWholesalePrice(),
+            $command->getEcotax(),
+            $command->getShopConstraint()
         );
 
         if (null !== $command->getUnity()) {
             $product->unity = $command->getUnity();
             $updatableProperties[] = 'unity';
-        }
-
-        if (null !== $command->getEcotax()) {
-            $product->ecotax = (float) (string) $command->getEcotax();
-            $updatableProperties[] = 'ecotax';
         }
 
         $taxRulesGroupId = $command->getTaxRulesGroupId();

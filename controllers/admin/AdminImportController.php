@@ -151,7 +151,7 @@ class AdminImportControllerCore extends AdminController
                     'quantity' => ['label' => $this->trans('Quantity', [], 'Admin.Global')],
                     'minimal_quantity' => ['label' => $this->trans('Minimal quantity', [], 'Admin.Advparameters.Feature')],
                     'low_stock_threshold' => ['label' => $this->trans('Low stock level', [], 'Admin.Catalog.Feature')],
-                    'low_stock_alert' => ['label' => $this->trans('Send me an email when the quantity is under this level', [], 'Admin.Catalog.Feature')],
+                    'low_stock_alert' => ['label' => $this->trans('Receive a low stock alert by email', [], 'Admin.Catalog.Feature')],
                     'weight' => ['label' => $this->trans('Impact on weight', [], 'Admin.Catalog.Feature')],
                     'default_on' => ['label' => $this->trans('Default (0 = No, 1 = Yes)', [], 'Admin.Advparameters.Feature')],
                     'available_date' => ['label' => $this->trans('Combination availability date', [], 'Admin.Advparameters.Feature')],
@@ -281,7 +281,7 @@ class AdminImportControllerCore extends AdminController
                     'quantity' => ['label' => $this->trans('Quantity', [], 'Admin.Global')],
                     'minimal_quantity' => ['label' => $this->trans('Minimal quantity', [], 'Admin.Advparameters.Feature')],
                     'low_stock_threshold' => ['label' => $this->trans('Low stock level', [], 'Admin.Catalog.Feature')],
-                    'low_stock_alert' => ['label' => $this->trans('Send me an email when the quantity is under this level', [], 'Admin.Catalog.Feature')],
+                    'low_stock_alert' => ['label' => $this->trans('Receive a low stock alert by email', [], 'Admin.Catalog.Feature')],
                     'visibility' => ['label' => $this->trans('Visibility', [], 'Admin.Catalog.Feature')],
                     'additional_shipping_cost' => ['label' => $this->trans('Additional shipping cost', [], 'Admin.Advparameters.Feature')],
                     'unity' => ['label' => $this->trans('Unit for the price per unit', [], 'Admin.Advparameters.Feature')],
@@ -2302,6 +2302,7 @@ class AdminImportControllerCore extends AdminController
 
             // set advanced stock managment
             if (!$validateOnly) {
+                /* @phpstan-ignore-next-line Data from the property `advanced_stock_management` come from the database */
                 if ($product->advanced_stock_management != 1 && $product->advanced_stock_management != 0) {
                     $this->warnings[] = $this->trans(
                         'Advanced stock management has incorrect value. Not set for product %name%',
@@ -2369,6 +2370,7 @@ class AdminImportControllerCore extends AdminController
 
             // stock available
             if (isset($product->depends_on_stock)) {
+                /* @phpstan-ignore-next-line Data from the property `depends_on_stock` come from the database */
                 if ($product->depends_on_stock != 0 && $product->depends_on_stock != 1) {
                     $this->warnings[] = $this->trans(
                         'Incorrect value for "Depends on stock" for product %name%',
@@ -2377,6 +2379,7 @@ class AdminImportControllerCore extends AdminController
                         ],
                         'Admin.Advparameters.Notification'
                     );
+                /* @phpstan-ignore-next-line Data from properties `advanced_stock_management` & `depends_on_stock` come from the database */
                 } elseif ((!$product->advanced_stock_management || $product->advanced_stock_management == 0) && $product->depends_on_stock == 1) {
                     $this->warnings[] = $this->trans(
                         'Advanced stock management is not enabled, cannot set "Depends on stock" for product %name%',

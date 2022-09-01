@@ -4,7 +4,7 @@ module.exports = {
     firstName: 'Marc',
     lastName: 'Beier',
     email: 'demo@prestashop.com',
-    password: 'prestashop_demo',
+    password: 'Correct Horse Battery Staple',
     defaultPage: 'Dashboard',
     Language: 'English (English)',
     active: true,

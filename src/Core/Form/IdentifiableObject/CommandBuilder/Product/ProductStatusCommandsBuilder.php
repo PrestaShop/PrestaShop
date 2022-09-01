@@ -38,10 +38,10 @@ class ProductStatusCommandsBuilder implements ProductCommandsBuilderInterface
      */
     public function buildCommands(ProductId $productId, array $formData): array
     {
-        if (!isset($formData['footer']['active'])) {
+        if (!isset($formData['header']['active'])) {
             return [];
         }
 
-        return [new UpdateProductStatusCommand($productId->getValue(), (bool) $formData['footer']['active'])];
+        return [new UpdateProductStatusCommand($productId->getValue(), (bool) $formData['header']['active'])];
     }
 }

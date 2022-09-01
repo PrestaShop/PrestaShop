@@ -7,10 +7,10 @@
         <target>Image slider</target>
         <note>Line: 68</note>
       </trans-unit>
-      <trans-unit id="b6b0bc2f758de605f7589a85d105c1ec">
-        <source>Adds an image slider to your site.</source>
-        <target>Adds an image slider to your site.</target>
-        <note>Line: 66</note>
+      <trans-unit id="88fd0fdbf26a60e4fb7eaea258dea1df">
+        <source>Add sliding images to your homepage to welcome your visitors in a visual and friendly way.</source>
+        <target>Add sliding images to your homepage to welcome your visitors in a visual and friendly way.</target>
+        <note>Line: 69</note>
       </trans-unit>
       <trans-unit id="3f80dc2cdd06939d4f5514362067cd86">
         <source>Invalid values</source>
@@ -26,11 +26,6 @@
         <source>Invalid slide state.</source>
         <target>Invalid slide state.</target>
         <note>Line: 315</note>
-      </trans-unit>
-      <trans-unit id="9f79795e050649dc6b8bd0cdc874cbdc">
-        <source>Invalid slide position.</source>
-        <target>Invalid slide position.</target>
-        <note>Line: 310</note>
       </trans-unit>
       <trans-unit id="5c8bedc4c0c9f42d9b0f14340bbe53da">
         <source>Invalid slide ID</source>
@@ -181,11 +176,6 @@
         <source>This slide is shared with other shops! All shops associated to this slide will apply modifications made here</source>
         <target>This slide is shared with other shops! All shops associated to this slide will apply modifications made here</target>
         <note>Line: 1062</note>
-      </trans-unit>
-      <trans-unit id="88fd0fdbf26a60e4fb7eaea258dea1df">
-        <source>Add sliding images to your homepage to welcome your visitors in a visual and friendly way.</source>
-        <target>Add sliding images to your homepage to welcome your visitors in a visual and friendly way.</target>
-        <note>Line: 69</note>
       </trans-unit>
     </body>
   </file>

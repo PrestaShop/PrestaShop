@@ -180,7 +180,7 @@ class CustomerCore extends ObjectModel
             'lastname' => ['type' => self::TYPE_STRING, 'validate' => 'isCustomerName', 'required' => true, 'size' => 255],
             'firstname' => ['type' => self::TYPE_STRING, 'validate' => 'isCustomerName', 'required' => true, 'size' => 255],
             'email' => ['type' => self::TYPE_STRING, 'validate' => 'isEmail', 'required' => true, 'size' => 255],
-            'passwd' => ['type' => self::TYPE_STRING, 'validate' => 'isPlaintextPassword', 'required' => true, 'size' => 255],
+            'passwd' => ['type' => self::TYPE_STRING, 'validate' => 'isHashedPassword', 'required' => true, 'size' => 255],
             'last_passwd_gen' => ['type' => self::TYPE_STRING, 'copy_post' => false],
             'id_gender' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'birthday' => ['type' => self::TYPE_DATE, 'validate' => 'isBirthDate'],
@@ -448,11 +448,6 @@ class CustomerCore extends ObjectModel
                 'Cannot get customer by email as %s is not a valid email',
                 $email
             ));
-        }
-        if (($plaintextPassword && !Validate::isPlaintextPassword($plaintextPassword))) {
-            throw new \InvalidArgumentException(
-                'Cannot get customer by email as given password is not a valid password'
-            );
         }
 
         $shopGroup = Shop::getGroupFromShop(Shop::getContextShopID(), false);
@@ -1184,10 +1179,12 @@ class CustomerCore extends ObjectModel
         if (!$this->isGuest()) {
             return false;
         }
+
         if (empty($password)) {
-            $password = Tools::passwdGen(8, 'RANDOM');
+            $password = Tools::passwdGen(16, 'RANDOM');
         }
-        if (!Validate::isPlaintextPassword($password)) {
+
+        if (!Validate::isAcceptablePasswordLength($password) || !Validate::isAcceptablePasswordScore($password)) {
             return false;
         }
 

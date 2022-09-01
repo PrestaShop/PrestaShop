@@ -29,6 +29,7 @@ import ProductEvents from '@pages/product/product-event-map';
 import CombinationsService from '@pages/product/services/combinations-service';
 import BulkChoicesSelector from '@pages/product/components/combination-list/bulk-choices-selector';
 import {EventEmitter} from 'events';
+import ProgressModal from '@components/modal/progress-modal';
 
 const CombinationMap = ProductMap.combinations;
 const CombinationEvents = ProductEvents.combinations;
@@ -87,9 +88,6 @@ export default class BulkDeleteHandler {
           },
           async () => {
             await this.bulkDelete(selectedCombinationIds);
-            //@todo: hardcoded success for now, but it should still be removed when new modal is implemented in #26004.
-            $.growl({message: 'Success'});
-            this.eventEmitter.emit(CombinationEvents.bulkDeleteFinished);
           },
         );
         modal.show();
@@ -100,49 +98,74 @@ export default class BulkDeleteHandler {
     });
   }
 
-  /**
-   * @todo: the bulk delete action should be displayed with a progress modal once it is ready.
-   */
   private async bulkDelete(combinationIds: number[]): Promise<void> {
-    const progressModal = this.showProgressModal();
-    const progressModalElement = document.getElementById(CombinationMap.bulkProgressModalId);
+    const $bulkDeleteBtn = $(CombinationMap.bulkDeleteBtn);
+    const bulkChunkSize = Number($bulkDeleteBtn.data('bulkChunkSize'));
+    const abortController = new AbortController();
 
-    let progress = 1;
+    const progressModal = new ProgressModal({
+      id: CombinationMap.bulkProgressModalId,
+      abortCallback: () => {
+        stopProcess = true;
+        abortController.abort();
+      },
+      closeCallback: () => this.eventEmitter.emit(CombinationEvents.bulkDeleteFinished),
+      progressionTitle: $bulkDeleteBtn.data('progressTitle'),
+      progressionMessage: $bulkDeleteBtn.data('progressMessage'),
+      closeLabel: $bulkDeleteBtn.data('closeLabel'),
+      abortProcessingLabel: $bulkDeleteBtn.data('stopProcessing'),
+      errorsMessage: $bulkDeleteBtn.data('errorsMessage'),
+      backToProcessingLabel: $bulkDeleteBtn.data('backToProcessing'),
+      downloadErrorLogLabel: $bulkDeleteBtn.data('downloadErrorLog'),
+      viewErrorLogLabel: $bulkDeleteBtn.data('viewErrorLog'),
+      viewErrorTitle: $bulkDeleteBtn.data('viewErrorTitle'),
+      total: combinationIds.length,
+    });
+    progressModal.show();
+    let stopProcess = false;
+    let doneCount = 0;
+    while (combinationIds.length) {
+      if (stopProcess) {
+        break;
+      }
 
-    //@todo: is there better loop option to avoid disabling eslint?
-    // eslint-disable-next-line no-restricted-syntax
-    for (const combinationId of combinationIds) {
+      const chunkIds: number[] = combinationIds.splice(0, bulkChunkSize);
+      let data: Record<string, any>;
+
       try {
         // eslint-disable-next-line no-await-in-loop
-        await this.combinationsService.deleteCombination(combinationId);
-      } catch (error) {
-        console.error(error);
+        const response: Response = await this.combinationsService.bulkDeleteCombinations(
+          this.productId,
+          chunkIds,
+          abortController.signal,
+        );
+
+        // eslint-disable-next-line no-await-in-loop
+        data = await response.json();
+        if (data.error) {
+          progressModal.interruptProgress();
+          stopProcess = true;
+        }
+      } catch (e) {
+        data = {
+          error: `Something went wrong with IDs ${chunkIds.join(', ')}: ${e.message ?? ''}`,
+        };
       }
 
-      //@todo: also related with temporary progress modal. Needs to be fixed according to new progress modal once its merged in #26004.
-      const progressContent = progressModalElement?.querySelector<HTMLParagraphElement>('.progress-increment');
+      doneCount += chunkIds.length;
+      progressModal.updateProgress(doneCount);
 
-      if (progressContent) {
-        progressContent.innerHTML = String(progress);
+      if (!data.success) {
+        if (data.errors && Array.isArray(data.errors)) {
+          data.errors.forEach((error: string) => {
+            progressModal.addError(error);
+          });
+        } else {
+          progressModal.addError(data.errors ?? data.error ?? data.message);
+        }
       }
-      progress += 1;
     }
 
-    progressModal.hide();
-  }
-
-  private showProgressModal(): ConfirmModal {
-    //@todo: Replace with new progress modal when introduced in #26004.
-    const modal = new ConfirmModal(
-      {
-        id: CombinationMap.bulkProgressModalId,
-        confirmMessage: '<div>Updating combinations: <p class="progress-increment"></p></div>',
-      },
-      () => null,
-    );
-
-    modal.show();
-
-    return modal;
+    progressModal.completeProgress();
   }
 }

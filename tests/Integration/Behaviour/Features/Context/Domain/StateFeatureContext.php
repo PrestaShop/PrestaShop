@@ -24,17 +24,27 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use Behat\Gherkin\Node\TableNode;
 use Country;
 use PHPUnit\Framework\Assert;
+use PrestaShop\PrestaShop\Core\Domain\State\Command\AddStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\State\Command\BulkDeleteStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\State\Command\BulkToggleStateStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\State\Command\DeleteStateCommand;
+use PrestaShop\PrestaShop\Core\Domain\State\Command\EditStateCommand;
 use PrestaShop\PrestaShop\Core\Domain\State\Command\ToggleStateStatusCommand;
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\CannotAddStateException;
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\CannotUpdateStateException;
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateException;
 use PrestaShop\PrestaShop\Core\Domain\State\Exception\StateNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\State\Query\GetStateForEditing;
 use PrestaShop\PrestaShop\Core\Domain\State\QueryResult\EditableState;
+use PrestaShop\PrestaShop\Core\Domain\State\ValueObject\StateId;
 use RuntimeException;
 use State;
 use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
@@ -57,14 +67,75 @@ class StateFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
+     * @When I add new state :stateReference with following properties:
+     *
+     * @param string $stateReference
+     * @param TableNode $table
+     */
+    public function createState(string $stateReference, TableNode $table): void
+    {
+        $data = $table->getRowsHash();
+
+        try {
+            /** @var StateId $stateId */
+            $stateId = $this->getCommandBus()->handle(new AddStateCommand(
+                (int) Country::getIdByName($this->defaultLangId, $data['country']),
+                Zone::getIdByName($data['zone']),
+                $data['name'],
+                $data['iso_code'],
+                PrimitiveUtils::castStringBooleanIntoBoolean($data['enabled'])
+            ));
+
+            SharedStorage::getStorage()->set($stateReference, $stateId->getValue());
+        } catch (CannotAddStateException|StateConstraintException|StateException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @When I edit state :stateReference with following properties:
+     *
+     * @param string $stateReference
+     * @param TableNode $table
+     */
+    public function editState(string $stateReference, TableNode $table): void
+    {
+        $state = new State((int) SharedStorage::getStorage()->get($stateReference));
+
+        $command = new EditStateCommand($state->id);
+
+        $data = $table->getRowsHash();
+        if (isset($data['name'])) {
+            $command->setName((string) $data['name']);
+        }
+        if (isset($data['iso_code'])) {
+            $command->setIsoCode((string) $data['iso_code']);
+        }
+        if (isset($data['enabled'])) {
+            $command->setActive(PrimitiveUtils::castStringBooleanIntoBoolean($data['enabled']));
+        }
+        if (isset($data['country'])) {
+            $command->setCountryId((int) Country::getIdByName($this->defaultLangId, $data['country']));
+        }
+        if (isset($data['zone'])) {
+            $command->setZoneId((int) Zone::getIdByName($data['zone']));
+        }
+
+        try {
+            $this->getCommandBus()->handle($command);
+        } catch (CannotUpdateStateException|StateConstraintException|StateException|StateNotFoundException $e) {
+            $this->setLastException($e);
+        }
+    }
+
+    /**
      * @When I delete state :stateReference
      *
      * @param string $stateReference
      */
     public function deleteState(string $stateReference): void
     {
-        /** @var State $state */
-        $state = SharedStorage::getStorage()->get($stateReference);
+        $state = new State((int) SharedStorage::getStorage()->get($stateReference));
 
         try {
             $this->getCommandBus()->handle(new DeleteStateCommand((int) $state->id));
@@ -82,7 +153,7 @@ class StateFeatureContext extends AbstractDomainFeatureContext
     {
         $stateIds = [];
         foreach (PrimitiveUtils::castStringArrayIntoArray($stateReferences) as $stateReference) {
-            $stateIds[] = (int) SharedStorage::getStorage()->get($stateReference)->id;
+            $stateIds[] = (int) SharedStorage::getStorage()->get($stateReference);
         }
 
         try {
@@ -99,12 +170,10 @@ class StateFeatureContext extends AbstractDomainFeatureContext
      */
     public function toggleStatus(string $stateReference): void
     {
-        /** @var State $state */
-        $state = SharedStorage::getStorage()->get($stateReference);
-        $stateId = (int) $state->id;
+        $stateId = (int) SharedStorage::getStorage()->get($stateReference);
 
         $this->getCommandBus()->handle(new ToggleStateStatusCommand($stateId));
-        SharedStorage::getStorage()->set($stateReference, new State($stateId));
+        SharedStorage::getStorage()->set($stateReference, $stateId);
     }
 
     /**
@@ -119,14 +188,13 @@ class StateFeatureContext extends AbstractDomainFeatureContext
         $stateIds = [];
 
         foreach (PrimitiveUtils::castStringArrayIntoArray($stateReferences) as $stateReference) {
-            $state = SharedStorage::getStorage()->get($stateReference);
-            $stateIds[$stateReference] = (int) $state->id;
+            $stateIds[$stateReference] = (int) SharedStorage::getStorage()->get($stateReference);
         }
 
         $this->getCommandBus()->handle(new BulkToggleStateStatusCommand($expectedStatus, $stateIds));
 
         foreach ($stateIds as $reference => $id) {
-            SharedStorage::getStorage()->set($reference, new State($id));
+            SharedStorage::getStorage()->set($reference, $id);
         }
     }
 
@@ -138,7 +206,7 @@ class StateFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertStateName(string $stateReference, string $name): void
     {
-        $state = SharedStorage::getStorage()->get($stateReference);
+        $state = new State((int) SharedStorage::getStorage()->get($stateReference));
 
         if ($state->name !== $name) {
             throw new RuntimeException(sprintf('State "%s" has "%s" name, but "%s" was expected.', $stateReference, $state->name, $name));
@@ -153,9 +221,7 @@ class StateFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertStateCountry(string $stateReference, string $name): void
     {
-        /** @var State $state */
-        $state = SharedStorage::getStorage()->get($stateReference);
-
+        $state = new State((int) SharedStorage::getStorage()->get($stateReference));
         $country = new Country($state->id_country);
 
         if ($country->name[$this->defaultLangId] !== $name) {
@@ -176,9 +242,7 @@ class StateFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertStateZone(string $stateReference, string $name): void
     {
-        /** @var State $state */
-        $state = SharedStorage::getStorage()->get($stateReference);
-
+        $state = new State((int) SharedStorage::getStorage()->get($stateReference));
         $zone = new Zone($state->id_zone);
 
         if ($zone->name !== $name) {
@@ -200,8 +264,7 @@ class StateFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertStatus(string $stateReference, string $expectedStatus): void
     {
-        /** @var State $state */
-        $state = SharedStorage::getStorage()->get($stateReference);
+        $state = new State((int) SharedStorage::getStorage()->get($stateReference));
 
         $isEnabled = 'enabled' === $expectedStatus;
         $actualStatus = (bool) $state->active;
@@ -231,9 +294,7 @@ class StateFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertStateIsDeleted(string $stateReference): void
     {
-        /** @var State $state */
-        $state = SharedStorage::getStorage()->get($stateReference);
-        $query = new GetStateForEditing((int) $state->id);
+        $query = new GetStateForEditing((int) SharedStorage::getStorage()->get($stateReference));
         try {
             $this->getQueryBus()->handle($query);
 
@@ -250,9 +311,7 @@ class StateFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertStateIsNotDeleted(string $stateReference): void
     {
-        /** @var State $state */
-        $state = SharedStorage::getStorage()->get($stateReference);
-        $query = new GetStateForEditing((int) $state->id);
+        $query = new GetStateForEditing((int) SharedStorage::getStorage()->get($stateReference));
 
         $state = $this->getQueryBus()->handle($query);
         Assert::assertInstanceOf(EditableState::class, $state);

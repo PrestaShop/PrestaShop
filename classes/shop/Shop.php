@@ -119,16 +119,16 @@ class ShopCore extends ObjectModel
     /**
      * There are 3 kinds of shop context : shop, group shop and general.
      */
-    const CONTEXT_SHOP = 1;
-    const CONTEXT_GROUP = 2;
-    const CONTEXT_ALL = 4;
+    public const CONTEXT_SHOP = 1;
+    public const CONTEXT_GROUP = 2;
+    public const CONTEXT_ALL = 4;
 
     /**
      * Some data can be shared between shops, like customers or orders.
      */
-    const SHARE_CUSTOMER = 'share_customer';
-    const SHARE_ORDER = 'share_order';
-    const SHARE_STOCK = 'share_stock';
+    public const SHARE_CUSTOMER = 'share_customer';
+    public const SHARE_ORDER = 'share_order';
+    public const SHARE_STOCK = 'share_stock';
 
     /**
      * On shop instance, get its URL data.
@@ -522,7 +522,7 @@ class ShopCore extends ObjectModel
      *
      * @return string|bool complete base url of current shop
      */
-    public function getBaseURL($auto_secure_mode = false, $add_base_uri = true)
+    public function getBaseURL($auto_secure_mode = true, $add_base_uri = true)
     {
         if ($auto_secure_mode && Tools::usingSecureMode()) {
             if (!$this->domain_ssl) {

@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query;
 
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 
 class SearchCombinationsForAssociation
@@ -37,7 +38,7 @@ class SearchCombinationsForAssociation
     /**
      * This is the minimum length of search phrase
      */
-    const SEARCH_PHRASE_MIN_LENGTH = 3;
+    public const SEARCH_PHRASE_MIN_LENGTH = 3;
 
     /**
      * @var string
@@ -58,14 +59,27 @@ class SearchCombinationsForAssociation
      * @var int|null
      */
     private $limit;
+    /**
+     * @var array<string>
+     */
+    protected $filters;
 
     /**
      * @param string $phrase
      * @param int $languageId
      * @param int $shopId
+     * @param array $filters
      * @param int|null $limit
+     *
+     * @throws ProductConstraintException
+     * @throws ShopException
      */
-    public function __construct(string $phrase, int $languageId, int $shopId, ?int $limit = null)
+    public function __construct(
+        string $phrase,
+        int $languageId,
+        int $shopId,
+        array $filters = [],
+        ?int $limit = null)
     {
         if (null !== $limit && $limit <= 0) {
             throw new ProductConstraintException('Search limit must be a positive integer or null', ProductConstraintException::INVALID_SEARCH_LIMIT);
@@ -82,6 +96,7 @@ class SearchCombinationsForAssociation
         $this->limit = $limit;
         $this->shopId = new ShopId($shopId);
         $this->languageId = new LanguageId($languageId);
+        $this->filters = $filters;
     }
 
     /**
@@ -114,5 +129,13 @@ class SearchCombinationsForAssociation
     public function getLimit(): ?int
     {
         return $this->limit;
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getFilters(): array
+    {
+        return $this->filters;
     }
 }

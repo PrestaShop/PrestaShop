@@ -34,6 +34,7 @@ use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -52,16 +53,30 @@ class GiftOptionsType extends TranslatorAwareType
      */
     private $taxChoices;
 
+    /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param string $defaultCurrencyIsoCode
+     * @param array $taxChoices
+     * @param RouterInterface $router
+     */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         $defaultCurrencyIsoCode,
-        array $taxChoices
+        array $taxChoices,
+        RouterInterface $router
     ) {
         parent::__construct($translator, $locales);
 
         $this->defaultCurrencyIsoCode = $defaultCurrencyIsoCode;
         $this->taxChoices = $taxChoices;
+        $this->router = $router;
     }
 
     /**
@@ -78,7 +93,13 @@ class GiftOptionsType extends TranslatorAwareType
             ->add('enable_gift_wrapping', SwitchType::class, [
                 'required' => false,
                 'label' => $this->trans('Offer gift wrapping', 'Admin.Shopparameters.Feature'),
-                'help' => $this->trans('Suggest gift-wrapping to customers.', 'Admin.Shopparameters.Help'),
+                'help' => $this->trans('Remember to regenerate email templates in [1]Design > Email theme[/1] after enabling or disabling this feature.',
+                    'Admin.Shopparameters.Help',
+                    [
+                        '[1]' => '<a href="' . $this->router->generate('admin_mail_theme_index') . '" target="_blank">',
+                        '[/1]' => '</a>',
+                    ]
+                ),
                 'multistore_configuration_key' => 'PS_GIFT_WRAPPING',
             ])
             ->add('gift_wrapping_price', MoneyWithSuffixType::class, [

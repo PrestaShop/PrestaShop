@@ -23,13 +23,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-import {ConfirmModal, FormIframeModal} from '@components/modal';
+import {FormIframeModal} from '@components/modal';
 import ProductMap from '@pages/product/product-map';
 import ProductEvents from '@pages/product/product-event-map';
 import CombinationsService from '@pages/product/services/combinations-service';
 import {EventEmitter} from 'events';
 import BulkChoicesSelector from '@pages/product/components/combination-list/bulk-choices-selector';
-import {notifyFormErrors} from '@components/form/helpers';
+import ProgressModal from '@components/modal/progress-modal';
 
 const CombinationMap = ProductMap.combinations;
 const CombinationEvents = ProductEvents.combinations;
@@ -70,6 +70,11 @@ export default class BulkEditionHandler {
       console.error(`${CombinationMap.bulkCombinationFormBtn} was expected to be HTMLButtonElement`);
       return;
     }
+
+    bulkEditionFormBtn.addEventListener('click', () => this.showFormModal(bulkEditionFormBtn));
+  }
+
+  private async showFormModal(bulkEditionFormBtn: HTMLButtonElement): Promise<void> {
     const {modalConfirmLabel, modalCancelLabel} = bulkEditionFormBtn.dataset;
     const {formUrl} = bulkEditionFormBtn.dataset;
 
@@ -77,54 +82,43 @@ export default class BulkEditionHandler {
       console.error('Mandatory attribute "data-form-url" is missing');
       return;
     }
-
-    bulkEditionFormBtn.addEventListener('click', () => this.showFormModal(
-      formUrl,
-      bulkEditionFormBtn.innerHTML,
-      modalConfirmLabel || 'Confirm',
-      modalCancelLabel || 'Cancel',
-    ));
-  }
-
-  private async showFormModal(
-    formUrl: string,
-    modalTitle: string,
-    confirmButtonLabel: string,
-    closeButtonLabel: string,
-  ): Promise<void> {
     const selectedCombinationIds = await this.bulkChoicesSelector.getSelectedIds();
     const selectedCombinationsCount = selectedCombinationIds.length;
     let initialSerializedData: string;
-    const iframeModal = new FormIframeModal({
+
+    const iframeModal: FormIframeModal = new FormIframeModal({
       id: CombinationMap.bulkFormModalId,
-      modalTitle,
+      modalTitle: bulkEditionFormBtn.innerHTML,
       formUrl,
       autoSizeContainer: 'form[name="bulk_combination"]',
       closable: true,
-      confirmButtonLabel: confirmButtonLabel.replace(/%combinations_number%/, String(selectedCombinationsCount)),
-      closeButtonLabel,
+      confirmButtonLabel: modalConfirmLabel?.replace(/%combinations_number%/, String(selectedCombinationsCount)),
+      closeButtonLabel: modalCancelLabel,
       onFormLoaded: (form: HTMLFormElement) => {
+        if (form.dataset.formSubmitted === '1' && form.dataset.formValid === '1') {
+          this.submitForm(form);
+          iframeModal.hide();
+        }
+
         // Disable submit button as long as the form data has not changed
         iframeModal.modal.confirmButton?.setAttribute('disabled', 'disabled');
+        initialSerializedData = this.serializeForm(form);
 
-        if (form) {
-          initialSerializedData = this.serializeForm(form);
-          form.addEventListener('change', () => {
-            const currentSerializedData: string = this.serializeForm(form);
+        form.addEventListener('change', () => {
+          const currentSerializedData: string = this.serializeForm(form);
 
-            if (currentSerializedData === initialSerializedData) {
-              iframeModal.modal.confirmButton?.setAttribute('disabled', 'disabled');
-            } else {
-              iframeModal.modal.confirmButton?.removeAttribute('disabled');
-            }
-          });
-        }
+          if (currentSerializedData === initialSerializedData) {
+            iframeModal.modal.confirmButton?.setAttribute('disabled', 'disabled');
+          } else {
+            iframeModal.modal.confirmButton?.removeAttribute('disabled');
+          }
+        });
       },
-      formConfirmCallback: (form: HTMLFormElement) => {
-        this.submitForm(form);
-      },
+      formConfirmCallback: (form: HTMLFormElement) => form.submit(),
+      closeOnConfirm: false,
     });
-
+    // Disable before loading
+    iframeModal.modal.confirmButton?.setAttribute('disabled', 'disabled');
     iframeModal.show();
   }
 
@@ -134,59 +128,73 @@ export default class BulkEditionHandler {
   }
 
   private async submitForm(form: HTMLFormElement): Promise<void> {
-    const progressModal = this.showProgressModal();
-    const selectedIds = await this.bulkChoicesSelector.getSelectedIds();
-    const progressModalElement = document.getElementById(CombinationMap.bulkProgressModalId);
+    const combinationIds = await this.bulkChoicesSelector.getSelectedIds();
+    const bulkChunkSize = Number(form.dataset.bulkChunkSize);
+    const abortController = new AbortController();
 
-    let progress = 1;
+    const progressModal = new ProgressModal({
+      id: CombinationMap.bulkProgressModalId,
+      abortCallback: () => {
+        stopProcess = true;
+        abortController.abort();
+      },
+      closeCallback: () => this.eventEmitter.emit(CombinationEvents.bulkUpdateFinished),
+      progressionTitle: form.dataset.progressTitle,
+      progressionMessage: form.dataset.progressMessage,
+      closeLabel: form.dataset.closeLabel,
+      abortProcessingLabel: form.dataset.stopProcessing,
+      errorsMessage: form.dataset.errorsMessage,
+      backToProcessingLabel: form.dataset.backToProcessing,
+      downloadErrorLogLabel: form.dataset.downloadErrorLog,
+      viewErrorLogLabel: form.dataset.viewErrorLog,
+      viewErrorTitle: form.dataset.viewErrorTitle,
+      total: combinationIds.length,
+    });
+    progressModal.show();
+    let stopProcess = false;
+    let doneCount = 0;
+    while (combinationIds.length) {
+      if (stopProcess) {
+        break;
+      }
 
-    for (let i = 0; i < selectedIds.length; i += 1) {
-      const combinationId = selectedIds[i];
+      const chunkIds: number[] = combinationIds.splice(0, bulkChunkSize);
+      let data: Record<string, any>;
 
-      // @todo when the ProgressModal will be integrated this will update it after each request
       try {
         // eslint-disable-next-line no-await-in-loop
         const response: Response = await this.combinationsService.bulkUpdate(
           this.productId,
-          combinationId,
+          chunkIds,
           new FormData(form),
+          abortController.signal,
         );
+
         // eslint-disable-next-line no-await-in-loop
-        const jsonResponse = await response.json();
-
-        if (jsonResponse.errors) {
-          notifyFormErrors(jsonResponse);
+        data = await response.json();
+        if (data.error) {
+          progressModal.interruptProgress();
+          stopProcess = true;
         }
-      } catch (error) {
-        console.log(error);
+      } catch (e) {
+        data = {
+          error: `Something went wrong with IDs ${chunkIds.join(', ')}: ${e.message ?? ''}`,
+        };
       }
 
-      //@todo: also related with temporary progress modal. Needs to be fixed according to new progress modal once its merged in #26004.
-      const progressContent = progressModalElement?.querySelector<HTMLParagraphElement>('.progress-increment');
+      doneCount += chunkIds.length;
+      progressModal.updateProgress(doneCount);
 
-      if (progressContent) {
-        progressContent.innerHTML = String(progress);
+      if (!data.success) {
+        if (data.errors && Array.isArray(data.errors)) {
+          data.errors.forEach((error: string) => {
+            progressModal.addError(error);
+          });
+        } else {
+          progressModal.addError(data.errors ?? data.error ?? data.message);
+        }
       }
-      progress += 1;
     }
-
-    progressModal.hide();
-
-    this.eventEmitter.emit(CombinationEvents.bulkUpdateFinished);
-  }
-
-  private showProgressModal(): ConfirmModal {
-    //@todo: Replace with new progress modal when introduced in #26004.
-    const modal = new ConfirmModal(
-      {
-        id: CombinationMap.bulkProgressModalId,
-        confirmMessage: '<div>Updating combinations: <p class="progress-increment"></p></div>',
-      },
-      () => null,
-    );
-
-    modal.show();
-
-    return modal;
+    progressModal.completeProgress();
   }
 }

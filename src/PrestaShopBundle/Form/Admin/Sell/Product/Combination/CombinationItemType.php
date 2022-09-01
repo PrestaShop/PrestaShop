@@ -27,6 +27,7 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
+use Currency;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
 use PrestaShopBundle\Form\Admin\Type\ButtonCollectionType;
@@ -42,10 +43,25 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Length;
 
 class CombinationItemType extends TranslatorAwareType
 {
+    /**
+     * @var Currency
+     */
+    protected $defaultCurrency;
+
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        Currency $defaultCurrency
+    ) {
+        parent::__construct($translator, $locales);
+        $this->defaultCurrency = $defaultCurrency;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -100,6 +116,7 @@ class CombinationItemType extends TranslatorAwareType
                     'data-order-by' => 'price',
                 ],
                 'label' => $this->trans('Impact on price (tax excl.)', 'Admin.Catalog.Feature'),
+                'currency' => $this->defaultCurrency->iso_code,
             ])
             ->add('impact_on_price_ti', MoneyType::class, [
                 'attr' => [
@@ -107,6 +124,7 @@ class CombinationItemType extends TranslatorAwareType
                     'data-order-by' => 'price',
                 ],
                 'label' => $this->trans('Impact on price (tax incl.)', 'Admin.Catalog.Feature'),
+                'currency' => $this->defaultCurrency->iso_code,
             ])
             ->add('final_price_te', TextPreviewType::class, [
                 'attr' => [

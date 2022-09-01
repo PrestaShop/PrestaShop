@@ -83,7 +83,12 @@ class CarrierDataProvider
         $carriersChoices = [];
 
         foreach ($carriers as $carrier) {
-            $carriersChoices[$carrier['name']] = (int) $carrier['id_carrier'];
+            $choiceId = (int) $carrier['id_carrier'] . ' - ' . $carrier['name'];
+            if (!empty($carrier['delay'])) {
+                $choiceId .= ' (' . $carrier['delay'] . ')';
+            }
+
+            $carriersChoices[$choiceId] = (int) $carrier['id_carrier'];
         }
 
         return $carriersChoices;

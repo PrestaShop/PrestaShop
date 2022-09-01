@@ -2,6 +2,18 @@ services:
   _defaults:
     public: true
 
+  prestashop.adapter.state.command_handler.create_state_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\State\CommandHandler\AddStateHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\State\Command\AddStateCommand'
+
+  prestashop.adapter.state.command_handler.edit_state_handler:
+    class: 'PrestaShop\PrestaShop\Adapter\State\CommandHandler\EditStateHandler'
+    tags:
+      - name: 'tactician.handler'
+        command: 'PrestaShop\PrestaShop\Core\Domain\State\Command\EditStateCommand'
+
   prestashop.adapter.state.command_handler.toggle_state_status_handler:
     class: 'PrestaShop\PrestaShop\Adapter\State\CommandHandler\ToggleStateStatusHandler'
     tags:

@@ -48,11 +48,13 @@ class CombinationsType extends TranslatorAwareType
     {
         $resolver
             ->setDefaults([
-                'label' => false,
+                'label' => $this->trans('Combinations', 'Admin.Catalog.Feature'),
                 'required' => false,
-                'product_id' => null,
             ])
-            ->setAllowedTypes('product_id', ['null', 'int'])
+            ->setRequired([
+                'product_id',
+            ])
+            ->setAllowedTypes('product_id', 'int')
         ;
     }
 }

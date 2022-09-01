@@ -44,7 +44,7 @@ class DeliveryController extends FrameworkBundleAdminController
      *
      * @Template("@PrestaShop/Admin/Sell/Order/Delivery/slip.html.twig")
      * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted('read', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('create', request.get('_legacy_controller')) || is_granted('delete', request.get('_legacy_controller'))",
      *     message="Access denied."
      * )
      *
@@ -60,7 +60,9 @@ class DeliveryController extends FrameworkBundleAdminController
         $form = $formHandler->getForm();
 
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()
+            && $this->isGranted('update', $request->attributes->get('_legacy_controller')
+        )) {
             $errors = $formHandler->save($form->getData());
             if (empty($errors)) {
                 $this->addFlash(
@@ -89,7 +91,7 @@ class DeliveryController extends FrameworkBundleAdminController
      * Delivery slips PDF generator.
      *
      * @AdminSecurity(
-     *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     "is_granted('read', request.get('_legacy_controller')) || is_granted('update', request.get('_legacy_controller')) || is_granted('create', request.get('_legacy_controller')) || is_granted('delete', request.get('_legacy_controller'))",
      *     message="Access denied."
      * )
      *

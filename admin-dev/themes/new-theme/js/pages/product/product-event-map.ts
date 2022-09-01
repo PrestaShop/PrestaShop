@@ -24,9 +24,6 @@
  */
 
 export default {
-  productModelUpdated: 'productModelUpdated',
-  updatedProductModel: 'updatedProductModel',
-  updatedProductField: 'updatedProductField',
   updateSubmitButtonState: 'updateSubmitButtonState',
   customizations: {
     rowRemoved: 'customizationRowRemoved',
@@ -45,6 +42,7 @@ export default {
   combinations: {
     refreshPage: 'refreshPage',
     refreshCombinationList: 'refreshCombinationList',
+    listEditionMode: 'listEditionMode',
     updateAttributeGroups: 'updateAttributeGroups',
     combinationGeneratorReady: 'combinationGeneratorReady',
     openCombinationsGenerator: 'openCombinationsGenerator',

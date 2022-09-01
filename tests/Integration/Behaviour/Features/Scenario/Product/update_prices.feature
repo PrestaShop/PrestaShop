@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-prices
 @restore-products-before-feature
+@update-product-prices
 @update-prices
 Feature: Update product price fields from Back Office (BO).
   As a BO user I want to be able to update product fields associated with price.
@@ -137,11 +138,36 @@ Feature: Update product price fields from Back Office (BO).
 
   Scenario: I update product unit price when product price is 0
     When I update product "product1" prices with following information:
+      | price      | 200 |
+      | unit_price | 300 |
+    And product product1 should have following prices information:
+      | price                   | 200      |
+      | price_tax_included      | 200      |
+      | ecotax                  | 0        |
+      | tax rules group         |          |
+      | on_sale                 | false    |
+      | wholesale_price         | 0        |
+      | unit_price              | 300      |
+      | unit_price_tax_included | 300      |
+      | unit_price_ratio        | 0.666666 |
+      | unity                   |          |
+    When I update product "product1" prices with following information:
+      | price      | 0 |
+    Then product product1 should have following prices information:
+      | price                   | 0     |
+      | price_tax_included      | 0     |
+      | ecotax                  | 0     |
+      | tax rules group         |       |
+      | on_sale                 | false |
+      | wholesale_price         | 0     |
+      | unit_price              | 0     |
+      | unit_price_tax_included | 0     |
+      | unit_price_ratio        | 0     |
+      | unity                   |       |
+    # Even if you try to update unit price it remains zero because price is still zero
+    When I update product "product1" prices with following information:
       | unit_price | 300 |
     Then product product1 should have following prices information:
-      | price      | 0 |
-      | unit_price | 0 |
-    And product product1 should have following prices information:
       | price                   | 0     |
       | price_tax_included      | 0     |
       | ecotax                  | 0     |
@@ -153,26 +179,35 @@ Feature: Update product price fields from Back Office (BO).
       | unit_price_ratio        | 0     |
       | unity                   |       |
 
-  Scenario: I update product unit price along with product price
+  Scenario: I update product unit price when product price is 0 even if unit price was being modified
     When I update product "product1" prices with following information:
-      | price           | 20              |
-      | tax rules group | US-AL Rate (4%) |
-      | unit_price      | 500             |
-    Then product product1 should have following prices information:
-      | price                   | 20   |
-      | price_tax_included      | 20.8 |
-      | unit_price              | 500  |
-      | unit_price_tax_included | 520  |
-      | unit_price_ratio        | 0.04 |
+      | price      | 200 |
+      | unit_price | 300 |
+    And product product1 should have following prices information:
+      | price                   | 200      |
+      | price_tax_included      | 200      |
+      | ecotax                  | 0        |
+      | tax rules group         |          |
+      | on_sale                 | false    |
+      | wholesale_price         | 0        |
+      | unit_price              | 300      |
+      | unit_price_tax_included | 300      |
+      | unit_price_ratio        | 0.666666 |
+      | unity                   |          |
     When I update product "product1" prices with following information:
       | price      | 0   |
-      | unit_price | 500 |
-    Then product product1 should have following prices information:
-      | price                   | 0 |
-      | price_tax_included      | 0 |
-      | unit_price              | 0 |
-      | unit_price_tax_included | 0 |
-      | unit_price_ratio        | 0 |
+      | unit_price | 300 |
+    And product product1 should have following prices information:
+      | price                   | 0     |
+      | price_tax_included      | 0     |
+      | ecotax                  | 0     |
+      | tax rules group         |       |
+      | on_sale                 | false |
+      | wholesale_price         | 0     |
+      | unit_price              | 0     |
+      | unit_price_tax_included | 0     |
+      | unit_price_ratio        | 0     |
+      | unity                   |       |
 
   Scenario: I update product tax the price tax included and unit price tax included is impacted
     When I update product "product1" prices with following information:

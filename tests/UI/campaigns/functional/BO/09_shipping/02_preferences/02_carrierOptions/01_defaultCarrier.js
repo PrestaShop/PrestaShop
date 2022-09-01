@@ -65,17 +65,17 @@ describe('BO - Shipping - Preferences : Update default carrier and check it in F
     await expect(pageTitle).to.contains(preferencesPage.pageTitle);
   });
 
-  const carriersNames = [
-    Carriers.myCarrier.name,
-    Carriers.default.name,
+  const carriers = [
+    Carriers.myCarrier,
+    Carriers.default,
   ];
 
-  carriersNames.forEach((carrierName, index) => {
-    describe(`Set default carrier to '${carrierName}' and check result in FO`, async () => {
-      it(`should set default carrier to ${carrierName} in BO`, async function () {
+  carriers.forEach((carrier, index) => {
+    describe(`Set default carrier to '${carrier.name}' and check result in FO`, async () => {
+      it(`should set default carrier to ${carrier.name} in BO`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `setDefaultCarrier${index}`, baseContext);
 
-        const textResult = await preferencesPage.setDefaultCarrier(page, carrierName);
+        const textResult = await preferencesPage.setDefaultCarrier(page, carrier);
         await expect(textResult).to.contain(preferencesPage.successfulUpdateMessage);
       });
 
@@ -120,7 +120,7 @@ describe('BO - Shipping - Preferences : Update default carrier and check it in F
         await testContext.addContextItem(this, 'testIdentifier', `checkDefaultCarrier${index}`, baseContext);
 
         const selectedShippingMethod = await foCheckoutPage.getSelectedShippingMethod(page);
-        await expect(selectedShippingMethod, 'Wrong carrier was selected in FO').to.equal(carrierName);
+        await expect(selectedShippingMethod, 'Wrong carrier was selected in FO').to.equal(carrier.name);
       });
 
       it('should go back to BO', async function () {

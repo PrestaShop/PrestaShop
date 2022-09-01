@@ -31,9 +31,9 @@
  */
 class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
 {
-    const LEFT_JOIN = 1;
-    const INNER_JOIN = 2;
-    const LEFT_OUTER_JOIN = 3;
+    public const LEFT_JOIN = 1;
+    public const INNER_JOIN = 2;
+    public const LEFT_OUTER_JOIN = 3;
 
     /**
      * @var string Object class name
@@ -91,7 +91,7 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
     protected $join_list = [];
     protected $association_definition = [];
 
-    const LANG_ALIAS = 'l';
+    public const LANG_ALIAS = 'l';
 
     /**
      * @param string $classname
@@ -336,7 +336,6 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
         $this->is_hydrated = true;
 
         $alias = $this->generateAlias();
-        //$this->query->select($alias.'.*');
         $this->query->from($this->definition['table'], $alias);
 
         // If multilang, create association to lang table
@@ -344,6 +343,9 @@ class PrestaShopCollectionCore implements Iterator, ArrayAccess, Countable
             $this->join(self::LANG_ALIAS);
             if ($this->id_lang) {
                 $this->where(self::LANG_ALIAS . '.id_lang', '=', $this->id_lang);
+            }
+            if (!empty($this->definition['multilang_shop'])) {
+                $this->sqlWhere($this->join_list[self::LANG_ALIAS]['alias'] . '.`id_shop` = ' . (int) Context::getContext()->shop->id);
             }
         }
 

@@ -79,7 +79,7 @@
 		var admin_notification_get_link = adminNotificationGetLink = '{$link->getAdminLink("AdminCommon")|addslashes}';
 		var admin_notification_push_link = adminNotificationPushLink ='{$link->getAdminLink("AdminCommon", true, ['route' => 'admin_common_notifications_ack'])|addslashes}';
 		var tab_modules_list = '{if isset($tab_modules_list) && $tab_modules_list}{$tab_modules_list|addslashes}{/if}';
-		var update_success_msg = '{l|escape s='Successful update.' js=1 d='Admin.Notifications.Success'}';
+		var update_success_msg = '{l|escape s='Successful update' js=1 d='Admin.Notifications.Success'}';
 		var search_product_msg = '{l|escape s='Search for a product' js=1 d='Admin.Orderscustomers.Feature'}';
 	</script>
 {/if}
@@ -112,7 +112,7 @@
 </head>
 
 {if $display_header}
-  <body class="lang-{$iso_user}{if $lang_is_rtl} lang-rtl{/if} ps_back-office{if $employee->bo_menu} page-sidebar{if $collapse_menu} page-sidebar-closed{/if}{else} page-topbar{/if} {$smarty.get.controller|escape|strtolower}">
+  <body class="lang-{$iso_user}{if $lang_is_rtl} lang-rtl{/if} ps_back-office{if $employee->bo_menu} page-sidebar{if $collapse_menu} page-sidebar-closed{/if}{else} page-topbar{/if} {$controller_name|escape|strtolower}">
   {* begin  HEADER *}
   <header id="header" class="bootstrap">
     <nav id="header_infos" role="navigation">

@@ -26,36 +26,40 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Customer;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class CustomerConfiguration is responsible for saving & loading customer configuration.
  */
-class CustomerConfiguration implements DataConfigurationInterface
+class CustomerConfiguration extends AbstractMultistoreConfiguration
 {
     /**
-     * @var Configuration
+     * @var array<int, string>
      */
-    private $configuration;
-
-    public function __construct(Configuration $configuration)
-    {
-        $this->configuration = $configuration;
-    }
+    private const CONFIGURATION_FIELDS = [
+        'redisplay_cart_at_login',
+        'send_email_after_registration',
+        'password_reset_delay',
+        'enable_b2b_mode',
+        'ask_for_birthday',
+        'enable_offers',
+    ];
 
     /**
      * {@inheritdoc}
      */
     public function getConfiguration()
     {
+        $shopConstraint = $this->getShopConstraint();
+
         return [
-            'redisplay_cart_at_login' => $this->configuration->getBoolean('PS_CART_FOLLOWING'),
-            'send_email_after_registration' => $this->configuration->getBoolean('PS_CUSTOMER_CREATION_EMAIL'),
-            'password_reset_delay' => $this->configuration->getInt('PS_PASSWD_TIME_FRONT'),
-            'enable_b2b_mode' => $this->configuration->getBoolean('PS_B2B_ENABLE'),
-            'ask_for_birthday' => $this->configuration->getBoolean('PS_CUSTOMER_BIRTHDATE'),
-            'enable_offers' => $this->configuration->getBoolean('PS_CUSTOMER_OPTIN'),
+            'redisplay_cart_at_login' => (bool) $this->configuration->get('PS_CART_FOLLOWING', false, $shopConstraint),
+            'send_email_after_registration' => (bool) $this->configuration->get('PS_CUSTOMER_CREATION_EMAIL', false, $shopConstraint),
+            'password_reset_delay' => (int) $this->configuration->get('PS_PASSWD_TIME_FRONT', 0, $shopConstraint),
+            'enable_b2b_mode' => (bool) $this->configuration->get('PS_B2B_ENABLE', false, $shopConstraint),
+            'ask_for_birthday' => (bool) $this->configuration->get('PS_CUSTOMER_BIRTHDATE', false, $shopConstraint),
+            'enable_offers' => (bool) $this->configuration->get('PS_CUSTOMER_OPTIN', false, $shopConstraint),
         ];
     }
 
@@ -65,29 +69,33 @@ class CustomerConfiguration implements DataConfigurationInterface
     public function updateConfiguration(array $config)
     {
         if ($this->validateConfiguration($config)) {
-            $this->configuration->set('PS_CART_FOLLOWING', (int) $config['redisplay_cart_at_login']);
-            $this->configuration->set('PS_CUSTOMER_CREATION_EMAIL', (int) $config['send_email_after_registration']);
-            $this->configuration->set('PS_PASSWD_TIME_FRONT', (int) $config['password_reset_delay']);
-            $this->configuration->set('PS_B2B_ENABLE', (int) $config['enable_b2b_mode']);
-            $this->configuration->set('PS_CUSTOMER_BIRTHDATE', (int) $config['ask_for_birthday']);
-            $this->configuration->set('PS_CUSTOMER_OPTIN', (int) $config['enable_offers']);
+            $shopConstraint = $this->getShopConstraint();
+
+            $this->updateConfigurationValue('PS_CART_FOLLOWING', 'redisplay_cart_at_login', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_CUSTOMER_CREATION_EMAIL', 'send_email_after_registration', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_PASSWD_TIME_FRONT', 'password_reset_delay', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_B2B_ENABLE', 'enable_b2b_mode', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_CUSTOMER_BIRTHDATE', 'ask_for_birthday', $config, $shopConstraint);
+            $this->updateConfigurationValue('PS_CUSTOMER_OPTIN', 'enable_offers', $config, $shopConstraint);
         }
 
         return [];
     }
 
     /**
-     * {@inheritdoc}
+     * @return OptionsResolver
      */
-    public function validateConfiguration(array $config)
+    protected function buildResolver(): OptionsResolver
     {
-        return isset(
-            $config['redisplay_cart_at_login'],
-            $config['send_email_after_registration'],
-            $config['password_reset_delay'],
-            $config['enable_b2b_mode'],
-            $config['ask_for_birthday'],
-            $config['enable_offers']
-        );
+        $resolver = (new OptionsResolver())
+            ->setDefined(self::CONFIGURATION_FIELDS)
+            ->setAllowedTypes('redisplay_cart_at_login', 'bool')
+            ->setAllowedTypes('send_email_after_registration', 'bool')
+            ->setAllowedTypes('password_reset_delay', 'int')
+            ->setAllowedTypes('enable_b2b_mode', 'bool')
+            ->setAllowedTypes('ask_for_birthday', 'bool')
+            ->setAllowedTypes('enable_offers', 'bool');
+
+        return $resolver;
     }
 }

@@ -32,7 +32,12 @@
   <div class="product-header-summary">
     <div class="product-field-preview">
       <div class="product-field-value">
-        {{ productData.pricing.retail_price.price_tax_excluded|price_format }}
+        {% if productData.pricing.retail_price.ecotax_tax_excluded is defined %}
+          {% set final_price_tax_excluded = productData.pricing.retail_price.price_tax_excluded + productData.pricing.retail_price.ecotax_tax_excluded %}
+          {{ final_price_tax_excluded|price_format }}
+        {% else %}
+          {{ productData.pricing.retail_price.price_tax_excluded|price_format }}
+        {% endif %}
       </div>
       <div class="product-field-label">
         {{ 'tax excl.'|trans({}, 'Admin.Global') }}

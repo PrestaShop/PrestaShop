@@ -15,6 +15,8 @@ class MyAccount extends FOBasePage {
     super();
 
     this.pageTitle = 'My account';
+    this.resetPasswordSuccessMessage = 'Your password has been successfully reset and a confirmation has been sent to'
+      + ' your email address:';
 
     // Selectors
     this.accountInformationLink = '#identity-link';
@@ -23,11 +25,21 @@ class MyAccount extends FOBasePage {
     this.accountFirstAddressLink = '#address-link';
     this.accountVouchersLink = '#discounts-link';
     this.merchandiseReturnsLink = '#returns-link';
+    this.successMessageAlert = '#notifications article.alert-success';
+    this.logoutFooterLink = '#main footer a[href*="mylogout"]';
   }
 
   /*
   Methods
    */
+  /**
+   * Get success message
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  getSuccessMessageAlert(page) {
+    return this.getTextContent(page, this.successMessageAlert);
+  }
 
   /**
    * Go to account information page
@@ -45,6 +57,15 @@ class MyAccount extends FOBasePage {
    */
   async goToHistoryAndDetailsPage(page) {
     await this.clickAndWaitForNavigation(page, this.accountHistoryLink);
+  }
+
+  /**
+   * Is add first address link visible
+   * @param page page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async isAddFirstAddressLinkVisible(page) {
+    return this.elementVisible(page, this.accountFirstAddressLink);
   }
 
   /**
@@ -76,6 +97,15 @@ class MyAccount extends FOBasePage {
    */
   async goToMerchandiseReturnsPage(page) {
     await this.clickAndWaitForNavigation(page, this.merchandiseReturnsLink);
+  }
+
+  /**
+   * Logout from FO
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async logout(page) {
+    await this.clickAndWaitForNavigation(page, this.logoutFooterLink);
   }
 }
 

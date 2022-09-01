@@ -158,8 +158,24 @@ class AdminPdfControllerCore extends AdminController
         $this->generatePDF($supply_order, PDF::TEMPLATE_SUPPLY_ORDER_FORM);
     }
 
+    /**
+     * @deprecated Since 8.1.0, use the route `admin_orders_generate_delivery_slip_pdf` instead.
+     *
+     * @param int $id_order
+     *
+     * @return void
+     */
     public function generateDeliverySlipPDFByIdOrder($id_order)
     {
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 8.1.0. Use the route %s instead.',
+                __METHOD__,
+                'admin_orders_generate_delivery_slip_pdf'
+            ),
+            E_USER_DEPRECATED
+        );
+
         $order = new Order((int) $id_order);
         if (!Validate::isLoadedObject($order)) {
             throw new PrestaShopException('Can\'t load Order object');
@@ -179,8 +195,24 @@ class AdminPdfControllerCore extends AdminController
         $this->generatePDF($order_invoice, PDF::TEMPLATE_DELIVERY_SLIP);
     }
 
+    /**
+     * @deprecated Since 8.1.0, use the route `admin_orders_generate_invoice_pdf` instead.
+     *
+     * @param int $id_order
+     *
+     * @return void
+     */
     public function generateInvoicePDFByIdOrder($id_order)
     {
+        @trigger_error(
+            sprintf(
+                '%s is deprecated since version 8.1.0. Use the route %s instead.',
+                __METHOD__,
+                'admin_orders_generate_invoice_pdf'
+            ),
+            E_USER_DEPRECATED
+        );
+
         $order = new Order((int) $id_order);
         if (!Validate::isLoadedObject($order)) {
             die($this->trans('The order cannot be found within your database.', [], 'Admin.Orderscustomers.Notification'));

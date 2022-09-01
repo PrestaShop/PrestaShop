@@ -15,10 +15,10 @@ class BOBasePage extends CommonPage {
     super();
 
     // Successful Messages
-    this.successfulCreationMessage = 'Successful creation.';
-    this.successfulUpdateMessage = 'Successful update.';
-    this.successfulDeleteMessage = 'Successful deletion.';
-    this.successfulMultiDeleteMessage = 'The selection has been successfully deleted.';
+    this.successfulCreationMessage = 'Successful creation';
+    this.successfulUpdateMessage = 'Successful update';
+    this.successfulDeleteMessage = 'Successful deletion';
+    this.successfulMultiDeleteMessage = 'The selection has been successfully deleted';
 
     // Access denied message
     this.accessDeniedMessage = 'Access denied';
@@ -79,6 +79,7 @@ class BOBasePage extends CommonPage {
     this.customersParentLink = 'li#subtab-AdminParentCustomer';
     this.customersLink = '#subtab-AdminCustomers';
     this.addressesLink = '#subtab-AdminAddresses';
+    this.outstandingLink = '#subtab-AdminOutstanding';
 
     // Customer Service
     this.customerServiceParentLink = '#subtab-AdminParentCustomerThreads';
@@ -149,6 +150,8 @@ class BOBasePage extends CommonPage {
 
     // Advanced Parameters
     this.advancedParametersLink = '#subtab-AdminAdvancedParameters';
+    // Performance
+    this.performanceLink = '#subtab-AdminPerformance';
     // E-mail
     this.emailLink = '#subtab-AdminEmails';
     // Import
@@ -161,6 +164,8 @@ class BOBasePage extends CommonPage {
     this.webserviceLink = '#subtab-AdminWebservice';
     // Logs
     this.logsLink = '#subtab-AdminLogs';
+    // New & Experimental Features
+    this.featureFlagLink = '#subtab-AdminFeatureFlag';
     // Multistore
     this.multistoreLink = '#subtab-AdminShopGroup';
     // Deprecated tab used for regression test

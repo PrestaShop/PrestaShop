@@ -24,6 +24,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+use PrestaShop\PrestaShop\Core\Util\Sorter;
+
 /**
  * @since 1.5
  */
@@ -125,6 +127,10 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
                 }
             }
         }
+
+        // Sort products by Reference ID (and if equals (like combination) by Supplier Reference)
+        $sorter = new Sorter();
+        $order_details = $sorter->natural($order_details, Sorter::ORDER_DESC, 'product_reference', 'product_supplier_reference');
 
         $this->smarty->assign([
             'order' => $this->order,

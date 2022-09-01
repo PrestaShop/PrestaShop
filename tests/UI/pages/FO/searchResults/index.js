@@ -22,6 +22,7 @@ class SearchResults extends FOBasePage {
     this.productImg = number => `${this.productArticle(number)} img`;
     this.productDescriptionDiv = number => `${this.productArticle(number)} div.product-description`;
     this.productQuickViewLink = number => `${this.productArticle(number)} a.quick-view`;
+    this.productPrice = '#js-product-list div.product-description span.price';
 
     // Quick View modal
     this.quickViewModalDiv = 'div[id*=\'quickview-modal\']';
@@ -88,6 +89,15 @@ class SearchResults extends FOBasePage {
     await this.waitForVisibleSelector(page, `${this.quickViewThumbImage(position)}.selected`);
 
     return this.getAttributeContent(page, this.quickViewCoverImage, 'src');
+  }
+
+  /**
+   * Get the product price value
+   * @param page
+   * @returns {Promise<string>}
+   */
+  getProductPrice(page) {
+    return this.getTextContent(page, this.productPrice);
   }
 }
 

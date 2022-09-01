@@ -38,6 +38,15 @@ services:
       - '@prestashop.adapter.legacy.configuration'
     public: true
 
+  prestashop.core.grid.query_builder.product_light:
+    class: 'PrestaShop\PrestaShop\Core\Grid\Query\ProductLightQueryBuilder'
+    parent: 'prestashop.core.grid.abstract_query_builder'
+    arguments:
+      - '@prestashop.core.query.doctrine_search_criteria_applicator'
+      - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.core.grid.query_builder.product'
+    public: true
+
   prestashop.core.grid.query_builder.meta:
     class: 'PrestaShop\PrestaShop\Core\Grid\Query\MetaQueryBuilder'
     parent: 'prestashop.core.grid.abstract_query_builder'

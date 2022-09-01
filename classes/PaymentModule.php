@@ -34,7 +34,7 @@ abstract class PaymentModuleCore extends Module
     public $currencies = true;
     public $currencies_mode = 'checkbox';
 
-    const DEBUG_MODE = false;
+    public const DEBUG_MODE = false;
 
     /** @var MailPartialTemplateRenderer|null */
     protected $partialRenderer;

@@ -26,6 +26,7 @@
 import ChoiceTree from '@components/form/choice-tree';
 import textToLinkRewriteCopier from '@components/text-to-link-rewrite-copier';
 import Serp from '@app/utils/serp/index';
+import TextWithRecommendedLengthCounter from '@components/form/text-with-recommended-length-counter';
 
 const {$} = window;
 
@@ -72,4 +73,6 @@ $(() => {
   });
 
   new ChoiceTree('#cms_page_shop_association').enableAutoCheckChildren();
+
+  new TextWithRecommendedLengthCounter();
 });

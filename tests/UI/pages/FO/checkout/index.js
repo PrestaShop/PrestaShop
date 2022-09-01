@@ -30,8 +30,7 @@ class Checkout extends FOBasePage {
 
     // Personal information form
     this.personalInformationStepForm = '#checkout-personal-information-step';
-    this.createAccountOptionalNotice = `${this.personalInformationStepForm} `
-      + '#customer-form .form-informations .form-informations-title';
+    this.activeLink = `${this.personalInformationStepForm} .nav-link.active`;
     this.signInLink = `${this.personalInformationStepForm} a[href="#checkout-login-form"]`;
     this.checkoutGuestForm = '#checkout-guest-form';
     this.checkoutGuestGenderInput = pos => `${this.checkoutGuestForm} input[name='id_gender'][value='${pos}']`;
@@ -72,9 +71,13 @@ class Checkout extends FOBasePage {
     this.deliveryOptionAllPricesSpan = '#js-delivery .delivery-option span.carrier-price';
     this.deliveryMessage = '#delivery_message';
     this.deliveryStepContinueButton = `${this.deliveryStepSection} button[name='confirmDeliveryOption']`;
+    this.deliveryAddressBlock = '#delivery-addresses';
+    this.deliveryAddressSection = `${this.deliveryAddressBlock} article.js-address-item`;
+    this.deliveryAddressPosition = position => `#delivery-addresses article:nth-child(${position})`;
 
     // Gift selectors
     this.giftCheckbox = '#input_gift';
+    this.giftMessageTextarea = '#gift_message';
     this.recycableGiftCheckbox = '#input_recyclable';
     this.cartSubtotalGiftWrappingDiv = '#cart-subtotal-gift_wrapping';
     this.cartSubtotalGiftWrappingValueSpan = `${this.cartSubtotalGiftWrappingDiv} span.value`;
@@ -111,6 +114,16 @@ class Checkout extends FOBasePage {
   async goToDeliveryStep(page) {
     await this.clickAndWaitForNavigation(page, this.addressStepContinueButton);
     return this.isStepCompleted(page, this.addressStepSection);
+  }
+
+  /**
+   * Choose delivery address
+   * @param page {Page} Browser tab
+   * @param position {number} Position of address to choose
+   * @returns {Promise<void>}
+   */
+  async chooseDeliveryAddress(page, position = 1) {
+    await this.waitForSelectorAndClick(page, this.deliveryAddressPosition(position));
   }
 
   /**
@@ -284,12 +297,12 @@ class Checkout extends FOBasePage {
   }
 
   /**
-   * Is create account notice visible
+   * Get active link from personal information block
    * @param page {Page} Browser tab
-   * @returns {Promise<boolean>}
+   * @returns {Promise<string>}
    */
-  isCreateAnAccountNoticeVisible(page) {
-    return this.elementVisible(page, this.createAccountOptionalNotice, 1000);
+  getActiveLinkFromPersonalInformationBlock(page) {
+    return this.getTextContent(page, this.activeLink);
   }
 
   /**
@@ -330,12 +343,50 @@ class Checkout extends FOBasePage {
   }
 
   /**
-   * Check if recyclable checkbox is visible
+   * Set gift checkbox
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async setGiftCheckBox(page) {
+    await this.waitForSelectorAndClick(page, this.giftCheckbox);
+  }
+
+  /**
+   * Is gift message textarea visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  isGiftMessageTextareaVisible(page) {
+    return this.elementVisible(page, this.giftMessageTextarea, 2000);
+  }
+
+  /**
+   * Set gift message
+   * @param page {Page} Browser tab
+   * @param message {string} Message to set
+   * @returns {Promise<void>}
+   */
+  async setGiftMessage(page, message) {
+    await this.setValue(page, this.giftMessageTextarea, message);
+  }
+
+  /**
+   * Check if recycled packaging checkbox is visible
    * @param page {Page} Browser tab
    * @return {Promise<boolean>}
    */
-  isRecyclableCheckboxVisible(page) {
+  isRecycledPackagingCheckboxVisible(page) {
     return this.elementVisible(page, this.recycableGiftCheckbox, 1000);
+  }
+
+  /**
+   * Set recycled packaging checkbox
+   * @param page {Page} Browser tab
+   * @param toCheck {boolean} True if we need to check recycle packaging checkbox
+   * @returns {Promise<void>}
+   */
+  async setRecycledPackagingCheckbox(page, toCheck = true) {
+    await this.setChecked(page, this.recycableGiftCheckbox, toCheck);
   }
 
   /**
@@ -386,6 +437,17 @@ class Checkout extends FOBasePage {
 
     await page.click(this.addressStepContinueButton);
     return this.isStepCompleted(page, this.addressStepSection);
+  }
+
+  /**
+   * Get number od addresses
+   * @param page {Page} Browser tab
+   * @returns {Promise<number>}
+   */
+  async getNumberOfAddresses(page) {
+    await this.waitForSelector(page, this.deliveryAddressBlock, 'visible');
+
+    return (await page.$$(this.deliveryAddressSection)).length;
   }
 
   /**

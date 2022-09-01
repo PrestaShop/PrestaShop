@@ -14,6 +14,13 @@ admin_products_v2_index:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::indexAction
     _legacy_controller: AdminProducts
 
+admin_products_v2_light_list:
+  path: /light-list
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::lightListAction
+    _legacy_controller: AdminProducts
+
 admin_products_search:
   path: /
   methods: [ POST ]
@@ -171,6 +178,15 @@ admin_products_v2_search_associations:
   methods: [ GET, POST ]
   defaults:
     _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::searchAssociationsAction
+    _legacy_controller: AdminProducts
+  requirements:
+    languageCode: !php/const PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\TagIETF::IETF_TAG_REGEXP
+
+admin_products_v2_search_combinations:
+  path: /search/combination/{languageCode}
+  methods: [ GET, POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\CombinationController::searchCombinationProductsAction
     _legacy_controller: AdminProducts
   requirements:
     languageCode: !php/const PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\TagIETF::IETF_TAG_REGEXP

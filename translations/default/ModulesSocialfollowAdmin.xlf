@@ -7,10 +7,15 @@
         <target>Social media follow links</target>
         <note>Line: 52</note>
       </trans-unit>
-      <trans-unit id="d02883d61d6ccabe562b5c330ebe174a">
-        <source>Allows you to add information about your brand's social networking accounts.</source>
-        <target>Allows you to add information about your brand's social networking accounts.</target>
-        <note>Line: 60</note>
+      <trans-unit id="57c5adc84e6b7d212be5f4d48e19107f">
+        <source>Facebook, Twitter, let your customers know where to follow you and increase your community.</source>
+        <target>Facebook, Twitter, let your customers know where to follow you and increase your community.</target>
+        <note>Line: 53</note>
+      </trans-unit>
+      <trans-unit id="4ee6b3b11a0cfe42f0522f01407d7885">
+        <source>Please choose a shop to edit the social media links.</source>
+        <target>Please choose a shop to edit the social media links.</target>
+        <note>Line: 105</note>
       </trans-unit>
       <trans-unit id="76f8961bb8f4bb2b95c07650f30a7e7b">
         <source>Facebook URL</source>
@@ -52,16 +57,6 @@
         <target>Your official YouTube account.</target>
         <note>Line: 154</note>
       </trans-unit>
-      <trans-unit id="1dd99e363d1bebee81578708c1e8a5e0">
-        <source>Google+ URL:</source>
-        <target>Google+ URL:</target>
-        <note>Line: 141</note>
-      </trans-unit>
-      <trans-unit id="1dd0a74974711190139fa51579765a04">
-        <source>Your official Google+ page.</source>
-        <target>Your official Google+ page.</target>
-        <note>Line: 143</note>
-      </trans-unit>
       <trans-unit id="76abe3a162f22f63fae44d60fbe8f11b">
         <source>Pinterest URL:</source>
         <target>Pinterest URL:</target>
@@ -101,16 +96,6 @@
         <source>Your official LinkedIn account.</source>
         <target>Your official LinkedIn account.</target>
         <note>Line: 182</note>
-      </trans-unit>
-      <trans-unit id="57c5adc84e6b7d212be5f4d48e19107f">
-        <source>Facebook, Twitter, let your customers know where to follow you and increase your community.</source>
-        <target>Facebook, Twitter, let your customers know where to follow you and increase your community.</target>
-        <note>Line: 53</note>
-      </trans-unit>
-      <trans-unit id="4ee6b3b11a0cfe42f0522f01407d7885">
-        <source>Please choose a shop to edit the social media links.</source>
-        <target>Please choose a shop to edit the social media links.</target>
-        <note>Line: 105</note>
       </trans-unit>
     </body>
   </file>

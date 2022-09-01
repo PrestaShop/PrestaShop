@@ -31,33 +31,39 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
     /**
      * List of field types.
      */
-    const TYPE_INT = 1;
-    const TYPE_BOOL = 2;
-    const TYPE_STRING = 3;
-    const TYPE_FLOAT = 4;
-    const TYPE_DATE = 5;
-    const TYPE_HTML = 6;
-    const TYPE_NOTHING = 7;
-    const TYPE_SQL = 8;
+    public const TYPE_INT = 1;
+    public const TYPE_BOOL = 2;
+    public const TYPE_STRING = 3;
+    public const TYPE_FLOAT = 4;
+    public const TYPE_DATE = 5;
+    public const TYPE_HTML = 6;
+    public const TYPE_NOTHING = 7;
+    public const TYPE_SQL = 8;
 
     /**
      * List of data to format.
      */
-    const FORMAT_COMMON = 1;
-    const FORMAT_LANG = 2;
-    const FORMAT_SHOP = 3;
+    public const FORMAT_COMMON = 1;
+    public const FORMAT_LANG = 2;
+    public const FORMAT_SHOP = 3;
 
     /**
      * List of association types.
      */
-    const HAS_ONE = 1;
-    const HAS_MANY = 2;
+    public const HAS_ONE = 1;
+    public const HAS_MANY = 2;
 
     /** @var int|null Object ID */
     public $id;
 
     /** @var int|null Language ID */
     protected $id_lang = null;
+
+    /** @var Language|null Language ID
+     * This is the same Language as the $id_lang except in the following case:
+     * If $id_lang is invalid (e.g. due to a removed language) $lang_associated is the default language
+     */
+    protected $lang_associated = null;
 
     /** @var int|null Shop ID */
     protected $id_shop = null;
@@ -385,12 +391,15 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      */
     public function getAssociatedLanguage(): Language
     {
-        $language = new Language($this->id_lang);
-        if (null === $language->id) {
-            $language = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
+        if (null !== $this->lang_associated) {
+            return $this->lang_associated;
+        }
+        $this->lang_associated = new Language($this->id_lang);
+        if (null === $this->lang_associated->id) {
+            $this->lang_associated = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
         }
 
-        return $language;
+        return $this->lang_associated;
     }
 
     /**
@@ -1737,7 +1746,7 @@ abstract class ObjectModelCore implements \PrestaShop\PrestaShop\Core\Foundation
      *
      * @since 1.5.0.1
      *
-     * @return array
+     * @return array<int, int>
      *
      * @throws PrestaShopDatabaseException
      */

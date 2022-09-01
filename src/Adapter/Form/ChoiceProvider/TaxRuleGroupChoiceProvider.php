@@ -61,7 +61,7 @@ final class TaxRuleGroupChoiceProvider implements FormChoiceProviderInterface, F
             }
 
             $attrs[$rule['name']] = [
-                'data-tax-rate' => !empty($rule['rate']) ? $rule['rate'] : null,
+                'data-tax-rate' => !empty($rule['rate']) ? $rule['rate'] : 0,
             ];
         }
 

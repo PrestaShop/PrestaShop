@@ -310,10 +310,10 @@ class AdminFeaturesControllerCore extends AdminController
                             $bread_extended[] = $this->trans('Edit: %value%', ['%value%' => $obj->value[$this->context->employee->id_lang]], 'Admin.Catalog.Feature');
                         }
                     } else {
-                        $bread_extended[] = $this->trans('Edit Value', [], 'Admin.Catalog.Feature');
+                        $bread_extended[] = $this->trans('Edit value', [], 'Admin.Catalog.Feature');
                     }
                 } else {
-                    $bread_extended[] = $this->trans('Add New Value', [], 'Admin.Catalog.Feature');
+                    $bread_extended[] = $this->trans('Add new value', [], 'Admin.Catalog.Feature');
                 }
 
                 if (count($bread_extended) > 0) {

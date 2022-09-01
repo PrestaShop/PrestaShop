@@ -24,20 +24,11 @@
       </trans-unit>
     </body>
   </file>
-  <file original="admin-dev/themes/default/template/controllers/languages/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="c8177e39573538431ca4c24841ee3fbe">
-        <source>Missing files are marked in red</source>
-        <target>Missing files are marked in red</target>
-        <note>Line: 86</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="admin-dev/themes/default/template/controllers/translations/helpers/view/translation_errors.tpl" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="3881d16572ee3be6a8ab13f6862b3911">
-        <source>You MUST use this syntax in your translations. Here are a few examples:</source>
-        <target>You MUST use this syntax in your translations. Here are a few examples:</target>
+      <trans-unit id="bd54d10b0140e2c228bb5020a4a2dea7">
+        <source>You must use this syntax in your translations. Here are a few examples:</source>
+        <target>You must use this syntax in your translations. Here are a few examples:</target>
         <note>Line: 69</note>
       </trans-unit>
       <trans-unit id="7cefb4829c6de24b63f7a05716b43bec">
@@ -53,11 +44,6 @@
         <source>Some of these expressions use this special syntax: %s.</source>
         <target>Some of these expressions use this special syntax: %s.</target>
         <note>Line: 68</note>
-      </trans-unit>
-      <trans-unit id="f324bbd9de83d61ccb5f7d5593aec5b3">
-        <source>You MUST use this syntax in your translations. Here are several examples:</source>
-        <target>You MUST use this syntax in your translations. Here are several examples:</target>
-        <note>Line: 70</note>
       </trans-unit>
       <trans-unit id="919a5a4550f8f714f806f5590ed1b66a">
         <source>There are [1]%replace%[/1] products</source>
@@ -88,6 +74,11 @@
         <source>The numbers enable you to reorder the variables when necessary.</source>
         <target>The numbers enable you to reorder the variables when necessary.</target>
         <note>Line: 75</note>
+      </trans-unit>
+      <trans-unit id="54524210ee89080b3da6c88a11c6d438">
+        <source>You must use this syntax in your translations. Here are several examples:</source>
+        <target>You must use this syntax in your translations. Here are several examples:</target>
+        <note>Line: 70</note>
       </trans-unit>
     </body>
   </file>
@@ -120,27 +111,27 @@
       <trans-unit id="b33aadd6763bfea56853a7ecf2176382">
         <source>Two -- or three -- letter ISO code (e.g. "us" for United States).</source>
         <target>Two -- or three -- letter ISO code (e.g. "us" for United States).</target>
-        <note>Line: 207</note>
+        <note>Line: 206</note>
       </trans-unit>
       <trans-unit id="cd2f7b9409e0f1527766ad35aa8bd3c5">
         <source>International call prefix, (e.g. 1 for United States).</source>
         <target>International call prefix, (e.g. 1 for United States).</target>
-        <note>Line: 221</note>
+        <note>Line: 220</note>
       </trans-unit>
       <trans-unit id="92de0162cbdfa60f671ba3cad1d392a1">
         <source>Geographical region.</source>
         <target>Geographical region.</target>
-        <note>Line: 246</note>
+        <note>Line: 245</note>
       </trans-unit>
       <trans-unit id="98ae2fd635525d30d2b0e8b643f9a23c">
         <source>Indicate the format of the postal code: use L for a letter, N for a number, and C for the country's ISO 3166-1 alpha-2 code. For example, NNNNN for the United States, France, Poland and many other; LNNNNLLL for Argentina, etc. If you do not want PrestaShop to verify the postal code for this country, leave it blank.</source>
         <target>Indicate the format of the postal code: use L for a letter, N for a number, and C for the country's ISO 3166-1 alpha-2 code. For example, NNNNN for the United States, France, Poland and many other; LNNNNLLL for Argentina, etc. If you do not want PrestaShop to verify the postal code for this country, leave it blank.</target>
-        <note>Line: 272</note>
+        <note>Line: 271</note>
       </trans-unit>
       <trans-unit id="a2ddbdfb29a0708bd711601f9277435c">
         <source>Display this country to your customers (the selected country will always be displayed in the Back Office).</source>
         <target>Display this country to your customers (the selected country will always be displayed in the Back Office).</target>
-        <note>Line: 301</note>
+        <note>Line: 300</note>
       </trans-unit>
     </body>
   </file>
@@ -149,81 +140,76 @@
       <trans-unit id="b6ff06f41cb66b5b89be6a3670e40d63">
         <source>Provide the state name to be displayed in addresses and on invoices.</source>
         <target>Provide the state name to be displayed in addresses and on invoices.</target>
-        <note>Line: 158</note>
+        <note>Line: 155</note>
       </trans-unit>
       <trans-unit id="473d5a5e7a18ca5e30b399ae0dfda18e">
         <source>1 to 4 letter ISO code.</source>
         <target>1 to 4 letter ISO code.</target>
-        <note>Line: 167</note>
+        <note>Line: 164</note>
       </trans-unit>
       <trans-unit id="d44080730b4d80fb65b9018d57c058b3">
         <source>You can prefix it with the country ISO code if needed.</source>
         <target>You can prefix it with the country ISO code if needed.</target>
-        <note>Line: 167</note>
+        <note>Line: 164</note>
       </trans-unit>
       <trans-unit id="0f6ca10753a64573af4ae286c7421e62">
         <source>Country where the state is located.</source>
         <target>Country where the state is located.</target>
-        <note>Line: 180</note>
+        <note>Line: 177</note>
       </trans-unit>
       <trans-unit id="68240d02aad03eed41bc52305688a035">
         <source>Only the countries with the option "contains states" enabled are displayed.</source>
         <target>Only the countries with the option "contains states" enabled are displayed.</target>
-        <note>Line: 180</note>
+        <note>Line: 177</note>
       </trans-unit>
       <trans-unit id="15c5d5dd58a9e70b8b86a7447dd00f70">
         <source>Geographical region where this state is located.</source>
         <target>Geographical region where this state is located.</target>
-        <note>Line: 193</note>
+        <note>Line: 190</note>
       </trans-unit>
       <trans-unit id="ec92dbe75bbcc2fbf4cad6302df97c19">
         <source>Used for shipping</source>
         <target>Used for shipping</target>
-        <note>Line: 194</note>
+        <note>Line: 191</note>
       </trans-unit>
     </body>
   </file>
   <file original="controllers/admin/AdminTaxRulesGroupController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="8bd279ebcd912dc792663bc65a1fb499">
-        <source>You can define a range of Zip/postal codes (e.g., 75000-75015) or simply use one Zip/postal code.</source>
-        <target>You can define a range of Zip/postal codes (e.g., 75000-75015) or simply use one Zip/postal code.</target>
-        <note>Line: 289</note>
+      <trans-unit id="e14eeddb992a1fa103cb2669178369cf">
+        <source>You can define a range of Zip/Postal codes (e.g., 75000-75015) or simply use one Zip/Postal code.</source>
+        <target>You can define a range of Zip/Postal codes (e.g., 75000-75015) or simply use one Zip/Postal code.</target>
+        <note>Line: 287</note>
       </trans-unit>
       <trans-unit id="ce9c5fc1032ac5aa03a3d248022773df">
         <source>You must define the behavior if an address matches multiple rules:</source>
         <target>You must define the behavior if an address matches multiple rules:</target>
-        <note>Line: 315</note>
+        <note>Line: 313</note>
       </trans-unit>
       <trans-unit id="439fa6ce423495b01ffd31ea56b33335">
         <source>- This tax only: Will apply only this tax</source>
         <target>- This tax only: Will apply only this tax</target>
-        <note>Line: 316</note>
+        <note>Line: 314</note>
       </trans-unit>
       <trans-unit id="4019ba4535164cd55c61ac20379a8aa9">
         <source>- Combine: Combine taxes (e.g.: 10% + 5% = 15%)</source>
         <target>- Combine: Combine taxes (e.g.: 10% + 5% = 15%)</target>
-        <note>Line: 317</note>
+        <note>Line: 315</note>
       </trans-unit>
       <trans-unit id="dabf677c95d59c749ea5d6d6d22012c4">
         <source><![CDATA[- One after another: Apply taxes one after another (e.g.: 100 + 10% => 110 + 5% = 115.5)]]></source>
         <target><![CDATA[- One after another: Apply taxes one after another (e.g.: 100 + 10% => 110 + 5% = 115.5)]]></target>
-        <note>Line: 318</note>
+        <note>Line: 316</note>
       </trans-unit>
       <trans-unit id="7475ec0d41372a307c497acb7eeea8c4">
         <source>No Tax</source>
         <target>No Tax</target>
-        <note>Line: 332</note>
+        <note>Line: 330</note>
       </trans-unit>
       <trans-unit id="7a3ded393734410a3d3514e10b672c92">
         <source>(Total tax: 9%)</source>
         <target>(Total tax: 9%)</target>
-        <note>Line: 335</note>
-      </trans-unit>
-      <trans-unit id="e14eeddb992a1fa103cb2669178369cf">
-        <source>You can define a range of Zip/Postal codes (e.g., 75000-75015) or simply use one Zip/Postal code.</source>
-        <target>You can define a range of Zip/Postal codes (e.g., 75000-75015) or simply use one Zip/Postal code.</target>
-        <note>Line: 289</note>
+        <note>Line: 333</note>
       </trans-unit>
     </body>
   </file>
@@ -282,6 +268,11 @@
         <target>Upload the country flag from your computer.</target>
         <note>Line: 151</note>
       </trans-unit>
+      <trans-unit id="2e5dbe80db3202a360b608da07f1c2de">
+        <source>Image is displayed when no picture is found.</source>
+        <target>Image is displayed when no picture is found.</target>
+        <note>Line: 161</note>
+      </trans-unit>
       <trans-unit id="6f570144d5f5ca1404b40cab00a9fa3f">
         <source>Enable if this language is read from right to left.</source>
         <target>Enable if this language is read from right to left.</target>
@@ -291,11 +282,6 @@
         <source>(Experimental: your theme must be compliant with RTL languages).</source>
         <target>(Experimental: your theme must be compliant with RTL languages).</target>
         <note>Line: 175</note>
-      </trans-unit>
-      <trans-unit id="2e5dbe80db3202a360b608da07f1c2de">
-        <source>Image is displayed when no picture is found.</source>
-        <target>Image is displayed when no picture is found.</target>
-        <note>Line: 161</note>
       </trans-unit>
       <trans-unit id="1e817248a18ffae64e10be49a46fa9ee">
         <source>Activate this language.</source>
@@ -358,25 +344,25 @@
         <target>The default language used in your shop.</target>
         <note>Line: 94</note>
       </trans-unit>
-      <trans-unit id="59a0d89a785e4e00f80b5d6154a446d0">
-        <source>The default country used in your shop.</source>
-        <target>The default country used in your shop.</target>
-        <note>Line: 120</note>
-      </trans-unit>
-      <trans-unit id="eb99748a0429320ff7a0120625ace088">
-        <source>The default currency used in your shop.</source>
-        <target>The default currency used in your shop.</target>
-        <note>Line: 149</note>
-      </trans-unit>
       <trans-unit id="90f1a96f31bb51ae7d7f347c3b5df846">
         <source>Set browser language as default language.</source>
         <target>Set browser language as default language.</target>
         <note>Line: 110</note>
       </trans-unit>
+      <trans-unit id="59a0d89a785e4e00f80b5d6154a446d0">
+        <source>The default country used in your shop.</source>
+        <target>The default country used in your shop.</target>
+        <note>Line: 120</note>
+      </trans-unit>
       <trans-unit id="754ab93466f1c17d19e11e8a03731ebd">
         <source>Set country corresponding to browser language.</source>
         <target>Set country corresponding to browser language.</target>
         <note>Line: 136</note>
+      </trans-unit>
+      <trans-unit id="eb99748a0429320ff7a0120625ace088">
+        <source>The default currency used in your shop.</source>
+        <target>The default currency used in your shop.</target>
+        <note>Line: 149</note>
       </trans-unit>
     </body>
   </file>
@@ -396,25 +382,25 @@
   </file>
   <file original="src/PrestaShopBundle/Form/Admin/Improve/International/Tax/TaxOptionsType.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
-      <trans-unit id="9065c9561edb357b57b213c15813cb32">
-        <source>If you disable the ecotax, the ecotax for all your products will be set to 0.</source>
-        <target>If you disable the ecotax, the ecotax for all your products will be set to 0.</target>
-        <note>Line: 124</note>
-      </trans-unit>
       <trans-unit id="fc6d7eca192247f8406fc4fc8ff896ef">
         <source>Select whether or not to include tax on purchases.</source>
         <target>Select whether or not to include tax on purchases.</target>
-        <note>Line: 91</note>
+        <note>Line: 93</note>
       </trans-unit>
       <trans-unit id="ea9d4f5bdfaaa411eb8c74355aec4553">
         <source>Select whether or not to display tax on a distinct line in the cart.</source>
         <target>Select whether or not to display tax on a distinct line in the cart.</target>
-        <note>Line: 106</note>
+        <note>Line: 112</note>
+      </trans-unit>
+      <trans-unit id="9065c9561edb357b57b213c15813cb32">
+        <source>If you disable the ecotax, the ecotax for all your products will be set to 0.</source>
+        <target>If you disable the ecotax, the ecotax for all your products will be set to 0.</target>
+        <note>Line: 134</note>
       </trans-unit>
       <trans-unit id="a84047cec2a677153211d701853a65b4">
         <source>Define the ecotax (e.g. French ecotax: 20%).</source>
         <target>Define the ecotax (e.g. French ecotax: 20%).</target>
-        <note>Line: 135</note>
+        <note>Line: 143</note>
       </trans-unit>
     </body>
   </file>
@@ -432,58 +418,12 @@
       </trans-unit>
     </body>
   </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/International/Currency/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="c7c838899b96b2b17ea954d2578cf541">
-        <source>Exchange rates are calculated from one unit of your shop's default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1€ = $1.20).</source>
-        <target>Exchange rates are calculated from one unit of your shop's default currency. For example, if the default currency is euros and your chosen currency is dollars, type "1.20" (1€ = $1.20).</target>
-        <note>Line: 93</note>
-      </trans-unit>
-      <trans-unit id="4ef5571f164a6a7fcc9f4625d14e260b">
-        <source>ISO code (e.g. USD for Dollars, EUR for Euros, etc.).</source>
-        <target>ISO code (e.g. USD for Dollars, EUR for Euros, etc.).</target>
-        <note>Line: 41</note>
-      </trans-unit>
-    </body>
-  </file>
   <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/International/Geolocation/Blocks/geolocation_ip_address_whitelist.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
       <trans-unit id="632a9a67e93d72324b63a0d0626cd2a2">
         <source>You can add IP addresses that will always be allowed to access your shop (e.g. Google bots' IP).</source>
         <target>You can add IP addresses that will always be allowed to access your shop (e.g. Google bots' IP).</target>
         <note>Line: 40</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/International/Language/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e63a2fc0fc5da5af27fbf5c515beb044">
-        <source>Image is displayed when "no picture is found".</source>
-        <target>Image is displayed when "no picture is found".</target>
-        <note>Line: 77</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/International/Localization/Blocks/configuration.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e932e3b39aa40f0efe327c599cbd406f">
-        <source>Set browser language as default language</source>
-        <target>Set browser language as default language</target>
-        <note>Line: 52</note>
-      </trans-unit>
-      <trans-unit id="2d84287b4a1226bb820aac87116f401a">
-        <source>Set country corresponding to browser language</source>
-        <target>Set country corresponding to browser language</target>
-        <note>Line: 71</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Improve/International/Tax/Blocks/tax_options.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="e17a0f166831874c90c9a13934c45cf7">
-        <source>Define the ecotax (e.g. French ecotax: 19.6%).</source>
-        <target>Define the ecotax (e.g. French ecotax: 19.6%).</target>
-        <note>Line: 81</note>
       </trans-unit>
     </body>
   </file>
@@ -501,17 +441,17 @@
       <trans-unit id="d4e007a94451a69f593c3ce0e06e08f2">
         <source>Copies data from one language to another.</source>
         <target>Copies data from one language to another.</target>
-        <note>Line: 43</note>
+        <note>Line: 44</note>
       </trans-unit>
       <trans-unit id="3cd0f0cce3990de970f803ffc19f68e1">
         <source>Warning: This will replace all of the existing data inside the destination language.</source>
         <target>Warning: This will replace all of the existing data inside the destination language.</target>
-        <note>Line: 44</note>
+        <note>Line: 45</note>
       </trans-unit>
       <trans-unit id="8a6815aee1e25633b568be3153f4e779">
         <source>If necessary [1][2] you must first create a new language[/1].</source>
         <target>If necessary [1][2] you must first create a new language[/1].</target>
-        <note>Line: 45</note>
+        <note>Line: 46</note>
       </trans-unit>
     </body>
   </file>

@@ -44,6 +44,8 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\Customiz
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Query\GetProductFeatureValues;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\QueryResult\ProductFeatureValue;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Query\GetPackedProducts;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\QueryResult\PackedProductDetails;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetRelatedProducts;
@@ -123,7 +125,6 @@ class ProductFormDataProviderTest extends TestCase
 
         $formData = $provider->getData(self::PRODUCT_ID);
         $this->assertNotNull($formData);
-
         $contextShopId = 51;
         $queryBusMock = $this->createQueryBusCheckingShopMock($contextShopId);
         $provider = new ProductFormDataProvider(
@@ -169,6 +170,7 @@ class ProductFormDataProviderTest extends TestCase
             $this->getDatasetsForShipping(),
             $this->getDatasetsForOptions(),
             $this->getDatasetsForCategories(),
+            $this->getDatasetsForPackedProducts(),
             $this->getDatasetsForRelatedProducts(),
             $this->getDatasetsForCombinations(),
         ];
@@ -303,7 +305,9 @@ class ProductFormDataProviderTest extends TestCase
             'cover_thumbnail' => $newCover,
         ];
         $expectedOutputData['header']['name'] = $localizedValues;
+        $expectedOutputData['header']['initial_type'] = ProductType::TYPE_VIRTUAL;
         $expectedOutputData['header']['type'] = ProductType::TYPE_VIRTUAL;
+        $expectedOutputData['header']['initial_type'] = ProductType::TYPE_VIRTUAL;
         $expectedOutputData['header']['cover_thumbnail'] = $newCover;
 
         $expectedOutputData['description']['description'] = $localizedValues;
@@ -338,6 +342,7 @@ class ProductFormDataProviderTest extends TestCase
             'price_tax_excluded' => new DecimalNumber('42.00'),
             'price_tax_included' => new DecimalNumber('50.40'),
             'ecotax' => new DecimalNumber('69.51'),
+            'ecotax_tax_included' => new DecimalNumber('72.2904'),
             'tax_rules_group_id' => 49,
             'on_sale' => true,
             'wholesale_price' => new DecimalNumber('66.56'),
@@ -349,7 +354,8 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData['pricing']['retail_price']['price_tax_excluded'] = 42.00;
         $expectedOutputData['pricing']['retail_price']['price_tax_included'] = 50.40;
         $expectedOutputData['pricing']['retail_price']['tax_rules_group_id'] = 49;
-        $expectedOutputData['pricing']['retail_price']['ecotax'] = 69.51;
+        $expectedOutputData['pricing']['retail_price']['ecotax_tax_excluded'] = 69.51;
+        $expectedOutputData['pricing']['retail_price']['ecotax_tax_included'] = 72.2904;
         $expectedOutputData['pricing']['on_sale'] = true;
         $expectedOutputData['pricing']['wholesale_price'] = 66.56;
         $expectedOutputData['pricing']['unit_price']['price_tax_excluded'] = 6.656;
@@ -502,6 +508,64 @@ class ProductFormDataProviderTest extends TestCase
     /**
      * @return array
      */
+    private function getDatasetsForPackedProducts(): array
+    {
+        $datasets = [];
+
+        $expectedOutputData = $this->getDefaultOutputData();
+        $productData = [
+            'packed_products' => [
+                0 => [
+                    'product_id' => 15,
+                    'productName' => 'wicked snowboard',
+                    'quantity' => 3,
+                    'reference' => 'demo_15',
+                    'combination_id' => 1,
+                    'image' => 'http://myshop.com/img/p/no_picture-small_default.jpg',
+                ],
+                1 => [
+                    'product_id' => 42,
+                    'productName' => 'cool glasses',
+                    'quantity' => 5,
+                    'reference' => 'demo_42',
+                    'combination_id' => 2,
+                    'image' => 'http://myshop.com/img/p/no_picture-small_default.jpg',
+                ],
+            ],
+        ];
+
+        $expectedOutputData['stock']['packed_products'] = [
+            0 => [
+                'product_id' => 15,
+                'name' => 'wicked snowboard',
+                'reference' => 'demo_15',
+                'combination_id' => 1,
+                'image' => 'http://myshop.com/img/p/no_picture-small_default.jpg',
+                'quantity' => 3,
+                'unique_identifier' => '15_1',
+            ],
+            1 => [
+                'product_id' => 42,
+                'name' => 'cool glasses',
+                'reference' => 'demo_42',
+                'combination_id' => 2,
+                'image' => 'http://myshop.com/img/p/no_picture-small_default.jpg',
+                'quantity' => 5,
+                'unique_identifier' => '42_2',
+            ],
+        ];
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        return $datasets;
+    }
+
+    /**
+     * @return array
+     */
     private function getDatasetsForRelatedProducts(): array
     {
         $datasets = [];
@@ -509,30 +573,30 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData = $this->getDefaultOutputData();
         $productData = [
             'related_products' => [
-                [
-                    'id' => 42,
-                    'name' => 'cool glasses',
-                    'reference' => '',
-                    'image' => 'http://awesome.jpg',
-                ],
-                [
+                0 => [
                     'id' => 15,
                     'name' => 'wicked snowboard',
                     'reference' => 'zebest',
+                    'image' => 'http://awesome.jpg',
+                ],
+                1 => [
+                    'id' => 42,
+                    'name' => 'cool glasses',
+                    'reference' => '',
                     'image' => 'http://awesome.jpg',
                 ],
             ],
         ];
 
         $expectedOutputData['description']['related_products'] = [
-            [
-                'id' => 42,
-                'name' => 'cool glasses',
-                'image' => 'http://awesome.jpg',
-            ],
-            [
+            0 => [
                 'id' => 15,
                 'name' => 'wicked snowboard (ref: zebest)',
+                'image' => 'http://awesome.jpg',
+            ],
+            1 => [
+                'id' => 42,
+                'name' => 'cool glasses',
                 'image' => 'http://awesome.jpg',
             ],
         ];
@@ -642,7 +706,7 @@ class ProductFormDataProviderTest extends TestCase
                 ),
             ],
         ];
-        $expectedOutputData['footer']['active'] = false;
+        $expectedOutputData['header']['active'] = false;
         $expectedOutputData['options']['visibility']['visibility'] = ProductVisibility::VISIBLE_IN_CATALOG;
         $expectedOutputData['options']['visibility']['available_for_order'] = false;
         $expectedOutputData['options']['visibility']['online_only'] = true;
@@ -947,6 +1011,7 @@ class ProductFormDataProviderTest extends TestCase
         ];
 
         $expectedOutputData['header']['type'] = ProductType::TYPE_COMBINATIONS;
+        $expectedOutputData['header']['initial_type'] = ProductType::TYPE_COMBINATIONS;
         $expectedOutputData['combinations']['availability']['out_of_stock_type'] = OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE;
         $expectedOutputData['combinations']['availability']['available_now_label'] = $localizedValues;
         $expectedOutputData['combinations']['availability']['available_later_label'] = $localizedValues;
@@ -1044,6 +1109,32 @@ class ProductFormDataProviderTest extends TestCase
         }
 
         return $productFeatureValues;
+    }
+
+    /**
+     * @param array $productData
+     *
+     * @return PackedProductDetails[]
+     */
+    private function createPackedProductsDetails(array $productData): array
+    {
+        if (empty($productData['packed_products'])) {
+            return [];
+        }
+
+        $packedProducts = [];
+        foreach ($productData['packed_products'] as $packedProduct) {
+            $packedProducts[] = new PackedProductDetails(
+                (int) $packedProduct['product_id'],
+                (int) $packedProduct['quantity'],
+                $packedProduct['combination_id'],
+                $packedProduct['productName'],
+                $packedProduct['reference'],
+                $packedProduct['image']
+            );
+        }
+
+        return $packedProducts;
     }
 
     /**
@@ -1246,6 +1337,7 @@ class ProductFormDataProviderTest extends TestCase
             $product['price_tax_excluded'] ?? new DecimalNumber('19.86'),
             $product['price_tax_included'] ?? new DecimalNumber('23.832'),
             $product['ecotax'] ?? new DecimalNumber('19.86'),
+            $product['ecotax_tax_included'] ?? new DecimalNumber('20.6544'),
             $product['tax_rules_group_id'] ?? 1,
             $product['on_sale'] ?? false,
             $product['wholesale_price'] ?? new DecimalNumber('19.86'),
@@ -1347,7 +1439,8 @@ class ProductFormDataProviderTest extends TestCase
             $this->isInstanceOf(GetProductFeatureValues::class),
             $this->isInstanceOf(GetProductCustomizationFields::class),
             $this->isInstanceOf(GetEmployeesStockMovements::class),
-            $this->isInstanceOf(GetRelatedProducts::class)
+            $this->isInstanceOf(GetRelatedProducts::class),
+            $this->isInstanceOf(GetPackedProducts::class)
         );
     }
 
@@ -1366,6 +1459,7 @@ class ProductFormDataProviderTest extends TestCase
             GetProductCustomizationFields::class => $this->createProductCustomizationFields($productData),
             GetEmployeesStockMovements::class => $this->createProductStockMovements($productData),
             GetRelatedProducts::class => $this->createRelatedProducts($productData),
+            GetPackedProducts::class => $this->createPackedProductsDetails($productData),
         ];
 
         $queryClass = get_class($query);
@@ -1385,8 +1479,10 @@ class ProductFormDataProviderTest extends TestCase
             'id' => self::PRODUCT_ID,
             'header' => [
                 'type' => ProductType::TYPE_STANDARD,
+                'initial_type' => ProductType::TYPE_STANDARD,
                 'name' => [],
                 'cover_thumbnail' => self::COVER_URL,
+                'active' => true,
             ],
             'description' => [
                 'description' => [],
@@ -1436,13 +1532,15 @@ class ProductFormDataProviderTest extends TestCase
                     'available_later_label' => [],
                     'available_date' => '',
                 ],
+                'packed_products' => [],
             ],
             'pricing' => [
                 'retail_price' => [
                     'price_tax_excluded' => 19.86,
                     'price_tax_included' => 23.832,
                     'tax_rules_group_id' => 1,
-                    'ecotax' => 19.86,
+                    'ecotax_tax_excluded' => 19.86,
+                    'ecotax_tax_included' => 20.6544,
                 ],
                 'on_sale' => false,
                 'wholesale_price' => 19.86,
@@ -1493,9 +1591,6 @@ class ProductFormDataProviderTest extends TestCase
                     'supplier_ids' => [],
                 ],
                 'product_suppliers' => [],
-            ],
-            'footer' => [
-                'active' => true,
             ],
         ];
     }

@@ -33,7 +33,6 @@ const createEmployeeData = new EmployeeFaker({
 });
 
 const firstEditEmployeeData = new EmployeeFaker({
-  password: '123456789',
   defaultPage: 'Orders',
   language: 'English (English)',
   permissionProfile: 'Salesman',

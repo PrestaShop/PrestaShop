@@ -123,7 +123,6 @@ class EntitySearchInputType extends CollectionType
             // field name in record dataset which should be used to show suggestion in search dropdown
             'suggestion_field' => 'name',
         ]);
-
         $resolver->setAllowedTypes('allow_search', ['bool']);
         $resolver->setAllowedTypes('search_attr', ['array']);
         $resolver->setAllowedTypes('list_attr', ['array']);

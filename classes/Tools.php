@@ -36,8 +36,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ToolsCore
 {
-    const CACERT_LOCATION = 'https://curl.haxx.se/ca/cacert.pem';
-    const SERVICE_LOCALE_REPOSITORY = 'prestashop.core.localization.locale.repository';
+    public const CACERT_LOCATION = 'https://curl.haxx.se/ca/cacert.pem';
+    public const SERVICE_LOCALE_REPOSITORY = 'prestashop.core.localization.locale.repository';
     public const CACHE_LIFETIME_SECONDS = 604800;
 
     public const PASSWORDGEN_FLAG_NUMERIC = 'NUMERIC';
@@ -448,6 +448,16 @@ class ToolsCore
         } else {
             return 'http://';
         }
+    }
+
+    /**
+     * Get the current url
+     *
+     * @return string current url
+     */
+    public static function getCurrentUrl(): string
+    {
+        return Tools::getCurrentUrlProtocolPrefix() . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
     }
 
     /**
@@ -949,7 +959,11 @@ class ToolsCore
     {
         $format = Context::getContext()->language->date_format_lite;
         $search = ['d', 'm', 'Y'];
-        $replace = ['DD', 'MM', 'YYYY'];
+        $replace = [
+            Context::getContext()->getTranslator()->trans('DD', [], 'Shop.Forms.Help'),
+            Context::getContext()->getTranslator()->trans('MM', [], 'Shop.Forms.Help'),
+            Context::getContext()->getTranslator()->trans('YYYY', [], 'Shop.Forms.Help'),
+        ];
         $format = str_replace($search, $replace, $format);
 
         return $format;

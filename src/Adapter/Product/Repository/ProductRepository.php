@@ -29,6 +29,8 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Exception;
+use Doctrine\DBAL\Exception as ExceptionAlias;
 use Doctrine\DBAL\Query\QueryBuilder;
 use ObjectModel;
 use PrestaShop\Decimal\DecimalNumber;
@@ -227,11 +229,11 @@ class ProductRepository extends AbstractObjectModelRepository
 
         if (!$results || (int) $results['product_count'] !== count($ids)) {
             throw new ProductNotFoundException(
-                    sprintf(
-                        'Some of these products do not exist: %s',
-                        implode(',', $ids)
-                    )
-                );
+                sprintf(
+                    'Some of these products do not exist: %s',
+                    implode(',', $ids)
+                )
+            );
         }
     }
 
@@ -240,10 +242,10 @@ class ProductRepository extends AbstractObjectModelRepository
      * @param LanguageId $languageId
      *
      * @return array<array<string, string>>
-     *                             e.g [
-     *                             ['id_product' => '1', 'name' => 'Product name', 'reference' => 'demo15'],
-     *                             ['id_product' => '2', 'name' => 'Product name2', 'reference' => 'demo16'],
-     *                             ]
+     *                                      e.g [
+     *                                      ['id_product' => '1', 'name' => 'Product name', 'reference' => 'demo15'],
+     *                                      ['id_product' => '2', 'name' => 'Product name2', 'reference' => 'demo16'],
+     *                                      ]
      *
      * @throws CoreException
      */
@@ -283,17 +285,24 @@ class ProductRepository extends AbstractObjectModelRepository
         return $this->loadProduct($product);
     }
 
+    /**
+     * @param ProductId $productId
+     *
+     * @return ProductType
+     *
+     * @throws ProductNotFoundException
+     */
     public function getProductType(ProductId $productId): ProductType
     {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->addSelect('p.product_type')
+        $result = $this->connection->createQueryBuilder()
+            ->select('p.product_type')
             ->from($this->dbPrefix . 'product', 'p')
             ->where('p.id_product = :productId')
             ->setParameter('productId', $productId->getValue())
+            ->execute()
+            ->fetchAssociative()
         ;
 
-        $result = $qb->execute()->fetchAssociative();
         if (empty($result)) {
             throw new ProductNotFoundException(sprintf(
                 'Cannot find product type for product %d because it does not exist',
@@ -301,7 +310,12 @@ class ProductRepository extends AbstractObjectModelRepository
             ));
         }
 
-        return new ProductType($result['product_type']);
+        if (!empty($result['product_type'])) {
+            return new ProductType($result['product_type']);
+        }
+
+        // Older products that were created before product page v2, might have no type, so we determine it dynamically
+        return new ProductType($this->get($productId)->getDynamicProductType());
     }
 
     /**
@@ -341,7 +355,12 @@ class ProductRepository extends AbstractObjectModelRepository
      */
     public function searchProducts(string $searchPhrase, LanguageId $languageId, ShopId $shopId, ?int $limit = null): array
     {
-        $qb = $this->getSearchQueryBuilder($searchPhrase, $languageId, $shopId, $limit);
+        $qb = $this->getSearchQueryBuilder(
+            $searchPhrase,
+            $languageId,
+            $shopId,
+            [],
+            $limit);
         $qb
             ->addSelect('p.id_product, pl.name, p.reference, i.id_image')
             ->addGroupBy('p.id_product')
@@ -356,13 +375,28 @@ class ProductRepository extends AbstractObjectModelRepository
      * @param string $searchPhrase
      * @param LanguageId $languageId
      * @param ShopId $shopId
+     * @param array $filters
      * @param int|null $limit
      *
      * @return array<int, array<string, int|string>>
+     *
+     * @throws Exception
+     * @throws ExceptionAlias
      */
-    public function searchCombinations(string $searchPhrase, LanguageId $languageId, ShopId $shopId, ?int $limit = null): array
-    {
-        $qb = $this->getSearchQueryBuilder($searchPhrase, $languageId, $shopId, $limit);
+    public function searchCombinations(
+        string $searchPhrase,
+        LanguageId $languageId,
+        ShopId $shopId,
+        array $filters = [],
+        ?int $limit = null
+    ): array {
+        $qb = $this->getSearchQueryBuilder(
+            $searchPhrase,
+            $languageId,
+            $shopId,
+            $filters,
+            $limit
+        );
         $qb
             ->addSelect('p.id_product, pa.id_product_attribute, pl.name, i.id_image')
             ->addSelect('p.reference as product_reference')
@@ -382,12 +416,18 @@ class ProductRepository extends AbstractObjectModelRepository
      * @param string $searchPhrase
      * @param LanguageId $languageId
      * @param ShopId $shopId
+     * @param array $filters
      * @param int|null $limit
      *
      * @return QueryBuilder
      */
-    private function getSearchQueryBuilder(string $searchPhrase, LanguageId $languageId, ShopId $shopId, ?int $limit): QueryBuilder
-    {
+    protected function getSearchQueryBuilder(
+        string $searchPhrase,
+        LanguageId $languageId,
+        ShopId $shopId,
+        array $filters = [],
+        ?int $limit = null
+    ): QueryBuilder {
         $qb = $this->connection->createQueryBuilder();
         $qb
             ->addSelect('p.id_product, pl.name, p.reference, i.id_image')
@@ -423,6 +463,19 @@ class ProductRepository extends AbstractObjectModelRepository
             $qb->expr()->like('pa.ean13', $dbSearchPhrase),
             $qb->expr()->like('pa.supplier_reference', $dbSearchPhrase)
         ));
+
+        if (!empty($filters)) {
+            foreach ($filters as $type => $filter) {
+                switch ($type) {
+                    case 'filteredTypes':
+                        $qb->andWhere('p.product_type not in(:filter)')
+                            ->setParameter('filter', implode(', ', $filter));
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
 
         if (!empty($limit)) {
             $qb->setMaxResults($limit);

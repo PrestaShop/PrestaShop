@@ -54,12 +54,13 @@ Feature: Update product options from Back Office (BO)
       | manufacturer        | studioDesign |
     When I update product "product1" options with following values:
       | available_for_order | true |
+    # show_price is automatically set to true
     Then product "product1" should have following options:
       | product option      | value        |
       | visibility          | catalog      |
       | available_for_order | true         |
       | online_only         | true         |
-      | show_price          | false        |
+      | show_price          | true         |
       | condition           | used         |
       | show_condition      | true         |
       | manufacturer        | studioDesign |
@@ -71,7 +72,7 @@ Feature: Update product options from Back Office (BO)
       | visibility          | catalog      |
       | available_for_order | true         |
       | online_only         | true         |
-      | show_price          | false        |
+      | show_price          | true         |
       | condition           | used         |
       | show_condition      | true         |
       | manufacturer        | studioDesign |
@@ -82,7 +83,7 @@ Feature: Update product options from Back Office (BO)
       | visibility          | catalog       |
       | available_for_order | true          |
       | online_only         | true          |
-      | show_price          | false         |
+      | show_price          | true          |
       | condition           | used          |
       | show_condition      | true          |
       | manufacturer        | graphicCorner |
@@ -93,7 +94,7 @@ Feature: Update product options from Back Office (BO)
       | visibility          | catalog |
       | available_for_order | true    |
       | online_only         | true    |
-      | show_price          | false   |
+      | show_price          | true    |
       | condition           | used    |
       | show_condition      | true    |
       | manufacturer        |         |
@@ -255,3 +256,51 @@ Feature: Update product options from Back Office (BO)
     When I disable product "product1"
     Then product "product1" should be disabled
     And product "product1" should not be indexed
+
+  Scenario: Price should always be shown when product is available for ordering
+    # Based on previous changes in previous scenarios we already know that order can be disabled and prices hidden
+    Given product "product1" should have following options:
+      | product option      | value        |
+      | visibility          | both         |
+      | available_for_order | false        |
+      | online_only         | true         |
+      | show_price          | false        |
+      | condition           | used         |
+      | show_condition      | true         |
+      | manufacturer        | studioDesign |
+    When I update product "product1" options with following values:
+      | show_price | true |
+    # We can show price when product is not available for order
+    Then product "product1" should have following options:
+      | product option      | value        |
+      | visibility          | both         |
+      | available_for_order | false        |
+      | online_only         | true         |
+      | show_price          | true         |
+      | condition           | used         |
+      | show_condition      | true         |
+      | manufacturer        | studioDesign |
+    # Even if we try forcing the show price to false it will be true as long as product is available for order
+    When I update product "product1" options with following values:
+      | available_for_order | true  |
+      | show_price          | false |
+    Then product "product1" should have following options:
+      | product option      | value        |
+      | visibility          | both         |
+      | available_for_order | true         |
+      | online_only         | true         |
+      | show_price          | true         |
+      | condition           | used         |
+      | show_condition      | true         |
+      | manufacturer        | studioDesign |
+    When I update product "product1" options with following values:
+      | show_price          | false  |
+    Then product "product1" should have following options:
+      | product option      | value        |
+      | visibility          | both         |
+      | available_for_order | true         |
+      | online_only         | true         |
+      | show_price          | true         |
+      | condition           | used         |
+      | show_condition      | true         |
+      | manufacturer        | studioDesign |

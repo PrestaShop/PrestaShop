@@ -222,7 +222,7 @@ class AdminCartRulesControllerCore extends AdminController
                             break;
                         case 'shop':
                         default:
-                            $restriction_name = $this->trans('Shop selection', [], 'Admin.Catalog.Feature');
+                            $restriction_name = $this->trans('Store selection', [], 'Admin.Catalog.Feature');
                             break;
                     }
                     $this->errors[] = $this->trans('The "%s" restriction is checked, but no item is selected.', [$restriction_name], 'Admin.Catalog.Notification');
@@ -735,7 +735,7 @@ class AdminCartRulesControllerCore extends AdminController
                             $value = $carrier['id_carrier'] . ' - ' . Configuration::get('PS_SHOP_NAME');
                         } else {
                             $value = $carrier['id_carrier'] . ' - ' . $carrier['name'];
-                            if ($carrier['name']) {
+                            if (!empty($carrier['delay'])) {
                                 $value .= ' (' . $carrier['delay'] . ')';
                             }
                         }

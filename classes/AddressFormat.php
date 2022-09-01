@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\Domain\Address\Exception\AddressException;
  */
 class AddressFormatCore extends ObjectModel
 {
-    const FORMAT_NEW_LINE = "\n";
+    public const FORMAT_NEW_LINE = "\n";
 
     /** @var int Address format */
     public $id_address_format;
@@ -115,7 +115,7 @@ class AddressFormatCore extends ObjectModel
         'Supplier',
     ];
 
-    const _CLEANING_REGEX_ = '#([^\w:_]+)#i';
+    public const _CLEANING_REGEX_ = '#([^\w:_]+)#i';
 
     /**
      * Check if the the association of the field name and a class name

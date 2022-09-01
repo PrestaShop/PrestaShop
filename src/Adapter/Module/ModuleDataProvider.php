@@ -154,6 +154,7 @@ class ModuleDataProvider
         $results = Db::getInstance()->executeS($select . $from);
         $modules = [];
 
+        /** @var array{id: int, name:string, version: string, installed: int}|array{id: int, name:string, version: string, installed: int, active:int, active_on_mobile: int} $module */
         foreach ($results as $module) {
             $module['installed'] = (bool) $module['installed'];
             if (array_key_exists('active_on_mobile', $module)) {

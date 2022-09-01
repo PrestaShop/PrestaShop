@@ -32,8 +32,10 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\SearchCombinationsForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use Throwable;
+use TypeError;
 
 class SearchCombinationsForAssociationTest extends TestCase
 {
@@ -46,38 +48,54 @@ class SearchCombinationsForAssociationTest extends TestCase
      * @param string $phrase
      * @param int $languageId
      * @param int $shopId
+     * @param array $filters
      * @param int|null $limit
+     *
+     * @throws ProductConstraintException
+     * @throws ShopException
      */
-    public function testValidQuery(string $phrase, int $languageId, int $shopId, ?int $limit): void
+    public function testValidQuery(string $phrase, int $languageId, int $shopId, array $filters, ?int $limit): void
     {
-        $query = new SearchCombinationsForAssociation($phrase, $languageId, $shopId, $limit);
+        $query = new SearchCombinationsForAssociation($phrase, $languageId, $shopId, $filters, $limit);
         $this->assertNotNull($query);
         $this->assertEquals($phrase, $query->getPhrase());
         $this->assertEquals($languageId, $query->getLanguageId()->getValue());
         $this->assertEquals($shopId, $query->getShopId()->getValue());
+        $this->assertEquals($filters, $filters);
         $this->assertEquals($limit, $query->getLimit());
     }
 
     public function getValidParameters(): iterable
     {
-        yield [
+        yield 'mug_nofilter_nolimit' => [
             'mug',
             self::LANGUAGE_ID,
             self::SHOP_ID,
+            [],
             null,
         ];
 
-        yield [
+        yield 'mug_packfilter_nolimit' => [
             'mug',
             self::LANGUAGE_ID,
             self::SHOP_ID,
+            [ProductType::TYPE_PACK],
+            null,
+        ];
+
+        yield 'mug_nofilter_limit1' => [
+            'mug',
+            self::LANGUAGE_ID,
+            self::SHOP_ID,
+            [],
             1,
         ];
 
-        yield [
+        yield 'prettymug_nofilter_limit1' => [
             'pretty mug',
             self::LANGUAGE_ID,
             self::SHOP_ID,
+            [],
             1,
         ];
     }
@@ -89,13 +107,15 @@ class SearchCombinationsForAssociationTest extends TestCase
      * @param int $languageId
      * @param int $shopId
      * @param int|null $limit
+     * @param array $filters
+     * @param string $exceptionClass
      * @param int $errorCode
      */
-    public function testInvalidQuery(string $phrase, int $languageId, int $shopId, ?int $limit, string $exceptionClass, int $errorCode): void
+    public function testInvalidQuery(string $phrase, int $languageId, int $shopId, ?int $limit, ?array $filters, string $exceptionClass, int $errorCode): void
     {
         $caughtException = null;
         try {
-            new SearchCombinationsForAssociation($phrase, $languageId, $shopId, $limit);
+            new SearchCombinationsForAssociation($phrase, $languageId, $shopId, $filters, $limit);
         } catch (Throwable $e) {
             $caughtException = $e;
         }
@@ -111,6 +131,7 @@ class SearchCombinationsForAssociationTest extends TestCase
             self::LANGUAGE_ID,
             self::SHOP_ID,
             null,
+            [ProductType::TYPE_PACK],
             ProductConstraintException::class,
             ProductConstraintException::INVALID_SEARCH_PHRASE_LENGTH,
         ];
@@ -120,6 +141,7 @@ class SearchCombinationsForAssociationTest extends TestCase
             self::LANGUAGE_ID,
             self::SHOP_ID,
             null,
+            [],
             ProductConstraintException::class,
             ProductConstraintException::INVALID_SEARCH_PHRASE_LENGTH,
         ];
@@ -129,6 +151,7 @@ class SearchCombinationsForAssociationTest extends TestCase
             self::LANGUAGE_ID,
             self::SHOP_ID,
             null,
+            [],
             ProductConstraintException::class,
             ProductConstraintException::INVALID_SEARCH_PHRASE_LENGTH,
         ];
@@ -138,6 +161,7 @@ class SearchCombinationsForAssociationTest extends TestCase
             self::LANGUAGE_ID,
             self::SHOP_ID,
             0,
+            [],
             ProductConstraintException::class,
             ProductConstraintException::INVALID_SEARCH_LIMIT,
         ];
@@ -147,6 +171,7 @@ class SearchCombinationsForAssociationTest extends TestCase
             self::LANGUAGE_ID,
             self::SHOP_ID,
             -1,
+            [],
             ProductConstraintException::class,
             ProductConstraintException::INVALID_SEARCH_LIMIT,
         ];
@@ -156,6 +181,7 @@ class SearchCombinationsForAssociationTest extends TestCase
             0,
             self::SHOP_ID,
             null,
+            [],
             LanguageException::class,
             0,
         ];
@@ -165,7 +191,18 @@ class SearchCombinationsForAssociationTest extends TestCase
             self::LANGUAGE_ID,
             0,
             null,
+            [],
             ShopException::class,
+            0,
+        ];
+
+        yield [
+            'mug',
+            self::LANGUAGE_ID,
+            0,
+            null,
+            null,
+            TypeError::class,
             0,
         ];
     }

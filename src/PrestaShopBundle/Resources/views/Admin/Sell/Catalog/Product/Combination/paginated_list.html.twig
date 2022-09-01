@@ -40,7 +40,7 @@
         * content may be replaced when invalid form values are detected by the update list API in edition mode.
       *#}
       <div id="combinations-list-form-container">
-        {{ include('@PrestaShop/Admin/Sell/Catalog/Product/Combination/combination_list_form.html.twig', {'combinationsForm': combinationsForm}) }}
+        {{ form_row(combinationsForm) }}
       </div>
 
       {# Empty state when product has no combinations by specified filters #}
@@ -48,7 +48,7 @@
 
       <div id="combinations-list-footer">
         <span>
-          {{ 'Edition mode'|trans({}, 'Admin.Actions') }}
+          {{ 'Edition mode'|trans({}, 'Admin.Catalog.Feature') }}
         </span>
         <div id="combinations-list-footer-buttons">
           <button type="button" id="cancel-combinations-edition" class="btn btn-secondary">

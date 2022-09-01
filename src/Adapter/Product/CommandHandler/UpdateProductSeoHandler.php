@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductSeoPropertiesFiller;
+use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductSeoHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
@@ -51,15 +52,23 @@ class UpdateProductSeoHandler implements UpdateProductSeoHandlerInterface
     private $productSeoPropertiesFiller;
 
     /**
+     * @var Tools
+     */
+    private $tools;
+
+    /**
      * @param ProductMultiShopRepository $productRepository
      * @param ProductSeoPropertiesFiller $productSeoPropertiesFiller
+     * @param Tools $tools
      */
     public function __construct(
         ProductMultiShopRepository $productRepository,
-        ProductSeoPropertiesFiller $productSeoPropertiesFiller
+        ProductSeoPropertiesFiller $productSeoPropertiesFiller,
+        Tools $tools
     ) {
         $this->productRepository = $productRepository;
         $this->productSeoPropertiesFiller = $productSeoPropertiesFiller;
+        $this->tools = $tools;
     }
 
     /**
@@ -111,9 +120,21 @@ class UpdateProductSeoHandler implements UpdateProductSeoHandlerInterface
         }
 
         $localizedLinkRewrites = $command->getLocalizedLinkRewrites();
+
         if (null !== $localizedLinkRewrites) {
-            $product->link_rewrite = $localizedLinkRewrites;
-            $updatableProperties['link_rewrite'] = array_keys($localizedLinkRewrites);
+            foreach ($localizedLinkRewrites as $langId => $linkRewrite) {
+                if (!empty($linkRewrite)) {
+                    $product->link_rewrite[$langId] = $linkRewrite;
+                } elseif (!empty($product->name[$langId])) {
+                    // When link rewrite is provided empty, then use product name.
+                    // There is similar behavior in UpdateProductBasicInformationHandler
+                    $product->link_rewrite[$langId] = $this->tools->linkRewrite($product->name[$langId]);
+                } else {
+                    continue;
+                }
+
+                $updatableProperties['link_rewrite'][] = $langId;
+            }
         }
 
         return $updatableProperties;

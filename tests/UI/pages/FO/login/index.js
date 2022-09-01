@@ -15,6 +15,7 @@ class Login extends FOBasePage {
     super();
 
     this.pageTitle = 'Login';
+    this.loginErrorText = 'Authentication failed.';
 
     // Selectors
     this.loginForm = '#login-form';
@@ -23,6 +24,8 @@ class Login extends FOBasePage {
     this.signInButton = `${this.loginForm} button#submit-login`;
     this.displayRegisterFormLink = 'div.no-account a[data-link-action=\'display-register-form\']';
     this.passwordReminderLink = '.forgot-password a';
+    this.showPasswordButton = '#login-form button[data-action=show-password]';
+    this.alertDangerTextBlock = '#content section.login-form div.help-block li.alert-danger';
   }
 
   /*
@@ -33,12 +36,46 @@ class Login extends FOBasePage {
    * Login in FO
    * @param page {Page} Browser tab
    * @param customer {object} Customer's information (email and password)
+   * @param waitForNavigation {boolean} true to wait for navigation after the click on button
    * @return {Promise<void>}
    */
-  async customerLogin(page, customer) {
+  async customerLogin(page, customer, waitForNavigation = true) {
     await this.setValue(page, this.emailInput, customer.email);
     await this.setValue(page, this.passwordInput, customer.password);
-    await this.clickAndWaitForNavigation(page, this.signInButton);
+    if (waitForNavigation) {
+      await this.clickAndWaitForNavigation(page, this.signInButton);
+    } else {
+      await page.click(this.signInButton);
+    }
+  }
+
+  /**
+   * Get login error
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
+  async getLoginError(page) {
+    return this.getTextContent(page, this.alertDangerTextBlock);
+  }
+
+  /**
+   * Get password type
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getPasswordType(page) {
+    return this.getAttributeContent(page, this.passwordInput, 'type');
+  }
+
+  /**
+   * Show password
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async showPassword(page) {
+    await this.waitForSelectorAndClick(page, this.showPasswordButton);
+
+    return this.getAttributeContent(page, this.passwordInput, 'type');
   }
 
   /**

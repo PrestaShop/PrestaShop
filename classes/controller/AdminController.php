@@ -256,16 +256,16 @@ class AdminControllerCore extends Controller
     public $override_folder;
 
     /** @var int DELETE access level */
-    const LEVEL_DELETE = 4;
+    public const LEVEL_DELETE = 4;
 
     /** @var int ADD access level */
-    const LEVEL_ADD = 3;
+    public const LEVEL_ADD = 3;
 
     /** @var int EDIT access level */
-    const LEVEL_EDIT = 2;
+    public const LEVEL_EDIT = 2;
 
     /** @var int VIEW access level */
-    const LEVEL_VIEW = 1;
+    public const LEVEL_VIEW = 1;
 
     /**
      * Actions to execute on multiple selections.
@@ -409,7 +409,7 @@ class AdminControllerCore extends Controller
     protected $tabSlug;
 
     /** @var int Auth cookie lifetime */
-    const AUTH_COOKIE_LIFETIME = 3600;
+    public const AUTH_COOKIE_LIFETIME = 3600;
 
     /** @var array */
     public $_conf;
@@ -489,10 +489,10 @@ class AdminControllerCore extends Controller
         $this->token = Tools::getAdminToken($this->controller_name . (int) $this->id . (int) $this->context->employee->id);
 
         $this->_conf = [
-            1 => $this->trans('Successful deletion.', [], 'Admin.Notifications.Success'),
-            2 => $this->trans('The selection has been successfully deleted.', [], 'Admin.Notifications.Success'),
-            3 => $this->trans('Successful creation.', [], 'Admin.Notifications.Success'),
-            4 => $this->trans('Successful update.', [], 'Admin.Notifications.Success'),
+            1 => $this->trans('Successful deletion', [], 'Admin.Notifications.Success'),
+            2 => $this->trans('The selection has been successfully deleted', [], 'Admin.Notifications.Success'),
+            3 => $this->trans('Successful creation', [], 'Admin.Notifications.Success'),
+            4 => $this->trans('Successful update', [], 'Admin.Notifications.Success'),
             5 => $this->trans('The status has been successfully updated.', [], 'Admin.Notifications.Success'),
             6 => $this->trans('The settings have been successfully updated.', [], 'Admin.Notifications.Success'),
             7 => $this->trans('The image was successfully deleted.', [], 'Admin.Notifications.Success'),
@@ -1666,7 +1666,7 @@ class AdminControllerCore extends Controller
             $this->page_header_toolbar_title = $this->toolbar_title[count($this->toolbar_title) - 1];
         }
 
-        $this->context->smarty->assign('help_link', 'https://help.prestashop.com/' . Language::getIsoById($this->context->employee->id_lang) . '/doc/'
+        $this->context->smarty->assign('help_link', 'https://help.prestashop-project.org/' . Language::getIsoById($this->context->employee->id_lang) . '/doc/'
             . Tools::getValue('controller') . '?version=' . _PS_VERSION_ . '&country=' . Language::getIsoById($this->context->employee->id_lang));
     }
 
@@ -2073,7 +2073,7 @@ class AdminControllerCore extends Controller
             'full_cldr_language_code' => $this->context->getCurrentLocale()->getCode(),
             'link' => $this->context->link,
             'shop_name' => Configuration::get('PS_SHOP_NAME'),
-            'base_url' => $this->context->shop->getBaseURL(true),
+            'base_url' => $this->context->shop->getBaseURL(),
             'current_parent_id' => (int) Tab::getCurrentParentId(),
             'tabs' => $tabs,
             'current_tab_level' => $currentTabLevel,
@@ -3146,9 +3146,10 @@ class AdminControllerCore extends Controller
             $select_shop = ', shop.name as shop_name ';
         }
 
-        if ($this->multishop_context && Shop::isTableAssociated($this->table) && !empty($this->className) && null !== $this->_join) {
+        if ($this->multishop_context && Shop::isTableAssociated($this->table) && !empty($this->className)) {
             if (Shop::getContext() != Shop::CONTEXT_ALL || !$this->context->employee->isSuperAdmin()) {
-                $test_join = !preg_match('#`?' . preg_quote(_DB_PREFIX_ . $this->table . '_shop') . '`? *sa#', $this->_join);
+                // test if multishop is already considered by planned request
+                $test_join = (null === $this->_join) || !preg_match('#`?' . preg_quote(_DB_PREFIX_ . $this->table . '_shop') . '`? *sa#', $this->_join);
                 if (Shop::isFeatureActive() && $test_join) {
                     $this->_where .= ' AND EXISTS (
                         SELECT 1

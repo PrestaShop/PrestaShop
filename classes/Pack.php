@@ -34,28 +34,28 @@ class PackCore extends Product
      *
      * @var int
      */
-    const STOCK_TYPE_PACK_ONLY = PackStockType::STOCK_TYPE_PACK_ONLY;
+    public const STOCK_TYPE_PACK_ONLY = PackStockType::STOCK_TYPE_PACK_ONLY;
 
     /**
      * Only decrement pack products quantities.
      *
      * @var int
      */
-    const STOCK_TYPE_PRODUCTS_ONLY = PackStockType::STOCK_TYPE_PRODUCTS_ONLY;
+    public const STOCK_TYPE_PRODUCTS_ONLY = PackStockType::STOCK_TYPE_PRODUCTS_ONLY;
 
     /**
      * Decrement pack quantity and pack products quantities.
      *
      * @var int
      */
-    const STOCK_TYPE_PACK_BOTH = PackStockType::STOCK_TYPE_BOTH;
+    public const STOCK_TYPE_PACK_BOTH = PackStockType::STOCK_TYPE_BOTH;
 
     /**
      * Use pack quantity default setting.
      *
      * @var int
      */
-    const STOCK_TYPE_DEFAULT = PackStockType::STOCK_TYPE_DEFAULT;
+    public const STOCK_TYPE_DEFAULT = PackStockType::STOCK_TYPE_DEFAULT;
 
     protected static $cachePackItems = [];
     protected static $cacheIsPack = [];
@@ -349,6 +349,7 @@ class PackCore extends Product
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
+        /** @var array{id_product: int, id_product_attribute_item: int|null, name: string} $line */
         foreach ($result as &$line) {
             if (Combination::isFeatureActive() && isset($line['id_product_attribute_item']) && $line['id_product_attribute_item']) {
                 $line['cache_default_attribute'] = $line['id_product_attribute'] = $line['id_product_attribute_item'];

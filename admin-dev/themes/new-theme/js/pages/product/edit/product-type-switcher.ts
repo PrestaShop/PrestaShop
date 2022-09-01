@@ -94,6 +94,7 @@ export default class ProductTypeSwitcher {
 
   private confirmTypeSubmit(newType: string) {
     const stockEnabled: boolean = this.$typeSelector.data('stockEnabled');
+    const ecotaxEnabled: boolean = this.$typeSelector.data('ecotaxEnabled');
     const confirmWarnings = [];
 
     // eslint-disable-next-line default-case
@@ -110,8 +111,15 @@ export default class ProductTypeSwitcher {
     }
 
     // Switching FROM and TO combination resets the stock
-    if (stockEnabled && (newType === ProductConst.PRODUCT_TYPE.COMBINATIONS || this.initialType)) {
+    if (stockEnabled
+      && (newType === ProductConst.PRODUCT_TYPE.COMBINATIONS || this.initialType === ProductConst.PRODUCT_TYPE.COMBINATIONS)
+    ) {
       confirmWarnings.push(this.$typeSelector.data('stockWarning'));
+    }
+
+    // When switching to virtual the ecotax is reset
+    if (ecotaxEnabled && newType === ProductConst.PRODUCT_TYPE.VIRTUAL) {
+      confirmWarnings.push(this.$typeSelector.data('ecotaxWarning'));
     }
 
     let confirmMessage: string = `<div class="alert alert-info">${this.$typeSelector.data('confirm-message')}</div>`;

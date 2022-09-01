@@ -30,8 +30,8 @@ use PrestaShop\PrestaShop\Core\Foundation\Filesystem\FileSystem;
 class AdminTranslationsControllerCore extends AdminController
 {
     /** Name of theme by default */
-    const DEFAULT_THEME_NAME = _PS_DEFAULT_THEME_NAME_;
-    const TEXTAREA_SIZED = 70;
+    public const DEFAULT_THEME_NAME = _PS_DEFAULT_THEME_NAME_;
+    public const TEXTAREA_SIZED = 70;
 
     /** @var string : Link which list all pack of language */
     protected $link_lang_pack = 'http://i18n.prestashop-project.org/translations/%ps_version%/available_languages.json';
@@ -830,44 +830,41 @@ class AdminTranslationsControllerCore extends AdminController
                 /** @var bool $error */
                 $error = $gz->extractList($files_paths, _PS_TRANSLATIONS_DIR_ . '../');
                 if ($error) {
-                    if (!empty($error->message)) {
-                        $this->errors[] = $this->trans('The archive cannot be extracted.', [], 'Admin.International.Notification') . ' ' . $error->message;
-                    } else {
-                        foreach ($files_list as $file2check) {
-                            if (pathinfo($file2check['filename'], PATHINFO_BASENAME) == 'index.php' && file_put_contents(_PS_TRANSLATIONS_DIR_ . '../' . $file2check['filename'], Tools::getDefaultIndexContent())) {
-                                continue;
-                            }
+                    foreach ($files_list as $file2check) {
+                        if (pathinfo($file2check['filename'], PATHINFO_BASENAME) == 'index.php' && file_put_contents(_PS_TRANSLATIONS_DIR_ . '../' . $file2check['filename'], Tools::getDefaultIndexContent())) {
+                            continue;
                         }
-
-                        // Clear smarty modules cache
-                        Tools::clearCache();
-
-                        if (Validate::isLanguageFileName($filename)) {
-                            if (!Language::checkAndAddLanguage($iso_code)) {
-                                $conf = 20;
-                            } else {
-                                // Reset cache
-                                Language::loadLanguages();
-
-                                AdminTranslationsController::checkAndAddMailsFiles($iso_code, $files_list);
-                                $this->checkAndAddThemesFiles($files_list, $themes_selected);
-                                $tab_errors = AdminTranslationsController::addNewTabs($iso_code, $files_list);
-
-                                if (count($tab_errors)) {
-                                    $this->errors += $tab_errors;
-
-                                    return false;
-                                }
-                            }
-                        }
-
-                        /*
-                         * @see AdminController::$_conf
-                         */
-                        $this->redirect(false, (isset($conf) ? $conf : '15'));
                     }
+
+                    // Clear smarty modules cache
+                    Tools::clearCache();
+
+                    if (Validate::isLanguageFileName($filename)) {
+                        if (!Language::checkAndAddLanguage($iso_code)) {
+                            $conf = 20;
+                        } else {
+                            // Reset cache
+                            Language::loadLanguages();
+
+                            AdminTranslationsController::checkAndAddMailsFiles($iso_code, $files_list);
+                            $this->checkAndAddThemesFiles($files_list, $themes_selected);
+                            $tab_errors = AdminTranslationsController::addNewTabs($iso_code, $files_list);
+
+                            if (count($tab_errors)) {
+                                $this->errors += $tab_errors;
+
+                                return false;
+                            }
+                        }
+                    }
+
+                    /*
+                     * @see AdminController::$_conf
+                     */
+                    $this->redirect(false, (isset($conf) ? $conf : '15'));
+                } else {
+                    $this->errors[] = $this->trans('The archive cannot be extracted.', [], 'Admin.International.Notification');
                 }
-                $this->errors[] = $this->trans('The archive cannot be extracted.', [], 'Admin.International.Notification');
             } else {
                 $this->errors[] = $this->trans('ISO CODE invalid "%iso_code%" for the following file: "%file%"', ['%iso_code%' => $iso_code, '%file%' => $filename], 'Admin.International.Notification');
             }
@@ -1213,8 +1210,8 @@ class AdminTranslationsControllerCore extends AdminController
                 $directories['php'] = [
                     _PS_FRONT_CONTROLLER_DIR_ => scandir(_PS_FRONT_CONTROLLER_DIR_, SCANDIR_SORT_NONE),
                     _PS_ADMIN_CONTROLLER_DIR_ => scandir(_PS_ADMIN_CONTROLLER_DIR_, SCANDIR_SORT_NONE),
-                    _PS_OVERRIDE_DIR_ . 'controllers/front/' => scandir(_PS_OVERRIDE_DIR_ . 'controllers/front/', SCANDIR_SORT_NONE),
-                    _PS_OVERRIDE_DIR_ . 'controllers/admin/' => scandir(_PS_OVERRIDE_DIR_ . 'controllers/admin/', SCANDIR_SORT_NONE),
+                    _PS_OVERRIDE_DIR_ . 'controllers/front/' => is_dir(_PS_OVERRIDE_DIR_ . 'controllers/front/') ? scandir(_PS_OVERRIDE_DIR_ . 'controllers/front/', SCANDIR_SORT_NONE) : [],
+                    _PS_OVERRIDE_DIR_ . 'controllers/admin/' => is_dir(_PS_OVERRIDE_DIR_ . 'controllers/admin/') ? scandir(_PS_OVERRIDE_DIR_ . 'controllers/admin/', SCANDIR_SORT_NONE) : [],
                     _PS_ADMIN_DIR_ . DIRECTORY_SEPARATOR => scandir(_PS_ADMIN_DIR_ . DIRECTORY_SEPARATOR, SCANDIR_SORT_NONE),
                 ];
 
@@ -3265,7 +3262,7 @@ class AdminTranslationsControllerCore extends AdminController
     {
         $dir = rtrim($dir, '/') . DIRECTORY_SEPARATOR;
 
-        $to_parse = scandir($dir, SCANDIR_SORT_NONE);
+        $to_parse = is_dir($dir) ? scandir($dir, SCANDIR_SORT_NONE) : [];
         // copied (and kind of) adapted from AdminImages.php
         foreach ($to_parse as $file) {
             if (!in_array($file, self::$ignore_folder)) {

@@ -90,6 +90,8 @@ class CustomerPreferencesController extends FrameworkBundleAdminController
             }
 
             $this->addFlash('success', $this->trans('Update successful', 'Admin.Notifications.Success'));
+
+            return $this->redirectToRoute('admin_customer_preferences');
         }
 
         $legacyController = $request->attributes->get('_legacy_controller');

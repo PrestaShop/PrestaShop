@@ -51,15 +51,17 @@ class TestProductFormType extends CommonAbstractType
             ->add('options', FormType::class)
             ->add('pricing', FormType::class)
             ->add('combinations', FormType::class)
+            ->add('extra_modules', FormType::class)
         ;
 
         $stockForm = $builder->get('stock');
+        $stockForm->add('packed_products', FormType::class);
         $stockForm->add('pack_stock_type', ChoiceType::class);
         $stockForm->add('virtual_product_file', FormType::class);
         $stockForm->add('quantities', FormType::class);
 
-        $quantitiesForm = $stockForm->get('quantities');
-        $quantitiesForm->add('stock_movements', FormType::class);
+        $quantities = $stockForm->get('quantities');
+        $quantities->add('stock_movements', FormType::class);
 
         $optionsForm = $builder->get('options');
         $optionsForm->add('product_suppliers', ChoiceType::class);
@@ -68,6 +70,7 @@ class TestProductFormType extends CommonAbstractType
         $pricingForm->add('retail_price', FormType::class);
 
         $retailPricingForm = $pricingForm->get('retail_price');
-        $retailPricingForm->add('ecotax', UnavailableType::class);
+        $retailPricingForm->add('ecotax_tax_excluded', UnavailableType::class);
+        $retailPricingForm->add('ecotax_tax_included', UnavailableType::class);
     }
 }

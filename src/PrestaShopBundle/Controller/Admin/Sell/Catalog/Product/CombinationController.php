@@ -37,9 +37,12 @@ use PrestaShop\PrestaShop\Core\Domain\Product\AttributeGroup\QueryResult\Attribu
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\BulkDeleteCombinationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\DeleteCombinationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\GenerateProductCombinationsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\BulkCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetEditableCombinationsList;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\SearchCombinationsForAssociation;
+use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\CombinationListForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
@@ -104,15 +107,92 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
+     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     *
+     * @param Request $request
+     * @param string $languageCode
+     *
+     * @return JsonResponse
+     */
+    public function searchCombinationProductsAction(
+        Request $request,
+        string $languageCode
+    ): JsonResponse {
+        $langRepository = $this->get('prestashop.core.admin.lang.repository');
+        $language = $langRepository->getOneByLocaleOrIsoCode($languageCode);
+        if (null === $language) {
+            return $this->json([
+                'message' => sprintf(
+                    'Invalid language code %s was used which matches no existing language in this shop.',
+                    $languageCode
+                ),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        $shopId = $this->get('prestashop.adapter.shop.context')->getContextShopID();
+        if (empty($shopId)) {
+            $shopId = $this->get('prestashop.adapter.legacy.configuration')->getInt('PS_SHOP_DEFAULT');
+        }
+
+        try {
+            /** @var CombinationForAssociation[] $combinationProducts */
+            $combinationProducts = $this->getQueryBus()->handle(new SearchCombinationsForAssociation(
+                $request->get('query', ''),
+                $language->getId(),
+                (int) $shopId,
+                $request->get('filters', []),
+                (int) $request->get('limit', 20)
+            ));
+        } catch (ProductConstraintException $e) {
+            return $this->json([
+                'message' => $e->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        if (empty($combinationProducts)) {
+            return $this->json([], Response::HTTP_NOT_FOUND);
+        }
+
+        return $this->json($this->formatCombinationProductsForAssociation($combinationProducts));
+    }
+
+    /**
+     * @param CombinationForAssociation[] $combinationsForAssociation
+     *
+     * @return array<array<string, mixed>>
+     */
+    protected function formatCombinationProductsForAssociation(array $combinationsForAssociation): array
+    {
+        $productsData = [];
+        foreach ($combinationsForAssociation as $productForAssociation) {
+            $productsData[] = [
+                'product_id' => $productForAssociation->getProductId(),
+                'unique_identifier' => $productForAssociation->getProductId() . '_' . $productForAssociation->getCombinationId(),
+                'name' => $productForAssociation->getName(),
+                'reference' => $productForAssociation->getReference(),
+                'combination_id' => $productForAssociation->getCombinationId(),
+                'image' => $productForAssociation->getImageUrl(),
+                'quantity' => 1,
+            ];
+        }
+
+        return $productsData;
+    }
+
+    /**
      * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
      *
      * @param int $productId
      *
      * @return Response
      */
-    public function bulkEditFormAction(int $productId): Response
+    public function bulkEditFormAction(Request $request, int $productId): Response
     {
-        $bulkCombinationForm = $this->getBulkCombinationFormBuilder()->getForm([], ['product_id' => $productId]);
+        $bulkCombinationForm = $this->getBulkCombinationFormBuilder()->getForm([], [
+            'product_id' => $productId,
+            'method' => Request::METHOD_PATCH,
+        ]);
+        $bulkCombinationForm->handleRequest($request);
 
         return $this->render('@PrestaShop/Admin/Sell/Catalog/Product/Combination/bulk.html.twig', [
             'bulkCombinationForm' => $bulkCombinationForm->createView(),
@@ -124,48 +204,60 @@ class CombinationController extends FrameworkBundleAdminController
      *
      * @param Request $request
      * @param int $productId
-     * @param int $combinationId
      *
      * @return JsonResponse
      */
-    public function bulkEditAction(Request $request, int $productId, int $combinationId): JsonResponse
+    public function bulkEditAction(Request $request, int $productId): JsonResponse
     {
-        try {
-            // PATCH request is required to avoid disabled fields to be forced with null values
-            $bulkCombinationForm = $this->getBulkCombinationFormBuilder()->getFormFor($combinationId, [], [
-                'method' => Request::METHOD_PATCH,
-                'product_id' => $productId,
-            ]);
-        } catch (CombinationNotFoundException $e) {
-            return $this->returnErrorJsonResponse(
-                ['error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
-                Response::HTTP_NOT_FOUND
-            );
+        $combinationIds = $request->request->get('combinationIds');
+        if (!$combinationIds) {
+            return $this->json([
+                'error' => $this->getFallbackErrorMessage('', 0, 'Missing combinationIds in request body'),
+            ], Response::HTTP_BAD_REQUEST);
         }
 
-        try {
-            $bulkCombinationForm->handleRequest($request);
-            $result = $this->getBulkCombinationFormHandler()->handleFor($combinationId, $bulkCombinationForm);
-
-            if (!$result->isSubmitted()) {
-                return $this->json(['errors' => [
-                    'form' => [
-                        $this->trans('No submitted data.', 'Admin.Notifications.Error'),
-                    ],
-                ]], Response::HTTP_BAD_REQUEST);
+        $combinationIds = json_decode($combinationIds);
+        $errors = [];
+        foreach ($combinationIds as $combinationId) {
+            try {
+                // PATCH request is required to avoid disabled fields to be forced with null values
+                $bulkCombinationForm = $this->getBulkCombinationFormBuilder()->getFormFor($combinationId, [], [
+                    'method' => Request::METHOD_PATCH,
+                    'product_id' => $productId,
+                ]);
+            } catch (CombinationNotFoundException $e) {
+                $errors[] = $this->getErrorMessageForException($e, $this->getErrorMessages($e));
+                continue;
             }
 
-            if ($result->isValid()) {
-                return $this->json([]);
+            try {
+                $bulkCombinationForm->handleRequest($request);
+                $result = $this->getBulkCombinationFormHandler()->handleFor($combinationId, $bulkCombinationForm);
+
+                if (!$result->isSubmitted()) {
+                    return $this->json([
+                        'error' => $this->getFallbackErrorMessage('', 0, 'No submitted data'),
+                    ], Response::HTTP_BAD_REQUEST);
+                }
+
+                if (!$result->isValid()) {
+                    // it's the same form for all combinations, so if it is invalid for one, it will be invalid for all of them,
+                    // so we return and break the loop
+                    return $this->json([
+                        'error' => $this->trans('Form contains invalid values', 'Admin.Notifications.Error'),
+                        'formErrors' => $this->getFormErrorsForJS($bulkCombinationForm),
+                    ], Response::HTTP_BAD_REQUEST);
+                }
+            } catch (CombinationException $e) {
+                $errors[] = $this->getErrorMessageForException($e, $this->getErrorMessages($e));
             }
-        } catch (CombinationException $e) {
-            return $this->returnErrorJsonResponse(
-                ['error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e))],
-                Response::HTTP_BAD_REQUEST
-            );
         }
 
-        return $this->json(['errors' => $this->getFormErrorsForJS($bulkCombinationForm)], Response::HTTP_BAD_REQUEST);
+        if (empty($errors)) {
+            return $this->json(['success' => true]);
+        }
+
+        return $this->json(['errors' => $errors], Response::HTTP_BAD_REQUEST);
     }
 
     /**
@@ -290,9 +382,6 @@ class CombinationController extends FrameworkBundleAdminController
     }
 
     /**
-     * @todo: this has left unused after some changes, but it may be needed for bulk deletion by chunks
-     *        (remove this code if its still unused after issue #28491 is closed)
-     *
      * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param int $productId
@@ -312,14 +401,40 @@ class CombinationController extends FrameworkBundleAdminController
         try {
             $this->getCommandBus()->handle(new BulkDeleteCombinationCommand($productId, json_decode($combinationIds)));
         } catch (Exception $e) {
+            if ($e instanceof BulkCombinationException) {
+                return $this->jsonBulkErrors($e);
+            }
+
             return $this->json([
                 'error' => $this->getErrorMessageForException($e, $this->getErrorMessages($e)),
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        return $this->json([
-            'message' => $this->trans('Successful deletion', 'Admin.Notifications.Success'),
-        ]);
+        return $this->json(['success' => true]);
+    }
+
+    /**
+     * Format the bulk exception into an array of errors returned in a JsonResponse.
+     *
+     * @param BulkCombinationException $bulkCombinationException
+     *
+     * @return JsonResponse
+     */
+    private function jsonBulkErrors(BulkCombinationException $bulkCombinationException): JsonResponse
+    {
+        $errors = [];
+        foreach ($bulkCombinationException->getBulkExceptions() as $productId => $productException) {
+            $errors[] = $this->trans(
+                'Error for combination %combination_id%: %error_message%',
+                'Admin.Notification.Error',
+                [
+                    '%combination_id%' => $productId,
+                    '%error_message%' => $this->getErrorMessageForException($productException, $this->getErrorMessages($productException)),
+                ]
+            );
+        }
+
+        return $this->json(['errors' => $errors], Response::HTTP_BAD_REQUEST);
     }
 
     /**

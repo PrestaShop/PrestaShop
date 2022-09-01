@@ -191,26 +191,27 @@ class CombinationRepository extends AbstractObjectModelRepository
 
     /**
      * @param CombinationId[] $combinationIds
+     *
+     * @throws CannotBulkDeleteCombinationException
      */
     public function bulkDelete(array $combinationIds): void
     {
-        $failedIds = [];
+        $bulkException = null;
+
         foreach ($combinationIds as $combinationId) {
             try {
                 $this->delete($combinationId);
             } catch (CannotDeleteCombinationException $e) {
-                $failedIds[] = $combinationId->getValue();
+                if (null === $bulkException) {
+                    $bulkException = new CannotBulkDeleteCombinationException('Errors occurred during bulk deletion of combinations');
+                }
+                $bulkException->addException($combinationId, $e);
             }
         }
 
-        if (empty($failedIds)) {
-            return;
+        if (null !== $bulkException) {
+            throw $bulkException;
         }
-
-        throw new CannotBulkDeleteCombinationException($failedIds, sprintf(
-            'Failed to delete following combinations: %s',
-            implode(', ', $failedIds)
-        ));
     }
 
     /**

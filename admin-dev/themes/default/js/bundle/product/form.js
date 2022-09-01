@@ -1874,7 +1874,8 @@ window.priceCalculation = (function () {
           ps_round(price - getEcotaxTaxIncluded(),
             displayPricePrecision,
           ),
-          rates, computationMethod),
+          rates,
+          computationMethod),
         displayPricePrecision,
       );
     },

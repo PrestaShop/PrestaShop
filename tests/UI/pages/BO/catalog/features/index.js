@@ -186,7 +186,7 @@ class Features extends BOBasePage {
   async openHelpSideBar(page) {
     await page.click(this.helpCardLink);
 
-    return this.elementVisible(page, this.helpContainerBlock, 2000);
+    return this.elementVisible(page, this.helpContainerBlock, 4000);
   }
 
   /**

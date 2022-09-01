@@ -35,6 +35,8 @@ export default {
   'price.unitPriceTaxExcluded': 'product[pricing][unit_price][price_tax_excluded]',
   'price.unitPriceTaxIncluded': 'product[pricing][unit_price][price_tax_included]',
   'price.unity': 'product[pricing][unit_price][unity]',
+  'price.ecotaxTaxExcluded': 'product[pricing][retail_price][ecotax_tax_excluded]',
+  'price.ecotaxTaxIncluded': 'product[pricing][retail_price][ecotax_tax_included]',
   'price.overrideAllUnitPriceTaxExcluded': [
     'product[pricing][unit_price][modify_all_shops_price_tax_excluded]',
     'product[pricing][unit_price][modify_all_shops_price_tax_included]',

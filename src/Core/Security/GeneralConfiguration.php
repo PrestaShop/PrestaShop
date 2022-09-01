@@ -34,7 +34,7 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 /**
  * Responsible for saving configuration options for security
  */
-final class GeneralConfiguration implements DataConfigurationInterface
+class GeneralConfiguration implements DataConfigurationInterface
 {
     /**
      * @var ConfigurationInterface

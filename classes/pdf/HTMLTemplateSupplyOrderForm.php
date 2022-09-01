@@ -167,6 +167,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 
         $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
+        /** @var array{base_te: float, tax_rate: float, total_tax_value: float} $result */
         foreach ($results as &$result) {
             $result['base_te'] = Tools::ps_round($result['base_te'], 2);
             $result['tax_rate'] = Tools::ps_round($result['tax_rate'], 2);

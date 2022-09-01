@@ -31,7 +31,6 @@ use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\Type\SubmitBulkAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\SubmitRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
 use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
@@ -43,12 +42,16 @@ use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use PrestaShopBundle\Form\Admin\Type\YesAndNoChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Defines tax rules groups grid
  */
 final class TaxRulesGroupGridDefinitionFactory extends AbstractFilterableGridDefinitionFactory
 {
+    use BulkDeleteActionTrait;
+    use DeleteActionTrait;
+
     public const GRID_ID = 'tax_rules_group';
 
     /**
@@ -118,19 +121,12 @@ final class TaxRulesGroupGridDefinitionFactory extends AbstractFilterableGridDef
                                     ])
                             )
                             ->add(
-                                (new SubmitRowAction('delete'))
-                                    ->setName($this->trans('Delete', [], 'Admin.Actions'))
-                                    ->setIcon('delete')
-                                    ->setOptions([
-                                        'confirm_message' => $this->trans(
-                                            'Delete selected item?',
-                                            [],
-                                            'Admin.Notifications.Warning'
-                                        ),
-                                        'route' => 'admin_tax_rules_groups_delete',
-                                        'route_param_name' => 'taxRulesGroupId',
-                                        'route_param_field' => 'id_tax_rules_group',
-                                    ])
+                                $this->buildDeleteAction(
+                                    'admin_tax_rules_groups_delete',
+                                    'taxRulesGroupId',
+                                    'id_tax_rules_group',
+                                    Request::METHOD_DELETE
+                                )
                             ),
                     ])
             );
@@ -169,10 +165,9 @@ final class TaxRulesGroupGridDefinitionFactory extends AbstractFilterableGridDef
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
                     ->setTypeOptions([
-                        'reset_route' => 'admin_common_reset_search',
+                        'reset_route' => 'admin_common_reset_search_by_filter_id',
                         'reset_route_params' => [
-                            'controller' => 'taxRulesGroup',
-                            'action' => 'index',
+                            'filterId' => self::GRID_ID,
                         ],
                         'redirect_route' => 'admin_tax_rules_groups_index',
                     ])
@@ -224,12 +219,7 @@ final class TaxRulesGroupGridDefinitionFactory extends AbstractFilterableGridDef
                     ])
             )
             ->add(
-                (new SubmitBulkAction('delete_selection'))
-                    ->setName($this->trans('Delete selected', [], 'Admin.Actions'))
-                    ->setOptions([
-                        'submit_route' => 'admin_tax_rules_groups_bulk_delete',
-                        'confirm_message' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Warning'),
-                    ])
+                $this->buildBulkDeleteAction('admin_tax_rules_groups_bulk_delete')
             );
     }
 }

@@ -29,7 +29,7 @@
  */
 class ProfileCore extends ObjectModel
 {
-    const ALLOWED_PROFILE_TYPE_CHECK = [
+    public const ALLOWED_PROFILE_TYPE_CHECK = [
         'id_tab',
         'class_name',
     ];

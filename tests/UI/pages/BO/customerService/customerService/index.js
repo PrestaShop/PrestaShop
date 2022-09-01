@@ -55,7 +55,7 @@ class CustomerService extends BOBasePage {
     this.tableTextWarningStatusIcon = (row, column) => `${this.tableStatusIcon(row, column)}.text-warning`;
 
     // Delete message success text
-    this.deleteMessageSuccessAlertText = 'Successful deletion.';
+    this.deleteMessageSuccessAlertText = 'Successful deletion';
 
     // Contact options selectors
     this.contactOptionForm = '#customer_thread_fieldset_contact';

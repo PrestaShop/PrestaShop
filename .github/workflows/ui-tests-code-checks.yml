@@ -8,9 +8,15 @@ defaults:
   run:
     working-directory: ./tests/UI/
 
+permissions:
+  contents: read
+
 jobs:
 
   ESLint:
+    permissions:
+      actions: write  # for styfle/cancel-workflow-action to cancel/stop running workflows
+      contents: read  # for actions/checkout to fetch code
     runs-on: ubuntu-latest
     name: ESLint
     if: contains(github.event.pull_request.labels.*.name, 'TE')
@@ -30,6 +36,14 @@ jobs:
           path: ~/.cache/ms-playwright/
           key: ${{ runner.os }}-browsers
 
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Setup NPM
+        run: npm install -g npm@7
+
       - name: Install dependencies in UI tests directory
         run: npm install
 
@@ -37,6 +51,9 @@ jobs:
         run: npm run lint
 
   Steps-identifiers:
+    permissions:
+      actions: write  # for styfle/cancel-workflow-action to cancel/stop running workflows
+      contents: read  # for actions/checkout to fetch code
     runs-on: ubuntu-latest
     name: Checking doubles in steps identifiers
     if: contains(github.event.pull_request.labels.*.name, 'TE')
@@ -55,6 +72,14 @@ jobs:
         with:
           path: ~/.cache/ms-playwright/
           key: ${{ runner.os }}-browsers
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Setup NPM
+        run: npm install -g npm@7
 
       - name: Install dependencies in UI tests directory
         run: npm install

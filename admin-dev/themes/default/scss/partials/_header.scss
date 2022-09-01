@@ -474,7 +474,8 @@ $search-border-color: #bbcdd2;
   #bo_query {
     @include border-radius(0, 55px, 55px, 0);
     height: 35px;
-    padding-left: 10px;
+    padding-right: 35px;
+    padding-left: 6px;
     font-style: italic;
     color: $main-color;
     background: #fff;
@@ -488,52 +489,80 @@ $search-border-color: #bbcdd2;
     @include transition(none);
   }
 
-  .input-group {
-    margin: 0 !important;
-  }
-
   .form-group {
     width: 250px;
 
-    .input-group-btn {
-      @include border-radius(55px, 0, 0, 55px);
-      border: 1px solid $search-border-color;
-      border-right: none;
+    .input-group {
+      margin: 0 !important;
 
-      @at-root .bootstrap & {
-        > .btn {
-          @include border-radius(55px, 0, 0, 55px);
+      .input-group-btn {
+        @include border-radius(55px, 0, 0, 55px);
+        border: 1px solid $search-border-color;
+        border-right: none;
+
+        @at-root .bootstrap & {
+          > .btn {
+            @include border-radius(55px, 0, 0, 55px);
+            @include box-shadow(none);
+            height: 33px;
+            padding: 8px 6px 6px 8px;
+            outline: none;
+          }
+        }
+
+        .btn-default {
           @include box-shadow(none);
-          height: 33px;
-          padding: 8px 0 6px 8px;
-          padding-right: 0;
-          outline: none;
+          border: 1px solid transparent !important;
         }
       }
 
-      .btn-default {
-        @include box-shadow(none);
-        border: 1px solid transparent !important;
+      .dropdown-menu {
+        .material-icons {
+          font-size: 18px;
+          color: $medium-gray;
+        }
+
+        > li {
+          &.active {
+            .material-icons {
+              color: #fff;
+            }
+          }
+
+          a {
+            display: flex;
+            flex-wrap: nowrap;
+            column-gap: 10px;
+            align-items: center;
+
+            &:hover,
+            &:focus {
+              .material-icons {
+                color: #fff;
+              }
+            }
+          }
+        }
       }
     }
   }
 
   .clear_search {
     position: absolute;
-    top: 6px;
+    top: 7px;
     z-index: 10;
-    @include right(8px);
+    @include right(10px);
+
+    .material-icons {
+      font-size: 18px;
+    }
   }
 
   #search_type_icon {
     top: -2px;
     padding-right: 0;
-    font-size: 20px;
+    font-size: 18px;
     line-height: 1;
-  }
-
-  .icon-remove {
-    vertical-align: middle;
   }
 }
 

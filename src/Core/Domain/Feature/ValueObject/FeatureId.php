@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Feature\ValueObject;
 use PrestaShop\PrestaShop\Core\Domain\Feature\Exception\InvalidFeatureIdException;
 
 /**
- * Defines Feature ID with it's constraints.
+ * Defines Feature ID with its constraints.
  */
 class FeatureId
 {
@@ -61,9 +61,9 @@ class FeatureId
      *
      * @throws InvalidFeatureIdException
      */
-    private function assertIntegerIsGreaterThanZero($featureId)
+    private function assertIntegerIsGreaterThanZero($featureId): void
     {
-        if (!is_numeric($featureId) || 0 > $featureId) {
+        if (!is_int($featureId) || 0 > $featureId) {
             throw new InvalidFeatureIdException(sprintf('Invalid feature id %s supplied. Feature id must be positive integer.', var_export($featureId, true)));
         }
     }

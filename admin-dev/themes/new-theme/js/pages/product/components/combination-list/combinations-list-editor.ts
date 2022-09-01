@@ -165,6 +165,7 @@ export default class CombinationsListEditor {
     this.editionMode = true;
     this.$paginatedList.addClass(CombinationsMap.list.editionModeClass);
     this.disableElements();
+    this.eventEmitter.emit(CombinationEvents.listEditionMode, this.editionMode);
   }
 
   /**
@@ -199,6 +200,7 @@ export default class CombinationsListEditor {
     });
     this.renderer.setSorting(true);
     this.editionMode = false;
+    this.eventEmitter.emit(CombinationEvents.listEditionMode, this.editionMode);
   }
 
   private resetEdition(): void {

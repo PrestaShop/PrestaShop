@@ -40,6 +40,7 @@ $(() => {
     'EventEmitter',
     'TextWithLengthCounter',
     'DeltaQuantityInput',
+    'DisablingSwitch',
   ]);
 
   const $combinationForm: JQuery = $(CombinationMap.combinationForm);

@@ -100,11 +100,16 @@ class CategoriesType extends TranslatorAwareType
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-        $resolver->setDefaults([
-            'label' => false,
-            'required' => false,
-            'product_id' => null,
-        ]);
-        $resolver->setAllowedTypes('product_id', ['int', 'null']);
+        $resolver
+            ->setDefaults([
+                'label' => false,
+                'required' => false,
+                'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/categories.html.twig',
+            ])
+            ->setRequired([
+                'product_id',
+            ])
+            ->setAllowedTypes('product_id', 'int')
+        ;
     }
 }

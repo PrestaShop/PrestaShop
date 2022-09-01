@@ -40,16 +40,16 @@ use Symfony\Component\Intl\Intl;
 
 class LanguageCore extends ObjectModel implements LanguageInterface
 {
-    const ALL_LANGUAGES_FILE = '/app/Resources/all_languages.json';
-    const SF_LANGUAGE_PACK_URL = 'https://i18n.prestashop-project.org/translations/%version%/%locale%/%locale%.zip';
-    const EMAILS_LANGUAGE_PACK_URL = 'https://i18n.prestashop-project.org/mails/%version%/%locale%/%locale%.zip';
+    public const ALL_LANGUAGES_FILE = '/app/Resources/all_languages.json';
+    public const SF_LANGUAGE_PACK_URL = 'https://i18n.prestashop-project.org/translations/%version%/%locale%/%locale%.zip';
+    public const EMAILS_LANGUAGE_PACK_URL = 'https://i18n.prestashop-project.org/mails/%version%/%locale%/%locale%.zip';
     public const PACK_TYPE_EMAILS = 'emails';
     public const PACK_TYPE_SYMFONY = 'sf';
 
     /**
      * Timeout for downloading a translation pack, in seconds
      */
-    const PACK_DOWNLOAD_TIMEOUT = 20;
+    public const PACK_DOWNLOAD_TIMEOUT = 20;
 
     /**
      * Path to the local translation pack cache directory.
@@ -333,7 +333,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
      * @param string $theme_from
      * @param string|bool $iso_to
      * @param string|bool $theme_to
-     * @param bool $select
+     * @param bool|string $select
      * @param bool $check
      * @param bool $modules
      *
@@ -1018,6 +1018,7 @@ class LanguageCore extends ObjectModel implements LanguageInterface
                 }
                 Db::getInstance()->execute('DELETE FROM `' . $row['Tables_in_' . _DB_NAME_] . '` WHERE `id_lang` = ' . (int) $to);
                 $query = 'INSERT INTO `' . $row['Tables_in_' . _DB_NAME_] . '` VALUES ';
+                /** @var array<string, int|string|null> $row2 */
                 foreach ($result2 as $row2) {
                     $query .= '(';
                     $row2['id_lang'] = $to;

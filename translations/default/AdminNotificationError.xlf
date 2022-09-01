@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/CombinationController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9edb260e4183e5f1fa35c1702f0cffa1">
+        <source>Error for combination %combination_id%: %error_message%</source>
+        <target>Error for combination %combination_id%: %error_message%</target>
+        <note>Line: 428</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b49b6a333fc4422d8fbfad546c47b97c">
+        <source>Error for product %product_id%: %error_message%</source>
+        <target>Error for product %product_id%: %error_message%</target>
+        <note>Line: 718</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

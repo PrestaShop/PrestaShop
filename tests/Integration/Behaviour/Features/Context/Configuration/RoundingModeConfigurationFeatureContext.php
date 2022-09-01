@@ -35,7 +35,6 @@ class RoundingModeConfigurationFeatureContext extends AbstractConfigurationFeatu
      */
     public function setRoundingMode($value)
     {
-        $this->previousConfiguration['PS_PRICE_ROUND_MODE'] = Configuration::get('PS_PRICE_ROUND_MODE');
         switch ($value) {
             case 'up':
                 $this->setConfiguration('PS_PRICE_ROUND_MODE', PS_ROUND_UP);

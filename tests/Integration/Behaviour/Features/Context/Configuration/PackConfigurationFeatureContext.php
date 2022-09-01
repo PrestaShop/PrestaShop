@@ -36,7 +36,6 @@ class PackConfigurationFeatureContext extends AbstractConfigurationFeatureContex
      */
     public function specificShopConfigurationPackStockTypeOfIsSetTo($value)
     {
-        $this->previousConfiguration['PS_PACK_STOCK_TYPE'] = Configuration::get('PS_PACK_STOCK_TYPE');
         switch ($value) {
             case 'packs only':
                 $this->setConfiguration('PS_PACK_STOCK_TYPE', Pack::STOCK_TYPE_PACK_ONLY);

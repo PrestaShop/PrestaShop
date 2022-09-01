@@ -1,0 +1,51 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.bridge.smarty.smarty_bridge:
+    class: PrestaShopBundle\Bridge\Smarty\SmartyBridge
+    arguments:
+      - "@prestashop.adapter.legacy.context"
+      - "@prestashop.adapter.legacy.configuration"
+      - !tagged prestashop.bridge.smarty_configurator
+
+  prestashop.bridge.smarty.breadcrumbs_and_title_configurator:
+    class: PrestaShopBundle\Bridge\Smarty\BreadcrumbsAndTitleConfigurator
+    arguments:
+      - "@prestashop.adapter.legacy.context"
+      - "@prestashop.adapter.legacy.configuration"
+    tags: [ 'prestashop.bridge.smarty_configurator' ]
+
+  prestashop.bridge.smarty.footer_configurator:
+    class: PrestaShopBundle\Bridge\Smarty\FooterConfigurator
+    arguments:
+      - "@prestashop.adapter.legacy.context"
+    tags: [ 'prestashop.bridge.smarty_configurator' ]
+
+  prestashop.bridge.smarty.header_configurator:
+    class: PrestaShopBundle\Bridge\Smarty\HeaderConfigurator
+    arguments:
+      - "@prestashop.router"
+      - "@translator"
+      - "@prestashop.adapter.legacy.context"
+      - "@prestashop.hook.dispatcher"
+      - "@prestashop.adapter.legacy.configuration"
+    tags: [ 'prestashop.bridge.smarty_configurator' ]
+
+  prestashop.bridge.smarty.modal_configurator:
+    class: PrestaShopBundle\Bridge\Smarty\ModalConfigurator
+    tags: [ 'prestashop.bridge.smarty_configurator' ]
+
+  prestashop.bridge.smarty.notification_configurator:
+    class: PrestaShopBundle\Bridge\Smarty\NotificationsConfigurator
+    arguments:
+      - "@prestashop.adapter.legacy.configuration"
+    tags: [ 'prestashop.bridge.smarty_configurator' ]
+
+  prestashop.bridge.smarty.toolbar_flags_configurator:
+    class: PrestaShopBundle\Bridge\Smarty\ToolbarFlagsConfigurator
+    arguments:
+      - "@prestashop.router"
+      - "@prestashop.adapter.legacy.configuration"
+      - "@prestashop.core.help.documentation"
+    tags: [ 'prestashop.bridge.smarty_configurator' ]

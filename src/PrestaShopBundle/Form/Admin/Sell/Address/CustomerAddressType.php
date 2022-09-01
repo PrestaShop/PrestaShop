@@ -42,6 +42,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Email;
@@ -105,8 +106,8 @@ class CustomerAddressType extends TranslatorAwareType
             'Admin.Notifications.Info'
         ) . ' ' . TypedRegexValidator::GENERIC_NAME_CHARS;
         $stateChoices = $this->stateChoiceProvider->getChoices(['id_country' => $countryId]);
-
         $showStates = !empty($stateChoices);
+        $requiredFields = $options['requiredFields'];
 
         if (!isset($data['id_customer'])) {
             $builder->add('customer_email', EmailType::class, [
@@ -138,7 +139,7 @@ class CustomerAddressType extends TranslatorAwareType
                 'The national ID card number of this person, or a unique tax identification number.',
                 'Admin.Orderscustomers.Feature'
             ),
-            'required' => false,
+            'required' => in_array('dni', $requiredFields, true),
             'empty_data' => '',
             'constraints' => [
                 new CleanHtml(),
@@ -236,7 +237,7 @@ class CustomerAddressType extends TranslatorAwareType
             ->add('company', TextType::class, [
                 'label' => $this->trans('Company', 'Admin.Global'),
                 'help' => $genericInvalidCharsMessage,
-                'required' => false,
+                'required' => in_array('company', $requiredFields, true),
                 'empty_data' => '',
                 'constraints' => [
                     new CleanHtml(),
@@ -255,7 +256,7 @@ class CustomerAddressType extends TranslatorAwareType
             ])
             ->add('vat_number', TextType::class, [
                 'label' => $this->trans('VAT number', 'Admin.Orderscustomers.Feature'),
-                'required' => false,
+                'required' => in_array('vat_number', $requiredFields, true),
                 'empty_data' => '',
                 'constraints' => [
                     new CleanHtml(),
@@ -297,7 +298,7 @@ class CustomerAddressType extends TranslatorAwareType
             ])
             ->add('address2', TextType::class, [
                 'label' => $this->trans('Address (2)', 'Admin.Global'),
-                'required' => false,
+                'required' => in_array('address2', $requiredFields, true),
                 'empty_data' => '',
                 'constraints' => [
                     new CleanHtml(),
@@ -396,7 +397,7 @@ class CustomerAddressType extends TranslatorAwareType
                 ],
             ])->add('phone', TextType::class, [
                 'label' => $this->trans('Phone', 'Admin.Global'),
-                'required' => false,
+                'required' => in_array('phone', $requiredFields, true),
                 'empty_data' => '',
                 'constraints' => [
                     new CleanHtml(),
@@ -415,7 +416,7 @@ class CustomerAddressType extends TranslatorAwareType
             ])
             ->add('phone_mobile', TextType::class, [
                 'label' => $this->trans('Mobile phone', 'Admin.Global'),
-                'required' => false,
+                'required' => in_array('phone_mobile', $requiredFields, true),
                 'constraints' => [
                     new CleanHtml(),
                     new TypedRegex([
@@ -432,7 +433,7 @@ class CustomerAddressType extends TranslatorAwareType
                 ],
             ])
             ->add('other', TextareaType::class, [
-                'required' => false,
+                'required' => in_array('other', $requiredFields, true),
                 'label' => $this->trans('Other', 'Admin.Global'),
                 'help' => $this->trans(
                     'Invalid characters:',
@@ -454,5 +455,12 @@ class CustomerAddressType extends TranslatorAwareType
                     ]),
                 ],
             ]);
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'requiredFields' => [],
+        ]);
     }
 }

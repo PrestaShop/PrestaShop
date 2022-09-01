@@ -27,6 +27,8 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\CustomerConfiguration'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
 
   prestashop.adapter.order_general.configuration:
     class: 'PrestaShop\PrestaShop\Adapter\Order\GeneralConfiguration'
@@ -129,6 +131,9 @@ services:
     class: 'PrestaShop\PrestaShop\Adapter\Invoice\InvoiceOptionsConfiguration'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.shop.context'
+      - '@prestashop.adapter.multistore_feature'
+      - '@prestashop.core.form.choice_provider.invoice_model_by_name'
 
   prestashop.adapter.data_provider.language:
     class: 'PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider'
@@ -282,5 +287,10 @@ services:
 
   prestashop.adapter.security.general.configuration:
     class: 'PrestaShop\PrestaShop\Core\Security\GeneralConfiguration'
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+
+  prestashop.adapter.security.password_policy.configuration:
+    class: 'PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration'
     arguments:
       - '@prestashop.adapter.legacy.configuration'
