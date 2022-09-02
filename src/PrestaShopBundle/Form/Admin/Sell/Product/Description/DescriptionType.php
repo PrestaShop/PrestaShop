@@ -36,6 +36,7 @@ use PrestaShopBundle\Form\Admin\Type\EntitySearchInputType;
 use PrestaShopBundle\Form\Admin\Type\FormattedTextareaType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\Validator\Constraints\TinyMceMaxLength;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\RouterInterface;
@@ -110,16 +111,18 @@ class DescriptionType extends TranslatorAwareType
                         'class' => 'serp-default-description',
                     ],
                     'constraints' => [
-                        new Length([
-                            'max' => $shortDescriptionLimit,
-                            'maxMessage' => $this->trans(
-                                'This field cannot be longer than %limit% characters.',
-                                'Admin.Notifications.Error',
-                                [
-                                    '%limit%' => $shortDescriptionLimit,
-                                ]
-                            ),
-                        ]),
+                        new TinyMceMaxLength(
+                            [
+                                'max' => $shortDescriptionLimit,
+                                'message' => $this->trans(
+                                    'This field cannot be longer than %limit% characters.',
+                                    'Admin.Notifications.Error',
+                                    [
+                                        '%limit%' => $shortDescriptionLimit,
+                                    ]
+                                ),
+                            ]
+                        ),
                     ],
                 ],
                 'label_tag_name' => 'h3',
