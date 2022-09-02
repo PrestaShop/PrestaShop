@@ -362,8 +362,8 @@ class TagCore extends ObjectModel
             WHERE id_product=' . (int) $idProduct
         ;
         if ($langId) {
-            $removeWhere .= ' AND id_lang =' . (int) $langId;
-            $selectTagsToRemove .= ' AND id_lang =' . (int) $langId;
+            $removeWhere .= ' AND id_lang =' . $langId;
+            $selectTagsToRemove .= ' AND id_lang =' . $langId;
         }
 
         $tagsRemoved = Db::getInstance()->executeS($selectTagsToRemove);
