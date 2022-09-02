@@ -248,11 +248,15 @@ class ModuleController extends ModuleAbstractController
             }
 
             $collection = ModuleCollection::createFrom([$moduleInstance]);
+            $collectionWithActionUrls = $modulesProvider->setActionUrls($collection);
+
+            $modulePresenter = $this->get('prestashop.adapter.presenter.module');
+            $collectionPresented = $modulePresenter->presentCollection($collectionWithActionUrls);
+
             $response[$module]['action_menu_html'] = $this->container->get('twig')->render(
                 '@PrestaShop/Admin/Module/Includes/action_menu.html.twig',
                 [
-                    'module' => $this->container->get('prestashop.adapter.presenter.module')
-                        ->presentCollection($modulesProvider->setActionUrls($collection))[0],
+                    'module' => $collectionPresented[0],
                     'level' => $this->authorizationLevel(self::CONTROLLER_NAME),
                 ]
             );
