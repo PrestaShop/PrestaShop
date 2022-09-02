@@ -71,9 +71,6 @@ class ProductData {
     /** @type {string} Tac rule to apply the product */
     this.taxRule = productToCreate.taxRule || 'FR Taux standard (20%)';
 
-    /** @type {number} Tax rule id to apply the product */
-    this.taxRuleID = productToCreate.taxRuleID || 0;
-
     /** @type {number} EcoTax tax included of the product */
     this.ecoTax = productToCreate.ecoTax === undefined
       ? faker.datatype.number({min: 1, max: 5})

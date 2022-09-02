@@ -46,6 +46,7 @@ use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\Query\GetShowcaseCardIsClosed
 use PrestaShop\PrestaShop\Core\Domain\ShowcaseCard\ValueObject\ShowcaseCard;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Handler\FormHandler;
+use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\UploadedImageConstraintException;
 use PrestaShop\PrestaShop\Core\Search\Filters\EmployeeFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -476,6 +477,10 @@ class EmployeeController extends FrameworkBundleAdminController
     protected function getErrorMessages(Exception $e)
     {
         return [
+            UploadedImageConstraintException::class => $this->trans(
+                'The file extension for the avatar is not supported. Valid ones are: gif, jpg, jpeg, jpe, png, webp.',
+                'Admin.Notifications.Error'
+            ),
             InvalidEmployeeIdException::class => $this->trans(
                 'The object cannot be loaded (the identifier is missing or invalid)',
                 'Admin.Notifications.Error'

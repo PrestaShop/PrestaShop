@@ -20,7 +20,6 @@ class PricingTab extends BOBasePage {
     this.retailPriceInput = '#product_pricing_retail_price_price_tax_excluded';
     this.taxRuleSpan = '#select2-product_pricing_retail_price_tax_rules_group_id-container';
     this.taxRuleList = 'ul#select2-product_pricing_retail_price_tax_rules_group_id-results';
-    this.taxRuleSelect = taxRuleID => `${this.taxRuleList} li[id*='-${taxRuleID}']`;
   }
 
   /*
@@ -41,7 +40,7 @@ class PricingTab extends BOBasePage {
       this.waitForSelectorAndClick(page, this.taxRuleSpan),
       this.waitForVisibleSelector(page, this.taxRuleList),
     ]);
-    await this.waitForSelectorAndClick(page, this.taxRuleSelect(productData.taxRuleID));
+    await page.locator(`li:has-text('${productData.taxRule}')`).click();
   }
 }
 
