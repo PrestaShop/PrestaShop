@@ -48,9 +48,13 @@ class ProductSettings
     public const MAX_MPN_LENGTH = 40;
     public const MAX_META_TITLE_LENGTH = 70;
     public const MAX_META_DESCRIPTION_LENGTH = 160;
-
-    // The short description (a.k.a. summary) max length is configurable and is saved in configuration named PS_PRODUCT_SHORT_DESC_LIMIT
-    public const DEFAULT_MAX_DESCRIPTION_SHORT_LENGTH = 800;
     public const MAX_DESCRIPTION_LENGTH = 21844;
     public const MAX_LINK_REWRITE_LENGTH = 128;
+
+    /**
+     * This is the default value for short description (a.k.a. summary) maximum length,
+     * but this value is configurable,
+     * it is saved in configuration named PS_PRODUCT_SHORT_DESC_LIMIT
+     */
+    public const MAX_DESCRIPTION_SHORT_LENGTH = 800;
 }
