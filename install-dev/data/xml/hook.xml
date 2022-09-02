@@ -56,6 +56,11 @@
       <title>Right column blocks</title>
       <description>This hook displays new elements in the right-hand column</description>
     </hook>
+    <hook id="displayContactRightColumn">
+      <name>displayContactRightColumn</name>
+      <title>Right column blocks of the contact page</title>
+      <description>This hook displays new elements in the right-hand column of the contact page</description>
+    </hook>
     <hook id="displayWrapperTop">
       <name>displayWrapperTop</name>
       <title>Main wrapper section (top)</title>
@@ -65,6 +70,11 @@
       <name>displayWrapperBottom</name>
       <title>Main wrapper section (bottom)</title>
       <description>This hook displays new elements in the bottom of the main wrapper</description>
+    </hook>
+    <hook id="dipslayContactContent">
+      <name>dipslayContactContent</name>
+      <title>Content wrapper section of the contact page</title>
+      <description>This hook displays new elements in the content wrapper of the contact page</description>
     </hook>
     <hook id="displayContentWrapperTop">
       <name>displayContentWrapperTop</name>
@@ -80,6 +90,11 @@
       <name>displayLeftColumn</name>
       <title>Left column blocks</title>
       <description>This hook displays new elements in the left-hand column</description>
+    </hook>
+    <hook id="displayContactLeftColumn">
+      <name>displayContactLeftColumn</name>
+      <title>Left column blocks on the contact page</title>
+      <description>This hook displays new elements in the left-hand column of the contact page</description>
     </hook>
     <hook id="displayHome">
       <name>displayHome</name>
