@@ -320,6 +320,8 @@ class FrameworkBundleAdminControllerTest extends WebTestCase
             'admin_shipping_preferences' => ['Shipping Preferences', 'admin_shipping_preferences'],
             'admin_sql_requests_create' => ['Add new SQL query', 'admin_sql_requests_create'],
             'admin_sql_requests_index' => ['SQL Manager', 'admin_sql_requests_index'],
+            'admin_states_create' => ['Add new state', 'admin_states_index'],
+            'admin_states_index' => ['States', 'admin_states_index'],
             'admin_system_information' => ['Information', 'admin_system_information'],
             'admin_taxes_create' => ['Add new tax', 'admin_taxes_create'],
             'admin_taxes_index' => ['Taxes', 'admin_taxes_index'],

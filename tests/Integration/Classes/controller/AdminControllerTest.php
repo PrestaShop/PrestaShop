@@ -172,7 +172,6 @@ class AdminControllerTest extends TestCase
             ['AdminCartsController'],
             ['AdminImagesController'],
             ['AdminShopUrlController'],
-            ['AdminStatesController'],
             ['AdminStatsController'],
             ['AdminLegacyLayoutController'],
         ];
