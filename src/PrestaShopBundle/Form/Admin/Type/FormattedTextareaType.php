@@ -48,46 +48,40 @@ class FormattedTextareaType extends TranslatorAwareType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefined(['message']);
-        $resolver->setDefaults([
-            'autoload' => true, // Start automatically TinyMCE
-            'limit' => self::LIMIT_TEXT_UTF8,
-        ]);
-        $resolver->setAllowedTypes('limit', 'int');
-        $resolver->setAllowedTypes('autoload', 'bool');
-        $resolver->setAllowedTypes('message', ['string', 'null']);
-
-        $defaults = [
-            'autoload' => true, // Start automatically TinyMCE
-            'limit' => self::LIMIT_TEXT_UTF8,
-        ];
-
-        $resolver->setNormalizer('constraints', function (Options $options, $constraints) use (&$defaults) {
-            $limit = $options->offsetGet('limit');
-            // provide message from options if exists, or default one
-            $message = $options->offsetExists('message') ? $options->offsetGet('message') : $this->trans(
-                'This field cannot be longer than %limit% characters.',
-                'Admin.Notifications.Error',
-                [
-                    '%limit%' => $limit,
-                ]
-            );
-            foreach ($constraints as $constraint) {
-                if ($constraint instanceof TinyMceMaxLength) {
-                    // this means the TinyMceMaxLength constraint was overridden by child form, so we don't need to do anything
-                    return $constraints;
+        $resolver
+            ->setDefined(['message'])
+            ->setDefaults([
+                'autoload' => true, // Start automatically TinyMCE
+                'limit' => self::LIMIT_TEXT_UTF8,
+            ])
+            ->setAllowedTypes('limit', 'int')
+            ->setAllowedTypes('autoload', 'bool')
+            ->setAllowedTypes('message', ['string', 'null'])
+            ->setNormalizer('constraints', function (Options $options, $constraints) {
+                $limit = $options->offsetGet('limit');
+                // provide message from options if exists, or default one
+                $message = $options->offsetExists('message') ? $options->offsetGet('message') : $this->trans(
+                    'This field cannot be longer than %limit% characters.',
+                    'Admin.Notifications.Error',
+                    [
+                        '%limit%' => $limit,
+                    ]
+                );
+                foreach ($constraints as $constraint) {
+                    if ($constraint instanceof TinyMceMaxLength) {
+                        // this means the TinyMceMaxLength constraint was overridden by child form, so we don't need to do anything
+                        return $constraints;
+                    }
                 }
-            }
-            // add length constraint
-            $constraints[] = new TinyMceMaxLength([
-                'max' => $limit,
-                'message' => $message,
-            ]);
+                // add length constraint
+                $constraints[] = new TinyMceMaxLength([
+                    'max' => $limit,
+                    'message' => $message,
+                ]);
 
-            return $constraints;
-        });
-
-        $resolver->setDefaults($defaults);
+                return $constraints;
+            })
+        ;
     }
 
     /**
