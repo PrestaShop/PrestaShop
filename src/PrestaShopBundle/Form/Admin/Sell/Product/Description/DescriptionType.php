@@ -87,7 +87,7 @@ class DescriptionType extends TranslatorAwareType
         if ($this->shortDescriptionMaxLength > 0) {
             $shortDescriptionLimit = $this->shortDescriptionMaxLength;
         } else {
-            $shortDescriptionLimit = ProductSettings::DEFAULT_MAX_DESCRIPTION_SHORT_LENGTH;
+            $shortDescriptionLimit = ProductSettings::MAX_DESCRIPTION_SHORT_LENGTH;
         }
 
         if ($productId) {
