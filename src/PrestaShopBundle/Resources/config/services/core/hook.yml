@@ -86,3 +86,13 @@ parameters:
       'suffix': 'FormHandler'
       'title': 'Modify %s identifiable object data after creating it'
       'description': 'This hook allows to modify %s identifiable object forms data after it was created'
+    'form_data_provider_data':
+      'prefix': 'action'
+      'suffix': 'FormDataProviderData'
+      'title': 'Provide %s identifiable object form data for update'
+      'description': 'This hook allows to provide %s identifiable object form data which will prefill the form in update/edition page'
+    'form_data_provider_default_data':
+      'prefix': 'action'
+      'suffix': 'FormDataProviderDefaultData'
+      'title': 'Provide %s identifiable object default form data for creation'
+      'description': 'This hook allows to provide %s identifiable object form data which will prefill the form in creation page'
