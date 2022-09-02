@@ -30,6 +30,7 @@ let page;
 // Data to create product with combinations
 const newProductData = new ProductFaker({
   type: 'combinations',
+  taxRule: 'No tax',
   quantity: 50,
   minimumQuantity: 1,
   status: true,
@@ -37,6 +38,7 @@ const newProductData = new ProductFaker({
 // Data to edit product with combinations
 const editProductData = new ProductFaker({
   type: 'combinations',
+  taxRule: 'No tax',
   quantity: 100,
   minimumQuantity: 1,
   status: true,
