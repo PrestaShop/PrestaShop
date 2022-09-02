@@ -30,14 +30,14 @@ let page;
 // Data to create virtual product
 const newProductData = new ProductFaker({
   type: 'virtual',
-  taxRuleID: 0,
+  taxRule: 'No tax',
   quantity: 50,
   minimumQuantity: 1,
   status: true,
 });
 const editProductData = new ProductFaker({
   type: 'virtual',
-  taxRuleID: 2,
+  taxRule: 'FR Taux réduit (10%)',
   quantity: 100,
   minimumQuantity: 1,
   status: true,
