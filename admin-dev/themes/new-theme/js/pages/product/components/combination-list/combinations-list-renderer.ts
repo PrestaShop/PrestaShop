@@ -280,7 +280,7 @@ export default class CombinationsListRenderer {
 
     const ecoTax = this.productFormModel.getBigNumber('price.ecotaxTaxExcluded') ?? new BigNumber(0);
 
-    if (ecoTax) {
+    if (!ecoTax.isNaN()) {
       combinationPrice = combinationPrice.plus(new BigNumber(ecoTax.toString()));
     }
 
