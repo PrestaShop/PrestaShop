@@ -30,7 +30,7 @@ class AccountIdentity extends FOBasePage {
     this.invalidEmailAlertDanger = `${this.createAccountForm} div:nth-child(4) li.alert-danger`;
     this.passwordInput = `${this.createAccountForm} #field-password`;
     this.invalidPasswordAlertDanger = `${this.createAccountForm} div.field-password-policy li.alert-danger`;
-    this.invalidNewPasswordAlertDanger = `${this.createAccountForm} div:nth-child(6) li.alert-danger`;
+    this.invalidNewPasswordAlertDanger = `${this.createAccountForm} div:nth-child(6) div.help-block`;
     this.newPasswordInput = `${this.createAccountForm} #field-new_password`;
     this.birthdateInput = `${this.createAccountForm} #field-birthday`;
     this.customerPrivacyCheckbox = `${this.createAccountForm} input[name='customer_privacy']`;

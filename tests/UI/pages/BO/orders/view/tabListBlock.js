@@ -78,13 +78,17 @@ class TabListBlock extends ViewOrderBasePage.constructor {
    */
 
   /**
-   * Get success badge
+   * Get success badges
    * @param page {Page} Browser tab
-   * @param idBadge {number} Badge id to get text content
+   * @param numberOfBadges {number} Number of badges to get text content
    * @returns {Promise<string>}
    */
-  async getSuccessBadge(page, idBadge) {
-    return this.getTextContent(page, this.successBadge(idBadge));
+  async getSuccessBadge(page, numberOfBadges) {
+    let badge = '';
+    for (let i = 1; i <= numberOfBadges; i++) {
+      badge += await this.getTextContent(page, this.successBadge(i));
+    }
+    return badge;
   }
 
   // Methods for status tab
