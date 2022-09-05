@@ -59,6 +59,10 @@ export default class ProductTypeSwitcher {
     this.initialType = <string> this.$typeSelector.val();
 
     this.$productTypePreview.on('click', () => this.showSelectionModal());
+    $('input').on('change', () => {
+      this.$productTypePreview.off('click');
+      this.$productTypePreview.addClass('disabled');
+    });
   }
 
   private showSelectionModal() {
