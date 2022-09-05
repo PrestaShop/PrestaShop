@@ -66,7 +66,6 @@ class LocalizationController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Improve/International/Localization/index.html.twig', [
             'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->trans('Localization', 'Admin.Navigation.Menu'),
-            'requireAddonsSearch' => true,
             'enableSidebar' => true,
             'help_link' => $this->generateSidebarLink($legacyController),
             'configurationForm' => $configurationForm->createView(),
@@ -79,7 +78,10 @@ class LocalizationController extends FrameworkBundleAdminController
     /**
      * Process the Localization Configuration form.
      *
-     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))", message="You do not have permission to edit this.")
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     message="You do not have permission to edit this."
+     * )
      * @DemoRestricted(redirectRoute="admin_localization_index")
      *
      * @param Request $request
@@ -98,7 +100,10 @@ class LocalizationController extends FrameworkBundleAdminController
     /**
      * Process the Localization Local Units form.
      *
-     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller'))", message="You do not have permission to edit this.")
+     * @AdminSecurity(
+     *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     message="You do not have permission to edit this."
+     * )
      * @DemoRestricted(redirectRoute="admin_localization_index")
      *
      * @param Request $request
@@ -117,7 +122,10 @@ class LocalizationController extends FrameworkBundleAdminController
     /**
      * Process the Localization Advanced form.
      *
-     * @AdminSecurity("is_granted(['read','update', 'create','delete'], request.get('_legacy_controller'))", message="You do not have permission to edit this.")
+     * @AdminSecurity(
+     *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     message="You do not have permission to edit this."
+     * )
      * @DemoRestricted(redirectRoute="admin_localization_index")
      *
      * @param Request $request
@@ -171,7 +179,10 @@ class LocalizationController extends FrameworkBundleAdminController
     /**
      * Handles localization pack import.
      *
-     * @AdminSecurity("is_granted(['update', 'create','delete'], request.get('_legacy_controller'))", message="You do not have permission to edit this.")
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *     message="You do not have permission to edit this."
+     * )
      * @DemoRestricted(redirectRoute="admin_localization_index")
      *
      * @param Request $request

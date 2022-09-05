@@ -92,6 +92,10 @@ final class EditCategoryHandler extends AbstractObjectModelHandler implements Ed
             $category->description = $command->getLocalizedDescriptions();
         }
 
+        if (null !== $command->getLocalizedAdditionalDescriptions()) {
+            $category->additional_description = $command->getLocalizedAdditionalDescriptions();
+        }
+
         if (null !== $command->getLocalizedMetaTitles()) {
             $category->meta_title = $command->getLocalizedMetaTitles();
         }
@@ -109,11 +113,11 @@ final class EditCategoryHandler extends AbstractObjectModelHandler implements Ed
         }
 
         if (false === $category->validateFields(false)) {
-            throw new CannotEditCategoryException('Invalid data when updating category');
+            throw new CannotEditCategoryException('Invalid data for updating category.');
         }
 
         if (false === $category->validateFieldsLang(false)) {
-            throw new CannotEditCategoryException('Invalid data when updating category');
+            throw new CannotEditCategoryException('Invalid language data for updating category.');
         }
 
         if (false === $category->update()) {

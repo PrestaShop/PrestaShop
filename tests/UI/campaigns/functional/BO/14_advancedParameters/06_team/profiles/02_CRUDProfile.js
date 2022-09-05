@@ -4,7 +4,10 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const testContext = require('@utils/testContext');
+
+// Import login steps
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import data
 const ProfileFaker = require('@data/faker/profile');
@@ -14,9 +17,6 @@ const dashboardPage = require('@pages/BO/dashboard/index');
 const employeesPage = require('@pages/BO/advancedParameters/team/index');
 const profilesPage = require('@pages/BO/advancedParameters/team/profiles/index');
 const addProfilePage = require('@pages/BO/advancedParameters/team/profiles/add');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_advancedParams_team_profiles_CRUDProfile';
 
@@ -29,7 +29,7 @@ const profileData = new ProfileFaker();
 const editProfileData = new ProfileFaker();
 
 // Create, Read, Update and Delete profile in BO
-describe('Create, Read, Update and Delete profile in BO', async () => {
+describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete profile in BO', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -44,7 +44,7 @@ describe('Create, Read, Update and Delete profile in BO', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to "Advanced parameters>Team" page', async function () {
+  it('should go to \'Advanced Parameters > Team\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAdvancedParamsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -59,7 +59,7 @@ describe('Create, Read, Update and Delete profile in BO', async () => {
     await expect(pageTitle).to.contains(employeesPage.pageTitle);
   });
 
-  it('should go to "Profiles" page', async function () {
+  it('should go to \'Profiles\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToProfilesPage', baseContext);
 
     await employeesPage.goToProfilesPage(page);
@@ -100,12 +100,7 @@ describe('Create, Read, Update and Delete profile in BO', async () => {
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForUpdate', baseContext);
 
-      await profilesPage.filterProfiles(
-        page,
-        'input',
-        'name',
-        profileData.name,
-      );
+      await profilesPage.filterProfiles(page, 'input', 'name', profileData.name);
 
       const textName = await profilesPage.getTextColumnFromTable(page, 1, 'name');
       await expect(textName).to.contains(profileData.name);
@@ -132,12 +127,7 @@ describe('Create, Read, Update and Delete profile in BO', async () => {
     it('should filter list by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForDelete', baseContext);
 
-      await profilesPage.filterProfiles(
-        page,
-        'input',
-        'name',
-        editProfileData.name,
-      );
+      await profilesPage.filterProfiles(page, 'input', 'name', editProfileData.name);
 
       const textName = await profilesPage.getTextColumnFromTable(page, 1, 'name');
       await expect(textName).to.contains(editProfileData.name);

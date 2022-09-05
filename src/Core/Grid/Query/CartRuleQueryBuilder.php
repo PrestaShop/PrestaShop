@@ -30,9 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Grid\Query;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
-use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShop\PrestaShop\Core\Grid\Search\SearchCriteriaInterface;
-use PrestaShop\PrestaShop\Core\Multistore\MultistoreContextCheckerInterface;
 
 /**
  * Builds query for catalog price rule list
@@ -50,36 +48,20 @@ final class CartRuleQueryBuilder extends AbstractDoctrineQueryBuilder
     private $contextIdLang;
 
     /**
-     * @var MultistoreContextCheckerInterface
-     */
-    private $multistoreContextChecker;
-
-    /**
-     * @var FeatureInterface
-     */
-    private $multistoreFeature;
-
-    /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator
      * @param int $contextIdLang
-     * @param MultistoreContextCheckerInterface $multistoreContextChecker
-     * @param FeatureInterface $multistoreFeature
      */
     public function __construct(
         Connection $connection,
         $dbPrefix,
         DoctrineSearchCriteriaApplicatorInterface $searchCriteriaApplicator,
-        $contextIdLang,
-        MultistoreContextCheckerInterface $multistoreContextChecker,
-        FeatureInterface $multistoreFeature
+        $contextIdLang
     ) {
         parent::__construct($connection, $dbPrefix);
         $this->searchCriteriaApplicator = $searchCriteriaApplicator;
         $this->contextIdLang = $contextIdLang;
-        $this->multistoreContextChecker = $multistoreContextChecker;
-        $this->multistoreFeature = $multistoreFeature;
     }
 
     /**

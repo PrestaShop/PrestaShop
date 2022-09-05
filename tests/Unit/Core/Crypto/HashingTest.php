@@ -45,7 +45,7 @@ class HashingTest extends TestCase
         $hashing = new Hashing();
         $salt = '2349123849231-4123';
 
-        $this->assertInternalType('string', $hashing->hash('123', $salt));
+        $this->assertIsString($hashing->hash('123', $salt));
     }
 
     public function testSimpleFirstHash()
@@ -54,6 +54,6 @@ class HashingTest extends TestCase
         $salt = '2349123849231-4123';
 
         $this->assertTrue($hashing->isFirstHash('123', $hashing->hash('123', $salt), $salt));
-        $this->assertFalse($hashing->isFirstHash('123', md5('123', $salt), $salt));
+        $this->assertFalse($hashing->isFirstHash('123', md5('123'), $salt));
     }
 }

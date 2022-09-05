@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Localization\Specification\Number as NumberSpecif
 use PrestaShop\PrestaShop\Core\Localization\Specification\NumberCollection;
 use PrestaShop\PrestaShop\Core\Localization\Specification\NumberSymbolList;
 use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecification;
+use Tests\Unit\Core\Localization\Number\FormatterTest;
 
 class LocaleTest extends TestCase
 {
@@ -49,9 +50,9 @@ class LocaleTest extends TestCase
      *
      * The passed specifications are french (french number formatting and Euro currency)
      *
-     * For more formatting cases, @see \LegacyTests\Unit\Core\Localization\Number\FormatterTest
+     * For more formatting cases, @see FormatterTest
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         /** @noinspection PhpUnhandledExceptionInspection */
         $numberSpecification = new NumberSpecification(
@@ -125,7 +126,7 @@ class LocaleTest extends TestCase
      * When asking the locale to format it
      * Then an exception should be raised
      *
-     * For more formatting cases, @see \LegacyTests\Unit\Core\Localization\Number\FormatterTest
+     * For more formatting cases, @see FormatterTest
      */
     public function testFormatNumberWithInvalidRawNumber()
     {
@@ -159,7 +160,7 @@ class LocaleTest extends TestCase
      * When asking the locale to format this number as a price of this currency
      * Then the expected formatted price should be retrieved
      *
-     * For more formatting cases, @see \LegacyTests\Unit\Core\Localization\Number\FormatterTest
+     * For more formatting cases, @see FormatterTest
      *
      * @param int|float|string $number
      *                                 The number to be formatted

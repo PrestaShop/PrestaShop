@@ -24,28 +24,85 @@
  *}
 {if $show_toolbar}
 <div class="panel-footer" id="toolbar-footer">
-	{foreach from=$toolbar_btn item=btn key=k}
-		{if $k != 'modules-list'}
-			<a id="desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}" class="btn btn-default{if $k=='save' || $k=='save-and-stay'} pull-right{/if}{if isset($btn.target) && $btn.target} _blank{/if}" href="{if isset($btn.href)}{$btn.href|escape:'html':'UTF-8'}{else}#{/if}"{if isset($btn.js) && $btn.js} onclick="{$btn.js}"{/if}>
-				<i class="process-icon-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}{if isset($btn.class)} {$btn.class}{/if}"></i> <span {if isset($btn.force_desc) && $btn.force_desc == true } class="locked" {/if}>{$btn.desc}</span>
-			</a>
-		{/if}
-	{/foreach}
+  {foreach from=$toolbar_btn item=btn key=k}
+    {if $k != 'modules-list' && $k !='save' && $k !='save-and-stay'}
+      <a
+        id="desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}"
+        class="btn btn-default{if isset($btn.target) && $btn.target} _blank{/if} desc-{$table}-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}"
+        href="{if isset($btn.href)}{$btn.href|escape:'html':'UTF-8'}{else}#{/if}"
+        {if isset($btn.js) && $btn.js} onclick="{$btn.js}"{/if}
+      >
+        <i class="process-icon-{if isset($btn.imgclass)}{$btn.imgclass}{else}{$k}{/if}{if isset($btn.class)} {$btn.class}{/if}"></i>
+        <span {if isset($btn.force_desc) && $btn.force_desc == true } class="locked" {/if}>{$btn.desc}</span>
+      </a>
+    {/if}
+  {/foreach}
+
+  <div class="pull-right hidden-xs desktop-buttons">
+    {if isset($toolbar_btn['save-and-stay'])}
+      <a
+        id="desc-{$table}-{if isset($toolbar_btn['save-and-stay'].imgclass)}{$toolbar_btn['save-and-stay'].imgclass}{else}save-and-stay{/if}"
+        class="btn btn-info{if isset($toolbar_btn['save-and-stay'].target) && $toolbar_btn['save-and-stay'].target} _blank{/if} desc-{$table}-{if isset($toolbar_btn['save-and-stay'].imgclass)}{$toolbar_btn['save-and-stay'].imgclass}{else}save-and-stay{/if}"
+        href="{if isset($toolbar_btn['save-and-stay'].href)}{$toolbar_btn['save-and-stay'].href|escape:'html':'UTF-8'}{else}#{/if}"
+        {if isset($toolbar_btn['save-and-stay'].js) && $btn.js} onclick="{$toolbar_btn['save-and-stay'].js}"{/if}
+      >
+        <span {if isset($toolbar_btn['save-and-stay'].force_desc) && $toolbar_btn['save'].force_desc == true } class="locked" {/if}>{$toolbar_btn['save-and-stay'].desc}</span>
+      </a>
+    {/if}
+    <a
+      id="desc-{$table}-{if isset($toolbar_btn['save'].imgclass)}{$toolbar_btn['save'].imgclass}{else}save{/if}"
+      class="btn btn-info{if isset($toolbar_btn['save'].target) && $toolbar_btn['save'].target} _blank{/if} desc-{$table}-{if isset($toolbar_btn['save'].imgclass)}{$toolbar_btn['save'].imgclass}{else}save{/if}"
+      href="{if isset($toolbar_btn['save'].href)}{$toolbar_btn['save'].href|escape:'html':'UTF-8'}{else}#{/if}"
+      {if isset($toolbar_btn['save'].js) && $btn.js} onclick="{$toolbar_btn['save'].js}"{/if}
+    >
+      <span {if isset($toolbar_btn['save'].force_desc) && $toolbar_btn['save'].force_desc == true } class="locked" {/if}>{$toolbar_btn['save'].desc}</span>
+    </a>
+  </div>
+
+  <div class="btn-group dropup pull-right visible-xs mobile-buttons">
+    <a
+      id="desc-{$table}-{if isset($toolbar_btn['save'].imgclass)}{$toolbar_btn['save'].imgclass}{else}save{/if}"
+      class="btn btn-info{if isset($toolbar_btn['save'].target) && $toolbar_btn['save'].target} _blank{/if} desc-{$table}-{if isset($toolbar_btn['save'].imgclass)}{$toolbar_btn['save'].imgclass}{else}save{/if}"
+      href="{if isset($toolbar_btn['save'].href)}{$toolbar_btn['save'].href|escape:'html':'UTF-8'}{else}#{/if}"
+      {if isset($toolbar_btn['save'].js) && $btn.js} onclick="{$toolbar_btn['save'].js}"{/if}
+    >
+      <span {if isset($toolbar_btn['save'].force_desc) && $toolbar_btn['save'].force_desc == true } class="locked" {/if}>{$toolbar_btn['save'].desc}</span>
+    </a>
+    {if isset($toolbar_btn['save-and-stay'])}
+    <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <span class="caret"></span>
+      <span class="sr-only">{l s='Toggle dropdown' d='Admin.Modules.Feature'}</span>
+    </button>
+    <ul class="dropdown-menu">
+      <li>
+        <a
+          id="desc-{$table}-{if isset($toolbar_btn['save-and-stay'].imgclass)}{$toolbar_btn['save-and-stay'].imgclass}{else}save-and-stay{/if}"
+          class="desc-{$table}-{if isset($toolbar_btn['save-and-stay'].imgclass)}{$toolbar_btn['save-and-stay'].imgclass}{else}save-and-stay{/if}"
+          {if isset($toolbar_btn['save-and-stay'].target) && $toolbar_btn['save-and-stay'].target}target="_blank"{/if}
+          href="{if isset($toolbar_btn['save-and-stay'].href)}{$toolbar_btn['save-and-stay'].href|escape:'html':'UTF-8'}{else}#{/if}"
+        >
+          <span {if isset($toolbar_btn['save-and-stay'].force_desc) && $toolbar_btn['save-and-stay'].force_desc == true } class="locked" {/if}>
+              {$toolbar_btn['save-and-stay'].desc}
+          </span>
+        </a>
+      </li>
+    </ul>
+    {/if}
+  </div>
 
 	<script type="text/javascript">
 	//<![CDATA[
 		var submited = false
 
 		//get reference on save link
-		btn_save = $('#desc-{$table}-save');
+		btn_save = $('.desc-{$table}-save');
 
 		//get reference on form submit button
 		btn_submit = $('#{$table}_form_submit_btn');
 
-		if (btn_save.length > 0 && btn_submit.length > 0)
-		{
-			//get reference on save and stay link
-			btn_save_and_stay = $('#desc-{$table}-save-and-stay');
+		if (btn_save.length > 0 && btn_submit.length > 0) {
+			// Get reference on save and stay link
+			btn_save_and_stay = $('.desc-{$table}-save-and-stay');
 
 			//get reference on current save link label
 			lbl_save = $('#desc-{$table}-save');
@@ -54,10 +111,9 @@
 			if (btn_submit.html().length > 0)
 				lbl_save.find('span').html(btn_submit.html());
 
-			if (btn_save_and_stay.length > 0)
-			{
+			if (btn_save_and_stay.length > 0) {
 				//get reference on current save link label
-				lbl_save_and_stay = $('#desc-{$table}-save-and-stay');
+				lbl_save_and_stay = $('.desc-{$table}-save-and-stay');
 
 				//override save and stay link label with submit button value
 				if (btn_submit.html().length > 0 && lbl_save_and_stay && !lbl_save_and_stay.hasClass('locked'))
@@ -73,7 +129,7 @@
 			});
 			//submit the form
 			{block name=formSubmit}
-				btn_save.click(function() {
+				btn_save.on('click', function() {
 					// Avoid double click
 					if (submited)
 						return false;
@@ -89,9 +145,8 @@
 					return false;
 				});
 
-				if (btn_save_and_stay)
-				{
-					btn_save_and_stay.click(function() {
+				if (btn_save_and_stay) {
+					btn_save_and_stay.on('click', function() {
 						if ($(this).attr('href').replace('#', '').replace(/\s/g, '') != '')
 							return true;
 

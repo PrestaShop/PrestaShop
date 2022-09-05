@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Group;
 
+use Db;
 use Group;
 
 /**
@@ -55,5 +56,10 @@ class GroupDataProvider
     public static function getCurrent()
     {
         return Group::getCurrent();
+    }
+
+    public function getAllGroupIds(): array
+    {
+        return Group::getAllGroupIds();
     }
 }

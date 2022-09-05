@@ -26,36 +26,31 @@
 
 namespace PrestaShop\PrestaShop\Core\MerchandiseReturn\Configuration;
 
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Provides data configuration for merchandise returns options form
  */
-final class MerchandiseReturnOptionsConfiguration implements DataConfigurationInterface
+class MerchandiseReturnOptionsConfiguration extends AbstractMultistoreConfiguration
 {
-    /**
-     * @var ConfigurationInterface
-     */
-    private $configuration;
-
-    /**
-     * @param ConfigurationInterface $configuration
-     */
-    public function __construct(ConfigurationInterface $configuration)
-    {
-        $this->configuration = $configuration;
-    }
+    private const CONFIGURATION_FIELDS = [
+        'enable_order_return',
+        'order_return_period_in_days',
+        'order_return_prefix',
+    ];
 
     /**
      * {@inheritdoc}
      */
     public function getConfiguration()
     {
+        $shopConstraint = $this->getShopConstraint();
+
         return [
-            'enable_order_return' => (bool) $this->configuration->get('PS_ORDER_RETURN'),
-            'order_return_period_in_days' => (int) $this->configuration->get('PS_ORDER_RETURN_NB_DAYS'),
-            'order_return_prefix' => $this->configuration->get('PS_RETURN_PREFIX'),
+            'enable_order_return' => (bool) $this->configuration->get('PS_ORDER_RETURN', null, $shopConstraint),
+            'order_return_period_in_days' => (int) $this->configuration->get('PS_ORDER_RETURN_NB_DAYS', null, $shopConstraint),
+            'order_return_prefix' => $this->configuration->get('PS_RETURN_PREFIX', null, $shopConstraint),
         ];
     }
 
@@ -64,28 +59,47 @@ final class MerchandiseReturnOptionsConfiguration implements DataConfigurationIn
      */
     public function updateConfiguration(array $configuration)
     {
-        $errors = [];
-
         if (!$this->validateConfiguration($configuration)) {
-            $errors[] = [
-                'key' => 'Invalid configuration',
-                'parameters' => [],
-                'domain' => 'Admin.Notifications.Warning',
+            return [
+                [
+                    'key' => 'Invalid configuration',
+                    'parameters' => [],
+                    'domain' => 'Admin.Notifications.Warning',
+                ],
             ];
-        } else {
-            $this->configuration->set('PS_ORDER_RETURN', $configuration['enable_order_return']);
-            $this->configuration->set('PS_ORDER_RETURN_NB_DAYS', $configuration['order_return_period_in_days']);
-            $this->configuration->set('PS_RETURN_PREFIX', $configuration['order_return_prefix']);
         }
+        $shopConstraint = $this->getShopConstraint();
+        $this->updateConfigurationValue(
+            'PS_ORDER_RETURN',
+            'enable_order_return',
+            $configuration,
+            $shopConstraint
+        );
+        $this->updateConfigurationValue(
+            'PS_ORDER_RETURN_NB_DAYS',
+            'order_return_period_in_days',
+            $configuration,
+            $shopConstraint
+        );
+        $this->updateConfigurationValue(
+            'PS_RETURN_PREFIX',
+            'order_return_prefix',
+            $configuration,
+            $shopConstraint
+        );
 
-        return $errors;
+        return [];
     }
 
     /**
-     * {@inheritdoc}
+     * @return OptionsResolver
      */
-    public function validateConfiguration(array $configuration)
+    protected function buildResolver(): OptionsResolver
     {
-        return isset($configuration['enable_order_return']);
+        return (new OptionsResolver())
+            ->setDefined(self::CONFIGURATION_FIELDS)
+            ->setAllowedTypes('enable_order_return', 'bool')
+            ->setAllowedTypes('order_return_period_in_days', 'int')
+            ->setAllowedTypes('order_return_prefix', 'array');
     }
 }

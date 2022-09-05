@@ -189,7 +189,7 @@ abstract class AbstractAdminQueryBuilder
             $goodOrder = [];
             foreach ($order as $o) {
                 $value = explode(' ', $o);
-                if (!empty($value) && 2 === count($value) && Validate::isOrderBy($value[0]) && Validate::isOrderWay($value[1])) {
+                if (2 === count($value) && Validate::isOrderBy($value[0]) && Validate::isOrderWay($value[1])) {
                     $goodOrder[] = ' `' . bqSQL($value[0]) . '` ' . $value[1];
                 }
             }

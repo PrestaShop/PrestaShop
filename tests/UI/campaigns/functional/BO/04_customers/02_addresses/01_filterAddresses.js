@@ -8,7 +8,7 @@ const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
 
 // Import login steps
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -106,7 +106,7 @@ describe('BO - Customers - Addresses : Filter Addresses table', async () => {
             testIdentifier: 'filterPostCode',
             filterType: 'input',
             filterBy: 'postcode',
-            filterValue: Address.second.zipCode,
+            filterValue: Address.second.postalCode,
           },
       },
       {

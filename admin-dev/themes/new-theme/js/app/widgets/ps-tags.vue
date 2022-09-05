@@ -52,9 +52,10 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+  import Vue from 'vue';
 
-  export default {
+  export default Vue.extend({
     props: {
       tags: {
         type: Array,
@@ -72,18 +73,18 @@
       },
     },
     computed: {
-      inputSize() {
+      inputSize(): number {
         return !this.tags.length && this.placeholder ? this.placeholder.length : 0;
       },
-      placeholderToDisplay() {
+      placeholderToDisplay(): string {
         return this.tags.length ? '' : this.placeholder;
       },
     },
     methods: {
       onKeyUp() {
-        this.$emit('typing', this.$refs.tags.value);
+        this.$emit('typing', (<VTagsInput> this.$refs.tags).value);
       },
-      add(tag) {
+      add(tag: string): void {
         if (tag) {
           this.tags.push(tag.trim());
           this.tag = '';
@@ -91,22 +92,22 @@
           this.$emit('tagChange', this.tag);
         }
       },
-      close(index) {
+      close(index: number): void {
         const tagName = this.tags[index];
         this.tags.splice(index, 1);
         this.$emit('tagChange', tagName);
       },
-      remove() {
-        if (this.tags.length && !this.tag.length) {
+      remove(): void {
+        if (this.tags && this.tags.length && !this.tag.length) {
           const tagName = this.tags[this.tags.length - 1];
           this.tags.pop();
           this.$emit('tagChange', tagName);
         }
       },
-      focus() {
-        this.$refs.tags.focus();
+      focus(): void {
+        (<HTMLInputElement> this.$refs.tags).focus();
       },
     },
-    data: () => ({tag: null}),
-  };
+    data: () => ({tag: ''}),
+  });
 </script>

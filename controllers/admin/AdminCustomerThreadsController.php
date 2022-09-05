@@ -352,7 +352,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 $cm = new CustomerMessage();
                 $cm->id_employee = (int) $this->context->employee->id;
                 $cm->id_customer_thread = (int) Tools::getValue('id_customer_thread');
-                $cm->ip_address = (int) ip2long(Tools::getRemoteAddr());
+                $cm->ip_address = (string) ip2long(Tools::getRemoteAddr());
                 $current_employee = $this->context->employee;
                 $id_employee = (int) Tools::getValue('id_employee_forward');
                 $employee = new Employee($id_employee);
@@ -360,11 +360,11 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 $message = Tools::getValue('message_forward');
                 if (($error = $cm->validateField('message', $message, null, [], true)) !== true) {
                     $this->errors[] = $error;
-                } elseif ($id_employee && $employee && Validate::isLoadedObject($employee)) {
+                } elseif ($id_employee && Validate::isLoadedObject($employee)) {
                     $params = [
-                        '{messages}' => Tools::stripslashes($output),
+                        '{messages}' => $output,
                         '{employee}' => $current_employee->firstname . ' ' . $current_employee->lastname,
-                        '{comment}' => Tools::stripslashes(Tools::nl2br($_POST['message_forward'])),
+                        '{comment}' => Tools::nl2br($_POST['message_forward']),
                         '{firstname}' => $employee->firstname,
                         '{lastname}' => $employee->lastname,
                     ];
@@ -388,15 +388,15 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         _PS_MAIL_DIR_,
                         true
                     )) {
-                        $cm->private = 1;
+                        $cm->private = true;
                         $cm->message = $this->trans('Message forwarded to', [], 'Admin.Catalog.Feature') . ' ' . $employee->firstname . ' ' . $employee->lastname . "\n" . $this->trans('Comment:') . ' ' . $message;
                         $cm->add();
                     }
                 } elseif ($email && Validate::isEmail($email)) {
                     $params = [
-                        '{messages}' => Tools::nl2br(Tools::stripslashes($output)),
+                        '{messages}' => Tools::nl2br($output),
                         '{employee}' => $current_employee->firstname . ' ' . $current_employee->lastname,
-                        '{comment}' => Tools::stripslashes($_POST['message_forward']),
+                        '{comment}' => $_POST['message_forward'],
                         '{firstname}' => '',
                         '{lastname}' => '',
                     ];
@@ -435,11 +435,11 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 $cm = new CustomerMessage();
                 $cm->id_employee = (int) $this->context->employee->id;
                 $cm->id_customer_thread = $ct->id;
-                $cm->ip_address = (int) ip2long(Tools::getRemoteAddr());
+                $cm->ip_address = (string) ip2long(Tools::getRemoteAddr());
                 $cm->message = Tools::getValue('reply_message');
                 if (($error = $cm->validateField('message', $cm->message, null, [], true)) !== true) {
                     $this->errors[] = $error;
-                } elseif (isset($_FILES) && !empty($_FILES['joinFile']['name']) && $_FILES['joinFile']['error'] != 0) {
+                } elseif (!empty($_FILES['joinFile']['name']) && $_FILES['joinFile']['error'] != 0) {
                     $this->errors[] = $this->trans('An error occurred during the file upload process.', [], 'Admin.Notifications.Error');
                 } elseif ($cm->add()) {
                     $file_attachment = null;
@@ -513,10 +513,10 @@ class AdminCustomerThreadsControllerCore extends AdminController
     public function initContent()
     {
         if (isset($_GET['filename']) && file_exists(_PS_UPLOAD_DIR_ . $_GET['filename']) && Validate::isFileName($_GET['filename'])) {
-            AdminCustomerThreadsController::openUploadedFile();
+            $this->openUploadedFile();
         }
 
-        return parent::initContent();
+        parent::initContent();
     }
 
     protected function openUploadedFile()
@@ -710,7 +710,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         if ($thread->id_customer) {
             $customer = new Customer($thread->id_customer);
             $orders = Order::getCustomerOrders($customer->id);
-            if ($orders && count($orders)) {
+            if (count($orders)) {
                 $total_ok = 0;
                 $orders_ok = [];
                 foreach ($orders as $key => $order) {
@@ -726,7 +726,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
             $products = $customer->getBoughtProducts();
             if ($products && count($products)) {
                 foreach ($products as $key => $product) {
-                    $products[$key]['date_add'] = Tools::displayDate($product['date_add'], null, true);
+                    $products[$key]['date_add'] = Tools::displayDate($product['date_add'], true);
                 }
             }
         }
@@ -827,6 +827,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $tpl = $this->createTemplate('message.tpl');
 
         $contacts = Contact::getContacts($this->context->language->id);
+        $contact_array = [];
         foreach ($contacts as $contact) {
             $contact_array[$contact['id_contact']] = ['id_contact' => $contact['id_contact'], 'name' => $contact['name']];
         }
@@ -837,7 +838,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
                 $id_order_product = Order::getIdOrderProduct((int) $message['id_customer'], (int) $message['id_product']);
             }
         }
-        $message['date_add'] = Tools::displayDate($message['date_add'], null, true);
+        $message['date_add'] = Tools::displayDate($message['date_add'], true);
         $message['user_agent'] = strip_tags($message['user_agent']);
         $message['message'] = preg_replace(
             '/(https?:\/\/[a-z0-9#%&_=\(\)\.\? \+\-@\/]{6,1000})([\s\n<])/Uui',
@@ -857,9 +858,8 @@ class AdminCustomerThreadsControllerCore extends AdminController
         }
 
         $tpl->assign([
-            'thread_url' => Tools::getAdminUrl(basename(_PS_ADMIN_DIR_) . '/' .
-                $this->context->link->getAdminLink('AdminCustomerThreads') . '&amp;id_customer_thread='
-                . (int) $message['id_customer_thread'] . '&amp;viewcustomer_thread=1'),
+            'thread_url' => $this->context->link->getAdminLink('AdminCustomerThreads') . '&amp;id_customer_thread='
+                . (int) $message['id_customer_thread'] . '&amp;viewcustomer_thread=1',
             'link' => Context::getContext()->link,
             'current' => self::$currentIndex,
             'token' => $this->token,
@@ -1018,7 +1018,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
         $str_errors = '';
         $str_error_delete = '';
 
-        if (count($errors) && is_array($errors)) {
+        if (is_array($errors) && count($errors)) {
             $str_errors = '';
             foreach ($errors as $error) {
                 $str_errors .= $error . ', ';
@@ -1073,13 +1073,12 @@ class AdminCustomerThreadsControllerCore extends AdminController
 
                 $new_ct = (Configuration::get('PS_SAV_IMAP_CREATE_THREADS') && !$match_found && (strpos($subject, '[no_sync]') == false));
 
-                $fetch_succeed = true;
                 if ($match_found || $new_ct) {
                     if ($new_ct) {
                         // parse from attribute and fix it if needed
                         $from_parsed = [];
                         if (!isset($overview->from)
-                            || (!preg_match('/<(' . Tools::cleanNonUnicodeSupport('[a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]+[.a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]*@[a-z\p{L}0-9]+[._a-z\p{L}0-9-]*\.[a-z0-9]+') . ')>/', $overview->from, $from_parsed)
+                            || (!preg_match('/<([a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]+[.a-z\p{L}0-9!#$%&\'*+\/=?^`{}|~_-]*@[a-z\p{L}0-9]+[._a-z\p{L}0-9-]*\.[a-z0-9]+)>/', $overview->from, $from_parsed)
                             && !Validate::isEmail($overview->from))) {
                             $message_errors[] = $this->trans('Cannot create message in a new thread.', [], 'Admin.Orderscustomers.Notification');
 
@@ -1148,15 +1147,14 @@ class AdminCustomerThreadsControllerCore extends AdminController
                         }
                         $message = iconv($this->getEncoding($structure), 'utf-8', $message);
                         $message = nl2br($message);
-                        if (!$message || strlen($message) == 0) {
+                        if (empty($message)) {
                             $message_errors[] = $this->trans('The message body is empty, cannot import it.', [], 'Admin.Orderscustomers.Notification');
-                            $fetch_succeed = false;
 
                             continue;
                         }
                         $cm = new CustomerMessage();
                         $cm->id_customer_thread = $ct->id;
-                        if (empty($message) || !Validate::isCleanHtml($message)) {
+                        if (!Validate::isCleanHtml($message)) {
                             $str_errors .= $this->trans('Invalid message content for subject: %s', [$subject], 'Admin.Orderscustomers.Notification');
                         } else {
                             try {
@@ -1164,22 +1162,20 @@ class AdminCustomerThreadsControllerCore extends AdminController
                                 $cm->add();
                             } catch (PrestaShopException $pse) {
                                 $message_errors[] = $this->trans('The message content is not valid, cannot import it.', [], 'Admin.Orderscustomers.Notification');
-                                $fetch_succeed = false;
 
                                 continue;
                             }
                         }
                     }
                 }
-                if ($fetch_succeed) {
-                    Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'customer_message_sync_imap` (`md5_header`) VALUES (\'' . pSQL($md5) . '\')');
-                }
+                Db::getInstance()->execute('INSERT INTO `' . _DB_PREFIX_ . 'customer_message_sync_imap` (`md5_header`) VALUES (\'' . pSQL($md5) . '\')');
             }
         }
         imap_expunge($mbox);
         imap_close($mbox);
         if (count($message_errors) > 0) {
-            if (($more_error = $str_errors . $str_error_delete) && strlen($more_error) > 0) {
+            $more_error = $str_errors . $str_error_delete;
+            if (strlen($more_error) > 0) {
                 $message_errors = array_merge([$more_error], $message_errors);
             }
 
@@ -1195,7 +1191,7 @@ class AdminCustomerThreadsControllerCore extends AdminController
     protected function getEncoding($structure)
     {
         foreach ($structure->parameters as $parameter) {
-            if ($parameter->attribute == 'CHARSET') {
+            if (strtoupper($parameter->attribute) == 'CHARSET') {
                 return $parameter->value;
             }
         }

@@ -55,7 +55,7 @@ class ValidateTest extends TestCase
      */
     public function testIsOrderWay(int $expected, $input): void
     {
-        self::assertEquals($expected, Validate::isOrderWay($input));
+        self::assertEquals($expected, $this->validate::isOrderWay($input));
     }
 
     public function getIsOrderWay(): iterable
@@ -87,12 +87,41 @@ class ValidateTest extends TestCase
             [true, 'john#doe@prestashop.com'],
             [false, ''],
             [false, 'john.doe@prestashop,com'],
-            [true, 'john.doe@prestashop'],
+            [false, 'john.doe@prestashop'],
             [true, 'john.doe@сайт.рф'],
             [true, 'john.doe@xn--80aswg.xn--p1ai'],
             [false, 'иван@prestashop.com'], // rfc6531 valid but not swift mailer compatible
             [true, 'xn--80adrw@prestashop.com'],
             [true, 'xn--80adrw@xn--80aswg.xn--p1ai'],
+        ];
+    }
+
+    /**
+     * @param bool $expected
+     * @param mixed $value
+     *
+     * @dataProvider isUnsignedIntProvider
+     */
+    public function testIsUnsignedInt(bool $expected, $value): void
+    {
+        self::assertEquals($expected, $this->validate->isUnsignedInt($value));
+    }
+
+    public function isUnsignedIntProvider(): array
+    {
+        return [
+            [true, 1],
+            [true, 666],
+            [true, 0],
+            [true, '234'],
+            [true, '0'],
+            [false, -1],
+            [false, '-1'],
+            [false, false],
+            [false, true],
+            [false, null],
+            [false, 'invalid'],
+            [false, '666invalid'],
         ];
     }
 }

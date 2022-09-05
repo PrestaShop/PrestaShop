@@ -146,7 +146,7 @@ class SupplyOrderStateCore extends ObjectModel
     /**
      * Gets the list of supply order statuses.
      *
-     * @param array $ids Optional Do not include these ids in the result
+     * @param array|null $ids Optional Do not include these ids in the result
      * @param int $id_lang Optional
      *
      * @return array
@@ -157,7 +157,7 @@ class SupplyOrderStateCore extends ObjectModel
             $id_lang = Context::getContext()->language->id;
         }
 
-        if ($ids && !is_array($ids)) {
+        if (!is_array($ids)) {
             $ids = [];
         }
 

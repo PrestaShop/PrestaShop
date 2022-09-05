@@ -1,4 +1,4 @@
-@reset-database-before-feature
+@restore-all-tables-before-feature
 Feature: Cart calculation with only products and gift wrapping
   As a customer
   I must be able to have correct cart total when adding products, and selecting gift wrapping

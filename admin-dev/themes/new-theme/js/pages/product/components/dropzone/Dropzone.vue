@@ -139,7 +139,8 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+  import Vue from 'vue';
   import Router from '@components/router';
   import {
     getProductImages,
@@ -150,9 +151,17 @@
   } from '@pages/product/services/images';
   import ProductMap from '@pages/product/product-map';
   import ProductEventMap from '@pages/product/product-event-map';
-  import Modal from '@vue/components/Modal';
-  import DropzoneWindow from './DropzoneWindow';
-  import DropzonePhotoSwipe from './DropzonePhotoSwipe';
+  import Modal from '@vue/components/Modal.vue';
+  import DropzoneWindow from './DropzoneWindow.vue';
+  import DropzonePhotoSwipe from './DropzonePhotoSwipe.vue';
+
+  /* eslint-disable camelcase */
+  export interface PSDropzoneFile extends Dropzone.DropzoneFile {
+    image_id: string;
+    is_cover: boolean;
+    legends: Record<string, string>;
+  }
+  /* eslint-enable camelcase */
 
   const {$} = window;
 
@@ -160,18 +169,35 @@
   const DropzoneMap = ProductMap.dropzone;
   const DropzoneEvents = ProductEventMap.dropzone;
 
-  export default {
+  interface DropzoneStates {
+    dropzone: Dropzone,
+    configuration: Dropzone.DropzoneOptions & {params: KeyStringRecord},
+    files: Array<PSDropzoneFile>,
+    selectedFiles: Array<PSDropzoneFile>,
+    translations: Array<PSDropzoneFile>,
+    loading: boolean,
+    selectedLocale: string | null | Record<string, any>,
+    buttonLoading: boolean,
+    isModalShown: boolean,
+    galleryOpened: boolean,
+    sortableContainer: JQuery | null;
+  }
+
+  export default Vue.extend({
     name: 'Dropzone',
-    data() {
+    data(): DropzoneStates {
       return {
-        dropzone: null,
+        dropzone: <any>null,
         configuration: {
           url: router.generate('admin_products_v2_add_image'),
           clickable: DropzoneMap.configuration.fileManager,
-          previewTemplate: null,
+          previewTemplate: undefined,
           thumbnailWidth: 130,
           thumbnailHeight: 130,
           thumbnailMethod: 'crop',
+          paramName: '',
+          method: '',
+          params: {},
         },
         files: [],
         selectedFiles: [],
@@ -181,6 +207,7 @@
         buttonLoading: false,
         isModalShown: false,
         galleryOpened: false,
+        sortableContainer: null,
       };
     },
     props: {
@@ -189,7 +216,7 @@
         required: true,
       },
       locales: {
-        type: Array,
+        type: Array as () => Array<Record<string, any>>,
         required: true,
       },
       formName: {
@@ -215,12 +242,12 @@
       /**
        * Watch locale changes to update the selected one
        */
-      watchLocaleChanges() {
+      watchLocaleChanges(): void {
         this.selectedLocale = this.locales[0];
 
         window.prestashop.instance.eventEmitter.on(
           DropzoneEvents.languageSelected,
-          (event) => {
+          (event: any) => {
             const {selectedLocale} = event;
 
             this.locales.forEach((locale) => {
@@ -234,15 +261,15 @@
       /**
        * This methods is used to initialize product images we already have uploaded
        */
-      async initProductImages() {
+      async initProductImages(): Promise<void> {
         try {
           const images = await getProductImages(this.productId);
 
           this.loading = false;
           this.initDropZone();
 
-          images.forEach((image) => {
-            this.dropzone.displayExistingFile(image, image.image_url);
+          images.forEach((image: Dropzone.DropzoneMockFile) => {
+            this.dropzone?.displayExistingFile(image, image.image_url);
           });
         } catch (error) {
           window.$.growl.error({message: error});
@@ -252,10 +279,10 @@
        * Method to initialize the dropzone, using the configuration's state and adding files
        * we already have in database.
        */
-      initDropZone() {
-        this.configuration.previewTemplate = document.querySelector(
+      initDropZone(): void {
+        this.configuration.previewTemplate = (<HTMLElement> document.querySelector(
           DropzoneMap.dzTemplate,
-        ).innerHTML;
+        )).innerHTML;
         this.configuration.paramName = `${this.formName}[file]`;
         this.configuration.method = 'POST';
         this.configuration.params = {};
@@ -282,18 +309,18 @@
             top: 64,
           },
           cancel: '.disabled',
-          stop: (event, ui) => {
+          stop: (event: Event, ui: Record<string, any>) => {
             // Get new position (-1 because the open file manager is always first)
             const movedPosition = ui.item.index() - 1;
             this.updateImagePosition(ui.item.data('id'), movedPosition);
           },
-          start: (event, ui) => {
-            this.sortableContainer.find(DropzoneMap.dzPreview).css('zIndex', 1);
+          start: (event: Event, ui: Record<string, any>) => {
+            this.sortableContainer?.find(DropzoneMap.dzPreview)?.css('zIndex', 1);
             ui.item.css('zIndex', 10);
           },
         });
 
-        this.dropzone.on(DropzoneEvents.addedFile, (file) => {
+        this.dropzone.on(DropzoneEvents.addedFile, (file: PSDropzoneFile) => {
           file.previewElement.dataset.id = file.image_id;
 
           if (file.is_cover) {
@@ -301,7 +328,7 @@
           }
 
           file.previewElement.addEventListener('click', () => {
-            const input = file.previewElement.querySelector(DropzoneMap.checkbox);
+            const input = <HTMLInputElement>file.previewElement.querySelector(DropzoneMap.checkbox);
             input.checked = !input.checked;
 
             if (input.checked) {
@@ -317,12 +344,12 @@
           this.files.push(file);
         });
 
-        this.dropzone.on(DropzoneEvents.error, (fileWithError, message) => {
+        this.dropzone.on(DropzoneEvents.error, (fileWithError: PSDropzoneFile, message: OptionsObject) => {
           $.growl.error({message: message.error});
           this.dropzone.removeFile(fileWithError);
         });
 
-        this.dropzone.on(DropzoneEvents.success, (file, response) => {
+        this.dropzone.on(DropzoneEvents.success, (file: Record<string, any>, response: OptionsObject) => {
           // Append the data required for a product image
           file.image_id = response.image_id;
           file.is_cover = response.is_cover;
@@ -338,7 +365,7 @@
       /**
        * Method to select every files by checking checkboxes and add files to the files state
        */
-      selectAll() {
+      selectAll(): void {
         this.selectedFiles = this.files;
 
         this.editCheckboxes(true);
@@ -346,7 +373,7 @@
       /**
        * Method to unselect every files by unchecking checkboxes and empty files state
        */
-      unselectAll() {
+      unselectAll(): void {
         this.editCheckboxes(false);
 
         this.selectedFiles = [];
@@ -356,7 +383,7 @@
       /**
        * Method to remove every selected files from the dropzone
        */
-      async removeSelection() {
+      async removeSelection(): Promise<void> {
         let errorMessage = false;
         let isCoverImageRemoved = false;
         const nbFiles = this.selectedFiles.length;
@@ -402,8 +429,8 @@
       /**
        * Method to manage checkboxes of files mainly used on selectAll and unselectAll
        */
-      editCheckboxes(checked) {
-        this.selectedFiles.forEach((file) => {
+      editCheckboxes(checked: boolean): void {
+        this.selectedFiles.forEach((file: Record<string, any>) => {
           const input = file.previewElement.querySelector(DropzoneMap.checkbox);
           input.checked = typeof checked !== 'undefined' ? checked : !input.checked;
 
@@ -413,7 +440,7 @@
       /**
        * We sometime need to remove tooltip because Vue kick the markup of the component
        */
-      removeTooltips() {
+      removeTooltips(): void {
         $(DropzoneMap.shownTooltips).each((i, element) => {
           $(element).remove();
         });
@@ -421,7 +448,7 @@
       /**
        * Save selected file
        */
-      async saveSelectedFile(captionValue, isCover) {
+      async saveSelectedFile(captionValue: Record<string, any>, isCover: boolean): Promise<void> {
         if (!this.selectedFiles.length) {
           return;
         }
@@ -441,7 +468,7 @@
             this.formName,
           );
 
-          const savedImageElement = document.querySelector(
+          const savedImageElement = <HTMLElement> document.querySelector(
             DropzoneMap.savedImageContainer(savedImage.image_id),
           );
 
@@ -461,7 +488,7 @@
 
               savedImageElement.classList.add('is-cover');
 
-              this.files = this.files.map((file) => {
+              this.files = this.files.map((file: PSDropzoneFile) => {
                 if (file.image_id !== savedImage.image_id && file.is_cover) {
                   file.is_cover = false;
                 }
@@ -480,30 +507,34 @@
       /**
        * Used to save and manage some datas from a replaced file
        */
-      async manageReplacedFile(event) {
+      async manageReplacedFile(event: Event): Promise<void> {
         const selectedFile = this.selectedFiles[0];
+        const eventTarget = <HTMLInputElement> event.target;
         this.buttonLoading = true;
 
         try {
-          const newImage = await replaceImage(
-            selectedFile,
-            event.target.files[0],
-            this.formName,
-            this.token,
-          );
-          const imageElement = document.querySelector(
-            DropzoneMap.savedImage(newImage.image_id),
-          );
-          imageElement.src = newImage.image_url;
+          if (eventTarget.files && eventTarget.files[0]) {
+            const newImage = await replaceImage(
+              selectedFile,
+              eventTarget.files[0],
+              this.formName,
+              this.token,
+            );
+            const imageElement = <HTMLImageElement> document.querySelector(
+              DropzoneMap.savedImage(newImage.image_id),
+            );
+            const imageUpdateTime = new Date();
+            imageElement.src = `${newImage.image_url}?${imageUpdateTime.getTime()}`;
 
-          $.growl({message: this.$t('window.imageReplaced')});
-          this.buttonLoading = false;
+            $.growl({message: this.$t('window.imageReplaced')});
+            this.buttonLoading = false;
+          }
         } catch (error) {
           $.growl.error({message: error.responseJSON.error});
           this.buttonLoading = false;
         }
       },
-      async updateImagePosition(productImageId, newPosition) {
+      async updateImagePosition(productImageId: number, newPosition: number): Promise<void> {
         try {
           await saveImagePosition(
             productImageId,
@@ -512,7 +543,7 @@
             this.token,
           );
         } catch (error) {
-          this.sortableContainer.sortable('cancel');
+          this.sortableContainer?.sortable('cancel');
           $.growl.error({message: error.responseJSON.error});
         }
       },
@@ -520,29 +551,29 @@
        * Mainly used when we wants to reset the whole list
        * to reset cover image for example on remove
        */
-      resetDropzone() {
+      resetDropzone(): void {
         this.loading = true;
         this.files.forEach((file) => {
           this.dropzone.removeFile(file);
         });
         this.dropzone.destroy();
-        this.dropzone = null;
+        this.dropzone = <any>null;
         this.initProductImages();
       },
-      showModal() {
+      showModal(): void {
         this.isModalShown = true;
       },
-      hideModal() {
+      hideModal(): void {
         this.isModalShown = false;
       },
       /**
        * Method used to open the photoswipe gallery
        */
-      toggleGallery() {
+      toggleGallery(): void {
         this.galleryOpened = !this.galleryOpened;
       },
     },
-  };
+  });
 </script>
 
 <style lang="scss" type="text/scss">

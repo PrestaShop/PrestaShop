@@ -5,18 +5,18 @@ const {expect} = require('chai');
 // Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
-const loginCommon = require('@commonTests/loginBO');
+const testContext = require('@utils/testContext');
+
+// Import login steps
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const importPage = require('@pages/BO/advancedParameters/import');
-const attributesPage = require('@pages/BO/catalog/attributes');
+const categoriesPage = require('@pages/BO/catalog/categories');
 
 // Import Data
-const {SampleFiles} = require('@data/demo/sampleFiles');
-
-// Import test context
-const testContext = require('@utils/testContext');
+const {Data} = require('@data/import/categories');
 
 const baseContext = 'functional_BO_advancedParameters_import_importFile';
 
@@ -24,74 +24,88 @@ const baseContext = 'functional_BO_advancedParameters_import_importFile';
 let browserContext;
 let page;
 
-// Variable Used in the download / rename / upload test
-let sampleFilePath;
-const renamedSampleFilePath = `./${SampleFiles.combinations.name}.csv`;
+// Variable Used to create csv file
+const fileName = 'categories.csv';
 
 // Variable used in the "check import success" test
-const initialNumberOfAttributes = 4;
-let numberOfAttributes = 0;
+let numberOfCategories = 0;
 
 /*
-Go to the import page
-Download the combinations sample file
-Import the combinations sample file
-Go to attributes and features page
-Check import success
+Pre-condition:
+- Get categories number
+Scenario
+- Import categories csv file
+- Check validation progress message
+- Go to categories page to check number of categories
+Post-Condition:
+- delete imported categories
  */
-describe('Import combinations', async () => {
+describe('BO - Advanced Parameters - Import : Import categories', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+    // Create csv file with all data
+    await files.createCSVFile('.', fileName, Data);
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
-    await files.deleteFile(renamedSampleFilePath);
+    // delete file
+    await files.deleteFile(fileName);
   });
 
-  it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
+  // Pre-condition: Get number of categories
+  describe('PRE-TEST: Get number of categories', async () => {
+    it('should login in BO', async function () {
+      await loginCommon.loginBO(this, page);
+    });
+
+    it('should go to \'Catalog > Categories\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCategoriesPage', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.catalogParentLink,
+        dashboardPage.categoriesLink,
+      );
+
+      await categoriesPage.closeSfToolBar(page);
+
+      const pageTitle = await categoriesPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(categoriesPage.pageTitle);
+    });
+
+    it('should reset all filters and get number of Categories in BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
+
+      numberOfCategories = await categoriesPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfCategories).to.be.above(0);
+    });
   });
 
-  it('should go to import page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToImportPage', baseContext);
-
-    await dashboardPage.goToSubMenu(
-      page,
-      dashboardPage.advancedParametersLink,
-      dashboardPage.importLink,
-    );
-
-    await importPage.closeSfToolBar(page);
-
-    const pageTitle = await importPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(importPage.pageTitle);
-  });
-
-  it(`should download ${SampleFiles.combinations.name} sample file`, async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'downloadFile', baseContext);
-
-    sampleFilePath = await importPage.downloadSampleFile(page, SampleFiles.combinations.name);
-
-    const doesFileExist = await files.doesFileExist(sampleFilePath);
-    await expect(doesFileExist, `${SampleFiles.combinations.name} sample file was not downloaded`).to.be.true;
-  });
-
+  // 1 - Import categories.csv
   describe('Import file', async () => {
-    it(`should upload ${SampleFiles.combinations.name} sample text file`, async function () {
+    it('should go to \'Advanced Parameters > Import\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToImportPage', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.advancedParametersLink,
+        dashboardPage.importLink,
+      );
+
+      await importPage.closeSfToolBar(page);
+
+      const pageTitle = await importPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(importPage.pageTitle);
+    });
+
+    it(`should upload '${fileName}' file`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'importFile', baseContext);
 
-      // Rename the file and add file extension to be able to upload it
-      await files.renameFile(sampleFilePath, renamedSampleFilePath);
-
-      const uploadSuccessText = await importPage.uploadSampleFile(
-        page,
-        SampleFiles.combinations.value,
-        renamedSampleFilePath,
-      );
-      await expect(uploadSuccessText).contain(SampleFiles.combinations.name);
+      const uploadSuccessText = await importPage.uploadFile(page, 'Categories', fileName);
+      await expect(uploadSuccessText).contain(fileName);
     });
 
     it('should go to next import file step', async function () {
@@ -108,6 +122,15 @@ describe('Import combinations', async () => {
       await expect(modalTitle).contain(importPage.importModalTitle);
     });
 
+    it('should check that the import is completed', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'waitForImport', baseContext);
+
+      const isCompleted = await importPage.getImportValidationMessage(page);
+      await expect(isCompleted, 'The import is not completed!')
+        .contain('Data imported')
+        .and.contain('Look at your listings to make sure it\'s all there as you wished.');
+    });
+
     it('should close import progress modal', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'closeImportModal', baseContext);
 
@@ -116,27 +139,54 @@ describe('Import combinations', async () => {
     });
   });
 
-  describe('Check import success', async () => {
-    it('should go to attributes and features page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToCombinationsPage', baseContext);
+  // 2 - Check number of categories imported
+  describe('Check number of categories', async () => {
+    it('should go to \'Catalog > Categories\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCategoriesPageToCheckImport', baseContext);
 
-      await importPage.goToSubMenu(
+      await dashboardPage.goToSubMenu(
         page,
-        importPage.catalogParentLink,
-        importPage.attributesAndFeaturesLink,
+        dashboardPage.catalogParentLink,
+        dashboardPage.categoriesLink,
       );
 
-      await attributesPage.closeSfToolBar(page);
+      await categoriesPage.closeSfToolBar(page);
 
-      const pageTitle = await attributesPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(attributesPage.pageTitle);
+      const pageTitle = await categoriesPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(categoriesPage.pageTitle);
     });
 
-    it('should reset all filters and get number of attributes in BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterFirst', baseContext);
+    it('should check number of categories in BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetSecond', baseContext);
 
-      numberOfAttributes = await attributesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfAttributes).to.be.above(initialNumberOfAttributes);
+      const numberOfCategoriesAfterImport = await categoriesPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfCategoriesAfterImport).to.be.above(numberOfCategories);
+    });
+  });
+
+  // Post-condition: Delete imported categories
+  describe('POSt-TEST: Delete imported categories', async () => {
+    it('should filter list by Name \'category\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterCategoriesTable', baseContext);
+
+      await categoriesPage.filterCategories(page, 'input', 'name', 'category');
+
+      const textColumn = await categoriesPage.getTextColumnFromTableCategories(page, 1, 'name');
+      await expect(textColumn).to.contains('category');
+    });
+
+    it('should delete categories', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'bulkDelete', baseContext);
+
+      const deleteTextResult = await categoriesPage.deleteCategoriesBulkActions(page);
+      await expect(deleteTextResult).to.be.equal(categoriesPage.successfulMultiDeleteMessage);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
+
+      const numberOfCategoriesAfterReset = await categoriesPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfCategoriesAfterReset).to.equal(numberOfCategories);
     });
   });
 });

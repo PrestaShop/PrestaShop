@@ -28,7 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\EventListener;
 
+use PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShopBundle\Form\Admin\Sell\Product\ExtraModulesType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -40,6 +42,19 @@ use Symfony\Component\Form\FormInterface;
  */
 class ProductTypeListener implements EventSubscriberInterface
 {
+    /**
+     * @var HookInformationProvider
+     */
+    private $hookInformationProvider;
+
+    /**
+     * @param HookInformationProvider $hookInformationProvider
+     */
+    public function __construct(HookInformationProvider $hookInformationProvider)
+    {
+        $this->hookInformationProvider = $hookInformationProvider;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -56,51 +71,128 @@ class ProductTypeListener implements EventSubscriberInterface
      */
     public function adaptProductForm(FormEvent $event): void
     {
-        $form = $event->getForm();
         $data = $event->getData();
+        $form = $event->getForm();
+        // We need both initial and new types because we may need to keep some fields during the transition request
         $productType = $data['header']['type'];
+        $initialProductType = $data['header']['initial_type'] ?? $productType;
+
+        $registeredExtraModules = $this->hookInformationProvider->getRegisteredModulesByHookName(ExtraModulesType::HOOK_NAME);
+        if (empty($registeredExtraModules)) {
+            $form->remove('extra_modules');
+        }
 
         if (ProductType::TYPE_COMBINATIONS === $productType) {
             $this->removeSuppliers($form);
             $this->removeStock($form);
-        } else {
-            if ($form->has('stock')) {
-                $stock = $form->get('stock');
-                if (ProductType::TYPE_PACK !== $productType) {
-                    $stock->remove('pack_stock_type');
-                }
-                if (ProductType::TYPE_VIRTUAL !== $productType) {
-                    $stock->remove('virtual_product_file');
-                }
-            }
+        } elseif ($initialProductType !== ProductType::TYPE_COMBINATIONS) {
+            $this->removeCombinations($form);
+        }
 
-            if (ProductType::TYPE_VIRTUAL === $productType) {
-                $form->remove('shipping');
+        if (ProductType::TYPE_PACK !== $productType) {
+            $this->removePackStockType($form);
+            $this->removePack($form);
+        }
+
+        $this->removeStockMovementsIfNecessary($form, $data);
+
+        if (ProductType::TYPE_VIRTUAL === $productType) {
+            $this->removeShipping($form);
+            // We don't remove the ecotax during the transition request because we could lose the ecotax data
+            // and some part of the price with it
+            if (ProductType::TYPE_VIRTUAL === $initialProductType) {
+                $this->removeEcotax($form);
             }
+        } else {
+            $this->removeVirtualProduct($form);
+        }
+
+        $event->setData($data);
+    }
+
+    protected function removeCombinations(FormInterface $form): void
+    {
+        if ($form->has('options')) {
+            $form->remove('combinations');
         }
     }
 
-    /**
-     * @param FormInterface $form
-     */
-    private function removeSuppliers(FormInterface $form): void
+    protected function removeSuppliers(FormInterface $form): void
     {
         if ($form->has('options')) {
             $optionsForm = $form->get('options');
-            $optionsForm->remove('suppliers');
             $optionsForm->remove('product_suppliers');
         }
     }
 
-    /**
-     * @param FormInterface $form
-     */
-    private function removeStock(FormInterface $form): void
+    protected function removeStock(FormInterface $form): void
     {
         $form->remove('stock');
-        if ($form->has('shortcuts')) {
-            $shortcutsForm = $form->get('shortcuts');
-            $shortcutsForm->remove('stock');
+    }
+
+    protected function removePackStockType(FormInterface $form): void
+    {
+        if (!$form->has('stock')) {
+            return;
+        }
+        $stock = $form->get('stock');
+        $stock->remove('pack_stock_type');
+    }
+
+    protected function removePack(FormInterface $form): void
+    {
+        if (!$form->has('stock')) {
+            return;
+        }
+        $stock = $form->get('stock');
+        $stock->remove('packed_products');
+    }
+
+    protected function removeVirtualProduct(FormInterface $form): void
+    {
+        if (!$form->has('stock')) {
+            return;
+        }
+        $stock = $form->get('stock');
+        $stock->remove('virtual_product_file');
+    }
+
+    protected function removeStockMovementsIfNecessary(FormInterface $form, array $data): void
+    {
+        if (!$form->has('stock')) {
+            return;
+        }
+        $stock = $form->get('stock');
+        if (!$stock->has('quantities')) {
+            return;
+        }
+        $quantities = $stock->get('quantities');
+        if ($quantities->has('stock_movements') && empty($data['stock']['quantities']['stock_movements'])) {
+            $quantities->remove('stock_movements');
+        }
+    }
+
+    protected function removeShipping(FormInterface $form): void
+    {
+        $form->remove('shipping');
+    }
+
+    protected function removeEcotax(FormInterface $form): void
+    {
+        if (!$form->has('pricing')) {
+            return;
+        }
+        $pricing = $form->get('pricing');
+        if (!$pricing->has('retail_price')) {
+            return;
+        }
+        $retailPrice = $pricing->get('retail_price');
+        if ($retailPrice->has('ecotax_tax_excluded')) {
+            $retailPrice->remove('ecotax_tax_excluded');
+        }
+
+        if ($retailPrice->has('ecotax_tax_included')) {
+            $retailPrice->remove('ecotax_tax_included');
         }
     }
 }

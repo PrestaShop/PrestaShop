@@ -29,6 +29,7 @@
  */
 class AdminSuppliersControllerCore extends AdminController
 {
+    /** @var bool */
     public $bootstrap = true;
 
     public function __construct()
@@ -399,7 +400,7 @@ class AdminSuppliersControllerCore extends AdminController
                     }
                     $comb_array[$key]['attributes'] = rtrim($list, ', ');
                 }
-                isset($comb_array) ? $products[$i]->combination = $comb_array : '';
+                $products[$i]->combination = $comb_array;
                 unset($comb_array);
             } else {
                 $product_infos = Supplier::getProductInformationsBySupplier(
@@ -429,8 +430,9 @@ class AdminSuppliersControllerCore extends AdminController
         $generate_hight_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
 
         /* Generate image with differents size */
-        if (($id_supplier = (int) Tools::getValue('id_supplier')) &&
-             isset($_FILES) && count($_FILES) && file_exists(_PS_SUPP_IMG_DIR_ . $id_supplier . '.jpg')) {
+        if (($id_supplier = (int) Tools::getValue('id_supplier'))
+            && count($_FILES)
+            && file_exists(_PS_SUPP_IMG_DIR_ . $id_supplier . '.jpg')) {
             $images_types = ImageType::getImagesTypes('suppliers');
             foreach ($images_types as $image_type) {
                 $file = _PS_SUPP_IMG_DIR_ . $id_supplier . '.jpg';

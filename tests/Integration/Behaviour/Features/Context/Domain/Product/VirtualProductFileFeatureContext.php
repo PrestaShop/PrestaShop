@@ -61,7 +61,6 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
      *
      * @param string $fileReference
      * @param string $productReference
-     * @param string $filePathReference
      * @param TableNode $dataTable
      */
     public function addFile(string $fileReference, string $productReference, TableNode $dataTable): void
@@ -77,7 +76,6 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
             isset($dataRows['expiration date']) ? new DateTime($dataRows['expiration date']) : null
         );
 
-        $this->cleanLastException();
         try {
             $virtualProductId = $this->getCommandBus()->handle($command);
             $this->getSharedStorage()->set($fileReference, $virtualProductId->getValue());
@@ -88,9 +86,7 @@ class VirtualProductFileFeatureContext extends AbstractProductFeatureContext
                 $this->buildSystemFileReference($productReference, $fileReference),
                 _PS_DOWNLOAD_DIR_ . $filename
             );
-        } catch (VirtualProductFileException $e) {
-            $this->setLastException($e);
-        } catch (InvalidProductTypeException $e) {
+        } catch (VirtualProductFileException|InvalidProductTypeException $e) {
             $this->setLastException($e);
         }
     }

@@ -4,14 +4,14 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const testContext = require('@utils/testContext');
+
+// Import login steps
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const webservicePage = require('@pages/BO/advancedParameters/webservice');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_advancedParameters_webservice_helpCard';
 
@@ -19,7 +19,7 @@ let browserContext;
 let page;
 
 // Check that help card is in english in webservice page
-describe('Webservice help card', async () => {
+describe('BO - Advanced Parameters - Webservice : Help card in webservice page', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -34,7 +34,7 @@ describe('Webservice help card', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to webservice page', async function () {
+  it('should go to \'Advanced Parameters > Webservice\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToWebservicePage', baseContext);
 
     await dashboardPage.goToSubMenu(

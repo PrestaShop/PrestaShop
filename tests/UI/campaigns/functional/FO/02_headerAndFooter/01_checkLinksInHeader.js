@@ -4,7 +4,7 @@ const {expect} = require('chai');
 
 const helper = require('@utils/helpers');
 
-// Import pages
+// Import FO pages
 const homePage = require('@pages/FO/home');
 const loginPage = require('@pages/FO/login');
 const contactUsPage = require('@pages/FO/contactUs');
@@ -26,15 +26,13 @@ let page;
 Go to FO
 Check header links:
 - Contact us
-- Language( English, Français)
 - Sign in
 - My account( Customer name)
-- Sign out
 - Cart
+- Sign out
 - Logo
  */
-
-describe('Check links in header page', async () => {
+describe('FO - Header and Footer : Check links in header page', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -54,7 +52,7 @@ describe('Check links in header page', async () => {
     await expect(isHomePage).to.be.true;
   });
 
-  it('should check \'Contact us\' header links', async function () {
+  it('should check \'Contact us\' header link', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkContactUsHeaderLink', baseContext);
 
     // Check Contact us
@@ -64,21 +62,7 @@ describe('Check links in header page', async () => {
     await expect(pageTitle, 'Fail to open FO login page').to.contains(contactUsPage.pageTitle);
   });
 
-  it('should check languages link', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkLanguagesLink', baseContext);
-
-    await homePage.changeLanguage(page, 'fr');
-
-    let language = await homePage.getShopLanguage(page);
-    expect(language).to.equal('Français');
-
-    await homePage.changeLanguage(page, 'en');
-
-    language = await homePage.getShopLanguage(page);
-    expect(language).to.equal('English');
-  });
-
-  it('should check sign in link', async function () {
+  it('should check \'sign in\' link', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkSignInLink', baseContext);
 
     // Check sign in link
@@ -86,12 +70,16 @@ describe('Check links in header page', async () => {
 
     const pageTitle = await loginPage.getPageTitle(page);
     await expect(pageTitle).to.equal(loginPage.pageTitle);
+  });
+
+  it('should sign in by default customer', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
 
     // Sign in
     await loginPage.customerLogin(page, DefaultCustomer);
 
     const isCustomerConnected = await loginPage.isCustomerConnected(page);
-    await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+    await expect(isCustomerConnected, 'Customer is not connected!').to.be.true;
   });
 
   it('should check my account link', async function () {
@@ -103,27 +91,21 @@ describe('Check links in header page', async () => {
     await expect(pageTitle).to.equal(myAccountPage.pageTitle);
   });
 
-  it('should check sign out link', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkSignOutLink', baseContext);
-
-    // Sign out
-    await myAccountPage.logout(page);
-
-    const pageTitle = await loginPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(loginPage.pageTitle);
-  });
-
-  it('should check shopping cart link', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkShoppingCartLink', baseContext);
+  it('should add a product to cart by quick view', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
 
     await loginPage.goToHomePage(page);
 
     // Add product to cart by quick view
-    await homePage.addProductToCartByQuickView(page, 1, 1);
+    await homePage.addProductToCartByQuickView(page, 1, 3);
 
     // Close block cart modal
     const isQuickViewModalClosed = await homePage.closeBlockCartModal(page);
     await expect(isQuickViewModalClosed).to.be.true;
+  });
+
+  it('should check \'Cart\' link', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkShoppingCartLink', baseContext);
 
     // Check cart link
     await homePage.clickOnHeaderLink(page, 'Cart');
@@ -132,7 +114,33 @@ describe('Check links in header page', async () => {
     await expect(pageTitle).to.equal(cartPage.pageTitle);
   });
 
-  it('should check logo link', async function () {
+  it('should go to home page and check the notification number', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkNotificationNumber1', baseContext);
+
+    await loginPage.goToHomePage(page);
+
+    const notificationsNumber = await homePage.getCartNotificationsNumber(page);
+    await expect(notificationsNumber, 'Notification number is not equal to 3!').to.be.equal(3);
+  });
+
+  it('should check \'Sign out\' link', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkSignOutLink', baseContext);
+
+    // Sign out
+    await homePage.logout(page);
+
+    const isCustomerConnected = await homePage.isCustomerConnected(page);
+    await expect(isCustomerConnected, 'Customer is connected!').to.be.false;
+  });
+
+  it('should check that the cart is empty', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkNotificationNumber2', baseContext);
+
+    const notificationsNumber = await homePage.getCartNotificationsNumber(page);
+    await expect(notificationsNumber, 'The cart is not empty!').to.be.equal(0);
+  });
+
+  it('should check \'Logo\' link', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkLogoLink', baseContext);
 
     await homePage.clickOnHeaderLink(page, 'Logo');

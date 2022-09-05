@@ -23,16 +23,16 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{% import 'PrestaShopBundle:Admin:macros.html.twig' as ps %}
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
 {% block category_form_block %}
-{{ form_start(categoryForm) }}
+{{ form_start(categoryForm, {'attr': {'data-id': categoryId|default(0)}}) }}
 <div class="card">
   <h3 class="card-header">
     {{ 'Category'|trans({}, 'Admin.Catalog.Feature') }}
   </h3>
-  <div class="card-block row">
-    <div class="card-text">
+  <div class="card-body">
+    <div class="form-wrapper">
       {{ form_errors(categoryForm) }}
 
       {{ ps.form_group_row(categoryForm.name, {}, {
@@ -70,6 +70,11 @@
 
       {{ ps.form_group_row(categoryForm.description, {}, {
         'label': 'Description'|trans({}, 'Admin.Global'),
+        'help': 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}'
+      }) }}
+
+      {{ ps.form_group_row(categoryForm.additional_description, {}, {
+        'label': 'Additional description'|trans({}, 'Admin.Catalog.Feature'),
         'help': 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}'
       }) }}
 
@@ -113,7 +118,9 @@
           {% if allowMenuThumbnailsUpload %}
             {{ form_widget(categoryForm.menu_thumbnail_images) }}
           {% else %}
-            {{ form_widget(categoryForm.menu_thumbnail_images, {'attr': {'class': 'd-none'}}) }}
+            <div class="d-none">
+              {{ form_widget(categoryForm.menu_thumbnail_images) }}
+            </div>
 
             <div class="alert alert-warning" role="alert">
               <p class="alert-text">

@@ -24,19 +24,21 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace LegacyTests\Unit\Core\Util\File;
+declare(strict_types=1);
 
-use LegacyTests\TestCase\UnitTestCase;
+namespace Tests\Unit\Core\Util;
+
+use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Util\File\YamlParser;
 
-class YamlParserTest extends UnitTestCase
+class YamlParserTest extends TestCase
 {
     /**
-     * @param $yamlFiles
+     * @param string $yamlFiles
      *
      * @return string
      */
-    private function clearCacheFile($yamlFiles)
+    private function clearCacheFile(string $yamlFiles): string
     {
         $yamlParser = new YamlParser($this->getCacheDir(), false);
         $cacheFile = $yamlParser->getCacheFile($yamlFiles);
@@ -45,12 +47,12 @@ class YamlParserTest extends UnitTestCase
         return $cacheFile;
     }
 
-    public function getConfigDir()
+    public function getConfigDir(): string
     {
         return _PS_ROOT_DIR_ . '/app/config/';
     }
 
-    public function getCacheDir()
+    public function getCacheDir(): string
     {
         return _PS_ROOT_DIR_ . '/var/cache/test/';
     }
@@ -58,7 +60,7 @@ class YamlParserTest extends UnitTestCase
     /**
      * @dataProvider getYamlFilesProvider
      */
-    public function testParserNoCache($yamlFiles)
+    public function testParserNoCache(string $yamlFiles): void
     {
         $cacheFile = $this->clearCacheFile($yamlFiles);
         $yamlParser = new YamlParser($this->getCacheDir(), false);
@@ -66,13 +68,17 @@ class YamlParserTest extends UnitTestCase
         // no cache file
         $config = $yamlParser->parse($yamlFiles);
         $this->assertArrayHasKey('parameters', $config);
-        $this->assertFileNotExists($cacheFile);
+        if (method_exists($this, 'assertFileDoesNotExist')) {
+            $this->assertFileDoesNotExist($cacheFile);
+        } else {
+            $this->assertFileNotExists($cacheFile);
+        }
     }
 
     /**
      * @dataProvider getYamlFilesProvider
      */
-    public function testParserCache($yamlFiles)
+    public function testParserCache(string $yamlFiles): void
     {
         $cacheFile = $this->clearCacheFile($yamlFiles);
 
@@ -102,7 +108,7 @@ class YamlParserTest extends UnitTestCase
     /**
      * @dataProvider getYamlFilesProvider
      */
-    public function testParserCacheRefresh($yamlFiles)
+    public function testParserCacheRefresh(string $yamlFiles): void
     {
         $cacheFile = $this->clearCacheFile($yamlFiles);
 
@@ -124,10 +130,12 @@ class YamlParserTest extends UnitTestCase
     /**
      * Data provider
      *
-     * @return array
+     * @return array<array<string>>
      */
-    public function getYamlFilesProvider()
+    public function getYamlFilesProvider(): array
     {
-        return [[$this->getConfigDir() . '/config_test.yml']];
+        return [
+            [$this->getConfigDir() . '/config_test.yml'],
+        ];
     }
 }

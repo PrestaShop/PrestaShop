@@ -25,7 +25,9 @@
  */
 class GetFileControllerCore extends FrontController
 {
+    /** @var bool */
     protected $display_header = false;
+    /** @var bool */
     protected $display_footer = false;
 
     public function init()
@@ -115,12 +117,12 @@ class GetFileControllerCore extends FrontController
 
             $now = time();
 
-            $product_deadline = strtotime($info['download_deadline']);
+            $product_deadline = (int) strtotime($info['download_deadline']);
             if ($now > $product_deadline && $info['download_deadline'] != '0000-00-00 00:00:00') {
                 $this->displayCustomError('The product deadline is in the past.');
             }
 
-            $customer_deadline = strtotime($info['date_expiration']);
+            $customer_deadline = (int) strtotime($info['date_expiration']);
             if ($now > $customer_deadline && $info['date_expiration'] != '0000-00-00 00:00:00') {
                 $this->displayCustomError('Expiration date has passed, you cannot download this product');
             }

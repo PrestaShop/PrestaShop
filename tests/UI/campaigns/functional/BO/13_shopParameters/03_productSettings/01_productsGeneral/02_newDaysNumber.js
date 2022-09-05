@@ -1,16 +1,20 @@
 require('module-alias/register');
-// Using chai
-const {expect} = require('chai');
-const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
 
-// Import pages
+const {expect} = require('chai');
+
+// Import utils
+const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
+const loginCommon = require('@commonTests/BO/loginBO');
+
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const productSettingsPage = require('@pages/BO/shopParameters/productSettings');
-const homePage = require('@pages/FO/home');
 
-// Import test context
-const testContext = require('@utils/testContext');
+// Import FO pages
+const homePage = require('@pages/FO/home');
 
 const baseContext = 'functional_BO_shopParameters_productSettings_productsGeneral_newDaysNumber';
 
@@ -23,7 +27,8 @@ Check that there is no new products in FO
 Go back to the default value
 Check that all products are new in FO
  */
-describe('Number of days for which the product is considered \'new\'', async () => {
+describe('BO - Shop Parameters - Product Settings : Update Number of days for which  '
+  + 'the product is considered \'new\'', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -73,8 +78,15 @@ describe('Number of days for which the product is considered \'new\'', async () 
 
       const isNewFlagVisible = await homePage.isNewFlagVisible(page, 1);
       await expect(isNewFlagVisible).to.be.equal(test.args.exist);
+    });
+
+    it('should close the page and go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `closePageAndBackToBO${test.args.state}`, baseContext);
 
       page = await homePage.closePage(browserContext, page, 0);
+
+      const pageTitle = await productSettingsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
     });
   });
 });

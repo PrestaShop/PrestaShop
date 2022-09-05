@@ -1,0 +1,379 @@
+@font-face {
+  font-family: Vazirmatn;
+  font-style: normal;
+  font-weight: 400;
+  src: url("~vazirmatn/fonts/webfonts/Vazirmatn-Regular.woff2") format("woff2");
+}
+
+
+@font-face {
+  font-family: Vazirmatn;
+  font-style: normal;
+  font-weight: 700;
+  src: url("~vazirmatn/fonts/webfonts/Vazirmatn-Bold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: Vazirmatn;
+  font-style: normal;
+  font-weight: 300;
+  src: url("~vazirmatn/fonts/webfonts/Vazirmatn-Light.woff2") format("woff2");
+}
+
+body {
+  &.lang-fa,
+  &.lang-ar {
+    font-family: Vazirmatn, sans-serif;
+
+    #content {
+      &.bootstrap {
+        .panel {
+          .panel-heading {
+            a {
+              &.btn {
+                font-family: Vazirmatn, sans-serif;
+              }
+            }
+            font-family: Vazirmatn, sans-serif;
+          }
+        }
+
+        #dash_version {
+          .panel-heading {
+            a {
+              &.btn {
+                font-family: Vazirmatn, sans-serif;
+              }
+            }
+            font-family: Vazirmatn, sans-serif;
+          }
+        }
+
+        .message-item-initial {
+          .message-item-initial-body {
+            .panel-heading {
+              a {
+                &.btn {
+                  font-family: Vazirmatn, sans-serif;
+                }
+              }
+              font-family: Vazirmatn, sans-serif;
+            }
+          }
+        }
+
+        .timeline {
+          .timeline-item {
+            .timeline-caption {
+              .timeline-panel {
+                .panel-heading {
+                  a {
+                    &.btn {
+                      font-family: Vazirmatn, sans-serif;
+                    }
+                  }
+                  font-family: Vazirmatn, sans-serif;
+                }
+              }
+            }
+          }
+        }
+
+        .btn-group-action {
+          .btn {
+            font-family: Vazirmatn, sans-serif;
+          }
+        }
+
+        .page-head {
+          &,
+          h2,
+          h4 {
+            .page-title {
+              font-size: 1.625rem;
+            }
+          }
+        }
+
+        #dashboard {
+          #dashproducts {
+            nav {
+              font-family: Vazirmatn, sans-serif;
+            }
+          }
+
+          #dashtrends {
+            dt {
+              font-family: Vazirmatn, sans-serif;
+            }
+          }
+
+          section {
+            >section {
+              header {
+                .small {
+                  font-family: Vazirmatn, sans-serif;
+                }
+              }
+            }
+          }
+
+          .tooltip-panel-heading {
+            font-family: Vazirmatn, sans-serif;
+          }
+
+          svg {
+            text {
+              font-family: Vazirmatn, sans-serif;
+            }
+          }
+        }
+
+        .h1,
+        .h2,
+        .h3,
+        .h4,
+        .h5,
+        .h6,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        input,
+        button,
+        textarea,
+        select {
+          font-family: Vazirmatn, sans-serif !important;
+        }
+
+        .nav-tabs {
+          li {
+            a {
+              font-family: Vazirmatn, sans-serif;
+            }
+          }
+        }
+      }
+    }
+
+    input {
+      &[type="email"],
+      &[type="password"],
+      &[type="search"],
+      &[type="tel"],
+      &[type="text"] {
+        font-family: Vazirmatn, sans-serif !important;
+      }
+    }
+
+    .ui-widget {
+      input,
+      select,
+      textarea,
+      button {
+        font-family: Vazirmatn, sans-serif !important;
+      }
+    }
+
+    .tooltip,
+    .ui-datepicker-rtl {
+      font-family: Vazirmatn, sans-serif;
+    }
+
+    #notification {
+      .dropdown-menu {
+        .notifications {
+          .nav-tabs {
+            .nav-item {
+              .nav-link {
+                font-family: Vazirmatn, sans-serif;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    #login-panel {
+      input {
+        &[type="email"],
+        &[type="password"],
+        &[type="text"] {
+          font-family: Vazirmatn, FontAwesome, sans-serif !important;
+        }
+      }
+
+      #forgot_name {
+        font-family: Vazirmatn, sans-serif;
+      }
+    }
+  }
+}
+
+.rtl-flip {
+  &:not(.rtl-no-flip) {
+    transform: scaleX(-1);
+  }
+}
+
+i {
+  &[class*="right"],
+  &[class*="left"],
+  &[class*="backward"],
+  &[class*="forward"] {
+    transform: scale(-1, 1);
+  }
+}
+
+.magnitude {
+  &::before {
+    content: "?";
+    opacity: 0;
+  }
+}
+
+.dropdown-menu,
+.mce-window {
+  right: auto;
+}
+
+ul {
+  &.category-tree {
+    .category-label {
+      .category {
+        left: 9px;
+      }
+    }
+
+    .more {
+      &::before {
+        content: "\E5CB";
+      }
+    }
+  }
+}
+
+.adminproducts {
+  .dz-hidden-input {
+    display: none;
+  }
+}
+
+.product-page {
+  .product-header {
+    overflow: hidden;
+  }
+}
+
+.select2-container--open {
+  .select2-dropdown {
+    right: auto;
+    left: 0;
+  }
+}
+
+#search {
+  .search-input {
+    text-align: right;
+  }
+}
+
+.ui-datepicker-rtl {
+  right: auto;
+}
+
+svg {
+  direction: ltr;
+}
+
+.mce-panel {
+  right: auto;
+}
+
+.process-icon-rtl {
+  &::before {
+    content: "\f1dd\f0d9";
+  }
+}
+
+#header_infos {
+  #header_logo {
+    background-position: right;
+  }
+}
+
+.notification-center {
+  .dropdown-menu {
+    right: auto;
+    left: 85px;
+  }
+}
+
+.popover {
+  right: auto;
+  left: 5px;
+  margin-right: 0;
+  margin-left: 8px;
+
+  .arrow {
+    right: auto;
+    left: -8px;
+    transform: scaleX(-1);
+  }
+}
+
+.stock-app {
+  .stock-overview {
+    .table {
+      .qty-update {
+        .material-icons {
+          transform: scaleX(-1);
+        }
+      }
+    }
+  }
+}
+
+@keyframes showcase-img-appearance-rtl {
+  from {
+    opacity: 0;
+    transform: translate(-20px) translateX(-1);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(0) translateX(-1);
+  }
+}
+
+.img-rtl {
+  transform: scaleX(-1);
+  animation: showcase-img-appearance-rtl 0.4s;
+}
+
+#psthemecusto {
+  .modal {
+    .modal-header {
+      .close {
+        right: auto !important;
+        left: 1rem;
+      }
+    }
+  }
+}
+
+.mobile {
+  #content {
+    &.bootstrap {
+      overflow: hidden;
+    }
+  }
+}
+
+.material-icons {
+  &.rtl-flip {
+    transform: scaleX(-1);
+  }
+}

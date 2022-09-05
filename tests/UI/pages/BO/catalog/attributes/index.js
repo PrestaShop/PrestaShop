@@ -25,7 +25,7 @@ class Attributes extends BOBasePage {
 
     // Header selectors
     this.addNewAttributeLink = '#page-header-desc-attribute_group-new_attribute_group';
-    this.addNewValueLink = '#page-header-desc-attribute_group-new_value';
+    this.addNewValueLink = 'a[data-role=page-header-desc-attribute_group-link]';
     this.featuresSubtabLink = '#subtab-AdminFeatures';
 
     // Form selectors
@@ -403,7 +403,7 @@ class Attributes extends BOBasePage {
   async openHelpSideBar(page) {
     await page.click(this.helpCardLink);
 
-    return this.elementVisible(page, this.helpContainterBlock, 2000);
+    return this.elementVisible(page, this.helpContainterBlock, 4000);
   }
 
   /**

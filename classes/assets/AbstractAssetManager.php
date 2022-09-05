@@ -28,15 +28,14 @@ use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 
 abstract class AbstractAssetManagerCore
 {
+    use PrestaShop\PrestaShop\Adapter\Assets\AssetUrlGeneratorTrait;
     protected $directories;
     protected $configuration;
     protected $list = [];
 
-    const DEFAULT_MEDIA = 'all';
-    const DEFAULT_PRIORITY = 50;
-    const DEFAULT_JS_POSITION = 'bottom';
-
-    use PrestaShop\PrestaShop\Adapter\Assets\AssetUrlGeneratorTrait;
+    public const DEFAULT_MEDIA = 'all';
+    public const DEFAULT_PRIORITY = 50;
+    public const DEFAULT_JS_POSITION = 'bottom';
 
     public function __construct(array $directories, ConfigurationInterface $configuration)
     {

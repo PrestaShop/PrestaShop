@@ -2,9 +2,10 @@ require('module-alias/register');
 
 // Helpers to open and close browser
 const helper = require('@utils/helpers');
+const {getDateFormat} = require('@utils/date');
 
 // Common tests login BO
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -24,21 +25,7 @@ const {expect} = require('chai');
 let numberOfShoppingCarts;
 let browserContext;
 let page;
-
-// Today date
-const today = new Date();
-
-// Current day
-const day = (`0${today.getDate()}`).slice(-2);
-
-// Current month
-const month = (`0${today.getMonth() + 1}`).slice(-2);
-
-// Current year
-const year = today.getFullYear();
-
-// Date today format (mm/dd/yyyy)
-const todayDate = `${month}/${day}/${year}`;
+const todayDate = getDateFormat('mm/dd/yyyy');
 
 /*
 Delete the non ordered shopping carts

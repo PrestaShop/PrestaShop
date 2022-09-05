@@ -34,6 +34,15 @@ class TranslateCore
     public static $regexSprintfParams = '#(?:%%|%(?:[0-9]+\$)?[+-]?(?:[ 0]|\'.)?-?[0-9]*(?:\.[0-9]+)?[bcdeufFosxX])#';
     public static $regexClassicParams = '/%\w+%/';
 
+    /**
+     * @param string $string
+     * @param string $class
+     * @param bool $addslashes
+     * @param bool $htmlentities
+     * @param array|null $sprintf
+     *
+     * @return string
+     */
     public static function getFrontTranslation($string, $class, $addslashes = false, $htmlentities = true, $sprintf = null)
     {
         global $_LANG;
@@ -53,9 +62,9 @@ class TranslateCore
         $str = str_replace('"', '&quot;', $str);
 
         if (
-            $sprintf !== null &&
-            (!is_array($sprintf) || !empty($sprintf)) &&
-            !(count($sprintf) === 1 && isset($sprintf['legacy']))
+            $sprintf !== null
+            && (!is_array($sprintf) || !empty($sprintf))
+            && !(count($sprintf) === 1 && isset($sprintf['legacy']))
         ) {
             $str = Translate::checkAndReplaceArgs($str, $sprintf);
         }
@@ -66,49 +75,21 @@ class TranslateCore
     /**
      * Get a translation for an admin controller.
      *
-     * @param $string
+     * @deprecated Use Context::getContext()->getTranslator()->trans()
+     *
+     * @param string $string
      * @param string $class
      * @param bool $addslashes
      * @param bool $htmlentities
+     * @param array|null $sprintf
      *
      * @return string
      */
     public static function getAdminTranslation($string, $class = 'AdminTab', $addslashes = false, $htmlentities = true, $sprintf = null)
     {
-        static $modulesTabs = null;
+        @trigger_error(__FUNCTION__ . 'is deprecated. Use Context::getContext()->getTranslator()->trans() instead.', E_USER_DEPRECATED);
 
-        // @todo remove global keyword in translations files and use static
-        global $_LANGADM;
-
-        if ($modulesTabs === null) {
-            $modulesTabs = Tab::getModuleTabList();
-        }
-
-        if ($_LANGADM == null) {
-            $iso = Context::getContext()->language->iso_code;
-            if (empty($iso)) {
-                $iso = Language::getIsoById((int) Configuration::get('PS_LANG_DEFAULT'));
-            }
-            if (file_exists(_PS_TRANSLATIONS_DIR_ . $iso . '/admin.php')) {
-                include_once _PS_TRANSLATIONS_DIR_ . $iso . '/admin.php';
-            }
-        }
-
-        if (isset($modulesTabs[strtolower($class)])) {
-            $classNameController = $class . 'controller';
-            // if the class is extended by a module, use modules/[module_name]/xx.php lang file
-            if (class_exists($classNameController) && Module::getModuleNameFromClass($classNameController)) {
-                return Translate::getModuleTranslation(Module::$classInModule[$classNameController], $string, $classNameController, $sprintf, $addslashes);
-            }
-        }
-
-        $string = preg_replace("/\\\*'/", "\'", $string);
-        $key = md5($string);
-        if (isset($_LANGADM[$class . $key])) {
-            $str = $_LANGADM[$class . $key];
-        } else {
-            $str = Translate::getGenericAdminTranslation($string, $key, $_LANGADM);
-        }
+        $str = Context::getContext()->getTranslator()->trans($string);
 
         if ($htmlentities) {
             $str = htmlspecialchars($str, ENT_QUOTES, 'utf-8');
@@ -123,45 +104,16 @@ class TranslateCore
             $str = Translate::checkAndReplaceArgs($str, $sprintf);
         }
 
-        return $addslashes ? addslashes($str) : stripslashes($str);
-    }
-
-    /**
-     * Return the translation for a string if it exists for the base AdminController or for helpers.
-     *
-     * @param $string string to translate
-     * @param null $key md5 key if already calculated (optional)
-     * @param array $langArray Global array of admin translations
-     *
-     * @return string translation
-     */
-    public static function getGenericAdminTranslation($string, $key, &$langArray)
-    {
-        $string = preg_replace("/\\\*'/", "\'", $string);
-        if (null === $key) {
-            $key = md5($string);
-        }
-
-        if (isset($langArray['AdminController' . $key])) {
-            $str = $langArray['AdminController' . $key];
-        } elseif (isset($langArray['Helper' . $key])) {
-            $str = $langArray['Helper' . $key];
-        } elseif (isset($langArray['AdminTab' . $key])) {
-            $str = $langArray['AdminTab' . $key];
-        } else {
-            $str = $string;
-        }
-
-        return $str;
+        return $addslashes ? addslashes($str) : $str;
     }
 
     /**
      * Get a translation for a module.
      *
-     * @param string|Module $module
+     * @param string|ModuleCore $module
      * @param string $originalString
      * @param string $source
-     * @param null $sprintf
+     * @param string|array|null $sprintf
      * @param bool $js
      * @param string|null $locale
      * @param bool $fallback [default=true] If true, this method falls back to the new translation system if no translation is found
@@ -180,14 +132,14 @@ class TranslateCore
         $fallback = true,
         $escape = true
     ) {
-        global $_MODULES, $_MODULE, $_LANGADM;
+        global $_MODULES, $_MODULE;
 
         static $langCache = [];
         // $_MODULES is a cache of translations for all module.
         // $translations_merged is a cache of wether a specific module's translations have already been added to $_MODULES
         static $translationsMerged = [];
 
-        $name = $module instanceof Module ? $module->name : $module;
+        $name = $module instanceof ModuleCore ? $module->name : $module;
 
         if (null !== $locale) {
             $iso = Language::getIsoByLocale($locale);
@@ -240,9 +192,6 @@ class TranslateCore
                 $ret = stripslashes($_MODULES[$currentKey]);
             } elseif (!empty($_MODULES[$defaultKey])) {
                 $ret = stripslashes($_MODULES[$defaultKey]);
-            } elseif (!empty($_LANGADM)) {
-                // if translation was not found in module, look for it in AdminController or Helpers
-                $ret = stripslashes(Translate::getGenericAdminTranslation($string, $key, $_LANGADM));
             } else {
                 $ret = stripslashes($string);
             }
@@ -289,6 +238,7 @@ class TranslateCore
      * Get a translation for a PDF.
      *
      * @param string $string
+     * @param array|null $sprintf
      *
      * @return string
      */
@@ -329,8 +279,8 @@ class TranslateCore
     /**
      * Check if string use a specif syntax for sprintf and replace arguments if use it.
      *
-     * @param $string
-     * @param $args
+     * @param string $string
+     * @param array $args
      *
      * @return string
      */

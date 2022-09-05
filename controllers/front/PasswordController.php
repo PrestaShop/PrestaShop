@@ -27,8 +27,11 @@ use PrestaShop\PrestaShop\Core\Util\InternationalizedDomainNameConverter;
 
 class PasswordControllerCore extends FrontController
 {
+    /** @var string */
     public $php_self = 'password';
+    /** @var bool */
     public $auth = false;
+    /** @var bool */
     public $ssl = true;
 
     /**
@@ -154,10 +157,10 @@ class PasswordControllerCore extends FrontController
 
                 if ($passwd && $confirmation) {
                     if ($passwd !== $confirmation) {
-                        $this->errors[] = $this->trans('The password and its confirmation do not match.', [], 'Shop.Notifications.Error');
+                        $this->errors[] = $this->trans('The confirmation password doesn\'t match.', [], 'Shop.Notifications.Error');
                     }
 
-                    if (!Validate::isPasswd($passwd)) {
+                    if (!Validate::isPlaintextPassword($passwd)) {
                         $this->errors[] = $this->trans('The password is not in a valid format.', [], 'Shop.Notifications.Error');
                     }
                 }

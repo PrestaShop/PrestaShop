@@ -1,0 +1,63 @@
+# This workflow aim to create nightly builds on active branches
+name: Nightly Build
+
+on:
+  schedule:
+    - cron: '0 1 * * *'
+
+jobs:
+  nightly-build:
+    name: Nightly Build
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        BRANCH:
+          - develop
+          - 1.7.8.x
+
+    env:
+      PHP_VERSION: '7.4'
+      NODE_VERSION: '14'
+      RELEASE_DIR: '/tmp/ps-release'
+      GH_BRANCH: ${{ matrix.BRANCH }}
+      GC_PROJECT_ID: ${{ secrets.GC_PROJECT_ID }}
+      GC_SERVICE_KEY: ${{ secrets.GC_SERVICE_KEY }}
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: ${{ env.GH_BRANCH }}
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Create Release directory
+        run: mkdir -p ${{ env.RELEASE_DIR }}
+
+      - name: Create build
+        run: php tools/build/CreateRelease.php --destination-dir=${{ env.RELEASE_DIR }}
+
+      - name: Rename build
+        run: today=`date +%Y-%m-%d-`; for i in *; do mv $i $today$GH_BRANCH-$i; done
+        working-directory: ${{ env.RELEASE_DIR }}
+
+      - uses: google-github-actions/setup-gcloud@v0
+        name: Setup Cloud Sdk
+        with:
+          service_account_key: ${{ env.GC_SERVICE_KEY }}
+          project_id: ${{ env.GC_PROJECT_ID }}
+
+      - name: Upload to Google Cloud Storage (GCS)
+        run: gsutil cp -r "${{ env.RELEASE_DIR }}/**" gs://prestashop-core-nightly

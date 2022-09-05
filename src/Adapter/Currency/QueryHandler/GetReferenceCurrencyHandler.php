@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Currency\QueryHandler;
 
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Query\GetReferenceCurrency;
 use PrestaShop\PrestaShop\Core\Domain\Currency\QueryHandler\GetReferenceCurrencyHandlerInterface;
@@ -43,27 +42,19 @@ class GetReferenceCurrencyHandler implements GetReferenceCurrencyHandlerInterfac
     private $localeRepository;
 
     /**
-     * @var CommandBusInterface
-     */
-    private $queryBus;
-
-    /**
      * @var LanguageInterface[]
      */
     private $languages;
 
     /**
      * @param LocaleRepository $localeRepository
-     * @param CommandBusInterface $queryBus
      * @param array $languages
      */
     public function __construct(
         LocaleRepository $localeRepository,
-        CommandBusInterface $queryBus,
         array $languages
     ) {
         $this->localeRepository = $localeRepository;
-        $this->queryBus = $queryBus;
         $this->languages = $languages;
     }
 

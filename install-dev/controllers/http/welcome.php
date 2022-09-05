@@ -29,49 +29,49 @@
  */
 class InstallControllerHttpWelcome extends InstallControllerHttp implements HttpConfigureInterface
 {
-    public function processNextStep()
-    {
-    }
-
-    public function validate()
-    {
-        return true;
-    }
+    /**
+     * @var bool
+     */
+    public $can_upgrade;
+    /**
+     * @var string
+     */
+    public $ps_version;
 
     /**
-     * Change language
+     * {@inheritdoc}
      */
-    public function process()
+    public function process(): void
     {
         if (Tools::getValue('language')) {
             $this->session->lang = Tools::getValue('language');
         }
 
         $locale = $this->language->getLanguage($this->session->lang)->locale;
-        if (!empty($this->session->lang) && !is_file(_PS_ROOT_DIR_ . '/app/Resources/translations/' . $locale . '/Install.' . $locale . '.xlf')) {
+        if (!empty($this->session->lang) && !is_file(_PS_ROOT_DIR_ . '/translations/' . $locale . '/Install.' . $locale . '.xlf')) {
             Language::downloadLanguagePack($this->session->lang, _PS_VERSION_);
             Language::installSfLanguagePack($locale);
             $this->clearCache();
         }
-        if (Tools::getIsset('language') && is_dir(_PS_ROOT_DIR_ . '/app/Resources/translations/' . $locale)) {
+        if (Tools::getIsset('language') && is_dir(_PS_ROOT_DIR_ . '/translations/' . $locale)) {
             $this->redirect('welcome');
         }
     }
 
     /**
-     * Display welcome step
+     * {@inheritdoc}
      */
-    public function display()
+    public function display(): void
     {
         $this->can_upgrade = false;
-        if (file_exists(_PS_ROOT_DIR_.'/config/settings.inc.php')) {
+        if (file_exists(_PS_ROOT_DIR_ . '/config/settings.inc.php')) {
             if (version_compare(_PS_VERSION_, _PS_INSTALL_VERSION_, '<')) {
                 $this->can_upgrade = true;
                 $this->ps_version = _PS_VERSION_;
             }
         }
 
-        $this->displayTemplate('welcome');
+        $this->displayContent('welcome');
     }
 
     private function clearCache()

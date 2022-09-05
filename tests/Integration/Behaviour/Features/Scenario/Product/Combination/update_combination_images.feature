@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-combination-images
-@reset-database-before-feature
+@restore-products-before-feature
 @clear-cache-before-feature
 @reset-img-after-feature
 @product-combination
@@ -62,10 +62,14 @@ Feature: Associate combination image from Back Office (BO)
       | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      | http://myshop.com/img/p/{image1}-small_default.jpg |
       | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      | http://myshop.com/img/p/{image1}-small_default.jpg |
     And combination "product1SWhite" should have no images
+    And combination "product1SWhite" should have the following cover "http://myshop.com/img/p/{image1}-cart_default.jpg"
     When I associate "[image2]" to combination "product1SWhite"
     Then combination "product1SWhite" should have following images "[image2]"
+    And combination "product1SWhite" should have the following cover "http://myshop.com/img/p/{image2}-cart_default.jpg"
     When I associate "[image3, image4]" to combination "product1MBlack"
     Then combination "product1MBlack" should have following images "[image3, image4]"
+    And combination "product1MBlack" should have the following cover "http://myshop.com/img/p/{image3}-cart_default.jpg"
+    # Now the combination image is the first one in its own associated images
     And product "product1" should have following combinations:
       | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default | image url                                          |
       | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       | http://myshop.com/img/p/{image2}-small_default.jpg |
@@ -74,3 +78,4 @@ Feature: Associate combination image from Back Office (BO)
       | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      | http://myshop.com/img/p/{image3}-small_default.jpg |
     When I remove all images associated to combination "product1SWhite"
     And combination "product1SWhite" should have no images
+    And combination "product1SWhite" should have the following cover "http://myshop.com/img/p/{image1}-cart_default.jpg"

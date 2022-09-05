@@ -29,44 +29,77 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\DefaultLanguage;
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
+use PrestaShopBundle\Form\Admin\Type\ImagePreviewType;
+use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\Length;
 
 class HeaderType extends TranslatorAwareType
 {
+    /**
+     * @var bool
+     */
+    private $stockManagementEnabled;
+
+    /**
+     * @var bool
+     */
+    private $isEcotaxEnabled;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param bool $stockManagementEnabled
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        bool $stockManagementEnabled,
+        bool $isEcotaxEnabled
+    ) {
+        parent::__construct($translator, $locales);
+        $this->stockManagementEnabled = $stockManagementEnabled;
+        $this->isEcotaxEnabled = $isEcotaxEnabled;
+    }
+
     /**
      * {@inheritDoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', TranslatableType::class, [
+            ->add('cover_thumbnail', ImagePreviewType::class, [
                 'label' => false,
+            ])
+            ->add('name', TranslatableType::class, [
+                'label' => $this->trans('Product name', 'Admin.Catalog.Feature'),
                 'type' => TextType::class,
-                'constraints' => [
-                    new DefaultLanguage(),
-                ],
+                'constraints' => $options['active'] ? [new DefaultLanguage()] : [],
                 'options' => [
+                    'constraints' => [
+                        new TypedRegex(TypedRegex::TYPE_CATALOG_NAME),
+                        new Length(['max' => ProductSettings::MAX_NAME_LENGTH]),
+                    ],
                     'attr' => [
                         'class' => 'serp-default-title',
                     ],
                 ],
-            ])
-            ->add('type', ChoiceType::class, [
-                'choices' => [
-                    $this->trans('Standard product', 'Admin.Catalog.Feature') => ProductType::TYPE_STANDARD,
-                    $this->trans('Pack of products', 'Admin.Catalog.Feature') => ProductType::TYPE_PACK,
-                    $this->trans('Virtual product', 'Admin.Catalog.Feature') => ProductType::TYPE_VIRTUAL,
-                    $this->trans('Product with combinations', 'Admin.Catalog.Feature') => ProductType::TYPE_COMBINATIONS,
+                'row_attr' => [
+                    'class' => 'header-name',
                 ],
-                'choice_translation_domain' => 'Admin.Catalog.Feature',
+                'modify_all_shops' => true,
+            ])
+            ->add('type', ProductTypeType::class, [
                 'attr' => [
-                    'class' => 'custom-select',
+                    'data-switch-modal-title' => $this->trans('Change the product type', 'Admin.Catalog.Notification'),
                     'data-modal-title' => $this->trans('Are you sure you want to change the product type?', 'Admin.Catalog.Notification'),
                     'data-modal-apply' => $this->trans('Change product type', 'Admin.Catalog.Notification'),
                     'data-modal-cancel' => $this->trans('Cancel', 'Admin.Global'),
@@ -74,13 +107,21 @@ class HeaderType extends TranslatorAwareType
                     'data-combinations-warning' => $this->trans('This will delete all combinations.', 'Admin.Catalog.Notification'),
                     'data-pack-warning' => $this->trans('This will delete the list of products in this pack.', 'Admin.Catalog.Notification'),
                     'data-virtual-warning' => $this->trans('This will delete the associated virtual file.', 'Admin.Catalog.Notification'),
+                    'data-ecotax-warning' => $this->trans('This will reset the ecotax value and may impact your retail price (tax incl.).', 'Admin.Catalog.Notification'),
+                    'data-stock-warning' => $this->trans('This will reset the stock of this product.', 'Admin.Catalog.Notification'),
+                    'data-stock-enabled' => $this->stockManagementEnabled,
+                    'data-ecotax-enabled' => $this->isEcotaxEnabled,
+                    'class' => 'header-product-type-selector',
                 ],
-                'label' => false,
-                'help' => $this->trans('Is the product a pack (a combination of at least two existing products), a virtual product (downloadable file, service, etc.), or simply a standard, physical product?', 'Admin.Catalog.Help'),
-                'required' => false,
-                // placeholder false is important to avoid empty option in select input despite required being false
-                'placeholder' => false,
             ])
+            ->add('active', SwitchType::class, [
+                'label' => false,
+                'choices' => [
+                    $this->trans('Offline', 'Admin.Global') => false,
+                    $this->trans('Online', 'Admin.Global') => true,
+                ],
+            ])
+            ->add('initial_type', HiddenType::class)
         ;
     }
 
@@ -90,9 +131,15 @@ class HeaderType extends TranslatorAwareType
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-        $resolver->setDefaults([
-            'required' => false,
-            'label' => false,
-        ]);
+
+        $resolver
+            ->setDefaults([
+                'active' => false,
+                'required' => false,
+                'label' => false,
+                'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/header.html.twig',
+            ])
+            ->setAllowedTypes('active', ['bool'])
+        ;
     }
 }

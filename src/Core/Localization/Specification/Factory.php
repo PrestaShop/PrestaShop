@@ -83,7 +83,7 @@ class Factory
      * @param Currency $currency This Currency object brings missing specification to format a number as a price
      * @param bool $numberGroupingUsed Should we group digits when formatting prices ?
      * @param string $currencyDisplayType Type of display for currency symbol (symbol or ISO code)
-     * @param int $maxFractionDigits|null The decimal precision of the price
+     * @param int|null $maxFractionDigits The decimal precision of the price
      *
      * @return PriceSpecification
      *
@@ -131,7 +131,7 @@ class Factory
     {
         $patterns = explode(';', $pattern);
 
-        return isset($patterns[0]) ? $patterns[0] : '';
+        return $patterns[0] ?? '';
     }
 
     /**
@@ -148,9 +148,7 @@ class Factory
     {
         $patterns = explode(';', $pattern);
 
-        return isset($patterns[1])
-            ? $patterns[1]
-            : '-' . $patterns[0];
+        return $patterns[1] ?? '-' . $patterns[0];
     }
 
     /**

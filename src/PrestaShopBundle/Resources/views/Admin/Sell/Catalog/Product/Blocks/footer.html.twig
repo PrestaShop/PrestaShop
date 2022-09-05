@@ -26,18 +26,15 @@
 <div class="product-footer">
   {% block product_header_form %}
     <div class="product-footer-container">
-      {# Only a few selected elements are in the left column #}
-      <div class="form-group">
-        <div id="product-footer-left" class="product-footer-left">
-          {{ form_row(productForm.footer.catalog) }}
+      {# Only a few selected elements are in the right column #}
+      <div class="form-group product-footer-right">
+        <div id="product-footer-right" class="footer-buttons-container">
           {{ form_row(productForm.footer.preview) }}
-          {{ form_row(productForm.footer.standard_page) }}
-          {{ form_row(productForm.footer.delete) }}
-          {{ form_row(productForm.footer.active) }}
+          {{ form_row(productForm.footer.save) }}
         </div>
       </div>
 
-      {# The rest is displayed in the right column #}
+      {# The rest is displayed in the left column, it is displayed after because it renders all that's left #}
       {{ form_row(productForm.footer) }}
     </div>
   {% endblock %}

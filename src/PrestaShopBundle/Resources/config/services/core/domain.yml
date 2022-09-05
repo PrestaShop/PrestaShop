@@ -1,2 +1,2 @@
 imports:
-    - { resource: domain/*.yml }
+  - { resource: domain/*.yml }

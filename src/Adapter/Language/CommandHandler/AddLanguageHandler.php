@@ -27,6 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Language\CommandHandler;
 
 use Language;
+use PrestaShop\PrestaShop\Adapter\File\RobotsTextFileGenerator;
 use PrestaShop\PrestaShop\Adapter\Image\ImageValidator;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\AddLanguageCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\CommandHandler\AddLanguageHandlerInterface;
@@ -47,9 +48,15 @@ final class AddLanguageHandler extends AbstractLanguageHandler implements AddLan
      */
     private $imageValidator;
 
-    public function __construct(ImageValidator $imageValidator)
+    /**
+     * @var RobotsTextFileGenerator
+     */
+    private $robotsTextFileGenerator;
+
+    public function __construct(ImageValidator $imageValidator, RobotsTextFileGenerator $robotsTextFileGenerator)
     {
         $this->imageValidator = $imageValidator;
+        $this->robotsTextFileGenerator = $robotsTextFileGenerator;
     }
 
     /**
@@ -76,6 +83,7 @@ final class AddLanguageHandler extends AbstractLanguageHandler implements AddLan
         );
         $this->uploadFlagImage($language, $command);
         $this->addShopAssociation($language, $command);
+        $this->robotsTextFileGenerator->generateFile();
 
         return new LanguageId((int) $language->id);
     }

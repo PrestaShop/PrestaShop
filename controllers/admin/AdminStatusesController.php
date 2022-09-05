@@ -697,8 +697,9 @@ class AdminStatusesControllerCore extends AdminController
     {
         parent::afterImageUpload();
 
-        if (($id_order_state = (int) Tools::getValue('id_order_state')) &&
-             isset($_FILES) && count($_FILES) && file_exists(_PS_ORDER_STATE_IMG_DIR_ . $id_order_state . '.gif')) {
+        if (($id_order_state = (int) Tools::getValue('id_order_state'))
+            && count($_FILES)
+            && file_exists(_PS_ORDER_STATE_IMG_DIR_ . $id_order_state . '.gif')) {
             $current_file = _PS_TMP_IMG_DIR_ . 'order_state_mini_' . $id_order_state . '_' . $this->context->shop->id . '.gif';
 
             if (file_exists($current_file)) {

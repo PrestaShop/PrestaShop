@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\DependencyInjection\Compiler;
 
 use Doctrine\Bundle\DoctrineBundle\DependencyInjection\Compiler\DoctrineOrmMappingsPass;
-use Doctrine\Common\Util\Inflector;
+use PrestaShop\PrestaShop\Core\Util\Inflector;
 use Symfony\Component\Config\Resource\DirectoryResource;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -85,7 +85,7 @@ class ModulesDoctrineCompilerPass implements CompilerPassInterface
                 if (empty($moduleNamespace)) {
                     continue;
                 }
-                $modulePrefix = 'Module' . Inflector::camelize($moduleFolder->getFilename());
+                $modulePrefix = 'Module' . Inflector::getInflector()->camelize($moduleFolder->getFilename());
                 $moduleEntityDirectory = realpath($moduleFolder . '/src/Entity');
                 $mappingPass = $this->createAnnotationMappingDriver($moduleNamespace, $moduleEntityDirectory, $modulePrefix);
                 $mappingsPassList[$moduleEntityDirectory] = $mappingPass;

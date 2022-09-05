@@ -23,34 +23,23 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{% form_theme exchangeRatesForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
+{% form_theme exchangeRatesForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
 {{ form_start(exchangeRatesForm, {'action': path('admin_currencies_refresh_exchange_rates') }) }}
   <div class="card">
     <h3 class="card-header">
       {{ 'Exchange rate'|trans({}, 'Admin.International.Feature') }}
     </h3>
-    <div class="card-block row">
-      <div class="card-text">
+    <div class="card-body">
+      <div class="form-wrapper">
         <div class="form-group row">
-          <label class="form-control-label" for="{{ exchangeRatesForm.live_exchange_rate.vars.id }}">
-            {{ form_label(exchangeRatesForm.live_exchange_rate) }}
+          <label class="form-control-label">
+            {{ 'Live exchange rates'|trans({}, 'Admin.International.Feature') }}
           </label>
           <div class="col-sm">
-            {{ form_widget(exchangeRatesForm.live_exchange_rate, {'attr': {'class': 'js-live-exchange-rate', 'data-url': path('admin_currencies_update_live_exchange_rates')}}) }}
-
-            {% if exchangeRatesForm.live_exchange_rate.vars.disabled %}
-                <small class="form-text">
-                  {{ 'Please install the %module_name% module before using this feature.'|trans({'%module_name%': 'cronjobs'}, 'Admin.International.Notification') }}
-                </small>
-              {% else %}
-                <small class="form-text js-exchange-rate-text-when-disabled {{ (exchangeRatesForm.live_exchange_rate.vars.value == 0) ? '' : 'd-none' }}">
-                  {{ 'The exchange rates are not automatically updated'|trans({}, 'Admin.International.Feature') }}
-                </small>
-                <small class="form-text js-exchange-rate-text-when-enabled {{ (exchangeRatesForm.live_exchange_rate.vars.value != 0) ? '' : 'd-none' }}">
-                  {{ 'The exchange rates are automatically updated'|trans({}, 'Admin.International.Feature') }}
-                </small>
-            {% endif %}
+            <small class="form-text">
+              {{ 'Check the [a]developer documentation[/a] for setup instructions.'|trans({'[a]': '<a href="https://devdocs.prestashop.com/1.7/faq/pricing/#refresh-exchange-rates" target="_blank">', '[/a]': '</a>'}, 'Admin.International.Notification')|raw }}
+            </small>
           </div>
         </div>
         <div class="form-group row">

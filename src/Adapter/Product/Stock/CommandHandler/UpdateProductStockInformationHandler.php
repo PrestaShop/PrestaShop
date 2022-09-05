@@ -28,10 +28,12 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Stock\CommandHandler;
 
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockProperties;
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Update\ProductStockUpdater;
-use PrestaShop\PrestaShop\Adapter\Product\Update\ProductStockProperties;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\CommandHandler\UpdateProductStockInformationHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
 
 /**
  * Handles @see UpdateProductStockInformationCommand using legacy object model
@@ -44,12 +46,20 @@ final class UpdateProductStockInformationHandler implements UpdateProductStockIn
     private $productStockUpdater;
 
     /**
+     * @var MovementReasonRepository
+     */
+    private $movementReasonRepository;
+
+    /**
      * @param ProductStockUpdater $productStockUpdater
+     * @param MovementReasonRepository $movementReasonRepository
      */
     public function __construct(
-        ProductStockUpdater $productStockUpdater
+        ProductStockUpdater $productStockUpdater,
+        MovementReasonRepository $movementReasonRepository
     ) {
         $this->productStockUpdater = $productStockUpdater;
+        $this->movementReasonRepository = $movementReasonRepository;
     }
 
     /**
@@ -57,11 +67,19 @@ final class UpdateProductStockInformationHandler implements UpdateProductStockIn
      */
     public function handle(UpdateProductStockInformationCommand $command): void
     {
+        $stockModification = null;
+        if ($command->getDeltaQuantity()) {
+            $stockModification = new StockModification(
+                $command->getDeltaQuantity(),
+                $this->movementReasonRepository->getIdForEmployeeEdition($command->getDeltaQuantity() > 0)
+            );
+        }
+
         $this->productStockUpdater->update(
             $command->getProductId(),
             new ProductStockProperties(
                 $command->getPackStockType(),
-                $command->getQuantity(),
+                $stockModification,
                 $command->getOutOfStockType(),
                 $command->getMinimalQuantity(),
                 $command->getLocation(),
@@ -70,7 +88,8 @@ final class UpdateProductStockInformationHandler implements UpdateProductStockIn
                 $command->getLocalizedAvailableNowLabels(),
                 $command->getLocalizedAvailableLaterLabels(),
                 $command->getAvailableDate()
-            )
+            ),
+            $command->getShopConstraint()
         );
     }
 }

@@ -4,23 +4,24 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const testContext = require('@utils/testContext');
 
-// Import pages
+// Import login steps
+const loginCommon = require('@commonTests/BO/loginBO');
+
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const seoAndUrlsPage = require('@pages/BO/shopParameters/trafficAndSeo/seoAndUrls');
 const productsPage = require('@pages/BO/catalog/products');
 const addProductPage = require('@pages/BO/catalog/products/add');
+
+// Import FO pages
 const foHomePage = require('@pages/FO/home');
 
 // Import data
 const ProductFaker = require('@data/faker/product');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_shopParameters_trafficAndSeo_seoAndUrls_enableDisableAccentedUrl';
-
 
 let browserContext;
 let page;
@@ -30,7 +31,7 @@ const productNameWithoutAccent = 'TESTURLE';
 
 const productData = new ProductFaker({name: productName, type: 'Standard product'});
 
-describe('Enable/Disable accented URL', async () => {
+describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable accented URL', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -74,7 +75,7 @@ describe('Enable/Disable accented URL', async () => {
   ];
 
   tests.forEach((test) => {
-    it('should go to \'Shop parameters > SEO and Urls\' page', async function () {
+    it('should go to \'Shop Parameters > SEO & Urls\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToSeoPageTo${test.args.action}`, baseContext);
 
       await addProductPage.goToSubMenu(
@@ -127,8 +128,8 @@ describe('Enable/Disable accented URL', async () => {
       await testContext.addContextItem(this, 'testIdentifier', `resetFriendlyURl${test.args.action}`, baseContext);
 
       await productsPage.goToProductPage(page, 1);
-      const pageTitle = await addProductPage.getPageTitle(page);
 
+      const pageTitle = await addProductPage.getPageTitle(page);
       await expect(pageTitle).to.contains(addProductPage.pageTitle);
       await addProductPage.resetURL(page);
     });
@@ -141,9 +142,16 @@ describe('Enable/Disable accented URL', async () => {
 
       const url = await foHomePage.getCurrentURL(page);
       await expect(url).to.contains(test.args.productNameInURL.toLowerCase());
+    });
+
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${test.args.action}`, baseContext);
 
       // Go back to BO
       page = await foHomePage.closePage(browserContext, page, 0);
+
+      const pageTitle = await addProductPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addProductPage.pageTitle);
     });
   });
 

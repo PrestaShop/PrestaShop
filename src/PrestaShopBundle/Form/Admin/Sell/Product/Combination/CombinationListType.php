@@ -27,29 +27,36 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Combination;
 
-use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Form uses collection of combination items and so it can be rendered as a grid consisting of submittable inputs.
  */
-class CombinationListType extends TranslatorAwareType
+class CombinationListType extends CollectionType
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $builder
-            ->add('combinations', CollectionType::class, [
+        parent::configureOptions($resolver);
+        $resolver
+            ->setDefaults([
                 'entry_type' => CombinationItemType::class,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'prototype_name' => '__COMBINATION_INDEX__',
+                'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/combination_listing.html.twig',
             ])
-            ->add('total_combinations_count', HiddenType::class)
         ;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
+    {
+        return 'combination_list';
     }
 }

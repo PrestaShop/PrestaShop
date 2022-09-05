@@ -41,126 +41,110 @@
 
 {% block content %}
   <div id="themes-logo-page">
-    <div class="row">
-      <div class="col">
 
-        {% if not isSingleShopContext %}
-          <div class="alert alert-info">
-            <p class="alert-text">
-              {{ 'You must select a shop from the above list if you wish to choose a theme.'|trans({}, 'Admin.Design.Help') }}
-            </p>
-          </div>
-        {% endif %}
 
-        {% if isInstalledRtlLanguage %}
-          {% include '@PrestaShop/Admin/Improve/Design/Theme/Blocks/rtl_configuration.html.twig' %}
-        {% endif %}
+    {% if not isSingleShopContext %}
+      <div class="alert alert-info">
+        <p class="alert-text">
+          {{ 'You must select a shop from the above list if you wish to choose a theme.'|trans({}, 'Admin.Design.Help') }}
+        </p>
+      </div>
+    {% endif %}
 
-        {{ form_start(shopLogosForm, {'action': path('admin_themes_upload_logos')}) }}
-          {% if not isInstalledRtlLanguage and isSingleShopContext and isMultiShopFeatureUsed %}
-            {% include '@PrestaShop/Admin/Improve/Design/Theme/Blocks/multishop_switch.html.twig' %}
-          {% endif %}
-          <div class="card">
-            <div class="card-header">
-              {{ 'Logo'|trans({}, 'Admin.Global') }}
-            </div>
-            <div class="card-body logo-configuration-card-body">
-              {% include '@PrestaShop/Admin/Improve/Design/Theme/Blocks/logo_configuration.html.twig' %}
-            </div>
-            <div class="card-footer">
-              <button class="btn btn-primary float-right">
-                {{ 'Save'|trans({}, 'Admin.Actions') }}
-              </button>
-              <div class="clearfix">&nbsp;</div>
-            </div>
-          </div>
-          {{ form_rest(shopLogosForm) }}
-        {{ form_end(shopLogosForm) }}
+    {% if isInstalledRtlLanguage %}
+      {% include '@PrestaShop/Admin/Improve/Design/Theme/Blocks/rtl_configuration.html.twig' %}
+    {% endif %}
 
-        <div class="card">
-          <div class="card-header">
-            {{ 'My theme for %name% shop'|trans({'%name%': shopName}, 'Admin.Design.Feature') }}
-          </div>
-          <div class="card-body row">
-
-            {% embed '@PrestaShop/Admin/Improve/Design/Theme/Blocks/Partials/theme_card.html.twig' with {
-              'themeName': currentlyUsedTheme.get('display_name'),
-              'themeVersion': currentlyUsedTheme.get('version'),
-              'themeAuthor': currentlyUsedTheme.get('author.name'),
-              'themeAuthorUrl': theme.get('author.url'),
-              'isActive': true
-              } %}
-              {% block image %}
-                <img src="{{ baseShopUrl }}{{ currentlyUsedTheme.get('preview') }}" alt="{{ currentlyUsedTheme.get('display_name')   }}">
-              {% endblock %}
-              {% block button_container %}
-                <button class="btn action-button">
-                  <i class="material-icons icon-current-theme">done</i>
-                  {{ 'My current theme'|trans({}, 'Admin.Design.Feature') }}
-                </button>
-              {% endblock %}
-            {% endembed %}
-
-            {% if notUsedThemes is not empty %}
-              {% for theme in notUsedThemes %}
-                {% embed '@PrestaShop/Admin/Improve/Design/Theme/Blocks/Partials/theme_card.html.twig' with {
-                  'themeName': theme.get('display_name'),
-                  'themeVersion': theme.get('version'),
-                  'themeAuthor': theme.get('author.name'),
-                  'themeAuthorUrl': theme.get('author.url'),
-                  'isActive': false
-                  }  %}
-                  {% block image %}
-                    <img src="{{ baseShopUrl }}{{ theme.get('preview') }}" alt="{{ theme.get('display_name') }}">
-                  {% endblock %}
-                  {% block button_container %}
-                    <form action="{{ path('admin_themes_enable', {'themeName': theme.name}) }}" method="post" class="d-inline">
-                      <input type="hidden" name="token" value="{{ csrf_token('enable-theme') }}" />
-                      <button type="button" class="btn action-button js-display-use-theme-modal" {{ (not isSingleShopContext) ? 'disabled' : '' }}>
-                        <i class="material-icons">
-                          present_to_all
-                        </i>
-                        <span>{{ 'Use this theme'|trans({}, 'Admin.Design.Feature') }}</span>
-                      </button>
-                    </form>
-                    <form action="{{ path('admin_themes_delete', {'themeName': theme.name}) }}" method="post" class="d-inline">
-                      <input type="hidden" name="token" value="{{ csrf_token('delete-theme') }}" />
-                      <button type="button" class="btn delete-button js-display-delete-theme-modal">
-                        <i class="material-icons">
-                          delete
-                        </i>
-                      </button>
-                    </form>
-                  {% endblock %}
-                {% endembed %}
-              {% endfor %}
-
-              {% include '@PrestaShop/Admin/Improve/Design/Theme/Blocks/use_theme_modal.html.twig' %}
-              {% include '@PrestaShop/Admin/Improve/Design/Theme/Blocks/delete_theme_modal.html.twig' %}
-            {% endif %}
-
-            {% embed '@PrestaShop/Admin/Improve/Design/Theme/Blocks/Partials/theme_catalog_card.html.twig' %}
-              {% block image %}
-                <img src="{{ asset('themes/new-theme/public/pages/themes/icon_themes.png') }}" alt="{{ 'Visit the theme catalog'|trans({}, 'Admin.Design.Feature') }}">
-              {% endblock %}
-
-              {% block description %}
-                {{ 'Explore more than a thousand themes'|trans({}, 'Admin.Design.Feature') }}
-              {% endblock %}
-
-              {% block button_container %}
-                <a class="btn btn-primary" href="{{ themeCatalogUrl }}" target="_blank">
-                  {{ 'Visit the theme catalog'|trans({}, 'Admin.Design.Feature') }}
-                </a>
-              {% endblock %}
-
-            {% endembed %}
-
-            {% include '@PrestaShop/Admin/Improve/Design/Theme/Blocks/layouts_configuration.html.twig' %}
-          </div>
-        </div>
+    {{ form_start(shopLogosForm, {'action': path('admin_themes_upload_logos')}) }}
+    {% if not isInstalledRtlLanguage and isSingleShopContext and isMultiShopFeatureUsed %}
+      {% include '@PrestaShop/Admin/Improve/Design/Theme/Blocks/multishop_switch.html.twig' %}
+    {% endif %}
+    <div class="card">
+      <div class="card-header">
+        {{ 'Logo'|trans({}, 'Admin.Global') }}
+      </div>
+      <div class="card-body logo-configuration-card-body">
+        {% include '@PrestaShop/Admin/Improve/Design/Theme/Blocks/logo_configuration.html.twig' %}
+      </div>
+      <div class="card-footer">
+        <button class="btn btn-primary float-right">
+          {{ 'Save'|trans({}, 'Admin.Actions') }}
+        </button>
+        <div class="clearfix">&nbsp;</div>
       </div>
     </div>
+    {{ form_rest(shopLogosForm) }}
+    {{ form_end(shopLogosForm) }}
+
+    <div class="card">
+      <div class="card-header" data-role="theme-shop">
+        {{ 'My theme for %name% shop'|trans({'%name%': shopName}, 'Admin.Design.Feature') }}
+      </div>
+      <div class="card-body">
+        <div class="row">
+          {% embed '@PrestaShop/Admin/Improve/Design/Theme/Blocks/Partials/theme_card.html.twig' with {
+            'themeName': currentlyUsedTheme.get('display_name'),
+            'themeVersion': currentlyUsedTheme.get('version'),
+            'themeAuthor': currentlyUsedTheme.get('author.name'),
+            'themeAuthorUrl': theme.get('author.url'),
+            'isActive': true
+          } %}
+            {% block image %}
+              <img src="{{ baseShopUrl }}{{ currentlyUsedTheme.get('preview') }}" alt="{{ currentlyUsedTheme.get('display_name') }}">
+            {% endblock %}
+            {% block button_container %}
+              <button class="btn action-button">
+                <i class="material-icons icon-current-theme">done</i>
+                {{ 'My current theme'|trans({}, 'Admin.Design.Feature') }}
+              </button>
+            {% endblock %}
+          {% endembed %}
+
+          {% if notUsedThemes is not empty %}
+            {% for theme in notUsedThemes %}
+              {% embed '@PrestaShop/Admin/Improve/Design/Theme/Blocks/Partials/theme_card.html.twig' with {
+                'themeName': theme.get('display_name'),
+                'themeVersion': theme.get('version'),
+                'themeAuthor': theme.get('author.name'),
+                'themeAuthorUrl': theme.get('author.url'),
+                'isActive': false
+              }  %}
+                {% block image %}
+                  <img src="{{ baseShopUrl }}{{ theme.get('preview') }}" alt="{{ theme.get('display_name') }}">
+                {% endblock %}
+                {% block button_container %}
+                  <form action="{{ path('admin_themes_enable', {'themeName': theme.name}) }}" method="post" class="d-inline">
+                    <input type="hidden" name="token" value="{{ csrf_token('enable-theme') }}"/>
+                    <button type="button" class="btn action-button js-display-use-theme-modal" {{ (not isSingleShopContext) ? 'disabled' : '' }}>
+                      <i class="material-icons">
+                        present_to_all
+                      </i>
+                      <span>{{ 'Use this theme'|trans({}, 'Admin.Design.Feature') }}</span>
+                    </button>
+                  </form>
+                  <form action="{{ path('admin_themes_delete', {'themeName': theme.name}) }}" method="post" class="d-inline">
+                    <input type="hidden" name="token" value="{{ csrf_token('delete-theme') }}"/>
+                    <button type="button" class="btn delete-button js-display-delete-theme-modal">
+                      <i class="material-icons">
+                        delete
+                      </i>
+                    </button>
+                  </form>
+                {% endblock %}
+              {% endembed %}
+            {% endfor %}
+          </div>
+
+          {% include '@PrestaShop/Admin/Improve/Design/Theme/Blocks/use_theme_modal.html.twig' %}
+          {% include '@PrestaShop/Admin/Improve/Design/Theme/Blocks/delete_theme_modal.html.twig' %}
+        {% endif %}
+
+        {{ renderhook('displayAdminThemesListAfter', { 'current_theme_name': currentlyUsedTheme.get('name') }) }}
+
+        {% include '@PrestaShop/Admin/Improve/Design/Theme/Blocks/layouts_configuration.html.twig' %}
+      </div>
+    </div>
+
   </div>
 {% endblock %}
 

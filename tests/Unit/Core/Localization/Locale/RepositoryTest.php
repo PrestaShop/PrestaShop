@@ -46,7 +46,7 @@ class RepositoryTest extends TestCase
      */
     protected $localeRepository;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         /**
          * Mock the LocaleRepository dependencies :
@@ -69,6 +69,12 @@ class RepositoryTest extends TestCase
         $cldrLocale
             ->method('getAllNumberSymbols')
             ->willReturn(['latn' => $symbolsDataStub]);
+        $cldrLocale
+            ->method('getDecimalPattern')
+            ->willReturn('');
+        $cldrLocale
+            ->method('getCurrencyPattern')
+            ->willReturn('');
 
         /** CLDR LocaleRepository (returning the data object) */
         $cldrLocaleRepository = $this->getMockBuilder(CldrLocaleRepository::class)
@@ -101,7 +107,7 @@ class RepositoryTest extends TestCase
 
         /* @var CldrLocaleRepository $cldrLocaleRepository */
         /* @var CurrencyRepository $currencyRepository */
-        $this->localeRepository = new LocaleRepository($cldrLocaleRepository, $currencyRepository, 'fr-FR');
+        $this->localeRepository = new LocaleRepository($cldrLocaleRepository, $currencyRepository);
     }
 
     /**

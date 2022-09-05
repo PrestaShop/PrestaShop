@@ -26,7 +26,9 @@
 
 namespace PrestaShopBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use PrestaShopBundle\Routing\Linter\AdminRouteProvider;
+use PrestaShopBundle\Routing\Linter\LegacyLinkLinter;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -34,8 +36,25 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 /**
  * Checks if all admin routes are configured with _legacy_link
  */
-class LegacyLinkLinterCommand extends ContainerAwareCommand
+class LegacyLinkLinterCommand extends Command
 {
+    /**
+     * @var LegacyLinkLinter
+     */
+    private $legacyLinkLinter;
+
+    /**
+     * @var AdminRouteProvider
+     */
+    private $adminRouteProvider;
+
+    public function __construct(LegacyLinkLinter $legacyLinkLinter, AdminRouteProvider $adminRouteProvider)
+    {
+        parent::__construct();
+        $this->legacyLinkLinter = $legacyLinkLinter;
+        $this->adminRouteProvider = $adminRouteProvider;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -76,13 +95,11 @@ class LegacyLinkLinterCommand extends ContainerAwareCommand
      */
     private function getUnconfiguredRoutes()
     {
-        $legacyLinkLinter = $this->getContainer()->get('prestashop.bundle.routing.linter.legacy_link_linter');
-        $adminRouteProvider = $this->getContainer()->get('prestashop.bundle.routing.linter.admin_route_provider');
-        $routes = $adminRouteProvider->getRoutes();
+        $routes = $this->adminRouteProvider->getRoutes();
         $unconfiguredRoutes = [];
 
         foreach ($routes as $routeName => $route) {
-            if (true === $legacyLinkLinter->lint('_legacy_link', $route)) {
+            if (true === $this->legacyLinkLinter->lint('_legacy_link', $route)) {
                 continue;
             }
             $unconfiguredRoutes[] = $routeName;

@@ -36,6 +36,7 @@ use Currency;
 use Customer;
 use DateTimeImmutable;
 use Gender;
+use Group;
 use Module;
 use Order;
 use OrderInvoice;
@@ -253,20 +254,44 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
 
         $isB2BEnabled = $this->configuration->getBoolean('PS_B2B_ENABLE');
 
+        // Assign customer groups, if enabled
+        $groups = [];
+        if (Group::isFeatureActive()) {
+            // Get group data in employees language and extract ids and names
+            $groupNames = [];
+            foreach (Group::getGroups($this->contextLanguageId) as $group) {
+                $groupNames[$group['id_group']] = $group['name'];
+            }
+
+            // Get customer groups as IDs
+            $customerGroupIds = Customer::getGroupsStatic((int) $customer->id);
+
+            // Go through customer groups and assign a name
+            // If it's the default group of the customer and there is more than 1 group, we assign a suffix
+            foreach ($customerGroupIds as $id) {
+                if ($id == $customer->id_default_group && count($customerGroupIds) > 1) {
+                    $groups[] = $groupNames[$id] . ' (' . $this->translator->trans('default', [], 'Admin.Orderscustomers.Feature') . ')';
+                } else {
+                    $groups[] = $groupNames[$id];
+                }
+            }
+        }
+
         return new OrderCustomerForViewing(
             (int) $customer->id,
             $customer->firstname,
             $customer->lastname,
             $genderName,
             $customer->email,
-            new DateTimeImmutable($customer->date_add),
+            new DateTimeImmutable($customer->date_add ?? 'now'),
             $totalSpentSinceRegistration !== null ? $this->locale->formatPrice($totalSpentSinceRegistration, $currency->iso_code) : '',
             $customerStats['nb_orders'],
             $customer->note,
             (bool) $customer->is_guest,
             (int) $order->getAssociatedLanguage()->getId(),
             $isB2BEnabled ? ($customer->ape ?: '') : '',
-            $isB2BEnabled ? ($customer->siret ?: '') : ''
+            $isB2BEnabled ? ($customer->siret ?: '') : '',
+            $groups
         );
     }
 
@@ -531,7 +556,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
 
                 $carriers[] = new OrderCarrierForViewing(
                     (int) $item['id_order_carrier'],
-                    new DateTimeImmutable($item['date_add']),
+                    new DateTimeImmutable($item['date_add'] ?? 'now'),
                     $item['carrier_name'],
                     $weight,
                     (int) $item['id_carrier'],
@@ -559,34 +584,28 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
      */
     private function getOrderReturns(Order $order): OrderReturnsForViewing
     {
-        $returns = $order->getReturn();
-
-        if ($order->isVirtual()) {
+        if ($order->isVirtual() || $this->configuration->getBoolean('PS_ORDER_RETURN') === false) {
             return new OrderReturnsForViewing();
         }
 
+        $returns = $order->getReturn();
         $orderReturns = [];
 
         foreach ($returns as $orderReturn) {
-            $trackingUrl = null;
-            $trackingNumber = null;
-
-            if (isset($orderReturn['url'], $orderReturn['tracking_number'])) {
-                $trackingUrl = $orderReturn['url'];
-                $trackingNumber = $orderReturn['tracking_number'];
-            } elseif (isset($orderReturn['tracking_number'])) {
-                $trackingNumber = $orderReturn['tracking_number'];
-            }
+            $returnPrefixByLang = $this->configuration->get('PS_RETURN_PREFIX');
+            $orderReturnNumber = sprintf(
+                '%s%06d',
+                $returnPrefixByLang[$this->contextLanguageId] ?? '',
+                $orderReturn['id_order_return']
+            );
 
             $orderReturns[] = new OrderReturnForViewing(
                 (int) $orderReturn['id_order_return'],
                 isset($orderReturn['id_order_invoice']) ? (int) $orderReturn['id_order_invoice'] : 0,
-                isset($orderReturn['id_carrier']) ? (int) $orderReturn['id_carrier'] : 0,
                 new DateTimeImmutable($orderReturn['date_add']),
                 $orderReturn['type'],
                 $orderReturn['state_name'] ?? '',
-                $trackingUrl,
-                $trackingNumber
+                $orderReturnNumber
             );
         }
 
@@ -613,7 +632,7 @@ final class GetOrderForViewingHandler extends AbstractOrderHandler implements Ge
 
         if (count($payments) > 0) {
             $noPaymentMismatch = round($order->getOrdersTotalPaid(), 2) == round($order->getTotalPaid(), 2)
-                || ($currentState && $currentState->id == 6);
+                || ($currentState && $currentState->id == $this->configuration->getInt('PS_OS_CANCELED'));
 
             if (!$noPaymentMismatch) {
                 $orderAmountToPay = $this->locale->formatPrice($order->getOrdersTotalPaid(), $currency->iso_code);

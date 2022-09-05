@@ -29,11 +29,17 @@ class CustomerSessionCore extends ObjectModel implements SessionInterface
 {
     public $id;
 
-    /** @var Id Customer */
+    /** @var int Id Customer */
     public $id_customer;
 
     /** @var string Token */
     public $token;
+
+    /** @var string Object last modification date */
+    public $date_upd;
+
+    /** @var string Object creation date */
+    public $date_add;
 
     /**
      * @see ObjectModel::$definition
@@ -44,6 +50,8 @@ class CustomerSessionCore extends ObjectModel implements SessionInterface
         'fields' => [
             'id_customer' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'required' => true],
             'token' => ['type' => self::TYPE_STRING, 'validate' => 'isSha1', 'size' => 40, 'copy_post' => false],
+            'date_upd' => ['type' => self::TYPE_DATE, 'validate' => 'isDate', 'copy_post' => false],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate', 'copy_post' => false],
         ],
     ];
 

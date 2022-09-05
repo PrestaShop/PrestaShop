@@ -180,7 +180,7 @@ class ZoneController extends FrameworkBundleAdminController
             }
         }
 
-        if (!isset($editableZone) || !isset($zoneForm)) {
+        if (!isset($zoneForm)) {
             return $this->redirectToRoute('admin_zones_index');
         }
 
@@ -272,7 +272,7 @@ class ZoneController extends FrameworkBundleAdminController
 
             $this->addFlash(
                 'success',
-                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+                $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
             );
         } catch (ZoneException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));

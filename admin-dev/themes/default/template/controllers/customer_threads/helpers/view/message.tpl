@@ -46,7 +46,7 @@
 			<h4 class="message-item-heading">
 				<i class="icon-mail-reply text-muted"></i>
 					{if $type == 'customer'}
-						{$message.customer_name|escape:'html':'UTF-8'}
+						{$message.customer_name|default|escape:'html':'UTF-8'}
 					{else}
 						{$message.employee_name|escape:'html':'UTF-8'}
 					{/if}

@@ -29,9 +29,13 @@ use PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderReturnPresenter;
 
 class OrderReturnControllerCore extends FrontController
 {
+    /** @var bool */
     public $auth = true;
+    /** @var string */
     public $php_self = 'order-return';
+    /** @var string */
     public $authRedirection = 'order-follow';
+    /** @var bool */
     public $ssl = true;
 
     /**
@@ -45,7 +49,7 @@ class OrderReturnControllerCore extends FrontController
 
         $id_order_return = (int) Tools::getValue('id_order_return');
 
-        if (!isset($id_order_return) || !Validate::isUnsignedId($id_order_return)) {
+        if (!Validate::isUnsignedId($id_order_return)) {
             $this->redirect_after = '404';
             $this->redirect();
         } else {
@@ -95,6 +99,10 @@ class OrderReturnControllerCore extends FrontController
             if ($orderReturn->id_order == $return['id_order']) {
                 break;
             }
+        }
+
+        if (!isset($return)) {
+            return [];
         }
 
         $orderReturnPresenter = new OrderReturnPresenter(

@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Language\Pack;
 
-use PrestaShop\PrestaShop\Adapter\Language\LanguageDataProvider;
 use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShop\PrestaShop\Core\Language\Pack\Import\LanguagePackImporterInterface;
 use PrestaShop\PrestaShop\Core\Language\Pack\LanguagePackInstallerInterface;
@@ -42,36 +41,20 @@ final class LanguagePackImporter implements LanguagePackImporterInterface
     private $languagePack;
 
     /**
-     * @var LanguageDataProvider
-     */
-    private $languageProvider;
-
-    /**
      * @var CacheClearerInterface
      */
     private $entireCacheClearer;
 
     /**
-     * @var string
-     */
-    private $translationsDir;
-
-    /**
      * @param LanguagePackInstallerInterface $languagePack
-     * @param LanguageDataProvider $languageProvider
      * @param CacheClearerInterface $entireCacheClearer
-     * @param string $translationsDir
      */
     public function __construct(
         LanguagePackInstallerInterface $languagePack,
-        LanguageDataProvider $languageProvider,
-        CacheClearerInterface $entireCacheClearer,
-        $translationsDir
+        CacheClearerInterface $entireCacheClearer
     ) {
         $this->languagePack = $languagePack;
-        $this->languageProvider = $languageProvider;
         $this->entireCacheClearer = $entireCacheClearer;
-        $this->translationsDir = $translationsDir;
     }
 
     /**
@@ -88,23 +71,5 @@ final class LanguagePackImporter implements LanguagePackImporterInterface
         $this->entireCacheClearer->clear();
 
         return [];
-    }
-
-    /**
-     * Gets language code in format of ISO 639-1.
-     *
-     * @param string $languageCode - language code to format
-     *
-     * @return string
-     */
-    private function getFormattedLanguageCode($languageCode)
-    {
-        $explodedLangCode = explode('-', $languageCode);
-
-        return sprintf(
-            '%s-%s',
-            isset($explodedLangCode[0]) ? $explodedLangCode[0] : '',
-            isset($explodedLangCode[1]) ? strtoupper($explodedLangCode[1]) : ''
-        );
     }
 }

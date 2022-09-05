@@ -26,77 +26,44 @@
 {% set enableSidebar = true %}
 {% set layoutTitle = 'Manage your Customers'|trans({}, 'Admin.Orderscustomers.Feature') %}
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
   {% block employee_helper_card %}
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Sell/Customer/Blocks/showcase_card.html.twig' %}
-      </div>
-    </div>
+    {% include '@PrestaShop/Admin/Sell/Customer/Blocks/showcase_card.html.twig' %}
   {% endblock %}
 
   {% block customers_kpis %}
-    <div class="row">
-      <div class="col-md-12">
-        <div class="card card-kpis">
-          <div class="row">
-            {{ render(controller(
-              'PrestaShopBundle:Admin\\Common:renderKpiRow',
-              { 'kpiRow': customersKpi }
-            )) }}
-          </div>
-        </div>
-      </div>
-    </div>
+    {{ render(controller(
+      'PrestaShopBundle:Admin\\Common:renderKpiRow',
+      { 'kpiRow': customersKpi }
+    )) }}
   {% endblock %}
 
   {% block customers_listing %}
     {% if not isSingleShopContext %}
-      <div class="row">
-        <div class="col-md-12">
-          <div class="alert alert-info" role="alert">
-            <p class="alert-text">
-              {{ 'You have to select a shop if you want to create a customer.'|trans({}, 'Admin.Orderscustomers.Notification') }}
-            </p>
-          </div>
-        </div>
+      <div class="alert alert-info" role="alert">
+        <p class="alert-text">
+          {{ 'You have to select a shop if you want to create a customer.'|trans({}, 'Admin.Orderscustomers.Notification') }}
+        </p>
       </div>
     {% endif %}
 
-    <div class="row">
-      <div class="col-12">
-        {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': customerGrid} %}
-          {% block grid_panel_extra_content %}
-            {% include '@PrestaShop/Admin/Sell/Customer/Blocks/delete_modal.html.twig' %}
-          {% endblock %}
-        {% endembed %}
-      </div>
-    </div>
+    {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': customerGrid} %}
+      {% block grid_panel_extra_content %}
+        {% include '@PrestaShop/Admin/Sell/Customer/Blocks/delete_modal.html.twig' %}
+      {% endblock %}
+    {% endembed %}
   {% endblock %}
 
   {% block customer_required_fields_form %}
-    <div class="row">
-      <div class="col-md-12">
-        <p>
-          <button class="btn btn-primary"
-                  type="button"
-                  data-toggle="collapse"
-                  data-target="#customerRequiredFieldsContainer"
-                  aria-expanded="false"
-                  aria-controls="customerRequiredFieldsContainer"
-          >
-            <i class="material-icons">add_circle</i>
-            {{ 'Set required fields for this section'|trans({}, 'Admin.Orderscustomers.Feature') }}
-          </button>
-        </p>
-      </div>
-
-      <div class="col-md-12">
-        {% include '@PrestaShop/Admin/Sell/Customer/Blocks/Index/required_fields.html.twig' %}
-      </div>
-    </div>
+    <p>
+      <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#customerRequiredFieldsContainer" aria-expanded="false" aria-controls="customerRequiredFieldsContainer">
+        <i class="material-icons">add_circle</i>
+        {{ 'Set required fields for this section'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </button>
+    </p>
+    {% include '@PrestaShop/Admin/Sell/Customer/Blocks/Index/required_fields.html.twig' %}
   {% endblock %}
 {% endblock %}
 
@@ -105,4 +72,3 @@
 
   {% include '@PrestaShop/Admin/Sell/Customer/Blocks/javascript.html.twig' %}
 {% endblock %}
-

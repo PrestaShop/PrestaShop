@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{% form_theme manufacturerForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
+{% form_theme manufacturerForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
 {{ form_start(manufacturerForm) }}
 <div class="card">
@@ -31,8 +31,8 @@
     <i class="material-icons">star</i>
     {{ 'Brands'|trans({}, 'Admin.Catalog.Feature') }}
   </h3>
-  <div class="card-block row">
-    <div class="card-text">
+  <div class="card-body">
+    <div class="form-wrapper">
       {{ form_row(manufacturerForm.name) }}
       {{ form_row(manufacturerForm.short_description) }}
       {{ form_row(manufacturerForm.description) }}

@@ -1,0 +1,19 @@
+// Handle special rendering for light display layout which is usually used inside an iframe in a modal
+body {
+  background: #fff;
+}
+
+.light_display_layout {
+  form {
+    /*
+     * When the form is displayed in a card there is a default margin bottom which messes with the estimated height
+     * of the iframe and forces a useless scrollbar.
+     */
+    > .card {
+      margin-bottom: 0.01%;
+    }
+
+    padding: 0 1rem 0.1rem;
+    background-color: #fff;
+  }
+}

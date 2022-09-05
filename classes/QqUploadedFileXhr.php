@@ -69,11 +69,7 @@ class QqUploadedFileXhrCore
                     }
                 }
             }
-            if (!Image::getCover($image->id_product)) {
-                $image->cover = 1;
-            } else {
-                $image->cover = 0;
-            }
+            $image->cover = !Image::getCover($image->id_product);
 
             if (($validate = $image->validateFieldsLang(false, true)) !== true) {
                 return ['error' => $validate];

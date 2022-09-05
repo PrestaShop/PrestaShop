@@ -1,7 +1,7 @@
 <nav class="nav-bar" role="navigation" id="nav-sidebar">
 	<span class="menu-collapse" data-toggle-url="{$toggle_navigation_url}">
-		<i class="material-icons">chevron_left</i>
-		<i class="material-icons">chevron_left</i>
+		<i class="material-icons rtl-flip">chevron_left</i>
+		<i class="material-icons rtl-flip">chevron_left</i>
 	</span>
 
   <div class="nav-bar-overflow">

@@ -108,10 +108,11 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+  import Vue from 'vue';
   import '@vue/directives/click-outside';
 
-  export default {
+  export default Vue.extend({
     name: 'Modal',
     props: {
       confirmation: {
@@ -149,14 +150,14 @@
       },
     },
     methods: {
-      close() {
+      close(): void {
         this.$emit('close');
       },
-      confirm() {
+      confirm(): void {
         this.$emit('confirm');
       },
     },
-  };
+  });
 </script>
 
 <style lang="scss" scoped>

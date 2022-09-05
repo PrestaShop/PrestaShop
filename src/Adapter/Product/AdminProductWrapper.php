@@ -904,7 +904,7 @@ class AdminProductWrapper
     public function getPreviewUrl($product, $preview = true)
     {
         $context = Context::getContext();
-        $id_lang = Configuration::get('PS_LANG_DEFAULT', null, null, $context->shop->id);
+        $id_lang = (int) Configuration::get('PS_LANG_DEFAULT', null, null, $context->shop->id);
 
         if (!ShopUrl::getMainShopDomain()) {
             return false;

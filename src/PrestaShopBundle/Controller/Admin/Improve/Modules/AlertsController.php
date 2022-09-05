@@ -36,15 +36,17 @@ use Symfony\Component\HttpFoundation\Response;
 class AlertsController extends ModuleAbstractController
 {
     /**
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @return Response
      */
     public function indexAction()
     {
+        $moduleRepository = $this->getModuleRepository();
+
         return $this->render(
             '@PrestaShop/Admin/Module/alerts.html.twig',
-            $this->getNotificationPageData('to_configure')
+            $this->getNotificationPageData($moduleRepository->getMustBeConfiguredModules())
         );
     }
 
@@ -53,9 +55,14 @@ class AlertsController extends ModuleAbstractController
      */
     public function notificationsCountAction()
     {
-        return new JsonResponse(
-            $this->get('prestashop.module.manager')
-                ->countModulesWithNotificationsDetailed()
-        );
+        $moduleRepository = $this->getModuleRepository();
+        $toConfigure = count($moduleRepository->getMustBeConfiguredModules());
+        $toUpdate = count($moduleRepository->getUpgradableModules());
+
+        return new JsonResponse([
+            self::UPDATABLE_MODULE_TYPE => $toUpdate,
+            self::CONFIGURABLE_MODULE_TYPE => $toConfigure,
+            self::TOTAL_MODULE_TYPE => $toConfigure + $toUpdate,
+        ]);
     }
 }

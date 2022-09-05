@@ -1,4 +1,4 @@
-@reset-database-before-feature
+@restore-all-tables-before-feature
 Feature: Contact
   In order to create customizable contact us form for customers
   As a BO user

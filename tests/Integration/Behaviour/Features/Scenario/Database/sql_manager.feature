@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s database
-@reset-database-before-feature
+@restore-all-tables-before-feature
 Feature: SQL Manager
   PrestaShop allows BO users to manage SQL queries in the Configure > Advanced > Database page
   As a BO user

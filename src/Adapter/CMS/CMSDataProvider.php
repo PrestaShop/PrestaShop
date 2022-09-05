@@ -69,7 +69,7 @@ class CMSDataProvider
         $choices = [];
 
         foreach ($this->getCMSPages($languageId) as $cms) {
-            $choices[$cms['meta_title']] = $cms['id_cms'];
+            $choices[$cms['meta_title']] = (int) $cms['id_cms'];
         }
 
         return $choices;

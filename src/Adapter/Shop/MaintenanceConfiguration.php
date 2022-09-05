@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Shop;
 
 use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
-use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * This class loads and saves data configuration for the Maintenance page.
@@ -37,17 +37,19 @@ class MaintenanceConfiguration extends AbstractMultistoreConfiguration
     /**
      * @var array<int, string>
      */
-    private $fields = ['enable_shop', 'maintenance_ip', 'maintenance_text'];
+    private const CONFIGURATION_FIELDS = ['enable_shop', 'maintenance_ip', 'maintenance_text'];
 
     /**
      * {@inheritdoc}
      */
     public function getConfiguration()
     {
+        $shopConstraint = $this->getShopConstraint();
+
         return [
-            'enable_shop' => $this->configuration->getBoolean('PS_SHOP_ENABLE'),
-            'maintenance_ip' => $this->configuration->get('PS_MAINTENANCE_IP'),
-            'maintenance_text' => $this->configuration->get('PS_MAINTENANCE_TEXT'),
+            'enable_shop' => (bool) $this->configuration->get('PS_SHOP_ENABLE', false, $shopConstraint),
+            'maintenance_ip' => $this->configuration->get('PS_MAINTENANCE_IP', null, $shopConstraint),
+            'maintenance_text' => $this->configuration->get('PS_MAINTENANCE_TEXT', null, $shopConstraint),
         ];
     }
 
@@ -68,24 +70,16 @@ class MaintenanceConfiguration extends AbstractMultistoreConfiguration
     }
 
     /**
-     * @param array $configurationInputValues
-     *
-     * @return bool
+     * @return OptionsResolver
      */
-    public function validateConfiguration(array $configurationInputValues)
+    protected function buildResolver(): OptionsResolver
     {
-        // add multistore fields in list of expected fields
-        foreach ($this->fields as $value) {
-            $this->fields[] = MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . $value;
-        }
+        $resolver = new OptionsResolver();
+        $resolver->setDefined(self::CONFIGURATION_FIELDS);
+        $resolver->setAllowedTypes('enable_shop', 'bool');
+        $resolver->setAllowedTypes('maintenance_ip', ['string', 'null']);
+        $resolver->setAllowedTypes('maintenance_text', ['array', 'null']);
 
-        // check all given fields are expected
-        foreach ($configurationInputValues as $key => $value) {
-            if (!in_array($key, $this->fields)) {
-                return false;
-            }
-        }
-
-        return true;
+        return $resolver;
     }
 }

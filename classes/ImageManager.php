@@ -33,17 +33,34 @@
  */
 class ImageManagerCore
 {
-    const ERROR_FILE_NOT_EXIST = 1;
-    const ERROR_FILE_WIDTH = 2;
-    const ERROR_MEMORY_LIMIT = 3;
-    const MIME_TYPE_SUPPORTED = [
+    public const ERROR_FILE_NOT_EXIST = 1;
+    public const ERROR_FILE_WIDTH = 2;
+    public const ERROR_MEMORY_LIMIT = 3;
+    public const MIME_TYPE_SUPPORTED = [
         'image/gif',
         'image/jpg',
         'image/jpeg',
         'image/pjpeg',
         'image/png',
         'image/x-png',
+        'image/webp',
+        'image/svg+xml',
+        'image/svg',
     ];
+
+    public const EXTENSIONS_SUPPORTED = [
+        'gif',
+        'jpg',
+        'jpeg',
+        'jpe',
+        'png',
+        'webp',
+    ];
+
+    /**
+     * @var array - a list of svg mime types
+     */
+    protected const SVG_MIMETYPES = ['image/svg+xml', 'image/svg'];
 
     /**
      * Generate a cached thumbnail for object lists (eg. carrier, order statuses...etc).
@@ -55,7 +72,7 @@ class ImageManagerCore
      * @param bool $disableCache When turned on a timestamp will be added to the image URI to disable the HTTP cache
      * @param bool $regenerate When turned on and the file already exist, the file will be regenerated
      *
-     *@return string
+     * @return string|bool
      */
     public static function thumbnail($image, $cacheImage, $size, $imageType = 'jpg', $disableCache = true, $regenerate = false)
     {
@@ -63,7 +80,7 @@ class ImageManagerCore
             return '';
         }
 
-        if (file_exists(_PS_TMP_IMG_DIR_ . $cacheImage) && $regenerate) {
+        if ($regenerate && file_exists(_PS_TMP_IMG_DIR_ . $cacheImage)) {
             @unlink(_PS_TMP_IMG_DIR_ . $cacheImage);
         }
 
@@ -90,7 +107,7 @@ class ImageManagerCore
                     $size = $y / ($x / $maxX);
                 }
 
-                ImageManager::resize($image, _PS_TMP_IMG_DIR_ . $cacheImage, $ratioX, $size, $imageType);
+                ImageManager::resize($image, _PS_TMP_IMG_DIR_ . $cacheImage, (int) $ratioX, (int) $size, $imageType);
             }
         }
 
@@ -98,8 +115,8 @@ class ImageManagerCore
     }
 
     /**
-     * @param $cacheImage
-     * @param $disableCache
+     * @param string $cacheImage
+     * @param bool $disableCache
      *
      * @return string
      */
@@ -107,7 +124,8 @@ class ImageManagerCore
     {
         $cacheParam = $disableCache ? '?time=' . time() : '';
 
-        if (Context::getContext()->controller->controller_type == 'admin') {
+        $controller = Context::getContext()->controller;
+        if (isset($controller->controller_type) && $controller->controller_type == 'admin') {
             return __PS_BASE_URI__ . 'img/tmp/' . $cacheImage . $cacheParam;
         }
 
@@ -182,12 +200,14 @@ class ImageManagerCore
         clearstatcache(true, $sourceFile);
 
         if (!file_exists($sourceFile) || !filesize($sourceFile)) {
-            return !($error = self::ERROR_FILE_NOT_EXIST);
+            $error = self::ERROR_FILE_NOT_EXIST;
+
+            return false;
         }
 
         list($tmpWidth, $tmpHeight, $type) = getimagesize($sourceFile);
         $rotate = 0;
-        if (function_exists('exif_read_data') && function_exists('mb_strtolower')) {
+        if (function_exists('exif_read_data')) {
             $exif = @exif_read_data($sourceFile);
 
             if ($exif && isset($exif['Orientation'])) {
@@ -234,8 +254,18 @@ class ImageManagerCore
             $fileType = 'png';
         }
 
+        // If PS_IMAGE_QUALITY is activated, the generated image will be a WEBP with .jpg as a file extension.
+        // This allow for higher quality and for transparency. JPG source files will also benefit from a higher quality
+        // because JPG reencoding by GD, even with max quality setting, degrades the image.
+        if (Configuration::get('PS_IMAGE_QUALITY') == 'webp_all'
+            || (Configuration::get('PS_IMAGE_QUALITY') == 'webp' && $type == IMAGETYPE_WEBP) && !$forceType) {
+            $fileType = 'webp';
+        }
+
         if (!$sourceWidth) {
-            return !($error = self::ERROR_FILE_WIDTH);
+            $error = self::ERROR_FILE_WIDTH;
+
+            return false;
         }
         if (!$destinationWidth) {
             $destinationWidth = $sourceWidth;
@@ -264,7 +294,9 @@ class ImageManagerCore
         }
 
         if (!ImageManager::checkImageMemoryLimit($sourceFile)) {
-            return !($error = self::ERROR_MEMORY_LIMIT);
+            $error = self::ERROR_MEMORY_LIMIT;
+
+            return false;
         }
 
         $targetWidth = $destinationWidth;
@@ -272,8 +304,8 @@ class ImageManagerCore
 
         $destImage = imagecreatetruecolor($destinationWidth, $destinationHeight);
 
-        // If image is a PNG and the output is PNG, fill with transparency. Else fill with white background.
-        if ($fileType == 'png' && $type == IMAGETYPE_PNG) {
+        // If the output is PNG, fill with transparency. Else fill with white background.
+        if ($fileType == 'png') {
             imagealphablending($destImage, false);
             imagesavealpha($destImage, true);
             $transparent = imagecolorallocatealpha($destImage, 255, 255, 255, 127);
@@ -285,6 +317,7 @@ class ImageManagerCore
 
         $srcImage = ImageManager::create($type, $sourceFile);
         if ($rotate) {
+            /** @phpstan-ignore-next-line */
             $srcImage = imagerotate($srcImage, $rotate, 0);
         }
 
@@ -306,22 +339,24 @@ class ImageManagerCore
     }
 
     /**
-     * @param $dstImage
-     * @param $srcImage
-     * @param $dstX
-     * @param $dstY
-     * @param $srcX
-     * @param $srcY
-     * @param $dstW
-     * @param $dstH
-     * @param $srcW
-     * @param $srcH
+     * @param resource|GdImage $dstImage
+     * @param resource|GdImage $srcImage
+     * @param int $dstX
+     * @param int $dstY
+     * @param int $srcX
+     * @param int $srcY
+     * @param int $dstW
+     * @param int $dstH
+     * @param int $srcW
+     * @param int $srcH
      * @param int $quality
      *
      * @return bool
      */
     public static function imagecopyresampled(
+        // @phpstan-ignore-next-line
         &$dstImage,
+        // @phpstan-ignore-next-line
         $srcImage,
         $dstX,
         $dstY,
@@ -346,7 +381,7 @@ class ImageManagerCore
         // 4 = Up to 25 times faster.  Almost identical to imagecopyresampled for most images.
         // 5 = No speedup. Just uses imagecopyresampled, no advantage over imagecopyresampled.
 
-        if (empty($srcImage) || empty($dstImage) || $quality <= 0) {
+        if ($quality <= 0) {
             return false;
         }
         if ($quality < 5 && (($dstW * $quality) < $srcW || ($dstH * $quality) < $srcH)) {
@@ -435,15 +470,15 @@ class ImageManagerCore
      * Check if image file extension is correct.
      *
      * @param string $filename Real filename
-     * @param array|null $authorizedExtensions
+     * @param array<string>|null $authorizedExtensions
      *
      * @return bool True if it's correct
      */
     public static function isCorrectImageFileExt($filename, $authorizedExtensions = null)
     {
         // Filter on file extension
-        if ($authorizedExtensions === null) {
-            $authorizedExtensions = ['gif', 'jpg', 'jpeg', 'jpe', 'png'];
+        if (empty($authorizedExtensions)) {
+            $authorizedExtensions = static::EXTENSIONS_SUPPORTED;
         }
         $nameExplode = explode('.', $filename);
         if (count($nameExplode) >= 2) {
@@ -473,8 +508,17 @@ class ImageManagerCore
         if ((int) $maxFileSize > 0 && $file['size'] > (int) $maxFileSize) {
             return Context::getContext()->getTranslator()->trans('Image is too large (%1$d kB). Maximum allowed: %2$d kB', [$file['size'] / 1024, $maxFileSize / 1024], 'Admin.Notifications.Error');
         }
-        if (!ImageManager::isRealImage($file['tmp_name'], $file['type'], $mimeTypeList) || !ImageManager::isCorrectImageFileExt($file['name'], $types) || preg_match('/\%00/', $file['name'])) {
-            return Context::getContext()->getTranslator()->trans('Image format not recognized, allowed formats are: .gif, .jpg, .png', [], 'Admin.Notifications.Error');
+        if (!ImageManager::isRealImage($file['tmp_name'], $file['type'], $mimeTypeList)
+            || !ImageManager::isCorrectImageFileExt($file['name'], $types)
+            || preg_match('/\%00/', $file['name'])
+        ) {
+            return Context::getContext()->getTranslator()->trans(
+                'Image format not recognized, allowed formats are: %s',
+                [
+                    implode(', ', is_null($types) ? static::EXTENSIONS_SUPPORTED : $types),
+                ],
+                'Admin.Notifications.Error'
+            );
         }
         if ($file['error']) {
             return Context::getContext()->getTranslator()->trans('Error while uploading image; please change your server\'s settings. (Error code: %s)', [$file['error']], 'Admin.Notifications.Error');
@@ -509,7 +553,7 @@ class ImageManagerCore
     /**
      * Cut image.
      *
-     * @param array $srcFile Origin filename
+     * @param string $srcFile Origin filename
      * @param string $dstFile Destination filename
      * @param int $dstWidth Desired width
      * @param int $dstHeight Desired height
@@ -542,10 +586,12 @@ class ImageManagerCore
         $dest['ressource'] = ImageManager::createWhiteImage($dest['width'], $dest['height']);
 
         $white = imagecolorallocate($dest['ressource'], 255, 255, 255);
+        // @phpstan-ignore-next-line
         imagecopyresampled($dest['ressource'], $src['ressource'], 0, 0, $dest['x'], $dest['y'], $dest['width'], $dest['height'], $dest['width'], $dest['height']);
         imagecolortransparent($dest['ressource'], $white);
         $return = ImageManager::write($fileType, $dest['ressource'], $dstFile);
         Hook::exec('actionOnImageCutAfter', ['dst_file' => $dstFile, 'file_type' => $fileType]);
+        // @phpstan-ignore-next-line
         @imagedestroy($src['ressource']);
 
         return $return;
@@ -557,26 +603,20 @@ class ImageManagerCore
      * @param string $type
      * @param string $filename
      *
-     * @return resource
+     * @return false|resource
      */
     public static function create($type, $filename)
     {
         switch ($type) {
             case IMAGETYPE_GIF:
                 return imagecreatefromgif($filename);
-
-                break;
-
             case IMAGETYPE_PNG:
                 return imagecreatefrompng($filename);
-
-                break;
-
+            case IMAGETYPE_WEBP:
+                return imagecreatefromwebp($filename);
             case IMAGETYPE_JPEG:
             default:
                 return imagecreatefromjpeg($filename);
-
-                break;
         }
     }
 
@@ -586,7 +626,9 @@ class ImageManagerCore
      * @param int $width
      * @param int $height
      *
-     * @return resource
+     * @phpstan-ignore-next-line
+     *
+     * @return resource|GdImage
      */
     public static function createWhiteImage($width, $height)
     {
@@ -594,6 +636,7 @@ class ImageManagerCore
         $white = imagecolorallocate($image, 255, 255, 255);
         imagefill($image, 0, 0, $white);
 
+        // @phpstan-ignore-next-line
         return $image;
     }
 
@@ -610,6 +653,7 @@ class ImageManagerCore
     {
         static $psPngQuality = null;
         static $psJpegQuality = null;
+        static $psWebpQuality = null;
 
         if ($psPngQuality === null) {
             $psPngQuality = Configuration::get('PS_PNG_QUALITY');
@@ -619,15 +663,28 @@ class ImageManagerCore
             $psJpegQuality = Configuration::get('PS_JPEG_QUALITY');
         }
 
+        if ($psWebpQuality === null) {
+            $psWebpQuality = Configuration::get('PS_WEBP_QUALITY');
+        }
+
         switch ($type) {
             case 'gif':
+                // @phpstan-ignore-next-line
                 $success = imagegif($resource, $filename);
 
                 break;
 
             case 'png':
                 $quality = ($psPngQuality === false ? 7 : $psPngQuality);
+                // @phpstan-ignore-next-line
                 $success = imagepng($resource, $filename, (int) $quality);
+
+                break;
+
+            case 'webp':
+                $quality = ($psWebpQuality === false ? 80 : $psWebpQuality);
+                // @phpstan-ignore-next-line
+                $success = imagewebp($resource, $filename, (int) $quality);
 
                 break;
 
@@ -635,11 +692,14 @@ class ImageManagerCore
             case 'jpeg':
             default:
                 $quality = ($psJpegQuality === false ? 90 : $psJpegQuality);
-                imageinterlace($resource, 1); /// make it PROGRESSIVE
+                // @phpstan-ignore-next-line
+                imageinterlace($resource, true); /// make it PROGRESSIVE
+                // @phpstan-ignore-next-line
                 $success = imagejpeg($resource, $filename, (int) $quality);
 
                 break;
         }
+        // @phpstan-ignore-next-line
         imagedestroy($resource);
         @chmod($filename, 0664);
 
@@ -659,6 +719,8 @@ class ImageManagerCore
             'image/gif' => ['gif'],
             'image/jpeg' => ['jpg', 'jpeg'],
             'image/png' => ['png'],
+            'image/webp' => ['webp'],
+            'image/svg+xml' => ['svg'],
         ];
         $extension = substr($fileName, strrpos($fileName, '.') + 1);
 
@@ -676,5 +738,10 @@ class ImageManagerCore
         }
 
         return $mimeType;
+    }
+
+    public static function isSvgMimeType(string $mimeType): bool
+    {
+        return in_array($mimeType, self::SVG_MIMETYPES);
     }
 }

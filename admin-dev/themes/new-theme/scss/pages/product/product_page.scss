@@ -94,18 +94,6 @@ $product-page-padding-bottom: 80px !default;
     }
   }
 
-  &::before {
-    position: fixed;
-    top: $size-header-height - 0.0625rem;
-    right: 0;
-    left: 0;
-    z-index: 400;
-    display: block;
-    height: 1px;
-    content: "";
-    box-shadow: $gray-dark 0 0 10px;
-  }
-
   // Resets
   ul.nostyle {
     padding: 0;
@@ -121,12 +109,172 @@ $product-page-padding-bottom: 80px !default;
   }
 
   // Components
+  .product-header-v2 {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    padding: 0;
+    margin: 1rem 0;
+    background: $white;
+    @include border-radius(0.375rem);
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
+
+    > * {
+      flex-grow: 1;
+    }
+
+    $product-cover-size: 130px;
+
+    .product-header-cover {
+      flex-grow: 0;
+      min-width: $product-cover-size;
+      max-width: $product-cover-size;
+
+      .form-group {
+        margin-bottom: 0;
+
+        img {
+          @include border-left-radius(0.375rem);
+        }
+      }
+    }
+
+    .product-header-form {
+      flex-grow: 2;
+      min-width: 35%;
+      padding: 0.625rem 0;
+
+      > .form-group {
+        margin-bottom: 0;
+      }
+
+      #product_header {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.5rem 1rem;
+
+        .header-name {
+          flex-basis: 100%;
+        }
+
+        .ps-switch {
+          /* This is a temporary fix, ps-switch component behaves poorly in a flex container this should be handled correctly in prestakit */
+          min-width: 7rem;
+          margin-top: 0;
+        }
+
+        .form-group {
+          margin-bottom: 0;
+        }
+      }
+
+      .product-type-preview {
+        color: $medium-gray;
+        cursor: pointer;
+
+        &:hover {
+          color: $primary;
+        }
+      }
+    }
+
+    .product-header-details {
+      padding-top: 1.125rem;
+
+      .product-header-summary {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 1rem;
+        padding-right: 1.125rem;
+
+        .product-field-preview {
+          display: flex;
+          flex-direction: row;
+          gap: 0.5rem;
+          max-height: 29px;
+          font-size: 1rem;
+          font-weight: 600;
+          line-height: 29px;
+
+          .product-field-value {
+            padding: 0 0.75rem;
+            color: $white;
+            background-color: $medium-gray;
+            @include border-radius(24px);
+
+            &.danger {
+              background-color: $danger;
+            }
+
+            &.warning {
+              background-color: $warning;
+            }
+
+            &.success {
+              background-color: $success;
+            }
+          }
+        }
+
+        &::after {
+          position: absolute;
+          right: 0;
+          bottom: -0.875rem;
+          left: 0;
+          content: " ";
+          border-style: solid;
+          border-width: 1px;
+          border-top: 0;
+          // stylelint-disable-next-line
+          border-image: linear-gradient(to left, #c6d5da, #fff) 1;
+        }
+      }
+
+      .product-header-references {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        padding-right: 1.125rem;
+        margin: 1.75rem 0 0;
+        font-size: 0.875rem;
+        font-weight: 400;
+
+        .product-reference {
+          padding: 0 0.5rem 0 0;
+
+          label {
+            &::after {
+              content: ":";
+            }
+          }
+        }
+      }
+    }
+  }
+
   .product-header {
     padding-top: 1.25rem;
     padding-bottom: 1.25rem;
-    margin-top: -$grid-gutter-width / 2;
     margin-bottom: $grid-gutter-width / 2;
     background: $white;
+    border-bottom: 1px solid $color-separator;
+
+    &::before {
+      position: fixed;
+      top: $size-header-height - 0.0625rem;
+      right: 0;
+      left: 0;
+      z-index: 400;
+      display: block;
+      height: 1px;
+      content: "";
+      box-shadow: $gray-dark 0 0 10px;
+    }
 
     .edit {
       background-size: 4%;
@@ -150,8 +298,11 @@ $product-page-padding-bottom: 80px !default;
         flex-direction: row;
         margin: 0 -1rem;
 
-        > .form-group {
+        .header-name {
           flex-grow: 1;
+        }
+
+        > .form-group {
           margin: 0 1rem;
 
           &.select-widget {
@@ -220,26 +371,25 @@ $product-page-padding-bottom: 80px !default;
       display: flex;
       flex-direction: row;
       justify-content: space-between;
+      gap: 0.5rem;
       width: 100%;
       height: 100%;
+      padding: 0 0.5rem;
 
-      .product-footer-left,
-      .product-footer-right {
+      .footer-buttons-container {
         display: flex;
         flex-direction: row;
-        margin: 0 0.5rem;
-
-        > * {
-          margin: 0 0.5rem;
-        }
+        gap: 0.5rem;
       }
 
       .product-footer-left {
         justify-content: flex-start;
+        order: 1;
       }
 
       .product-footer-right {
         justify-content: flex-end;
+        order: 2;
       }
 
       .switch-widget {
@@ -637,29 +787,6 @@ $product-page-padding-bottom: 80px !default;
     }
   }
 
-  .twitter-typeahead {
-    .tt-menu {
-      width: 100%;
-      max-height: 19.5rem;
-      padding: 0.3125rem 0;
-      overflow: auto;
-      background: $white;
-      border: 1px solid $gray-medium;
-    }
-
-    .tt-suggestion {
-      padding: 0.3125rem 0.625rem;
-      color: $gray-medium;
-      cursor: pointer;
-
-      &:hover,
-      &.tt-cursor {
-        color: $white;
-        background-color: $primary-hover;
-      }
-    }
-  }
-
   .pack-product {
     position: relative;
     border: 0.0625rem solid $gray-light;
@@ -695,7 +822,7 @@ $product-page-padding-bottom: 80px !default;
       margin: 0;
       font-weight: 400;
       line-height: 1.25rem;
-      color: #000;
+      color: $black;
     }
 
     .ref {
@@ -740,7 +867,6 @@ $product-page-padding-bottom: 80px !default;
 
   .category-tree-overflow {
     overflow: auto;
-    white-space: nowrap;
 
     > .main-category {
       display: block;
@@ -1037,14 +1163,6 @@ $product-page-padding-bottom: 80px !default;
     }
   }
 
-  #form_step6_tags .token-input {
-    min-width: 768px;
-  }
-
-  #form_step3_tags .token-input {
-    min-width: 768px;
-  }
-
   .alert-info {
     &.alert-experimental {
       &::before {
@@ -1052,24 +1170,534 @@ $product-page-padding-bottom: 80px !default;
       }
     }
   }
-}
 
-.product-page-v2 {
-  .maxLength {
-    float: none;
+  .specific-price-priorities {
+    display: flex;
+
+    > div {
+      margin: 0.5rem;
+    }
   }
 }
 
-#external-combination-tab {
-  padding-bottom: $product-page-padding-bottom;
-  margin-top: -$product-page-padding-bottom;
+// We use this class to scope the modifications that only target product page v2
+// Ideally the whole css should be cleaned when we remove the older page and this class won't be needed anymore
+.product-page-v2 {
+  .tabs {
+    position: relative;
+
+    .toolbar {
+      position: absolute;
+      top: 3px;
+      right: 3px;
+
+      .toolbar-button {
+        margin: 0 0.156rem;
+      }
+    }
+  }
+
+  #product-tabs-content {
+    @include border-radius(6px);
+
+    > .form-contenttab {
+      @include border-radius(6px);
+      background-color: $white;
+    }
+
+    // First tab needs a straight top left corner when selected to avoid empty space under the tab button
+    > .form-contenttab.active:first-child {
+      @include border-top-left-radius(0);
+    }
+  }
+
+  // External tab are rendered outside of the tab container so their bottom corners need to to be rounded
+  .external-tab {
+    h2 {
+      padding-top: 20px;
+    }
+
+    > .tab-content {
+      padding: 0;
+      @include border-radius(6px);
+
+      > .form-contenttab {
+        padding: {
+          top: $grid-gutter-width / 2;
+          bottom: $grid-gutter-width / 2;
+        }
+        @include border-radius(6px);
+        background-color: $white;
+      }
+    }
+  }
+
+  .maxLength {
+    float: none;
+  }
+
+  ul.entities-list {
+    max-width: 100%;
+    padding: 0;
+    list-style: none;
+  }
+
+  #product_specifications_references {
+    input {
+      max-width: 415px;
+    }
+  }
+
+  #product_stock_quantities_stock_movements {
+    max-width: 400px;
+
+    .table {
+      margin-bottom: 0.8rem;
+    }
+
+    td {
+      padding-top: 0.8rem;
+      padding-bottom: 0.8rem;
+    }
+
+    .stock_movement_quantity {
+      @include border-radius(5px);
+      display: inline-block;
+      min-width: 55px;
+      padding: 2px;
+      font-size: 0.7rem;
+      color: #fff;
+      text-align: center;
+
+      &.increased_quantity {
+        background-color: $brand-primary;
+      }
+
+      &.decreased_quantity {
+        background-color: $gray-dark;
+      }
+    }
+  }
+
+  #product_description_related_products {
+    .search-with-icon {
+      max-width: 377px;
+    }
+
+    .entities-list-container {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      margin: 0.5rem -0.5rem;
+    }
+
+    .related-product {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 180px;
+      margin: 0.5rem;
+
+      &-image {
+        margin-bottom: 0.5rem;
+      }
+
+      &-legend {
+        max-width: 100%;
+
+        .text-preview {
+          display: inline-block;
+          max-width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+  }
+
+  // @TODO(NeOMakinG): Most of these styles could be moved to the global tokenfield style
+  .tokenfield {
+    min-height: 100%;
+    padding: 0.15rem;
+
+    .token {
+      padding: 0.4rem 0.7rem;
+      background-color: $gray-medium;
+      @include border-radius(0.25rem);
+
+      .close {
+        float: left;
+        margin: 0 0.4rem 0 0;
+        font-size: 1.5rem;
+        line-height: 1rem;
+        color: $white;
+        opacity: 1;
+
+        &:hover {
+          opacity: 0.5;
+        }
+      }
+    }
+  }
+
+  // @TODO(NeOMakinG): Moove this to a global file, because every locale-input-group should be the same
+  // But it can be done in this PR as it require more global QA on every forms
+  .locale-input-group {
+    flex-wrap: nowrap;
+
+    > div {
+      flex-shrink: 1;
+      width: 100%;
+    }
+
+    .dropdown {
+      flex-shrink: 0;
+      width: auto;
+    }
+  }
+
+  .retail-price-widget {
+    display: flex;
+    flex-direction: row;
+
+    .form-group {
+      margin-bottom: 0;
+    }
+
+    .retail-price-tax-rules-group-id {
+      margin-left: 3rem;
+
+      .select2-container {
+        position: relative;
+
+        .select2-selection {
+          height: auto;
+          padding: 0.5rem 2.2rem 0.5rem 1rem;
+
+          .select2-selection__rendered {
+            line-height: 1.5;
+          }
+        }
+
+        &::before {
+          position: absolute;
+          left: -2rem;
+          font-size: 1.5rem;
+          content: "+";
+        }
+      }
+    }
+
+    .retail-price-tax-included {
+      margin-left: 3rem;
+
+      .input-group {
+        position: relative;
+
+        &::before {
+          position: absolute;
+          left: -2rem;
+          font-size: 1.5rem;
+          content: "=";
+        }
+      }
+    }
+
+    .ecotax-tax-excluded {
+      margin-left: 3rem;
+
+      .input-group {
+        position: relative;
+
+        &::before {
+          position: absolute;
+          left: -2rem;
+          font-size: 1.5rem;
+          content: "+";
+        }
+      }
+    }
+
+    .ecotax-tax-included {
+      margin-left: 2rem;
+
+      .input-group {
+        position: relative;
+
+        &::before {
+          position: absolute;
+          left: -1rem;
+          font-size: 1.5rem;
+          content: "(";
+        }
+
+        &::after {
+          position: absolute;
+          right: -1rem;
+          font-size: 1.5rem;
+          content: ")";
+        }
+      }
+    }
+  }
+
+  .price-summary-widget {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+
+    .price-summary-block {
+      padding: 1rem 2rem;
+      @include border-radius(0.5rem);
+      font-size: 1rem;
+      font-weight: 700;
+      color: #363a41;
+      background-color: #eaebec;
+
+      .price-summary-value {
+        margin-bottom: 0.8rem;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}
+
+.product_packed_products {
+  .search-with-icon {
+    max-width: 377px;
+  }
+
+  .combination-reference {
+    margin-left: 0.5rem;
+  }
+
+  .entities-list-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  li.packed-product {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 180px;
+    // stylelint-disable-next-line
+    padding: 0 !important;
+    border: none;
+
+    .packed-product-image {
+      margin-bottom: 0.5rem;
+    }
+
+    .packed-product-legend,
+    .packed-product-reference,
+    .packed-product-quantity {
+      max-width: 100%;
+
+      .reference-preview,
+      .text-preview {
+        display: inline-block;
+        max-width: 100%;
+        overflow: hidden;
+        font-weight: 600;
+        text-overflow: ellipsis;
+      }
+
+      .reference-preview {
+        font-weight: 500;
+      }
+    }
+
+    .packed-product-quantity {
+      margin-top: 0.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// Some of the following styles target product page v2 components, but since the are new and only used in the new
+// page there is no need to scope them inside the product-page-v2 class
+.create-product-form {
+  width: 100%;
+  padding: 0 1rem 0.1rem;
+  background-color: $white;
+}
+
+.product-type-selector {
+  width: 100%;
+  margin-bottom: 1rem;
+
+  select {
+    display: none;
+  }
+
+  .product-type-choices {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding-top: 1.5rem;
+
+    .product-type-choice {
+      position: relative;
+      width: 100%;
+      max-width: 350px;
+      padding-right: 3rem;
+      margin: 0.25rem 0;
+      text-align: left;
+
+      .material-icons {
+        position: absolute;
+        top: 50%;
+        right: 0.75rem;
+        margin-top: -0.725rem;
+        font-size: 1.45rem;
+      }
+    }
+  }
+
+  .product-type-description {
+    width: 100%;
+    margin: 1.5rem 0;
+    text-align: center;
+
+    .material-icons {
+      color: $brand-primary;
+    }
+  }
+}
+
+#modal-create-product-attachment {
+  .modal-dialog {
+    max-width: 810px;
+  }
+}
+
+#bulk-combination-form-modal {
+  .modal-dialog {
+    max-width: 810px;
+
+    .modal-footer {
+      padding: 1.125rem;
+      background-color: $background-grey;
+    }
+  }
+}
+
+#specific-prices-loading {
+  .loading-label {
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .spinner {
+    display: block;
+    margin: 0 auto;
+  }
+}
+
+#modal-specific-price-form {
+  .modal-dialog {
+    max-width: 810px;
+  }
+}
+
+#specific_price_customer_list {
+  .entity-item.disabled {
+    cursor: not-allowed;
+    background-color: #eceeef;
+
+    .material-icons {
+      cursor: not-allowed;
+    }
+  }
+}
+
+.light_display_layout form.specific-price-product-form {
+  padding-top: 2rem;
+}
+
+.specific-price-product-form {
+  input[type="text"]:not(.entity-search-input) {
+    max-width: 210px;
+  }
+
+  .entity-search-widget {
+    max-width: 420px;
+  }
+}
+
+.bulk-combination-form {
+  padding: 0 1.625rem 1.625rem;
+
+  label {
+    display: flex;
+    width: 100%;
+
+    .ps-disabling-switch {
+      margin-left: auto;
+    }
+  }
+
+  .card-body {
+    padding: 0;
+  }
+
+  > .form-group:last-child {
+    margin-bottom: 0;
+  }
+}
+
+#product_combinations_combination_manager {
+  #combination-list-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    margin: 0.5rem 0;
+  }
 
   #combinations-list {
     position: relative;
     min-height: 3.5rem;
+    margin-top: 0.5rem;
+
+    #combination-bulk-cell {
+      white-space: nowrap;
+
+      .md-checkbox {
+        display: inline-block;
+      }
+
+      .dropdown-menu .md-checkbox {
+        display: block;
+        padding-left: 2rem;
+
+        .md-checkbox-control::before,
+        .md-checkbox-control::after {
+          margin-top: 0.4rem;
+          margin-left: 0.4rem;
+        }
+      }
+
+      .ps-sortable-column {
+        display: inline-block;
+      }
+
+      .dropdown-toggle:not(.dropdown-toggle-split)::after {
+        margin-left: 0;
+      }
+    }
 
     .combination {
-      &-actions {
+      &-row-actions {
         display: flex;
         align-items: center;
       }
@@ -1078,12 +1706,45 @@ $product-page-padding-bottom: 80px !default;
         width: 3rem;
       }
 
+      &-name-preview {
+        min-width: 10rem;
+      }
+
       td {
         .form-check-radio {
           margin-bottom: 0;
 
           .form-check-label {
             justify-content: center;
+          }
+        }
+
+        .input-group.money-type {
+          max-width: 10rem;
+        }
+
+        .delta-quantity {
+          max-width: 15rem;
+
+          &-quantity {
+            max-width: 10rem;
+          }
+        }
+
+        .alert > * {
+          padding: 0;
+        }
+
+        .alert-danger {
+          padding: 0.5rem;
+          margin: 0.2rem 0 0;
+
+          &::before {
+            content: "";
+          }
+
+          .close {
+            margin: 0;
           }
         }
       }
@@ -1108,24 +1769,130 @@ $product-page-padding-bottom: 80px !default;
         margin-left: auto;
       }
     }
+
+    #bulk-all-selection-dropdown {
+      cursor: pointer;
+
+      label {
+        cursor: pointer;
+      }
+
+      .dropdown-toggle {
+        background-color: inherit;
+        border: none;
+      }
+    }
+  }
+
+  #combinations-list-footer {
+    display: none;
+  }
+
+  #combinations-paginated-list {
+    &.edition-mode {
+      #combinations-list-form-container {
+        background-color: rgba(37, 185, 215, 0.1);
+        @include border-radius(0.5rem 0.5rem 0 0);
+      }
+
+      #combinations-pagination {
+        display: none;
+      }
+
+      #combinations-list-footer {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        padding: 1.25rem;
+        background-color: rgba(37, 185, 215, 0.1);
+        @include border-radius(0 0 0.5rem 0.5rem);
+
+        &-buttons {
+          display: flex;
+          flex-direction: row;
+          gap: 0.5rem;
+        }
+
+        span {
+          display: block;
+          padding-top: 0.5rem;
+          margin: 0 auto;
+        }
+      }
+
+      .combinations-table {
+        margin-bottom: 0;
+
+        .combination-value-changed {
+          background-color: #f4fcfd;
+        }
+      }
+    }
   }
 }
 
-// Combination form page (in modal)
-.combination-page {
-  .combination-images-selector {
-    display: flex;
-    flex-direction: row;
+// Typeahead custo
+.twitter-typeahead {
+  .tt-menu {
+    width: 100%;
+    max-height: 19.5rem;
+    padding: 0.3125rem 0;
+    overflow: auto;
+    background: $white;
+    border: 1px solid $gray-medium;
+  }
 
+  .tt-suggestion {
+    padding: 0.3125rem 0.625rem;
+    color: $gray-medium;
+    cursor: pointer;
+
+    &:hover,
+    &.tt-cursor {
+      color: $white;
+      background-color: $primary-hover;
+    }
+  }
+}
+
+.combination-page {
+  #combination_form {
+    padding-top: 1rem;
+  }
+
+  .combination-cover-row {
+    display: inline-block;
+  }
+
+  .combination-header-row {
+    display: inline-block;
+    margin-left: 1rem;
+
+    .combination-name-row {
+      font-weight: 600;
+    }
+  }
+
+  .combination-images-selector:not(.disabled) {
     .combination-image-choice {
-      margin: 0.35rem;
       cursor: pointer;
-      border: solid transparent 3px;
 
       &:hover,
       &.selected {
         border: solid $primary 3px;
       }
+    }
+  }
+
+  .combination-images-selector {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+    .combination-image-choice {
+      flex: 0 0 0;
+      margin: 0.35rem;
+      border: solid transparent 3px;
 
       .form-check-radio {
         display: none;
@@ -1139,6 +1906,27 @@ $product-page-padding-bottom: 80px !default;
       max-width: 20rem;
     }
   }
+
+  .combination-images-selector.disabled .combination-image-choice {
+    cursor: not-allowed;
+    opacity: 0.4;
+  }
+
+  .final-price-preview {
+    display: block;
+    width: auto;
+    padding: 0.25rem 0.625rem;
+    @include border-radius(0.5rem);
+    font-size: 1rem;
+    font-weight: 700;
+    color: #363a41;
+    background-color: #eaebec;
+  }
+
+  .accordion-form-button.has-error {
+    color: #c45c67;
+    border-top: 3px solid #c45c67;
+  }
 }
 
 .product-page,
@@ -1151,6 +1939,14 @@ $product-page-padding-bottom: 80px !default;
     .product-suppliers-collection-row {
       max-width: 100%;
     }
+  }
+
+  .small-input {
+    max-width: 210px;
+  }
+
+  .medium-input {
+    max-width: 540px;
   }
 }
 
@@ -1597,3 +2393,7 @@ $product-page-padding-bottom: 80px !default;
     }
   }
 }
+
+// Create product modal
+@import "create_product_modal";
+@import "product_light_list";

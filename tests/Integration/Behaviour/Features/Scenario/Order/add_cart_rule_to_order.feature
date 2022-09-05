@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags add-discounts-to-order
-@reset-database-before-feature
+@restore-all-tables-before-feature
 @reboot-kernel-before-feature
 @add-discounts-to-order
 Feature: Add discounts to order from Back Office (BO)
@@ -49,7 +49,7 @@ Feature: Add discounts to order from Back Office (BO)
       | name      | <<           |
       | type      | amount      |
       | value     | 5.50         |
-    Then I should get no error
+    Then I should get no order error
     And order "bo_order1" should have 1 cart rule
     And order "bo_order1" should have a cart rule with name "<<"
 

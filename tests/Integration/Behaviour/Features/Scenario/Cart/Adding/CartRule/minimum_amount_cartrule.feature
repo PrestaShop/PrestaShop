@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s cart --tags cart-minimum-amount-cart-rule
-@reset-database-before-feature
+@restore-all-tables-before-feature
 @cart-minimum-amount-cart-rule
 Feature: Add cart rule in cart
   As a customer

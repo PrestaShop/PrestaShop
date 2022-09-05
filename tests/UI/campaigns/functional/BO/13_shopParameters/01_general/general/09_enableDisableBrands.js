@@ -4,24 +4,29 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const testContext = require('@utils/testContext');
 
-// Importing pages
+// Import login steps
+const loginCommon = require('@commonTests/BO/loginBO');
+
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const generalPage = require('@pages/BO/shopParameters/general');
 const brandsPage = require('@pages/BO/catalog/brands');
 const homePage = require('@pages/FO/home');
 const siteMapPage = require('@pages/FO/siteMap');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_shopParameters_general_general_enableDisableDisplayBrands';
 
 let browserContext;
 let page;
 
-describe('Enable display brands', async () => {
+/*
+Enable/Disable brands
+Check the alert message from BO Brands page
+Go to FO to check brands link in sitemap page
+ */
+describe('BO - Shop Parameters - General : Enable/Disable display brands', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -64,7 +69,7 @@ describe('Enable display brands', async () => {
       await expect(result).to.contains(generalPage.successfulUpdateMessage);
     });
 
-    it('should go to Brands & Suppliers page', async function () {
+    it('should go to \'Brands & Suppliers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToBrandsPage_${index}`, baseContext);
 
       await generalPage.goToSubMenu(

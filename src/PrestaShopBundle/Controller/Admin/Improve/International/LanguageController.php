@@ -88,7 +88,7 @@ class LanguageController extends FrameworkBundleAdminController
      *
      * Process Grid search.
      *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -128,7 +128,7 @@ class LanguageController extends FrameworkBundleAdminController
             $result = $languageFormHandler->handle($languageForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_languages_index');
             }
@@ -178,7 +178,7 @@ class LanguageController extends FrameworkBundleAdminController
             if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash(
                     'success',
-                    $this->trans('Successful update.', 'Admin.Notifications.Success')
+                    $this->trans('Successful update', 'Admin.Notifications.Success')
                 );
 
                 return $this->redirectToRoute('admin_languages_index');
@@ -217,7 +217,7 @@ class LanguageController extends FrameworkBundleAdminController
         try {
             $this->getCommandBus()->handle(new DeleteLanguageCommand((int) $languageId));
 
-            $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
         } catch (LanguageException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
         }
@@ -244,7 +244,7 @@ class LanguageController extends FrameworkBundleAdminController
 
             $this->addFlash(
                 'success',
-                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+                $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
             );
         } catch (LanguageException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));

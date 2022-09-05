@@ -41,7 +41,7 @@
 				{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
 				name="latitude"
 				id="latitude"
-				value="{$fields_value[$input.name]|escape:'html':'UTF-8'}" />
+				value="{$fields_value[$input.name]|default|escape:'html':'UTF-8'}" />
 		</div>
 		<div class="col-lg-1">
 			<div class="form-control-static text-center"> / </div>
@@ -52,7 +52,7 @@
 				{if isset($input.maxlength)}maxlength="{$input.maxlength}"{/if}
 				name="longitude"
 				id="longitude"
-				value="{$fields_value['longitude']|escape:'html':'UTF-8'}" />
+				value="{$fields_value['longitude']|default|escape:'html':'UTF-8'}" />
 		</div>
 	</div>
 	{else}
@@ -66,7 +66,7 @@
       <label class="control-label col-lg-3">{l s='Hours:' d='Admin.Shopparameters.Feature'}</label>
       <div class="col-lg-9"><p class="form-control-static">{l s='e.g. 10:00AM - 9:30PM' d='Admin.Shopparameters.Help'}</p></div>
     </div>
-    {foreach $fields_value.days as $k => $value}
+    {foreach $fields_value.days|default:[] as $k => $value}
     <div class="form-group">
       <label class="control-label col-lg-3">{$value}</label>
       {if $languages|count > 1}

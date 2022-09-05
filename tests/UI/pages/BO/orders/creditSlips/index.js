@@ -38,7 +38,10 @@ class CreditSlips extends BOBasePage {
 
     // Credit slip options form
     this.creditSlipOptionsForm = '#form-credit-slips-options';
-    this.invoicePrefixInput = '#form_slip_prefix_1';
+    this.invoicePrefixENInput = '#form_slip_prefix_1';
+    this.invoicePrefixFRInput = '#form_slip_prefix_2';
+    this.languageDropDownButton = '#form_slip_prefix_dropdown';
+    this.invoicePrefixFrenchSelect = 'div.dropdown.show span[data-locale="fr"]';
     this.saveCreditSlipOptionsButton = `${this.creditSlipOptionsForm} #save-credit-slip-options-button`;
   }
 
@@ -166,13 +169,29 @@ class CreditSlips extends BOBasePage {
     }
   }
 
-  /** Edit credit slip Prefix
+  /** Edit credit slip Prefix on FR and on EN
    * @param page {Page} Browser tab
-   * @param prefix {string} Prefix value to change
+   * @param prefixEN {string} Prefix on english language value to change
+   * @param prefixFR {string} Prefix on french language value to change
    * @returns {Promise<void>}
    */
-  async changePrefix(page, prefix) {
-    await this.setValue(page, this.invoicePrefixInput, prefix);
+  async changePrefix(page, prefixEN, prefixFR = prefixEN) {
+    await this.setValue(page, this.invoicePrefixENInput, prefixEN);
+    await this.waitForSelectorAndClick(page, this.languageDropDownButton);
+    await this.waitForSelectorAndClick(page, this.invoicePrefixFrenchSelect);
+    await this.setValue(page, this.invoicePrefixFRInput, prefixFR);
+  }
+
+  /**
+   * Delete prefix
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async deletePrefix(page) {
+    await this.clearInput(page, this.invoicePrefixENInput);
+    await this.waitForSelectorAndClick(page, this.languageDropDownButton);
+    await this.waitForSelectorAndClick(page, this.invoicePrefixFrenchSelect);
+    await this.clearInput(page, this.invoicePrefixFRInput);
   }
 
   /** Save credit slip options
@@ -184,4 +203,5 @@ class CreditSlips extends BOBasePage {
     return this.getAlertSuccessBlockParagraphContent(page);
   }
 }
+
 module.exports = new CreditSlips();

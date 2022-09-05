@@ -19,7 +19,7 @@ class Countries extends BOBasePage {
 
     // Selectors
     // Header selectors
-    this.addNewCountryButton = '#page-header-desc-country-new_country';
+    this.addNewCountryButton = 'a[data-role=page-header-desc-country-link]';
 
     // Form selectors
     this.gridForm = '#form-country';
@@ -401,7 +401,7 @@ class Countries extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setCountriesRestrictions(page, toEnable = true) {
-    await page.check(this.enableRestrictCountriesToggleLabel(toEnable ? 'on' : 'off'));
+    await this.setChecked(page, this.enableRestrictCountriesToggleLabel(toEnable ? 'on' : 'off'));
     await this.clickAndWaitForNavigation(page, this.saveButton);
 
     return this.getAlertSuccessBlockContent(page);

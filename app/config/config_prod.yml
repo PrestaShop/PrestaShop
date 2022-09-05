@@ -1,32 +1,36 @@
 imports:
-    - { resource: config.yml }
+  - { resource: config.yml }
 
-#framework:
-#    validation:
-#        cache: validator.mapping.cache.apc
-#    serializer:
-#        cache: serializer.mapping.cache.apc
+# framework:
+#  validation:
+#    cache: validator.mapping.cache.apc
+#  serializer:
+#    cache: serializer.mapping.cache.apc
 
-#doctrine:
-#    orm:
-#        metadata_cache_driver: apc
-#        result_cache_driver: apc
-#        query_cache_driver: apc
+# doctrine:
+#  orm:
+#    metadata_cache_driver: apc
+#    result_cache_driver: apc
+#    query_cache_driver: apc
 
 monolog:
-    handlers:
-        main:
-            type:         fingers_crossed
-            action_level: error
-            handler:      nested
-        nested:
-            type:  stream
-            path:  '%env(PS_LOG_OUTPUT)%'
-            level: debug
-        console:
-            type:  console
+  handlers:
+    main:
+      type: fingers_crossed
+      action_level: error
+      handler: nested
+    nested:
+      type: stream
+      path: '%env(PS_LOG_OUTPUT)%'
+      level: debug
+    console:
+      type: console
 
 doctrine:
-    orm:
-        metadata_cache_driver: "%cache.driver%"
-        query_cache_driver:    "%cache.driver%"
+  orm:
+    metadata_cache_driver:
+      type: pool
+      pool: "%cache.driver%"
+    query_cache_driver:
+      type: pool
+      pool: "%cache.driver%"

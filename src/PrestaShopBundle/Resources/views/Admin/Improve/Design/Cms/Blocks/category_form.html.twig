@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{% form_theme cmsPageCategoryForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
+{% form_theme cmsPageCategoryForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
 {% block category_form %}
   {{ form_start(cmsPageCategoryForm) }}
@@ -32,8 +32,8 @@
     <div class="card-header">
       {{ 'CMS Category'|trans({}, 'Admin.Design.Feature') }}
     </div>
-    <div class="card-block row">
-      <div class="card-text">
+    <div class="card-body">
+      <div class="form-wrapper">
         {{ form_widget(cmsPageCategoryForm) }}
       </div>
     </div>

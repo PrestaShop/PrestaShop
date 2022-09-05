@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/gridhtml/gridhtml.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="cf6b972204ee563b4e5691b293e931b6">
+        <source>Simple HTML table display</source>
+        <target>Simple HTML table display</target>
+        <note>Line: 83</note>
+      </trans-unit>
+      <trans-unit id="996f44a7ea1d6b05f2c92519583c1a5b">
+        <source>Just allow statistics to be displayed (and therefore analyzed) on your back office.</source>
+        <target>Just allow statistics to be displayed (and therefore analyzed) on your back office.</target>
+        <note>Line: 84</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

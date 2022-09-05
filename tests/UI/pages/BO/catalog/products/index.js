@@ -28,7 +28,7 @@ class Products extends BOBasePage {
     this.productListForm = '#product_catalog_list';
     this.productTable = `${this.productListForm} table`;
     this.productRow = `${this.productTable} tbody tr`;
-    this.productListfooterRow = `${this.productListForm} div.row:nth-of-type(3)`;
+    this.productListfooterRow = `${this.productListForm} div.pagination-block`;
     this.productNumberBloc = `${this.productListfooterRow} label.col-form-label`;
     this.dropdownToggleButton = row => `${this.productRow}:nth-of-type(${row}) button.dropdown-toggle`;
     this.dropdownMenu = row => `${this.productRow}:nth-of-type(${row}) div.dropdown-menu`;
@@ -36,7 +36,7 @@ class Products extends BOBasePage {
     this.dropdownMenuPreviewLink = row => `${this.dropdownMenu(row)} a.product-edit:not([onclick])`;
     this.dropdownMenuDuplicateLink = row => `${this.dropdownMenu(row)} a.product-edit[onclick*='duplicate']`;
     this.productRowEditLink = row => `${this.productRow}:nth-of-type(${row}) a.tooltip-link.product-edit`;
-    this.selectAllBulkCheckboxLabel = '#catalog-actions div.md-checkbox label';
+    this.selectAllBulkCheckboxLabel = `${this.productListForm} .column-filters .md-checkbox label`;
     this.productBulkMenuButton = '#product_bulk_menu:not([disabled])';
     this.productBulkMenuButtonState = state => `${this.productBulkMenuButton}[aria-expanded='${state}']`;
     this.productBulkDropdownMenu = 'div.bulk-catalog div.dropdown-menu.show';
@@ -494,16 +494,24 @@ class Products extends BOBasePage {
   }
 
   /**
+   * Select all products
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async selectAllProducts(page) {
+    await Promise.all([
+      this.waitForVisibleSelector(page, this.productBulkMenuButton),
+      page.$eval(this.selectAllBulkCheckboxLabel, el => el.click()),
+    ]);
+  }
+
+  /**
    * Delete all products with Bulk Actions
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
    */
   async deleteAllProductsWithBulkActions(page) {
-    // Then delete first product and only product shown
-    await Promise.all([
-      this.waitForVisibleSelector(page, this.productBulkMenuButton),
-      page.click(this.selectAllBulkCheckboxLabel),
-    ]);
+    await this.selectAllProducts(page);
 
     await Promise.all([
       this.waitForVisibleSelector(page, this.productBulkMenuButtonState('true')),
@@ -526,10 +534,7 @@ class Products extends BOBasePage {
    * @return {Promise<string>}
    */
   async bulkSetStatus(page, status) {
-    await Promise.all([
-      this.waitForVisibleSelector(page, this.productBulkMenuButton),
-      page.click(this.selectAllBulkCheckboxLabel),
-    ]);
+    await this.selectAllProducts(page);
 
     await Promise.all([
       this.waitForVisibleSelector(page, this.productBulkMenuButtonState('true')),

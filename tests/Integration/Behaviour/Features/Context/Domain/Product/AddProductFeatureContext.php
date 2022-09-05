@@ -41,14 +41,37 @@ class AddProductFeatureContext extends AbstractProductFeatureContext
      * @param string $productReference
      * @param TableNode $table
      */
-    public function addProduct(string $productReference, TableNode $table): void
+    public function addProductToDefaultShop(string $productReference, TableNode $table): void
+    {
+        $this->addProduct($productReference, $this->getDefaultShopId(), $table);
+    }
+
+    /**
+     * @When I add product :productReference to shop :shopReference with following information:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function addProductToShop(string $productReference, string $shopReference, TableNode $table): void
+    {
+        $shopId = $this->getSharedStorage()->get($shopReference);
+        $this->addProduct($productReference, $shopId, $table);
+    }
+
+    /**
+     * @param string $productReference
+     * @param int $shopId
+     * @param TableNode $table
+     */
+    private function addProduct(string $productReference, int $shopId, TableNode $table): void
     {
         $data = $this->localizeByRows($table);
 
         try {
             $productId = $this->getCommandBus()->handle(new AddProductCommand(
-                $data['name'],
-                $data['type']
+                $data['type'],
+                $shopId,
+                $data['name'] ?? []
             ));
 
             $this->getSharedStorage()->set($productReference, $productId->getValue());

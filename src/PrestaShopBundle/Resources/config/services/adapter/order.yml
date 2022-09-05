@@ -49,10 +49,10 @@ services:
   prestashop.adapter.order.command_handler.change_order_delivery_address_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\ChangeOrderDeliveryAddressHandler
     arguments:
-        - '@prestashop.adapter.order.amount.updater'
-        - '@prestashop.adapter.order.order_detail.updater'
-        - '@prestashop.adapter.context_state_manager'
-        - '@prestashop.adapter.order.product_quantity.updater'
+      - '@prestashop.adapter.order.amount.updater'
+      - '@prestashop.adapter.order.order_detail.updater'
+      - '@prestashop.adapter.context_state_manager'
+      - '@prestashop.adapter.order.product_quantity.updater'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderDeliveryAddressCommand
@@ -60,8 +60,8 @@ services:
   prestashop.adapter.order.command_handler.change_order_invoice_address_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\ChangeOrderInvoiceAddressHandler
     arguments:
-        - '@prestashop.adapter.order.amount.updater'
-        - '@prestashop.adapter.order.order_detail.updater'
+      - '@prestashop.adapter.order.amount.updater'
+      - '@prestashop.adapter.order.order_detail.updater'
     tags:
       - name: tactician.handler
         command: PrestaShop\PrestaShop\Core\Domain\Order\Command\ChangeOrderInvoiceAddressCommand
@@ -177,15 +177,11 @@ services:
 
   prestashop.adapter.order.product.remover:
     class: PrestaShop\PrestaShop\Adapter\Order\Refund\OrderProductRemover
-    arguments:
-      - "@logger"
-      - "@translator"
 
   prestashop.adapter.order.command_handler.delete_product_from_order_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\DeleteProductFromOrderHandler
     arguments:
       - '@prestashop.adapter.context_state_manager'
-      - '@prestashop.adapter.order.amount.updater'
       - '@prestashop.adapter.order.product_quantity.updater'
     tags:
       - name: tactician.handler
@@ -277,10 +273,10 @@ services:
       - '@prestashop.adapter.context_state_manager'
 
   prestashop.adapter.order.order_detail.updater:
-      class: PrestaShop\PrestaShop\Adapter\Order\OrderDetailUpdater
-      arguments:
-          - '@prestashop.adapter.context_state_manager'
-          - '@prestashop.adapter.legacy.configuration'
+    class: PrestaShop\PrestaShop\Adapter\Order\OrderDetailUpdater
+    arguments:
+      - '@prestashop.adapter.context_state_manager'
+      - '@prestashop.adapter.legacy.configuration'
 
   prestashop.adapter.order.command_handler.set_internal_order_note_handler:
     class: PrestaShop\PrestaShop\Adapter\Order\CommandHandler\SetInternalOrderNoteHandler

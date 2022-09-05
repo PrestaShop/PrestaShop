@@ -2,42 +2,69 @@ require('module-alias/register');
 
 const {expect} = require('chai');
 
+// Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
 
-const loginCommon = require('@commonTests/loginBO');
+// Import common tests
+const {createAccountTest} = require('@commonTests/FO/createAccount');
+const {deleteCustomerTest} = require('@commonTests/BO/customers/createDeleteCustomer');
 
 // Import data
-const FakerCustomer = require('@data/faker/customer');
+const CustomerFaker = require('@data/faker/customer');
 
-const createCustomerData = new FakerCustomer();
-const editCustomerData = new FakerCustomer();
-
-// Importing pages
-const foHomePage = require('@pages/FO/home');
-const foLoginPage = require('@pages/FO/login');
-const foCreateAccountPage = require('@pages/FO/myAccount/add');
-const foMyAccountPage = require('@pages/FO/myAccount');
-const foAccountIdentityPage = require('@pages/FO/myAccount/identity');
-const dashboardPage = require('@pages/BO/dashboard');
-const customersPage = require('@pages/BO/customers');
-
-// Import test context
-const testContext = require('@utils/testContext');
+// Import FO pages
+const homePage = require('@pages/FO/home');
+const loginPage = require('@pages/FO/login');
+const myAccountPage = require('@pages/FO/myAccount');
+const accountIdentityPage = require('@pages/FO/myAccount/identity');
 
 const baseContext = 'functional_FO_userAccount_editInformation';
 
 let browserContext;
 let page;
 
-/*
-Go to FO and create account
-Check created account in BO
-Go back to FO and edit account information
-Check new account information on BO
-Delete the created account on BO
- */
+const createCustomerData = new CustomerFaker();
+// New customer data with empty new password
+const editCustomerData1 = new CustomerFaker({password: ''});
+// New customer data with repeated letters
+const editCustomerData2 = new CustomerFaker({password: 'abcabcabc'});
+// New customer data with password below 8
+const editCustomerData3 = new CustomerFaker({password: 'presta'});
+// New customer data with an old similar password
+const editCustomerData4 = new CustomerFaker({password: 'testoune'});
+// New customer data with simple characters password
+const editCustomerData5 = new CustomerFaker({password: 'prestash'});
+// New customer data with common password
+const editCustomerData6 = new CustomerFaker({password: 'azerty123'});
+// New customer data with top 10 common password
+const editCustomerData7 = new CustomerFaker({password: '123456789'});
+// New customer data with same characters
+const editCustomerData8 = new CustomerFaker({password: 'aaaaaaaaa'});
+// New customer data with good password
+const editCustomerData9 = new CustomerFaker({password: 'test edit information'});
 
-describe('Create an account in FO and edit its information', async () => {
+/*
+Pre-condition:
+- Create new customer account in FO
+Scenario:
+- Re-enter the same password and leave new password empty
+- Enter a wrong password and leave new password empty
+- Update password with repeated words
+- Enter a new password between 5 and 8 characters
+- Update password with an old similar password
+- Update password with simple characters
+- Update password with common password
+- Update password with top 10 common password
+- Update password with the same characters
+- Update password with a good new password
+Post condition:
+- Delete the created account in BO
+ */
+describe('FO - Account : Edit information', async () => {
+  // Pre-condition: Create new account on FO
+  createAccountTest(createCustomerData, `${baseContext}_preTest`);
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -48,154 +75,210 @@ describe('Create an account in FO and edit its information', async () => {
     await helper.closeBrowserContext(browserContext);
   });
 
-  describe('Create new account in FO', async () => {
-    it('should go to FO home page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFOToCreateAccount', baseContext);
-
-      await foHomePage.goToFo(page);
-      const isHomePage = await foHomePage.isHomePage(page);
-      await expect(isHomePage).to.be.true;
-    });
-
-    it('should go to create account page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToCreateAccountPage', baseContext);
-
-      await foHomePage.goToLoginPage(page);
-      await foLoginPage.goToCreateAccountPage(page);
-
-      const pageHeaderTitle = await foCreateAccountPage.getHeaderTitle(page);
-      await expect(pageHeaderTitle).to.equal(foCreateAccountPage.formTitle);
-    });
-
-    it('should create new account', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createAccount', baseContext);
-
-      await foCreateAccountPage.createAccount(page, createCustomerData);
-
-      const isCustomerConnected = await foHomePage.isCustomerConnected(page);
-      await expect(isCustomerConnected).to.be.true;
-    });
-  });
-
-  describe('Go to BO and check the created account', async () => {
-    before(async () => {
-      page = await helper.newTab(browserContext);
-    });
-
-    it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
-    });
-
-    it('should go to customers page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPageAfterCreation', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.customersParentLink,
-        dashboardPage.customersLink,
-      );
-
-      await customersPage.closeSfToolBar(page);
-
-      const pageTitle = await customersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customersPage.pageTitle);
-    });
-
-    it('should check the created customer', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkCreatedCustomer', baseContext);
-
-      await customersPage.resetFilter(page);
-      await customersPage.filterCustomers(page, 'input', 'email', createCustomerData.email);
-
-      const textColumn = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
-      await expect(textColumn).to.equal(createCustomerData.email);
-    });
-
-    after(async () => {
-      page = await customersPage.closePage(browserContext, page, 0);
-    });
-  });
-
   describe('Edit the created account in FO', async () => {
-    it('should go to my account page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToAccountPage', baseContext);
+    it('should open the shop page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
 
-      await foHomePage.goToMyAccountPage(page);
-      const pageTitle = await foMyAccountPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(foMyAccountPage.pageTitle);
+      await homePage.goTo(page, global.FO.URL);
+
+      const result = await homePage.isHomePage(page);
+      await expect(result).to.be.true;
+    });
+
+    it('should go to login page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPage', baseContext);
+
+      await homePage.goToLoginPage(page);
+      const pageTitle = await loginPage.getPageTitle(page);
+      await expect(pageTitle).to.equal(loginPage.pageTitle);
+    });
+
+    it('should login', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'loginFO', baseContext);
+
+      await loginPage.customerLogin(page, createCustomerData);
+
+      const isCustomerConnected = await loginPage.isCustomerConnected(page);
+      await expect(isCustomerConnected, 'Customer is not connected!').to.be.true;
+    });
+
+    it('should go to my account page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToMyAccountPage', baseContext);
+
+      await homePage.goToMyAccountPage(page);
+
+      const pageTitle = await myAccountPage.getPageTitle(page);
+      await expect(pageTitle).to.equal(myAccountPage.pageTitle);
     });
 
     it('should go account information page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAccountInformationPage', baseContext);
 
-      await foMyAccountPage.goToInformationPage(page);
+      await myAccountPage.goToInformationPage(page);
 
-      const pageTitle = await foAccountIdentityPage.getPageTitle(page);
-      await expect(pageTitle).to.equal(foAccountIdentityPage.pageTitle);
+      const pageTitle = await accountIdentityPage.getPageTitle(page);
+      await expect(pageTitle).to.equal(accountIdentityPage.pageTitle);
     });
 
-    it('should edit the account', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'editAccount', baseContext);
+    it('case 1 - should edit the account information ** re-enter the same password and leave new password empty',
+      async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'editAccount1', baseContext);
 
-      const textResult = await foAccountIdentityPage.editAccount(page, createCustomerData.password, editCustomerData);
-      await expect(textResult).to.be.equal(foAccountIdentityPage.successfulUpdateMessage);
-    });
+        const textResult = await accountIdentityPage.editAccount(page, createCustomerData.password, editCustomerData1);
+        await expect(textResult).to.be.equal(accountIdentityPage.successfulUpdateMessage);
+      });
 
     it('should check that the account is still connected after update', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'connectedUpdatedAccount', baseContext);
 
-      const isCustomerConnected = await foAccountIdentityPage.isCustomerConnected(page);
+      const isCustomerConnected = await accountIdentityPage.isCustomerConnected(page);
       await expect(isCustomerConnected).to.be.true;
     });
+
+    it('case 2 - should edit the account information ** enter a wrong password and leave new password empty',
+      async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'editAccount2', baseContext);
+
+        const textResult = await accountIdentityPage.editAccount(page, 'wrongPass', editCustomerData1);
+        await expect(textResult).to.be.equal(accountIdentityPage.errorUpdateMessage);
+      });
+
+    it('should check the error alerts \'Invalid email/password combination\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkErrorAlerts2', baseContext);
+
+      let textResult = await accountIdentityPage.getInvalidEmailAlert(page);
+      await expect(textResult, 'Invalid email/password alert is not visible!').to
+        .equal(accountIdentityPage.invalidEmailAlertMessage);
+
+      textResult = await accountIdentityPage.getInvalidPasswordAlert(page);
+      await expect(textResult, 'Invalid email/password alert is not visible!').to
+        .equal(accountIdentityPage.invalidEmailAlertMessage);
+    });
+
+    it('Case 3 - should edit the account information ** enter a new password with repeated words',
+      async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'editAccount3', baseContext);
+
+        const textResult = await accountIdentityPage.editAccount(page, createCustomerData.password, editCustomerData2);
+        await expect(textResult).to.be.equal(accountIdentityPage.errorUpdateMessage);
+      });
+
+    it('should check the minimum score alert on new password block', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkErrorAlerts3', baseContext);
+
+      const textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
+      await expect(textResult, 'Minimum score alert is not visible!').to
+        .contains(accountIdentityPage.minimumScoreAlertMessage);
+    });
+
+    it('Case 4 - should edit the account information ** enter a new password between 5 and 8 characters',
+      async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'editAccount4', baseContext);
+
+        const textResult = await accountIdentityPage.editAccount(page, createCustomerData.password, editCustomerData3);
+        await expect(textResult).to.be.equal(accountIdentityPage.errorUpdateMessage);
+      });
+
+    it('should check the error alerts on new password block', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkErrorAlerts4', baseContext);
+
+      let textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
+      await expect(textResult, 'Invalid number of characters words alert is not visible!').to
+        .contains(accountIdentityPage.invalidNumberOfCharacters);
+
+      textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
+      await expect(textResult, 'Minimum score alert is not visible!').to
+        .contains(accountIdentityPage.minimumScoreAlertMessage);
+    });
+
+    it('Case 5 - should edit the account information ** enter a new password with an old similar password',
+      async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'editAccount5', baseContext);
+
+        const textResult = await accountIdentityPage.editAccount(page, createCustomerData.password, editCustomerData4);
+        await expect(textResult).to.be.equal(accountIdentityPage.errorUpdateMessage);
+      });
+
+    it('should check the error alert on new password block', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkErrorAlerts5', baseContext);
+
+      const textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
+      await expect(textResult, 'Minimum score alert is not visible!').to
+        .contains(accountIdentityPage.minimumScoreAlertMessage);
+    });
+
+    it('Case 6 - should edit the account information ** update password with simple characters',
+      async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'editAccount6', baseContext);
+
+        const textResult = await accountIdentityPage.editAccount(page, createCustomerData.password, editCustomerData5);
+        await expect(textResult).to.be.equal(accountIdentityPage.errorUpdateMessage);
+      });
+
+    it('should check the error alert on new password block', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkErrorAlerts6', baseContext);
+
+      const textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
+      await expect(textResult, 'Minimum score password alert is not visible!').to
+        .contains(accountIdentityPage.minimumScoreAlertMessage);
+    });
+
+    it('Case 7 - should edit the account information ** update password with common password', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'editAccount7', baseContext);
+
+      const textResult = await accountIdentityPage.editAccount(page, createCustomerData.password, editCustomerData6);
+      await expect(textResult).to.be.equal(accountIdentityPage.errorUpdateMessage);
+    });
+
+    it('should check the error alert on new password block', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkErrorAlerts7', baseContext);
+
+      const textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
+      await expect(textResult, 'Minimum score alert is not visible!').to
+        .contains(accountIdentityPage.minimumScoreAlertMessage);
+    });
+
+    it('Case 8 - should edit the account information ** update password with top 10 common password',
+      async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'editAccount8', baseContext);
+
+        const textResult = await accountIdentityPage.editAccount(page, createCustomerData.password, editCustomerData7);
+        await expect(textResult).to.be.equal(accountIdentityPage.errorUpdateMessage);
+      });
+
+    it('should check the error alert on new password block', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkErrorAlerts8', baseContext);
+
+      const textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
+      await expect(textResult, 'Minimum score alert is not visible!').to
+        .contains(accountIdentityPage.minimumScoreAlertMessage);
+    });
+
+    it('Case 9 - should edit the account information ** update password with the same characters',
+      async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'editAccount9', baseContext);
+
+        const textResult = await accountIdentityPage.editAccount(page, createCustomerData.password, editCustomerData8);
+        await expect(textResult).to.be.equal(accountIdentityPage.errorUpdateMessage);
+      });
+
+    it('should check the error alert on new password block', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkErrorAlerts9', baseContext);
+
+      const textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
+      await expect(textResult, 'Minimum score alert is not visible!').to
+        .contains(accountIdentityPage.minimumScoreAlertMessage);
+    });
+
+    it('Case 10 - should edit the account information ** update password with a good new password',
+      async function () {
+        await testContext.addContextItem(this, 'testIdentifier', 'editAccount10', baseContext);
+
+        const textResult = await accountIdentityPage.editAccount(page, createCustomerData.password, editCustomerData9);
+        await expect(textResult).to.be.equal(accountIdentityPage.successfulUpdateMessage);
+      });
   });
 
-  describe('Go to BO and check the account after update', async () => {
-    before(async () => {
-      page = await helper.newTab(browserContext);
-    });
-
-    it('should go to BO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToBoAfterUpdate');
-
-      await dashboardPage.goTo(page, global.BO.URL);
-      const pageTitle = await dashboardPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(dashboardPage.pageTitle);
-    });
-
-    it('should go to customers page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPageAfterUpdate', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.customersParentLink,
-        dashboardPage.customersLink,
-      );
-
-      await customersPage.closeSfToolBar(page);
-
-      const pageTitle = await customersPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(customersPage.pageTitle);
-    });
-
-    it('should check that the updated customer exist', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkEditedCustomer', baseContext);
-
-      await customersPage.resetFilter(page);
-      await customersPage.filterCustomers(page, 'input', 'email', editCustomerData.email);
-
-      const textColumn = await customersPage.getTextColumnFromTableCustomers(page, 1, 'email');
-      await expect(textColumn).to.equal(editCustomerData.email);
-    });
-
-    it('should delete the account', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'deleteAccount', baseContext);
-
-      const textResult = await customersPage.deleteCustomer(page, 1);
-      await expect(textResult).to.equal(customersPage.successfulDeleteMessage);
-    });
-
-    after(async () => {
-      page = await customersPage.closePage(browserContext, page, 0);
-    });
-  });
+  // Post-condition: Delete the created customer account
+  deleteCustomerTest(editCustomerData9, `${baseContext}_postTest`);
 });

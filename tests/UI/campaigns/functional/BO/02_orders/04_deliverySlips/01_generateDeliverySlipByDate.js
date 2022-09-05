@@ -3,15 +3,16 @@ require('module-alias/register');
 // Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
+const {getDateFormat} = require('@utils/date');
 
 // Import login steps
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const deliverySlipsPage = require('@pages/BO/orders/deliverySlips/index');
 const ordersPage = require('@pages/BO/orders/index');
-const viewOrderPage = require('@pages/BO/orders/view');
+const orderPageTabListBlock = require('@pages/BO/orders/view/tabListBlock');
 
 // Import data
 const {Statuses} = require('@data/demo/orderStatuses');
@@ -26,13 +27,7 @@ const {expect} = require('chai');
 
 let browserContext;
 let page;
-
-// Get today date
-const today = new Date();
-
-// Create a future date that there is no delivery slips (yyy-mm-dd)
-today.setFullYear(today.getFullYear() + 1);
-const futureDate = today.toISOString().slice(0, 10);
+const futureDate = getDateFormat('yyyy-mm-dd', 'future');
 
 /*
 Update the last order status to shipped
@@ -74,21 +69,21 @@ describe('BO - Orders - Delivery slips : Generate Delivery slip file by date', a
       await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrderPage', baseContext);
 
       await ordersPage.goToOrder(page, 1);
-      const pageTitle = await viewOrderPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+      await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
     it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const result = await viewOrderPage.modifyOrderStatus(page, Statuses.shipped.status);
+      const result = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.shipped.status);
       await expect(result).to.equal(Statuses.shipped.status);
     });
 
     it('should check the delivery slip document name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDocumentName', baseContext);
 
-      const documentType = await viewOrderPage.getDocumentType(page, 3);
+      const documentType = await orderPageTabListBlock.getDocumentType(page, 3);
       await expect(documentType).to.be.equal('Delivery slip');
     });
   });
@@ -97,10 +92,10 @@ describe('BO - Orders - Delivery slips : Generate Delivery slip file by date', a
     it('should go to \'Orders > Delivery slips\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDeliverySlipsPage', baseContext);
 
-      await viewOrderPage.goToSubMenu(
+      await orderPageTabListBlock.goToSubMenu(
         page,
-        viewOrderPage.ordersParentLink,
-        viewOrderPage.deliverySlipslink,
+        orderPageTabListBlock.ordersParentLink,
+        orderPageTabListBlock.deliverySlipslink,
       );
 
       const pageTitle = await deliverySlipsPage.getPageTitle(page);

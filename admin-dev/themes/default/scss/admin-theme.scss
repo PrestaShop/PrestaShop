@@ -66,7 +66,6 @@
 //PrestaShop Elements
 @import "partials/content";
 @import "partials/header";
-@import "partials/footer";
 @import "partials/nav";
 @import "partials/icons";
 
@@ -97,6 +96,7 @@
   @import "controllers/products";
 
 }
+@import "controllers/cartrules";
 
 //Plug-ins
 @import "partials/tinymce";

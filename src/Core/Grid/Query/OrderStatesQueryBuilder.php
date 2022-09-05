@@ -42,11 +42,6 @@ final class OrderStatesQueryBuilder extends AbstractDoctrineQueryBuilder
     private $contextLangId;
 
     /**
-     * @var int[]
-     */
-    private $contextShopIds;
-
-    /**
      * @var DoctrineSearchCriteriaApplicatorInterface
      */
     private $criteriaApplicator;
@@ -56,19 +51,16 @@ final class OrderStatesQueryBuilder extends AbstractDoctrineQueryBuilder
      * @param string $dbPrefix
      * @param DoctrineSearchCriteriaApplicatorInterface $criteriaApplicator
      * @param int $contextLangId
-     * @param int[] $contextShopIds
      */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
         DoctrineSearchCriteriaApplicatorInterface $criteriaApplicator,
-        int $contextLangId,
-        array $contextShopIds
+        int $contextLangId
     ) {
         parent::__construct($connection, $dbPrefix);
 
         $this->contextLangId = $contextLangId;
-        $this->contextShopIds = $contextShopIds;
         $this->criteriaApplicator = $criteriaApplicator;
     }
 
@@ -78,7 +70,16 @@ final class OrderStatesQueryBuilder extends AbstractDoctrineQueryBuilder
     public function getSearchQueryBuilder(SearchCriteriaInterface $searchCriteria)
     {
         $searchQueryBuilder = $this->getOrderStatesQueryBuilder($searchCriteria)
-            ->select('os.id_order_state, osl.name, os.send_email, os.delivery, os.invoice, osl.template, os.color');
+            ->select(
+                'os.id_order_state',
+                'osl.name',
+                'os.send_email',
+                'os.delivery',
+                'os.invoice',
+                'osl.template',
+                'os.color',
+                'os.unremovable'
+            );
 
         $this->applySorting($searchQueryBuilder, $searchCriteria);
 

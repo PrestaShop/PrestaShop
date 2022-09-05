@@ -5,7 +5,7 @@
 </head>
 
 <body
-  class="lang-{$iso_user}{if $lang_is_rtl} lang-rtl{/if} {$smarty.get.controller|escape|strtolower}{if $collapse_menu} page-sidebar-closed{/if}{if isset($is_multishop) && $is_multishop} multishop-enabled{/if}{if isset($lite_display) && $lite_display} light_display_layout{/if}"
+  class="lang-{$iso_user}{if $lang_is_rtl} lang-rtl{/if} {$controller_name|escape|strtolower}{if $collapse_menu} page-sidebar-closed{/if}{if isset($is_multishop) && $is_multishop} multishop-enabled{/if}{if isset($lite_display) && $lite_display} light_display_layout{/if}"
   {if isset($js_router_metadata.base_url)}data-base-url="{$js_router_metadata.base_url}"{/if}
   {if isset($js_router_metadata.token)}data-token="{$js_router_metadata.token}"{/if}
 >
@@ -24,8 +24,17 @@
       <div class="component" id="quick-access-container">
         {include file="components/layout/quick_access.tpl"}
       </div>
-      <div class="component" id="header-search-container">
-        {include file="components/layout/search_form.tpl"}
+      <div class="component component-search" id="header-search-container">
+        <div class="component-search-body">
+          <div class="component-search-top">
+            {include file="components/layout/search_form.tpl"}
+            <button class="component-search-cancel d-none">{l|escape s='Cancel' d='Admin.Actions'}</button>
+          </div>
+
+          {include file="components/layout/mobile_quickaccess.tpl"}
+        </div>
+
+        <div class="component-search-background d-none"></div>
       </div>
 
       {if isset($debug_mode) && $debug_mode == true}
@@ -35,11 +44,11 @@
              data-toggle="pstooltip"
              data-placement="bottom"
              data-html="true"
-             title="<p class='text-left'><strong>{l s='Your shop is in debug mode.' d='Admin.Navigation.Notification'}</strong></p><p class='text-left'>{l s='All the PHP errors and messages are displayed. When you no longer need it, [1]turn off[/1] this mode.' html=true sprintf=['[1]' => '<strong>', '[/1]' => '</strong>'] d='Admin.Navigation.Notification'}</p>"
+             title="<p class=&quot;text-left&quot;><strong>{l|escape s='Your shop is in debug mode.' d='Admin.Navigation.Notification'}</strong></p><p class=&quot;text-left&quot;>{l|escape s='All the PHP errors and messages are displayed. When you no longer need it, [1]turn off[/1] this mode.' html=true sprintf=['[1]' => '<strong>', '[/1]' => '</strong>'] d='Admin.Navigation.Notification'}</p>"
              href="{$link->getAdminLink('AdminPerformance')|escape:'html':'UTF-8'}"
           >
             <i class="material-icons">bug_report</i>
-            <span>{l s='Debug mode' d='Admin.Navigation.Header'}</span>
+            <span>{l|escape s='Debug mode' d='Admin.Navigation.Header'}</span>
           </a>
         </div>
       {/if}
@@ -51,29 +60,31 @@
              data-toggle="pstooltip"
              data-placement="bottom"
              data-html="true"
-             title="<p class='text-left'><strong>{l s='Your shop is in maintenance.' d='Admin.Navigation.Notification'}</strong></p><p class='text-left'>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Shop Parameters > Maintenance tab.' sprintf=['<br />'] d='Admin.Navigation.Notification'}</p>" href="{$link->getAdminLink('AdminMaintenance')|escape:'html':'UTF-8'}"
+             title="<p class=&quot;text-left&quot;><strong>{l|escape s='Your shop is in maintenance.' d='Admin.Navigation.Notification'}</strong></p><p class=&quot;text-left&quot;>{l|escape s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Shop Parameters > Maintenance tab.' sprintf=['<br />'] d='Admin.Navigation.Notification'}</p>" href="{$link->getAdminLink('AdminMaintenance')|escape:'html':'UTF-8'}"
           >
             <i class="material-icons">build</i>
-            <span>{l s='Maintenance mode' d='Admin.Navigation.Header'}</span>
+            <span>{l|escape s='Maintenance mode' d='Admin.Navigation.Header'}</span>
           </a>
         </div>
       {/if}
 
-      {if !isset($hideLegacyStoreContextSelector) || !$hideLegacyStoreContextSelector}
-        <div class="component" id="header-shop-list-container">
-          {include file="components/layout/shop_list.tpl"}
-        </div>
-      {/if}
-      {if $show_new_orders || $show_new_customers || $show_new_messages}
-        <div class="component header-right-component" id="header-notifications-container">
-          {include file="components/layout/notifications_center.tpl"}
-        </div>
-      {/if}
+      <div class="header-right">
+        {if !isset($hideLegacyStoreContextSelector) || !$hideLegacyStoreContextSelector}
+          <div class="component" id="header-shop-list-container">
+            {include file="components/layout/shop_list.tpl"}
+          </div>
+        {/if}
+        {if $show_new_orders || $show_new_customers || $show_new_messages}
+          <div class="component header-right-component" id="header-notifications-container">
+            {include file="components/layout/notifications_center.tpl"}
+          </div>
+        {/if}
 
-      <div class="component" id="header-employee-container">
-        {include file="components/layout/employee_dropdown.tpl"}
+        <div class="component" id="header-employee-container">
+          {include file="components/layout/employee_dropdown.tpl"}
+        </div>
+        {if isset($displayBackOfficeTop)}{$displayBackOfficeTop}{/if}
       </div>
-      {if isset($displayBackOfficeTop)}{$displayBackOfficeTop}{/if}
     </nav>
   </header>
 {/if}
@@ -87,7 +98,7 @@
 <div id="main-div">
     {if $install_dir_exists}
       <div class="alert alert-warning">
-        {l s='For security reasons, you must also delete the /install folder.' d='Admin.Login.Notification'}
+        {l|escape s='For security reasons, you must also delete the /install folder.' d='Admin.Login.Notification'}
       </div>
     {else}
       {if isset($modal_module_list)}{$modal_module_list}{/if}
@@ -103,12 +114,8 @@
           {include file='components/layout/warning_messages.tpl'}
         {/if}
 
-        <div class="row ">
-          <div class="col-sm-12">
-            {$page}
-            {hook h='displayAdminEndContent'}
-          </div>
-        </div>
+        {$page}
+        {hook h='displayAdminEndContent'}
 
       </div>
     {/if}

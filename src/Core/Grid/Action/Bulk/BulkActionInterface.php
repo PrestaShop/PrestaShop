@@ -75,5 +75,21 @@ interface BulkActionInterface
      *
      * @return self
      */
-    public function setName($name);
+    public function setName(string $name);
+
+    /**
+     * Returns action icon name.
+     *
+     * @return string
+     */
+    public function getIcon();
+
+    /**
+     * Set action icon name.
+     *
+     * @param string $icon
+     *
+     * @return self
+     */
+    public function setIcon(string $icon);
 }

@@ -97,7 +97,7 @@ class AddressController extends FrameworkBundleAdminController
      * Process addresses required fields configuration form.
      *
      * @AdminSecurity(
-     *     "is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     redirectRoute="admin_addresses_index"
      * )
      *
@@ -141,7 +141,7 @@ class AddressController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new DeleteAddressCommand($addressId));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -173,7 +173,7 @@ class AddressController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new BulkDeleteAddressCommand($addressIds));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -232,7 +232,7 @@ class AddressController extends FrameworkBundleAdminController
      * Show "Add new" form and handle form submit.
      *
      * @AdminSecurity(
-     *     "is_granted(['create'], request.get('_legacy_controller'))",
+     *     "is_granted('create', request.get('_legacy_controller'))",
      *     redirectRoute="admin_addresses_index",
      *     message="You do not have permission to create this."
      * )
@@ -288,7 +288,7 @@ class AddressController extends FrameworkBundleAdminController
         try {
             $handlerResult = $addressFormHandler->handle($addressForm);
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 if ($request->query->has('submitFormAjax')) {
                     return $this->render(

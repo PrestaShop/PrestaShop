@@ -1,0 +1,41 @@
+name: Cron Update PHP Modules
+on:
+  schedule:
+    - cron: '0 23 * * *'
+  workflow_dispatch:
+
+jobs:
+  js-routing-dump:
+    runs-on: ubuntu-latest
+    name: Update PHP Modules
+    steps:
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist
+
+      - name: Execute script for updating modules
+        run: php .github/workflows/cron_update_modules/script.php
+
+      - name: Update PrestaShop packages
+        run: echo "PULL_REQUEST_BODY='$(cat cron_php_update_modules.txt)'" >> $GITHUB_ENV
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        if: env.PULL_REQUEST_BODY != ''
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: cron-php-update-modules
+          commit-message: Updated PrestaShop Packages
+          committer: PrestonBot <noreply@github.com>
+          author: prestonBot <prestonBot@users.noreply.github.com>
+          title: 'Updated PrestaShop Packages'
+          body: ${{ env.PULL_REQUEST_BODY }}
+          base: 'develop'
+          delete-branch: true

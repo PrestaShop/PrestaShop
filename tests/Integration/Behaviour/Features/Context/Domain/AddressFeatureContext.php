@@ -570,10 +570,10 @@ class AddressFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When I edit brand address :manufacturerAddressReference with following details:
      *
-     * @param $manufacturerAddressReference
+     * @param string $manufacturerAddressReference
      * @param TableNode $table
      */
-    public function editBrandAddressWithFollowingDetails($manufacturerAddressReference, TableNode $table)
+    public function editBrandAddressWithFollowingDetails(string $manufacturerAddressReference, TableNode $table): void
     {
         $manufacturerAddressId = SharedStorage::getStorage()->get($manufacturerAddressReference);
         $testCaseData = $table->getRowsHash();

@@ -111,7 +111,7 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
      */
     public function resolve(Request $request, ArgumentMetadata $argument)
     {
-        list($controller, $action) = ControllerAction::fromString($request->get('_controller'));
+        list($controller, $action) = ControllerAction::fromString($request->get('_controller', ''));
         $filtersClass = $argument->getType();
         /** @var Filters $filters */
         $filters = $this->buildDefaultFilters($filtersClass);
@@ -125,7 +125,7 @@ class SearchParametersResolver implements ArgumentValueResolverInterface
         }
 
         $filterSearchParametersEvent = new FilterSearchCriteriaEvent($filters);
-        $this->dispatcher->dispatch(FilterSearchCriteriaEvent::NAME, $filterSearchParametersEvent);
+        $this->dispatcher->dispatch($filterSearchParametersEvent, FilterSearchCriteriaEvent::NAME);
 
         yield $filterSearchParametersEvent->getSearchCriteria();
     }

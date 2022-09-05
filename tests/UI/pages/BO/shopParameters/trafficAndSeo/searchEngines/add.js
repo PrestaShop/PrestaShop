@@ -14,14 +14,13 @@ class AddSearchEngine extends BOBasePage {
   constructor() {
     super();
 
-    this.pageTitleCreate = 'Search Engines > Add new •';
-    this.pageTitleEdit = 'Search Engines > Edit:';
+    this.pageTitleCreate = 'Search Engines •';
+    this.pageTitleEdit = 'Edit:';
 
     // Form Selectors
-    this.serverInput = '#server';
-    this.getVarInput = '#getvar';
-    this.saveButton = '#search_engine_form_submit_btn';
-    this.alertSuccessBlockParagraph = '.alert-success';
+    this.serverInput = '#search_engine_server';
+    this.queryKeyInput = '#search_engine_query_key';
+    this.saveButton = '#save-button';
   }
 
   /*
@@ -37,7 +36,7 @@ class AddSearchEngine extends BOBasePage {
   async createEditSearchEngine(page, searchEngineData) {
     // Fill the form
     await this.setValue(page, this.serverInput, searchEngineData.server);
-    await this.setValue(page, this.getVarInput, searchEngineData.getVar);
+    await this.setValue(page, this.queryKeyInput, searchEngineData.queryKey);
 
     // Save form
     await this.clickAndWaitForNavigation(page, this.saveButton);

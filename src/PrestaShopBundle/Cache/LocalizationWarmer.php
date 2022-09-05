@@ -45,7 +45,7 @@ class LocalizationWarmer implements CacheWarmerInterface
     {
         $fs = new Filesystem();
 
-        if (is_dir($cacheDir)) {
+        if (!is_dir($cacheDir)) {
             try {
                 $fs->mkdir($cacheDir);
             } catch (IOExceptionInterface $e) {

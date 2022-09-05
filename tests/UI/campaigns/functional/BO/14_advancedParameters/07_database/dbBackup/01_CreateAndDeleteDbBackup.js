@@ -5,15 +5,15 @@ const {expect} = require('chai');
 // Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
-const loginCommon = require('@commonTests/loginBO');
+const testContext = require('@utils/testContext');
+
+// Import login steps
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const sqlManagerPage = require('@pages/BO/advancedParameters/database/sqlManager');
 const dbBackupPage = require('@pages/BO/advancedParameters/database/dbBackup');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_advancedParams_database_dbBackup_createAndDeleteDbBackup';
 
@@ -28,7 +28,7 @@ Generate new backup
 Download file
 Delete backup
  */
-describe('Generate db backup and download it', async () => {
+describe('BO - Advanced Parameters - Database : Generate db backup and download it', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -44,7 +44,7 @@ describe('Generate db backup and download it', async () => {
   });
 
   // Go db backup page
-  it('should go to \'database > sql manager\' page', async function () {
+  it('should go to \'Advanced Parameters > Database\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSqlManagerPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -59,7 +59,7 @@ describe('Generate db backup and download it', async () => {
     await expect(pageTitle).to.contains(sqlManagerPage.pageTitle);
   });
 
-  it('should go to db backup page', async function () {
+  it('should go to \'DB Backup\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToDbBackupPage', baseContext);
 
     await sqlManagerPage.goToDbBackupPage(page);

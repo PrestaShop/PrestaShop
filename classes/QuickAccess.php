@@ -71,7 +71,7 @@ class QuickAccessCore extends ObjectModel
     /**
      * Get all available quick_accesses with token.
      *
-     * @return array QuickAccesses
+     * @return bool|array QuickAccesses
      */
     public static function getQuickAccessesWithToken($idLang, $idEmployee)
     {

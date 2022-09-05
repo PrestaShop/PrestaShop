@@ -3,7 +3,7 @@ require('module-alias/register');
 const {expect} = require('chai');
 
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -201,18 +201,8 @@ describe('BO - International - Currencies : Create unofficial currency and check
     it('should check currency non existence', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkCurrency2', baseContext);
 
-      // Check currency
-      let textError = '';
-
-      try {
-        await foHomePage.changeCurrency(page, Currencies.toman.isoCode, Currencies.toman.symbol);
-      } catch (e) {
-        textError = e.toString();
-      }
-
-      await expect(textError).to.contains(
-        `${Currencies.toman.isoCode} was not found as option of select`,
-      );
+      const found = await foHomePage.currencyExists(page, Currencies.toman.name);
+      await expect(found).to.be.false;
     });
 
     it('should go back to BO', async function () {

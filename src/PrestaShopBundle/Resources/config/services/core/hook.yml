@@ -1,28 +1,28 @@
 services:
-    _defaults:
-        public: true
+  _defaults:
+    public: true
 
-    prestashop.core.hook.dispatcher:
-        class: 'PrestaShop\PrestaShop\Core\Hook\HookDispatcher'
-        arguments:
-            - '@prestashop.hook.dispatcher'
+  prestashop.core.hook.dispatcher:
+    class: 'PrestaShop\PrestaShop\Core\Hook\HookDispatcher'
+    arguments:
+      - '@prestashop.hook.dispatcher'
 
-    prestashop.core.hook.provider.grid_definition_hook_by_service_ids_provider:
-      class: PrestaShop\PrestaShop\Core\Hook\Provider\GridDefinitionHookByServiceIdsProvider
-      arguments:
-        - '@service_container'
+  prestashop.core.hook.provider.grid_definition_hook_by_service_ids_provider:
+    class: PrestaShop\PrestaShop\Core\Hook\Provider\GridDefinitionHookByServiceIdsProvider
+    arguments:
+      - '@service_container'
 
-    prestashop.core.hook.provider.identifiable_object_hook_by_form_type_provider:
-      class: PrestaShop\PrestaShop\Core\Hook\Provider\IdentifiableObjectHookByFormTypeProvider
-      arguments:
-        - '@form.factory'
+  prestashop.core.hook.provider.identifiable_object_hook_by_form_type_provider:
+    class: PrestaShop\PrestaShop\Core\Hook\Provider\IdentifiableObjectHookByFormTypeProvider
+    arguments:
+      - '@form.factory'
 
-    prestashop.core.hook.generator.hook_description_generator:
-      class: 'PrestaShop\PrestaShop\Core\Hook\Generator\HookDescriptionGenerator'
-      arguments:
-        - '%hook_descriptions%'
-        - '@prestashop.core.util.string.string_validator'
-        - '@prestashop.core.util.string.string_modifier'
+  prestashop.core.hook.generator.hook_description_generator:
+    class: 'PrestaShop\PrestaShop\Core\Hook\Generator\HookDescriptionGenerator'
+    arguments:
+      - '%hook_descriptions%'
+      - '@prestashop.core.util.string.string_validator'
+      - '@prestashop.core.util.string.string_modifier'
 
 parameters:
   hook_descriptions:
@@ -86,3 +86,13 @@ parameters:
       'suffix': 'FormHandler'
       'title': 'Modify %s identifiable object data after creating it'
       'description': 'This hook allows to modify %s identifiable object forms data after it was created'
+    'form_data_provider_data':
+      'prefix': 'action'
+      'suffix': 'FormDataProviderData'
+      'title': 'Provide %s identifiable object form data for update'
+      'description': 'This hook allows to provide %s identifiable object form data which will prefill the form in update/edition page'
+    'form_data_provider_default_data':
+      'prefix': 'action'
+      'suffix': 'FormDataProviderDefaultData'
+      'title': 'Provide %s identifiable object default form data for creation'
+      'description': 'This hook allows to provide %s identifiable object form data which will prefill the form in creation page'

@@ -24,205 +24,216 @@
  *#}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% trans_default_domain "Admin.Advparameters.Feature" %}
-{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
-{% form_theme smartyForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
-{% form_theme debugModeForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
-{% form_theme optionalFeaturesForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
-{% form_theme combineCompressCacheForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
-{% form_theme mediaServersForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
-{% form_theme cachingForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
+{% form_theme smartyForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+{% form_theme debugModeForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+{% form_theme optionalFeaturesForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+{% form_theme combineCompressCacheForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+{% form_theme mediaServersForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+{% form_theme cachingForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
 {% block content %}
   {{ form_start(smartyForm, {attr : {class: 'form'}, action: path('admin_performance_smarty_save') }) }}
-    <div class="row justify-content-center">
-      {% block perfs_form_smarty_cache %}
-        <div class="col">
-          <div class="card">
-            <h3 class="card-header">
-              <i class="material-icons">business_center</i> {{ 'Smarty'|trans }}
-            </h3>
-            <div class="card-block row">
-              <div class="card-text">
-                {% block perfs_form_smarty_cache_form %}
-                  {{ form_widget(smartyForm) }}
-                {% endblock %}
-              </div>
-            </div>
-            <div class="card-footer">
-              <div class="d-flex justify-content-end">
-                <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
-              </div>
-            </div>
-          </div>
+  {% block perfs_form_smarty_cache %}
+    <div class="card">
+      <h3 class="card-header">
+        <i class="material-icons">business_center</i>
+        {{ 'Smarty'|trans }}
+      </h3>
+      <div class="card-body">
+        <div class="form-wrapper">
+          {% block perfs_form_smarty_cache_form %}
+            {{ form_widget(smartyForm) }}
+          {% endblock %}
         </div>
-      {% endblock %}
+      </div>
+      <div class="card-footer">
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+        </div>
+      </div>
     </div>
+  {% endblock %}
   {{ form_end(smartyForm) }}
 
   {{ form_start(debugModeForm, {attr : {class: 'form'}, action: path('admin_performance_debug_mode_save') }) }}
-    <div class="row justify-content-center">
-      {% block perfs_form_debug_mode %}
-        <div class="col">
-          <div class="card">
-            <h3 class="card-header">
-              <i class="material-icons">bug_report</i> {{ 'Debug mode'|trans }}
-            </h3>
-            <div class="card-block row">
-              <div class="card-text">
-                {% block perfs_form_debug_mode_form %}
-                  {{ form_widget(debugModeForm) }}
-                {% endblock %}
-              </div>
-            </div>
-            <div class="card-footer">
-              <div class="d-flex justify-content-end">
-                <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
-              </div>
-            </div>
-          </div>
+  {% block perfs_form_debug_mode %}
+    <div class="card">
+      <h3 class="card-header">
+        <i class="material-icons">bug_report</i>
+        {{ 'Debug mode'|trans }}
+      </h3>
+      <div class="card-body">
+        <div class="form-wrapper">
+          {% block perfs_form_debug_mode_form %}
+            {{ form_widget(debugModeForm) }}
+          {% endblock %}
         </div>
-      {% endblock %}
+      </div>
+      <div class="card-footer">
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+        </div>
+      </div>
     </div>
+  {% endblock %}
   {{ form_end(debugModeForm) }}
 
-  {{ form_start(optionalFeaturesForm, {attr : {class: 'form'}, action: path('admin_performance_optional_features_save') }) }}
-    <div class="row justify-content-center">
-      {% block perfs_form_optional_features %}
-        <div class="col">
-          <div class="card" id="optional_features">
-            <h3 class="card-header">
-              <i class="material-icons">extension</i> {{ 'Optional features'|trans }}
+  {% block perfs_form_modules %}
+    <div class="card form-horizontal">
+      <h3 class="card-header">
+        <i class="material-icons">bug_report</i>
+        {{ 'Modules'|trans }}
 
-              <span
-                class="help-box"
-                data-container="body"
-                data-toggle="popover"
-                data-trigger="hover"
-                data-placement="right"
-                data-content="{{ 'Some features can be disabled in order to improve performance.'|trans({}, 'Admin.Advparameters.Help') }}"
-                title=""
-              >
-              </span>
-            </h3>
-            <div class="card-block row">
-              <div class="card-text">
-                {% block perfs_form_optional_features_form %}
-                  {{ form_widget(optionalFeaturesForm) }}
-                {% endblock %}
+        <span
+          class="help-box"
+          data-container="body"
+          data-toggle="popover"
+          data-trigger="hover"
+          data-placement="right"
+          data-content="{{ 'This feature allows you to identify modules that might be causing bugs on your store. Disable all non-built-in modules (not listed in composer.json). Then, re-enable each module one by one and check that everything works properly before moving on to the next one.'|trans({}, 'Admin.Advparameters.Help')|escape('html_attr') }}"
+          title=""
+          data-original-title=""
+        ></span>
+      </h3>
+      <div class="card-body">
+        <div class="form-wrapper">
+          {% block perfs_form_modules_form %}
+            <div class="form-group row">
+              <label class="form-control-label">
+                {{ 'Disable non built-in modules'|trans({}, 'Admin.Advparameters.Feature') }}
+              </label>
+
+              <div class="col-sm input-container">
+                <a class="btn btn-primary pointer" href="{{ path('admin_performance_module_disable_non_builtin') }}" title="Clear cache">
+                  {{ 'Disable'|trans({}, 'Admin.Actions') }}
+                </a>
               </div>
             </div>
-            <div class="card-footer">
-              <div class="d-flex justify-content-end">
-                <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
-              </div>
-            </div>
-          </div>
+          {% endblock %}
         </div>
-      {% endblock %}
+      </div>
     </div>
+  {% endblock %}
+
+  {{ form_start(optionalFeaturesForm, {attr : {class: 'form'}, action: path('admin_performance_optional_features_save') }) }}
+  {% block perfs_form_optional_features %}
+    <div class="card" id="optional_features">
+      <h3 class="card-header">
+        <i class="material-icons">extension</i>
+        {{ 'Optional features'|trans }}
+
+        <span class="help-box"
+              data-container="body"
+              data-toggle="popover"
+              data-trigger="hover"
+              data-placement="right"
+              data-content="{{ 'Some features can be disabled in order to improve performance.'|trans({}, 'Admin.Advparameters.Help') }}"
+              title="">
+        </span>
+      </h3>
+      <div class="card-body">
+        <div class="form-wrapper">
+          {% block perfs_form_optional_features_form %}
+            {{ form_widget(optionalFeaturesForm) }}
+          {% endblock %}
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+        </div>
+      </div>
+    </div>
+  {% endblock %}
   {{ form_end(optionalFeaturesForm) }}
 
   {{ form_start(combineCompressCacheForm, {attr : {class: 'form'}, action: path('admin_performance_combine_compress_cache_save') }) }}
-    <div class="row justify-content-center">
-      {% block perfs_form_ccc %}
-        <div class="col">
-          <div class="card">
-            <h3 class="card-header">
-              <i class="material-icons">zoom_out_map</i> {{ 'CCC (Combine, Compress and Cache)'|trans }}
+  {% block perfs_form_ccc %}
+    <div class="card">
+      <h3 class="card-header">
+        <i class="material-icons">zoom_out_map</i>
+        {{ 'CCC (Combine, Compress and Cache)'|trans }}
 
-
-            <span
-              class="help-box"
+        <span class="help-box"
               data-container="body"
               data-toggle="popover"
               data-trigger="hover"
               data-placement="right"
               data-content="{{ 'CCC allows you to reduce the loading time of your page. With these settings you will gain performance without even touching the code of your theme. Make sure, however, that your theme is compatible with PrestaShop 1.7+. Otherwise, CCC will cause problems.'|trans({}, 'Admin.Advparameters.Help') }}"
-              title=""
-            >
-            </span>
-            </h3>
-            <div class="card-block row">
-              <div class="card-text">
-                {% block perfs_form_ccc_form %}
-                  {{ form_widget(combineCompressCacheForm) }}
-                {% endblock %}
-              </div>
-            </div>
-            <div class="card-footer">
-              <div class="d-flex justify-content-end">
-                <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
-              </div>
-            </div>
-          </div>
+              title="">
+        </span>
+      </h3>
+      <div class="card-body">
+        <div class="form-wrapper">
+          {% block perfs_form_ccc_form %}
+            {{ form_widget(combineCompressCacheForm) }}
+          {% endblock %}
         </div>
-      {% endblock %}
+      </div>
+      <div class="card-footer">
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+        </div>
+      </div>
     </div>
+  {% endblock %}
   {{ form_end(combineCompressCacheForm) }}
 
   {{ form_start(mediaServersForm, {attr : {class: 'form'}, action: path('admin_performance_media_servers_save') }) }}
-    <div class="row justify-content-center">
-      {% block perfs_form_media_servers %}
-        <div class="col">
-          <div class="card">
-            <h3 class="card-header">
-              <i class="material-icons">link</i> {{ 'Media servers (use only with CCC)'|trans }}
+  {% block perfs_form_media_servers %}
+    <div class="card">
+      <h3 class="card-header">
+        <i class="material-icons">link</i>
+        {{ 'Media servers (use only with CCC)'|trans }}
 
-              <span
-                class="help-box"
-                data-container="body"
-                data-toggle="popover"
-                data-trigger="hover"
-                data-placement="right"
-                data-content="{{ 'You must enter another domain, or subdomain, in order to use cookieless static content.'|trans({}, 'Admin.Advparameters.Feature') }}"
-                title=""
-              >
-              </span>
-            </h3>
-            <div class="card-block row">
-              <div class="card-text">
-                {% block perfs_form_media_servers_form %}
-                  {{ form_widget(mediaServersForm) }}
-                {% endblock %}
-              </div>
-            </div>
-            <div class="card-footer">
-              <div class="d-flex justify-content-end">
-                <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
-              </div>
-            </div>
-          </div>
+        <span class="help-box"
+              data-container="body"
+              data-toggle="popover"
+              data-trigger="hover"
+              data-placement="right"
+              data-content="{{ 'You must enter another domain, or subdomain, in order to use cookieless static content.'|trans({}, 'Admin.Advparameters.Feature') }}"
+              title="">
+        </span>
+      </h3>
+      <div class="card-body">
+        <div class="form-wrapper">
+          {% block perfs_form_media_servers_form %}
+            {{ form_widget(mediaServersForm) }}
+          {% endblock %}
         </div>
-      {% endblock %}
+      </div>
+      <div class="card-footer">
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+        </div>
+      </div>
     </div>
+  {% endblock %}
   {{ form_end(mediaServersForm) }}
 
   {{ form_start(cachingForm, {attr : {class: 'form'}, action: path('admin_performance_caching_save') }) }}
-    <div class="row justify-content-center">
-      {% block perfs_form_caching %}
-        <div class="col">
-          <div class="card">
-            <h3 class="card-header">
-              <i class="material-icons">link</i> {{ 'Caching'|trans }}
-            </h3>
-            <div class="card-block row">
-              <div class="card-text">
-                {% block perfs_form_caching_form %}
-                  {{ form_widget(cachingForm) }}
-                {% endblock %}
+  {% block perfs_form_caching %}
+    <div class="card">
+      <h3 class="card-header">
+        <i class="material-icons">link</i>
+        {{ 'Caching'|trans }}
+      </h3>
+      <div class="card-body">
+        <div class="form-wrapper">
+          {% block perfs_form_caching_form %}
+            {{ form_widget(cachingForm) }}
+          {% endblock %}
 
-                {{ include('@AdvancedParameters/memcache_servers.html.twig', {'form': memcacheForm}) }}
-              </div>
-            </div>
-            <div class="card-footer">
-              <div class="d-flex justify-content-end">
-                <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
-              </div>
-            </div>
-          </div>
+          {{ include('@AdvancedParameters/memcache_servers.html.twig', {'form': memcacheForm}) }}
         </div>
-      {% endblock %}
+      </div>
+      <div class="card-footer">
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+        </div>
+      </div>
     </div>
+  {% endblock %}
   {{ form_end(cachingForm) }}
 {% endblock %}
 
@@ -235,22 +246,18 @@
       'removeServerUrl': '{{ url('admin_servers_delete')|e('js') }}',
       'testServerUrl': '{{ url('admin_servers_test')|e('js') }}'
     };
-    var app = new PerformancePage(
-      configuration.addServerUrl,
-      configuration.removeServerUrl,
-      configuration.testServerUrl
-    );
+    var app = new PerformancePage(configuration.addServerUrl, configuration.removeServerUrl, configuration.testServerUrl);
 
-    window.addEventListener('load', function() {
+    window.addEventListener('load', function () {
       var addServerBtn = document.getElementById('add-server-btn');
       var testServerBtn = document.getElementById('test-server-btn');
 
-      addServerBtn.addEventListener('click', function(event) {
+      addServerBtn.addEventListener('click', function (event) {
         event.preventDefault();
         app.addServer();
       });
 
-      testServerBtn.addEventListener('click', function(event) {
+      testServerBtn.addEventListener('click', function (event) {
         event.preventDefault();
         app.testServer();
       });

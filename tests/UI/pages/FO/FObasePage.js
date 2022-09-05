@@ -19,7 +19,8 @@ class FOBasePage extends CommonPage {
     this.content = '#content';
     this.desktopLogo = '#_desktop_logo';
     this.desktopLogoLink = `${this.desktopLogo} a`;
-    this.cartProductsCount = '#_desktop_cart span.cart-products-count';
+    this.breadCrumbLink = link => `#wrapper nav.breadcrumb a[href*=${link}]`;
+    this.cartProductsCount = '#_desktop_cart .cart-products-count';
     this.cartLink = '#_desktop_cart a';
     this.userInfoLink = '#_desktop_user_info';
     this.accountLink = `${this.userInfoLink} .user-info a.account`;
@@ -29,9 +30,12 @@ class FOBasePage extends CommonPage {
     this.languageSelectorDiv = '#_desktop_language_selector';
     this.defaultLanguageSpan = `${this.languageSelectorDiv} button span`;
     this.languageSelectorExpandIcon = `${this.languageSelectorDiv} i.expand-more`;
+    this.languageSelectorList = `${this.languageSelectorDiv} .js-dropdown.open`;
     this.languageSelectorMenuItemLink = language => `${this.languageSelectorDiv} ul li a[data-iso-code='${language}']`;
     this.currencySelectorDiv = '#_desktop_currency_selector';
     this.defaultCurrencySpan = `${this.currencySelectorDiv} button span`;
+    this.currencySelectorExpandIcon = `${this.currencySelectorDiv} i.expand-more`;
+    this.currencySelectorMenuItemLink = currency => `${this.currencySelectorExpandIcon} ul li a[title='${currency}']`;
     this.currencySelect = 'select[aria-labelledby=\'currency-selector-label\']';
     this.searchInput = '#search_widget input.ui-autocomplete-input';
     this.autocompleteSearchResult = '.ui-autocomplete';
@@ -52,32 +56,33 @@ class FOBasePage extends CommonPage {
     this.storesLink = '#link-static-page-stores-2';
     // Your account links selectors
     this.footerAccountList = '#footer_account_list';
-    this.personalInfoLink = `${this.footerAccountList} a[title='Personal info']`;
+    this.informationLink = `${this.footerAccountList} a[title='Information']`;
+    this.orderTrackingLink = `${this.footerAccountList} a[title='Order tracking']`;
+    this.signInLink = `${this.footerAccountList} a[href*='/my-account']`;
+    this.createAccountLink = `${this.footerAccountList} a[title='Create account']`;
+    this.addressesLink = `${this.footerAccountList} a[title='Addresses']`;
+    this.addFirstAddressLink = `${this.footerAccountList} a[title='Add first address']`;
     this.ordersLink = `${this.footerAccountList} a[title='Orders']`;
     this.creditSlipsLink = `${this.footerAccountList} a[title='Credit slips']`;
-    this.addressesLink = `${this.footerAccountList} a[title='Addresses']`;
+    this.vouchersLink = `${this.footerAccountList} a[title='Vouchers']`;
+    this.wishListLink = `${this.footerAccountList} a[title='My wishlists']`;
+    this.signOutLink = `${this.footerAccountList} a[title='Log me out']`;
+
     // Store information
     this.wrapperContactBlockDiv = '#footer div.block-contact';
 
-    this.footerLinksDiv = '#footer div.links';
-    this.wrapperDiv = position => `${this.footerLinksDiv}:nth-child(1) > div > div.wrapper:nth-child(${position})`;
+    this.footerLinksDiv = '#footer .links';
+    this.wrapperDiv = position => `${this.footerLinksDiv} .wrapper:nth-child(${position})`;
     this.wrapperTitle = position => `${this.wrapperDiv(position)} p`;
     this.wrapperSubmenu = position => `${this.wrapperDiv(position)} ul[id*='footer_sub_menu']`;
     this.wrapperSubmenuItemLink = position => `${this.wrapperSubmenu(position)} li a`;
 
+    // Copyright
+    this.copyrightLink = '#footer div.footer-container a[href*="www.prestashop-project.org"]';
+
     // Alert block selectors
     this.alertSuccessBlock = '.alert-success ul li';
-  }
-
-  // Methods
-
-  /**
-   * Go to Fo page
-   * @param page {Page} Browser tab
-   * @return {Promise<void>}
-   */
-  async goToFo(page) {
-    await this.goTo(page, global.FO.URL);
+    this.notificationsBlock = '#notifications';
   }
 
   // Header methods
@@ -112,6 +117,16 @@ class FOBasePage extends CommonPage {
     }
 
     return this.clickAndWaitForNavigation(page, selector);
+  }
+
+  /**
+   * Click on bread crumb link
+   * @param page {Page} Browser tab
+   * @param link {string} Link to click on
+   * @returns {Promise<void>}
+   */
+  async clickOnBreadCrumbLink(page, link) {
+    await this.clickAndWaitForNavigation(page, this.breadCrumbLink(link));
   }
 
   /**
@@ -161,17 +176,12 @@ class FOBasePage extends CommonPage {
   }
 
   /**
-   * Change language in FO
+   * Is language list visible
    * @param page {Page} Browser tab
-   * @param lang {string} Language to choose on the select (ex: en or fr)
-   * @return {Promise<void>}
+   * @returns {Promise<boolean>}
    */
-  async changeLanguage(page, lang = 'en') {
-    await Promise.all([
-      page.click(this.languageSelectorExpandIcon),
-      this.waitForVisibleSelector(page, this.languageSelectorMenuItemLink(lang)),
-    ]);
-    await this.clickAndWaitForNavigation(page, this.languageSelectorMenuItemLink(lang));
+  isLanguageListVisible(page) {
+    return this.elementVisible(page, this.languageSelectorExpandIcon, 1000);
   }
 
   /**
@@ -180,6 +190,29 @@ class FOBasePage extends CommonPage {
    * @returns {Promise<string>}
    */
   getShopLanguage(page) {
+    return this.getAttributeContent(page, 'html[lang]', 'lang');
+  }
+
+  /**
+   * Change language in FO
+   * @param page {Page} Browser tab
+   * @param lang {string} Language to choose on the select (ex: en or fr)
+   * @return {Promise<void>}
+   */
+  async changeLanguage(page, lang = 'en') {
+    await Promise.all([
+      page.click(this.languageSelectorExpandIcon),
+      this.waitForVisibleSelector(page, this.languageSelectorList),
+    ]);
+    await this.clickAndWaitForNavigation(page, this.languageSelectorMenuItemLink(lang));
+  }
+
+  /**
+   * Get default shop language
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  getDefaultShopLanguage(page) {
     return this.getTextContent(page, this.defaultLanguageSpan);
   }
 
@@ -206,9 +239,20 @@ class FOBasePage extends CommonPage {
     const currency = isoCode === symbol ? isoCode : `${isoCode} ${symbol}`;
 
     await Promise.all([
-      this.selectByVisibleText(page, this.currencySelect, currency),
+      this.selectByVisibleText(page, this.currencySelect, currency, true),
       page.waitForNavigation('newtorkidle'),
     ]);
+  }
+
+  /**
+   * Get if currency exists on dropdown
+   * @param page {Page} Browser tab
+   * @param currencyName {string} Name of the currency to check
+   * @returns {Promise<boolean>}
+   */
+  async currencyExists(page, currencyName = 'Euro') {
+    await page.click(this.currencySelectorExpandIcon);
+    return this.elementVisible(page, this.currencySelectorMenuItemLink(currencyName), 1000);
   }
 
   /**
@@ -227,7 +271,7 @@ class FOBasePage extends CommonPage {
    * @returns {Promise<void>}
    */
   async goToCategory(page, categoryID) {
-    await this.waitForSelectorAndClick(page, this.categoryMenu(categoryID));
+    await this.clickAndWaitForNavigation(page, this.categoryMenu(categoryID));
   }
 
   /**
@@ -371,8 +415,28 @@ class FOBasePage extends CommonPage {
         selector = this.storesLink;
         break;
 
-      case 'Personal info':
-        selector = this.personalInfoLink;
+      case 'Information':
+        selector = this.informationLink;
+        break;
+
+      case 'Order tracking':
+        selector = this.orderTrackingLink;
+        break;
+
+      case 'Sign in':
+        selector = this.signInLink;
+        break;
+
+      case 'Create account':
+        selector = this.createAccountLink;
+        break;
+
+      case 'Addresses':
+        selector = this.addressesLink;
+        break;
+
+      case 'Add first address':
+        selector = this.addFirstAddressLink;
         break;
 
       case 'Orders':
@@ -383,14 +447,40 @@ class FOBasePage extends CommonPage {
         selector = this.creditSlipsLink;
         break;
 
-      case 'Addresses':
-        selector = this.addressesLink;
+      case 'Vouchers':
+        selector = this.vouchersLink;
+        break;
+
+      case 'Wishlist':
+        selector = this.wishListLink;
+        break;
+
+      case 'Sign out':
+        selector = this.signOutLink;
         break;
 
       default:
         throw new Error(`The page ${textSelector} was not found`);
     }
     return this.clickAndWaitForNavigation(page, selector);
+  }
+
+  /**
+   * Get copyright
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getCopyright(page) {
+    return this.getTextContent(page, this.copyrightLink);
+  }
+
+  /**
+   * Check that currency is visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async isCurrencyVisible(page) {
+    return this.elementVisible(page, this.currencySelectorDiv, 1000);
   }
 }
 

@@ -17,7 +17,7 @@ class CatalogPriceRules extends BOBasePage {
     this.pageTitle = 'Catalog Price Rules •';
 
     // Selectors header
-    this.addNewCatalogPriceRuleButton = '#page-header-desc-specific_price_rule-new_specific_price_rule';
+    this.addNewCatalogPriceRuleButton = 'a[data-role=page-header-desc-specific_price_rule-link]';
 
     // Form selectors
     this.gridForm = '#form-specific_price_rule';
@@ -208,40 +208,36 @@ class CatalogPriceRules extends BOBasePage {
         columnSelector = this.tableColumn(row, 3);
         break;
 
-      case 's!name':
+      case 'cul!name':
         columnSelector = this.tableColumn(row, 4);
         break;
 
-      case 'cul!name':
+      case 'cl!name':
         columnSelector = this.tableColumn(row, 5);
         break;
 
-      case 'cl!name':
+      case 'gl!name':
         columnSelector = this.tableColumn(row, 6);
         break;
 
-      case 'gl!name':
+      case 'from_quantity':
         columnSelector = this.tableColumn(row, 7);
         break;
 
-      case 'from_quantity':
+      case 'a!reduction_type':
         columnSelector = this.tableColumn(row, 8);
         break;
 
-      case 'a!reduction_type':
+      case 'reduction':
         columnSelector = this.tableColumn(row, 9);
         break;
 
-      case 'reduction':
+      case 'from':
         columnSelector = this.tableColumn(row, 10);
         break;
 
-      case 'from':
-        columnSelector = this.tableColumn(row, 11);
-        break;
-
       case 'to':
-        columnSelector = this.tableColumn(row, 12);
+        columnSelector = this.tableColumn(row, 11);
         break;
 
       default:
@@ -323,40 +319,36 @@ class CatalogPriceRules extends BOBasePage {
         columnSelector = this.sortColumnDiv(3);
         break;
 
-      case 's!name':
+      case 'cul!name':
         columnSelector = this.sortColumnDiv(4);
         break;
 
-      case 'cul!name':
+      case 'cl!name':
         columnSelector = this.sortColumnDiv(5);
         break;
 
-      case 'cl!name':
+      case 'gl!name':
         columnSelector = this.sortColumnDiv(6);
         break;
 
-      case 'gl!name':
+      case 'from_quantity':
         columnSelector = this.sortColumnDiv(7);
         break;
 
-      case 'from_quantity':
+      case 'a!reduction_type':
         columnSelector = this.sortColumnDiv(8);
         break;
 
-      case 'a!reduction_type':
+      case 'reduction':
         columnSelector = this.sortColumnDiv(9);
         break;
 
-      case 'reduction':
+      case 'from':
         columnSelector = this.sortColumnDiv(10);
         break;
 
-      case 'from':
-        columnSelector = this.sortColumnDiv(11);
-        break;
-
       case 'to':
-        columnSelector = this.sortColumnDiv(12);
+        columnSelector = this.sortColumnDiv(11);
         break;
 
       default:

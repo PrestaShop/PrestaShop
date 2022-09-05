@@ -76,7 +76,7 @@ class CombinationPriceCommandsBuilderTest extends AbstractCombinationCommandBuil
         yield [
             [
                 'price_impact' => [
-                    'unit_price' => 51.00,
+                    'unit_price_tax_excluded' => 51.00,
                     'wholesale_price' => '12.00',
                 ],
             ],
@@ -89,7 +89,7 @@ class CombinationPriceCommandsBuilderTest extends AbstractCombinationCommandBuil
         yield [
             [
                 'price_impact' => [
-                    'ecotax' => 42.00,
+                    'ecotax_tax_excluded' => 42.00,
                     'price_tax_excluded' => '49.00',
                 ],
             ],

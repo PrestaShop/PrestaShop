@@ -27,62 +27,13 @@
 if (!defined('_PS_ADMIN_DIR_')) {
     define('_PS_ADMIN_DIR_', __DIR__);
 }
-require_once _PS_ADMIN_DIR_.'/../images.inc.php';
-function bindDatepicker($id, $time)
-{
-    if ($time) {
-        echo '
-		var dateObj = new Date();
-		var hours = dateObj.getHours();
-		var mins = dateObj.getMinutes();
-		var secs = dateObj.getSeconds();
-		if (hours < 10) { hours = "0" + hours; }
-		if (mins < 10) { mins = "0" + mins; }
-		if (secs < 10) { secs = "0" + secs; }
-		var time = " "+hours+":"+mins+":"+secs;';
-    }
-
-    echo '
-	$(function() {
-		$("#'.Tools::htmlentitiesUTF8($id).'").datepicker({
-			prevText:"",
-			nextText:"",
-			dateFormat:"yy-mm-dd"'.($time ? '+time' : '').'});
-	});';
-}
-
-/**
- * @deprecated 1.5.3.0 Use Controller::addJqueryUi('ui.datepicker') instead
- * @param int|array $id ID can be a identifier or an array of identifiers
- * @param bool $time
- */
-function includeDatepicker($id, $time = false)
-{
-    Tools::displayAsDeprecated();
-    echo '<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/ui/jquery.ui.core.min.js"></script>';
-    echo '<link type="text/css" rel="stylesheet" href="'.__PS_BASE_URI__.'js/jquery/ui/themes/ui-lightness/jquery.ui.theme.css" />';
-    echo '<link type="text/css" rel="stylesheet" href="'.__PS_BASE_URI__.'js/jquery/ui/themes/ui-lightness/jquery.ui.datepicker.css" />';
-    $iso = Db::getInstance()->getValue('SELECT iso_code FROM '._DB_PREFIX_.'lang WHERE `id_lang` = '.(int)Context::getContext()->language->id);
-    if ($iso != 'en') {
-        echo '<script type="text/javascript" src="'.__PS_BASE_URI__.'js/jquery/ui/i18n/jquery.ui.datepicker-'.Tools::htmlentitiesUTF8($iso).'.js"></script>';
-    }
-    echo '<script type="text/javascript">';
-    if (is_array($id)) {
-        foreach ($id as $id2) {
-            bindDatepicker($id2, $time);
-        }
-    } else {
-        bindDatepicker($id, $time);
-    }
-    echo '</script>';
-}
 
 /**
  * Generate a new settings file, only transmitted parameters are updated
  *
- * @param string $baseUri Base URI
- * @param string $theme Theme name (eg. default)
- * @param array $array_db Parameters in order to connect to database
+ * @param string|null $base_urls Base URI
+ * @param string|null $theme Theme name (eg. default)
+ * @param array|null $array_db Parameters in order to connect to database
  */
 function rewriteSettingsFile($base_urls = null, $theme = null, $array_db = null)
 {
@@ -144,7 +95,8 @@ function displayDate($sql_date, $with_time = false)
  * @param int $id_category Start category
  * @param string $path Current path
  * @param string $highlight String to highlight (in XHTML/CSS)
- * @param string $type Category type (products/cms)
+ * @param string $category_type Category type (products/cms)
+ * @param bool $home
  */
 function getPath($url_base, $id_category, $path = '', $highlight = '', $category_type = 'catalog', $home = false)
 {
@@ -238,25 +190,6 @@ function checkPSVersion()
 }
 
 /**
- * @deprecated 1.5.4.1 Use Translate::getAdminTranslation($string) instead
- * @param string $string
- * @return string
- */
-function translate($string)
-{
-    Tools::displayAsDeprecated();
-
-    global $_LANGADM;
-    if (!is_array($_LANGADM)) {
-        return str_replace('"', '&quot;', $string);
-    }
-    $key = md5(str_replace('\'', '\\\'', $string));
-    $str = (array_key_exists('index'.$key, $_LANGADM)) ? $_LANGADM['index'.$key] : ((array_key_exists('index'.$key, $_LANGADM)) ? $_LANGADM['index'.$key] : $string);
-
-    return str_replace('"', '&quot;', stripslashes($str));
-}
-
-/**
  * Returns a new Tab object
  *
  * @param string $tab class name
@@ -270,16 +203,13 @@ function checkingTab($tab)
     }
     $row = Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('SELECT id_tab, module, class_name FROM `'._DB_PREFIX_.'tab` WHERE LOWER(class_name) = \''.pSQL($tab).'\'');
     if (!$row['id_tab']) {
-        if (isset(AdminTab::$tabParenting[$tab])) {
-            Tools::redirectAdmin('?tab='.AdminTab::$tabParenting[$tab].'&token='.Tools::getAdminTokenLite(AdminTab::$tabParenting[$tab]));
-        }
         echo sprintf(Tools::displayError('Page %s cannot be found.'), $tab);
 
         return false;
     }
 
     // Class file is included in Dispatcher::dispatch() function
-    if (!class_exists($tab, false) || !$row['id_tab']) {
+    if (!class_exists($tab, false)) {
         echo sprintf(Tools::displayError('The class %s cannot be found.'), $tab);
 
         return false;
@@ -493,7 +423,7 @@ function runAdminTab($tab, $ajax_mode = false)
                         }
                     } else {
                         /* Filter memorization */
-                        if (isset($_POST) && !empty($_POST) && isset($admin_obj->table)) {
+                        if (!empty($_POST) && isset($admin_obj->table)) {
                             foreach ($_POST as $key => $value) {
                                 if (is_array($admin_obj->table)) {
                                     foreach ($admin_obj->table as $table) {
@@ -507,7 +437,7 @@ function runAdminTab($tab, $ajax_mode = false)
                             }
                         }
 
-                        if (isset($_GET) && !empty($_GET) && isset($admin_obj->table)) {
+                        if (!empty($_GET) && isset($admin_obj->table)) {
                             foreach ($_GET as $key => $value) {
                                 if (is_array($admin_obj->table)) {
                                     foreach ($admin_obj->table as $table) {
@@ -540,8 +470,7 @@ function runAdminTab($tab, $ajax_mode = false)
                         }
 
                         // we can display the correct url
-                        // die(Tools::jsonEncode(array(Translate::getAdminTranslation('Invalid security token'),$url)));
-                        die(Tools::jsonEncode(Translate::getAdminTranslation('Invalid security token')));
+                        die(json_encode(Translate::getAdminTranslation('Invalid security token')));
                     } else {
                         // If this is an XSS attempt, then we should only display a simple, secure page
                         if (ob_get_level() && ob_get_length() > 0) {

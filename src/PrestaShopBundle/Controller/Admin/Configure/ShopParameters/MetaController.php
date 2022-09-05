@@ -122,7 +122,7 @@ class MetaController extends FrameworkBundleAdminController
             $result = $this->getMetaFormHandler()->handle($metaForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_metas_index');
             }
@@ -160,7 +160,7 @@ class MetaController extends FrameworkBundleAdminController
             $result = $this->getMetaFormHandler()->handleFor($metaId, $metaForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_metas_index');
             }
@@ -196,7 +196,7 @@ class MetaController extends FrameworkBundleAdminController
         } else {
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         }
 
@@ -225,7 +225,7 @@ class MetaController extends FrameworkBundleAdminController
         } else {
             $this->addFlash(
                 'success',
-                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+                $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
             );
         }
 
@@ -362,7 +362,9 @@ class MetaController extends FrameworkBundleAdminController
     /**
      * Generates robots.txt file for Front Office.
      *
-     * @AdminSecurity("is_granted(['create', 'update', 'delete'], request.get('_legacy_controller'))")
+     * @AdminSecurity(
+     *     "is_granted('create', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))"
+     * )
      * @DemoRestricted(redirectRoute="admin_metas_index")
      *
      * @return RedirectResponse
@@ -390,7 +392,7 @@ class MetaController extends FrameworkBundleAdminController
 
         $this->addFlash(
             'success',
-            $this->trans('Successful update.', 'Admin.Notifications.Success')
+            $this->trans('Successful update', 'Admin.Notifications.Success')
         );
 
         return $this->redirectToRoute('admin_metas_index');
@@ -427,8 +429,7 @@ class MetaController extends FrameworkBundleAdminController
         if ($isGridDisplayed) {
             $grid = $seoUrlsGridFactory->getGrid($filters);
 
-            $gridPresenter = $this->get('prestashop.core.grid.presenter.grid_presenter');
-            $presentedGrid = $gridPresenter->present($grid);
+            $presentedGrid = $this->presentGrid($grid);
         }
 
         $tools = $this->get('prestashop.adapter.tools');
@@ -467,7 +468,6 @@ class MetaController extends FrameworkBundleAdminController
                 'isHtaccessFileValid' => $urlFileChecker->isHtaccessFileWritable(),
                 'isRobotsTextFileValid' => $urlFileChecker->isRobotsFileWritable(),
                 'isShopFeatureActive' => $isShopFeatureActive,
-                'isHostMode' => $hostingInformation->isHostMode(),
                 'doesMainShopUrlExist' => $doesMainShopUrlExist,
                 'enableSidebar' => true,
                 'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),

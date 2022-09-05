@@ -90,7 +90,7 @@ class ThemeManager implements AddonManagerInterface
     private $finder;
 
     /**
-     * @var string
+     * @var string|null
      */
     public $sandbox;
 
@@ -244,8 +244,8 @@ class ThemeManager implements AddonManagerInterface
             ->doDisableModules($theme->get('global_settings.modules.to_disable', []))
             ->doEnableModules($theme->getModulesToEnable())
             ->doResetModules($theme->get('global_settings.modules.to_reset', []))
-            ->doApplyImageTypes($theme->get('global_settings.image_types'))
-            ->doHookModules($theme->get('global_settings.hooks.modules_to_hook'));
+            ->doApplyImageTypes($theme->get('global_settings.image_types', []))
+            ->doHookModules($theme->get('global_settings.hooks.modules_to_hook', []));
 
         $theme->onEnable();
 
@@ -312,7 +312,12 @@ class ThemeManager implements AddonManagerInterface
         return $this->themeValidator->getErrors($themeName);
     }
 
-    private function doCreateCustomHooks(array $hooks)
+    /**
+     * @param array $hooks
+     *
+     * @return self
+     */
+    private function doCreateCustomHooks(array $hooks): self
     {
         foreach ($hooks as $hook) {
             $this->hookConfigurator->addHook(
@@ -325,7 +330,12 @@ class ThemeManager implements AddonManagerInterface
         return $this;
     }
 
-    private function doApplyConfiguration(array $configuration)
+    /**
+     * @param array $configuration
+     *
+     * @return self
+     */
+    private function doApplyConfiguration(array $configuration): self
     {
         foreach ($configuration as $key => $value) {
             $this->appConfiguration->set($key, $value);
@@ -334,7 +344,14 @@ class ThemeManager implements AddonManagerInterface
         return $this;
     }
 
-    private function doDisableModules(array $modules)
+    /**
+     * @param array $modules
+     *
+     * @return self
+     *
+     * @throws Exception
+     */
+    private function doDisableModules(array $modules): self
     {
         $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $moduleManager = $moduleManagerBuilder->build();
@@ -351,14 +368,14 @@ class ThemeManager implements AddonManagerInterface
     /**
      * @param array $modules
      *
-     * @return $this
+     * @return self
      *
      * @throws FailedToEnableThemeModuleException
      */
-    private function doEnableModules(array $modules)
+    private function doEnableModules(array $modules): self
     {
         $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
-        $moduleManager = $moduleManagerBuilder->build()->setActionParams(['confirmPrestaTrust' => true]);
+        $moduleManager = $moduleManagerBuilder->build();
 
         foreach ($modules as $key => $moduleName) {
             if (!$moduleManager->isInstalled($moduleName)
@@ -379,9 +396,9 @@ class ThemeManager implements AddonManagerInterface
      *
      * @param string[] $modules
      *
-     * @return $this
+     * @return self
      */
-    private function doResetModules(array $modules)
+    private function doResetModules(array $modules): self
     {
         $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $moduleManager = $moduleManagerBuilder->build();
@@ -395,14 +412,24 @@ class ThemeManager implements AddonManagerInterface
         return $this;
     }
 
-    private function doHookModules(array $hooks)
+    /**
+     * @param array $hooks
+     *
+     * @return self
+     */
+    private function doHookModules(array $hooks): self
     {
         $this->hookConfigurator->setHooksConfiguration($hooks);
 
         return $this;
     }
 
-    private function doApplyImageTypes(array $types)
+    /**
+     * @param array $types
+     *
+     * @return self
+     */
+    private function doApplyImageTypes(array $types): self
     {
         $this->imageTypeRepository->setTypes($types);
 

@@ -22,11 +22,9 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-<div id="catalog-actions" class="col order-first">
-  <div class="row">
-    <div class="col">
+<div id="catalog-actions">
       {% block product_catalog_filter_by_categories %}
-        <div id="product_catalog_category_tree_filter" class="d-inline-block dropdown dropdown-clickable mr-2">
+        <div id="product_catalog_category_tree_filter" class="d-inline-block dropdown dropdown-clickable mr-2 mb-2">
           <button
                   class="btn btn-outline-secondary dropdown-toggle"
                   type="button"
@@ -71,12 +69,21 @@
             </div>
               {{ form_widget(categories) }}
           </div>
+          {% if selected_category is defined and selected_category is not null %}
+            <button
+              class="btn btn-link"
+              type="reset"
+              name="categories_filter_reset"
+              onclick="productCategoryFilterReset($('div#product_catalog_category_tree_filter'));">
+              <i class="material-icons">clear</i> {{ 'Clear filter'|trans({}, 'Admin.Actions') }}
+            </button>
+          {% endif %}
         </div>
       {% endblock %}
 
       {% block product_catalog_filter_bulk_actions %}
         <div
-            class="d-inline-block"
+            class="d-inline-block mb-2"
             bulkurl="{{ path('admin_product_bulk_action', {'action': 'activate_all'}) }}"
             massediturl="{{ path('admin_product_mass_edit_action', {'action': 'sort'}) }}"
             redirecturl="{{ path('admin_product_catalog', {'limit': limit, 'offset': offset, 'orderBy': orderBy, 'sortOrder': sortOrder}) }}"
@@ -126,25 +133,4 @@
           } %}
         </div>
       {% endblock %}
-    </div>
-  </div>
-
-  {% block product_catalog_filter_select_all %}
-  <div class="row">
-    <div class="col">
-      <div class="md-checkbox">
-        <label>
-          <input
-            type="checkbox"
-            id="bulk_action_select_all"
-            onclick="$('#product_catalog_list').find('table td.checkbox-column input:checkbox').prop('checked', $(this).prop('checked')); updateBulkMenu();"
-            value=""
-          >
-          <i class="md-checkbox-control"></i>
-            {{ "Select all"|trans({}, 'Admin.Actions') }}
-        </label>
-      </div>
-    </div>
-  </div>
-  {% endblock %}
 </div>

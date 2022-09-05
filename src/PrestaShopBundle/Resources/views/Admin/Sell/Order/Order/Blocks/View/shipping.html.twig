@@ -26,17 +26,17 @@
 {% if not orderForViewing.virtual %}
 
     {% if orderForViewing.shipping.giftMessage %}
-      <div class="row col-lg-12">
+      <div>
         <label>
           {{ 'Gift message:'|trans({}, 'Admin.Global') }}
         </label>
-        <div id="gift-message" class="col-lg-9">
+        <div id="gift-message">
            {{ orderForViewing.shipping.giftMessage }}
         </div>
       </div>
     {% endif %}
 
-    <table class="table">
+    <table class="table" id="shipping-grid-table">
     <thead>
       <tr>
         <th>{{ 'Date'|trans({}, 'Admin.Global') }}</th>
@@ -51,12 +51,12 @@
     <tbody>
       {% for carrier in orderForViewing.shipping.carriers %}
         <tr>
-          <td>{{ carrier.date|date_format_lite }}</td>
+          <td class="date">{{ carrier.date|date_format_lite }}</td>
           <td>&nbsp;</td>
-          <td>{{ carrier.name }}</td>
-          <td>{{ carrier.weight }}</td>
-          <td>{{ carrier.price }}</td>
-          <td>
+          <td class="carrier-name">{{ carrier.name }}</td>
+          <td class="carrier-weight">{{ carrier.weight }}</td>
+          <td class="carrier-price">{{ carrier.price }}</td>
+          <td class="carrier-tracking-number">
             {% if carrier.trackingNumber %}
               {% if carrier.trackingUrl %}
                 <a href="{{ carrier.trackingUrl }}" target="_blank" rel="noopener noreferrer nofollow">{{ carrier.trackingNumber }}</a>

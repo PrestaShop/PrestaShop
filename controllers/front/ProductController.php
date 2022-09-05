@@ -30,17 +30,18 @@ use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductListingPresenter;
 use PrestaShop\PrestaShop\Adapter\Product\PriceFormatter;
 use PrestaShop\PrestaShop\Adapter\Product\ProductColorsRetriever;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
 use PrestaShop\PrestaShop\Core\Product\ProductExtraContentFinder;
-use PrestaShop\PrestaShop\Core\Product\ProductInterface;
 
 class ProductControllerCore extends ProductPresentingFrontControllerCore
 {
+    /** @var string */
     public $php_self = 'product';
 
     /** @var Product */
     protected $product;
 
-    /** @var Category */
+    /** @var Category|null */
     protected $category;
 
     protected $redirectionExtraExcludedKeys = ['id_product_attribute', 'rewrite'];
@@ -84,6 +85,9 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getCanonicalURL(): string
     {
         $product = $this->context->smarty->getTemplateVars('product');
@@ -145,43 +149,39 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                     ];
                 } else {
                     if (!$this->product->id_type_redirected) {
-                        if (in_array($this->product->redirect_type, [ProductInterface::REDIRECT_TYPE_CATEGORY_MOVED_PERMANENTLY, ProductInterface::REDIRECT_TYPE_CATEGORY_FOUND])) {
+                        if (in_array($this->product->redirect_type, [RedirectType::TYPE_CATEGORY_PERMANENT, RedirectType::TYPE_CATEGORY_TEMPORARY])) {
                             $this->product->id_type_redirected = $this->product->id_category_default;
-                        } else {
-                            $this->product->redirect_type = ProductInterface::REDIRECT_TYPE_NOT_FOUND;
                         }
-                    } elseif (in_array($this->product->redirect_type, [ProductInterface::REDIRECT_TYPE_PRODUCT_MOVED_PERMANENTLY, ProductInterface::REDIRECT_TYPE_PRODUCT_FOUND]) && $this->product->id_type_redirected == $this->product->id) {
-                        $this->product->redirect_type = ProductInterface::REDIRECT_TYPE_NOT_FOUND;
+                    } elseif (in_array($this->product->redirect_type, [RedirectType::TYPE_PRODUCT_PERMANENT, RedirectType::TYPE_PRODUCT_TEMPORARY]) && $this->product->id_type_redirected == $this->product->id) {
+                        $this->product->redirect_type = RedirectType::TYPE_NOT_FOUND;
                     }
-
                     switch ($this->product->redirect_type) {
-                        case ProductInterface::REDIRECT_TYPE_PRODUCT_MOVED_PERMANENTLY:
+                        case RedirectType::TYPE_PRODUCT_PERMANENT:
                             header('HTTP/1.1 301 Moved Permanently');
                             header('Location: ' . $this->context->link->getProductLink($this->product->id_type_redirected));
                             exit;
-
-                        break;
-                        case ProductInterface::REDIRECT_TYPE_PRODUCT_FOUND:
+                        case RedirectType::TYPE_PRODUCT_TEMPORARY:
                             header('HTTP/1.1 302 Moved Temporarily');
                             header('Cache-Control: no-cache');
                             header('Location: ' . $this->context->link->getProductLink($this->product->id_type_redirected));
                             exit;
-
-                        break;
-                        case ProductInterface::REDIRECT_TYPE_CATEGORY_MOVED_PERMANENTLY:
+                        case RedirectType::TYPE_CATEGORY_PERMANENT:
                             header('HTTP/1.1 301 Moved Permanently');
                             header('Location: ' . $this->context->link->getCategoryLink($this->product->id_type_redirected));
                             exit;
-
-                            break;
-                        case ProductInterface::REDIRECT_TYPE_CATEGORY_FOUND:
+                        case RedirectType::TYPE_CATEGORY_TEMPORARY:
                             header('HTTP/1.1 302 Moved Temporarily');
                             header('Cache-Control: no-cache');
                             header('Location: ' . $this->context->link->getCategoryLink($this->product->id_type_redirected));
                             exit;
+                        case RedirectType::TYPE_GONE:
+                            header('HTTP/1.1 410 Gone');
+                            header('Status: 410 Gone');
+                            $this->errors[] = $this->trans('This product is no longer available.', [], 'Shop.Notifications.Error');
+                            $this->setTemplate('errors/410');
 
                             break;
-                        case ProductInterface::REDIRECT_TYPE_NOT_FOUND:
+                        case RedirectType::TYPE_NOT_FOUND:
                         default:
                             header('HTTP/1.1 404 Not Found');
                             header('Status: 404 Not Found');
@@ -237,7 +237,13 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
                 $moduleManager = $moduleManagerBuilder->build();
 
-                if (isset($this->context->cookie, $this->category->id_category) && !($moduleManager->isInstalled('ps_categorytree') && $moduleManager->isEnabled('ps_categorytree'))) {
+                if (
+                    isset($this->context->cookie)
+                    && !(
+                        $moduleManager->isInstalled('ps_categorytree')
+                        && $moduleManager->isEnabled('ps_categorytree')
+                    )
+                ) {
                     $this->context->cookie->last_visited_category = (int) $this->category->id_category;
                 }
             }
@@ -390,7 +396,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
             $productManufacturer = new Manufacturer((int) $this->product->id_manufacturer, $this->context->language->id);
 
             $manufacturerImageUrl = $this->context->link->getManufacturerImageLink($productManufacturer->id);
-            $undefinedImage = $this->context->link->getManufacturerImageLink(null);
+            $undefinedImage = $this->context->link->getManufacturerImageLink(0);
             if ($manufacturerImageUrl === $undefinedImage) {
                 $manufacturerImageUrl = null;
             }
@@ -404,7 +410,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                 'id_customization' => empty($customization_datas) ? null : $customization_datas[0]['id_customization'],
                 'accessories' => $accessories,
                 'product' => $product_for_template,
-                'displayUnitPrice' => (!empty($this->product->unity) && $this->product->unit_price_ratio > 0.000000) ? true : false,
+                'displayUnitPrice' => !empty($this->product->unity) && $this->product->unit_price > 0.000000,
                 'product_manufacturer' => $productManufacturer,
                 'manufacturer_image_url' => $manufacturerImageUrl,
                 'product_brand_url' => $productBrandUrl,
@@ -425,7 +431,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         $this->setQuickViewMode();
 
-        $this->ajaxRender(Tools::jsonEncode([
+        $this->ajaxRender(json_encode([
             'quickview_html' => $this->render(
                 'catalog/_partials/quickview',
                 $productForTemplate instanceof AbstractLazyArray ?
@@ -449,7 +455,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
 
         ob_end_clean();
         header('Content-Type: application/json');
-        $this->ajaxRender(Tools::jsonEncode([
+        $this->ajaxRender(json_encode([
             'product_prices' => $this->render('catalog/_partials/product-prices'),
             'product_cover_thumbnails' => $this->render('catalog/_partials/product-cover-thumbnails'),
             'product_customization' => $this->render(
@@ -493,7 +499,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      *
      * @deprecated This method is deprecated since 1.7.5 and will be dropped in 1.8.0, please use getProductMinimalQuantity instead.
      *
-     * @param $product
+     * @param array $product
      *
      * @return int
      */
@@ -672,9 +678,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
                             if (isset($product_images) && is_array($product_images) && isset($product_images[$id_image])) {
                                 $product_images[$id_image]['cover'] = 1;
                                 $this->context->smarty->assign('mainImage', $product_images[$id_image]);
-                                if (count($product_images)) {
-                                    $this->context->smarty->assign('images', $product_images);
-                                }
+                                $this->context->smarty->assign('images', $product_images);
                             }
 
                             $cover = $current_cover;
@@ -818,7 +822,10 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     protected function assignCategory()
     {
         // Assign category to the template
-        if (($this->category === false || !Validate::isLoadedObject($this->category) || !$this->category->inShop() || !$this->category->isAssociatedToShop()) && Category::inShopStatic($this->product->id_category_default, $this->context->shop)) {
+        if (
+            (empty($this->category) || !Validate::isLoadedObject($this->category) || !$this->category->inShop() || !$this->category->isAssociatedToShop())
+            && Category::inShopStatic($this->product->id_category_default, $this->context->shop)
+        ) {
             $this->category = new Category((int) $this->product->id_category_default, (int) $this->context->language->id);
         }
 
@@ -866,7 +873,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $indexes = array_flip($authorized_file_fields);
         foreach ($_FILES as $field_name => $file) {
             if (in_array($field_name, $authorized_file_fields) && isset($file['tmp_name']) && !empty($file['tmp_name'])) {
-                $file_name = md5(uniqid(mt_rand(0, mt_getrandmax()), true));
+                $file_name = md5(uniqid((string) mt_rand(0, mt_getrandmax()), true));
                 if ($error = ImageManager::validateUpload($file, (int) Configuration::get('PS_PRODUCT_PICTURE_MAX_SIZE'))) {
                     $this->errors[] = $error;
                 }
@@ -978,7 +985,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
      * Return id_product_attribute by id_product_attribute group parameter,
      * or request parameter, or the default attribute as a fallback.
      *
-     * @return int|null
+     * @return int
      *
      * @throws PrestaShopException
      */
@@ -1127,10 +1134,8 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $product_full['quantity_label'] = ($this->product->quantity > 1) ? $this->trans('Items', [], 'Shop.Theme.Catalog') : $this->trans('Item', [], 'Shop.Theme.Catalog');
         $product_full['quantity_discounts'] = $this->quantity_discounts;
 
-        if ($product_full['unit_price_ratio'] > 0) {
-            $unitPrice = ($productSettings->include_taxes) ? $product_full['price'] : $product_full['price_tax_exc'];
-            $product_full['unit_price'] = $unitPrice / $product_full['unit_price_ratio'];
-        }
+        // Adapt unit price to display settings
+        $product_full['unit_price'] = $productSettings->include_taxes ? $product_full['unit_price_tax_included'] : $product_full['unit_price_tax_excluded'];
 
         $group_reduction = GroupReduction::getValueForProduct($this->product->id, (int) Group::getCurrent()->id);
         if ($group_reduction === false) {
@@ -1155,7 +1160,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     }
 
     /**
-     * @param $product
+     * @param array $product
      *
      * @return int
      */
@@ -1207,7 +1212,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     }
 
     /**
-     * @param $combinationId
+     * @param int $combinationId
      *
      * @return ProductController|null
      */
@@ -1215,7 +1220,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     {
         $combinations = $this->product->getAttributesGroups($this->context->language->id, $combinationId);
 
-        if ($combinations === false || !is_array($combinations) || empty($combinations)) {
+        if (!is_array($combinations) || empty($combinations)) {
             return null;
         }
 
@@ -1223,7 +1228,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
     }
 
     /**
-     * @param $product
+     * @param array $product
      *
      * @return int
      */
@@ -1244,6 +1249,7 @@ class ProductControllerCore extends ProductPresentingFrontControllerCore
         $categoryDefault = new Category($this->product->id_category_default, $this->context->language->id);
 
         foreach ($categoryDefault->getAllParents() as $category) {
+            /** @var Category $category */
             if ($category->id_parent != 0 && !$category->is_root_category && $category->active) {
                 $breadcrumb['links'][] = [
                     'title' => $category->name,

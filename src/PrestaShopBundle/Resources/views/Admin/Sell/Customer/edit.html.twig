@@ -24,21 +24,17 @@
  *#}
 
 {% set enableSidebar = true %}
-{% set fullName = '%s. %s'|format(customerInformation.personalInformation.firstName[:1], customerInformation.personalInformation.lastName) %}
+{% set fullName = '%s. %s'|format(customerInformation.firstName.getValue[:1], customerInformation.lastName.getValue) %}
 {% set layoutTitle = 'Editing customer %name%'|trans({'%name%': fullName}, 'Admin.Orderscustomers.Feature') %}
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-  <div class="row justify-content-center">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/form.html.twig' with {'isGuest': customerInformation.personalInformation.guest} %}
-    </div>
-  </div>
+  {% include '@PrestaShop/Admin/Sell/Customer/Blocks/form.html.twig' with {'isGuest': customerInformation.isGuest} %}
 {% endblock %}
 
 {% block javascripts %}
   {{ parent() }}
 
-  {% include '@PrestaShop/Admin/Sell/Customer/Blocks/javascript.html.twig' %}
+  <script src="{{ asset('themes/new-theme/public/customer_form.bundle.js') }}"></script>
 {% endblock %}

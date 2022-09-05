@@ -5,10 +5,11 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const basicHelper = require('@utils/basicHelper');
 const testContext = require('@utils/testContext');
 
 // Import login steps
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import data
 const CategoryPageFaker = require('@data/faker/CMScategory');
@@ -198,7 +199,7 @@ describe('BO - Design - Pages : Pagination and sort categories table', async () 
           sortedTable = await sortedTable.map(text => parseFloat(text));
         }
 
-        const expectedResult = await pagesPage.sortArray(nonSortedTable, test.args.isFloat);
+        const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
 
         if (test.args.sortDirection === 'asc') {
           await expect(sortedTable).to.deep.equal(expectedResult);

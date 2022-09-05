@@ -4,7 +4,10 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const testContext = require('@utils/testContext');
+
+// Import login steps
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -13,9 +16,6 @@ const addContactPage = require('@pages/BO/shopParameters/contact/add');
 
 // Import data
 const ContactFaker = require('@data/faker/contact');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_contact_CRUDContact';
 
@@ -28,7 +28,7 @@ const createContactData = new ContactFaker();
 const editContactData = new ContactFaker({saveMessage: false});
 
 // Create, Update and Delete contact in BO
-describe('Create, Update and Delete contact in BO', async () => {
+describe('BO - Shop Parameters - Contact : Create, Update and Delete contact in BO', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -43,7 +43,7 @@ describe('Create, Update and Delete contact in BO', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Shop parameters>Contact\' page', async function () {
+  it('should go to \'Shop parameters > Contact\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToContactsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -106,11 +106,7 @@ describe('Create, Update and Delete contact in BO', async () => {
 
       await contactsPage.resetFilter(page);
 
-      await contactsPage.filterContacts(
-        page,
-        'email',
-        createContactData.email,
-      );
+      await contactsPage.filterContacts(page, 'email', createContactData.email);
 
       const textEmail = await contactsPage.getTextColumnFromTableContacts(page, 1, 'email');
       await expect(textEmail).to.contains(createContactData.email);
@@ -155,11 +151,7 @@ describe('Create, Update and Delete contact in BO', async () => {
 
       await contactsPage.resetFilter(page);
 
-      await contactsPage.filterContacts(
-        page,
-        'email',
-        editContactData.email,
-      );
+      await contactsPage.filterContacts(page, 'email', editContactData.email);
 
       const textEmail = await contactsPage.getTextColumnFromTableContacts(page, 1, 'email');
       await expect(textEmail).to.contains(editContactData.email);

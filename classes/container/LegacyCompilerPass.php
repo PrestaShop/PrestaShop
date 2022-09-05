@@ -24,9 +24,12 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 use PrestaShop\PrestaShop\Adapter\Configuration;
+use PrestaShopBundle\DependencyInjection\CacheAdapterFactory;
+use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Reference;
 
 class LegacyCompilerPass implements CompilerPassInterface
 {
@@ -43,6 +46,9 @@ class LegacyCompilerPass implements CompilerPassInterface
             'db' => [Db::class, 'getInstance'],
         ], $container);
 
+        $cacheDriver = $container->getParameter('cache.driver');
+        $this->buildCacheDefinition($cacheDriver, $container);
+
         $this->buildSyntheticDefinitions(['shop' => Shop::class, 'employee' => Employee::class], $container);
     }
 
@@ -55,15 +61,32 @@ class LegacyCompilerPass implements CompilerPassInterface
             } else {
                 $definition = new Definition($class);
             }
+            $definition->setPublic(true);
             $container->setDefinition($key, $definition);
         }
+    }
+
+    private function buildCacheDefinition(string $cacheDriver, ContainerBuilder $container): void
+    {
+        $container->setDefinition(CacheAdapterFactory::class, new Definition(CacheAdapterFactory::class));
+        $definition = new Definition(AdapterInterface::class);
+        $definition
+            ->setPublic(true)
+            ->setFactory([new Reference(CacheAdapterFactory::class), 'getCacheAdapter'])
+            ->setArguments([$cacheDriver])
+        ;
+
+        $container->setDefinition($cacheDriver, $definition);
     }
 
     private function buildSyntheticDefinitions(array $keys, ContainerBuilder $container): void
     {
         foreach ($keys as $key => $class) {
             $definition = new Definition($class);
-            $definition->setSynthetic(true);
+            $definition
+                ->setSynthetic(true)
+                ->setPublic(true)
+            ;
             $container->setDefinition($key, $definition);
         }
     }

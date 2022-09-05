@@ -4,7 +4,10 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const testContext = require('@utils/testContext');
+
+// Import login steps
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import data
 const EmployeeFaker = require('@data/faker/employee');
@@ -14,9 +17,6 @@ const {DefaultEmployee} = require('@data/demo/employees');
 const dashboardPage = require('@pages/BO/dashboard/index');
 const employeesPage = require('@pages/BO/advancedParameters/team/index');
 const addEmployeePage = require('@pages/BO/advancedParameters/team/add');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_advancedParams_team_employees_filterAndQuickEditEmployees';
 
@@ -31,8 +31,8 @@ const createEmployeeData = new EmployeeFaker({
   active: false,
 });
 
-// Filter And Quick Edit Employees in BO
-describe('Filter And Quick Edit Employees', async () => {
+// Filter and quick edit Employees in BO
+describe('BO - Advanced Parameters - Team : Filter and quick edit Employees', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -47,7 +47,7 @@ describe('Filter And Quick Edit Employees', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to "Advanced parameters>Team" page', async function () {
+  it('should go to \'Advanced Parameters > Team\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAdvancedParamsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -170,7 +170,7 @@ describe('Filter And Quick Edit Employees', async () => {
     });
 
     // 2 : Editing Employees from grid table
-    describe('Quick Edit Employees', async () => {
+    describe('Quick edit Employees', async () => {
       it('should filter by Email address', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterForQuickEdit', baseContext);
 
@@ -221,12 +221,7 @@ describe('Filter And Quick Edit Employees', async () => {
       it('should filter list by email', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterForDelete', baseContext);
 
-        await employeesPage.filterEmployees(
-          page,
-          'input',
-          'email',
-          createEmployeeData.email,
-        );
+        await employeesPage.filterEmployees(page, 'input', 'email', createEmployeeData.email);
 
         const textEmail = await employeesPage.getTextColumnFromTable(page, 1, 'email');
         await expect(textEmail).to.contains(createEmployeeData.email);

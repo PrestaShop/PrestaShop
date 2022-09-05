@@ -25,7 +25,9 @@
  */
 class StatisticsControllerCore extends FrontController
 {
+    /** @var bool */
     public $display_header = false;
+    /** @var bool */
     public $display_footer = false;
 
     protected $param_token;

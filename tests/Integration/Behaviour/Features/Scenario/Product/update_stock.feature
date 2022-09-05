@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-stock
-@reset-database-before-feature
+@restore-products-before-feature
+@restore-languages-after-feature
 @clear-cache-before-feature
 @reboot-kernel-before-feature
 @update-stock
@@ -19,28 +20,28 @@ Feature: Update product stock from Back Office (BO)
       | name[en-US] | Presta camera |
       | type        | standard      |
     Then product "product1" should have following stock information:
-      | pack_stock_type               | default |
-      | out_of_stock_type             | default |
-      | quantity                      | 0       |
-      | minimal_quantity              | 1       |
-      | location                      |         |
-      | low_stock_threshold           | 0       |
-      | low_stock_alert               | false   |
-      | available_date                |         |
+      | pack_stock_type     | default |
+      | out_of_stock_type   | default |
+      | quantity            | 0       |
+      | minimal_quantity    | 1       |
+      | location            |         |
+      | low_stock_threshold | 0       |
+      | low_stock_alert     | false   |
+      | available_date      |         |
 
   Scenario: I check default stock values for virtual product
     When I add product "product1" with following information:
       | name[en-US] | Presta camera |
       | type        | virtual       |
     Then product "product1" should have following stock information:
-      | pack_stock_type               | default   |
-      | out_of_stock_type             | available |
-      | quantity                      | 0         |
-      | minimal_quantity              | 1         |
-      | location                      |           |
-      | low_stock_threshold           | 0         |
-      | low_stock_alert               | false     |
-      | available_date                |           |
+      | pack_stock_type     | default   |
+      | out_of_stock_type   | available |
+      | quantity            | 0         |
+      | minimal_quantity    | 1         |
+      | location            |           |
+      | low_stock_threshold | 0         |
+      | low_stock_alert     | false     |
+      | available_date      |           |
 
   Scenario: I update product pack stock type
     Given I add product "productPack1" with following information:
@@ -55,9 +56,9 @@ Feature: Update product stock from Back Office (BO)
       | product  | quantity |
       | product2 | 5        |
     Then product "productPack1" type should be pack
-    And pack "productPack1" should contain products with following quantities:
-      | product  | quantity |
-      | product2 | 5        |
+    And pack "productPack1" should contain products with following details:
+      | product  | combination | quantity | name             | image url                                              |
+      | product2 |             | 5        | shady sunglasses | http://myshop.com/img/p/{no_picture}-small_default.jpg |
     And product "productPack1" should have following stock information:
       | pack_stock_type | default |
     When I update product "productPack1" stock with following information:
@@ -113,15 +114,33 @@ Feature: Update product stock from Back Office (BO)
       | type        | standard      |
     And product "product1" should have following stock information:
       | quantity | 0 |
+    And product "product1" should have no stock movements
     When I update product "product1" stock with following information:
+      | delta_quantity | 51 |
+    And product "product1" should have following stock information:
       | quantity | 51 |
-    Then product "product1" should have following stock information:
-      | quantity | 51 |
+    And product "product1" last employees stock movements should be:
+      | first_name | last_name | delta_quantity |
+      | Puff       | Daddy     | 51             |
     And product "product1" last stock movement increased by 51
     When I update product "product1" stock with following information:
+      | delta_quantity | -9 |
+    And product "product1" should have following stock information:
       | quantity | 42 |
+    And product "product1" last employees stock movements should be:
+      | first_name | last_name | delta_quantity |
+      | Puff       | Daddy     | -9             |
+      | Puff       | Daddy     | 51             |
+    And product "product1" last stock movement decreased by 9
+#   Following assert makes sure that 0 delta quantity is valid input for command but is skipped and stock does not move
+    When I update product "product1" stock with following information:
+      | delta_quantity | 0 |
     Then product "product1" should have following stock information:
       | quantity | 42 |
+    And product "product1" last employees stock movements should be:
+      | first_name | last_name | delta_quantity |
+      | Puff       | Daddy     | -9             |
+      | Puff       | Daddy     | 51             |
     And product "product1" last stock movement decreased by 9
 
   Scenario: I update product simple stock fields

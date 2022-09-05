@@ -51,8 +51,10 @@ final class LinkColumn extends AbstractColumn
             ->setDefaults([
                 'sortable' => true,
                 'icon' => null,
+                'route_fragment' => null,
                 'button_template' => false,
                 'color_template' => 'primary',
+                'color_template_field' => null,
                 'clickable' => false,
             ])
             ->setRequired([
@@ -68,8 +70,10 @@ final class LinkColumn extends AbstractColumn
             ->setAllowedTypes('field', ['string', 'null'])
             ->setAllowedTypes('icon', ['string', 'null'])
             ->setAllowedTypes('target', ['string', 'null'])
+            ->setAllowedTypes('color_template_field', ['string', 'null'])
             ->setAllowedTypes('sortable', 'bool')
             ->setAllowedTypes('route', 'string')
+            ->setAllowedTypes('route_fragment', ['string', 'null'])
             ->setAllowedTypes('route_param_name', 'string')
             ->setAllowedTypes('route_param_field', 'string')
             ->setAllowedTypes('clickable', 'bool')

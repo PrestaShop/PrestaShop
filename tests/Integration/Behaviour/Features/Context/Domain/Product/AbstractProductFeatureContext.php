@@ -28,13 +28,16 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
+use Configuration;
 use DateTime;
 use DateTimeInterface;
+use Language;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
@@ -60,13 +63,51 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
         // Get image reference which is integrated in image url
         preg_match('_\{(.+)\}_', $imageUrl, $matches);
         $imageReference = $matches[1];
-        $imageId = $this->getSharedStorage()->get($imageReference);
+
+        if ('no_picture' === $imageReference) {
+            $defaultIso = Language::getIsoById((int) Configuration::get('PS_LANG_DEFAULT'));
+            $realImageUrl = str_replace(
+                '{' . $imageReference . '}',
+                $defaultIso . '-default',
+                $imageUrl
+            );
+        } else {
+            // Now rebuild the image folder with image id appended
+            $imageId = $this->getSharedStorage()->get($imageReference);
+            $imageFolder = implode('/', str_split((string) $imageId)) . '/' . $imageId;
+            $realImageUrl = str_replace(
+                '{' . $imageReference . '}',
+                $imageFolder,
+                $imageUrl
+            );
+        }
+
+        return $realImageUrl;
+    }
+
+    /**
+     * Transform url from behat test into a proper one, expected value looks like this:
+     *   http://myshop.com/img/c/{men}.jpg
+     *
+     * Where men is the reference to the category id in the shared storage, it allows to get the category
+     * id and correctly rebuild the url into something like this:
+     *  http://myshop.com/img/c/4.jpg
+     *
+     * @param string $imageUrl
+     *
+     * @return string
+     */
+    protected function getRealCategoryImageUrl(string $imageUrl): string
+    {
+        // Get image reference which is integrated in image url
+        preg_match('_\{(.+)\}_', $imageUrl, $matches);
+        $categoryReference = $matches[1];
 
         // Now rebuild the image folder with image id appended
-        $imageFolder = implode('/', str_split((string) $imageId)) . '/' . $imageId;
+        $categoryId = $this->getSharedStorage()->get($categoryReference);
         $realImageUrl = str_replace(
-            '{' . $imageReference . '}',
-            $imageFolder,
+            '{' . $categoryReference . '}',
+            (string) $categoryId,
             $imageUrl
         );
 
@@ -75,15 +116,23 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
 
     /**
      * @param string $reference
+     * @param int|null $shopId
      *
      * @return ProductForEditing
      */
-    protected function getProductForEditing(string $reference): ProductForEditing
+    protected function getProductForEditing(string $reference, ?int $shopId = null): ProductForEditing
     {
+        if (null === $shopId) {
+            $shopConstraint = ShopConstraint::shop($this->getDefaultShopId());
+        } else {
+            $shopConstraint = ShopConstraint::shop($shopId);
+        }
+
         $productId = $this->getSharedStorage()->get($reference);
 
         return $this->getQueryBus()->handle(new GetProductForEditing(
-            $productId
+            $productId,
+            $shopConstraint
         ));
     }
 
@@ -103,8 +152,9 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
      * @param ProductForEditing $productForEditing
      * @param array $data
      * @param string $propertyName
+     * @param string $extraMessage
      */
-    protected function assertBoolProperty(ProductForEditing $productForEditing, array &$data, string $propertyName): void
+    protected function assertBoolProperty(ProductForEditing $productForEditing, array &$data, string $propertyName, string $extraMessage = ''): void
     {
         if (isset($data[$propertyName])) {
             $expectedValue = PrimitiveUtils::castStringBooleanIntoBoolean($data[$propertyName]);
@@ -115,7 +165,7 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
             Assert::assertSame(
                 $expectedValue,
                 $actualValue,
-                sprintf('Expected %s "%s". Got "%s".', $propertyName, $expectedValue, $actualValue)
+                sprintf('Expected %s "%s". Got "%s"%s', $propertyName, $expectedValue, $actualValue, $extraMessage)
             );
 
             // Unset the checked field from array so we can validate they havel all been asserted
@@ -127,8 +177,9 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
      * @param ProductForEditing $productForEditing
      * @param array $data
      * @param string $propertyName
+     * @param string $extraMessage
      */
-    protected function assertStringProperty(ProductForEditing $productForEditing, array &$data, string $propertyName): void
+    protected function assertStringProperty(ProductForEditing $productForEditing, array &$data, string $propertyName, string $extraMessage = ''): void
     {
         if (isset($data[$propertyName])) {
             $expectedValue = $data[$propertyName];
@@ -139,7 +190,7 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
             Assert::assertSame(
                 $expectedValue,
                 $actualValue,
-                sprintf('Expected %s "%s". Got "%s".', $propertyName, $expectedValue, $actualValue)
+                sprintf('Expected %s "%s". Got "%s"%s', $propertyName, $expectedValue, $actualValue, $extraMessage)
             );
 
             // Unset the checked field from array so we can validate they havel all been asserted
@@ -151,8 +202,9 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
      * @param ProductForEditing $productForEditing
      * @param array $data
      * @param string $propertyName
+     * @param string $extraMessage
      */
-    protected function assertIntegerProperty(ProductForEditing $productForEditing, array &$data, string $propertyName): void
+    protected function assertIntegerProperty(ProductForEditing $productForEditing, array &$data, string $propertyName, string $extraMessage = ''): void
     {
         if (isset($data[$propertyName])) {
             $expectedValue = (int) $data[$propertyName];
@@ -163,7 +215,7 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
             Assert::assertSame(
                 $expectedValue,
                 $actualValue,
-                sprintf('Expected %s "%s". Got "%s".', $propertyName, $expectedValue, $actualValue)
+                sprintf('Expected %s "%s". Got "%s"%s', $propertyName, $expectedValue, $actualValue, $extraMessage)
             );
 
             // Unset the checked field from array so we can validate they havel all been asserted
@@ -175,8 +227,9 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
      * @param ProductForEditing $productForEditing
      * @param array $data
      * @param string $propertyName
+     * @param string $extraMessage
      */
-    protected function assertDateTimeProperty(ProductForEditing $productForEditing, array &$data, string $propertyName): void
+    protected function assertDateTimeProperty(ProductForEditing $productForEditing, array &$data, string $propertyName, string $extraMessage = ''): void
     {
         if (!isset($data[$propertyName])) {
             return;
@@ -188,7 +241,7 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
             Assert::assertEquals(
                 null,
                 $actualValue,
-                sprintf('Unexpected available_date. Expected NULL, got "%s"', var_export($actualValue, true))
+                sprintf('Unexpected available_date. Expected NULL, got "%s"%s', var_export($actualValue, true), $extraMessage)
             );
         } else {
             $expectedDateTime = new DateTime($data[$propertyName]);
@@ -201,7 +254,7 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
             Assert::assertSame(
                 $formattedExpectedDate,
                 $formattedActualDate,
-                sprintf('Expected %s "%s". Got "%s".', $propertyName, $formattedExpectedDate, $formattedActualDate)
+                sprintf('Expected %s "%s". Got "%s"%s', $propertyName, $formattedExpectedDate, $formattedActualDate, $extraMessage)
             );
         }
 
@@ -224,7 +277,7 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
             'description' => 'basicInformation.localizedDescriptions',
             'description_short' => 'basicInformation.localizedShortDescriptions',
             'tags' => 'basicInformation.localizedTags',
-            'active' => 'options.active',
+            'active' => 'active',
             'visibility' => 'options.visibility',
             'available_for_order' => 'options.availableForOrder',
             'online_only' => 'options.onlineOnly',
@@ -257,5 +310,13 @@ abstract class AbstractProductFeatureContext extends AbstractDomainFeatureContex
         $propertyAccessor = PropertyAccess::createPropertyAccessor();
 
         return $propertyAccessor->getValue($productForEditing, $pathsByNames[$propertyName]);
+    }
+
+    /**
+     * @return int
+     */
+    protected function getDefaultShopId(): int
+    {
+        return (int) Configuration::get('PS_SHOP_DEFAULT');
     }
 }

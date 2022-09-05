@@ -28,15 +28,17 @@ namespace Tests\Integration\Behaviour\Features\Context\Configuration;
 
 use Behat\Behat\Context\Context as BehatContext;
 use Configuration;
+use Tests\Resources\DatabaseDump;
 
 abstract class AbstractConfigurationFeatureContext implements BehatContext
 {
-    protected $previousConfiguration = [];
+    protected $configurationModified = false;
 
     protected function setConfiguration($index, $value)
     {
-        $this->previousConfiguration[$index] = Configuration::get($index);
-        Configuration::set($index, $value);
+        $this->configurationModified = true;
+        Configuration::updateGlobalValue($index, $value);
+        Configuration::resetStaticCache();
     }
 
     /**
@@ -46,10 +48,10 @@ abstract class AbstractConfigurationFeatureContext implements BehatContext
      */
     public function restoreConfigurationValues()
     {
-        // delete products
-        foreach ($this->previousConfiguration as $index => $value) {
-            Configuration::set($index, $value);
+        if ($this->configurationModified) {
+            DatabaseDump::restoreTables(['configuration', 'configuration_lang']);
+            Configuration::resetStaticCache();
         }
-        $this->previousConfiguration = [];
+        $this->configurationModified = false;
     }
 }

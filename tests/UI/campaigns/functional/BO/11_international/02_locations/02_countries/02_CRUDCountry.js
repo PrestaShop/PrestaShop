@@ -2,7 +2,7 @@ require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -15,6 +15,7 @@ const foHomePage = require('@pages/FO/home');
 const foLoginPage = require('@pages/FO/login');
 const foMyAccountPage = require('@pages/FO/myAccount');
 const foAddressesPage = require('@pages/FO/myAccount/addresses');
+const foNewAddressesPage = require('@pages/FO/myAccount/addAddress');
 
 // Import data
 const CountryFaker = require('@data/faker/country');
@@ -150,6 +151,7 @@ describe('BO - International - Countries : CRUD country', async () => {
     it('should go to addresses page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage_1', baseContext);
 
+      await foHomePage.goToMyAccountPage(page);
       await foMyAccountPage.goToAddressesPage(page);
 
       const pageTitle = await foAddressesPage.getPageTitle(page);
@@ -161,8 +163,8 @@ describe('BO - International - Countries : CRUD country', async () => {
 
       await foAddressesPage.openNewAddressForm(page);
 
-      const isCountryExist = await foAddressesPage.isCountryExist(page, createCountryData.name);
-      await expect(isCountryExist, 'Country does not exist').to.be.true;
+      const countryExist = await foNewAddressesPage.countryExist(page, createCountryData.name);
+      await expect(countryExist, 'Country does not exist').to.be.true;
     });
 
     it('should sign out from FO', async function () {
@@ -248,6 +250,7 @@ describe('BO - International - Countries : CRUD country', async () => {
     it('should go to addresses page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage_2', baseContext);
 
+      await foHomePage.goToMyAccountPage(page);
       await foMyAccountPage.goToAddressesPage(page);
 
       const pageTitle = await foAddressesPage.getPageTitle(page);
@@ -259,8 +262,8 @@ describe('BO - International - Countries : CRUD country', async () => {
 
       await foAddressesPage.openNewAddressForm(page);
 
-      const isCountryExist = await foAddressesPage.isCountryExist(page, editCountryData.name);
-      await expect(isCountryExist, 'Country exist').to.be.false;
+      const countryExist = await foNewAddressesPage.countryExist(page, editCountryData.name);
+      await expect(countryExist, 'Country exist').to.be.false;
     });
 
     it('should go back to BO', async function () {

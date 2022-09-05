@@ -40,6 +40,10 @@ class OrderDetails extends FOBasePage {
     this.productIdSelect = '[name=id_product]';
     this.messageTextarea = '[name=msgText]';
     this.submitMessageButton = '[name=submitMessage]';
+
+    // Order addresses block
+    this.deliveryAddressBox = '#delivery-address';
+    this.invoiceAddressBox = '#invoice-address';
   }
 
   /*
@@ -49,7 +53,7 @@ class OrderDetails extends FOBasePage {
   /**
    * Is orderReturn form visible
    * @param page {Page} Browser tab
-   * @returns {boolean}
+   * @returns {Promise<boolean>}
    */
   isOrderReturnFormVisible(page) {
     return this.elementVisible(page, this.orderReturnForm, 1000);
@@ -62,7 +66,7 @@ class OrderDetails extends FOBasePage {
    * @returns {Promise<void>}
    */
   async requestMerchandiseReturn(page, messageText) {
-    await page.check(`${this.tableBodyColumn(1, 1)} input`);
+    await this.setChecked(page, `${this.tableBodyColumn(1, 1)} input`);
     await this.setValue(page, this.returnTextarea, messageText);
     await this.clickAndWaitForNavigation(page, this.requestReturnButton);
   }
@@ -109,6 +113,24 @@ class OrderDetails extends FOBasePage {
    */
   async clickOnReorderLink(page) {
     await this.clickAndWaitForNavigation(page, this.reorderLink);
+  }
+
+  /**
+   * Get delivery address
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getDeliveryAddress(page) {
+    return this.getTextContent(page, this.deliveryAddressBox);
+  }
+
+  /**
+   * Get Invoice address
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getInvoiceAddress(page) {
+    return this.getTextContent(page, this.invoiceAddressBox);
   }
 }
 

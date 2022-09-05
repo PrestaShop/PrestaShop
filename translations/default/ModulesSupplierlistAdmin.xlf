@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_supplierlist/ps_supplierlist.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a2d2d31f18e471c272f14c46cee789cd">
+        <source>Supplier list</source>
+        <target>Supplier list</target>
+        <note>Line: 54</note>
+      </trans-unit>
+      <trans-unit id="8a6b2ba351be03fc5cd039e39985733b">
+        <source>Display your suppliers on your catalog and allow visitors to filter their search by supplier.</source>
+        <target>Display your suppliers on your catalog and allow visitors to filter their search by supplier.</target>
+        <note>Line: 59</note>
+      </trans-unit>
+      <trans-unit id="85ab0c0d250e58397e95c96277a3f8e3">
+        <source>Invalid number of elements.</source>
+        <target>Invalid number of elements.</target>
+        <note>Line: 122</note>
+      </trans-unit>
+      <trans-unit id="914b0cd4e4aa7cba84a3fd47b880fd2a">
+        <source>Please activate at least one type of list.</source>
+        <target>Please activate at least one type of list.</target>
+        <note>Line: 128</note>
+      </trans-unit>
+      <trans-unit id="afabc99b211a08e3b5fd912cc3fdfc17">
+        <source>Type of display</source>
+        <target>Type of display</target>
+        <note>Line: 179</note>
+      </trans-unit>
+      <trans-unit id="bfdff752293014f11f17122c92909ad5">
+        <source>Use a plain-text list</source>
+        <target>Use a plain-text list</target>
+        <note>Line: 186</note>
+      </trans-unit>
+      <trans-unit id="b0fa976774d2acf72f9c62e9ab73de38">
+        <source>Use a drop-down list</source>
+        <target>Use a drop-down list</target>
+        <note>Line: 190</note>
+      </trans-unit>
+      <trans-unit id="2eef734f174a02ae3d7aaafefeeedb42">
+        <source>Number of elements to display</source>
+        <target>Number of elements to display</target>
+        <note>Line: 199</note>
+      </trans-unit>
+      <trans-unit id="9b52fcf71a5cc28e580f9f8b247ee912">
+        <source>Only apply in plain-text mode</source>
+        <target>Only apply in plain-text mode</target>
+        <note>Line: 200</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

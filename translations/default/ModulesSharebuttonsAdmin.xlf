@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_sharebuttons/ps_sharebuttons.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d3c92a24ab45afe985ee34e758787dd3">
+        <source>Social media share buttons</source>
+        <target>Social media share buttons</target>
+        <note>Line: 57</note>
+      </trans-unit>
+      <trans-unit id="78a8ef03639502fd92f7fc66ef3e4d30">
+        <source>Instagram, YouTube, gather your community with social media sharing buttons on product pages.</source>
+        <target>Instagram, YouTube, gather your community with social media sharing buttons on product pages.</target>
+        <note>Line: 58</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

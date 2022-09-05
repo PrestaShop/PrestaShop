@@ -22,7 +22,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-{% set dimension_unit, weight_unit = configuration('PS_DIMENSION_UNIT'), configuration('PS_WEIGHT_UNIT') %}
 
 <div class="col-md-12 pb-1">
   <h2>{{ 'Package dimension'|trans({}, 'Admin.Catalog.Feature') }}</h2>
@@ -35,9 +34,6 @@
     {{ form_errors(form.width) }}
     <div class="input-group">
       {{ form_widget(form.width) }}
-      <div class="input-group-append">
-        <span class="input-group-text">{{ dimension_unit }}</span>
-      </div>
     </div>
   </div>
 </div>
@@ -47,9 +43,6 @@
     {{ form_errors(form.height) }}
     <div class="input-group">
       {{ form_widget(form.height) }}
-      <div class="input-group-append">
-        <span class="input-group-text">{{ dimension_unit }}</span>
-      </div>
     </div>
   </div>
 </div>
@@ -59,9 +52,6 @@
     {{ form_errors(form.depth) }}
     <div class="input-group">
       {{ form_widget(form.depth) }}
-      <div class="input-group-append">
-        <span class="input-group-text">{{ dimension_unit }}</span>
-      </div>
     </div>
   </div>
 </div>
@@ -71,9 +61,6 @@
     {{ form_errors(form.weight) }}
     <div class="input-group">
       {{ form_widget(form.weight) }}
-      <div class="input-group-append">
-        <span class="input-group-text">{{ weight_unit }}</span>
-      </div>
     </div>
   </div>
 </div>
@@ -82,8 +69,10 @@
   <div class="form-group">
     <h2>
       {{ form.additional_delivery_times.vars.label }}
-      <span class="help-box" data-toggle="popover"
-        data-content="{{ "Display delivery time for a product is advised for merchants selling in Europe to comply with the local laws."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+      <span class="help-box"
+            data-toggle="popover"
+            data-content="{{ "Display delivery time for a product is advised for merchants selling in Europe to comply with the local laws."|trans({}, 'Admin.Catalog.Help') }}" >
+      </span>
     </h2>
     <div class="row">
        <div class="col-md-12" {% if block('widget_container_attributes') is defined %} {{ block('widget_container_attributes') }} {% endif %}>
@@ -123,10 +112,12 @@
   <div class="form-group">
     <h2>
       {{ form.additional_shipping_cost.vars.label }}
-      <span class="help-box" data-toggle="popover"
-        data-content="{{ "If a carrier has a tax, it will be added to the shipping fees. Does not apply to free shipping."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+      <span class="help-box"
+            data-toggle="popover"
+            data-content="{{ "If a carrier has a tax, it will be added to the shipping fees. Does not apply to free shipping."|trans({}, 'Admin.Catalog.Help') }}" >
+      </span>
     </h2>
-    <label class="form-control-label">{{ 'Does this product incur additional shipping costs?'|trans({}, 'Admin.Catalog.Feature') }}</label>
+    <label class="form-control-label">{{ 'Additional shipping costs'|trans({}, 'Admin.Catalog.Feature') }}</label>
     <div class="row">
       <div class="col-md-2">
         {{ form_widget(form.additional_shipping_cost) }}
@@ -153,7 +144,7 @@
 <div class="col-md-12">
   <div id="warehouse_combination_collection" class="col-md-12 form-group" data-url="{{ path('admin_warehouse_refresh_product_warehouse_combination_form') }}">
     {% if asm_globally_activated and isNotVirtual and isChecked %}
-      {{ include('@PrestaShop/Admin:Product/ProductPage/Forms/form_warehouse_combination.html.twig', { 'warehouses': warehouses, 'form': form }) }}
+      {{ include('@PrestaShop/Admin/Product/ProductPage/Forms/form_warehouse_combination.html.twig', { 'warehouses': warehouses, 'form': form }) }}
     {% endif %}
   </div>
 </div>

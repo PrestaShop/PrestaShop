@@ -27,15 +27,22 @@
 namespace Tests\Unit\Core\ConstraintValidator;
 
 use Generator;
-use PHPUnit\Framework\MockObject\MockObject;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
-use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
-use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Test\ConstraintValidatorTestCase;
 
 class TypedRegexValidatorTest extends ConstraintValidatorTestCase
 {
+    protected const ALLOW_ACCENTED_CHARS_CONFIG_NAME = 'PS_ALLOW_ACCENTED_CHARS_URL';
+
+    /**
+     * Modify this configuration data before creating new validator when needed to inject different configuration values into validator
+     */
+    protected $configurationData = [
+        self::ALLOW_ACCENTED_CHARS_CONFIG_NAME => '0',
+    ];
+
     public function testItSucceedsForNameTypeWhenValidCharactersGiven(): void
     {
         $value = 'goodname';
@@ -256,7 +263,7 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
 
     public function testItSucceedsForIsbnTypeWhenValidCharactersGiven(): void
     {
-        $this->validator->validate('-1780', new TypedRegex('isbn'));
+        $this->validator->validate('0-8044-2957-X', new TypedRegex('isbn'));
 
         $this->assertNoViolation();
     }
@@ -286,6 +293,98 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
         $this->validator->validate('product1', new TypedRegex('reference'));
 
         $this->assertNoViolation();
+    }
+
+    public function testItSucceedsForUrlTypeWhenValidCharactersGiven(): void
+    {
+        $this->validator->validate('test.com', new TypedRegex(['type' => 'url']));
+
+        $this->assertNoViolation();
+    }
+
+    /**
+     * @dataProvider getInvalidCharactersForUrl
+     *
+     * @param string $invalidChar
+     */
+    public function testItFailsForUrlTypeWhenInvalidCharactersGiven(string $invalidChar): void
+    {
+        $this->assertViolationIsRaised(new TypedRegex(['type' => 'url']), $invalidChar);
+    }
+
+    public function testItSucceedsForModuleNameTypeWhenValidCharactersGiven(): void
+    {
+        $this->validator->validate('my-name', new TypedRegex(['type' => 'module_name']));
+
+        $this->assertNoViolation();
+    }
+
+    /**
+     * @dataProvider getInvalidCharactersForModuleName
+     *
+     * @param string $invalidChar
+     */
+    public function testItFailsForModuleNameTypeWhenInvalidCharactersGiven(string $invalidChar): void
+    {
+        $this->assertViolationIsRaised(new TypedRegex(['type' => 'module_name']), $invalidChar);
+    }
+
+    public function testItSucceedsForWebserviceKeyTypeWhenValidCharactersGiven(): void
+    {
+        $this->validator->validate('22XRNQR7X4RLAGCBSSNQIVPXQ271ZIKE', new TypedRegex(['type' => TypedRegex::TYPE_WEBSERVICE_KEY]));
+
+        $this->assertNoViolation();
+    }
+
+    /**
+     * @dataProvider getInvalidCharactersForWebserviceKey
+     *
+     * @param string $invalidChar
+     */
+    public function testItFailsForWebserviceKeyTypeWhenInvalidCharactersGiven(string $invalidChar): void
+    {
+        $this->assertViolationIsRaised(new TypedRegex(['type' => TypedRegex::TYPE_WEBSERVICE_KEY]), $invalidChar);
+    }
+
+    /**
+     * @dataProvider getDataForLinkRewriteTest
+     *
+     * @param string $value
+     *
+     * @return void
+     */
+    public function testLinkRewriteType(string $value, string $allowAccentedChars, bool $expectSuccess): void
+    {
+        $this->configurationData[self::ALLOW_ACCENTED_CHARS_CONFIG_NAME] = $allowAccentedChars;
+        $this->reinitializeValidator([
+            self::ALLOW_ACCENTED_CHARS_CONFIG_NAME => $allowAccentedChars,
+        ]);
+
+        $constraint = new TypedRegex(TypedRegex::TYPE_LINK_REWRITE);
+        $this->validator->validate($value, $constraint);
+
+        if ($expectSuccess) {
+            $this->assertNoViolation();
+        } else {
+            $this->buildViolation($constraint->message)
+                ->setParameter('%s', '"' . $value . '"')
+                ->assertRaised();
+        }
+    }
+
+    /**
+     * @return array[]
+     */
+    public function getDataForLinkRewriteTest(): array
+    {
+        return [
+            ['okay', '0', true],
+            ['Notebook-13', '0', true],
+            ['Notebook_3', '0', true],
+            ['notebook-ė', '0', false],
+            ['notebook-ė', '1', true],
+            ['notebook with spaces', '1', false],
+        ];
     }
 
     /**
@@ -510,38 +609,133 @@ class TypedRegexValidatorTest extends ConstraintValidatorTestCase
     }
 
     /**
+     * @return Generator
+     */
+    public function getInvalidCharactersForUrl(): Generator
+    {
+        yield ['!'];
+        yield ['"'];
+        yield ["'"];
+        yield ['*'];
+        yield ['§'];
+        yield ['{'];
+        yield ['['];
+        yield [']'];
+        yield ['}'];
+        yield ['\\'];
+        yield [';'];
+    }
+
+    /**
+     * @return Generator
+     */
+    public function getInvalidCharactersForModuleName(): Generator
+    {
+        yield ['~'];
+        yield ['ˇ'];
+        yield ['"'];
+        yield ['@'];
+        yield ['#'];
+        yield ['€'];
+        yield ['$'];
+        yield ['£'];
+        yield ['%'];
+        yield ['&'];
+        yield ['§'];
+        yield ['/'];
+        yield ['('];
+        yield [')'];
+        yield ['='];
+        yield ['?'];
+        yield ['`'];
+        yield ['\\'];
+        yield ['}'];
+        yield [']'];
+        yield ['['];
+        yield ['{'];
+        yield ["'"];
+        yield ['*'];
+        yield ['.'];
+        yield [','];
+        yield [':'];
+        yield [';'];
+        yield ['<'];
+        yield ['>'];
+        yield ['|'];
+    }
+
+    /**
+     * @return Generator
+     */
+    public function getInvalidCharactersForWebServiceKey(): Generator
+    {
+        yield ['~'];
+        yield ['ˇ'];
+        yield ['"'];
+        yield ['€'];
+        yield ['$'];
+        yield ['£'];
+        yield ['%'];
+        yield ['&'];
+        yield ['§'];
+        yield ['/'];
+        yield ['('];
+        yield [')'];
+        yield ['='];
+        yield ['`'];
+        yield ['\\'];
+        yield ['\''];
+        yield ['}'];
+        yield [']'];
+        yield ['['];
+        yield ['{'];
+        yield ['*'];
+        yield ['.'];
+        yield [','];
+        yield [':'];
+        yield [';'];
+        yield ['<'];
+        yield ['>'];
+        yield ['|'];
+        yield [' '];
+    }
+
+    /**
      * @return TypedRegexValidator
      */
     protected function createValidator(): TypedRegexValidator
     {
-        return new TypedRegexValidator($this->createCharacterCleanersMock());
+        $configurationMock = $this->createMock(ConfigurationInterface::class);
+        $configurationMock->method('get')
+            ->willReturnMap(
+            [
+                ['PS_ALLOW_ACCENTED_CHARS_URL', $this->configurationData['PS_ALLOW_ACCENTED_CHARS_URL']],
+            ]
+        );
+
+        return new TypedRegexValidator($configurationMock);
     }
 
     /**
-     * @return MockObject|CharacterCleaner
-     */
-    private function createCharacterCleanersMock()
-    {
-        $toolsMock = $this->getMockBuilder(CharacterCleaner::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $toolsMock
-            ->method('cleanNonUnicodeSupport')
-            ->will($this->returnArgument(0));
-
-        return $toolsMock;
-    }
-
-    /**
-     * @param Constraint $constraint
+     * @param TypedRegex $constraint
      * @param string $invalidChar
      */
-    private function assertViolationIsRaised(Constraint $constraint, string $invalidChar): void
+    private function assertViolationIsRaised(TypedRegex $constraint, string $invalidChar): void
     {
         $this->validator->validate($invalidChar, $constraint);
 
         $this->buildViolation($constraint->message)
             ->setParameter('%s', '"' . $invalidChar . '"')
             ->assertRaised();
+    }
+
+    /**
+     * Reinitialize validator when custom configuration data needs to be injected
+     */
+    private function reinitializeValidator(array $configurationData): void
+    {
+        $this->configurationData = $configurationData;
+        $this->validator = $this->createValidator();
+        $this->validator->initialize($this->context);
     }
 }

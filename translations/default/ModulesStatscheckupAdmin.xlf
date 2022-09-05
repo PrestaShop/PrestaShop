@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/statscheckup/statscheckup.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e7a908d79d3758c911692ba791da9c70">
+        <source>Catalog evaluation</source>
+        <target>Catalog evaluation</target>
+        <note>Line: 45</note>
+      </trans-unit>
+      <trans-unit id="80bf50a3c43fa186661f32f53a1b7692">
+        <source>Enrich your stats, give your catalog a quick evaluation to better analyze your activity.</source>
+        <target>Enrich your stats, give your catalog a quick evaluation to better analyze your activity.</target>
+        <note>Line: 46</note>
+      </trans-unit>
+      <trans-unit id="7ff3e75ce6aca348bc513ed3d5882946">
+        <source>Bad</source>
+        <target>Bad</target>
+        <note>Line: 109</note>
+      </trans-unit>
+      <trans-unit id="b1897515d548a960afe49ecf66a29021">
+        <source>Average</source>
+        <target>Average</target>
+        <note>Line: 110</note>
+      </trans-unit>
+      <trans-unit id="0c6ad70beb3a7e76c3fc7adab7c46acc">
+        <source>Good</source>
+        <target>Good</target>
+        <note>Line: 111</note>
+      </trans-unit>
+      <trans-unit id="619a1efbedc7855aa27c0a50579c104e">
+        <source>No product was found.</source>
+        <target>No product was found.</target>
+        <note>Line: 152</note>
+      </trans-unit>
+      <trans-unit id="8bc84316c4078bf66723fd019616d920">
+        <source>Descriptions</source>
+        <target>Descriptions</target>
+        <note>Line: 156</note>
+      </trans-unit>
+      <trans-unit id="5cd1930570823694abdd596f29c8943d">
+        <source>chars (without HTML)</source>
+        <target>chars (without HTML)</target>
+        <note>Line: 156</note>
+      </trans-unit>
+      <trans-unit id="c3917e1f7138a24c6dc954fe81b86679">
+        <source>orders / month</source>
+        <target>orders / month</target>
+        <note>Line: 158</note>
+      </trans-unit>
+      <trans-unit id="691d502cfd0e0626cd3b058e5682ad1c">
+        <source>items</source>
+        <target>items</target>
+        <note>Line: 159</note>
+      </trans-unit>
+      <trans-unit id="dc270bcf468689b19074a5eef7581b52">
+        <source>Not enough</source>
+        <target>Not enough</target>
+        <note>Line: 171</note>
+      </trans-unit>
+      <trans-unit id="f4abc77d498c89880f67331609406774">
+        <source>Alright</source>
+        <target>Alright</target>
+        <note>Line: 172</note>
+      </trans-unit>
+      <trans-unit id="ad647e4ae904c7ed54ee93040d8298c7">
+        <source>Less than</source>
+        <target>Less than</target>
+        <note>Line: 185</note>
+      </trans-unit>
+      <trans-unit id="05824b7be006782aaefd1fdb97c71e06">
+        <source>Greater than</source>
+        <target>Greater than</target>
+        <note>Line: 194</note>
+      </trans-unit>
+      <trans-unit id="01fda57aa6c7e9f07f5aa36b108e95cb">
+        <source>Order by</source>
+        <target>Order by</target>
+        <note>Line: 211</note>
+      </trans-unit>
+      <trans-unit id="3f74e68055b1123e5d7deb32cd8b0b1b">
+        <source>Desc.</source>
+        <target>Desc.</target>
+        <note>Line: 313</note>
+      </trans-unit>
+      <trans-unit id="4cc6684df7b4a92b1dec6fce3264fac8">
+        <source>Global</source>
+        <target>Global</target>
+        <note>Line: 319</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -1,16 +1,18 @@
-.js-mobile-menu {
-  display: none;
-  flex-direction: column;
-  justify-content: center;
-  float: left;
-  padding-top: 0;
-  margin-right: 0.6rem;
-  margin-left: 0.6rem;
-  font-size: 1.8rem;
-  cursor: pointer;
+#header_infos {
+  .js-mobile-menu {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    float: left;
+    padding-top: 0;
+    margin-right: 0.6rem;
+    margin-left: 0.6rem;
+    font-size: 1.8rem;
+    cursor: pointer;
 
-  @include media-breakpoint-down(md) {
-    display: inline-flex;
+    @include media-breakpoint-down(md) {
+      display: inline-flex;
+    }
   }
 }
 
@@ -78,18 +80,28 @@
     .panel-collapse {
       padding-left: 0;
 
-      .link-leveltwo .link {
-        padding-left: 1rem;
+      .link-leveltwo {
+        .link {
+          padding-left: 1rem;
 
-        @include media-breakpoint-down(md) {
-          padding-left: 0.625rem;
+          @include media-breakpoint-down(md) {
+            padding-left: 0.625rem;
+          }
+        }
+
+        &:last-of-type {
+          .link {
+            @include media-breakpoint-down(md) {
+              padding-bottom: 1.5rem;
+            }
+          }
         }
       }
     }
 
     .employee_avatar {
       padding-top: 1rem;
-      padding-left: 1.5rem;
+      padding-left: 1rem;
       text-align: center;
       text-decoration: none;
 
@@ -157,7 +169,7 @@
     .main-menu {
       margin-top: 0.625rem;
 
-      & > li:first-child {
+      > li:first-child {
         padding-bottom: 1rem;
       }
     }
@@ -225,7 +237,7 @@
 }
 
 .main-menu {
-  padding: 0 0 13.313rem;
+  padding: 0 0 8.313rem;
   margin: 0;
 
   &.sidebar-closed {
@@ -255,23 +267,23 @@
     display: block;
 
     #header_logout {
-      margin-top: 1rem;
-      color: #f44336;
+      margin-top: 2rem;
+      color: $gray-dark-logout;
 
       i {
         margin-right: 0.625rem;
-        color: #f44336;
+        line-height: 1.375rem;
+        color: $gray-dark-logout;
       }
     }
 
     &[data-submenu] {
       @include media-breakpoint-down(md) {
         a.link {
-          padding-top: 0.5rem;
-          padding-bottom: 0.5rem;
-          padding-left: 1.5rem;
+          padding-top: 0.535rem;
+          padding-bottom: 0.535rem;
           font-size: 1rem;
-          line-height: inherit;
+          line-height: 1.428rem;
 
           .material-icons {
             font-size: 1.25rem;
@@ -295,7 +307,7 @@
 
     &.link-active {
       > .link {
-        padding-left: 0.638rem;
+        padding-left: 0.688rem;
         border-left: 0.25rem solid #25b9d7;
 
         .material-icons {
@@ -324,7 +336,7 @@
       overflow: hidden;
       font-size: 0.75rem;
       line-height: 1rem;
-      color: $gray-dark-text;
+      color: $gray-dark-link;
       text-decoration: none;
       text-overflow: initial;
       word-break: break-word;
@@ -340,7 +352,7 @@
       .sub-tabs-arrow {
         margin-left: auto;
         line-height: inherit;
-        color: #6c868e;
+        color: #fff;
         vertical-align: middle;
         visibility: hidden;
       }
@@ -349,14 +361,10 @@
     &.ul-open,
     &.link-active,
     &.-hover {
-      & > .link {
+      > .link {
         color: #fff;
-        background: #202226;
+        background: $gray-dark-active-menu;
         transition: background 300ms ease;
-
-        @include media-breakpoint-down(md) {
-          background: $gray-dark-menu;
-        }
       }
 
       &.has_submenu {
@@ -373,19 +381,26 @@
       padding-left: 2.75rem;
       white-space: nowrap;
       list-style: none;
-      background: #202226;
+      background: $gray-dark-active-menu;
 
-      & > li {
+      @include media-breakpoint-down(md) {
+        padding-left: 2.25rem;
+      }
+
+      > li {
         @include media-breakpoint-down(md) {
           a.link {
             padding-top: 0.5rem;
             padding-bottom: 0.5rem;
-            color: #bebebe;
+
+            &:hover {
+              color: #fff;
+            }
           }
         }
 
         &:first-of-type {
-          padding-top: 0.625rem;
+          padding-top: 0.25rem;
 
           @include media-breakpoint-down(md) {
             padding-top: 0;
@@ -405,7 +420,7 @@
     &.ul-open,
     &.link-active {
       .link {
-        background: #202226;
+        background: $gray-dark-active-menu;
       }
     }
 
@@ -431,6 +446,7 @@
       height: initial;
       padding: 0.3125rem 0.3rem 0.3125rem 0;
       line-height: 0.9rem;
+      color: $gray-dark-secondary-link;
 
       @include media-breakpoint-down(md) {
         padding-top: 1.4rem;
@@ -440,41 +456,36 @@
     }
 
     > .link:hover {
-      color: $gray-dark-text-hover;
+      color: $gray-dark-link-hover;
     }
   }
 }
 
 .category-title {
   display: block;
-  padding: 0.875rem 0 0.75rem;
-  margin: 1.813rem 0 0 0.938rem;
+  padding: 0.75rem 0 0.5rem;
+  margin: 0.875rem 0 0 0.938rem;
   font-size: 0.75rem;
   font-weight: 700;
-  border-top: 1px solid #bbcdd2;
+  line-height: 1.125rem;
 
   @include media-breakpoint-down(md) {
-    padding-bottom: 0.25rem;
-    margin-top: 1rem;
+    margin: 0.75rem 0 0 1rem;
     font-size: 1rem;
-    font-weight: 500;
-    line-height: 1.25rem;
-    border-top: none;
   }
 
-  & > .title {
-    color: #fff;
-    background: $gray-dark-menu;
+  > .title {
+    color: $gray-dark-title;
   }
 }
 
 .menu-collapse {
   display: block;
   height: 0.813rem;
-  padding: 0.688rem 0.938rem 1.188rem 0;
+  padding: 0.75rem 0.938rem 1.188rem 0;
   font-size: 2rem;
   line-height: 0.813rem;
-  color: $gray-dark-text;
+  color: $gray-dark-link;
   text-align: right;
   cursor: pointer;
 
@@ -484,7 +495,7 @@
   }
 
   .material-icons {
-    color: #bebebe;
+    color: $gray-dark-link;
 
     &:last-child {
       margin-left: -1.313rem;
@@ -525,8 +536,8 @@
       }
 
       .category-title {
+        padding-top: 0;
         padding-bottom: 0;
-        margin-top: 0.8rem;
       }
 
       .link-levelone {

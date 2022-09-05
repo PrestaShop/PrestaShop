@@ -28,27 +28,45 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
+use Generator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\OptionsCommandsBuilder;
 
 class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTest
 {
     /**
-     * @dataProvider getExpectedCommands
+     * @dataProvider getExpectedCommandsForSingleShop
      *
      * @param array $formData
      * @param array $expectedCommands
      */
-    public function testBuildCommand(array $formData, array $expectedCommands)
+    public function testBuildSingleShopCommand(array $formData, array $expectedCommands): void
     {
-        $builder = new OptionsCommandsBuilder();
-        $builtCommands = $builder->buildCommands($this->getProductId(), $formData);
+        $builder = new OptionsCommandsBuilder(self::MODIFY_ALL_SHOPS_PREFIX);
+        $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 
-    public function getExpectedCommands()
+    /**
+     * @dataProvider getExpectedCommandsForMultiShop
+     *
+     * @param array $formData
+     * @param array $expectedCommands
+     */
+    public function testBuildMultiShopCommand(array $formData, array $expectedCommands): void
+    {
+        $builder = new OptionsCommandsBuilder(self::MODIFY_ALL_SHOPS_PREFIX);
+        $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
+        $this->assertEquals($expectedCommands, $builtCommands);
+    }
+
+    /**
+     * @return Generator
+     */
+    public function getExpectedCommandsForSingleShop(): Generator
     {
         yield [
             [
@@ -57,61 +75,57 @@ class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTes
             [],
         ];
 
-        $command = new UpdateProductOptionsCommand($this->getProductId()->getValue());
+        yield [
+            [
+                'options' => [],
+            ],
+            [],
+        ];
+
         yield [
             [
                 'options' => [
                     'not_handled' => 0,
                 ],
             ],
-            [$command],
+            [],
         ];
 
-        $command = new UpdateProductOptionsCommand($this->getProductId()->getValue());
-        $command->setActive(true);
+        $command = $this->getSingleShopCommand();
+        $command->setManufacturerId(1);
         yield [
             [
-                'not_handled' => 0,
-                'footer' => [
-                    'active' => 1,
+                'description' => [
+                    'manufacturer' => '1',
                 ],
             ],
             [$command],
         ];
 
-        $command = new UpdateProductOptionsCommand($this->getProductId()->getValue());
-        $command->setManufacturerId(1);
-        yield [
-            [
-                'manufacturer' => '1',
-            ],
-            [$command],
-        ];
-
-        $command = new UpdateProductOptionsCommand($this->getProductId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setCondition(ProductCondition::NEW);
         yield [
             [
-                'options' => [
+                'specifications' => [
                     'condition' => 'new',
                 ],
             ],
             [$command],
         ];
 
-        $command = new UpdateProductOptionsCommand($this->getProductId()->getValue());
-        $command->setShowCondition(false);
+        $command = $this->getSingleShopCommand();
+        $command->setShowCondition(true);
         yield [
             [
-                'options' => [
+                'specifications' => [
                     'not_handled' => 0,
-                    'show_condition' => 0,
+                    'show_condition' => 1,
                 ],
             ],
             [$command],
         ];
 
-        $command = new UpdateProductOptionsCommand($this->getProductId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setOnlineOnly(true);
         yield [
             [
@@ -125,7 +139,7 @@ class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTes
             [$command],
         ];
 
-        $command = new UpdateProductOptionsCommand($this->getProductId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setShowPrice(false);
         yield [
             [
@@ -139,7 +153,7 @@ class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTes
             [$command],
         ];
 
-        $command = new UpdateProductOptionsCommand($this->getProductId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setAvailableForOrder(true);
         yield [
             [
@@ -153,7 +167,7 @@ class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTes
             [$command],
         ];
 
-        $command = new UpdateProductOptionsCommand($this->getProductId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setVisibility(ProductVisibility::INVISIBLE);
         yield [
             [
@@ -166,5 +180,121 @@ class ProductOptionsCommandsBuilderTest extends AbstractProductCommandBuilderTes
             ],
             [$command],
         ];
+    }
+
+    /**
+     * @return Generator
+     */
+    public function getExpectedCommandsForMultiShop(): Generator
+    {
+        $command = $this->getAllShopsCommand();
+        $command->setCondition(ProductCondition::NEW);
+        yield [
+            [
+                'specifications' => [
+                    'condition' => 'new',
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'condition' => true,
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getAllShopsCommand();
+        $command->setShowCondition(false);
+        yield [
+            [
+                'specifications' => [
+                    'not_handled' => 0,
+                    'show_condition' => 0,
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'show_condition' => true,
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getAllShopsCommand();
+        $command->setShowPrice(false);
+        yield [
+            [
+                'options' => [
+                    'not_handled' => 0,
+                    'visibility' => [
+                        'show_price' => false,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'show_price' => true,
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getAllShopsCommand();
+        $command->setAvailableForOrder(true);
+        yield [
+            [
+                'options' => [
+                    'visibility' => [
+                        'available_for_order' => '1',
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'available_for_order' => true,
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getAllShopsCommand();
+        $command->setVisibility(ProductVisibility::INVISIBLE);
+        yield [
+            [
+                'options' => [
+                    'visibility' => [
+                        'visibility' => ProductVisibility::INVISIBLE,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'visibility' => true,
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getAllShopsCommand();
+        $command->setOnlineOnly(false);
+        yield [
+            [
+                'options' => [
+                    'visibility' => [
+                        'online_only' => false,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'online_only' => true,
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $singleShopCommand = $this->getSingleShopCommand();
+        $singleShopCommand->setVisibility(ProductVisibility::VISIBLE_EVERYWHERE);
+        $allShopsCommand = $this->getAllShopsCommand();
+        $allShopsCommand->setAvailableForOrder(true);
+        yield [
+            [
+                'options' => [
+                    'not_handled' => 0,
+                    'visibility' => [
+                        'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
+                        'available_for_order' => true,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'available_for_order' => true,
+                    ],
+                ],
+            ],
+            [$singleShopCommand, $allShopsCommand],
+        ];
+    }
+
+    private function getSingleShopCommand(): UpdateProductOptionsCommand
+    {
+        return new UpdateProductOptionsCommand($this->getProductId()->getValue(), $this->getSingleShopConstraint());
+    }
+
+    private function getAllShopsCommand(): UpdateProductOptionsCommand
+    {
+        return new UpdateProductOptionsCommand($this->getProductId()->getValue(), ShopConstraint::allShops());
     }
 }

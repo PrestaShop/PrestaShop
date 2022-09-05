@@ -40,27 +40,20 @@
     </div>
   {% endif %}
 
-  <div class="row justify-content-center">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Employee/Blocks/form.html.twig' with {
+  {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Employee/Blocks/form.html.twig' with {
         employeeForm: employeeForm,
         level: level,
         errorMessage: errorMessage,
         isRestrictedAccess: isRestrictedAccess,
         superAdminProfileId: superAdminProfileId,
-        showAddonsConnectButton: showAddonsConnectButton,
         getTabsUrl: getTabsUrl,
         avatarUrl: editableEmployee.avatarUrl
       } %}
-    </div>
-  </div>
+
 {% endblock %}
 
 {% block javascripts %}
   {{ parent() }}
-
-  {# Password generation plugin #}
-  <script src="{{ asset('themes/default/js/vendor/jquery-passy.js') }}"></script>
 
   <script src="{{ asset('themes/new-theme/public/employee_form.bundle.js') }}"></script>
 {% endblock %}

@@ -29,16 +29,19 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Exception;
+use Doctrine\DBAL\Exception as ExceptionAlias;
+use Doctrine\DBAL\Query\QueryBuilder;
+use ObjectModel;
 use PrestaShop\Decimal\DecimalNumber;
-use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Manufacturer\Repository\ManufacturerRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Validate\ProductValidator;
 use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
+use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\CategoryId;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Manufacturer\Exception\ManufacturerException;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\ManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotAddProductException;
-use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotDuplicateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
@@ -51,8 +54,10 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstr
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
+use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\Exception\TaxRulesGroupException;
 use PrestaShop\PrestaShop\Core\Domain\TaxRulesGroup\ValueObject\TaxRulesGroupId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
 use PrestaShopException;
 use Product;
 
@@ -77,11 +82,6 @@ class ProductRepository extends AbstractObjectModelRepository
     private $productValidator;
 
     /**
-     * @var int
-     */
-    private $defaultCategoryId;
-
-    /**
      * @var TaxRulesGroupRepository
      */
     private $taxRulesGroupRepository;
@@ -95,7 +95,6 @@ class ProductRepository extends AbstractObjectModelRepository
      * @param Connection $connection
      * @param string $dbPrefix
      * @param ProductValidator $productValidator
-     * @param int $defaultCategoryId
      * @param TaxRulesGroupRepository $taxRulesGroupRepository
      * @param ManufacturerRepository $manufacturerRepository
      */
@@ -103,19 +102,21 @@ class ProductRepository extends AbstractObjectModelRepository
         Connection $connection,
         string $dbPrefix,
         ProductValidator $productValidator,
-        int $defaultCategoryId,
         TaxRulesGroupRepository $taxRulesGroupRepository,
         ManufacturerRepository $manufacturerRepository
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
         $this->productValidator = $productValidator;
-        $this->defaultCategoryId = $defaultCategoryId;
         $this->taxRulesGroupRepository = $taxRulesGroupRepository;
         $this->manufacturerRepository = $manufacturerRepository;
     }
 
     /**
+     * @todo: Not sure this should be in the repository as it gives a false feeling the the repository can duplicate a
+     *        product on its own, but you actually need to use the ProductDuplicator service to do it right, this method
+     *        should be removed and the duplicator service should rely on repository to add/update but it is the one that
+     *        must perform the required modifications on the object instance
      * Duplicates product entity without relations
      *
      * @param Product $product
@@ -136,6 +137,34 @@ class ProductRepository extends AbstractObjectModelRepository
         $this->addObjectModel($product, CannotDuplicateProductException::class);
 
         return $product;
+    }
+
+    /**
+     * Gets position product position in category
+     *
+     * @param ProductId $productId
+     * @param CategoryId $categoryId
+     *
+     * @return int|null
+     */
+    public function getPositionInCategory(ProductId $productId, CategoryId $categoryId): ?int
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb->select('position')
+            ->from($this->dbPrefix . 'category_product')
+            ->where('id_product = :productId')
+            ->andWhere('id_category = :categoryId')
+            ->setParameter('productId', $productId->getValue())
+            ->setParameter('categoryId', $categoryId->getValue())
+        ;
+
+        $position = $qb->execute()->fetchOne();
+
+        if (!$position) {
+            return null;
+        }
+
+        return (int) $position;
     }
 
     /**
@@ -168,6 +197,8 @@ class ProductRepository extends AbstractObjectModelRepository
 
     /**
      * @param ProductId $productId
+     *
+     * @throws ProductNotFoundException
      */
     public function assertProductExists(ProductId $productId): void
     {
@@ -198,11 +229,11 @@ class ProductRepository extends AbstractObjectModelRepository
 
         if (!$results || (int) $results['product_count'] !== count($ids)) {
             throw new ProductNotFoundException(
-                    sprintf(
-                        'Some of these products do not exist: %s',
-                        implode(',', $ids)
-                    )
-                );
+                sprintf(
+                    'Some of these products do not exist: %s',
+                    implode(',', $ids)
+                )
+            );
         }
     }
 
@@ -211,10 +242,10 @@ class ProductRepository extends AbstractObjectModelRepository
      * @param LanguageId $languageId
      *
      * @return array<array<string, string>>
-     *                             e.g [
-     *                             ['id_product' => '1', 'name' => 'Product name', 'reference' => 'demo15'],
-     *                             ['id_product' => '2', 'name' => 'Product name2', 'reference' => 'demo16'],
-     *                             ]
+     *                                      e.g [
+     *                                      ['id_product' => '1', 'name' => 'Product name', 'reference' => 'demo15'],
+     *                                      ['id_product' => '2', 'name' => 'Product name2', 'reference' => 'demo16'],
+     *                                      ]
      *
      * @throws CoreException
      */
@@ -251,69 +282,51 @@ class ProductRepository extends AbstractObjectModelRepository
             ProductNotFoundException::class
         );
 
-        try {
-            $product->loadStockData();
-        } catch (PrestaShopException $e) {
-            throw new CoreException(
-                sprintf('Error occurred when trying to load Product stock #%d', $productId->getValue()),
-                0,
-                $e
-            );
-        }
-
-        return $product;
+        return $this->loadProduct($product);
     }
 
     /**
-     * @param array<int, string> $localizedNames
-     * @param string $productType
+     * @param ProductId $productId
      *
-     * @return Product
+     * @return ProductType
      *
-     * @throws CannotAddProductException
+     * @throws ProductNotFoundException
      */
-    public function create(array $localizedNames, string $productType): Product
+    public function getProductType(ProductId $productId): ProductType
     {
-        $product = new Product();
-        $product->active = false;
-        $product->id_category_default = $this->defaultCategoryId;
-        $product->name = $localizedNames;
-        $product->is_virtual = ProductType::TYPE_VIRTUAL === $productType;
-        $product->cache_is_pack = ProductType::TYPE_PACK === $productType;
-        $product->product_type = $productType;
+        $result = $this->connection->createQueryBuilder()
+            ->select('p.product_type')
+            ->from($this->dbPrefix . 'product', 'p')
+            ->where('p.id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+            ->execute()
+            ->fetchAssociative()
+        ;
 
-        $this->productValidator->validateCreation($product);
-        $this->addObjectModel($product, CannotAddProductException::class);
-        $product->addToCategories([$product->id_category_default]);
+        if (empty($result)) {
+            throw new ProductNotFoundException(sprintf(
+                'Cannot find product type for product %d because it does not exist',
+                $productId->getValue()
+            ));
+        }
 
-        return $product;
+        if (!empty($result['product_type'])) {
+            return new ProductType($result['product_type']);
+        }
+
+        // Older products that were created before product page v2, might have no type, so we determine it dynamically
+        return new ProductType($this->get($productId)->getDynamicProductType());
     }
 
     /**
      * @param Product $product
      * @param array $propertiesToUpdate
      * @param int $errorCode
-     *
-     * @throws CoreException
-     * @throws ProductConstraintException
-     * @throws ProductPackConstraintException
-     * @throws ProductStockConstraintException
      */
     public function partialUpdate(Product $product, array $propertiesToUpdate, int $errorCode): void
     {
-        $taxRulesGroupIdIsBeingUpdated = in_array('id_tax_rules_group', $propertiesToUpdate, true);
-        $taxRulesGroupId = (int) $product->id_tax_rules_group;
-        $manufacturerIdIsBeingUpdated = in_array('id_manufacturer', $propertiesToUpdate, true);
-        $manufacturerId = (int) $product->id_manufacturer;
+        $this->validateProduct($product, $propertiesToUpdate);
 
-        if ($taxRulesGroupIdIsBeingUpdated && $taxRulesGroupId !== ProductTaxRulesGroupSettings::NONE_APPLIED) {
-            $this->taxRulesGroupRepository->assertTaxRulesGroupExists(new TaxRulesGroupId($taxRulesGroupId));
-        }
-        if ($manufacturerIdIsBeingUpdated && $manufacturerId !== NoManufacturerId::NO_MANUFACTURER_ID) {
-            $this->manufacturerRepository->assertManufacturerExists(new ManufacturerId($manufacturerId));
-        }
-
-        $this->productValidator->validate($product);
         $this->partiallyUpdateObjectModel(
             $product,
             $propertiesToUpdate,
@@ -333,28 +346,204 @@ class ProductRepository extends AbstractObjectModelRepository
     }
 
     /**
-     * @param array $productIds
+     * @param string $searchPhrase
+     * @param LanguageId $languageId
+     * @param ShopId $shopId
+     * @param int|null $limit
      *
-     * @throws CannotBulkDeleteProductException
+     * @return array<int, array<string, int|string>>
      */
-    public function bulkDelete(array $productIds): void
+    public function searchProducts(string $searchPhrase, LanguageId $languageId, ShopId $shopId, ?int $limit = null): array
     {
-        $failedIds = [];
-        foreach ($productIds as $productId) {
-            try {
-                $this->delete($productId);
-            } catch (CannotDeleteProductException $e) {
-                $failedIds[] = $productId->getValue();
+        $qb = $this->getSearchQueryBuilder(
+            $searchPhrase,
+            $languageId,
+            $shopId,
+            [],
+            $limit);
+        $qb
+            ->addSelect('p.id_product, pl.name, p.reference, i.id_image')
+            ->addGroupBy('p.id_product')
+            ->addOrderBy('pl.name', 'ASC')
+            ->addOrderBy('p.id_product', 'ASC')
+        ;
+
+        return $qb->execute()->fetchAllAssociative();
+    }
+
+    /**
+     * @param string $searchPhrase
+     * @param LanguageId $languageId
+     * @param ShopId $shopId
+     * @param array $filters
+     * @param int|null $limit
+     *
+     * @return array<int, array<string, int|string>>
+     *
+     * @throws Exception
+     * @throws ExceptionAlias
+     */
+    public function searchCombinations(
+        string $searchPhrase,
+        LanguageId $languageId,
+        ShopId $shopId,
+        array $filters = [],
+        ?int $limit = null
+    ): array {
+        $qb = $this->getSearchQueryBuilder(
+            $searchPhrase,
+            $languageId,
+            $shopId,
+            $filters,
+            $limit
+        );
+        $qb
+            ->addSelect('p.id_product, pa.id_product_attribute, pl.name, i.id_image')
+            ->addSelect('p.reference as product_reference')
+            ->addSelect('pa.reference as combination_reference')
+            ->addSelect('ai.id_image as combination_image_id')
+            ->leftJoin('p', $this->dbPrefix . 'product_attribute_image', 'ai', 'ai.id_product_attribute = pa.id_product_attribute')
+            ->addGroupBy('p.id_product, pa.id_product_attribute')
+            ->addOrderBy('pl.name', 'ASC')
+            ->addOrderBy('p.id_product', 'ASC')
+            ->addOrderBy('pa.id_product_attribute', 'ASC')
+        ;
+
+        return $qb->execute()->fetchAllAssociative();
+    }
+
+    /**
+     * @param string $searchPhrase
+     * @param LanguageId $languageId
+     * @param ShopId $shopId
+     * @param array $filters
+     * @param int|null $limit
+     *
+     * @return QueryBuilder
+     */
+    protected function getSearchQueryBuilder(
+        string $searchPhrase,
+        LanguageId $languageId,
+        ShopId $shopId,
+        array $filters = [],
+        ?int $limit = null
+    ): QueryBuilder {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->addSelect('p.id_product, pl.name, p.reference, i.id_image')
+            ->from($this->dbPrefix . 'product', 'p')
+            ->join('p', $this->dbPrefix . 'product_shop', 'ps', 'ps.id_product = p.id_product AND ps.id_shop = :shopId')
+            ->leftJoin('p', $this->dbPrefix . 'product_lang', 'pl', 'pl.id_product = p.id_product AND pl.id_lang = :languageId')
+            ->leftJoin('p', $this->dbPrefix . 'image_shop', 'i', 'i.id_product = p.id_product AND i.id_shop = :shopId AND i.cover = 1')
+            ->leftJoin('p', $this->dbPrefix . 'product_supplier', 'psu', 'psu.id_product = p.id_product')
+            ->leftJoin('p', $this->dbPrefix . 'product_attribute', 'pa', 'pa.id_product = p.id_product')
+            ->setParameter('shopId', $shopId->getValue())
+            ->setParameter('languageId', $languageId->getValue())
+            ->addOrderBy('pl.name', 'ASC')
+            ->addGroupBy('p.id_product')
+        ;
+
+        $dbSearchPhrase = sprintf('"%%%s%%"', $searchPhrase);
+        $qb->where($qb->expr()->or(
+            $qb->expr()->like('pl.name', $dbSearchPhrase),
+
+            // Product references
+            $qb->expr()->like('p.isbn', $dbSearchPhrase),
+            $qb->expr()->like('p.upc', $dbSearchPhrase),
+            $qb->expr()->like('p.mpn', $dbSearchPhrase),
+            $qb->expr()->like('p.reference', $dbSearchPhrase),
+            $qb->expr()->like('p.ean13', $dbSearchPhrase),
+            $qb->expr()->like('p.supplier_reference', $dbSearchPhrase),
+
+            // Combination attributes
+            $qb->expr()->like('pa.isbn', $dbSearchPhrase),
+            $qb->expr()->like('pa.upc', $dbSearchPhrase),
+            $qb->expr()->like('pa.mpn', $dbSearchPhrase),
+            $qb->expr()->like('pa.reference', $dbSearchPhrase),
+            $qb->expr()->like('pa.ean13', $dbSearchPhrase),
+            $qb->expr()->like('pa.supplier_reference', $dbSearchPhrase)
+        ));
+
+        if (!empty($filters)) {
+            foreach ($filters as $type => $filter) {
+                switch ($type) {
+                    case 'filteredTypes':
+                        $qb->andWhere('p.product_type not in(:filter)')
+                            ->setParameter('filter', implode(', ', $filter));
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
-        if (empty($failedIds)) {
-            return;
+        if (!empty($limit)) {
+            $qb->setMaxResults($limit);
         }
 
-        throw new CannotBulkDeleteProductException(
-            $failedIds,
-            sprintf('Failed to delete following products: "%s"', implode(', ', $failedIds))
-        );
+        return $qb;
+    }
+
+    /**
+     * This override was needed because of the extra parameter in product constructor
+     *
+     * {@inheritDoc}
+     */
+    protected function constructObjectModel(int $id, string $objectModelClass, ?int $shopId): ObjectModel
+    {
+        return new Product($id, false, null, $shopId);
+    }
+
+    /**
+     * @param Product $product
+     * @param array $propertiesToUpdate
+     *
+     * @throws CoreException
+     * @throws ProductConstraintException
+     * @throws ProductException
+     * @throws ProductPackConstraintException
+     * @throws ProductStockConstraintException
+     * @throws ManufacturerException
+     * @throws TaxRulesGroupException
+     */
+    private function validateProduct(Product $product, array $propertiesToUpdate = []): void
+    {
+        $taxRulesGroupIdIsBeingUpdated = empty($propertiesToUpdate) || in_array('id_tax_rules_group', $propertiesToUpdate, true);
+        $taxRulesGroupId = (int) $product->id_tax_rules_group;
+        $manufacturerIdIsBeingUpdated = empty($propertiesToUpdate) || in_array('id_manufacturer', $propertiesToUpdate, true);
+        $manufacturerId = (int) $product->id_manufacturer;
+
+        if ($taxRulesGroupIdIsBeingUpdated && $taxRulesGroupId !== ProductTaxRulesGroupSettings::NONE_APPLIED) {
+            $this->taxRulesGroupRepository->assertTaxRulesGroupExists(new TaxRulesGroupId($taxRulesGroupId));
+        }
+        if ($manufacturerIdIsBeingUpdated && $manufacturerId !== NoManufacturerId::NO_MANUFACTURER_ID) {
+            $this->manufacturerRepository->assertManufacturerExists(new ManufacturerId($manufacturerId));
+        }
+
+        $this->productValidator->validate($product);
+    }
+
+    /**
+     * @todo: this should be removable soon once the deprecated stock properties have been removed see PR #26682
+     *
+     * @param Product $product
+     *
+     * @return Product
+     *
+     * @throws CoreException
+     */
+    private function loadProduct(Product $product): Product
+    {
+        try {
+            $product->loadStockData();
+        } catch (PrestaShopException $e) {
+            throw new CoreException(
+                sprintf('Error occurred when trying to load Product stock #%d', $product->id),
+                0,
+                $e
+            );
+        }
+
+        return $product;
     }
 }

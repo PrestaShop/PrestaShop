@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Module\Tab;
 
-use PrestaShop\PrestaShop\Adapter\Module\Module;
+use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 use PrestaShopBundle\Entity\Repository\LangRepository;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use PrestaShopBundle\Entity\Tab;
@@ -74,7 +74,7 @@ class ModuleTabUnregister
      *
      * @return void
      */
-    public function unregisterTabs(Module $module)
+    public function unregisterTabs(ModuleInterface $module)
     {
         // We use the Tab repository to have only
         // installed tabs related to the module
@@ -87,9 +87,9 @@ class ModuleTabUnregister
     }
 
     /**
-     * @param Module $module
+     * @param ModuleInterface $module
      */
-    public function disableTabs(Module $module)
+    public function disableTabs(ModuleInterface $module)
     {
         $this->tabRepository->changeEnabledByModuleName($module->get('name'), false);
     }

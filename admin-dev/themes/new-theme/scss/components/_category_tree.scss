@@ -45,6 +45,15 @@ ul.category-tree {
     display: block;
     padding-right: 1.563rem;
 
+    .form-check-label {
+      position: absolute;
+      top: 0;
+      right: 0.4em;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+
     .category {
       position: absolute;
       top: 0.4em; // relative to the current font size, so "em" and not "rem"
@@ -72,7 +81,8 @@ ul.category-tree {
 }
 
 // category tree on the catalog page
-#tree-categories {
+#tree-categories,
+.category-filter-menu {
   padding: 0.625rem;
 
   .categories-tree-actions {
@@ -99,6 +109,13 @@ ul.category-tree {
         vertical-align: bottom;
       }
     }
+
+    > button {
+      display: inline-block;
+      padding: 0;
+      margin-bottom: 0.625rem;
+      color: $gray-medium;
+    }
   }
 
   label.form-control-label {
@@ -113,4 +130,8 @@ ul.category-tree {
       margin-bottom: 0;
     }
   }
+}
+
+.category-filter-menu {
+  min-width: 320px;
 }

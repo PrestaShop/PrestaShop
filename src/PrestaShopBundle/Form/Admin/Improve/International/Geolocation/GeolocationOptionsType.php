@@ -29,7 +29,6 @@ namespace PrestaShopBundle\Form\Admin\Improve\International\Geolocation;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialChoiceTableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -105,14 +104,5 @@ class GeolocationOptionsType extends TranslatorAwareType
                 'choices' => $this->countryChoices,
                 'choice_translation_domain' => false,
             ]);
-
-        $builder->get('geolocation_countries')->addModelTransformer(new CallbackTransformer(
-            function ($countriesAsString) {
-                return explode(';', $countriesAsString);
-            },
-            function ($countriesAsArray) {
-                return implode(';', $countriesAsArray);
-            }
-        ));
     }
 }

@@ -73,18 +73,27 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
   import ProductEventMap from '@pages/product/product-event-map';
-  import Pagination from '@vue/components/Pagination';
+  import {Combination} from '@pages/product/components/combination-modal/CombinationModal.vue';
+  import Pagination from '@vue/components/Pagination.vue';
+  import Vue from 'vue';
+
+  interface HistoryStates {
+    paginatedDatas: Array<Record<string, any>>;
+    currentPage: number;
+    currentCombination: Record<string, any> | null
+  }
 
   const CombinationsEventMap = ProductEventMap.combinations;
 
-  export default {
+  export default Vue.extend({
     name: 'CombinationHistory',
-    data() {
+    data(): HistoryStates {
       return {
         paginatedDatas: [],
         currentPage: 1,
+        currentCombination: null,
       };
     },
     components: {
@@ -105,13 +114,13 @@
       },
     },
     computed: {
-      areCombinationsNotEmpty() {
+      areCombinationsNotEmpty(): boolean {
         return this.combinationsList.length > 0;
       },
     },
     mounted() {
-      this.$parent.$on(CombinationsEventMap.selectCombination, (id) => {
-        this.selectedCombination = {id};
+      this.$parent.$on(CombinationsEventMap.selectCombination, (id: number) => {
+        this.currentCombination = {id};
       });
     },
     methods: {
@@ -120,13 +129,13 @@
        *
        * @param {object} combination
        */
-      selectCombination(combination) {
+      selectCombination(combination: Combination): void {
         this.$emit(CombinationsEventMap.selectCombination, combination);
       },
       /**
-       * This events comes from the pagination component as
+       * This events comes from the pagination component
        */
-      preventClose(event) {
+      preventClose(event: Event): void {
         event.stopPropagation();
         event.preventDefault();
       },
@@ -136,21 +145,21 @@
        *
        * @param {array} datas
        */
-      constructDatas(datas) {
+      constructDatas(datas: Record<string, any>): void {
         this.paginatedDatas = datas.paginatedDatas;
         this.currentPage = datas.currentPage;
       },
       /**
        * Used to avoid having too much logic in the markup
        */
-      isSelected(idCombination) {
-        return this.selectedCombination === idCombination
+      isSelected(idCombination: number): null | string {
+        return this.currentCombination?.id === idCombination
           || this.combinationsList.length === 1
           ? 'selected'
           : null;
       },
     },
-  };
+  });
 </script>
 
 <style lang="scss" type="text/scss">

@@ -24,14 +24,16 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Domain\Customer\ValueObject;
 
-use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
+use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerConstraintException;
 
 /**
  * Defines Customer ID with it's constraints
  */
-class CustomerId
+class CustomerId implements CustomerIdInterface
 {
     /**
      * @var int
@@ -41,17 +43,16 @@ class CustomerId
     /**
      * @param int $customerId
      */
-    public function __construct($customerId)
+    public function __construct(int $customerId)
     {
         $this->assertIntegerIsGreaterThanZero($customerId);
-
         $this->customerId = $customerId;
     }
 
     /**
      * @return int
      */
-    public function getValue()
+    public function getValue(): int
     {
         return $this->customerId;
     }
@@ -59,10 +60,13 @@ class CustomerId
     /**
      * @param int $customerId
      */
-    private function assertIntegerIsGreaterThanZero($customerId)
+    private function assertIntegerIsGreaterThanZero(int $customerId): void
     {
-        if (!is_int($customerId) || 0 > $customerId) {
-            throw new CustomerException(sprintf('Customer id %s is invalid. Customer id must be number that is greater than zero.', var_export($customerId, true)));
+        if (0 >= $customerId) {
+            throw new CustomerConstraintException(
+                sprintf('Customer id %s is invalid.', $customerId),
+                CustomerConstraintException::INVALID_ID
+            );
         }
     }
 }

@@ -28,50 +28,47 @@
 
 {% block content %}
   {% block request_sql_view_block %}
-    <div class="row">
-      <div class="col">
-        <div class="card">
-          <div class="card-header">
-            <h3>
-              <i class="material-icons">list</i>
-              {{ 'SQL query result'|trans }} ({{ sqlRequestResult.rows|length }})
-            </h3>
-          </div>
-            <div class="card-block">
-              {% if sqlRequestResult.rows is not empty %}
-              <div class="table-responsive">
-                <table class="table">
-                  <thead>
-                    <tr>
-                      {% for column in sqlRequestResult.columns %}
-                        <th>{{ column }}</th>
-                      {% endfor %}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% for row in sqlRequestResult.rows %}
-                    <tr>
-                      {% for column in sqlRequestResult.columns %}
-                        {% if requestSqlView.attributes[column] is defined %}
-                          <td>{{ requestSqlView.attributes[column] }}</td>
-                        {% else %}
-                          <td>{{ row[column] }}</td>
-                        {% endif %}
-                      {% endfor %}
-                    </tr>
+    <div class="card">
+      <div class="card-header">
+        <h3 id="card-title">
+          <i class="material-icons">list</i>
+          {{ 'SQL query result'|trans }}
+          ({{ sqlRequestResult.rows|length }})
+        </h3>
+      </div>
+      <div class="card-body">
+        {% if sqlRequestResult.rows is not empty %}
+          <div class="table-responsive">
+            <table id="grid-table" class="table">
+              <thead>
+                <tr>
+                  {% for column in sqlRequestResult.columns %}
+                    <th class="column-{{ column }}-head">{{ column }}</th>
+                  {% endfor %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for row in sqlRequestResult.rows %}
+                  <tr>
+                    {% for column in sqlRequestResult.columns %}
+                      {% if requestSqlView.attributes[column] is defined %}
+                        <td class="grid-{{ column }}-value">{{ requestSqlView.attributes[column] }}</td>
+                      {% else %}
+                        <td class="grid-{{ column }}-value">{{ row[column] }}</td>
+                      {% endif %}
                     {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-              {% else %}
-                <div class="alert alert-warning">
-                  <p class="alert-text">
-                    {{ 'This SQL query has no result.'|trans({}, 'Admin.Advparameters.Notification') }}
-                  </p>
-                </div>
-              {% endif %}
-            </div>
-        </div>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <div class="alert alert-warning">
+            <p class="alert-text">
+              {{ 'This SQL query has no result.'|trans({}, 'Admin.Advparameters.Notification') }}
+            </p>
+          </div>
+        {% endif %}
       </div>
     </div>
   {% endblock %}

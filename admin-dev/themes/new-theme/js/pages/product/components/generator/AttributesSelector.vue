@@ -119,31 +119,45 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+  import Vue, {PropType, VueConstructor} from 'vue';
   import isSelected from '@pages/product/mixins/is-attribute-selected';
   import ProductMap from '@pages/product/product-map';
   import PerfectScrollbar from 'perfect-scrollbar';
+  // @ts-ignore
   import Bloodhound from 'typeahead.js';
-  import AutoCompleteSearch from '@components/auto-complete-search';
+  import AutoCompleteSearch, {AutoCompleteSearchConfig} from '@components/auto-complete-search';
+  import Tokenizers from '@components/bloodhound/tokenizers';
+  import {Attribute, AttributeGroup} from '@pages/product/types';
 
   const {$} = window;
 
   const CombinationsMap = ProductMap.combinations;
 
-  export default {
+  export interface AttributesSelectorStates {
+    dataSetConfig: AutoCompleteSearchConfig | {};
+    searchSource: Record<string, any>;
+    scrollbar: PerfectScrollbar | null;
+    hasGeneratedCombinations: boolean;
+    checkboxList: Array<Record<string, any>>;
+  }
+
+  export type AttributesSelectorType = VueConstructor<Vue & InstanceType<typeof isSelected>>
+
+  export default (<AttributesSelectorType>Vue).extend({
     name: 'AttributesSelector',
     props: {
       attributeGroups: {
-        type: Array,
+        type: Array as PropType<Array<AttributeGroup>>,
         default: () => [],
       },
       selectedAttributeGroups: {
-        type: Object,
-        default: () => {},
+        type: Object as PropType<Record<string, AttributeGroup>>,
+        default: () => ({}),
       },
     },
     mixins: [isSelected],
-    data() {
+    data(): AttributesSelectorStates {
       return {
         dataSetConfig: {},
         searchSource: {},
@@ -156,10 +170,10 @@
       this.initDataSetConfig();
       this.scrollbar = new PerfectScrollbar(CombinationsMap.scrollBar);
       const $searchInput = $(CombinationsMap.searchInput);
-      new AutoCompleteSearch($searchInput, this.dataSetConfig);
+      new AutoCompleteSearch($searchInput, <Partial<AutoCompleteSearchConfig>> this.dataSetConfig);
     },
     watch: {
-      selectedAttributeGroups(value) {
+      selectedAttributeGroups(value: any): void {
         const attributes = Object.keys(value);
 
         if (attributes.length <= 0) {
@@ -168,53 +182,49 @@
       },
     },
     methods: {
-      initDataSetConfig() {
+      initDataSetConfig(): void {
         const searchItems = this.getSearchableAttributes();
+
+        const letters = [
+          'name',
+          'value',
+          'group_name',
+        ];
+
         this.searchSource = new Bloodhound({
-          datumTokenizer: Bloodhound.tokenizers.obj.whitespace(
-            'name',
-            'value',
-            'color',
-            'group_name',
-          ),
-          queryTokenizer: Bloodhound.tokenizers.whitespace,
+          datumTokenizer: Tokenizers.obj.letters(letters),
+          queryTokenizer: Bloodhound.tokenizers.nonword,
           local: searchItems,
         });
 
-        const dataSetConfig = {
+        this.dataSetConfig = {
           source: this.searchSource,
-          display: 'name',
+          display: (item: Attribute) => `${item.group_name}: ${item.name}`,
           value: 'name',
           minLength: 1,
-          onSelect: (attribute, e, $searchInput) => {
-            const attributeGroup = {
+          onSelect: (attribute: Attribute, e: JQueryEventObject, $searchInput: JQuery) => {
+            const attributeGroup: AttributeGroup = {
               id: attribute.group_id,
               name: attribute.group_name,
+              attributes: [],
+              publicName: attribute.group_name,
             };
             this.sendAddEvent(attribute, attributeGroup);
 
             // This resets the search input or else previous search is cached and can be added again
             $searchInput.typeahead('val', '');
-          },
-          onClose(event, $searchInput) {
-            $searchInput.typeahead('val', '');
+
             return true;
           },
         };
-
-        dataSetConfig.templates = {
-          suggestion: (item) => `<div class="px-2">${item.group_name}: ${item.name}</div>`,
-        };
-
-        this.dataSetConfig = dataSetConfig;
       },
       /**
        * @returns {Array}
        */
-      getSearchableAttributes() {
-        const searchableAttributes = [];
-        this.attributeGroups.forEach((attributeGroup) => {
-          attributeGroup.attributes.forEach((attribute) => {
+      getSearchableAttributes(): Array<Attribute> {
+        const searchableAttributes: Array<Attribute> = [];
+        this.attributeGroups.forEach((attributeGroup: AttributeGroup) => {
+          attributeGroup.attributes.forEach((attribute: Attribute) => {
             if (
               this.isSelected(
                 attribute,
@@ -239,7 +249,7 @@
        *
        * @returns {string}
        */
-      getSelectedClass(attribute, attributeGroup) {
+      getSelectedClass(attribute: Attribute, attributeGroup: AttributeGroup): string {
         return this.isSelected(
           attribute,
           attributeGroup,
@@ -248,7 +258,7 @@
           ? 'selected'
           : 'unselected';
       },
-      sendRemoveEvent(selectedAttribute, selectedAttributeGroup) {
+      sendRemoveEvent(selectedAttribute: Attribute, selectedAttributeGroup: AttributeGroup): void {
         this.$emit('removeSelected', {
           selectedAttribute,
           selectedAttributeGroup,
@@ -256,12 +266,12 @@
         this.updateSearchableAttributes();
         this.updateCheckboxes(selectedAttributeGroup);
       },
-      sendChangeEvent(selectedAttribute, attributeGroup) {
+      sendChangeEvent(selectedAttribute: Attribute, attributeGroup: AttributeGroup): void {
         this.$emit('changeSelected', {selectedAttribute, attributeGroup});
         this.updateSearchableAttributes();
         this.updateCheckboxes(attributeGroup);
       },
-      sendAddEvent(selectedAttribute, attributeGroup) {
+      sendAddEvent(selectedAttribute: Attribute, attributeGroup: AttributeGroup): void {
         this.$emit('addSelected', {selectedAttribute, attributeGroup});
         this.updateSearchableAttributes();
         this.updateCheckboxes(attributeGroup);
@@ -269,12 +279,12 @@
       /**
        * Update Bloodhound engine so that it does not include already selected attributes
        */
-      updateSearchableAttributes() {
+      updateSearchableAttributes(): void {
         const searchableAttributes = this.getSearchableAttributes();
         this.searchSource.clear();
         this.searchSource.add(searchableAttributes);
       },
-      toggleAll(attributeGroup) {
+      toggleAll(attributeGroup: AttributeGroup): void {
         if (this.checkboxList.includes(attributeGroup)) {
           this.checkboxList = this.checkboxList.filter(
             (e) => e.id !== attributeGroup.id,
@@ -288,7 +298,7 @@
           select: this.checkboxList.includes(attributeGroup),
         });
       },
-      updateCheckboxes(attributeGroup) {
+      updateCheckboxes(attributeGroup: AttributeGroup): void {
         if (
           this.selectedAttributeGroups[attributeGroup.id]
           && !this.checkboxList.includes(attributeGroup)
@@ -303,7 +313,7 @@
         }
       },
     },
-  };
+  });
 </script>
 
 <style lang="scss" type="text/scss">

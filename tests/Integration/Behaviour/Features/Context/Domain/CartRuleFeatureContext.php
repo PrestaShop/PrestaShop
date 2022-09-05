@@ -102,8 +102,8 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @Given /^I specify (cart rule|its) "([^"]+)" as "([^"]+)"$/
-     * @Given /^I specify that (its) "([^"]+)" is "([^"]+)"$/
+     * @Given /^I specify (cart rule|its) "([^"]+)" as "([^"]*)"$/
+     * @Given /^I specify that (its) "([^"]+)" is "([^"]*)"$/
      */
     public function specifyCartRuleProperty(array $properties, string $property, string $value)
     {
@@ -285,7 +285,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertCartRuleProperty(CartRule $cartRule, string $property, $value)
     {
-        $propertyToCheck = $cartRule->{$property};
+        $propertyToCheck = (string) $cartRule->{$property};
 
         if (is_bool($value)) {
             $propertyToCheck = (bool) $propertyToCheck;
@@ -437,7 +437,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
             $data['gift_product_attribute_id'] ?? null
         );
 
-        $currency = SharedStorage::getStorage()->get($data['minimum_amount_currency']);
+        $currencyId = SharedStorage::getStorage()->get($data['minimum_amount_currency']);
 
         $command = new AddCartRuleCommand(
             [$defaultLanguageId => $data['name_in_default_language']],
@@ -451,7 +451,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
             $data['quantity_per_user'],
             $cartRuleAction,
             $data['minimum_amount'],
-            (int) $currency->id,
+            $currencyId,
             $data['minimum_amount_tax_included'],
             $data['minimum_amount_shipping_included']
         );
@@ -459,7 +459,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
         $command->setDescription($data['description'] ?? '');
         $command->setCode($data['code'] ?? '');
 
-        /** @var $cartRule CartRuleId */
+        /** @var CartRuleId $cartRule */
         $cartRule = $this->getCommandBus()->handle($command);
 
         SharedStorage::getStorage()->set($cartRuleReference, new CartRule($cartRule->getValue()));
@@ -574,7 +574,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     {
         $cartRuleId = (int) SharedStorage::getStorage()->get($cartRuleReference)->id;
 
-        /** @var $cartRule EditableCartRule */
+        /** @var EditableCartRule $cartRule */
         $cartRule = $this->getQueryBus()->handle(new GetCartRuleForEditing($cartRuleId));
         if (!$cartRule->getInformation()->isEnabled() === true) {
             throw new RuntimeException(sprintf('Cart rule %s is not disabled', $cartRuleReference));
@@ -592,7 +592,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     {
         $cartRuleId = (int) SharedStorage::getStorage()->get($cartRuleReference)->id;
 
-        /** @var $cartRule EditableCartRule */
+        /** @var EditableCartRule $cartRule */
         $cartRule = $this->getQueryBus()->handle(new GetCartRuleForEditing($cartRuleId));
         if (!$cartRule->getInformation()->isEnabled() === false) {
             throw new RuntimeException(sprintf('Cart rule %s is not enabled', $cartRuleReference));
@@ -602,7 +602,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then Cart rule with reference :cartRuleReference does not exist
      *
-     * @param $cartRuleReference
+     * @param string $cartRuleReference
      *
      * @throws CartRuleConstraintException
      * @throws NoExceptionAlthoughExpectedException
@@ -710,7 +710,7 @@ class CartRuleFeatureContext extends AbstractDomainFeatureContext
      * @param int $totalQuantity
      * @param int $quantityPerUser
      * @param CartRuleActionInterface $cartRuleAction
-     * @param float|null $minimumAmount
+     * @param float $minimumAmount
      * @param int $minimumAmountCurrencyId
      * @param bool $minimumAmountTaxIncluded
      * @param bool $minimumAmountShippingIncluded

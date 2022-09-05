@@ -29,9 +29,11 @@ declare(strict_types=1);
 namespace Tests\Unit\Adapter\Preferences;
 
 use Cookie;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Preferences\PreferencesConfiguration;
+use PrestaShopBundle\Entity\Repository\FeatureFlagRepository;
 
 class PreferencesConfigurationTest extends TestCase
 {
@@ -41,18 +43,32 @@ class PreferencesConfigurationTest extends TestCase
     private $object;
 
     /**
-     * @var Configuration
+     * @var Configuration|MockObject
      */
     private $mockConfiguration;
 
-    protected function setUp()
+    /**
+     * @var FeatureFlagRepository|MockObject
+     */
+    private $featureFlagRepository;
+
+    protected function setUp(): void
     {
         $this->mockConfiguration = $this->getMockBuilder(Configuration::class)
             ->setMethods(['get', 'getBoolean', 'set'])
             ->disableOriginalConstructor()
             ->getMock();
+        $this->featureFlagRepository = $this->getMockBuilder(FeatureFlagRepository::class)
+            ->setMethods(['get'])
+            ->disableOriginalConstructor()
+            ->getMock()
+        ;
+        $this->featureFlagRepository
+            ->method('get')
+            ->willReturn(false)
+        ;
 
-        $this->object = new PreferencesConfiguration($this->mockConfiguration);
+        $this->object = new PreferencesConfiguration($this->mockConfiguration, $this->featureFlagRepository);
     }
 
     public function testGetConfiguration()

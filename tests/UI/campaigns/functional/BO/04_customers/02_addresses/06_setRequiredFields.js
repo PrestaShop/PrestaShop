@@ -8,7 +8,7 @@ const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
 
 // Import login steps
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -106,6 +106,7 @@ describe('BO - Customers - Addresses : Set required fields for addresses', async
     it('should go to \'Customers > Addresses\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', `goToFOAddressesPage${index}`, baseContext);
 
+      await foHomePage.goToMyAccountPage(page);
       await foMyAccountPage.goToAddressesPage(page);
       const pageHeaderTitle = await foAddressesPage.getPageTitle(page);
       await expect(pageHeaderTitle).to.equal(foAddressesPage.pageTitle);

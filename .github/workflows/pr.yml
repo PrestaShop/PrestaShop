@@ -4,13 +4,25 @@ on: pull_request
 
 jobs:
   message-check:
-    if: "!endsWith(github.event.pull_request.title, '[merge]')"
     name: Block Merge Commits
 
     runs-on: ubuntu-latest
 
     steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.0
+        with:
+          access_token: ${{ github.token }}
+
+      - name: Check is merge PR
+        id: check-is-merge
+        run: |
+          if [[ ${{ toJSON(github.event.pull_request.body) }} =~ \|?[[:space:]]*Category\?[[:space:]]*\|[[:space:]]*ME([[:space:]]|(\\[rn]))+ ]]; then
+              echo ::set-output name=isMerge::true
+          fi
+
       - name: Block Merge Commits
+        if: steps.check-is-merge.outputs.isMerge != 'true'
         uses: Morishiri/block-merge-commits-action@v1.0.1
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}

@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Tests\Integration\Behaviour\Features\Context\Domain\TaxRulesGroupFeatureContext;
@@ -44,6 +45,31 @@ use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 class UpdatePricesFeatureContext extends AbstractProductFeatureContext
 {
     /**
+     * @When I update product :productReference prices for shop :shopReference with following information:
+     *
+     * @param string $productReference
+     * @param string $shopReference
+     * @param TableNode $table
+     */
+    public function updateProductPricesForShop(string $productReference, string $shopReference, TableNode $table): void
+    {
+        $shopId = $this->getSharedStorage()->get(trim($shopReference));
+        $shopConstraint = ShopConstraint::shop($shopId);
+        $this->updatePrices($productReference, $table, $shopConstraint);
+    }
+
+    /**
+     * @When I update product :productReference prices for all shops with following information:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function updateProductPricesForAllShops(string $productReference, TableNode $table): void
+    {
+        $this->updatePrices($productReference, $table, ShopConstraint::allShops());
+    }
+
+    /**
      * @When I update product :productReference prices with following information:
      *
      * @param string $productReference
@@ -51,8 +77,21 @@ class UpdatePricesFeatureContext extends AbstractProductFeatureContext
      */
     public function updateProductPrices(string $productReference, TableNode $table): void
     {
+        $this->updatePrices($productReference, $table, ShopConstraint::shop($this->getDefaultShopId()));
+    }
+
+    /**
+     * @param string $productReference
+     * @param TableNode $table
+     * @param ShopConstraint $shopConstraint
+     */
+    private function updatePrices(string $productReference, TableNode $table, ShopConstraint $shopConstraint): void
+    {
         $data = $table->getRowsHash();
-        $command = new UpdateProductPricesCommand($this->getSharedStorage()->get($productReference));
+        $command = new UpdateProductPricesCommand(
+            $this->getSharedStorage()->get($productReference),
+            $shopConstraint
+        );
 
         if (isset($data['price'])) {
             $command->setPrice($data['price']);
@@ -94,7 +133,7 @@ class UpdatePricesFeatureContext extends AbstractProductFeatureContext
     {
         $productId = $this->getSharedStorage()->get($productReference);
 
-        $command = new UpdateProductPricesCommand($productId);
+        $command = new UpdateProductPricesCommand($productId, ShopConstraint::shop($this->getDefaultShopId()));
         // this id value does not exist, it is used on purpose.
         $command->setTaxRulesGroupId(50000000);
 
@@ -102,6 +141,29 @@ class UpdatePricesFeatureContext extends AbstractProductFeatureContext
             $this->getCommandBus()->handle($command);
         } catch (DomainException $e) {
             $this->setLastException($e);
+        }
+    }
+
+    /**
+     * @Then product :productReference should have following prices information for shops :shopReference:
+     *
+     * @param string $productReference
+     * @param string $shopReferences
+     * @param TableNode $tableNode
+     */
+    public function assertPriceFieldsForShops(string $productReference, string $shopReferences, TableNode $tableNode): void
+    {
+        $data = $tableNode->getRowsHash();
+
+        $shopReferences = explode(',', $shopReferences);
+        foreach ($shopReferences as $shopReference) {
+            $shopId = $this->getSharedStorage()->get(trim($shopReference));
+            $pricesInfo = $this->getProductForEditing(
+                $productReference,
+                $shopId
+            )->getPricesInformation();
+
+            $this->assertPricesInfos($pricesInfo, $data, $shopReference);
         }
     }
 
@@ -116,6 +178,17 @@ class UpdatePricesFeatureContext extends AbstractProductFeatureContext
         $data = $tableNode->getRowsHash();
         $pricesInfo = $this->getProductForEditing($productReference)->getPricesInformation();
 
+        $this->assertPricesInfos($pricesInfo, $data);
+    }
+
+    /**
+     * @param ProductPricesInformation $pricesInfo
+     * @param array $data
+     * @param string|null $shopReference
+     */
+    private function assertPricesInfos(ProductPricesInformation $pricesInfo, array $data, string $shopReference = null): void
+    {
+        $shopErrorMessage = !empty($shopReference) ? sprintf(' for shop %s', $shopReference) : '';
         if (isset($data['on_sale'])) {
             $expectedOnSale = PrimitiveUtils::castStringBooleanIntoBoolean($data['on_sale']);
             $onSaleInWords = $expectedOnSale ? 'to be on sale' : 'not to be on sale';
@@ -123,7 +196,7 @@ class UpdatePricesFeatureContext extends AbstractProductFeatureContext
             Assert::assertEquals(
                 $expectedOnSale,
                 $pricesInfo->isOnSale(),
-                sprintf('Expected product %s', $onSaleInWords)
+                sprintf('Expected product %s%s', $onSaleInWords, $shopErrorMessage)
             );
 
             unset($data['on_sale']);
@@ -136,23 +209,24 @@ class UpdatePricesFeatureContext extends AbstractProductFeatureContext
             Assert::assertEquals(
                 $expectedUnity,
                 $actualUnity,
-                sprintf('Tax rules group expected to be "%s", but got "%s"', $expectedUnity, $actualUnity)
+                sprintf('Tax rules group expected to be "%s", but got "%s"%s', $expectedUnity, $actualUnity, $shopErrorMessage)
             );
 
             unset($data['unity']);
         }
 
-        $this->assertTaxRulesGroup($data, $pricesInfo);
-        $this->assertNumberPriceFields($data, $pricesInfo);
+        $this->assertTaxRulesGroup($data, $pricesInfo, $shopErrorMessage);
+        $this->assertNumberPriceFields($data, $pricesInfo, $shopErrorMessage);
 
-        Assert::assertEmpty($data, sprintf('Some provided product price fields haven\'t been asserted: %s', var_export($data, true)));
+        Assert::assertEmpty($data, sprintf('Some provided product price fields haven\'t been asserted%s: %s', $shopErrorMessage, var_export($data, true)));
     }
 
     /**
      * @param array $data
      * @param ProductPricesInformation $pricesInfo
+     * @param string $shopErrorMessage
      */
-    private function assertTaxRulesGroup(array &$data, ProductPricesInformation $pricesInfo): void
+    private function assertTaxRulesGroup(array &$data, ProductPricesInformation $pricesInfo, string $shopErrorMessage): void
     {
         if (!isset($data['tax rules group'])) {
             return;
@@ -170,9 +244,10 @@ class UpdatePricesFeatureContext extends AbstractProductFeatureContext
         if ($expectedId !== $actualId) {
             throw new RuntimeException(
                 sprintf(
-                    'Expected tax rules group "%s", but got "%s"',
+                    'Expected tax rules group "%s", but got "%s"%s',
                     $expectedName,
-                    (new \TaxRulesGroup($actualId))->name
+                    (new \TaxRulesGroup($actualId))->name,
+                    $shopErrorMessage
                 )
             );
         }
@@ -183,15 +258,18 @@ class UpdatePricesFeatureContext extends AbstractProductFeatureContext
     /**
      * @param array $expectedPrices
      * @param ProductPricesInformation $actualPrices
+     * @param string $shopErrorMessage
      */
-    private function assertNumberPriceFields(array &$expectedPrices, ProductPricesInformation $actualPrices)
+    private function assertNumberPriceFields(array &$expectedPrices, ProductPricesInformation $actualPrices, string $shopErrorMessage)
     {
         $numberPriceFields = [
             'price',
             'price_tax_included',
             'ecotax',
+            'ecotax_tax_included',
             'wholesale_price',
             'unit_price',
+            'unit_price_tax_included',
             'unit_price_ratio',
         ];
 
@@ -204,7 +282,7 @@ class UpdatePricesFeatureContext extends AbstractProductFeatureContext
 
                 if (!$expectedNumber->equals($actualNumber)) {
                     throw new RuntimeException(
-                        sprintf('Product %s expected to be "%s", but is "%s"', $field, $expectedNumber, $actualNumber)
+                        sprintf('Product %s expected to be "%s", but is "%s"%s', $field, $expectedNumber, $actualNumber, $shopErrorMessage)
                     );
                 }
 

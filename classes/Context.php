@@ -30,10 +30,12 @@ use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
 use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShopBundle\Bridge\AdminController\LegacyControllerBridgeInterface;
 use PrestaShopBundle\Install\Language as InstallLanguage;
 use PrestaShopBundle\Translation\TranslatorComponent as Translator;
 use PrestaShopBundle\Translation\TranslatorLanguageLoader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -46,37 +48,37 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
  */
 class ContextCore
 {
-    /** @var Context */
+    /** @var Context|null */
     protected static $instance;
 
-    /** @var Cart */
+    /** @var Cart|null */
     public $cart;
 
-    /** @var Customer */
+    /** @var Customer|null */
     public $customer;
 
-    /** @var Cookie */
+    /** @var Cookie|null */
     public $cookie;
 
     /** @var SessionInterface|null */
     public $session;
 
-    /** @var Link */
+    /** @var Link|null */
     public $link;
 
-    /** @var Country */
+    /** @var Country|null */
     public $country;
 
     /** @var Employee|null */
     public $employee;
 
-    /** @var AdminController|FrontController */
+    /** @var AdminController|FrontController|LegacyControllerBridgeInterface|null */
     public $controller;
 
     /** @var string */
     public $override_controller_name_for_translations;
 
-    /** @var Language|InstallLanguage */
+    /** @var Language|InstallLanguage|null */
     public $language;
 
     /** @var Currency|null */
@@ -92,20 +94,29 @@ class ContextCore
     /** @var Tab */
     public $tab;
 
-    /** @var Shop */
+    /** @var Shop|null */
     public $shop;
 
-    /** @var Smarty */
+    /** @var Shop */
+    public $tmpOldShop;
+
+    /** @var Smarty|null */
     public $smarty;
 
-    /** @var \Mobile_Detect */
+    /** @var Mobile_Detect */
     public $mobile_detect;
 
     /** @var int */
     public $mode;
 
-    /** @var ContainerBuilder */
+    /** @var ContainerBuilder|ContainerInterface|null */
     public $container;
+
+    /** @var float */
+    public $virtualTotalTaxExcluded = 0;
+
+    /** @var float */
+    public $virtualTotalTaxIncluded = 0;
 
     /** @var Translator */
     protected $translator = null;
@@ -127,25 +138,25 @@ class ContextCore
     protected $is_tablet = null;
 
     /** @var int */
-    const DEVICE_COMPUTER = 1;
+    public const DEVICE_COMPUTER = 1;
 
     /** @var int */
-    const DEVICE_TABLET = 2;
+    public const DEVICE_TABLET = 2;
 
     /** @var int */
-    const DEVICE_MOBILE = 4;
+    public const DEVICE_MOBILE = 4;
 
     /** @var int */
-    const MODE_STD = 1;
+    public const MODE_STD = 1;
 
     /** @var int */
-    const MODE_STD_CONTRIB = 2;
+    public const MODE_STD_CONTRIB = 2;
 
     /** @var int */
-    const MODE_HOST_CONTRIB = 4;
+    public const MODE_HOST_CONTRIB = 4;
 
     /** @var int */
-    const MODE_HOST = 8;
+    public const MODE_HOST = 8;
 
     /**
      * Sets Mobile_Detect tool object.
@@ -274,14 +285,14 @@ class ContextCore
         if (Tools::isSubmit('no_mobile_theme')) {
             Context::getContext()->cookie->no_mobile = true;
             if (Context::getContext()->cookie->id_guest) {
-                $guest = new Guest(Context::getContext()->cookie->id_guest);
+                $guest = new Guest((int) Context::getContext()->cookie->id_guest);
                 $guest->mobile_theme = false;
                 $guest->update();
             }
         } elseif (Tools::isSubmit('mobile_theme_ok')) {
             Context::getContext()->cookie->no_mobile = false;
             if (Context::getContext()->cookie->id_guest) {
-                $guest = new Guest(Context::getContext()->cookie->id_guest);
+                $guest = new Guest((int) Context::getContext()->cookie->id_guest);
                 $guest->mobile_theme = true;
                 $guest->update();
             }
@@ -289,6 +300,7 @@ class ContextCore
 
         return isset($_SERVER['HTTP_USER_AGENT'], Context::getContext()->cookie)
             && (bool) Configuration::get('PS_ALLOW_MOBILE_DEVICE')
+            && defined('_PS_THEME_MOBILE_DIR_')
             && @filemtime(_PS_THEME_MOBILE_DIR_)
             && !Context::getContext()->cookie->no_mobile;
     }
@@ -308,8 +320,7 @@ class ContextCore
     }
 
     /**
-     * @param $testInstance Context
-     * Unit testing purpose only
+     * @param Context $testInstance Unit testing purpose only
      */
     public static function setInstanceForTesting($testInstance)
     {
@@ -327,7 +338,7 @@ class ContextCore
     /**
      * Clone current context object.
      *
-     * @return Context
+     * @return static
      */
     public function cloneContext()
     {
@@ -346,34 +357,39 @@ class ContextCore
         $this->cookie->customer_lastname = $customer->lastname;
         $this->cookie->customer_firstname = $customer->firstname;
         $this->cookie->passwd = $customer->passwd;
-        $this->cookie->logged = 1;
-        $customer->logged = 1;
+        $this->cookie->logged = true;
+        $customer->logged = true;
         $this->cookie->email = $customer->email;
         $this->cookie->is_guest = $customer->isGuest();
 
-        if (Configuration::get('PS_CART_FOLLOWING') && (empty($this->cookie->id_cart) || Cart::getNbProducts($this->cookie->id_cart) == 0) && $idCart = (int) Cart::lastNoneOrderedCart($this->customer->id)) {
+        if (Configuration::get('PS_CART_FOLLOWING') && (empty($this->cookie->id_cart) || Cart::getNbProducts((int) $this->cookie->id_cart) == 0) && $idCart = (int) Cart::lastNoneOrderedCart($this->customer->id)) {
             $this->cart = new Cart($idCart);
             $this->cart->secure_key = $customer->secure_key;
         } else {
-            $idCarrier = (int) $this->cart->id_carrier;
-            $this->cart->secure_key = $customer->secure_key;
-            $this->cart->id_carrier = 0;
-            $this->cart->setDeliveryOption(null);
-            $this->cart->updateAddressId($this->cart->id_address_delivery, (int) Address::getFirstCustomerAddressId((int) ($customer->id)));
-            $this->cart->id_address_delivery = (int) Address::getFirstCustomerAddressId((int) ($customer->id));
-            $this->cart->id_address_invoice = (int) Address::getFirstCustomerAddressId((int) ($customer->id));
+            if (Validate::isLoadedObject($this->cart)) {
+                $idCarrier = (int) $this->cart->id_carrier;
+                $this->cart->secure_key = $customer->secure_key;
+                $this->cart->id_carrier = 0;
+                if (!empty($idCarrier)) {
+                    $deliveryOption = [$this->cart->id_address_delivery => $idCarrier . ','];
+                    $this->cart->setDeliveryOption($deliveryOption);
+                } else {
+                    $this->cart->setDeliveryOption(null);
+                }
+                $this->cart->id_customer = (int) $customer->id;
+                $this->cart->updateAddressId($this->cart->id_address_delivery, (int) Address::getFirstCustomerAddressId((int) ($customer->id)));
+                $this->cart->id_address_delivery = (int) Address::getFirstCustomerAddressId((int) ($customer->id));
+                $this->cart->id_address_invoice = (int) Address::getFirstCustomerAddressId((int) ($customer->id));
+            }
         }
-        $this->cart->id_customer = (int) $customer->id;
 
-        if (isset($idCarrier) && $idCarrier) {
-            $deliveryOption = [$this->cart->id_address_delivery => $idCarrier . ','];
-            $this->cart->setDeliveryOption($deliveryOption);
+        if (Validate::isLoadedObject($this->cart)) {
+            $this->cart->save();
+            $this->cart->autosetProductAddress();
+            $this->cookie->id_cart = (int) $this->cart->id;
         }
 
-        $this->cart->save();
-        $this->cookie->id_cart = (int) $this->cart->id;
         $this->cookie->write();
-        $this->cart->autosetProductAddress();
 
         $this->cookie->registerSession(new CustomerSession());
     }
@@ -421,7 +437,7 @@ class ContextCore
 
         // In case we have at least 1 translated message, we return the current translator.
         // If some translations are missing, clear cache
-        if ($locale === '' || null === $locale || count($translator->getCatalogue($locale)->all())) {
+        if (empty($locale) || count($translator->getCatalogue($locale)->all())) {
             return $translator;
         }
 
@@ -444,27 +460,27 @@ class ContextCore
         $withDB = !$this->language instanceof InstallLanguage;
         $theme = $this->shop !== null ? $this->shop->theme : null;
 
-        try {
-            $containerFinder = new ContainerFinder($this);
-            $container = $containerFinder->getContainer();
-            $translatorLoader = $container->get('prestashop.translation.translator_language_loader');
-        } catch (ContainerNotFoundException $exception) {
-            $translatorLoader = null;
-        } catch (ServiceNotFoundException $e) {
-            $translatorLoader = null;
-        }
+        if ($this instanceof Context) {
+            try {
+                $containerFinder = new ContainerFinder($this);
+                $container = $containerFinder->getContainer();
+                $translatorLoader = $container->get('prestashop.translation.translator_language_loader');
+            } catch (ContainerNotFoundException|ServiceNotFoundException $exception) {
+                $translatorLoader = null;
+            }
 
-        if (null === $translatorLoader) {
-            // If a container is still not found, instantiate manually the translator loader
-            // This will happen in the Front as we have legacy controllers, the Sf container won't be available.
-            // As we get the translator in the controller's constructor and the container is built in the init method, we won't find it here
-            $translatorLoader = (new TranslatorLanguageLoader(new ModuleRepository()));
-        }
+            if (null === $translatorLoader) {
+                // If a container is still not found, instantiate manually the translator loader
+                // This will happen in the Front as we have legacy controllers, the Sf container won't be available.
+                // As we get the translator in the controller's constructor and the container is built in the init method, we won't find it here
+                $translatorLoader = (new TranslatorLanguageLoader(new ModuleRepository(_PS_ROOT_DIR_, _PS_MODULE_DIR_)));
+            }
 
-        $translatorLoader
-            ->setIsAdminContext($adminContext)
-            ->loadLanguage($translator, $locale, $withDB, $theme)
-        ;
+            $translatorLoader
+                ->setIsAdminContext($adminContext)
+                ->loadLanguage($translator, $locale, $withDB, $theme)
+            ;
+        }
 
         return $translator;
     }
@@ -474,7 +490,7 @@ class ContextCore
      */
     protected function getTranslationResourcesDirectories()
     {
-        $locations = [_PS_ROOT_DIR_ . '/app/Resources/translations'];
+        $locations = [_PS_ROOT_DIR_ . '/translations'];
 
         if (null !== $this->shop) {
             $activeThemeLocation = _PS_ROOT_DIR_ . '/themes/' . $this->shop->theme_name . '/translations';

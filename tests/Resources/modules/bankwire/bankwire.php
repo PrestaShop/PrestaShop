@@ -51,6 +51,7 @@ class bankwire extends PaymentModule
         $this->currencies_mode = 'checkbox';
 
         $this->bootstrap = true;
+        parent::__construct();
 
         $this->displayName = 'Bank wire';
         $this->description = 'Accept payments for your products via bank wire transfer.';
@@ -90,6 +91,10 @@ class bankwire extends PaymentModule
     }
 
     public function hookPaymentOptions()
+    {
+    }
+
+    public function hookDisplayHome()
     {
     }
 }

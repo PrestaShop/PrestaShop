@@ -54,6 +54,10 @@ class TypedRegex extends Constraint
     public const TYPE_EAN_13 = 'ean_13';
     public const TYPE_ISBN = 'isbn';
     public const TYPE_REFERENCE = 'reference';
+    public const TYPE_URL = 'url';
+    public const TYPE_MODULE_NAME = 'module_name';
+    public const TYPE_WEBSERVICE_KEY = 'webservice_key';
+    public const TYPE_LINK_REWRITE = 'link_rewrite';
 
     /**
      * @var string

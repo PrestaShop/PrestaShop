@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags order-to-cart
-@reset-database-before-feature
+@restore-all-tables-before-feature
 @order-to-cart
 Feature: Check order to cart data copy
   As a BO user

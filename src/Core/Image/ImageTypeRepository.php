@@ -27,19 +27,20 @@
 namespace PrestaShop\PrestaShop\Core\Image;
 
 use Db;
-use Shop;
 
 class ImageTypeRepository
 {
-    private $shop;
+    /**
+     * @var Db
+     */
     private $db;
+    /**
+     * @var string
+     */
     private $db_prefix;
 
-    public function __construct(
-        Shop $shop,
-        Db $db
-    ) {
-        $this->shop = $shop;
+    public function __construct(Db $db)
+    {
         $this->db = $db;
         $this->db_prefix = $db->getPrefix();
     }

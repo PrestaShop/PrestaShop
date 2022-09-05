@@ -37,7 +37,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class PathWithBackUrlExtensionTest extends TestCase
 {
-    const FALLBACK_URL = 'https://www.prestashop.com/en';
+    public const FALLBACK_URL = 'https://www.prestashop.com/en';
 
     /**
      * @var MockObject|RoutingExtension
@@ -54,7 +54,7 @@ class PathWithBackUrlExtensionTest extends TestCase
      */
     private $backUrlProviderMock;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

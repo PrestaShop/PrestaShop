@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_cashondelivery/ps_cashondelivery.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1f9497d3e8bac9b50151416f04119cec">
+        <source>Cash on delivery (COD)</source>
+        <target>Cash on delivery (COD)</target>
+        <note>Line: 55</note>
+      </trans-unit>
+      <trans-unit id="04c6b42a04ee0865ef3464ef4b73ab72">
+        <source>Accept cash payments on delivery to make it easy for customers to purchase on your store.</source>
+        <target>Accept cash payments on delivery to make it easy for customers to purchase on your store.</target>
+        <note>Line: 56</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

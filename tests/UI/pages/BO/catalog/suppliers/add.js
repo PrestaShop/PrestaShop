@@ -29,10 +29,13 @@ class AddSupplier extends BOBasePage {
     this.postalCodeInput = '#supplier_post_code';
     this.cityInput = '#supplier_city';
     this.countryInput = '#supplier_id_country';
+    this.selectCountryList = '#select2-supplier_id_country-container';
+    this.searchCountryInput = '.select2-search__field';
+    this.countrySearchResult = '#select2-supplier_id_country-results li.select2-results__option--highlighted';
     this.stateInput = '#supplier_id_state';
     this.logoFileInput = '#supplier_logo';
-    this.metaTitleLangButton = '#supplier_meta_title';
-    this.metaTitleLangSpan = lang => 'div.dropdown-menu[aria-labelledby=\'supplier_meta_title\']'
+    this.metaTitleLangButton = '#supplier_meta_title_dropdown';
+    this.metaTitleLangSpan = lang => 'div.dropdown-menu[aria-labelledby=\'supplier_meta_title_dropdown\']'
       + ` span[data-locale='${lang}']`;
     this.metaTitleInput = id => `#supplier_meta_title_${id}`;
     this.metaDescriptionTextarea = id => `#supplier_meta_description_${id}`;
@@ -66,7 +69,10 @@ class AddSupplier extends BOBasePage {
     await this.setValue(page, this.secondaryAddressInput, supplierData.secondaryAddress);
     await this.setValue(page, this.postalCodeInput, supplierData.postalCode);
     await this.setValue(page, this.cityInput, supplierData.city);
-    await this.setValue(page, this.countryInput, supplierData.country);
+    // Select country
+    await page.click(this.selectCountryList);
+    await this.setValue(page, this.searchCountryInput, supplierData.country);
+    await this.waitForSelectorAndClick(page, this.countrySearchResult);
 
     // Add logo
     await this.uploadFile(page, this.logoFileInput, supplierData.logo);
@@ -92,7 +98,7 @@ class AddSupplier extends BOBasePage {
     await this.addKeywords(page, supplierData.metaKeywords, 2);
 
     // Set status value
-    await page.check(this.statusToggleInput(supplierData.enabled ? 1 : 0));
+    await this.setChecked(page, this.statusToggleInput(supplierData.enabled ? 1 : 0));
 
     // Save Supplier
     await this.clickAndWaitForNavigation(page, this.saveButton);

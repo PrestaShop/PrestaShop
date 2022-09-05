@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags order-cart-rules
-@reset-database-before-feature
+@restore-all-tables-before-feature
 @order-cart-rules
 @clear-cache-before-feature
 Feature: Order from Back Office (BO)
@@ -714,7 +714,6 @@ Feature: Order from Back Office (BO)
     When I add discount to order "bo_order1" with following details:
       | name      | Free Shipping |
       | type      | free_shipping |
-    Then I should get no error
     And order "bo_order1" should have 1 cart rule
     And order "bo_order1" should have 1 products in total
     And order "bo_order1" should have following details:
@@ -729,7 +728,6 @@ Feature: Order from Back Office (BO)
       | total_shipping_tax_excl  | 7.000  |
       | total_shipping_tax_incl  | 7.420  |
 
-  @order-cart-rules1
   Scenario: Add a cart rule with free shipping to an order with a total of 0 and existing order
     Given there is a product in the catalog named "product1" with a price of 0.00 and 100 items in stock
     When I create an empty cart "dummy_cart_free_shipping" for customer "testCustomer"
@@ -758,7 +756,6 @@ Feature: Order from Back Office (BO)
     When I add discount to order "bo_order1" on first invoice and following details:
       | name      | Free Shipping |
       | type      | free_shipping |
-    Then I should get no error
     And order "bo_order1" should have 1 cart rule
     And order "bo_order1" should have 1 products in total
     And order "bo_order1" should have following details:
@@ -772,3 +769,66 @@ Feature: Order from Back Office (BO)
       | total_paid_real          | 7.420  |
       | total_shipping_tax_excl  | 7.000  |
       | total_shipping_tax_incl  | 7.420  |
+
+  Scenario: Add a cart rule with free shipping to an order with a total of 0 and existing order
+    Given there is a product in the catalog named "product_expensive" with a price of 123.00 and 100 items in stock
+    And there is a product in the catalog named "product_cheap" with a price of 10.00 and 100 items in stock
+    When I create an empty cart "dummy_cart_cart_rule_cheapest" for customer "testCustomer"
+    And I add 1 products "product_expensive" to the cart "dummy_cart_cart_rule_cheapest"
+    And I select "US" address as delivery and invoice address for customer "testCustomer" in cart "dummy_cart_cart_rule_cheapest"
+    Then cart "dummy_cart_cart_rule_cheapest" should contain 1 products
+    ## Create an order with the expensive product
+    When I add order "bo_order1" with the following details:
+      | cart                | dummy_cart_cart_rule_cheapest |
+      | message             |                               |
+      | payment module name | dummy_payment                 |
+      | status              | Payment accepted              |
+    Then order "bo_order1" should have 1 products in total
+    And order "bo_order1" should have 0 cart rule
+    And order "bo_order1" should have following details:
+      | total_products           | 123.000 |
+      | total_products_wt        | 130.380 |
+      | total_discounts_tax_excl | 0.000   |
+      | total_discounts_tax_incl | 0.000   |
+      | total_paid_tax_excl      | 130.000 |
+      | total_paid_tax_incl      | 137.80  |
+      | total_paid               | 137.80  |
+      | total_paid_real          | 137.80  |
+      | total_shipping_tax_excl  | 7.000   |
+      | total_shipping_tax_incl  | 7.42    |
+    And order "bo_order1" should have invoice
+    ## Create a new cart rule
+    When I want to create a new cart rule
+    And I specify its name in default language as "Cart Rule 50% which excludes discounted products and applies to cheapest product"
+    And I specify its "description" as "None"
+    And I specify its "code" as ""
+    And I specify that its active from "2019-01-01 11:00:00"
+    And I specify that its active until "2040-01-01 12:00:00"
+    And I specify that its "quantity" is "100"
+    And I specify that its "quantity per user" is "100"
+    And I specify that its "priority" is "1"
+    And its minimum purchase amount in currency "USD" is "0.0"
+    And its minimum purchase amount is tax included
+    And its minimum purchase amount is shipping included
+    And I specify its status as enabled
+    And it gives a percentage reduction of "50" which excludes discounted products and applies to cheapest product
+    Then I save it
+    ## Add the product to the order
+    When I add products to order "bo_order1" without invoice and the following products details:
+      | name          | product_cheap     |
+      | amount        | 1                 |
+      | price         | 10                |
+    Then order "bo_order1" should have 2 products in total
+    And order "bo_order1" should have 1 cart rule
+    And order "bo_order1" should have a cart rule with name "Cart Rule 50% which excludes discounted products and applies to cheapest product"
+    And order "bo_order1" should have following details:
+      | total_products           | 133.000  |
+      | total_products_wt        | 140.980  |
+      | total_discounts_tax_excl | 5.000    |
+      | total_discounts_tax_incl | 5.300    |
+      | total_paid_tax_excl      | 135.000  |
+      | total_paid_tax_incl      | 143.100  |
+      | total_paid               | 143.100  |
+      | total_paid_real          | 137.800  |
+      | total_shipping_tax_excl  | 7.000    |
+      | total_shipping_tax_incl  | 7.420    |

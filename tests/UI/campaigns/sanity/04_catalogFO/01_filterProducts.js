@@ -1,14 +1,18 @@
 require('module-alias/register');
 // Using chai
 const {expect} = require('chai');
+
+// Import utils
 const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
 
-const baseContext = 'sanity_catalogFO_filterProducts';
-
-// Importing pages
+// Import pages
 const homePage = require('@pages/FO/home');
+
+// Import data
 const {Categories} = require('@data/demo/categories');
+
+const baseContext = 'sanity_catalogFO_filterProducts';
 
 let browserContext;
 let page;
@@ -20,12 +24,13 @@ let allProductsNumber = 0;
   Filter products by a category
   Filter products by a subcategory
  */
-describe('Filter Products by categories in Home page', async () => {
+describe('FO - Catalog : Filter Products by categories in Home page', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
   });
+
   after(async () => {
     await helper.closeBrowserContext(browserContext);
   });
@@ -33,6 +38,7 @@ describe('Filter Products by categories in Home page', async () => {
   // Steps
   it('should open the shop page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToShopFO', baseContext);
+
     await homePage.goTo(page, global.FO.URL);
     const result = await homePage.isHomePage(page);
     await expect(result).to.be.true;
@@ -40,20 +46,23 @@ describe('Filter Products by categories in Home page', async () => {
 
   it('should check and get the products number', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkNumberOfProducts', baseContext);
+
     await homePage.waitForSelectorAndClick(page, homePage.allProductLink);
     allProductsNumber = await homePage.getNumberFromText(page, homePage.totalProducts);
     await expect(allProductsNumber).to.be.above(0);
   });
 
-  it('should filter products by the category "Accessories" and check result', async function () {
+  it('should filter products by the category \'Accessories\' and check result', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'FilterProductByCategory', baseContext);
+
     await homePage.goToCategory(page, Categories.accessories.id);
     const numberOfProducts = await homePage.getNumberFromText(page, homePage.totalProducts);
     await expect(numberOfProducts).to.be.below(allProductsNumber);
   });
 
-  it('should filter products by the subcategory "Stationery" and check result', async function () {
+  it('should filter products by the subcategory \'Stationery\' and check result', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'FilterProductBySubCategory', baseContext);
+
     await homePage.goToSubCategory(page, Categories.accessories.id, Categories.stationery.id);
     const numberOfProducts = await homePage.getNumberFromText(page, homePage.totalProducts);
     await expect(numberOfProducts).to.be.below(allProductsNumber);

@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags odd-order-ecotax
-@reset-database-before-feature
+@restore-all-tables-before-feature
 @reboot-kernel-before-feature
 @clear-cache-before-feature
 @order-ecotax

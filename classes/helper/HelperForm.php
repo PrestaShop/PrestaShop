@@ -23,7 +23,6 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
- use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 
 /**
  * @since 1.5.0
@@ -278,9 +277,6 @@ class HelperFormCore extends Helper
             }
         }
 
-        $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
-        $moduleManager = $moduleManagerBuilder->build();
-
         $this->tpl->assign([
             'title' => $this->title,
             'toolbar_btn' => $this->toolbar_btn,
@@ -302,7 +298,6 @@ class HelperFormCore extends Helper
             'fields' => $this->fields_form,
             'fields_value' => $this->fields_value,
             'required_fields' => $this->getFieldsRequired(),
-            'vat_number' => $moduleManager->isInstalled('vatnumber') && file_exists(_PS_MODULE_DIR_ . 'vatnumber/ajax.php'),
             'module_dir' => _MODULE_DIR_,
             'base_url' => $this->context->shop->getBaseURL(),
             'contains_states' => (isset($this->fields_value['id_country'], $this->fields_value['id_state'])) ? Country::containsStates($this->fields_value['id_country']) : null,
@@ -340,7 +335,7 @@ class HelperFormCore extends Helper
     public function renderAssoShop($disable_shared = false, $template_directory = null)
     {
         if (!Shop::isFeatureActive()) {
-            return;
+            return '';
         }
 
         $assos = [];

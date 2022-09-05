@@ -38,9 +38,9 @@ class AddContactCommandTest extends TestCase
     /**
      * @dataProvider getIncorrectTitles
      *
-     * @param $incorrectTitle
+     * @param array $incorrectTitle
      */
-    public function testItThrowsAnExceptionOnIncorrectTitle($incorrectTitle)
+    public function testItThrowsAnExceptionOnIncorrectTitle(array $incorrectTitle): void
     {
         $this->expectException(ContactConstraintException::class);
         $this->expectExceptionCode(ContactConstraintException::INVALID_TITLE);
@@ -48,7 +48,7 @@ class AddContactCommandTest extends TestCase
         $command = new AddContactCommand($incorrectTitle, false);
     }
 
-    public function getIncorrectTitles()
+    public function getIncorrectTitles(): array
     {
         return [
             [
@@ -73,7 +73,7 @@ class AddContactCommandTest extends TestCase
     /**
      * @dataProvider getIncorrectShopAssociations
      */
-    public function testItThrowsAnExceptionOnIncorrectShopAssociation($incorrectShopAssociation)
+    public function testItThrowsAnExceptionOnIncorrectShopAssociation(array $incorrectShopAssociation): void
     {
         $this->expectException(ContactConstraintException::class);
         $this->expectExceptionCode(ContactConstraintException::INVALID_SHOP_ASSOCIATION);
@@ -88,7 +88,7 @@ class AddContactCommandTest extends TestCase
         $command->setShopAssociation($incorrectShopAssociation);
     }
 
-    public function getIncorrectShopAssociations()
+    public function getIncorrectShopAssociations(): array
     {
         return [
             [

@@ -37,9 +37,7 @@ class HelperCore
     public $toolbar_scroll = false;
     public $bootstrap = false;
 
-    /**
-     * @var Module
-     */
+    /** @var Module|null */
     public $module;
 
     /** @var string Helper tpl folder */
@@ -48,17 +46,18 @@ class HelperCore
     /** @var string Controller tpl folder */
     public $override_folder;
 
-    /**
-     * @var Smarty_Internal_Template base template object
-     */
+    /** @var Smarty_Internal_Template base template object */
     protected $tpl;
 
-    /**
-     * @var string base template name
-     */
+    /** @var string base template name */
     public $base_tpl = 'content.tpl';
 
     public $tpl_vars = [];
+
+    /**
+     * @var string
+     */
+    public $controller_name = '';
 
     public function __construct()
     {
@@ -115,32 +114,6 @@ class HelperCore
     }
 
     /**
-     * @deprecated 1.5.0
-     */
-    public static function renderAdminCategorieTree(
-        $translations,
-        $selected_cat = [],
-        $input_name = 'categoryBox',
-        $use_radio = false,
-        $use_search = false,
-        $disabled_categories = [],
-        $use_in_popup = false
-    ) {
-        Tools::displayAsDeprecated();
-
-        $helper = new Helper();
-        if (isset($translations['Root'])) {
-            $root = $translations['Root'];
-        } elseif (isset($translations['Home'])) {
-            $root = ['name' => $translations['Home'], 'id_category' => 1];
-        } else {
-            throw new PrestaShopException('Missing root category parameter.');
-        }
-
-        return $helper->renderCategoryTree($root, $selected_cat, $input_name, $use_radio, $use_search, $disabled_categories, $use_in_popup);
-    }
-
-    /**
      * @param array $root array with the name and ID of the tree root category, if null the Shop's root category will be used
      * @param array $selected_cat array of selected categories
      *
@@ -169,8 +142,8 @@ class HelperCore
 
         $translations = [
             'selected' => $translator->trans('Selected', [], 'Admin.Global'),
-            'Collapse All' => $translator->trans('Collapse All', [], 'Admin.Actions'),
-            'Expand All' => $translator->trans('Expand All', [], 'Admin.Actions'),
+            'Collapse all' => $translator->trans('Collapse all', [], 'Admin.Actions'),
+            'Expand all' => $translator->trans('Expand all', [], 'Admin.Actions'),
             'Check All' => $translator->trans('Check All', [], 'Admin.Actions'),
             'Uncheck All' => $translator->trans('Uncheck All', [], 'Admin.Actions'),
             'search' => $translator->trans('Find a category', [], 'Admin.Actions'),
@@ -219,8 +192,8 @@ class HelperCore
 
         $html .= '
         <div class="category-filter">
-            <a class="btn btn-link" href="#" id="collapse_all"><i class="icon-collapse"></i> ' . $translations['Collapse All'] . '</a>
-            <a class="btn btn-link" href="#" id="expand_all"><i class="icon-expand"></i> ' . $translations['Expand All'] . '</a>
+            <a class="btn btn-link" href="#" id="collapse_all"><i class="icon-collapse"></i> ' . $translations['Collapse all'] . '</a>
+            <a class="btn btn-link" href="#" id="expand_all"><i class="icon-expand"></i> ' . $translations['Expand all'] . '</a>
             ' . (!$use_radio ? '
                 <a class="btn btn-link" href="#" id="check_all"><i class="icon-check"></i> ' . $translations['Check All'] . '</a>
                 <a class="btn btn-link" href="#" id="uncheck_all"><i class="icon-check-empty"></i> ' . $translations['Uncheck All'] . '</a>' : '')
@@ -286,29 +259,6 @@ class HelperCore
     }
 
     /**
-     * use translations files to replace english expression.
-     *
-     * @deprecated use Context::getContext()->getTranslator()->trans($id, $parameters, $domain, $locale); instead
-     *
-     * @param mixed $string term or expression in english
-     * @param string $class
-     * @param bool $addslashes if set to true, the return value will pass through addslashes(). Otherwise, stripslashes().
-     * @param bool $htmlentities if set to true(default), the return value will pass through htmlentities($string, ENT_QUOTES, 'utf-8')
-     *
-     * @return string the translation if available, or the english default text
-     */
-    protected function l($string, $class = 'AdminTab', $addslashes = false, $htmlentities = true)
-    {
-        // if the class is extended by a module, use modules/[module_name]/xx.php lang file
-        $current_class = get_class($this);
-        if (Module::getModuleNameFromClass($current_class)) {
-            return Translate::getModuleTranslation(Module::$classInModule[$current_class], $string, $current_class);
-        }
-
-        return Translate::getAdminTranslation($string, get_class($this), $addslashes, $htmlentities);
-    }
-
-    /**
      * Render a form with potentials required fields.
      *
      * @param string $class_name
@@ -347,81 +297,5 @@ class HelperCore
         $tpl->assign($this->tpl_vars);
 
         return $tpl->fetch();
-    }
-
-    public function renderModulesList($modules_list)
-    {
-        $this->tpl_vars = [
-            'modules_list' => $modules_list,
-            'modules_uri' => __PS_BASE_URI__ . basename(_PS_MODULE_DIR_),
-        ];
-        // The translations for this are defined by AdminModules, so override the context for the translations
-        $override_controller_name_for_translations = Context::getContext()->override_controller_name_for_translations;
-        Context::getContext()->override_controller_name_for_translations = 'AdminModules';
-        $tpl = $this->createTemplate('helpers/modules_list/list.tpl');
-        $tpl->assign($this->tpl_vars);
-        $html = $tpl->fetch();
-        // Restore the previous context
-        Context::getContext()->override_controller_name_for_translations = $override_controller_name_for_translations;
-
-        return $html;
-    }
-
-    /**
-     * Render shop list.
-     *
-     * @deprecated deprecated since 1.6.1.0 use HelperShop->getRenderedShopList
-     *
-     * @return string
-     */
-    public static function renderShopList()
-    {
-        Tools::displayAsDeprecated('Use HelperShop->getRenderedShopList instead');
-
-        if (!Shop::isFeatureActive() || Shop::getTotalShops(false, null) < 2) {
-            return null;
-        }
-
-        $tree = Shop::getTree();
-        $context = Context::getContext();
-
-        // Get default value
-        $shop_context = Shop::getContext();
-        if ($shop_context == Shop::CONTEXT_ALL || ($context->controller->multishop_context_group == false && $shop_context == Shop::CONTEXT_GROUP)) {
-            $value = '';
-        } elseif ($shop_context == Shop::CONTEXT_GROUP) {
-            $value = 'g-' . Shop::getContextShopGroupID();
-        } else {
-            $value = 's-' . Shop::getContextShopID();
-        }
-
-        // Generate HTML
-        $url = $_SERVER['REQUEST_URI'] . (($_SERVER['QUERY_STRING']) ? '&' : '?') . 'setShopContext=';
-        $shop = new Shop(Shop::getContextShopID());
-
-        // $html = '<a href="#"><i class="icon-home"></i> '.$shop->name.'</a>';
-        $html = '<select class="shopList" onchange="location.href = \'' . htmlspecialchars($url) . '\'+$(this).val();">';
-        $html .= '<option value="" class="first">' . Translate::getAdminTranslation('All shops') . '</option>';
-
-        foreach ($tree as $group_id => $group_data) {
-            if ((!isset($context->controller->multishop_context) || $context->controller->multishop_context & Shop::CONTEXT_GROUP)) {
-                $html .= '<option class="group" value="g-' . $group_id . '"' . (((empty($value) && $shop_context == Shop::CONTEXT_GROUP) || $value == 'g-' . $group_id) ? ' selected="selected"' : '') . ($context->controller->multishop_context_group == false ? ' disabled="disabled"' : '') . '>' . Translate::getAdminTranslation('Group:') . ' ' . htmlspecialchars($group_data['name']) . '</option>';
-            } else {
-                $html .= '<optgroup class="group" label="' . Translate::getAdminTranslation('Group:') . ' ' . htmlspecialchars($group_data['name']) . '"' . ($context->controller->multishop_context_group == false ? ' disabled="disabled"' : '') . '>';
-            }
-            if (!isset($context->controller->multishop_context) || $context->controller->multishop_context & Shop::CONTEXT_SHOP) {
-                foreach ($group_data['shops'] as $shop_id => $shop_data) {
-                    if ($shop_data['active']) {
-                        $html .= '<option value="s-' . $shop_id . '" class="shop"' . (($value == 's-' . $shop_id) ? ' selected="selected"' : '') . '>' . ($context->controller->multishop_context_group == false ? htmlspecialchars($group_data['name']) . ' - ' : '') . $shop_data['name'] . '</option>';
-                    }
-                }
-            }
-            if (!(!isset($context->controller->multishop_context) || $context->controller->multishop_context & Shop::CONTEXT_GROUP)) {
-                $html .= '</optgroup>';
-            }
-        }
-        $html .= '</select>';
-
-        return $html;
     }
 }

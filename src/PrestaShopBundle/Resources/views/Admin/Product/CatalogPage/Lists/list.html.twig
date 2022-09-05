@@ -125,16 +125,6 @@
                     }
                 ]) %}
 
-                {% if productPageV2IsEnabled == true %}
-                    {% set buttons_action = buttons_action|merge([
-                        {
-                          "href": product.url_v2|default('#'),
-                          "icon": "mode_edit",
-                          "label": "Edit on experimental page"|trans({}, 'Admin.Catalog.Feature')
-                        }
-                    ]) %}
-                {% endif %}
-
                 {% include '@Product/CatalogPage/Forms/form_edit_dropdown.html.twig' with {
                     'button_id': "product_list_id_" ~ product.id_product ~ "_menu",
                     'default_item': {

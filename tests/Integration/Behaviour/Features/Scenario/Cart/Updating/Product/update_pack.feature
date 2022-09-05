@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s cart --tags cart-updating-product-pack
-@reset-database-before-feature
+@restore-all-tables-before-feature
 @cart-updating-product-pack
 Feature: Add product pack in cart
   As a customer
@@ -30,7 +30,6 @@ Feature: Add product pack in cart
     And the remaining available stock for product "product_in_pack_1" should be 10
     And the remaining available stock for product "product_in_pack_2" should be 10
     When I update quantity of product "product_pack" in the cart "cart_pack" to 10
-    Then I should get no error
     And the remaining available stock for product "product_pack" should be 0
     And the remaining available stock for product "product_in_pack_1" should be 10
     And the remaining available stock for product "product_in_pack_2" should be 10
@@ -53,7 +52,6 @@ Feature: Add product pack in cart
     And the remaining available stock for product "product_in_pack_1" should be 10
     And the remaining available stock for product "product_in_pack_2" should be 10
     When I update quantity of product "product_pack" in the cart "cart_pack" to 5
-    Then I should get no error
     And cart "cart_pack" should contain product "product_pack"
     And the remaining available stock for product "product_pack" should be 0
     And the remaining available stock for product "product_in_pack_1" should be 5
@@ -76,7 +74,6 @@ Feature: Add product pack in cart
     And the remaining available stock for product "product_in_pack_1" should be 10
     And the remaining available stock for product "product_in_pack_2" should be 10
     When I update quantity of product "product_pack" in the cart "cart_pack" to 5
-    Then I should get no error
     And cart "cart_pack" should contain product "product_pack"
     When I delete product "product_pack" from cart "cart_pack"
     And cart "cart_pack" should not contain product "product_pack"
@@ -89,7 +86,6 @@ Feature: Add product pack in cart
     Given the product "product_pack" allows order if out of stock
     And the pack "product_pack" decrements pack only
     When I update quantity of product "product_pack" in the cart "cart_pack" to 11
-    Then I should get no error
     And cart "cart_pack" should contain product "product_pack"
     And the remaining available stock for product "product_pack" should be -1
     And the remaining available stock for product "product_in_pack_1" should be 10
@@ -105,7 +101,6 @@ Feature: Add product pack in cart
     Given the product "product_pack" allows order if out of stock
     And the pack "product_pack" decrements products in pack only
     When I update quantity of product "product_pack" in the cart "cart_pack" to 6
-    Then I should get no error
     And cart "cart_pack" should contain product "product_pack"
     And the remaining available stock for product "product_pack" should be -1
     And the remaining available stock for product "product_in_pack_1" should be 4
@@ -121,7 +116,6 @@ Feature: Add product pack in cart
     Given the product "product_pack" allows order if out of stock
     And the pack "product_pack" decrements both packs and products
     When I update quantity of product "product_pack" in the cart "cart_pack" to 11
-    Then I should get no error
     And cart "cart_pack" should contain product "product_pack"
     And the remaining available stock for product "product_pack" should be -6
     And the remaining available stock for product "product_in_pack_1" should be -1

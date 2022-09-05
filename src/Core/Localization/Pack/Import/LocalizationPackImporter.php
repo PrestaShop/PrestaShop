@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Localization\Pack\Import;
 
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Localization\Pack\Factory\LocalizationPackFactoryInterface;
 use PrestaShop\PrestaShop\Core\Localization\Pack\Loader\LocalizationPackLoaderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -57,29 +56,21 @@ final class LocalizationPackImporter implements LocalizationPackImporterInterfac
     private $translator;
 
     /**
-     * @var ConfigurationInterface
-     */
-    private $configuration;
-
-    /**
      * @param LocalizationPackLoaderInterface $remoteLocalizationPackLoader
      * @param LocalizationPackLoaderInterface $localLocalizationPackLoader
      * @param LocalizationPackFactoryInterface $localizationPackFactory
      * @param TranslatorInterface $translator
-     * @param ConfigurationInterface $configuration
      */
     public function __construct(
         LocalizationPackLoaderInterface $remoteLocalizationPackLoader,
         LocalizationPackLoaderInterface $localLocalizationPackLoader,
         LocalizationPackFactoryInterface $localizationPackFactory,
-        TranslatorInterface $translator,
-        ConfigurationInterface $configuration
+        TranslatorInterface $translator
     ) {
         $this->remoteLocalizationPackLoader = $remoteLocalizationPackLoader;
         $this->localLocalizationPackLoader = $localLocalizationPackLoader;
         $this->localizationPackFactory = $localizationPackFactory;
         $this->translator = $translator;
-        $this->configuration = $configuration;
     }
 
     /**
@@ -94,7 +85,7 @@ final class LocalizationPackImporter implements LocalizationPackImporterInterfac
 
         $pack = null;
 
-        if ($config->shouldDownloadPackData() || $this->configuration->get('_PS_HOST_MODE_')) {
+        if ($config->shouldDownloadPackData()) {
             $pack = $this->remoteLocalizationPackLoader->getLocalizationPack(
                 $config->getCountryIsoCode()
             );

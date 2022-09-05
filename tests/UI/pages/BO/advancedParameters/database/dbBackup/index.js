@@ -26,7 +26,7 @@ class DbBackup extends BOBasePage {
     this.newBackupButton = `${this.newBackupForm} button`;
 
     // Download backup selectors
-    this.downloadBackupButton = 'a[href*=\'backups/download\']';
+    this.downloadBackupButton = 'a.download-file-link';
 
     // DB backup grid selectors
     this.gridPanel = '#backup_grid_panel';
@@ -54,7 +54,7 @@ class DbBackup extends BOBasePage {
     this.paginationLimitSelect = '#paginator_select_page_limit';
     this.paginationLabel = `${this.gridPanel} .col-form-label`;
     this.paginationNextLink = `${this.gridPanel} #pagination_next_url`;
-    this.paginationPreviousLink = `${this.gridPanel} [aria-label='Previous']`;
+    this.paginationPreviousLink = `${this.gridPanel} .pagination .previous a.page-link`;
   }
 
   /* Header methods */

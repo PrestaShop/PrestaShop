@@ -4,7 +4,7 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -46,7 +46,7 @@ const editCartRuleData = new CartRuleFaker(
   },
 );
 
-describe('CRUD cart rule', async () => {
+describe('BO - Catalog - Discounts : CRUD cart rule', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

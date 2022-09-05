@@ -29,7 +29,7 @@ define('_PS_DEFAULT_THEME_NAME_', 'classic');
 define('_PS_THEME_DIR_', _PS_ROOT_DIR_.'/themes/'._THEME_NAME_.'/');
 define('_PS_THEME_URI_', __PS_BASE_URI__.'themes/'._THEME_NAME_.'/');
 
-if (defined('_PARENT_THEME_NAME_') && _PARENT_THEME_NAME_) {
+if (defined('_PARENT_THEME_NAME_') && _PARENT_THEME_NAME_ !== '') {
     define('_PS_PARENT_THEME_DIR_', _PS_ROOT_DIR_.'/themes/'._PARENT_THEME_NAME_.'/');
     define('_PS_PARENT_THEME_URI_', __PS_BASE_URI__.'themes/'._PARENT_THEME_NAME_.'/');
 } else {
@@ -67,8 +67,12 @@ define('_MAIL_DIR_', __PS_BASE_URI__.'mails/');
 define('_MODULE_DIR_', __PS_BASE_URI__.'modules/');
 
 /* Define API URLs if not defined before */
-Tools::safeDefine('_PS_API_DOMAIN_', 'api.prestashop.com');
-Tools::safeDefine('_PS_API_URL_', 'http://'._PS_API_DOMAIN_);
+if (!defined('_PS_API_DOMAIN_')) {
+    define('_PS_API_DOMAIN_', 'api.prestashop.com');
+}
+if (!defined('_PS_API_URL_')) {
+    define('_PS_API_URL_', 'http://' . _PS_API_DOMAIN_);
+}
 /** @deprecated Since 1.7.7 */
 Tools::safeDefine('_PS_TAB_MODULE_LIST_URL_', '');
 /** @deprecated Since 1.7.7 */

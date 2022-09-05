@@ -23,10 +23,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{% embed 'PrestaShopBundle:Admin/Helpers:bootstrap_popup.html.twig' with {
+{% embed '@PrestaShop/Admin/Helpers/bootstrap_popup.html.twig' with {
   'id': grid.id ~ '_grid_delete_categories_modal',
   'title': "What do you want to do with the products associated with this category?"|trans({}, 'Admin.Catalog.Notification'),
   'closable': true,
+  'closeLabel': "Cancel"|trans({}, 'Admin.Actions'),
   'actions': [{
     'type': 'button',
     'label': "Delete"|trans({}, 'Admin.Actions'),

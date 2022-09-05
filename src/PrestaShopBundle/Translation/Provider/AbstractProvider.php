@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Translation\Provider;
 
 use PrestaShop\PrestaShop\Core\Exception\FileNotFoundException;
-use PrestaShop\PrestaShop\Core\Translation\Locale\Converter;
 use PrestaShopBundle\Translation\Loader\DatabaseTranslationLoader;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
@@ -117,23 +116,6 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
     }
 
     /**
-     * Get the PrestaShop locale from real locale.
-     *
-     * @return string The PrestaShop locale
-     *
-     * @deprecated since 1.7.6, to be removed in the next major
-     */
-    public function getPrestaShopLocale()
-    {
-        @trigger_error(
-            '`AbstractProvider::getPrestaShopLocale` function is deprecated and will be removed in the next major',
-            E_USER_DEPRECATED
-        );
-
-        return Converter::toPrestaShopLocale($this->locale);
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getMessageCatalogue()
@@ -200,7 +182,7 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
     /**
      * Get the Catalogue from database only.
      *
-     * @param null $theme
+     * @param string|null $theme
      *
      * @return MessageCatalogue A MessageCatalogue instance
      */
@@ -257,7 +239,7 @@ abstract class AbstractProvider implements ProviderInterface, XliffCatalogueInte
     }
 
     /**
-     * @param array $paths a list of paths when we can look for translations
+     * @param string|array<string> $paths a list of paths when we can look for translations
      * @param string $locale the Symfony (not the PrestaShop one) locale
      * @param string|null $pattern a regular expression
      *

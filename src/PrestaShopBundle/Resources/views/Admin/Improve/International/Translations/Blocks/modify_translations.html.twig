@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{% form_theme modifyTranslationsForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
+{% form_theme modifyTranslationsForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 {% trans_default_domain 'Admin.International.Feature' %}
 
 {% block modify_translations %}
@@ -45,8 +45,8 @@
       </span>
     </h3>
 
-    <div class="card-block row">
-      <div class="card-text">
+    <div class="card-body">
+      <div class="form-wrapper">
         {{ form_widget(modifyTranslationsForm) }}
       </div>
     </div>

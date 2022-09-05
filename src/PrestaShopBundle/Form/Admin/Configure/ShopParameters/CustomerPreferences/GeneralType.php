@@ -27,8 +27,8 @@
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferences;
 
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
@@ -63,7 +63,7 @@ class GeneralType extends TranslatorAwareType
                     'Admin.Shopparameters.Help'
                 ),
             ])
-            ->add('password_reset_delay', TextWithUnitType::class, [
+            ->add('password_reset_delay', IntegerType::class, [
                 'label' => $this->trans(
                     'Password reset delay',
                     'Admin.Shopparameters.Feature'

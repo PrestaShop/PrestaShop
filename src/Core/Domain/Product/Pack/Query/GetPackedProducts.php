@@ -28,7 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Pack\Query;
 
-use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackId;
 
 /**
  * Retrieves product from a pack
@@ -36,23 +37,38 @@ use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 class GetPackedProducts
 {
     /**
-     * @var ProductId
+     * @var PackId
      */
     private $packId;
 
     /**
-     * @param int $packId id of product which represents the pack
+     * @var LanguageId
      */
-    public function __construct(int $packId)
+    protected $languageId;
+
+    /**
+     * @param int $packId
+     * @param int $languageId
+     */
+    public function __construct(int $packId, int $languageId)
     {
-        $this->packId = new ProductId($packId);
+        $this->packId = new PackId($packId);
+        $this->languageId = new LanguageId($languageId);
     }
 
     /**
-     * @return ProductId
+     * @return PackId
      */
-    public function getPackId(): ProductId
+    public function getPackId(): PackId
     {
         return $this->packId;
+    }
+
+    /**
+     * @return LanguageId
+     */
+    public function getLanguageId(): LanguageId
+    {
+        return $this->languageId;
     }
 }

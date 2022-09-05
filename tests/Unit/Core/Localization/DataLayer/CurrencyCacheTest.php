@@ -44,7 +44,7 @@ class CurrencyCacheTest extends TestCase
      */
     protected $layer;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         // Let's use a real cache adapter (easier to setup, and a php array is always available in any environment)
         $cacheAdapter = new ArrayAdapter();
@@ -61,6 +61,7 @@ class CurrencyCacheTest extends TestCase
     public function testReadWrite()
     {
         $data = new CurrencyData();
+        /* @phpstan-ignore-next-line */
         $data->foo = ['bar', 'baz'];
 
         /* @noinspection PhpUnhandledExceptionInspection */
@@ -69,6 +70,7 @@ class CurrencyCacheTest extends TestCase
 
         // Get value back from cache
         /** @noinspection PhpUnhandledExceptionInspection */
+        /** @phpstan-ignore-next-line */
         $cachedData = $this->layer->read(new LocalizedCurrencyId('foo', 'bar'));
         /* @noinspection end */
 
@@ -84,6 +86,7 @@ class CurrencyCacheTest extends TestCase
 
         // Same test with unknown cache key
         /** @noinspection PhpUnhandledExceptionInspection */
+        /** @phpstan-ignore-next-line */
         $cachedData = $this->layer->read(new LocalizedCurrencyId('unknown', 'unknown'));
         /* @noinspection end */
 

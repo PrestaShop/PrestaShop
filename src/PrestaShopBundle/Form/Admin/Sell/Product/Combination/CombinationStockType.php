@@ -34,45 +34,18 @@ use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class CombinationStockType extends TranslatorAwareType
 {
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
-     * @var bool
-     */
-    private $stockManagementEnabled;
-
-    /**
-     * @param TranslatorInterface $translator
-     * @param array $locales
-     * @param RouterInterface $router
-     * @param bool $stockManagementEnabled
-     */
-    public function __construct(
-        TranslatorInterface $translator,
-        array $locales,
-        RouterInterface $router,
-        bool $stockManagementEnabled
-    ) {
-        parent::__construct($translator, $locales);
-        $this->router = $router;
-        $this->stockManagementEnabled = $stockManagementEnabled;
-    }
-
     /**
      * {@inheritDoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('quantities', QuantityType::class)
+            ->add('quantities', QuantityType::class, [
+                'product_id' => $options['product_id'],
+            ])
             ->add('options', StockOptionsType::class)
             ->add('available_date', DatePickerType::class, [
                 'label' => $this->trans('Availability date', 'Admin.Catalog.Feature'),
@@ -90,8 +63,14 @@ class CombinationStockType extends TranslatorAwareType
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-        $resolver->setDefaults([
-            'label' => false,
-        ]);
+        $resolver
+            ->setDefaults([
+                'label' => false,
+            ])
+            ->setRequired([
+                'product_id',
+            ])
+            ->setAllowedTypes('product_id', 'int')
+        ;
     }
 }

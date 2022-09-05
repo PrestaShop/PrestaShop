@@ -5,19 +5,20 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const basicHelper = require('@utils/basicHelper');
 const files = require('@utils/files');
 const testContext = require('@utils/testContext');
 
-// Import login steps
-const loginCommon = require('@commonTests/loginBO');
+// Import common tests
+const loginCommon = require('@commonTests/BO/loginBO');
+const {importFileTest} = require('@commonTests/BO/advancedParameters/importFile');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const brandsPage = require('@pages/BO/catalog/brands');
-const addBrandPage = require('@pages/BO/catalog/brands/add');
 
 // Import data
-const BrandFaker = require('@data/faker/brand');
+const {Data} = require('@data/import/brands');
 
 const baseContext = 'functional_BO_catalog_brandsAndSuppliers_brands_brands_sortPaginationAndBulkActions';
 
@@ -26,80 +27,63 @@ let page;
 let numberOfBrands = 0;
 const tableName = 'manufacturer';
 
+// Variable used to create customers csv file
+const fileName = 'brands.csv';
+const numberOfImportedBrands = 10;
+
 /*
-Create 9 brands
-Paginate between pages
-Sort brands table
-Enable/Disable/Delete brands with bulk actions
+Pre-condition:
+- Import list of customers
+Scenario:
+- Paginate between pages
+- Sort brands table
+- Enable/Disable/Delete brands with bulk actions
  */
 describe('BO - Catalog - Brands & Suppliers : Sort, pagination and bulk actions Brands table', async () => {
+  // Pre-condition: Import list of categories
+  importFileTest(fileName, Data.entity, `${baseContext}_preTest_1`);
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+    // Create csv file with all brands data
+    await files.createCSVFile('.', fileName, Data);
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
+    // Delete created csv file
+    await files.deleteFile(fileName);
   });
 
-  it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
-  });
-
-  it('should go to \'Catalog > Brands & Suppliers\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPage', baseContext);
-
-    await dashboardPage.goToSubMenu(
-      page,
-      dashboardPage.catalogParentLink,
-      dashboardPage.brandsAndSuppliersLink,
-    );
-    await dashboardPage.closeSfToolBar(page);
-
-    const pageTitle = await brandsPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(brandsPage.pageTitle);
-  });
-
-  it('should reset all filters and get number of brands in BO', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'resetFilterBrandsTable', baseContext);
-
-    numberOfBrands = await brandsPage.resetAndGetNumberOfLines(page, tableName);
-    await expect(numberOfBrands).to.be.above(0);
-  });
-
-  // 1 : Create 9 new brands
-  const creationBrandTests = new Array(9).fill(0, 0, 9);
-  describe('Create 9 brands in BO', async () => {
-    creationBrandTests.forEach((test, index) => {
-      const createBrandData = new BrandFaker({name: `todelete${index}`});
-
-      before(() => files.generateImage(createBrandData.logo));
-
-      it('should go to add new brand page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToAddNewBrandPage${index}`, baseContext);
-
-        await brandsPage.goToAddNewBrandPage(page);
-        const pageTitle = await addBrandPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addBrandPage.pageTitle);
-      });
-
-      it(`should create brand n°${index + 1} and check result`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `createBrand${index}`, baseContext);
-
-        const result = await addBrandPage.createEditBrand(page, createBrandData);
-        await expect(result).to.equal(brandsPage.successfulCreationMessage);
-
-        const numberOfBrandsAfterCreation = await brandsPage.getNumberOfElementInGrid(page, tableName);
-        await expect(numberOfBrandsAfterCreation).to.be.equal(numberOfBrands + 1 + index);
-      });
-
-      after(() => files.deleteFile(createBrandData.logo));
-    });
-  });
-
-  // 2 : Pagination of brands table
+  // 1 : Pagination of brands table
   describe('Pagination next and previous of Brands table', async () => {
+    it('should login in BO', async function () {
+      await loginCommon.loginBO(this, page);
+    });
+
+    it('should go to \'Catalog > Brands & Suppliers\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToBrandsPage', baseContext);
+
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.catalogParentLink,
+        dashboardPage.brandsAndSuppliersLink,
+      );
+      await dashboardPage.closeSfToolBar(page);
+
+      const pageTitle = await brandsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(brandsPage.pageTitle);
+    });
+
+    it('should reset all filters and get number of brands in BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterBrandsTable', baseContext);
+
+      numberOfBrands = await brandsPage.resetAndGetNumberOfLines(page, tableName);
+      await expect(numberOfBrands).to.be.above(0);
+    });
+
     it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'brandsChangeItemsNumberTo10', baseContext);
 
@@ -129,7 +113,7 @@ describe('BO - Catalog - Brands & Suppliers : Sort, pagination and bulk actions 
     });
   });
 
-  // 3: sort brands
+  // 2 : sort brands
   describe('Sort Brands table', async () => {
     const brandsTests = [
       {
@@ -163,7 +147,7 @@ describe('BO - Catalog - Brands & Suppliers : Sort, pagination and bulk actions 
             sortedTable = await sortedTable.map(text => parseFloat(text));
           }
 
-          const expectedResult = await brandsPage.sortArray(nonSortedTable, test.args.isFloat);
+          const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
 
           if (test.args.sortDirection === 'asc') {
             await expect(sortedTable).to.deep.equal(expectedResult);
@@ -175,10 +159,10 @@ describe('BO - Catalog - Brands & Suppliers : Sort, pagination and bulk actions 
     });
   });
 
-  // 4 : Disable, enable Brands
+  // 3 : Disable, enable Brands
   describe('Disable, enable created Brands', async () => {
     it('should filter list by name', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterToDeleteBrands1', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToDisableBrands', baseContext);
 
       await brandsPage.filterBrands(page, 'input', 'name', 'todelete');
       const textColumn = await brandsPage.getTextColumnFromTableBrands(page, 1, 'name');
@@ -198,7 +182,7 @@ describe('BO - Catalog - Brands & Suppliers : Sort, pagination and bulk actions 
         await expect(textResult).to.be.equal(brandsPage.successfulUpdateStatusMessage);
 
         const numberOfBrandsInGrid = await brandsPage.getNumberOfElementInGrid(page, tableName);
-        await expect(numberOfBrandsInGrid).to.be.equal(9);
+        await expect(numberOfBrandsInGrid).to.be.equal(numberOfImportedBrands);
 
         for (let i = 1; i <= numberOfBrandsInGrid; i++) {
           const brandStatus = await brandsPage.getBrandStatus(page, i);
@@ -211,14 +195,14 @@ describe('BO - Catalog - Brands & Suppliers : Sort, pagination and bulk actions 
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterBulkEdit', baseContext);
 
       const numberOfBrandsAfterReset = await brandsPage.resetAndGetNumberOfLines(page, tableName);
-      await expect(numberOfBrandsAfterReset).to.be.equal(numberOfBrands + 9);
+      await expect(numberOfBrandsAfterReset).to.be.equal(numberOfBrands);
     });
   });
 
-  // 5 : Delete brands with bulk actions
+  // 4 : Delete brands with bulk actions
   describe('Delete Brands with bulk actions', async () => {
     it('should filter list by name', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterToDeleteBrands2', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'filterToDeleteBrands', baseContext);
 
       await brandsPage.filterBrands(page, 'input', 'name', 'todelete');
       const textColumn = await brandsPage.getTextColumnFromTableBrands(page, 1, 'name');
@@ -236,7 +220,7 @@ describe('BO - Catalog - Brands & Suppliers : Sort, pagination and bulk actions 
       await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDeleteBrands', baseContext);
 
       const numberOfBrandsAfterReset = await brandsPage.resetAndGetNumberOfLines(page, tableName);
-      await expect(numberOfBrandsAfterReset).to.be.equal(numberOfBrands);
+      await expect(numberOfBrandsAfterReset).to.be.equal(numberOfBrands - numberOfImportedBrands);
     });
   });
 });

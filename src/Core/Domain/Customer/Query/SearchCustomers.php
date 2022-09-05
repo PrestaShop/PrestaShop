@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Customer\Query;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Exception\CustomerException;
 
 /**
- * Searchers for customers by phrases matching customer's first name, last name, email and id
+ * Searchers for customers by phrases matching customer's first name, last name, email, company name and id
  */
 class SearchCustomers
 {

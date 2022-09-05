@@ -37,16 +37,69 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
      */
     public $model_database;
 
-    public function init()
+    /**
+     * @var string
+     */
+    public $database_server;
+
+    /**
+     * @var string
+     */
+    public $database_name;
+
+    /**
+     * @var string
+     */
+    public $database_login;
+
+    /**
+     * @var string
+     */
+    public $database_password;
+
+    /**
+     * @var string
+     */
+    public $database_engine;
+
+    /**
+     * @var string
+     */
+    public $database_prefix;
+
+    /**
+     * @var bool
+     */
+    public $database_clear;
+
+    /**
+     * @var bool
+     */
+    public $use_smtp;
+
+    /**
+     * @var string
+     */
+    public $smtp_encryption;
+
+    /**
+     * @var int
+     */
+    public $smtp_port;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function init(): void
     {
         $this->model_database = new Database();
         $this->model_database->setTranslator($this->translator);
     }
 
     /**
-     * @see HttpConfigureInterface::processNextStep()
+     * {@inheritdoc}
      */
-    public function processNextStep()
+    public function processNextStep(): void
     {
         // Save database config
         $this->session->database_server = trim(Tools::getValue('dbServer'));
@@ -59,11 +112,9 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
     }
 
     /**
-     * Database configuration must be valid to validate this step
-     *
-     * @see HttpConfigureInterface::validate()
+     * {@inheritdoc}
      */
-    public function validate()
+    public function validate(): bool
     {
         $this->errors = $this->model_database->testDatabaseSettings(
             $this->session->database_server,
@@ -85,7 +136,10 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
         return true;
     }
 
-    public function process()
+    /**
+     * {@inheritdoc}
+     */
+    public function process(): void
     {
         if (Tools::getValue('checkDb')) {
             $this->processCheckDb();
@@ -97,7 +151,7 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
     /**
      * Check if a connection to database is possible with these data
      */
-    public function processCheckDb()
+    public function processCheckDb(): void
     {
         $server = Tools::getValue('dbServer');
         $database = Tools::getValue('dbName');
@@ -110,14 +164,14 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
 
         $this->ajaxJsonAnswer(
             (count($errors)) ? false : true,
-            (count($errors)) ? implode('<br />', $errors) : $this->translator->trans('Database is connected', array(), 'Install')
+            (count($errors)) ? implode('<br />', $errors) : $this->translator->trans('Database is connected', [], 'Install')
         );
     }
 
     /**
      * Attempt to create the database
      */
-    public function processCreateDb()
+    public function processCreateDb(): void
     {
         $server = Tools::getValue('dbServer');
         $database = Tools::getValue('dbName');
@@ -128,25 +182,25 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
 
         $this->ajaxJsonAnswer(
             $success,
-            $success ?  $this->translator->trans('Database is created', array(), 'Install') : $this->translator->trans('Cannot create the database automatically', array(), 'Install')
+            $success ? $this->translator->trans('Database is created', [], 'Install') : $this->translator->trans('Cannot create the database automatically', [], 'Install')
         );
     }
 
     /**
-     * @see HttpConfigureInterface::display()
+     * {@inheritdoc}
      */
-    public function display()
+    public function display(): void
     {
         if (!$this->session->database_server) {
-            if (file_exists(_PS_ROOT_DIR_.'/app/config/parameters.php')) {
-                $parameters = require _PS_ROOT_DIR_.'/app/config/parameters.php';
+            if (file_exists(_PS_ROOT_DIR_ . '/app/config/parameters.php')) {
+                $parameters = require _PS_ROOT_DIR_ . '/app/config/parameters.php';
             } else {
-                $parameters = Yaml::parse(file_get_contents(_PS_ROOT_DIR_.'/app/config/parameters.yml.dist'));
+                $parameters = Yaml::parse(file_get_contents(_PS_ROOT_DIR_ . '/app/config/parameters.yml.dist'));
             }
 
             $this->database_server = $parameters['parameters']['database_host'];
             if (!empty($parameters['parameters']['database_port'])) {
-                $this->database_server .= ':'.$parameters['parameters']['database_port'];
+                $this->database_server .= ':' . $parameters['parameters']['database_port'];
             }
             $this->database_name = $parameters['parameters']['database_name'];
             $this->database_login = $parameters['parameters']['database_user'];
@@ -172,6 +226,6 @@ class InstallControllerHttpDatabase extends InstallControllerHttp implements Htt
             $this->smtp_port = $this->session->smtp_port;
         }
 
-        $this->displayTemplate('database');
+        $this->displayContent('database');
     }
 }

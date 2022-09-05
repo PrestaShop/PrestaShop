@@ -30,12 +30,12 @@ use AppKernel;
 use Behat\Gherkin\Node\TableNode;
 use Configuration;
 use Exception;
-use LegacyTests\Unit\Core\Cart\CartToOrder\PaymentModuleFake;
 use Order;
 use OrderCarrier;
 use OrderCartRule;
 use PHPUnit\Framework\Assert as Assert;
 use RuntimeException;
+use Tests\Integration\Utility\PaymentModuleFake;
 
 class OrderFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -71,7 +71,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
         $cart->update();
         $paymentModule->validateOrder(
             $cart->id,
-            Configuration::get('PS_OS_CHEQUE'), // PS_OS_PAYMENT for payment-validated order
+            (int) Configuration::get('PS_OS_CHEQUE'), // PS_OS_PAYMENT for payment-validated order
             0,
             'Unknown',
             null,
@@ -80,6 +80,7 @@ class OrderFeatureContext extends AbstractPrestaShopFeatureContext
             false,
             $cart->secure_key
         );
+        /** @var Order $order */
         $order = Order::getByCartId($cart->id);
         $this->orders[] = $order;
 

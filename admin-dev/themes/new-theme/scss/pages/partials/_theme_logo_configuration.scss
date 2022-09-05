@@ -32,7 +32,7 @@
       font-weight: 400;
       font-stretch: normal;
       line-height: normal;
-      color: #6c868e;
+      color: $gray-500;
       letter-spacing: -0.0125rem;
     }
 
@@ -74,7 +74,7 @@
 
     .nav-link {
       &.active {
-        color: #363a41;
+        color: $gray-700;
         background-color: inherit;
       }
       height: 1.65rem;

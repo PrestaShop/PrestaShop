@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory;
 
 use PrestaShop\PrestaShop\Core\Grid\Action\Bulk\BulkActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\GridActionCollection;
-use PrestaShop\PrestaShop\Core\Grid\Action\Row\AccessibilityChecker\AccessibilityCheckerInterface;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\RowActionCollection;
 use PrestaShop\PrestaShop\Core\Grid\Action\Row\Type\LinkRowAction;
 use PrestaShop\PrestaShop\Core\Grid\Action\Type\SimpleGridAction;
@@ -38,7 +37,6 @@ use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
 use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
 use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
 use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
-use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
@@ -50,45 +48,14 @@ final class ProfileGridDefinitionFactory extends AbstractGridDefinitionFactory
     use BulkDeleteActionTrait;
     use DeleteActionTrait;
 
-    /**
-     * @var string
-     */
-    private $resetActionUrl;
-
-    /**
-     * @var string
-     */
-    private $redirectionUrl;
-
-    /**
-     * @var AccessibilityCheckerInterface
-     */
-    private $deleteProfileAccessibilityChecker;
-
-    /**
-     * @param HookDispatcherInterface $hookDispatcher
-     * @param string $resetActionUrl
-     * @param string $redirectionUrl
-     * @param AccessibilityCheckerInterface $deleteProfileAccessibilityChecker
-     */
-    public function __construct(
-        HookDispatcherInterface $hookDispatcher,
-        $resetActionUrl,
-        $redirectionUrl,
-        AccessibilityCheckerInterface $deleteProfileAccessibilityChecker
-    ) {
-        parent::__construct($hookDispatcher);
-        $this->resetActionUrl = $resetActionUrl;
-        $this->redirectionUrl = $redirectionUrl;
-        $this->deleteProfileAccessibilityChecker = $deleteProfileAccessibilityChecker;
-    }
+    public const GRID_ID = 'profile';
 
     /**
      * {@inheritdoc}
      */
     protected function getId()
     {
-        return 'profile';
+        return self::GRID_ID;
     }
 
     /**
@@ -196,10 +163,11 @@ final class ProfileGridDefinitionFactory extends AbstractGridDefinitionFactory
             )
             ->add((new Filter('actions', SearchAndResetType::class))
             ->setTypeOptions([
-                'attr' => [
-                    'data-url' => $this->resetActionUrl,
-                    'data-redirect' => $this->redirectionUrl,
+                'reset_route' => 'admin_common_reset_search_by_filter_id',
+                'reset_route_params' => [
+                    'filterId' => self::GRID_ID,
                 ],
+                'redirect_route' => 'admin_profiles_index',
             ])
             ->setAssociatedColumn('actions')
             )

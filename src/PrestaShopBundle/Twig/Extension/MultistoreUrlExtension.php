@@ -32,7 +32,7 @@ use PrestaShopBundle\Entity\Shop;
 use PrestaShopBundle\Entity\ShopGroup;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Extension\AbstractExtension;
-use Twig_SimpleFunction as SimpleFunction;
+use Twig\TwigFunction;
 
 /**
  * Class MultiStoreUrlExtension is responsible for providing a way to generate url with setShopContext parameter.
@@ -60,9 +60,9 @@ class MultistoreUrlExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new SimpleFunction('multistore_url', [$this, 'generateUrl']),
-            new SimpleFunction('multistore_group_url', [$this, 'generateGroupUrl']),
-            new SimpleFunction('multistore_shop_url', [$this, 'generateShopUrl']),
+            new TwigFunction('multistore_url', [$this, 'generateUrl']),
+            new TwigFunction('multistore_group_url', [$this, 'generateGroupUrl']),
+            new TwigFunction('multistore_shop_url', [$this, 'generateShopUrl']),
         ];
     }
 

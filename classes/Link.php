@@ -24,7 +24,6 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Feature\TokenInUrls;
 use PrestaShopBundle\Routing\Converter\LegacyUrlConverter;
@@ -57,7 +56,7 @@ class LinkCore
      */
     public function __construct($protocolLink = null, $protocolContent = null)
     {
-        $this->allow = (int) Configuration::get('PS_REWRITING_SETTINGS');
+        $this->allow = (bool) Configuration::get('PS_REWRITING_SETTINGS');
         $this->url = $_SERVER['SCRIPT_NAME'];
         $this->protocol_link = $protocolLink;
         $this->protocol_content = $protocolContent;
@@ -123,7 +122,7 @@ class LinkCore
     /**
      * Create a link to a product.
      *
-     * @param Product|array|int $product Product object (can be an ID product, but deprecated)
+     * @param ProductCore|array|int $product Product object (can be an ID product, but deprecated)
      * @param string|null $alias
      * @param string|null $category
      * @param string|null $ean13
@@ -412,7 +411,7 @@ class LinkCore
     /**
      * Create a link to a category.
      *
-     * @param Category|array|int $category Category object (can be an ID category, but deprecated)
+     * @param CategoryCore|array|int $category Category object (can be an ID category, but deprecated)
      * @param string|null $alias
      * @param int|null $idLang
      * @param string|null $selectedFilters Url parameter to autocheck filters of the module blocklayered
@@ -449,15 +448,7 @@ class LinkCore
             throw new \InvalidArgumentException('Invalid category parameter');
         }
 
-        // Selected filters is used by the module ps_facetedsearch
-        $selectedFilters = null === $selectedFilters ? '' : $selectedFilters;
-
-        if (empty($selectedFilters)) {
-            $rule = 'category_rule';
-        } else {
-            $rule = 'layered_rule';
-            $params['selected_filters'] = $selectedFilters;
-        }
+        $rule = 'category_rule';
 
         if (!$alias) {
             $category = $this->getCategoryObject($category, $idLang);
@@ -928,7 +919,7 @@ class LinkCore
             if (null !== $idShop) {
                 $shop = new Shop($idShop);
             } else {
-                $shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
+                $shop = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
             }
         } else {
             $shop = Context::getContext()->shop;
@@ -994,31 +985,14 @@ class LinkCore
     public function getImageLink($name, $ids, $type = null)
     {
         $notDefault = false;
-        $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
-        $moduleManager = $moduleManagerBuilder->build();
-        static $watermarkLogged = null;
-        static $watermarkHash = null;
-        static $psLegacyImages = null;
-        if ($watermarkLogged === null) {
-            $watermarkLogged = Configuration::get('WATERMARK_LOGGED');
-            $watermarkHash = Configuration::get('WATERMARK_HASH');
-            $psLegacyImages = Configuration::get('PS_LEGACY_IMAGES');
-        }
-
-        // Check if module is installed, enabled, customer is logged in and watermark logged option is on
-        if (!empty($type) && $watermarkLogged &&
-            ($moduleManager->isInstalled('watermark') && $moduleManager->isEnabled('watermark')) &&
-            isset(Context::getContext()->customer->id)
-        ) {
-            $type .= '-' . $watermarkHash;
-        }
+        $psLegacyImages = Configuration::get('PS_LEGACY_IMAGES');
 
         // legacy mode or default image
-        $theme = ((Shop::isFeatureActive() && file_exists(_PS_PROD_IMG_DIR_ . $ids . ($type ? '-' . $type : '') . '-' . Context::getContext()->shop->theme_name . '.jpg')) ? '-' . Context::getContext()->shop->theme_name : '');
+        $theme = ((Shop::isFeatureActive() && file_exists(_PS_PRODUCT_IMG_DIR_ . $ids . ($type ? '-' . $type : '') . '-' . Context::getContext()->shop->theme_name . '.jpg')) ? '-' . Context::getContext()->shop->theme_name : '');
         if (($psLegacyImages
-                && (file_exists(_PS_PROD_IMG_DIR_ . $ids . ($type ? '-' . $type : '') . $theme . '.jpg')))
+                && (file_exists(_PS_PRODUCT_IMG_DIR_ . $ids . ($type ? '-' . $type : '') . $theme . '.jpg')))
             || ($notDefault = strpos($ids, 'default') !== false)) {
-            if ($this->allow == 1 && !$notDefault) {
+            if ($this->allow && !$notDefault) {
                 $uriPath = __PS_BASE_URI__ . $ids . ($type ? '-' . $type : '') . $theme . '/' . $name . '.jpg';
             } else {
                 $uriPath = _THEME_PROD_DIR_ . $ids . ($type ? '-' . $type : '') . $theme . '.jpg';
@@ -1027,8 +1001,8 @@ class LinkCore
             // if ids if of the form id_product-id_image, we want to extract the id_image part
             $splitIds = explode('-', $ids);
             $idImage = (isset($splitIds[1]) ? $splitIds[1] : $splitIds[0]);
-            $theme = ((Shop::isFeatureActive() && file_exists(_PS_PROD_IMG_DIR_ . Image::getImgFolderStatic($idImage) . $idImage . ($type ? '-' . $type : '') . '-' . (int) Context::getContext()->shop->theme_name . '.jpg')) ? '-' . Context::getContext()->shop->theme_name : '');
-            if ($this->allow == 1) {
+            $theme = ((Shop::isFeatureActive() && file_exists(_PS_PRODUCT_IMG_DIR_ . Image::getImgFolderStatic($idImage) . $idImage . ($type ? '-' . $type : '') . '-' . (int) Context::getContext()->shop->theme_name . '.jpg')) ? '-' . Context::getContext()->shop->theme_name : '');
+            if ($this->allow) {
                 $uriPath = __PS_BASE_URI__ . $idImage . ($type ? '-' . $type : '') . $theme . '/' . $name . '.jpg';
             } else {
                 $uriPath = _THEME_PROD_DIR_ . Image::getImgFolderStatic($idImage) . $idImage . ($type ? '-' . $type : '') . $theme . '.jpg';
@@ -1162,7 +1136,7 @@ class LinkCore
             }
         } else {
             /** @FIXME html_entity_decode has been added due to '&amp;' => '%3B' ... */
-            $request = html_entity_decode($request);
+            $request = html_entity_decode($request ?? '');
             if ($requestUrlEncode) {
                 $request = urlencode($request);
             }
@@ -1187,7 +1161,7 @@ class LinkCore
      */
     public function getCatImageLink($name, $idCategory, $type = null)
     {
-        if ($this->allow == 1 && $type) {
+        if ($this->allow && $type) {
             $uriPath = __PS_BASE_URI__ . 'c/' . $idCategory . '-' . $type . '/' . $name . '.jpg';
         } else {
             $uriPath = _THEME_CAT_DIR_ . $idCategory . ($type ? '-' . $type : '') . '.jpg';
@@ -1306,9 +1280,9 @@ class LinkCore
                 if (Configuration::get('PS_REWRITING_SETTINGS') && ($k == 'isolang' || $k == 'id_lang')) {
                     continue;
                 }
-                $ifNb = (!$nb || ($nb && !in_array($k, $varsNb)));
-                $ifSort = (!$sort || ($sort && !in_array($k, $varsSort)));
-                $ifPagination = (!$pagination || ($pagination && !in_array($k, $varsPagination)));
+                $ifNb = (!$nb || !in_array($k, $varsNb));
+                $ifSort = (!$sort || !in_array($k, $varsSort));
+                $ifPagination = (!$pagination || !in_array($k, $varsPagination));
                 if ($ifNb && $ifSort && $ifPagination) {
                     if (!is_array($value)) {
                         $vars[urlencode($k)] = $value;
@@ -1324,7 +1298,7 @@ class LinkCore
 
         if (!$array) {
             if (count($vars)) {
-                return $url . (!strstr($url, '?') && ($this->allow == 1 || $url == $this->url) ? '?' : '&') . http_build_query($vars, '', '&');
+                return $url . (!strstr($url, '?') && ($this->allow || $url == $this->url) ? '?' : '&') . http_build_query($vars, '', '&');
             } else {
                 return $url;
             }
@@ -1336,7 +1310,7 @@ class LinkCore
             $vars['id_' . $type] = (is_object($idObject) ? (int) $idObject->id : (int) $idObject);
         }
 
-        if (!$this->allow == 1) {
+        if (!$this->allow) {
             $vars['controller'] = Dispatcher::getInstance()->getController();
         }
 
@@ -1455,7 +1429,7 @@ class LinkCore
     {
         $quickLink = $this->getQuickLink($url);
 
-        return isset($quickLink) && $quickLink === ($this->getQuickLink($_SERVER['REQUEST_URI']));
+        return $quickLink === ($this->getQuickLink($_SERVER['REQUEST_URI']));
     }
 
     /**
@@ -1532,6 +1506,20 @@ class LinkCore
                 $link = $context->link->getCatImageLink(
                     $params['name'],
                     $params['id'],
+                    $params['type'] = (isset($params['type']) ? $params['type'] : null)
+                );
+
+                break;
+            case 'manufacturerImage':
+                $link = $context->link->getManufacturerImageLink(
+                    (int) $params['id'],
+                    $params['type'] = (isset($params['type']) ? $params['type'] : null)
+                );
+
+                break;
+            case 'supplierImage':
+                $link = $context->link->getSupplierImageLink(
+                    (int) $params['id'],
                     $params['type'] = (isset($params['type']) ? $params['type'] : null)
                 );
 

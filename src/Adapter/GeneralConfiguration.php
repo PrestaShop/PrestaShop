@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Adapter;
 
 use Cookie;
-use PrestaShop\PrestaShop\Adapter\Addons\AddonsDataProvider;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 
 /**
@@ -46,20 +45,13 @@ class GeneralConfiguration implements DataConfigurationInterface
     private $cookie;
 
     /**
-     * @var bool
-     */
-    private $isDebug;
-
-    /**
      * @param Configuration $configuration
      * @param Cookie $cookie
-     * @param bool|null $isDebug
      */
-    public function __construct(Configuration $configuration, Cookie $cookie, bool $isDebug = null)
+    public function __construct(Configuration $configuration, Cookie $cookie)
     {
         $this->configuration = $configuration;
         $this->cookie = $cookie;
-        $this->isDebug = $isDebug === null ? (defined(_PS_MODE_DEV_) ? _PS_MODE_DEV_ : true) : $isDebug;
     }
 
     /**
@@ -67,21 +59,13 @@ class GeneralConfiguration implements DataConfigurationInterface
      */
     public function getConfiguration()
     {
-        $configuration = [
+        return [
             'check_modules_update' => $this->configuration->getBoolean('PRESTASTORE_LIVE'),
             'check_ip_address' => $this->configuration->getBoolean('PS_COOKIE_CHECKIP'),
             'front_cookie_lifetime' => $this->configuration->get('PS_COOKIE_LIFETIME_FO'),
             'back_cookie_lifetime' => $this->configuration->get('PS_COOKIE_LIFETIME_BO'),
             'cookie_samesite' => $this->configuration->get('PS_COOKIE_SAMESITE'),
         ];
-        if ($this->isDebug) {
-            $configuration['check_modules_stability_channel'] = $this->configuration->get(
-                'ADDONS_API_MODULE_CHANNEL',
-                AddonsDataProvider::ADDONS_API_MODULE_CHANNEL_STABLE
-            );
-        }
-
-        return $configuration;
     }
 
     /**
@@ -104,9 +88,6 @@ class GeneralConfiguration implements DataConfigurationInterface
                 $this->configuration->set('PS_COOKIE_LIFETIME_FO', (int) $configuration['front_cookie_lifetime']);
                 $this->configuration->set('PS_COOKIE_LIFETIME_BO', (int) $configuration['back_cookie_lifetime']);
                 $this->configuration->set('PS_COOKIE_SAMESITE', $configuration['cookie_samesite']);
-                if ($this->isDebug) {
-                    $this->configuration->set('ADDONS_API_MODULE_CHANNEL', $configuration['check_modules_stability_channel']);
-                }
                 // Clear checksum to force the refresh
                 $this->cookie->checksum = '';
                 $this->cookie->write();
@@ -130,12 +111,6 @@ class GeneralConfiguration implements DataConfigurationInterface
                 $configuration['cookie_samesite'],
                 Cookie::SAMESITE_AVAILABLE_VALUES
             );
-        if ($this->isDebug) {
-            $isValid &= in_array(
-                $configuration['check_modules_stability_channel'],
-                AddonsDataProvider::ADDONS_API_MODULE_CHANNELS
-            );
-        }
 
         return (bool) $isValid;
     }

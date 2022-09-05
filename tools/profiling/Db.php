@@ -73,11 +73,12 @@ abstract class Db extends DbCore
         }
 
         if (!$explain) {
-            $uniqSql = preg_replace('/[\'"][a-f0-9]{32}[\'"]/', '<span style="color:blue">XX</span>', $sql);
-            $uniqSql = preg_replace('/[0-9]+/', '<span style="color:blue">XX</span>', $uniqSql);
+            $uniqSql = preg_replace('/[\'"][a-f0-9]{32}[\'"]/', 'XX', $sql);
+            $uniqSql = preg_replace('/[0-9]+/', 'XX', $uniqSql);
             if (!isset($this->uniqQueries[$uniqSql])) {
                 $this->uniqQueries[$uniqSql] = 0;
             }
+
             ++$this->uniqQueries[$uniqSql];
 
             // No cache for query
@@ -103,13 +104,17 @@ abstract class Db extends DbCore
         if (!$explain) {
             $end = microtime(true);
 
-            $stack = debug_backtrace(false);
+            $stack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
             while (preg_match('@[/\\\\]classes[/\\\\]db[/\\\\]@i', $stack[0]['file'])) {
                 array_shift($stack);
             }
             $stack_light = [];
             foreach ($stack as $call) {
-                $stack_light[] = ['file' => isset($call['file']) ? $call['file'] : 'undefined', 'line' => isset($call['line']) ? $call['line'] : 'undefined'];
+                $stack_light[] = [
+                    'file' => $call['file'] ?? 'undefined',
+                    'line' => $call['line'] ?? 'undefined',
+                    'function' => $call['function'],
+                ];
             }
 
             $this->queries[] = [

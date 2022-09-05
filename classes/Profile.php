@@ -29,12 +29,12 @@
  */
 class ProfileCore extends ObjectModel
 {
-    const ALLOWED_PROFILE_TYPE_CHECK = [
+    public const ALLOWED_PROFILE_TYPE_CHECK = [
         'id_tab',
         'class_name',
     ];
 
-    /** @var array<string> Name */
+    /** @var string|array<int, string> Name */
     public $name;
 
     /**
@@ -94,9 +94,9 @@ class ProfileCore extends ObjectModel
      * Get the current profile name.
      *
      * @param int $idProfile Profile ID
-     * @param null $idLang Language ID
+     * @param int|null $idLang Language ID
      *
-     * @return string Profile
+     * @return array Profile
      */
     public static function getProfile($idProfile, $idLang = null)
     {
@@ -105,8 +105,7 @@ class ProfileCore extends ObjectModel
         }
 
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow(
-            '
-			SELECT `name`
+            'SELECT `name`
 			FROM `' . _DB_PREFIX_ . 'profile` p
 			LEFT JOIN `' . _DB_PREFIX_ . 'profile_lang` pl ON (p.`id_profile` = pl.`id_profile`)
 			WHERE p.`id_profile` = ' . (int) $idProfile . '
@@ -204,6 +203,12 @@ class ProfileCore extends ObjectModel
         }
 
         return self::$_cache_accesses[$idProfile][$type];
+    }
+
+    public static function resetStaticCache()
+    {
+        parent::resetStaticCache();
+        self::resetCacheAccesses();
     }
 
     public static function resetCacheAccesses()

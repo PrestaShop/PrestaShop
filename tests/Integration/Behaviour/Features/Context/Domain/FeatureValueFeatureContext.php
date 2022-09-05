@@ -55,7 +55,6 @@ class FeatureValueFeatureContext extends AbstractDomainFeatureContext
         $featureId = $this->getSharedStorage()->get($featureReference);
         $data = $this->localizeByRows($table);
 
-        $this->cleanLastException();
         $command = new AddFeatureValueCommand($featureId, $data['value']);
         try {
             /** @var FeatureValueId $featureValueId */
@@ -80,7 +79,6 @@ class FeatureValueFeatureContext extends AbstractDomainFeatureContext
         $command = new EditFeatureValueCommand($featureValueId);
         $command->setLocalizedValues($data['value']);
 
-        $this->cleanLastException();
         try {
             $this->getCommandBus()->handle($command);
         } catch (FeatureValueException $e) {
@@ -141,7 +139,6 @@ class FeatureValueFeatureContext extends AbstractDomainFeatureContext
         $command = new EditFeatureValueCommand($featureValueId);
         $command->setFeatureId($featureId);
 
-        $this->cleanLastException();
         try {
             $this->getCommandBus()->handle($command);
         } catch (FeatureValueException $e) {
@@ -167,7 +164,7 @@ class FeatureValueFeatureContext extends AbstractDomainFeatureContext
                 'Incorrect feature associated to %s, expected %d but got %d',
                 $featureReference,
                 $featureId,
-                $editableFeatureValue->getFeatureId()
+                $editableFeatureValue->getFeatureId()->getValue()
             ));
         }
     }

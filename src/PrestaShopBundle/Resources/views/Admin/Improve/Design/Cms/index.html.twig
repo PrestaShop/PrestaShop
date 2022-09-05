@@ -41,37 +41,24 @@
 
 {% block content %}
 
-  <div class="row">
-    <div class="col-sm">
-      {% include '@PrestaShop/Admin/Improve/Design/Cms/Blocks/showcase_card.html.twig' %}
-    </div>
-  </div>
+  {% include '@PrestaShop/Admin/Improve/Design/Cms/Blocks/showcase_card.html.twig' %}
 
   {% block cms_page_category_breadcrumb %}
     {% include '@PrestaShop/Admin/Improve/Design/Cms/Blocks/breadcrumb.html.twig' %}
   {% endblock %}
 
   {% block cms_category_grid %}
-    <div class="row">
-      <div class="col">
-        {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': cmsCategoryGrid} %}
-
-            {% block grid_panel_footer %}
-              {% if app.request.query.get('id_cms_category') and app.request.query.get('id_cms_category') != cmsPageView.root_category_id %}
-                {% include '@PrestaShop/Admin/Improve/Design/Cms/Blocks/listing_panel_footer.html.twig' %}
-              {% endif %}
-            {% endblock %}
-        {% endembed %}
-      </div>
-    </div>
+    {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': cmsCategoryGrid} %}
+      {% block grid_panel_footer %}
+        {% if app.request.query.get('id_cms_category') and app.request.query.get('id_cms_category') != cmsPageView.root_category_id %}
+          {% include '@PrestaShop/Admin/Improve/Design/Cms/Blocks/listing_panel_footer.html.twig' %}
+        {% endif %}
+      {% endblock %}
+    {% endembed %}
   {% endblock %}
 
   {% block cms_grid %}
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': cmsGrid} %}
-      </div>
-    </div>
+    {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': cmsGrid} %}
   {% endblock %}
 {% endblock %}
 

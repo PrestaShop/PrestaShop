@@ -31,7 +31,6 @@ use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchProviderInterface;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchResult;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
-use PrestaShop\PrestaShop\Core\Product\Search\SortOrderFactory;
 use ProductSale;
 use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
@@ -43,16 +42,10 @@ class BestSalesProductSearchProvider implements ProductSearchProviderInterface
      */
     private $translator;
 
-    /**
-     * @var SortOrderFactory
-     */
-    private $sortOrderFactory;
-
     public function __construct(
         TranslatorInterface $translator
     ) {
         $this->translator = $translator;
-        $this->sortOrderFactory = new SortOrderFactory($this->translator);
     }
 
     /**

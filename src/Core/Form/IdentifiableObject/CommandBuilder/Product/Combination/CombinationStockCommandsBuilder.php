@@ -27,9 +27,11 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination;
 
-use DateTime;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilder;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\DataField;
 
 /**
  * Builds commands from command stock form type
@@ -41,32 +43,21 @@ final class CombinationStockCommandsBuilder implements CombinationCommandsBuilde
      */
     public function buildCommands(CombinationId $combinationId, array $formData): array
     {
-        if (!isset($formData['stock'])) {
-            return [];
-        }
+        $config = new CommandBuilderConfig();
+        $config
+            ->addField('[stock][quantities][delta_quantity][delta]', 'setDeltaQuantity', DataField::TYPE_INT)
+            ->addField('[stock][quantities][fixed_quantity]', 'setFixedQuantity', DataField::TYPE_INT)
+            ->addField('[stock][quantities][minimal_quantity]', 'setMinimalQuantity', DataField::TYPE_INT)
+            ->addField('[stock][options][stock_location]', 'setLocation', DataField::TYPE_STRING)
+            ->addField('[stock][options][low_stock_threshold]', 'setLowStockThreshold', DataField::TYPE_INT)
+            ->addField('[stock][options][disabling_switch_low_stock_threshold]', 'setLowStockAlert', DataField::TYPE_BOOL)
+            ->addField('[stock][pack_stock_type]', 'setPackStockType', DataField::TYPE_INT)
+            ->addField('[stock][available_date]', 'setAvailableDate', DataField::TYPE_DATETIME)
+        ;
 
-        $quantityData = $formData['stock'];
+        $commandBuilder = new CommandBuilder($config);
         $command = new UpdateCombinationStockCommand($combinationId->getValue());
 
-        if (isset($quantityData['quantities']['quantity'])) {
-            $command->setQuantity((int) $quantityData['quantities']['quantity']);
-        }
-        if (isset($quantityData['quantities']['minimal_quantity'])) {
-            $command->setMinimalQuantity((int) $quantityData['quantities']['minimal_quantity']);
-        }
-        if (isset($quantityData['options']['stock_location'])) {
-            $command->setLocation($quantityData['options']['stock_location']);
-        }
-        if (isset($quantityData['options']['low_stock_threshold'])) {
-            $command->setLowStockThreshold((int) $quantityData['options']['low_stock_threshold']);
-        }
-        if (isset($quantityData['options']['low_stock_alert'])) {
-            $command->setLowStockAlert((bool) $quantityData['options']['low_stock_alert']);
-        }
-        if (isset($quantityData['available_date'])) {
-            $command->setAvailableDate(new DateTime($quantityData['available_date']));
-        }
-
-        return [$command];
+        return $commandBuilder->buildCommands($formData, $command);
     }
 }

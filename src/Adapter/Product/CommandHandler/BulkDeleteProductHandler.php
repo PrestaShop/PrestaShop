@@ -31,11 +31,14 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\BulkDeleteProductCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\BulkDeleteProductHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\BulkProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
 /**
  * Handles command which deletes addresses in bulk action
  */
-final class BulkDeleteProductHandler implements BulkDeleteProductHandlerInterface
+final class BulkDeleteProductHandler extends AbstractBulkHandler implements BulkDeleteProductHandlerInterface
 {
     /**
      * @var ProductRepository
@@ -55,6 +58,16 @@ final class BulkDeleteProductHandler implements BulkDeleteProductHandlerInterfac
      */
     public function handle(BulkDeleteProductCommand $command): void
     {
-        $this->productRepository->bulkDelete($command->getProductIds());
+        $this->handleBulkAction($command->getProductIds());
+    }
+
+    protected function handleSingleAction(ProductId $productId, $command = null)
+    {
+        $this->productRepository->delete($productId);
+    }
+
+    protected function buildBulkException(): BulkProductException
+    {
+        return new CannotBulkDeleteProductException();
     }
 }

@@ -66,6 +66,10 @@ class Router extends BaseRouter
 
         $url = parent::generate($name, $parameters, $referenceType);
 
+        if (TokenInUrls::isDisabled()) {
+            return $url;
+        }
+
         return self::generateTokenizedUrl($url, $this->tokens[$username]);
     }
 
@@ -81,10 +85,6 @@ class Router extends BaseRouter
 
     public static function generateTokenizedUrl($url, $token)
     {
-        if (TokenInUrls::isDisabled()) {
-            return $url;
-        }
-
         $components = parse_url($url);
         $baseUrl = (isset($components['path']) ? $components['path'] : '');
         $queryParams = [];
@@ -96,6 +96,12 @@ class Router extends BaseRouter
 
         $queryParams['_token'] = $token;
 
-        return $baseUrl . '?' . http_build_query($queryParams, '', '&');
+        $url = $baseUrl . '?' . http_build_query($queryParams, '', '&');
+        if (isset($components['fragment']) && $components['fragment'] !== '') {
+            /* This copy-paste from Symfony's UrlGenerator */
+            $url .= '#' . strtr(rawurlencode($components['fragment']), ['%2F' => '/', '%3F' => '?']);
+        }
+
+        return $url;
     }
 }

@@ -7,7 +7,7 @@ const {expect} = require('chai');
 const helper = require('@utils/helpers');
 
 // Common tests login BO
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -56,11 +56,15 @@ describe('BO - Catalog - Attributes & Features : Help card on attributes page', 
     await expect(pageTitle).to.contains(attributesPage.pageTitle);
   });
 
-  it('should open the help side bar and check the document language', async function () {
+  it('should open the help side bar', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'openHelpSidebar', baseContext);
 
     const isHelpSidebarVisible = await attributesPage.openHelpSideBar(page);
     await expect(isHelpSidebarVisible).to.be.true;
+  });
+
+  it('should check the document language', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkDocumentLanguage', baseContext);
 
     const documentURL = await attributesPage.getHelpDocumentURL(page);
     await expect(documentURL).to.contains('country=en');

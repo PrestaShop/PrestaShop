@@ -177,23 +177,6 @@ class GroupReductionCore extends ObjectModel
         );
     }
 
-    /**
-     * @deprecated 1.5.3.0
-     *
-     * @param int $id_category
-     *
-     * @return array|null
-     */
-    public static function getGroupByCategoryId($id_category)
-    {
-        Tools::displayAsDeprecated('Use GroupReduction::getGroupsByCategoryId($id_category)');
-
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-			SELECT gr.`id_group` as id_group, gr.`reduction` as reduction, id_group_reduction
-			FROM `' . _DB_PREFIX_ . 'group_reduction` gr
-			WHERE `id_category` = ' . (int) $id_category, false);
-    }
-
     public static function getGroupsReductionByCategoryId($id_category)
     {
         return Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS(
@@ -202,23 +185,6 @@ class GroupReductionCore extends ObjectModel
 			FROM `' . _DB_PREFIX_ . 'group_reduction` gr
 			WHERE `id_category` = ' . (int) $id_category
         );
-    }
-
-    /**
-     * @deprecated 1.5.3.0
-     *
-     * @param int $id_category
-     *
-     * @return array|null
-     */
-    public static function getGroupReductionByCategoryId($id_category)
-    {
-        Tools::displayAsDeprecated('Use GroupReduction::getGroupsByCategoryId($id_category)');
-
-        return Db::getInstance(_PS_USE_SQL_SLAVE_)->getRow('
-			SELECT gr.`id_group_reduction` as id_group_reduction
-			FROM `' . _DB_PREFIX_ . 'group_reduction` gr
-			WHERE `id_category` = ' . (int) $id_category, false);
     }
 
     public static function setProductReduction($id_product, $id_group = null, $id_category = null, $reduction = null)

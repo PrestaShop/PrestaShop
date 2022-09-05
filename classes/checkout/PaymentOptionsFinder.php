@@ -81,7 +81,7 @@ class PaymentOptionsFinderCore extends HookFinder
 
         $find = $free ? $this->findFree() : $this->find();
 
-        return array_map(function (array $options) use (&$id) {
+        $paymentOptions = array_map(function (array $options) use (&$id) {
             return array_map(function (PaymentOption $option) use (&$id) {
                 ++$id;
                 $formattedOption = $option->toArray();
@@ -98,5 +98,11 @@ class PaymentOptionsFinderCore extends HookFinder
                 return $formattedOption;
             }, $options);
         }, $find);
+
+        Hook::exec('actionPresentPaymentOptions',
+            ['paymentOptions' => &$paymentOptions]
+        );
+
+        return $paymentOptions;
     }
 }

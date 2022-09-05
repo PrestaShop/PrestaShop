@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Adapter\Module\Tab;
 
 use Exception;
-use PrestaShop\PrestaShop\Adapter\Module\Module;
+use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 use PrestaShopBundle\Entity\Repository\LangRepository;
 use PrestaShopBundle\Entity\Repository\TabRepository;
 use Psr\Log\LoggerInterface;
@@ -118,9 +118,9 @@ class ModuleTabRegister
      *
      * This is done automatically as part of the module installation.
      *
-     * @param Module $module
+     * @param ModuleInterface $module
      */
-    public function registerTabs(Module $module)
+    public function registerTabs(ModuleInterface $module)
     {
         if (!$module->getInstance()) {
             return;
@@ -137,9 +137,9 @@ class ModuleTabRegister
     }
 
     /**
-     * @param Module $module
+     * @param ModuleInterface $module
      */
-    public function enableTabs(Module $module)
+    public function enableTabs(ModuleInterface $module)
     {
         $this->tabRepository->changeEnabledByModuleName($module->get('name'), true);
     }
@@ -197,10 +197,8 @@ class ModuleTabRegister
         $legacyControllers = array_map(function ($legacyControllersFilename) {
             return str_replace('Controller.php', '', $legacyControllersFilename);
         }, $legacyControllersFilenames);
-        $legacyControllers = $legacyControllers ?? [];
 
         $routingControllers = $this->getModuleControllersFromRouting($moduleName);
-        $routingControllers = $routingControllers ?? [];
 
         return array_merge($legacyControllers, $routingControllers);
     }
@@ -343,12 +341,12 @@ class ModuleTabRegister
     /**
      * Install a tab according to its defined structure.
      *
-     * @param Module $module
+     * @param ModuleInterface $module
      * @param ParameterBag $tabDetails the structure of the tab
      *
      * @throws Exception in case of error from validation or save
      */
-    protected function registerTab(Module $module, ParameterBag $tabDetails)
+    protected function registerTab(ModuleInterface $module, ParameterBag $tabDetails)
     {
         $this->checkIsValid($module->get('name'), $tabDetails);
 

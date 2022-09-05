@@ -28,9 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Category;
 
+use PrestaShopBundle\Form\Admin\Type\TextPreviewType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\RadioType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class ProductCategoryType extends TranslatorAwareType
@@ -38,18 +38,13 @@ class ProductCategoryType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('is_associated', CheckboxType::class, [
-                'label' => false,
+            ->add('name', TextPreviewType::class, [
+                'preview_class' => 'category-name-preview',
                 'attr' => [
-                    'class' => 'category',
+                    'class' => 'category-name-input',
                 ],
             ])
-            ->add('is_default', RadioType::class, [
-                'label' => false,
-                'attr' => [
-                    'class' => 'default-category',
-                ],
-            ])
+            ->add('id', HiddenType::class)
         ;
     }
 }

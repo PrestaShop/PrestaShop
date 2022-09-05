@@ -72,8 +72,12 @@ final class ProductCombinationQueryBuilder extends AbstractDoctrineQueryBuilder
 
         $this->searchCriteriaApplicator
             ->applyPagination($searchCriteria, $qb)
-            ->applySorting($searchCriteria, $qb)
-        ;
+            ->applySorting($searchCriteria, $qb);
+
+        // Sort by quantity has been added first, this is the second order condition
+        if ('quantity' === $searchCriteria->getOrderBy()) {
+            $qb->addOrderBy('pa.id_product_attribute', 'asc');
+        }
 
         return $qb;
     }
@@ -137,9 +141,9 @@ final class ProductCombinationQueryBuilder extends AbstractDoctrineQueryBuilder
 
         if (null === $productCombinationFilters->getOrderBy()) {
             $qb->addOrderBy('id_product_attribute', 'asc');
-        } elseif ('stock_quantity' === $productCombinationFilters->getOrderBy()) {
+        } elseif ('quantity' === $productCombinationFilters->getOrderBy()) {
             $qb
-                ->addSelect('pa.quantity AS stock_quantity')
+                ->addSelect('sa.quantity AS quantity')
                 ->innerJoin(
                     'pa',
                     $this->dbPrefix . 'stock_available',

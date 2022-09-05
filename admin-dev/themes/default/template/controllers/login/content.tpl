@@ -164,8 +164,11 @@
 		</div>
 		{/if}
 	</div>
-    <p class='text-center'><i class="icon-caret-left"></i> {l s='Back to' d='Admin.Actions'} <a href='{$homeUrl}'>{$shop_name}</a></p>
+
+  <a class='login-back' href='{$homeUrl}'><i class="material-icons rtl-flip">arrow_back</i> <span>{l s='Back to' d='Admin.Actions'}</span> <span class="login-back-shop">{$shop_name}</span></a>
+
 	{hook h="displayAdminLogin"}
+
 	<div id="login-footer">
 		<p class="text-center text-muted">
 			<a href="https://www.prestashop.com/" onclick="return !window.open(this.href);">

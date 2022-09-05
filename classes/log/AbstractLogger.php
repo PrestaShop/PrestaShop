@@ -33,10 +33,10 @@ abstract class AbstractLoggerCore
         3 => 'ERROR',
     ];
 
-    const DEBUG = 0;
-    const INFO = 1;
-    const WARNING = 2;
-    const ERROR = 3;
+    public const DEBUG = 0;
+    public const INFO = 1;
+    public const WARNING = 2;
+    public const ERROR = 3;
 
     public function __construct($level = self::INFO)
     {
@@ -50,16 +50,16 @@ abstract class AbstractLoggerCore
     /**
      * Log the message.
      *
-     * @param string message
-     * @param level
+     * @param string $message
+     * @param int $level
      */
     abstract protected function logMessage($message, $level);
 
     /**
      * Check the level and log the message if needed.
      *
-     * @param string message
-     * @param level
+     * @param string $message
+     * @param int $level
      */
     public function log($message, $level = self::DEBUG)
     {
@@ -71,7 +71,7 @@ abstract class AbstractLoggerCore
     /**
      * Log a debug message.
      *
-     * @param string message
+     * @param string $message
      */
     public function logDebug($message)
     {
@@ -81,7 +81,7 @@ abstract class AbstractLoggerCore
     /**
      * Log an info message.
      *
-     * @param string message
+     * @param string $message
      */
     public function logInfo($message)
     {
@@ -91,7 +91,7 @@ abstract class AbstractLoggerCore
     /**
      * Log a warning message.
      *
-     * @param string message
+     * @param string $message
      */
     public function logWarning($message)
     {
@@ -101,7 +101,7 @@ abstract class AbstractLoggerCore
     /**
      * Log an error message.
      *
-     * @param string message
+     * @param string $message
      */
     public function logError($message)
     {

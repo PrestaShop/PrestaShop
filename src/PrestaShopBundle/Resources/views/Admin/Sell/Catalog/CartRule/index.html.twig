@@ -23,15 +23,11 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
   {% block cart_rule_listing %}
-    <div class="row">
-      <div class="col-12">
-        {% include'@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': cartRuleGrid} %}
-      </div>
-    </div>
+    {% include'@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': cartRuleGrid} %}
   {% endblock %}
 {% endblock %}
 

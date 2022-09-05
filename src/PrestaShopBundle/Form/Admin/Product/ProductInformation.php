@@ -101,10 +101,6 @@ class ProductInformation extends CommonAbstractType
     /**
      * @var ProductDataProvider
      */
-    private $productAdapter;
-    /**
-     * @var ProductDataProvider
-     */
     public $productDataProvider;
     /**
      * @var Router
@@ -139,7 +135,6 @@ class ProductInformation extends CommonAbstractType
         $this->translator = $translator;
         $this->router = $router;
         $this->productDataProvider = $productDataProvider;
-        $this->productAdapter = $this->productDataProvider;
         $this->categoryDataProvider = $categoryDataProvider;
         $this->manufacturerDataProvider = $manufacturerDataProvider;
         $this->featureDataProvider = $featureDataProvider;

@@ -36,7 +36,7 @@ final class RemoteLanguagePackLoader implements LanguagePackLoaderInterface
     /**
      * The link from which available languages are retrieved.
      */
-    public const PACK_LINK = 'http://i18n.prestashop.com/translations/%ps_version%/available_languages.json';
+    public const PACK_LINK = 'http://i18n.prestashop-project.org/translations/%ps_version%/available_languages.json';
 
     /**
      * @var Version
@@ -56,7 +56,7 @@ final class RemoteLanguagePackLoader implements LanguagePackLoaderInterface
      */
     public function getLanguagePackList()
     {
-        $normalizedLink = str_replace('%ps_version%', $this->version->getVersion(), self::PACK_LINK);
+        $normalizedLink = str_replace('%ps_version%', $this->version->getSemVersion(), self::PACK_LINK);
         $jsonResponse = file_get_contents($normalizedLink);
 
         $result = [];

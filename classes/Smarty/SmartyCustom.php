@@ -63,7 +63,7 @@ class SmartyCustomCore extends Smarty
     {
         Db::getInstance()->execute('REPLACE INTO `' . _DB_PREFIX_ . 'smarty_last_flush` (`type`, `last_flush`) VALUES (\'template\', FROM_UNIXTIME(' . time() . '))');
 
-        return $this->delete_from_lazy_cache(null, null, null);
+        return $this->delete_from_lazy_cache('', null, null);
     }
 
     /**
@@ -109,7 +109,7 @@ class SmartyCustomCore extends Smarty
     {
         $this->check_compile_cache_invalidation();
 
-        return parent::fetch($template, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter);
+        return parent::fetch($template, $cache_id, $compile_id, $parent);
     }
 
     /**
@@ -129,7 +129,7 @@ class SmartyCustomCore extends Smarty
      * Handle the lazy template cache invalidation.
      *
      * @param string $template template name
-     * @param string $cache_id cache id
+     * @param string|array|object|null $cache_id cache id
      * @param string $compile_id compile id
      */
     public function check_template_invalidation($template, $cache_id, $compile_id)
@@ -269,10 +269,10 @@ class SmartyCustomCore extends Smarty
      * Delete the current template from the lazy cache or the whole cache if no template name is given.
      *
      * @param string $template template name
-     * @param string $cache_id cache id
-     * @param string $compile_id compile id
+     * @param string|null $cache_id cache id
+     * @param string|null $compile_id compile id
      *
-     * @return bool
+     * @return bool|int
      */
     public function delete_from_lazy_cache($template, $cache_id, $compile_id)
     {
@@ -281,8 +281,7 @@ class SmartyCustomCore extends Smarty
         }
 
         $template_md5 = md5($template);
-        $sql = 'DELETE FROM `' . _DB_PREFIX_ . 'smarty_lazy_cache`
-							WHERE template_hash=\'' . pSQL($template_md5) . '\'';
+        $sql = 'DELETE FROM `' . _DB_PREFIX_ . 'smarty_lazy_cache` WHERE template_hash=\'' . pSQL($template_md5) . '\'';
 
         if ($cache_id != null) {
             $sql .= ' AND cache_id LIKE "' . pSQL((string) $cache_id) . '%"';

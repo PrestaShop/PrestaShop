@@ -6,7 +6,7 @@
   </fields>
   <entities>
     <quick_access id="Orders" new_window="0">
-      <link>index.php?controller=AdminOrders</link>
+      <link>index.php/sell/orders</link>
     </quick_access>
     <quick_access id="New_voucher" new_window="0">
       <link>index.php?controller=AdminCartRules&amp;addcart_rule</link>

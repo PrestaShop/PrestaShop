@@ -17,7 +17,7 @@ class Features extends BOBasePage {
     this.pageTitle = 'Features • ';
 
     // Header selectors
-    this.addNewFeatureLink = '#page-header-desc-feature-new_feature';
+    this.addNewFeatureLink = 'a[data-role=page-header-desc-feature-link]';
 
     // Help card selectors
     this.helpCardLink = '#toolbar-nav a.btn-help';
@@ -186,7 +186,7 @@ class Features extends BOBasePage {
   async openHelpSideBar(page) {
     await page.click(this.helpCardLink);
 
-    return this.elementVisible(page, this.helpContainerBlock, 2000);
+    return this.elementVisible(page, this.helpContainerBlock, 4000);
   }
 
   /**

@@ -25,14 +25,17 @@
  */
 class AuthControllerCore extends FrontController
 {
+    /** @var bool */
     public $ssl = true;
+    /** @var string */
     public $php_self = 'authentication';
+    /** @var bool */
     public $auth = false;
 
     public function checkAccess()
     {
         if ($this->context->customer->isLogged() && !$this->ajax) {
-            $this->redirect_after = ($this->authRedirection) ? urlencode($this->authRedirection) : 'my-account';
+            $this->redirect_after = $this->authRedirection ? urlencode($this->authRedirection) : 'my-account';
             $this->redirect();
         }
 
@@ -41,48 +44,26 @@ class AuthControllerCore extends FrontController
 
     public function initContent()
     {
+        if (Tools::isSubmit('create_account')) {
+            return $this->redirectWithNotifications('registration');
+        }
+
         $should_redirect = false;
 
-        if (Tools::isSubmit('submitCreate') || Tools::isSubmit('create_account')) {
-            $register_form = $this
-                ->makeCustomerForm()
-                ->setGuestAllowed(false)
-                ->fillWith(Tools::getAllValues());
+        $login_form = $this->makeLoginForm()->fillWith(
+            Tools::getAllValues()
+        );
 
-            if (Tools::isSubmit('submitCreate')) {
-                $hookResult = array_reduce(
-                    Hook::exec('actionSubmitAccountBefore', [], null, true),
-                    function ($carry, $item) {
-                        return $carry && $item;
-                    },
-                    true
-                );
-                if ($hookResult && $register_form->submit()) {
-                    $should_redirect = true;
-                }
+        if (Tools::isSubmit('submitLogin')) {
+            if ($login_form->submit()) {
+                $should_redirect = true;
             }
-
-            $this->context->smarty->assign([
-                'register_form' => $register_form->getProxy(),
-                'hook_create_account_top' => Hook::exec('displayCustomerAccountFormTop'),
-            ]);
-            $this->setTemplate('customer/registration');
-        } else {
-            $login_form = $this->makeLoginForm()->fillWith(
-                Tools::getAllValues()
-            );
-
-            if (Tools::isSubmit('submitLogin')) {
-                if ($login_form->submit()) {
-                    $should_redirect = true;
-                }
-            }
-
-            $this->context->smarty->assign([
-                'login_form' => $login_form->getProxy(),
-            ]);
-            $this->setTemplate('customer/authentication');
         }
+
+        $this->context->smarty->assign([
+            'login_form' => $login_form->getProxy(),
+        ]);
+        $this->setTemplate('customer/authentication');
 
         parent::initContent();
 
@@ -111,17 +92,10 @@ class AuthControllerCore extends FrontController
     {
         $breadcrumb = parent::getBreadcrumbLinks();
 
-        if (Tools::isSubmit('submitCreate') || Tools::isSubmit('create_account')) {
-            $breadcrumb['links'][] = [
-                'title' => $this->trans('Create an account', [], 'Shop.Theme.Customeraccount'),
-                'url' => $this->context->link->getPageLink('authentication'),
-            ];
-        } else {
-            $breadcrumb['links'][] = [
-                'title' => $this->trans('Log in to your account', [], 'Shop.Theme.Customeraccount'),
-                'url' => $this->context->link->getPageLink('authentication'),
-            ];
-        }
+        $breadcrumb['links'][] = [
+            'title' => $this->trans('Log in to your account', [], 'Shop.Theme.Customeraccount'),
+            'url' => $this->context->link->getPageLink('authentication'),
+        ];
 
         return $breadcrumb;
     }

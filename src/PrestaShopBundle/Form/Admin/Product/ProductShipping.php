@@ -67,6 +67,14 @@ class ProductShipping extends CommonAbstractType
      * @var array
      */
     private $warehouses;
+    /**
+     * @var string
+     */
+    private $dimensionUnit;
+    /**
+     * @var string
+     */
+    private $weightUnit;
 
     /**
      * Constructor.
@@ -75,8 +83,10 @@ class ProductShipping extends CommonAbstractType
      * @param LegacyContext $legacyContext
      * @param WarehouseDataProvider $warehouseDataProvider
      * @param CarrierDataProvider $carrierDataProvider
+     * @param string $dimensionUnit
+     * @param string $weightUnit
      */
-    public function __construct($translator, $legacyContext, $warehouseDataProvider, $carrierDataProvider)
+    public function __construct($translator, $legacyContext, $warehouseDataProvider, $carrierDataProvider, string $dimensionUnit, string $weightUnit)
     {
         $this->translator = $translator;
         $this->legacyContext = $legacyContext;
@@ -101,6 +111,8 @@ class ProductShipping extends CommonAbstractType
 
             $this->carriersChoices[$choiceId] = $carrier['id_reference'];
         }
+        $this->dimensionUnit = $dimensionUnit;
+        $this->weightUnit = $weightUnit;
     }
 
     /**
@@ -114,6 +126,7 @@ class ProductShipping extends CommonAbstractType
             'width',
             FormType\NumberType::class,
             [
+                'unit' => $this->dimensionUnit,
                 'required' => false,
                 'label' => $this->translator->trans('Width', [], 'Admin.Catalog.Feature'),
                 'constraints' => [
@@ -126,6 +139,7 @@ class ProductShipping extends CommonAbstractType
                 'height',
                 FormType\NumberType::class,
                 [
+                    'unit' => $this->dimensionUnit,
                     'required' => false,
                     'label' => $this->translator->trans('Height', [], 'Admin.Catalog.Feature'),
                     'constraints' => [
@@ -138,6 +152,7 @@ class ProductShipping extends CommonAbstractType
                 'depth',
                 FormType\NumberType::class,
                 [
+                    'unit' => $this->dimensionUnit,
                     'required' => false,
                     'label' => $this->translator->trans('Depth', [], 'Admin.Catalog.Feature'),
                     'constraints' => [
@@ -150,6 +165,8 @@ class ProductShipping extends CommonAbstractType
                 'weight',
                 FormType\NumberType::class,
                 [
+                    'unit' => $this->weightUnit,
+                    'scale' => static::PRESTASHOP_WEIGHT_DECIMALS,
                     'required' => false,
                     'label' => $this->translator->trans('Weight', [], 'Admin.Catalog.Feature'),
                     'constraints' => [
@@ -196,7 +213,7 @@ class ProductShipping extends CommonAbstractType
                     'required' => false,
                     'placeholder' => null,
                     'preferred_choices' => ['default'],
-                    'label' => $this->translator->trans('Delivery Time', [], 'Admin.Catalog.Feature'),
+                    'label' => $this->translator->trans('Delivery time', [], 'Admin.Catalog.Feature'),
                 ]
             )
             ->add(

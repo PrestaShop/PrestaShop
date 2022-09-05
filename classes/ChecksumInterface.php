@@ -26,7 +26,7 @@
 interface ChecksumInterface
 {
     /**
-     * @param $object checksum target
+     * @param object $object Checksum target
      *
      * @return string
      */

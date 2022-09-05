@@ -31,6 +31,9 @@
 {if isset($name_controller)}
 	{capture name=hookName assign=hookName}display{$name_controller|ucfirst}View{/capture}
 	{hook h=$hookName}
+{elseif isset($controller_name)}
+    {capture name=hookName assign=hookName}display{$controller_name|ucfirst}View{/capture}
+    {hook h=$hookName}
 {elseif isset($smarty.get.controller)}
 	{capture name=hookName assign=hookName}display{$smarty.get.controller|ucfirst|htmlentities}View{/capture}
 	{hook h=$hookName}

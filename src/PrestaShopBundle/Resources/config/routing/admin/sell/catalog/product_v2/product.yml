@@ -1,14 +1,40 @@
 _combinations:
-    resource: 'combination.yml'
+  resource: 'combination.yml'
 
 _images:
-    resource: 'image.yml'
+  resource: 'image.yml'
+
+_specific_prices:
+  resource: 'specific_price.yml'
+
+admin_products_v2_index:
+  path: /
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::indexAction
+    _legacy_controller: AdminProducts
+
+admin_products_v2_light_list:
+  path: /light-list
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::lightListAction
+    _legacy_controller: AdminProducts
+
+admin_products_search:
+  path: /
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
+    gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.product
+    redirectRoute: admin_products_v2_index
+    _legacy_controller: AdminProducts
 
 admin_products_v2_create:
   path: /create
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:create
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::createAction
     _legacy_controller: AdminProducts
     _legacy_link:
       - AdminProducts:addproduct
@@ -16,9 +42,9 @@ admin_products_v2_create:
 
 admin_products_v2_edit:
   path: /{productId}/edit
-  methods: [GET, POST, PATCH]
+  methods: [ GET, POST, PATCH ]
   defaults:
-    _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:edit
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::editAction
     _legacy_controller: AdminProducts
     _legacy_link:
       - AdminProducts:updateproduct
@@ -27,12 +53,140 @@ admin_products_v2_edit:
       id_product: productId
   requirements:
     productId: \d+
+  options:
+    expose: true
 
 admin_products_v2_download_virtual_product_file:
-    path: /virtual-product-file/{virtualProductFileId}
-    methods: [GET]
-    defaults:
-        _controller: PrestaShopBundle:Admin/Sell/Catalog/Product/Product:downloadVirtualFile
-        _legacy_controller: AdminProducts
-    requirements:
-        virtualProductFileId: \d+
+  path: /virtual-product-file/{virtualProductFileId}
+  methods: [ GET ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::downloadVirtualFileAction
+    _legacy_controller: AdminProducts
+  requirements:
+    virtualProductFileId: \d+
+
+admin_products_v2_delete:
+  path: /{productId}/delete
+  methods: [ POST, DELETE ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::deleteAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:delete
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
+
+admin_products_v2_duplicate:
+  path: /{productId}/duplicate
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::duplicateAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:duplicate
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
+
+admin_products_v2_toggle_status:
+  path: /{productId}/toggle_status
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::toggleStatusAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:statusproduct
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
+
+admin_products_v2_update_position:
+  path: /update_position
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::updatePositionAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:positionproduct
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
+
+admin_products_v2_bulk_enable:
+  path: /bulk-enable
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkEnableAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:submitBulkdisableSelectionproduct
+  requirements:
+    productId: \d+
+  options:
+    expose: true
+
+admin_products_v2_bulk_disable:
+  path: /bulk-disable
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkDisableAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:submitBulkenableSelectionproduct
+  requirements:
+    productId: \d+
+  options:
+    expose: true
+
+admin_products_v2_bulk_duplicate:
+  path: /bulk-duplicate
+  methods: [ POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkDuplicateAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:submitBulkduplicateSelectionproduct
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
+  options:
+    expose: true
+
+admin_products_v2_bulk_delete:
+  path: /bulk-delete
+  methods: [ POST, DELETE ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::bulkDeleteAction
+    _legacy_controller: AdminProducts
+    _legacy_link:
+      - AdminProducts:submitBulkdeleteproduct
+    _legacy_parameters:
+      id_product: productId
+  requirements:
+    productId: \d+
+  options:
+    expose: true
+
+admin_products_v2_search_associations:
+  path: /search/{languageCode}
+  methods: [ GET, POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\ProductController::searchAssociationsAction
+    _legacy_controller: AdminProducts
+  requirements:
+    languageCode: !php/const PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\TagIETF::IETF_TAG_REGEXP
+
+admin_products_v2_search_combinations:
+  path: /search/combination/{languageCode}
+  methods: [ GET, POST ]
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\CombinationController::searchCombinationProductsAction
+    _legacy_controller: AdminProducts
+  requirements:
+    languageCode: !php/const PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\TagIETF::IETF_TAG_REGEXP

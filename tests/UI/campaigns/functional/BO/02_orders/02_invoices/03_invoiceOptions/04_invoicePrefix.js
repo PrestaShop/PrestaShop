@@ -4,13 +4,13 @@ require('module-alias/register');
 const helper = require('@utils/helpers');
 
 // Import login steps
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const invoicesPage = require('@pages/BO/orders/invoices/index');
 const ordersPage = require('@pages/BO/orders/index');
-const viewOrderPage = require('@pages/BO/orders/view');
+const orderPageTabListBlock = require('@pages/BO/orders/view/tabListBlock');
 
 // Import data
 const {Statuses} = require('@data/demo/orderStatuses');
@@ -98,14 +98,14 @@ describe('BO - Orders - Invoices : Update invoice prefix and check the generated
       // View order
       await ordersPage.goToOrder(page, 1);
 
-      const pageTitle = await viewOrderPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+      await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
     it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'UpdateStatusForUpdatedPrefix', baseContext);
 
-      const result = await viewOrderPage.modifyOrderStatus(page, Statuses.shipped.status);
+      const result = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.shipped.status);
       await expect(result).to.equal(Statuses.shipped.status);
     });
 
@@ -113,7 +113,7 @@ describe('BO - Orders - Invoices : Update invoice prefix and check the generated
       await testContext.addContextItem(this, 'testIdentifier', 'checkFirstOrderUpdatedPrefix', baseContext);
 
       // Get invoice file name
-      fileName = await viewOrderPage.getFileName(page);
+      fileName = await orderPageTabListBlock.getFileName(page);
       expect(fileName).to.contains(invoiceData.prefix.replace('#', '').trim());
     });
   });
@@ -122,10 +122,10 @@ describe('BO - Orders - Invoices : Update invoice prefix and check the generated
     it('should go to \'Orders > Invoices\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToInvoicesPageForDefaultPrefix', baseContext);
 
-      await viewOrderPage.goToSubMenu(
+      await orderPageTabListBlock.goToSubMenu(
         page,
-        viewOrderPage.ordersParentLink,
-        viewOrderPage.invoicesLink,
+        orderPageTabListBlock.ordersParentLink,
+        orderPageTabListBlock.invoicesLink,
       );
 
       const pageTitle = await invoicesPage.getPageTitle(page);
@@ -159,15 +159,15 @@ describe('BO - Orders - Invoices : Update invoice prefix and check the generated
       await testContext.addContextItem(this, 'testIdentifier', 'goToFirstOrderPageForDefaultPrefix', baseContext);
 
       await ordersPage.goToOrder(page, 1);
-      const pageTitle = await viewOrderPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+      await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
     it(`should check that the invoice file name contain the default prefix ${defaultPrefix}`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkDefaultPrefixInInvoice', baseContext);
 
       // Get invoice file name
-      fileName = await viewOrderPage.getFileName(page);
+      fileName = await orderPageTabListBlock.getFileName(page);
       expect(fileName).to.contains(defaultPrefix.replace('#', '').trim());
     });
   });

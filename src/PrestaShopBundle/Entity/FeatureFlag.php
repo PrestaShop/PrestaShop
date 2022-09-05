@@ -30,10 +30,11 @@ namespace PrestaShopBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
+use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="PrestaShopBundle\Entity\Repository\FeatureFlagRepository")
  * @ORM\Table()
  * @UniqueEntity("name")
  */
@@ -65,7 +66,7 @@ class FeatureFlag
     /**
      * @var string
      *
-     * @ORM\Column(name="label_wording", type="string", length=191, options={"default":""})
+     * @ORM\Column(name="label_wording", type="string", length=512, options={"default":""})
      */
     private $labelWording;
 
@@ -79,7 +80,7 @@ class FeatureFlag
     /**
      * @var string
      *
-     * @ORM\Column(name="description_wording", type="string", length=191, options={"default":""})
+     * @ORM\Column(name="description_wording", type="string", length=512, options={"default":""})
      */
     private $descriptionWording;
 
@@ -89,6 +90,13 @@ class FeatureFlag
      * @ORM\Column(name="description_domain", type="string", length=255, options={"default":""})
      */
     private $descriptionDomain;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="stability", type="string", length=64, options={"default":"beta"})
+     */
+    private $stability;
 
     /**
      * @param string $name
@@ -104,6 +112,7 @@ class FeatureFlag
         $this->descriptionDomain = '';
         $this->labelWording = '';
         $this->labelDomain = '';
+        $this->stability = FeatureFlagSettings::STABILITY_BETA;
     }
 
     /**
@@ -226,6 +235,26 @@ class FeatureFlag
     public function setDescriptionDomain(string $descriptionDomain): self
     {
         $this->descriptionDomain = $descriptionDomain;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStability(): string
+    {
+        return $this->stability;
+    }
+
+    /**
+     * @param string $stability
+     *
+     * @return self
+     */
+    public function setStability(string $stability): self
+    {
+        $this->stability = $stability;
 
         return $this;
     }

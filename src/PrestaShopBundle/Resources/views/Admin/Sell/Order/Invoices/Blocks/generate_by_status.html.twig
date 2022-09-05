@@ -29,30 +29,31 @@
 {% form_theme generateByStatusForm _self %}
 
 {% block invoices_generate_by_status %}
-  <div id="by-status-block" class="col-xl-12">
+  <div id="by-status-block">
     {{ form_start(generateByStatusForm, {method: 'POST', action: path('admin_order_invoices_generate_by_status'), attr: {id: 'form-generate-invoices-by-status'}}) }}
-      <div class="card">
-        <h3 class="card-header">
-          <i class="material-icons">schedule</i> {{ 'By order status'|trans }}
-        </h3>
-        <div class="card-block row">
-          <div class="card-text">
-            <div class="form-group row">
-              {{ ps.label_with_help(('Order statuses'|trans), ('You can also export orders which have not been charged yet.'|trans({}, 'Admin.Orderscustomers.Help'))) }}
-              <div class="col-sm">
-                {{ form_errors(generateByStatusForm.order_states) }}
-                {{ form_widget(generateByStatusForm.order_states) }}
-              </div>
+    <div class="card">
+      <h3 class="card-header">
+        <i class="material-icons">schedule</i>
+        {{ 'By order status'|trans }}
+      </h3>
+      <div class="card-body">
+        <div class="form-wrapper">
+          <div class="form-group row">
+            {{ ps.label_with_help(('Order statuses'|trans), ('You can also export orders which have not been charged yet.'|trans({}, 'Admin.Orderscustomers.Help'))) }}
+            <div class="col-sm">
+              {{ form_errors(generateByStatusForm.order_states) }}
+              {{ form_widget(generateByStatusForm.order_states) }}
             </div>
           </div>
-          {{ form_rest(generateByStatusForm) }}
         </div>
-        <div class="card-footer">
-          <div class="d-flex justify-content-end">
-            <button class="btn btn-primary" id="generate-pdf-by-status-button">{{ 'Generate PDF file by status'|trans }}</button>
-          </div>
+        {{ form_rest(generateByStatusForm) }}
+      </div>
+      <div class="card-footer">
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-primary" id="generate-pdf-by-status-button">{{ 'Generate PDF file by status'|trans }}</button>
         </div>
       </div>
+    </div>
     {{ form_end(generateByStatusForm) }}
   </div>
 {% endblock %}

@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Product\Command;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectOption;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Updates Product SEO options
@@ -40,6 +41,11 @@ class UpdateProductSeoCommand
      * @var ProductId
      */
     private $productId;
+
+    /**
+     * @var ShopConstraint
+     */
+    private $shopConstraint;
 
     /**
      * @var string[]|null
@@ -64,9 +70,10 @@ class UpdateProductSeoCommand
     /**
      * @param int $productId
      */
-    public function __construct(int $productId)
+    public function __construct(int $productId, ShopConstraint $shopConstraint)
     {
         $this->productId = new ProductId($productId);
+        $this->shopConstraint = $shopConstraint;
     }
 
     /**
@@ -75,6 +82,14 @@ class UpdateProductSeoCommand
     public function getProductId(): ProductId
     {
         return $this->productId;
+    }
+
+    /**
+     * @return ShopConstraint
+     */
+    public function getShopConstraint(): ShopConstraint
+    {
+        return $this->shopConstraint;
     }
 
     /**

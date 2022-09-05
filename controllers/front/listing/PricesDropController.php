@@ -29,7 +29,13 @@ use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
 
 class PricesDropControllerCore extends ProductListingFrontController
 {
+    /** @var string */
     public $php_self = 'prices-drop';
+
+    public function getCanonicalURL(): string
+    {
+        return $this->buildPaginatedUrl($this->context->link->getPageLink('prices-drop'));
+    }
 
     /**
      * {@inheritdoc}

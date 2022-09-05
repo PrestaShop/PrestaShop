@@ -4,7 +4,10 @@ const {expect} = require('chai');
 
 // Import Utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const testContext = require('@utils/testContext');
+
+// Import login steps
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import data
 const EmployeeFaker = require('@data/faker/employee');
@@ -16,9 +19,6 @@ const employeesPage = require('@pages/BO/advancedParameters/team/index');
 const addEmployeePage = require('@pages/BO/advancedParameters/team/add');
 const productsPage = require('@pages/BO/catalog/products/index');
 const ordersPage = require('@pages/BO/orders/index');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_advancedParams_team_employees_CRUDEmployee';
 
@@ -33,7 +33,6 @@ const createEmployeeData = new EmployeeFaker({
 });
 
 const firstEditEmployeeData = new EmployeeFaker({
-  password: '123456789',
   defaultPage: 'Orders',
   language: 'English (English)',
   permissionProfile: 'Salesman',
@@ -47,7 +46,7 @@ const secondEditEmployeeData = new EmployeeFaker({
 });
 
 // Create, Read, Update and Delete Employee in BO
-describe('Create, Read, Update and Delete Employee in BO', async () => {
+describe('BO - Advanced Parameters - Team : Create, Read, Update and Delete Employee in BO', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -62,7 +61,7 @@ describe('Create, Read, Update and Delete Employee in BO', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to "Advanced parameters>Team" page', async function () {
+  it('should go to \'Advanced Parameters > Team\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAdvancedParamsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -128,7 +127,7 @@ describe('Create, Read, Update and Delete Employee in BO', async () => {
     });
 
     describe('Update the password and the default page', async () => {
-      it('should go to Employees page', async function () {
+      it('should go to \'Advanced Parameters > Team\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToEmployeePageForUpdate', baseContext);
 
         await dashboardPage.goToSubMenu(
@@ -144,12 +143,7 @@ describe('Create, Read, Update and Delete Employee in BO', async () => {
       it('should filter list by email', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterForUpdate', baseContext);
 
-        await employeesPage.filterEmployees(
-          page,
-          'input',
-          'email',
-          createEmployeeData.email,
-        );
+        await employeesPage.filterEmployees(page, 'input', 'email', createEmployeeData.email);
 
         const textEmail = await employeesPage.getTextColumnFromTable(page, 1, 'email');
         await expect(textEmail).to.contains(createEmployeeData.email);
@@ -200,7 +194,7 @@ describe('Create, Read, Update and Delete Employee in BO', async () => {
         await loginCommon.loginBO(this, page);
       });
 
-      it('should go to Employees page', async function () {
+      it('should go to \'Advanced Parameters > Team\' page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'goToEmployeesPageToDisable', baseContext);
 
         await dashboardPage.goToSubMenu(
@@ -216,12 +210,7 @@ describe('Create, Read, Update and Delete Employee in BO', async () => {
       it('should filter list by email', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'filterEmployeesToDisable', baseContext);
 
-        await employeesPage.filterEmployees(
-          page,
-          'input',
-          'email',
-          firstEditEmployeeData.email,
-        );
+        await employeesPage.filterEmployees(page, 'input', 'email', firstEditEmployeeData.email);
 
         const textEmail = await employeesPage.getTextColumnFromTable(page, 1, 'email');
         await expect(textEmail).to.contains(firstEditEmployeeData.email);
@@ -262,7 +251,7 @@ describe('Create, Read, Update and Delete Employee in BO', async () => {
       await loginCommon.loginBO(this, page);
     });
 
-    it('should go to Employees page', async function () {
+    it('should go to \'Advanced Parameters > Team\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEmployeesPageToDelete', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -278,12 +267,7 @@ describe('Create, Read, Update and Delete Employee in BO', async () => {
     it('should filter list by email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterEmployeesToDelete', baseContext);
 
-      await employeesPage.filterEmployees(
-        page,
-        'input',
-        'email',
-        secondEditEmployeeData.email,
-      );
+      await employeesPage.filterEmployees(page, 'input', 'email', secondEditEmployeeData.email);
 
       const textEmail = await employeesPage.getTextColumnFromTable(page, 1, 'email');
       await expect(textEmail).to.contains(secondEditEmployeeData.email);

@@ -38,7 +38,7 @@ use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 class CacheProviderTest extends TestCase
 {
-    const CACHE_KEY = 'test_cache_key';
+    public const CACHE_KEY = 'test_cache_key';
 
     /**
      * @var array
@@ -55,7 +55,7 @@ class CacheProviderTest extends TestCase
      */
     private $legacyRoutes;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->expectedFlattenArray = [

@@ -141,6 +141,7 @@ class TranslatableType extends TranslatorAwareType
             }
         }
 
+        /** @var FormInterface $varsForm */
         $varsForm = $view->vars['errors']->getForm();
         $view->vars['errors'] = new FormErrorIterator($varsForm, $errors);
         $view->vars['locales'] = $options['locales'];
@@ -212,17 +213,13 @@ class TranslatableType extends TranslatorAwareType
      */
     private function getErrorsByLocale(FormView $view, FormInterface $form, array $locales)
     {
-        if (count($locales) <= 1) {
-            return null;
-        }
-
         $formErrors = $form->getErrors(true);
 
-        if (empty($formErrors)) {
+        if (0 === $formErrors->count()) {
             return null;
         }
 
-        if (1 === count($formErrors)) {
+        if (1 === $formErrors->count()) {
             $errorByLocale = $this->getSingleTranslatableErrorExcludingDefaultLocale(
                 $formErrors,
                 $form,
@@ -236,13 +233,11 @@ class TranslatableType extends TranslatorAwareType
             return [$errorByLocale];
         }
 
-        $errorsByLocale = $this->getTranslatableErrors(
+        return $this->getTranslatableErrors(
             $formErrors,
             $form,
             $locales
         );
-
-        return $errorsByLocale;
     }
 
     /**
@@ -302,7 +297,9 @@ class TranslatableType extends TranslatorAwareType
         $errorsByLocale = null;
         $iteration = 0;
         foreach ($form as $formItem) {
-            $doesLocaleExistForInvalidForm = isset($locales[$iteration]) && !$formItem->isValid();
+            $doesLocaleExistForInvalidForm = isset($locales[$iteration])
+                && $formItem->isSubmitted()
+                && !$formItem->isValid();
 
             if ($doesLocaleExistForInvalidForm) {
                 foreach ($formErrors as $formError) {

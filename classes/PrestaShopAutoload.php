@@ -32,7 +32,7 @@
 class PrestaShopAutoload
 {
     /**
-     * @var PrestaShopAutoload
+     * @var PrestaShopAutoload|null
      */
     protected static $instance;
 
@@ -194,13 +194,13 @@ class PrestaShopAutoload
         }
 
         if ($this->_include_override_path) {
-            $coreOverrideClasses = $this->getClassesFromDir('override/classes/', defined('_PS_HOST_MODE_'));
+            $coreOverrideClasses = $this->getClassesFromDir('override/classes/');
             $coreClassesWOOverrides = array_diff_key($coreClasses, $coreOverrideClasses);
 
             $classes = array_merge(
                 $classes,
                 $coreOverrideClasses,
-                $this->getClassesFromDir('override/controllers/', defined('_PS_HOST_MODE_'))
+                $this->getClassesFromDir('override/controllers/')
             );
         } else {
             $coreClassesWOOverrides = $coreClasses;
@@ -270,19 +270,21 @@ class PrestaShopAutoload
      * Retrieve recursively all classes in a directory and its subdirectories.
      *
      * @param string $path Relative path from root to the directory
-     * @param bool $hostMode Since 1.7, deprecated.
      *
      * @return array
      */
-    protected function getClassesFromDir($path, $hostMode = false)
+    protected function getClassesFromDir($path)
     {
-        $classes = [];
-        $rootDir = $hostMode ? $this->normalizeDirectory(_PS_ROOT_DIR_) : $this->root_dir;
+        $rootDir = $this->root_dir;
+        if (!is_dir($rootDir . $path)) {
+            return [];
+        }
 
+        $classes = [];
         foreach (scandir($rootDir . $path, SCANDIR_SORT_NONE) as $file) {
             if ($file[0] != '.') {
                 if (is_dir($rootDir . $path . $file)) {
-                    $classes = array_merge($classes, $this->getClassesFromDir($path . $file . '/', $hostMode));
+                    $classes = array_merge($classes, $this->getClassesFromDir($path . $file . '/'));
                 } elseif (substr($file, -4) == '.php') {
                     $content = file_get_contents($rootDir . $path . $file);
 
@@ -305,14 +307,14 @@ class PrestaShopAutoload
                         $classes[$m['classname']] = [
                             'path' => $path . $file,
                             'type' => trim($m[1]),
-                            'override' => $hostMode,
+                            'override' => false,
                         ];
 
                         if (substr($m['classname'], -4) == 'Core') {
                             $classes[substr($m['classname'], 0, -4)] = [
                                 'path' => '',
                                 'type' => $classes[$m['classname']]['type'],
-                                'override' => $hostMode,
+                                'override' => false,
                             ];
                         }
                     }

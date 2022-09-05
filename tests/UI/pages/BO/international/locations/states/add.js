@@ -41,7 +41,7 @@ class AddState extends BOBasePage {
     await this.setValue(page, this.isoCodeInput, stateData.isoCode);
     await this.selectByVisibleText(page, this.countrySelect, stateData.country);
     await this.selectByVisibleText(page, this.zoneSelect, stateData.zone);
-    await page.check(this.statusToggle(stateData.status ? 'on' : 'off'));
+    await this.setChecked(page, this.statusToggle(stateData.status ? 'on' : 'off'));
 
     // Save zone
     await this.clickAndWaitForNavigation(page, this.saveStateButton);

@@ -53,7 +53,10 @@
           </div>
         </form>
       </div>
-      <Filters @applyFilter="applyFilter" />
+      <Filters
+        ref="filters"
+        @applyFilter="applyFilter"
+      />
     </div>
     <div class="col-md-4 alert-box">
       <transition name="fade">
@@ -71,14 +74,15 @@
   </div>
 </template>
 
-<script>
-  import PSTags from '@app/widgets/ps-tags';
-  import PSButton from '@app/widgets/ps-button';
-  import PSAlert from '@app/widgets/ps-alert';
+<script lang="ts">
+  import Vue from 'vue';
+  import PSTags from '@app/widgets/ps-tags.vue';
+  import PSButton from '@app/widgets/ps-button.vue';
+  import PSAlert from '@app/widgets/ps-alert.vue';
   import {EventBus} from '@app/utils/event-bus';
-  import Filters from './filters';
+  import Filters, {FiltersInstanceType} from './filters.vue';
 
-  export default {
+  const Search = Vue.extend({
     components: {
       Filters,
       PSTags,
@@ -86,22 +90,26 @@
       PSAlert,
     },
     computed: {
-      error() {
+      filtersRef(): FiltersInstanceType {
+        return <FiltersInstanceType>(this.$refs.filters);
+      },
+      error(): boolean {
         return (this.alertType === 'ALERT_TYPE_DANGER');
       },
     },
     methods: {
-      onClick() {
-        const {tag} = this.$refs.psTags;
-        this.$refs.psTags.add(tag);
+      onClick(): void {
+        const refPsTags = this.$refs.psTags as VTags;
+        const {tag} = refPsTags;
+        refPsTags.add(tag);
       },
-      onSearch() {
+      onSearch(): void {
         this.$emit('search', this.tags);
       },
-      applyFilter(filters) {
+      applyFilter(filters: Array<any>): void {
         this.$emit('applyFilter', filters);
       },
-      onCloseAlert() {
+      onCloseAlert(): void {
         this.showAlert = false;
       },
     },
@@ -111,7 +119,7 @@
       },
     },
     mounted() {
-      EventBus.$on('displayBulkAlert', (type) => {
+      EventBus.$on('displayBulkAlert', (type: string) => {
         this.alertType = type === 'success' ? 'ALERT_TYPE_SUCCESS' : 'ALERT_TYPE_DANGER';
         this.showAlert = true;
         setTimeout(() => {
@@ -119,11 +127,17 @@
         }, 5000);
       });
     },
-    data: () => ({
-      tags: [],
-      showAlert: false,
-      alertType: 'ALERT_TYPE_DANGER',
-      duration: false,
-    }),
-  };
+    data() {
+      return {
+        tags: [],
+        showAlert: false,
+        alertType: 'ALERT_TYPE_DANGER',
+        duration: false,
+      };
+    },
+  });
+
+  export type SearchInstanceType = InstanceType<typeof Search> | undefined;
+
+  export default Search;
 </script>

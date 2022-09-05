@@ -26,13 +26,9 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-  <div class="row">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Profiles/Blocks/form.html.twig' with {
-        avatarUrl: editableProfile.avatarUrl
-      } %}
-    </div>
-  </div>
+  {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Profiles/Blocks/form.html.twig' with {
+    avatarUrl: editableProfile.avatarUrl
+  } %}
 {% endblock %}
 
 {% block javascripts %}

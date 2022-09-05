@@ -5,10 +5,11 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const basicHelper = require('@utils/basicHelper');
 const testContext = require('@utils/testContext');
 
 // Import login steps
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -206,7 +207,7 @@ describe('BO - Catalog - Discounts : Sort and pagination cart rules', async () =
           sortedTable = await sortedTable.map(text => parseFloat(text));
         }
 
-        const expectedResult = await cartRulesPage.sortArray(nonSortedTable, test.args.isFloat, test.args.isDate);
+        const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat, test.args.isDate);
 
         if (test.args.sortDirection === 'up') {
           await expect(sortedTable).to.deep.equal(expectedResult);

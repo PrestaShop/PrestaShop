@@ -52,7 +52,7 @@ class GridPresenterTest extends TestCase
      */
     private $gridPresenter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $hookDispatcherMock = $this->createMock(HookDispatcherInterface::class);
         $this->gridPresenter = new GridPresenter($hookDispatcherMock);
@@ -76,7 +76,7 @@ class GridPresenterTest extends TestCase
             'view_options' => [],
         ];
 
-        $this->assertInternalType('array', $presentedGrid);
+        $this->assertIsArray($presentedGrid);
 
         foreach ($expectedPresentedGrid as $itemName => $innerStruct) {
             $this->assertArrayHasKey($itemName, $presentedGrid);
@@ -113,6 +113,8 @@ class GridPresenterTest extends TestCase
             ->willReturn(new ViewOptionsCollection());
         $definition->method('getFilters')
             ->willReturn(new FilterCollection());
+        $definition->method('getId')
+            ->willReturn('');
 
         $criteria = $this->createMock(SearchCriteriaInterface::class);
 

@@ -27,7 +27,6 @@
 namespace PrestaShopBundle\Form\Admin\Sell\Order;
 
 use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
-use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -96,14 +95,14 @@ class AddProductRowType extends TranslatorAwareType
                     'class' => 'custom-select',
                 ],
             ])
-            ->add('price_tax_excluded', TextWithUnitType::class, [
+            ->add('price_tax_excluded', NumberType::class, [
                 'label' => false,
                 'unit' => sprintf('%s %s',
                     $options['symbol'],
                         $this->trans('tax excl.', 'Admin.Global')
                 ),
             ])
-            ->add('price_tax_included', TextWithUnitType::class, [
+            ->add('price_tax_included', NumberType::class, [
                 'label' => false,
                 'unit' => sprintf('%s %s',
                     $options['symbol'],

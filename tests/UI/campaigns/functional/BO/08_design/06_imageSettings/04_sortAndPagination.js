@@ -5,10 +5,12 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const basicHelper = require('@utils/basicHelper');
+
 const testContext = require('@utils/testContext');
 
 // Common tests login BO
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -184,7 +186,7 @@ describe('BO - Design - Image Settings : Pagination and sort image settings', as
           sortedTable = await sortedTable.map(text => parseFloat(text));
         }
 
-        const expectedResult = await imageSettingsPage.sortArray(nonSortedTable, test.args.isFloat);
+        const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
 
         if (test.args.sortDirection === 'up') {
           await expect(sortedTable).to.deep.equal(expectedResult);

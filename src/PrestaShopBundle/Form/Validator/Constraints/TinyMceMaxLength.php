@@ -31,13 +31,21 @@ use Symfony\Component\Validator\Exception\MissingOptionsException;
 
 class TinyMceMaxLength extends Constraint
 {
+    public const TOO_LONG_ERROR_CODE = 'TOO_LONG_ERROR_CODE';
+
     public $max;
+
+    /**
+     * @var string|null
+     */
+    public $message;
 
     public function __construct($options = null)
     {
         if (null !== $options && !is_array($options)) {
             $options = [
                 'max' => $options,
+                'message' => null,
             ];
         }
 
@@ -46,5 +54,10 @@ class TinyMceMaxLength extends Constraint
         if (null === $this->max) {
             throw new MissingOptionsException(sprintf('Option "max" must be given for constraint %s', __CLASS__), ['max']);
         }
+    }
+
+    public function validatedBy(): string
+    {
+        return get_class($this) . 'Validator';
     }
 }

@@ -16,7 +16,7 @@ class ViewBrand extends BOBasePage {
 
     // Selectors
     this.contentDiv = 'div.content-div';
-    this.addressesGrid = `${this.contentDiv} > div.row > div > div.row:nth-of-type(2)`;
+    this.addressesGrid = 'div[data-role=addresses-card]';
     this.addressesGridHeader = `${this.addressesGrid} h3.card-header`;
     this.addressesTableBody = `${this.addressesGrid} .card-body table tbody`;
     this.addressesTableRow = row => `${this.addressesTableBody} tr:nth-of-type(${row})`;

@@ -43,8 +43,8 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class SearchParametersResolverTest extends TestCase
 {
-    const EMPLOYEE_ID = 99;
-    const SHOP_ID = 13;
+    private const EMPLOYEE_ID = 99;
+    private const SHOP_ID = 13;
 
     public function testConstructor()
     {
@@ -238,7 +238,6 @@ class SearchParametersResolverTest extends TestCase
                 ->expects($this->once())
                 ->method('dispatch')
                 ->with(
-                    $this->equalTo(FilterSearchCriteriaEvent::NAME),
                     $this->callback(function (FilterSearchCriteriaEvent $event) use ($expectedFilters) {
                         $this->assertInstanceOf(FilterSearchCriteriaEvent::class, $event);
                         /** @var SampleFilters $filters */
@@ -248,7 +247,8 @@ class SearchParametersResolverTest extends TestCase
                         $this->assertEquals($expectedFilters, $filters->all());
 
                         return true;
-                    })
+                    }),
+                    $this->equalTo(FilterSearchCriteriaEvent::NAME)
                 );
         }
 
@@ -288,6 +288,11 @@ class SearchParametersResolverTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock()
         ;
+        $requestMock
+            ->method('get')
+            ->willReturnCallback(function ($parameter, $default = null) {
+                return $default;
+            });
 
         $parametersBagMock = $this->getMockBuilder(ParameterBag::class)
             ->disableOriginalConstructor()
@@ -301,8 +306,8 @@ class SearchParametersResolverTest extends TestCase
         ;
         $parametersBagMock
             ->method('get')
-            ->willReturnCallback(function ($parameter) use ($parameters) {
-                return $parameters[$parameter];
+            ->willReturnCallback(function ($parameter, $default = null) use ($parameters) {
+                return $parameters[$parameter] ?? $default;
             })
         ;
 
@@ -354,7 +359,7 @@ class SearchParametersResolverTest extends TestCase
                 ->willReturn(self::EMPLOYEE_ID)
             ;
 
-            $tokenMock = $this->getMockBuilder(TokenInterface::class)
+            $tokenMock = $this->getMockBuilder(SerializableTokenInterface::class)
                 ->disableOriginalConstructor()
                 ->getMock()
             ;
@@ -376,11 +381,11 @@ class SearchParametersResolverTest extends TestCase
 
     /**
      * @param array|null $repoParameters
-     * @param array|null $requestParameters
+     * @param array $requestParameters
      *
-     * @return MockObject|SearchParametersInterface
+     * @return SearchParametersInterface
      */
-    private function buildSearchParametersMock(array $repoParameters = null, array $requestParameters = [])
+    private function buildSearchParametersMock(array $repoParameters = null, array $requestParameters = []): SearchParametersInterface
     {
         $searchParametersMock = $this->getMockBuilder(SearchParametersInterface::class)
             ->disableOriginalConstructor()
@@ -449,4 +454,11 @@ class SampleFilters extends Filters
             'filters' => [],
         ];
     }
+}
+
+interface SerializableTokenInterface extends TokenInterface
+{
+    public function __serialize(): array;
+
+    public function __unserialize(array $data): void;
 }

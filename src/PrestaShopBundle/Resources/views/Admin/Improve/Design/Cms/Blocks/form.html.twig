@@ -23,15 +23,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{% form_theme cmsPageForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
+{% form_theme cmsPageForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
-{{ form_start(cmsPageForm) }}
+{{ form_start(cmsPageForm, {'attr': {'data-id': cmsPageId|default(0)}}) }}
 <div class="card">
   <div class="card-header">
     {{ 'Page'|trans({}, 'Admin.Shopparameters.Feature') }}
   </div>
-  <div class="card-block row">
-    <div class="card-text">
+  <div class="card-body">
+    <div class="form-wrapper">
       {{ form_widget(cmsPageForm) }}
     </div>
   </div>
@@ -52,7 +52,7 @@
       <div class="btn-group dropup">
         <button type="submit" class="btn btn-primary" id="save-button-mobile">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
         <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <span class="sr-only">{{ 'Toggle Dropdown'|trans({}, 'Admin.Modules.Feature') }}</span>
+          <span class="sr-only">{{ 'Toggle dropdown'|trans({}, 'Admin.Modules.Feature') }}</span>
         </button>
         <div class="dropdown-menu dropdown-menu-right">
           <button type="submit" class="dropdown-item" name="save-and-preview" id="save-and-preview-button-mobile">{{ 'Save and preview'|trans({}, 'Admin.Actions') }}</button>

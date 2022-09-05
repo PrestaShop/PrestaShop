@@ -26,8 +26,8 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
-use Cache;
 use Module;
+use PHPUnit\Framework\Assert;
 use Symfony\Component\Filesystem\Filesystem;
 
 class ModuleFeatureContext extends AbstractPrestaShopFeatureContext
@@ -35,15 +35,31 @@ class ModuleFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Given the module :module is installed
      */
-    public function theModuleIsInstalled($module)
+    public function theModuleIsInstalled(string $module): void
     {
         $fs = new Filesystem();
         $fs->mirror(self::MODULES_DIRECTORY . '/' . $module, _PS_MODULE_DIR_ . '/' . $module);
 
-        // enable the module
+        // Enable the module if needed
         if (!Module::isEnabled($module)) {
-            Module::enableByName($module);
-            Cache::clear();
+            Module::getInstanceByName($module)->enable();
+            Module::resetStaticCache();
         }
+    }
+
+    /**
+     * @Given the module :module is enabled
+     */
+    public function isTheModuleEnabled(string $module): void
+    {
+        Assert::assertTrue(Module::isEnabled($module));
+    }
+
+    /**
+     * @Given the module :module is disabled
+     */
+    public function isTheModuleDisabled(string $module): void
+    {
+        Assert::assertFalse(Module::isEnabled($module));
     }
 }

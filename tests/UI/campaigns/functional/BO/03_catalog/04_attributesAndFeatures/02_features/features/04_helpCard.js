@@ -4,7 +4,7 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -66,16 +66,20 @@ describe('BO - Catalog - Attributes & Features : Help card on features page', as
     await testContext.addContextItem(this, 'testIdentifier', 'openHelpSidebar', baseContext);
 
     const isHelpSidebarVisible = await featuresPage.openHelpSideBar(page);
-    await expect(isHelpSidebarVisible).to.be.true;
+    await expect(isHelpSidebarVisible, 'Help side bar is not opened!').to.be.true;
+  });
+
+  it('should check the document language', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'checkDocumentLanguage', baseContext);
 
     const documentURL = await featuresPage.getHelpDocumentURL(page);
-    await expect(documentURL).to.contains('country=en');
+    await expect(documentURL, 'Help document is not in english language!').to.contains('country=en');
   });
 
   it('should close the help side bar', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'closeHelpSidebar', baseContext);
 
     const isHelpSidebarClosed = await featuresPage.closeHelpSideBar(page);
-    await expect(isHelpSidebarClosed).to.be.true;
+    await expect(isHelpSidebarClosed, 'Help document is not closed!').to.be.true;
   });
 });

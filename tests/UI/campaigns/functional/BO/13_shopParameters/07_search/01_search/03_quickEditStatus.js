@@ -1,10 +1,13 @@
 require('module-alias/register');
 
+const {expect} = require('chai');
+
 // Import utils
 const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
 
 // Import common tests
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -13,13 +16,7 @@ const searchPage = require('@pages/BO/shopParameters/search');
 // Import data
 const {Aliases} = require('@data/demo/search');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_shopParameters_search_search_quickEditStatus';
-
-// Import expect from chai
-const {expect} = require('chai');
 
 // Browser and tab
 let browserContext;
@@ -29,7 +26,7 @@ let numberOfSearch = 0;
 /*
 Quick edit status
  */
-describe('Quick edit status', async () => {
+describe('BO - Shop Parameters - Search : Quick edit status', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -44,7 +41,7 @@ describe('Quick edit status', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'ShopParameters > Search\' page', async function () {
+  it('should go to \'Shop Parameters > Search\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSearchPage', baseContext);
 
     await dashboardPage.goToSubMenu(

@@ -26,8 +26,9 @@
 
 namespace PrestaShopBundle\Service\DataProvider\Admin;
 
-use PrestaShop\PrestaShop\Adapter\Module\Module as ApiModule;
-use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
+use PrestaShop\PrestaShop\Adapter\Module\Module;
+use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
+use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 use stdClass;
 
 /**
@@ -52,6 +53,11 @@ class CategoriesProvider
     private $categories;
 
     /**
+     * @var array
+     */
+    private $categoriesMenu;
+
+    /**
      * @var object
      */
     private $categoriesFromSource;
@@ -61,23 +67,29 @@ class CategoriesProvider
         $this->modulesTheme = $modulesTheme;
         // We now avoid calling the API. This data is loaded from a local YML file
         $this->categoriesFromSource = $this->sortCategories($addonsCategories);
+        $this->categories = $this->initializeCategories($this->categoriesFromSource);
+    }
+
+    public function getCategories(): array
+    {
+        return $this->categories;
     }
 
     /**
      * Return the list of categories with the associated modules.
      *
-     * @param array|AddonsCollection $modules
+     * @param array|ModuleCollection $modules
      *
      * @return array the list of categories
      */
     public function getCategoriesMenu($modules): array
     {
-        if (null === $this->categories) {
+        if (null === $this->categoriesMenu) {
             // The Root category is "Categories"
-            $categories = $this->initializeCategories($this->categoriesFromSource);
+            // Co py the original array
+            $categories = $this->categories;
             foreach ($modules as $module) {
                 $category = $this->findModuleCategory($module, $categories);
-
                 $categories['categories']->subMenu[$category]->modules[] = $module;
             }
 
@@ -86,10 +98,10 @@ class CategoriesProvider
                 unset($categories['categories']->subMenu[self::CATEGORY_THEME]);
             }
 
-            $this->categories = $categories;
+            $this->categoriesMenu = $categories;
         }
 
-        return $this->categories;
+        return $this->categoriesMenu;
     }
 
     /**
@@ -175,10 +187,10 @@ class CategoriesProvider
     /**
      * Find module category.
      *
-     * @param ApiModule $installedProduct Installed product
+     * @param ModuleInterface $installedProduct Installed product
      * @param array $categories Available categories
      */
-    private function findModuleCategory(ApiModule $installedProduct, array $categories): string
+    private function findModuleCategory(ModuleInterface $installedProduct, array $categories): string
     {
         $moduleCategoryParent = $installedProduct->attributes->get('categoryParentEnglishName');
         if (!isset($categories['categories']->subMenu[$moduleCategoryParent])) {
@@ -208,14 +220,7 @@ class CategoriesProvider
         uasort(
             $categories,
             function ($a, $b) {
-                $a = !isset($a['order']) ? 0 : $a['order'];
-                $b = !isset($b['order']) ? 0 : $b['order'];
-
-                if ($a === $b) {
-                    return 0;
-                }
-
-                return ($a < $b) ? -1 : 1;
+                return ($a['order'] ?? 0) <=> ($b['order'] ?? 0);
             }
         );
 
@@ -227,11 +232,11 @@ class CategoriesProvider
      * Try to find the parent category depending on
      * the module's tab attribute.
      *
-     * @param ApiModule $module
+     * @param ModuleInterface $module
      *
      * @return ?string
      */
-    private function getParentCategoryFromTabAttribute(ApiModule $module): ?string
+    private function getParentCategoryFromTabAttribute(ModuleInterface $module): ?string
     {
         foreach ($this->categoriesFromSource as $parentCategory) {
             foreach ($parentCategory->categories as $category) {

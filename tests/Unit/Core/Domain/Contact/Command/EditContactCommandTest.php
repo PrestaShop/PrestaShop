@@ -39,15 +39,16 @@ class EditContactCommandTest extends TestCase
     public function testItThrowsAnExceptionOnIncorrectIdPassed()
     {
         $this->expectException(ContactException::class);
+        /** @phpstan-ignore-next-line */
         $command = new EditContactCommand('1');
     }
 
     /**
      * @dataProvider getIncorrectTitles
      *
-     * @param $incorrectTitle
+     * @param array $incorrectTitle
      */
-    public function testItThrowsAnExceptionOnIncorrectTitle($incorrectTitle)
+    public function testItThrowsAnExceptionOnIncorrectTitle(array $incorrectTitle): void
     {
         $this->expectException(ContactConstraintException::class);
         $this->expectExceptionCode(ContactConstraintException::INVALID_TITLE);
@@ -56,7 +57,7 @@ class EditContactCommandTest extends TestCase
         $command->setLocalisedTitles($incorrectTitle);
     }
 
-    public function getIncorrectTitles()
+    public function getIncorrectTitles(): array
     {
         return [
             [
@@ -81,7 +82,7 @@ class EditContactCommandTest extends TestCase
     /**
      * @dataProvider getIncorrectShopAssociations
      */
-    public function testItThrowsAnExceptionOnIncorrectShopAssociation($incorrectShopAssociation)
+    public function testItThrowsAnExceptionOnIncorrectShopAssociation(array $incorrectShopAssociation): void
     {
         $this->expectException(ContactConstraintException::class);
         $this->expectExceptionCode(ContactConstraintException::INVALID_SHOP_ASSOCIATION);
@@ -90,7 +91,7 @@ class EditContactCommandTest extends TestCase
         $command->setShopAssociation($incorrectShopAssociation);
     }
 
-    public function getIncorrectShopAssociations()
+    public function getIncorrectShopAssociations(): array
     {
         return [
             [

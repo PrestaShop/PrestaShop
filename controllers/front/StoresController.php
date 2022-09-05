@@ -25,23 +25,8 @@
  */
 class StoresControllerCore extends FrontController
 {
+    /** @var string */
     public $php_self = 'stores';
-
-    /**
-     * Initialize stores controller.
-     *
-     * @see FrontController::init()
-     */
-    public function init()
-    {
-        parent::init();
-
-        // StarterTheme: Remove check when google maps v3 is done
-        if (!extension_loaded('Dom')) {
-            $this->errors[] = $this->trans('PHP "Dom" extension has not been loaded.', [], 'Shop.Notifications.Error');
-            $this->context->smarty->assign('errors', $this->errors);
-        }
-    }
 
     /**
      * Get formatted string address.
@@ -52,7 +37,6 @@ class StoresControllerCore extends FrontController
      */
     protected function processStoreAddress($store)
     {
-        // StarterTheme: Remove method when google maps v3 is done
         $ignore_field = [
             'firstname',
             'lastname',
@@ -71,7 +55,7 @@ class StoresControllerCore extends FrontController
             foreach ($data_fields as $field_item) {
                 $field_item = trim($field_item);
                 if (!in_array($field_item, $ignore_field) && !empty($store[$field_item])) {
-                    $addr_out[] = ($field_item == 'city' && $state && isset($state->iso_code) && strlen($state->iso_code)) ?
+                    $addr_out[] = ($field_item == 'city' && $state && !empty($state->iso_code)) ?
                         $store[$field_item] . ', ' . $state->iso_code : $store[$field_item];
                     $data_fields_mod = true;
                 }
@@ -88,7 +72,6 @@ class StoresControllerCore extends FrontController
 
     public function getStoresForXml()
     {
-        // StarterTheme: Remove method when google maps v3 is done
         $distance_unit = Configuration::get('PS_DISTANCE_UNIT');
         if (!in_array($distance_unit, ['km', 'mi'])) {
             $distance_unit = 'km';
@@ -97,8 +80,10 @@ class StoresControllerCore extends FrontController
         $distance = (int) Tools::getValue('radius', 100);
         $multiplicator = ($distance_unit == 'km' ? 6371 : 3959);
 
+        $langId = (int) Tools::getValue('lang', Configuration::get('PS_LANG_DEFAULT'));
+
         $stores = Db::getInstance()->executeS('
-        SELECT s.*, cl.name country, st.iso_code state,
+        SELECT s.*, sl.*, cl.name country, st.iso_code state,
         (' . (int) $multiplicator . '
             * acos(
                 cos(radians(' . (float) Tools::getValue('latitude') . '))
@@ -110,10 +95,10 @@ class StoresControllerCore extends FrontController
         ) distance,
         cl.id_country id_country
         FROM ' . _DB_PREFIX_ . 'store s
-        ' . Shop::addSqlAssociation('store', 's') . '
-        LEFT JOIN ' . _DB_PREFIX_ . 'country_lang cl ON (cl.id_country = s.id_country)
+        LEFT JOIN ' . _DB_PREFIX_ . 'country_lang cl ON (cl.id_country = s.id_country AND cl.id_lang = ' . (int) $langId . ')
+        LEFT JOIN ' . _DB_PREFIX_ . 'store_lang sl ON (sl.id_store = s.id_store AND sl.id_lang = ' . (int) $langId . ')
         LEFT JOIN ' . _DB_PREFIX_ . 'state st ON (st.id_state = s.id_state)
-        WHERE s.active = 1 AND cl.id_lang = ' . (int) $this->context->language->id . '
+        WHERE s.active = 1
         HAVING distance < ' . (int) $distance . '
         ORDER BY distance ASC
         LIMIT 0,20');
@@ -126,27 +111,26 @@ class StoresControllerCore extends FrontController
      */
     protected function displayAjax()
     {
-        // StarterTheme: Remove method when google maps v3 is done
         $stores = $this->getStoresForXml();
         $parnode = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><markers></markers>');
 
         foreach ($stores as $store) {
-            $other = '';
             $newnode = $parnode->addChild('marker');
             $newnode->addAttribute('name', $store['name']);
             $address = $this->processStoreAddress($store);
 
-            //$other .= $this->renderStoreWorkingHours($store);
             $newnode->addAttribute('addressNoHtml', strip_tags(str_replace('<br />', ' ', $address)));
             $newnode->addAttribute('address', $address);
-            $newnode->addAttribute('other', $other);
+            $newnode->addAttribute('hours', trim($store['hours']));
             $newnode->addAttribute('phone', $store['phone']);
-            $newnode->addAttribute('id_store', (int) $store['id_store']);
-            $newnode->addAttribute('has_store_picture', file_exists(_PS_STORE_IMG_DIR_ . (int) $store['id_store'] . '.jpg'));
-            $newnode->addAttribute('lat', (float) $store['latitude']);
-            $newnode->addAttribute('lng', (float) $store['longitude']);
+            $newnode->addAttribute('fax', $store['fax']);
+            $newnode->addAttribute('note', $store['note']);
+            $newnode->addAttribute('id_store', (string) (int) $store['id_store']);
+            $newnode->addAttribute('has_store_picture', (string) file_exists(_PS_STORE_IMG_DIR_ . (int) $store['id_store'] . '.jpg'));
+            $newnode->addAttribute('lat', (string) (float) $store['latitude']);
+            $newnode->addAttribute('lng', (string) (float) $store['longitude']);
             if (isset($store['distance'])) {
-                $newnode->addAttribute('distance', (int) $store['distance']);
+                $newnode->addAttribute('distance', (string) (int) $store['distance']);
             }
         }
 

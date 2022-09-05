@@ -1,16 +1,18 @@
-.js-mobile-menu {
-  display: none;
-  flex-direction: column;
-  justify-content: center;
-  float: left;
-  padding-top: 0;
-  margin-right: 0.6rem;
-  margin-left: 0.6rem;
-  font-size: 1.8rem;
-  cursor: pointer;
+#header_infos {
+  .js-mobile-menu {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    float: left;
+    padding-top: 0;
+    margin-right: 0.6rem;
+    margin-left: 0.6rem;
+    font-size: 1.8rem;
+    cursor: pointer;
 
-  @include media-breakpoint-down(md) {
-    display: inline-flex;
+    @include media-breakpoint-down(md) {
+      display: inline-flex;
+    }
   }
 }
 
@@ -22,8 +24,12 @@
   width: $size-navbar-width;
   height: 100%;
   margin-top: $size-header-height;
-  background: $gray-dark;
-  @include transition(all 0.5s ease);
+  background: $sidebar-background-color;
+  @include transition(all 0.5s ease-out);
+
+  .logo-container {
+    display: none;
+  }
 
   &-overflow {
     height: 100%;
@@ -37,9 +43,52 @@
   }
 
   &.mobile-nav {
-    width: 70%;
-    margin-top: $size-header-height + ($header-mobile-padding-y * 2);
+    z-index: 2000;
+    width: 80%;
+    margin-top: 0;
     margin-left: -100%;
+
+    .employee-top {
+      display: flex;
+      align-items: center;
+      padding: 0 1rem;
+
+      .employee-avatar {
+        padding-top: 0;
+
+        img {
+          width: 2.5rem;
+          height: 2.5rem;
+          margin-right: 1rem;
+          margin-bottom: 0;
+        }
+      }
+
+      span {
+        font-size: 1rem;
+        color: $white;
+      }
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      padding: 0.875rem;
+      border-bottom: 1px solid $gray-dark-text;
+
+      .logo {
+        width: 8rem;
+        height: 1.25rem;
+        background: url("@images/ps-logo-white.svg") no-repeat;
+        background-size: contain;
+      }
+
+      .header-version {
+        margin-left: 0.75rem;
+        font-size: 1rem;
+        color: $white;
+      }
+    }
 
     &::before {
       position: fixed;
@@ -142,7 +191,7 @@
       margin-top: 0.625rem;
 
       & > li:first-child {
-        padding-bottom: 1rem;
+        padding: 1rem 0;
       }
     }
 
@@ -206,11 +255,24 @@
       }
     }
   }
+
+  .ps .ps__rail-x:hover,
+  .ps .ps__rail-y:hover,
+  .ps .ps__rail-x:focus,
+  .ps .ps__rail-y:focus,
+  .ps .ps__rail-x.ps--clicking,
+  .ps .ps__rail-y.ps--clicking {
+    background-color: inherit;
+  }
 }
 
 .main-menu {
-  padding: 0 0 8.313rem;
+  padding: 0 0 10.825rem;
   margin: 0;
+
+  @include media-breakpoint-down(md) {
+    padding: 0 0 4.5rem;
+  }
 
   &.sidebar-closed {
     .link-levelone {
@@ -235,11 +297,16 @@
     display: block;
 
     #header_logout {
-      margin-top: 1rem;
-      color: #f44336;
+      margin-top: 2rem;
+      color: $sidebar-logout-color;
 
       i {
-        color: #f44336;
+        line-height: 1.375rem;
+        color: $sidebar-logout-color;
+      }
+
+      &:hover {
+        background-color: transparent;
       }
     }
 
@@ -248,9 +315,8 @@
         a.link {
           padding-top: 0.5rem;
           padding-bottom: 0.5rem;
-          padding-left: 1rem;
           font-size: 1rem;
-          line-height: inherit;
+          line-height: 1.428rem;
 
           .material-icons {
             margin-top: 0.1rem;
@@ -279,12 +345,12 @@
       }
 
       > .link {
-        padding-left: 0.7rem;
-        border-left: 0.25rem solid #25b9d7;
+        padding-left: 0.688rem;
+        border-left: 0.25rem solid $sidebar-active-icon-color;
 
         .material-icons {
           &:first-child {
-            color: #25b9d7;
+            color: $sidebar-active-icon-color;
           }
         }
       }
@@ -292,7 +358,7 @@
 
     &:not(#subtab-AdminParentModulesSf) {
       i.material-icons.mi-extension {
-        color: #6c868e;
+        color: $gray-500;
       }
     }
 
@@ -304,7 +370,7 @@
       overflow: hidden;
       font-size: 0.75rem;
       line-height: 1rem;
-      color: $gray-dark-text;
+      color: $sidebar-primary-link-color;
       text-decoration: none;
       text-overflow: initial;
       word-break: break-word;
@@ -320,7 +386,7 @@
       .sub-tabs-arrow {
         margin-left: auto;
         line-height: inherit;
-        color: #6c868e;
+        color: $sidebar-primary-link-color;
         vertical-align: middle;
         visibility: hidden;
       }
@@ -330,13 +396,9 @@
     &.link-active,
     &.link-hover {
       & > .link {
-        color: $white;
-        background: #202226;
+        color: $sidebar-primary-link-color;
+        background: $sidebar-active-background-color;
         @include transition(background 300ms ease);
-
-        @include media-breakpoint-down(md) {
-          background: $gray-dark;
-        }
       }
 
       &.has_submenu {
@@ -350,10 +412,14 @@
 
     > .submenu {
       display: none;
-      padding-left: 2.8rem;
+      padding-left: 2.75rem;
       white-space: nowrap;
       list-style: none;
-      background: #202226;
+      background: $sidebar-active-background-color;
+
+      @include media-breakpoint-down(md) {
+        padding-left: 2.5rem;
+      }
 
       & > li {
         @include media-breakpoint-down(md) {
@@ -364,7 +430,7 @@
         }
 
         &:first-of-type {
-          padding-top: 0.625rem;
+          padding-top: 0.25rem;
 
           @include media-breakpoint-down(md) {
             padding-top: 0;
@@ -388,7 +454,7 @@
     &.ul-open,
     &.link-active {
       .link {
-        background: #202226;
+        background: $sidebar-active-background-color;
       }
     }
 
@@ -414,6 +480,7 @@
       height: initial;
       padding: 0.3125rem 0.3rem 0.3125rem 0;
       line-height: 0.9rem;
+      color: $sidebar-secondary-link-color;
 
       @include media-breakpoint-down(md) {
         padding-top: 1.4rem;
@@ -423,29 +490,26 @@
     }
 
     > .link:hover {
-      color: $gray-dark-text-hover;
+      color: $sidebar-primary-link-color;
     }
   }
 }
 
 .category-title {
   display: block;
-  padding: 0.875rem 0 0.75rem;
-  margin: 1.813rem 0 0 0.938rem;
+  padding: 0.75rem 0 0.5rem;
+  margin: 0.875rem 0 0 0.938rem;
   font-size: 0.75rem;
   font-weight: 700;
-  border-top: 1px solid #bbcdd2;
+  line-height: 1.125rem;
 
   @include media-breakpoint-down(md) {
-    margin: 0.75rem 0 0 0.5rem;
+    margin: 0.75rem 0 0 1rem;
     font-size: 1rem;
-    font-weight: 500;
-    border-top: none;
   }
 
   & > .title {
-    color: $white;
-    background: $gray-dark;
+    color: $sidebar-title-color;
 
     @at-root .sidebar-closed & {
       display: none;
@@ -456,7 +520,7 @@
 .menu-collapse {
   display: block;
   height: 0.813rem;
-  padding: 0.688rem 0.938rem 2.188rem 0;
+  padding: 0.688rem 0.938rem 2.063rem 0;
   font-size: 2rem;
   line-height: 0.813rem;
   color: $gray-dark-text;
@@ -469,7 +533,7 @@
   }
 
   .material-icons {
-    color: #bebebe;
+    color: $sidebar-primary-link-color;
 
     &:last-child {
       margin-left: -1.313rem;
@@ -501,8 +565,8 @@
       }
 
       .category-title {
+        padding-top: 0;
         padding-bottom: 0;
-        margin-top: 0.8rem;
       }
 
       .link-levelone {
@@ -586,11 +650,11 @@
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 998;
+  z-index: 1999;
   display: none;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.9);
   @include transition(all 0.2s ease-in-out);
 
   &.expanded {

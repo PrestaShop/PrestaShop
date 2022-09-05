@@ -1,10 +1,11 @@
 require('module-alias/register');
 
-// Helpers to open and close browser
+// Import utils
 const helper = require('@utils/helpers');
+const {getDateFormat} = require('@utils/date');
 
 // Import login steps
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -31,21 +32,11 @@ const {expect} = require('chai');
 
 let browserContext;
 let page;
-
-// Today date
-const now = new Date();
-// Day before
-const today = (`0${now.getDate()}`).slice(-2);
-// Current month
-const month = (`0${now.getMonth() + 1}`).slice(-2);
-// Current year
-const year = now.getFullYear();
-// Date yesterday format (yyyy-mm-dd)
-const dateFrom = `${year}-${month}-${today} 01:00:00`;
+const pastDate = getDateFormat('yyyy-mm-dd', 'past');
 
 const cartRuleWithoutCode = new CartRuleFaker(
   {
-    dateFrom,
+    dateFrom: pastDate,
     name: 'withoutCode',
     discountType: 'Percent',
     discountPercent: 20,

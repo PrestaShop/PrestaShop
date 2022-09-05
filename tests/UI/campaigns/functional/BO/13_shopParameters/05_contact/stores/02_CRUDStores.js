@@ -1,10 +1,13 @@
 require('module-alias/register');
 
-// Helpers to open and close browser
-const helper = require('@utils/helpers');
+const {expect} = require('chai');
 
-// Common tests login BO
-const loginCommon = require('@commonTests/loginBO');
+// Import utils
+const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -15,13 +18,7 @@ const addStorePage = require('@pages/BO/shopParameters/stores/add');
 // Import data
 const StoreFaker = require('@data/faker/store');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_shopParameters_contact_stores_CRUDStores';
-
-// Import expect from chai
-const {expect} = require('chai');
 
 // Browser and tab
 let browserContext;
@@ -32,8 +29,7 @@ let numberOfStores = 0;
 const createStoreData = new StoreFaker();
 const editStoreData = new StoreFaker();
 
-
-describe('Create, update and delete Store in BO', async () => {
+describe('BO - Shop Parameters - Contact : Create, update and delete Store in BO', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -48,7 +44,7 @@ describe('Create, update and delete Store in BO', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to contact page', async function () {
+  it('should go to \'Shop Parameters > Contact\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToContactPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -63,7 +59,7 @@ describe('Create, update and delete Store in BO', async () => {
     await expect(pageTitle).to.contains(contactPage.pageTitle);
   });
 
-  it('should go to stores page', async function () {
+  it('should go to \'Stores\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToStoresPage', baseContext);
 
     await contactPage.goToStoresPage(page);
@@ -105,12 +101,7 @@ describe('Create, update and delete Store in BO', async () => {
 
       await storesPage.resetFilter(page);
 
-      await storesPage.filterTable(
-        page,
-        'input',
-        'sl!name',
-        createStoreData.name,
-      );
+      await storesPage.filterTable(page, 'input', 'sl!name', createStoreData.name);
 
       const textEmail = await storesPage.getTextColumn(page, 1, 'sl!name');
       await expect(textEmail).to.contains(createStoreData.name);
@@ -140,13 +131,7 @@ describe('Create, update and delete Store in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForDelete', baseContext);
 
       await storesPage.resetFilter(page);
-
-      await storesPage.filterTable(
-        page,
-        'input',
-        'sl!name',
-        editStoreData.name,
-      );
+      await storesPage.filterTable(page, 'input', 'sl!name', editStoreData.name);
 
       const textEmail = await storesPage.getTextColumn(page, 1, 'sl!name');
       await expect(textEmail).to.contains(editStoreData.name);

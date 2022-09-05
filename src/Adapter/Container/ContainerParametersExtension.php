@@ -82,6 +82,6 @@ class ContainerParametersExtension implements ContainerBuilderExtensionInterface
         $container->setParameter('kernel.cache_dir', $this->environment->getCacheDir());
 
         //Init the active modules
-        $container->setParameter('kernel.active_modules', (new ModuleRepository())->getActiveModules());
+        $container->setParameter('kernel.active_modules', (new ModuleRepository(_PS_ROOT_DIR_, _PS_MODULE_DIR_))->getActiveModules());
     }
 }

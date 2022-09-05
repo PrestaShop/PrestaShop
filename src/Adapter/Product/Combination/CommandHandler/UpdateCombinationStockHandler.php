@@ -30,8 +30,11 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockProperties;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\CombinationStockUpdater;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\MovementReasonRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\UpdateCombinationStockHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
 
 /**
  * Handles @see UpdateCombinationStockCommand using legacy object model
@@ -44,12 +47,27 @@ final class UpdateCombinationStockHandler implements UpdateCombinationStockHandl
     private $combinationStockUpdater;
 
     /**
+     * @var MovementReasonRepository
+     */
+    private $movementReasonRepository;
+    /**
+     * @var StockAvailableRepository
+     */
+    private $stockAvailableRepository;
+
+    /**
      * @param CombinationStockUpdater $combinationStockUpdater
+     * @param MovementReasonRepository $movementReasonRepository
+     * @param StockAvailableRepository $stockAvailableRepository
      */
     public function __construct(
-        CombinationStockUpdater $combinationStockUpdater
+        CombinationStockUpdater $combinationStockUpdater,
+        MovementReasonRepository $movementReasonRepository,
+        StockAvailableRepository $stockAvailableRepository
     ) {
         $this->combinationStockUpdater = $combinationStockUpdater;
+        $this->movementReasonRepository = $movementReasonRepository;
+        $this->stockAvailableRepository = $stockAvailableRepository;
     }
 
     /**
@@ -57,8 +75,24 @@ final class UpdateCombinationStockHandler implements UpdateCombinationStockHandl
      */
     public function handle(UpdateCombinationStockCommand $command): void
     {
+        $stockModification = null;
+        if ($command->getDeltaQuantity()) {
+            $stockModification = new StockModification(
+                $command->getDeltaQuantity(),
+                $this->movementReasonRepository->getIdForEmployeeEdition($command->getDeltaQuantity() > 0)
+            );
+        } elseif (null !== $command->getFixedQuantity()) {
+            $currentQuantity = (int) $this->stockAvailableRepository->getForCombination($command->getCombinationId())->quantity;
+            $deltaQuantity = $command->getFixedQuantity() - $currentQuantity;
+
+            $stockModification = new StockModification(
+                $deltaQuantity,
+                $this->movementReasonRepository->getIdForEmployeeEdition($deltaQuantity > 0)
+            );
+        }
+
         $properties = new CombinationStockProperties(
-            $command->getQuantity(),
+            $stockModification,
             $command->getMinimalQuantity(),
             $command->getLocation(),
             $command->getLowStockThreshold(),

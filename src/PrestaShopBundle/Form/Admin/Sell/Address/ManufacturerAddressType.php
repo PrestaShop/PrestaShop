@@ -52,16 +52,6 @@ class ManufacturerAddressType extends TranslatorAwareType
     private $manufacturerChoices;
 
     /**
-     * @var array
-     */
-    private $countryChoices;
-
-    /**
-     * @var array
-     */
-    private $countryChoicesAttributes;
-
-    /**
      * @var ConfigurableFormChoiceProviderInterface
      */
     private $statesChoiceProvider;
@@ -77,29 +67,25 @@ class ManufacturerAddressType extends TranslatorAwareType
     private $router;
 
     /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
      * @param array $manufacturerChoices
-     * @param array $countryChoices
      * @param ConfigurableFormChoiceProviderInterface $statesChoiceProvider
      * @param int $contextCountryId
-     * @param TranslatorInterface $translator
-     * @param array $countryChoicesAttributes
+     * @param Router $router
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         array $manufacturerChoices,
-        array $countryChoices,
         ConfigurableFormChoiceProviderInterface $statesChoiceProvider,
         $contextCountryId,
-        array $countryChoicesAttributes,
         Router $router
     ) {
         parent::__construct($translator, $locales);
         $this->manufacturerChoices = $manufacturerChoices;
-        $this->countryChoices = $countryChoices;
         $this->statesChoiceProvider = $statesChoiceProvider;
         $this->contextCountryId = $contextCountryId;
-        $this->countryChoicesAttributes = $countryChoicesAttributes;
         $this->router = $router;
     }
 
@@ -244,6 +230,8 @@ class ManufacturerAddressType extends TranslatorAwareType
                 'attr' => [
                     'class' => 'js-manufacturer-country-select',
                     'data-states-url' => $this->router->generate('admin_country_states'),
+                    'data-toggle' => 'select2',
+                    'data-minimumResultsForSearch' => '7',
                 ],
                 'required' => true,
                 'with_dni_attr' => true,
@@ -263,6 +251,10 @@ class ManufacturerAddressType extends TranslatorAwareType
                     new AddressStateRequired([
                         'id_country' => $countryId,
                     ]),
+                ],
+                'attr' => [
+                    'data-toggle' => 'select2',
+                    'data-minimumResultsForSearch' => '7',
                 ],
             ])
             ->add('dni', TextType::class, [

@@ -49,6 +49,9 @@ class SwitchType extends AbstractType
                 'No' => false,
                 'Yes' => true,
             ],
+            'show_choices' => true,
+            // Force label and switch to be displayed on the same line (mainly useful for base ui kit)
+            'inline_switch' => false,
             'multiple' => false,
             'expanded' => false,
             'disabled' => false,
@@ -68,6 +71,18 @@ class SwitchType extends AbstractType
         $view->vars['attr']['class'] = 'ps-switch';
         if (isset($options['attr']['class'])) {
             $view->vars['attr']['class'] .= ' ' . $options['attr']['class'];
+        }
+        $view->vars['show_choices'] = $options['show_choices'];
+
+        // Add a class when inline mode is enabled
+        if ($options['inline_switch']) {
+            $rowAttributes = $options['row_attr'] ?? [];
+            if (!empty($rowAttributes['class'])) {
+                $rowAttributes['class'] .= ' inline-switch-widget';
+            } else {
+                $rowAttributes['class'] = 'inline-switch-widget';
+            }
+            $view->vars['row_attr'] = $rowAttributes;
         }
     }
 

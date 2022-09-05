@@ -254,7 +254,6 @@ class PersistFiltersBuilderTest extends TestCase
      */
     private function buildRequestMock(string $controller): Request
     {
-        /** @var Request $requestMock */
         $requestMock = $this->getMockBuilder(Request::class)
             ->disableOriginalConstructor()
             ->getMock()

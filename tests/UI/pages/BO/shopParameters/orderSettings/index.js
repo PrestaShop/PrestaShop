@@ -50,7 +50,7 @@ class OrderSettings extends BOBasePage {
    * @return {Promise<string>}
    */
   async setFinalSummaryStatus(page, toEnable = true) {
-    await page.check(this.enableFinalSummaryToggleInput(toEnable ? 1 : 0));
+    await this.setChecked(page, this.enableFinalSummaryToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveGeneralFormButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -63,7 +63,7 @@ class OrderSettings extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setGuestCheckoutStatus(page, toEnable = true) {
-    await page.check(this.enableGuestCheckoutToggleInput(toEnable ? 1 : 0));
+    await this.setChecked(page, this.enableGuestCheckoutToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveGeneralFormButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -76,7 +76,7 @@ class OrderSettings extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setReorderOptionStatus(page, toEnable = true) {
-    await page.check(this.disableReorderingToggleInput(toEnable ? 1 : 0));
+    await this.setChecked(page, this.disableReorderingToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveGeneralFormButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -103,7 +103,7 @@ class OrderSettings extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setTermsOfService(page, toEnable = true, pageName = '') {
-    await page.check(this.enableTermsOfServiceToggleInput(toEnable ? 1 : 0));
+    await this.setChecked(page, this.enableTermsOfServiceToggleInput(toEnable ? 1 : 0));
     if (toEnable) {
       await this.selectByVisibleText(page, this.pageForTermsAndConditionsSelect, pageName);
     }
@@ -122,13 +122,13 @@ class OrderSettings extends BOBasePage {
    * @return {Promise<string>}
    */
   async setGiftOptions(page, wantedStatus = false, price = 0, tax = 'none', recyclePackagingStatus = false) {
-    await page.check(this.giftWrappingToggleInput(wantedStatus ? 1 : 0));
+    await this.setChecked(page, this.giftWrappingToggleInput(wantedStatus ? 1 : 0));
     if (wantedStatus) {
-      await this.setValue(page, this.giftWrappingPriceInput, price.toString());
+      await this.setValue(page, this.giftWrappingPriceInput, price);
       await this.selectByVisibleText(page, this.giftWrappingTaxSelect, tax);
     }
 
-    await page.check(this.recycledPackagingToggleInput(recyclePackagingStatus ? 1 : 0));
+    await this.setChecked(page, this.recycledPackagingToggleInput(recyclePackagingStatus ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveGiftOptionsFormButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);

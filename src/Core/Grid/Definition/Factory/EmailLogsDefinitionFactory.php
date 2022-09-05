@@ -52,15 +52,7 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
     use BulkDeleteActionTrait;
     use DeleteActionTrait;
 
-    /**
-     * @var string the URL to reset Grid filters
-     */
-    private $resetActionUrl;
-
-    /**
-     * @var string the URL for redirection
-     */
-    private $redirectionUrl;
+    public const GRID_ID = 'email_logs';
 
     /**
      * @var ConfigurableFormChoiceProviderInterface
@@ -69,19 +61,13 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
 
     /**
      * @param HookDispatcherInterface $hookDispatcher
-     * @param string $resetActionUrl
-     * @param string $redirectionUrl
      * @param ConfigurableFormChoiceProviderInterface $languageChoiceProvider
      */
     public function __construct(
         HookDispatcherInterface $hookDispatcher,
-        $resetActionUrl,
-        $redirectionUrl,
         ConfigurableFormChoiceProviderInterface $languageChoiceProvider
     ) {
         parent::__construct($hookDispatcher);
-        $this->resetActionUrl = $resetActionUrl;
-        $this->redirectionUrl = $redirectionUrl;
         $this->languageChoiceProvider = $languageChoiceProvider;
     }
 
@@ -90,7 +76,7 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
      */
     protected function getId()
     {
-        return 'email_logs';
+        return self::GRID_ID;
     }
 
     /**
@@ -224,10 +210,11 @@ final class EmailLogsDefinitionFactory extends AbstractGridDefinitionFactory
             ->add(
                 (new Filter('actions', SearchAndResetType::class))
                     ->setTypeOptions([
-                        'attr' => [
-                            'data-url' => $this->resetActionUrl,
-                            'data-redirect' => $this->redirectionUrl,
+                        'reset_route' => 'admin_common_reset_search_by_filter_id',
+                        'reset_route_params' => [
+                            'filterId' => self::GRID_ID,
                         ],
+                        'redirect_route' => 'admin_emails_index',
                     ])
                     ->setAssociatedColumn('actions')
             );

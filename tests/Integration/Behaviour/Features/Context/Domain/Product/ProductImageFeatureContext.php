@@ -242,7 +242,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
         $directories = str_split((string) $imageId);
         $path = implode('/', $directories);
 
-        return _PS_PROD_IMG_DIR_ . $path;
+        return _PS_PRODUCT_IMG_DIR_ . $path;
     }
 
     /**
@@ -267,6 +267,20 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
             $this->getProductImages($productReference),
             sprintf('No images expected for product "%s"', $productReference)
         );
+    }
+
+    /**
+     * @Then product :productReference should have following cover :coverUrl
+     *
+     * @param string $productReference
+     * @param string $coverUrl
+     */
+    public function assertProductCover(string $productReference, string $coverUrl): void
+    {
+        $productForEditing = $this->getProductForEditing($productReference);
+        $realImageUrl = $this->getRealImageUrl($coverUrl);
+
+        Assert::assertEquals($realImageUrl, $productForEditing->getCoverThumbnailUrl());
     }
 
     /**
@@ -352,7 +366,7 @@ class ProductImageFeatureContext extends AbstractProductFeatureContext
     {
         $imageFolder = implode('/', str_split((string) $imageId));
 
-        return _PS_PROD_IMG_DIR_ . '/' . $imageFolder . '/' . $imageId . '.jpg';
+        return _PS_PRODUCT_IMG_DIR_ . '/' . $imageFolder . '/' . $imageId . '.jpg';
     }
 
     /**

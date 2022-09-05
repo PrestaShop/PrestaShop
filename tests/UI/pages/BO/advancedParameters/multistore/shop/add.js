@@ -40,7 +40,10 @@ class AddShop extends BOBasePage {
     await this.selectByVisibleText(page, this.shopGroupSelect, shopData.shopGroup);
     await this.selectByVisibleText(page, this.categoryRootSelect, shopData.categoryRoot);
 
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await Promise.all([
+      page.$eval(this.saveButton, el => el.click()),
+      page.waitForNavigation({waitUntil: 'networkidle', timeout: 30000}),
+    ]);
 
     return this.getTextContent(page, this.alertSuccessBlock);
   }

@@ -15,13 +15,14 @@ class Search extends BOBasePage {
     super();
 
     this.pageTitle = 'Search •';
-    this.successfulCreationMessage = 'Creation successful';
+    this.successfulCreationMessage = 'Successful creation';
     this.successfulUpdateStatusMessage = 'The status has been successfully updated.';
-    this.successfulUpdateMessage = 'The settings have been successfully updated.';
+    this.successfulUpdateMessage = 'Update successful';
+    this.settingsUpdateMessage = 'The settings have been successfully updated.';
 
     // Selectors
     // Header links
-    this.addNewAliasLink = '#page-header-desc-alias-new_alias';
+    this.addNewAliasLink = 'a[data-role=page-header-desc-alias-link]';
 
     // Tabs
     this.tagsTabLink = '#subtab-AdminTags';
@@ -317,7 +318,7 @@ class Search extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setFuzzySearch(page, toEnable = true) {
-    await page.check(this.fuzzySearchLabel(toEnable ? 'on' : 'off'));
+    await this.setChecked(page, this.fuzzySearchLabel(toEnable ? 'on' : 'off'));
     await this.clickAndWaitForNavigation(page, this.saveFormButton);
     return this.getAlertSuccessBlockContent(page);
   }

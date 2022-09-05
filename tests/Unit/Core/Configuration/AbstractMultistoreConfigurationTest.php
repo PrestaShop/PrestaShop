@@ -27,15 +27,15 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration as ShopConfiguration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context as ShopContext;
-use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
+use Tests\Resources\DummyMultistoreConfiguration;
+use Tests\TestCase\AbstractConfigurationTestCase;
 
-class AbstractMultistoreConfigurationTest extends TestCase
+class AbstractMultistoreConfigurationTest extends AbstractConfigurationTestCase
 {
     /**
      * @dataProvider provideForGetShopConstraint
@@ -90,7 +90,7 @@ class AbstractMultistoreConfigurationTest extends TestCase
     {
         // this will test that inside the `UpdateConfigurationValue` method, the right update method will be called depending on situation
         $abstractMultistoreConfiguration = $this->getTestableClass(false, $expectedMethodToBeCalled, $isMultistoreUsed);
-        $abstractMultistoreConfiguration->updateConfigurationValue('PS_CONF_KEY', $fieldName, $inputValues, $this->getShopConstraintMock());
+        $abstractMultistoreConfiguration->dummyUpdateConfigurationValue($fieldName, $inputValues, $this->getShopConstraintMock());
     }
 
     /**
@@ -115,7 +115,7 @@ class AbstractMultistoreConfigurationTest extends TestCase
      * @param int $shopGroupId
      * @param int $shopId
      *
-     * @return AbstractMultistoreConfiguration
+     * @return DummyMultistoreConfiguration
      */
     private function getTestableClass(
         bool $isAllShopContext,
@@ -123,23 +123,12 @@ class AbstractMultistoreConfigurationTest extends TestCase
         bool $isMultistoreUsed = true,
         int $shopGroupId = 1,
         int $shopId = 1
-    ): AbstractMultistoreConfiguration {
-        return new class($this->createShopConfigurationMock($expectedCalledMethod), $this->createMultistoreContextMock($isAllShopContext, $shopGroupId, $shopId), $this->getMultistoreFeatureMock($isMultistoreUsed)) extends AbstractMultistoreConfiguration {
-            public function getConfiguration()
-            {
-                return [];
-            }
-
-            public function validateConfiguration(array $configuration)
-            {
-                return true;
-            }
-
-            public function updateConfiguration(array $configuration)
-            {
-                return [];
-            }
-        };
+    ): DummyMultistoreConfiguration {
+        return new DummyMultistoreConfiguration(
+            $this->createShopConfigurationMock($expectedCalledMethod),
+            $this->createMultistoreContextMock($isAllShopContext, $shopGroupId, $shopId),
+            $this->getMultistoreFeatureMock($isMultistoreUsed)
+        );
     }
 
     /**
@@ -147,9 +136,9 @@ class AbstractMultistoreConfigurationTest extends TestCase
      * @param int $shopGroupId
      * @param int $shopId
      *
-     * @return MockObject
+     * @return ShopContext
      */
-    private function createMultistoreContextMock(bool $isAllShopContext, int $shopGroupId, int $shopId): MockObject
+    private function createMultistoreContextMock(bool $isAllShopContext, int $shopGroupId, int $shopId): ShopContext
     {
         $stub = $this->createMock(ShopContext::class);
         $stub->method('isAllShopContext')->willReturn($isAllShopContext);
@@ -162,9 +151,9 @@ class AbstractMultistoreConfigurationTest extends TestCase
     /**
      * @param string|null $expectedMethodCalled
      *
-     * @return MockObject
+     * @return ShopConfiguration
      */
-    private function createShopConfigurationMock(?string $expectedMethodCalled): MockObject
+    private function createShopConfigurationMock(?string $expectedMethodCalled): ShopConfiguration
     {
         $stub = $this->createMock(ShopConfiguration::class);
         $stub->method('get')->willReturn(true);
@@ -203,9 +192,9 @@ class AbstractMultistoreConfigurationTest extends TestCase
     /**
      * @param bool $isUsed
      *
-     * @return MockObject
+     * @return FeatureInterface
      */
-    private function getMultistoreFeatureMock(bool $isUsed = true): MockObject
+    private function getMultistoreFeatureMock(bool $isUsed = true): FeatureInterface
     {
         $stub = $this->createMock(FeatureInterface::class);
         $stub->method('isUsed')->willReturn($isUsed);

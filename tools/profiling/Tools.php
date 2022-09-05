@@ -31,11 +31,11 @@ class Tools extends ToolsCore
             $link = Context::getContext()->link;
         }
 
-        if (strpos($url, 'http://') === false && strpos($url, 'https://') === false && $link) {
+        if (!preg_match('@^https?://@i', $url) && $link) {
             if (strpos($url, $base_uri) === 0) {
                 $url = substr($url, strlen($base_uri));
             }
-            if (strpos($url, 'index.php?controller=') !== false && strpos($url, 'index.php/') == 0) {
+            if (strpos($url, 'index.php?controller=') === 0) {
                 $url = substr($url, strlen('index.php?controller='));
                 if (Configuration::get('PS_REWRITING_SETTINGS')) {
                     $url = static::strReplaceFirst('&', '?', $url);
@@ -43,8 +43,7 @@ class Tools extends ToolsCore
             }
 
             $explode = explode('?', $url);
-            // don't use ssl if url is home page
-            // used when logout for example
+            // don't use ssl if url is home page, used when logout for example
             $use_ssl = !empty($url);
             $url = $link->getPageLink($explode[0], $use_ssl);
             if (isset($explode[1])) {
@@ -85,16 +84,7 @@ class Tools extends ToolsCore
 
     public static function redirectLink($url)
     {
-        if (!preg_match('@^https?://@i', $url)) {
-            if (strpos($url, __PS_BASE_URI__) !== false && strpos($url, __PS_BASE_URI__) == 0) {
-                $url = substr($url, strlen(__PS_BASE_URI__));
-            }
-            $explode = explode('?', $url);
-            $url = Context::getContext()->link->getPageLink($explode[0]);
-            if (isset($explode[1])) {
-                $url .= '?' . $explode[1];
-            }
-        }
+        static::redirect($url);
     }
 
     public static function redirectAdmin($url)

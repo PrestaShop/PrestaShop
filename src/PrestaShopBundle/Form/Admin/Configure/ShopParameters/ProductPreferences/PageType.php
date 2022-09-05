@@ -27,9 +27,8 @@
 namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\ProductPreferences;
 
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use Symfony\Component\Form\AbstractType;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -37,7 +36,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * Class generates "Product page" form
  * in "Configure > Shop Parameters > Product Settings" page.
  */
-class PageType extends AbstractType
+class PageType extends TranslatorAwareType
 {
     /**
      * {@inheritdoc}
@@ -45,19 +44,60 @@ class PageType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('display_quantities', SwitchType::class)
-            ->add('display_last_quantities', IntegerType::class)
-            ->add('display_unavailable_attributes', SwitchType::class)
-            ->add('allow_add_variant_to_cart_from_listing', SwitchType::class)
+            ->add('display_quantities', SwitchType::class, [
+                'label' => $this->trans(
+                    'Display available quantities on the product page',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'required' => false,
+            ])
+            ->add('allow_add_variant_to_cart_from_listing', SwitchType::class, [
+                'label' => $this->trans(
+                    'Display the "%add_to_cart_label%" button when a product has attributes',
+                    'Admin.Shopparameters.Help',
+                    [
+                        '%add_to_cart_label%' => $this->trans(
+                            'Add to cart',
+                            'Shop.Theme.Actions'
+                        ),
+                    ]
+                ),
+                'help' => $this->trans(
+                    'Display or hide the "%add_to_cart_label%" button on category pages for products that have attributes forcing customers to see product details.',
+                    'Admin.Shopparameters.Help',
+                    [
+                        '%add_to_cart_label%' => $this->trans(
+                            'Add to cart',
+                            'Shop.Theme.Actions'
+                        ),
+                    ]
+                ),
+                'required' => false,
+            ])
             ->add('attribute_anchor_separator', ChoiceType::class, [
+                'label' => $this->trans(
+                    'Separator of attribute anchor on the product links',
+                    'Admin.Shopparameters.Feature'
+                ),
                 'choices' => [
                     '-' => '-',
                     ',' => ',',
                 ],
-                'required' => true,
+                'placeholder' => false,
+                'required' => false,
                 'choice_translation_domain' => 'Admin.Global',
             ])
-            ->add('display_discount_price', SwitchType::class);
+            ->add('display_discount_price', SwitchType::class, [
+                'label' => $this->trans(
+                    'Display the discounted unit price',
+                    'Admin.Shopparameters.Feature'
+                ),
+                'help' => $this->trans(
+                    'In the volume discount table on the product page, display the discounted unit price instead of the unit discount. E.g. If you sell a product for $10 with a discount of $2 from 3 items purchased, the discounted unit price ($8) will be displayed instead of the unit discount ($2).',
+                    'Admin.Shopparameters.Help'
+                ),
+                'required' => false,
+            ]);
     }
 
     /**

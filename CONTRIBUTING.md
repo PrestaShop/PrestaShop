@@ -40,10 +40,10 @@ Thank you for your help in making PrestaShop even better!
 * All modules files you commit in your pull request must respect/use the [Academic Free License (AFL 3.0)][8].
 
 
-[1]: https://devdocs.prestashop.com/1.7/development/coding-standards/
-[2]: https://devdocs.prestashop.com/1.7/contribute/contribution-guidelines/
+[1]: https://devdocs.prestashop.com/8/development/coding-standards/
+[2]: https://devdocs.prestashop.com/8/contribute/contribution-guidelines/
 [3]: https://help.github.com/articles/using-pull-requests
-[4]: https://devdocs.prestashop.com/1.7/contribute/contribute-pull-requests/
+[4]: https://devdocs.prestashop.com/8/contribute/contribute-pull-requests/
 [5]: https://github.com/PrestaShop/PrestaShop/issues/new/choose
 [6]: https://github.com/join
 [7]: https://opensource.org/licenses/OSL-3.0

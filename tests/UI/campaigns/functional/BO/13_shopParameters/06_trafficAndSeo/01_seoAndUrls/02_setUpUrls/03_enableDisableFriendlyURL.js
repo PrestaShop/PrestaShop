@@ -4,23 +4,22 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const testContext = require('@utils/testContext');
+
+// Import login steps
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const seoAndUrlsPage = require('@pages/BO/shopParameters/trafficAndSeo/seoAndUrls');
 const foHomePage = require('@pages/FO/home');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_shopParameters_TrafficAndSeo_seoAndUrls_enableDisableFriendlyUrl';
-
 
 let browserContext;
 let page;
 
-describe('Enable/Disable friendly URL', async () => {
+describe('BO - Shop Parameters - Traffic & SEO : Enable/Disable friendly URL', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -35,7 +34,7 @@ describe('Enable/Disable friendly URL', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Shop parameters > SEO and Urls\' page', async function () {
+  it('should go to \'Shop Parameters > SEO and Urls\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSeoAndUrlsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -65,9 +64,16 @@ describe('Enable/Disable friendly URL', async () => {
 
     const url = await foHomePage.getCurrentURL(page);
     await expect(url).to.contains('index.php');
+  });
+
+  it('should go back to BO', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
 
     // Go back to BO
     page = await foHomePage.closePage(browserContext, page, 0);
+
+    const pageTitle = await seoAndUrlsPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(seoAndUrlsPage.pageTitle);
   });
 
   it('should enable friendly URL', async function () {
@@ -87,8 +93,5 @@ describe('Enable/Disable friendly URL', async () => {
 
     const url = await foHomePage.getCurrentURL(page);
     await expect(url).to.contains('/en/');
-
-    // Go back to BO
-    page = await foHomePage.closePage(browserContext, page, 0);
   });
 });

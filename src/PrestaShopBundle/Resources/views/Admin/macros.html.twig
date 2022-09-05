@@ -83,13 +83,13 @@
     >
       <span role="columnheader">{{ title }}</span>
       <span role="button" class="ps-sort" aria-label="{{ 'Sort by'|trans({}, 'Admin.Actions') }}"></span>
-    </div>
-  </th>
+  </div>
 {% endmacro %}
 
 {# Show link to import file sample #}
 {% macro import_file_sample(label, filename) %}
-    <a id="download-sample-{{ filename }}-file-link" class="list-group-item list-group-item-action" href="{{ path('admin_import_sample_download', {'sampleName': filename}) }}">
+    <a id="download-sample-{{ filename }}-file-link" class="list-group-item list-group-item-action"
+       href="{{ path('admin_import_sample_download', {'sampleName': filename}) }}">
         {{ label|trans({}, 'Admin.Advparameters.Feature') }}
     </a>
 {% endmacro %}
@@ -209,7 +209,7 @@
           data-trigger="hover"
           data-container=".{{ popoverContainer }}"
         >
-          <i class="material-icons form-error-icon">error_outline</i> <u>{{ '%count% errors'|transchoice(popoverErrors|length, {}, 'Admin.Global') }}</u>
+          <i class="material-icons form-error-icon">error_outline</i> <u>{{ '%count% errors'|trans({'%count%': popoverErrors|length}, 'Admin.Global') }}</u>
         </span>
       {% endset %}
 
@@ -274,7 +274,7 @@
         {% endif %}
         {{ extraVars.label }}
 
-        {% if form.vars.label_attr is defined and form.vars.label_attr['popover'] is defined %}
+        {% if form.vars.label_attr is defined and form.vars.label_attr and form.vars.label_attr['popover'] is defined %}
           {{ include('@Common/HelpBox/helpbox.html.twig', {'content': form.vars.label_attr['popover']}) }}
         {% endif %}
       </label>

@@ -54,7 +54,12 @@ class DatabaseTranslationLoader implements LoaderInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param mixed $resource
+     * @param string $locale
+     * @param string $domain
+     * @param string|null $theme
+     *
+     * @return MessageCatalogue
      *
      * @todo: this method doesn't match the interface
      */
@@ -69,7 +74,7 @@ class DatabaseTranslationLoader implements LoaderInterface
         }
 
         if (!array_key_exists($locale, $langs)) {
-            $langs[$locale] = $this->entityManager->getRepository('PrestaShopBundle:Lang')->findOneBy(['locale' => $locale]);
+            $langs[$locale] = $this->entityManager->getRepository(Lang::class)->findOneBy(['locale' => $locale]);
         }
 
         if ($langs[$locale] === null) {
@@ -77,7 +82,7 @@ class DatabaseTranslationLoader implements LoaderInterface
         }
 
         /** @var EntityRepository $translationRepository */
-        $translationRepository = $this->entityManager->getRepository('PrestaShopBundle:Translation');
+        $translationRepository = $this->entityManager->getRepository(Translation::class);
 
         $queryBuilder = $translationRepository->createQueryBuilder('t');
 

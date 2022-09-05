@@ -53,7 +53,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
         // If shop_address is null, then update it with current one.
         // But no DB save required here to avoid massive updates for bulk PDF generation case.
         // (DB: bug fixed in 1.6.1.1 with upgrade SQL script to avoid null shop_address in old orderInvoices)
-        if (!isset($this->order_invoice->shop_address) || !$this->order_invoice->shop_address) {
+        if (empty($this->order_invoice->shop_address)) {
             $this->order_invoice->shop_address = OrderInvoice::getCurrentFormattedShopAddress((int) $this->order->id_shop);
             if (!$bulk_mode) {
                 OrderInvoice::fixAllShopAddresses();
@@ -61,7 +61,9 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
         }
 
         // header informations
-        $this->date = Tools::displayDate($order_invoice->date_add);
+        // The date MUST be the delivery slip date and not the invoice date …
+        // In case of empty date, use the old one …
+        $this->date = Tools::displayDate($order_invoice->delivery_date) ?: Tools::displayDate($order_invoice->date_add);
         $prefix = Configuration::get('PS_DELIVERY_PREFIX', Context::getContext()->language->id);
         $this->title = sprintf(HTMLTemplateDeliverySlip::l('%1$s%2$06d'), $prefix, $this->order_invoice->delivery_number);
 
@@ -106,7 +108,7 @@ class HTMLTemplateDeliverySlipCore extends HTMLTemplate
             foreach ($order_details as &$order_detail) {
                 if ($order_detail['image'] != null) {
                     $name = 'product_mini_' . (int) $order_detail['product_id'] . (isset($order_detail['product_attribute_id']) ? '_' . (int) $order_detail['product_attribute_id'] : '') . '.jpg';
-                    $path = _PS_PROD_IMG_DIR_ . $order_detail['image']->getExistingImgPath() . '.jpg';
+                    $path = _PS_PRODUCT_IMG_DIR_ . $order_detail['image']->getExistingImgPath() . '.jpg';
 
                     $order_detail['image_tag'] = preg_replace(
                         '/\.*' . preg_quote(__PS_BASE_URI__, '/') . '/',

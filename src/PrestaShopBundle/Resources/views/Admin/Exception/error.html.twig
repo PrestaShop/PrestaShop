@@ -26,7 +26,7 @@
 {% extends '::base.html.twig' %}
 
 {% block stylesheets %}
-  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/theme.css') }}" />
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/theme' ~ rtl_suffix ~ '.css') }}"/>
 {% endblock %}
 
 {% block title %}
@@ -35,47 +35,45 @@
 
 {% block body %}
   <div class="container">
-    <div class="row mt-5">
-      <div class="col">
-        <div class="card">
-          <div class="card-body text-center">
-            <img class="img-responsive"
-                 src="{{ asset('themes/new-theme/img/error/500.svg') }}"
-                 alt="{{ 'Oops... looks like an unexpected error occurred'|trans({}, 'Admin.Notifications.Error') }}"
-            >
+    <div class="mt-5">
+      <div class="card">
+        <div class="card-body text-center">
+          <img class="img-responsive" 
+               src="{{ asset('themes/new-theme/img/error/500.svg') }}" 
+               alt="{{ 'Oops... looks like an unexpected error occurred'|trans({}, 'Admin.Notifications.Error') }}">
 
-            <div class="mt-3">
-              <p class="error-header">
-                {{ 'Oops... looks like an unexpected error occurred'|trans({}, 'Admin.Notifications.Error') }}
-              </p>
+          <div class="mt-3">
+            <p class="error-header">
+              {{ 'Oops... looks like an unexpected error occurred'|trans({}, 'Admin.Notifications.Error') }}
+            </p>
 
-              {% if exception %}
-                <div class="mx-auto">
-                  <p class="mb-0">{{ exception.message }}</p>
-                  <p class="mb-0">[{{ exception.class }} {{ exception.code }}]</p>
-                </div>
-              {% endif %}
-
-              <div class="mt-4">
-                <form action="{{ path('admin_errors_enable_debug_mode') }}" method="post" class="d-inline">
-                  <input type="hidden" name="_redirect_url" value="{{ app.request.requestUri }}">
-
-                  <button class="btn btn-outline-secondary" type="submit">
-                    {{ 'Enable debug mode'|trans({}, 'Admin.Actions') }}
-                  </button>
-                </form>
-                <button class="btn btn-primary js-go-back-btn ml-3" type="button">
-                  {{ 'Back to previous page'|trans({}, 'Admin.Actions') }}
-                </button>
+            {% if exception %}
+              <div class="mx-auto">
+                <p class="mb-0">{{ exception.message }}</p>
+                <p class="mb-0">[{{ exception.class }}
+                  {{ exception.code }}]</p>
               </div>
+            {% endif %}
 
-              <p class="mt-3">
-                <a href="{{ documentation_link('debug_mode') }}" target="_blank">
-                  {{ 'Learn more about debug mode'|trans({}, 'Admin.Actions') }}
-                  <i class="material-icons">arrow_right_alt</i>
-                </a>
-              </p>
+            <div class="mt-4">
+              <form action="{{ path('admin_errors_enable_debug_mode') }}" method="post" class="d-inline">
+                <input type="hidden" name="_redirect_url" value="{{ app.request.requestUri }}">
+
+                <button class="btn btn-outline-secondary" type="submit">
+                  {{ 'Enable debug mode'|trans({}, 'Admin.Actions') }}
+                </button>
+              </form>
+              <button class="btn btn-primary js-go-back-btn ml-3" type="button">
+                {{ 'Back to previous page'|trans({}, 'Admin.Actions') }}
+              </button>
             </div>
+
+            <p class="mt-3">
+              <a href="{{ documentation_link('debug_mode') }}" target="_blank">
+                {{ 'Learn more about debug mode'|trans({}, 'Admin.Actions') }}
+                <i class="material-icons rtl-flip">arrow_right_alt</i>
+              </a>
+            </p>
           </div>
         </div>
       </div>

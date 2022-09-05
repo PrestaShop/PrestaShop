@@ -162,6 +162,9 @@ class ProductCombination extends CommonAbstractType
                 ],
             ])
             ->add('attribute_weight', NumberType::class, [
+                'prepend_unit' => true,
+                'unit' => $this->configuration->get('PS_WEIGHT_UNIT'),
+                'scale' => static::PRESTASHOP_WEIGHT_DECIMALS,
                 'required' => false,
                 'label' => $this->translator->trans('Impact on weight', [], 'Admin.Catalog.Feature'),
                 'attr' => ['class' => 'attribute_weight'],

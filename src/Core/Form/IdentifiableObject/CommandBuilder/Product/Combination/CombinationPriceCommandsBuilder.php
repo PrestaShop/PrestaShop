@@ -51,14 +51,14 @@ class CombinationPriceCommandsBuilder implements CombinationCommandsBuilderInter
         if (isset($quantityData['price_tax_excluded'])) {
             $command->setImpactOnPrice((string) $quantityData['price_tax_excluded']);
         }
-        if (isset($quantityData['ecotax'])) {
-            $command->setEcoTax((string) $quantityData['ecotax']);
+        if (isset($quantityData['ecotax_tax_excluded'])) {
+            $command->setEcoTax((string) $quantityData['ecotax_tax_excluded']);
+        }
+        if (isset($quantityData['unit_price_tax_excluded'])) {
+            $command->setImpactOnUnitPrice((string) $quantityData['unit_price_tax_excluded']);
         }
         if (isset($quantityData['wholesale_price'])) {
             $command->setWholesalePrice((string) $quantityData['wholesale_price']);
-        }
-        if (isset($quantityData['unit_price'])) {
-            $command->setImpactOnUnitPrice((string) $quantityData['unit_price']);
         }
 
         return [$command];

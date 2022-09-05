@@ -90,18 +90,20 @@ class CheckoutProcessCore implements RenderableInterface
     /**
      * @param CheckoutStepInterface $step
      *
-     * @return $this
+     * @return self
      */
     public function addStep(CheckoutStepInterface $step)
     {
-        $step->setCheckoutProcess($this);
-        $this->steps[] = $step;
+        if ($this instanceof CheckoutProcess) {
+            $step->setCheckoutProcess($this);
+            $this->steps[] = $step;
+        }
 
         return $this;
     }
 
     /**
-     * @return CheckoutStepInterface[]
+     * @return AbstractCheckoutStep[]
      */
     public function getSteps()
     {
@@ -268,6 +270,7 @@ class CheckoutProcessCore implements RenderableInterface
     public function invalidateAllStepsAfterCurrent()
     {
         $markAsUnreachable = false;
+        /** @var AbstractCheckoutStep $step */
         foreach ($this->getSteps() as $step) {
             if ($markAsUnreachable) {
                 $step->setComplete(false)->setReachable(false);

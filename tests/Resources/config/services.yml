@@ -11,6 +11,9 @@ services:
     prestashop.adapter.shop.url.product_image_folder_provider:
         class: 'Tests\Integration\Adapter\Shop\Url\TestProductImageFolderProvider'
 
+    prestashop.adapter.shop.url.category_image_folder_provider:
+        class: 'Tests\Integration\Adapter\Shop\Url\TestCategoryImageFolderProvider'
+
     # Advanced form type
     test.integration.prestashop_bundle.form.advanced_form_type:
         class: 'Tests\Integration\PrestaShopBundle\Form\AdvancedFormType'
@@ -26,3 +29,18 @@ services:
             - '@prestashop.core.hook.dispatcher'
             - '@translator'
             - '@=service("prestashop.adapter.legacy.configuration").get("_PS_MODE_DEMO_")'
+
+    # Decoration handler because authorization checker does not work in test environment
+    test.integration.utility.authorization_checker:
+      class: Tests\Integration\Utility\AuthorizationChecker
+
+    test.prestashop.adapter.profile.permission.query_handler.get_permissions_for_configuration_handler_decorator:
+      decorates: prestashop.adapter.profile.permission.query_handler.get_permissions_for_configuration_handler
+      class: 'Tests\Integration\Adapter\Profile\Permission\QueryHandler\GetPermissionsForConfigurationHandlerDecorator'
+      arguments:
+        - '@test.integration.utility.authorization_checker'
+        - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
+        -
+          - 'AdminLogin'
+          - 'AdminQuickAccesses'
+          - 'AdminTabs'

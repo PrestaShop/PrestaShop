@@ -119,4 +119,30 @@ SetEnv _TOKEN_ disabled
 npm run check:links
 ```
 
+## Documentation
+
+To help contributors find more documentation about UI tests, [JS-DOC](https://jsdoc.app/) was added on these directories:
+
+- `pages`
+- `campaigns/data/faker`
+- `campaigns/utils`
+
+### Before generating documentation
+
+[jsdoc-to-markdown](https://github.com/jsdoc2md/jsdoc-to-markdown) is the library used, it will create `.md` files using js files from the above directories.
+
+To install `jsdoc-to-markdown` :
+```shell
+cd tests/UI
+npm install
+```
+
+### Generate documentation
+
+By running the command below, it will generate jsdoc on `.doc` directory.
+
+```shell
+bash scripts/generate-jsdoc.sh
+```
+
 Enjoy :wink: :v:

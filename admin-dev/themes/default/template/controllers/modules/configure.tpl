@@ -87,14 +87,6 @@
 				</a>
 			</li>
 			{/if}
-			{if isset($module_update_link)}
-			<li>
-				<a id="desc-module-update" class="toolbar_btn" href="{$module_update_link}" title="{l s='Update'}">
-					<i class="process-icon-refresh"></i>
-					<div>{l s='Check update' d='Admin.Modules.Feature'}</div>
-				</a>
-			</li>
-			{/if}
 			{if isset($module_rtl_link)}
 			<li>
 				<a id="desc-module-rtl" class="toolbar_btn" href="{$module_rtl_link}" title="{l s='Generate RTL Stylesheets'}">
@@ -109,6 +101,7 @@
 					<div>{l s='Manage hooks' d='Admin.Modules.Feature'}</div>
 				</a>
 			</li>
+			{hook h="displayModuleConfigureExtraButtons" module_name=$module_name}
 		</ul>
 	</div>
 </div>

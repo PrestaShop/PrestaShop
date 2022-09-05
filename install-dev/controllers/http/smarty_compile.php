@@ -23,22 +23,22 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 define('_PS_DO_NOT_LOAD_CONFIGURATION_', true);
 if (Tools::getValue('bo')) {
-    if (!is_dir(_PS_ROOT_DIR_.'/admin/')) {
+    if (!is_dir(_PS_ROOT_DIR_ . '/admin/')) {
         exit;
     }
-    define('_PS_ADMIN_DIR_', _PS_ROOT_DIR_.'/admin/');
-    $directory = _PS_ADMIN_DIR_.'themes/default/';
+    define('_PS_ADMIN_DIR_', _PS_ROOT_DIR_ . '/admin/');
+    $directory = _PS_ADMIN_DIR_ . 'themes/default/';
 } else {
-    $directory = _PS_THEME_DIR_.'templates/';
+    $directory = _PS_THEME_DIR_ . 'templates/';
 }
 
-require_once _PS_ROOT_DIR_.'/config/smarty.config.inc.php';
-
+require_once _PS_ROOT_DIR_ . '/config/smarty.config.inc.php';
+/** @phpstan-ignore-next-line */
 $smarty->setTemplateDir($directory);
 ob_start();
+/** @phpstan-ignore-next-line */
 $smarty->compileAllTemplates('.tpl', false);
 if (ob_get_level() && ob_get_length() > 0) {
     ob_end_clean();

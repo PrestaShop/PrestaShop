@@ -60,6 +60,11 @@ class EditCategoryCommand
     private $localizedDescriptions;
 
     /**
+     * @var string[]|null
+     */
+    private $localizedAdditionalDescriptions;
+
+    /**
      * @var bool
      */
     private $isActive;
@@ -203,6 +208,26 @@ class EditCategoryCommand
     public function setLocalizedDescriptions(array $localizedDescriptions)
     {
         $this->localizedDescriptions = $localizedDescriptions;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]|null
+     */
+    public function getLocalizedAdditionalDescriptions(): ?array
+    {
+        return $this->localizedAdditionalDescriptions;
+    }
+
+    /**
+     * @param string[] $localizedAdditionalDescriptions
+     *
+     * @return $this
+     */
+    public function setLocalizedAdditionalDescriptions(array $localizedAdditionalDescriptions): self
+    {
+        $this->localizedAdditionalDescriptions = $localizedAdditionalDescriptions;
 
         return $this;
     }

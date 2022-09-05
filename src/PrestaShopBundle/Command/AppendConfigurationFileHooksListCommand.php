@@ -26,22 +26,93 @@
 
 namespace PrestaShopBundle\Command;
 
+use DOMDocument;
 use Employee;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Hook\Generator\HookDescriptionGenerator;
 use PrestaShop\PrestaShop\Core\Hook\HookDescription;
+use PrestaShop\PrestaShop\Core\Hook\Provider\GridDefinitionHookByServiceIdsProvider;
+use PrestaShop\PrestaShop\Core\Hook\Provider\IdentifiableObjectHookByFormTypeProvider;
 use SimpleXMLElement;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Finder\Finder;
 
 /**
  * This command is used for appending the hook names in the configuration file.
  */
-class AppendConfigurationFileHooksListCommand extends ContainerAwareCommand
+class AppendConfigurationFileHooksListCommand extends Command
 {
+    /**
+     * @var string
+     */
+    private $env;
+
+    /**
+     * @var LegacyContext
+     */
+    private $legacyContext;
+
+    /**
+     * @var GridDefinitionHookByServiceIdsProvider
+     */
+    private $gridDefinitionHookByServiceIdsProvider;
+
+    /**
+     * @var IdentifiableObjectHookByFormTypeProvider
+     */
+    private $identifiableObjectHookByFormTypeProvider;
+
+    /**
+     * @var HookDescriptionGenerator
+     */
+    private $hookDescriptionGenerator;
+
+    /**
+     * @var array
+     */
+    private $serviceIds;
+
+    /**
+     * @var array
+     */
+    private $optionFormHookNames;
+
+    /**
+     * @var array
+     */
+    private $formTypes;
+
+    /**
+     * @var string
+     */
+    private $hookFile;
+
+    public function __construct(
+        string $env,
+        LegacyContext $legacyContext,
+        GridDefinitionHookByServiceIdsProvider $gridDefinitionHookByServiceIdsProvider,
+        IdentifiableObjectHookByFormTypeProvider $identifiableObjectHookByFormTypeProvider,
+        HookDescriptionGenerator $hookDescriptionGenerator,
+        array $serviceIds,
+        array $optionFormHookNames,
+        array $formTypes,
+        string $hookFile
+    ) {
+        parent::__construct();
+        $this->env = $env;
+        $this->legacyContext = $legacyContext;
+        $this->gridDefinitionHookByServiceIdsProvider = $gridDefinitionHookByServiceIdsProvider;
+        $this->identifiableObjectHookByFormTypeProvider = $identifiableObjectHookByFormTypeProvider;
+        $this->hookDescriptionGenerator = $hookDescriptionGenerator;
+        $this->serviceIds = $serviceIds;
+        $this->optionFormHookNames = $optionFormHookNames;
+        $this->formTypes = $formTypes;
+        $this->hookFile = $hookFile;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -55,13 +126,11 @@ class AppendConfigurationFileHooksListCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $container = $this->getContainer();
-
         $this->initContext();
 
         $io = new SymfonyStyle($input, $output);
 
-        if (!in_array($container->getParameter('kernel.environment'), ['dev', 'test'])) {
+        if (!in_array($this->env, ['dev', 'test'])) {
             $io->warning('Dev or test environment is required to fully list all the hooks');
 
             return 1;
@@ -93,13 +162,11 @@ class AppendConfigurationFileHooksListCommand extends ContainerAwareCommand
      */
     private function initContext()
     {
-        /** @var LegacyContext $legacyContext */
-        $legacyContext = $this->getContainer()->get('prestashop.adapter.legacy.context');
         //We need to have an employee or the listing hooks don't work
         //see LegacyHookSubscriber
-        if (!$legacyContext->getContext()->employee) {
+        if (!$this->legacyContext->getContext()->employee) {
             //Even a non existing employee is fine
-            $legacyContext->getContext()->employee = new Employee();
+            $this->legacyContext->getContext()->employee = new Employee();
         }
     }
 
@@ -110,27 +177,13 @@ class AppendConfigurationFileHooksListCommand extends ContainerAwareCommand
      */
     private function getHookNames()
     {
-        $container = $this->getContainer();
+        $gridDefinitionHookNames = $this->gridDefinitionHookByServiceIdsProvider->getHookNames($this->serviceIds);
 
-        $gridServiceIds = $container->getParameter('prestashop.core.grid.definition.service_ids');
-        $optionsFormHookNames = $container->getParameter('prestashop.hook.option_form_hook_names');
-        $identifiableObjectFormTypes = $container->getParameter('prestashop.core.form.identifiable_object.form_types');
-
-        $gridDefinitionHooksProvider = $container->get(
-            'prestashop.core.hook.provider.grid_definition_hook_by_service_ids_provider'
-        );
-
-        $identifiableObjectFormTypeProvider = $container->get(
-            'prestashop.core.hook.provider.identifiable_object_hook_by_form_type_provider'
-        );
-
-        $gridDefinitionHookNames = $gridDefinitionHooksProvider->getHookNames($gridServiceIds);
-
-        $identifiableObjectHookNames = $identifiableObjectFormTypeProvider->getHookNames($identifiableObjectFormTypes);
+        $identifiableObjectHookNames = $this->identifiableObjectHookByFormTypeProvider->getHookNames($this->formTypes);
 
         return array_merge(
             $identifiableObjectHookNames,
-            $optionsFormHookNames,
+            $this->optionFormHookNames,
             $gridDefinitionHookNames
         );
     }
@@ -146,28 +199,11 @@ class AppendConfigurationFileHooksListCommand extends ContainerAwareCommand
      */
     private function appendHooksInConfigurationFile(array $hookDescriptions)
     {
-        $hookConfigurationFileLocation = $this->getContainer()->get('kernel')->getRootDir() . '/../install-dev/data/xml/';
-        $hookFileName = 'hook.xml';
-        $fullFilePath = $hookConfigurationFileLocation . $hookFileName;
-
-        $filesFinder = new Finder();
-        $filesFinder
-            ->files()
-            ->in($hookConfigurationFileLocation)
-            ->name($hookFileName)
-        ;
-
-        $hookFileContent = null;
-
-        foreach ($filesFinder as $fileInfo) {
-            $hookFileContent = $fileInfo->getContents();
-
-            break;
+        if (!file_exists($this->hookFile)) {
+            throw new Exception(sprintf('File %s has not been found', $this->hookFile));
         }
 
-        if (!$hookFileContent) {
-            throw new Exception(sprintf('File %s has not been found', $fullFilePath));
-        }
+        $hookFileContent = file_get_contents($this->hookFile);
 
         $xmlFileContent = new SimpleXMLElement($hookFileContent);
 
@@ -193,9 +229,18 @@ class AppendConfigurationFileHooksListCommand extends ContainerAwareCommand
             $addedHooks[] = $hookDescription;
         }
 
-        if (!$xmlFileContent->saveXML($fullFilePath)) {
-            throw new Exception(sprintf('Failed to save new xml content to file %s', $fullFilePath));
+        $xmlContent = $xmlFileContent->asXML();
+        if (empty($xmlContent)) {
+            throw new Exception(sprintf('Failed to save new xml content to file %s', $this->hookFile));
         }
+
+        $dom = new DOMDocument('1.0');
+        $dom->preserveWhiteSpace = false;
+        $dom->formatOutput = true;
+        $dom->loadXML($xmlContent);
+
+        $formattedXMLContent = $dom->saveXML();
+        file_put_contents($this->hookFile, $formattedXMLContent);
 
         return $addedHooks;
     }
@@ -230,11 +275,9 @@ class AppendConfigurationFileHooksListCommand extends ContainerAwareCommand
      */
     private function getHookDescriptions(array $hookNames)
     {
-        $descriptionGenerator = $this->getContainer()->get('prestashop.core.hook.generator.hook_description_generator');
-
         $descriptions = [];
         foreach ($hookNames as $hookName) {
-            $hookDescription = $descriptionGenerator->generate($hookName);
+            $hookDescription = $this->hookDescriptionGenerator->generate($hookName);
 
             $descriptions[] = $hookDescription;
         }

@@ -15,6 +15,8 @@ class MyAccount extends FOBasePage {
     super();
 
     this.pageTitle = 'My account';
+    this.resetPasswordSuccessMessage = 'Your password has been successfully reset and a confirmation has been sent to'
+      + ' your email address:';
 
     // Selectors
     this.accountInformationLink = '#identity-link';
@@ -22,11 +24,22 @@ class MyAccount extends FOBasePage {
     this.accountAddressesLink = '#addresses-link';
     this.accountFirstAddressLink = '#address-link';
     this.accountVouchersLink = '#discounts-link';
+    this.merchandiseReturnsLink = '#returns-link';
+    this.successMessageAlert = '#notifications article.alert-success';
+    this.logoutFooterLink = '#main footer a[href*="mylogout"]';
   }
 
   /*
   Methods
    */
+  /**
+   * Get success message
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  getSuccessMessageAlert(page) {
+    return this.getTextContent(page, this.successMessageAlert);
+  }
 
   /**
    * Go to account information page
@@ -47,21 +60,25 @@ class MyAccount extends FOBasePage {
   }
 
   /**
+   * Is add first address link visible
+   * @param page page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async isAddFirstAddressLinkVisible(page) {
+    return this.elementVisible(page, this.accountFirstAddressLink);
+  }
+
+  /**
    * Go to addresses page
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
   async goToAddressesPage(page) {
-    await this.clickAndWaitForNavigation(page, this.accountAddressesLink);
-  }
-
-  /**
-   * Go to add first address page
-   * @param page {Page} Browser tab
-   * @returns {Promise<void>}
-   */
-  async goToAddFirstAddressPage(page) {
-    await this.clickAndWaitForNavigation(page, this.accountFirstAddressLink);
+    if (await this.elementVisible(page, this.accountFirstAddressLink, 2000)) {
+      await this.clickAndWaitForNavigation(page, this.accountFirstAddressLink);
+    } else {
+      await this.clickAndWaitForNavigation(page, this.accountAddressesLink);
+    }
   }
 
   /**
@@ -71,6 +88,24 @@ class MyAccount extends FOBasePage {
    */
   async goToVouchersPage(page) {
     await this.clickAndWaitForNavigation(page, this.accountVouchersLink);
+  }
+
+  /**
+   * Go to merchandise returns page
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async goToMerchandiseReturnsPage(page) {
+    await this.clickAndWaitForNavigation(page, this.merchandiseReturnsLink);
+  }
+
+  /**
+   * Logout from FO
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async logout(page) {
+    await this.clickAndWaitForNavigation(page, this.logoutFooterLink);
   }
 }
 

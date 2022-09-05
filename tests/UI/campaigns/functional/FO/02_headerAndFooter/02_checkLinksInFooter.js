@@ -2,9 +2,15 @@ require('module-alias/register');
 
 const {expect} = require('chai');
 
+// Import utils
 const helper = require('@utils/helpers');
 
-// Importing pages
+// Import common tests
+const {deleteCacheTest} = require('@commonTests/BO/advancedParameters/deleteCache');
+const {createAccountTest} = require('@commonTests/FO/createAccount');
+const {deleteCustomerTest} = require('@commonTests/BO/customers/createDeleteCustomer');
+
+// Importing FO pages
 const homePage = require('@pages/FO/home');
 const loginPage = require('@pages/FO/login');
 const pricesDropPage = require('@pages/FO/pricesDrop');
@@ -22,9 +28,16 @@ const personalInfoPage = require('@pages/FO/myAccount/identity');
 const ordersPage = require('@pages/FO/myAccount/orderHistory');
 const creditSlipsPage = require('@pages/FO/myAccount/creditSlips');
 const addressesPage = require('@pages/FO/myAccount/addresses');
+const addAddressPage = require('@pages/FO/myAccount/addAddress');
+const createAccountPage = require('@pages/FO/myAccount/add');
+const guestOrderTrackingPage = require('@pages/FO/orderTracking/guestOrderTracking');
+const myWishlistPage = require('@pages/FO/myAccount/myWishlists');
 
-// Import data
+// Import demo data
 const {DefaultCustomer} = require('@data/demo/customer');
+
+// Import faker data
+const CustomerFaker = require('@data/faker/customer');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -34,15 +47,33 @@ const baseContext = 'functional_FO_headerAndFooter_checkLinksInFooter';
 let browserContext;
 let page;
 
+const today = new Date();
+const currentYear = today.getFullYear().toString();
+
+const createCustomerData = new CustomerFaker();
+
 /*
-Go to FO
-Check footer Products links( Prices drop, New products and Best sales)
+Pre-condition:
+- Create new customer account
+- Delete cache
+Scenario:
+- Go to FO
+- Check footer Products links( Prices drop, New products and Best sales)
 Check our company links( Delivery, Legal notices, Terms and conditions of use, About us, Secure payment, Contact us,
 Sitemap, Stores)
-Check your account links( Personal info, Orders, Credit slips, Addresses)
+- Check your account links( Personal info, Orders, Credit slips, Addresses)
+- Check store information
+- Check copyright
+Post-condition:
+- Delete created customer
  */
+describe('FO - Header and Footer : Check links in footer page', async () => {
+  // Pre-condition: Create new account on FO
+  createAccountTest(createCustomerData, `${baseContext}_preTest1`);
 
-describe('Check links in footer page', async () => {
+  // Pre-condition: Delete cache
+  deleteCacheTest(`${baseContext}_preTest2`);
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -62,140 +93,165 @@ describe('Check links in footer page', async () => {
     await expect(isHomePage).to.be.true;
   });
 
-  it('should check \'Products\' footer links', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkProductsFooterLinks', baseContext);
+  describe('Check \'Products\' footer links', async () => {
+    [
+      {linkSelector: 'Prices drop', pageTitle: pricesDropPage.pageTitle},
+      {linkSelector: 'New products', pageTitle: newProductsPage.pageTitle},
+      {linkSelector: 'Best sales', pageTitle: bestSalesPage.pageTitle},
+    ].forEach((args, index) => {
+      it(`should check '${args.linkSelector}' footer links`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `checkProductsFooterLinks${index}`, baseContext);
 
-    // Check prices drop link
-    await homePage.goToFooterLink(page, 'Prices drop');
+        // Check prices drop link
+        await homePage.goToFooterLink(page, args.linkSelector);
 
-    let pageTitle = await pricesDropPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(pricesDropPage.pageTitle);
-
-    // Check new products link
-    await homePage.goToFooterLink(page, 'New products');
-
-    pageTitle = await newProductsPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(newProductsPage.pageTitle);
-
-    // Check best sales link
-    await homePage.goToFooterLink(page, 'Best sales');
-
-    pageTitle = await bestSalesPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(bestSalesPage.pageTitle);
+        const pageTitle = await homePage.getPageTitle(page);
+        await expect(pageTitle).to.equal(args.pageTitle);
+      });
+    });
   });
 
-  it('should check \'Our Company\' footer links', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkOurCompanyFooterLinks', baseContext);
+  describe('Check \'Our Company\' footer links', async () => {
+    [
+      {linkSelector: 'Delivery', pageTitle: deliveryPage.pageTitle},
+      {linkSelector: 'Legal Notice', pageTitle: legalNoticePage.pageTitle},
+      {linkSelector: 'Terms and conditions of use', pageTitle: termsAndConditionsOfUsePage.pageTitle},
+      {linkSelector: 'About us', pageTitle: aboutUsPage.pageTitle},
+      {linkSelector: 'Secure payment', pageTitle: securePaymentPage.pageTitle},
+      {linkSelector: 'Contact us', pageTitle: contactUsPage.pageTitle},
+      {linkSelector: 'Sitemap', pageTitle: siteMapPage.pageTitle},
+      {linkSelector: 'Stores', pageTitle: storesPage.pageTitle},
+    ].forEach((args, index) => {
+      it(`should check '${args.linkSelector}' footer links`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `checkOurCompanyFooterLinks${index}`, baseContext);
 
-    // Check delivery link
-    await homePage.goToFooterLink(page, 'Delivery');
+        // Check prices drop link
+        await homePage.goToFooterLink(page, args.linkSelector);
 
-    let pageTitle = await deliveryPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(deliveryPage.pageTitle);
-
-    // Check legal notice link
-    await homePage.goToFooterLink(page, 'Legal Notice');
-
-    pageTitle = await legalNoticePage.getPageTitle(page);
-    await expect(pageTitle).to.equal(legalNoticePage.pageTitle);
-
-    // Check terms and conditions of use link
-    await homePage.goToFooterLink(page, 'Terms and conditions of use');
-
-    pageTitle = await termsAndConditionsOfUsePage.getPageTitle(page);
-    await expect(pageTitle).to.equal(termsAndConditionsOfUsePage.pageTitle);
-
-    // Check about us link
-    await homePage.goToFooterLink(page, 'About us');
-
-    pageTitle = await aboutUsPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(aboutUsPage.pageTitle);
-
-    // Check secure payment link
-    await homePage.goToFooterLink(page, 'Secure payment');
-
-    pageTitle = await securePaymentPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(securePaymentPage.pageTitle);
-
-    // Check contact us link
-    await homePage.goToFooterLink(page, 'Contact us');
-
-    pageTitle = await contactUsPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(contactUsPage.pageTitle);
-
-    // Check sitemap link
-    await homePage.goToFooterLink(page, 'Sitemap');
-
-    pageTitle = await siteMapPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(siteMapPage.pageTitle);
-
-    // Check stores link
-    await homePage.goToFooterLink(page, 'Stores');
-
-    pageTitle = await storesPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(storesPage.pageTitle);
+        const pageTitle = await homePage.getPageTitle(page);
+        await expect(pageTitle).to.equal(args.pageTitle);
+      });
+    });
   });
 
-  it('should check \'Your Account\' footer links before login', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkYourAccountFooterLinks1', baseContext);
+  describe('Check \'Your Account\' footer links before login', async () => {
+    [
+      {linkSelector: 'Order tracking', pageTitle: guestOrderTrackingPage.pageTitle},
+      {linkSelector: 'Sign in', pageTitle: loginPage.pageTitle},
+      {linkSelector: 'Create account', pageTitle: createAccountPage.formTitle},
+    ].forEach((args, index) => {
+      it(`should check '${args.linkSelector}' footer links`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `checkYourAccountFooterLinks1${index}`, baseContext);
 
-    // Check personal info link
-    await homePage.goToFooterLink(page, 'Personal info');
+        // Check prices drop link
+        await homePage.goToFooterLink(page, args.linkSelector);
 
-    let pageTitle = await loginPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(loginPage.pageTitle);
-
-    // Check orders link
-    await homePage.goToFooterLink(page, 'Orders');
-
-    pageTitle = await loginPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(loginPage.pageTitle);
-
-    // Check credit slips link
-    await homePage.goToFooterLink(page, 'Credit slips');
-
-    pageTitle = await loginPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(loginPage.pageTitle);
-
-    // Check addresses link
-    await homePage.goToFooterLink(page, 'Addresses');
-
-    pageTitle = await loginPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(loginPage.pageTitle);
+        let pageTitle;
+        if (args.linkSelector === 'Create account') {
+          pageTitle = await createAccountPage.getHeaderTitle(page);
+        } else {
+          pageTitle = await homePage.getPageTitle(page);
+        }
+        await expect(pageTitle).to.equal(args.pageTitle);
+      });
+    });
   });
 
-  it('should check \'Your Account\' footer links after login', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'checkYourAccountFooterLinks2', baseContext);
+  describe('Check \'Your Account\' footer links after login with default customer', async () => {
+    it('should login to FO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'loginFO', baseContext);
 
-    // Login FO
-    await homePage.goToLoginPage(page);
-    await loginPage.customerLogin(page, DefaultCustomer);
+      await homePage.goToLoginPage(page);
+      await loginPage.customerLogin(page, DefaultCustomer);
 
-    const isCustomerConnected = await loginPage.isCustomerConnected(page);
-    await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+      const isCustomerConnected = await loginPage.isCustomerConnected(page);
+      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+    });
 
-    // Check personal info link
-    await homePage.goToFooterLink(page, 'Personal info');
+    [
+      {linkSelector: 'Information', pageTitle: personalInfoPage.pageTitle},
+      {linkSelector: 'Addresses', pageTitle: addressesPage.pageTitle},
+      {linkSelector: 'Orders', pageTitle: ordersPage.pageTitle},
+      {linkSelector: 'Credit slips', pageTitle: creditSlipsPage.pageTitle},
+      {linkSelector: 'Wishlist', pageTitle: myWishlistPage.pageTitle},
+      {linkSelector: 'Sign out', pageTitle: loginPage.pageTitle},
+    ].forEach((args, index) => {
+      it(`should check '${args.linkSelector}' footer links`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `checkYourAccountFooterLinks2${index}`, baseContext);
 
-    let pageTitle = await personalInfoPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(personalInfoPage.pageTitle);
+        // Check prices drop link
+        await homePage.goToFooterLink(page, args.linkSelector);
 
-    // Check orders link
-    await homePage.goToFooterLink(page, 'Orders');
-
-    pageTitle = await ordersPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(ordersPage.pageTitle);
-
-    // Check credit slips link
-    await homePage.goToFooterLink(page, 'Credit slips');
-
-    pageTitle = await creditSlipsPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(creditSlipsPage.pageTitle);
-
-    // Check addresses link
-    await homePage.goToFooterLink(page, 'Addresses');
-
-    pageTitle = await addressesPage.getPageTitle(page);
-    await expect(pageTitle).to.equal(addressesPage.pageTitle);
+        let pageTitle = '';
+        if (args.linkSelector === 'Wishlist') {
+          pageTitle = await myWishlistPage.getPageTitle(page);
+        } else {
+          pageTitle = await homePage.getPageTitle(page);
+        }
+        await expect(pageTitle).to.equal(args.pageTitle);
+      });
+    });
   });
+
+  // Pre-condition: Delete cache
+  deleteCacheTest(`${baseContext}_preTest3`);
+
+  describe('Check \'Your Account\' footer links after login with new customer without address', async () => {
+    it('should login to FO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'loginFONewCustomer', baseContext);
+
+      await homePage.goToLoginPage(page);
+      await loginPage.customerLogin(page, createCustomerData);
+
+      const isCustomerConnected = await loginPage.isCustomerConnected(page);
+      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
+    });
+
+    [
+      {linkSelector: 'Information', pageTitle: personalInfoPage.pageTitle},
+      {linkSelector: 'Add first address', pageTitle: addAddressPage.pageTitle},
+      {linkSelector: 'Orders', pageTitle: ordersPage.pageTitle},
+      {linkSelector: 'Credit slips', pageTitle: creditSlipsPage.pageTitle},
+      {linkSelector: 'Wishlist', pageTitle: myWishlistPage.pageTitle},
+      {linkSelector: 'Sign out', pageTitle: loginPage.pageTitle},
+    ].forEach((args, index) => {
+      it(`should check '${args.linkSelector}' footer links`, async function () {
+        await testContext.addContextItem(this, 'testIdentifier', `checkYourAccountFooterLinks3${index}`, baseContext);
+
+        // Check prices drop link
+        await homePage.goToFooterLink(page, args.linkSelector);
+
+        let pageTitle = '';
+        if (args.linkSelector === 'Wishlist') {
+          pageTitle = await myWishlistPage.getPageTitle(page);
+        } else {
+          pageTitle = await homePage.getPageTitle(page);
+        }
+        await expect(pageTitle).to.equal(args.pageTitle);
+      });
+    });
+  });
+
+  describe('Check \'Store Information\'', async () => {
+    it('should check \'Store Information\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkStoreInformation', baseContext);
+
+      const storeInformation = await homePage.getStoreInformation(page);
+      await expect(storeInformation).to.contains(global.INSTALL.SHOP_NAME)
+        .and.to.contain(global.INSTALL.COUNTRY)
+        .and.to.contains(global.BO.EMAIL);
+    });
+  });
+
+  describe('Check the copyright', async () => {
+    it('should check the copyright', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkCopyright', baseContext);
+
+      const copyright = await homePage.getCopyright(page);
+      await expect(copyright).to.equal(`© ${currentYear} - Ecommerce software by PrestaShop™`);
+    });
+  });
+
+  // Post-condition: Delete the created customer account
+  deleteCustomerTest(createCustomerData, `${baseContext}_postTest`);
 });

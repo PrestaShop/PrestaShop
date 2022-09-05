@@ -89,14 +89,4 @@ class HostingInformation
     {
         return Tools::apacheModExists('mod_instaweb');
     }
-
-    /**
-     * Check if the shop is hosted on PrestaCloud.
-     *
-     * @return bool
-     */
-    public function isHostMode()
-    {
-        return defined('_PS_HOST_MODE_');
-    }
 }

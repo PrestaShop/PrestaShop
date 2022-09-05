@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
@@ -50,7 +50,7 @@ class Admin
     private $legacyContext;
 
     /**
-     * @var TokenStorage
+     * @var TokenStorageInterface
      */
     private $securityTokenStorage;
 
@@ -59,7 +59,7 @@ class Admin
      */
     private $userProvider;
 
-    public function __construct(LegacyContext $context, TokenStorage $securityTokenStorage, UserProviderInterface $userProvider)
+    public function __construct(LegacyContext $context, TokenStorageInterface $securityTokenStorage, UserProviderInterface $userProvider)
     {
         $this->context = $context;
         $this->legacyContext = $context->getContext();

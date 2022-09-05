@@ -175,7 +175,7 @@ trait PrestaShopTranslatorTrait
      * Indicates if we should try and translate the provided wording using the legacy system.
      *
      * @param string $message Message to translate
-     * @param string $domain Translation domain
+     * @param string|null $domain Translation domain
      * @param string $translated Message after first translation attempt
      *
      * @return bool
@@ -184,7 +184,7 @@ trait PrestaShopTranslatorTrait
     {
         return
             $message === $translated
-            && 'Modules.' === substr($domain, 0, 8)
+            && 'Modules.' === substr($domain ?? '', 0, 8)
             && (
                 !method_exists($this, 'getCatalogue')
                 || !$this->getCatalogue()->has($message, $this->normalizeDomain($domain))

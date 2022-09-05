@@ -129,7 +129,7 @@ class StockRepository extends StockManagementRepository
                     $product,
                     $productIdentity->getCombinationId(),
                     $delta,
-                    $this->contextAdapter->getContext()->shop->id,
+                    $this->getCurrentShop()->id,
                     true,
                     [
                         'id_stock_mvt_reason' => ($delta >= 1 ? $configurationAdapter->get('PS_STOCK_MVT_INC_EMPLOYEE_EDITION') : $configurationAdapter->get('PS_STOCK_MVT_DEC_EMPLOYEE_EDITION')),
@@ -151,7 +151,7 @@ class StockRepository extends StockManagementRepository
     private function syncAllStock($idProduct)
     {
         (new StockManager())->updatePhysicalProductQuantity(
-            $this->contextAdapter->getContext()->shop->id,
+            $this->getCurrentShop()->id,
             $this->orderStates['error'],
             $this->orderStates['cancellation'],
             (int) $idProduct
@@ -195,7 +195,7 @@ class StockRepository extends StockManagementRepository
     public function getData(QueryParamsCollection $queryParams)
     {
         $this->stockManager->updatePhysicalProductQuantity(
-            $this->shopId,
+            $this->getContextualShopId(),
             $this->orderStates['error'],
             $this->orderStates['cancellation']
         );

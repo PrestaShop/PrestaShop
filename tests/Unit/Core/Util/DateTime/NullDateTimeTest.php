@@ -75,11 +75,11 @@ class NullDateTimeTest extends TestCase
         $nullDateTime->format($format);
     }
 
-    public function testMethodAddShouldThrowException(): void
+    public function testMethodAddChangesNothing(): void
     {
-        $this->expectUnusableMethodException('add');
         $nullDateTime = new NullDateTime();
-        $nullDateTime->add('+1 day');
+        $modifiedDateTime = $nullDateTime->add('+1 day');
+        $this->assertEquals($nullDateTime, $modifiedDateTime);
     }
 
     public function testMethodCreateFromFormatShouldThrowException(): void
@@ -111,14 +111,14 @@ class NullDateTimeTest extends TestCase
     {
         $this->expectUnusableMethodException('setDate');
         $nullDateTime = new NullDateTime();
-        $nullDateTime->setDate('1990', 1, 1);
+        $nullDateTime->setDate(1990, 1, 1);
     }
 
     public function testMethodSetISODateShouldThrowException(): void
     {
         $this->expectUnusableMethodException('setISODate');
         $nullDateTime = new NullDateTime();
-        $nullDateTime->setISODate('1990', 1);
+        $nullDateTime->setISODate(1990, 1);
     }
 
     public function testMethodSetTimeShouldThrowException(): void
@@ -137,16 +137,16 @@ class NullDateTimeTest extends TestCase
 
     public function testMethodSetTimezoneShouldThrowException(): void
     {
-        $this->expectUnusableMethodException('setTimezone');
         $nullDateTime = new NullDateTime();
-        $nullDateTime->setTimezone(new DateTimeZone('UTC'));
+        $modifiedDateTime = $nullDateTime->setTimezone(new DateTimeZone('UTC'));
+        $this->assertEquals($nullDateTime, $modifiedDateTime);
     }
 
     public function testMethodSubShouldThrowException(): void
     {
-        $this->expectUnusableMethodException('sub');
         $nullDateTime = new NullDateTime();
-        $nullDateTime->sub('-1 day');
+        $modifiedDateTime = $nullDateTime->sub('-1 day');
+        $this->assertEquals($nullDateTime, $modifiedDateTime);
     }
 
     public function testMethodDiffShouldThrowException(): void
@@ -175,13 +175,6 @@ class NullDateTimeTest extends TestCase
         $this->expectUnusableMethodException('getTimezone');
         $nullDateTime = new NullDateTime();
         $nullDateTime->getTimezone();
-    }
-
-    public function testMethodWakeupShouldThrowException(): void
-    {
-        $this->expectUnusableMethodException('__wakeup');
-        $nullDateTime = new NullDateTime();
-        $nullDateTime->__wakeup();
     }
 
     public function testMethodCreateFromInterfaceShouldThrowException(): void

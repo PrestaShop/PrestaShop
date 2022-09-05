@@ -78,7 +78,7 @@ final class TransformGuestToCustomerHandler implements TransformGuestToCustomerH
     private function assertCustomerExists(CustomerId $customerId, Customer $customer)
     {
         if ($customer->id !== $customerId->getValue()) {
-            throw new CustomerNotFoundException($customerId, sprintf('Customer with id "%s" was not found', $customerId->getValue()));
+            throw new CustomerNotFoundException(sprintf('Customer with id "%d" was not found', $customerId->getValue()));
         }
     }
 

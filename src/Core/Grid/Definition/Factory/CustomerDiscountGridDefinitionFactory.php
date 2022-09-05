@@ -72,6 +72,7 @@ final class CustomerDiscountGridDefinitionFactory extends AbstractGridDefinition
                     ->setName($this->trans('ID', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'id_cart_rule',
+                        'sortable' => false,
                     ])
             )
             ->add(
@@ -79,6 +80,7 @@ final class CustomerDiscountGridDefinitionFactory extends AbstractGridDefinition
                     ->setName($this->trans('Code', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'code',
+                        'sortable' => false,
                     ])
             )
             ->add(
@@ -86,6 +88,7 @@ final class CustomerDiscountGridDefinitionFactory extends AbstractGridDefinition
                     ->setName($this->trans('Name', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'name',
+                        'sortable' => false,
                     ])
             )
             ->add(
@@ -93,6 +96,7 @@ final class CustomerDiscountGridDefinitionFactory extends AbstractGridDefinition
                     ->setName($this->trans('Status', [], 'Admin.Global'))
                     ->setOptions([
                         'field' => 'active',
+                        'sortable' => false,
                     ])
             )
             ->add(
@@ -100,6 +104,7 @@ final class CustomerDiscountGridDefinitionFactory extends AbstractGridDefinition
                     ->setName($this->trans('Qty available', [], 'Admin.Orderscustomers.Feature'))
                     ->setOptions([
                         'field' => 'quantity',
+                        'sortable' => false,
                     ])
             )
             ->add((new ActionColumn('actions'))

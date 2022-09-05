@@ -28,36 +28,26 @@
 
 {% block content %}
   {% if not geolocationDatabaseAvailable %}
-    <div class="row">
-      <div class="col">
-        <div class="alert alert-warning" role="alert">
-          <span class="alert-text">
-            {{ 'Since December 30, 2019, you need to register for a [1]MaxMind[/1] account to get a license key to be able to download the geolocation data. Once downloaded, extract the data using Winrar or Gzip into the /app/Resources/geoip/ directory.'|trans({'[1]': '<a href="https://dev.maxmind.com/geoip/geoip2/geolite2" target="_blank">', '[/1]': '<a/>'}, 'Admin.Notifications.Warning')|raw }}
-          </span>
-        </div>
-      </div>
+
+    <div class="alert alert-warning" role="alert">
+      <span class="alert-text">
+        {{ 'Since December 30, 2019, you need to register for a [1]MaxMind[/1] account to get a license key to be able to download the geolocation data. Once downloaded, extract the data using Winrar or Gzip into the /app/Resources/geoip/ directory.'|trans({'[1]': '<a href="https://dev.maxmind.com/geoip/geoip2/geolite2" target="_blank">', '[/1]': '</a>'}, 'Admin.Notifications.Warning')|raw }}
+      </span>
     </div>
+
   {% endif %}
 
-  <div class="row justify-content-center">
-    <div class="col-xl-12">
-      {{ form_start(geolocationByIpAddressForm, {'action': path('admin_geolocation_by_ip_address_save')}) }}
-        {% include '@PrestaShop/Admin/Improve/International/Geolocation/Blocks/geolocation_by_ip_address.html.twig' %}
-      {{ form_end(geolocationByIpAddressForm) }}
-    </div>
+  {{ form_start(geolocationByIpAddressForm, {'action': path('admin_geolocation_by_ip_address_save')}) }}
+  {% include '@PrestaShop/Admin/Improve/International/Geolocation/Blocks/geolocation_by_ip_address.html.twig' %}
+  {{ form_end(geolocationByIpAddressForm) }}
 
-    <div class="col-xl-12">
-      {{ form_start(geolocationOptionsForm, {'action': path('admin_geolocation_options_save')}) }}
-        {% include '@PrestaShop/Admin/Improve/International/Geolocation/Blocks/geolocation_options.html.twig' %}
-      {{ form_end(geolocationOptionsForm) }}
-    </div>
+  {{ form_start(geolocationOptionsForm, {'action': path('admin_geolocation_options_save')}) }}
+  {% include '@PrestaShop/Admin/Improve/International/Geolocation/Blocks/geolocation_options.html.twig' %}
+  {{ form_end(geolocationOptionsForm) }}
 
-    <div class="col-xl-12">
-      {{ form_start(geolocationIpAddressWhitelistForm, {'action': path('admin_geolocation_whitelist_save')}) }}
-        {% include '@PrestaShop/Admin/Improve/International/Geolocation/Blocks/geolocation_ip_address_whitelist.html.twig' %}
-      {{ form_end(geolocationIpAddressWhitelistForm) }}
-    </div>
-  </div>
+  {{ form_start(geolocationIpAddressWhitelistForm, {'action': path('admin_geolocation_whitelist_save')}) }}
+  {% include '@PrestaShop/Admin/Improve/International/Geolocation/Blocks/geolocation_ip_address_whitelist.html.twig' %}
+  {{ form_end(geolocationIpAddressWhitelistForm) }}
 
 {% endblock %}
 

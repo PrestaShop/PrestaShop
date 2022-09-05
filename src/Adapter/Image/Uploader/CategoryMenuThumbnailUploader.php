@@ -28,7 +28,7 @@ namespace PrestaShop\PrestaShop\Adapter\Image\Uploader;
 
 use HelperImageUploader;
 use ImageManager;
-use PrestaShop\PrestaShop\Adapter\Cache\CacheClearer;
+use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Exception\MenuThumbnailsLimitException;
 use PrestaShop\PrestaShop\Core\Domain\Category\ValueObject\MenuThumbnailId;
 use PrestaShop\PrestaShop\Core\Image\Uploader\Exception\ImageUploadException;
@@ -39,17 +39,17 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 /**
  * Class CategoryMenuThumbnailUploader.
  */
-final class CategoryMenuThumbnailUploader implements ImageUploaderInterface
+final class CategoryMenuThumbnailUploader extends AbstractImageUploader implements ImageUploaderInterface
 {
     /**
-     * @var CacheClearer
+     * @var CacheClearerInterface
      */
     private $cacheClearer;
 
     /**
-     * @param CacheClearer $cacheClearer
+     * @param CacheClearerInterface $cacheClearer
      */
-    public function __construct(CacheClearer $cacheClearer)
+    public function __construct(CacheClearerInterface $cacheClearer)
     {
         $this->cacheClearer = $cacheClearer;
     }
@@ -61,6 +61,7 @@ final class CategoryMenuThumbnailUploader implements ImageUploaderInterface
      */
     public function upload($categoryId, UploadedFile $uploadedImage)
     {
+        $this->checkImageIsAllowedForUpload($uploadedImage);
         //Get total of image already present in directory
         $files = scandir(_PS_CAT_IMG_DIR_, SCANDIR_SORT_NONE);
         $usedKeys = [];
@@ -121,6 +122,6 @@ final class CategoryMenuThumbnailUploader implements ImageUploaderInterface
             }
         }
 
-        $this->cacheClearer->clearSmartyCache();
+        $this->cacheClearer->clear();
     }
 }

@@ -26,57 +26,44 @@
 <div class="card" id="customer-search-block">
   <h3 class="card-header">{{ 'Customer'|trans({}, 'Admin.Global') }}</h3>
   <div class="card-body">
-    <div class="row js-search-customer-row mb-3">
-      <div class="col-3">
-        <span class="float-right">{{ 'Search for a customer'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
-      </div>
-      <div class="col-4">
+    <div class="row js-search-customer-row mb-4">
+      <label class="col-md-3 text-md-right col-form-label" for="customer-search-input">
+        {{ 'Search for a customer'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      </label>
+      <div class="col-md-4 mb-2">
         <input type="text"
                class="form-control"
                id="customer-search-input"
         >
         <small class="form-text">
           {{ 'Search for an existing customer by typing the first letters of his/her name.'|trans({}, 'Admin.Orderscustomers.Help') }}
+          {{ 'Use OR to broaden your search'|trans({}, 'Admin.Orderscustomers.Help') }}
         </small>
       </div>
       <div class="col">
         <span class="mr-2">{{ 'or'|trans({}, 'Admin.Global') }}</span>
-
         <a id="customer-add-btn" class="btn btn-primary" href="{{ path('admin_customers_create', {'liteDisplaying': 1, 'submitFormAjax': 1}) }}">
           {{ 'Add new customer'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </a>
       </div>
     </div>
 
-    <div id="customer-search-empty-result-warn" class="row d-none">
-      <div class="col">
-        <div class="col">
-          <div class="alert alert-warning" role="alert">
-            <p class="alert-text">{{ 'No customers found'|trans({}, 'Admin.Orderscustomers.Notification') }}</p>
-          </div>
+    <div id="customer-search-empty-result-warn" class="d-none">
+        <div class="alert alert-warning" role="alert">
+          <p class="alert-text">{{ 'No customers found'|trans({}, 'Admin.Orderscustomers.Notification') }}</p>
         </div>
-      </div>
     </div>
 
-    <div id="customer-search-loading-notice" class="row d-none">
-      <div class="col">
-        <div class="col">
-          <div class="alert alert-info" role="alert">
-            <p class="alert-text">
-              {{ 'Searching for customers'|trans({}, 'Admin.Orderscustomers.Notification') }}
-            </p>
-          </div>
+    <div id="customer-search-loading-notice" class="d-none">
+        <div class="alert alert-info" role="alert">
+          <p class="alert-text">
+            {{ 'Searching for customers'|trans({}, 'Admin.Orderscustomers.Notification') }}
+          </p>
         </div>
-      </div>
     </div>
 
-    <div class="row">
-      <div class="col">
-        <div class="row js-customer-search-results"></div>
-      </div>
-    </div>
-    <div class="row d-none" id="customer-checkout-history">
-      <div class="col">
+    <div class="row js-customer-search-results"></div>
+    <div class="d-none mt-4" id="customer-checkout-history">
         <ul class="nav nav-pills" role="tablist">
           <li class="nav-item">
             <a class="nav-link active show js-customer-carts-tab"
@@ -117,42 +104,45 @@
         </ul>
         <div class="tab-content collapse show" id="customer-tab-content-container">
           <div class="tab-pane fade active show" id="customer-carts-tab-content" role="tabpanel" aria-labelledby="pills-home-tab">
-            <table class="table" id="customer-carts-table">
-              <thead class="d-none">
+            <div class="table-responsive">
+              <table class="table mb-0" id="customer-carts-table">
+                <thead class="d-none">
+                  <tr>
+                    <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
+                    <th>{{ 'Date'|trans({}, 'Admin.Global') }}</th>
+                    <th>{{ 'Total'|trans({}, 'Admin.Global') }}</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="customer-orders-tab-content" role="tabpanel" aria-labelledby="pills-home-tab">
+            <div class="table-responsive">
+              <table class="table mb-0" id="customer-orders-table">
+                <thead class="d-none">
                 <tr>
                   <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
                   <th>{{ 'Date'|trans({}, 'Admin.Global') }}</th>
-                  <th>{{ 'Total'|trans({}, 'Admin.Global') }}</th>
+                  <th>{{ 'Products'|trans({}, 'Admin.Global') }}</th>
+                  <th>{{ 'Total paid'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
+                  <th>{{ 'Payment'|trans({}, 'Admin.Global') }}</th>
+                  <th>{{ 'Status'|trans({}, 'Admin.Global') }}</th>
                   <th></th>
                 </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
-          </div>
-          <div class="tab-pane fade" id="customer-orders-tab-content" role="tabpanel" aria-labelledby="pills-home-tab">
-            <table class="table" id="customer-orders-table">
-              <thead class="d-none">
-              <tr>
-                <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
-                <th>{{ 'Date'|trans({}, 'Admin.Global') }}</th>
-                <th>{{ 'Products'|trans({}, 'Admin.Global') }}</th>
-                <th>{{ 'Total paid'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
-                <th>{{ 'Payment'|trans({}, 'Admin.Global') }}</th>
-                <th>{{ 'Status'|trans({}, 'Admin.Global') }}</th>
-                <th></th>
-              </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
           </div>
         </div>
-      </div>
     </div>
   </div>
 </div>
 
 <div id="customer-search-result-template" class="d-none">
-  <div class="col-4 js-customer-search-result-col">
+  <div class="col-sm-6 col-md-4 col-xl-3 js-customer-search-result-col">
     <div class="card js-customer-search-result">
       <div class="card-header">
         <h3 class="card-header-title d-inline-block js-customer-name"></h3>
@@ -163,6 +153,10 @@
       <div class="card-body">
         <p class="mb-0 js-customer-email"></p>
         <p class="mb-0 js-customer-birthday"></p>
+        {% if isB2BEnabled %}
+          <p class="mb-0 js-customer-company"></p>
+        {% endif %}
+        <p class="mb-0 js-customer-groups"></p>
       </div>
       <div class="card-footer">
         <a class="btn btn-outline-secondary js-details-customer-btn">
@@ -211,7 +205,7 @@
     <td class="text-right">
       <a
         title="{{ 'View this order'|trans({}, 'Admin.Orderscustomers.Feature') }}"
-        class="btn btn-outline-primary js-order-details-btn">
+        class="btn btn-outline-secondary js-order-details-btn">
         {{ 'Details'|trans({}, 'Admin.Global') }}
       </a>
 

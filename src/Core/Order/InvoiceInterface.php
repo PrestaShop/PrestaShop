@@ -26,6 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Core\Order;
 
+use OrderInvoice;
+
 interface InvoiceInterface
 {
     /**
@@ -34,7 +36,7 @@ interface InvoiceInterface
      * @param string $dateFrom Date From
      * @param string $dateTo Date To
      *
-     * @return array[InvoiceLegacy]
+     * @return array<OrderInvoice>
      */
     public static function getByDeliveryDateInterval($dateFrom, $dateTo);
 }

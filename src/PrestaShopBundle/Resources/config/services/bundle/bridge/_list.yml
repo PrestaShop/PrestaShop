@@ -1,0 +1,31 @@
+services:
+  _defaults:
+    public: true
+
+  prestashop.bridge.helper.listing.helper_list_configuration_factory:
+    class: PrestaShopBundle\Bridge\Helper\Listing\HelperListConfigurationFactory
+
+  prestashop.bridge.helper.listing.helper_list_configurator:
+    class: PrestaShopBundle\Bridge\Helper\Listing\HelperListConfigurator
+    arguments:
+      - '@prestashop.bridge.smarty.breadcrumbs_and_title_configurator'
+
+  prestashop.bridge.helper.listing.filters_processor:
+    class: PrestaShopBundle\Bridge\Helper\Listing\FiltersProcessor
+    arguments:
+      - "@prestashop.adapter.legacy.context"
+      - "@prestashop.hook.dispatcher"
+
+  prestashop.bridge.helper.listing.helper_bridge.helper_list_bridge:
+    class: PrestaShopBundle\Bridge\Helper\Listing\HelperBridge\HelperListBridge
+    arguments:
+      - '@prestashop.adapter.legacy.context'
+      - '@prestashop.user_provider'
+      - '@prestashop.bridge.helper.listing.helper_list_configurator'
+      - '@prestashop.hook.dispatcher'
+      - '@prestashop.adapter.legacy.configuration'
+
+  prestashop.bridge.helper.listing.helper_bridge.feature_helper_list_bridge:
+    class: PrestaShopBundle\Bridge\Helper\Listing\HelperBridge\FeatureHelperListBridge
+    parent: prestashop.bridge.helper.listing.helper_bridge.helper_list_bridge
+    public: true

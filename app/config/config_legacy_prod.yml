@@ -1,7 +1,14 @@
 imports:
-    - { resource: config_legacy.yml }
+  - { resource: config_legacy.yml }
 
 doctrine:
-    orm:
-        metadata_cache_driver: "%cache.driver%"
-        query_cache_driver:    "%cache.driver%"
+  orm:
+    metadata_cache_driver:
+      type: pool
+      pool: "%cache.driver%"
+    query_cache_driver:
+      type: pool
+      pool: "%cache.driver%"
+    result_cache_driver:
+      type: pool
+      pool: "%cache.driver%"

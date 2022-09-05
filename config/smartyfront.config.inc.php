@@ -29,7 +29,7 @@ use PrestaShop\TranslationToolsBundle\Translation\Helper\DomainHelper;
 
 $template_dirs = array(_PS_THEME_DIR_.'templates');
 $plugin_dirs = array(_PS_THEME_DIR_.'plugins');
-if (_PS_PARENT_THEME_DIR_) {
+if (_PS_PARENT_THEME_DIR_ !== '') {
     $template_dirs[] = _PS_PARENT_THEME_DIR_.'templates';
     $plugin_dirs[] = _PS_PARENT_THEME_DIR_.'plugins';
 }
@@ -38,14 +38,14 @@ $smarty->setTemplateDir($template_dirs);
 $smarty->addPluginsDir($plugin_dirs);
 
 $module_resources = array('theme' => _PS_THEME_DIR_.'modules/');
-if (_PS_PARENT_THEME_DIR_) {
+if (_PS_PARENT_THEME_DIR_ !== '') {
     $module_resources['parent'] = _PS_PARENT_THEME_DIR_.'modules/';
 }
 $module_resources['modules'] = _PS_MODULE_DIR_;
 $smarty->registerResource('module', new SmartyResourceModule($module_resources));
 
 $parent_resources = array();
-if (_PS_PARENT_THEME_DIR_) {
+if (_PS_PARENT_THEME_DIR_ !== '') {
     $parent_resources['parent'] = _PS_PARENT_THEME_DIR_.'templates/';
 }
 $smarty->registerResource('parent', new SmartyResourceParent($parent_resources));

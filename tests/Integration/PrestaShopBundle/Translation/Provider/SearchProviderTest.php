@@ -42,7 +42,7 @@ class SearchProviderTest extends TestCase
      */
     private $provider;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $loader = $this->getMockBuilder(LoaderInterface::class)
             ->getMock()
@@ -56,8 +56,7 @@ class SearchProviderTest extends TestCase
         $this->provider = new SearchProvider(
             $loader,
             $externalSystemProvider,
-            $resourcesDir,
-            ''
+            $resourcesDir
         );
 
         $this->provider->setDomain('AdminActions');

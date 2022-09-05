@@ -51,7 +51,7 @@ class DeliveryTimeNotesType extends TranslatorAwareType
                         'placeholder' => $this->trans('Delivered within 3-4 days', 'Admin.Catalog.Feature'),
                     ],
                 ],
-                'help' => $this->trans('Leave empty to disable', 'Admin.Catalog.Help'),
+                'modify_all_shops' => true,
             ])
             ->add('out_of_stock', TranslatableType::class, [
                 'locales' => $this->locales,
@@ -65,7 +65,7 @@ class DeliveryTimeNotesType extends TranslatorAwareType
                         'placeholder' => $this->trans('Delivered within 5-7 days', 'Admin.Catalog.Feature'),
                     ],
                 ],
-                'help' => $this->trans('Leave empty to disable', 'Admin.Catalog.Help'),
+                'modify_all_shops' => true,
             ])
         ;
     }

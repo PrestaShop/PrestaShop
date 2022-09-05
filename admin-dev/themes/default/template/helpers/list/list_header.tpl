@@ -59,12 +59,12 @@
 {/if}
 {* Display column names and arrows for ordering (ASC, DESC) *}
 {if $is_order_position}
-	<script type="text/javascript" src="../js/jquery/plugins/jquery.tablednd.js"></script>
+	<script type="text/javascript" src="{$js_dir}jquery/plugins/jquery.tablednd.js"></script>
 	<script type="text/javascript">
 		var come_from = '{$list_id|addslashes}';
 		var alternate = {if $order_way == 'DESC'}'1'{else}'0'{/if};
 	</script>
-	<script type="text/javascript" src="../js/admin/dnd.js"></script>
+	<script type="text/javascript" src="{$js_dir}admin/dnd.js"></script>
 {/if}
 {if !$simple_header}
 	<script type="text/javascript">
@@ -104,6 +104,9 @@
 
 {if isset($name_controller)}
 	{capture name=hookName assign=hookName}display{$name_controller|ucfirst}ListBefore{/capture}
+	{hook h=$hookName}
+{elseif isset($controller_name)}
+	{capture name=hookName assign=hookName}display{$controller_name|ucfirst}ListBefore{/capture}
 	{hook h=$hookName}
 {elseif isset($smarty.get.controller)}
 	{capture name=hookName assign=hookName}display{$smarty.get.controller|ucfirst|htmlentities}ListBefore{/capture}
@@ -347,14 +350,14 @@
 								{elseif $params.type == 'date' || $params.type == 'datetime'}
 									<div class="date_range row">
  										<div class="input-group fixed-width-md center">
-											<input type="text" class="filter datepicker date-input form-control" id="local_{$params.id_date}_0" name="local_{$params.name_date}[0]"  placeholder="{l s='From'}" />
+											<input type="text" class="filter datepicker date-input form-control" id="local_{$params.id_date}_0" name="local_{$params.name_date}[0]"  placeholder="{l s='From'}" autocomplete="off"/>
 											<input type="hidden" id="{$params.id_date}_0" name="{$params.name_date}[0]" value="{if isset($params.value.0)}{$params.value.0}{/if}">
 											<span class="input-group-addon">
 												<i class="icon-calendar"></i>
 											</span>
 										</div>
  										<div class="input-group fixed-width-md center">
-											<input type="text" class="filter datepicker date-input form-control" id="local_{$params.id_date}_1" name="local_{$params.name_date}[1]"  placeholder="{l s='To'}" />
+											<input type="text" class="filter datepicker date-input form-control" id="local_{$params.id_date}_1" name="local_{$params.name_date}[1]"  placeholder="{l s='To'}" autocomplete="off"/>
 											<input type="hidden" id="{$params.id_date}_1" name="{$params.name_date}[1]" value="{if isset($params.value.1)}{$params.value.1}{/if}">
 											<span class="input-group-addon">
 												<i class="icon-calendar"></i>

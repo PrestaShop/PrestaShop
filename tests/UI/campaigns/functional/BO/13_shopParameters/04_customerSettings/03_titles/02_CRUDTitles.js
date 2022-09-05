@@ -1,14 +1,14 @@
 require('module-alias/register');
 
-// Helpers to open and close browser
-const helper = require('@utils/helpers');
+const {expect} = require('chai');
 
-// Helper files to delete images
+// Import utils
+const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
 const files = require('@utils/files');
 
-
-// Common tests login BO
-const loginCommon = require('@commonTests/loginBO');
+// Import login steps
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -19,27 +19,18 @@ const addTitlePage = require('@pages/BO/shopParameters/customerSettings/titles/a
 // Import data
 const TitleFaker = require('@data/faker/title');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_shopParameters_customerSettings_titles_CRUDTitles';
-
-// Import expect from chai
-const {expect} = require('chai');
-
 
 // Browser and tab
 let browserContext;
 let page;
-
 
 let numberOfTitles = 0;
 
 const createTitleData = new TitleFaker();
 const editTitleData = new TitleFaker();
 
-
-describe('Create, update and delete title in BO', async () => {
+describe('BO - Shop Parameters - Customer Settings : Create, update and delete title in BO', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -65,7 +56,7 @@ describe('Create, update and delete title in BO', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to customer settings page', async function () {
+  it('should go to \'Shop Parameters > Customer Settings\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCustomerSettingsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -80,7 +71,7 @@ describe('Create, update and delete title in BO', async () => {
     await expect(pageTitle).to.contains(customerSettingPage.pageTitle);
   });
 
-  it('should go to titles page', async function () {
+  it('should go to \'Titles\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToTitlesPage', baseContext);
 
     await customerSettingPage.goToTitlesPage(page);
@@ -121,13 +112,7 @@ describe('Create, update and delete title in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForUpdate', baseContext);
 
       await titlesPage.resetFilter(page);
-
-      await titlesPage.filterTitles(
-        page,
-        'input',
-        'b!name',
-        createTitleData.name,
-      );
+      await titlesPage.filterTitles(page, 'input', 'b!name', createTitleData.name);
 
       const textEmail = await titlesPage.getTextColumn(page, 1, 'b!name');
       await expect(textEmail).to.contains(createTitleData.name);
@@ -157,13 +142,7 @@ describe('Create, update and delete title in BO', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForDelete', baseContext);
 
       await titlesPage.resetFilter(page);
-
-      await titlesPage.filterTitles(
-        page,
-        'input',
-        'b!name',
-        editTitleData.name,
-      );
+      await titlesPage.filterTitles(page, 'input', 'b!name', editTitleData.name);
 
       const textEmail = await titlesPage.getTextColumn(page, 1, 'b!name');
       await expect(textEmail).to.contains(editTitleData.name);

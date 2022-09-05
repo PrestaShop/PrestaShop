@@ -7,7 +7,7 @@ const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
 
 // Import login steps
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -84,8 +84,8 @@ describe('BO - Customers - Customers : Set required fields', async () => {
       await foHomePage.goToLoginPage(page);
       await foLoginPage.goToCreateAccountPage(page);
 
-      const pageTitle = await foCreateAccountPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(foCreateAccountPage.pageTitle);
+      const pageTitle = await foCreateAccountPage.getHeaderTitle(page);
+      await expect(pageTitle).to.contains(foCreateAccountPage.formTitle);
     });
 
     it('should check \'Receive offers from our partners\' checkbox', async function () {

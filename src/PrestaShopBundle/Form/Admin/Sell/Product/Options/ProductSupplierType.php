@@ -28,18 +28,25 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Options;
 
+use Currency;
+use PrestaShop\PrestaShop\Adapter\Currency\Repository\CurrencyRepository;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\Domain\Currency\ValueObject\CurrencyId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Reference;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use PrestaShopBundle\Form\FormCloner;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\PositiveOrZero;
 use Symfony\Component\Validator\Constraints\Type;
 
 class ProductSupplierType extends TranslatorAwareType
@@ -52,23 +59,37 @@ class ProductSupplierType extends TranslatorAwareType
     /**
      * @var string
      */
-    private $currencyIsoCode;
+    private $defaultCurrencyIsoCode;
+
+    /**
+     * @var CurrencyRepository
+     */
+    private $currencyRepository;
+
+    /**
+     * @var FormCloner
+     */
+    private $formCloner;
 
     /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param FormChoiceProviderInterface $currencyByIdChoiceProvider
-     * @param string $currencyIsoCode
+     * @param string $defaultCurrencyIsoCode
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         FormChoiceProviderInterface $currencyByIdChoiceProvider,
-        string $currencyIsoCode
+        string $defaultCurrencyIsoCode,
+        CurrencyRepository $currencyRepository,
+        FormCloner $formCloner
     ) {
         parent::__construct($translator, $locales);
         $this->currencyByIdChoiceProvider = $currencyByIdChoiceProvider;
-        $this->currencyIsoCode = $currencyIsoCode;
+        $this->defaultCurrencyIsoCode = $defaultCurrencyIsoCode;
+        $this->currencyRepository = $currencyRepository;
+        $this->formCloner = $formCloner;
     }
 
     /**
@@ -98,12 +119,13 @@ class ProductSupplierType extends TranslatorAwareType
             ])
             ->add('price_tax_excluded', MoneyType::class, [
                 'label' => $this->trans('Cost price (tax excl.)', 'Admin.Catalog.Feature'),
-                'currency' => $this->currencyIsoCode,
+                'currency' => $this->defaultCurrencyIsoCode,
                 'scale' => self::PRESTASHOP_DECIMALS,
                 'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
                 'constraints' => [
                     new NotBlank(),
                     new Type(['type' => 'float']),
+                    new PositiveOrZero(),
                 ],
                 'default_empty_data' => 0.0,
             ])
@@ -115,5 +137,22 @@ class ProductSupplierType extends TranslatorAwareType
                 'choices' => $this->currencyByIdChoiceProvider->getChoices(),
             ])
         ;
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $productSupplierData = $event->getData();
+            if (empty($productSupplierData['currency_id'])) {
+                return;
+            }
+            $currencyId = $productSupplierData['currency_id'];
+
+            /** @var Currency $currency */
+            $currency = $this->currencyRepository->get(new CurrencyId($currencyId));
+            if ($currency->iso_code !== $this->defaultCurrencyIsoCode) {
+                $form = $event->getForm();
+                $form->add($this->formCloner->cloneForm($form->get('price_tax_excluded'), [
+                    'currency' => $currency->iso_code,
+                ]));
+            }
+        });
     }
 }

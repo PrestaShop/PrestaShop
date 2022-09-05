@@ -125,7 +125,6 @@ function onShowStepCallback()
 		$(this).closest('li').addClass($(this).attr('class'));
 	});
 	$('#carrier_logo_block').prependTo($('div.content').filter(function() { return $(this).css('display') != 'none' }).find('.defaultForm').find('fieldset'));
-	resizeWizard();
 }
 
 function onFinishCallback(obj, context)
@@ -141,7 +140,6 @@ function onFinishCallback(obj, context)
 			if (data.has_error)
 			{
 				displayError(data.errors, context.fromStep);
-				resizeWizard();
 			}
 			else
 				window.location.href = carrierlist_url;
@@ -308,7 +306,6 @@ function validateSteps(fromStep, toStep)
 						$(this).closest('div.input-group').removeClass('has-error');
 					});
 					displayError(datas.errors, fromStep);
-					resizeWizard();
 				}
 			},
 			error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -335,16 +332,11 @@ function displayError(errors, step_number)
 	bind_inputs();
 }
 
-function resizeWizard()
-{
-	resizeInterval = setInterval(function (){$("#carrier_wizard").smartWizard('fixHeight'); clearInterval(resizeInterval)}, 100);
-}
-
 function bind_inputs()
 {
 	$('input').focus(function () {
 		$(this).closest('div.input-group').removeClass('has-error');
-		$('#carrier_wizard .actionBar a.btn').not('.buttonFinish').removeClass('disabled');
+		$('#carrier_wizard .actionBar a.btn').removeClass('disabled');
 		$('.wizard_error').fadeOut('fast', function () { $(this).remove()});
 	});
 
@@ -610,7 +602,6 @@ function add_new_range()
 	bind_inputs();
 	rebuildTabindex();
 	displayRangeType();
-	resizeWizard();
 	return false;
 }
 
@@ -687,7 +678,6 @@ function checkRangeContinuity(reordering)
 		$('.ranges_not_follow').fadeOut();
 	else
 		$('.ranges_not_follow').fadeIn();
-	resizeWizard();
 }
 
 function getCorrectRangePosistion(current_inf, current_sup)

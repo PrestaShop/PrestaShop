@@ -30,51 +30,56 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Prod
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilder;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\DataField;
 
-final class OptionsCommandsBuilder implements ProductCommandsBuilderInterface
+final class OptionsCommandsBuilder implements MultiShopProductCommandsBuilderInterface
 {
+    /**
+     * @var string
+     */
+    private $modifyAllNamePrefix;
+
+    /**
+     * @param string $modifyAllNamePrefix
+     */
+    public function __construct(string $modifyAllNamePrefix)
+    {
+        $this->modifyAllNamePrefix = $modifyAllNamePrefix;
+    }
+
     /**
      * {@inheritdoc}
      */
-    public function buildCommands(ProductId $productId, array $formData): array
+    public function buildCommands(ProductId $productId, array $formData, ShopConstraint $singleShopConstraint): array
     {
-        if (!isset($formData['options']) &&
-            !isset($formData['manufacturer']) &&
-            !isset($formData['footer']['active'])) {
+        if (empty($formData['options']) &&
+            !isset($formData['description']['manufacturer']) &&
+            !isset($formData['specifications'])) {
             return [];
         }
 
-        $options = $formData['options'] ?? [];
-        $manufacturerId = isset($formData['manufacturer']) ? (int) $formData['manufacturer'] : null;
-        $command = new UpdateProductOptionsCommand($productId->getValue());
+        $config = new CommandBuilderConfig($this->modifyAllNamePrefix);
+        $config
+            ->addField('[description][manufacturer]', 'setManufacturerId', DataField::TYPE_INT)
+            ->addMultiShopField('[options][visibility][online_only]', 'setOnlineOnly', DataField::TYPE_BOOL)
+            ->addMultiShopField('[options][visibility][visibility]', 'setVisibility', DataField::TYPE_STRING)
+            ->addMultiShopField('[options][visibility][available_for_order]', 'setAvailableForOrder', DataField::TYPE_BOOL)
+            ->addMultiShopField('[options][visibility][show_price]', 'setShowPrice', DataField::TYPE_BOOL)
+            ->addMultiShopField('[specifications][show_condition]', 'setShowCondition', DataField::TYPE_BOOL)
+        ;
 
-        if (isset($options['visibility']['visibility'])) {
-            $command->setVisibility($options['visibility']['visibility']);
-        }
-        if (isset($options['visibility']['available_for_order'])) {
-            $command->setAvailableForOrder((bool) $options['visibility']['available_for_order']);
-        }
-        if (isset($options['visibility']['show_price'])) {
-            $command->setShowPrice((bool) $options['visibility']['show_price']);
-        }
-        if (isset($options['visibility']['online_only'])) {
-            $command->setOnlineOnly((bool) $options['visibility']['online_only']);
-        }
-        if (isset($options['show_condition'])) {
-            $command->setShowCondition((bool) $options['show_condition']);
-        }
-        if (isset($options['condition'])) {
-            $command->setCondition($options['condition']);
+        // based on show_condition value, the condition field can be disabled, in that case "condition" won't exist in request
+        if (!empty($formData['specifications']['condition'])) {
+            $config->addMultiShopField('[specifications][condition]', 'setCondition', DataField::TYPE_STRING);
         }
 
-        if (null !== $manufacturerId) {
-            $command->setManufacturerId($manufacturerId);
-        }
+        $commandBuilder = new CommandBuilder($config);
+        $shopCommand = new UpdateProductOptionsCommand($productId->getValue(), $singleShopConstraint);
+        $allShopsCommand = new UpdateProductOptionsCommand($productId->getValue(), ShopConstraint::allShops());
 
-        if (isset($formData['footer']['active'])) {
-            $command->setActive((bool) $formData['footer']['active']);
-        }
-
-        return [$command];
+        return $commandBuilder->buildCommands($formData, $shopCommand, $allShopsCommand);
     }
 }

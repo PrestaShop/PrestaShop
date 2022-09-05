@@ -11,14 +11,14 @@
     "lint": "eslint --ignore-path .gitignore .",
 
     "// Step identifiers": "Script to check step identifiers",
-    "check:step-identifiers": "node campaigns/tools/stepIdentifiersChecker.js ",
+    "check:step-identifiers": "node tools/stepIdentifiersChecker.js ",
 
     "// Linkchecker": "Script to run link checker",
-    "check:links": "./node_modules/mocha/bin/mocha campaigns/tools/linkchecker.js",
+    "check:links": "./node_modules/mocha/bin/mocha tools/linkchecker.js",
 
     "// Specific test": "Script to run a specific test/folder",
-    "test:specific": "./node_modules/mocha/bin/mocha --recursive --file campaigns/utils/setup.js campaigns/$TEST_PATH",
-    "test:specific:fast-fail": "./node_modules/mocha/bin/mocha --bail --recursive --file campaigns/utils/setup.js campaigns/$TEST_PATH",
+    "test:specific": "./node_modules/mocha/bin/mocha --recursive --file utils/setup.js campaigns/$TEST_PATH",
+    "test:specific:fast-fail": "./node_modules/mocha/bin/mocha --bail --recursive --file utils/setup.js campaigns/$TEST_PATH",
 
     "// Sanity": "Scripts to run sanity tests",
     "test:sanity": "TEST_PATH='sanity/*' npm run test:specific",
@@ -50,14 +50,14 @@
     "test:regression": "TEST_PATH='regression/*' npm run test:specific",
 
     "// All tests": "Scripts to run all campaigns",
-    "test:all": "./node_modules/mocha/bin/mocha --recursive --file campaigns/utils/setup.js campaigns/functional/* campaigns/sanity/* campaigns/regression/*"
+    "test:all": "./node_modules/mocha/bin/mocha --recursive --file utils/setup.js campaigns/functional/* campaigns/sanity/* campaigns/regression/*"
   },
   "_moduleAliases": {
     "@pages": "pages",
-    "@commonTests": "campaigns/commonTests",
-    "@data": "campaigns/data",
-    "@utils": "campaigns/utils",
-    "@tools": "campaigns/tools"
+    "@commonTests": "commonTests",
+    "@data": "data",
+    "@utils": "utils",
+    "@tools": "tools"
   },
   "repository": {
     "type": "git",
@@ -75,17 +75,18 @@
   },
   "homepage": "https://github.com/PrestaShop/PrestaShop/tree/develop/tests/UI#readme",
   "dependencies": {
+    "@faker-js/faker": "^7.3.0",
     "chai": "^4.2.0",
     "chai-string": "^1.5.0",
+    "csv-writer": "^1.6.0",
     "eslint-config-prestashop": "0.0.2",
-    "faker": "^4.1.0",
     "js-image-generator": "^1.0.2",
     "maildev": "^1.1.0",
     "mocha": "^6.1.4",
     "mochawesome": "^6.2.2",
     "module-alias": "^2.2.2",
     "pdfjs-dist": "^2.3.200",
-    "playwright": "1.8.1"
+    "playwright": "^1.16.2"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
@@ -93,6 +94,7 @@
     "eslint-config-airbnb-base": "^13.2.0",
     "eslint-plugin-html": "^6.0.2",
     "eslint-plugin-import": "^2.20.2",
+    "jsdoc-to-markdown": "^7.0.1",
     "mochawesome-merge": "^4.2.0"
   }
 }

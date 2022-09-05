@@ -26,6 +26,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
+use Behat\Behat\Context\Environment\InitializedContextEnvironment;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Cache;
 use Context;
@@ -58,26 +59,33 @@ class TaxFeatureContext extends AbstractPrestaShopFeatureContext
     protected $carrierFeatureContext;
 
     /**
-     * @var ProductFeatureContext
+     * @var LegacyProductFeatureContext
      */
     protected $productFeatureContext;
 
     /** @BeforeScenario */
     public function before(BeforeScenarioScope $scope)
     {
-        $this->carrierFeatureContext = $scope->getEnvironment()->getContext(CarrierFeatureContext::class);
-        $this->productFeatureContext = $scope->getEnvironment()->getContext(ProductFeatureContext::class);
+        /** @var InitializedContextEnvironment $environment */
+        $environment = $scope->getEnvironment();
+        /** @var CarrierFeatureContext $carrierFeatureContext */
+        $carrierFeatureContext = $environment->getContext(CarrierFeatureContext::class);
+        /** @var LegacyProductFeatureContext $productFeatureContext */
+        $productFeatureContext = $environment->getContext(LegacyProductFeatureContext::class);
+
+        $this->carrierFeatureContext = $carrierFeatureContext;
+        $this->productFeatureContext = $productFeatureContext;
     }
 
     /**
      * @Given /^there is a tax named "(.+)" and rate (\d+\.\d+)%$/
      */
-    public function createTax($name, $rate)
+    public function createTax(string $name, float $rate): void
     {
         $tax = new Tax();
         $tax->name = [(int) Context::getContext()->language->id => 'fake'];
         $tax->rate = $rate;
-        $tax->active = 1;
+        $tax->active = true;
         $tax->add();
         $this->taxes[$name] = $tax;
     }
@@ -92,7 +100,7 @@ class TaxFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkTaxWithNameExists($taxName);
 
         $taxRuleGroup = new TaxRulesGroup();
-        $taxRuleGroup->active = 1;
+        $taxRuleGroup->active = true;
         $taxRuleGroup->name = 'fake';
         $taxRuleGroup->add();
         $this->taxRuleGroups[$taxRuleName] = $taxRuleGroup;
@@ -118,7 +126,7 @@ class TaxFeatureContext extends AbstractPrestaShopFeatureContext
         $this->checkTaxWithNameExists($taxName);
 
         $taxRuleGroup = new TaxRulesGroup();
-        $taxRuleGroup->active = 1;
+        $taxRuleGroup->active = true;
         $taxRuleGroup->name = 'fake';
         $taxRuleGroup->add();
         $this->taxRuleGroups[$taxRuleName] = $taxRuleGroup;
@@ -136,17 +144,17 @@ class TaxFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @param $name
+     * @param string $name
      */
-    public function checkTaxWithNameExists($name)
+    public function checkTaxWithNameExists(string $name): void
     {
         $this->checkFixtureExists($this->taxes, 'Tax', $name);
     }
 
     /**
-     * @param $name
+     * @param string $name
      */
-    public function checkTaxRuleWithNameExists($name)
+    public function checkTaxRuleWithNameExists(string $name): void
     {
         $this->checkFixtureExists($this->taxRules, 'Tax rule', $name);
     }

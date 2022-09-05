@@ -26,9 +26,9 @@
 
 namespace PrestaShopBundle\Form\Admin\Sell\Order\CreditSlip;
 
-use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
@@ -48,17 +48,7 @@ final class CreditSlipOptionsType extends TranslatorAwareType
             'help' => $this->trans('Prefix used for credit slips.', 'Admin.Orderscustomers.Help'),
             'required' => false,
             'error_bubbling' => true,
-            'options' => [
-                'constraints' => [
-                    new TypedRegex([
-                        'type' => 'file_name',
-                        'message' => $this->trans(
-                            '%s is invalid.',
-                            'Admin.Notifications.Error'
-                        ),
-                    ]),
-                ],
-            ],
+            'type' => TextType::class,
         ]);
     }
 }

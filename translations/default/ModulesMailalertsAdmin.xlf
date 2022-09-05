@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="src/Adapter/MailTemplate/MailPreviewVariablesBuilder.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1d744a9ad1dac20645cfc4a36b77323b">
+        <source>image(s)</source>
+        <target>image(s)</target>
+        <note>Line: 275</note>
+      </trans-unit>
+      <trans-unit id="9137796c15dd92e5553c3f29574d0968">
+        <source>Voucher code:</source>
+        <target>Voucher code:</target>
+        <note>Line: 308</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

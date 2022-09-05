@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Webservice;
 
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -52,7 +53,7 @@ class WebserviceConfigurationType extends TranslatorAwareType
         );
         $enableWebservicesHelp .= '<br/> 2. ';
         $enableWebservicesHelp .= $this->trans(
-            'Check that the five methods GET, POST, PUT, DELETE and HEAD are supported by this server.',
+            'Check that the six methods GET, POST, PUT, PATCH, DELETE and HEAD are supported by this server.',
             'Admin.Advparameters.Help'
         );
 
@@ -63,6 +64,7 @@ class WebserviceConfigurationType extends TranslatorAwareType
                     'Admin.Advparameters.Feature'
                 ),
                 'help' => $enableWebservicesHelp,
+                'multistore_configuration_key' => 'PS_WEBSERVICE',
                 'required' => true,
             ])
             ->add('enable_cgi', SwitchType::class, [
@@ -74,6 +76,7 @@ class WebserviceConfigurationType extends TranslatorAwareType
                     'Before choosing "Yes", check that PHP is not configured as an Apache module on your server.',
                     'Admin.Advparameters.Help'
                 ),
+                'multistore_configuration_key' => 'PS_WEBSERVICE_CGI_HOST',
                 'required' => true,
             ]);
     }
@@ -94,5 +97,15 @@ class WebserviceConfigurationType extends TranslatorAwareType
     public function getBlockPrefix()
     {
         return 'webservice_configuration';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see MultistoreConfigurationTypeExtension
+     */
+    public function getParent(): string
+    {
+        return MultistoreConfigurationType::class;
     }
 }

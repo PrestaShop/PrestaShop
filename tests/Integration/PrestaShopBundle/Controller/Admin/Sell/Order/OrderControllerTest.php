@@ -35,9 +35,12 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
+use Tests\Integration\Utility\ContextMockerTrait;
 
 class OrderControllerTest extends WebTestCase
 {
+    use ContextMockerTrait;
+
     /**
      * @var Client
      */
@@ -54,6 +57,7 @@ class OrderControllerTest extends WebTestCase
     protected function setUp(): void
     {
         parent::setUp();
+        self::mockContext();
         self::bootKernel();
 
         // Enable debug mode (for data)
@@ -124,9 +128,7 @@ class OrderControllerTest extends WebTestCase
         $content = $response->getContent();
         $content = json_decode($content, true);
         $this->assertIsArray($content);
-        $this->assertArrayHasKey(0, $content);
-        $this->assertIsArray($content[0]);
-        $this->assertArrayHasKey('message', $content[0]);
-        $this->assertEquals('Product search phrase must be a not empty string', $content[0]['message']);
+        $this->assertArrayHasKey('message', $content);
+        $this->assertEquals('Product search phrase must not be an empty string.', $content['message']);
     }
 }

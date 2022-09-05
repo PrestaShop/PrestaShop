@@ -23,31 +23,19 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
   {% block credit_slips_listing %}
-    <div class="row justify-content-center">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': creditSlipGrid} %}
-      </div>
-    </div>
+    {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': creditSlipGrid} %}
   {% endblock %}
 
   {% block credit_slips_print_pdf %}
-    <div class="row justify-content-center">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Sell/Order/CreditSlip/Blocks/pdf_by_date.html.twig' %}
-      </div>
-    </div>
+    {% include '@PrestaShop/Admin/Sell/Order/CreditSlip/Blocks/pdf_by_date.html.twig' %}
   {% endblock %}
 
   {% block credit_slips_options %}
-    <div class="row justify-content-center">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Sell/Order/CreditSlip/Blocks/credit_slip_options.html.twig' %}
-      </div>
-    </div>
+    {% include '@PrestaShop/Admin/Sell/Order/CreditSlip/Blocks/credit_slip_options.html.twig' %}
   {% endblock %}
 {% endblock %}
 

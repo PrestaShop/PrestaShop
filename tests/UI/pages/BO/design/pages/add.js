@@ -46,8 +46,8 @@ class AddPage extends BOBasePage {
     await this.setValue(page, this.metaDescriptionInput, pageData.metaDescription);
     await this.setValue(page, this.metaKeywordsInput, pageData.metaKeywords);
     await this.setValueOnTinymceInput(page, this.pageContentIframe, pageData.content);
-    await page.check(this.indexationToggleInput(pageData.indexation ? 1 : 0));
-    await page.check(this.displayedToggleInput(pageData.displayed ? 1 : 0));
+    await this.setChecked(page, this.indexationToggleInput(pageData.indexation ? 1 : 0));
+    await this.setChecked(page, this.displayedToggleInput(pageData.displayed ? 1 : 0));
 
     // Save form
     await this.clickAndWaitForNavigation(page, this.savePageButton);

@@ -89,14 +89,14 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
 
         if (!$cachedFilters->isHit()) {
             $shop = Context::getContext()->shop;
-            $filter = $this->entityManager->getRepository('PrestaShopBundle:AdminFilter')->findOneBy([
+            /** @var AdminFilter|null $filter */
+            $filter = $this->entityManager->getRepository(AdminFilter::class)->findOneBy([
                 'employee' => $employeeId,
                 'shop' => $shop->id ?: 0,
                 'controller' => 'ProductController',
                 'action' => 'catalogAction',
             ]);
 
-            /** @var $filter AdminFilter */
             if (null === $filter) {
                 $filters = AdminFilter::getProductCatalogEmptyFilter();
             } else {
@@ -142,7 +142,8 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
     {
         $employee = Context::getContext()->employee;
         $shop = Context::getContext()->shop;
-        $filter = $this->entityManager->getRepository('PrestaShopBundle:AdminFilter')->findOneBy([
+        /** @var AdminFilter|null $filter */
+        $filter = $this->entityManager->getRepository(AdminFilter::class)->findOneBy([
             'employee' => $employee->id ?: 0,
             'shop' => $shop->id ?: 0,
             'controller' => 'ProductController',
@@ -315,17 +316,6 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         }
 
         $sqlGroupBy = [];
-
-        // exec legacy hook but with different parameters (retro-compat < 1.7 is broken here)
-        Hook::exec('actionAdminProductsListingFieldsModifier', [
-            '_ps_version' => AppKernel::VERSION,
-            'sql_select' => &$sqlSelect,
-            'sql_table' => &$sqlTable,
-            'sql_where' => &$sqlWhere,
-            'sql_group_by' => &$sqlGroupBy,
-            'sql_order' => &$sqlOrder,
-            'sql_limit' => &$sqlLimit,
-        ]);
         foreach ($filterParams as $filterParam => $filterValue) {
             if (!$filterValue && $filterValue !== '0') {
                 continue;
@@ -364,9 +354,12 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         $total = $total[0]['FOUND_ROWS()'];
 
         // post treatment
-        $currency = new Currency(Configuration::get('PS_CURRENCY_DEFAULT'));
+        $currency = new Currency((int) Configuration::get('PS_CURRENCY_DEFAULT'));
         $localeCldr = Tools::getContextLocale(Context::getContext());
 
+        /**
+         * @var array{id_product: int, reference: string, price: string, id_shop_default: int, link_rewrite: string, id_image: int} $product
+         */
         foreach ($products as &$product) {
             $product['total'] = $total; // total product count (filtered)
             $product['price_final'] = Product::getPriceStatic(
@@ -392,7 +385,10 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
                 $product['price_final'] = $localeCldr->formatPrice($product['price_final'], $currency->iso_code);
             }
             $product['image'] = $this->imageManager->getThumbnailForListing($product['id_image']);
-            $product['image_link'] = Context::getContext()->link->getImageLink($product['link_rewrite'], $product['id_image']);
+            $product['image_link'] = Context::getContext()->link->getImageLink(
+                $product['link_rewrite'],
+                (string) $product['id_image']
+            );
         }
 
         // post treatment by hooks

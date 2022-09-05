@@ -35,7 +35,7 @@ class AddUrl extends BOBasePage {
   async setVirtualUrl(page, shopData) {
     await this.setValue(page, this.virtualUrlInput, shopData.name);
 
-    await this.clickAndWaitForNavigation(page, this.saveButton);
+    await this.clickAndWaitForNavigation(page, this.saveButton, 'networkidle', 60000);
     return this.getTextContent(page, this.alertSuccessBlock);
   }
 }

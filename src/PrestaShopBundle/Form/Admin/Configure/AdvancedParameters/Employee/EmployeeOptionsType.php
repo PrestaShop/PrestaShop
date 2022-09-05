@@ -27,8 +27,8 @@
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Employee;
 
 use PrestaShopBundle\Form\Admin\Type\SwitchType;
-use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -63,7 +63,7 @@ class EmployeeOptionsType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('password_change_time', TextWithUnitType::class, [
+            ->add('password_change_time', IntegerType::class, [
                 'required' => false,
                 'unit' => $this->trans('minutes', 'Admin.Advparameters.Feature'),
                 'disabled' => !$this->canOptionsBeChanged,

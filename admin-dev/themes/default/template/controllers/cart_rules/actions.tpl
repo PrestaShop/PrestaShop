@@ -90,8 +90,8 @@
 			</div>
 			<div class="col-lg-4">
 				<select name="reduction_tax" >
-					<option value="0" {if $currentTab->getFieldValue($currentObject, 'reduction_tax') == 0}selected="selected"{/if}>{l s='Tax excluded' d='Admin.Global'}</option>
-					<option value="1" {if $currentTab->getFieldValue($currentObject, 'reduction_tax') == 1}selected="selected"{/if}>{l s='Tax included' d='Admin.Global'}</option>
+					<option value="0" {if $currentTab->getFieldValue($currentObject, 'reduction_tax') === '0'}selected="selected"{/if}>{l s='Tax excluded' d='Admin.Global'}</option>
+					<option value="1" {if $currentTab->getFieldValue($currentObject, 'reduction_tax') === '1' || $currentTab->getFieldValue($currentObject, 'reduction_tax') === false}selected="selected"{/if}>{l s='Tax included' d='Admin.Global'}</option>
 				</select>
 			</div>
 		</div>
@@ -121,7 +121,7 @@
 		</p>
 		<p class="radio">
 			<label for="apply_discount_to_selection">
-				<input type="radio" name="apply_discount_to" id="apply_discount_to_selection" value="selection"{if $currentTab->getFieldValue($currentObject, 'reduction_product')|intval == -2} checked="checked"{/if}{if $product_rule_groups|@count == 0}disabled="disabled"{/if} />
+				<input type="radio" name="apply_discount_to" id="apply_discount_to_selection" value="selection"{if $currentTab->getFieldValue($currentObject, 'reduction_product')|intval == -2} checked="checked"{/if}{if $product_rule_groups|@count == 0} disabled="disabled"{/if} />
 				{l s='Selected product(s)' d='Admin.Catalog.Feature'}{if $product_rule_groups|@count == 0}&nbsp;<span id="apply_discount_to_selection_warning" class="text-muted clearfix"><i class="icon-warning-sign"></i> <a href="#" id="apply_discount_to_selection_shortcut">{l s='You must select some products before' d='Admin.Catalog.Notification'}</a></span>{/if}
 			</label>
 		</p>
@@ -142,7 +142,7 @@
 <div id="apply_discount_to_product_special" class="form-group">
  	<label class="control-label col-lg-3">
     <span class="label-tooltip" data-toggle="tooltip"
-        title="{l s='If enabled, the voucher will not apply to products already on sale.'}">
+        title="{l|escape s='If enabled, the voucher will not apply to products already on sale.'}">
     {l s='Exclude discounted products' d='Admin.Catalog.Feature'}
     </span>
   </label>

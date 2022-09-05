@@ -24,7 +24,13 @@
  *#}
 {% block multistore_header %}
   {% if isMultistoreUsed and app.request is not null %}
-    <div class="header-multishop{% if isAllShopContext %} header-multishop-allshops{% elseif currentContext.color is empty %} header-multishop-default{% endif %}{% if isTitleDark is same as (true) %} header-multishop-dark{% else %} header-multishop-bright{% endif %}">
+    <div
+        id="header-multishop"
+        class="header-multishop{% if isAllShopContext %} header-multishop-allshops{% elseif currentContext.color is empty %} header-multishop-default{% endif %}{% if isTitleDark is same as (true) %} header-multishop-dark{% else %} header-multishop-bright{% endif %}"
+        {% if isShopContext %}data-shop-id="{{ currentContext.id }}"{% elseif isGroupContext %}data-group-id="{{ currentContext.id }}"{% else %}data-all-shops="1"{% endif %}
+        {% if colorConfigLink %}data-header-color-notification="{{ "Customize your multistore header, [1]pick a color[/1] for this store context."|trans({'[1]': '<a href="' ~ colorConfigLink ~ '">', '[/1]': '</a>'}, 'Admin.Navigation.Header') }}"{% endif %}
+        data-checkbox-notification="{{ "To apply specific settings to a store or a group of stores, select the parameter to modify, make your changes and save."|trans({}, 'Admin.Navigation.Header') ~ ' '}}"
+    >
       <div class="header-multishop-top-bar"{% if currentContext.color is not empty %} style="background-color: {{currentContext.color}};"{% endif %}>
         <div class="header-multishop-center js-header-multishop-open-modal">
           {% if isShopContext %}
@@ -67,7 +73,7 @@
           {% endif %}
 
           <h2 class="header-multishop-title">
-          {% if isGroupContext %}{{ "Group"|trans({}, 'Admin.Global') ~ ' '}} {% endif %}{{ currentContext.name }}
+            {% if isGroupContext %}{{ "Group"|trans({}, 'Admin.Global') ~ ' '}} {% endif %}{{ currentContext.name }}
           </h2>
 
           <button class="header-multishop-button">
@@ -83,7 +89,7 @@
       {% endif %}
 
       <div id="multishop-modal" class="multishop-modal multishop-modal-hidden js-multishop-modal" tabindex="-1" role="dialog" aria-labelledby="multishop-modal" aria-hidden="true">
-        <div class="multishop-modal-dialog" role="document">
+        <div class="multishop-modal-dialog js-multishop-modal-dialog" role="document">
           <div class="multishop-modal-body">
             {% if lockedToAllShopContext == false %}
             <div class="multishop-modal-search-container">
@@ -104,7 +110,7 @@
                   </a>
                 </li>
 
-              {% for group in groupList if group.shops is not empty %}
+              {% for group in groupList|filter(group => group.shops is not empty) %}
                 <li class="multishop-modal-group-item multishop-modal-item">
                   <span class="multishop-modal-color-container{% if isGroupContext and currentContext.id == group.id %} multishop-modal-color-check{% endif %}">
                     <i class="material-icons">check</i>

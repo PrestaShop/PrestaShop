@@ -87,6 +87,7 @@
     <tab id="Payment_preferences" name="Preferences" />
     <tab id="Payment" name="Payment" />
     <tab id="Performance" name="Performance" />
+    <tab id="Security" name="Security" />
     <tab id="Permissions" name="Permissions" />
     <tab id="Positions" name="Positions" />
     <tab id="Preferences_1" name="Preferences" />
@@ -94,6 +95,7 @@
     <tab id="Price_Rules" name="Discounts" />
     <tab id="Products_1" name="Product Settings" />
     <tab id="Products" name="Products" />
+    <tab id="Products_v2" name="Products (experimental)" />
     <tab id="Profiles" name="Profiles" />
     <tab id="Quick_Access" name="Quick Access" />
     <tab id="Referrers" name="Referrers" />
@@ -132,5 +134,8 @@
     <tab id="Webservice" name="Webservice" />
     <tab id="Zones" name="Zones" />
     <tab id="Marketing_tools" name="Module Selections" />
-    <tab id="FeatureFlag" name="Experimental Features" />
+    <tab id="FeatureFlag" name="New &amp; Experimental Features" />
+    <tab id="Security_1" name="Security" />
+    <tab id="EmployeeSessions" name="Employee Sessions" />
+    <tab id="CustomerSessions" name="Customer Sessions" />
 </entity_tab>

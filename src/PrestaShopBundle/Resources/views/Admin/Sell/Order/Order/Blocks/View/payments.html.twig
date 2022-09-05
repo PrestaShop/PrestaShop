@@ -36,7 +36,7 @@
         'linkedOrders': orderForViewing.linkedOrders
     } %}
 
-    <table class="table">
+    <table class="table" data-role="payments-grid-table">
       <thead>
         <tr>
           <th class="table-head-date">{{ 'Date'|trans({}, 'Admin.Global') }}</th>
@@ -50,18 +50,18 @@
       <tbody>
       {% for payment in orderForViewing.payments.payments %}
         <tr>
-          <td>{{ payment.date|date_format_full }}</td>
-          <td>{{ payment.paymentMethod }}</td>
-          <td>{{ payment.transactionId }}</td>
-          <td>{{ payment.amount }}</td>
-          <td>{% if payment.invoiceNumber %}{{ payment.invoiceNumber }}{% endif %}</td>
+          <td data-role="date-column">{{ payment.date|date_format_full }}</td>
+          <td data-role="payment-method-column">{{ payment.paymentMethod }}</td>
+          <td data-role="transaction-id-column">{{ payment.transactionId }}</td>
+          <td data-role="amount-column">{{ payment.amount }}</td>
+          <td data-role="invoice-column">{% if payment.invoiceNumber %}{{ payment.invoiceNumber }}{% endif %}</td>
           <td class="text-right">
             <button class="btn btn-sm btn-outline-secondary js-payment-details-btn">
               {{ 'Details'|trans({}, 'Admin.Global') }}
             </button>
           </td>
         </tr>
-        <tr class="d-none">
+        <tr class="d-none" data-role="payment-details">
           <td colspan="6">
             <p class="mb-0">
               <strong>{{ 'Card number'|trans({}, 'Admin.Orderscustomers.Feature') }}</strong>
@@ -110,10 +110,7 @@
             {{ form_widget(addOrderPaymentForm.transaction_id) }}
           </td>
           <td>
-            <div class="input-group">
-              {{ form_widget(addOrderPaymentForm.amount) }}
-              {{ form_widget(addOrderPaymentForm.id_currency) }}
-            </div>
+            {{ form_widget(addOrderPaymentForm.amount_currency) }}
           </td>
           <td>
             <div {% if addOrderPaymentForm.id_invoice.vars.choices is empty %}class="d-none"{% endif %}>

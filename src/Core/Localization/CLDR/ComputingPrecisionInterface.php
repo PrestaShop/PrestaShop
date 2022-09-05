@@ -36,7 +36,7 @@ interface ComputingPrecisionInterface
      * Number of decimal digits to take into account when computing values
      * for a given display precision
      *
-     * @var int
+     * @param int $displayPrecision
      *
      * @return int
      */

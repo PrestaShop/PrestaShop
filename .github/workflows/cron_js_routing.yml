@@ -1,7 +1,7 @@
 name: Cron Update JS Routing
 on:
-    schedule:
-        - cron:  '0 23 * * *'
+  schedule:
+    - cron: '0 23 * * *'
 jobs:
   js-routing-dump:
     runs-on: ubuntu-latest
@@ -10,7 +10,6 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
           extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv, simplexml
 
       - name: Setup MySQL
@@ -23,7 +22,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
-          node-version: '10'
+          node-version: '14'
 
       - name: Checkout
         uses: actions/checkout@v2
@@ -42,7 +41,7 @@ jobs:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-               ${{ runner.os }}-node-
+            ${{ runner.os }}-node-
 
       - name: Cache Composer Directory
         uses: actions/cache@v2
@@ -50,7 +49,10 @@ jobs:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
-                 ${{ runner.os }}-composer-
+            ${{ runner.os }}-composer-
+
+      - name: Update npm
+        run: npm install npm -g
 
       - name: Install Composer dependencies
         run: composer install --prefer-dist
@@ -59,30 +61,35 @@ jobs:
         run: make assets
 
       - name: Install PrestaShop
+        # yamllint disable-line rule:line-length
         run: php install-dev/index_cli.php --language=en --country=fr --domain=localhost --db_server=127.0.0.1 --db_password=password --db_name=prestashop --db_create=1 --name=prestashop.unit.test --email=demo@prestashop.com --password=prestashop_demo
 
       - name: Dump JS Routing file
+        # yamllint disable-line rule:line-length
         run: php bin/console fos:js-routing:dump --format=json --target=admin-dev/themes/new-theme/js/fos_js_routes.json
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
         with:
-            token: ${{ secrets.GITHUB_TOKEN }}
-            commit-message: Updated JS Routing file
-            committer: PrestonBot <noreply@github.com>
-            author: prestonBot <prestonBot@users.noreply.github.com>
-            title: 'Updated JS Routing file'
-            body: |
-                    | Questions         | Answers
-                    | ----------------- | -------------------------------------------------------
-                    | Branch?           | develop
-                    | Description?      | Updated JS Routing file
-                    | Type?             | improvement
-                    | Category?         | CO
-                    | BC breaks?        | no
-                    | Deprecations?     | no
-                    | Fixed ticket?     | N/A
-                    | How to test?      | N/A
-                    | Possible impacts? | N/A
-            base: 'develop'
-            delete-branch: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: cron-js-routing
+          add-paths: |
+            admin-dev/themes/new-theme/js/fos_js_routes.json
+          commit-message: Updated JS Routing file
+          committer: PrestonBot <noreply@github.com>
+          author: prestonBot <prestonBot@users.noreply.github.com>
+          title: 'Updated JS Routing file'
+          body: |
+                  | Questions         | Answers
+                  | ----------------- | -------------------------------------------------------
+                  | Branch?           | develop
+                  | Description?      | Updated JS Routing file
+                  | Type?             | improvement
+                  | Category?         | CO
+                  | BC breaks?        | no
+                  | Deprecations?     | no
+                  | Fixed ticket?     | N/A
+                  | How to test?      | N/A
+                  | Possible impacts? | N/A
+          base: 'develop'
+          delete-branch: true

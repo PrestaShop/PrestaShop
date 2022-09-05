@@ -1,26 +1,28 @@
 require('module-alias/register');
+
 const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const testContext = require('@utils/testContext');
 
-// Import pages
+// Import login steps
+const loginCommon = require('@commonTests/BO/loginBO');
+
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const productSettingsPage = require('@pages/BO/shopParameters/productSettings');
 const productsPage = require('@pages/BO/catalog/products');
 const addProductPage = require('@pages/BO/catalog/products/add');
+
+// Import FO pages
 const foProductPage = require('@pages/FO/product');
 const cartPage = require('@pages/FO/cart');
 
 // Import data
 const ProductFaker = require('@data/faker/product');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_shopParameters_productSettings_productsGeneral_quantityDiscountsBasedOn';
-
 
 let browserContext;
 let page;
@@ -56,7 +58,7 @@ Add the combinations to the cart and check the price ATI
 Choose quantity discounts based on 'Combinations'
 Check the cart price ATI
  */
-describe('Choose quantity discount based on', async () => {
+describe('BO - Shop Parameters - Product Settings : Choose quantity discount based on', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -170,8 +172,15 @@ describe('Choose quantity discount based on', async () => {
     await foProductPage.goToCartPage(page);
     const priceATI = await cartPage.getATIPrice(page);
     await expect(priceATI).to.equal(secondCartTotalATI);
+  });
+
+  it('should close the page and go back to BO', async function () {
+    await testContext.addContextItem(this, 'testIdentifier', 'closePageAndBackToBO', baseContext);
 
     page = await cartPage.closePage(browserContext, page, 0);
+
+    const pageTitle = await productSettingsPage.getPageTitle(page);
+    await expect(pageTitle).to.contains(productSettingsPage.pageTitle);
   });
 
   it('should go to \'Catalog > Products\' page', async function () {
@@ -187,7 +196,7 @@ describe('Choose quantity discount based on', async () => {
     await expect(pageTitle).to.contains(productsPage.pageTitle);
   });
 
-  it('should delete product from DropDown Menu', async function () {
+  it('should delete product from dropDown menu', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'deleteProduct', baseContext);
 
     const deleteTextResult = await productsPage.deleteProduct(page, productWithCombinations);

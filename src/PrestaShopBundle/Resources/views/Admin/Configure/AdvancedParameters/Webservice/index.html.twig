@@ -34,43 +34,62 @@
     'desc': 'Add new webservice key'|trans({}, 'Admin.Advparameters.Feature'),
     'icon': 'add_circle_outline'
   }
-  } %}
+} %}
 
 {% block content %}
 
   {% block webservice_list_notifications %}
     {% if configurationWarnings is not empty  %}
-      <div class="row">
-        <div class="col">
-          <div class="alert alert-warning" role="alert">
-            {% for warning in configurationWarnings %}
-              <p class="alert-text">{{ warning }}</p>
-            {% endfor %}
-          </div>
+      <div class="alert alert-warning" role="alert">
+        {% for warning in configurationWarnings %}
+          <p class="alert-text">{{ warning }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endblock %}
+
+  {% block webservice_api_status %}
+    {% set devdocUrl = 'https://devdocs.prestashop.com/8/webservice/' %}
+
+    {% if webserviceStatus.isEnabled == true %}
+      <div class="card">
+        <h3 class="card-header">
+          <i class="material-icons">info_outline</i> {{ 'Webservice status'|trans }}
+        </h3>
+        <div class="card-body">
+          <p>
+            {{ 'Webservice is enabled. Main entry point is' |trans }}
+            <a href="{{ webserviceStatus.endpoint }}" target="_blank">
+              {{ webserviceStatus.endpoint }}
+            </a>
+          </p>
+          {% if webserviceStatus.isFunctional == false %}
+            <p>
+              {{ 'It seems that the webservice endpoint is not functional. If you are using httpd/apache2, you need to enable URL rewriting on your server.'|trans }}
+            </p>
+          {% endif %}
+          <p>
+            {{ "Read the [1]developer documentation[/1]."|trans({
+              '[1]': '<a href="'~devdocUrl~'" target="_blank">', '[/1]': "</a>"
+            }, 'Admin.Advparameters.Feature')|raw }}
+          </p>
         </div>
       </div>
     {% endif %}
   {% endblock %}
 
-  <div class="row">
-    <div class="col">
-      {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {'grid': grid }) }}
-    </div>
-  </div>
+  {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {'grid': grid }) }}
 
-  <div class="row justify-content-center">
-    <div class="col">
-      {{ form_start(webserviceConfigurationForm, {'action': path('admin_webservice_save_settings') ,'attr' : {'class': 'form', 'id': 'configuration_form'} }) }}
+  {{ form_start(webserviceConfigurationForm, {'action': path('admin_webservice_save_settings') ,'attr' : {'class': 'form', 'id': 'configuration_form'} }) }}
 
-        {{ include('@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/webservice_settings.html.twig') }}
+  {{ include('@PrestaShop/Admin/Configure/AdvancedParameters/Webservice/webservice_settings.html.twig') }}
 
-        {% block webservice_configuration_form_rest %}
-          {{ form_rest(webserviceConfigurationForm) }}
-        {% endblock %}
+  {% block webservice_configuration_form_rest %}
+    {{ form_rest(webserviceConfigurationForm) }}
+  {% endblock %}
 
-      {{ form_end(webserviceConfigurationForm) }}
-    </div>
-  </div>
+  {{ form_end(webserviceConfigurationForm) }}
+
 {% endblock %}
 
 {% block javascripts %}

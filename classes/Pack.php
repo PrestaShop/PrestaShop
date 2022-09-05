@@ -32,30 +32,30 @@ class PackCore extends Product
     /**
      * Only decrement pack quantity.
      *
-     * @var string
+     * @var int
      */
-    const STOCK_TYPE_PACK_ONLY = PackStockType::STOCK_TYPE_PACK_ONLY;
+    public const STOCK_TYPE_PACK_ONLY = PackStockType::STOCK_TYPE_PACK_ONLY;
 
     /**
      * Only decrement pack products quantities.
      *
-     * @var string
+     * @var int
      */
-    const STOCK_TYPE_PRODUCTS_ONLY = PackStockType::STOCK_TYPE_PRODUCTS_ONLY;
+    public const STOCK_TYPE_PRODUCTS_ONLY = PackStockType::STOCK_TYPE_PRODUCTS_ONLY;
 
     /**
      * Decrement pack quantity and pack products quantities.
      *
-     * @var string
+     * @var int
      */
-    const STOCK_TYPE_PACK_BOTH = PackStockType::STOCK_TYPE_BOTH;
+    public const STOCK_TYPE_PACK_BOTH = PackStockType::STOCK_TYPE_BOTH;
 
     /**
      * Use pack quantity default setting.
      *
-     * @var string
+     * @var int
      */
-    const STOCK_TYPE_DEFAULT = PackStockType::STOCK_TYPE_DEFAULT;
+    public const STOCK_TYPE_DEFAULT = PackStockType::STOCK_TYPE_DEFAULT;
 
     protected static $cachePackItems = [];
     protected static $cacheIsPack = [];
@@ -71,7 +71,7 @@ class PackCore extends Product
     /**
      * Is product a pack?
      *
-     * @param $id_product
+     * @param int $id_product
      *
      * @return bool
      */
@@ -87,7 +87,8 @@ class PackCore extends Product
 
         if (!array_key_exists($id_product, self::$cacheIsPack)) {
             $result = Db::getInstance()->getValue('SELECT COUNT(*) FROM `' . _DB_PREFIX_ . 'pack` WHERE id_product_pack = ' . (int) $id_product);
-            self::$cacheIsPack[$id_product] = ($result > 0);
+            $productType = Db::getInstance()->getValue('SELECT product_type FROM `' . _DB_PREFIX_ . 'product` WHERE id_product = ' . (int) $id_product);
+            self::$cacheIsPack[$id_product] = ($result > 0) || $productType === ProductType::TYPE_PACK;
         }
 
         return self::$cacheIsPack[$id_product];
@@ -232,11 +233,11 @@ class PackCore extends Product
     /**
      * Returns the available quantity of a given pack (this method already have decreased products in cart).
      *
-     * @param int $id_product Product id
-     * @param int $id_product_attribute Product attribute id (optional)
+     * @param int $idProduct Product id
+     * @param int|null $idProductAttribute Product attribute id (optional)
      * @param bool|null $cacheIsPack
-     * @param Cart $cart
-     * @param int $idCustomization Product customization id (optional)
+     * @param CartCore|null $cart
+     * @param int|null $idCustomization Product customization id (optional)
      *
      * @return int
      *
@@ -246,12 +247,11 @@ class PackCore extends Product
         $idProduct,
         $idProductAttribute = null,
         $cacheIsPack = null,
-        Cart $cart = null,
+        CartCore $cart = null,
         $idCustomization = null
     ) {
         $idProduct = (int) $idProduct;
         $idProductAttribute = (int) $idProductAttribute;
-        $cacheIsPack = (bool) $cacheIsPack;
 
         if (!self::isPack($idProduct)) {
             throw new PrestaShopException("Product with id $idProduct is not a pack");
@@ -349,6 +349,7 @@ class PackCore extends Product
 
         $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($sql);
 
+        /** @var array{id_product: int, id_product_attribute_item: int|null, name: string} $line */
         foreach ($result as &$line) {
             if (Combination::isFeatureActive() && isset($line['id_product_attribute_item']) && $line['id_product_attribute_item']) {
                 $line['cache_default_attribute'] = $line['id_product_attribute'] = $line['id_product_attribute_item'];
@@ -505,8 +506,8 @@ class PackCore extends Product
      *
      * @since 1.5.0
      *
-     * @param $table
-     * @param $has_active_column
+     * @param string|null $table Name of table linked to entity
+     * @param bool $has_active_column True if the table has an active column
      *
      * @return bool
      */

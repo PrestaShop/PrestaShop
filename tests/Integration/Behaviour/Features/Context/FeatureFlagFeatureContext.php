@@ -70,7 +70,7 @@ class FeatureFlagFeatureContext extends AbstractPrestaShopFeatureContext
         $doctrineEntityManager = $this->getDoctrineEntityManager();
 
         /** @var FeatureFlag $featureFlag */
-        $featureFlag = $doctrineEntityManager->getRepository('PrestaShopBundle:FeatureFlag')->findOneBy(['name' => $name]);
+        $featureFlag = $doctrineEntityManager->getRepository(FeatureFlag::class)->findOneBy(['name' => $name]);
 
         if ($state === 'enable') {
             $featureFlag->enable();
@@ -89,7 +89,7 @@ class FeatureFlagFeatureContext extends AbstractPrestaShopFeatureContext
         $doctrineEntityManager = $this->getDoctrineEntityManager();
 
         /** @var FeatureFlag $featureFlag */
-        $featureFlag = $doctrineEntityManager->getRepository('PrestaShopBundle:FeatureFlag')->findOneBy(['name' => $name]);
+        $featureFlag = $doctrineEntityManager->getRepository(FeatureFlag::class)->findOneBy(['name' => $name]);
 
         if ($state === 'enabled' && !$featureFlag->isEnabled()) {
             throw new RuntimeException(sprintf('Feature flag %s is disabled although it was expected to be enabled', $name));
@@ -121,7 +121,7 @@ class FeatureFlagFeatureContext extends AbstractPrestaShopFeatureContext
         $doctrineEntityManager = $this->getDoctrineEntityManager();
 
         /** @var array<int, FeatureFlag> $allFlags */
-        $allFlags = $doctrineEntityManager->getRepository('PrestaShopBundle:FeatureFlag')->findAll();
+        $allFlags = $doctrineEntityManager->getRepository(FeatureFlag::class)->findAll();
         foreach ($allFlags as $flag) {
             $doctrineEntityManager->remove($flag);
         }

@@ -2,10 +2,10 @@ require('module-alias/register');
 
 const {expect} = require('chai');
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import data
-const {DefaultFrTax} = require('@data/demo/tax');
+const {DefaultFrTax, VatUkTax} = require('@data/demo/tax');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -128,13 +128,13 @@ describe('BO - International - Taxes : Filter And Quick Edit', async () => {
     it('should filter by name', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForQuickEdit', baseContext);
 
-      await taxesPage.filterTaxes(page, 'input', 'name', DefaultFrTax.name);
+      await taxesPage.filterTaxes(page, 'input', 'name', VatUkTax.name);
 
       const numberOfTaxesAfterFilter = await taxesPage.getNumberOfElementInGrid(page);
       await expect(numberOfTaxesAfterFilter).to.be.at.most(numberOfTaxes);
 
       const textColumn = await taxesPage.getTextColumnFromTableTaxes(page, 1, 'name');
-      await expect(textColumn).to.contains(DefaultFrTax.name);
+      await expect(textColumn).to.contains(VatUkTax.name);
     });
 
     [

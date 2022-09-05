@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s cart --tags bo-add-cart-rule
-@reset-database-before-feature
+@restore-all-tables-before-feature
 Feature: Add cart rule in cart
   As a customer
   I must be able to correctly add cart rules in my cart

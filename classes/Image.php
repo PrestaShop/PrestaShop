@@ -40,7 +40,7 @@ class ImageCore extends ObjectModel
     /** @var int Position used to order images of the same product */
     public $position;
 
-    /** @var bool Image is cover */
+    /** @var bool|null Image is cover */
     public $cover;
 
     /** @var array<int,string> Legend */
@@ -76,19 +76,22 @@ class ImageCore extends ObjectModel
         ],
     ];
 
+    /**
+     * @var array
+     */
     protected static $_cacheGetSize = [];
 
     /**
      * ImageCore constructor.
      *
-     * @param null $id
-     * @param null $idLang
+     * @param int|null $id
+     * @param int|null $idLang
      */
     public function __construct($id = null, $idLang = null)
     {
         parent::__construct($id, $idLang);
-        $this->image_dir = _PS_PROD_IMG_DIR_;
-        $this->source_index = _PS_PROD_IMG_DIR_ . 'index.php';
+        $this->image_dir = _PS_PRODUCT_IMG_DIR_;
+        $this->source_index = _PS_PRODUCT_IMG_DIR_ . 'index.php';
     }
 
     /**
@@ -109,7 +112,7 @@ class ImageCore extends ObjectModel
         }
 
         if ($this->cover) {
-            $this->cover = 1;
+            $this->cover = true;
         } else {
             $this->cover = null;
         }
@@ -130,7 +133,7 @@ class ImageCore extends ObjectModel
     public function update($nullValues = false)
     {
         if ($this->cover) {
-            $this->cover = 1;
+            $this->cover = true;
         } else {
             $this->cover = null;
         }
@@ -389,16 +392,16 @@ class ImageCore extends ObjectModel
             if ($imageNew->add()) {
                 $newPath = $imageNew->getPathForCreation();
                 foreach ($imagesTypes as $imageType) {
-                    if (file_exists(_PS_PROD_IMG_DIR_ . $imageOld->getExistingImgPath() . '-' . $imageType['name'] . '.jpg')) {
+                    if (file_exists(_PS_PRODUCT_IMG_DIR_ . $imageOld->getExistingImgPath() . '-' . $imageType['name'] . '.jpg')) {
                         if (!Configuration::get('PS_LEGACY_IMAGES')) {
                             $imageNew->createImgFolder();
                         }
                         copy(
-                            _PS_PROD_IMG_DIR_ . $imageOld->getExistingImgPath() . '-' . $imageType['name'] . '.jpg',
+                            _PS_PRODUCT_IMG_DIR_ . $imageOld->getExistingImgPath() . '-' . $imageType['name'] . '.jpg',
                         $newPath . '-' . $imageType['name'] . '.jpg'
                         );
                         if (Configuration::get('WATERMARK_HASH')) {
-                            $oldImagePath = _PS_PROD_IMG_DIR_ . $imageOld->getExistingImgPath() . '-' . $imageType['name'] . '-' . Configuration::get('WATERMARK_HASH') . '.jpg';
+                            $oldImagePath = _PS_PRODUCT_IMG_DIR_ . $imageOld->getExistingImgPath() . '-' . $imageType['name'] . '-' . Configuration::get('WATERMARK_HASH') . '.jpg';
                             if (file_exists($oldImagePath)) {
                                 copy($oldImagePath, $newPath . '-' . $imageType['name'] . '-' . Configuration::get('WATERMARK_HASH') . '.jpg');
                             }
@@ -406,8 +409,8 @@ class ImageCore extends ObjectModel
                     }
                 }
 
-                if (file_exists(_PS_PROD_IMG_DIR_ . $imageOld->getExistingImgPath() . '.jpg')) {
-                    copy(_PS_PROD_IMG_DIR_ . $imageOld->getExistingImgPath() . '.jpg', $newPath . '.jpg');
+                if (file_exists(_PS_PRODUCT_IMG_DIR_ . $imageOld->getExistingImgPath() . '.jpg')) {
+                    copy(_PS_PRODUCT_IMG_DIR_ . $imageOld->getExistingImgPath() . '.jpg', $newPath . '.jpg');
                 }
 
                 Image::replaceAttributeImageAssociationId($combinationImages, (int) $imageOld->id, (int) $imageNew->id);
@@ -470,7 +473,7 @@ class ImageCore extends ObjectModel
      * @param int $way position is moved up if 0, moved down if 1
      * @param int $position new position of the moved image
      *
-     * @return int success
+     * @return bool success
      */
     public function updatePosition($way, $position)
     {
@@ -480,20 +483,22 @@ class ImageCore extends ObjectModel
 
         // < and > statements rather than BETWEEN operator
         // since BETWEEN is treated differently according to databases
-        $result = (Db::getInstance()->execute('
-			UPDATE `' . _DB_PREFIX_ . 'image`
-			SET `position`= `position` ' . ($way ? '- 1' : '+ 1') . '
-			WHERE `position`
-			' . ($way
-                ? '> ' . (int) $this->position . ' AND `position` <= ' . (int) $position
-                : '< ' . (int) $this->position . ' AND `position` >= ' . (int) $position) . '
-			AND `id_product`=' . (int) $this->id_product)
-        && Db::getInstance()->execute('
-			UPDATE `' . _DB_PREFIX_ . 'image`
-			SET `position` = ' . (int) $position . '
-			WHERE `id_image` = ' . (int) $this->id_image));
-
-        return $result;
+        return
+            Db::getInstance()->execute(
+                'UPDATE `' . _DB_PREFIX_ . 'image`
+                SET `position`= `position` ' . ($way ? '- 1' : '+ 1') . '
+                WHERE `position`
+                ' . ($way
+                    ? '> ' . (int) $this->position . ' AND `position` <= ' . (int) $position
+                    : '< ' . (int) $this->position . ' AND `position` >= ' . (int) $position) . '
+                AND `id_product`=' . (int) $this->id_product
+            )
+            && Db::getInstance()->execute(
+                'UPDATE `' . _DB_PREFIX_ . 'image`
+                SET `position` = ' . (int) $position . '
+                WHERE `id_image` = ' . (int) $this->id_image
+            )
+        ;
     }
 
     /**
@@ -503,7 +508,7 @@ class ImageCore extends ObjectModel
      */
     public static function getSize($type)
     {
-        if (!isset(self::$_cacheGetSize[$type]) || self::$_cacheGetSize[$type] === null) {
+        if (!isset(self::$_cacheGetSize[$type])) {
             self::$_cacheGetSize[$type] = Db::getInstance()->getRow('
 				SELECT `width`, `height`
 				FROM ' . _DB_PREFIX_ . 'image_type
@@ -586,6 +591,7 @@ class ImageCore extends ObjectModel
         $image_types = ImageType::getImagesTypes();
         foreach ($image_types as $imageType) {
             $filesToDelete[] = $this->image_dir . $this->getExistingImgPath() . '-' . $imageType['name'] . '.' . $this->image_format;
+            $filesToDelete[] = $this->image_dir . $this->getExistingImgPath() . '-' . $imageType['name'] . '2x.' . $this->image_format;
             if (Configuration::get('WATERMARK_HASH')) {
                 $filesToDelete[] = $this->image_dir . $this->getExistingImgPath() . '-' . $imageType['name'] . '-' . Configuration::get('WATERMARK_HASH') . '.' . $this->image_format;
             }
@@ -593,6 +599,7 @@ class ImageCore extends ObjectModel
 
         // Delete watermark image
         $filesToDelete[] = $this->image_dir . $this->getExistingImgPath() . '-watermark.' . $this->image_format;
+        $filesToDelete[] = $this->image_dir . $this->getExistingImgPath() . '-watermark2x.' . $this->image_format;
         // delete index.php
         $filesToDelete[] = $this->image_dir . $this->getImgFolder() . 'index.php';
         // delete fileType
@@ -681,7 +688,7 @@ class ImageCore extends ObjectModel
         }
 
         if (!$this->existing_path) {
-            if (Configuration::get('PS_LEGACY_IMAGES') && file_exists(_PS_PROD_IMG_DIR_ . $this->id_product . '-' . $this->id . '.' . $this->image_format)) {
+            if (Configuration::get('PS_LEGACY_IMAGES') && file_exists(_PS_PRODUCT_IMG_DIR_ . $this->id_product . '-' . $this->id . '.' . $this->image_format)) {
                 $this->existing_path = $this->id_product . '-' . $this->id;
             } else {
                 $this->existing_path = $this->getImgPath();
@@ -694,7 +701,7 @@ class ImageCore extends ObjectModel
     /**
      * Returns the path to the folder containing the image in the new filesystem.
      *
-     * @return string path to folder
+     * @return string|bool path to folder
      */
     public function getImgFolder()
     {
@@ -720,16 +727,16 @@ class ImageCore extends ObjectModel
             return false;
         }
 
-        if (!file_exists(_PS_PROD_IMG_DIR_ . $this->getImgFolder())) {
+        if (!file_exists(_PS_PRODUCT_IMG_DIR_ . $this->getImgFolder())) {
             // Apparently sometimes mkdir cannot set the rights, and sometimes chmod can't. Trying both.
-            $success = @mkdir(_PS_PROD_IMG_DIR_ . $this->getImgFolder(), self::$access_rights, true);
-            $chmod = @chmod(_PS_PROD_IMG_DIR_ . $this->getImgFolder(), self::$access_rights);
+            $success = @mkdir(_PS_PRODUCT_IMG_DIR_ . $this->getImgFolder(), self::$access_rights, true);
+            $chmod = @chmod(_PS_PRODUCT_IMG_DIR_ . $this->getImgFolder(), self::$access_rights);
 
             // Create an index.php file in the new folder
             if (($success || $chmod)
-                && !file_exists(_PS_PROD_IMG_DIR_ . $this->getImgFolder() . 'index.php')
+                && !file_exists(_PS_PRODUCT_IMG_DIR_ . $this->getImgFolder() . 'index.php')
                 && file_exists($this->source_index)) {
-                return @copy($this->source_index, _PS_PROD_IMG_DIR_ . $this->getImgFolder() . 'index.php');
+                return @copy($this->source_index, _PS_PRODUCT_IMG_DIR_ . $this->getImgFolder() . 'index.php');
             }
         }
 
@@ -739,7 +746,7 @@ class ImageCore extends ObjectModel
     /**
      * Returns the path to the image without file extension.
      *
-     * @return string path
+     * @return string|bool path
      */
     public function getImgPath()
     {
@@ -747,9 +754,7 @@ class ImageCore extends ObjectModel
             return false;
         }
 
-        $path = $this->getImgFolder() . $this->id;
-
-        return $path;
+        return $this->getImgFolder() . $this->id;
     }
 
     /**
@@ -757,7 +762,7 @@ class ImageCore extends ObjectModel
      *
      * @param mixed $idImage
      *
-     * @return string path to folder
+     * @return string|bool path to folder
      */
     public static function getImgFolderStatic($idImage)
     {
@@ -783,7 +788,7 @@ class ImageCore extends ObjectModel
         $startTime = time();
         $image = null;
         $tmpFolder = 'duplicates/';
-        foreach (scandir(_PS_PROD_IMG_DIR_, SCANDIR_SORT_NONE) as $file) {
+        foreach (scandir(_PS_PRODUCT_IMG_DIR_, SCANDIR_SORT_NONE) as $file) {
             // matches the base product image or the thumbnails
             if (preg_match('/^([0-9]+\-)([0-9]+)(\-(.*))?\.jpg$/', $file, $matches)) {
                 // don't recreate an image object for each image type
@@ -799,19 +804,19 @@ class ImageCore extends ObjectModel
 
                     // if there's already a file at the new image path, move it to a dump folder
                     // most likely the preexisting image is a demo image not linked to a product and it's ok to replace it
-                    $newPath = _PS_PROD_IMG_DIR_ . $image->getImgPath() . (isset($matches[3]) ? $matches[3] : '') . '.jpg';
+                    $newPath = _PS_PRODUCT_IMG_DIR_ . $image->getImgPath() . (isset($matches[3]) ? $matches[3] : '') . '.jpg';
                     if (file_exists($newPath)) {
-                        if (!file_exists(_PS_PROD_IMG_DIR_ . $tmpFolder)) {
-                            @mkdir(_PS_PROD_IMG_DIR_ . $tmpFolder, self::$access_rights);
-                            @chmod(_PS_PROD_IMG_DIR_ . $tmpFolder, self::$access_rights);
+                        if (!file_exists(_PS_PRODUCT_IMG_DIR_ . $tmpFolder)) {
+                            @mkdir(_PS_PRODUCT_IMG_DIR_ . $tmpFolder, self::$access_rights);
+                            @chmod(_PS_PRODUCT_IMG_DIR_ . $tmpFolder, self::$access_rights);
                         }
-                        $tmpPath = _PS_PROD_IMG_DIR_ . $tmpFolder . basename($file);
+                        $tmpPath = _PS_PRODUCT_IMG_DIR_ . $tmpFolder . basename($file);
                         if (!@rename($newPath, $tmpPath) || !file_exists($tmpPath)) {
                             return false;
                         }
                     }
                     // move the image
-                    if (!@rename(_PS_PROD_IMG_DIR_ . $file, $newPath) || !file_exists($newPath)) {
+                    if (!@rename(_PS_PRODUCT_IMG_DIR_ . $file, $newPath) || !file_exists($newPath)) {
                         return false;
                     }
                 }
@@ -831,7 +836,7 @@ class ImageCore extends ObjectModel
      */
     public static function testFileSystem()
     {
-        $folder1 = _PS_PROD_IMG_DIR_ . 'testfilesystem/';
+        $folder1 = _PS_PRODUCT_IMG_DIR_ . 'testfilesystem/';
         $testFolder = $folder1 . 'testsubfolder/';
         // check if folders are already existing from previous failed test
         if (file_exists($testFolder)) {
@@ -860,7 +865,7 @@ class ImageCore extends ObjectModel
     /**
      * Returns the path where a product image should be created (without file format).
      *
-     * @return string path
+     * @return string|bool path
      */
     public function getPathForCreation()
     {
@@ -877,6 +882,6 @@ class ImageCore extends ObjectModel
             $this->createImgFolder();
         }
 
-        return _PS_PROD_IMG_DIR_ . $path;
+        return _PS_PRODUCT_IMG_DIR_ . $path;
     }
 }

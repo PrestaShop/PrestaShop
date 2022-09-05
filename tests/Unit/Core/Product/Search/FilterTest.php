@@ -29,20 +29,17 @@ namespace Tests\Unit\Core\Product\Search;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Product\Search\Filter;
 
-/**
- * @doc ./vendor/bin/phpunit -c tests/phpunit.xml --filter="FilterTest"
- */
 class FilterTest extends TestCase
 {
     /**
-     * @var Filter
+     * @var Filter|null
      */
     private $filter;
 
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->filter = new Filter();
     }
@@ -50,7 +47,7 @@ class FilterTest extends TestCase
     /**
      * {@inheritdoc}
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->filter = null;
     }
@@ -60,13 +57,13 @@ class FilterTest extends TestCase
         $this->assertInstanceOf(Filter::class, $this->filter);
 
         // Filter public integrity of data types.
-        $this->assertInternalType('string', $this->filter->getLabel());
-        $this->assertInternalType('string', $this->filter->getType());
-        $this->assertInternalType('bool', $this->filter->isDisplayed());
-        $this->assertInternalType('bool', $this->filter->isActive());
-        $this->assertInternalType('array', $this->filter->getNextEncodedFacets());
-        $this->assertInternalType('array', $this->filter->toArray());
-        $this->assertInternalType('integer', $this->filter->getMagnitude());
+        $this->assertIsString($this->filter->getLabel());
+        $this->assertIsString($this->filter->getType());
+        $this->assertIsBool($this->filter->isDisplayed());
+        $this->assertIsBool($this->filter->isActive());
+        $this->assertIsArray($this->filter->getNextEncodedFacets());
+        $this->assertIsArray($this->filter->toArray());
+        $this->assertIsInt($this->filter->getMagnitude());
 
         // Facet public integrity of default Facet data
         $this->assertEmpty($this->filter->getLabel());

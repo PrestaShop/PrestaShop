@@ -61,7 +61,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
         // If shop_address is null, then update it with current one.
         // But no DB save required here to avoid massive updates for bulk PDF generation case.
         // (DB: bug fixed in 1.6.1.1 with upgrade SQL script to avoid null shop_address in old orderInvoices)
-        if (!isset($this->order_invoice->shop_address) || !$this->order_invoice->shop_address) {
+        if (empty($this->order_invoice->shop_address)) {
             $this->order_invoice->shop_address = OrderInvoice::getCurrentFormattedShopAddress((int) $this->order->id_shop);
             if (!$bulk_mode) {
                 OrderInvoice::fixAllShopAddresses();
@@ -166,7 +166,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
 
         $delivery_address = null;
         $formatted_delivery_address = '';
-        if (isset($this->order->id_address_delivery) && $this->order->id_address_delivery) {
+        if (!empty($this->order->id_address_delivery)) {
             $delivery_address = new Address((int) $this->order->id_address_delivery);
             $formatted_delivery_address = AddressFormat::generateAddress($delivery_address, $deliveryAddressPatternRules, '<br />', ' ');
         }
@@ -219,7 +219,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             foreach ($order_details as &$order_detail) {
                 if ($order_detail['image'] != null) {
                     $name = 'product_mini_' . (int) $order_detail['product_id'] . (isset($order_detail['product_attribute_id']) ? '_' . (int) $order_detail['product_attribute_id'] : '') . '.jpg';
-                    $path = _PS_PROD_IMG_DIR_ . $order_detail['image']->getExistingImgPath() . '.jpg';
+                    $path = _PS_PRODUCT_IMG_DIR_ . $order_detail['image']->getExistingImgPath() . '.jpg';
 
                     $order_detail['image_tag'] = preg_replace(
                         '/\.*' . preg_quote(__PS_BASE_URI__, '/') . '/',
@@ -238,7 +238,7 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
             unset($order_detail); // don't overwrite the last order_detail later
         }
 
-        $cart_rules = $this->order->getCartRules($this->order_invoice->id);
+        $cart_rules = $this->order->getCartRules();
         $free_shipping = false;
         foreach ($cart_rules as $key => $cart_rule) {
             if ($cart_rule['free_shipping']) {
@@ -501,17 +501,10 @@ class HTMLTemplateInvoiceCore extends HTMLTemplate
     {
         $id_lang = Context::getContext()->language->id;
         $id_shop = (int) $this->order->id_shop;
-        $format = '%1$s%2$06d';
-
-        if (Configuration::get('PS_INVOICE_USE_YEAR')) {
-            $format = Configuration::get('PS_INVOICE_YEAR_POS') ? '%1$s%3$s-%2$06d' : '%1$s%2$06d-%3$s';
-        }
 
         return sprintf(
-            $format,
-            Configuration::get('PS_INVOICE_PREFIX', $id_lang, null, $id_shop),
-            $this->order_invoice->number,
-            date('Y', strtotime($this->order_invoice->date_add))
-        ) . '.pdf';
+            '%s.pdf',
+            $this->order_invoice->getInvoiceNumberFormatted($id_lang, $id_shop)
+        );
     }
 }

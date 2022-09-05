@@ -4,7 +4,11 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const basicHelper = require('@utils/basicHelper');
+const testContext = require('@utils/testContext');
+
+// Import login steps
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import data
 const EmployeeFaker = require('@data/faker/employee');
@@ -13,9 +17,6 @@ const EmployeeFaker = require('@data/faker/employee');
 const dashboardPage = require('@pages/BO/dashboard/index');
 const employeesPage = require('@pages/BO/advancedParameters/team/index');
 const addEmployeePage = require('@pages/BO/advancedParameters/team/add');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_advancedParams_team_employees_sortAndPagination';
 
@@ -31,7 +32,7 @@ Sort employee list
 Pagination
 Delete created employees
  */
-describe('Sort and pagination employees', async () => {
+describe('BO - Advanced Parameters - Team : Sort and pagination employees', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -46,7 +47,7 @@ describe('Sort and pagination employees', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to "Advanced parameters > Team" page', async function () {
+  it('should go to \'Advanced parameters > Team\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAdvancedParamsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -68,12 +69,12 @@ describe('Sort and pagination employees', async () => {
     await expect(numberOfEmployees).to.be.above(0);
   });
 
-  // 1 : Create 20 employees
+  // 1 : Create 10 employees
   const tests = new Array(10).fill(0, 0, 10);
+  describe('Create 10 employees in BO', async () => {
+    tests.forEach((test, index) => {
+      const employeeToCreate = new EmployeeFaker({email: `${employeeData.email}${index}`});
 
-  tests.forEach((test, index) => {
-    const employeeToCreate = new EmployeeFaker({email: `${employeeData.email}${index}`});
-    describe(`Create employee n°${index + 1} in BO`, async () => {
       it('should go to add new employee page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewEmployeePage${index + 1}`, baseContext);
 
@@ -83,7 +84,7 @@ describe('Sort and pagination employees', async () => {
         await expect(pageTitle).to.contains(addEmployeePage.pageTitleCreate);
       });
 
-      it('should create employee', async function () {
+      it(`should create employee n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `createEmployee${index + 1}`, baseContext);
 
         const textResult = await addEmployeePage.createEditEmployee(page, employeeToCreate);
@@ -133,7 +134,7 @@ describe('Sort and pagination employees', async () => {
           sortedTable = await sortedTable.map(text => parseFloat(text));
         }
 
-        const expectedResult = await employeesPage.sortArray(nonSortedTable, test.args.isFloat);
+        const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
 
         if (test.args.sortDirection === 'asc') {
           await expect(sortedTable).to.deep.equal(expectedResult);
@@ -146,7 +147,7 @@ describe('Sort and pagination employees', async () => {
 
   // 3 : Test pagination
   describe('Pagination next and previous', async () => {
-    it('should change the item number to 10 per page', async function () {
+    it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
       const paginationNumber = await employeesPage.selectPaginationLimit(page, '10');
@@ -167,7 +168,7 @@ describe('Sort and pagination employees', async () => {
       expect(paginationNumber).to.contain('(page 1 / 2)');
     });
 
-    it('should change the item number to 50 per page', async function () {
+    it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
       const paginationNumber = await employeesPage.selectPaginationLimit(page, '50');
@@ -180,18 +181,13 @@ describe('Sort and pagination employees', async () => {
     it('should filter list by email', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterForUpdate', baseContext);
 
-      await employeesPage.filterEmployees(
-        page,
-        'input',
-        'email',
-        employeeData.email,
-      );
+      await employeesPage.filterEmployees(page, 'input', 'email', employeeData.email);
 
       const textEmail = await employeesPage.getTextColumnFromTable(page, 1, 'email');
       await expect(textEmail).to.contains(employeeData.email);
     });
 
-    it('should delete employees with Bulk Actions and check Result', async function () {
+    it('should delete employees with Bulk Actions and check result', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteEmployee', baseContext);
 
       const deleteTextResult = await employeesPage.deleteBulkActions(page);

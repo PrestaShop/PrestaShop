@@ -135,7 +135,7 @@ class OrderForViewingTest extends TestCase
 
     public function testConstructWithShippingAddressFormatted(): void
     {
-        $mockCreatedAt = $this->createMock(DateTimeImmutable::class);
+        $createdAt = new DateTimeImmutable();
         $mockCustomer = $this->createMock(OrderCustomerForViewing::class);
         $mockShippingAddress = $this->createMock(OrderShippingAddressForViewing::class);
         $mockInvoiceAddress = $this->createMock(OrderInvoiceAddressForViewing::class);
@@ -167,7 +167,7 @@ class OrderForViewingTest extends TestCase
             true,
             true,
             true,
-            $mockCreatedAt,
+            $createdAt,
             $mockCustomer,
             $mockShippingAddress,
             $mockInvoiceAddress,
@@ -200,7 +200,7 @@ class OrderForViewingTest extends TestCase
         self::assertSame(true, $instance->isDelivered());
         self::assertSame(true, $instance->isShipped());
         self::assertSame(true, $instance->isInvoiceManagementIsEnabled());
-        self::assertSame($mockCreatedAt, $instance->getCreatedAt());
+        self::assertSame($createdAt, $instance->getCreatedAt());
         self::assertSame($mockCustomer, $instance->getCustomer());
         self::assertSame($mockShippingAddress, $instance->getShippingAddress());
         self::assertSame($mockInvoiceAddress, $instance->getInvoiceAddress());
@@ -221,7 +221,7 @@ class OrderForViewingTest extends TestCase
 
     public function testConstructWithInvoiceAddressFormatted(): void
     {
-        $mockCreatedAt = $this->createMock(DateTimeImmutable::class);
+        $createdAt = new DateTimeImmutable();
         $mockCustomer = $this->createMock(OrderCustomerForViewing::class);
         $mockShippingAddress = $this->createMock(OrderShippingAddressForViewing::class);
         $mockInvoiceAddress = $this->createMock(OrderInvoiceAddressForViewing::class);
@@ -253,7 +253,7 @@ class OrderForViewingTest extends TestCase
             true,
             true,
             true,
-            $mockCreatedAt,
+            $createdAt,
             $mockCustomer,
             $mockShippingAddress,
             $mockInvoiceAddress,
@@ -287,7 +287,7 @@ class OrderForViewingTest extends TestCase
         self::assertSame(true, $instance->isDelivered());
         self::assertSame(true, $instance->isShipped());
         self::assertSame(true, $instance->isInvoiceManagementIsEnabled());
-        self::assertSame($mockCreatedAt, $instance->getCreatedAt());
+        self::assertSame($createdAt, $instance->getCreatedAt());
         self::assertSame($mockCustomer, $instance->getCustomer());
         self::assertSame($mockShippingAddress, $instance->getShippingAddress());
         self::assertSame($mockInvoiceAddress, $instance->getInvoiceAddress());

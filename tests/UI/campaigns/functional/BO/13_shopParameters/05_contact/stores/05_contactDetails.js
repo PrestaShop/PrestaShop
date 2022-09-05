@@ -1,10 +1,13 @@
 require('module-alias/register');
 
-// Helpers to open and close browser
-const helper = require('@utils/helpers');
+const {expect} = require('chai');
 
-// Common tests login BO
-const loginCommon = require('@commonTests/loginBO');
+// Import utils
+const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -16,13 +19,7 @@ const foHomePage = require('@pages/FO/home');
 const StoreFaker = require('@data/faker/store');
 const {stores} = require('@data/demo/stores');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_shopParameters_contact_store_contactDetails';
-
-// Import expect from chai
-const {expect} = require('chai');
 
 // Browser and tab
 let browserContext;
@@ -30,7 +27,7 @@ let page;
 
 const storesContactToCreate = new StoreFaker();
 
-describe('Configure contact details', async () => {
+describe('BO - Shop Parameters - Contact : Configure contact details', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -45,7 +42,7 @@ describe('Configure contact details', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to contact page', async function () {
+  it('should go to \'Shop Parameters > Contact\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToContactPage', baseContext);
 
     await dashboardPage.goToSubMenu(

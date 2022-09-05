@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Exception\ProductStockConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Class UpdateProductStockInformationCommand update a given product stock
@@ -53,7 +54,7 @@ class UpdateProductStockInformationCommand
     /**
      * @var int|null
      */
-    private $quantity;
+    private $deltaQuantity;
 
     /**
      * @var OutOfStockType|null
@@ -96,11 +97,20 @@ class UpdateProductStockInformationCommand
     private $availableDate;
 
     /**
-     * @param int $productId
+     * @var ShopConstraint
      */
-    public function __construct(int $productId)
-    {
+    private $shopConstraint;
+
+    /**
+     * @param int $productId
+     * @param ShopConstraint $shopConstraint
+     */
+    public function __construct(
+        int $productId,
+        ShopConstraint $shopConstraint
+    ) {
         $this->productId = new ProductId($productId);
+        $this->shopConstraint = $shopConstraint;
     }
 
     /**
@@ -109,6 +119,14 @@ class UpdateProductStockInformationCommand
     public function getProductId(): ProductId
     {
         return $this->productId;
+    }
+
+    /**
+     * @return ShopConstraint
+     */
+    public function getShopConstraint(): ShopConstraint
+    {
+        return $this->shopConstraint;
     }
 
     /**
@@ -136,19 +154,19 @@ class UpdateProductStockInformationCommand
     /**
      * @return int|null
      */
-    public function getQuantity(): ?int
+    public function getDeltaQuantity(): ?int
     {
-        return $this->quantity;
+        return $this->deltaQuantity;
     }
 
     /**
-     * @param int $quantity
+     * @param int $deltaQuantity
      *
      * @return UpdateProductStockInformationCommand
      */
-    public function setQuantity(int $quantity): UpdateProductStockInformationCommand
+    public function setDeltaQuantity(int $deltaQuantity): UpdateProductStockInformationCommand
     {
-        $this->quantity = $quantity;
+        $this->deltaQuantity = $deltaQuantity;
 
         return $this;
     }

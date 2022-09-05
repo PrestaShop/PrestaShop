@@ -96,7 +96,7 @@ table.grid-ordering-column tr.position-row-while-drag {
 }
 
 table .thead-default .column-headers th:last-child .grid-actions-header-text {
-  float: right;
+  text-align: right;
 
   span {
     padding-right: 14px;
@@ -104,13 +104,14 @@ table .thead-default .column-headers th:last-child .grid-actions-header-text {
 }
 
 table .column-filters {
-  th .btn {
+  th .btn,
+  td .btn {
     white-space: nowrap;
   }
 
   td:last-child .grid-search-button,
   td:last-child .grid-reset-button {
-    float: right;
+    margin-left: auto;
     white-space: nowrap;
   }
 }
@@ -120,12 +121,6 @@ table .column-filters {
     thead {
       tr {
         td {
-          .min-field,
-          .max-field {
-            display: inline-block;
-            width: 60px;
-          }
-
           .md-checkbox {
             &:not(:last-child) {
               display: inline-block;
@@ -161,7 +156,7 @@ table .column-filters {
         // styling for row that is being dragged
         &.dragging-row {
           cursor: move;
-          background: #fafbfc;
+          background: $gray-250;
 
           td {
             color: $white;
@@ -276,6 +271,13 @@ table .column-filters {
             }
           }
 
+          &.image-type {
+            img {
+              max-width: 3rem;
+              height: auto;
+            }
+          }
+
           &.date_time-type {
             word-break: normal;
           }
@@ -302,6 +304,26 @@ table {
         input,
         select {
           min-width: 6rem;
+        }
+      }
+
+      td[data-column-id^="id_"] {
+        max-width: 8rem;
+
+        input {
+          max-width: 6rem;
+        }
+      }
+
+      td[data-column-id^="price_tax_excluded"] {
+        input {
+          max-width: 6rem;
+        }
+      }
+
+      td[data-column-id^="quantity"] {
+        input {
+          max-width: 6rem;
         }
       }
     }

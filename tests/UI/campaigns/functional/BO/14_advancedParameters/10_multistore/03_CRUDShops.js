@@ -4,7 +4,10 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const testContext = require('@utils/testContext');
+
+// Import login steps
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -18,9 +21,6 @@ const shopURLPage = require('@pages/BO/advancedParameters/multistore/url/index')
 // Import data
 const ShopFaker = require('@data/faker/shop');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_modules_advancedParameters_multistore_CRUDShops';
 
 let browserContext;
@@ -31,7 +31,7 @@ const updateShopData = new ShopFaker({shopGroup: 'Default', categoryRoot: 'Home'
 let shopID = 0;
 
 // Create, Read, Update and Delete shop in BO
-describe('Create, Read, Update and Delete shop in BO', async () => {
+describe('BO - Advanced Parameters - Multistore : Create, Read, Update and Delete shop in BO', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -47,8 +47,8 @@ describe('Create, Read, Update and Delete shop in BO', async () => {
   });
 
   // 1 : Enable multi store
-  describe('Enable multistore', async () => {
-    it('should go to "Shop parameters > General" page', async function () {
+  describe('Enable \'Multistore\'', async () => {
+    it('should go to \'Shop parameters > General\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToGeneralPage', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -63,7 +63,7 @@ describe('Create, Read, Update and Delete shop in BO', async () => {
       await expect(pageTitle).to.contains(generalPage.pageTitle);
     });
 
-    it('should enable "Multi store"', async function () {
+    it('should enable \'Multistore\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableMultiStore', baseContext);
 
       const result = await generalPage.setMultiStoreStatus(page, true);
@@ -73,7 +73,7 @@ describe('Create, Read, Update and Delete shop in BO', async () => {
 
   // 2 : Create shop
   describe('Create shop', async () => {
-    it('should go to "Advanced parameters > Multi store" page', async function () {
+    it('should go to \'Advanced Parameters > Multistore\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMultiStorePage', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -185,8 +185,8 @@ describe('Create, Read, Update and Delete shop in BO', async () => {
   });
 
   // 5 : Disable multi store
-  describe('Disable multistore', async () => {
-    it('should go to "Shop parameters > General" page', async function () {
+  describe('Disable \'Multistore\'', async () => {
+    it('should go to \'Shop parameters > General\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToGeneralPage2', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -201,7 +201,7 @@ describe('Create, Read, Update and Delete shop in BO', async () => {
       await expect(pageTitle).to.contains(generalPage.pageTitle);
     });
 
-    it('should disable "Multi store"', async function () {
+    it('should disable \'Multistore\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableMultiStore', baseContext);
 
       const result = await generalPage.setMultiStoreStatus(page, false);

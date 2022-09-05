@@ -22,13 +22,14 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
-{% set url, priceRaw, priceDisplay, url_active, urls, name, transDomains =
+{% set url, priceRaw, priceDisplay, url_active, urls, name, transLabels, transDomains =
   module.attributes.url,
   module.attributes.price.raw,
   module.attributes.price.displayPrice,
   module.attributes.url_active,
   module.attributes.urls,
   module.attributes.name,
+  module.attributes.actionTranslationLabels,
   module.attributes.actionTranslationDomains
 %}
  <div class="btn-group module-actions">
@@ -43,14 +44,15 @@
         'classes' : 'btn btn-primary-reverse btn-outline-primary',
         'url': urls[url_active],
         'action': url_active,
+        'transLabels': transLabels,
         'transDomain': transDomains}
     %}
     {% if (urls|length > 1) %}
-        <input type="hidden" class="btn" /> 
-        <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 
-          <span class="caret"></span> 
+        <input type="hidden" class="btn" />
+        <button type="button" class="btn btn-outline-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <span class="caret"></span>
         </button>
-        <span class="sr-only">{{ 'Toggle Dropdown'|trans({}, 'Admin.Modules.Feature') }}</span> 
+        <span class="sr-only">{{ 'Toggle dropdown'|trans({}, 'Admin.Modules.Feature') }}</span>
         <div class="dropdown-menu">
           {% for module_action, module_url in urls %}
             {% if module_action != url_active %}
@@ -60,6 +62,7 @@
                       'classes' : 'dropdown-item',
                       'url': module_url,
                       'action': module_action,
+                      'transLabels': transLabels,
                       'transDomain': transDomains}
                   %}
                 </li>

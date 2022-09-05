@@ -30,14 +30,14 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
 use Currency;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use PrestaShopBundle\Form\Admin\Type\UnavailableType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\PositiveOrZero;
+use Symfony\Component\Validator\Constraints\Type;
 
 /**
  * Form type containing price fields for Pricing tab
@@ -45,46 +45,17 @@ use Symfony\Component\Translation\TranslatorInterface;
 class PricingType extends TranslatorAwareType
 {
     /**
-     * @var array
-     */
-    private $taxRuleGroupChoices;
-
-    /**
-     * @var array
-     */
-    private $taxRuleGroupChoicesAttributes;
-
-    /**
      * @var Currency
      */
     private $defaultCurrency;
 
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
-     * @param TranslatorInterface $translator
-     * @param array $locales
-     * @param array $taxRuleGroupChoices
-     * @param array $taxRuleGroupChoicesAttributes
-     * @param Currency $defaultCurrency
-     * @param RouterInterface $router
-     */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        array $taxRuleGroupChoices,
-        array $taxRuleGroupChoicesAttributes,
-        Currency $defaultCurrency,
-        RouterInterface $router
+        Currency $defaultCurrency
     ) {
         parent::__construct($translator, $locales);
-        $this->taxRuleGroupChoices = $taxRuleGroupChoices;
-        $this->taxRuleGroupChoicesAttributes = $taxRuleGroupChoicesAttributes;
         $this->defaultCurrency = $defaultCurrency;
-        $this->router = $router;
     }
 
     /**
@@ -95,48 +66,39 @@ class PricingType extends TranslatorAwareType
     {
         $builder
             ->add('retail_price', RetailPriceType::class)
-            ->add('tax_rules_group_id', ChoiceType::class, [
-                'choices' => $this->taxRuleGroupChoices,
+            ->add('wholesale_price', MoneyType::class, [
                 'required' => false,
-                // placeholder false is important to avoid empty option in select input despite required being false
-                'placeholder' => false,
-                'choice_attr' => $this->taxRuleGroupChoicesAttributes,
-                'attr' => [
-                    'data-toggle' => 'select2',
-                    'data-minimumResultsForSearch' => '7',
-                ],
-                'label' => $this->trans('Tax rule', 'Admin.Catalog.Feature'),
-                'external_link' => [
-                    'text' => $this->trans('[1]Manage tax rules[/1]', 'Admin.Catalog.Feature'),
-                    'href' => $this->router->generate('admin_taxes_index'),
-                    'align' => 'right',
+                'label' => $this->trans('Cost price', 'Admin.Catalog.Feature'),
+                'label_tag_name' => 'h3',
+                'label_subtitle' => $this->trans('Cost price (tax excl.)', 'Admin.Catalog.Feature'),
+                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
+                'currency' => $this->defaultCurrency->iso_code,
+                'modify_all_shops' => true,
+                'constraints' => [
+                    new NotBlank(),
+                    new Type(['type' => 'float']),
+                    new PositiveOrZero(),
                 ],
             ])
             ->add('unit_price', UnitPriceType::class)
+            ->add('summary', PriceSummaryType::class)
             ->add('on_sale', CheckboxType::class, [
                 'required' => false,
                 'label' => $this->trans(
                     'Display the "On sale!" flag on the product page, and on product listings.',
                     'Admin.Catalog.Feature'
                 ),
+                'modify_all_shops' => true,
             ])
-            ->add('wholesale_price', MoneyType::class, [
-                'required' => false,
-                'label' => $this->trans('Cost price (tax excl.)', 'Admin.Catalog.Feature'),
-                'label_tag_name' => 'h2',
-                'label_help_box' => $this->trans('The cost price is the price you paid for the product. Do not include the tax. It should be lower than the retail price: the difference between the two will be your margin.', 'Admin.Catalog.Help'),
-                'attr' => ['data-display-price-precision' => self::PRESTASHOP_DECIMALS],
-                'currency' => $this->defaultCurrency->iso_code,
-            ])
-            ->add('specific_prices', UnavailableType::class, [
+            ->add('specific_prices', SpecificPricesType::class, [
                 'label' => $this->trans('Specific prices', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
-                'label_help_box' => $this->trans('You can set specific prices for customers belonging to different groups, different countries, etc.', 'Admin.Catalog.Help'),
+                'label_help_box' => $this->trans('Set specific prices for customers meeting certain conditions.', 'Admin.Catalog.Help'),
             ])
-            ->add('priority_management', UnavailableType::class, [
+            ->add('priority_management', ProductSpecificPricePriorityType::class, [
                 'label' => $this->trans('Priority management', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
-                'label_help_box' => $this->trans('Sometimes one customer can fit into multiple price rules. Priorities allow you to define which rules apply first.', 'Admin.Catalog.Help'),
+                'label_help_box' => $this->trans('Define which condition should apply first when a customer is eligible for multiple specific prices.', 'Admin.Catalog.Help'),
             ])
         ;
     }
@@ -148,7 +110,7 @@ class PricingType extends TranslatorAwareType
     {
         parent::configureOptions($resolver);
         $resolver->setDefaults([
-            'label' => false,
+            'label' => $this->trans('Pricing', 'Admin.Catalog.Feature'),
             'required' => false,
         ]);
     }

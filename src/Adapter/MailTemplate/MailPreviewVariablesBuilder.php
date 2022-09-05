@@ -150,8 +150,8 @@ final class MailPreviewVariablesBuilder
     /**
      * @param string $id
      * @param array $parameters
-     * @param null $domain
-     * @param null $local
+     * @param string|null $domain
+     * @param string|null $local
      *
      * @return string
      */
@@ -227,11 +227,11 @@ final class MailPreviewVariablesBuilder
                 'firstname' => '<span style="font-weight:bold;">%s</span>',
                 'lastname' => '<span style="font-weight:bold;">%s</span>',
             ]),
-            '{date}' => Tools::displayDate($order->date_add, null, 1),
+            '{date}' => Tools::displayDate($order->date_add, true),
             '{order_name}' => $order->getUniqReference(),
             '{id_order}' => $order->id,
             '{payment}' => Tools::substr($order->payment, 0, 255),
-            '{total_products}' => count($order->getProducts()),
+            '{total_products}' => $this->locale->formatPrice($order->total_products_wt, $this->context->currency->iso_code),
             '{total_discounts}' => $this->locale->formatPrice($order->total_discounts, $this->context->currency->iso_code),
             '{total_wrapping}' => $this->locale->formatPrice($order->total_wrapping, $this->context->currency->iso_code),
             '{total_shipping}' => $this->locale->formatPrice($order->total_shipping, $this->context->currency->iso_code),
@@ -270,7 +270,10 @@ final class MailPreviewVariablesBuilder
                     }
 
                     if (isset($customization['datas'][Product::CUSTOMIZE_FILE])) {
-                        $customizationText .= count($customization['datas'][Product::CUSTOMIZE_FILE]) . ' ' . $this->trans('image(s)', [], 'Modules.Mailalerts.Admin') . '<br />';
+                        $customizationText .= count($customization['datas'][Product::CUSTOMIZE_FILE])
+                            . ' '
+                            . $this->trans('image(s)', [], 'Modules.Mailalerts.Admin')
+                            . '<br />';
                     }
 
                     $customizationText .= '---<br />';

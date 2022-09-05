@@ -4,7 +4,7 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -19,7 +19,7 @@ let browserContext;
 let page;
 
 // Check that help card is in english in sql manager page
-describe('Sql manager help card', async () => {
+describe('BO - Advanced Parameters - Database : Help card in SQL Manager page', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -34,7 +34,7 @@ describe('Sql manager help card', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to database > sql manager page', async function () {
+  it('should go to \'Advanced Parameters > Database\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSqlManagerPage', baseContext);
 
     await dashboardPage.goToSubMenu(

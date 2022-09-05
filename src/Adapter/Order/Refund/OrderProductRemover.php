@@ -38,37 +38,14 @@ use PrestaShop\PrestaShop\Adapter\Cart\Comparator\CartProductsComparator;
 use PrestaShop\PrestaShop\Adapter\Cart\Comparator\CartProductUpdate;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DeleteCustomizedProductFromOrderException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\DeleteProductFromOrderException;
-use Psr\Log\LoggerInterface;
 use SpecificPrice;
-use Symfony\Component\Translation\TranslatorInterface;
 
 class OrderProductRemover
 {
     /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
      * @var CartProductsComparator
      */
     private $cartProductComparator;
-
-    /**
-     * OrderProductRemover constructor.
-     *
-     * @param LoggerInterface $logger
-     */
-    public function __construct(LoggerInterface $logger, TranslatorInterface $translator)
-    {
-        $this->logger = $logger;
-        $this->translator = $translator;
-    }
 
     /**
      * @param Order $order

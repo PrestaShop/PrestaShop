@@ -49,6 +49,6 @@
 		{/if}
     <script type="text/javascript" src="../js/admin/login.js?v={$smarty.const._PS_VERSION_|escape:'html':'UTF-8'}"></script>
 	</head>
-	<body class="ps_back-office bootstrap">
+	<body class="lang-{$iso_user}{if $lang_is_rtl} lang-rtl{/if} ps_back-office bootstrap">
 		<div id="login">
 			<div id="content">

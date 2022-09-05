@@ -40,24 +40,6 @@ class DbPDOCore extends Db
     /**
      * Returns a new PDO object (database link).
      *
-     * @deprecated use getPDO
-     *
-     * @param string $host
-     * @param string $user
-     * @param string $password
-     * @param string $dbname
-     * @param int $timeout
-     *
-     * @return PDO
-     */
-    protected static function _getPDO($host, $user, $password, $dbname, $timeout = 5)
-    {
-        return static::getPDO($host, $user, $host, $dbname, $timeout);
-    }
-
-    /**
-     * Returns a new PDO object (database link).
-     *
      * @param string $host
      * @param string $user
      * @param string $password
@@ -107,7 +89,7 @@ class DbPDOCore extends Db
     public static function createDatabase($host, $user, $password, $dbname, $dropit = false)
     {
         try {
-            $link = DbPDO::getPDO($host, $user, $password, false);
+            $link = DbPDO::getPDO($host, $user, $password, '');
             $success = $link->exec('CREATE DATABASE `' . str_replace('`', '\\`', $dbname) . '`');
             if ($dropit && ($link->exec('DROP DATABASE `' . str_replace('`', '\\`', $dbname) . '`') !== false)) {
                 return true;
@@ -162,7 +144,11 @@ class DbPDOCore extends Db
      */
     protected function _query($sql)
     {
-        return $this->link->query($sql);
+        try {
+            return $this->link->query($sql);
+        } catch (\PDOException $exception) {
+            throw new PrestaShopException($exception->getMessage(), (int) $exception->getCode(), $exception);
+        }
     }
 
     /**
@@ -294,12 +280,16 @@ class DbPDOCore extends Db
      *
      * @see DbCore::_escape()
      *
-     * @param string $str
+     * @param string|null $str
      *
      * @return string
      */
     public function _escape($str)
     {
+        if (null === $str) {
+            return '';
+        }
+
         $search = ['\\', "\0", "\n", "\r", "\x1a", "'", '"'];
         $replace = ['\\\\', '\\0', '\\n', '\\r', "\Z", "\'", '\"'];
 
@@ -410,29 +400,28 @@ class DbPDOCore extends Db
             return false;
         }
 
-        if ($engine === null) {
-            $engine = 'MyISAM';
+        $enginesToTest = ['InnoDB', 'MyISAM'];
+        if ($engine !== null) {
+            $enginesToTest = [$engine];
         }
 
-        // Create a table
-        $link->query('
-		CREATE TABLE `' . $prefix . 'test` (
-			`test` tinyint(1) unsigned NOT NULL
-		) ENGINE=' . $engine);
+        foreach ($enginesToTest as $engineToTest) {
+            $link->query('CREATE TABLE `' . $prefix . 'test` (
+                `test` tinyint(1) unsigned NOT NULL
+            ) ENGINE=' . $engineToTest);
 
-        // Select content
-        $result = $link->query('SELECT * FROM `' . $prefix . 'test`');
+            $result = $link->query('SELECT * FROM `' . $prefix . 'test`');
 
-        // Drop the table
-        $link->query('DROP TABLE `' . $prefix . 'test`');
+            $link->query('DROP TABLE `' . $prefix . 'test`');
 
-        if (!$result) {
-            $error = $link->errorInfo();
-
-            return $error[2];
+            if ($result) {
+                return true;
+            }
         }
 
-        return true;
+        $error = $link->errorInfo();
+
+        return $error[2];
     }
 
     /**
@@ -514,7 +503,7 @@ class DbPDOCore extends Db
     public static function tryUTF8($server, $user, $pwd)
     {
         try {
-            $link = DbPDO::getPDO($server, $user, $pwd, false, 5);
+            $link = DbPDO::getPDO($server, $user, $pwd, '', 5);
         } catch (PDOException $e) {
             return false;
         }

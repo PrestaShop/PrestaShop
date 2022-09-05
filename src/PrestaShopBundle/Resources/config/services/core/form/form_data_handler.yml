@@ -28,8 +28,7 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CurrencyFormDataHandler'
     arguments:
       - '@prestashop.core.command_bus'
-      -
-        - '@prestashop.adapter.cache.clearer.symfony_cache_clearer'
+      - - '@prestashop.adapter.cache.clearer.symfony_cache_clearer'
         - '@prestashop.adapter.cache.clearer.smarty_cache_clearer'
 
   prestashop.core.form.identifiable_object.data_handler.webservice_key_form_data_handler:
@@ -85,6 +84,9 @@ services:
       - '@prestashop.adapter.employee.data_provider'
       - '@prestashop.core.crypto.hashing'
       - '@prestashop.adapter.image.uploader.employee_image_uploader'
+      - '@=service("prestashop.adapter.legacy.configuration").getInt(constant("PrestaShop\\PrestaShop\\Core\\Security\\PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH"))'
+      - '@=service("prestashop.adapter.legacy.configuration").getInt(constant("PrestaShop\\PrestaShop\\Core\\Security\\PasswordPolicyConfiguration::CONFIGURATION_MAXIMUM_LENGTH"))'
+      - '@=service("prestashop.adapter.legacy.configuration").getInt(constant("PrestaShop\\PrestaShop\\Core\\Security\\PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_SCORE"))'
 
   prestashop.core.form.identifiable_object.data_handler.profile_form_data_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ProfileFormDataHandler'
@@ -166,7 +168,6 @@ services:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CancellationFormDataHandler'
     arguments:
       - '@prestashop.core.command_bus'
-      - '@prestashop.core.query_bus'
 
   prestashop.core.form.identifiable_object.data_handler.order_state_form_data_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\OrderStateFormDataHandler'
@@ -178,29 +179,56 @@ services:
     arguments:
       - '@prestashop.core.command_bus'
 
+  prestashop.core.form.identifiable_object.data_handler.cart_summary_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CartSummaryFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+      - '@=service("prestashop.adapter.legacy.context").getContext().employee.id'
+
   prestashop.core.form.identifiable_object.data_handler.product_form_data_handler:
-      class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ProductFormDataHandler'
-      arguments:
-          - '@prestashop.core.command_bus'
-          - '@prestashop.core.form.command_builder.product_commands_builder'
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ProductFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+      - '@prestashop.core.form.command_builder.product_commands_builder'
+      - '@=service("prestashop.adapter.legacy.configuration").getInt("PS_SHOP_DEFAULT")'
+      - "@=service('prestashop.adapter.shop.context').getContextShopID()"
 
   prestashop.core.form.identifiable_object.data_handler.combination_form_data_handler:
-      class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CombinationFormDataHandler'
-      arguments:
-          - '@prestashop.core.command_bus'
-          - '@prestashop.core.form.command_builder.combination.combination_commands_builder'
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CombinationFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+      - '@prestashop.core.form.command_builder.combination.combination_commands_builder'
 
-  prestashop.core.form.identifiable_object.data_handler.combination_item_form_data_handler:
-      class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CombinationItemFormDataHandler'
-      arguments:
-          - '@prestashop.core.command_bus'
+  prestashop.core.form.identifiable_object.data_handler.bulk_combination_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\BulkCombinationFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+      - '@prestashop.core.form.data_formatter.bulk_combination_form_data_formatter'
+      - '@prestashop.core.form.command_builder.combination.combination_commands_builder'
+
+  prestashop.core.form.identifiable_object.data_handler.combination_list_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\CombinationListFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+      - '@prestashop.core.form.data_formatter.combination_list_form_data_formatter'
+      - '@prestashop.core.form.command_builder.combination.combination_commands_builder'
 
   prestashop.core.form.identifiable_object.data_handler.product_image_form_data_handler:
-      class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ProductImageFormDataHandler'
-      arguments:
-          - '@prestashop.core.command_bus'
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ProductImageFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
 
   prestashop.core.form.identifiable_object.data_handler.zone_form_data_handler:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\ZoneFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+
+  prestashop.core.form.identifiable_object.data_handler.search_engine_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\SearchEngineFormDataHandler'
+    arguments:
+      - '@prestashop.core.command_bus'
+
+  prestashop.core.form.identifiable_object.data_handler.specific_price_form_data_handler:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataHandler\SpecificPriceFormDataHandler'
     arguments:
       - '@prestashop.core.command_bus'

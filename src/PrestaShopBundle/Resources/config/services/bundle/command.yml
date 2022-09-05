@@ -1,0 +1,61 @@
+services:
+  _defaults:
+    public: true
+
+  PrestaShopBundle\Command\UpdateSchemaCommand:
+    arguments:
+      - '%database_name%'
+      - '%database_prefix%'
+      - '@doctrine.orm.default_entity_manager'
+    tags:
+      - 'console.command'
+
+  PrestaShopBundle\Command\ExportThemeCommand:
+    arguments:
+      - '@prestashop.core.addon.theme.repository'
+      - '@prestashop.core.addon.theme.exporter'
+      - '@translator'
+    tags:
+      - 'console.command'
+
+  PrestaShopBundle\Command\GenerateMailTemplatesCommand:
+    arguments:
+      - '@prestashop.core.command_bus'
+      - '@prestashop.adapter.legacy.context'
+    tags:
+      - 'console.command'
+
+  PrestaShopBundle\Command\ThemeEnablerCommand:
+    arguments:
+      - '@prestashop.core.addon.theme.theme_manager'
+    tags:
+      - 'console.command'
+
+  PrestaShopBundle\Command\UpdateEUTaxruleGroupsCommand:
+    arguments:
+      - '%kernel.root_dir%/../localization'
+    tags:
+      - 'console.command'
+
+  PrestaShopBundle\Command\ModuleCommand:
+    arguments:
+      - '@translator'
+      - '@prestashop.adapter.legacy.context'
+      - '@prestashop.adapter.module.self_configurator'
+      - '@prestashop.module.manager'
+    tags:
+      - 'console.command'
+
+  PrestaShopBundle\Command\DebugCommand:
+    arguments:
+      - '@prestashop.core.command_bus'
+      - '@prestashop.adapter.debug_mode'
+    tags:
+      - 'console.command'
+
+  PrestaShopBundle\Command\ConfigCommand:
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - '@prestashop.adapter.data_provider.language'
+    tags:
+      - 'console.command'

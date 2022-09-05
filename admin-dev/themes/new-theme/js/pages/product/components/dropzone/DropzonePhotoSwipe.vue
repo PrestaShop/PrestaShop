@@ -94,7 +94,7 @@
           class="pswp__button pswp__button--arrow--left"
           :title="$t('window.previousPhotoSwipe')"
         >
-          <i class="material-icons">arrow_back</i>
+          <i class="material-icons rtl-flip">arrow_back</i>
         </button>
 
         <button
@@ -102,7 +102,7 @@
           class="pswp__button pswp__button--arrow--right"
           :title="$t('window.nextPhotoSwipe')"
         >
-          <i class="material-icons">arrow_forward</i>
+          <i class="material-icons rtl-flip">arrow_forward</i>
         </button>
 
         <div class="pswp__caption">
@@ -113,16 +113,17 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
   import PhotoSwipe from 'photoswipe';
   import PhotoSwipeUIDefault from 'photoswipe/dist/photoswipe-ui-default';
   import ProductMap from '@pages/product/product-map';
   import ProductEventMap from '@pages/product/product-event-map';
+  import Vue from 'vue';
 
   const PhotoSwipeMap = ProductMap.dropzone.photoswipe;
   const PhotoSwipeEventMap = ProductEventMap.dropzone.photoswipe;
 
-  export default {
+  export default Vue.extend({
     name: 'DropzonePhotoSwipe',
     props: {
       files: {
@@ -131,7 +132,7 @@
       },
     },
     mounted() {
-      const pswpElement = document.querySelector(PhotoSwipeMap.element);
+      const pswpElement = <HTMLElement> document.querySelector(PhotoSwipeMap.element);
 
       if (pswpElement) {
         const options = {
@@ -148,18 +149,19 @@
 
         // This is needed to make our files compatible for photoswipe
         const items = this.files.map((file) => {
-          file.src = file.dataURL;
-          file.h = file.height;
-          file.w = file.width;
+          const newFile = <Record<string, any>> file;
+          newFile.src = newFile.dataURL;
+          newFile.h = newFile.height;
+          newFile.w = newFile.width;
 
-          return file;
+          return newFile;
         });
 
         const gallery = new PhotoSwipe(
           pswpElement,
           PhotoSwipeUIDefault,
           items,
-          options,
+          <PhotoSwipe.Options> options,
         );
 
         gallery.init();
@@ -171,7 +173,7 @@
       }
     },
     methods: {},
-  };
+  });
 </script>
 
 <style lang="scss" type="text/scss">

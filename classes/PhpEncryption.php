@@ -30,8 +30,7 @@ use Defuse\Crypto\Exception\EnvironmentIsBrokenException;
  */
 class PhpEncryptionCore
 {
-    const ENGINE = 'PhpEncryptionEngine';
-    const LEGACY_ENGINE = 'PhpEncryptionLegacyEngine';
+    public const ENGINE = 'PhpEncryptionEngine';
 
     private static $engine;
 
@@ -75,8 +74,8 @@ class PhpEncryptionCore
     }
 
     /**
-     * @param $header
-     * @param $bytes
+     * @param string $header
+     * @param string $bytes
      *
      * @return string
      *
@@ -113,10 +112,6 @@ class PhpEncryptionCore
      */
     public static function resolveEngineToUse()
     {
-        if (false === in_array(\Defuse\Crypto\Core::CIPHER_METHOD, openssl_get_cipher_methods())) {
-            return self::LEGACY_ENGINE;
-        }
-
         return self::ENGINE;
     }
 }

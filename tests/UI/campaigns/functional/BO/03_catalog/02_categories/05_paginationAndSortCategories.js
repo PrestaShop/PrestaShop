@@ -5,19 +5,21 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const basicHelper = require('@utils/basicHelper');
 const files = require('@utils/files');
 const testContext = require('@utils/testContext');
 
-// Import login steps
-const loginCommon = require('@commonTests/loginBO');
+// Import common tests
+const loginCommon = require('@commonTests/BO/loginBO');
+const {importFileTest} = require('@commonTests/BO/advancedParameters/importFile');
+const {bulkDeleteCategoriesTest} = require('@commonTests/BO/catalog/createDeleteCategory');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const categoriesPage = require('@pages/BO/catalog/categories');
-const addCategoryPage = require('@pages/BO/catalog/categories/add');
 
-// Import data
-const CategoryFaker = require('@data/faker/category');
+// Import Data
+const {Data} = require('@data/import/categories');
 
 const baseContext = 'functional_BO_catalog_categories_paginationAndSortCategories';
 
@@ -25,76 +27,65 @@ let browserContext;
 let page;
 let numberOfCategories = 0;
 
+// Variable used to create empty categories csv file
+const fileName = 'categories.csv';
+
+// Object used to delete imported categories
+const categoryData = {filterBy: 'name', value: 'category'};
+
 /*
-Create 11 categories
-Paginate between pages
-Sort categories table
-Delete categories with bulk actions
+Pre-condition:
+- Import list of categories
+Scenario:
+- Paginate between pages
+- Sort categories table
+Post-condition:
+- Delete categories with bulk actions
  */
 describe('BO - Catalog - Categories : Pagination and sort categories table', async () => {
+  // Pre-condition: Import list of categories
+  importFileTest(fileName, Data.entity, `${baseContext}_preTest_1`);
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+    // Create csv file with all categories data
+    await files.createCSVFile('.', fileName, Data);
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
+    // Delete created csv file
+    await files.deleteFile(fileName);
   });
 
-  it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
-  });
+  // 1 : Go to categories page
+  describe('Go to \'Catalog > Categories\' page', async () => {
+    it('should login in BO', async function () {
+      await loginCommon.loginBO(this, page);
+    });
 
-  it('should go to \'Catalog > Categories\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToCategoriesPage', baseContext);
+    it('should go to \'Catalog > Categories\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToCategoriesPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
-      page,
-      dashboardPage.catalogParentLink,
-      dashboardPage.categoriesLink,
-    );
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.catalogParentLink,
+        dashboardPage.categoriesLink,
+      );
 
-    await dashboardPage.closeSfToolBar(page);
+      await dashboardPage.closeSfToolBar(page);
 
-    const pageTitle = await categoriesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(categoriesPage.pageTitle);
-  });
+      const pageTitle = await categoriesPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(categoriesPage.pageTitle);
+    });
 
-  it('should reset all filters and get number of categories in BO', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
+    it('should reset all filters and get number of categories in BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
-    numberOfCategories = await categoriesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfCategories).to.be.above(0);
-  });
-
-  // 1 : Create 11 new categories
-  describe('Create 11 categories in BO', async () => {
-    const creationTests = new Array(10).fill(0, 0, 10);
-    creationTests.forEach((test, index) => {
-      before(() => files.generateImage(`${createCategoryData.name}.jpg`));
-
-      const createCategoryData = new CategoryFaker({name: `todelete${index}`});
-
-      it('should go to add new category page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToAddNewCategoryPage${index}`, baseContext);
-
-        await categoriesPage.goToAddNewCategoryPage(page);
-        const pageTitle = await addCategoryPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addCategoryPage.pageTitleCreate);
-      });
-
-      it(`should create category n°${index + 1} and check result`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `createCategory${index}`, baseContext);
-
-        const textResult = await addCategoryPage.createEditCategory(page, createCategoryData);
-        await expect(textResult).to.equal(categoriesPage.successfulCreationMessage);
-
-        const numberOfCategoriesAfterCreation = await categoriesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfCategoriesAfterCreation).to.be.equal(numberOfCategories + 1 + index);
-      });
-
-      after(() => files.deleteFile(`${createCategoryData.name}.jpg`));
+      numberOfCategories = await categoriesPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfCategories).to.be.above(0);
     });
   });
 
@@ -184,7 +175,7 @@ describe('BO - Catalog - Categories : Pagination and sort categories table', asy
           sortedTable = await sortedTable.map(text => parseFloat(text));
         }
 
-        const expectedResult = await categoriesPage.sortArray(nonSortedTable, test.args.isFloat);
+        const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
 
         if (test.args.sortDirection === 'asc') {
           await expect(sortedTable).to.deep.equal(expectedResult);
@@ -195,34 +186,6 @@ describe('BO - Catalog - Categories : Pagination and sort categories table', asy
     });
   });
 
-  // 4 : Delete categories created by bulk actions
-  describe('Delete categories by Bulk Actions', async () => {
-    it('should filter list by Name \'todelete\'', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDelete', baseContext);
-
-      await categoriesPage.filterCategories(
-        page,
-        'input',
-        'name',
-        'todelete',
-      );
-
-      const textResult = await categoriesPage.getTextColumnFromTableCategories(page, 1, 'name');
-      await expect(textResult).to.contains('todelete');
-    });
-
-    it('should delete categories and check result', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'bulkDelete', baseContext);
-
-      const deleteTextResult = await categoriesPage.deleteCategoriesBulkActions(page);
-      await expect(deleteTextResult).to.be.equal(categoriesPage.successfulMultiDeleteMessage);
-    });
-
-    it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterDelete', baseContext);
-
-      const numberOfCategoriesAfterReset = await categoriesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfCategoriesAfterReset).to.equal(numberOfCategories);
-    });
-  });
+  // Pre-condition: Delete imported categories by bulk actions
+  bulkDeleteCategoriesTest(categoryData, `${baseContext}_postTest_1`);
 });

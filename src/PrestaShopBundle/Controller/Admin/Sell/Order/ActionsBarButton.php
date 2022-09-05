@@ -26,56 +26,11 @@
 
 namespace PrestaShopBundle\Controller\Admin\Sell\Order;
 
-class ActionsBarButton implements ActionsBarButtonInterface
+use PrestaShop\PrestaShop\Core\Action\ActionsBarButton as CoreActionsBarButton;
+
+/**
+ * @deprecated since 8.0 and will be removed in next major. Use PrestaShop\PrestaShop\Core\ActionBar\ActionsBarButton instead
+ */
+class ActionsBarButton extends CoreActionsBarButton implements ActionsBarButtonInterface
 {
-    /**
-     * @var string
-     */
-    protected $class;
-
-    /**
-     * @var string[]
-     */
-    protected $properties;
-
-    /**
-     * @var string
-     */
-    protected $content;
-
-    /**
-     * @param string $class
-     * @param string[] $properties
-     * @param string $content
-     */
-    public function __construct(string $class = '', array $properties = [], string $content = '')
-    {
-        $this->class = $class;
-        $this->properties = $properties;
-        $this->content = $content;
-    }
-
-    /**
-     * @return string
-     */
-    public function getClass(): string
-    {
-        return $this->class;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getProperties(): array
-    {
-        return $this->properties;
-    }
-
-    /**
-     * @return string
-     */
-    public function getContent(): string
-    {
-        return $this->content;
-    }
 }

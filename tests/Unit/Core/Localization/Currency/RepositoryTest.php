@@ -43,7 +43,7 @@ class RepositoryTest extends TestCase
      */
     protected $currencyRepository;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $dataSource = $this->createMock(CurrencyDataSourceInterface::class);
         $dataSource
@@ -57,7 +57,7 @@ class RepositoryTest extends TestCase
                             $data->setIsActive(true);
                             $data->setConversionRate(1);
                             $data->setIsoCode('EUR');
-                            $data->setNumericIsoCode(978);
+                            $data->setNumericIsoCode('978');
                             $data->setSymbols(['fr-FR' => '€', 'en-US' => '€']);
                             $data->setPrecision(2);
                             $data->setNames(['fr-FR' => 'euro', 'en-US' => 'euro']);
@@ -67,7 +67,7 @@ class RepositoryTest extends TestCase
                             $data->setIsActive(true);
                             $data->setConversionRate(1);
                             $data->setIsoCode('PCE');
-                            $data->setNumericIsoCode(999);
+                            $data->setNumericIsoCode('999');
                             $data->setSymbols(['fr-FR' => '☮', 'en-US' => '☮']);
                             $data->setPrecision(2);
                             $data->setNames(['fr-FR' => 'paix', 'en-US' => 'peace']);

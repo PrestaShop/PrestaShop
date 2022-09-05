@@ -85,18 +85,36 @@
   }
 
   // Todo: Looks like we don't have any custom select without JS to add in a form
+  // Please notice that you have two different select2 component inside order view
+  .select2-container,
+  .select2-selection {
+    min-width: 36ch;
+    height: 100%;
+  }
+
+  .select-status-colored,
+  .select2-selection {
+    display: flex;
+    align-items: center;
+    padding: 0.375rem 2.2rem 0.375rem 0.4375rem;
+  }
+
   .select-status {
     position: relative;
     max-width: 280px;
-    color: $white;
     background: $white;
     border: none;
     @include border-radius(4px);
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
     @include transition(0.2s ease-out);
 
-    .select-status-colored {
-      padding: 0.375rem 2.2rem 0.375rem 0.4375rem;
+    .select2-selection__rendered,
+    .select2-selection__arrow b::after {
+      color: $white;
+    }
+
+    .select-status-colored,
+    .select2-selection {
       color: $white;
       background: none;
       border: none;
@@ -107,21 +125,8 @@
       }
     }
 
-    &::after {
-      position: absolute;
-      top: 50%;
-      right: 10px;
-      font-family: "Material Icons", Arial, sans-serif;
-      font-size: 1.25rem;
-      color: $white;
-      pointer-events: none;
-      cursor: pointer;
-      content: "keyboard_arrow_down";
-      transform: translateY(-50%);
-    }
-
-    &.is-bright .select-status-colored,
-    &.is-bright::after {
+    &.is-bright .select2-selection__rendered,
+    &.is-bright .select2-selection__arrow b::after {
       color: $bright-status-text;
     }
   }
@@ -178,6 +183,17 @@
   .customer {
     .badge-dark {
       font-size: 100%;
+    }
+
+    .customer-groups .badge {
+      padding: 0.45rem 0.6rem;
+      margin: 0.1rem 0;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #6c868e;
+      white-space: normal;
+      background: #fff;
+      @include border-radius(1000px);
     }
   }
 
@@ -244,7 +260,7 @@
     }
 
     a {
-      color: #000;
+      color: $black;
       text-decoration: none;
     }
 
@@ -277,13 +293,13 @@
 
     .badge-dark,
     .badge-secondary {
-      color: #000;
+      color: $black;
       background-color: $white;
     }
 
     .badge-print-light {
       font-weight: 500;
-      color: #000 !important; // stylelint-disable-line
+      color: $black !important; // stylelint-disable-line
       background-color: $white !important; // stylelint-disable-line
     }
   }
@@ -450,7 +466,8 @@
       .select-status {
         max-width: 206px;
 
-        .select-status-colored {
+        .select-status-colored,
+        .select2-selection {
           max-width: inherit;
           padding-right: 2.5rem;
           text-overflow: ellipsis;

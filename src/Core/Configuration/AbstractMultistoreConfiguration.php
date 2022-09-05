@@ -33,6 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Shop\Context;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Feature\FeatureInterface;
 use PrestaShopBundle\Service\Form\MultistoreCheckboxEnabler;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 abstract class AbstractMultistoreConfiguration implements DataConfigurationInterface
 {
@@ -65,6 +66,8 @@ abstract class AbstractMultistoreConfiguration implements DataConfigurationInter
         $this->multistoreFeature = $multistoreFeature;
     }
 
+    abstract protected function buildResolver(): OptionsResolver;
+
     /**
      * @return ShopConstraint|null
      */
@@ -84,7 +87,7 @@ abstract class AbstractMultistoreConfiguration implements DataConfigurationInter
      * @param ShopConstraint|null $shopConstraint
      * @param array $options<int, string> Options @deprecated Will be removed in next major
      */
-    public function updateConfigurationValue(string $configurationKey, string $fieldName, array $input, ?ShopConstraint $shopConstraint, array $options = []): void
+    protected function updateConfigurationValue(string $configurationKey, string $fieldName, array $input, ?ShopConstraint $shopConstraint, array $options = []): void
     {
         if (!array_key_exists($fieldName, $input)) {
             return;
@@ -99,5 +102,38 @@ abstract class AbstractMultistoreConfiguration implements DataConfigurationInter
         } else {
             $this->configuration->set($configurationKey, $input[$fieldName], $shopConstraint, $options);
         }
+    }
+
+    /**
+     * This method checks that:
+     * - Only defined configuration fields exist
+     * - In single or group shop context, multistore fields are added to the list of defined fields, so that no error
+     * is triggered because of additional checkboxes
+     * - In all shop context, all fields are required
+     *
+     * @param array $configurationInputValues
+     *
+     * @return bool
+     */
+    public function validateConfiguration(array $configurationInputValues): bool
+    {
+        $resolver = $this->buildResolver();
+        $definedOptions = $fields = $resolver->getDefinedOptions();
+
+        if ($this->multistoreFeature->isUsed() && !$this->shopContext->isAllShopContext()) {
+            // add multistore fields in list of defined fields
+            foreach ($definedOptions as $value) {
+                $fields[] = MultistoreCheckboxEnabler::MULTISTORE_FIELD_PREFIX . $value;
+            }
+            $resolver->setDefined($fields);
+        } else {
+            // all fields are mandatory in all shop context. (not in single or group shop context because fields
+            // can be disabled with checkboxes)
+            $resolver->setRequired($definedOptions);
+        }
+
+        $resolver->resolve($configurationInputValues);
+
+        return true;
     }
 }

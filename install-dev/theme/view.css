@@ -1232,3 +1232,212 @@ ul#optional_update li.ok {
   }
 }
 /* @end */
+#sheet_content ul {
+  list-style: none;
+  margin: 0;
+}
+
+.themes-container {
+  overflow-y: auto;
+  height: 12rem;
+  border: 1px solid #cccccc;
+  padding: 1rem;
+  margin-right: 1rem;
+}
+
+.theme-card {
+  position: relative;
+  height: 12rem;
+  max-width: 24.1875rem;
+  overflow-y: hidden;
+  border-radius: 0.25rem;
+}
+
+.theme-card .image-block {
+  padding-left: 1rem;
+  max-width: 100%;
+  height: 9rem;
+  overflow: hidden;
+}
+
+.theme-card .image-block img {
+  max-width: 100%;
+  height: auto;
+}
+.theme-card .theme-version {
+  font-size: 0.7rem;
+  text-align: center;
+}
+
+#modules-container {
+  display: none;
+  margin-left: 190px;
+  padding: 1rem;
+  width: 26.7rem;
+  height: 15rem;
+  overflow: auto;
+  border: 1px solid #cccccc;
+}
+#modules-container label {
+  width: 100%;
+}
+#modules-container dt {
+  padding: 0.6rem 0;
+  font-weight: bold;
+}
+
+#search-for-module {
+  margin-bottom: 1rem;
+  border: 1px solid #cccccc;
+  padding: 0.3rem;
+}
+
+.password-strength-feedback {
+  width: 100%;
+  color: #888f9b;
+  padding-right: 13px;
+  box-sizing: border-box;
+}
+
+.password-strength-feedback svg {
+  color: #888f9b;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.password-strength-feedback .progress-container {
+  margin-top: 5px;
+  background-color: #e1e0eb;
+}
+
+.password-strength-feedback .progress-bar {
+  text-align: center;
+}
+
+.password-strength-feedback .progress-bar > div {
+  background-color: white; /* Adjust with JavaScript */
+  width: 0%; /* Adjust with JavaScript */
+  height: 5px;
+  border-radius: 10px;
+}
+
+.password-strength-feedback .password-strength-text {
+  text-align: left;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.password-strength-feedback .password-requirements p {
+  margin-bottom: 0;
+  font-size: 14px;
+}
+
+.border {
+  border-width: 1px;
+  border-style: solid;
+}
+
+.border-success {
+  border-color: #70b580;
+}
+
+.border-danger {
+  border-color: #f54c3e;
+}
+
+.field-password input {
+  padding: 0 6px;
+  height: 22px;
+  width: 218px;
+}
+
+.field-password .contentinput {
+  position: relative;
+}
+
+.text-success {
+  color: #70b580!important;
+}
+
+.popover {
+  padding: 10px;
+  background: #363a41;
+  border: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1060;
+  max-width: 276px;
+  font-family: "Open Sans",helvetica,arial,sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: left;
+  text-decoration: none;
+  text-shadow: none;
+  text-transform: none;
+  letter-spacing: normal;
+  word-break: normal;
+  word-spacing: normal;
+  white-space: normal;
+  line-break: auto;
+  font-size: .75rem;
+  word-wrap: break-word;
+  background-clip: padding-box;
+  border-radius: 0.3rem;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  position: absolute;
+  bottom: calc(100% + 10px);
+  width: 100%;
+}
+
+.popover .arrow::after, .popover .arrow::before {
+  position: absolute;
+  display: block;
+  content: "";
+  border-color: transparent;
+  border-style: solid;
+}
+
+.bs-popover-auto[x-placement^=top]>.arrow::before, .bs-popover-top>.arrow::before {
+  bottom: 0;
+  border-width: 0.5rem 0.5rem 0;
+  border-top-color: #bbcdd2;
+}
+
+.popover.bs-popover-auto[x-placement^=top] .arrow::after, .popover.bs-popover-auto[x-placement^=top] .arrow::before, .popover.bs-popover-top .arrow::after, .popover.bs-popover-top .arrow::before {
+  border-top-color: #363a41;
+}
+
+.popover.bs-popover-auto[x-placement^=top] .arrow, .popover.bs-popover-top .arrow {
+  bottom: calc((0.5rem)*-1);
+}
+
+.popover .arrow {
+  width: 1rem;
+  height: 0.5rem;
+  margin: 0 0.3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  position: absolute;
+  top: 100%;
+}
+
+.popover .popover-header {
+  margin-bottom: 0.2rem;
+}
+
+.popover-header:empty {
+  display: none;
+}
+
+.popover .popover-body, .popover .popover-header {
+  padding: 0;
+  color: #fff;
+  background: 0 0;
+  border: 0;
+}
+
+.d-none {
+  display: none;
+}

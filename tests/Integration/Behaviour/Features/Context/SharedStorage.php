@@ -34,7 +34,7 @@ use RuntimeException;
 class SharedStorage
 {
     /**
-     * @var self
+     * @var self|null
      */
     protected static $instance;
 
@@ -102,19 +102,19 @@ class SharedStorage
     }
 
     /**
-     * @param $key
+     * @param string $key
      *
      * @return bool
      */
-    public function exists($key): bool
+    public function exists(string $key): bool
     {
         return isset($this->storage[$key]);
     }
 
     /**
-     * @param string $key
+     * @param string|int $key
      */
-    public function clear($key)
+    public function clear($key): void
     {
         if ($this->exists($key)) {
             unset($this->storage[$key]);

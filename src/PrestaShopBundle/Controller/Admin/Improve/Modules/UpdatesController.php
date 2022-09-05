@@ -35,15 +35,17 @@ use Symfony\Component\HttpFoundation\Response;
 class UpdatesController extends ModuleAbstractController
 {
     /**
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @return Response
      */
     public function indexAction()
     {
+        $moduleRepository = $this->getModuleRepository();
+
         return $this->render(
             '@PrestaShop/Admin/Module/updates.html.twig',
-            $this->getNotificationPageData('to_update')
+            $this->getNotificationPageData($moduleRepository->getUpgradableModules())
         );
     }
 }

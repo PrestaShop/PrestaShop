@@ -5,11 +5,12 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const basicHelper = require('@utils/basicHelper');
 const files = require('@utils/files');
 const testContext = require('@utils/testContext');
 
 // Common tests login BO
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -166,7 +167,6 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
           testIdentifier: 'sortByIdDesc', sortBy: 'id_carrier', sortDirection: 'down', isFloat: true,
         },
       },
-      /* Sort by name not working, skipping it https://github.com/PrestaShop/PrestaShop/issues/21640
       {
         args: {
           testIdentifier: 'sortByNameDesc', sortBy: 'name', sortDirection: 'down',
@@ -176,7 +176,7 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
         args: {
           testIdentifier: 'sortByNameAsc', sortBy: 'name', sortDirection: 'up',
         },
-      }, */
+      },
       {
         args: {
           testIdentifier: 'sortByPositionAsc', sortBy: 'a!position', sortDirection: 'up', isFloat: true,
@@ -209,7 +209,7 @@ describe('BO - Shipping - Carriers : Filter, sort and pagination carriers', asyn
           sortedTable = await sortedTable.map(text => parseFloat(text));
         }
 
-        const expectedResult = await carriersPage.sortArray(nonSortedTable, test.args.isFloat);
+        const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
 
         if (test.args.sortDirection === 'up') {
           await expect(sortedTable).to.deep.equal(expectedResult);

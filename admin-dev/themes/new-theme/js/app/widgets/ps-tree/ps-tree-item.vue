@@ -88,11 +88,12 @@
   </div>
 </template>
 
-<script>
-  import PSCheckbox from '@app/widgets/ps-checkbox';
+<script lang="ts">
+  import Vue from 'vue';
+  import PSCheckbox from '@app/widgets/ps-checkbox.vue';
   import {EventBus} from '@app/utils/event-bus';
 
-  export default {
+  export default Vue.extend({
     name: 'PSTreeItem',
     props: {
       model: {
@@ -120,16 +121,16 @@
       },
     },
     computed: {
-      id() {
-        return this.model.id;
+      id(): number {
+        return this.model.id.toString();
       },
-      isFolder() {
+      isFolder(): boolean {
         return this.model.children && this.model.children.length;
       },
-      displayExtraLabel() {
+      displayExtraLabel(): boolean {
         return this.isFolder && this.model.extraLabel;
       },
-      getExtraLabel() {
+      getExtraLabel(): string {
         let extraLabel = '';
 
         if (this.model.extraLabel && this.model.extraLabel === 1) {
@@ -140,21 +141,21 @@
 
         return extraLabel;
       },
-      isHidden() {
+      isHidden(): boolean {
         return !this.isFolder;
       },
-      chevronStatus() {
+      chevronStatus(): string {
         return this.open ? 'open' : 'closed';
       },
-      isWarning() {
+      isWarning(): boolean {
         return !this.isFolder && this.model.warning;
       },
-      active() {
+      active(): boolean {
         return this.model.full_name === this.currentItem;
       },
     },
     methods: {
-      setCurrentElement(el) {
+      setCurrentElement(el: any): void {
         if (this.$refs[el]) {
           this.openTreeItemAction();
           this.current = true;
@@ -163,16 +164,16 @@
           this.current = false;
         }
       },
-      parentElement(parent) {
+      parentElement(parent: any): void {
         if (parent.clickElement) {
           parent.clickElement();
           this.parentElement(parent.$parent);
         }
       },
-      clickElement() {
+      clickElement(): boolean | void {
         return !this.model.disable ? this.openTreeItemAction() : false;
       },
-      openTreeItemAction() {
+      openTreeItemAction(): void {
         this.setCurrentElement(this.model.full_name);
         if (this.isFolder) {
           this.open = !this.open;
@@ -182,22 +183,22 @@
           });
         }
       },
-      onCheck(obj) {
+      onCheck(obj: any): void {
         this.$emit('checked', obj);
       },
     },
     mounted() {
-      EventBus.$on('toggleCheckbox', (tag) => {
+      EventBus.$on('toggleCheckbox', (tag: any) => {
         const checkbox = this.$refs[tag];
 
         if (checkbox) {
-          checkbox.$data.checked = !checkbox.$data.checked;
+          (<VCheckbox>checkbox).$data.checked = !(<VCheckbox>checkbox).$data.checked;
         }
       }).$on('expand', () => {
         this.open = true;
       }).$on('reduce', () => {
         this.open = false;
-      }).$on('setCurrentElement', (el) => {
+      }).$on('setCurrentElement', (el: HTMLElement) => {
         this.setCurrentElement(el);
       });
       this.setCurrentElement(this.currentItem);
@@ -209,5 +210,5 @@
       open: false,
       current: false,
     }),
-  };
+  });
 </script>

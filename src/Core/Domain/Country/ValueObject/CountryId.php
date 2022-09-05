@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintExcepti
 /**
  * Provides country id value
  */
-class CountryId
+class CountryId implements CountryIdInterface
 {
     /**
      * @var int
@@ -64,7 +64,7 @@ class CountryId
      */
     private function assertPositiveInt(int $value)
     {
-        if (0 > $value) {
+        if (0 >= $value) {
             throw new CountryConstraintException(sprintf('Invalid country id "%s".', var_export($value, true)), CountryConstraintException::INVALID_ID);
         }
     }

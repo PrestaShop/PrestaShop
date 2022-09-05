@@ -1,29 +1,29 @@
 services:
-    _defaults:
-        public: true
+  _defaults:
+    public: true
 
-    doctrine.cache.provider:
-        class: Doctrine\Common\Cache\FilesystemCache
-        arguments:
-            - "%kernel.cache_dir%/doctrine"
+  doctrine.cache.adapter:
+    class: Symfony\Component\Cache\Adapter\FilesystemAdapter
+    arguments:
+      - ''
+      - 0
+      - "%kernel.cache_dir%/doctrine"
 
-    guzzle.cache:
-        class: Csa\Bundle\GuzzleBundle\GuzzleHttp\Cache\DoctrineAdapter
-        arguments:
-            - "@doctrine.cache.provider"
-            - "%prestashop.addons.api_client.ttl%"
-        shared: false
+  doctrine.cache.provider:
+    class: Symfony\Component\Cache\DoctrineProvider
+    arguments:
+      - "@doctrine.cache.adapter"
 
-    main.warmer.cache_warmer:
-        class: PrestaShopBundle\Cache\CacheWarmer
-        arguments:
-            - "@filesystem"
-        tags:
-            - { name: kernel.cache_warmer }
+  main.warmer.cache_warmer:
+    class: PrestaShopBundle\Cache\CacheWarmer
+    arguments:
+      - "@filesystem"
+    tags:
+      - { name: kernel.cache_warmer }
 
-    prestashop.cache.refresh:
-        class: PrestaShopBundle\Service\Cache\Refresh
-        arguments:
-            - "@kernel"
-        calls:
-            - [addCacheClear, []]
+  prestashop.cache.refresh:
+    class: PrestaShopBundle\Service\Cache\Refresh
+    arguments:
+      - "@kernel"
+    calls:
+      - [ addCacheClear, [ ] ]

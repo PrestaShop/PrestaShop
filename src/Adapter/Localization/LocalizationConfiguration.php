@@ -28,7 +28,6 @@ namespace PrestaShop\PrestaShop\Adapter\Localization;
 
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyManager;
-use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Language\LanguageActivatorInterface;
 
@@ -54,26 +53,18 @@ class LocalizationConfiguration implements DataConfigurationInterface
     private $currencyManager;
 
     /**
-     * @var AdminModuleDataProvider
-     */
-    private $adminModuleDataProvider;
-
-    /**
      * @param Configuration $configuration
      * @param LanguageActivatorInterface $languageActivator
      * @param CurrencyManager $currencyManager
-     * @param AdminModuleDataProvider $adminModuleDataProvider
      */
     public function __construct(
         Configuration $configuration,
         LanguageActivatorInterface $languageActivator,
-        CurrencyManager $currencyManager,
-        AdminModuleDataProvider $adminModuleDataProvider
+        CurrencyManager $currencyManager
     ) {
         $this->configuration = $configuration;
         $this->languageActivator = $languageActivator;
         $this->currencyManager = $currencyManager;
-        $this->adminModuleDataProvider = $adminModuleDataProvider;
     }
 
     /**
@@ -106,11 +97,6 @@ class LocalizationConfiguration implements DataConfigurationInterface
             if ($currentConfig['default_currency'] != $config['default_currency']) {
                 $this->configuration->set('PS_CURRENCY_DEFAULT', (int) $config['default_currency']);
                 $this->currencyManager->updateDefaultCurrency();
-            }
-
-            // remove module list cache if the default country changed
-            if ($currentConfig['default_country'] != $config['default_country']) {
-                $this->adminModuleDataProvider->clearModuleListCache();
             }
 
             $this->configuration->set('PS_LANG_DEFAULT', (int) $config['default_language']);

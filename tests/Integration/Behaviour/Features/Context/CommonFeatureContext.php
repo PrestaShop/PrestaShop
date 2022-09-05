@@ -32,7 +32,6 @@ use AddressFormat;
 use Alias;
 use AppKernel;
 use Attachment;
-use Attribute;
 use AttributeGroup;
 use Cache;
 use Carrier;
@@ -64,8 +63,6 @@ use Hook;
 use Image;
 use ImageType;
 use Language;
-use LegacyTests\PrestaShopBundle\Utils\DatabaseCreator;
-use LegacyTests\Unit\ContextMocker;
 use Mail;
 use Manufacturer;
 use Message;
@@ -83,13 +80,13 @@ use Pack;
 use Page;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use Product;
+use ProductAttribute;
 use ProductDownload;
 use ProductSupplier;
 use Profile;
 use QuickAccess;
 use RangePrice;
 use RangeWeight;
-use Referrer;
 use RequestSql;
 use Risk;
 use SearchEngine;
@@ -116,6 +113,8 @@ use Tax;
 use TaxManagerFactory;
 use TaxRule;
 use TaxRulesGroup;
+use Tests\Integration\Utility\ContextMocker;
+use Tests\Resources\DatabaseDump;
 use Tests\Resources\ResourceResetter;
 use WarehouseProductLocation;
 use WebserviceKey;
@@ -133,7 +132,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     protected static $kernel;
 
     /**
-     * @var ContextMocker
+     * @var ContextMocker|null
      */
     protected static $contextMocker;
 
@@ -157,11 +156,29 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * This hook can be used to flag a feature for database hard reset
      *
+     * @deprecated since 8.0.0 and will be removed in next major.
+     *
      * @BeforeFeature @reset-database-before-feature
      */
     public static function cleanDatabaseHardPrepareFeature()
     {
-        DatabaseCreator::restoreTestDB();
+        @trigger_error(
+            'The @reset-database-before-feature tag is deprecated because there is a more optimized alternative use the @restore-all-tables-before-feature tag instead ',
+            E_USER_DEPRECATED
+        );
+
+        self::restoreTestDB();
+        require_once _PS_ROOT_DIR_ . '/config/config.inc.php';
+    }
+
+    /**
+     * This hook can be used to flag a feature for database hard reset
+     *
+     * @BeforeFeature @restore-all-tables-before-feature
+     */
+    public static function restoreAllTablesBeforeFeature()
+    {
+        DatabaseDump::restoreAllTables();
         require_once _PS_ROOT_DIR_ . '/config/config.inc.php';
     }
 
@@ -170,7 +187,17 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
      *
      * @BeforeFeature @reboot-kernel-before-feature
      */
-    public static function rebootKernelPrepareFeature()
+    public static function rebootKernelBeforeFeature()
+    {
+        self::rebootKernel();
+    }
+
+    /**
+     * This hook can be used to flag a feature for kernel reboot
+     *
+     * @AfterFeature @reboot-kernel-after-feature
+     */
+    public static function rebootKernelAfterFeature()
     {
         self::rebootKernel();
     }
@@ -220,6 +247,14 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
+     * @BeforeFeature @clear-cache-before-feature
+     */
+    public static function clearCacheBeforeFeature()
+    {
+        self::clearCache();
+    }
+
+    /**
      * @BeforeScenario @mock-context-on-scenario
      */
     public static function mockContextBeforeScenario()
@@ -252,14 +287,6 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @BeforeFeature @clear-cache-before-feature
-     */
-    public static function clearCacheBeforeFeature()
-    {
-        self::clearCache();
-    }
-
-    /**
      * @BeforeScenario @clear-cache-before-scenario
      */
     public static function clearCacheBeforeScenario()
@@ -274,18 +301,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public static function cleanDatabaseHardPrepareScenario()
     {
-        DatabaseCreator::restoreTestDB();
-        require_once _PS_ROOT_DIR_ . '/config/config.inc.php';
-    }
-
-    /**
-     * This hook can be used to flag a scenario for database hard reset
-     *
-     * @BeforeScenario @database-scenario
-     */
-    public function cleanDatabaseHardPrepare()
-    {
-        DatabaseCreator::restoreTestDB();
+        self::restoreTestDB();
         require_once _PS_ROOT_DIR_ . '/config/config.inc.php';
     }
 
@@ -307,9 +323,20 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
         self::rebootKernel();
     }
 
+    /**
+     * @Given I restore tables :tableNames
+     *
+     * @param string $tableNames
+     */
+    public function restoreTables(string $tableNames): void
+    {
+        $tables = explode(',', $tableNames);
+        DatabaseDump::restoreTables($tables);
+    }
+
     private static function mockContext()
     {
-        /** @var LegacyContext $localeRepository */
+        /** @var LegacyContext $legacyContext */
         $legacyContext = self::getContainer()->get('prestashop.adapter.legacy.context');
         /*
          * We need to call this before initializing the ContextMocker because this method forcefully init
@@ -341,6 +368,11 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
         self::$kernel->reboot($warmupDir);
     }
 
+    private static function restoreTestDB(): void
+    {
+        DatabaseDump::restoreDb();
+    }
+
     /**
      * Clears cache
      */
@@ -354,7 +386,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
         Category::resetStaticCache();
         Pack::resetStaticCache();
         Product::resetStaticCache();
-        Language::resetCache();
+        Language::resetStaticCache();
         Currency::resetStaticCache();
         TaxManagerFactory::resetStaticCache();
         Group::clearCachedValues();
@@ -362,7 +394,7 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
         AddressFormat::resetStaticCache();
         Alias::resetStaticCache();
         Attachment::resetStaticCache();
-        Attribute::resetStaticCache();
+        ProductAttribute::resetStaticCache();
         AttributeGroup::resetStaticCache();
         CMS::resetStaticCache();
         CMSCategory::resetStaticCache();
@@ -393,7 +425,6 @@ class CommonFeatureContext extends AbstractPrestaShopFeatureContext
         ProductSupplier::resetStaticCache();
         Profile::resetStaticCache();
         QuickAccess::resetStaticCache();
-        Referrer::resetStaticCache();
         RequestSql::resetStaticCache();
         Risk::resetStaticCache();
         SearchEngine::resetStaticCache();

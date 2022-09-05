@@ -28,7 +28,6 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
 use Cache;
 use Category;
-use Context;
 use Customer;
 use GroupReduction;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\SearchProducts;
@@ -125,7 +124,7 @@ class ProductFeatureContext extends AbstractDomainFeatureContext
     private function getProductIdByName(string $productName): int
     {
         /** @var FoundProduct[] */
-        $products = $this->getQueryBus()->handle(new SearchProducts($productName, 1, Context::getContext()->currency->iso_code));
+        $products = $this->getQueryBus()->handle(new SearchProducts($productName, 1, $this->getDefaultCurrencyIsoCode()));
 
         if (empty($products)) {
             throw new RuntimeException(sprintf('Product with name "%s" was not found', $productName));

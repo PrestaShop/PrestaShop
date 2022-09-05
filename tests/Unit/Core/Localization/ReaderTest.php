@@ -44,7 +44,7 @@ class ReaderTest extends TestCase
     /**
      * {@inheritDoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->reader = new Reader();
     }
@@ -52,12 +52,10 @@ class ReaderTest extends TestCase
     /**
      * @dataProvider provideLocaleData
      *
-     * @param $localeCode
-     * @param $expectedData
-     *
-     * @throws \PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException
+     * @param string $localeCode
+     * @param array $expectedData
      */
-    public function testReadLocaleData($localeCode, $expectedData)
+    public function testReadLocaleData(string $localeCode, array $expectedData): void
     {
         $localeData = $this->reader->readLocaleData($localeCode);
 
@@ -92,7 +90,7 @@ class ReaderTest extends TestCase
         );
     }
 
-    public function provideLocaleData()
+    public function provideLocaleData(): array
     {
         return [
             'root' => [

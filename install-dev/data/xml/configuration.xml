@@ -218,9 +218,6 @@
   <configuration id="PS_CONDITIONS_CMS_ID" name="PS_CONDITIONS_CMS_ID">
     <value>3</value>
   </configuration>
-  <configuration id="TRACKING_DIRECT_TRAFFIC" name="TRACKING_DIRECT_TRAFFIC">
-    <value>0</value>
-  </configuration>
   <configuration id="PS_VOLUME_UNIT" name="PS_VOLUME_UNIT">
     <value>cl</value>
   </configuration>
@@ -249,7 +246,7 @@
     <value>3</value>
   </configuration>
   <configuration id="PS_SPECIFIC_PRICE_PRIORITIES" name="PS_SPECIFIC_PRICE_PRIORITIES">
-    <value>id_shop;id_currency;id_country;id_group</value>
+    <value>id_group;id_currency;id_country;id_shop</value>
   </configuration>
   <configuration id="PS_TAX_DISPLAY" name="PS_TAX_DISPLAY">
     <value>0</value>
@@ -400,6 +397,9 @@
   </configuration>
   <configuration id="PS_JPEG_QUALITY" name="PS_JPEG_QUALITY">
     <value>90</value>
+  </configuration>
+  <configuration id="PS_WEBP_QUALITY" name="PS_WEBP_QUALITY">
+    <value>80</value>
   </configuration>
   <configuration id="PS_COOKIE_LIFETIME_FO" name="PS_COOKIE_LIFETIME_FO">
     <value>480</value>
@@ -751,6 +751,18 @@ Country</value>
   <configuration id="PS_MAIL_COLOR" name="PS_MAIL_COLOR">
     <value>#db3484</value>
   </configuration>
+  <configuration id="PS_MAIL_DKIM_ENABLE" name="PS_MAIL_DKIM_ENABLE">
+    <value>0</value>
+  </configuration>
+  <configuration id="PS_MAIL_DKIM_DOMAIN" name="PS_MAIL_DKIM_DOMAIN">
+    <value/>
+  </configuration>
+  <configuration id="PS_MAIL_DKIM_SELECTOR" name="PS_MAIL_DKIM_SELECTOR">
+    <value/>
+  </configuration>
+  <configuration id="PS_MAIL_DKIM_KEY" name="PS_MAIL_DKIM_KEY">
+    <value/>
+  </configuration>
   <configuration id="NW_SALT" name="NW_SALT">
     <value>nK4KJP7jOsnzWMpo</value>
   </configuration>
@@ -775,9 +787,6 @@ Country</value>
   <configuration id="PS_SMARTY_CONSOLE_KEY" name="PS_SMARTY_CONSOLE_KEY">
     <value>SMARTY_DEBUG</value>
   </configuration>
-  <configuration id="PS_DASHBOARD_USE_PUSH" name="PS_DASHBOARD_USE_PUSH">
-    <value>0</value>
-  </configuration>
   <configuration id="PS_ATTRIBUTE_ANCHOR_SEPARATOR" name="PS_ATTRIBUTE_ANCHOR_SEPARATOR">
     <value>-</value>
   </configuration>
@@ -789,9 +798,6 @@ Country</value>
   </configuration>
   <configuration id="PS_USE_HTMLPURIFIER" name="PS_USE_HTMLPURIFIER">
     <value>1</value>
-  </configuration>
-  <configuration id="PS_SMARTY_CACHING_TYPE" name="PS_SMARTY_CACHING_TYPE">
-    <value>filesystem</value>
   </configuration>
   <configuration id="PS_SMARTY_LOCAL" name="PS_SMARTY_LOCAL">
     <value>0</value>
@@ -832,9 +838,6 @@ Country</value>
     <configuration id="PS_PRODUCT_WEIGHT_PRECISION" name="PS_PRODUCT_WEIGHT_PRECISION">
       <value>2</value>
     </configuration>
-    <configuration id="PS_ACTIVE_CRONJOB_EXCHANGE_RATE" name="PS_ACTIVE_CRONJOB_EXCHANGE_RATE">
-        <value>0</value>
-    </configuration>
     <configuration id="PS_ORDER_RECALCULATE_SHIPPING" name="PS_ORDER_RECALCULATE_SHIPPING">
       <value>1</value>
     </configuration>
@@ -870,6 +873,18 @@ Country</value>
     </configuration>
     <configuration id="ADDONS_API_MODULE_CHANNEL" name="ADDONS_API_MODULE_CHANNEL">
       <value>stable</value>
+    </configuration>
+    <configuration id="PS_SECURITY_TOKEN" name="PS_SECURITY_TOKEN">
+      <value>1</value>
+    </configuration>
+    <configuration id="PS_SECURITY_PASSWORD_POLICY_MAXIMUM_LENGTH" name="PS_SECURITY_PASSWORD_POLICY_MAXIMUM_LENGTH">
+      <value>72</value>
+    </configuration>
+    <configuration id="PS_SECURITY_PASSWORD_POLICY_MINIMUM_LENGTH" name="PS_SECURITY_PASSWORD_POLICY_MINIMUM_LENGTH">
+      <value>8</value>
+    </configuration>
+    <configuration id="PS_SECURITY_PASSWORD_POLICY_MINIMUM_SCORE" name="PS_SECURITY_PASSWORD_POLICY_MINIMUM_SCORE">
+      <value>3</value>
     </configuration>
   </entities>
 </entity_configuration>

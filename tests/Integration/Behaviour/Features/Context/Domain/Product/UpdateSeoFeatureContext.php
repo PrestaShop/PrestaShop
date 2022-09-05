@@ -33,24 +33,76 @@ use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectTarget;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\RedirectType;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use RuntimeException;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class UpdateSeoFeatureContext extends AbstractProductFeatureContext
 {
     /**
+     * @When I update product :productReference SEO information for shop :shopReference with following values:
+     *
+     * @param string $productReference
+     * @param string $shopReference
+     * @param TableNode $tableNode
+     */
+    public function updateSeoForShop(
+        string $productReference,
+        string $shopReference,
+        TableNode $tableNode
+    ): void {
+        $this->updateSeo(
+            $productReference,
+            ShopConstraint::shop(
+                $this->getSharedStorage()->get(trim($shopReference))
+            ),
+            $tableNode
+        );
+    }
+
+    /**
+     * @When I update product :productReference SEO information for all shops with following values:
+     *
+     * @param string $productReference
+     * @param TableNode $tableNode
+     */
+    public function updateSeoForAlShops(string $productReference, TableNode $tableNode): void
+    {
+        $this->updateSeo(
+            $productReference,
+            ShopConstraint::allShops(),
+            $tableNode
+        );
+    }
+
+    /**
      * @When I update product :productReference SEO information with following values:
      *
      * @param string $productReference
      * @param TableNode $tableNode
      */
-    public function updateSeo(string $productReference, TableNode $tableNode): void
+    public function updateSeoForDefaultShop(string $productReference, TableNode $tableNode): void
     {
+        $this->updateSeo(
+            $productReference,
+            ShopConstraint::shop(
+                $this->getDefaultShopId()
+            ),
+            $tableNode
+        );
+    }
+
+    private function updateSeo(
+        string $productReference,
+        ShopConstraint $shopConstraint,
+        TableNode $tableNode
+    ): void {
         $dataRows = $this->localizeByRows($tableNode);
         $productId = $this->getSharedStorage()->get($productReference);
 
         try {
-            $command = new UpdateProductSeoCommand($productId);
+            $command = new UpdateProductSeoCommand($productId, $shopConstraint);
             $unhandledData = $this->fillUpdateSeoCommand($dataRows, $command);
             Assert::assertEmpty(
                 $unhandledData,
@@ -63,16 +115,53 @@ class UpdateSeoFeatureContext extends AbstractProductFeatureContext
     }
 
     /**
+     * @Then product :productReference should have following seo options for shops :shopReferences:
+     *
+     * @param string $productReference
+     * @param string $shopReferences
+     * @param TableNode $tableNode
+     */
+    public function assertSeoOptionsForShops(
+        string $productReference,
+        string $shopReferences,
+        TableNode $tableNode
+    ): void {
+        foreach (explode(',', $shopReferences) as $shopReference) {
+            $this->assertSeoOptions(
+                $productReference,
+                $this->getSharedStorage()->get(trim($shopReference)),
+                $tableNode
+            );
+        }
+    }
+
+    /**
      * @Then product :productReference should have following seo options:
      *
      * @param string $productReference
      * @param TableNode $tableNode
      */
-    public function assertSeoOptions(string $productReference, TableNode $tableNode): void
+    public function assertSeoOptionsForDefaultShop(string $productReference, TableNode $tableNode): void
     {
-        $productSeoOptions = $this->getProductForEditing($productReference)->getProductSeoOptions();
+        $this->assertSeoOptions(
+            $productReference,
+            null,
+            $tableNode
+        );
+    }
+
+    private function assertSeoOptions(
+        string $productReference,
+        ?int $shopId,
+        TableNode $tableNode
+    ): void {
+        $productSeoOptions = $this
+            ->getProductForEditing($productReference, $shopId)
+            ->getProductSeoOptions()
+        ;
         $dataRows = $tableNode->getRowsHash();
 
+        $redirectType = $dataRows['redirect_type'] ?? RedirectType::TYPE_PRODUCT_PERMANENT;
         if (isset($dataRows['redirect_type'])) {
             Assert::assertEquals(
                 $dataRows['redirect_type'],
@@ -92,7 +181,47 @@ class UpdateSeoFeatureContext extends AbstractProductFeatureContext
             $productSeoOptions->getRedirectTargetId(),
             'Unexpected redirect target'
         );
+        if ($expectedRedirectTarget) {
+            Assert::assertEquals(
+                $expectedRedirectTarget,
+                $productSeoOptions->getRedirectTarget()->getId(),
+                'Unexpected redirect target'
+            );
+        } else {
+            Assert::assertNull(
+                $productSeoOptions->getRedirectTarget(),
+                'Unexpected redirect target'
+            );
+        }
         unset($dataRows['redirect_target']);
+
+        if (isset($dataRows['redirect_name'])) {
+            Assert::assertEquals(
+                $dataRows['redirect_name'],
+                $productSeoOptions->getRedirectTarget()->getName(),
+                'Unexpected redirect_name'
+            );
+            unset($dataRows['redirect_name']);
+        }
+
+        if (isset($dataRows['redirect_image'])) {
+            switch ($redirectType) {
+                case RedirectType::TYPE_CATEGORY_TEMPORARY:
+                case RedirectType::TYPE_CATEGORY_PERMANENT:
+                    $realImageUrl = $this->getRealCategoryImageUrl($dataRows['redirect_image']);
+                    break;
+                default:
+                    $realImageUrl = $this->getRealImageUrl($dataRows['redirect_image']);
+                    break;
+            }
+
+            Assert::assertEquals(
+                $realImageUrl,
+                $productSeoOptions->getRedirectTarget()->getImage(),
+                'Unexpected redirect_image'
+            );
+            unset($dataRows['redirect_image']);
+        }
     }
 
     /**
@@ -102,10 +231,30 @@ class UpdateSeoFeatureContext extends AbstractProductFeatureContext
      * @param string $field
      * @param int $length
      */
-    public function updateLocalizedSeoFieldsTooLongValue(string $productReference, string $field, int $length)
-    {
+    public function updateLocalizedSeoFieldsTooLongValueForDefaultShop(
+        string $productReference,
+        string $field,
+        int $length
+    ): void {
+        $this->updateLocalizedSeoFieldsTooLongValue(
+            $productReference,
+            $field,
+            $length,
+            ShopConstraint::shop($this->getDefaultShopId())
+        );
+    }
+
+    private function updateLocalizedSeoFieldsTooLongValue(
+        string $productReference,
+        string $field,
+        int $length,
+        ShopConstraint $shopConstraint
+    ): void {
         try {
-            $command = new UpdateProductSeoCommand($this->getSharedStorage()->get($productReference));
+            $command = new UpdateProductSeoCommand(
+                $this->getSharedStorage()->get($productReference),
+                $shopConstraint
+            );
             switch ($field) {
                 case 'meta_title':
                     $command->setLocalizedMetaTitles([
@@ -145,6 +294,7 @@ class UpdateSeoFeatureContext extends AbstractProductFeatureContext
             $productForEditing->getProductSeoOptions()->getRedirectTargetId(),
             'Product "%s" expected to have no redirect target'
         );
+        Assert::assertNull($productForEditing->getProductSeoOptions()->getRedirectTarget());
     }
 
     /**

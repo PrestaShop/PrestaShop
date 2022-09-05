@@ -5,18 +5,21 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const basicHelper = require('@utils/basicHelper');
+const files = require('@utils/files');
 const testContext = require('@utils/testContext');
 
-// Import login steps
-const loginCommon = require('@commonTests/loginBO');
+// Import common tests
+const loginCommon = require('@commonTests/BO/loginBO');
+const {importFileTest} = require('@commonTests/BO/advancedParameters/importFile');
+const {bulkDeleteAddressesTest} = require('@commonTests/BO/customers/createDeleteAddress');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const addressesPage = require('@pages/BO/customers/addresses');
-const addAddressPage = require('@pages/BO/customers/addresses/add');
 
 // Import data
-const AddressFaker = require('@data/faker/address');
+const {Data} = require('@data/import/addresses');
 
 const baseContext = 'functional_BO_customers_addresses_paginationAndSortAddresses';
 
@@ -24,79 +27,62 @@ let browserContext;
 let page;
 let numberOfAddresses = 0;
 
+// Variable used to create customers csv file
+const fileName = 'addresses.csv';
+
 /*
-Create 11 addresses
-Paginate between pages
-Sort addresses by id, firstname, lastname, address, post code, city and country
-Delete addresses with bulk actions
+Pre-condition:
+- Import list of addresses
+Scenario:
+- Paginate between pages
+- Sort addresses by id, firstname, lastname, address, post code, city and country
+Post-condition:
+- Delete addresses with bulk actions
  */
 describe('BO - Customers - Addresses : Pagination and sort addresses table', async () => {
+  // Pre-condition: Import list of categories
+  importFileTest(fileName, Data.entity, `${baseContext}_preTest_1`);
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
     page = await helper.newTab(browserContext);
+    // Create csv file with all customers data
+    await files.createCSVFile('.', fileName, Data);
   });
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
+    // Delete created csv file
+    await files.deleteFile(fileName);
   });
 
-  it('should login in BO', async function () {
-    await loginCommon.loginBO(this, page);
-  });
+  // 1 : Go to addresses page
+  describe('Go to \'Customers > Addresses\' page', async () => {
+    it('should login in BO', async function () {
+      await loginCommon.loginBO(this, page);
+    });
 
-  it('should go to \'Customers > Addresses\' page', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage', baseContext);
+    it('should go to \'Customers > Addresses\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToAddressesPage', baseContext);
 
-    await dashboardPage.goToSubMenu(
-      page,
-      dashboardPage.customersParentLink,
-      dashboardPage.addressesLink,
-    );
-
-    await dashboardPage.closeSfToolBar(page);
-
-    const pageTitle = await addressesPage.getPageTitle(page);
-    await expect(pageTitle).to.contains(addressesPage.pageTitle);
-  });
-
-  it('should reset all filters and get number of addresses in BO', async function () {
-    await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
-
-    numberOfAddresses = await addressesPage.resetAndGetNumberOfLines(page);
-    await expect(numberOfAddresses).to.be.above(0);
-  });
-
-  // 1 : Create 11 new addresses
-  // 1 : Create 10 new addresses
-  describe('Create 10 addresses in BO', async () => {
-    const creationTests = new Array(10).fill(0, 0, 10);
-    creationTests.forEach((test, index) => {
-      const createAddressData = new AddressFaker(
-        {
-          email: 'pub@prestashop.com',
-          address: `My address${index}`,
-          country: 'France',
-        },
+      await dashboardPage.goToSubMenu(
+        page,
+        dashboardPage.customersParentLink,
+        dashboardPage.addressesLink,
       );
 
-      it('should go to add new address page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToAddNewAddressPage${index}`, baseContext);
+      await dashboardPage.closeSfToolBar(page);
 
-        await addressesPage.goToAddNewAddressPage(page);
-        const pageTitle = await addAddressPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(addAddressPage.pageTitleCreate);
-      });
+      const pageTitle = await addressesPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(addressesPage.pageTitle);
+    });
 
-      it(`should create address n°${index + 1} and check result`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `createAddress${index}`, baseContext);
+    it('should reset all filters and get number of addresses in BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFirst', baseContext);
 
-        const textResult = await addAddressPage.createEditAddress(page, createAddressData);
-        await expect(textResult).to.equal(addressesPage.successfulCreationMessage);
-
-        const numberOfAddressesAfterCreation = await addressesPage.getNumberOfElementInGrid(page);
-        await expect(numberOfAddressesAfterCreation).to.be.equal(numberOfAddresses + 1 + index);
-      });
+      numberOfAddresses = await addressesPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfAddresses).to.be.above(0);
     });
   });
 
@@ -173,7 +159,7 @@ describe('BO - Customers - Addresses : Pagination and sort addresses table', asy
           sortedTable = await sortedTable.map(text => parseFloat(text));
         }
 
-        const expectedResult = await addressesPage.sortArray(nonSortedTable, test.args.isFloat);
+        const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
 
         if (test.args.sortDirection === 'asc') {
           await expect(sortedTable).to.deep.equal(expectedResult);
@@ -184,30 +170,6 @@ describe('BO - Customers - Addresses : Pagination and sort addresses table', asy
     });
   });
 
-  // 4 : Delete addresses created with bulk actions
-  describe('Delete addresses with Bulk Actions', async () => {
-    it('should filter list by address', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'filterToBulkDelete', baseContext);
-
-      await addressesPage.resetFilter(page);
-      await addressesPage.filterAddresses(page, 'input', 'address1', 'My address');
-
-      const address = await addressesPage.getTextColumnFromTableAddresses(page, 1, 'address1');
-      await expect(address).to.contains('My address');
-    });
-
-    it('should delete addresses', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteAddresses', baseContext);
-
-      const deleteTextResult = await addressesPage.deleteAddressesBulkActions(page);
-      await expect(deleteTextResult).to.be.equal(addressesPage.successfulDeleteMessage);
-    });
-
-    it('should reset all filters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetAfterBulkDelete', baseContext);
-
-      const numberOfAddressesAfterReset = await addressesPage.resetAndGetNumberOfLines(page);
-      await expect(numberOfAddressesAfterReset).to.be.equal(numberOfAddresses);
-    });
-  });
+  // Post-condition: Delete imported addresses with bulk actions
+  bulkDeleteAddressesTest('lastname', 'test', `${baseContext}_postTest_1`);
 });

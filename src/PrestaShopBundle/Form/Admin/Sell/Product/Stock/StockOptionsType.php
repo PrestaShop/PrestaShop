@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Stock;
 
-use PrestaShopBundle\Form\Admin\Type\SwitchType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -68,27 +67,16 @@ class StockOptionsType extends TranslatorAwareType
             ->add('stock_location', TextType::class, [
                 'label' => $this->trans('Stock location', 'Admin.Catalog.Feature'),
                 'required' => false,
-                'column_breaker' => true,
+                'attr' => [
+                    'placeholder' => $this->trans('Enter stock location', 'Admin.Catalog.Feature'),
+                    'class' => 'medium-input',
+                ],
+                'modify_all_shops' => true,
             ])
             ->add('low_stock_threshold', NumberType::class, [
-                'label' => $this->trans('Low stock level', 'Admin.Catalog.Feature'),
-                'help' => $this->trans('Leave empty to disable', 'Admin.Catalog.Help'),
-                'constraints' => [
-                    new Type(['type' => 'numeric']),
-                ],
-                'required' => false,
-                'default_empty_data' => 0,
-                // Using null here allows to keep the field empty in the page instead of 0
-                'empty_view_data' => null,
-            ])
-            ->add('low_stock_alert', SwitchType::class, [
-                'required' => false,
-                'label' => $this->trans(
-                    'Send me an email when the quantity is below or equals this level',
-                    'Admin.Catalog.Feature'
-                ),
+                'label' => $this->trans('Receive a low stock alert by email', 'Admin.Catalog.Feature'),
                 'label_help_box' => $this->trans(
-                    'The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]',
+                    'The email will be sent to all users who have access to the Stock page. To modify permissions, go to [1]Advanced Parameters > Team[/1].',
                     'Admin.Catalog.Help',
                     [
                         '[1]' => sprintf(
@@ -98,6 +86,18 @@ class StockOptionsType extends TranslatorAwareType
                         '[/1]' => '</a>',
                     ]
                 ),
+                'constraints' => [
+                    new Type(['type' => 'numeric']),
+                ],
+                'required' => false,
+                // These two options allow to have a default data equals to zero but displayed as empty string
+                'default_empty_data' => 0,
+                'empty_view_data' => null,
+                'modify_all_shops' => true,
+                'disabling_switch' => true,
+                'attr' => [
+                    'class' => 'small-input',
+                ],
             ])
         ;
     }
@@ -110,9 +110,7 @@ class StockOptionsType extends TranslatorAwareType
         parent::configureOptions($resolver);
         $resolver->setDefaults([
             'required' => false,
-            'label' => $this->trans('Stock', 'Admin.Catalog.Feature'),
-            'label_tag_name' => 'h2',
-            'columns_number' => 3,
+            'label' => false,
         ]);
     }
 }

@@ -1,5 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-combination-suppliers
-@reset-database-before-feature
+@restore-products-before-feature
+@restore-currencies-after-feature
 @clear-cache-before-feature
 @product-combination
 @update-combination-suppliers
@@ -62,123 +63,889 @@ Feature: Update product combination suppliers in Back Office (BO)
       | type        | combinations      |
     And product product1 type should be combinations
     And I generate combinations for product product1 using following attributes:
-      | Size  | [S,M]              |
-      | Color | [White,Black,Blue] |
+      | Size  | [S,M]         |
+      | Color | [White,Black] |
     And product "product1" should have following combinations:
       | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
       | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
       | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
-      | product1Blue   | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | false      |
       | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
       | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
-      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
     And combination "product1SWhite" should not have any suppliers assigned
     And combination "product1SBlack" should not have any suppliers assigned
-    And combination "product1Blue" should not have any suppliers assigned
     And combination "product1MWhite" should not have any suppliers assigned
     And combination "product1MBlack" should not have any suppliers assigned
-    And combination "product1MBlue" should not have any suppliers assigned
-    When I set following suppliers for combination "product1SWhite":
-      | reference               | supplier reference | combination supplier reference | currency | price tax excluded |
-      | product1SWhiteSupplier1 | supplier1          | sup white shirt S 1            | USD      | 10                 |
-    Then combination "product1SWhite" should have following suppliers:
-      | combination supplier reference | currency | price tax excluded |
-      | sup white shirt S 1            | USD      | 10                 |
-    And combination "product1SBlack" should not have any suppliers assigned
-    And combination "product1Blue" should not have any suppliers assigned
-    And combination "product1MWhite" should not have any suppliers assigned
-    And combination "product1MBlack" should not have any suppliers assigned
-    And combination "product1MBlue" should not have any suppliers assigned
-    # Default supplier is the first one
+    # Association and update are performed by two distinct commands, all combinations are associated
+    # This the moment to define the references for product_supplier to use them later, after it's too late
+    # You can define references for any combination/supplier association, you are not obliged to reference them all
+    When I associate suppliers to product "product1"
+      | supplier  | combination_suppliers                                                         |
+      | supplier2 | product1SWhite:product1SWhiteSupplier2;product1SBlack:product1SBlackSupplier2 |
+      | supplier1 | product1SWhite:product1SWhiteSupplier1;product1SBlack:product1SBlackSupplier1 |
+    Then product product1 should have the following suppliers assigned:
+      | supplier1 |
+      | supplier2 |
+    # Default supplier is the first one associated
     And product product1 should have following supplier values:
-      | default supplier           | supplier1           |
-      | default supplier reference | sup white shirt S 1 |
-    When I set following suppliers for combination "product1SWhite":
-      | reference               | supplier reference | combination supplier reference | currency | price tax excluded |
-      | product1SWhiteSupplier1 | supplier1          | new sup white shirt S 1        | USD      | 10                 |
-      | product1SWhiteSupplier2 | supplier2          | sup S2                         | USD      | 0                  |
-      | product1SWhiteSupplier3 | supplier3          | sup S3                         | USD      | 5.5                |
-    Then combination "product1SWhite" should have following suppliers:
-      | combination supplier reference | currency | price tax excluded |
-      | new sup white shirt S 1        | USD      | 10                 |
-      | sup S2                         | USD      | 0                  |
-      | sup S3                         | USD      | 5.5                |
+      | default supplier           | supplier2 |
+      | default supplier reference |           |
+    # Every combinations are associated to the supplier
+    And combination "product1SWhite" should have following suppliers:
+      | product_supplier        | supplier  | reference | currency | price_tax_excluded |
+      | product1SWhiteSupplier1 | supplier1 |           | USD      | 0                  |
+      | product1SWhiteSupplier2 | supplier2 |           | USD      | 0                  |
+    And combination "product1SBlack" should have following suppliers:
+      | product_supplier        | supplier  | reference | currency | price_tax_excluded |
+      | product1SBlackSupplier1 | supplier1 |           | USD      | 0                  |
+      | product1SBlackSupplier2 | supplier2 |           | USD      | 0                  |
+    # We didn't define references for product suppliers of these combinations so we don't check them
+    And combination "product1MWhite" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier1 |           | USD      | 0                  |
+      | supplier2 |           | USD      | 0                  |
+    And combination "product1MBlack" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier1 |           | USD      | 0                  |
+      | supplier2 |           | USD      | 0                  |
+    # I can update combination content independently (and partially) it does not remove other associations
+    When I update following suppliers for combination "product1SWhite":
+      | product_supplier        | supplier  | reference           | currency | price_tax_excluded |
+      | product1SWhiteSupplier1 | supplier1 | sup white shirt S 1 | USD      | 10                 |
+    And combination "product1SWhite" should have following suppliers:
+      | product_supplier        | supplier  | reference           | currency | price_tax_excluded |
+      | product1SWhiteSupplier1 | supplier1 | sup white shirt S 1 | USD      | 10                 |
+      | product1SWhiteSupplier2 | supplier2 |                     | USD      | 0                  |
+    And combination "product1SBlack" should have following suppliers:
+      | product_supplier        | supplier  | reference | currency | price_tax_excluded |
+      | product1SBlackSupplier1 | supplier1 |           | USD      | 0                  |
+      | product1SBlackSupplier2 | supplier2 |           | USD      | 0                  |
+    And combination "product1MWhite" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier1 |           | USD      | 0                  |
+      | supplier2 |           | USD      | 0                  |
+    And combination "product1MBlack" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier1 |           | USD      | 0                  |
+      | supplier2 |           | USD      | 0                  |
+    And product product1 should have following supplier values:
+      | default supplier           | supplier2           |
+      | default supplier reference |                     |
+    # Infos are for product form, they should remain empty for combination products
+    But product product1 should not have suppliers infos
+    When I update following suppliers for combination "product1SWhite":
+      | product_supplier        | supplier  | reference               | currency | price_tax_excluded |
+      | product1SWhiteSupplier1 | supplier1 | new sup white shirt S 1 | USD      | 10                 |
+      | product1SWhiteSupplier2 | supplier2 | sup S2                  | EUR      | 20                 |
+    Then product product1 should have the following suppliers assigned:
+      | supplier1 |
+      | supplier2 |
+    And combination "product1SWhite" should have following suppliers:
+      | product_supplier        | supplier  | reference               | currency | price_tax_excluded |
+      | product1SWhiteSupplier1 | supplier1 | new sup white shirt S 1 | USD      | 10                 |
+      | product1SWhiteSupplier2 | supplier2 | sup S2                  | EUR      | 20                 |
+    But product product1 should not have suppliers infos
     # Default supplier was already set it should be the same but reference is updated
+    And product product1 should have following supplier values:
+      | default supplier           | supplier2 |
+      | default supplier reference | sup S2    |
+    # Explicitly set default supplier for combination
+    When I set product product1 default supplier to supplier1
     And product product1 should have following supplier values:
       | default supplier           | supplier1               |
       | default supplier reference | new sup white shirt S 1 |
-    # Explicitly set default supplier for product
-    When I set product product1 default supplier to supplier2
-    When I set combination "product1SWhite" default supplier to supplier2
-    And product product1 should have following supplier values:
-      | default supplier           | supplier2 |
-      | default supplier reference | sup S2    |
-
-  Scenario: Set suppliers for standard product while it has combinations
-    Given product product1 type should be combinations
-    And product product1 should not have any suppliers assigned
-    And combination "product1SWhite" should have following suppliers:
-      | combination supplier reference | currency | price tax excluded |
-      | new sup white shirt S 1        | USD      | 10                 |
-      | sup S2                         | USD      | 0                  |
-      | sup S3                         | USD      | 5.5                |
-    When I set product product1 suppliers:
-      | reference         | supplier reference | product supplier reference      | currency | price tax excluded |
-      | product1supplier1 | supplier1          | my first supplier for product1  | USD      | 10                 |
-      | product1supplier2 | supplier2          | my second supplier for product1 | EUR      | 11                 |
-    Then I should get error that this action is allowed for single product only
-    And product product1 should not have any suppliers assigned
-    And combination "product1SWhite" should have following suppliers:
-      | combination supplier reference | currency | price tax excluded |
-      | new sup white shirt S 1        | USD      | 10                 |
-      | sup S2                         | USD      | 0                  |
-      | sup S3                         | USD      | 5.5                |
-    When I set product product1 default supplier to supplier2
-    Then I should get error that this action is allowed for single product only
-    And product product1 should have following supplier values:
-      | default supplier           | supplier2 |
-      | default supplier reference | sup S2    |
 
   Scenario: Remove one of combination suppliers
     Given combination "product1SWhite" should have following suppliers:
-      | combination supplier reference | currency | price tax excluded |
-      | new sup white shirt S 1        | USD      | 10                 |
-      | sup S2                         | USD      | 0                  |
-      | sup S3                         | USD      | 5.5                |
+      | product_supplier        | supplier  | reference               | currency | price_tax_excluded |
+      | product1SWhiteSupplier1 | supplier1 | new sup white shirt S 1 | USD      | 10                 |
+      | product1SWhiteSupplier2 | supplier2 | sup S2                  | EUR      | 20                 |
     And product product1 should have following supplier values:
-      | default supplier           | supplier2 |
-      | default supplier reference | sup S2    |
-    When I set following suppliers for combination "product1SWhite":
-      | reference               | supplier reference | combination supplier reference | currency | price tax excluded |
-      | product1SWhiteSupplier1 | supplier1          | sup white shirt S 1            | USD      | 10                 |
-      | product1SWhiteSupplier2 | supplier2          | sup S2                         | USD      | 0                  |
+      | default supplier           | supplier1               |
+      | default supplier reference | new sup white shirt S 1 |
+    When I associate suppliers to product "product1"
+      | supplier  | combination_suppliers                                                         |
+      | supplier1 | product1SWhite:product1SWhiteSupplier1;product1SBlack:product1SBlackSupplier1 |
     Then combination "product1SWhite" should have following suppliers:
-      | combination supplier reference | currency | price tax excluded |
-      | sup white shirt S 1            | USD      | 10                 |
-      | sup S2                         | USD      | 0                  |
+      | product_supplier        | supplier  | reference               | currency | price_tax_excluded |
+      | product1SWhiteSupplier1 | supplier1 | new sup white shirt S 1 | USD      | 10                 |
     And product product1 should have following supplier values:
-      | default supplier           | supplier2 |
-      | default supplier reference | sup S2    |
-    # If default supplier is removed another one is automatically associated
-    When I set following suppliers for combination "product1SWhite":
-      | reference                  | supplier reference | combination supplier reference | currency | price tax excluded |
-      | product1SWhiteSupplier3bis | supplier3          | sup S3                         | USD      | 5.5                |
-      | product1SWhiteSupplier1    | supplier1          | sup white shirt S 1            | USD      | 10                 |
-    Given combination "product1SWhite" should have following suppliers:
-      | combination supplier reference | currency | price tax excluded |
-      | sup white shirt S 1            | USD      | 10                 |
-      | sup S3                         | USD      | 5.5                |
+      | default supplier           | supplier1               |
+      | default supplier reference | new sup white shirt S 1 |
+    # If default supplier is removed, the first one is automatically associated
+    When I associate suppliers to product "product1"
+      | supplier  | combination_suppliers                     |
+      | supplier3 | product1SWhite:product1SWhiteSupplier3    |
+      | supplier2 | product1SWhite:product1SWhiteSupplier2bis |
+    And I update following suppliers for combination "product1SWhite":
+      | product_supplier           | supplier  | reference        | currency | price_tax_excluded |
+      | product1SWhiteSupplier2bis | supplier2 | second supplier2 | USD      | 20                 |
+      | product1SWhiteSupplier3    | supplier3 | sup S3           | USD      | 5.5                |
+    Then product product1 should have the following suppliers assigned:
+      | supplier2 |
+      | supplier3 |
+    And combination "product1SWhite" should have following suppliers:
+      | product_supplier           | supplier  | reference        | currency | price_tax_excluded |
+      | product1SWhiteSupplier2bis | supplier2 | second supplier2 | USD      | 20                 |
+      | product1SWhiteSupplier3    | supplier3 | sup S3           | USD      | 5.5                |
     And product product1 should have following supplier values:
       | default supplier           | supplier3 |
       | default supplier reference | sup S3    |
 
   Scenario: Remove all associated combination suppliers
     Given product product1 type should be combinations
-    Given combination "product1SWhite" should have following suppliers:
-      | combination supplier reference | currency | price tax excluded |
-      | sup white shirt S 1            | USD      | 10                 |
-      | sup S3                         | USD      | 5.5                |
-    When I remove all associated combination "product1SWhite" suppliers
+    And product product1 should have the following suppliers assigned:
+      | supplier2 |
+      | supplier3 |
+    And combination "product1SWhite" should have following suppliers:
+      | product_supplier           | supplier  | reference        | currency | price_tax_excluded |
+      | product1SWhiteSupplier2bis | supplier2 | second supplier2 | USD      | 20                 |
+      | product1SWhiteSupplier3    | supplier3 | sup S3           | USD      | 5.5                |
+    And product product1 should have following supplier values:
+      | default supplier           | supplier3 |
+      | default supplier reference | sup S3    |
+    When I remove all associated product product1 suppliers
     And combination "product1SWhite" should not have any suppliers assigned
+    And combination "product1SBlack" should not have any suppliers assigned
+    And combination "product1MWhite" should not have any suppliers assigned
+    And combination "product1MBlack" should not have any suppliers assigned
     And product product1 should not have a default supplier
     And product product1 default supplier reference should be empty
+
+  Scenario: Update product suppliers without specifying the productSupplierId should also work
+    When I associate suppliers to product "product1"
+      | supplier  | combination_suppliers                     |
+      | supplier2 | product1SWhite:product1SWhiteSupplier2Ter |
+      | supplier1 | product1SWhite:product1SWhiteSupplier1Ter |
+    Then product product1 should have the following suppliers assigned:
+      | supplier1 |
+      | supplier2 |
+    # Default supplier is the first one associated
+    And product product1 should have following supplier values:
+      | default supplier           | supplier2 |
+      | default supplier reference |           |
+    # Suppliers are associated to all combinations but only product1SWhite has references for product supplier
+    And combination "product1SWhite" should have following suppliers:
+      | product_supplier           | supplier  | reference | currency | price_tax_excluded |
+      | product1SWhiteSupplier1Ter | supplier1 |           | USD      | 0                  |
+      | product1SWhiteSupplier2Ter | supplier2 |           | USD      | 0                  |
+    And combination "product1SBlack" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier1 |           | USD      | 0                  |
+      | supplier2 |           | USD      | 0                  |
+    And combination "product1MWhite" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier1 |           | USD      | 0                  |
+      | supplier2 |           | USD      | 0                  |
+    And combination "product1MBlack" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier1 |           | USD      | 0                  |
+      | supplier2 |           | USD      | 0                  |
+    # We can update combination suppliers even without specifying the productSupplierId, the matching works based on the
+    # productId,combinationId,supplierId triplet
+    When I update following suppliers for combination "product1SWhite":
+      | supplier  | reference               | currency | price_tax_excluded |
+      | supplier1 | new sup white shirt S 1 | USD      | 51                 |
+      | supplier2 | second supplier2        | USD      | 69                 |
+    And combination "product1SWhite" should have following suppliers:
+      | product_supplier           | supplier  | reference               | currency | price_tax_excluded |
+      | product1SWhiteSupplier1Ter | supplier1 | new sup white shirt S 1 | USD      | 51                 |
+      | product1SWhiteSupplier2Ter | supplier2 | second supplier2        | USD      | 69                 |
+    And product product1 should have following supplier values:
+      | default supplier           | supplier2        |
+      | default supplier reference | second supplier2 |
+
+  Scenario: Updating a supplier not associated is forbidden
+    # Assert initial combination product state
+    Given product product1 type should be combinations
+    And product product1 should have the following suppliers assigned:
+      | supplier1 |
+      | supplier2 |
+    And combination "product1SWhite" should have following suppliers:
+      | product_supplier           | supplier  | reference               | currency | price_tax_excluded |
+      | product1SWhiteSupplier1Ter | supplier1 | new sup white shirt S 1 | USD      | 51                 |
+      | product1SWhiteSupplier2Ter | supplier2 | second supplier2        | USD      | 69                 |
+    But product product1 should not have suppliers infos
+    # Now we try updating a supplier not associated
+    When I update following suppliers for combination "product1SWhite":
+      | supplier  | reference               | currency | price_tax_excluded |
+      | supplier1 | new sup white shirt S 1 | USD      | 51                 |
+      | supplier2 | second supplier2        | USD      | 69                 |
+      | supplier3 | sup S3                  | USD      | 5.5                |
+    Then I should get error that supplier is not associated with product
+    # And nothing changed
+    Then product product1 should have the following suppliers assigned:
+      | supplier1 |
+      | supplier2 |
+    And combination "product1SWhite" should have following suppliers:
+      | product_supplier           | supplier  | reference               | currency | price_tax_excluded |
+      | product1SWhiteSupplier1Ter | supplier1 | new sup white shirt S 1 | USD      | 51                 |
+      | product1SWhiteSupplier2Ter | supplier2 | second supplier2        | USD      | 69                 |
+    And product product1 should have following supplier values:
+      | default supplier           | supplier2        |
+      | default supplier reference | second supplier2 |
+    But product product1 should not have suppliers infos
+
+  Scenario: Combinations wholesale price should depend on default supplier price (product wholesale price remains independent)
+    And I add product "product2" with following information:
+      | name[en-US] | universal T-shirt |
+      | type        | combinations      |
+    And product product2 type should be combinations
+    When I update product "product2" prices with following information:
+      | wholesale_price | 70  |
+    Then product product2 should have following prices information:
+      | wholesale_price | 70 |
+    And I generate combinations for product product2 using following attributes:
+      | Size  | [S,M]         |
+      | Color | [White,Black] |
+    And product "product2" should have following combinations:
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product2SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
+      | product2SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
+      | product2MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product2MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+    And combination "product2SWhite" should have following prices:
+      | combination price detail        | value |
+      | impact on price                 | 0     |
+      | impact on price with taxes      | 0     |
+      | impact on unit price            | 0     |
+      | impact on unit price with taxes | 0     |
+      | eco tax                         | 0     |
+      | eco tax with taxes              | 0     |
+      | wholesale price                 | 0     |
+      | product tax rate                | 0     |
+      | product price                   | 0     |
+      | product ecotax                  | 0     |
+    And product product2 should have following prices information:
+      | wholesale_price | 70 |
+    When I associate suppliers to product "product2"
+      | supplier  | combination_suppliers                                                         |
+      | supplier2 | product2SWhite:product2SWhiteSupplier2;product2SBlack:product2SBlackSupplier2 |
+      | supplier1 | product2SWhite:product2SWhiteSupplier1;product2SBlack:product2SBlackSupplier1 |
+    Given product product2 should have the following suppliers assigned:
+      | supplier1 |
+      | supplier2 |
+    And combination "product2SWhite" should have following suppliers:
+      | product_supplier        | supplier  | reference | currency | price_tax_excluded |
+      | product2SWhiteSupplier1 | supplier1 |           | USD      | 0                  |
+      | product2SWhiteSupplier2 | supplier2 |           | USD      | 0                  |
+    And product product2 should have following supplier values:
+      | default supplier           | supplier2 |
+    Then product product2 should have following prices information:
+      | wholesale_price | 70 |
+    # Now I update suppliers values, the wholesale price of the combination should have the same value as the default supplier
+    When I update following suppliers for combination "product2SWhite":
+      | product_supplier        | supplier  | reference | currency | price_tax_excluded |
+      | product2SWhiteSupplier1 | supplier1 |           | USD      | 51                 |
+      | product2SWhiteSupplier2 | supplier2 |           | USD      | 69                 |
+    And I update following suppliers for combination "product2SBlack":
+      | product_supplier        | supplier  | reference | currency | price_tax_excluded |
+      | product2SBlackSupplier1 | supplier1 |           | USD      | 44                 |
+      | product2SBlackSupplier2 | supplier2 |           | USD      | 49                 |
+    Then combination "product2SWhite" should have following suppliers:
+      | product_supplier        | supplier  | reference | currency | price_tax_excluded |
+      | product2SWhiteSupplier1 | supplier1 |           | USD      | 51                 |
+      | product2SWhiteSupplier2 | supplier2 |           | USD      | 69                 |
+    And combination "product2SBlack" should have following suppliers:
+      | product_supplier        | supplier  | reference | currency | price_tax_excluded |
+      | product2SBlackSupplier1 | supplier1 |           | USD      | 44                 |
+      | product2SBlackSupplier2 | supplier2 |           | USD      | 49                 |
+    And combination "product2SWhite" should have following prices:
+      | combination price detail        | value |
+      | impact on price                 | 0     |
+      | impact on price with taxes      | 0     |
+      | impact on unit price            | 0     |
+      | impact on unit price with taxes | 0     |
+      | eco tax                         | 0     |
+      | eco tax with taxes              | 0     |
+      | wholesale price                 | 69    |
+      | product tax rate                | 0     |
+      | product price                   | 0     |
+      | product ecotax                  | 0     |
+    And combination "product2SBlack" should have following prices:
+      | combination price detail        | value |
+      | impact on price                 | 0     |
+      | impact on price with taxes      | 0     |
+      | impact on unit price            | 0     |
+      | impact on unit price with taxes | 0     |
+      | eco tax                         | 0     |
+      | eco tax with taxes              | 0     |
+      | wholesale price                 | 49    |
+      | product tax rate                | 0     |
+      | product price                   | 0     |
+      | product ecotax                  | 0     |
+    And combination "product2MWhite" should have following prices:
+      | combination price detail        | value |
+      | impact on price                 | 0     |
+      | impact on price with taxes      | 0     |
+      | impact on unit price            | 0     |
+      | impact on unit price with taxes | 0     |
+      | eco tax                         | 0     |
+      | eco tax with taxes              | 0     |
+      | wholesale price                 | 0     |
+      | product tax rate                | 0     |
+      | product price                   | 0     |
+      | product ecotax                  | 0     |
+    And combination "product2MBlack" should have following prices:
+      | combination price detail        | value |
+      | impact on price                 | 0     |
+      | impact on price with taxes      | 0     |
+      | impact on unit price            | 0     |
+      | impact on unit price with taxes | 0     |
+      | eco tax                         | 0     |
+      | eco tax with taxes              | 0     |
+      | wholesale price                 | 0     |
+      | product tax rate                | 0     |
+      | product price                   | 0     |
+      | product ecotax                  | 0     |
+    And product product2 should have following prices information:
+      | wholesale_price | 70 |
+    # Change the default supplier the wholesale price should also be updated
+    When I set product product2 default supplier to supplier1
+    And product product2 should have following supplier values:
+      | default supplier           | supplier1 |
+      | default supplier reference |           |
+    And combination "product2SWhite" should have following prices:
+      | combination price detail        | value |
+      | impact on price                 | 0     |
+      | impact on price with taxes      | 0     |
+      | impact on unit price            | 0     |
+      | impact on unit price with taxes | 0     |
+      | eco tax                         | 0     |
+      | eco tax with taxes              | 0     |
+      | wholesale price                 | 51    |
+      | product tax rate                | 0     |
+      | product price                   | 0     |
+      | product ecotax                  | 0     |
+    And combination "product2SBlack" should have following prices:
+      | combination price detail        | value |
+      | impact on price                 | 0     |
+      | impact on price with taxes      | 0     |
+      | impact on unit price            | 0     |
+      | impact on unit price with taxes | 0     |
+      | eco tax                         | 0     |
+      | eco tax with taxes              | 0     |
+      | wholesale price                 | 44    |
+      | product tax rate                | 0     |
+      | product price                   | 0     |
+      | product ecotax                  | 0     |
+    And combination "product2MWhite" should have following prices:
+      | combination price detail        | value |
+      | impact on price                 | 0     |
+      | impact on price with taxes      | 0     |
+      | impact on unit price            | 0     |
+      | impact on unit price with taxes | 0     |
+      | eco tax                         | 0     |
+      | eco tax with taxes              | 0     |
+      | wholesale price                 | 0     |
+      | product tax rate                | 0     |
+      | product price                   | 0     |
+      | product ecotax                  | 0     |
+    And combination "product2MBlack" should have following prices:
+      | combination price detail        | value |
+      | impact on price                 | 0     |
+      | impact on price with taxes      | 0     |
+      | impact on unit price            | 0     |
+      | impact on unit price with taxes | 0     |
+      | eco tax                         | 0     |
+      | eco tax with taxes              | 0     |
+      | wholesale price                 | 0     |
+      | product tax rate                | 0     |
+      | product price                   | 0     |
+      | product ecotax                  | 0     |
+    And product product2 should have following prices information:
+      | wholesale_price | 70 |
+
+  Scenario: Updating combination wholesale price should update default supplier price (product wholesale remains independent)
+    Given I add product "product3" with following information:
+      | name[en-US] | universal T-shirt |
+      | type        | combinations      |
+    And product product3 type should be combinations
+    When I update product "product3" prices with following information:
+      | wholesale_price | 70  |
+    Then product product3 should have following prices information:
+      | wholesale_price | 70 |
+    And I generate combinations for product product3 using following attributes:
+      | Size  | [S,M]         |
+      | Color | [White,Black] |
+    Then product "product3" should have following combinations:
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product3SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
+      | product3SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
+      | product3MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product3MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+    And combination "product3SWhite" should have following prices:
+      | combination price detail        | value |
+      | impact on price                 | 0     |
+      | impact on price with taxes      | 0     |
+      | impact on unit price            | 0     |
+      | impact on unit price with taxes | 0     |
+      | eco tax                         | 0     |
+      | eco tax with taxes              | 0     |
+      | wholesale price                 | 0     |
+      | product tax rate                | 0     |
+      | product price                   | 0     |
+      | product ecotax                  | 0     |
+    When I associate suppliers to product "product3"
+      | supplier  | combination_suppliers                  |
+      | supplier2 | product3SWhite:product3SWhiteSupplier2 |
+      | supplier1 | product3SWhite:product3SWhiteSupplier1 |
+    Then product product3 should have the following suppliers assigned:
+      | supplier1 |
+      | supplier2 |
+    And combination "product3SWhite" should have following suppliers:
+      | product_supplier        | supplier  | reference | currency | price_tax_excluded |
+      | product3SWhiteSupplier1 | supplier1 |           | USD      | 0                  |
+      | product3SWhiteSupplier2 | supplier2 |           | USD      | 0                  |
+    And product product3 should have following supplier values:
+      | default supplier           | supplier2 |
+    # Supplier with value zero has overridden the product wholesale price
+    And product product3 should have following prices information:
+      | wholesale_price | 70 |
+    # Now I update combination wholesale price it should update the default supplier price
+    When I update combination "product3SWhite" prices with following details:
+      | wholesale price      | 20  |
+    Then combination "product3SWhite" should have following prices:
+      | combination price detail        | value |
+      | impact on price                 | 0     |
+      | impact on price with taxes      | 0     |
+      | impact on unit price            | 0     |
+      | impact on unit price with taxes | 0     |
+      | eco tax                         | 0     |
+      | eco tax with taxes              | 0     |
+      | wholesale price                 | 20    |
+      | product tax rate                | 0     |
+      | product price                   | 0     |
+      | product ecotax                  | 0     |
+    And combination "product3SWhite" should have following suppliers:
+      | product_supplier        | supplier  | reference | currency | price_tax_excluded |
+      | product3SWhiteSupplier1 | supplier1 |           | USD      | 0                  |
+      | product3SWhiteSupplier2 | supplier2 |           | USD      | 20                 |
+    And product product3 should have following prices information:
+      | wholesale_price | 70 |
+    When I set product product3 default supplier to supplier1
+    Then product product3 should have following supplier values:
+      | default supplier           | supplier1 |
+    # Back to 0 since it's the value for supplier1
+    And combination "product3SWhite" should have following prices:
+      | combination price detail        | value |
+      | impact on price                 | 0     |
+      | impact on price with taxes      | 0     |
+      | impact on unit price            | 0     |
+      | impact on unit price with taxes | 0     |
+      | eco tax                         | 0     |
+      | eco tax with taxes              | 0     |
+      | wholesale price                 | 0     |
+      | product tax rate                | 0     |
+      | product price                   | 0     |
+      | product ecotax                  | 0     |
+    And product product3 should have following prices information:
+      | wholesale_price | 70 |
+    When I update combination "product3SWhite" prices with following details:
+      | wholesale price      | 44  |
+    # The new default supplier is updated
+    And combination "product3SWhite" should have following suppliers:
+      | product_supplier        | supplier  | reference | currency | price_tax_excluded |
+      | product3SWhiteSupplier1 | supplier1 |           | USD      | 44                 |
+      | product3SWhiteSupplier2 | supplier2 |           | USD      | 20                 |
+    And product product3 should have following prices information:
+      | wholesale_price | 70 |
+
+  Scenario: When new combinations are generated the suppliers must be associated to them
+    Given I add product "product4" with following information:
+      | name[en-US] | universal T-shirt |
+      | type        | combinations      |
+    And product product4 type should be combinations
+    And I generate combinations for product product4 using following attributes:
+      | Size  | [S,M]         |
+      | Color | [White,Black] |
+    Then product "product4" should have following combinations:
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product4SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
+      | product4SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
+      | product4MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product4MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+    When I associate suppliers to product "product4"
+      | supplier  | combination_suppliers                  |
+      | supplier2 | product4SWhite:product4SWhiteSupplier2 |
+      | supplier1 | product4SWhite:product4SWhiteSupplier1 |
+    And I update following suppliers for combination "product4SWhite":
+      | product_supplier        | supplier  | reference          | currency | price_tax_excluded |
+      | product4SWhiteSupplier1 | supplier1 | white S supplier 1 | USD      | 51                 |
+      | product4SWhiteSupplier2 | supplier2 | white S supplier 2 | EUR      | 69                 |
+    Then product product4 should have the following suppliers assigned:
+      | supplier1 |
+      | supplier2 |
+    And product product4 should have following supplier values:
+      | default supplier           | supplier2 |
+    And combination "product4SWhite" should have following suppliers:
+      | product_supplier        | supplier  | reference          | currency | price_tax_excluded |
+      | product4SWhiteSupplier1 | supplier1 | white S supplier 1 | USD      | 51                 |
+      | product4SWhiteSupplier2 | supplier2 | white S supplier 2 | EUR      | 69                 |
+    And combination "product4SBlack" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier1 |           | USD      | 0                  |
+      | supplier2 |           | USD      | 0                  |
+    And combination "product4MWhite" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier1 |           | USD      | 0                  |
+      | supplier2 |           | USD      | 0                  |
+    And combination "product4MBlack" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier1 |           | USD      | 0                  |
+      | supplier2 |           | USD      | 0                  |
+    # Now I generate new combinations
+    When I generate combinations for product product4 using following attributes:
+      | Size  | [S,M]  |
+      | Color | [Blue] |
+    Then product "product4" should have following combinations:
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product4SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
+      | product4SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
+      | product4MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product4MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+      | product4SBlue  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | false      |
+      | product4MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
+    And combination "product4SWhite" should have following suppliers:
+      | product_supplier        | supplier  | reference          | currency | price_tax_excluded |
+      | product4SWhiteSupplier1 | supplier1 | white S supplier 1 | USD      | 51                 |
+      | product4SWhiteSupplier2 | supplier2 | white S supplier 2 | EUR      | 69                 |
+    And combination "product4SBlack" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier1 |           | USD      | 0                  |
+      | supplier2 |           | USD      | 0                  |
+    And combination "product4MWhite" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier1 |           | USD      | 0                  |
+      | supplier2 |           | USD      | 0                  |
+    And combination "product4MBlack" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier1 |           | USD      | 0                  |
+      | supplier2 |           | USD      | 0                  |
+    And combination "product4SBlue" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier1 |           | USD      | 0                  |
+      | supplier2 |           | USD      | 0                  |
+    And combination "product4MBlue" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier1 |           | USD      | 0                  |
+      | supplier2 |           | USD      | 0                  |
+
+  Scenario: I should be able to associate suppliers (and default supplier) even when no combinations has been created
+    # We create new empty suppliers which have no other products
+    Given I add new supplier supplier4 with following properties:
+      | name                    | my supplier 4       |
+      | address                 | Donelaicio st. 4    |
+      | city                    | Kaunas              |
+      | country                 | Lithuania           |
+      | enabled                 | true                |
+      | description[en-US]      | just a supplier     |
+      | meta title[en-US]       | my supplier nr four |
+      | meta description[en-US] |                     |
+      | meta keywords[en-US]    | sup,4               |
+      | shops                   | [shop1]             |
+    And I add new supplier supplier5 with following properties:
+      | name                    | my supplier 5       |
+      | address                 | Donelaicio st. 5    |
+      | city                    | Kaunas              |
+      | country                 | Lithuania           |
+      | enabled                 | true                |
+      | description[en-US]      | just a supplier     |
+      | meta title[en-US]       | my supplier nr five |
+      | meta description[en-US] |                     |
+      | meta keywords[en-US]    | sup,5               |
+      | shops                   | [shop1]             |
+    And I add product "product5" with following information:
+      | name[en-US] | really unique T-shirt |
+      | type        | combinations          |
+    And product product5 type should be combinations
+    But product product5 should have no combinations
+    When I associate suppliers to product "product5"
+      | supplier  | product_supplier  |
+      | supplier5 | product5supplier5 |
+      | supplier4 | product5supplier4 |
+    And I set product product5 default supplier to supplier4
+    Then product product5 should have the following suppliers assigned:
+      | supplier4 |
+      | supplier5 |
+    And product product5 should have following supplier values:
+      | default supplier           | supplier4 |
+    And supplier "supplier4" should have 1 products associated
+    And supplier "supplier5" should have 1 products associated
+    # No combinations but suppliers display the product regardless
+    And supplier "supplier4" should have following details for product "really unique T-shirt":
+      | attribute name | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      |                |                    | $0.00           | product5          |       |     | 0        |
+    And supplier "supplier5" should have following details for product "really unique T-shirt":
+      | attribute name | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      |                |                    | $0.00           | product5          |       |     | 0        |
+    # Event if association is present no details are provided in product form
+    But product product5 should not have suppliers infos
+    # Now I generate combinations, since the supplier's associations are existent the combination will also be associated
+    When I generate combinations for product product5 using following attributes:
+      | Size  | [S,M]         |
+      | Color | [White,Black] |
+    Then product "product5" should have following combinations:
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product5SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
+      | product5SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
+      | product5MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product5MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+    And combination "product5SWhite" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier4 |           | USD      | 0                  |
+      | supplier5 |           | USD      | 0                  |
+    And combination "product5SBlack" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier4 |           | USD      | 0                  |
+      | supplier5 |           | USD      | 0                  |
+    And combination "product5MWhite" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier4 |           | USD      | 0                  |
+      | supplier5 |           | USD      | 0                  |
+    And combination "product5MBlack" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier4 |           | USD      | 0                  |
+      | supplier5 |           | USD      | 0                  |
+    And supplier "supplier4" should have 1 products associated
+    And supplier "supplier5" should have 1 products associated
+    # Now that combinations are present only them are displayed
+    And supplier "supplier4" should have following details for product "really unique T-shirt":
+      | attribute name          | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      | Size - S, Color - White |                    | $0.00           | product5          |       |     | 0        |
+      | Size - S, Color - Black |                    | $0.00           | product5          |       |     | 0        |
+      | Size - M, Color - White |                    | $0.00           | product5          |       |     | 0        |
+      | Size - M, Color - Black |                    | $0.00           | product5          |       |     | 0        |
+    And supplier "supplier5" should have following details for product "really unique T-shirt":
+      | attribute name          | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      | Size - S, Color - White |                    | $0.00           | product5          |       |     | 0        |
+      | Size - S, Color - Black |                    | $0.00           | product5          |       |     | 0        |
+      | Size - M, Color - White |                    | $0.00           | product5          |       |     | 0        |
+      | Size - M, Color - Black |                    | $0.00           | product5          |       |     | 0        |
+    # Now I delete a combination its association should disappear
+    When I delete combination product5SWhite
+    Then product "product5" should have following combinations:
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product5SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | true       |
+      | product5MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product5MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+    And combination "product5SBlack" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier4 |           | USD      | 0                  |
+      | supplier5 |           | USD      | 0                  |
+    And combination "product5MWhite" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier4 |           | USD      | 0                  |
+      | supplier5 |           | USD      | 0                  |
+    And combination "product5MBlack" should have following suppliers:
+      | supplier  | reference | currency | price_tax_excluded |
+      | supplier4 |           | USD      | 0                  |
+      | supplier5 |           | USD      | 0                  |
+    And supplier "supplier4" should have 1 products associated
+    And supplier "supplier5" should have 1 products associated
+    # Now that combinations are present only them are displayed
+    And supplier "supplier4" should have following details for product "really unique T-shirt":
+      | attribute name          | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      | Size - S, Color - Black |                    | $0.00           | product5          |       |     | 0        |
+      | Size - M, Color - White |                    | $0.00           | product5          |       |     | 0        |
+      | Size - M, Color - Black |                    | $0.00           | product5          |       |     | 0        |
+    And supplier "supplier5" should have following details for product "really unique T-shirt":
+      | attribute name          | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      | Size - S, Color - Black |                    | $0.00           | product5          |       |     | 0        |
+      | Size - M, Color - White |                    | $0.00           | product5          |       |     | 0        |
+      | Size - M, Color - Black |                    | $0.00           | product5          |       |     | 0        |
+    When I delete following combinations of product product5:
+      | id reference   |
+      | product5SBlack |
+      | product5MWhite |
+      | product5MBlack |
+    Then product product5 should have no combinations
+    # Suppliers association are still present
+    But product product5 should have the following suppliers assigned:
+      | supplier4 |
+      | supplier5 |
+    And product product5 should have following supplier values:
+      | default supplier           | supplier4 |
+    And supplier "supplier4" should have 1 products associated
+    And supplier "supplier5" should have 1 products associated
+    # No combinations but suppliers display the product regardless
+    And supplier "supplier4" should have following details for product "really unique T-shirt":
+      | attribute name | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      |                |                    | $0.00           | product5          |       |     | 0        |
+    And supplier "supplier5" should have following details for product "really unique T-shirt":
+      | attribute name | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      |                |                    | $0.00           | product5          |       |     | 0        |
+    When I delete product product5
+    Then product product5 should not exist anymore
+    And supplier "supplier4" should have 0 products associated
+    And supplier "supplier5" should have 0 products associated
+
+  Scenario: Supplier associations should still be present if I change the product type
+    When I add product "product6" with following information:
+      | name[en-US] | even more unique T-shirt |
+      | type        | combinations             |
+    And product product6 type should be combinations
+    But product product6 should have no combinations
+    When I associate suppliers to product "product6"
+      | supplier  | product_supplier  |
+      | supplier5 | product6supplier5 |
+      | supplier4 | product6supplier4 |
+    Then product product6 should have the following suppliers assigned:
+      | supplier4 |
+      | supplier5 |
+    And product product6 should have following supplier values:
+      | default supplier           | supplier5 |
+    And supplier "supplier4" should have 1 products associated
+    And supplier "supplier5" should have 1 products associated
+    And supplier "supplier4" should have following details for product "even more unique T-shirt":
+      | attribute name | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      |                |                    | $0.00           | product6          |       |     | 0        |
+    And supplier "supplier5" should have following details for product "even more unique T-shirt":
+      | attribute name | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      |                |                    | $0.00           | product6          |       |     | 0        |
+    # Now I change the product type
+    When I update product "product6" type to standard
+    # Nothing should change
+    Then product product6 should have the following suppliers assigned:
+      | supplier4 |
+      | supplier5 |
+    And product product6 should have following supplier values:
+      | default supplier           | supplier5 |
+    And supplier "supplier4" should have 1 products associated
+    And supplier "supplier5" should have 1 products associated
+    And supplier "supplier4" should have following details for product "even more unique T-shirt":
+      | attribute name | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      |                |                    | $0.00           | product6          |       |     | 0        |
+    And supplier "supplier5" should have following details for product "even more unique T-shirt":
+      | attribute name | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      |                |                    | $0.00           | product6          |       |     | 0        |
+    # Let's try again with a product that has combinations
+    When I update product "product6" type to combinations
+    When I generate combinations for product product6 using following attributes:
+      | Size  | [S,M]         |
+      | Color | [White,Black] |
+    Then product "product6" should have following combinations:
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product6SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
+      | product6SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
+      | product6MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product6MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+    And supplier "supplier4" should have following details for product "even more unique T-shirt":
+      | attribute name          | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      | Size - S, Color - White |                    | $0.00           | product5          |       |     | 0        |
+      | Size - S, Color - Black |                    | $0.00           | product5          |       |     | 0        |
+      | Size - M, Color - White |                    | $0.00           | product5          |       |     | 0        |
+      | Size - M, Color - Black |                    | $0.00           | product5          |       |     | 0        |
+    And supplier "supplier5" should have following details for product "even more unique T-shirt":
+      | attribute name          | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      | Size - S, Color - White |                    | $0.00           | product5          |       |     | 0        |
+      | Size - S, Color - Black |                    | $0.00           | product5          |       |     | 0        |
+      | Size - M, Color - White |                    | $0.00           | product5          |       |     | 0        |
+      | Size - M, Color - Black |                    | $0.00           | product5          |       |     | 0        |
+    # We switch the type again
+    When I update product "product6" type to standard
+    # Still no changes, associations are still present
+    Then product product6 should have the following suppliers assigned:
+      | supplier4 |
+      | supplier5 |
+    And product product6 should have following supplier values:
+      | default supplier           | supplier5 |
+    And supplier "supplier4" should have 1 products associated
+    And supplier "supplier5" should have 1 products associated
+    And supplier "supplier4" should have following details for product "even more unique T-shirt":
+      | attribute name | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      |                |                    | $0.00           | product6          |       |     | 0        |
+    And supplier "supplier5" should have following details for product "even more unique T-shirt":
+      | attribute name | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      |                |                    | $0.00           | product6          |       |     | 0        |
+    When I delete product product6
+    Then product product6 should not exist anymore
+    And supplier "supplier4" should have 0 products associated
+    And supplier "supplier5" should have 0 products associated
+
+  Scenario: Supplier associations should still be present if I remove combinations
+    When I add product "product7" with following information:
+      | name[en-US] | even more unique T-shirt |
+      | type        | combinations             |
+    And product product7 type should be combinations
+    But product product7 should have no combinations
+    When I associate suppliers to product "product7"
+      | supplier  | product_supplier  |
+      | supplier5 | product7supplier5 |
+      | supplier4 | product7supplier4 |
+    Then product product7 should have the following suppliers assigned:
+      | supplier4 |
+      | supplier5 |
+    And product product7 should have following supplier values:
+      | default supplier           | supplier5 |
+    And supplier "supplier4" should have 1 products associated
+    And supplier "supplier5" should have 1 products associated
+    And supplier "supplier4" should have following details for product "even more unique T-shirt":
+      | attribute name | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      |                |                    | $0.00           | product7          |       |     | 0        |
+    And supplier "supplier5" should have following details for product "even more unique T-shirt":
+      | attribute name | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      |                |                    | $0.00           | product7          |       |     | 0        |
+    And I generate combinations for product product7 using following attributes:
+      | Size  | [S,M]         |
+      | Color | [White,Black] |
+    Then product "product7" should have following combinations:
+      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product7SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
+      | product7SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
+      | product7MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product7MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+    # This is mainly used to assign references to product suppliers
+    When I associate suppliers to product "product7"
+      | supplier  | combination_suppliers                                                         |
+      | supplier4 | product7SWhite:product7SWhiteSupplier4;product7SBlack:product7SBlackSupplier4 |
+      | supplier5 | product7SWhite:product7SWhiteSupplier5;product7SBlack:product7SBlackSupplier5 |
+    And combination "product7SWhite" should have following suppliers:
+      | product_supplier        | supplier  | reference | currency | price_tax_excluded |
+      | product7SWhiteSupplier4 | supplier4 |           | USD      | 0                  |
+      | product7SWhiteSupplier5 | supplier5 |           | USD      | 0                  |
+    # We update combination details to make sure it doesn't remove associations at this moment (previous implementation used to remove on each update)
+    When I update following suppliers for combination "product7SWhite":
+      | product_supplier        | supplier  | reference | currency | price_tax_excluded |
+      | product7SWhiteSupplier4 | supplier4 |           | USD      | 51                 |
+      | product7SWhiteSupplier5 | supplier5 |           | USD      | 69                 |
+    And combination "product7SWhite" should have following suppliers:
+      | product_supplier        | supplier  | reference | currency | price_tax_excluded |
+      | product7SWhiteSupplier4 | supplier4 |           | USD      | 51                 |
+      | product7SWhiteSupplier5 | supplier5 |           | USD      | 69                 |
+    # Now supplier list combinations
+    And supplier "supplier4" should have following details for product "even more unique T-shirt":
+      | attribute name          | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      | Size - S, Color - White |                    | $51.00          | product7          |       |     | 0        |
+      | Size - S, Color - Black |                    | $0.00           | product7          |       |     | 0        |
+      | Size - M, Color - White |                    | $0.00           | product7          |       |     | 0        |
+      | Size - M, Color - Black |                    | $0.00           | product7          |       |     | 0        |
+    And supplier "supplier5" should have following details for product "even more unique T-shirt":
+      | attribute name          | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      | Size - S, Color - White |                    | $69.00          | product7          |       |     | 0        |
+      | Size - S, Color - Black |                    | $0.00           | product7          |       |     | 0        |
+      | Size - M, Color - White |                    | $0.00           | product7          |       |     | 0        |
+      | Size - M, Color - Black |                    | $0.00           | product7          |       |     | 0        |
+    # I delete all product combinations
+    When I delete following combinations of product product7:
+      | id reference   |
+      | product7SWhite |
+      | product7SBlack |
+      | product7MWhite |
+      | product7MBlack |
+    Then product product7 should have no combinations
+    And product product7 should have the following suppliers assigned:
+      | supplier4 |
+      | supplier5 |
+    And product product7 should have following supplier values:
+      | default supplier | supplier5 |
+    # Now supplier can only list product, not combinations anymore
+    And supplier "supplier4" should have following details for product "even more unique T-shirt":
+      | attribute name | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      |                |                    | $0.00           | product7          |       |     | 0        |
+    And supplier "supplier5" should have following details for product "even more unique T-shirt":
+      | attribute name | supplier reference | wholesale price | product reference | ean13 | upc | quantity |
+      |                |                    | $0.00           | product7          |       |     | 0        |
+    When I delete product product7
+    Then product product7 should not exist anymore
+    And supplier "supplier4" should have 0 products associated
+    And supplier "supplier5" should have 0 products associated

@@ -4,7 +4,10 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const testContext = require('@utils/testContext');
+
+// Import login steps
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -12,9 +15,6 @@ const seoAndUrlsPage = require('@pages/BO/shopParameters/trafficAndSeo/seoAndUrl
 
 // Import data
 const {contact} = require('@data/demo/seoPages');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_TrafficAndSeo_seoAndUrls_filterSeoPages';
 
@@ -25,7 +25,8 @@ let numberOfSeoPages = 0;
 /*
 Filter SEO pages with id, page, page title and friendly url
  */
-describe('Filter SEO pages with id, page, page title and friendly url', async () => {
+describe('BO - Shop Parameters - Traffic & SEO : Filter SEO pages with id, page, page title and '
+  + 'friendly url', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -40,7 +41,7 @@ describe('Filter SEO pages with id, page, page title and friendly url', async ()
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Shop parameters > SEO and Urls\' page', async function () {
+  it('should go to \'Shop Parameters > Traffic & SEO\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSeoAndUrlsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -84,12 +85,7 @@ describe('Filter SEO pages with id, page, page title and friendly url', async ()
         await expect(numberOfSeoPagesAfterFilter).to.be.at.most(numberOfSeoPages);
 
         for (let i = 1; i <= numberOfSeoPagesAfterFilter; i++) {
-          const textColumn = await seoAndUrlsPage.getTextColumnFromTable(
-            page,
-            i,
-            test.args.filterBy,
-          );
-
+          const textColumn = await seoAndUrlsPage.getTextColumnFromTable(page, i, test.args.filterBy);
           await expect(textColumn).to.contains(test.args.filterValue);
         }
       });

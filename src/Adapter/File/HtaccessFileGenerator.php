@@ -26,8 +26,8 @@
 
 namespace PrestaShop\PrestaShop\Adapter\File;
 
-use PrestaShop\PrestaShop\Adapter\Cache\CacheClearer;
 use PrestaShop\PrestaShop\Adapter\Tools;
+use PrestaShop\PrestaShop\Core\Cache\Clearer\CacheClearerInterface;
 
 /**
  * Class HtaccessFileGenerator is responsible for generating htaccess file with its default content.
@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Adapter\Tools;
 class HtaccessFileGenerator
 {
     /**
-     * @var CacheClearer
+     * @var CacheClearerInterface
      */
     private $cacheClearer;
 
@@ -52,11 +52,11 @@ class HtaccessFileGenerator
     /**
      * HtaccessFileGenerator constructor.
      *
-     * @param CacheClearer $cacheClearer
+     * @param CacheClearerInterface $cacheClearer
      * @param Tools $tools
      * @param bool $multipleViewsConfiguration
      */
-    public function __construct(CacheClearer $cacheClearer, Tools $tools, $multipleViewsConfiguration)
+    public function __construct(CacheClearerInterface $cacheClearer, Tools $tools, $multipleViewsConfiguration)
     {
         $this->cacheClearer = $cacheClearer;
         $this->tools = $tools;
@@ -79,7 +79,7 @@ class HtaccessFileGenerator
         $isGenerated = $disableMultiView ? $this->tools->generateHtaccessWithMultiViews() : $this->tools->generateHtaccessWithoutMultiViews();
 
         if ($isGenerated) {
-            $this->cacheClearer->clearAllCaches();
+            $this->cacheClearer->clear();
         }
 
         return $isGenerated;

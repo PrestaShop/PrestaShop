@@ -2,7 +2,7 @@ admin_credit_slips_index:
   path: /
   methods: GET
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Order/CreditSlip:index'
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Order\CreditSlipController::indexAction'
     _legacy_controller: AdminSlip
     _legacy_link: AdminSlip
 
@@ -10,7 +10,7 @@ admin_credit_slips_search:
   path: /search
   methods: POST
   defaults:
-    _controller: PrestaShopBundle:Admin\Common:searchGrid
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
     _legacy_controller: AdminSlip
     _legacy_link: AdminSlip:submitFilterorder_slip
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.credit_slip
@@ -20,7 +20,7 @@ admin_credit_slips_generate_pdf:
   path: /{creditSlipId}/pdf
   methods: GET
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Order/CreditSlip:generatePdf'
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Order\CreditSlipController::generatePdfAction'
     _legacy_controller: AdminSlip
     _legacy_link: AdminSlip:submitgenerateOrderSlipPdf
     _legacy_parameters:
@@ -32,14 +32,14 @@ _admin_credit_slips_pdf_by_date:
   path: /pdf-by-date
   methods: GET
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Order/CreditSlip:generatePdfByDate'
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Order\CreditSlipController::generatePdfByDateAction'
     _legacy_link: AdminSlip:submitAddorder_slip
     _legacy_controller: AdminSlip
 
 admin_credit_slips_process_options:
   path: /
-  methods: [POST]
+  methods: [ POST ]
   defaults:
-    _controller: 'PrestaShopBundle:Admin/Sell/Order/CreditSlip:index'
+    _controller: 'PrestaShopBundle\Controller\Admin\Sell\Order\CreditSlipController::indexAction'
     _legacy_controller: AdminSlip
     _legacy_link: AdminSlip:submitOptionsorder_slip

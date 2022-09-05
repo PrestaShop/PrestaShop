@@ -85,6 +85,9 @@ services:
 
   prestashop.adapter.customer.query_handler.search_customers:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\QueryHandler\SearchCustomersHandler'
+    arguments:
+      - '@prestashop.adapter.legacy.configuration'
+      - "@=service('prestashop.adapter.legacy.context').getContext().language.id"
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Customer\Query\SearchCustomers'
@@ -113,3 +116,6 @@ services:
 
   prestashop.adapter.customer.customer_data_source:
     class: 'PrestaShop\PrestaShop\Adapter\Customer\CustomerDataSource'
+
+  prestashop.adapter.customer.repository.customer_repository:
+    class: 'PrestaShop\PrestaShop\Adapter\Customer\Repository\CustomerRepository'

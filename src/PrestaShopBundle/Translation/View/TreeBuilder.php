@@ -26,7 +26,7 @@
 
 namespace PrestaShopBundle\Translation\View;
 
-use Doctrine\Common\Util\Inflector;
+use PrestaShop\PrestaShop\Core\Util\Inflector;
 use PrestaShopBundle\Translation\Provider\AbstractProvider;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 
@@ -37,13 +37,13 @@ class TreeBuilder
      */
     private $locale;
     /**
-     * @var string
+     * @var string|null
      */
     private $theme;
 
     /**
      * @param string $locale
-     * @param string $theme
+     * @param string|null $theme
      */
     public function __construct($locale, $theme)
     {
@@ -53,7 +53,7 @@ class TreeBuilder
 
     /**
      * @param AbstractProvider $provider
-     * @param null $search
+     * @param string|array|null $search
      *
      * @return array|mixed
      */
@@ -146,7 +146,7 @@ class TreeBuilder
         $translationsTree = [];
 
         foreach ($catalogue as $domain => $messages) {
-            $tableisedDomain = Inflector::tableize($domain);
+            $tableisedDomain = Inflector::getInflector()->tableize($domain);
             // the third component of the domain may have underscores, so we need to limit pieces to 3
             $parts = explode('_', $tableisedDomain, 3);
             /** @var array $subtree */
@@ -180,9 +180,9 @@ class TreeBuilder
      *
      * @param array $tree
      * @param Router $router
-     * @param null $theme
+     * @param string|null $theme
      * @param null $search
-     * @param null $module
+     * @param string|null $module
      *
      * @return array
      */
@@ -294,9 +294,9 @@ class TreeBuilder
      * @param int $index
      * @param string $name
      * @param string $fullName
-     * @param bool $theme
-     * @param null $search
-     * @param bool $module
+     * @param string|bool $theme
+     * @param string|null $search
+     * @param string|bool $module
      *
      * @return mixed
      */

@@ -32,7 +32,7 @@ class CurrencyCore extends ObjectModel
     /**
      * Currency's name for the current language.
      *
-     * @var string
+     * @var string|string[]
      */
     public $name;
 
@@ -77,7 +77,7 @@ class CurrencyCore extends ObjectModel
      *
      * @var bool
      */
-    public $deleted = 0;
+    public $deleted = false;
 
     /**
      * Is this currency unofficial ?
@@ -112,7 +112,7 @@ class CurrencyCore extends ObjectModel
     /**
      * Currency's symbol for the current language.
      *
-     * @var string
+     * @var string|string[]
      */
     public $symbol;
 
@@ -155,7 +155,7 @@ class CurrencyCore extends ObjectModel
     /**
      * CLDR price pattern
      *
-     * @var string
+     * @var string|string[]
      */
     public $pattern;
 
@@ -345,7 +345,7 @@ class CurrencyCore extends ObjectModel
         /** @var Configuration $configuration */
         $configuration = $container->get('prestashop.adapter.legacy.configuration');
         $languages = Language::getIDs();
-        $defaultLanguage = new Language($configuration->get('PS_LANG_DEFAULT'));
+        $defaultLanguage = new Language((int) $configuration->get('PS_LANG_DEFAULT'));
         $locale = $localeCldr->getLocale($defaultLanguage->getLocale());
         $currency = $locale->getCurrency($this->iso_code);
         if (!empty($currency)) {
@@ -376,8 +376,10 @@ class CurrencyCore extends ObjectModel
      */
     public static function resetStaticCache()
     {
+        parent::resetStaticCache();
         static::$currencies = [];
         static::$countActiveCurrencies = [];
+        Cache::clean('Currency::*');
     }
 
     /**
@@ -754,8 +756,8 @@ class CurrencyCore extends ObjectModel
     /**
      * Add Cldr datas to result query or signe object/array.
      *
-     * @param $currencies mixed object|array
-     * @param $isObject bool
+     * @param array|object $currencies
+     * @param bool $isObject
      *
      * @return mixed object|array
      */
@@ -913,7 +915,7 @@ class CurrencyCore extends ObjectModel
      */
     public static function getIsoCodeById(int $id, bool $forceRefreshCache = false)
     {
-        $cacheId = 'Currency::getIsoCodeById' . pSQL($id);
+        $cacheId = 'Currency::getIsoCodeById' . pSQL((string) $id);
         if ($forceRefreshCache || !Cache::isStored($cacheId)) {
             $resultIsoCode = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('SELECT `iso_code` FROM ' . _DB_PREFIX_ . 'currency WHERE `id_currency` = ' . (int) $id);
             Cache::store($cacheId, $resultIsoCode);
@@ -934,10 +936,10 @@ class CurrencyCore extends ObjectModel
      */
     public static function getIdByNumericIsoCode($numericIsoCode, $idShop = 0)
     {
-        $cacheId = 'Currency::getIdByNumericIsoCode_' . pSQL($numericIsoCode) . '-' . (int) $idShop;
+        $cacheId = 'Currency::getIdByNumericIsoCode_' . pSQL((string) $numericIsoCode) . '-' . (int) $idShop;
         if (!Cache::isStored($cacheId)) {
             $query = Currency::getIdByQuery($idShop);
-            $query->where('numeric_iso_code = \'' . pSQL($numericIsoCode) . '\'');
+            $query->where('numeric_iso_code = \'' . pSQL((string) $numericIsoCode) . '\'');
 
             $result = (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query->build());
             Cache::store($cacheId, $result);

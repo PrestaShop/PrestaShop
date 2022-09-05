@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-shipping
-@reset-database-before-feature
+@restore-products-before-feature
 @clear-cache-before-feature
 @update-shipping
 Feature: Update product shipping options from Back Office (BO)

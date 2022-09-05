@@ -24,15 +24,15 @@
  *#}
 
 {% trans_default_domain "Admin.Shopparameters.Feature" %}
-{% form_theme setUpUrlsForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
+{% form_theme setUpUrlsForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
 {% block set_up_urls_configuration %}
   <div class="card">
     <h3 class="card-header">
       <i class="material-icons">settings</i> {{ 'Set up URLs'|trans }}
     </h3>
-    <div class="card-block row">
-      <div class="card-text">
+    <div class="card-body">
+      <div class="form-wrapper">
         {{ form_widget(setUpUrlsForm) }}
       </div>
     </div>

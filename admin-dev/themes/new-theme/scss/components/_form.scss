@@ -25,17 +25,17 @@
  */
 
 .form-horizontal {
-  .card-block {
-    justify-content: center;
+  .card-body {
     padding: 1.875rem $card-spacer-x;
-
-    &.row {
-      margin: 0; // used to override negative margins brought by .row
-    }
   }
 
-  .card-text {
-    @extend .col-sm-10;
+  .form-wrapper {
+    padding: 0 $spacer * 0.5;
+
+    @include media-breakpoint-up(sm) {
+      width: 83%;
+      margin: auto;
+    }
   }
 
   .form-check-radio {
@@ -67,9 +67,6 @@
         text-align: right;
       }
 
-      @include media-breakpoint-down("sm") {
-        padding-left: 0;
-      }
     }
 
     &.type-hidden {
@@ -88,9 +85,9 @@
   }
 
   // make ps-switch align with label
-  .ps-switch:not(.ps-switch-lg) {
+  span.ps-switch:not(.ps-switch-lg) {
     @include media-breakpoint-up("sm") {
-      margin-top: 5px;
+      margin-top: 7px;
     }
   }
 
@@ -117,6 +114,21 @@
     .modal-dialog {
       top: 45%;
     }
+  }
+}
+
+.form-group.inline-switch-widget {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+
+  > * {
+    width: auto;
+  }
+
+  > .input-group {
+    min-width: 35px;
+    margin-top: -7px;
   }
 }
 
@@ -148,3 +160,69 @@
     }
   }
 }
+
+.modify-all-shops {
+  display: none;
+  margin-top: 5px;
+  margin-left: 10px;
+
+  &.multi-shop-field-focused,
+  &.multi-shop-focused,
+  &.multi-shop-updated {
+    display: block;
+  }
+}
+
+/**
+ * Style related to the accordion form type
+ */
+.accordion-form {
+  .card {
+    margin-bottom: 0;
+    border: none;
+    box-shadow: none;
+
+    .card-header {
+      padding: 0;
+      margin-bottom: 0.5rem;
+      color: $dark-gray;
+      background-color: $background-grey;
+      @include border-radius(6px);
+
+      button {
+        padding: 0.7rem 1rem;
+      }
+    }
+
+    .accordion-form-button {
+      display: flex;
+
+      i.material-icons {
+        margin-left: auto;
+      }
+
+      i.material-icons::after {
+        content: "keyboard_arrow_up";
+      }
+
+      &.collapsed {
+        i.material-icons::after {
+          content: "keyboard_arrow_down";
+        }
+      }
+    }
+
+    .accordion-sub-form {
+      > .form-group {
+        padding: 0.625rem;
+        border-bottom: 1px solid $background-grey;
+      }
+
+      > .form-group:last-child {
+        margin-bottom: 0;
+        border-bottom: none;
+      }
+    }
+  }
+}
+

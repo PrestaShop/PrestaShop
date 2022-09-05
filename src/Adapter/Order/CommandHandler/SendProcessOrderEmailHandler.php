@@ -136,7 +136,7 @@ class SendProcessOrderEmailHandler implements SendProcessOrderEmailHandlerInterf
         $customer = new Customer($customerIdValue);
 
         if ($customer->id !== $customerIdValue) {
-            throw new CustomerNotFoundException(new CustomerId($customerIdValue), sprintf('Customer #%s not found', $customerIdValue));
+            throw new CustomerNotFoundException(sprintf('Customer #%d not found', $customerIdValue));
         }
 
         return $customer;

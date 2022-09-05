@@ -40,7 +40,7 @@ abstract class AbstractCatalogueLayersProviderTest extends KernelTestCase
      */
     protected $translationsDir;
 
-    public function setUp()
+    public function setUp(): void
     {
         self::bootKernel();
         $this->translationsDir = self::$kernel->getContainer()->getParameter('test_translations_dir');

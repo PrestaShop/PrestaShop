@@ -67,7 +67,7 @@ class AddStore extends BOBasePage {
     await this.setValue(page, this.noteTextarea, storeData.note);
 
     // Set store status
-    await page.check(this.statusToggle(storeData.status ? 'on' : 'off'));
+    await this.setChecked(page, this.statusToggle(storeData.status ? 'on' : 'off'));
 
     // Set opening hours
     for (let day = 1; day <= 7; day++) {

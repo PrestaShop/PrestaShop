@@ -27,12 +27,15 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
-use DateTime;
+use DateTimeImmutable;
 use Generator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Command\UpdateProductStockInformationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\StockCommandsBuilder;
+use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 
 class StockCommandsBuilderTest extends AbstractProductCommandBuilderTest
 {
@@ -44,8 +47,8 @@ class StockCommandsBuilderTest extends AbstractProductCommandBuilderTest
      */
     public function testBuildCommand(array $formData, array $expectedCommands): void
     {
-        $builder = new StockCommandsBuilder();
-        $builtCommands = $builder->buildCommands($this->getProductId(), $formData);
+        $builder = new StockCommandsBuilder(self::MODIFY_ALL_SHOPS_PREFIX);
+        $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 
@@ -61,24 +64,25 @@ class StockCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [],
         ];
 
-        $command = new UpdateProductStockInformationCommand($this->getProductId()->getValue());
         yield [
             [
                 'stock' => [
                     'not_handled' => 0,
                 ],
             ],
-            [$command],
+            [],
         ];
 
-        $command = new UpdateProductStockInformationCommand($this->getProductId()->getValue());
-        $command->setQuantity(100);
+        $command = $this->getSingleShopCommand();
+        $command->setDeltaQuantity(100);
         $command->setMinimalQuantity(1);
         yield [
             [
                 'stock' => [
                     'quantities' => [
-                        'quantity' => '100',
+                        'delta_quantity' => [
+                            'delta' => '100',
+                        ],
                         'minimal_quantity' => 1,
                     ],
                 ],
@@ -86,7 +90,7 @@ class StockCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = new UpdateProductStockInformationCommand($this->getProductId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setLocation('Im in miami...');
         yield [
             [
@@ -99,7 +103,7 @@ class StockCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = new UpdateProductStockInformationCommand($this->getProductId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setLowStockThreshold(5);
         yield [
             [
@@ -112,20 +116,20 @@ class StockCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = new UpdateProductStockInformationCommand($this->getProductId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setLowStockAlert(false);
         yield [
             [
                 'stock' => [
                     'options' => [
-                        'low_stock_alert' => '0',
+                        'disabling_switch_low_stock_threshold' => '0',
                     ],
                 ],
             ],
             [$command],
         ];
 
-        $command = new UpdateProductStockInformationCommand($this->getProductId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setPackStockType(PackStockType::STOCK_TYPE_BOTH);
         yield [
             [
@@ -136,7 +140,7 @@ class StockCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = new UpdateProductStockInformationCommand($this->getProductId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setOutOfStockType(OutOfStockType::OUT_OF_STOCK_DEFAULT);
         yield [
             [
@@ -149,10 +153,39 @@ class StockCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = new UpdateProductStockInformationCommand($this->getProductId()->getValue());
+        // Handle out_of_stock_type for product with combinations
+        $command->setOutOfStockType(OutOfStockType::OUT_OF_STOCK_DEFAULT);
+        yield [
+            [
+                'header' => [
+                    'type' => ProductType::TYPE_COMBINATIONS,
+                ],
+                'combinations' => [
+                    'availability' => [
+                        'out_of_stock_type' => '2',
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getSingleShopCommand();
+        $command->setAvailableDate(new DateTimeImmutable('2022-10-10'));
+        yield [
+            [
+                'stock' => [
+                    'availability' => [
+                        'available_date' => '2022-10-10',
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getSingleShopCommand();
         $localizedNotes = [
             '1' => 'hello',
-            '2', 'Goodbye',
+            '2' => 'Goodbye',
         ];
         $command->setLocalizedAvailableNowLabels($localizedNotes);
         yield [
@@ -166,7 +199,22 @@ class StockCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = new UpdateProductStockInformationCommand($this->getProductId()->getValue());
+        // Handle available_now_label for product with combinations
+        yield [
+            [
+                'header' => [
+                    'type' => ProductType::TYPE_COMBINATIONS,
+                ],
+                'combinations' => [
+                    'availability' => [
+                        'available_now_label' => $localizedNotes,
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getSingleShopCommand();
         $localizedNotes = [
             '1' => 'welcome',
             '3' => 'cya',
@@ -183,8 +231,23 @@ class StockCommandsBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = new UpdateProductStockInformationCommand($this->getProductId()->getValue());
-        $command->setAvailableDate(new DateTime('2022-10-10'));
+        // Handle available_later_label for product with combinations
+        yield [
+            [
+                'header' => [
+                    'type' => ProductType::TYPE_COMBINATIONS,
+                ],
+                'combinations' => [
+                    'availability' => [
+                        'available_later_label' => $localizedNotes,
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getSingleShopCommand();
+        $command->setAvailableDate(new DateTimeImmutable('2022-10-10'));
         yield [
             [
                 'stock' => [
@@ -195,5 +258,258 @@ class StockCommandsBuilderTest extends AbstractProductCommandBuilderTest
             ],
             [$command],
         ];
+
+        $command = $this->getSingleShopCommand();
+        $command->setAvailableDate(new NullDateTime());
+        yield [
+            [
+                'stock' => [
+                    'availability' => [
+                        'available_date' => '',
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getSingleShopCommand();
+        $command->setAvailableDate(new NullDateTime());
+        yield [
+            [
+                'stock' => [
+                    'availability' => [
+                        'available_date' => null,
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+    }
+
+    /**
+     * @dataProvider getExpectedCommandsMultiShop
+     *
+     * @param array $formData
+     * @param array $expectedCommands
+     */
+    public function testBuildCommandMultiShop(array $formData, array $expectedCommands): void
+    {
+        $builder = new StockCommandsBuilder(self::MODIFY_ALL_SHOPS_PREFIX);
+        $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
+        $this->assertEquals($expectedCommands, $builtCommands);
+    }
+
+    public function getExpectedCommandsMultiShop(): iterable
+    {
+        $localizedAvailableNowLabels = [
+            '1' => 'hello',
+            '2', 'Goodbye',
+        ];
+
+        $localizedAvailableLaterLabels = [
+            '1' => 'welcome',
+            '3' => 'cya',
+        ];
+
+        $singleShopCommand = $this->getSingleShopCommand();
+        $singleShopCommand
+            ->setDeltaQuantity(100)
+            ->setMinimalQuantity(1)
+            ->setLocation('Im in miami...')
+            ->setLowStockAlert(false)
+            ->setLowStockThreshold(5)
+            ->setPackStockType(PackStockType::STOCK_TYPE_BOTH)
+            ->setOutOfStockType(OutOfStockType::OUT_OF_STOCK_DEFAULT)
+            ->setLocalizedAvailableNowLabels($localizedAvailableNowLabels)
+            ->setLocalizedAvailableLaterLabels($localizedAvailableLaterLabels)
+            ->setAvailableDate(new DateTimeImmutable('2022-10-10'))
+        ;
+
+        yield 'full single shop command' => [
+            [
+                'stock' => [
+                    'quantities' => [
+                        'delta_quantity' => [
+                            'delta' => '100',
+                        ],
+                        'minimal_quantity' => 1,
+                    ],
+                    'pack_stock_type' => '2',
+                    'options' => [
+                        'stock_location' => 'Im in miami...',
+                        'low_stock_alert' => '0',
+                        'low_stock_threshold' => '5',
+                    ],
+                    'availability' => [
+                        'out_of_stock_type' => '2',
+                        'available_date' => '2022-10-10',
+                        'available_now_label' => $localizedAvailableNowLabels,
+                        'available_later_label' => $localizedAvailableLaterLabels,
+                    ],
+                ],
+            ],
+            [$singleShopCommand],
+        ];
+
+        $allShopsCommand = $this->getAllShopsCommand();
+        $allShopsCommand
+            ->setDeltaQuantity(100)
+            ->setMinimalQuantity(1)
+            ->setLocation('Im in miami...')
+            ->setLowStockAlert(false)
+            ->setLowStockThreshold(5)
+            ->setPackStockType(PackStockType::STOCK_TYPE_BOTH)
+            ->setOutOfStockType(OutOfStockType::OUT_OF_STOCK_DEFAULT)
+            ->setLocalizedAvailableNowLabels($localizedAvailableNowLabels)
+            ->setLocalizedAvailableLaterLabels($localizedAvailableLaterLabels)
+            ->setAvailableDate(new DateTimeImmutable('2022-10-10'))
+        ;
+
+        yield 'full all shops command' => [
+            [
+                'stock' => [
+                    'quantities' => [
+                        'delta_quantity' => [
+                            'delta' => '100',
+                            self::MODIFY_ALL_SHOPS_PREFIX . 'delta' => true,
+                        ],
+                        'minimal_quantity' => 1,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'minimal_quantity' => true,
+                    ],
+                    'pack_stock_type' => '2',
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'pack_stock_type' => true,
+                    'options' => [
+                        'stock_location' => 'Im in miami...',
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'stock_location' => true,
+                        'low_stock_alert' => '0',
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'low_stock_alert' => true,
+                        'low_stock_threshold' => '5',
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'low_stock_threshold' => true,
+                    ],
+                    'availability' => [
+                        'out_of_stock_type' => '2',
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'out_of_stock_type' => true,
+                        'available_date' => '2022-10-10',
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'available_date' => true,
+                        'available_now_label' => $localizedAvailableNowLabels,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'available_now_label' => true,
+                        'available_later_label' => $localizedAvailableLaterLabels,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'available_later_label' => true,
+                    ],
+                ],
+            ],
+            [$allShopsCommand],
+        ];
+
+        $singleShopCommand = $this->getSingleShopCommand();
+        $singleShopCommand
+            ->setDeltaQuantity(100)
+            ->setLocation('Im in miami...')
+            ->setLowStockThreshold(5)
+            ->setPackStockType(PackStockType::STOCK_TYPE_BOTH)
+            ->setLocalizedAvailableNowLabels($localizedAvailableNowLabels)
+        ;
+        $allShopsCommand = $this->getAllShopsCommand();
+        $allShopsCommand
+            ->setMinimalQuantity(1)
+            ->setLowStockAlert(false)
+            ->setOutOfStockType(OutOfStockType::OUT_OF_STOCK_DEFAULT)
+            ->setLocalizedAvailableLaterLabels($localizedAvailableLaterLabels)
+            ->setAvailableDate(new DateTimeImmutable('2022-10-10'))
+        ;
+
+        yield 'two commands with missing toggle fields' => [
+            [
+                'stock' => [
+                    'quantities' => [
+                        'delta_quantity' => [
+                            'delta' => '100',
+                        ],
+                        'minimal_quantity' => 1,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'minimal_quantity' => true,
+                    ],
+                    'pack_stock_type' => '2',
+                    'options' => [
+                        'stock_location' => 'Im in miami...',
+                        'low_stock_alert' => '0',
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'low_stock_alert' => true,
+                        'low_stock_threshold' => '5',
+                    ],
+                    'availability' => [
+                        'out_of_stock_type' => '2',
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'out_of_stock_type' => true,
+                        'available_date' => '2022-10-10',
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'available_date' => true,
+                        'available_now_label' => $localizedAvailableNowLabels,
+                        'available_later_label' => $localizedAvailableLaterLabels,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'available_later_label' => true,
+                    ],
+                ],
+            ],
+            [$singleShopCommand, $allShopsCommand],
+        ];
+
+        $singleShopCommand = $this->getSingleShopCommand();
+        $singleShopCommand
+            ->setMinimalQuantity(1)
+            ->setLowStockAlert(false)
+            ->setOutOfStockType(OutOfStockType::OUT_OF_STOCK_DEFAULT)
+            ->setLocalizedAvailableLaterLabels($localizedAvailableLaterLabels)
+            ->setAvailableDate(new DateTimeImmutable('2022-10-10'))
+        ;
+        $allShopsCommand = $this->getAllShopsCommand();
+        $allShopsCommand
+            ->setDeltaQuantity(100)
+            ->setLocation('Im in miami...')
+            ->setLowStockThreshold(5)
+            ->setPackStockType(PackStockType::STOCK_TYPE_BOTH)
+            ->setLocalizedAvailableNowLabels($localizedAvailableNowLabels)
+        ;
+
+        yield 'two commands with toggle field false' => [
+            [
+                'stock' => [
+                    'quantities' => [
+                        'delta_quantity' => [
+                            'delta' => '100',
+                            self::MODIFY_ALL_SHOPS_PREFIX . 'delta' => true,
+                        ],
+                        'minimal_quantity' => 1,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'minimal_quantity' => false,
+                    ],
+                    'pack_stock_type' => '2',
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'pack_stock_type' => true,
+                    'options' => [
+                        'stock_location' => 'Im in miami...',
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'stock_location' => true,
+                        'low_stock_alert' => '0',
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'low_stock_alert' => false,
+                        'low_stock_threshold' => '5',
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'low_stock_threshold' => true,
+                    ],
+                    'availability' => [
+                        'out_of_stock_type' => '2',
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'out_of_stock_type' => false,
+                        'available_date' => '2022-10-10',
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'available_date' => false,
+                        'available_now_label' => $localizedAvailableNowLabels,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'available_now_label' => true,
+                        'available_later_label' => $localizedAvailableLaterLabels,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'available_later_label' => false,
+                    ],
+                ],
+            ],
+            [$singleShopCommand, $allShopsCommand],
+        ];
+    }
+
+    private function getSingleShopCommand(): UpdateProductStockInformationCommand
+    {
+        return new UpdateProductStockInformationCommand($this->getProductId()->getValue(), ShopConstraint::shop(self::SHOP_ID));
+    }
+
+    private function getAllShopsCommand(): UpdateProductStockInformationCommand
+    {
+        return new UpdateProductStockInformationCommand($this->getProductId()->getValue(), ShopConstraint::allShops());
     }
 }

@@ -26,6 +26,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context\Domain;
 
+use Behat\Behat\Context\Environment\InitializedContextEnvironment;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Cart;
 use CartRule;
@@ -66,20 +67,25 @@ use Product;
 use RuntimeException;
 use SpecificPrice;
 use State;
-use Tests\Integration\Behaviour\Features\Context\ProductFeatureContext;
+use Tests\Integration\Behaviour\Features\Context\LegacyProductFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 
 class CartFeatureContext extends AbstractDomainFeatureContext
 {
     /**
-     * @var ProductFeatureContext
+     * @var LegacyProductFeatureContext
      */
     protected $productFeatureContext;
 
     /** @BeforeScenario */
     public function before(BeforeScenarioScope $scope)
     {
-        $this->productFeatureContext = $scope->getEnvironment()->getContext(ProductFeatureContext::class);
+        /** @var InitializedContextEnvironment $environment */
+        $environment = $scope->getEnvironment();
+        /** @var LegacyProductFeatureContext $productFeatureContext */
+        $productFeatureContext = $environment->getContext(LegacyProductFeatureContext::class);
+
+        $this->productFeatureContext = $productFeatureContext;
     }
 
     /**
@@ -101,7 +107,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         }
 
         Context::getContext()->currency = $currency;
-        SharedStorage::getStorage()->set($currencyIsoCode, $currency);
+        SharedStorage::getStorage()->set($currencyIsoCode, (int) $currency->id);
     }
 
     /**
@@ -137,9 +143,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function updateCartCurrency(string $cartReference, string $currencyReference)
     {
-        /** @var Currency $currency */
-        $currency = SharedStorage::getStorage()->get($currencyReference);
-
+        $currency = $this->getCurrency($currencyReference);
         $cartId = SharedStorage::getStorage()->get($cartReference);
 
         $this->getCommandBus()->handle(
@@ -163,7 +167,6 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     {
         $productId = $this->getProductIdByName($productName);
 
-        $this->cleanLastException();
         try {
             $this->getCommandBus()->handle(
                 new AddProductToCartCommand(
@@ -197,7 +200,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         $command = new AddSpecificPriceCommand(
             $productId,
             Reduction::TYPE_AMOUNT,
-            0,
+            '0',
             true,
             $price,
             1
@@ -264,7 +267,6 @@ class CartFeatureContext extends AbstractDomainFeatureContext
     {
         $productId = $this->getProductIdByName($productName);
 
-        $this->cleanLastException();
         try {
             $this->getCommandBus()->handle(
                 new UpdateProductQuantityInCartCommand(
@@ -364,7 +366,6 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         $combinationId = (int) $this->productFeatureContext->getCombinationWithName($productName, $combinationName)->id;
         $cartId = (int) SharedStorage::getStorage()->get($cartReference);
 
-        $this->cleanLastException();
         try {
             $this->getCommandBus()->handle(
                 new UpdateProductQuantityInCartCommand(
@@ -1043,7 +1044,7 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         $cartRule->date_from = $now->format('Y-m-d H:i:s');
         $now->add(new DateInterval('P1Y'));
         $cartRule->date_to = $now->format('Y-m-d H:i:s');
-        $cartRule->active = 1;
+        $cartRule->active = true;
         $cartRule->code = $voucherCode;
 
         return $cartRule;
@@ -1091,14 +1092,15 @@ class CartFeatureContext extends AbstractDomainFeatureContext
      */
     public function assertLastErrorIsMinimumQuantityWhichMustBeAddedToCart(int $minQuantity)
     {
-        $this->assertLastErrorIs(
+        /** @var MinimalQuantityException $lastError */
+        $lastError = $this->assertLastErrorIs(
             MinimalQuantityException::class
         );
-        if ($minQuantity !== $this->getLastException()->getMinimalQuantity()) {
+        if ($minQuantity !== $lastError->getMinimalQuantity()) {
             throw new RuntimeException(sprintf(
                 'Minimal quantity in exception, expected %s but got %s',
                 $minQuantity,
-                $this->getLastException()->getMinimalQuantity()
+                $lastError->getMinimalQuantity()
             ));
         }
     }
@@ -1141,9 +1143,19 @@ class CartFeatureContext extends AbstractDomainFeatureContext
         $customerId = (int) SharedStorage::getStorage()->get($customerReference);
 
         $cart = new Cart($cartId);
-        $cart->id_guest = null;
+        $cart->id_guest = 0;
         $cart->id_customer = $customerId;
         $cart->save();
         Context::getContext()->cart = $cart;
+    }
+
+    /**
+     * @param string $reference
+     *
+     * @return Currency
+     */
+    private function getCurrency(string $reference): Currency
+    {
+        return new Currency(SharedStorage::getStorage()->get($reference));
     }
 }

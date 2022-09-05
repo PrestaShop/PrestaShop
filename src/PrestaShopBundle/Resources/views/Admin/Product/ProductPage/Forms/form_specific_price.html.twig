@@ -36,7 +36,7 @@
   {% set column_default_xl_3 = 'col-xl-4' %}
 {% endif %}
 
-<div class="card card-block">
+<div class="card card-body">
   <h4><b>{{ 'Specific price conditions'|trans({}, 'Admin.Catalog.Feature') }}</b></h4>
   {{ form_errors(form) }}
 
@@ -115,12 +115,7 @@
       <fieldset class="form-group">
         <label>{{ form.sp_from_quantity.vars.label }}</label>
         {{ form_errors(form.sp_from_quantity) }}
-        <div class="input-group">
-          {{ form_widget(form.sp_from_quantity) }}
-          <div class="input-group-append">
-            <span class="input-group-text">{{ 'Unit(s)'|trans({}, 'Admin.Catalog.Feature') }}</span>
-          </div>
-        </div>
+        {{ form_widget(form.sp_from_quantity) }}
       </fieldset>
     </div>
   </div>
