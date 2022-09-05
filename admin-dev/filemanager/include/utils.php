@@ -64,8 +64,31 @@ function rename_folder($old_path, $name, $transliteration)
     }
 }
 
+/**
+ * Gets file extension from filepath
+ * test.example.jpg returns jpg
+ * test.example returns example
+ *
+ * @param $path
+ * @return array|string|string[]|null
+ */
+function getFileExtension($path)
+{
+    if (!is_file($path)) {
+        return null;
+    }
+
+    return pathinfo($path, PATHINFO_EXTENSION) ?: null;
+}
+
 function create_img_gd($imgfile, $imgthumb, $newwidth, $newheight="")
 {
+    if (getFileExtension($imgfile) === 'svg') {
+        copy($imgfile, $imgthumb);
+
+        return true;
+    }
+
     if (image_check_memory_usage($imgfile, $newwidth, $newheight)) {
         require_once 'php_image_magician.php';
         $magicianObj = new imageLib($imgfile);
@@ -80,6 +103,12 @@ function create_img_gd($imgfile, $imgthumb, $newwidth, $newheight="")
 
 function create_img($imgfile, $imgthumb, $newwidth, $newheight="")
 {
+    if (getFileExtension($imgfile) === 'svg') {
+        copy($imgfile, $imgthumb);
+
+        return true;
+    }
+
     if (image_check_memory_usage($imgfile, $newwidth, $newheight)) {
         require_once 'php_image_magician.php';
         $magicianObj = new imageLib($imgfile);
@@ -87,9 +116,9 @@ function create_img($imgfile, $imgthumb, $newwidth, $newheight="")
         $magicianObj -> saveImage($imgthumb, 80);
 
         return true;
-    } else {
-        return false;
     }
+
+    return false;
 }
 
 function makeSize($size)
