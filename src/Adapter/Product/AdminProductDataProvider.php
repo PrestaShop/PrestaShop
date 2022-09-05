@@ -85,7 +85,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         $employee = Context::getContext()->employee;
         $employeeId = $employee->id ?: 0;
 
-        $cachedFilters = $this->cache->getItem("app.product_filters_${employeeId}");
+        $cachedFilters = $this->cache->getItem("app.product_filters_{$employeeId}");
 
         if (!$cachedFilters->isHit()) {
             $shop = Context::getContext()->shop;
@@ -165,11 +165,11 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
 
         $this->entityManager->flush();
 
-        //Flush cache
+        // Flush cache
         $employee = Context::getContext()->employee;
         $employeeId = $employee->id ?: 0;
 
-        $this->cache->deleteItem("app.product_filters_${employeeId}");
+        $this->cache->deleteItem("app.product_filters_{$employeeId}");
     }
 
     /**
