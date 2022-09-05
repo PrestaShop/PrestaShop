@@ -122,7 +122,7 @@ class BackupController extends FrameworkBundleAdminController
     /**
      * Return a backup content as a download.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller')~'_')")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      * @DemoRestricted(redirectRoute="admin_backup")
      *
      * @param string $downloadFileName
