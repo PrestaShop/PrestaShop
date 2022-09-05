@@ -60,11 +60,9 @@ export default function initCombinationModal(
     eventEmitter,
     emptyImage,
     paginatedCombinationsService,
-  });
+  }).use(i18n);
 
   vueApp.mount(combinationModalSelector);
-
-  vueApp.use(i18n);
 
   return vueApp;
 }
