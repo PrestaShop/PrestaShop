@@ -381,11 +381,9 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
           it('should check \'Recycled packaging\' and \'gift wrapping\' badges on status tab', async function () {
             await testContext.addContextItem(this, 'testIdentifier', `checkBadgesOnStatusTab${index}`, baseContext);
 
-            const isRecycledPackaging = await orderPageTabListBlock.getSuccessBadge(page, 1);
-            await expect(isRecycledPackaging).to.be.equal('Recycled packaging');
-
-            const isGiftWrappingPackage = await orderPageTabListBlock.getSuccessBadge(page, 2);
-            await expect(isGiftWrappingPackage).to.be.equal('Gift wrapping');
+            const isRecycledPackaging = await orderPageTabListBlock.getSuccessBadge(page, 2);
+            await expect(isRecycledPackaging).to.contain('Recycled packaging')
+              .and.to.contain('Gift wrapping');
           });
 
           it('should check \'Recycled packaging\' and \'gift wrapping\' badges on documents tab', async function () {
@@ -394,11 +392,9 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
             const isTabOpened = await orderPageTabListBlock.goToDocumentsTab(page);
             await expect(isTabOpened, 'Documents tab is not opened!').to.be.true;
 
-            const isRecycledPackaging = await orderPageTabListBlock.getSuccessBadge(page, 1);
-            await expect(isRecycledPackaging).to.be.equal('Recycled packaging');
-
-            const isGiftWrapping = await orderPageTabListBlock.getSuccessBadge(page, 2);
-            await expect(isGiftWrapping).to.be.equal('Gift wrapping');
+            const isRecycledPackaging = await orderPageTabListBlock.getSuccessBadge(page, 2);
+            await expect(isRecycledPackaging).to.contain('Recycled packaging')
+              .and.to.contain('Gift wrapping');
           });
 
           it('should check \'Recycled packaging\' and \'gift wrapping\' badges on carriers tab', async function () {
@@ -407,11 +403,9 @@ describe('BO - Shop Parameters - Order Settings : Update gift options ', async (
             const isTabOpened = await orderPageTabListBlock.goToCarriersTab(page);
             await expect(isTabOpened, 'Carriers tab is not opened!').to.be.true;
 
-            const isRecycledPackaging = await orderPageTabListBlock.getSuccessBadge(page, 1);
-            await expect(isRecycledPackaging).to.be.equal('Recycled packaging');
-
-            const isGiftWrapping = await orderPageTabListBlock.getSuccessBadge(page, 2);
-            await expect(isGiftWrapping).to.be.equal('Gift wrapping');
+            const isRecycledPackaging = await orderPageTabListBlock.getSuccessBadge(page, 2);
+            await expect(isRecycledPackaging).to.be.contain('Recycled packaging')
+              .and.to.contain('Gift wrapping');
           });
         }
       });
