@@ -2225,7 +2225,15 @@ class ProductCore extends ObjectModel
                 'unit_price_impact' => null !== $unit,
                 'default_on' => null !== $default,
                 'minimal_quantity' => null !== $minimal_quantity,
+                'reference' => null !== $reference,
+                'ean13' => null !== $ean13,
+                'upc' => null !== $upc,
+                'isbn' => null !== $isbn,
+                'mpn' => null !== $mpn,
                 'available_date' => null !== $available_date,
+                'low_stock_threshold' => null !== $low_stock_threshold,
+                'low_stock_alert' => null !== $low_stock_alert,
+                'id_shop_list' => !empty($id_shop_list),
             ]);
         }
 
@@ -2248,7 +2256,7 @@ class ProductCore extends ObjectModel
         $combination->low_stock_alert = !empty($low_stock_alert);
         $combination->available_date = $available_date ? pSQL($available_date) : '0000-00-00';
 
-        if (count($id_shop_list)) {
+        if (!empty($id_shop_list)) {
             $combination->id_shop_list = $id_shop_list;
         }
 
