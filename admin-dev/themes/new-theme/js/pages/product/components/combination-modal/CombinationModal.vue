@@ -130,7 +130,7 @@
           <p
             v-html="
               $t('modal.history.confirmBody', {
-                '%combinationName%': selectedCombinationName,
+                'combinationName': selectedCombinationName,
               })
             "
           />

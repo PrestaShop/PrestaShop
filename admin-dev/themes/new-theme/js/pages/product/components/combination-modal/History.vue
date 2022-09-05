@@ -30,7 +30,7 @@
     <div class="card-header">
       {{
         $t("modal.history.editedCombination", {
-          "%editedNb%": combinationsList.length,
+          "editedNb": combinationsList.length,
         })
       }}
     </div>
