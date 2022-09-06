@@ -189,11 +189,11 @@ $product-page-padding-bottom: 80px !default;
       }
 
       .product-type-preview.disabled {
-        color: #6c868e;
+        color: $gray-500;
         cursor: not-allowed;
 
         &:hover {
-          color: #6c868e;
+          color: $gray-500;
         }
       }
     }
