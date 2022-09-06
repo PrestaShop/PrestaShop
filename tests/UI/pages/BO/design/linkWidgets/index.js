@@ -16,6 +16,10 @@ class LinkList extends BOBasePage {
 
     this.pageTitle = 'Link List •';
 
+    // Successful Messages
+    this.successfulCreationMessage = 'Successful creation.';
+    this.successfulDeleteMessage = 'Successful deletion.';
+
     // Header Selectors
     this.newBlockLink = '#page-header-desc-configuration-add';
     this.gridPanel = hookName => `div[data-hook-name='${hookName}']`;
