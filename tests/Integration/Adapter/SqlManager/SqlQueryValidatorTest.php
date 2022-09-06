@@ -49,36 +49,36 @@ class SqlQueryValidatorTest extends TestCase
     {
         // Valid queries
         yield [
-            'SELECT * FROM ps_customer',
+            'SELECT * FROM ' . _DB_PREFIX_ . '`customer`',
             [],
         ];
         yield [
             'SELECT MAX(o.date_add), COUNT(o.id_order), SUM(o.total_paid_tax_incl), c.id_customer, c.firstname, c.lastname, c.email, c.last_passwd_gen, c.newsletter_date_add, c.date_add, c.date_upd '
-            . 'FROM ps_customer c '
-            . 'LEFT JOIN ps_orders o ON c.id_customer = o.id_customer '
+            . 'FROM ' . _DB_PREFIX_ . '`customer` c '
+            . 'LEFT JOIN ' . _DB_PREFIX_ . '`orders` o ON c.id_customer = o.id_customer '
             . 'GROUP BY c.id_customer;',
             [],
         ];
         yield [
             'SELECT SQL_CALC_FOUND_ROWS b.*, a.* '
-            . 'FROM `ps_cart_rule` a '
-            . 'LEFT JOIN `ps_cart_rule_lang` b ON (b.`id_cart_rule` = a.`id_cart_rule` AND b.`id_lang` = 1) '
+            . 'FROM ' . _DB_PREFIX_ . '`cart_rule` a '
+            . 'LEFT JOIN ' . _DB_PREFIX_ . '`cart_rule_lang` b ON (b.`id_cart_rule` = a.`id_cart_rule` AND b.`id_lang` = 1) '
             . 'WHERE 1 '
             . 'ORDER BY a.id_cart_rule DESC',
             [],
         ];
         yield [
             'SELECT SQL_CALC_FOUND_ROWS b.*, a.* '
-            . 'FROM `ps_cart_rule` a '
-            . 'LEFT JOIN `ps_cart_rule_lang` b ON (b.`id_cart_rule` = a.`id_cart_rule` AND b.`id_lang` = a.`id_cart_rule`) '
+            . 'FROM ' . _DB_PREFIX_ . '`cart_rule` a '
+            . 'LEFT JOIN ' . _DB_PREFIX_ . '`cart_rule_lang` b ON (b.`id_cart_rule` = a.`id_cart_rule` AND b.`id_lang` = a.`id_cart_rule`) '
             . 'WHERE 1 '
             . 'ORDER BY a.id_cart_rule DESC',
             [],
         ];
         yield [
             'SELECT SQL_CALC_FOUND_ROWS b.*, a.* '
-            . 'FROM `ps_cart_rule` a '
-            . 'LEFT JOIN `ps_cart_rule_lang` b ON (b.`id_cart_rule` = a.`id_cart_rule` AND 1) '
+            . 'FROM ' . _DB_PREFIX_ . '`cart_rule` a '
+            . 'LEFT JOIN ' . _DB_PREFIX_ . '`cart_rule_lang` b ON (b.`id_cart_rule` = a.`id_cart_rule` AND 1) '
             . 'WHERE 1 '
             . 'ORDER BY a.id_cart_rule DESC',
             [],
@@ -97,26 +97,26 @@ class SqlQueryValidatorTest extends TestCase
             ],
         ];
         yield [
-            'SELECT * FROM ps_customer c LEFT JOIN ps_orders o ON c.id_customer = o.id_customera',
+            'SELECT * FROM ' . _DB_PREFIX_ . '`customer` c LEFT JOIN ' . _DB_PREFIX_ . '`orders` o ON c.id_customer = o.id_customera',
             [
                 [
                     'key' => 'The "%attribute%" attribute does not exist in the "%table%" table.',
                     'parameters' => [
                         '%attribute%' => 'id_customera',
-                        '%table%' => 'ps_orders',
+                        '%table%' => _DB_PREFIX_ . '`orders`',
                     ],
                     'domain' => 'Admin.Advparameters.Notification',
                 ],
             ],
         ];
         yield [
-            'SELECT * FROM ps_customer c GROUP BY c.ida',
+            'SELECT * FROM ' . _DB_PREFIX_ . '`customer` c GROUP BY c.ida',
             [
                 [
                     'key' => 'The "%attribute%" attribute does not exist in the "%table%" table.',
                     'parameters' => [
                         '%attribute%' => 'ida',
-                        '%table%' => 'ps_customer',
+                        '%table%' => _DB_PREFIX_ . '`customer`',
                     ],
                     'domain' => 'Admin.Advparameters.Notification',
                 ],
