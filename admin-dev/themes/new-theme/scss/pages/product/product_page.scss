@@ -188,8 +188,8 @@ $product-page-padding-bottom: 80px !default;
         flex-direction: row;
         flex-wrap: wrap;
         gap: 1rem;
-        padding-right: 1.125rem;
         justify-content: flex-end;
+        padding-right: 1.125rem;
 
         .product-field-preview {
           display: flex;
