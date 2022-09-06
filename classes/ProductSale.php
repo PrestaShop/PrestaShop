@@ -37,9 +37,9 @@ class ProductSaleCore
     public static function fillProductSales()
     {
         $sql = 'REPLACE INTO ' . _DB_PREFIX_ . 'product_sale
-				(`id_product`, `quantity`, `sale_nbr`, `date_upd`)
-				SELECT od.product_id, SUM(od.product_quantity), COUNT(od.product_id), NOW()
-							FROM ' . _DB_PREFIX_ . 'order_detail od GROUP BY od.product_id';
+				(`id_product`, `id_shop`,`quantity`, `sale_nbr`, `date_upd`)
+				SELECT od.product_id, od.id_shop, SUM(od.product_quantity), COUNT(od.product_id), NOW()
+							FROM ' . _DB_PREFIX_ . 'order_detail od GROUP BY od.product_id, od.id_shop';
 
         return Db::getInstance()->execute($sql);
     }
@@ -53,8 +53,8 @@ class ProductSaleCore
     {
         $sql = 'SELECT COUNT(ps.`id_product`) AS nb
 				FROM `' . _DB_PREFIX_ . 'product_sale` ps
-				LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON p.`id_product` = ps.`id_product`
-				' . Shop::addSqlAssociation('product', 'p', false) . '
+				INNER JOIN `' . _DB_PREFIX_ . 'product` p ON p.`id_product` = ps.`id_product`
+				' . Shop::addSqlAssociation('product', 'p') . ' and product_shop.id_shop = ps.id_shop
 				WHERE product_shop.`active` = 1';
 
         return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
@@ -111,8 +111,8 @@ class ProductSaleCore
 					DATEDIFF(p.`date_add`, DATE_SUB("' . date('Y-m-d') . ' 00:00:00",
 					INTERVAL ' . (int) $interval . ' DAY)) > 0 AS new'
             . ' FROM `' . _DB_PREFIX_ . 'product_sale` ps
-				LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON ps.`id_product` = p.`id_product`
-				' . Shop::addSqlAssociation('product', 'p', false);
+				INNER JOIN `' . _DB_PREFIX_ . 'product` p ON ps.`id_product` = p.`id_product`
+				' . Shop::addSqlAssociation('product', 'p') . ' and product_shop.id_shop = ps.id_shop';
         if (Combination::isFeatureActive()) {
             $sql .= ' LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_shop` product_attribute_shop
 							ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop=' . (int) $context->shop->id . ')';
@@ -193,8 +193,8 @@ class ProductSaleCore
 			product_shop.`date_add` > "' . date('Y-m-d', strtotime('-' . (Configuration::get('PS_NB_DAYS_NEW_PRODUCT') ? (int) Configuration::get('PS_NB_DAYS_NEW_PRODUCT') : 20) . ' DAY')) . '" as new,
 			product_shop.`on_sale`, product_attribute_shop.minimal_quantity AS product_attribute_minimal_quantity
 		FROM `' . _DB_PREFIX_ . 'product_sale` ps
-		LEFT JOIN `' . _DB_PREFIX_ . 'product` p ON ps.`id_product` = p.`id_product`
-		' . Shop::addSqlAssociation('product', 'p') . '
+		INNER JOIN `' . _DB_PREFIX_ . 'product` p ON ps.`id_product` = p.`id_product`
+		' . Shop::addSqlAssociation('product', 'p') . ' and product_shop.id_shop = ps.id_shop
 		LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute_shop` product_attribute_shop
 			ON (p.`id_product` = product_attribute_shop.`id_product` AND product_attribute_shop.`default_on` = 1 AND product_attribute_shop.id_shop=' . (int) $context->shop->id . ')
 		LEFT JOIN `' . _DB_PREFIX_ . 'product_attribute` pa ON (product_attribute_shop.id_product_attribute=pa.id_product_attribute)
@@ -240,10 +240,11 @@ class ProductSaleCore
      */
     public static function addProductSale($productId, $qty = 1)
     {
+        $idShop = Context::getContext()->shop->id;
         return Db::getInstance()->execute('
 			INSERT INTO ' . _DB_PREFIX_ . 'product_sale
-			(`id_product`, `quantity`, `sale_nbr`, `date_upd`)
-			VALUES (' . (int) $productId . ', ' . (int) $qty . ', 1, NOW())
+			(`id_product`, `id_shop`, `quantity`, `sale_nbr`, `date_upd`)
+			VALUES (' . (int) $productId . ', ' . (int) $idShop . ', ' . (int) $qty . ', 1, NOW())
 			ON DUPLICATE KEY UPDATE `quantity` = `quantity` + ' . (int) $qty . ', `sale_nbr` = `sale_nbr` + 1, `date_upd` = NOW()');
     }
 
@@ -256,7 +257,8 @@ class ProductSaleCore
      */
     public static function getNbrSales($idProduct)
     {
-        $result = Db::getInstance()->getRow('SELECT `sale_nbr` FROM ' . _DB_PREFIX_ . 'product_sale WHERE `id_product` = ' . (int) $idProduct);
+        $idShop = Context::getContext()->shop->id;
+        $result = Db::getInstance()->getRow('SELECT `sale_nbr` FROM ' . _DB_PREFIX_ . 'product_sale WHERE `id_product` = ' . (int) $idProduct . ' and `id_shop` = ' . (int) $idShop);
         if (empty($result) || !array_key_exists('sale_nbr', $result)) {
             return -1;
         }
@@ -274,16 +276,17 @@ class ProductSaleCore
      */
     public static function removeProductSale($idProduct, $qty = 1)
     {
+        $idShop = Context::getContext()->shop->id;
         $totalSales = ProductSale::getNbrSales($idProduct);
         if ($totalSales > 1) {
             return Db::getInstance()->execute(
                 '
 				UPDATE ' . _DB_PREFIX_ . 'product_sale
 				SET `quantity` = CAST(`quantity` AS SIGNED) - ' . (int) $qty . ', `sale_nbr` = CAST(`sale_nbr` AS SIGNED) - 1, `date_upd` = NOW()
-				WHERE `id_product` = ' . (int) $idProduct
+				WHERE `id_product` = ' . (int) $idProduct . ' and `id_shop` = ' . (int) $idShop
             );
         } elseif ($totalSales == 1) {
-            return Db::getInstance()->delete('product_sale', 'id_product = ' . (int) $idProduct);
+            return Db::getInstance()->delete('product_sale', 'id_product = ' . (int) $idProduct) . ' and `id_shop` = ' . (int) $idShop;
         }
 
         return true;
