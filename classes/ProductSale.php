@@ -234,14 +234,13 @@ class ProductSaleCore
      * Add Product sale.
      *
      * @param int $productId Product ID
+     * @param int $idShop Shop ID
      * @param int $qty Quantity
      *
      * @return bool Indicates whether the sale was successfully added
      */
-    public static function addProductSale($productId, $qty = 1)
+    public static function addProductSale($productId, $idShop, $qty = 1)
     {
-        $idShop = Context::getContext()->shop->id;
-
         return Db::getInstance()->execute('
 			INSERT INTO ' . _DB_PREFIX_ . 'product_sale
 			(`id_product`, `id_shop`, `quantity`, `sale_nbr`, `date_upd`)
@@ -253,12 +252,12 @@ class ProductSaleCore
      * Get number of sales.
      *
      * @param int $idProduct Product ID
+     * @param int $idShop Shop ID
      *
      * @return int Number of sales for the given Product
      */
-    public static function getNbrSales($idProduct)
+    public static function getNbrSales($idProduct, $idShop)
     {
-        $idShop = Context::getContext()->shop->id;
         $result = Db::getInstance()->getRow('SELECT `sale_nbr` FROM ' . _DB_PREFIX_ . 'product_sale WHERE `id_product` = ' . (int) $idProduct . ' and `id_shop` = ' . (int) $idShop);
         if (empty($result) || !array_key_exists('sale_nbr', $result)) {
             return -1;
@@ -271,14 +270,14 @@ class ProductSaleCore
      * Remove a Product sale.
      *
      * @param int $idProduct Product ID
+     * @param int $idShop Shop ID
      * @param int $qty Quantity
      *
      * @return bool Indicates whether the product sale has been successfully removed
      */
-    public static function removeProductSale($idProduct, $qty = 1)
+    public static function removeProductSale($idProduct, $idShop, $qty = 1)
     {
-        $idShop = Context::getContext()->shop->id;
-        $totalSales = ProductSale::getNbrSales($idProduct);
+        $totalSales = ProductSale::getNbrSales($idProduct, $idShop);
         if ($totalSales > 1) {
             return Db::getInstance()->execute(
                 '
