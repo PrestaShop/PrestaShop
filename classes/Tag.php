@@ -86,6 +86,20 @@ class TagCore extends ObjectModel
     }
 
     /**
+     * @return bool
+     */
+    public function delete()
+    {
+        if (!parent::delete()) {
+            return false;
+        }
+
+        Search::removeProductsSearchIndex(array_column($this->getProducts(), 'id_product'));
+
+        return true;
+    }
+
+    /**
      * Add several tags in database and link it to a product.
      *
      * @param int $idLang Language id
