@@ -5080,16 +5080,16 @@
         },
         {
             "name": "prestashop/productcomments",
-            "version": "v5.0.1",
+            "version": "v5.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/productcomments.git",
-                "reference": "b2586beb1283ee037273a6cab2a911d0379f00a8"
+                "reference": "e1b9d0333dc186c6e3f1b721d5feeef13e450ef8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/productcomments/zipball/b2586beb1283ee037273a6cab2a911d0379f00a8",
-                "reference": "b2586beb1283ee037273a6cab2a911d0379f00a8",
+                "url": "https://api.github.com/repos/PrestaShop/productcomments/zipball/e1b9d0333dc186c6e3f1b721d5feeef13e450ef8",
+                "reference": "e1b9d0333dc186c6e3f1b721d5feeef13e450ef8",
                 "shasum": ""
             },
             "require": {
@@ -5121,9 +5121,9 @@
             "description": "PrestaShop module productcomments",
             "homepage": "https://github.com/PrestaShop/productcomments",
             "support": {
-                "source": "https://github.com/PrestaShop/productcomments/tree/v5.0.1"
+                "source": "https://github.com/PrestaShop/productcomments/tree/v5.0.2"
             },
-            "time": "2022-02-10T15:06:39+00:00"
+            "time": "2022-08-31T12:30:46+00:00"
         },
         {
             "name": "prestashop/ps_banner",
