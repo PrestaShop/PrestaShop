@@ -338,7 +338,7 @@ class AdminProductDataProvider extends AbstractAdminQueryBuilder implements Prod
         $sqlWhere[] = 'state = ' . Product::STATE_SAVED;
 
         // exec legacy hook but with different parameters (retro-compat < 1.7 is broken here)
-        Hook::exec('actionAdminProductsListingFieldsModifier', [
+        $this->hookDispatcher->dispatchWithParameters('actionAdminProductsListingFieldsModifier', [
             '_ps_version' => AppKernel::VERSION,
             'sql_select' => &$sqlSelect,
             'sql_table' => &$sqlTable,
