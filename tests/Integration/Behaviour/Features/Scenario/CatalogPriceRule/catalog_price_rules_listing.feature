@@ -87,7 +87,7 @@ Feature: List catalog price rules for product in Back Office (BO)
       | shop            | testShop              |
       | includes tax    | true                  |
       | price           | 20                    |
-    When I add catalog price rule "catalogPriceRuleReference4" with following details:
+    And I add catalog price rule "catalogPriceRuleReference4" with following details:
       | name            | catalog price rule 4  |
       | currency        | usd                   |
       | country         | UnitedStates          |
@@ -126,6 +126,8 @@ Feature: List catalog price rules for product in Back Office (BO)
       | catalog price rule 4  | usd        | UnitedStates  | visitor  | 5              | amount        | 10              | testShop | true        | 20    | 0000-00-00 00:00:00 | 0000-00-00 00:00:00 |
       | catalog price rule 5  | usd        | UnitedStates  | visitor  | 5              | amount        | 10              | testShop | true        | 20    | 0000-00-00 00:00:00 | 0000-00-00 00:00:00 |
 
+#  Here I keep adding conditions to catalog price rules and make product1 satisfy that condition.
+#  So catalog price rule list should stay the same for product1 and keep getting smaller for product2
   Scenario: I can see correctly with category condition
     When I add following conditions to catalog price rule "catalogPriceRuleReference1":
       | type     | value |
