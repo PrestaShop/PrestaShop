@@ -61,6 +61,5 @@ admin_catalog_price_rules_list_for_product:
   defaults:
     _controller: 'PrestaShopBundle\Controller\Admin\Sell\Catalog\CatalogPriceRuleController::listForProductAction'
     _legacy_controller: AdminSpecificPriceRule
-    # _legacy_link: AdminSpecificPriceRule:submitBulkdeletespecific_price_rule
   options:
     expose: true

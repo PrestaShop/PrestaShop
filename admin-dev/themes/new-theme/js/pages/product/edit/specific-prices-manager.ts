@@ -111,8 +111,7 @@ export default class SpecificPricesManager {
       console.log(`Error: ${CatalogPriceRulesMap.blockContainer} element not found`);
       return;
     }
-    const showIcon = showCatalogPriceRulesButton.dataset.showIcon ?? 'visibility';
-    const hideIcon = showCatalogPriceRulesButton.dataset.hideIcon ?? 'visibility_off';
+
     const showLabel = showCatalogPriceRulesButton.dataset.showLabel ?? 'Show catalog price rules';
     const hideLabel = showCatalogPriceRulesButton.dataset.hideLabel ?? 'Hide catalog price rules';
 
@@ -126,12 +125,11 @@ export default class SpecificPricesManager {
 
     showCatalogPriceRulesButton.addEventListener('click', () => {
       formContainer.classList.toggle('d-none');
+      const listShown = formContainer.classList.contains('d-none');
       if (!listShown) {
-        showCatalogPriceRulesButton.innerHTML = `<i class="material-icons"> ${hideIcon}</i> ${hideLabel}`;
-        listShown = true;
+        showCatalogPriceRulesButton.innerHTML = `<i class="material-icons">visibility_off</i> ${hideLabel}`;
       } else {
-        showCatalogPriceRulesButton.innerHTML = `<i class="material-icons"> ${showIcon}</i> ${showLabel}`;
-        listShown = false;
+        showCatalogPriceRulesButton.innerHTML = `<i class="material-icons">visibility</i> ${showLabel}`;
       }
 
       if (!listRendered) {

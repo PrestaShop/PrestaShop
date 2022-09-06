@@ -129,8 +129,6 @@ class PricingType extends TranslatorAwareType
                 'attr' => [
                     'data-hide-label' => $this->trans('Hide catalog price rules', 'Admin.Catalog.Feature'),
                     'data-show-label' => $this->trans('Show catalog price rules', 'Admin.Catalog.Feature'),
-                    'data-show-icon' => 'visibility',
-                    'data-hide-icon' => 'visibility_off',
                 ],
             ])
             ->add('catalog_price_rules', CatalogPriceRulesType::class, [
