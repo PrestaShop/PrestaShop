@@ -125,7 +125,7 @@ class SmartyBridge
      *
      * @return string
      */
-    public function display(ControllerConfiguration $controllerConfiguration, string $content, $templateName): string
+    private function display(ControllerConfiguration $controllerConfiguration, string $content, $templateName): string
     {
         $helperShop = new HelperShop();
         $this->smarty->assign([
@@ -175,6 +175,10 @@ class SmartyBridge
         $template = $this->createTemplate($controllerConfiguration, $controllerConfiguration->template);
         $page = $template->fetch();
 
+        /* @see ControllerConfiguration::$errors */
+        /* @see ControllerConfiguration::$warnings */
+        /* @see ControllerConfiguration::$informations */
+        /* @see ControllerConfiguration::$confirmations */
         foreach (['errors', 'warnings', 'informations', 'confirmations'] as $type) {
             if (!is_array($controllerConfiguration->$type)) {
                 $controllerConfiguration->$type = (array) $controllerConfiguration->$type;

@@ -32,7 +32,6 @@ use Language;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Help\Documentation;
 use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
-use Symfony\Component\Routing\RouterInterface;
 use Tools;
 
 /**
@@ -40,11 +39,6 @@ use Tools;
  */
 class ToolbarFlagsConfigurator implements ConfiguratorInterface
 {
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-
     /**
      * @var Configuration
      */
@@ -56,15 +50,23 @@ class ToolbarFlagsConfigurator implements ConfiguratorInterface
     private $documentation;
 
     /**
-     * @param RouterInterface $router
+     * @var bool
+     */
+    private $isDebugMode;
+
+    /**
      * @param Configuration $configuration
      * @param Documentation $documentation
+     * @param bool $isDebugMode
      */
-    public function __construct(RouterInterface $router, Configuration $configuration, Documentation $documentation)
-    {
-        $this->router = $router;
+    public function __construct(
+        Configuration $configuration,
+        Documentation $documentation,
+        bool $isDebugMode
+    ) {
         $this->configuration = $configuration;
         $this->documentation = $documentation;
+        $this->isDebugMode = $isDebugMode;
     }
 
     /**
@@ -78,15 +80,13 @@ class ToolbarFlagsConfigurator implements ConfiguratorInterface
         $this->initPageHeaderToolbar($controllerConfiguration);
 
         $controllerConfiguration->templateVars['maintenance_mode'] = !(bool) $this->configuration->get('PS_SHOP_ENABLE');
-        $controllerConfiguration->templateVars['debug_mode'] = (bool) _PS_MODE_DEV_;
+        $controllerConfiguration->templateVars['debug_mode'] = $this->isDebugMode;
         $controllerConfiguration->templateVars['lite_display'] = $controllerConfiguration->liteDisplay;
-        // @todo: fix hardcoded route
-        $controllerConfiguration->templateVars['url_post'] = $this->router->generate('admin_features_index');
         $controllerConfiguration->templateVars['show_page_header_toolbar'] = $controllerConfiguration->showPageHeaderToolbar;
         $controllerConfiguration->templateVars['page_header_toolbar_title'] = $controllerConfiguration->pageHeaderToolbarTitle;
         $controllerConfiguration->templateVars['title'] = $controllerConfiguration->pageHeaderToolbarTitle;
-        $controllerConfiguration->templateVars['toolbar_btn'] = $controllerConfiguration->pageHeaderToolbarButtons;
-        $controllerConfiguration->templateVars['page_header_toolbar_btn'] = $controllerConfiguration->pageHeaderToolbarButtons;
+        $controllerConfiguration->templateVars['toolbar_btn'] = $controllerConfiguration->pageHeaderToolbarActions;
+        $controllerConfiguration->templateVars['page_header_toolbar_btn'] = $controllerConfiguration->pageHeaderToolbarActions;
         $controllerConfiguration->templateVars['help_link'] = $this->documentation->generateLink(
             Tools::getValue('controller'),
             (string) Language::getIsoById($controllerConfiguration->getUser()->getData()->id_lang)

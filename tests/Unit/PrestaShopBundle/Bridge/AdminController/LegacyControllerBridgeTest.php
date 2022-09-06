@@ -61,13 +61,16 @@ class LegacyControllerBridgeTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->controllerConfiguration = new ControllerConfiguration($this->mockSecurityUser());
-        $this->controllerConfiguration->tabId = 42;
-        $this->controllerConfiguration->objectModelClassName = 'ObjectModel';
-        $this->controllerConfiguration->legacyControllerName = 'AdminController';
+        $this->controllerConfiguration = new ControllerConfiguration(
+            $this->mockSecurityUser(),
+            42,
+            'ObjectModel',
+            'AdminController',
+            'object',
+            '/templates'
+        );
         $this->controllerConfiguration->legacyCurrentIndex = 'index.php?controller=AdminFoo';
         $this->controllerConfiguration->positionIdentifierKey = 'id_object';
-        $this->controllerConfiguration->tableName = 'object';
         $this->controllerConfiguration->token = 'tokenFooBar';
         $this->controllerConfiguration->metaTitle = [1 => 'french title', 2 => 'english title'];
         $this->controllerConfiguration->breadcrumbs = [1 => 'foo', 2 => 'bar'];
@@ -75,27 +78,20 @@ class LegacyControllerBridgeTest extends TestCase
         $this->controllerConfiguration->displayType = 'edit';
         $this->controllerConfiguration->showPageHeaderToolbar = true;
         $this->controllerConfiguration->pageHeaderToolbarTitle = 'Foo Header';
-        $this->controllerConfiguration->pageHeaderToolbarButtons = [
+        $this->controllerConfiguration->pageHeaderToolbarActions = [
             'add_new_foo' => [
                 'href' => 'prestashop.com/admin-dev/foo/new',
                 'desc' => 'Add new foo',
                 'icon' => 'process-icon-new',
             ],
         ];
-        $this->controllerConfiguration->toolbarButtons = [
-            'cancel' => [
-                'href' => 'prestashop.com/admin-dev/foo',
-                'desc' => 'Cancel',
-            ],
-        ];
-        $this->controllerConfiguration->toolbarTitle = 'Foo Title';
+        $this->controllerConfiguration->toolbarTitle = ['Foo Title'];
         $this->controllerConfiguration->displayHeader = false;
         $this->controllerConfiguration->displayHeaderJavascript = false;
         $this->controllerConfiguration->displayFooter = false;
         $this->controllerConfiguration->bootstrap = false;
         $this->controllerConfiguration->cssFiles = self::DEFAULT_CSS_FILES_VALUE;
         $this->controllerConfiguration->jsFiles = self::DEFAULT_JS_FILES_VALUE;
-        $this->controllerConfiguration->templateFolder = '/templates';
         $this->controllerConfiguration->errors = [
             'error1',
             'error2',
@@ -180,7 +176,7 @@ class LegacyControllerBridgeTest extends TestCase
         yield 'test displayType' => ['display', 'edit', 'displayType'];
         yield 'test showPageHeaderToolbar' => ['show_page_header_toolbar', true, 'showPageHeaderToolbar'];
         yield 'test pageHeaderToolbarTitle' => ['page_header_toolbar_title', 'Foo Header', 'pageHeaderToolbarTitle'];
-        yield 'test pageHeaderToolbarButtons' => [
+        yield 'test pageHeaderToolbarActions' => [
             'page_header_toolbar_btn',
             [
                 'add_new_foo' => [
@@ -189,17 +185,19 @@ class LegacyControllerBridgeTest extends TestCase
                     'icon' => 'process-icon-new',
                 ],
             ],
-            'pageHeaderToolbarButtons',
+            'pageHeaderToolbarActions',
         ];
-        yield 'test toolbarButtons' => [
+        // toolbar_btn and page_header_toolbar_btn seems to be always set the same
+        yield 'test toolbar_btn gets pageHeaderToolbarActions' => [
             'toolbar_btn',
             [
-                'cancel' => [
-                    'href' => 'prestashop.com/admin-dev/foo',
-                    'desc' => 'Cancel',
+                'add_new_foo' => [
+                    'href' => 'prestashop.com/admin-dev/foo/new',
+                    'desc' => 'Add new foo',
+                    'icon' => 'process-icon-new',
                 ],
             ],
-            'toolbarButtons',
+            'pageHeaderToolbarActions',
         ];
         yield 'test displayHeader' => ['display_header', false, 'displayHeader'];
         yield 'test displayHeaderJavascript' => ['display_header_javascript', false, 'displayHeaderJavascript'];
@@ -305,7 +303,7 @@ class LegacyControllerBridgeTest extends TestCase
         yield 'test displayType' => ['display', 'edit', 'view', 'displayType'];
         yield 'test showPageHeaderToolbar' => ['show_page_header_toolbar', true, false, 'showPageHeaderToolbar'];
         yield 'test pageHeaderToolbarTitle' => ['page_header_toolbar_title', 'Foo Header', 'bar header', 'pageHeaderToolbarTitle'];
-        yield 'test pageHeaderToolbarButtons' => [
+        yield 'test pageHeaderToolbarActions' => [
             'page_header_toolbar_btn',
             [
                 'add_new_foo' => [
@@ -321,23 +319,25 @@ class LegacyControllerBridgeTest extends TestCase
                     'icon' => 'icon-trash',
                 ],
             ],
-            'pageHeaderToolbarButtons',
+            'pageHeaderToolbarActions',
         ];
         yield 'test toolbarButtons' => [
             'toolbar_btn',
             [
-                'cancel' => [
-                    'href' => 'prestashop.com/admin-dev/foo',
-                    'desc' => 'Cancel',
+                'add_new_foo' => [
+                    'href' => 'prestashop.com/admin-dev/foo/new',
+                    'desc' => 'Add new foo',
+                    'icon' => 'process-icon-new',
                 ],
             ],
             [
-                'Save' => [
-                    'href' => 'prestashop.com/admin-dev/foo',
-                    'desc' => 'Save',
+                'delete_foo' => [
+                    'href' => 'prestashop.com/admin-dev/foo/delete',
+                    'desc' => 'Delete foo',
+                    'icon' => 'icon-trash',
                 ],
             ],
-            'toolbarButtons',
+            'pageHeaderToolbarActions',
         ];
         yield 'test displayHeader' => ['display_header', false, true, 'displayHeader'];
         yield 'test displayHeaderJavascript' => ['display_header_javascript', false, true, 'displayHeaderJavascript'];

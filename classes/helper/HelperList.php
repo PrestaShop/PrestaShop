@@ -147,6 +147,21 @@ class HelperListCore extends Helper
     public $list_id;
 
     /**
+     * Property introduced for horizontal migration.
+     * It ensures the list form filters and sorting can use framework index url instead of legacy one
+     *
+     * @var string|null
+     */
+    public $frameworkIndexUrl;
+
+    /**
+     * Raw sql query string of a list
+     *
+     * @var string|null
+     */
+    public $sql;
+
+    /**
      * You can use $controllerMapping to add entity/controller mapping in order to have migrated links
      * in a legacy list (this requires to have correctly set the _legacy_link in the routing of course)
      *
@@ -655,7 +670,11 @@ class HelperListCore extends Helper
 
         $identifier = Tools::getIsset($this->identifier) ? '&' . $this->identifier . '=' . (int) Tools::getValue($this->identifier) : '';
 
-        $action = $this->currentIndex . $identifier . '&token=' . $this->token . '#' . $this->list_id;
+        if ($this->frameworkIndexUrl) {
+            $action = $this->frameworkIndexUrl;
+        } else {
+            $action = $this->currentIndex . $identifier . '&token=' . $this->token . '#' . $this->list_id;
+        }
 
         /* Determine current page number */
         $page = (int) Tools::getValue('submitFilter' . $this->list_id);
@@ -797,6 +816,7 @@ class HelperListCore extends Helper
             'title' => array_key_exists('title', $this->tpl_vars) ? $this->tpl_vars['title'] : $this->title,
             'show_filters' => ((count($this->_list) > 1 && $has_search_field) || $has_value),
             'currentIndex' => $this->currentIndex,
+            'frameworkIndexUrl' => $this->frameworkIndexUrl,
             'action' => $action,
             'is_order_position' => $this->position_identifier && $this->orderBy == 'position',
             'order_way' => $this->orderWay,

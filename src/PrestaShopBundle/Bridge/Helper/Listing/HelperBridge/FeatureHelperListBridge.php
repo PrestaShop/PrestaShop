@@ -37,24 +37,37 @@ use PrestaShopBundle\Bridge\Helper\Listing\HelperListConfiguration;
  */
 class FeatureHelperListBridge extends HelperListBridge
 {
+    /**
+     * {@inheritDoc}
+     */
     public function generateListQuery(
         HelperListConfiguration $helperListConfiguration,
         int $idLang
-    ): void {
-        parent::generateListQuery($helperListConfiguration, $idLang);
+    ): string {
+        $listSql = parent::generateListQuery($helperListConfiguration, $idLang);
 
-        $nbItems = count($helperListConfiguration->list);
-        for ($i = 0; $i < $nbItems; ++$i) {
-            $item = &$helperListConfiguration->list[$i];
-
-            $query = new DbQuery();
-            $query->select('COUNT(fv.id_feature_value) as count_values');
-            $query->from('feature_value', 'fv');
-            $query->where('fv.id_feature =' . (int) $item['id_feature']);
-            $query->where('(fv.custom=0 OR fv.custom IS NULL)');
-            $res = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
-            $item['value'] = (int) $res;
-            unset($query);
+        // adds feature_value count to evey row of feature
+        foreach ($helperListConfiguration->list as $featureRowRecord) {
+            $featureRowRecord['value'] = $this->countFeatureValues((int) $featureRowRecord['id_feature']);
         }
+
+        return $listSql;
+    }
+
+    /**
+     * Counts feature values of realated feature
+     */
+    private function countFeatureValues(int $featureId): int
+    {
+        $query = new DbQuery();
+
+        $query
+            ->select('COUNT(fv.id_feature_value) as count_values')
+            ->from('feature_value', 'fv')
+            ->where('fv.id_feature =' . $featureId)
+            ->where('(fv.custom=0 OR fv.custom IS NULL)')
+        ;
+
+        return (int) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($query);
     }
 }

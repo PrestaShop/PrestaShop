@@ -23,16 +23,17 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
-
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Bridge\Helper\Listing\Action;
+namespace PrestaShopBundle\Bridge\Exception;
 
-use PrestaShopBundle\Bridge\AdminController\Action\AbstractAction;
+use PrestaShopBundle\Bridge\Helper\Listing\HelperBridge\HelperListBridge;
 
 /**
- * This class is the object to instantiate if you want to add a bulk action for your list.
+ * Thrown when fetching list records fails at some point using HelperListBridge.
+ *
+ * @see HelperListBridge
  */
-class ListBulkAction extends AbstractAction
+class FailedToFetchListRecordsException extends BridgeException
 {
 }

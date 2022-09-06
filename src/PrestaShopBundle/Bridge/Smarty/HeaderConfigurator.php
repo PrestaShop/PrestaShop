@@ -45,7 +45,6 @@ use PrestaShop\PrestaShop\Core\Localization\Specification\Price as PriceSpecific
 use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 use QuickAccess;
 use Shop;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Tab;
 use Tools;
@@ -87,11 +86,6 @@ class HeaderConfigurator implements ConfiguratorInterface
     private $link;
 
     /**
-     * @var RouterInterface
-     */
-    private $router;
-
-    /**
      * @var Shop
      */
     private $shop;
@@ -112,14 +106,12 @@ class HeaderConfigurator implements ConfiguratorInterface
     private $configuration;
 
     /**
-     * @param RouterInterface $router
      * @param TranslatorInterface $translator
      * @param LegacyContext $legacyContext
      * @param HookDispatcherInterface $hookDispatcher
      * @param Configuration $configuration
      */
     public function __construct(
-        RouterInterface $router,
         TranslatorInterface $translator,
         LegacyContext $legacyContext,
         HookDispatcherInterface $hookDispatcher,
@@ -131,7 +123,6 @@ class HeaderConfigurator implements ConfiguratorInterface
         $this->language = $legacyContext->getLanguage();
         $this->currency = $legacyContext->getContext()->currency;
         $this->currentLocale = $legacyContext->getContext()->getCurrentLocale();
-        $this->router = $router;
         $this->shop = $legacyContext->getContext()->shop;
         $this->translator = $translator;
         $this->hookDispatcher = $hookDispatcher;
@@ -148,8 +139,6 @@ class HeaderConfigurator implements ConfiguratorInterface
     public function configure(ControllerConfiguration $controllerConfiguration): void
     {
         $controllerConfiguration->templateVars['table'] = $controllerConfiguration->tableName;
-        // @todo: hardcoded route. Should be replaced with some value from configuration
-        $controllerConfiguration->templateVars['current'] = $this->router->generate('admin_features_index');
         $controllerConfiguration->templateVars['token'] = $controllerConfiguration->token;
         $controllerConfiguration->templateVars['host_mode'] = (int) defined('_PS_HOST_MODE_');
         $controllerConfiguration->templateVars['stock_management'] = (int) $this->configuration->get('PS_STOCK_MANAGEMENT');
@@ -199,7 +188,7 @@ class HeaderConfigurator implements ConfiguratorInterface
         $controllerConfiguration->templateVars['bootstrap'] = $controllerConfiguration->bootstrap;
         $controllerConfiguration->templateVars['controller_name'] = $controllerConfiguration->legacyControllerName;
         $controllerConfiguration->templateVars['country_iso_code'] = $this->country->iso_code;
-        $controllerConfiguration->templateVars['currentIndex'] = $this->router->generate('admin_features_index');
+        $controllerConfiguration->templateVars['currentIndex'] = $controllerConfiguration->legacyCurrentIndex;
         $controllerConfiguration->templateVars['current_tab_level'] = $currentTabLevel;
         $controllerConfiguration->templateVars['default_language'] = (int) $this->configuration->get('PS_LANG_DEFAULT');
         $controllerConfiguration->templateVars['full_language_code'] = $this->language->language_code;

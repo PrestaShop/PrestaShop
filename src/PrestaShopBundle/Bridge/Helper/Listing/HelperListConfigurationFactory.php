@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Bridge\Helper\Listing;
 
 use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * Create an instance of the helper configuration object, using controller configuration.
@@ -36,50 +37,67 @@ use PrestaShopBundle\Bridge\AdminController\ControllerConfiguration;
 class HelperListConfigurationFactory
 {
     /**
+     * @var RouterInterface
+     */
+    private $router;
+
+    /**
+     * @param RouterInterface $router
+     */
+    public function __construct(
+        RouterInterface $router
+    ) {
+        $this->router = $router;
+    }
+
+    /**
      * @param ControllerConfiguration $controllerConfiguration
-     * @param string $identifier
-     * @param string|null $positionIdentifier
-     * @param string|null $defaultOrderBy
-     * @param bool $isJoinLanguageTableAuto
-     * @param bool $deleted
-     * @param bool $explicitSelect
-     * @param bool $useFoundRows
+     * @param string $identifierKey @see HelperListConfiguration::$identifierKey
+     * @param string $indexRoute used to generate indexUrl. @see HelperListConfiguration::$indexUrl
+     * @param string|null $positionIdentifierKey @see HelperListConfiguration::$positionIdentifierKey
+     * @param string|null $defaultOrderBy @see HelperListConfiguration::$defaultOrderBy
+     * @param bool $isJoinLanguageTableAuto @see HelperListConfiguration::$autoJoinLanguageTable
+     * @param bool $deleted @see HelperListConfiguration::$deleted
+     * @param bool $explicitSelect @see HelperListConfiguration::$explicitSelect
+     * @param bool $useFoundRows @see HelperListConfiguration::$useFoundRows
+     * @param string|null $listId @see HelperListConfiguration::$listId
      *
      * @return HelperListConfiguration
      */
     public function create(
         ControllerConfiguration $controllerConfiguration,
-        string $identifier,
-        string $positionIdentifier = null,
-        string $defaultOrderBy = null,
+        string $identifierKey,
+        string $indexRoute,
+        ?string $positionIdentifierKey = null,
+        ?string $defaultOrderBy = null,
         bool $isJoinLanguageTableAuto = false,
-        // @todo: investigate what these options actually do and maybe rename them to reflect it better
         bool $deleted = false,
         bool $explicitSelect = false,
-        bool $useFoundRows = true
+        bool $useFoundRows = true,
+        ?string $listId = null
     ): HelperListConfiguration {
         if (empty($defaultOrderBy)) {
-            $defaultOrderBy = $identifier;
+            $defaultOrderBy = $identifierKey;
         }
-        $helperListConfiguration = new HelperListConfiguration();
 
-        $helperListConfiguration->table = $controllerConfiguration->tableName;
-        $helperListConfiguration->listId = $controllerConfiguration->tableName;
-        $helperListConfiguration->objectModelClassName = $controllerConfiguration->objectModelClassName;
-        $helperListConfiguration->identifier = $identifier;
-        $helperListConfiguration->positionIdentifier = $positionIdentifier;
-        $helperListConfiguration->isJoinLanguageTableAuto = $isJoinLanguageTableAuto;
-        $helperListConfiguration->deleted = $deleted;
-        $helperListConfiguration->defaultOrderBy = $defaultOrderBy;
-        $helperListConfiguration->explicitSelect = $explicitSelect;
-        $helperListConfiguration->useFoundRows = $useFoundRows;
-        $helperListConfiguration->id = $controllerConfiguration->tabId;
-        $helperListConfiguration->legacyControllerName = $controllerConfiguration->legacyControllerName;
-        $helperListConfiguration->token = $controllerConfiguration->token;
-        $helperListConfiguration->bootstrap = $controllerConfiguration->bootstrap;
-        $helperListConfiguration->legacyCurrentIndex = $controllerConfiguration->legacyCurrentIndex;
-        $helperListConfiguration->multishopContext = $controllerConfiguration->multiShopContext;
-
-        return $helperListConfiguration;
+        return new HelperListConfiguration(
+            $controllerConfiguration->tabId,
+            $controllerConfiguration->tableName,
+            $listId ?: $controllerConfiguration->tableName,
+            $controllerConfiguration->objectModelClassName,
+            $identifierKey,
+            $positionIdentifierKey,
+            $isJoinLanguageTableAuto,
+            $deleted,
+            $defaultOrderBy,
+            $explicitSelect,
+            $useFoundRows,
+            $controllerConfiguration->legacyControllerName,
+            $controllerConfiguration->token,
+            $controllerConfiguration->bootstrap,
+            $controllerConfiguration->legacyCurrentIndex,
+            $controllerConfiguration->multiShopContext,
+            $this->router->generate($indexRoute)
+        );
     }
 }

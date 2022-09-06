@@ -25,7 +25,6 @@ services:
   prestashop.bridge.smarty.header_configurator:
     class: PrestaShopBundle\Bridge\Smarty\HeaderConfigurator
     arguments:
-      - "@prestashop.router"
       - "@translator"
       - "@prestashop.adapter.legacy.context"
       - "@prestashop.hook.dispatcher"
@@ -45,7 +44,7 @@ services:
   prestashop.bridge.smarty.toolbar_flags_configurator:
     class: PrestaShopBundle\Bridge\Smarty\ToolbarFlagsConfigurator
     arguments:
-      - "@prestashop.router"
       - "@prestashop.adapter.legacy.configuration"
       - "@prestashop.core.help.documentation"
+      - "@=service('prestashop.adapter.environment').isDebug()"
     tags: [ 'prestashop.bridge.smarty_configurator' ]

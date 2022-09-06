@@ -28,91 +28,64 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Bridge\AdminController;
 
-use PrestaShopBundle\Bridge\AdminController\Action\ActionInterface;
-use PrestaShopBundle\Bridge\Exception\NotAllowedActionTypeForListException;
-use PrestaShopBundle\Bridge\Helper\Listing\Action\ListBulkAction;
-use PrestaShopBundle\Bridge\Helper\Listing\Action\ListHeaderToolbarAction;
-use PrestaShopBundle\Bridge\Helper\Listing\Action\ListRowAction;
-use PrestaShopBundle\Bridge\Helper\Listing\Field\FieldInterface;
-use PrestaShopBundle\Bridge\Helper\Listing\FiltersProcessor;
 use PrestaShopBundle\Bridge\Helper\Listing\HelperListConfiguration;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Contains the principal methods you need to horizontally migrate a controller which has a list.
  */
 trait FrameworkBridgeControllerListTrait
 {
+    /**
+     * @param string $identifierKey @see HelperListConfiguration::$identifierKey
+     * @param string $defaultOrderBy @see HelperListConfiguration::$defaultOrderBy
+     * @param string $indexRoute route name used to generate url for filters & sorting submissions. @see HelperListConfiguration::$indexUrl
+     * @param string|null $positionIdentifierKey @see HelperListConfiguration::$positionIdentifierKey
+     * @param bool $autoJoinLangTable @see HelperListConfiguration::$autoJoinLanguageTable
+     * @param bool $deleted @see HelperListConfiguration::$deleted
+     * @param bool $explicitSelect @see HelperListConfiguration::$explicitSelect
+     * @param bool $useFoundRows @see HelperListConfiguration::$useFoundRows
+     * @param string|null $listId @see HelperListConfiguration::$listId
+     *
+     * @return HelperListConfiguration
+     */
     protected function buildListConfiguration(
         string $identifierKey,
-        string $positionIdentifierKey,
         string $defaultOrderBy,
+        string $indexRoute,
+        ?string $positionIdentifierKey = null,
         bool $autoJoinLangTable = true,
         bool $deleted = false,
         bool $explicitSelect = false,
-        bool $useFoundRows = true
+        bool $useFoundRows = true,
+        ?string $listId = null
     ): HelperListConfiguration {
         $controllerConfiguration = $this->getControllerConfiguration();
 
         return $this->get('prestashop.bridge.helper.listing.helper_list_configuration_factory')->create(
             $controllerConfiguration,
             $identifierKey,
+            $indexRoute,
             $positionIdentifierKey,
             $defaultOrderBy,
             $autoJoinLangTable,
             $deleted,
             $explicitSelect,
-            $useFoundRows
+            $useFoundRows,
+            $listId
         );
     }
 
     /**
-     * @return FiltersProcessor
-     */
-    protected function getFiltersProcessor(): FiltersProcessor
-    {
-        return $this->get('prestashop.bridge.helper.listing.filters_processor');
-    }
-
-    /**
-     * This method add action specific for the list.
+     * Handles filters submit and reset
      *
-     * @param ActionInterface $action
+     * @param Request $request
      * @param HelperListConfiguration $helperListConfiguration
-     *
-     * @return void
      */
-    protected function addActionList(ActionInterface $action, HelperListConfiguration $helperListConfiguration): void
+    protected function processFilters(Request $request, HelperListConfiguration $helperListConfiguration): void
     {
-        if ($action instanceof ListBulkAction) {
-            $helperListConfiguration->bulkActions[$action->getLabel()] = $action->getConfig();
-
-            return;
-        }
-
-        if ($action instanceof ListRowAction) {
-            $helperListConfiguration->actions[] = $action->getLabel();
-
-            return;
-        }
-
-        if ($action instanceof ListHeaderToolbarAction) {
-            $helperListConfiguration->toolbarButton[$action->getLabel()] = $action->getConfig();
-
-            return;
-        }
-
-        throw new NotAllowedActionTypeForListException(sprintf('This action %s doesn\'t exist', get_class($action)));
-    }
-
-    /**
-     * This methods allow you to add field to your list.
-     *
-     * @param FieldInterface $field
-     *
-     * @return void
-     */
-    protected function addListField(FieldInterface $field, HelperListConfiguration $helperListConfiguration): void
-    {
-        $helperListConfiguration->fieldsList[$field->getLabel()] = $field->getConfig();
+        $this->get('prestashop.bridge.helper.listing.filters_processor')
+            ->processFilters($request, $helperListConfiguration)
+        ;
     }
 }

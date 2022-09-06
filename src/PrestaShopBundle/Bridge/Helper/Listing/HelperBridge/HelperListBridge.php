@@ -30,14 +30,16 @@ namespace PrestaShopBundle\Bridge\Helper\Listing\HelperBridge;
 
 use Context;
 use Db;
+use Exception;
 use HelperList;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShopBundle\Bridge\AdminController\FrameworkBridgeControllerInterface;
+use PrestaShopBundle\Bridge\Exception\FailedToFetchListRecordsException;
 use PrestaShopBundle\Bridge\Helper\Listing\FilterPrefix;
 use PrestaShopBundle\Bridge\Helper\Listing\HelperListConfiguration;
-use PrestaShopBundle\Bridge\Helper\Listing\HelperListConfigurator;
+use PrestaShopBundle\Bridge\Smarty\BreadcrumbsAndTitleConfigurator;
 use PrestaShopBundle\Service\DataProvider\UserProvider;
 use PrestaShopException;
 use Shop;
@@ -63,11 +65,6 @@ class HelperListBridge
     private $userProvider;
 
     /**
-     * @var HelperListConfigurator
-     */
-    private $helperListConfigurator;
-
-    /**
      * @var HookDispatcherInterface
      */
     private $hookDispatcher;
@@ -78,24 +75,29 @@ class HelperListBridge
     private $configuration;
 
     /**
+     * @var BreadcrumbsAndTitleConfigurator
+     */
+    private $breadcrumbsAndTitleConfigurator;
+
+    /**
      * @param LegacyContext $legacyContext
      * @param UserProvider $userProvider
-     * @param HelperListConfigurator $helperListVarsAssigner
      * @param HookDispatcherInterface $hookDispatcher
      * @param Configuration $configuration
+     * @param BreadcrumbsAndTitleConfigurator $breadcrumbsAndTitleConfigurator
      */
     public function __construct(
         LegacyContext $legacyContext,
         UserProvider $userProvider,
-        HelperListConfigurator $helperListVarsAssigner,
         HookDispatcherInterface $hookDispatcher,
-        Configuration $configuration
+        Configuration $configuration,
+        BreadcrumbsAndTitleConfigurator $breadcrumbsAndTitleConfigurator
     ) {
         $this->context = $legacyContext->getContext();
         $this->userProvider = $userProvider;
-        $this->helperListConfigurator = $helperListVarsAssigner;
         $this->hookDispatcher = $hookDispatcher;
         $this->configuration = $configuration;
+        $this->breadcrumbsAndTitleConfigurator = $breadcrumbsAndTitleConfigurator;
     }
 
     /**
@@ -112,42 +114,23 @@ class HelperListBridge
             return null;
         }
 
-        $this->generateListQuery($helperListConfiguration, $this->context->language->id);
-
-        $helper = new HelperList();
-
-        $this->helperListConfigurator->setHelperDisplay($helperListConfiguration, $helper);
-        $helper->_default_pagination = $helperListConfiguration->defaultPagination;
-        $helper->_pagination = $helperListConfiguration->pagination;
-        $helper->tpl_delete_link_vars = $helperListConfiguration->deleteLinksVariableTemplate;
-
-        foreach ($helperListConfiguration->actionsAvailable as $action) {
-            if (!in_array($action, $helperListConfiguration->actions) && isset($helperListConfiguration->$action) && $helperListConfiguration->$action) {
-                $helperListConfiguration->actions[] = $action;
-            }
-        }
-
-        /* @phpstan-ignore-next-line */
-        $helper->sql = $helperListConfiguration->listsql;
-
-        return $helper->generateList($helperListConfiguration->list, $helperListConfiguration->fieldsList);
+        return $this
+            ->buildHelperList($helperListConfiguration)
+            ->generateList($helperListConfiguration->list, $helperListConfiguration->fieldsList)
+        ;
     }
 
     /**
      * @param HelperListConfiguration $helperListConfiguration
      * @param int $idLang
      *
-     * @return void
+     * @return string
      */
     protected function generateListQuery(
         HelperListConfiguration $helperListConfiguration,
         int $idLang
-    ): void {
-        if ($helperListConfiguration->table == 'feature_value') {
-            $helperListConfiguration->where .= ' AND (a.custom = 0 OR a.custom IS NULL)';
-        }
-
-        $this->hookDispatcher->dispatchWithParameters('action' . $helperListConfiguration->legacyControllerName . 'ListingFieldsModifier', [
+    ): string {
+        $this->hookDispatcher->dispatchWithParameters('action' . $helperListConfiguration->getLegacyControllerName() . 'ListingFieldsModifier', [
             'select' => &$helperListConfiguration->select,
             'join' => &$helperListConfiguration->join,
             'where' => &$helperListConfiguration->where,
@@ -157,42 +140,46 @@ class HelperListBridge
             'fields' => &$helperListConfiguration->fieldsList,
         ]);
 
-        if (!Validate::isTableOrIdentifier($helperListConfiguration->table)) {
-            throw new PrestaShopException(sprintf('Table name %s is invalid:', $helperListConfiguration->table));
+        $tableName = $helperListConfiguration->getTableName();
+
+        if (!Validate::isTableOrIdentifier($tableName)) {
+            throw new PrestaShopException(sprintf('Table name %s is invalid:', $tableName));
         }
 
         $limit = $this->checkSqlLimit($helperListConfiguration);
+        $listId = $helperListConfiguration->getListId();
 
         /* Determine offset from current page */
         $start = 0;
-        if ((int) Tools::getValue('submitFilter' . $helperListConfiguration->listId)) {
-            $start = ((int) Tools::getValue('submitFilter' . $helperListConfiguration->listId) - 1) * $limit;
+        if ((int) Tools::getValue('submitFilter' . $listId)) {
+            $start = ((int) Tools::getValue('submitFilter' . $listId) - 1) * $limit;
         } elseif (
-            isset($this->context->cookie->{$helperListConfiguration->listId . '_start'})
-            && Tools::isSubmit('export' . $helperListConfiguration->table)
+            isset($this->context->cookie->{$listId . '_start'})
+            && Tools::isSubmit('export' . $tableName)
         ) {
-            $start = $this->context->cookie->{$helperListConfiguration->listId . '_start'};
+            $start = $this->context->cookie->{$listId . '_start'};
         }
 
         // Either save or reset the offset in the cookie
         if ($start) {
-            $this->context->cookie->{$helperListConfiguration->listId . '_start'} = $start;
-        } elseif (isset($this->context->cookie->{$helperListConfiguration->listId . '_start'})) {
-            unset($this->context->cookie->{$helperListConfiguration->listId . '_start'});
+            $this->context->cookie->{$listId . '_start'} = $start;
+        } elseif (isset($this->context->cookie->{$listId . '_start'})) {
+            unset($this->context->cookie->{$listId . '_start'});
         }
 
         // Add SQL shop restriction
         $select_shop = '';
-        if ($helperListConfiguration->shopLinkType) {
+        if ($helperListConfiguration->getShopLinkType()) {
             $select_shop = ', shop.name as shop_name ';
         }
 
-        if ($helperListConfiguration->multishopContext && Shop::isTableAssociated($helperListConfiguration->table) && !empty($helperListConfiguration->objectModelClassName)) {
+        if ($helperListConfiguration->getMultiShopContext() && Shop::isTableAssociated($tableName) && !empty($helperListConfiguration->getObjectModelClassName())) {
             if (Shop::getContext() != Shop::CONTEXT_ALL || !$this->userProvider->getUser()->getData()->isSuperAdmin()) {
+                $idKey = $helperListConfiguration->getIdentifierKey();
                 $helperListConfiguration->where .= ' AND EXISTS (
                         SELECT 1
-                        FROM `' . _DB_PREFIX_ . $helperListConfiguration->table . '_shop` sa
-                        WHERE a.`' . bqSQL($helperListConfiguration->identifier) . '` = sa.`' . bqSQL($helperListConfiguration->identifier) . '`
+                        FROM `' . _DB_PREFIX_ . $tableName . '_shop` sa
+                        WHERE a.`' . bqSQL($idKey) . '` = sa.`' . bqSQL($idKey) . '`
                          AND sa.id_shop IN (' . implode(', ', Shop::getContextListShopID()) . ')
                     )';
             }
@@ -206,64 +193,74 @@ class HelperListBridge
         $shouldLimitSqlResults = $this->shouldLimitSqlResults($limit);
 
         do {
-            $helperListConfiguration->listsql = '';
+            $listSql = '';
 
-            if ($helperListConfiguration->explicitSelect) {
+            if ($helperListConfiguration->isExplicitSelect()) {
                 foreach ($helperListConfiguration->fieldsList as $key => $array_value) {
                     if (preg_match('/[\s]`?' . preg_quote($key, '/') . '`?\s*,/', $helperListConfiguration->select)) {
                         continue;
                     }
 
                     if (isset($array_value['filter_key'])) {
-                        $helperListConfiguration->listsql .= str_replace('!', '.`', $array_value['filter_key']) . '` AS `' . $key . '`, ';
-                    } elseif ($key == 'id_' . $helperListConfiguration->table) {
-                        $helperListConfiguration->listsql .= 'a.`' . bqSQL($key) . '`, ';
+                        $listSql .= str_replace('!', '.`', $array_value['filter_key']) . '` AS `' . $key . '`, ';
+                    } elseif ($key == 'id_' . $tableName) {
+                        $listSql .= 'a.`' . bqSQL($key) . '`, ';
                     } elseif ($key != 'image' && !preg_match('/' . preg_quote($key, '/') . '/i', $helperListConfiguration->select)) {
-                        $helperListConfiguration->listsql .= '`' . bqSQL($key) . '`, ';
+                        $listSql .= '`' . bqSQL($key) . '`, ';
                     }
                 }
-                $helperListConfiguration->listsql = rtrim(trim($helperListConfiguration->listsql), ',');
+                $listSql = rtrim(trim($listSql), ',');
             } else {
-                $helperListConfiguration->listsql .= ($helperListConfiguration->isJoinLanguageTableAuto ? 'b.*,' : '') . ' a.*';
+                $listSql .= ($helperListConfiguration->autoJoinLanguageTable() ? 'b.*,' : '') . ' a.*';
             }
 
-            $helperListConfiguration->listsql .= "\n" . (!empty($helperListConfiguration->select) ? ', ' . rtrim($helperListConfiguration->select, ', ') : '') . $select_shop;
+            $listSql .= "\n" . (!empty($helperListConfiguration->select) ? ', ' . rtrim($helperListConfiguration->select, ', ') : '') . $select_shop;
 
             $limitClause = ' ' . (($shouldLimitSqlResults) ? ' LIMIT ' . (int) $start . ', ' . (int) $limit : '');
 
-            if ($helperListConfiguration->useFoundRows) {
-                $helperListConfiguration->listsql = 'SELECT SQL_CALC_FOUND_ROWS ' .
-                    $helperListConfiguration->listsql .
+            if ($helperListConfiguration->useFoundRows()) {
+                $listSql = 'SELECT SQL_CALC_FOUND_ROWS ' .
+                    $listSql .
                     $fromClause .
                     $joinClause .
                     $whereClause .
                     $orderByClause .
                     $limitClause;
 
-                $list_count = 'SELECT FOUND_ROWS() AS `' . _DB_PREFIX_ . $helperListConfiguration->table . '`';
+                $list_count = 'SELECT FOUND_ROWS() AS `' . _DB_PREFIX_ . $tableName . '`';
             } else {
-                $helperListConfiguration->listsql = 'SELECT ' .
-                    $helperListConfiguration->listsql .
+                $listSql = 'SELECT ' .
+                    $listSql .
                     $fromClause .
                     $joinClause .
                     $whereClause .
                     $orderByClause .
                     $limitClause;
 
-                $list_count = 'SELECT COUNT(*) AS `' . _DB_PREFIX_ . $helperListConfiguration->table . '` ' .
+                $list_count = 'SELECT COUNT(*) AS `' . _DB_PREFIX_ . $tableName . '` ' .
                     $fromClause .
                     $joinClause .
                     $whereClause;
             }
 
-            $helperListConfiguration->list = Db::getInstance()->executeS($helperListConfiguration->listsql, true, false);
-
-            if ($helperListConfiguration->list === false) {
-                $helperListConfiguration->listError = Db::getInstance()->getMsgError();
-
-                break;
+            try {
+                $records = Db::getInstance()->executeS($listSql, true, false);
+            } catch (Exception $e) {
+                throw new FailedToFetchListRecordsException(
+                    'Failed to fetch list records from database.',
+                    0,
+                    $e
+                );
             }
 
+            if (!is_array($records)) {
+                throw new FailedToFetchListRecordsException(sprintf(
+                    'Fetched list records expected to be array. Got %s',
+                    var_export($records, true)
+                ));
+            }
+
+            $helperListConfiguration->list = $records;
             $helperListConfiguration->listTotal = (int) Db::getInstance()->getValue($list_count, false);
 
             if ($shouldLimitSqlResults) {
@@ -274,12 +271,14 @@ class HelperListBridge
             } else {
                 break;
             }
-        } while (empty($this->_list));
+        } while (empty($helperListConfiguration->list));
 
-        $this->hookDispatcher->dispatchWithParameters('action' . $helperListConfiguration->legacyControllerName . 'ListingResultsModifier', [
+        $this->hookDispatcher->dispatchWithParameters('action' . $helperListConfiguration->getLegacyControllerName() . 'ListingResultsModifier', [
             'list' => &$helperListConfiguration->list,
             'list_total' => &$helperListConfiguration->listTotal,
         ]);
+
+        return $listSql;
     }
 
     /**
@@ -290,22 +289,24 @@ class HelperListBridge
      */
     private function checkSqlLimit(HelperListConfiguration $helperListConfiguration, ?string $limit = null): int
     {
+        $listId = $helperListConfiguration->getListId();
+
         if (empty($limit)) {
             if (
-                isset($this->context->cookie->{$helperListConfiguration->listId . '_pagination'}) &&
-                $this->context->cookie->{$helperListConfiguration->listId . '_pagination'}
+                isset($this->context->cookie->{$listId . '_pagination'}) &&
+                $this->context->cookie->{$listId . '_pagination'}
             ) {
-                $limit = $this->context->cookie->{$helperListConfiguration->listId . '_pagination'};
+                $limit = $this->context->cookie->{$listId . '_pagination'};
             } else {
-                $limit = $helperListConfiguration->defaultPagination;
+                $limit = $helperListConfiguration->getDefaultPaginationLimit();
             }
         }
 
-        $limit = (int) Tools::getValue($helperListConfiguration->listId . '_pagination', $limit);
-        if (in_array($limit, $helperListConfiguration->pagination) && $limit != $helperListConfiguration->defaultPagination) {
-            $this->context->cookie->{$helperListConfiguration->listId . '_pagination'} = $limit;
+        $limit = (int) Tools::getValue($listId . '_pagination', $limit);
+        if (in_array($limit, $helperListConfiguration->getPaginationLimits()) && $limit != $helperListConfiguration->getDefaultPaginationLimit()) {
+            $this->context->cookie->{$listId . '_pagination'} = $limit;
         } else {
-            unset($this->context->cookie->{$helperListConfiguration->listId . '_pagination'});
+            unset($this->context->cookie->{$listId . '_pagination'});
         }
 
         if (!is_numeric($limit)) {
@@ -322,7 +323,9 @@ class HelperListBridge
      */
     private function getFromClause(HelperListConfiguration $helperListConfiguration)
     {
-        $sqlTable = $helperListConfiguration->table == 'order' ? 'orders' : $helperListConfiguration->table;
+        $tableName = $helperListConfiguration->getTableName();
+        // for some reason Order object model db table name is plural, so it is handled here (all other tables matches object model singular name)
+        $sqlTable = $tableName == 'order' ? 'orders' : $tableName;
 
         return "\n" . 'FROM `' . _DB_PREFIX_ . $sqlTable . '` a ';
     }
@@ -337,9 +340,9 @@ class HelperListBridge
     private function getJoinClause(HelperListConfiguration $helperListConfiguration, $idLang, $idLangShop = false)
     {
         $shopJoinClause = '';
-        if ($helperListConfiguration->shopLinkType) {
-            $shopJoinClause = ' LEFT JOIN `' . _DB_PREFIX_ . bqSQL($helperListConfiguration->shopLinkType) . '` shop
-                            ON a.`id_' . bqSQL($helperListConfiguration->shopLinkType) . '` = shop.`id_' . bqSQL($helperListConfiguration->shopLinkType) . '`';
+        if ($shopLinkType = $helperListConfiguration->getShopLinkType()) {
+            $shopJoinClause = ' LEFT JOIN `' . _DB_PREFIX_ . bqSQL($shopLinkType) . '` shop
+                ON a.`id_' . bqSQL($shopLinkType) . '` = shop.`id_' . bqSQL($shopLinkType) . '`';
         }
 
         return "\n" . $this->getLanguageJoinClause($helperListConfiguration, $idLang, $idLangShop) .
@@ -357,9 +360,9 @@ class HelperListBridge
     private function getLanguageJoinClause(HelperListConfiguration $helperListConfiguration, $idLang, $idLangShop)
     {
         $languageJoinClause = '';
-        if ($helperListConfiguration->isJoinLanguageTableAuto) {
-            $languageJoinClause = 'LEFT JOIN `' . _DB_PREFIX_ . bqSQL($helperListConfiguration->table) . '_lang` b
-                ON (b.`' . bqSQL($helperListConfiguration->identifier) . '` = a.`' . bqSQL($helperListConfiguration->identifier) . '` AND b.`id_lang` = ' . (int) $idLang;
+        if ($helperListConfiguration->autoJoinLanguageTable()) {
+            $languageJoinClause = 'LEFT JOIN `' . _DB_PREFIX_ . bqSQL($helperListConfiguration->getTableName()) . '_lang` b
+                ON (b.`' . bqSQL($helperListConfiguration->getIdentifierKey()) . '` = a.`' . bqSQL($helperListConfiguration->getIdentifierKey()) . '` AND b.`id_lang` = ' . (int) $idLang;
 
             if ($idLangShop) {
                 if (!Shop::isFeatureActive()) {
@@ -384,32 +387,34 @@ class HelperListBridge
     private function getWhereClause(HelperListConfiguration $helperListConfiguration): string
     {
         $whereShop = '';
-        if ($helperListConfiguration->shopLinkType) {
-            //$whereShop = Shop::addSqlRestriction($this->shopShareDatas, 'a');
-            $whereShop = Shop::addSqlRestriction(false, 'a');
+        if ($helperListConfiguration->getShopLinkType()) {
+            $whereShop = Shop::addSqlRestriction($helperListConfiguration->isShopShareData(), 'a');
         }
 
         return ' WHERE 1 ' . $helperListConfiguration->where . ' ' .
-            ($helperListConfiguration->deleted ? 'AND a.`deleted` = 0 ' : '') .
+            ($helperListConfiguration->isDeleted() ? 'AND a.`deleted` = 0 ' : '') .
             $helperListConfiguration->filter . $whereShop . "\n" .
             $helperListConfiguration->group . ' ' . "\n" .
-            $this->getHavingClause();
+            $this->getHavingClause($helperListConfiguration);
     }
 
     /**
      * @return string
      */
-    private function getHavingClause(): string
+    private function getHavingClause(HelperListConfiguration $helperListConfiguration): string
     {
         $havingClause = '';
-        if (isset($this->_filterHaving) || isset($this->_having)) {
-            $havingClause = ' HAVING ';
-            if (isset($this->_filterHaving)) {
-                $havingClause .= ltrim($this->_filterHaving, ' AND ');
-            }
-            if (isset($this->_having)) {
-                $havingClause .= $this->_having . ' ';
-            }
+        if (!$helperListConfiguration->filterHaving && !$helperListConfiguration->having) {
+            return $havingClause;
+        }
+
+        $havingClause = ' HAVING ';
+        if ($helperListConfiguration->filterHaving) {
+            $havingClause .= ltrim($helperListConfiguration->filterHaving, ' AND ');
+        }
+
+        if ($helperListConfiguration->having) {
+            $havingClause .= $helperListConfiguration->having . ' ';
         }
 
         return $havingClause;
@@ -428,7 +433,7 @@ class HelperListBridge
         $helperListConfiguration->orderWay = $this->checkOrderDirection($helperListConfiguration, $orderDirection);
 
         return ' ORDER BY '
-            . ((str_replace('`', '', $helperListConfiguration->orderBy) == $helperListConfiguration->identifier) ? 'a.' : '')
+            . ((str_replace('`', '', $helperListConfiguration->orderBy) == $helperListConfiguration->getIdentifierKey()) ? 'a.' : '')
             . $helperListConfiguration->orderBy
             . ' '
             . $helperListConfiguration->orderWay;
@@ -443,14 +448,15 @@ class HelperListBridge
     private function checkOrderBy(HelperListConfiguration $helperListConfiguration, $orderBy)
     {
         if (empty($orderBy)) {
-            $prefix = FilterPrefix::getByClassName($helperListConfiguration->legacyControllerName);
+            $prefix = FilterPrefix::getByClassName($helperListConfiguration->getLegacyControllerName());
+            $listId = $helperListConfiguration->getListId();
 
-            if ($this->context->cookie->{$prefix . $helperListConfiguration->listId . 'Orderby'}) {
-                $orderBy = $this->context->cookie->{$prefix . $helperListConfiguration->listId . 'Orderby'};
+            if ($this->context->cookie->{$prefix . $listId . 'Orderby'}) {
+                $orderBy = $this->context->cookie->{$prefix . $listId . 'Orderby'};
             } elseif ($helperListConfiguration->orderBy) {
                 $orderBy = $helperListConfiguration->orderBy;
             } else {
-                $orderBy = $helperListConfiguration->defaultOrderBy;
+                $orderBy = $helperListConfiguration->getDefaultOrderBy();
             }
         }
 
@@ -485,14 +491,15 @@ class HelperListBridge
      */
     private function checkOrderDirection(HelperListConfiguration $helperListConfiguration, $orderDirection)
     {
-        $prefix = FilterPrefix::getByClassName($helperListConfiguration->legacyControllerName);
+        $prefix = FilterPrefix::getByClassName($helperListConfiguration->getLegacyControllerName());
         if (empty($orderDirection)) {
-            if ($this->context->cookie->{$prefix . $helperListConfiguration->listId . 'Orderway'}) {
-                $orderDirection = $this->context->cookie->{$prefix . $helperListConfiguration->listId . 'Orderway'};
+            $listId = $helperListConfiguration->getListId();
+            if ($this->context->cookie->{$prefix . $listId . 'Orderway'}) {
+                $orderDirection = $this->context->cookie->{$prefix . $listId . 'Orderway'};
             } elseif ($helperListConfiguration->orderWay) {
                 $orderDirection = $helperListConfiguration->orderWay;
             } else {
-                $orderDirection = $helperListConfiguration->defaultOrderWay;
+                $orderDirection = $helperListConfiguration->getDefaultOrderWay();
             }
         }
 
@@ -511,5 +518,40 @@ class HelperListBridge
     private function shouldLimitSqlResults($limit): bool
     {
         return $limit !== false;
+    }
+
+    /**
+     * @param HelperListConfiguration $helperListConfiguration
+     *
+     * @return HelperList
+     */
+    private function buildHelperList(
+        HelperListConfiguration $helperListConfiguration
+    ): HelperList {
+        $helper = new HelperList();
+        $helper->sql = $this->generateListQuery($helperListConfiguration, $this->context->language->id);
+        $breadcrumbs = $this->breadcrumbsAndTitleConfigurator->getBreadcrumbs($helperListConfiguration->getTabId());
+        $helper->title = $breadcrumbs['tab']['name'] ?? '';
+        $helper->toolbar_btn = $helperListConfiguration->getToolbarActions();
+        $helper->actions = $helperListConfiguration->getRowActions();
+        $helper->bulk_actions = $helperListConfiguration->getBulkActions();
+        $helper->show_toolbar = true;
+        $helper->currentIndex = $helperListConfiguration->getLegacyCurrentIndex();
+        $helper->table = $helperListConfiguration->getTableName();
+        $helper->orderBy = $helperListConfiguration->orderBy;
+        $helper->orderWay = $helperListConfiguration->orderWay;
+        $helper->listTotal = $helperListConfiguration->listTotal;
+        $helper->identifier = $helperListConfiguration->getIdentifierKey();
+        $helper->token = $helperListConfiguration->getToken();
+        $helper->position_identifier = $helperListConfiguration->getPositionIdentifierKey();
+        $helper->controller_name = $helperListConfiguration->getLegacyControllerName();
+        $helper->list_id = $helperListConfiguration->getListId();
+        $helper->bootstrap = $helperListConfiguration->isBootstrap();
+        $helper->_default_pagination = $helperListConfiguration->getDefaultPaginationLimit();
+        $helper->_pagination = $helperListConfiguration->getPaginationLimits();
+        $helper->tpl_delete_link_vars = $helperListConfiguration->getDeleteLinkVars();
+        $helper->frameworkIndexUrl = $helperListConfiguration->getIndexUrl();
+
+        return $helper;
     }
 }
