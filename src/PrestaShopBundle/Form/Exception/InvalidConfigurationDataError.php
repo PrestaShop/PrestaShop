@@ -48,7 +48,7 @@ class LabelProvider
             }
         }
 
-        /** If label not found return $fieldName as fallback */
+        /* If label not found return $fieldName as fallback */
         return $fieldName;
     }
 }
