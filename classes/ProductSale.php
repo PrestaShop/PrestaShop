@@ -241,6 +241,7 @@ class ProductSaleCore
     public static function addProductSale($productId, $qty = 1)
     {
         $idShop = Context::getContext()->shop->id;
+
         return Db::getInstance()->execute('
 			INSERT INTO ' . _DB_PREFIX_ . 'product_sale
 			(`id_product`, `id_shop`, `quantity`, `sale_nbr`, `date_upd`)
@@ -286,7 +287,7 @@ class ProductSaleCore
 				WHERE `id_product` = ' . (int) $idProduct . ' and `id_shop` = ' . (int) $idShop
             );
         } elseif ($totalSales == 1) {
-            return Db::getInstance()->delete('product_sale', 'id_product = ' . (int) $idProduct) . ' and `id_shop` = ' . (int) $idShop;
+            return Db::getInstance()->delete('product_sale', 'id_product = ' . (int) $idProduct . ' and `id_shop` = ' . (int) $idShop);
         }
 
         return true;
