@@ -26,7 +26,7 @@ const baseContext = 'functional_BO_header_quickAccess';
 let browserContext;
 let page;
 
-const quickAccessLinkData = {name: 'New customer', url: 'index.php/sell/customers/new', openNewWindow: false};
+const quickAccessLinkData = {name: 'New customer', url: 'index.php/sell/customers/new', openNewWindow: true};
 
 describe('BO - Header : Quick access links', async () => {
   // before and after functions
@@ -107,7 +107,7 @@ describe('BO - Header : Quick access links', async () => {
   it('should check the new link from Quick access', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'checkNewLink', baseContext);
 
-    await dashboardPage.quickAccessToPage(page, 4);
+    page = await dashboardPage.quickAccessToPageNewWindow(page, 4);
 
     const pageTitle = await newCustomerPage.getPageTitle(page);
     await expect(pageTitle).to.contains(newCustomerPage.pageTitleCreate);
