@@ -28,28 +28,13 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Exception;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
-use Throwable;
+use PrestaShop\PrestaShop\Core\Data\AbstractTypedCollection;
 
 /** @deprecated and will be removed in 9.0 */
-class DataProviderException extends DomainException
+class InvalidConfigurationDataErrorCollection extends AbstractTypedCollection
 {
-    /**
-     * @var InvalidConfigurationDataErrorCollection
-     */
-    private $InvalidConfigurationDataErrors;
-
-    public function __construct($message = '', $code = 0, Throwable $previous = null, ?InvalidConfigurationDataErrorCollection $InvalidConfigurationDataErrors = null)
+    protected function getType(): string
     {
-        parent::__construct($message, $code, $previous);
-        $this->InvalidConfigurationDataErrors = $InvalidConfigurationDataErrors ?: new InvalidConfigurationDataErrorCollection();
-    }
-
-    /**
-     * @return InvalidConfigurationDataErrorCollection
-     */
-    public function getInvalidConfigurationDataErrors(): InvalidConfigurationDataErrorCollection
-    {
-        return $this->InvalidConfigurationDataErrors;
+        return InvalidConfigurationDataError::class;
     }
 }

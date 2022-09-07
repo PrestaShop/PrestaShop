@@ -29,13 +29,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 use PrestaShop\PrestaShop\Core\Form\FormHandlerInterface;
 use PrestaShop\PrestaShop\Core\Http\CookieOptions;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
-use PrestaShopBundle\Controller\Exception\FieldNotFoundException;
-use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\FormDataProvider;
-use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralType;
-use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\UploadQuotaType;
-use PrestaShopBundle\Form\Exception\DataProviderException;
-use PrestaShopBundle\Form\Exception\InvalidConfigurationDataError;
-use PrestaShopBundle\Form\Exception\InvalidConfigurationDataErrorCollection;
+use PrestaShopBundle\Form\Exception\FormDataProviderException;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
 use PrestaShopBundle\Security\Annotation\DemoRestricted;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -170,8 +164,9 @@ class AdministrationController extends FrameworkBundleAdminController
             $data = $form->getData();
             try {
                 $formHandler->save($data);
-            } catch (DataProviderException $e) {
-                $this->flashErrors($this->getErrorMessages($e->getInvalidConfigurationDataErrors()));
+            } catch (FormDataProviderException $e) {
+                $errorMessageFactory = $this->get('prestashop.form.error_message.configuration_error_factory');
+                $this->flashErrors($errorMessageFactory->getErrorMessages($e->getInvalidConfigurationDataErrors(), $form));
 
                 return $this->redirectToRoute('admin_administration');
             }

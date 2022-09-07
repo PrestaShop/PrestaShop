@@ -35,8 +35,8 @@ use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorCollection;
 use PrestaShopBundle\Entity\Lang;
 use PrestaShopBundle\Entity\Repository\LangRepository;
 use PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Administration\GeneralDataProvider;
-use PrestaShopBundle\Form\ErrorMessage\Factory\AdministrationConfigurationErrorFactory;
-use PrestaShopBundle\Form\ErrorMessage\Factory\CommonConfigurationErrorFactory;
+use PrestaShopBundle\Form\ErrorMessage\Factory\AdministrationConfigurationErrorMessageProvider;
+use PrestaShopBundle\Form\ErrorMessage\Factory\CommonConfigurationErrorMessageProvider;
 use PrestaShopBundle\Form\ErrorMessage\Factory\ConfigurationErrorFactory;
 use PrestaShopBundle\Form\ErrorMessage\LabelProvider;
 use Symfony\Component\Form\FormInterface;
@@ -98,8 +98,8 @@ class ConfigurationErrorFactoryTest extends TestCase
             ->getMock();
         $labelProviderMock->method('getLabel')->willReturn('Field');
         $errorFactoryCollection = [];
-        $errorFactoryCollection[] = new AdministrationConfigurationErrorFactory($translatorMock, $languageRepositoryMock);
-        $errorFactoryCollection[] = new CommonConfigurationErrorFactory($translatorMock, $languageRepositoryMock);
+        $errorFactoryCollection[] = new AdministrationConfigurationErrorMessageProvider($translatorMock, $languageRepositoryMock);
+        $errorFactoryCollection[] = new CommonConfigurationErrorMessageProvider($translatorMock, $languageRepositoryMock);
         $configurationErrorFactory = new ConfigurationErrorFactory($errorFactoryCollection, $labelProviderMock, $translatorMock);
 
         $formMock = $this->getMockBuilder(FormInterface::class)->getMock();

@@ -29,27 +29,31 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Exception;
 
 use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
+use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorCollection;
 use Throwable;
 
-/** @deprecated and will be removed in 9.0 */
-class DataProviderException extends DomainException
+/**
+ * Exception thrown in case error happens in data provider validation
+ * should be caught in the controller and configurationErrors used to display errors
+ */
+class FormDataProviderException extends DomainException
 {
     /**
-     * @var InvalidConfigurationDataErrorCollection
+     * @var ConfigurationErrorCollection
      */
-    private $InvalidConfigurationDataErrors;
+    private $configurationErrors;
 
-    public function __construct($message = '', $code = 0, Throwable $previous = null, ?InvalidConfigurationDataErrorCollection $InvalidConfigurationDataErrors = null)
+    public function __construct($message = '', $code = 0, Throwable $previous = null, ?ConfigurationErrorCollection $configurationErrors = null)
     {
         parent::__construct($message, $code, $previous);
-        $this->InvalidConfigurationDataErrors = $InvalidConfigurationDataErrors ?: new InvalidConfigurationDataErrorCollection();
+        $this->configurationErrors = $configurationErrors ?: new ConfigurationErrorCollection();
     }
 
     /**
-     * @return InvalidConfigurationDataErrorCollection
+     * @return ConfigurationErrorCollection
      */
-    public function getInvalidConfigurationDataErrors(): InvalidConfigurationDataErrorCollection
+    public function getInvalidConfigurationDataErrors(): ConfigurationErrorCollection
     {
-        return $this->InvalidConfigurationDataErrors;
+        return $this->configurationErrors;
     }
 }
