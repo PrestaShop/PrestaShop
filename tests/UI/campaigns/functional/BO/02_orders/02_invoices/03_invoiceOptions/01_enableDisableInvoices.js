@@ -61,6 +61,7 @@ describe('BO - Orders - Invoices : Enable/Disable invoices', async () => {
         action: 'Disable',
         status: false,
         orderStatus: Statuses.shipped.status,
+        isInvoiceCreated: 'no invoice document created',
       },
     },
     {
@@ -68,12 +69,13 @@ describe('BO - Orders - Invoices : Enable/Disable invoices', async () => {
         action: 'Enable',
         status: true,
         orderStatus: Statuses.paymentAccepted.status,
+        isInvoiceCreated: 'an invoice document created',
       },
     },
   ];
 
   tests.forEach((test, index) => {
-    describe(`${test.args.action} invoices then check that there is no invoice created`, async () => {
+    describe(`${test.args.action} invoices then check that there is ${test.args.isInvoiceCreated}`, async () => {
       if (index === 0) {
         it('should login in BO', async function () {
           await loginCommon.loginBO(this, page);
@@ -131,7 +133,7 @@ describe('BO - Orders - Invoices : Enable/Disable invoices', async () => {
         await expect(result).to.equal(test.args.orderStatus);
       });
 
-      it('should check that there is no invoice document created', async function () {
+      it(`should check that there is ${test.args.isInvoiceCreated}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkInvoiceCreation${index}`, baseContext);
 
         const documentName = await orderPageTabListBlock.getDocumentType(page);
