@@ -101,7 +101,6 @@ export default class SpecificPricesManager {
     const showCatalogPriceRulesButton = document.querySelector<HTMLElement>(CatalogPriceRulesMap.showCatalogPriceRules);
     const catalogPriceRulesContainer = document.querySelector<HTMLElement>(CatalogPriceRulesMap.blockContainer);
     let listRendered = false;
-    let listShown = false;
 
     if (showCatalogPriceRulesButton === null) {
       console.log(`Error: ${CatalogPriceRulesMap.showCatalogPriceRules} element not found`);
