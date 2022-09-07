@@ -315,7 +315,16 @@ class AdminLoginControllerCore extends AdminController
         } else {
             $employee = new Employee();
             if (!$employee->getByEmail($email)) {
-                $this->errors[] = $this->trans('This account does not exist.', [], 'Admin.Login.Notification');
+                die(json_encode([
+                    'hasErrors' => false,
+                    'confirm' => $this->trans(
+                        'If this email address has been registered in our shop, you will receive a link to reset your password at %email%.', 
+                        [
+                            '%email%' => $email
+                        ], 
+                        'Admin.Login.Notification'
+                    ),
+                ]));
             } elseif ((strtotime($employee->last_passwd_gen . '+' . Configuration::get('PS_PASSWD_TIME_BACK') . ' minutes') - time()) > 0) {
                 $this->errors[] = $this->trans('You can reset your password every %interval% minute(s) only. Please try again later.', ['%interval%' => Configuration::get('PS_PASSWD_TIME_BACK')], 'Admin.Login.Notification');
             }
