@@ -64,7 +64,6 @@ class PricingType extends TranslatorAwareType
     ) {
         parent::__construct($translator, $locales);
         $this->defaultCurrency = $defaultCurrency;
-        $this->legacyContext = $legacyContext;
     }
 
     /**
