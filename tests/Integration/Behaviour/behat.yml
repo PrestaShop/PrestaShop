@@ -246,7 +246,6 @@ default:
             - Tests\Integration\Behaviour\Features\Context\Domain\CategoryFeatureContext
             - Tests\Integration\Behaviour\Features\Context\Domain\SupplierFeatureContext
             - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateProductSuppliersFeatureContext
-            - Tests\Integration\Behaviour\Features\Context\CatalogPriceRuleContext
             - Tests\Integration\Behaviour\Features\Context\Domain\ManufacturerFeatureContext
             - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateBasicInformationFeatureContext
             - Tests\Integration\Behaviour\Features\Context\Domain\Product\UpdateOptionsFeatureContext

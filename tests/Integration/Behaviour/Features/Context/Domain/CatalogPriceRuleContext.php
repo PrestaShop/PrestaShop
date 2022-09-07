@@ -51,6 +51,7 @@ use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 use PrestaShopException;
 use RuntimeException;
 use Shop;
+use SpecificPriceRule;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
@@ -329,5 +330,25 @@ class CatalogPriceRuleContext extends AbstractDomainFeatureContext
         }
 
         return new CatalogPriceRuleList($catalogPriceRules, count($dataRows));
+    }
+
+    /**
+     * @todo This uses legacy code, should be refactored once we have a CQRS command to get SpecificPriceRule
+     * @When I add following conditions to catalog price rule :catalogPriceRuleName:
+     *
+     * @param string $catalogPriceRuleReference
+     * @param TableNode $tableNode
+     */
+    public function addCatalogPriceRuleConditionGroup(string $catalogPriceRuleReference, TableNode $tableNode): void
+    {
+        $catalogPriceRuleId = $this->getSharedStorage()->get($catalogPriceRuleReference);
+
+        $catalogPriceRule = new SpecificPriceRule($catalogPriceRuleId);
+        $conditions = $tableNode->getColumnsHash();
+        foreach ($conditions as $key => $condition) {
+            $conditions[$key]['value'] = $this->getSharedStorage()->get($condition['value']);
+        }
+        $catalogPriceRule->addConditions($conditions);
+        $catalogPriceRule->apply();
     }
 }
