@@ -711,7 +711,6 @@
   }
 
   #product-images-dropzone.dropzone {
-    display: flex;
     align-items: flex-start;
     justify-content: space-between;
     border-radius: 4px;
