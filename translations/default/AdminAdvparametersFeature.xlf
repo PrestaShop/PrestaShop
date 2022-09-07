@@ -1886,7 +1886,8 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="26420bd9e260012164a58a0f002e4821">
         <source>Add new SQL query</source>
         <target>Add new SQL query</target>
-        <note>Line: 34</note>
+        <note>Line: 34
+Comment: Stable feature flags form</note>
       </trans-unit>
     </body>
   </file>
@@ -1971,7 +1972,8 @@ Comment: voluntary do affectation here</note>
       <trans-unit id="644ebe55744f361a22bc3c9be9bc4ccf">
         <source>Add new webservice key</source>
         <target>Add new webservice key</target>
-        <note>Line: 34</note>
+        <note>Line: 34
+Comment: Stable feature flags form</note>
       </trans-unit>
       <trans-unit id="5a8228d4c852fd51c735b3563b33d3ed">
         <source>Webservice status</source>

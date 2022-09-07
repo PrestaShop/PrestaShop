@@ -38,6 +38,9 @@ const baseContext = 'functional_FO_userAccount_CRUDAddress';
 let browserContext;
 let page;
 
+let firstAddressPosition = 0;
+let secondAddressPosition = 0;
+
 /*
 Pre-condition:
 - Clear cache
@@ -255,9 +258,10 @@ describe('FO - Account : CRUD address', async () => {
     it('should try to delete the first address and check the error message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteAddress', baseContext);
 
-      const addressPosition = await addressesPage.getAddressPosition(page, editAddressData.alias);
+      firstAddressPosition = await addressesPage.getAddressPosition(page, editAddressData.alias);
+      secondAddressPosition = await addressesPage.getAddressPosition(page, secondAddressData.alias);
 
-      const textResult = await addressesPage.deleteAddress(page, addressPosition);
+      const textResult = await addressesPage.deleteAddress(page, firstAddressPosition);
       await expect(textResult).to.equal(addressesPage.deleteAddressErrorMessage);
     });
 
@@ -276,7 +280,7 @@ describe('FO - Account : CRUD address', async () => {
       // Proceed to checkout the shopping cart
       await cartPage.clickOnProceedToCheckout(page);
 
-      await checkoutPage.chooseDeliveryAddress(page, 2);
+      await checkoutPage.chooseDeliveryAddress(page, secondAddressPosition);
 
       // Address step - Go to delivery step
       const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
@@ -313,7 +317,7 @@ describe('FO - Account : CRUD address', async () => {
     it('should delete the first address and check the success message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'deleteAddress2', baseContext);
 
-      const addressPosition = await addressesPage.getAddressPosition(page, secondAddressData.alias);
+      const addressPosition = await addressesPage.getAddressPosition(page, editAddressData.alias);
 
       const textResult = await addressesPage.deleteAddress(page, addressPosition);
       await expect(textResult).to.equal(addressesPage.deleteAddressSuccessfulMessage);

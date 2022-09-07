@@ -1,4 +1,5 @@
-{#**
+<?php
+/**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
  *
@@ -21,9 +22,41 @@
  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
- *#}
-{% set isActive = record[column.id] %}
+ */
+declare(strict_types=1);
 
-<i class="material-icons {% if isActive %}text-success{% else %}text-danger{% endif %}">
-  {% if isActive %}check{% else %}clear{% endif %}
-</i>
+namespace PrestaShop\PrestaShop\Core\Translation\Storage\Provider\Definition;
+
+/**
+ * Properties container for Modules translation provider.
+ */
+class ModulesProviderDefinition extends AbstractCoreProviderDefinition
+{
+    private const FILENAME_FILTERS_REGEX = ['#^Modules*#'];
+
+    private const TRANSLATION_DOMAINS_REGEX = ['^Modules*'];
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getType(): string
+    {
+        return ProviderDefinitionInterface::TYPE_MODULES;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFilenameFilters(): array
+    {
+        return self::FILENAME_FILTERS_REGEX;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTranslationDomains(): array
+    {
+        return self::TRANSLATION_DOMAINS_REGEX;
+    }
+}

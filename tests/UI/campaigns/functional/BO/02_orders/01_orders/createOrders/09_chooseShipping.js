@@ -220,9 +220,9 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
     it('should enable \'Recycled packaging\' and \'Gift\' and add a gift message', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkSummaryBlock3', baseContext);
 
-      await addOrderPage.setGiftMessage(page, giftMessage);
 
       await addOrderPage.setRecycledPackaging(page, true);
+      await addOrderPage.setGiftMessage(page, giftMessage);
       await addOrderPage.setGift(page, true);
     });
 
@@ -253,11 +253,9 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
     it('should check \'Recycled packaging\' and \'gift wrapping\' badges', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkBadges', baseContext);
 
-      const recyclePackagingBadge = await orderPageTabListBlock.getSuccessBadge(page, 1);
-      await expect(recyclePackagingBadge).to.be.equal('Recycled packaging');
-
-      const giftWrapping = await orderPageTabListBlock.getSuccessBadge(page, 2);
-      await expect(giftWrapping).to.be.equal('Gift wrapping');
+      const recyclePackagingBadge = await orderPageTabListBlock.getSuccessBadge(page, 2);
+      await expect(recyclePackagingBadge).to.contain('Recycled packaging')
+        .and.to.contain('Gift wrapping');
     });
 
     it('should check the gift message', async function () {
@@ -269,7 +267,7 @@ describe('BO - Orders - Create order : Choose shipping', async () => {
   });
 
   // Post-condition : Go back to default gift options configuration
-  describe('POST-TEST: GO back to default configuration of gift options', async () => {
+  describe('POST-TEST: Go back to default configuration of gift options', async () => {
     it('should go to \'Shop Parameters > Order Settings\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToOrderSettingsPage2', baseContext);
 

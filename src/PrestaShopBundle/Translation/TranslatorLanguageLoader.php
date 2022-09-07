@@ -92,20 +92,38 @@ class TranslatorLanguageLoader
         if (!($translator instanceof BaseTranslatorComponent)) {
             return;
         }
+
         $translator->addLoader('xlf', new XliffFileLoader());
+        if ($withDB) {
+            $translator->addLoader('db', new SqlTranslationLoader());
+            if (null !== $theme) {
+                $sqlThemeTranslationLoader = new SqlTranslationLoader();
+                $sqlThemeTranslationLoader->setTheme($theme);
+                $translator->addLoader('db.theme', $sqlThemeTranslationLoader);
+            }
+        }
 
         // Load the theme translations catalogue
-        $finder = Finder::create()
-            ->files()
-            ->name('*.' . $locale . '.xlf')
-            ->notName($this->isAdminContext ? '^Shop*' : '^Admin*')
-            ->in($this->getTranslationResourcesDirectories($theme));
+        foreach ($this->getTranslationResourcesDirectories($theme) as $type => $directory) {
+            $finder = Finder::create()
+                ->files()
+                ->name('*.' . $locale . '.xlf')
+                ->notName($this->isAdminContext ? '^Shop*' : '^Admin*')
+                ->in($directory);
 
-        foreach ($finder as $file) {
-            list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
-            $translator->addResource($format, $file, $locale, $domain);
-            if ($withDB) {
-                $translator->addResource('db', $domain . '.' . $locale . '.db', $locale, $domain);
+            foreach ($finder as $file) {
+                list($domain, $locale, $format) = explode('.', $file->getBasename(), 3);
+                $translator->addResource($format, $file, $locale, $domain);
+                if ($withDB) {
+                    if ($type !== 'theme') {
+                        // Load core user-translated wordings
+                        $translator->addResource('db', $domain . '.' . $locale . '.db', $locale, $domain);
+                    }
+                    if (!$this->isAdminContext && $theme !== null) {
+                        // Load theme user-translated wordings for core + theme wordings
+                        $translator->addResource('db.theme', $domain . '.' . $locale . '.db', $locale, $domain);
+                    }
+                }
             }
         }
 
@@ -113,14 +131,6 @@ class TranslatorLanguageLoader
         $activeModulesPaths = $this->moduleRepository->getActiveModulesPaths();
         foreach ($activeModulesPaths as $activeModuleName => $activeModulePath) {
             $this->loadModuleTranslations($translator, $activeModuleName, $activeModulePath, $locale, $withDB);
-        }
-
-        if ($withDB) {
-            $sqlTranslationLoader = new SqlTranslationLoader();
-            if (null !== $theme) {
-                $sqlTranslationLoader->setTheme($theme);
-            }
-            $translator->addLoader('db', $sqlTranslationLoader);
         }
     }
 
@@ -165,12 +175,12 @@ class TranslatorLanguageLoader
      */
     protected function getTranslationResourcesDirectories(Theme $theme = null): array
     {
-        $locations = [self::TRANSLATION_DIR];
+        $locations = ['core' => self::TRANSLATION_DIR];
 
         if (null !== $theme) {
             $activeThemeLocation = $theme->getDirectory() . '/translations';
             if (is_dir($activeThemeLocation)) {
-                $locations[] = $activeThemeLocation;
+                $locations['theme'] = $activeThemeLocation;
             }
         }
 

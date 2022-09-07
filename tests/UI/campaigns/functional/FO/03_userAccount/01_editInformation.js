@@ -147,15 +147,15 @@ describe('FO - Account : Edit information', async () => {
       await testContext.addContextItem(this, 'testIdentifier', 'checkErrorAlerts2', baseContext);
 
       let textResult = await accountIdentityPage.getInvalidEmailAlert(page);
-      await expect(textResult, 'Invalid email alert is not visible!').to
+      await expect(textResult, 'Invalid email/password alert is not visible!').to
         .equal(accountIdentityPage.invalidEmailAlertMessage);
 
       textResult = await accountIdentityPage.getInvalidPasswordAlert(page);
-      await expect(textResult, 'Invalid password alert is not visible!').to
+      await expect(textResult, 'Invalid email/password alert is not visible!').to
         .equal(accountIdentityPage.invalidEmailAlertMessage);
     });
 
-    it.skip('Case 3 - should edit the account information ** enter a new password with repeated words',
+    it('Case 3 - should edit the account information ** enter a new password with repeated words',
       async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'editAccount3', baseContext);
 
@@ -163,23 +163,15 @@ describe('FO - Account : Edit information', async () => {
         await expect(textResult).to.be.equal(accountIdentityPage.errorUpdateMessage);
       });
 
-    it.skip('should check a three error alerts on new password block', async function () {
+    it('should check the minimum score alert on new password block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkErrorAlerts3', baseContext);
 
-      let textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
-      await expect(textResult, 'Invalid repeated words alert is not visible!').to
-        .contains(accountIdentityPage.invalidRepeatsPasswordAlertMessage);
-
-      textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
-      await expect(textResult, 'Uncommon words alert is not visible!').to
-        .contains(accountIdentityPage.invalidUncommonPasswordAlertMessage);
-
-      textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
-      await expect(textResult, 'Avoid repeated password alert is not visible!').to
-        .contains(accountIdentityPage.invalidRepeatedWordsPasswordAlertMessage);
+      const textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
+      await expect(textResult, 'Minimum score alert is not visible!').to
+        .contains(accountIdentityPage.minimumScoreAlertMessage);
     });
 
-    it.skip('Case 4 - should edit the account information ** enter a new password between 5 and 8 characters',
+    it('Case 4 - should edit the account information ** enter a new password between 5 and 8 characters',
       async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'editAccount4', baseContext);
 
@@ -187,7 +179,7 @@ describe('FO - Account : Edit information', async () => {
         await expect(textResult).to.be.equal(accountIdentityPage.errorUpdateMessage);
       });
 
-    it.skip('should check a three error alerts on new password block', async function () {
+    it('should check the error alerts on new password block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkErrorAlerts4', baseContext);
 
       let textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
@@ -195,11 +187,11 @@ describe('FO - Account : Edit information', async () => {
         .contains(accountIdentityPage.invalidNumberOfCharacters);
 
       textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
-      await expect(textResult, 'Uncommon words password alert is not visible!').to
-        .contains(accountIdentityPage.invalidUncommonPasswordAlertMessage);
+      await expect(textResult, 'Minimum score alert is not visible!').to
+        .contains(accountIdentityPage.minimumScoreAlertMessage);
     });
 
-    it.skip('Case 5 - should edit the account information ** enter a new password with an old similar password',
+    it('Case 5 - should edit the account information ** enter a new password with an old similar password',
       async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'editAccount5', baseContext);
 
@@ -207,19 +199,15 @@ describe('FO - Account : Edit information', async () => {
         await expect(textResult).to.be.equal(accountIdentityPage.errorUpdateMessage);
       });
 
-    it.skip('should check a two error alerts on new password block', async function () {
+    it('should check the error alert on new password block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkErrorAlerts5', baseContext);
 
-      let textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
-      await expect(textResult, 'Similar to a common words alert is not visible!').to
-        .contains(accountIdentityPage.similarPasswordAlertMessage);
-
-      textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
-      await expect(textResult, 'Uncommon words password alert is not visible!').to
-        .contains(accountIdentityPage.invalidUncommonPasswordAlertMessage);
+      const textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
+      await expect(textResult, 'Minimum score alert is not visible!').to
+        .contains(accountIdentityPage.minimumScoreAlertMessage);
     });
 
-    it.skip('Case 6 - should edit the account information ** update password with simple characters',
+    it('Case 6 - should edit the account information ** update password with simple characters',
       async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'editAccount6', baseContext);
 
@@ -227,38 +215,30 @@ describe('FO - Account : Edit information', async () => {
         await expect(textResult).to.be.equal(accountIdentityPage.errorUpdateMessage);
       });
 
-    it.skip('should check a two error alerts on new password block', async function () {
+    it('should check the error alert on new password block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkErrorAlerts6', baseContext);
 
-      let textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
+      const textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
       await expect(textResult, 'Minimum score password alert is not visible!').to
         .contains(accountIdentityPage.minimumScoreAlertMessage);
-
-      textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
-      await expect(textResult, 'Invalid uncommon password alert is not visible!').to
-        .contains(accountIdentityPage.invalidUncommonPasswordAlertMessage);
     });
 
-    it.skip('Case 7 - should edit the account information ** update password with common password', async function () {
+    it('Case 7 - should edit the account information ** update password with common password', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'editAccount7', baseContext);
 
       const textResult = await accountIdentityPage.editAccount(page, createCustomerData.password, editCustomerData6);
       await expect(textResult).to.be.equal(accountIdentityPage.errorUpdateMessage);
     });
 
-    it.skip('should check a two error alerts on new password block', async function () {
+    it('should check the error alert on new password block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkErrorAlerts7', baseContext);
 
-      let textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
-      await expect(textResult, 'Similar to a common words alert is not visible!').to
-        .contains(accountIdentityPage.invalidUncommonPasswordAlertMessage);
-
-      textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
-      await expect(textResult, 'Very common password alert is not visible!').to
-        .contains(accountIdentityPage.veryCommonPasswordAlertMessage);
+      const textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
+      await expect(textResult, 'Minimum score alert is not visible!').to
+        .contains(accountIdentityPage.minimumScoreAlertMessage);
     });
 
-    it.skip('Case 8 - should edit the account information ** update password with top 10 common password',
+    it('Case 8 - should edit the account information ** update password with top 10 common password',
       async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'editAccount8', baseContext);
 
@@ -266,19 +246,15 @@ describe('FO - Account : Edit information', async () => {
         await expect(textResult).to.be.equal(accountIdentityPage.errorUpdateMessage);
       });
 
-    it.skip('should check a two error alerts on new password block', async function () {
+    it('should check the error alert on new password block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkErrorAlerts8', baseContext);
 
-      let textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
-      await expect(textResult, 'Similar to a common words alert is not visible!').to
-        .contains(accountIdentityPage.invalidUncommonPasswordAlertMessage);
-
-      textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
-      await expect(textResult, 'Top 10 common password alert is not visible!').to
-        .contains(accountIdentityPage.topTenCommonPassword);
+      const textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
+      await expect(textResult, 'Minimum score alert is not visible!').to
+        .contains(accountIdentityPage.minimumScoreAlertMessage);
     });
 
-    it.skip('Case 9 - should edit the account information ** update password with the same characters',
+    it('Case 9 - should edit the account information ** update password with the same characters',
       async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'editAccount9', baseContext);
 
@@ -286,23 +262,15 @@ describe('FO - Account : Edit information', async () => {
         await expect(textResult).to.be.equal(accountIdentityPage.errorUpdateMessage);
       });
 
-    it.skip('should check a three error alerts on new password block', async function () {
+    it('should check the error alert on new password block', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkErrorAlerts9', baseContext);
 
-      let textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
-      await expect(textResult, 'Repeats characters alert is not visible!').to
-        .contains(accountIdentityPage.invalidRepeatedCharacterPasswordAlertMessage);
-
-      textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
-      await expect(textResult, 'Invalid uncommon words alert is not visible!').to
-        .contains(accountIdentityPage.invalidUncommonPasswordAlertMessage);
-
-      textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
-      await expect(textResult, 'Avoid repeated words and characters alert is not visible!').to
-        .contains(accountIdentityPage.invalidRepeatedWordsPasswordAlertMessage);
+      const textResult = await accountIdentityPage.getInvalidNewPasswordAlert(page);
+      await expect(textResult, 'Minimum score alert is not visible!').to
+        .contains(accountIdentityPage.minimumScoreAlertMessage);
     });
 
-    it.skip('Case 10 - should edit the account information ** update password with a good new password',
+    it('Case 10 - should edit the account information ** update password with a good new password',
       async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'editAccount10', baseContext);
 
@@ -312,5 +280,5 @@ describe('FO - Account : Edit information', async () => {
   });
 
   // Post-condition: Delete the created customer account
-  deleteCustomerTest(editCustomerData1, `${baseContext}_postTest`);
+  deleteCustomerTest(editCustomerData9, `${baseContext}_postTest`);
 });

@@ -22,28 +22,28 @@ const foProductPage = require('@pages/FO/product');
 // Import faker data
 const ProductFaker = require('@data/faker/product');
 
-const baseContext = 'productV2_sanity_CRUDStandardProduct';
+const baseContext = 'productV2_sanity_CRUDVirtualProduct';
 
 let browserContext;
 let page;
 
-// Data to create standard product
+// Data to create virtual product
 const newProductData = new ProductFaker({
-  type: 'standard',
+  type: 'virtual',
   taxRule: 'No tax',
   quantity: 50,
   minimumQuantity: 1,
   status: true,
 });
 const editProductData = new ProductFaker({
-  type: 'standard',
+  type: 'virtual',
   taxRule: 'FR Taux réduit (10%)',
   quantity: 100,
   minimumQuantity: 1,
   status: true,
 });
 
-describe('BO - Catalog - Products : CRUD standard product', async () => {
+describe('BO - Catalog - Products : CRUD virtual product', async () => {
   // Pre-condition: Enable new product page
   enableNewProductPageTest(`${baseContext}_enableNewProduct`);
 
@@ -84,8 +84,8 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
       await expect(isModalVisible).to.be.true;
     });
 
-    it('should choose \'Standard product\'', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'chooseStandardProduct', baseContext);
+    it('should choose \'Virtual product\'', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'chooseVirtualProduct', baseContext);
 
       await productsPage.chooseProductType(page, newProductData.type);
 
@@ -93,8 +93,8 @@ describe('BO - Catalog - Products : CRUD standard product', async () => {
       await expect(pageTitle).to.contains(createProductsPage.pageTitle);
     });
 
-    it('should create standard product', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'createStandardProduct', baseContext);
+    it('should create virtual product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'createVirtualProduct', baseContext);
 
       await createProductsPage.closeSfToolBar(page);
 

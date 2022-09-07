@@ -317,7 +317,7 @@ class WebserviceRequestCore
             'product_features' => ['description' => 'The product features', 'class' => 'Feature'],
             'product_feature_values' => ['description' => 'The product feature values', 'class' => 'FeatureValue'],
             'product_options' => ['description' => 'The product options', 'class' => 'AttributeGroup'],
-            'product_option_values' => ['description' => 'The product options value', 'class' => 'Attribute'],
+            'product_option_values' => ['description' => 'The product options value', 'class' => 'ProductAttribute'],
             'products' => ['description' => 'The products', 'class' => 'Product'],
             'states' => ['description' => 'The available states of countries', 'class' => 'State'],
             'stores' => ['description' => 'The stores', 'class' => 'Store'],

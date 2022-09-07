@@ -195,12 +195,12 @@
       <trans-unit id="608860b0f96a18f3737756fc6b7766f9">
         <source>Cannot add image because product creation failed.</source>
         <target>Cannot add image because product creation failed.</target>
-        <note>Line: 2779</note>
+        <note>Line: 2794</note>
       </trans-unit>
       <trans-unit id="c200140aea36e1efbf655fabf3f3b59e">
         <source>Error while creating additional image</source>
         <target>Error while creating additional image</target>
-        <note>Line: 2808</note>
+        <note>Line: 2823</note>
       </trans-unit>
       <trans-unit id="01816dd287bcb3b88ad3f63970ce045f">
         <source>Invalid quantity</source>
@@ -380,37 +380,37 @@
       <trans-unit id="4177a725868ed37e7de5c8c65f4a8b0e">
         <source>The selected currency is not valid</source>
         <target>The selected currency is not valid</target>
-        <note>Line: 2520</note>
+        <note>Line: 2535</note>
       </trans-unit>
       <trans-unit id="48b51a11285fae0b1f416165ae8fd489">
         <source>An error occurred while copying image, the file does not exist anymore.</source>
         <target>An error occurred while copying image, the file does not exist anymore.</target>
-        <note>Line: 2821</note>
+        <note>Line: 2836</note>
       </trans-unit>
       <trans-unit id="9f26cf683839613815feebc0b1e1c6b9">
         <source>An error occurred while copying image, the file width is 0px.</source>
         <target>An error occurred while copying image, the file width is 0px.</target>
-        <note>Line: 2826</note>
+        <note>Line: 2841</note>
       </trans-unit>
       <trans-unit id="de880a806b9948f168a2e70fff130160">
         <source>An error occurred while copying image, check your memory limit.</source>
         <target>An error occurred while copying image, check your memory limit.</target>
-        <note>Line: 2831</note>
+        <note>Line: 2846</note>
       </trans-unit>
       <trans-unit id="06b778accab7c14a499bc6e7a68138ec">
         <source>An error occurred while copying the image.</source>
         <target>An error occurred while copying the image.</target>
-        <note>Line: 2836</note>
+        <note>Line: 2851</note>
       </trans-unit>
       <trans-unit id="c88e73613e3f68ead933cd57e2828323">
         <source>You can't add product packs into a pack</source>
         <target>You can't add product packs into a pack</target>
-        <note>Line: 3112</note>
+        <note>Line: 3127</note>
       </trans-unit>
       <trans-unit id="5de4038e3ea0841bf6179f99103fcccd">
         <source>An error occurred while attempting to add products to the pack.</source>
         <target>An error occurred while attempting to add products to the pack.</target>
-        <note>Line: 3114</note>
+        <note>Line: 3129</note>
       </trans-unit>
     </body>
   </file>
@@ -687,8 +687,22 @@
       </trans-unit>
     </body>
   </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/CombinationController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9edb260e4183e5f1fa35c1702f0cffa1">
+        <source>Error for combination %combination_id%: %error_message%</source>
+        <target>Error for combination %combination_id%: %error_message%</target>
+        <note>Line: 428</note>
+      </trans-unit>
+    </body>
+  </file>
   <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/Product/ProductController.php" source-language="en-US" target-language="en" datatype="plaintext">
     <body>
+      <trans-unit id="b49b6a333fc4422d8fbfad546c47b97c">
+        <source>Error for product %product_id%: %error_message%</source>
+        <target>Error for product %product_id%: %error_message%</target>
+        <note>Line: 718</note>
+      </trans-unit>
       <trans-unit id="ee5c982526f2e7b8e72b282dc590aafd">
         <source>When redirecting towards a product you must select a target product.</source>
         <target>When redirecting towards a product you must select a target product.</target>
@@ -771,7 +785,7 @@
       <trans-unit id="8bc6a12d95b969fb603306eab1f0603b">
         <source>This pack is empty. You must add at least one product item.</source>
         <target>This pack is empty. You must add at least one product item.</target>
-        <note>Line: 391</note>
+        <note>Line: 387</note>
       </trans-unit>
     </body>
   </file>
@@ -1002,7 +1016,8 @@
       <trans-unit id="87ffb4b96479e24281064ad98ddfd16f">
         <source>To disable it, go to [1]Product Settings[/1]</source>
         <target>To disable it, go to [1]Product Settings[/1]</target>
-        <note>Line: 89</note>
+        <note>Line: 89
+Comment: "It" refers to the option "Force update of friendly URL"</note>
       </trans-unit>
     </body>
   </file>
@@ -1121,7 +1136,7 @@
       <trans-unit id="fd7c4e2dcae282ac5305265c45be0bc2">
         <source>This is the experimental product page.</source>
         <target>This is the experimental product page.</target>
-        <note>Line: 63</note>
+        <note>Line: 69</note>
       </trans-unit>
     </body>
   </file>

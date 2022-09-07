@@ -317,8 +317,14 @@ class CustomerFormCore extends AbstractForm
                 // ToDo : replace Hook::exec with HookFinder, because we expect a specific class here
                 $validatedCustomerFormFields = Hook::exec('validateCustomerFormFields', ['fields' => $formFields], $moduleId, true);
 
-                if (is_array($validatedCustomerFormFields)) {
-                    $this->formFields = array_merge($this->formFields, $validatedCustomerFormFields);
+                if (!is_array($validatedCustomerFormFields)) {
+                    continue;
+                }
+
+                foreach ($validatedCustomerFormFields as $name => $field) {
+                    if ($field instanceof FormFieldCore) {
+                        $this->formFields[$name] = $field;
+                    }
                 }
             }
         }

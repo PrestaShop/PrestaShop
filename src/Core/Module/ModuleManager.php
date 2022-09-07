@@ -298,6 +298,11 @@ class ModuleManager implements ModuleManagerInterface
         return $this->moduleDataProvider->isInstalled($name);
     }
 
+    public function isInstalledAndActive(string $name): bool
+    {
+        return $this->moduleDataProvider->isInstalledAndActive($name);
+    }
+
     public function isEnabled(string $name): bool
     {
         return $this->moduleDataProvider->isEnabled($name);

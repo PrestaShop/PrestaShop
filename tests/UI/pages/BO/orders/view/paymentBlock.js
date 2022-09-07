@@ -20,8 +20,8 @@ class PaymentBlock extends ViewOrderBasePage.constructor {
     this.paymentDateInput = '#order_payment_date';
     this.paymentMethodInput = '#order_payment_payment_method';
     this.transactionIDInput = '#order_payment_transaction_id';
-    this.paymentAmountInput = '#order_payment_amount';
-    this.paymentCurrencySelect = '#order_payment_id_currency';
+    this.paymentAmountInput = '#order_payment_amount_currency_amount';
+    this.paymentCurrencySelect = '#order_payment_amount_currency_id_currency';
     this.paymentInvoiceSelect = '#order_payment_id_invoice';
     this.paymentAddButton = `${this.orderPaymentsBlock} .btn.btn-primary.btn-sm`;
     this.paymentWarning = `${this.orderPaymentsBlock} .alert-danger`;

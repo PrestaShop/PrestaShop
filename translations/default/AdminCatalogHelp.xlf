@@ -266,7 +266,7 @@
       <trans-unit id="7aad0283b11e41230d9d1fc7372c3862">
         <source>Add new feature value</source>
         <target>Add new feature value</target>
-        <note>Line: 264</note>
+        <note>Line: 220</note>
       </trans-unit>
     </body>
   </file>
@@ -313,7 +313,7 @@
       <trans-unit id="1fbfcc9642d39544207c67f66ec3bc00">
         <source>Search and add a related product</source>
         <target>Search and add a related product</target>
-        <note>Line: 351</note>
+        <note>Line: 347</note>
       </trans-unit>
     </body>
   </file>
@@ -471,7 +471,7 @@
       <trans-unit id="1ffce2188d1a60720990e3f6ca9e8b0c">
         <source>Add new specific price</source>
         <target>Add new specific price</target>
-        <note>Line: 43</note>
+        <note>Line: 47</note>
       </trans-unit>
     </body>
   </file>
@@ -788,7 +788,8 @@
       <trans-unit id="0a4595dd800cb3338d233a177f422758">
         <source>Advanced settings in [1][2]Combinations[/1]</source>
         <target>Advanced settings in [1][2]Combinations[/1]</target>
-        <note>Line: 171</note>
+        <note>Line: 171
+Comment: First tag [1][/1] is for a HTML link. Second tag [2] is an icon (no closing tag needed).</note>
       </trans-unit>
       <trans-unit id="01cfe41b8ece41634e85248382166271">
         <source>Your reference code for this product. Allowed special characters: .-_#.</source>
@@ -803,7 +804,8 @@
       <trans-unit id="5e8b5ad38b1c0a76d41c2ebaa74c11f5">
         <source>Advanced settings in [1][2]Quantities[/1]</source>
         <target>Advanced settings in [1][2]Quantities[/1]</target>
-        <note>Line: 212</note>
+        <note>Line: 212
+Comment: First tag [1][/1] is for a HTML link. Second tag [2] is an icon (no closing tag needed).</note>
       </trans-unit>
       <trans-unit id="1423e14cddc8aa38062c77d9b8fe8910">
         <source>This is the retail price at which you intend to sell this product to your customers. The tax included price will change according to the tax rule you select.</source>
@@ -813,7 +815,8 @@
       <trans-unit id="143cb6dd5281d68859217704ad9c9f60">
         <source>Advanced settings in [1][2]Pricing[/1]</source>
         <target>Advanced settings in [1][2]Pricing[/1]</target>
-        <note>Line: 253</note>
+        <note>Line: 253
+Comment: First tag [1][/1] is for a HTML link. Second tag [2] is an icon (no closing tag needed).</note>
       </trans-unit>
     </body>
   </file>
@@ -978,15 +981,6 @@
         <source>To add combinations, you first need to create proper attributes and values in [1]%attributes_and_features_label%[/1].</source>
         <target>To add combinations, you first need to create proper attributes and values in [1]%attributes_and_features_label%[/1].</target>
         <note>Line: 34</note>
-      </trans-unit>
-    </body>
-  </file>
-  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/Tabs/options.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
-    <body>
-      <trans-unit id="f6011ed1f37abfade28c8fb3fcaf2562">
-        <source>To specify the suppliers of this product's combinations you can go to [1]{combinations_label}[/1] tab.</source>
-        <target>To specify the suppliers of this product's combinations you can go to [1]{combinations_label}[/1] tab.</target>
-        <note>Line: 37</note>
       </trans-unit>
     </body>
   </file>

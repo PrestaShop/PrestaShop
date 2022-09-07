@@ -578,7 +578,7 @@ Comment: Special case for Product : either one or the other. Not both.</note>
         <target>Fill in the fields below to set up DKIM signing of outgoing emails. This will reduce the likelihood of your emails being marked as spam.
               You can get the data below from your server administrator or generate it yourself by using one of the freely available tools, such as dkimcore.org.
               Also, make sure that your server is registered as an authorized sender in your SPF record.</target>
-        <note>Line: 47</note>
+        <note>Line: 45</note>
       </trans-unit>
     </body>
   </file>
@@ -625,7 +625,8 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       <trans-unit id="bd98e6133da373d5d4d0241cae2e5df5">
         <source>Click "%add_new_label%".</source>
         <target>Click "%add_new_label%".</target>
-        <note>Line: 34</note>
+        <note>Line: 34
+Comment: Stable feature flags form</note>
       </trans-unit>
       <trans-unit id="6fe4a9d3d016ffb7ac0c79b9b34f759b">
         <source>Fill in the fields and click "%save_label%".</source>
@@ -695,7 +696,7 @@ Comment: Special case for Product : either one or the other. Not both.</note>
       <trans-unit id="b5c5b3a0a7208392aaf2c4d23a81879c">
         <source>This page benefits from increased performance and includes new features such as a new combination management system. Please note this is a work in progress and some features are not available yet.</source>
         <target>This page benefits from increased performance and includes new features such as a new combination management system. Please note this is a work in progress and some features are not available yet.</target>
-        <note>Line: 66</note>
+        <note>Line: 72</note>
       </trans-unit>
     </body>
   </file>
