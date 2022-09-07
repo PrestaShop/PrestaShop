@@ -172,6 +172,7 @@
     methods: {
       sort(order: string, sortDirection: string): void {
         this.$store.dispatch('updateOrder', order);
+        this.$store.dispatch('updateSort', sortDirection);
         this.$emit('fetch', sortDirection === 'desc' ? 'desc' : 'asc');
       },
     },
