@@ -125,6 +125,7 @@ export default class SpecificPricesManager {
     showCatalogPriceRulesButton.addEventListener('click', () => {
       formContainer.classList.toggle('d-none');
       const listShown = formContainer.classList.contains('d-none');
+
       if (!listShown) {
         showCatalogPriceRulesButton.innerHTML = `<i class="material-icons">visibility_off</i> ${hideLabel}`;
       } else {
