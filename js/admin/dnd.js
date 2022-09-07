@@ -140,15 +140,29 @@ function initTableDnD(table)
 				params['selected_pagination'] = parseInt($('input[name=selected_pagination]').val());
 
 				var data = $.tableDnD.serialize().replace(/table-/g, '');
+        var updatePositionBaseUrl = typeof frameworkUpdatePositionUrl === 'string' ? frameworkUpdatePositionUrl : currentIndex + '&token=' + token;
+
 				if ((tableId == 'category') && (data.indexOf('_0&') != -1))
 					data += '&found_first=1';
 				$.ajax({
 					type: 'POST',
 					headers: { "cache-control": "no-cache" },
 					async: false,
-					url: currentIndex + '&token=' + token + '&' + 'rand=' + new Date().getTime(),
+					url: updatePositionBaseUrl + '&rand=' + new Date().getTime(),
 					data:  data + '&' + objToString(params) ,
 					success: function(data) {
+            if (data.errorMessage) {
+              console.error(data.errorMessage);
+
+              window.$.growl['error']({
+                title: 'Error',
+                size: 'large',
+                message: data.errorMessage,
+                duration: 2000,
+              });
+
+              return;
+            }
 						var nodrag_lines = $(tableDrag).find('tr:not(".nodrag")');
 						var new_pos;
 						if (come_from == 'AdminModulesPositions')

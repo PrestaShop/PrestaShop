@@ -61,6 +61,7 @@ class HelperListConfigurationFactory
      * @param bool $explicitSelect @see HelperListConfiguration::$explicitSelect
      * @param bool $useFoundRows @see HelperListConfiguration::$useFoundRows
      * @param string|null $listId @see HelperListConfiguration::$listId
+     * @param string|null $updatePositionRoute Route used to generate url for position update @see HelperListConfiguration::$updatePositionUrl
      *
      * @return HelperListConfiguration
      */
@@ -74,11 +75,17 @@ class HelperListConfigurationFactory
         bool $deleted = false,
         bool $explicitSelect = false,
         bool $useFoundRows = true,
-        ?string $listId = null
+        ?string $listId = null,
+        ?string $updatePositionRoute = null
     ): HelperListConfiguration {
         if (empty($defaultOrderBy)) {
             $defaultOrderBy = $identifierKey;
         }
+
+        $updatePositionUrl = $updatePositionRoute ? $this->router->generate($updatePositionRoute, [
+            'identifierKey' => $identifierKey,
+            'className' => $controllerConfiguration->objectModelClassName,
+        ]) : null;
 
         return new HelperListConfiguration(
             $controllerConfiguration->tabId,
@@ -97,7 +104,8 @@ class HelperListConfigurationFactory
             $controllerConfiguration->bootstrap,
             $controllerConfiguration->legacyCurrentIndex,
             $controllerConfiguration->multiShopContext,
-            $this->router->generate($indexRoute)
+            $this->router->generate($indexRoute),
+            $updatePositionUrl
         );
     }
 }

@@ -29,7 +29,10 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Bridge\AdminController;
 
 use PrestaShopBundle\Bridge\Helper\Listing\HelperListConfiguration;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Validate;
 
 /**
  * Contains the principal methods you need to horizontally migrate a controller which has a list.
@@ -37,9 +40,67 @@ use Symfony\Component\HttpFoundation\Request;
 trait FrameworkBridgeControllerListTrait
 {
     /**
+     * Updates object position when request is coming from legacy list javascript dnd.js.
+     * Check ajaxProcessUpdatePositions for legacy behavior in some AdminControllers like AdminFeaturesController
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    protected function updatePositionBridge(Request $request): JsonResponse
+    {
+        $identifierKey = $request->query->get('identifierKey');
+        // fallback to "id" because that is the default behavior and not all identifierKeys are mapped in dnd.js
+        $objectId = $request->request->getInt($identifierKey, $request->request->getInt('id'));
+        $className = $request->query->get('className');
+
+        if (!$objectId || !$className) {
+            return $this->json([
+                'errorMessage' => 'Object id or className is missing in request for position update.',
+                Response::HTTP_BAD_REQUEST,
+            ]);
+        }
+
+        $position = $this->extractLegacyAjaxPosition($request, $className, $objectId);
+
+        if ($position === null) {
+            return $this->json([
+                'errorMessage' => 'position not found for object',
+                Response::HTTP_INTERNAL_SERVER_ERROR,
+            ]);
+        }
+
+        if (!method_exists($className, 'updatePosition')) {
+            return $this->json([
+                'errorMessage' => sprintf('method "updatePosition" not found in class %s', $className),
+                Response::HTTP_INTERNAL_SERVER_ERROR,
+            ]);
+        }
+
+        $objectModel = new $className($objectId);
+
+        if (!Validate::isLoadedObject($objectModel)) {
+            return $this->json([
+                'errorMessage' => 'Failed to load object model',
+                Response::HTTP_BAD_REQUEST,
+            ]);
+        }
+
+        if (!$objectModel->updatePosition($request->request->getInt('way'), $position)) {
+            return $this->json([
+                'errorMessage' => 'Failed to update position',
+                Response::HTTP_BAD_REQUEST,
+            ]);
+        }
+
+        return $this->json('ok', Response::HTTP_OK);
+    }
+
+    /**
      * @param string $identifierKey @see HelperListConfiguration::$identifierKey
      * @param string $defaultOrderBy @see HelperListConfiguration::$defaultOrderBy
      * @param string $indexRoute route name used to generate url for filters & sorting submissions. @see HelperListConfiguration::$indexUrl
+     * @param string|null $updatePositionRoute used to generate url for position update
      * @param string|null $positionIdentifierKey @see HelperListConfiguration::$positionIdentifierKey
      * @param bool $autoJoinLangTable @see HelperListConfiguration::$autoJoinLanguageTable
      * @param bool $deleted @see HelperListConfiguration::$deleted
@@ -53,6 +114,7 @@ trait FrameworkBridgeControllerListTrait
         string $identifierKey,
         string $defaultOrderBy,
         string $indexRoute,
+        ?string $updatePositionRoute = null,
         ?string $positionIdentifierKey = null,
         bool $autoJoinLangTable = true,
         bool $deleted = false,
@@ -72,7 +134,8 @@ trait FrameworkBridgeControllerListTrait
             $deleted,
             $explicitSelect,
             $useFoundRows,
-            $listId
+            $listId,
+            $updatePositionRoute
         );
     }
 
@@ -87,5 +150,32 @@ trait FrameworkBridgeControllerListTrait
         $this->get('prestashop.bridge.helper.listing.filters_processor')
             ->processFilters($request, $helperListConfiguration)
         ;
+    }
+
+    /**
+     * Extracts new position provided from legacy dnd.js javascript side
+     *
+     * @param Request $request
+     * @param string $className
+     *
+     * @return int|null
+     */
+    private function extractLegacyAjaxPosition(Request $request, string $className, int $objectId): ?int
+    {
+        $positions = $request->request->get(strtolower($className));
+
+        foreach ($positions as $position => $data) {
+            if (!empty($data)) {
+                // explodes value formatted in legacy. The 2 item of array should be the updatable object id
+                $tmpData = explode('_', $data);
+                if (!is_array($tmpData) || !isset($tmpData[2]) || (int) $tmpData[2] !== $objectId) {
+                    continue;
+                }
+
+                return $position;
+            }
+        }
+
+        return null;
     }
 }

@@ -374,6 +374,13 @@ class HelperListConfiguration
     private $shopShareData = false;
 
     /**
+     * Url for submitting position update action
+     *
+     * @var string|null
+     */
+    private $updatePositionUrl;
+
+    /**
      * @param int $tabId
      * @param string $tableName
      * @param string $listId
@@ -391,6 +398,7 @@ class HelperListConfiguration
      * @param string $legacyCurrentIndex
      * @param int $multiShopContext
      * @param string $indexUrl
+     * @param string|null $updatePositionUrl
      */
     public function __construct(
         int $tabId,
@@ -409,7 +417,8 @@ class HelperListConfiguration
         bool $bootstrap,
         string $legacyCurrentIndex,
         int $multiShopContext,
-        string $indexUrl
+        string $indexUrl,
+        ?string $updatePositionUrl
     ) {
         $this->tabId = $tabId;
         $this->tableName = $tableName;
@@ -428,6 +437,7 @@ class HelperListConfiguration
         $this->legacyCurrentIndex = $legacyCurrentIndex;
         $this->multiShopContext = $multiShopContext;
         $this->indexUrl = $indexUrl;
+        $this->updatePositionUrl = $updatePositionUrl;
     }
 
     /**
@@ -806,5 +816,13 @@ class HelperListConfiguration
         $this->shopShareData = $shopShareData;
 
         return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getUpdatePositionUrl(): ?string
+    {
+        return $this->updatePositionUrl;
     }
 }

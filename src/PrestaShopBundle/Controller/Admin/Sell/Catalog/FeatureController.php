@@ -42,6 +42,7 @@ use PrestaShopBundle\Bridge\Helper\Listing\HelperListConfiguration;
 use PrestaShopBundle\Bridge\Smarty\FrameworkControllerSmartyTrait;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Tools;
@@ -64,9 +65,9 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
 
         $helperListConfiguration = $this->buildListConfiguration(
             'id_feature',
-            //@todo: position update is still handled by legacy ajax controller action. Need to handle in dedicated PR
             'position',
             $request->attributes->get('_route'),
+            'admin_features_update_position',
             'id_feature'
         );
 
@@ -168,6 +169,16 @@ class FeatureController extends FrameworkBundleAdminController implements Framew
             'featureForm' => $featureForm->createView(),
             'editableFeature' => $editableFeature,
         ]);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function updatePositionAction(Request $request): JsonResponse
+    {
+        return $this->updatePositionBridge($request);
     }
 
     /**

@@ -32,6 +32,7 @@ use Context;
 use Db;
 use Exception;
 use HelperList;
+use Media;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
@@ -114,10 +115,19 @@ class HelperListBridge
             return null;
         }
 
-        return $this
+        $listContent = $this
             ->buildHelperList($helperListConfiguration)
             ->generateList($helperListConfiguration->list, $helperListConfiguration->fieldsList)
         ;
+
+        if (!empty($helperListConfiguration->getUpdatePositionUrl())) {
+            // assign js def for ajax positioning action
+            Media::addJsDef([
+                'frameworkUpdatePositionUrl' => $helperListConfiguration->getUpdatePositionUrl(),
+            ]);
+        }
+
+        return $listContent;
     }
 
     /**
