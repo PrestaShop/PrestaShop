@@ -72,7 +72,7 @@ class CatalogPriceRuleContext extends AbstractDomainFeatureContext
             $catalogPriceRuleId = $this->getCommandBus()->handle($command);
 
             $this->getSharedStorage()->set($catalogPriceRuleReference, $catalogPriceRuleId->getValue());
-        } catch (CatalogPriceRuleException | DomainConstraintException $e) {
+        } catch (CatalogPriceRuleException|DomainConstraintException $e) {
             $this->setLastException($e);
         }
     }
