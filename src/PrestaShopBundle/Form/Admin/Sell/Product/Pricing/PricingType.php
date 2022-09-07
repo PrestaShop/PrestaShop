@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
 
 use Currency;
-use PrestaShop\PrestaShop\Adapter\LegacyContext;
 use PrestaShopBundle\Form\Admin\Type\IconButtonType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
