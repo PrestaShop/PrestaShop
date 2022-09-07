@@ -81,15 +81,6 @@ class PricingType extends TranslatorAwareType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        /**
-         * %catalog_price_rule_id% can't be used in this function, because getAdminLink adds uneeded stuff to % while creating url
-         * That's why catalog_price_rule_id is used and then string repalced.
-         */
-        $catalogPriceRuleEditLink = $this->legacyContext->getAdminLink('AdminSpecificPriceRule', true, ['updatespecific_price_rule' => '', 'id_specific_price_rule' => 'catalog_price_rule_id']);
-        $catalogPriceRuleIndexLink = $this->legacyContext->getAdminLink('AdminSpecificPriceRule');
-        /** Adding % to make link more unique */
-        $catalogPriceRuleEditLink = str_replace('catalog_price_rule_id', '%catalog_price_rule_id%', $catalogPriceRuleEditLink);
-
         $builder
             ->add('retail_price', RetailPriceType::class, [
                 'tax_rules_group_id' => $options['tax_rules_group_id'],
@@ -131,22 +122,7 @@ class PricingType extends TranslatorAwareType
                     'data-show-label' => $this->trans('Show catalog price rules', 'Admin.Catalog.Feature'),
                 ],
             ])
-            ->add('catalog_price_rules', CatalogPriceRulesType::class, [
-                'label' => $this->trans('Catalog price rules', 'Admin.Catalog.Feature'),
-                'label_tag_name' => 'h2',
-                'attr' => [
-                    'data-catalog-price-url' => $catalogPriceRuleEditLink,
-                ],
-                'external_link' => [
-                    'text' => $this->trans('[1]Manage catalog price rules[/1]', 'Admin.Catalog.Feature'),
-                    'href' => $catalogPriceRuleIndexLink,
-                    'align' => 'left',
-                ],
-                'row_attr' => [
-                    'id' => 'catalog-price-rules-container',
-                    'class' => 'd-none',
-                ],
-            ])
+            ->add('catalog_price_rules', CatalogPriceRulesType::class)
             ->add('priority_management', ProductSpecificPricePriorityType::class, [
                 'label' => $this->trans('Priority management', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h2',
