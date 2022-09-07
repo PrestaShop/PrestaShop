@@ -52,23 +52,16 @@ class PricingType extends TranslatorAwareType
     private $defaultCurrency;
 
     /**
-     * @var LegacyContext
-     */
-    private $legacyContext;
-
-    /**
      * PricingType constructor.
      *
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param Currency $defaultCurrency
-     * @param LegacyContext $legacyContext
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
-        Currency $defaultCurrency,
-        LegacyContext $legacyContext
+        Currency $defaultCurrency
     ) {
         parent::__construct($translator, $locales);
         $this->defaultCurrency = $defaultCurrency;
