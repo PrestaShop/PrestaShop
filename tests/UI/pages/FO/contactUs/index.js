@@ -66,8 +66,24 @@ class ContactUs extends FOBasePage {
 
     await this.setValue(page, this.messageTextarea, contactUsData.message);
     await page.click(this.sendButton);
+  }
 
+  /**
+   * Get login error
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
+  async getAlertSuccess(page) {
     return this.getTextContent(page, this.alertSuccessDiv);
+  }
+
+  /**
+   * Get login error
+   * @param page {Page} Browser tab
+   * @return {Promise<string>}
+   */
+  async getAlertError(page) {
+    return this.getTextContent(page, this.alertDangerTextBlock);
   }
 
   /**
