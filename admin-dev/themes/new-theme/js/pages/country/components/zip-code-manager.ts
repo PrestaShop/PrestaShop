@@ -32,7 +32,7 @@ export default class ZipCodeManager {
 
   private initZipCodeToggler(): void {
     new FormFieldToggler({
-      disablingInputSelector: CountryMap.isZopCodeNeededSwitch,
+      disablingInputSelector: CountryMap.isZipCodeNeededSwitch,
       targetSelector: CountryMap.zipCodeFormatInput,
       toggleType: ToggleType.availability,
     });

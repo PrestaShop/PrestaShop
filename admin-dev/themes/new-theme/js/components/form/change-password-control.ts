@@ -249,6 +249,7 @@ export default class ChangePasswordControl {
     this.$submittableInputs.removeAttr('required');
     this.$inputsBlock.find('input').val('');
     this.$inputsBlock.find('.form-text').text('');
+    $('#employee_change_password_new_password_first').click();
   }
 
   /**
