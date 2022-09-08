@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -24,14 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Country\Exception;
-
-/**
- * Is thrown when country constraint is violated
- */
-class CountryConstraintException extends CountryException
-{
-    public const INVALID_ID = 1;
-
-    public const INVALID_ZIP_CODE = 2;
-}
+export default {
+  isZipCodeNeededSwitch: 'input[name="country[need_zip_code]"]',
+  zipCodeFormatInput: '#country_zip_code_format',
+};

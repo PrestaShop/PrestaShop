@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
 use Context;
+use Exception;
 use PrestaShop\PrestaShop\Core\Search\Filters\CountryFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -59,19 +60,50 @@ class CountryController extends FrameworkBundleAdminController
             'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
             'countryGrid' => $this->presentGrid($countryGrid),
             'enableSidebar' => true,
+            'layoutHeaderToolbarBtn' => $this->getCountryToolbarButtons(),
         ]);
     }
 
     /**
-     * Display country edit form
+     * Show "Add new" country form and handles its submit.
      *
-     * @AdminSecurity("is_granted('update', request.get('_legacy_controller'))")
+     * @AdminSecurity(
+     *     "is_granted('create', request.get('_legacy_controller'))",
+     *     redirectRoute="admin_countries_index",
+     *     message="You need permission to create new country."
+     * )
      *
-     * @param int $countryId
      * @param Request $request
      *
      * @return Response
      */
+    public function createAction(Request $request): Response
+    {
+        $countryFormBuilder = $this->get('prestashop.core.form.identifiable_object.builder.country_form_builder');
+        $countryFormHandler = $this->get('prestashop.core.form.identifiable_object.handler.country_form_handler');
+
+        $countryForm = $countryFormBuilder->getForm();
+        $countryForm->handleRequest($request);
+
+        try {
+            $handleResult = $countryFormHandler->handle($countryForm);
+
+            if (null !== $handleResult->getIdentifiableObjectId()) {
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_countries_index');
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+        }
+
+        return $this->render('@PrestaShop/Admin/Improve/International/Country/create.html.twig', [
+            'countryForm' => $countryForm->createView(),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'enableSidebar' => true,
+        ]);
+    }
+
     public function editAction(int $countryId, Request $request): Response
     {
         //todo: complete edit action migration to symfony
@@ -86,5 +118,32 @@ class CountryController extends FrameworkBundleAdminController
                 ]
             )
         );
+    }
+
+    /**
+     * @return array
+     */
+    protected function getCountryToolbarButtons(): array
+    {
+        return [
+            'add' => [
+                'href' => $this->generateUrl('admin_countries_create'),
+                'desc' => $this->trans('Add new country', 'Admin.International.Feature'),
+                'icon' => 'add_circle_outline',
+            ],
+        ];
+    }
+
+    /**
+     * Returns country error messages mapping.
+     *
+     * @param Exception $e
+     *
+     * @return array
+     */
+    protected function getErrorMessages(Exception $e): array
+    {
+        //todo add error messages
+        return [];
     }
 }

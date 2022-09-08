@@ -24,14 +24,29 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Country\Exception;
+declare(strict_types=1);
+
+namespace PrestaShop\PrestaShop\Adapter\Country;
+
+use Country;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
+use PrestaShopException;
 
 /**
- * Is thrown when country constraint is violated
+ * Abstract country handler
  */
-class CountryConstraintException extends CountryException
+class AbstractCountryHandler
 {
-    public const INVALID_ID = 1;
-
-    public const INVALID_ZIP_CODE = 2;
+    /**
+     * @param Country $country
+     *
+     * @throws CountryConstraintException
+     * @throws PrestaShopException
+     */
+    protected function validateCountryFields(Country $country): void
+    {
+        if (!$country->validateFields(false) || !$country->validateFieldsLang(false)) {
+            throw new CountryConstraintException('Country contains invalid field values');
+        }
+    }
 }

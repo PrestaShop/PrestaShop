@@ -215,7 +215,7 @@ class CountryGridDefinitionFactory extends AbstractGridDefinitionFactory
     /**
      * @return RowActionCollection
      */
-    private function getRowActions(): RowActionCollection
+    protected function getRowActions(): RowActionCollection
     {
         $rowActionCollection = new RowActionCollection();
         $rowActionCollection
@@ -224,7 +224,7 @@ class CountryGridDefinitionFactory extends AbstractGridDefinitionFactory
                     ->setName($this->trans('Edit', [], 'Admin.Actions'))
                     ->setIcon('edit')
                     ->setOptions([
-                        'route' => 'admin_country_edit',
+                        'route' => 'admin_countries_edit',
                         'route_param_name' => 'countryId',
                         'route_param_field' => 'id_country',
                         'clickable_row' => true,

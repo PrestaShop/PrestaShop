@@ -23,3 +23,9 @@ services:
 
   prestashop.adapter.country.repository.country_repository:
     class: 'PrestaShop\PrestaShop\Adapter\Country\Repository\CountryRepository'
+
+  prestashop.adapter.country.command_handler.add_country_handler:
+    public: true
+    class: 'PrestaShop\PrestaShop\Adapter\Country\CommandHandler\AddCountryHandler'
+    tags:
+      - { name: 'tactician.handler', command: 'PrestaShop\PrestaShop\Core\Domain\Country\Command\AddCountryCommand' }

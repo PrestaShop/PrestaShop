@@ -312,6 +312,14 @@ abstract class AbstractDomainFeatureContext implements Context
     }
 
     /**
+     * @return int
+     */
+    protected function getDefaultShopId(): int
+    {
+        return (int) Configuration::get('PS_SHOP_DEFAULT');
+    }
+
+    /**
      * This method is private because last exception should only be handled inside this abstract class, you can only
      * use setLastException from inherited classes.
      */

@@ -32,7 +32,6 @@ import BulkActionCheckboxExtension from '@components/grid/extension/bulk-action-
 import SubmitBulkExtension from '@components/grid/extension/submit-bulk-action-extension';
 import SubmitRowActionExtension from '@components/grid/extension/action/row/submit-row-action-extension';
 import LinkRowActionExtension from '@components/grid/extension/link-row-action-extension';
-import FormSubmitButton from '@components/form-submit-button';
 import FiltersSubmitButtonEnablerExtension from '@components/grid/extension/filters-submit-button-enabler-extension';
 import ColumnTogglingExtension from '@components/grid/extension/column-toggling-extension';
 
@@ -51,6 +50,4 @@ $(() => {
   countryGrid.addExtension(new LinkRowActionExtension());
   countryGrid.addExtension(new FiltersSubmitButtonEnablerExtension());
   countryGrid.addExtension(new ColumnTogglingExtension());
-
-  new FormSubmitButton();
 });

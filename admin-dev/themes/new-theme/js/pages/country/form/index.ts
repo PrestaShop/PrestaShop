@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -24,14 +23,14 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Country\Exception;
+import ZipCodeManager from '@pages/country/components/zip-code-manager';
+import FormSubmitButton from '@components/form-submit-button';
+import TranslatableInput from '@components/translatable-input';
 
-/**
- * Is thrown when country constraint is violated
- */
-class CountryConstraintException extends CountryException
-{
-    public const INVALID_ID = 1;
+const {$} = window;
 
-    public const INVALID_ZIP_CODE = 2;
-}
+$(() => {
+  new FormSubmitButton();
+  new TranslatableInput();
+  new ZipCodeManager();
+});

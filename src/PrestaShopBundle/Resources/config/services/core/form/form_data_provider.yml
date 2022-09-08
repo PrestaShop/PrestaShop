@@ -181,6 +181,13 @@ services:
       - '@=service("prestashop.adapter.multistore_feature").isActive()'
       - '@=service("prestashop.adapter.shop.context").getShops(true, true)'
 
+  prestashop.core.form.identifiable_object.data_provider.country_form_data_provider:
+    class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\CountryFormDataProvider'
+    arguments:
+      - '@prestashop.core.query_bus'
+      - '@=service("prestashop.adapter.multistore_feature").isActive()'
+      - '@=service("prestashop.adapter.shop.context").getShops(true, true)'
+
   prestashop.core.form.identifiable_object.data_provider.search_engine_form_data_provider:
     class: 'PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\SearchEngineFormDataProvider'
     arguments:

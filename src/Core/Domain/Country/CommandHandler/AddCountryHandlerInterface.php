@@ -24,14 +24,20 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-namespace PrestaShop\PrestaShop\Core\Domain\Country\Exception;
+namespace PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler;
+
+use PrestaShop\PrestaShop\Core\Domain\Country\Command\AddCountryCommand;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 
 /**
- * Is thrown when country constraint is violated
+ * Defines a contract for AddCountryHandler
  */
-class CountryConstraintException extends CountryException
+interface AddCountryHandlerInterface
 {
-    public const INVALID_ID = 1;
-
-    public const INVALID_ZIP_CODE = 2;
+    /**
+     * @param AddCountryCommand $command
+     *
+     * @return CountryId
+     */
+    public function handle(AddCountryCommand $command): CountryId;
 }

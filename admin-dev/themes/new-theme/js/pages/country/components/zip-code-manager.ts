@@ -1,4 +1,3 @@
-<?php
 /**
  * Copyright since 2007 PrestaShop SA and Contributors
  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
@@ -23,15 +22,19 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+import FormFieldToggler, {ToggleType} from '@components/form/form-field-toggler';
+import CountryMap from '@pages/country/country-map';
 
-namespace PrestaShop\PrestaShop\Core\Domain\Country\Exception;
+export default class ZipCodeManager {
+  constructor() {
+    this.initZipCodeToggler();
+  }
 
-/**
- * Is thrown when country constraint is violated
- */
-class CountryConstraintException extends CountryException
-{
-    public const INVALID_ID = 1;
-
-    public const INVALID_ZIP_CODE = 2;
+  private initZipCodeToggler(): void {
+    new FormFieldToggler({
+      disablingInputSelector: CountryMap.isZipCodeNeededSwitch,
+      targetSelector: CountryMap.zipCodeFormatInput,
+      toggleType: ToggleType.availability,
+    });
+  }
 }
