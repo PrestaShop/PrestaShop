@@ -117,7 +117,7 @@ module.exports = (env, argv) => {
         extensions: ['woff2'],
         filter: /preload/,
         // eslint-disable-next-line
-        replaceCallback: ({indexSource, linksAsString}) => indexSource.replace('{{{preloadLinks}}}', linksAsString.replace(/href="auto/g, 'href="{"`$admin_dir`"}')),
+        replaceCallback: ({indexSource, linksAsString}) => indexSource.replace('{{{preloadLinks}}}', linksAsString.replace(/href="/g, 'href="{$admin_dir}')),
       }),
       new CssoWebpackPlugin({
         forceMediaMerge: true,
