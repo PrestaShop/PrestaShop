@@ -24,6 +24,6 @@
  */
 
 export default {
-  isZopCodeNeededSwitch: 'input[name="country[need_zip_code]"]',
+  isZipCodeNeededSwitch: 'input[name="country[need_zip_code]"]',
   zipCodeFormatInput: '#country_zip_code_format',
 };

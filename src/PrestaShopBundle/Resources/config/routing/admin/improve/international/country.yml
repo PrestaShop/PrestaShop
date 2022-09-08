@@ -25,7 +25,7 @@ admin_countries_create:
     _legacy_controller: AdminCountries
 #    _legacy_link: AdminCountries:addCountry
 
-admin_country_edit:
+admin_countries_edit:
   path: /{countryId}/edit
   methods: [ GET, POST ]
   defaults:
