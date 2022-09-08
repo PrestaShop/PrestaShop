@@ -110,3 +110,7 @@ services:
         class: PrestaShopBundle\Service\Multistore\CustomizedConfigurationChecker
         arguments:
             - "@prestashop.adapter.legacy.configuration"
+
+    PrestaShopBundle\DependencyInjection\RuntimeConstEnvVarProcessor:
+        public: false
+        tags: ['container.env_var_processor']

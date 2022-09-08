@@ -18,3 +18,7 @@ services:
 
     annotation_reader:
         class: Doctrine\Common\Annotations\AnnotationReader
+
+    PrestaShopBundle\DependencyInjection\RuntimeConstEnvVarProcessor:
+        public: false
+        tags: ['container.env_var_processor']
