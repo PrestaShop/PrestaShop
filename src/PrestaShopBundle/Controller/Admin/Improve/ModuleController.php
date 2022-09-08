@@ -395,7 +395,7 @@ class ModuleController extends ModuleAbstractController
                 [
                     '%module%' => $moduleName,
                     '%error%' => $this->trans(
-                        'Impossible to install form source',
+                        'Impossible to install from source',
                         'Admin.Modules.Notification'
                     ),
                 ]
