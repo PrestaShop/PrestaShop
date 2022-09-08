@@ -26,6 +26,7 @@
 import ZipCodeManager from '@pages/country/components/zip-code-manager';
 import FormSubmitButton from '@components/form-submit-button';
 import TranslatableInput from '@components/translatable-input';
+import CountryForm from './CountryForm';
 
 const {$} = window;
 
@@ -33,4 +34,5 @@ $(() => {
   new FormSubmitButton();
   new TranslatableInput();
   new ZipCodeManager();
+  new CountryForm();
 });
