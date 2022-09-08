@@ -26,4 +26,10 @@
 export default {
   isZipCodeNeededSwitch: 'input[name="country[need_zip_code]"]',
   zipCodeFormatInput: '#country_zip_code_format',
+  addressFormat: {
+    customAddressFieldsTabBtn: '#custom-address-fields',
+    addPatternBtn: '.add-pattern',
+    formatTextAreaField: '#country_address_format',
+    modifyAddressLayoutBtn: '.modify-address-layout',
+  }
 };

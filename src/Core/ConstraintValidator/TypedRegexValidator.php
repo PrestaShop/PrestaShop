@@ -150,10 +150,6 @@ class TypedRegexValidator extends ConstraintValidator
                 return '/^[a-zA-Z0-9@\#\?\-\_]+$/i';
             case TypedRegex::TYPE_ZIP_CODE_FORMAT:
                 return CountryZipCodeFormat::ZIP_CODE_PATTERN;
-            case TypedRegex::TYPE_WEBSERVICE_KEY:
-                return '/^[a-zA-Z0-9@\#\?\-\_]+$/i';
-            case TypedRegex::TYPE_ZIP_CODE_FORMAT:
-                return CountryZipCodeFormat::ZIP_CODE_PATTERN;
             case TypedRegex::TYPE_LINK_REWRITE:
                 if ($this->configuration->get('PS_ALLOW_ACCENTED_CHARS_URL')) {
                     return '/^[_a-zA-Z0-9\x{0600}-\x{06FF}\pL\pS-]+$/u';

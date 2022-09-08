@@ -23,7 +23,7 @@
  * International Registered Trademark & Property of PrestaShop SA
  */
 
-import countryFormMap from './country-form-map';
+import countryFormMap from './../country-map';
 
 /**
  * Class responsible for javascript actions in country add/edit page.
@@ -43,10 +43,10 @@ export default class CountryForm {
    * @private
    */
   initEvents() {
-    $(countryFormMap.addPatternBtn).on('click', (event) => this.handlePatternClick(event));
-    $(countryFormMap.customAddressFieldsTabBtn).on('click', (event) => this.handleTabShowClick(event));
-    $(countryFormMap.formatTextAreaField).on('keyup', (event) => this.saveLastModified(event));
-    $(countryFormMap.modifyAddressLayoutBtn).on('click', (event) => this.modifyLayout(event));
+    $(countryFormMap.addressFormat.addPatternBtn).on('click', (event) => this.handlePatternClick(event));
+    $(countryFormMap.addressFormat.customAddressFieldsTabBtn).on('click', (event) => this.handleTabShowClick(event));
+    $(countryFormMap.addressFormat.formatTextAreaField).on('keyup', (event) => this.saveLastModified(event));
+    $(countryFormMap.addressFormat.modifyAddressLayoutBtn).on('click', (event) => this.modifyLayout(event));
   }
 
   /**
@@ -56,7 +56,7 @@ export default class CountryForm {
    */
   handlePatternClick(event) {
     this.addFieldsToCursorPosition($(event.target).attr('id'));
-    this.lastLayoutModified = $(countryFormMap.formatTextAreaField).val();
+    this.lastLayoutModified = $(countryFormMap.addressFormat.formatTextAreaField).val();
   }
 
   /**
@@ -84,22 +84,22 @@ export default class CountryForm {
    * @param pattern
    */
   addFieldsToCursorPosition(pattern) {
-    const $el = $(countryFormMap.formatTextAreaField).get(0);
-    let pos = 0;
+    const $element = $(countryFormMap.addressFormat.formatTextAreaField).get(0);
+    let position = 0;
 
-    if ('selectionStart' in $el) {
-      pos = $el.selectionStart;
+    if ('selectionStart' in $element) {
+      position = $element.selectionStart;
     } else if ('selection' in document) {
-      $el.focus();
+      $element.focus();
       const sel = document.selection.createRange();
       const selLength = document.selection.createRange().text.length;
 
-      sel.moveStart('character', -$el.value.length);
-      pos = sel.text.length - selLength;
+      sel.moveStart('character', -$element.value.length);
+      position = sel.text.length - selLength;
     }
 
-    const content = $(countryFormMap.formatTextAreaField).val();
-    $(countryFormMap.formatTextAreaField).val(`${content.substr(0, pos)} ${pattern} ${content.substr(pos)}`);
+    const content = $(countryFormMap.addressFormat.formatTextAreaField).val();
+    $(countryFormMap.addressFormat.formatTextAreaField).val(`${content.substr(0, position)} ${pattern} ${content.substr(position)}`);
   }
 
   /**
@@ -117,7 +117,7 @@ export default class CountryForm {
 
     if (defaultLayout !== null) {
       if (confirm(confirmation)) {
-        $(countryFormMap.formatTextAreaField).val(unescape(defaultLayout.replace(/\+/g, ' ')));
+        $(countryFormMap.addressFormat.formatTextAreaField).val(unescape(defaultLayout.replace(/\+/g, ' ')));
       }
     }
   }

@@ -35,7 +35,7 @@ class AddressFormatCore extends ObjectModel
     /** @var int Address format */
     public $id_address_format;
 
-    /** @var ?int Country ID */
+    /** @var int Country ID */
     public $id_country;
 
     /** @var string Format */
@@ -214,7 +214,6 @@ class AddressFormatCore extends ObjectModel
     public function checkFormatFields()
     {
         $this->_errorFormatList = [];
-        $fieldsValidate = Address::getFieldsValidate();
         $usedKeyList = [];
 
         $multipleLineFields = explode(self::FORMAT_NEW_LINE, $this->format);
