@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Routing\Linter;
 
 use PrestaShop\PrestaShop\Core\Util\Inflector;
 use PrestaShopBundle\Routing\Linter\Exception\NamingConventionException;
+use PrestaShopBundle\Routing\Linter\Exception\SymfonyControllerConventionException;
 use Symfony\Component\Routing\Route;
 
 /**
@@ -69,6 +70,12 @@ final class NamingConventionLinter implements RouteLinterInterface
     private function getControllerAndMethodName(Route $route)
     {
         $controller = $route->getDefault('_controller');
+        if (false === strpos($controller, '::')) {
+            throw new SymfonyControllerConventionException(
+                sprintf('Controller "%s" does not follow symfony convention.', $controller),
+                $controller
+            );
+        }
 
         list($controller, $method) = explode('::', $controller, 2);
 
