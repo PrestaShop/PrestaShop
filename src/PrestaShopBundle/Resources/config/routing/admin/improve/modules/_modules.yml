@@ -1,7 +1,3 @@
-_addons:
-  resource: "addons.yml"
-  prefix: /addons/
-
 admin_module_manage:
   path: /manage/{category}/{keyword}
   methods: [ GET ]
@@ -78,11 +74,3 @@ admin_module_updates:
     _controller: PrestaShopBundle\Controller\Admin\Improve\Modules\UpdatesController::indexAction
     _legacy_controller: AdminModulesUpdates
     _legacy_link: AdminModulesUpdates
-
-admin_module_addons_store:
-  path: /addons-store
-  methods: [ GET ]
-  defaults:
-    _controller: 'PrestaShopBundle\Controller\Admin\Improve\Modules\AddonsStoreController::indexAction'
-    _legacy_controller: AdminAddonsCatalog
-    _legacy_link: AdminAddonsCatalog
