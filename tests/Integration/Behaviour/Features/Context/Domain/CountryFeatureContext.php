@@ -177,7 +177,7 @@ class CountryFeatureContext extends AbstractDomainFeatureContext
     public function assertQueryCustomerProperties($countryReference, TableNode $table)
     {
         $countryId = SharedStorage::getStorage()->get($countryReference);
-        $expectedData = $table->getRowsHash();
+        $expectedData = $this->localizeByRows($table);
         $expectedData = $this->formatCountryDataIfNeeded($expectedData);
 
         $queryBus = $this->getQueryBus();
@@ -194,9 +194,6 @@ class CountryFeatureContext extends AbstractDomainFeatureContext
 
     private function formatCountryDataIfNeeded(array $data)
     {
-        if (array_key_exists('localisedNames', $data)) {
-            $data['localisedNames'] = [$data['localisedNames']];
-        }
         if (array_key_exists('call_prefix', $data)) {
             $data['call_prefix'] = (int) $data['call_prefix'];
         }

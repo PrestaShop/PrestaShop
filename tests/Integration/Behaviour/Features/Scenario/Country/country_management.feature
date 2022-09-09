@@ -5,6 +5,8 @@ Feature: country management
   I must be able to add, edit and delete country
 
   Scenario: Adding new country
+    Given language "language1" with locale "en-US" exists
+    And language "language2" with locale "fr-FR" exists
     When I add new country "test" with following properties:
       | name[en-US]                | testName        |
       | iso_code                   | TE              |
@@ -20,22 +22,26 @@ Feature: country management
       | display_tax_label          | true            |
       | shop_association           | 1               |
     When I query country "test" I should get a Country with properties:
-      | localisedNames           | testName        |
-      | isoCode                  | TE              |
-      | callPrefix               | 123             |
-      | defaultCurrency          | 1               |
-      | zone                     | 1               |
-      | needZipCode              | true            |
-      | zipCodeFormat            | 1 NL            |
-      | enabled                  | true            |
-      | containsStates           | false           |
-      | needIdNumber             | false           |
-      | displayTaxLabel          | true            |
-      | shopAssociation          | 1               |
+      | localisedNames[en-US] | testName |
+      | localisedNames[fr-FR] | testName |
+      | isoCode               | TE       |
+      | callPrefix            | 123      |
+      | defaultCurrency       | 1        |
+      | zone                  | 1        |
+      | needZipCode           | true     |
+      | zipCodeFormat         | 1 NL     |
+      | enabled               | true     |
+      | containsStates        | false    |
+      | needIdNumber          | false    |
+      | displayTaxLabel       | true     |
+      | shopAssociation       | 1        |
 
   Scenario: edit country
+    Given language "language1" with locale "en-US" exists
+    And language "language2" with locale "fr-FR" exists
     When I edit country "test" with following properties:
-      | name[en-US]                | editName        |
+      | name[en-US]                | editName1       |
+      | name[fr-FR]                | editName2       |
       | iso_code                   | TA              |
       | call_prefix                | 1234            |
       | default_currency           | 2               |
@@ -49,15 +55,16 @@ Feature: country management
       | display_tax_label          | false           |
       | shop_association           | 1               |
     When I query country "test" I should get a Country with properties:
-      | localisedNames           | editName        |
-      | isoCode                  | TA              |
-      | callPrefix               | 1234            |
-      | defaultCurrency          | 2               |
-      | zone                     | 2               |
-      | needZipCode              | false           |
-      | zipCodeFormat            | 1 NLL           |
-      | enabled                  | false           |
-      | containsStates           | true            |
-      | needIdNumber             | true            |
-      | displayTaxLabel          | false           |
-      | shopAssociation          | 1               |
+      | localisedNames[en-US] | editName1 |
+      | localisedNames[fr-FR] | editName2 |
+      | isoCode               | TA        |
+      | callPrefix            | 1234      |
+      | defaultCurrency       | 2         |
+      | zone                  | 2         |
+      | needZipCode           | false     |
+      | zipCodeFormat         | 1 NLL     |
+      | enabled               | false     |
+      | containsStates        | true      |
+      | needIdNumber          | true      |
+      | displayTaxLabel       | false     |
+      | shopAssociation       | 1         |
