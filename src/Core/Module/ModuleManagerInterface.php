@@ -38,7 +38,7 @@ interface ModuleManagerInterface
 
     public function uninstall(string $name, bool $deleteFiles = false): bool;
 
-    public function upgrade(string $name): bool;
+    public function upgrade(string $name, $source = null): bool;
 
     public function enable(string $name): bool;
 
