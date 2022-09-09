@@ -26,15 +26,16 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Product;
 
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class ProductStatusUpdater
 {
     /**
-     * @var ProductRepository
+     * @var ProductMultiShopRepository
      */
     private $productRepository;
 
@@ -44,27 +45,32 @@ class ProductStatusUpdater
     private $productIndexationUpdater;
 
     /**
-     * @param ProductRepository $productRepository
+     * @param ProductMultiShopRepository $productRepository
      * @param ProductIndexationUpdater $productIndexationUpdater
      */
     public function __construct(
-        ProductRepository $productRepository,
+        ProductMultiShopRepository $productRepository,
         ProductIndexationUpdater $productIndexationUpdater
     ) {
         $this->productRepository = $productRepository;
         $this->productIndexationUpdater = $productIndexationUpdater;
     }
 
-    //@todo: add shop constraint
-    public function updateStatus(ProductId $productId, bool $newStatus): void
+    /**
+     * @param ProductId $productId
+     * @param bool $newStatus
+     * @param ShopConstraint $shopConstraint
+     */
+    public function updateStatus(ProductId $productId, bool $newStatus, ShopConstraint $shopConstraint): void
     {
         //@todo: use multishop repo getByConstraint instead
-        $product = $this->productRepository->get($productId);
-        $initialState = (bool) $product->active;
+        $product = $this->productRepository->getByShopConstraint($productId, $shopConstraint);
+        $initialStatus = (bool) $product->active;
         $product->active = $newStatus;
         $this->productRepository->partialUpdate(
             $product,
             ['active'],
+            $shopConstraint,
             CannotUpdateProductException::FAILED_UPDATE_STATUS
         );
 
@@ -79,7 +85,7 @@ class ProductStatusUpdater
 
 //      In single shop context we check if status changed to make sure we need to reindex product
 //      because reindexing is an expensive operation performance-wise
-        if ($initialState !== $command->getEnable()) {
+        if ($initialStatus !== $newStatus) {
             $this->productIndexationUpdater->updateIndexation($product, $shopConstraint);
         }
     }
