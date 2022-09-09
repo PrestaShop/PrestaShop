@@ -74,7 +74,7 @@ class GeolocationController extends FrameworkBundleAdminController
      * @AdminSecurity(
      *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this.",
-     *     redirectRoute="admin_geolocation"
+     *     redirectRoute="admin_geolocation_index"
      * )
      * @DemoRestricted(redirectRoute="admin_geolocation_index")
      *
@@ -97,7 +97,7 @@ class GeolocationController extends FrameworkBundleAdminController
      * @AdminSecurity(
      *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this.",
-     *     redirectRoute="admin_geolocation"
+     *     redirectRoute="admin_geolocation_index"
      * )
      * @DemoRestricted(redirectRoute="admin_geolocation_index")
      *
@@ -120,7 +120,7 @@ class GeolocationController extends FrameworkBundleAdminController
      * @AdminSecurity(
      *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this.",
-     *     redirectRoute="admin_geolocation"
+     *     redirectRoute="admin_geolocation_index"
      * )
      * @DemoRestricted(redirectRoute="admin_geolocation_index")
      *
