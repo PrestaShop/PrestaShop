@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Command;
 
 use PrestaShopBundle\Routing\Linter\AdminRouteProvider;
+use PrestaShopBundle\Routing\Linter\Exception\ControllerNotFoundException;
 use PrestaShopBundle\Routing\Linter\Exception\NamingConventionException;
 use PrestaShopBundle\Routing\Linter\Exception\SymfonyControllerConventionException;
 use PrestaShopBundle\Routing\Linter\NamingConventionLinter;
@@ -76,6 +77,7 @@ final class NamingConventionLinterCommand extends Command
     {
         $invalidRouteNameRows = [];
         $invalidControllerRows = [];
+        $controllerNotFoundRows = [];
         /** @var Route $route */
         foreach ($this->adminRouteProvider->getRoutes() as $routeName => $route) {
             try {
@@ -84,6 +86,8 @@ final class NamingConventionLinterCommand extends Command
                 $invalidRouteNameRows[] = [$routeName, $e->getExpectedRouteName()];
             } catch (SymfonyControllerConventionException $e) {
                 $invalidControllerRows[] = [$routeName, $e->getInvalidController()];
+            } catch (ControllerNotFoundException $e) {
+                $controllerNotFoundRows[] = [$routeName, $e->getInvalidController()];
             }
         }
 
@@ -92,6 +96,7 @@ final class NamingConventionLinterCommand extends Command
         if (!empty($invalidRouteNameRows) || !empty($invalidControllerRows)) {
             $this->displayInvalidRoutes($invalidRouteNameRows, $io);
             $this->displayInvalidControllers($invalidControllerRows, $io);
+            $this->displayNotFoundControllers($controllerNotFoundRows, $io);
 
             return 1;
         }
@@ -103,31 +108,48 @@ final class NamingConventionLinterCommand extends Command
 
     private function displayInvalidRoutes(array $invalidRouteNameRows, SymfonyStyle $io): void
     {
-        if (empty($invalidRouteNameRows)) {
-            return;
-        }
-
-        $ioTableheaders = ['Invalid routes', 'Valid routes suggestions'];
-        $io->title('PrestaShop routes follow admin_{resources}_{action} naming convention structure');
-        $io->warning(sprintf(
+        $this->displayInvalidRows(
+            $invalidRouteNameRows,
+            'PrestaShop routes follow admin_{resources}_{action} naming convention structure',
             '%s routes are not following naming conventions:',
-            count($invalidRouteNameRows)
-        ));
-        $io->table($ioTableheaders, $invalidRouteNameRows);
+            ['Invalid routes', 'Valid routes suggestions'],
+            $io
+        );
     }
 
     private function displayInvalidControllers(array $invalidControllerRows, SymfonyStyle $io): void
     {
-        if (empty($invalidControllerRows)) {
+        $this->displayInvalidRows(
+            $invalidControllerRows,
+            'Symfony controller naming convention follows FQCN::actionName',
+            '%s routes are not following controller conventions:',
+            ['Invalid routes', 'Invalid controller convention'],
+            $io
+        );
+    }
+
+    private function displayNotFoundControllers(array $controllerNotFoundRows, SymfonyStyle $io): void
+    {
+        $this->displayInvalidRows(
+            $controllerNotFoundRows,
+            'Symfony controller was not found',
+            '%s routes are using controller not found:',
+            ['Invalid routes', 'Controller not found'],
+            $io
+        );
+    }
+
+    private function displayInvalidRows(array $invalidRows, string $title, string $warning, array $header, SymfonyStyle $io): void
+    {
+        if (empty($invalidRows)) {
             return;
         }
 
-        $ioTableheaders = ['Invalid routes', 'Invalid controller convention'];
-        $io->title('Symfony controller naming convention follows FQCN::actionName');
+        $io->title($title);
         $io->warning(sprintf(
-            '%s routes are not following controller conventions:',
-            count($invalidControllerRows)
+            $warning,
+            count($invalidRows)
         ));
-        $io->table($ioTableheaders, $invalidControllerRows);
+        $io->table($header, $invalidRows);
     }
 }
