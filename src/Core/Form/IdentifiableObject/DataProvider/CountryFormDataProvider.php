@@ -81,13 +81,13 @@ class CountryFormDataProvider implements FormDataProviderInterface
             'call_prefix' => $editableCountry->getCallPrefix(),
             'default_currency' => $editableCountry->getDefaultCurrency(),
             'zone' => $editableCountry->getZone(),
-            'need_zip_code' => $editableCountry->needZipCode(),
+            'need_zip_code' => $editableCountry->isNeedZipCode(),
             'zip_code_format' => null !== $editableCountry->getZipCodeFormat() ? $editableCountry->getZipCodeFormat()->getValue() : null,
             'address_format' => $editableCountry->getAddressFormat(),
             'is_enabled' => $editableCountry->isEnabled(),
-            'contains_states' => $editableCountry->containsStates(),
-            'need_identification_number' => $editableCountry->needIdNumber(),
-            'display_tax_label' => $editableCountry->displayTaxLabel(),
+            'contains_states' => $editableCountry->isContainsStates(),
+            'need_identification_number' => $editableCountry->isNeedIdNumber(),
+            'display_tax_label' => $editableCountry->isDisplayTaxLabel(),
         ];
 
         if ($this->multistoreEnabled) {

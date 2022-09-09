@@ -144,7 +144,7 @@ class EditCountryCommand
         return $this;
     }
 
-    public function getIsoCode()
+    public function getIsoCode(): ?string
     {
         return $this->isoCode;
     }
@@ -156,7 +156,7 @@ class EditCountryCommand
         return $this;
     }
 
-    public function getCallPrefix(): int
+    public function getCallPrefix(): ?int
     {
         return $this->callPrefix;
     }
@@ -168,7 +168,7 @@ class EditCountryCommand
         return $this;
     }
 
-    public function getDefaultCurrency(): int
+    public function getDefaultCurrency(): ?int
     {
         return $this->defaultCurrency;
     }
@@ -192,7 +192,7 @@ class EditCountryCommand
         return $this;
     }
 
-    public function needZipCode(): bool
+    public function needZipCode(): ?bool
     {
         return $this->needZipCode;
     }
@@ -216,7 +216,7 @@ class EditCountryCommand
         return $this;
     }
 
-    public function getAddressFormat(): string
+    public function getAddressFormat(): ?string
     {
         return $this->addressFormat;
     }
@@ -228,7 +228,7 @@ class EditCountryCommand
         return $this;
     }
 
-    public function isEnabled(): bool
+    public function isEnabled(): ?bool
     {
         return $this->enabled;
     }
@@ -240,7 +240,7 @@ class EditCountryCommand
         return $this;
     }
 
-    public function containsStates(): bool
+    public function containsStates(): ?bool
     {
         return $this->containsStates;
     }
@@ -252,7 +252,7 @@ class EditCountryCommand
         return $this;
     }
 
-    public function needIdNumber(): bool
+    public function needIdNumber(): ?bool
     {
         return $this->needIdNumber;
     }
@@ -264,7 +264,7 @@ class EditCountryCommand
         return $this;
     }
 
-    public function displayTaxLabel(): bool
+    public function displayTaxLabel(): ?bool
     {
         return $this->displayTaxLabel;
     }
@@ -282,9 +282,9 @@ class EditCountryCommand
     }
 
     /**
-     * @return int[]
+     * @return ?int[]
      */
-    public function getShopAssociation(): array
+    public function getShopAssociation(): ?array
     {
         return $this->shopAssociation;
     }

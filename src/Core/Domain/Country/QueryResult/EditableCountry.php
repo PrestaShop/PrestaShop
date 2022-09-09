@@ -203,7 +203,7 @@ class EditableCountry
     /**
      * @return bool
      */
-    public function needZipCode(): bool
+    public function isNeedZipCode(): bool
     {
         return $this->needZipCode;
     }
@@ -235,7 +235,7 @@ class EditableCountry
     /**
      * @return bool
      */
-    public function containsStates(): bool
+    public function isContainsStates(): bool
     {
         return $this->containsStates;
     }
@@ -243,7 +243,7 @@ class EditableCountry
     /**
      * @return bool
      */
-    public function needIdNumber(): bool
+    public function isNeedIdNumber(): bool
     {
         return $this->needIdNumber;
     }
@@ -251,7 +251,7 @@ class EditableCountry
     /**
      * @return bool
      */
-    public function displayTaxLabel(): bool
+    public function isDisplayTaxLabel(): bool
     {
         return $this->displayTaxLabel;
     }
