@@ -28,6 +28,7 @@ namespace PrestaShopBundle\Command;
 
 use PrestaShopBundle\Routing\Linter\AdminRouteProvider;
 use PrestaShopBundle\Routing\Linter\Exception\NamingConventionException;
+use PrestaShopBundle\Routing\Linter\Exception\SymfonyControllerConventionException;
 use PrestaShopBundle\Routing\Linter\NamingConventionLinter;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -73,32 +74,60 @@ final class NamingConventionLinterCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $ioTableheaders = ['Invalid routes', 'Valid routes suggestions'];
-        $ioTableRows = [];
+        $invalidRouteNameRows = [];
+        $invalidControllerRows = [];
         /** @var Route $route */
         foreach ($this->adminRouteProvider->getRoutes() as $routeName => $route) {
             try {
                 $this->namingConventionLinter->lint($routeName, $route);
             } catch (NamingConventionException $e) {
-                $ioTableRows[] = [$routeName, $e->getExpectedRouteName()];
+                $invalidRouteNameRows[] = [$routeName, $e->getExpectedRouteName()];
+            } catch (SymfonyControllerConventionException $e) {
+                $invalidControllerRows[] = [$routeName, $e->getInvalidController()];
             }
         }
 
         $io = new SymfonyStyle($input, $output);
 
-        if (!empty($ioTableRows)) {
-            $io->title('PrestaShop routes follow admin_{resources}_{action} naming convention structure');
-            $io->warning(sprintf(
-                '%s routes are not following naming conventions:',
-                count($ioTableRows)
-            ));
-            $io->table($ioTableheaders, $ioTableRows);
+        if (!empty($invalidRouteNameRows) || !empty($invalidControllerRows)) {
+            $this->displayInvalidRoutes($invalidRouteNameRows, $io);
+            $this->displayInvalidControllers($invalidControllerRows, $io);
 
-            return 0;
+            return 1;
         }
 
         $io->success('Admin routes and controllers follow naming conventions.');
 
-        return 1;
+        return 0;
+    }
+
+    private function displayInvalidRoutes(array $invalidRouteNameRows, SymfonyStyle $io): void
+    {
+        if (empty($invalidRouteNameRows)) {
+            return;
+        }
+
+        $ioTableheaders = ['Invalid routes', 'Valid routes suggestions'];
+        $io->title('PrestaShop routes follow admin_{resources}_{action} naming convention structure');
+        $io->warning(sprintf(
+            '%s routes are not following naming conventions:',
+            count($invalidRouteNameRows)
+        ));
+        $io->table($ioTableheaders, $invalidRouteNameRows);
+    }
+
+    private function displayInvalidControllers(array $invalidControllerRows, SymfonyStyle $io): void
+    {
+        if (empty($invalidControllerRows)) {
+            return;
+        }
+
+        $ioTableheaders = ['Invalid routes', 'Invalid controller convention'];
+        $io->title('Symfony controller naming convention follows FQCN::actionName');
+        $io->warning(sprintf(
+            '%s routes are not following controller conventions:',
+            count($invalidControllerRows)
+        ));
+        $io->table($ioTableheaders, $invalidControllerRows);
     }
 }
