@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\BulkDuplicateProduc
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\BulkProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDuplicateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Handles command which deletes addresses in bulk action
@@ -58,7 +59,8 @@ class BulkDuplicateProductHandler extends AbstractBulkHandler implements BulkDup
      */
     public function handle(BulkDuplicateProductCommand $command): array
     {
-        return $this->handleBulkAction($command->getProductIds());
+        //@todo: handle multishop duplication using ShopConstraint in dedicated PR
+        return $this->handleBulkAction($command->getProductIds(), ShopConstraint::allShops());
     }
 
     /**
@@ -67,8 +69,9 @@ class BulkDuplicateProductHandler extends AbstractBulkHandler implements BulkDup
      *
      * @return ProductId
      */
-    protected function handleSingleAction(ProductId $productId, $command = null)
+    protected function handleSingleAction(ProductId $productId, ShopConstraint $shopConstraint, $command = null)
     {
+        //@todo: handle multishop duplication using ShopConstraint in dedicated PR
         return $this->productDuplicator->duplicate($productId);
     }
 

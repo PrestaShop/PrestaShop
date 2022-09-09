@@ -42,7 +42,9 @@ class UpdateProductStatusHandler implements UpdateProductStatusHandlerInterface
      */
     private $productStatusUpdater;
 
-
+    /**
+     * @param ProductStatusUpdater $productStatusUpdater
+     */
     public function __construct(ProductStatusUpdater $productStatusUpdater)
     {
         $this->productStatusUpdater = $productStatusUpdater;
@@ -53,6 +55,6 @@ class UpdateProductStatusHandler implements UpdateProductStatusHandlerInterface
      */
     public function handle(UpdateProductStatusCommand $command)
     {
-        $this->productStatusUpdater->updateStatus($command->getProductId(), $command->getEnable());
+        $this->productStatusUpdater->updateStatus($command->getProductId(), $command->getEnable(), $command->getShopConstraint());
     }
 }

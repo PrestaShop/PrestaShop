@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\BulkUpdateProductSt
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\BulkProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Handles command which deletes addresses in bulk action
@@ -55,7 +56,7 @@ class BulkUpdateProductStatusHandler extends AbstractBulkHandler implements Bulk
      */
     public function handle(BulkUpdateProductStatusCommand $command): void
     {
-        $this->handleBulkAction($command->getProductIds(), $command);
+        $this->handleBulkAction($command->getProductIds(), $command->getShopConstraint(), $command);
     }
 
     /**
@@ -64,9 +65,9 @@ class BulkUpdateProductStatusHandler extends AbstractBulkHandler implements Bulk
      *
      * @return void
      */
-    protected function handleSingleAction(ProductId $productId, $command = null)
+    protected function handleSingleAction(ProductId $productId, ShopConstraint $shopConstraint, $command = null)
     {
-        $this->productStatusUpdater->updateStatus($productId, $command->getNewStatus());
+        $this->productStatusUpdater->updateStatus($productId, $command->getNewStatus(), $shopConstraint);
     }
 
     protected function buildBulkException(): BulkProductException

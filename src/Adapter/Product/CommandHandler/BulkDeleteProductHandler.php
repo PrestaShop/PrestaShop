@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\BulkDeleteProductHa
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\BulkProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotBulkDeleteProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * Handles command which deletes addresses in bulk action
@@ -58,11 +59,13 @@ final class BulkDeleteProductHandler extends AbstractBulkHandler implements Bulk
      */
     public function handle(BulkDeleteProductCommand $command): void
     {
-        $this->handleBulkAction($command->getProductIds());
+        //@todo: add ShopConstraint to command in dedicated PR.
+        $this->handleBulkAction($command->getProductIds(), ShopConstraint::allShops());
     }
 
-    protected function handleSingleAction(ProductId $productId, $command = null)
+    protected function handleSingleAction(ProductId $productId, ShopConstraint $shopConstraint, $command = null)
     {
+        //@todo: handle deletion for multishop using shop constraint in dedicated PR
         $this->productRepository->delete($productId);
     }
 

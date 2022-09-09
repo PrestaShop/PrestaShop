@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\BulkProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 /**
  * This abstract class helps us build a bulk handler since the principle is often very similar, it might not be
@@ -46,13 +47,13 @@ abstract class AbstractBulkHandler
      *
      * @throws BulkProductException
      */
-    protected function handleBulkAction(array $productIds, $command = null): array
+    protected function handleBulkAction(array $productIds, ShopConstraint $shopConstraint, $command = null): array
     {
         $bulkException = null;
         $actionResults = [];
         foreach ($productIds as $productId) {
             try {
-                $actionResults[$productId->getValue()] = $this->handleSingleAction($productId, $command);
+                $actionResults[$productId->getValue()] = $this->handleSingleAction($productId, $shopConstraint, $command);
             } catch (ProductException $e) {
                 if (null === $bulkException) {
                     $bulkException = $this->buildBulkException();
@@ -80,9 +81,10 @@ abstract class AbstractBulkHandler
 
     /**
      * @param ProductId $productId
+     * @param ShopConstraint $shopConstraint
      * @param mixed|null $command
      *
      * @return mixed
      */
-    abstract protected function handleSingleAction(ProductId $productId, $command = null);
+    abstract protected function handleSingleAction(ProductId $productId, ShopConstraint $shopConstraint, $command = null);
 }
