@@ -105,7 +105,7 @@
         :title="lowStockLevel"
       >!</span>
     </td>
-    <td class="qty-spinner text-right">
+    <td class="qty-spinner">
       <Spinner
         :product="product"
         @updateProductQty="updateProductQty"

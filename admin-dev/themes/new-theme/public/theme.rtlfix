@@ -1,3 +1,5 @@
+/* This comment avoid some weird behavior with preceding unclosed comment */
+
 @keyframes showcase-img-appearance-rtl {
   from {
     -webkit-transform: translate(-20px) translateX(-1);
@@ -137,3 +139,60 @@
 .nav-bar-overflow .ps__rail-y {
   left: 0 !important;
 }
+
+/**
+ * Fix some RTL problem with `admin-dev/themes/new-theme/scss/pages/stock/stock_page.scss` page
+ * for details, take a look at https://github.com/PrestaShop/PrestaShop/issues/27864 
+ */
+
+.adminstockmanagement .stock-app #search .search-input.tags-input:not(.search-with-icon) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.adminstockmanagement .stock-app #search .alert-box {
+    right: auto;
+    left: 5px;
+}
+
+.adminstockmanagement .stock-app #search #filters-container .collapse-button {
+    text-align: right;
+}
+
+.adminstockmanagement .stock-app #search #filters-container .filter-container.filter-suppliers  ul {
+    padding-right: 0;
+}
+
+.adminstockmanagement .stock-app #filters-container #filters {
+    box-shadow: -1px 2px 3px 0 rgba(108, 134, 142, 0.3);
+}
+
+.adminstockmanagement .stock-app .qty-spinner form.qty:hover input[type="number"],
+.adminstockmanagement .stock-app .qty-spinner form.qty.active input[type="number"] {
+    padding-right: 16px;
+}
+
+.adminstockmanagement .stock-app .qty-spinner form.qty:hover .ps-number-spinner, .adminstockmanagement .stock-app .qty-spinner form.qty.active .ps-number-spinner {
+    right: auto;
+    left: 34px;
+    text-align: left;
+}
+
+.adminstockmanagement .stock-app .qty-spinner form.qty .check-button {
+    right: auto;
+    left: 1px;
+    border-radius: 4px 0 0 4px;
+}
+
+.adminstockmanagement .stock-app .card .stock-overview .table thead th.product-title {
+    padding-right: 6rem;
+}
+
+.adminstockmanagement .stock-app .card .stock-overview .table thead th:last-child .material-icons {
+    margin-left: 5px;
+}
+
+.adminstockmanagement .stock-app .card .stock-overview .product-actions .qty {
+    padding-right: 20px;
+}
+
