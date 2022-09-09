@@ -30,6 +30,8 @@ namespace PrestaShop\PrestaShop\Adapter\Country;
 
 use Country;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryNotFoundException;
+use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 use PrestaShopException;
 
 /**
@@ -48,5 +50,27 @@ class AbstractCountryHandler
         if (!$country->validateFields(false) || !$country->validateFieldsLang(false)) {
             throw new CountryConstraintException('Country contains invalid field values');
         }
+    }
+
+    /**
+     * Get legacy country
+     *
+     * @param CountryId $countryId
+     *
+     * @return Country
+     *
+     * @throws CountryNotFoundException
+     */
+    protected function getCountry(CountryId $countryId): Country
+    {
+        $countryIdValue = $countryId->getValue();
+
+        try {
+            $country = new Country($countryIdValue);
+        } catch (PrestaShopException $e) {
+            throw new CountryNotFoundException(sprintf('Country with id "%s" was not found.', $countryIdValue));
+        }
+
+        return $country;
     }
 }

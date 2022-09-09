@@ -28,8 +28,10 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Controller\Admin\Improve\International;
 
-use Context;
 use Exception;
+use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryException;
+use PrestaShop\PrestaShop\Core\Domain\Country\Query\GetCountryForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\EditableCountry;
 use PrestaShop\PrestaShop\Core\Search\Filters\CountryFilters;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
@@ -106,18 +108,44 @@ class CountryController extends FrameworkBundleAdminController
 
     public function editAction(int $countryId, Request $request): Response
     {
-        //todo: complete edit action migration to symfony
-        return $this->redirect(
-            Context::getContext()->link->getAdminLink(
-                'AdminCountries',
-                true,
-                [],
-                [
-                    'updatecountry' => '',
-                    'id_country' => $countryId,
-                ]
-            )
-        );
+        try {
+            /** @var EditableCountry $editableCountry */
+            $editableCountry = $this->getQueryBus()->handle(new GetCountryForEditing($countryId));
+        } catch (CountryException $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+
+            return $this->redirectToRoute('admin_countries_index');
+        }
+
+        try {
+            $countryFormBuilder = $this->get(
+                'prestashop.core.form.identifiable_object.builder.country_form_builder'
+            );
+            $countryFormHandler = $this->get(
+                'prestashop.core.form.identifiable_object.handler.country_form_handler'
+            );
+
+            $countryForm = $countryFormBuilder->getFormFor($countryId);
+            $countryForm->handleRequest($request);
+            $result = $countryFormHandler->handleFor($countryId, $countryForm);
+
+            if ($result->isSubmitted() && $result->isValid()) {
+                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+
+                return $this->redirectToRoute('admin_countries_index');
+            }
+        } catch (Exception $e) {
+            $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
+
+            return $this->redirectToRoute('admin_countries_index');
+        }
+
+        return $this->render('@PrestaShop/Admin/Improve/International/Country/edit.html.twig', [
+            'enableSidebar' => true,
+            'countryForm' => $countryForm->createView(),
+            'help_link' => $this->generateSidebarLink($request->attributes->get('_legacy_controller')),
+            'countryName' => $editableCountry->getLocalisedNames()[$this->getContextLangId()],
+        ]);
     }
 
     /**
