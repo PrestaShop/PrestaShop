@@ -1088,7 +1088,6 @@ class Install extends AbstractInstall
         }
 
         Module::updateTranslationsAfterInstall(true);
-        EntityLanguage::updateModulesTranslations($modules);
 
         return true;
     }
