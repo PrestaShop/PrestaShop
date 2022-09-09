@@ -27,6 +27,7 @@
 namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 
 use Exception;
+use ImageManagerCore;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Command\BulkDeleteProfileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Command\DeleteProfileCommand;
 use PrestaShop\PrestaShop\Core\Domain\Profile\Exception\CannotDeleteSuperAdminProfileException;
@@ -289,7 +290,8 @@ class ProfileController extends FrameworkBundleAdminController
         return [
             UploadedImageConstraintException::class => $this->trans(
                 'Image format not recognized, allowed formats are: %s',
-                'Admin.Notifications.Error'
+                'Admin.Notifications.Error',
+                [implode(', ', ImageManagerCore::MIME_TYPE_SUPPORTED)]
             ),
             ProfileConstraintException::class => [
                 ProfileConstraintException::INVALID_NAME => $this->trans(
