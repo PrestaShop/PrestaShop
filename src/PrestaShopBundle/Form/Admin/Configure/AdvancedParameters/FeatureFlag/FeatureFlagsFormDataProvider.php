@@ -66,15 +66,13 @@ class FeatureFlagsFormDataProvider implements FormDataProviderInterface
     {
         $featureFlags = $this->doctrineEntityManager->getRepository(FeatureFlag::class)->findBy(['stability' => $this->stability]);
 
-        // We disable product v2 switch based on multishop state and stability, someday we will need
-        // to implement a more generic feature for any feature flag
-        $isDisabled = false;
-        if ($this->stability === 'stable' && $this->isMultiShopUsed || $this->stability === 'beta' && !$this->isMultiShopUsed) {
-            $isDisabled = true;
-        }
-
         $featureFlagsData = [];
         foreach ($featureFlags as $featureFlag) {
+            // We disable product v2 switch based on multishop state and feature name, someday we will need
+            // to implement a more generic feature for any feature flag
+            $isDisabled = strpos($featureFlag->getName(), '_multi_shop') !== false && !$this->isMultiShopUsed
+                || strpos($featureFlag->getName(), '_multi_shop') === false && $this->isMultiShopUsed
+            ;
             $featureFlagsData[$featureFlag->getName()] = [
                 'enabled' => $featureFlag->isEnabled(),
                 'name' => $featureFlag->getName(),
@@ -123,7 +121,7 @@ class FeatureFlagsFormDataProvider implements FormDataProviderInterface
                 return false;
             }
 
-            if (!is_bool($flagData['enabled'])) {
+            if ($flagData['enabled'] !== null && !is_bool($flagData['enabled'])) {
                 return false;
             }
         }
