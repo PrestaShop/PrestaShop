@@ -29,7 +29,7 @@ namespace PrestaShop\PrestaShop\Core\Domain\Country\CommandHandler;
 use PrestaShop\PrestaShop\Core\Domain\Country\Command\EditCountryCommand;
 
 /**
- * Defines a contract for AddCountryHandler
+ * Defines a contract for EditCountryHandler
  */
 interface EditCountryHandlerInterface
 {

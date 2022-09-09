@@ -34,10 +34,5 @@ use PrestaShop\PrestaShop\Core\Domain\Country\QueryResult\EditableCountry;
  */
 interface GetCountryForEditingHandlerInterface
 {
-    /**
-     * @param GetCountryForEditing $command
-     *
-     * @return EditableCountry
-     */
     public function handle(GetCountryForEditing $command): EditableCountry;
 }

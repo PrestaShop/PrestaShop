@@ -36,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
 class GetCountryForEditing
 {
     /**
-     * @var CountryId|null
+     * @var CountryId
      */
     private $countryId;
 
@@ -51,7 +51,7 @@ class GetCountryForEditing
     /**
      * @return CountryId
      */
-    public function getCountryId(): ?CountryId
+    public function getCountryId(): CountryId
     {
         return $this->countryId;
     }

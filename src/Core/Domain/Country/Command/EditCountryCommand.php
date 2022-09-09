@@ -59,7 +59,7 @@ class EditCountryCommand
     /**
      * @var int
      */
-    protected $defaultCurrency = 0;
+    protected $defaultCurrency;
 
     /**
      * @var int|null
@@ -69,7 +69,7 @@ class EditCountryCommand
     /**
      * @var bool
      */
-    protected $needZipCode = false;
+    protected $needZipCode;
 
     /**
      * @var ?CountryZipCodeFormat
@@ -79,32 +79,32 @@ class EditCountryCommand
     /**
      * @var string
      */
-    protected $addressFormat = '';
+    protected $addressFormat;
 
     /**
      * @var bool
      */
-    protected $enabled = false;
+    protected $enabled;
 
     /**
      * @var bool
      */
-    protected $containsStates = false;
+    protected $containsStates;
 
     /**
      * @var bool
      */
-    protected $needIdNumber = false;
+    protected $needIdNumber;
 
     /**
      * @var bool
      */
-    protected $displayTaxLabel = false;
+    protected $displayTaxLabel;
 
     /**
      * @var int[]
      */
-    protected $shopAssociation = [];
+    protected $shopAssociation;
 
     public function __construct(
         int $countryId
