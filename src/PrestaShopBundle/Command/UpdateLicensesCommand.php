@@ -144,12 +144,18 @@ class UpdateLicensesCommand extends Command
                 'themes/starterTheme/assets/',
                 // tests folders
                 'tests/Resources/modules/',
+                'tests/Resources/modules_tests/override/',
                 'tests/Resources/themes/',
                 'tests/Resources/translations/',
-                'tests/resources/ModulesOverrideInstallUninstallTest/',
+                'tests/Resources/ModulesOverrideInstallUninstallTest/',
                 'tests/E2E/',
+                'tests/Unit/Resources/config/',
                 'tests/Unit/Resources/assets/',
+                'tests/Unit/Resources/twig/',
                 'tests/UI/',
+                // install
+                'install-dev/theme/js/sprintf.min.js',
+                'install-dev/theme/js/zxcvbn.js',
             ])
             ->ignoreDotFiles(false);
         $parser = (new ParserFactory())->create(ParserFactory::ONLY_PHP7);
