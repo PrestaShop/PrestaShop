@@ -34,7 +34,7 @@ use PrestaShopBundle\Form\FormCloner;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class StockMovementType extends TranslatorAwareType
 {

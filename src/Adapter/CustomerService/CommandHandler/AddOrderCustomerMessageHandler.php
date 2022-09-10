@@ -39,7 +39,7 @@ use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CannotSendEmailE
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CustomerMessageConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\CustomerMessage\Exception\CustomerMessageException;
 use PrestaShop\PrestaShop\Core\Domain\Order\Exception\OrderNotFoundException;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Tools;
 

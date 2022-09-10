@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Adapter\Meta\SetUpUrlsDataConfiguration;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use Symfony\Component\OptionsResolver\Exception\InvalidOptionsException;
 use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Tests\TestCase\AbstractConfigurationTestCase;
 
 class SetUpUrlsDataConfigurationTest extends AbstractConfigurationTestCase

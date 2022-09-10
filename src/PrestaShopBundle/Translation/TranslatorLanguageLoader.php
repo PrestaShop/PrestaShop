@@ -34,7 +34,7 @@ use PrestaShopBundle\Translation\Loader\SqlTranslationLoader;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\Translator as BaseTranslatorComponent;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TranslatorLanguageLoader
 {

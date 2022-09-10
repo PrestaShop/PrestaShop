@@ -28,7 +28,7 @@ namespace PrestaShopBundle\Form\Validator\Constraints;
 
 use InvalidArgumentException;
 use PrestaShop\PrestaShop\Adapter\Validate;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;

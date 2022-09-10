@@ -30,7 +30,7 @@ use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\AddressZipCode;
 use PrestaShop\PrestaShop\Core\Country\CountryZipCodeRequirementsProviderInterface;
 use PrestaShop\PrestaShop\Core\Domain\Country\Exception\CountryConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\ConstraintValidator;

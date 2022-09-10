@@ -32,7 +32,7 @@ use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Core\Addon\Theme\Theme;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeValidator;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Yaml\Parser;
 
 class ThemeValidatorTest extends TestCase
