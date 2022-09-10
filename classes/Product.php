@@ -38,13 +38,6 @@ use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime as DateTimeUtil;
 
 class ProductCore extends ObjectModel
 {
-    /**
-     * @var string Tax name
-     *
-     * @deprecated Since 1.4
-     */
-    public $tax_name;
-
     /** @var float Tax rate */
     public $tax_rate;
 
@@ -721,7 +714,6 @@ class ProductCore extends ObjectModel
             }
 
             $this->isFullyLoaded = $full;
-            $this->tax_name = 'deprecated'; // The applicable tax may be BOTH the product one AND the state one (moreover this variable is some deadcode)
             $this->manufacturer_name = Manufacturer::getNameById((int) $this->id_manufacturer);
             $this->supplier_name = Supplier::getNameById((int) $this->id_supplier);
             $address = null;
