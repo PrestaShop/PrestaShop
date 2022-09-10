@@ -27,30 +27,6 @@
 /**
  * Class AddressChecksumCore.
  */
-class AddressChecksumCore implements ChecksumInterface
+class AddressChecksumCore extends ObjectModelChecksum
 {
-    public const SEPARATOR = '_';
-
-    /**
-     * Generate a checksum.
-     *
-     * @param Address $address
-     *
-     * @return string SHA1 checksum for the Address
-     */
-    public function generateChecksum($address)
-    {
-        if (!$address->id) {
-            return sha1('No address set');
-        }
-
-        $uniqId = '';
-        $fields = $address->getFields();
-        foreach ($fields as $name => $value) {
-            $uniqId .= $value . self::SEPARATOR;
-        }
-        $uniqId = rtrim($uniqId, self::SEPARATOR);
-
-        return sha1($uniqId);
-    }
 }
