@@ -524,36 +524,6 @@ class CategoryCore extends ObjectModel
     }
 
     /**
-     * @param array $categories
-     * @param int $idCategory
-     * @param int $n
-     *
-     * @return bool Indicates whether the sub tree of categories has been successfully updated
-     *
-     * @deprecated 1.7.6.0 use computeNTreeInfos + sql query instead
-     */
-    protected static function subTree(&$categories, $idCategory, &$n)
-    {
-        $left = $n++;
-        if (isset($categories[(int) $idCategory]['subcategories'])) {
-            foreach ($categories[(int) $idCategory]['subcategories'] as $idSubcategory) {
-                Category::subTree($categories, (int) $idSubcategory, $n);
-            }
-        }
-        $right = (int) $n++;
-
-        return Db::getInstance()->update(
-            'category',
-            [
-                'nleft' => (int) $left,
-                'nright' => (int) $right,
-            ],
-            '`id_category` = ' . (int) $idCategory,
-            1
-        );
-    }
-
-    /**
      * Updates `level_depth` for all children of the given `id_category`.
      *
      * @param int $idParentCategory Parent Category ID
