@@ -2681,7 +2681,7 @@ class AdminControllerCore extends Controller
         Media::addJsDef(['baseAdminDir' => __PS_BASE_URI__ . basename(_PS_ADMIN_DIR_) . '/']);
         Media::addJsDef(['currency' => [
             'iso_code' => Context::getContext()->currency->iso_code,
-            'sign' => Context::getContext()->currency->sign,
+            'sign' => Context::getContext()->currency->symbol,
             'name' => Context::getContext()->currency->name,
             'format' => Context::getContext()->currency->format,
         ]]);
