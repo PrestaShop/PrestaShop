@@ -1791,7 +1791,7 @@ class AdminProductsControllerCore extends AdminController
                     $warehouse_location_entity->id_product = $this->object->id;
                     $warehouse_location_entity->id_product_attribute = 0;
                     $warehouse_location_entity->id_warehouse = (int) Configuration::get('PS_DEFAULT_WAREHOUSE_NEW_PRODUCT');
-                    $warehouse_location_entity->location = pSQL('');
+                    $warehouse_location_entity->location = '';
                     $warehouse_location_entity->save();
                 }
 
