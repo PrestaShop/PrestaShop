@@ -84,25 +84,70 @@ class ObjectModelChecksumTest extends TestCase
         $this->assertEquals(strlen($objectModelChecksum), $this->getAlgoHashLengt($hashAlgo));
     }
 
-    public function providerObjectModelsWithAlgo()
+    public function providerObjectModelsWithAlgo(): array
     {
         $objectModelsWithAlgo = [];
 
         for ($i = 0; $i <= 20; ++$i) {
-            $objectModel = $this->objectModel;
-            $objectModel->id = rand(1, 999);
-            $objectModel->field_int = rand(1, 999);
-            $objectModel->field_string = Tools::passwdGen(10, Tools::PASSWORDGEN_FLAG_ALPHANUMERIC);
-            $objectModel->field_bool = (bool) rand(0, 1);
-            $objectModel->field_date = date('Y-m-d H:i:s');
+            $objectModel = $this->genTestableObjectModel();
 
-            $objectModelsWithAlgo[] = [$objectModel, $this->genRandomHashAlgo()];
+            $objectModelsWithAlgo[] = [$objectModel, $this->getRandomHashAlgo()];
         }
 
         return $objectModelsWithAlgo;
     }
 
-    private function genRandomHashAlgo(): string
+    /**
+     * @dataProvider providerObjectModelChecksumSpecificCases
+     */
+    public function testObjectModelChecksumSpecificCases(
+        ObjectModel $objectModel1,
+        ObjectModel $objectModel2,
+        string $hashAlgo,
+        bool $sameChecksum
+    ): void {
+        $this->expectExceptionMessageMatches('/^(Link to database cannot be established: SQLSTATE).*$/');
+
+        $objectModelChecksum1 = (new ObjectModelChecksum($hashAlgo))->generateChecksum($objectModel1);
+        $objectModelChecksum2 = (new ObjectModelChecksum($hashAlgo))->generateChecksum($objectModel2);
+        $compareChecksumResult = $objectModelChecksum1 === $objectModelChecksum2;
+
+        $this->assertSame($compareChecksumResult, $sameChecksum);
+        $this->assertEquals(strlen($objectModelChecksum1), $this->getAlgoHashLengt($hashAlgo));
+        $this->assertEquals(strlen($objectModelChecksum2), $this->getAlgoHashLengt($hashAlgo));
+    }
+
+    public function providerObjectModelChecksumSpecificCases(): array
+    {
+        $cases = [];
+
+        $objectModel1 = $this->genTestableObjectModel();
+        $objectModel2 = clone $objectModel1;
+
+        // Case 1 : Identical objects => Same Checksum
+        $cases[] = [$objectModel1, $objectModel2, $this->getRandomHashAlgo(), true];
+
+        // Case 2 : Different objects => Different Checksum
+        $objectModel1->id = 55;
+        $objectModel2->id = 666;
+        $cases[] = [$objectModel1, $objectModel2, $this->getRandomHashAlgo(), false];
+
+        return $cases;
+    }
+
+    private function genTestableObjectModel(): ObjectModel
+    {
+        $objectModel = $this->objectModel;
+        $objectModel->id = rand(1, 999);
+        $objectModel->field_int = rand(1, 999);
+        $objectModel->field_string = Tools::passwdGen(10, Tools::PASSWORDGEN_FLAG_ALPHANUMERIC);
+        $objectModel->field_bool = (bool) rand(0, 1);
+        $objectModel->field_date = date('Y-m-d H:i:s');
+
+        return $objectModel;
+    }
+
+    private function getRandomHashAlgo(): string
     {
         $algos = hash_algos();
 
