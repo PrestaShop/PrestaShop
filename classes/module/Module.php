@@ -2476,7 +2476,7 @@ abstract class ModuleCore implements ModuleInterface
      */
     public static function getModulesAccessesByIdProfile($idProfile)
     {
-        if (empty(static::$cache_modules_roles)) {
+        if (empty(static::cache_lgc_access)) {
             self::warmupRolesCache();
         }
 
