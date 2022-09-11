@@ -373,20 +373,19 @@ class DispatcherCore
 
             // Dispatch module controller for front office
             case self::FC_MODULE:
-                $module_name = Validate::isModuleName(Tools::getValue('module')) ? Tools::getValue('module') : '';
-                $module = Module::getInstanceByName($module_name);
+                $module = Validate::isModuleName(Tools::getValue('module')) ? Module::getInstanceByName(Tools::getValue('module')) : false;
                 $controller_class = 'PageNotFoundController';
                 if (Validate::isLoadedObject($module) && $module->active) {
-                    $controllers = Dispatcher::getControllers(_PS_MODULE_DIR_ . "$module_name/controllers/front/");
+                    $controllers = Dispatcher::getControllers(_PS_MODULE_DIR_ . "$module->name/controllers/front/");
                     if (isset($controllers[strtolower($this->controller)])) {
-                        include_once _PS_MODULE_DIR_ . "$module_name/controllers/front/{$this->controller}.php";
+                        include_once _PS_MODULE_DIR_ . "$module->name/controllers/front/{$this->controller}.php";
                         if (file_exists(
-                            _PS_OVERRIDE_DIR_ . "modules/$module_name/controllers/front/{$this->controller}.php"
+                            _PS_OVERRIDE_DIR_ . "modules/$module->name/controllers/front/{$this->controller}.php"
                         )) {
-                            include_once _PS_OVERRIDE_DIR_ . "modules/$module_name/controllers/front/{$this->controller}.php";
-                            $controller_class = $module_name . $this->controller . 'ModuleFrontControllerOverride';
+                            include_once _PS_OVERRIDE_DIR_ . "modules/$module->name/controllers/front/{$this->controller}.php";
+                            $controller_class = $module->name . $this->controller . 'ModuleFrontControllerOverride';
                         } else {
-                            $controller_class = $module_name . $this->controller . 'ModuleFrontController';
+                            $controller_class = $module->name . $this->controller . 'ModuleFrontController';
                         }
                     }
                 }
