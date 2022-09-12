@@ -120,7 +120,7 @@
         {/if}
 
       {/if}
-
+      {hook h='displayAddressSelectorBottom'}
       {if !$form_has_continue_button}
         <div class="clearfix">
           <button type="submit" class="btn btn-primary continue float-xs-right" name="confirm-addresses" value="1">
