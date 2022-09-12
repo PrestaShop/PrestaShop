@@ -494,24 +494,11 @@ class FrameworkBundleAdminController extends AbstractController
     }
 
     /**
-     * Provides ShopConstraint from context
-     *
      * @return ShopConstraint
      */
     protected function getShopConstraint(): ShopConstraint
     {
-        $shop = $this->getContext()->shop;
-        $shopContext = $shop::getContext();
-
-        if ($shopContext === Shop::CONTEXT_ALL) {
-            return ShopConstraint::allShops();
-        }
-
-        if ($shopContext === Shop::CONTEXT_GROUP) {
-            return ShopConstraint::shopGroup($shop->id_shop_group);
-        }
-
-        return ShopConstraint::shop($shop->id);
+        return $this->get('prestashop.adapter.legacy.context')->getShopConstraint();
     }
 
     /**
