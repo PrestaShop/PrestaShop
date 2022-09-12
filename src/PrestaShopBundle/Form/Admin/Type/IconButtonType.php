@@ -48,6 +48,8 @@ class IconButtonType extends ButtonType
             ->setDefaults([
                 'icon' => null,
                 'type' => 'button',
+                // @todo: this should by default be inherited from parent because of ModifyAllShopsExtension, but it doesn't work for some reason
+                'modify_all_shops' => false,
             ])
             ->setAllowedTypes('icon', ['string', 'null'])
             ->setAllowedTypes('type', 'string')

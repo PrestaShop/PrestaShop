@@ -147,11 +147,11 @@ class EditProductFormType extends TranslatorAwareType
     {
         parent::configureOptions($resolver);
 
-        // We must allow extra fields because when we switch product type some former fields may be present in request
         $resolver
             ->setDefaults([
                 'virtual_product_file_id' => null,
                 'active' => false,
+                // We must allow extra fields because when we switch product type some former fields may be present in request
                 'allow_extra_fields' => true,
                 'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/product.html.twig',
                 'use_default_themes' => false,
