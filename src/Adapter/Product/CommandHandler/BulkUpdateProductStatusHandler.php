@@ -46,6 +46,9 @@ class BulkUpdateProductStatusHandler extends AbstractBulkHandler implements Bulk
      */
     private $productStatusUpdater;
 
+    /**
+     * @param ProductStatusUpdater $productStatusUpdater
+     */
     public function __construct(ProductStatusUpdater $productStatusUpdater)
     {
         $this->productStatusUpdater = $productStatusUpdater;
