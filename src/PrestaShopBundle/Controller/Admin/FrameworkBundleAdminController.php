@@ -486,9 +486,9 @@ class FrameworkBundleAdminController extends AbstractController
     /**
      * @return int
      */
-    protected function getContextShopId()
+    protected function getContextShopId(): int
     {
-        return $this->getContext()->shop->id;
+        return (int) $this->getContext()->shop->id;
     }
 
     /**
