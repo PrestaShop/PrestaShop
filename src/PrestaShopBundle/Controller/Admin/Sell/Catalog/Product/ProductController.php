@@ -51,7 +51,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForAssociation;
 use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopAssociationNotFound;
-use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\FeatureFlag\FeatureFlagSettings;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\Builder\FormBuilderInterface;
@@ -355,10 +354,11 @@ class ProductController extends FrameworkBundleAdminController
         $isEnabled = $this->getQueryBus()->handle(new GetProductIsEnabled((int) $productId));
 
         try {
-            $this->getCommandBus()->handle(
-                // @todo: instead of hardcoding context shoup, we should probably have a method in abstract controller to get ShopConstraint
-                new UpdateProductStatusCommand((int) $productId, !$isEnabled, ShopConstraint::shop($this->getContextShopId()))
-            );
+            $this->getCommandBus()->handle(new UpdateProductStatusCommand(
+                (int) $productId,
+                !$isEnabled,
+                $this->getShopConstraint()
+            ));
         } catch (ProductException $e) {
             return $this->json([
                 'status' => false,
@@ -462,7 +462,8 @@ class ProductController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(
                 new BulkUpdateProductStatusCommand(
                     $this->getProductIdsFromRequest($request),
-                    true
+                    true,
+                    $this->getShopConstraint()
                 )
             );
         } catch (Exception $e) {
@@ -495,7 +496,8 @@ class ProductController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(
                 new BulkUpdateProductStatusCommand(
                     $this->getProductIdsFromRequest($request),
-                    false
+                    false,
+                    $this->getShopConstraint()
                 )
             );
         } catch (Exception $e) {

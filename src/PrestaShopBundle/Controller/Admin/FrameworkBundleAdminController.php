@@ -29,12 +29,14 @@ namespace PrestaShopBundle\Controller\Admin;
 use Exception;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Shop\Context;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
 use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepository;
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorInterface;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Shop;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
@@ -489,6 +491,27 @@ class FrameworkBundleAdminController extends AbstractController
     protected function getContextShopId(): int
     {
         return (int) $this->getContext()->shop->id;
+    }
+
+    /**
+     * Provides ShopConstraint from context
+     *
+     * @return ShopConstraint
+     */
+    protected function getShopConstraint(): ShopConstraint
+    {
+        $shop = $this->getContext()->shop;
+        $shopContext = $shop::getContext();
+
+        if ($shopContext === Shop::CONTEXT_ALL) {
+            return ShopConstraint::allShops();
+        }
+
+        if ($shopContext === Shop::CONTEXT_GROUP) {
+            return ShopConstraint::shopGroup($shop->id_shop_group);
+        }
+
+        return ShopConstraint::shop($shop->id);
     }
 
     /**
