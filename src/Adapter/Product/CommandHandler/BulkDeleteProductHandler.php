@@ -59,8 +59,8 @@ final class BulkDeleteProductHandler extends AbstractBulkHandler implements Bulk
      */
     public function handle(BulkDeleteProductCommand $command): void
     {
-        //@todo: add ShopConstraint to command in dedicated PR.
-        $this->handleBulkAction($command->getProductIds(), ShopConstraint::allShops());
+        //@todo: shopId temporarily hardcoded from context until ShopConstraint is handled in dedicated PR
+        $this->handleBulkAction($command->getProductIds(), ShopConstraint::shop((int) \Context::getContext()->shop->id));
     }
 
     protected function handleSingleAction(ProductId $productId, ShopConstraint $shopConstraint, $command = null)

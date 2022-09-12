@@ -59,8 +59,8 @@ class BulkDuplicateProductHandler extends AbstractBulkHandler implements BulkDup
      */
     public function handle(BulkDuplicateProductCommand $command): array
     {
-        //@todo: handle multishop duplication using ShopConstraint in dedicated PR
-        return $this->handleBulkAction($command->getProductIds(), ShopConstraint::allShops());
+        //@todo: shopId temporarily hardcoded from context until ShopConstraint is handled in dedicated PR
+        return $this->handleBulkAction($command->getProductIds(), ShopConstraint::shop((int) \Context::getContext()->shop->id));
     }
 
     /**
