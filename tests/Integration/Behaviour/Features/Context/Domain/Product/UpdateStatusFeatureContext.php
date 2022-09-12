@@ -43,7 +43,9 @@ use Tests\Integration\Behaviour\Features\Transform\StringToBoolTransformContext;
 class UpdateStatusFeatureContext extends AbstractProductFeatureContext
 {
     /**
-     * @When /^I bulk change status to be (enabled|disabled) for following products:$/
+     * @When /^I bulk (enable|disable) following products in default shop:$/
+     *
+     * status transformation handled by @see StringToBoolTransformContext
      *
      * @param bool $status
      * @param TableNode $productsList
@@ -58,7 +60,8 @@ class UpdateStatusFeatureContext extends AbstractProductFeatureContext
         try {
             $this->getCommandBus()->handle(new BulkUpdateProductStatusCommand(
                 $productIds,
-                $status
+                $status,
+                ShopConstraint::shop($this->getDefaultShopId())
             ));
         } catch (ProductException $e) {
             $this->setLastException($e);
