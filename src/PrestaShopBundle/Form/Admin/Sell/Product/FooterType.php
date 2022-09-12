@@ -163,7 +163,6 @@ class FooterType extends TranslatorAwareType
                     'class' => 'btn-outline-secondary preview-url-button',
                     'data-seo-url' => $seoUrl,
                 ],
-                'modify_all_shops' => true,
             ])
             ->add('save', SubmitType::class, [
                 'label' => $options['active'] ? $this->trans('Save and publish', 'Admin.Actions') : $this->trans('Save', 'Admin.Actions'),
