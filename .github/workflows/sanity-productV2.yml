@@ -38,6 +38,7 @@ jobs:
           node-version: '16'
           npm-version: '7'
           ps-auto-install: 'true'
+          ps-dev-mode: 'false'
 
       - name: Cache Playwright browsers
         uses: actions/cache@v2
