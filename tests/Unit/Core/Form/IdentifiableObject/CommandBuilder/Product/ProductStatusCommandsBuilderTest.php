@@ -78,7 +78,7 @@ class ProductStatusCommandsBuilderTest extends AbstractProductCommandBuilderTest
         $command = $this->getSingleShopCommand(false);
         yield [
             [
-                'footer' => [
+                'header' => [
                     'active' => false,
                 ],
             ],
@@ -105,7 +105,7 @@ class ProductStatusCommandsBuilderTest extends AbstractProductCommandBuilderTest
         $command = $this->getAllShopsCommand(true);
         yield [
             [
-                'footer' => [
+                'header' => [
                     'active' => true,
                     self::MODIFY_ALL_SHOPS_PREFIX . 'active' => true,
                 ],
