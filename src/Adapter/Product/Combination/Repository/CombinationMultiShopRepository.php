@@ -29,6 +29,8 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Repository;
 
 use Combination;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
+use PrestaShop\PrestaShop\Adapter\Product\Combination\Validate\CombinationValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotBulkDeleteCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotDeleteCombinationException;
@@ -38,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\Combinatio
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\InvalidShopConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
@@ -63,15 +66,23 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
     private $dbPrefix;
 
     /**
+     * @var CombinationValidator
+     */
+    private $combinationValidator;
+
+    /**
      * @param Connection $connection
      * @param string $dbPrefix
+     * @param CombinationValidator $combinationValidator
      */
     public function __construct(
         Connection $connection,
-        string $dbPrefix
+        string $dbPrefix,
+        CombinationValidator $combinationValidator
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
+        $this->combinationValidator = $combinationValidator;
     }
 
     /**
@@ -90,7 +101,7 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
         $combination->default_on = $isDefault;
         $combination->id_shop_list = [];
 
-        $this->addObjectModel($combination, CannotAddCombinationException::class);
+        $this->addObjectModelToShop($combination, $shopId->getValue(), CannotAddCombinationException::class);
 
         return $combination;
     }
@@ -137,6 +148,30 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
         }
 
         return $this->getCombinationByShopId($combinationId, $shopConstraint->getShopId());
+    }
+
+    /**
+     * @param Combination $combination
+     * @param array $updatableProperties
+     * @param ShopConstraint $shopConstraint
+     * @param int $errorCode
+     */
+    public function partialUpdate(Combination $combination, array $updatableProperties, ShopConstraint $shopConstraint, int $errorCode): void
+    {
+        if ($shopConstraint->getShopGroupId()) {
+            throw new InvalidShopConstraintException('Product combination has no features related with shop group use single shop and all shops constraints');
+        }
+
+        $this->combinationValidator->validate($combination);
+        $combinationId = new CombinationId((int) $combination->id);
+
+        $this->partiallyUpdateObjectModelForShops(
+            $combination,
+            $updatableProperties,
+            $this->getShopIdsByConstraint($combinationId, $shopConstraint),
+            CannotAddCombinationException::class,
+            $errorCode
+        );
     }
 
     /**
@@ -374,5 +409,61 @@ class CombinationMultiShopRepository extends AbstractMultiShopObjectModelReposit
         $defaultShopId = $this->getDefaultShopIdForCombination($combinationId);
 
         return $this->getCombinationByShopId($combinationId, $defaultShopId);
+    }
+
+    /**
+     * @param CombinationId $combinationId
+     * @param ShopConstraint $shopConstraint
+     *
+     * @return int[]
+     *
+     * @throws InvalidShopConstraintException
+     */
+    private function getShopIdsByConstraint(CombinationId $combinationId, ShopConstraint $shopConstraint): array
+    {
+        if ($shopConstraint->getShopGroupId()) {
+            throw new InvalidShopConstraintException('Product combinations has no features related with shop group use single shop and all shops constraints');
+        }
+
+        $shopIds = [];
+        if ($shopConstraint->forAllShops()) {
+            $shops = $this->getAssociatedShopIds($combinationId);
+            foreach ($shops as $shopId) {
+                $shopIds[] = $shopId->getValue();
+            }
+        } else {
+            $shopIds = [$shopConstraint->getShopId()->getValue()];
+        }
+
+        return $shopIds;
+    }
+
+    /**
+     * @param CombinationId $combinationId
+     * @return ShopId
+     * @throws Exception
+     * @throws ShopException
+     */
+    public function getAssociatedShopIds(CombinationId $combinationId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('id_shop')
+            ->from($this->dbPrefix . 'product_attribute_shop')
+            ->where('id_product_attribute = :combinationId')
+            ->setParameter('combinationId', $combinationId->getValue())
+        ;
+
+        $result = $qb->execute()->fetchAll();
+        if (empty($result)) {
+            return [];
+        }
+
+        $shops = [];
+        foreach ($result as $shop) {
+            $shops[] = new ShopId((int) $shop['id_shop']);
+        }
+
+        return $shops;
     }
 }

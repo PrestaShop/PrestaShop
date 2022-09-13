@@ -30,6 +30,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\CommandHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Update\DefaultCombinationUpdater;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\SetDefaultCombinationCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CommandHandler\SetDefaultCombinationHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class SetDefaultCombinationHandler implements SetDefaultCombinationHandlerInterface
 {
@@ -49,6 +50,10 @@ class SetDefaultCombinationHandler implements SetDefaultCombinationHandlerInterf
 
     public function handle(SetDefaultCombinationCommand $command): void
     {
-        $this->defaultCombinationUpdater->setDefaultCombination($command->getCombinationId());
+        $this->defaultCombinationUpdater->setDefaultCombination(
+            $command->getCombinationId(),
+            // @todo: temporary hardcoded shop constraint. Needs to be required in command constructor.
+            ShopConstraint::shop((int)\Context::getContext()->shop->id)
+        );
     }
 }

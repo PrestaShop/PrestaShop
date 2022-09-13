@@ -107,7 +107,7 @@ class AbstractMultiShopObjectModelRepository extends AbstractObjectModelReposito
 
     /**
      * @param ObjectModel $objectModel
-     * @param array $propertiesToUpdate
+     * @param array<int|string, string|int[]> $propertiesToUpdate
      * @param array $shopIds
      * @param string $exceptionClass
      * @param int $errorCode

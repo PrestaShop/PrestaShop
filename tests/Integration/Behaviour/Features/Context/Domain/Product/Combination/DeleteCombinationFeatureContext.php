@@ -41,21 +41,18 @@ class DeleteCombinationFeatureContext extends AbstractCombinationFeatureContext
      */
     public function deleteCombinationInDefaultShop(string $combinationReference): void
     {
-        $this->getCommandBus()->handle(new DeleteCombinationCommand(
-            (int) $this->getSharedStorage()->get($combinationReference),
-            ShopConstraint::shop($this->getDefaultShopId())
-        ));
+        $this->deleteSingleCombination($combinationReference, $this->getDefaultShopId());
     }
 
     /**
      * @When I delete following combinations of product :productReference:
      *
-     * @param string $productRefeence
+     * @param string $productReference
      * @param TableNode $tableNode
      */
-    public function bulkDeleteCombinationsInDefaultShop(string $productRefeence, TableNode $tableNode): void
+    public function bulkDeleteCombinationsInDefaultShop(string $productReference, TableNode $tableNode): void
     {
-        $productId = $this->getSharedStorage()->get($productRefeence);
+        $productId = $this->getSharedStorage()->get($productReference);
         $combinationIds = [];
         foreach ($tableNode->getColumnsHash() as $column) {
             $combinationIdReference = $column['id reference'];
@@ -67,5 +64,28 @@ class DeleteCombinationFeatureContext extends AbstractCombinationFeatureContext
             $combinationIds,
             ShopConstraint::shop($this->getDefaultShopId()))
         );
+    }
+
+    /**
+     * @When I delete combination :combinationReference from shop :shopReference
+     *
+     * @param string $combinationReference
+     * @param string $shopReference
+     */
+    public function deleteCombinationInShop(string $combinationReference, string $shopReference): void
+    {
+        $this->deleteSingleCombination($combinationReference, $this->getSharedStorage()->get($shopReference));
+    }
+
+    /**
+     * @param string $combinationReference
+     * @param int|null $shopId
+     */
+    private function deleteSingleCombination(string $combinationReference, ?int $shopId): void
+    {
+        $this->getCommandBus()->handle(new DeleteCombinationCommand(
+            (int) $this->getSharedStorage()->get($combinationReference),
+            ShopConstraint::shop($shopId)
+        ));
     }
 }
