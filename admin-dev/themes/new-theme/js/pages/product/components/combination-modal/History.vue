@@ -174,6 +174,7 @@
   .card-block {
     padding: 0;
     height: calc(100% - 7rem);
+    overflow: auto;
   }
 
   &-empty {
