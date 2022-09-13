@@ -60,7 +60,7 @@ export default class PaginatedCombinationsService implements PaginationServiceTy
     this.offset = offset;
     this.limit = limit;
 
-    const filterId = `product_combinations_${this.productId}_${this.shopId}`;
+    const filterId = this.getFilterId();
     const requestParams: Record<string, any> = {};
     // Required for route generation
     requestParams.productId = this.productId;
@@ -108,6 +108,6 @@ export default class PaginatedCombinationsService implements PaginationServiceTy
   }
 
   private getFilterId(): string {
-    return `product_combinations_${this.productId}`;
+    return `product_combinations_${this.productId}_${this.shopId}`;
   }
 }
