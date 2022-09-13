@@ -56,7 +56,7 @@ class ConfigReaderTest extends TestCase
             ArrayFinder::class,
             $theme
         );
-        $this->assertArrayNotHasKey('preview', $theme);
+        $this->assertEquals('themes/preview-fallback.png', $theme->get('preview'));
         $this->assertEquals('My super aweosome theme', $theme->get('display_name'));
     }
 
