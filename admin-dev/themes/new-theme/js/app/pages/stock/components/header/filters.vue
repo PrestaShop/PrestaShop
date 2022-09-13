@@ -155,6 +155,7 @@
   import PSSelect from '@app/widgets/ps-select.vue';
   import PSDatePicker from '@app/widgets/ps-datepicker.vue';
   import PSRadio from '@app/widgets/ps-radio.vue';
+  import {Moment} from 'moment';
   import FilterComponent, {FilterComponentInstanceType} from './filters/filter-component.vue';
 
   export interface StockCategory {
@@ -172,6 +173,14 @@
     [key:string]: number;
   }
 
+  type DatepickerEvent = {
+    dateType: string;
+    date: Moment;
+    oldDate: Moment;
+  }
+
+  // sup is the starting date while inf is the end date
+  // Cf: src/PrestaShopBundle/Api/QueryParamsCollection::appendSqlDateAddFilter
   const DATE_TYPE_SUP = 'sup';
   const DATE_TYPE_INF = 'inf';
 
@@ -245,18 +254,18 @@
         }
         this.applyFilter();
       },
-      onDpChange(event: any) {
+      onDpChange(event: DatepickerEvent) {
         if (event.dateType === DATE_TYPE_SUP) {
           event.date.minutes(0).hours(0).seconds(1);
+          $(`.datepicker-${DATE_TYPE_INF}`).data('DateTimePicker').minDate(event.date);
         } else if (event.dateType === DATE_TYPE_INF) {
           event.date.minutes(59).hours(23).seconds(59);
+          $(`.datepicker-${DATE_TYPE_SUP}`).data('DateTimePicker').maxDate(event.date);
         }
 
-        this.date_add[<string>event.dateType] = <number>event.date.unix();
+        this.date_add[event.dateType] = event.date.unix();
 
-        if (event.oldDate) {
-          this.applyFilter();
-        }
+        this.applyFilter();
       },
       onRadioChange(value: any): void {
         this.active = value;
