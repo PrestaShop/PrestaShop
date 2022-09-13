@@ -28,8 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductSeoPropertiesFiller;
+use PrestaShop\PrestaShop\Adapter\Tools;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductSeoHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
@@ -41,7 +42,7 @@ use Product;
 class UpdateProductSeoHandler implements UpdateProductSeoHandlerInterface
 {
     /**
-     * @var ProductRepository
+     * @var ProductMultiShopRepository
      */
     private $productRepository;
 
@@ -51,15 +52,23 @@ class UpdateProductSeoHandler implements UpdateProductSeoHandlerInterface
     private $productSeoPropertiesFiller;
 
     /**
-     * @param ProductRepository $productRepository
+     * @var Tools
+     */
+    private $tools;
+
+    /**
+     * @param ProductMultiShopRepository $productRepository
      * @param ProductSeoPropertiesFiller $productSeoPropertiesFiller
+     * @param Tools $tools
      */
     public function __construct(
-        ProductRepository $productRepository,
-        ProductSeoPropertiesFiller $productSeoPropertiesFiller
+        ProductMultiShopRepository $productRepository,
+        ProductSeoPropertiesFiller $productSeoPropertiesFiller,
+        Tools $tools
     ) {
         $this->productRepository = $productRepository;
         $this->productSeoPropertiesFiller = $productSeoPropertiesFiller;
+        $this->tools = $tools;
     }
 
     /**
@@ -67,10 +76,18 @@ class UpdateProductSeoHandler implements UpdateProductSeoHandlerInterface
      */
     public function handle(UpdateProductSeoCommand $command): void
     {
-        $product = $this->productRepository->get($command->getProductId());
+        $product = $this->productRepository->getByShopConstraint(
+            $command->getProductId(),
+            $command->getShopConstraint()
+        );
         $updatableProperties = $this->fillUpdatableProperties($product, $command);
 
-        $this->productRepository->partialUpdate($product, $updatableProperties, CannotUpdateProductException::FAILED_UPDATE_SEO);
+        $this->productRepository->partialUpdate(
+            $product,
+            $updatableProperties,
+            $command->getShopConstraint(),
+            CannotUpdateProductException::FAILED_UPDATE_SEO
+        );
     }
 
     /**
@@ -103,9 +120,21 @@ class UpdateProductSeoHandler implements UpdateProductSeoHandlerInterface
         }
 
         $localizedLinkRewrites = $command->getLocalizedLinkRewrites();
+
         if (null !== $localizedLinkRewrites) {
-            $product->link_rewrite = $localizedLinkRewrites;
-            $updatableProperties['link_rewrite'] = array_keys($localizedLinkRewrites);
+            foreach ($localizedLinkRewrites as $langId => $linkRewrite) {
+                if (!empty($linkRewrite)) {
+                    $product->link_rewrite[$langId] = $linkRewrite;
+                } elseif (!empty($product->name[$langId])) {
+                    // When link rewrite is provided empty, then use product name.
+                    // There is similar behavior in UpdateProductBasicInformationHandler
+                    $product->link_rewrite[$langId] = $this->tools->linkRewrite($product->name[$langId]);
+                } else {
+                    continue;
+                }
+
+                $updatableProperties['link_rewrite'][] = $langId;
+            }
         }
 
         return $updatableProperties;

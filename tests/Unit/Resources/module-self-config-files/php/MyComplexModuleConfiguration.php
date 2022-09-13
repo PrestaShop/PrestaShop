@@ -25,11 +25,11 @@
  */
 
 use PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleComplexConfigurationInterface;
-use PrestaShop\PrestaShop\Adapter\Module\Module;
+use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 
 class MyComplexModuleConfiguration implements ModuleComplexConfigurationInterface
 {
-    public function run(Module $module, array $params)
+    public function run(ModuleInterface $module, array $params)
     {
     }
 }

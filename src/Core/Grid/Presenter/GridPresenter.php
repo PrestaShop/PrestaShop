@@ -34,6 +34,7 @@ use PrestaShop\PrestaShop\Core\Grid\GridInterface;
 use PrestaShop\PrestaShop\Core\Hook\HookDispatcherInterface;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\Form\FormView;
 
 /**
  * Class GridPresenter is responsible for presenting grid.
@@ -55,15 +56,13 @@ final class GridPresenter implements GridPresenterInterface
      */
     public function present(GridInterface $grid)
     {
-        $filterForm = $grid->getFilterForm();
-
         $definition = $grid->getDefinition();
         $searchCriteria = $grid->getSearchCriteria();
         $data = $grid->getData();
         $presentedGrid = [
             'id' => $definition->getId(),
             'name' => $definition->getName(),
-            'filter_form' => $filterForm->createView(),
+            'filter_form' => $this->getFilterForm($grid),
             'form_prefix' => '',
             'columns' => $this->getColumns($grid),
             'column_filters' => $this->getColumnFilters($definition),
@@ -110,42 +109,32 @@ final class GridPresenter implements GridPresenterInterface
      *
      * @return array
      */
-    private function getColumns(GridInterface $grid)
+    protected function getColumns(GridInterface $grid)
     {
         $columns = $grid->getDefinition()->getColumns()->toArray();
 
-        /** @var ColumnInterface $positionColumn */
-        $positionColumn = $this->getOrderingPosition($grid);
+        /** @var PositionColumn|null $positionColumn */
+        $positionColumn = $this->getPositionColumn($grid);
         if (null !== $positionColumn) {
-            array_unshift($columns, [
-                'id' => $positionColumn->getId() . '_handle',
-                'name' => $positionColumn->getName(),
-                'type' => 'position_handle',
-                'options' => $positionColumn->getOptions(),
-            ]);
-        }
+            $searchCriteria = $grid->getSearchCriteria();
+            $requiredFilter = $positionColumn->getOption('required_filter');
 
-        return $columns;
-    }
-
-    /**
-     * @param GridInterface $grid
-     *
-     * @return ColumnInterface|null
-     */
-    public function getOrderingPosition(GridInterface $grid)
-    {
-        $searchCriteria = $grid->getSearchCriteria();
-        /** @var ColumnInterface $column */
-        foreach ($grid->getDefinition()->getColumns() as $column) {
-            if ($column instanceof PositionColumn &&
-                strtolower($column->getId()) == strtolower($searchCriteria->getOrderBy())
-            ) {
-                return $column;
+            // If the required filter is not set the position column is not displayed
+            if (null !== $requiredFilter && empty($searchCriteria->getFilters()[$requiredFilter])) {
+                $columns = array_filter($columns, function (array $column) use ($positionColumn) {
+                    return $column['id'] !== $positionColumn->getId();
+                });
+            } elseif (strtolower($positionColumn->getId()) == strtolower($searchCriteria->getOrderBy())) {
+                array_unshift($columns, [
+                    'id' => $positionColumn->getId() . '_handle',
+                    'name' => $positionColumn->getName(),
+                    'type' => 'position_handle',
+                    'options' => $positionColumn->getOptions(),
+                ]);
             }
         }
 
-        return null;
+        return $columns;
     }
 
     /**
@@ -155,7 +144,7 @@ final class GridPresenter implements GridPresenterInterface
      *
      * @return array
      */
-    private function getColumnFilters(GridDefinitionInterface $definition)
+    protected function getColumnFilters(GridDefinitionInterface $definition)
     {
         $columnFiltersMapping = [];
 
@@ -167,6 +156,53 @@ final class GridPresenter implements GridPresenterInterface
         }
 
         return $columnFiltersMapping;
+    }
+
+    /**
+     * @param GridInterface $grid
+     *
+     * @return FormView
+     */
+    protected function getFilterForm(GridInterface $grid): FormView
+    {
+        $filterForm = $grid->getFilterForm();
+
+        /** @var PositionColumn|null $positionColumn */
+        $positionColumn = $this->getPositionColumn($grid);
+        if (null !== $positionColumn) {
+            $searchCriteria = $grid->getSearchCriteria();
+            $requiredFilter = $positionColumn->getOption('required_filter');
+            if (null !== $requiredFilter && empty($searchCriteria->getFilters()[$requiredFilter])) {
+                $definition = $grid->getDefinition();
+
+                /** @var FilterInterface $filter */
+                foreach ($definition->getFilters()->all() as $filter) {
+                    // When position column is not displayed we don't display the filter either
+                    if ($filter->getAssociatedColumn() === $positionColumn->getId()) {
+                        $filterForm->remove($filter->getName());
+                    }
+                }
+            }
+        }
+
+        return $filterForm->createView();
+    }
+
+    /**
+     * @param GridInterface $grid
+     *
+     * @return PositionColumn|null
+     */
+    protected function getPositionColumn(GridInterface $grid)
+    {
+        /** @var ColumnInterface $column */
+        foreach ($grid->getDefinition()->getColumns() as $column) {
+            if ($column instanceof PositionColumn) {
+                return $column;
+            }
+        }
+
+        return null;
     }
 
     /**

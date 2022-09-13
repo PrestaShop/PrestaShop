@@ -36,5 +36,8 @@
         data-confirm-button-label="{{ action.options.modal_options.options.confirm_button_label|default('Confirm'|trans({}, 'Admin.Actions')) }}"
         {% endif %}
 >
+  {% if action.icon is not empty %}
+    <i class="material-icons">{{ action.icon }}</i>
+  {% endif %}
   {{ action.name }}
 </button>

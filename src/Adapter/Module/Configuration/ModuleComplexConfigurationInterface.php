@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Module\Configuration;
 
-use PrestaShop\PrestaShop\Adapter\Module\Module;
+use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
 
 /**
  * @todo: document what is the contract of this interface.
@@ -34,10 +34,10 @@ use PrestaShop\PrestaShop\Adapter\Module\Module;
 interface ModuleComplexConfigurationInterface
 {
     /**
-     * @param Module $module
+     * @param ModuleInterface $module
      * @param array $params
      *
      * @return mixed
      */
-    public function run(Module $module, array $params);
+    public function run(ModuleInterface $module, array $params);
 }

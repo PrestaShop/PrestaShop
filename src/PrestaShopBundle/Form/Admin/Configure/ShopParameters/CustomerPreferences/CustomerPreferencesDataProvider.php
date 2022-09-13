@@ -28,7 +28,6 @@ namespace PrestaShopBundle\Form\Admin\Configure\ShopParameters\CustomerPreferenc
 
 use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Class is responsible of managing the data manipulated using forms
@@ -41,17 +40,9 @@ final class CustomerPreferencesDataProvider implements FormDataProviderInterface
      */
     private $generalDataConfiguration;
 
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    public function __construct(
-        DataConfigurationInterface $generalDataConfiguration,
-        TranslatorInterface $translator
-    ) {
+    public function __construct(DataConfigurationInterface $generalDataConfiguration)
+    {
         $this->generalDataConfiguration = $generalDataConfiguration;
-        $this->translator = $translator;
     }
 
     /**

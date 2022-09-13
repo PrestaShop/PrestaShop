@@ -28,12 +28,12 @@ abstract class CacheCore
     /**
      * Name of keys index.
      */
-    const KEYS_NAME = '__keys__';
+    public const KEYS_NAME = '__keys__';
 
     /**
      * Name of SQL cache index.
      */
-    const SQL_TABLES_NAME = 'tablesCached';
+    public const SQL_TABLES_NAME = 'tablesCached';
 
     /**
      * Store the number of time a query is fetched from the cache.
@@ -43,7 +43,7 @@ abstract class CacheCore
     protected $queryCounter = [];
 
     /**
-     * @var Cache
+     * @var Cache|null
      */
     protected static $instance;
 
@@ -181,7 +181,11 @@ abstract class CacheCore
     {
         if (!self::$instance) {
             $caching_system = _PS_CACHING_SYSTEM_;
-            self::$instance = new $caching_system();
+            if (class_exists($caching_system)) {
+                /** @var Cache $cache */
+                $cache = new $caching_system();
+                self::$instance = $cache;
+            }
         }
 
         return self::$instance;
@@ -190,7 +194,7 @@ abstract class CacheCore
     /**
      * Unit testing purpose only.
      *
-     * @param $test_instance Cache
+     * @param Cache $test_instance
      */
     public static function setInstanceForTesting($test_instance)
     {
@@ -289,7 +293,7 @@ abstract class CacheCore
      *
      * @param string $key
      *
-     * @return array List of deleted keys
+     * @return bool
      */
     public function delete($key)
     {
@@ -321,7 +325,7 @@ abstract class CacheCore
 
         $this->_writeKeys();
 
-        return $keys;
+        return true;
     }
 
     /**
@@ -477,7 +481,7 @@ abstract class CacheCore
      * Remove the first less used query results from the cache.
      *
      * @param string $table
-     * @param string $keyToKeep the keep we want to keep inside the table cache
+     * @param string|null $keyToKeep the key we want to keep inside the table cache
      */
     protected function adjustTableCacheSize($table, $keyToKeep = null)
     {
@@ -501,7 +505,7 @@ abstract class CacheCore
             $tableBuffer = array_slice(
                 $this->sql_tables_cached[$table],
                 0,
-                ceil($this->maxCachedObjectsByTable / 3),
+                (int) ceil($this->maxCachedObjectsByTable / 3),
                 true
             );
             foreach (array_keys($tableBuffer) as $fs_key) {
@@ -512,7 +516,7 @@ abstract class CacheCore
             $this->_deleteMulti($invalidKeys);
 
             if ($keyToKeep) {
-                $this->sql_tables_cached[$table][$keyToKeep] = $toKeep;
+                $this->sql_tables_cached[$table][$keyToKeep] = $toKeep ?? null;
             }
         }
         $this->adjustTableCacheSize = false;

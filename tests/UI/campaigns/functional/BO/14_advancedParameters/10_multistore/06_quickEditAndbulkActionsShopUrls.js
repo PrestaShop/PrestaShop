@@ -4,7 +4,10 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const testContext = require('@utils/testContext');
+
+// Import login steps
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -15,9 +18,6 @@ const shopUrlPage = require('@pages/BO/advancedParameters/multistore/url');
 
 // Import data
 const ShopFaker = require('@data/faker/shop');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_advancedParameters_multistore_quickEditAndBulkActionsShopUrls';
 
@@ -34,7 +34,7 @@ Bulk actions (enable, disable)
 Deleted created shop url
 Disable multistore
  */
-describe('Quick edit and bulk actions shop Urls', async () => {
+describe('BO - Advanced Parameters - Multistore : Quick edit and bulk actions shop Urls', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -50,8 +50,8 @@ describe('Quick edit and bulk actions shop Urls', async () => {
   });
 
   // 1 : Enable multi store
-  describe('Enable multistore', async () => {
-    it('should go to \'Shop parameters > General\' page', async function () {
+  describe('Enable \'Multistore\'', async () => {
+    it('should go to \'Shop Parameters > General\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToGeneralPage', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -66,7 +66,7 @@ describe('Quick edit and bulk actions shop Urls', async () => {
       await expect(pageTitle).to.contains(generalPage.pageTitle);
     });
 
-    it('should enable \'Multi store\'', async function () {
+    it('should enable \'Multistore\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableMultiStore', baseContext);
 
       const result = await generalPage.setMultiStoreStatus(page, true);
@@ -75,8 +75,8 @@ describe('Quick edit and bulk actions shop Urls', async () => {
   });
 
   // 2 : Go to multistore page
-  describe('Go to multistore page', async () => {
-    it('should go to \'Advanced parameters > Multi store\' page', async function () {
+  describe('Go to \'Multistore\' page', async () => {
+    it('should go to \'Advanced parameters > Multistore\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMultiStorePage', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -117,7 +117,7 @@ describe('Quick edit and bulk actions shop Urls', async () => {
       await expect(pageTitle).to.contains(addShopUrlPage.pageTitleCreate);
     });
 
-    it('should set shop URL', async function () {
+    it('should create shop URL', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'addURL', baseContext);
 
       const textResult = await addShopUrlPage.setVirtualUrl(page, ShopUrlData);
@@ -217,7 +217,7 @@ describe('Quick edit and bulk actions shop Urls', async () => {
       {args: {status: 'disable', enable: false}},
       {args: {status: 'enable', enable: true}},
     ].forEach((test) => {
-      it(`should ${test.args.status} shop url with Bulk Actions and check Result`, async function () {
+      it(`should ${test.args.status} shop url with Bulk Actions and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.status}ShopUrl`, baseContext);
 
         const textResult = await shopUrlPage.bulkSetStatus(page, test.args.enable);
@@ -246,8 +246,8 @@ describe('Quick edit and bulk actions shop Urls', async () => {
   });
 
   // 7 : Disable multi store
-  describe('Disable multistore', async () => {
-    it('should go to "Shop parameters > General" page', async function () {
+  describe('Disable \'Multistore\'', async () => {
+    it('should go to \'Shop parameters > General\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToGeneralPage2', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -262,7 +262,7 @@ describe('Quick edit and bulk actions shop Urls', async () => {
       await expect(pageTitle).to.contains(generalPage.pageTitle);
     });
 
-    it('should disable "Multi store"', async function () {
+    it('should disable \'Multistore\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableMultiStore', baseContext);
 
       const result = await generalPage.setMultiStoreStatus(page, false);

@@ -1,11 +1,14 @@
 require('module-alias/register');
 
-// Helpers to open and close browser
+const {expect} = require('chai');
+
+// Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
+const testContext = require('@utils/testContext');
 
 // Common tests login BO
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -13,18 +16,12 @@ const orderSettingsPage = require('@pages/BO/shopParameters/orderSettings');
 const statusesPage = require('@pages/BO/shopParameters/orderSettings/statuses');
 const addOrderStatusPage = require('@pages/BO/shopParameters/orderSettings/statuses/add');
 const ordersPage = require('@pages/BO/orders/index');
-const viewOrderPage = require('@pages/BO/orders/view');
+const viewOrderPage = require('@pages/BO/orders/view/viewOrderBasePage');
 
 // Import data
 const OrderStatusFaker = require('@data/faker/orderStatus');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_shopParameters_orderSettings_statuses_CRUDOrderStatus';
-
-// Import expect from chai
-const {expect} = require('chai');
 
 let browserContext;
 let page;
@@ -40,7 +37,8 @@ View new status in order page
 Update order status
 Delete order status
  */
-describe('Create, read, update and delete order status in BO', async () => {
+describe('BO - Shop Parameters - Order Settings - Statuses : Create, read, update and '
+  + 'delete order status in BO', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

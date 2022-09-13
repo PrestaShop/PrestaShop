@@ -94,9 +94,9 @@ class SpecificPriceRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @param $priceRuleName
+     * @param string $priceRuleName
      */
-    public function checkCartRuleWithNameExists($priceRuleName)
+    public function checkCartRuleWithNameExists(string $priceRuleName): void
     {
         $this->checkFixtureExists($this->specificPriceRules, 'Price rule', $priceRuleName);
     }

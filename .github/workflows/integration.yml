@@ -1,70 +1,81 @@
 name: Integration tests
-on: [push, pull_request]
+on: [ push, pull_request ]
 jobs:
-    integration:
-        name: Integration tests
-        runs-on: ubuntu-18.04
-        strategy:
-            matrix:
-                php: ['7.1', '7.2', '7.3', '7.4']
-            fail-fast: false
-        steps:
-            -   name: Setup PHP
-                uses: shivammathur/setup-php@v2
-                with:
-                    php-version: ${{ matrix.php }}
-                    extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv
-            -   name: Setup MySQL
-                uses: mirromutth/mysql-action@v1.1
-                with:
-                    mysql version: '5.7'
-                    mysql database: 'prestashop'
-                    mysql root password: 'password'
-            -   name: Setup Node
-                uses: actions/setup-node@v2
-                with:
-                    node-version: '10'
-            -   uses: actions/checkout@v2
+  integration:
+    name: Integration tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [ '7.2', '7.3', '7.4', '8.0', '8.1' ]
+      fail-fast: false
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.0
+        with:
+          access_token: ${{ github.token }}
 
-            -   name: PrestaShop Configuration
-                run: cp .github/workflows/phpunit/parameters.yml app/config/parameters.yml
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, iconv
+      - name: Setup MySQL
+        uses: mirromutth/mysql-action@v1.1
+        with:
+          mysql version: '8.0'
+          mysql database: 'prestashop'
+          mysql root password: 'password'
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
 
-            -   name: Get Composer Cache Directory
-                id: composer-cache
-                run: |
-                    echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - name: Setup NPM
+        run: npm install -g npm@7
 
-            -   name: Cache Node Directory
-                uses: actions/cache@v2
-                with:
-                    path: ~/.npm
-                    key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-                    restore-keys: |
-                        ${{ runner.os }}-node-
+      - uses: actions/checkout@v2
 
-            -   name: Cache Composer Directory
-                uses: actions/cache@v2
-                with:
-                    path: ${{ steps.composer-cache.outputs.dir }}
-                    key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-                    restore-keys: |
-                        ${{ runner.os }}-composer-
+      - name: PrestaShop Configuration
+        run: |
+          cp .github/workflows/phpunit/parameters.yml app/config/parameters.yml
+          cp .github/workflows/phpunit/parameters.php app/config/parameters.php
 
-            -   name: Composer Install
-                run: composer install --ansi --prefer-dist --no-interaction --no-progress --quiet
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
 
-            -   name: Build assets
-                run: make assets
+      - name: Cache Node Directory
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-node-
 
-            -   name: Prepare PrestaShop parameters
-                run: cp .github/workflows/phpunit/parameters.php app/config/parameters.php
+      - name: Cache Composer Directory
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
 
-            -   name: Run integration-tests
-                run: composer run-script integration-tests --timeout=0
-                env:
-                    SYMFONY_DEPRECATIONS_HELPER: disabled
+      - name: Composer Install
+        run: composer install --ansi --prefer-dist --no-interaction --no-progress
 
-            -   name: Run integration-behaviour-tests
-                run: composer run-script integration-behaviour-tests --timeout=0
-                env:
-                    SYMFONY_DEPRECATIONS_HELPER: disabled
+      - name: Update phpunit version
+        if: ${{ startsWith(matrix.php, '8.') }}
+        run: composer update -w --ignore-platform-reqs --no-interaction phpunit/phpunit
+
+      - name: Build theme assets
+        run: make front-classic
+
+      - name: Change MySQL authentication method
+        run: mysql -h127.0.0.1 -uroot -ppassword -e "ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'password'; FLUSH PRIVILEGES;"
+
+      - name: Run integration-tests
+        run: composer run-script integration-tests --timeout=0
+        env:
+          SYMFONY_DEPRECATIONS_HELPER: disabled
+
+      - name: Test git versionned files unchanged
+        if: ${{ !startsWith(matrix.php, '8.') }}  # composer.lock changes when updating phpunit version
+        run: git diff --exit-code

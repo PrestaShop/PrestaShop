@@ -218,7 +218,7 @@ class imageLib
 
         // *** Save the image file name. Only store this incase you want to display it
         $this->fileName = $fileName;
-        $this->fileExtension = fix_strtolower(strrchr($fileName, '.'));
+        $this->fileExtension = mb_strtolower(strrchr($fileName, '.'));
 
         // *** Open up the file
         $this->image = $this->openImage($fileName);
@@ -306,7 +306,7 @@ class imageLib
 
     // *** We can pass in an array of options to change the crop position
     $cropPos = 'm';
-        if (is_array($option) && fix_strtolower($option[0]) == 'crop') {
+        if (is_array($option) && mb_strtolower($option[0]) == 'crop') {
             $cropPos = $option[1];         # get the crop option
         } elseif (strpos($option, '-') !== false) {
             // *** Or pass in a hyphen seperated option
@@ -450,7 +450,7 @@ class imageLib
     // *** Crop this bad boy
     $crop = imagecreatetruecolor($newWidth, $newHeight);
         $this->keepTransparancy($optimalWidth, $optimalHeight, $crop);
-        imagecopyresampled($crop, $this->imageResized, 0, 0, $cropStartX, $cropStartY, $newWidth, $newHeight, $newWidth, $newHeight);
+        imagecopyresampled($crop, $this->imageResized, 0, 0, (int) $cropStartX, (int) $cropStartY, (int) $newWidth, (int) $newHeight, (int) $newWidth, (int) $newHeight);
 
         $this->imageResized = $crop;
 
@@ -473,7 +473,7 @@ class imageLib
   #       black borders.
   #
   {
-      $pos = fix_strtolower($pos);
+      $pos = mb_strtolower($pos);
 
     // *** If co-ords have been entered
     if (strstr($pos, 'x')) {
@@ -879,7 +879,7 @@ class imageLib
     #
   {
       if (is_array($option)) {
-          if (fix_strtolower($option[0]) == 'crop' && count($option) == 2) {
+          if (mb_strtolower($option[0]) == 'crop' && count($option) == 2) {
               return 'crop';
           } else {
               throw new Exception('Crop resize option array is badly formatted.');
@@ -889,7 +889,7 @@ class imageLib
       }
 
       if (is_string($option)) {
-          return fix_strtolower($option);
+          return mb_strtolower($option);
       }
 
       return $option;
@@ -1297,7 +1297,7 @@ class imageLib
           }
 
           if (is_string($value)) {
-              $value = fix_strtolower($value);
+              $value = mb_strtolower($value);
 
               switch ($value) {
           case 'left':
@@ -1354,7 +1354,7 @@ class imageLib
     // *** Check if the user wants transparency
     $isTransparent = false;
       if (!is_array($bgColor)) {
-          if (fix_strtolower($bgColor) == 'transparent') {
+          if (mb_strtolower($bgColor) == 'transparent') {
               $isTransparent = true;
           }
       }
@@ -1452,7 +1452,7 @@ class imageLib
       }
 
     // *** Convert color
-    if (fix_strtolower($bgColor) != 'transparent') {
+    if (mb_strtolower($bgColor) != 'transparent') {
         $rgbArray = $this->formatColor($bgColor);
         $r0 = $rgbArray['r'];
         $g0 = $rgbArray['g'];
@@ -1534,7 +1534,7 @@ class imageLib
               $t = $a/128.0;
 
         // *** Create color
-        if (fix_strtolower($bgColor) == 'transparent') {
+        if (mb_strtolower($bgColor) == 'transparent') {
             $myColour = imagecolorallocatealpha($rgb, $r, $g, $b, $a);
         } else {
             $myColour = imagecolorallocate($rgb, $r*(1.0-$t)+$r0*$t, $g*(1.0-$t)+$g0*$t, $b*(1.0-$t)+$b0*$t);
@@ -1573,7 +1573,7 @@ class imageLib
   # Notes:
   #
   {
-      $side = fix_strtolower($side);
+      $side = mb_strtolower($side);
 
       // *** Convert color
       $rgbArray = $this->formatColor($bgColor);
@@ -2268,7 +2268,7 @@ class imageLib
       $y = $posArray['height'];
 
     // *** Set watermark opacity
-    if (fix_strtolower(strrchr($watermarkImage, '.')) == '.png') {
+    if (mb_strtolower(strrchr($watermarkImage, '.')) == '.png') {
         $opacity = $this->invertTransparency($opacity, 100);
         $this->filterOpacity($stamp, $opacity);
     }
@@ -2300,7 +2300,7 @@ class imageLib
   #
   #
   {
-      $pos = fix_strtolower($pos);
+      $pos = mb_strtolower($pos);
 
     // *** If co-ords have been entered
     if (strstr($pos, 'x')) {
@@ -2468,7 +2468,7 @@ class imageLib
 
         // *** Get extension
         $extension = strrchr($file, '.');
-        $extension = fix_strtolower($extension);
+        $extension = mb_strtolower($extension);
         switch ($extension) {
             case '.jpg':
             case '.jpeg':
@@ -2481,6 +2481,10 @@ class imageLib
                 break;
             case '.png':
                 $img = @imagecreatefrompng($file);
+
+                break;
+            case '.webp':
+                $img = @imagecreatefromwebp($file);
 
                 break;
             case '.bmp':
@@ -2537,7 +2541,7 @@ class imageLib
     {
 
     // *** Perform a check or two.
-    if (!is_resource($this->imageResized)) {
+    if (!is_resource($this->imageResized) && !($this->imageResized instanceof \GdImage)) {
         if ($this->debug) {
             throw new Exception('saveImage: This is not a resource.');
         } else {
@@ -2556,7 +2560,7 @@ class imageLib
 
     // *** Get extension
         $extension = strrchr($savePath, '.');
-        $extension = fix_strtolower($extension);
+        $extension = mb_strtolower($extension);
 
         $error = '';
 
@@ -2569,6 +2573,14 @@ class imageLib
         } else {
             $error = 'jpg';
         }
+
+                break;
+            case '.webp':
+                if (imagetypes() & IMG_WEBP) {
+                    imagewebp($this->imageResized, $savePath, $imageQuality);
+                } else {
+                    $error = 'webp';
+                }
 
                 break;
 
@@ -2632,7 +2644,7 @@ class imageLib
     # Notes:
     #
   {
-      if (!is_resource($this->imageResized)) {
+      if (!is_resource($this->imageResized) && !($this->imageResized instanceof \GdImage)) {
           if ($this->debug) {
               throw new Exception('saveImage: This is not a resource.');
           } else {
@@ -2913,7 +2925,7 @@ class imageLib
         } else {
             $rgbArray = $value;
         }
-    } elseif (fix_strtolower($value) == 'transparent') {
+    } elseif (mb_strtolower($value) == 'transparent') {
         $rgbArray = array(
             'r' => 255,
             'g' => 255,
@@ -3149,7 +3161,7 @@ class imageLib
     # Notes:
     #
   {
-      if (!is_resource($img)) {
+      if (!is_resource($img) && !($img instanceof \GdImage)) {
           return false;
       }
 
@@ -3349,7 +3361,7 @@ class imageLib
 
     public function __destruct()
     {
-        if (is_resource($this->imageResized)) {
+        if (is_resource($this->imageResized) || ($this->imageResized instanceof \GdImage)) {
             imagedestroy($this->imageResized);
         }
     }

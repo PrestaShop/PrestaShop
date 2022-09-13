@@ -58,7 +58,6 @@ class MaintenanceController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Configure/ShopParameters/maintenance.html.twig', [
             'layoutHeaderToolbarBtn' => [],
             'layoutTitle' => $this->trans('Maintenance', 'Admin.Navigation.Menu'),
-            'requireAddonsSearch' => true,
             'requireBulkActions' => false,
             'showContentHeader' => true,
             'enableSidebar' => true,
@@ -71,7 +70,8 @@ class MaintenanceController extends FrameworkBundleAdminController
     /**
      * @param Request $request
      *
-     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this.",
      *     redirectRoute="admin_maintenance")
      * @DemoRestricted(redirectRoute="admin_maintenance")
@@ -94,7 +94,7 @@ class MaintenanceController extends FrameworkBundleAdminController
         $saveErrors = $this->get('prestashop.adapter.maintenance.form_handler')->save($data);
 
         if (0 === count($saveErrors)) {
-            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
             return $redirectResponse;
         }

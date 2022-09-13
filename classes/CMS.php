@@ -29,7 +29,7 @@
  */
 class CMSCore extends ObjectModel
 {
-    /** @var string Name */
+    /** @var int|null */
     public $id;
     public $id_cms;
     public $head_seo_title;
@@ -129,7 +129,7 @@ class CMSCore extends ObjectModel
      * Get links.
      *
      * @param int $idLang Language ID
-     * @param null $selection
+     * @param array|null $selection
      * @param bool $active
      * @param Link|null $link
      *
@@ -163,7 +163,7 @@ class CMSCore extends ObjectModel
     }
 
     /**
-     * @param null $idLang
+     * @param int|null $idLang
      * @param bool $idBlock
      * @param bool $active
      *
@@ -187,8 +187,8 @@ class CMSCore extends ObjectModel
     }
 
     /**
-     * @param $way
-     * @param $position
+     * @param int|null $way
+     * @param int|null $position
      *
      * @return bool
      */
@@ -232,7 +232,7 @@ class CMSCore extends ObjectModel
     }
 
     /**
-     * @param $idCategory
+     * @param int $idCategory
      *
      * @return bool
      */
@@ -258,14 +258,13 @@ class CMSCore extends ObjectModel
     }
 
     /**
-     * @param $idCategory
+     * @param int $idCategory
      *
      * @return false|string|null
      */
     public static function getLastPosition($idCategory)
     {
-        $sql = '
-		SELECT MAX(position) + 1
+        $sql = 'SELECT MAX(position) + 1
 		FROM `' . _DB_PREFIX_ . 'cms`
 		WHERE `id_cms_category` = ' . (int) $idCategory;
 
@@ -273,10 +272,10 @@ class CMSCore extends ObjectModel
     }
 
     /**
-     * @param null $idLang
-     * @param null $idCmsCategory
+     * @param int|null $idLang
+     * @param int|null $idCmsCategory
      * @param bool $active
-     * @param null $idShop
+     * @param int|null $idShop
      *
      * @return array|false|mysqli_result|PDOStatement|resource|null
      */
@@ -312,7 +311,7 @@ class CMSCore extends ObjectModel
     }
 
     /**
-     * @param $idCms
+     * @param int $idCms
      *
      * @return array|false|mysqli_result|PDOStatement|resource|null
      */

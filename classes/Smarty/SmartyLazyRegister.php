@@ -66,22 +66,19 @@ class SmartyLazyRegister
     {
         $item = $this->registry[$name];
 
-        // case 1: call to static method - case 2 : call to static function
-        if (is_array($item[1])) {
-            return call_user_func_array($item[1] . '::' . $item[0], [$arguments[0], &$arguments[1]]);
-        } else {
-            $args = [];
+        // case 1: call to static method
+        // case 2 : call to static function
+        $args = [];
 
-            foreach ($arguments as $a => $argument) {
-                if ($a == 0) {
-                    $args[] = $arguments[0];
-                } else {
-                    $args[] = &$arguments[$a];
-                }
+        foreach ($arguments as $a => $argument) {
+            if ($a == 0) {
+                $args[] = $arguments[0];
+            } else {
+                $args[] = &$arguments[$a];
             }
-
-            return call_user_func_array($item, $args);
         }
+
+        return call_user_func_array($item, $args);
     }
 
     public static function getInstance($smarty)

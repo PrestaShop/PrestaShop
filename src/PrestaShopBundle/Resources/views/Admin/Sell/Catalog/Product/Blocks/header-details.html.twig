@@ -1,0 +1,114 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+<div class="product-header-details">
+{% block header_summary %}
+  {# It is important to use vars.data and not vars.value because value contains the localized value which may
+   # not be written with numeric characters anymore depending on the language but data is the initial float data.
+   #}
+  {% set productData = productForm.vars.data %}
+  <div class="product-header-summary">
+    <div class="product-field-preview">
+      <div class="product-field-value">
+        {% if productData.pricing.retail_price.ecotax_tax_excluded is defined %}
+          {% set final_price_tax_excluded = productData.pricing.retail_price.price_tax_excluded + productData.pricing.retail_price.ecotax_tax_excluded %}
+          {{ final_price_tax_excluded|price_format }}
+        {% else %}
+          {{ productData.pricing.retail_price.price_tax_excluded|price_format }}
+        {% endif %}
+      </div>
+      <div class="product-field-label">
+        {{ 'tax excl.'|trans({}, 'Admin.Global') }}
+      </div>
+    </div>
+
+    <div class="product-field-preview">
+      <div class="product-field-value">
+        {{ productData.pricing.retail_price.price_tax_included|price_format }}
+      </div>
+      <div class="product-field-label">
+        {# If tax feature is enabled display it in the label #}
+        {% if taxEnabled %}
+          {# First find the selected tax rate #}
+          {% set taxRate = 0 %}
+          {% for group_label, choice in productForm.pricing.retail_price.tax_rules_group_id.vars.choices %}
+            {% if choice.data == productData.pricing.retail_price.tax_rules_group_id %}
+              {% set taxRate = choice.attr['data-tax-rate'] %}
+            {% endif %}
+          {% endfor %}
+
+          {{ 'tax incl. (tax rule: %taxRate%%)'|trans({'%taxRate%': taxRate|round(2)}, 'Admin.Catalog.Feature') }}
+        {% else %}
+          {{ 'tax incl.'|trans({}, 'Admin.Catalog.Feature') }}
+        {% endif %}
+      </div>
+    </div>
+
+    {# Only display stock when Stock management is enabled #}
+    {% if stockEnabled %}
+      {% set quantityData = productData.stock.quantities.delta_quantity.quantity %}
+      {% if productData.header.type != 'combinations' %}
+        {% set lowStock = productData.stock.options.low_stock_threshold %}
+      {% else %}
+        {% set lowStock = 0 %}
+      {% endif %}
+
+      {% if quantityData <= 0 %}
+        {% set stockClass = 'danger' %}
+        {% set stockLabel = 'out of stock'|trans({}, 'Admin.Catalog.Feature') %}
+      {% elseif lowStock > 0 and quantityData <= lowStock %}
+        {% set stockClass = 'warning' %}
+        {% set stockLabel = 'low stock'|trans({}, 'Admin.Catalog.Feature') %}
+      {% else %}
+        {% set stockClass = 'success' %}
+        {% set stockLabel = 'in stock'|trans({}, 'Admin.Catalog.Feature') %}
+      {% endif %}
+
+      <div class="product-field-preview">
+        <div class="product-field-value {{ stockClass }}">
+          {{ quantityData }}
+        </div>
+        <div class="product-field-label">
+          {{ stockLabel }}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}
+
+{% block header_references %}
+  {% set referencesForm = productForm.specifications.references %}
+  <div class="product-header-references">
+    {% for child in referencesForm.children %}
+      {% if child.vars.value is not empty %}
+        <div class="product-reference">
+          <label>{{ child.vars.label }}</label>
+          <span>{{ child.vars.value }}</span>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endblock %}
+</div>

@@ -23,6 +23,8 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 import $ from 'jquery';
+import prestashop from 'prestashop';
+import zxcvbn from 'zxcvbn';
 
 export function psShowHide() {
   $('.ps-shown-by-js').show();
@@ -72,3 +74,9 @@ export function refreshCheckoutPage() {
     .join('&');
   window.location.href = `${window.location.pathname}?${joined}`;
 }
+
+/**
+ * Verify password score.
+ * Estimate guesses needed to crack the password.
+ */
+prestashop.checkPasswordScore = (password) => zxcvbn(password);

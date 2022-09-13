@@ -1,10 +1,11 @@
 require('module-alias/register');
 
-// Helpers to open and close browser
+// Import utils
 const helper = require('@utils/helpers');
+const basicHelper = require('@utils/basicHelper');
 
 // Import login steps
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -21,6 +22,10 @@ const {expect} = require('chai');
 let browserContext;
 let page;
 
+/*
+Sort orders by:
+ID, reference, delivery, customer, total, payment, status and date
+ */
 describe('BO - Orders : Sort orders', async () => {
   // before and after functions
   before(async function () {
@@ -51,54 +56,12 @@ describe('BO - Orders : Sort orders', async () => {
   });
 
   const tests = [
-    {
-      args:
-        {
-          testIdentifier: 'sortByReferenceAsc', sortBy: 'reference', sortDirection: 'asc', isFloat: false,
-        },
-    },
-    {
-      args:
-        {
-          testIdentifier: 'sortByReferenceDesc', sortBy: 'reference', sortDirection: 'desc', isFloat: false,
-        },
-    },
-    {
-      args:
-        {
-          testIdentifier: 'sortByCountryNameAsc', sortBy: 'country_name', sortDirection: 'asc', isFloat: false,
-        },
-    },
-    {
-      args:
-        {
-          testIdentifier: 'sortByCountryNameDesc', sortBy: 'country_name', sortDirection: 'desc', isFloat: false,
-        },
-    },
-    {
-      args:
-        {
-          testIdentifier: 'sortByCustomerAsc', sortBy: 'customer', sortDirection: 'asc', isFloat: false,
-        },
-    },
-    {
-      args:
-        {
-          testIdentifier: 'sortByCustomerDesc', sortBy: 'customer', sortDirection: 'desc', isFloat: false,
-        },
-    },
-    {
-      args:
-        {
-          testIdentifier: 'sortByDateDesc', sortBy: 'date_add', sortDirection: 'desc', isFloat: false,
-        },
-    },
-    {
-      args:
-        {
-          testIdentifier: 'sortByDateAsc', sortBy: 'date_add', sortDirection: 'asc', isFloat: false,
-        },
-    },
+    {args: {testIdentifier: 'sortByReferenceAsc', sortBy: 'reference', sortDirection: 'asc'}},
+    {args: {testIdentifier: 'sortByReferenceDesc', sortBy: 'reference', sortDirection: 'desc'}},
+    {args: {testIdentifier: 'sortByCountryNameAsc', sortBy: 'country_name', sortDirection: 'asc'}},
+    {args: {testIdentifier: 'sortByCountryNameDesc', sortBy: 'country_name', sortDirection: 'desc'}},
+    {args: {testIdentifier: 'sortByCustomerAsc', sortBy: 'customer', sortDirection: 'asc'}},
+    {args: {testIdentifier: 'sortByCustomerDesc', sortBy: 'customer', sortDirection: 'desc'}},
     {
       args:
         {
@@ -111,41 +74,29 @@ describe('BO - Orders : Sort orders', async () => {
           testIdentifier: 'sortByTotalPaidDesc', sortBy: 'total_paid_tax_incl', sortDirection: 'desc', isFloat: true,
         },
     },
+    {args: {testIdentifier: 'sortByPaymentAsc', sortBy: 'payment', sortDirection: 'asc'}},
+    {args: {testIdentifier: 'sortByPaymentDesc', sortBy: 'payment', sortDirection: 'desc'}},
+    {args: {testIdentifier: 'sortByOsnameAsc', sortBy: 'osname', sortDirection: 'asc'}},
+    {args: {testIdentifier: 'sortByOsnameDesc', sortBy: 'osname', sortDirection: 'desc'}},
     {
-      args:
-        {
-          testIdentifier: 'sortByPaymentAsc', sortBy: 'payment', sortDirection: 'asc', isFloat: false,
-        },
+      args: {
+        testIdentifier: 'sortByDateDesc', sortBy: 'date_add', sortDirection: 'desc', isDate: true,
+      },
     },
     {
-      args:
-        {
-          testIdentifier: 'sortByPaymentDesc', sortBy: 'payment', sortDirection: 'desc', isFloat: false,
-        },
+      args: {
+        testIdentifier: 'sortByDateAsc', sortBy: 'date_add', sortDirection: 'asc', isDate: true,
+      },
     },
     {
-      args:
-        {
-          testIdentifier: 'sortByOsnameAsc', sortBy: 'osname', sortDirection: 'asc', isFloat: false,
-        },
+      args: {
+        testIdentifier: 'sortByIdAsc', sortBy: 'id_order', sortDirection: 'asc', isFloat: true,
+      },
     },
     {
-      args:
-        {
-          testIdentifier: 'sortByOsnameDesc', sortBy: 'osname', sortDirection: 'desc', isFloat: false,
-        },
-    },
-    {
-      args:
-        {
-          testIdentifier: 'sortByIdAsc', sortBy: 'id_order', sortDirection: 'asc', isFloat: true,
-        },
-    },
-    {
-      args:
-        {
-          testIdentifier: 'sortByIdDesc', sortBy: 'id_order', sortDirection: 'desc', isFloat: true,
-        },
+      args: {
+        testIdentifier: 'sortByIdDesc', sortBy: 'id_order', sortDirection: 'desc', isFloat: true,
+      },
     },
   ];
 
@@ -164,7 +115,7 @@ describe('BO - Orders : Sort orders', async () => {
         sortedTable = await sortedTable.map(text => parseFloat(text));
       }
 
-      const expectedResult = await ordersPage.sortArray(nonSortedTable, test.args.isFloat);
+      const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
 
       if (test.args.sortDirection === 'asc') {
         await expect(sortedTable).to.deep.equal(expectedResult);

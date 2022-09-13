@@ -33,10 +33,10 @@ use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepo
 use PrestaShop\PrestaShop\Adapter\Product\Stock\Repository\StockAvailableRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotUpdateCombinationException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
-use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
 use PrestaShop\PrestaShop\Core\Stock\StockManager;
 use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
-use PrestaShopException;
+use StockAvailable;
 
 /**
  * Updates stock for product combination
@@ -99,19 +99,9 @@ class CombinationStockUpdater
     {
         $updatableProperties = [];
 
-        if (null !== $properties->getQuantity()) {
-            $combination->quantity = $properties->getQuantity();
-            $updatableProperties[] = 'quantity';
-        }
-
         if (null !== $properties->getAvailableDate()) {
             $combination->available_date = $properties->getAvailableDate()->format(DateTime::DEFAULT_DATE_FORMAT);
             $updatableProperties[] = 'available_date';
-        }
-
-        if (null !== $properties->getLocation()) {
-            $combination->location = $properties->getLocation();
-            $updatableProperties[] = 'location';
         }
 
         if (null !== $properties->getLowStockThreshold()) {
@@ -129,6 +119,11 @@ class CombinationStockUpdater
             $updatableProperties[] = 'low_stock_alert';
         }
 
+        if (null !== $properties->getLocation()) {
+            $combination->location = $properties->getLocation();
+            $updatableProperties[] = 'location';
+        }
+
         return $updatableProperties;
     }
 
@@ -138,54 +133,44 @@ class CombinationStockUpdater
      */
     private function updateStockAvailable(Combination $combination, CombinationStockProperties $properties): void
     {
-        $updateQuantity = null !== $properties->getQuantity();
         $updateLocation = null !== $properties->getLocation();
+        $stockModification = $properties->getStockModification();
 
-        if (!$updateQuantity && !$updateLocation) {
+        if (!$stockModification && !$updateLocation) {
             return;
         }
-
-        $newQuantity = $properties->getQuantity();
-        $newLocation = $properties->getLocation();
 
         $stockAvailable = $this->stockAvailableRepository->getForCombination(new CombinationId((int) $combination->id));
 
-        if ($updateQuantity) {
-            $this->saveMovement($combination, (int) $stockAvailable->quantity, $newQuantity);
-            $stockAvailable->quantity = $newQuantity;
+        if ($stockModification) {
+            $stockAvailable->quantity += $stockModification->getDeltaQuantity();
         }
 
         if ($updateLocation) {
-            $stockAvailable->location = $newLocation;
+            $stockAvailable->location = $properties->getLocation();
         }
 
         $this->stockAvailableRepository->update($stockAvailable);
+
+        // save movement only after stockAvailable has been updated
+        if ($stockModification) {
+            $this->saveMovement($stockAvailable, $stockModification);
+        }
     }
 
     /**
-     * @param Combination $combination
-     * @param int $oldQuantity
-     * @param int $newQuantity
-     *
-     * @throws CoreException
+     * @param StockAvailable $stockAvailable
+     * @param StockModification $stockModification
      */
-    private function saveMovement(Combination $combination, int $oldQuantity, int $newQuantity): void
+    private function saveMovement(StockAvailable $stockAvailable, StockModification $stockModification): void
     {
-        $combinationId = $combination->id;
-        $deltaQuantity = $newQuantity - $oldQuantity;
-
-        if (0 === $deltaQuantity) {
-            return;
-        }
-
-        try {
-            $this->stockManager->saveMovement($combination->id_product, $combinationId, $deltaQuantity);
-        } catch (PrestaShopException $e) {
-            throw new CoreException(
-                sprintf('Error occurred when trying to save stock movement for combination %d', $combinationId),
-                0,
-                $e
-            );
-        }
+        $this->stockManager->saveMovement(
+            $stockAvailable->id_product,
+            $stockAvailable->id_product_attribute,
+            $stockModification->getDeltaQuantity(),
+            [
+                'id_stock_mvt_reason' => $stockModification->getMovementReasonId()->getValue(),
+            ]
+        );
     }
 }

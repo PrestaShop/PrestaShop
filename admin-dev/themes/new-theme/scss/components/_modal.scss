@@ -1,0 +1,159 @@
+/*!
+ * 2007-2020 PrestaShop and Contributors
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to http://www.prestashop.com for more information.
+ *
+ * @author    PrestaShop SA <contact@prestashop.com>
+ * @copyright 2007-2020 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ * International Registered Trademark & Property of PrestaShop SA
+ *
+ */
+// stylelint-disable-next-line
+$component-name: modal;
+
+.#{$component-name}-iframe {
+  .#{$component-name}-dialog {
+    width: 90%;
+    max-width: 1200px;
+    max-height: 95vh;
+    margin: 0 auto;
+
+    .#{$component-name}-content {
+      height: 100%;
+      max-height: 90vh;
+      padding: 0;
+      margin: 0;
+
+      .#{$component-name}-body {
+        max-height: 80vh;
+        padding: 0;
+        overflow: auto;
+
+        iframe {
+          width: 100%;
+          height: 100%;
+          overflow: visible;
+          border: none;
+          @include border-radius(0 0 6px 6px);
+        }
+      }
+    }
+  }
+
+  &-loader {
+    position: fixed;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 80px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 1);
+    @include border-radius(0 0 6px 6px);
+  }
+}
+
+.#{$component-name}-progress {
+  .#{$component-name}-dialog {
+    width: 90%;
+    max-width: 800px;
+    max-height: 80vh;
+  }
+
+  .#{$component-name}-header {
+    padding: 1.5rem;
+
+    .switch-to-errors-button {
+      cursor: pointer;
+    }
+  }
+
+  .#{$component-name}-content {
+    padding: 0;
+  }
+
+  .#{$component-name}-footer {
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    background: rgba(234, 235, 236, 0.3);
+
+    .close-modal-button {
+      margin-left: auto;
+    }
+  }
+
+  .#{$component-name}-body {
+    max-height: 60vh;
+    padding: 0 1.5rem 1rem;
+    overflow: auto;
+
+    .progress-headline {
+      display: flex;
+      flex-direction: row;
+      margin-bottom: 0.5rem;
+
+      .progress-percent {
+        margin-left: auto;
+        font-weight: 700;
+      }
+    }
+
+    .progress {
+      margin-bottom: 1rem;
+
+      .progress-bar {
+        height: 100%;
+      }
+    }
+
+    .progress-icon {
+      margin-right: 0.5rem;
+
+      .spinner {
+        width: 1.25rem;
+        height: 1.25rem;
+      }
+
+      .material-icons {
+        &.progress-warning-icon {
+          color: map-get($alerts-second-colors, "warning");
+        }
+
+        &.progress-complete-icon {
+          color: map-get($alerts-second-colors, "success");
+        }
+
+        &.progress-stop-icon {
+          color: map-get($alerts-second-colors, "danger");
+        }
+      }
+    }
+
+    .progress-modal-error{
+      padding: 1rem 0 1rem 0.5rem;
+      border-bottom: 1px solid #dbe6e9;
+
+      .progress-warning-icon {
+        margin-right: 1rem;
+        margin-bottom: 0.5rem;
+        color: map-get($alerts-second-colors, "warning");
+      }
+    }
+  }
+}

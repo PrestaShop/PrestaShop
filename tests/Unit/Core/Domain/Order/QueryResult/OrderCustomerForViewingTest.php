@@ -36,7 +36,7 @@ class OrderCustomerForViewingTest extends TestCase
 {
     public function testConstruct(): void
     {
-        $mockCreatedAt = $this->createMock(DateTimeImmutable::class);
+        $createdAt = new DateTimeImmutable();
 
         $instance = new OrderCustomerForViewing(
             0,
@@ -44,7 +44,7 @@ class OrderCustomerForViewingTest extends TestCase
             'b',
             'c',
             'd',
-            $mockCreatedAt,
+            $createdAt,
             'e',
             1,
             'f',
@@ -57,7 +57,7 @@ class OrderCustomerForViewingTest extends TestCase
         self::assertSame('b', $instance->getLastName());
         self::assertSame('c', $instance->getGender());
         self::assertSame('d', $instance->getEmail());
-        self::assertSame($mockCreatedAt, $instance->getAccountRegistrationDate());
+        self::assertSame($createdAt, $instance->getAccountRegistrationDate());
         self::assertSame('e', $instance->getTotalSpentSinceRegistration());
         self::assertSame(1, $instance->getValidOrdersPlaced());
         self::assertSame('f', $instance->getPrivateNote());
@@ -69,7 +69,7 @@ class OrderCustomerForViewingTest extends TestCase
 
     public function testConstructWithApe(): void
     {
-        $mockCreatedAt = $this->createMock(DateTimeImmutable::class);
+        $createdAt = new DateTimeImmutable();
 
         $instance = new OrderCustomerForViewing(
             0,
@@ -77,7 +77,7 @@ class OrderCustomerForViewingTest extends TestCase
             'b',
             'c',
             'd',
-            $mockCreatedAt,
+            $createdAt,
             'e',
             1,
             'f',
@@ -91,7 +91,7 @@ class OrderCustomerForViewingTest extends TestCase
         self::assertSame('b', $instance->getLastName());
         self::assertSame('c', $instance->getGender());
         self::assertSame('d', $instance->getEmail());
-        self::assertSame($mockCreatedAt, $instance->getAccountRegistrationDate());
+        self::assertSame($createdAt, $instance->getAccountRegistrationDate());
         self::assertSame('e', $instance->getTotalSpentSinceRegistration());
         self::assertSame(1, $instance->getValidOrdersPlaced());
         self::assertSame('f', $instance->getPrivateNote());
@@ -103,7 +103,7 @@ class OrderCustomerForViewingTest extends TestCase
 
     public function testConstructWithSiret(): void
     {
-        $mockCreatedAt = $this->createMock(DateTimeImmutable::class);
+        $createdAt = new DateTimeImmutable();
 
         $instance = new OrderCustomerForViewing(
             0,
@@ -111,7 +111,7 @@ class OrderCustomerForViewingTest extends TestCase
             'b',
             'c',
             'd',
-            $mockCreatedAt,
+            $createdAt,
             'e',
             1,
             'f',
@@ -126,7 +126,7 @@ class OrderCustomerForViewingTest extends TestCase
         self::assertSame('b', $instance->getLastName());
         self::assertSame('c', $instance->getGender());
         self::assertSame('d', $instance->getEmail());
-        self::assertSame($mockCreatedAt, $instance->getAccountRegistrationDate());
+        self::assertSame($createdAt, $instance->getAccountRegistrationDate());
         self::assertSame('e', $instance->getTotalSpentSinceRegistration());
         self::assertSame(1, $instance->getValidOrdersPlaced());
         self::assertSame('f', $instance->getPrivateNote());

@@ -27,7 +27,7 @@ class GroupCore extends ObjectModel
 {
     public $id;
 
-    /** @var string Lastname */
+    /** @var string|array<int, string> */
     public $name;
 
     /** @var string Reduction */
@@ -37,7 +37,7 @@ class GroupCore extends ObjectModel
     public $price_display_method;
 
     /** @var bool Show prices */
-    public $show_prices = 1;
+    public $show_prices = true;
 
     /** @var string Object creation date */
     public $date_add;
@@ -209,7 +209,7 @@ class GroupCore extends ObjectModel
             Configuration::updateGlobalValue('PS_GROUP_FEATURE_ACTIVE', 1);
         }
 
-        return parent::update($autodate, $null_values);
+        return parent::update($null_values);
     }
 
     public function delete()
@@ -272,8 +272,8 @@ class GroupCore extends ObjectModel
      *
      * @since 1.5.0.1
      *
-     * @param $table
-     * @param $has_active_column
+     * @param string|null $table Name of table linked to entity
+     * @param bool $has_active_column True if the table has an active column
      *
      * @return bool
      */
@@ -313,8 +313,8 @@ class GroupCore extends ObjectModel
     /**
      * Adding restrictions modules to the group with id $id_group.
      *
-     * @param $id_group
-     * @param $modules
+     * @param int $id_group
+     * @param array $modules
      * @param array $shops
      *
      * @return bool
@@ -362,7 +362,7 @@ class GroupCore extends ObjectModel
 
         $res = true;
         foreach ($shops as $shop) {
-            $res &= Db::getInstance()->execute('
+            $res = $res && Db::getInstance()->execute('
 			INSERT INTO `' . _DB_PREFIX_ . 'module_group` (`id_module`, `id_shop`, `id_group`)
 			(SELECT ' . (int) $id_module . ', ' . (int) $shop . ', id_group FROM `' . _DB_PREFIX_ . 'group`)');
         }
@@ -405,6 +405,19 @@ class GroupCore extends ObjectModel
         }
 
         return self::$groups[$id_group];
+    }
+
+    public static function getAllGroupIds(): array
+    {
+        $query = new DbQuery();
+        $query
+            ->select('g.`id_group`')
+            ->from('group', 'g')
+            ->orderby('g.`id_group` ASC')
+        ;
+        $result = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+
+        return array_column($result, 'id_group');
     }
 
     /**

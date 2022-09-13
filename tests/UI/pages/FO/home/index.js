@@ -162,15 +162,24 @@ class Home extends FOBasePage {
   }
 
   /**
+   * Is quick view product modal visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  isQuickViewProductModalVisible(page) {
+    return this.elementVisible(page, this.quickViewModalDiv, 2000);
+  }
+
+  /**
    * Add product to cart with Quick view
    * @param page {Page} Browser tab
    * @param id {number} Index of product in list of products
-   * @param quantity_wanted {string} Quantity to order
+   * @param quantity_wanted {number} Quantity to order
    * @return {Promise<void>}
    */
   async addProductToCartByQuickView(page, id, quantity_wanted = 1) {
     await this.quickViewProduct(page, id);
-    await this.setValue(page, this.quickViewQuantityWantedInput, quantity_wanted.toString());
+    await this.setValue(page, this.quickViewQuantityWantedInput, quantity_wanted);
     await Promise.all([
       this.waitForVisibleSelector(page, this.blockCartModalDiv),
       page.click(this.addToCartButton),
@@ -267,7 +276,7 @@ class Home extends FOBasePage {
     }
     /* eslint-enable no-await-in-loop */
 
-    await this.waitForSelectorAndClick(page, this.productColorLink(id, color));
+    await this.clickAndWaitForNavigation(page, this.productColorLink(id, color));
   }
 
   // Block cart modal methods

@@ -1,0 +1,66 @@
+name: 🐛 Bug Report
+description: Report an issue in PrestaShop or one of the native modules. DO NOT disclose security issues here, contact security@prestashop.com instead!
+labels: [ "Bug", "New" ]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for taking the time to fill out this bug report. Please take the time to provide as much details as possible. Following our [bug report guidelines](https://devdocs.prestashop.com/8/contribute/contribute-reporting-issues/#best-practices-for-writing-an-issue) will help maintainers qualify your report faster.
+  - type: checkboxes
+    attributes:
+      label: Prerequisites
+      options:
+        - label: I understand and accept the project's [code of conduct](https://github.com/PrestaShop/PrestaShop/blob/develop/CODE_OF_CONDUCT.md)
+          required: true
+        - label: I have already [searched in existing issues](https://github.com/PrestaShop/PrestaShop/issues?q=is%3Aissue+label%3ABug) and found no previous report of this bug.
+          required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: Describe the bug and add screenshots
+      description: What went wrong? If applicable, add screenshots or screen recordings to help explain your problem.
+    validations:
+      required: true
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected behavior
+      description: Explain what you expected to happen instead.
+    validations:
+      required: false
+  - type: textarea
+    id: steps-reproduce
+    attributes:
+      label: Steps to reproduce
+      description: List the exact steps to reproduce the issue
+      placeholder: |
+        1. Go to '...'
+
+        2. Click on '....'
+
+        3. Scroll down to '....'
+
+        4. See error
+    validations:
+      required: true
+  - type: input
+    id: prestashop-version
+    attributes:
+      label: PrestaShop version(s) where the bug happened
+      placeholder: "e.g., 1.7.5.2 or 1.7.8.0"
+    validations:
+      required: true
+  - type: input
+    id: php-version
+    attributes:
+      label: PHP version(s) where the bug happened
+      placeholder: "e.g., 7.1 or 8.0"
+    validations:
+      required: false
+  - type: input
+    id: module
+    attributes:
+      label: If your bug is related to a module, specify its name and its version
+      placeholder: "e.g., ps_facetedsearch v7.0"
+    validations:
+      required: false

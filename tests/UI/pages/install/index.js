@@ -21,7 +21,8 @@ class Install extends CommonPage {
     this.secondStepEnTitle = 'License Agreements';
     this.thirdStepEnTitle = 'We are currently checking PrestaShop compatibility with your system environment';
     this.fourthStepEnTitle = 'Information about your Store';
-    this.fifthStepEnTitle = 'Configure your database by filling out the following fields';
+    this.fifthStepEnTitle = 'Content of your store';
+    this.sixthStepEnTitle = 'Configure your database by filling out the following fields';
     this.finalStepEnTitle = 'Your installation is finished!';
 
     // Selectors for all steps
@@ -40,9 +41,11 @@ class Install extends CommonPage {
     this.thirdStepFinishedListItem = '#leftpannel #tabs li.finished:nth-child(3)';
 
     // Selectors for step 4
+    this.fourthStepFinishedListItem = '#leftpannel #tabs li.finished:nth-child(4)';
     this.storeInformationStepPageTitle = '#infosShopBlock h2';
     this.shopNameInput = '#infosShop';
-    this.countrySelect = '#infosCountry';
+    this.countryChosenSelect = '#infosCountry_chosen';
+    this.countryChosenSearchInput = `${this.countryChosenSelect} .chosen-search input`;
     this.firstNameInput = '#infosFirstname';
     this.lastNameInput = '#infosName';
     this.emailInput = '#infosEmail';
@@ -50,6 +53,10 @@ class Install extends CommonPage {
     this.repeatPasswordInput = '#infosPasswordRepeat';
 
     // Selectors for step 5
+    this.contentInformationStepPageTitle = '#contentInfosBlock h2';
+    this.fifthStepFinishedListItem = '#leftpannel #tabs li.finished:nth-child(5)';
+
+    // Selectors for step 6
     this.systemConfigurationStepPageTitle = '#dbPart h2';
     this.dbServerInput = '#dbServer';
     this.dbLoginInput = '#dbLogin';
@@ -68,9 +75,9 @@ class Install extends CommonPage {
     this.populateDatabaseStep = '#process_step_populateDatabase';
     this.configureShopStep = '#process_step_configureShop';
     this.installModulesStep = '#process_step_installModules';
-    this.installModulesAddons = '#process_step_installModulesAddons';
     this.installThemeStep = '#process_step_installTheme';
     this.installFixturesStep = '#process_step_installFixtures';
+    this.installPostInstall = '#process_step_postInstall';
     this.installationFinishedStepPageTitle = '#install_process_success h2';
     this.discoverFoButton = '#foBlock';
   }
@@ -99,6 +106,10 @@ class Install extends CommonPage {
 
       case 'Store information':
         selector = this.storeInformationStepPageTitle;
+        break;
+
+      case 'Content of your store':
+        selector = this.contentInformationStepPageTitle;
         break;
 
       case 'System configuration':
@@ -141,7 +152,7 @@ class Install extends CommonPage {
    * @return {Promise<void>}
    */
   async agreeToTermsAndConditions(page) {
-    await this.changeCheckboxValue(page, this.termsConditionsCheckbox);
+    await this.setChecked(page, this.termsConditionsCheckbox);
   }
 
   /**
@@ -151,7 +162,12 @@ class Install extends CommonPage {
    */
   async fillInformationForm(page) {
     await page.type(this.shopNameInput, global.INSTALL.SHOP_NAME);
-    await page.selectOption(this.countrySelect, global.INSTALL.COUNTRY);
+
+    // Choosing country
+    await page.click(this.countryChosenSelect);
+    await page.type(this.countryChosenSearchInput, global.INSTALL.COUNTRY);
+    await page.keyboard.press('Enter');
+
     await page.type(this.firstNameInput, global.BO.FIRSTNAME);
     await page.type(this.lastNameInput, global.BO.LASTNAME);
     await page.type(this.emailInput, global.BO.EMAIL);
@@ -233,16 +249,16 @@ class Install extends CommonPage {
         selector = this.installModulesStep;
         break;
 
-      case 'Install addons modules':
-        selector = this.installModulesAddons;
-        break;
-
       case 'Install theme':
         selector = this.installThemeStep;
         break;
 
       case 'Install fixtures':
         selector = this.installFixturesStep;
+        break;
+
+      case 'Post installation scripts':
+        selector = this.installPostInstall;
         break;
 
       default:

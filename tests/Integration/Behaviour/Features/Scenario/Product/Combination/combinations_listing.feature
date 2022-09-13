@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags combinations-listing
-@reset-database-before-feature
+@restore-products-before-feature
 @clear-cache-before-feature
 @product-combination
 @combinations-listing
@@ -91,19 +91,19 @@ Feature: Generate attribute combinations for product in Back Office (BO)
       | product1SBlue | Size - S, Color - Blue |           | [Size:S,Color:Blue] | 0               | 0        | false      |
       | product1MBlue | Size - M, Color - Blue |           | [Size:M,Color:Blue] | 0               | 0        | false      |
     When I search product "product1" combinations list by following search criteria:
-      | criteria          | value    |
-      | attributes[Size]  | [M]      |
-      | attributes[Color] | [Blue]   |
+      | criteria          | value  |
+      | attributes[Size]  | [M]    |
+      | attributes[Color] | [Blue] |
     Then I should see following combinations in filtered list of product "product1":
-      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
-      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
+      | id reference  | combination name       | reference | attributes          | impact on price | quantity | is default |
+      | product1MBlue | Size - M, Color - Blue |           | [Size:M,Color:Blue] | 0               | 0        | false      |
     When I search product "product1" combinations list by following search criteria:
-      | criteria          | value    |
-      | attributes[Size]  | [M]      |
-      | attributes[Color] | [Blue]   |
+      | criteria          | value  |
+      | attributes[Size]  | [M]    |
+      | attributes[Color] | [Blue] |
     Then I should see following combinations in filtered list of product "product1":
-      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
-      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
+      | id reference  | combination name       | reference | attributes          | impact on price | quantity | is default |
+      | product1MBlue | Size - M, Color - Blue |           | [Size:M,Color:Blue] | 0               | 0        | false      |
     When I search product "product1" combinations list by following search criteria:
       | criteria          | value        |
       | attributes[Size]  | [M]          |
@@ -134,17 +134,24 @@ Feature: Generate attribute combinations for product in Back Office (BO)
 
   Scenario: I can sort combinations by reference, quantity, impact on price
     Given product "product1" combinations list search criteria is set to defaults
-    And I update combination "product1SWhite" from list with following values:
+    And I update combination "product1SWhite" prices with following details:
       | impact on price | -1  |
-      | quantity        | 10  |
+    And I update combination "product1SWhite" stock with following details:
+      | delta quantity  | 10  |
+    And I update combination "product1SWhite" details with following values:
       | reference       | AAA |
-    And I update combination "product1SBlue" from list with following values:
+    And I update combination "product1SBlue" prices with following details:
       | impact on price | 1   |
-      | quantity        | 100 |
+    And I update combination "product1SBlue" stock with following details:
+      | delta quantity  | 100 |
+    And I update combination "product1SBlue" details with following values:
       | reference       | BBB |
-    And I update combination "product1SBlack" from list with following values:
-      | impact on price | 10  |
-      | quantity        | 50  |
+
+    And I update combination "product1SBlack" prices with following details:
+      | impact on price | 10   |
+    And I update combination "product1SBlack" stock with following details:
+      | delta quantity  | 50 |
+    And I update combination "product1SBlack" details with following values:
       | reference       | CCC |
     When I search product "product1" combinations list by following search criteria:
       | criteria  | value           |
@@ -181,19 +188,7 @@ Feature: Generate attribute combinations for product in Back Office (BO)
       | product1SBlack | Size - S, Color - Black | CCC       | [Size:S,Color:Black] | 10              | 50       | false      |
       | product1SBlue  | Size - S, Color - Blue  | BBB       | [Size:S,Color:Blue]  | 1               | 100      | false      |
       | product1SWhite | Size - S, Color - White | AAA       | [Size:S,Color:White] | -1              | 10       | true       |
-    When I search product "product1" combinations list by following search criteria:
-      | criteria  | value    |
-      | order by  | quantity |
-      | order way | asc      |
-    Then I should see following combinations in paginated list of product "product1":
-      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
-      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
-      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
-      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
-      | product1SWhite | Size - S, Color - White | AAA       | [Size:S,Color:White] | -1              | 10       | true       |
-      | product1SBlack | Size - S, Color - Black | CCC       | [Size:S,Color:Black] | 10              | 50       | false      |
-      | product1SBlue  | Size - S, Color - Blue  | BBB       | [Size:S,Color:Blue]  | 1               | 100      | false      |
-    # This sorts by Combination::quantity
+    # This sorts by StockAvailable::quantity
     When I search product "product1" combinations list by following search criteria:
       | criteria  | value    |
       | order by  | quantity |
@@ -206,27 +201,26 @@ Feature: Generate attribute combinations for product in Back Office (BO)
       | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
       | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
       | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
-    # This sorts by StockAvailable::quantity
     When I search product "product1" combinations list by following search criteria:
-      | criteria  | value          |
-      | order by  | stock_quantity |
-      | order way | desc           |
+      | criteria  | value    |
+      | order by  | quantity |
+      | order way | asc      |
     Then I should see following combinations in paginated list of product "product1":
       | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
-      | product1SBlue  | Size - S, Color - Blue  | BBB       | [Size:S,Color:Blue]  | 1               | 100      | false      |
-      | product1SBlack | Size - S, Color - Black | CCC       | [Size:S,Color:Black] | 10              | 50       | false      |
-      | product1SWhite | Size - S, Color - White | AAA       | [Size:S,Color:White] | -1              | 10       | true       |
       | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
       | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
       | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
+      | product1SWhite | Size - S, Color - White | AAA       | [Size:S,Color:White] | -1              | 10       | true       |
+      | product1SBlack | Size - S, Color - Black | CCC       | [Size:S,Color:Black] | 10              | 50       | false      |
+      | product1SBlue  | Size - S, Color - Blue  | BBB       | [Size:S,Color:Blue]  | 1               | 100      | false      |
 
   Scenario: I can filter combinations by reference
     Given product "product1" combinations list search criteria is set to defaults
-    And I update combination "product1SWhite" from list with following values:
+    And I update combination "product1SWhite" details with following values:
       | reference | ABC |
-    And I update combination "product1SBlue" from list with following values:
+    And I update combination "product1SBlue" details with following values:
       | reference | BBB |
-    And I update combination "product1SBlack" from list with following values:
+    And I update combination "product1SBlack" details with following values:
       | reference | CCCD |
     And product "product1" should have following combinations:
       | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |

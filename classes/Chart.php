@@ -25,6 +25,7 @@
  */
 class ChartCore
 {
+    /** @var int */
     protected static $poolId = 0;
 
     protected $width = 600;
@@ -133,11 +134,9 @@ class ChartCore
 			<div id="flot' . self::$poolId . '" style="width:' . $this->width . 'px;height:' . $this->height . 'px"></div>
 			<script type="text/javascript">
 				$(function () {
-					$.plot($(\'#flot' . self::$poolId . '\'), [' . implode(',', $jsCurves) . '], {' . $options . '});
+					$.plot($(\'#flot' . self::$poolId . '\'), [' . implode(',', $jsCurves) . '], {' . ($options ?? '') . '});
 				});
 			</script>';
-        } else {
-            return ErrorFacade::Display(PS_ERROR_UNDEFINED, 'No values for this chart.');
         }
     }
 }

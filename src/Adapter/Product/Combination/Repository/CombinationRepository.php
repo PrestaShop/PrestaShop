@@ -31,7 +31,6 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Repository;
 use Combination;
 use Db;
 use Doctrine\DBAL\Connection;
-use PrestaShop\PrestaShop\Adapter\AbstractObjectModelRepository;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Validate\CombinationValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCombinationException;
@@ -41,6 +40,9 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationN
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
+use PrestaShop\PrestaShop\Core\Grid\Query\ProductCombinationQueryBuilder;
+use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
+use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
 use PrestaShopException;
 use Product;
 
@@ -70,21 +72,29 @@ class CombinationRepository extends AbstractObjectModelRepository
     private $combinationValidator;
 
     /**
+     * @var ProductCombinationQueryBuilder
+     */
+    private $combinationQueryBuilder;
+
+    /**
      * @param Connection $connection
      * @param string $dbPrefix
      * @param AttributeRepository $attributeRepository
      * @param CombinationValidator $combinationValidator
+     * @param ProductCombinationQueryBuilder $combinationQueryBuilder
      */
     public function __construct(
         Connection $connection,
         string $dbPrefix,
         AttributeRepository $attributeRepository,
-        CombinationValidator $combinationValidator
+        CombinationValidator $combinationValidator,
+        ProductCombinationQueryBuilder $combinationQueryBuilder
     ) {
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
         $this->attributeRepository = $attributeRepository;
         $this->combinationValidator = $combinationValidator;
+        $this->combinationQueryBuilder = $combinationQueryBuilder;
     }
 
     /**
@@ -104,6 +114,23 @@ class CombinationRepository extends AbstractObjectModelRepository
         );
 
         return $combination;
+    }
+
+    public function getProductId(CombinationId $combinationId): ProductId
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('pa.id_product')
+            ->from($this->dbPrefix . 'product_attribute', 'pa')
+            ->andWhere('pa.id_product_attribute = :combinationId')
+            ->setParameter('combinationId', $combinationId->getValue())
+        ;
+        $result = $qb->execute()->fetchAssociative();
+        if (empty($result) || empty($result['id_product'])) {
+            throw new CombinationNotFoundException(sprintf('Combination #%d was not found', $combinationId->getValue()));
+        }
+
+        return new ProductId((int) $result['id_product']);
     }
 
     /**
@@ -154,56 +181,63 @@ class CombinationRepository extends AbstractObjectModelRepository
 
     /**
      * @param ProductId $productId
-     *
-     * @throws CannotDeleteCombinationException
      */
     public function deleteByProductId(ProductId $productId): void
     {
-        $combinationIds = $this->getCombinationIdsByProductId($productId);
+        $combinationIds = $this->getCombinationIds($productId);
 
         $this->bulkDelete($combinationIds);
     }
 
     /**
-     * @param array $combinationIds
+     * @param CombinationId[] $combinationIds
+     *
+     * @throws CannotBulkDeleteCombinationException
      */
     public function bulkDelete(array $combinationIds): void
     {
-        $failedIds = [];
+        $bulkException = null;
+
         foreach ($combinationIds as $combinationId) {
             try {
                 $this->delete($combinationId);
             } catch (CannotDeleteCombinationException $e) {
-                $failedIds[] = $combinationId->getValue();
+                if (null === $bulkException) {
+                    $bulkException = new CannotBulkDeleteCombinationException('Errors occurred during bulk deletion of combinations');
+                }
+                $bulkException->addException($combinationId, $e);
             }
         }
 
-        if (empty($failedIds)) {
-            return;
+        if (null !== $bulkException) {
+            throw $bulkException;
         }
-
-        throw new CannotBulkDeleteCombinationException($failedIds, sprintf(
-            'Failed to delete following combinations: %s',
-            implode(', ', $failedIds)
-        ));
     }
 
     /**
      * @param ProductId $productId
+     * @param ProductCombinationFilters|null $filters
      *
      * @return CombinationId[]
      */
-    public function getCombinationIdsByProductId(ProductId $productId): array
+    public function getCombinationIds(ProductId $productId, ?ProductCombinationFilters $filters = null): array
     {
-        $qb = $this->connection->createQueryBuilder();
-        $qb
-            ->select('pa.id_product_attribute')
-            ->from($this->dbPrefix . 'product_attribute', 'pa')
-            ->andWhere('pa.id_product = :productId')
-            ->setParameter('productId', $productId->getValue())
-            ->addOrderBy('pa.id_product_attribute', 'ASC')
-        ;
-        $combinationIds = $qb->execute()->fetchAll();
+        if ($filters) {
+            $qb = $this->combinationQueryBuilder->getSearchQueryBuilder($filters)
+                ->select('pa.id_product_attribute')
+            ;
+        } else {
+            $qb = $this->connection->createQueryBuilder();
+            $qb
+                ->select('pa.id_product_attribute')
+                ->from($this->dbPrefix . 'product_attribute', 'pa')
+                ->andWhere('pa.id_product = :productId')
+                ->setParameter('productId', $productId->getValue())
+                ->addOrderBy('pa.id_product_attribute', 'ASC')
+            ;
+        }
+
+        $combinationIds = $qb->execute()->fetchAllAssociative();
 
         return array_map(
             function (array $combination) { return new CombinationId((int) $combination['id_product_attribute']); },
@@ -252,6 +286,35 @@ class CombinationRepository extends AbstractObjectModelRepository
     }
 
     /**
+     * Returns default combination ID identified as such in DB by default_on property
+     *
+     * @param ProductId $productId
+     *
+     * @return CombinationId|null
+     */
+    public function getDefaultCombinationId(ProductId $productId): ?CombinationId
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('pa.id_product_attribute')
+            ->from($this->dbPrefix . 'product_attribute', 'pa')
+            ->where('pa.id_product = :productId')
+            ->andWhere('pa.default_on = 1')
+            ->addOrderBy('pa.id_product_attribute', 'ASC')
+            ->setParameter('productId', $productId->getValue())
+        ;
+
+        $result = $qb->execute()->fetchAssociative();
+        if (empty($result['id_product_attribute'])) {
+            return null;
+        }
+
+        return new CombinationId((int) $result['id_product_attribute']);
+    }
+
+    /**
+     * Find the best candidate for default combination amongst existing ones (not based on default_on only)
+     *
      * @param ProductId $productId
      *
      * @return Combination|null

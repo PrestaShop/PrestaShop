@@ -26,7 +26,7 @@
 {% form_theme categories '@PrestaShop/Admin/Product/Themes/categories_theme.html.twig' %}
 
 {% block stylesheets %}
-  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/product_catalog.css') }}" type="text/css" media="all">
+  <link rel="stylesheet" href="{{ asset('themes/new-theme/public/product_catalog' ~ rtl_suffix ~ '.css') }}" type="text/css" media="all">
 {% endblock %}
 
 {% block javascripts %}
@@ -39,15 +39,13 @@
 {% endblock %}
 
 {% block content %}
-  <div class="products-catalog">
+  <div class="products-catalog card">
 
     {{ renderhook('legacy_block_kpi', {'kpi_controller': 'AdminProductsController'}) }}
 
-    <div class="content container-fluid">
+    <div class="content card-body">
 
       {% if permission_error|length %}
-      <div class="row">
-        <div class="col-md-12">
           <div class="alert alert-danger" role="alert">
             <button type="button" class="close" data-dismiss="alert">
               <span aria-hidden="true"><i class="material-icons">close</i></span>
@@ -56,15 +54,9 @@
               {{ permission_error }}
             </p>
           </div>
-        </div>
-      </div>
       {% endif %}
 
-      <div class="row align-items-start">
-        {% block product_catalog_tools %}
-          {{ include('@Product/CatalogPage/Blocks/tools.html.twig', {'import_link': import_link }) }}
-        {% endblock %}
-
+      <div class="d-flex">
         {% block product_catalog_filters %}
           {{ include('@Product/CatalogPage/Blocks/filters.html.twig', {
               'limit': limit,
@@ -73,6 +65,9 @@
               'sortOrder': sortOrder
             })
           }}
+        {% endblock %}
+        {% block product_catalog_tools %}
+          {{ include('@Product/CatalogPage/Blocks/tools.html.twig', {'import_link': import_link }) }}
         {% endblock %}
       </div>
 
@@ -195,13 +190,14 @@
   {# Confirmation deletion product modal #}
   {% embed '@PrestaShop/Admin/Helpers/bootstrap_popup.html.twig' with {
     'id': "catalog_deletion_modal",
-    'title': "Delete products?"|trans({}, 'Admin.Catalog.Feature'),
+    'title': 'Delete products?'|trans({}, 'Admin.Catalog.Feature'),
     'closable': true,
+    'closeLabel': 'Cancel'|trans({}, 'Admin.Actions'),
     'actions': [{
       'type': 'button',
-      'label': "Delete now"|trans({}, 'Admin.Actions'),
+      'label': 'Delete'|trans({}, 'Admin.Actions'),
       'value': 'confirm',
-      'class': 'btn btn-primary btn-lg',
+      'class': 'btn btn-danger btn-lg',
     }],
   }%}
     {% block content %}

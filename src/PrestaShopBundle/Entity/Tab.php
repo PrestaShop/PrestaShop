@@ -95,13 +95,6 @@ class Tab
     private $enabled = true;
 
     /**
-     * @var bool
-     *
-     * @ORM\Column(name="hide_host_mode", type="boolean")
-     */
-    private $hideHostMode;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="icon", type="string", length=32, nullable=true)
@@ -155,11 +148,6 @@ class Tab
     public function getActive()
     {
         return $this->active;
-    }
-
-    public function getHideHostMode()
-    {
-        return $this->hideHostMode;
     }
 
     public function getIcon()

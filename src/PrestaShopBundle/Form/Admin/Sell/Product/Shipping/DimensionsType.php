@@ -29,8 +29,8 @@ declare(strict_types=1);
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Shipping;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\PositiveOrZero;
-use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -72,7 +72,7 @@ class DimensionsType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('width', TextWithUnitType::class, [
+            ->add('width', NumberType::class, [
                 'required' => false,
                 'label' => $this->trans('Width', 'Admin.Catalog.Feature'),
                 'unit' => $this->dimensionUnit,
@@ -89,7 +89,7 @@ class DimensionsType extends TranslatorAwareType
                 ],
                 'default_empty_data' => 0,
             ])
-            ->add('height', TextWithUnitType::class, [
+            ->add('height', NumberType::class, [
                 'required' => false,
                 'label' => $this->trans('Height', 'Admin.Catalog.Feature'),
                 'unit' => $this->dimensionUnit,
@@ -106,7 +106,7 @@ class DimensionsType extends TranslatorAwareType
                 ],
                 'default_empty_data' => 0,
             ])
-            ->add('depth', TextWithUnitType::class, [
+            ->add('depth', NumberType::class, [
                 'required' => false,
                 'label' => $this->trans('Depth', 'Admin.Catalog.Feature'),
                 'unit' => $this->dimensionUnit,
@@ -123,7 +123,7 @@ class DimensionsType extends TranslatorAwareType
                 ],
                 'default_empty_data' => 0,
             ])
-            ->add('weight', TextWithUnitType::class, [
+            ->add('weight', NumberType::class, [
                 'required' => false,
                 'label' => $this->trans('Weight', 'Admin.Catalog.Feature'),
                 'unit' => $this->weightUnit,
@@ -151,7 +151,7 @@ class DimensionsType extends TranslatorAwareType
         parent::configureOptions($resolver);
         $resolver->setDefaults([
             'label' => $this->trans('Package dimension', 'Admin.Catalog.Feature'),
-            'label_tag_name' => 'h2',
+            'label_tag_name' => 'h3',
             'label_subtitle' => $this->trans('Adjust your shipping costs by filling in the product dimensions.', 'Admin.Catalog.Feature'),
             'required' => false,
             'columns_number' => 6,

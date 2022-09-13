@@ -24,7 +24,7 @@
  *#}
 
 {% block order_preview %}
-  <div class="row order-preview-content mt-2">
+  <div class="row order-preview-content mt-2" data-role="preview-row">
     <div class="col-5">
       <div class="row">
         <div class="col">
@@ -34,7 +34,7 @@
                 <i class="material-icons pr-1">local_shipping</i>
               </p>
             </div>
-            <div class="col">
+            <div class="col" data-role="shipping-details">
               <p class="mb-0">
                 <strong>{{ 'Carrier'|trans({}, 'Admin.Global') }}:</strong>
                 {% if not orderPreview.isVirtual %}
@@ -79,7 +79,7 @@
                 <i class="material-icons pr-1">email</i>
               </p>
             </div>
-            <div class="col">
+            <div class="col" data-role="email">
               <p class="mb-1">
                 <strong>{{ 'Email:'|trans({}, 'Admin.Global') }}</strong>
               </p>
@@ -93,7 +93,7 @@
                 <i class="material-icons pr-1">receipt</i>
               </p>
             </div>
-            <div class="col">
+            <div class="col" data-role="invoice-details">
               <p class="mb-1">
                 <strong>{{ 'Invoice details'|trans({}, 'Admin.Orderscustomers.Feature') }}:</strong>
               </p>
@@ -109,7 +109,7 @@
     </div>
     <div class="col-7">
       <div class="table-responsive">
-        <table class="table product table-borderless border-bottom-0">
+        <table class="table product table-borderless border-bottom-0" data-role="product-table">
           <thead>
           <tr>
             {% if orderPreview.taxIncluded %}
@@ -139,7 +139,7 @@
           <tbody>
           {% for productDetail in orderPreview.productDetails %}
             <tr class="{% if loop.index > productsPreviewLimit %}js-product-preview-more d-none{% endif %}">
-              <td class="p-1">{{ productDetail.name }}</td>
+              <td class="p-1"><a class="px-0 external-link" href="{{ path('admin_product_form', {'id': productDetail.id}) }}" target="_blank">{{ productDetail.name }}</a></td>
               <td class="p-1">{{ productDetail.reference }}</td>
               <td class="p-1 js-cell-product-stock-location">
                 {% if productDetail.location is not empty %}{{ productDetail.location }}{% endif %}
@@ -171,7 +171,7 @@
       <div class="text-right">
         <a href="{{ path('admin_orders_view', {'orderId': orderId}) }}" class="btn btn-primary btn-sm mb-3">
           {{ 'Open details'|trans({}, 'Admin.Orderscustomers.Feature') }}
-          <i class="material-icons">arrow_right_alt</i>
+          <i class="material-icons rtl-flip">arrow_right_alt</i>
         </a>
       </div>
     </div>

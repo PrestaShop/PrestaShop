@@ -17,8 +17,8 @@ const AdminModuleCard = function () {
   this.moduleActionMenuEnableLinkSelector = 'button.module_action_menu_enable';
   this.moduleActionMenuUninstallLinkSelector = 'button.module_action_menu_uninstall';
   this.moduleActionMenuDisableLinkSelector = 'button.module_action_menu_disable';
-  this.moduleActionMenuEnableMobileLinkSelector = 'button.module_action_menu_enable_mobile';
-  this.moduleActionMenuDisableMobileLinkSelector = 'button.module_action_menu_disable_mobile';
+  this.moduleActionMenuEnableMobileLinkSelector = 'button.module_action_menu_enableMobile';
+  this.moduleActionMenuDisableMobileLinkSelector = 'button.module_action_menu_disableMobile';
   this.moduleActionMenuResetLinkSelector = 'button.module_action_menu_reset';
   this.moduleActionMenuUpdateLinkSelector = 'button.module_action_menu_upgrade';
   this.moduleItemListSelector = '.module-item-list';
@@ -57,63 +57,6 @@ const AdminModuleCard = function () {
     return false; // do not allow a.href to reload the page. The confirm modal dialog will do it async if needed.
   };
 
-  /**
-     * Update the content of a modal asking a confirmation for PrestaTrust and open it
-     *
-     * @param {array} result containing module data
-     * @return {void}
-     */
-  this.confirmPrestaTrust = function confirmPrestaTrust(result) {
-    const that = this;
-    const modal = this.replacePrestaTrustPlaceholders(result);
-    modal.find('.pstrust-install').off('click').on('click', () => {
-      // Find related form, update it and submit it
-      const installButton = $(
-        that.moduleActionMenuInstallLinkSelector,
-        `.module-item[data-tech-name="${result.module.attributes.name}"]`,
-      );
-      const form = installButton.parent('form');
-      $('<input>').attr({
-        type: 'hidden',
-        value: '1',
-        name: 'actionParams[confirmPrestaTrust]',
-      }).appendTo(form);
-      installButton.click();
-      modal.modal('hide');
-    });
-    modal.modal();
-  };
-
-  this.replacePrestaTrustPlaceholders = function replacePrestaTrustPlaceholders(result) {
-    const modal = $('#modal-prestatrust');
-    const module = result.module.attributes;
-
-    if (result.confirmation_subject !== 'PrestaTrust' || !modal.length) {
-      return;
-    }
-
-    const alertClass = module.prestatrust.status ? 'success' : 'warning';
-
-    if (module.prestatrust.check_list.property) {
-      modal.find('#pstrust-btn-property-ok').show();
-      modal.find('#pstrust-btn-property-nok').hide();
-    } else {
-      modal.find('#pstrust-btn-property-ok').hide();
-      modal.find('#pstrust-btn-property-nok').show();
-      modal.find('#pstrust-buy').attr('href', module.url).toggle(module.url !== null);
-    }
-
-    modal.find('#pstrust-img').attr({src: module.img, alt: module.name});
-    modal.find('#pstrust-name').text(module.displayName);
-    modal.find('#pstrust-author').text(module.author);
-    modal.find('#pstrust-label').attr('class', `text-${alertClass}`).text(module.prestatrust.status ? 'OK' : 'KO');
-    modal.find('#pstrust-message').attr('class', `alert alert-${alertClass}`);
-    modal.find('#pstrust-message > p').text(module.prestatrust.message);
-
-    // eslint-disable-next-line
-    return modal;
-  };
-
   this.dispatchPreEvent = function (action, element) {
     const event = jQuery.Event('module_card_action_event');
     $(element).trigger(event, [action]);
@@ -140,9 +83,6 @@ const AdminModuleCard = function () {
     });
 
     $(document).on('click', this.moduleActionMenuInstallLinkSelector, function () {
-      if ($('#modal-prestatrust').length) {
-        $('#modal-prestatrust').modal('hide');
-      }
       return that.dispatchPreEvent('install', this) && that.confirmAction('install', this) && that.requestToController('install', $(this));
     });
     $(document).on('click', this.moduleActionMenuEnableLinkSelector, function () {
@@ -155,10 +95,10 @@ const AdminModuleCard = function () {
       return that.dispatchPreEvent('disable', this) && that.confirmAction('disable', this) && that.requestToController('disable', $(this));
     });
     $(document).on('click', this.moduleActionMenuEnableMobileLinkSelector, function () {
-      return that.dispatchPreEvent('enable_mobile', this) && that.confirmAction('enable_mobile', this) && that.requestToController('enable_mobile', $(this));
+      return that.dispatchPreEvent('enableMobile', this) && that.confirmAction('enableMobile', this) && that.requestToController('enableMobile', $(this));
     });
     $(document).on('click', this.moduleActionMenuDisableMobileLinkSelector, function () {
-      return that.dispatchPreEvent('disable_mobile', this) && that.confirmAction('disable_mobile', this) && that.requestToController('disable_mobile', $(this));
+      return that.dispatchPreEvent('disableMobile', this) && that.confirmAction('disableMobile', this) && that.requestToController('disableMobile', $(this));
     });
     $(document).on('click', this.moduleActionMenuResetLinkSelector, function () {
       return that.dispatchPreEvent('reset', this) && that.confirmAction('reset', this) && that.requestToController('reset', $(this));
@@ -213,9 +153,6 @@ const AdminModuleCard = function () {
         const moduleTechName = Object.keys(result)[0];
 
         if (result[moduleTechName].status === false) {
-          if (typeof result[moduleTechName].confirmation_subject !== 'undefined') {
-            that.confirmPrestaTrust(result[moduleTechName]);
-          }
           $.growl.error({message: result[moduleTechName].msg});
         } else {
           $.growl.notice({message: result[moduleTechName].msg});

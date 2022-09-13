@@ -3,15 +3,16 @@ require('module-alias/register');
 // Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
+const {getDateFormat} = require('@utils/date');
 
 // Import login steps
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const invoicesPage = require('@pages/BO/orders/invoices/index');
 const ordersPage = require('@pages/BO/orders/index');
-const viewOrderPage = require('@pages/BO/orders/view');
+const orderPageTabListBlock = require('@pages/BO/orders/view/tabListBlock');
 
 // Import data
 const {Statuses} = require('@data/demo/orderStatuses');
@@ -27,16 +28,8 @@ const {expect} = require('chai');
 let browserContext;
 let page;
 let filePath;
-
-const today = new Date();
-
-// Get today date format (yyyy-mm-dd)
-const todayDate = today.toISOString().slice(0, 10);
-
-// Create a future date that there is no invoices (yyyy-mm-dd)
-today.setFullYear(today.getFullYear() + 1);
-const futureDate = today.toISOString().slice(0, 10);
-
+const todayDate = getDateFormat('yyyy-mm-dd');
+const futureDate = getDateFormat('yyyy-mm-dd', 'future');
 
 // Generate PDF file by date
 describe('BO - Orders - Invoices : Generate PDF file by date', async () => {
@@ -83,14 +76,14 @@ describe('BO - Orders - Invoices : Generate PDF file by date', async () => {
       // View order
       await ordersPage.goToOrder(page, 1);
 
-      const pageTitle = await viewOrderPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+      await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
     it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateOrderStatus', baseContext);
 
-      const result = await viewOrderPage.modifyOrderStatus(page, Statuses.shipped.status);
+      const result = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.shipped.status);
       await expect(result).to.equal(Statuses.shipped.status);
     });
   });
@@ -99,10 +92,10 @@ describe('BO - Orders - Invoices : Generate PDF file by date', async () => {
     it('should go to \'Orders > Invoices\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToInvoicesPage', baseContext);
 
-      await viewOrderPage.goToSubMenu(
+      await orderPageTabListBlock.goToSubMenu(
         page,
-        viewOrderPage.ordersParentLink,
-        viewOrderPage.invoicesLink,
+        orderPageTabListBlock.ordersParentLink,
+        orderPageTabListBlock.invoicesLink,
       );
 
       const pageTitle = await invoicesPage.getPageTitle(page);

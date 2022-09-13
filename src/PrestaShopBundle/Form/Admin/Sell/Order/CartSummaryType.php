@@ -89,6 +89,10 @@ class CartSummaryType extends AbstractType
                     [],
                     'Admin.Actions'
                 ),
+                'attr' => [
+                    'data-toggle' => 'select2',
+                    'data-minimumResultsForSearch' => '7',
+                ],
             ])
             ->add('order_state', ChoiceType::class, [
                 'choices' => $this->orderStatesChoiceProvider->getChoices(),
@@ -98,6 +102,10 @@ class CartSummaryType extends AbstractType
                     [],
                     'Admin.Actions'
                 ),
+                'attr' => [
+                    'data-toggle' => 'select2',
+                    'data-minimumResultsForSearch' => '7',
+                ],
             ]);
     }
 

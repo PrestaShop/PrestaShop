@@ -28,7 +28,7 @@ namespace Tests\Integration\Behaviour\Features\Context;
 
 use Cart;
 use Context;
-use LegacyTests\Unit\Core\Cart\Calculation\CartOld;
+use Tests\Integration\Utility\CartOld;
 
 class CartFeatureContext extends AbstractPrestaShopFeatureContext
 {
@@ -160,11 +160,14 @@ class CartFeatureContext extends AbstractPrestaShopFeatureContext
 
     protected function expectsTotal($expectedTotal, $method, $withTax = true, $precisely = false)
     {
-        $cart = $this->getCurrentCart();
-        $carrierId = (int) $cart->id_carrier <= 0 ? null : $cart->id_carrier;
         if ($method == 'v1') {
+            /** @var CartOld $cart */
+            $cart = $this->getCurrentCart();
+            $carrierId = (int) $cart->id_carrier <= 0 ? null : $cart->id_carrier;
             $total = $cart->getOrderTotalV1($withTax, Cart::BOTH, null, $carrierId);
         } else {
+            $cart = $this->getCurrentCart();
+            $carrierId = (int) $cart->id_carrier <= 0 ? null : $cart->id_carrier;
             $total = $cart->getOrderTotal($withTax, Cart::BOTH, null, $carrierId);
         }
         if (!$precisely) {

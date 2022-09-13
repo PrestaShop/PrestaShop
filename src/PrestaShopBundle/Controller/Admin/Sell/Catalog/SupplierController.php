@@ -116,7 +116,7 @@ class SupplierController extends FrameworkBundleAdminController
             $result = $this->getFormHandler()->handle($supplierForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_suppliers_index');
             }
@@ -152,7 +152,7 @@ class SupplierController extends FrameworkBundleAdminController
 
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -192,7 +192,7 @@ class SupplierController extends FrameworkBundleAdminController
 
             $this->addFlash(
                 'success',
-                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+                $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -311,7 +311,7 @@ class SupplierController extends FrameworkBundleAdminController
             $result = $this->getFormHandler()->handleFor((int) $supplierId, $supplierForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_suppliers_index');
             }
@@ -401,7 +401,7 @@ class SupplierController extends FrameworkBundleAdminController
     /**
      * Exports to csv visible suppliers list data.
      *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param SupplierFilters $filters
      *
@@ -502,7 +502,7 @@ class SupplierController extends FrameworkBundleAdminController
                         $iniConfig->getUploadMaxSizeInBytes(),
                     ]),
                 UploadedImageConstraintException::UNRECOGNIZED_FORMAT => $this->trans(
-                    'Image format not recognized, allowed formats are: .gif, .jpg, .png',
+                    'Image format not recognized, allowed formats are: .gif, .jpg, .png, .webp',
                     'Admin.Notifications.Error'
                 ),
             ],

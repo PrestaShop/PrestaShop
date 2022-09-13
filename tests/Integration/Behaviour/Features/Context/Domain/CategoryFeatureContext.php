@@ -59,16 +59,16 @@ use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class CategoryFeatureContext extends AbstractDomainFeatureContext
 {
-    const EMPTY_VALUE = '';
-    const DEFAULT_ROOT_CATEGORY_ID = 1;
-    const JPG_IMAGE_TYPE = '.jpg';
-    const THUMB0 = '0_thumb';
-    const JPG_IMAGE_STRING = 'iVBORw0KGgoAAAANSUhEUgAAABwAAAASCAMAAAB/2U7WAAAABl'
+    public const EMPTY_VALUE = '';
+    public const DEFAULT_ROOT_CATEGORY_ID = 1;
+    public const JPG_IMAGE_TYPE = '.jpg';
+    public const THUMB0 = '0_thumb';
+    public const JPG_IMAGE_STRING = 'iVBORw0KGgoAAAANSUhEUgAAABwAAAASCAMAAAB/2U7WAAAABl'
         . 'BMVEUAAAD///+l2Z/dAAAASUlEQVR4XqWQUQoAIAxC2/0vXZDr'
         . 'EX4IJTRkb7lobNUStXsB0jIXIAMSsQnWlsV+wULF4Avk9fLq2r'
         . '8a5HSE35Q3eO2XP1A1wQkZSgETvDtKdQAAAABJRU5ErkJggg==';
 
-    const CATEGORY_POSITION_WAYS_MAP = [
+    public const CATEGORY_POSITION_WAYS_MAP = [
         0 => 'Up',
         1 => 'Down',
     ];
@@ -86,7 +86,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     public function __construct()
     {
         $this->container = $this->getContainer();
-        $this->defaultLanguageId = Configuration::get('PS_LANG_DEFAULT');
+        $this->defaultLanguageId = (int) Configuration::get('PS_LANG_DEFAULT');
         $this->psCatImgDir = _PS_CAT_IMG_DIR_;
     }
 
@@ -186,16 +186,16 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         $testCaseData = $table->getRowsHash();
         $categoryId = SharedStorage::getStorage()->get($categoryReference);
 
-        /** @var EditableCategory $expectedEditableCategory */
+        /** @var EditableCategory $editableCategoryTestData */
         $editableCategoryTestData = $this->mapDataToEditableCategory($testCaseData, $categoryId);
 
-        /** @var EditCategoryCommand $command */
         $command = new EditCategoryCommand($categoryId);
         $command->setIsActive($editableCategoryTestData->isActive());
         $command->setLocalizedLinkRewrites($editableCategoryTestData->getLinkRewrite());
         $command->setLocalizedNames($editableCategoryTestData->getName());
         $command->setParentCategoryId($editableCategoryTestData->getParentId());
         $command->setLocalizedDescriptions($editableCategoryTestData->getDescription());
+        $command->setLocalizedAdditionalDescriptions($editableCategoryTestData->getAdditionalDescription());
         $command->setLocalizedMetaTitles($editableCategoryTestData->getMetaTitle());
         $command->setLocalizedMetaDescriptions($editableCategoryTestData->getMetaDescription());
         $command->setLocalizedMetaKeywords($editableCategoryTestData->getMetaKeywords());
@@ -304,6 +304,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         $command->setLocalizedLinkRewrites($editableRootCategoryTestCaseData->getLinkRewrite());
         $command->setLocalizedNames($editableRootCategoryTestCaseData->getName());
         $command->setLocalizedDescriptions($editableRootCategoryTestCaseData->getDescription());
+        $command->setLocalizedAdditionalDescriptions($editableRootCategoryTestCaseData->getAdditionalDescription());
         $command->setLocalizedMetaTitles($editableRootCategoryTestCaseData->getMetaTitle());
         $command->setLocalizedMetaDescriptions($editableRootCategoryTestCaseData->getMetaDescription());
         $command->setLocalizedMetaKeywords($editableRootCategoryTestCaseData->getMetaKeywords());
@@ -330,6 +331,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             $editableRootCategoryTestCaseData->isActive()
         );
         $command->setLocalizedDescriptions($editableRootCategoryTestCaseData->getDescription());
+        $command->setLocalizedAdditionalDescriptions($editableRootCategoryTestCaseData->getAdditionalDescription());
         $command->setLocalizedMetaTitles($editableRootCategoryTestCaseData->getMetaTitle());
         $command->setLocalizedMetaDescriptions($editableRootCategoryTestCaseData->getMetaDescription());
         $command->setLocalizedMetaKeywords($editableRootCategoryTestCaseData->getMetaKeywords());
@@ -413,18 +415,18 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     {
         $editableCategory = $this->getEditableCategory($categoryReference);
         $menuThumbnailImages = $editableCategory->getMenuThumbnailImages();
-        ASSERT::assertCount(0, $menuThumbnailImages);
+        Assert::assertCount(0, $menuThumbnailImages);
     }
 
     /**
      * @Given category :categoryReference is disabled
      *
-     * @param $categoryReference
+     * @param string $categoryReference
      */
-    public function categoryIsDisabled(string $categoryReference)
+    public function categoryIsDisabled(string $categoryReference): void
     {
         $categoryIsEnabled = $this->getCategoryIsEnabled($categoryReference);
-        ASSERT::assertFalse($categoryIsEnabled);
+        Assert::assertFalse($categoryIsEnabled);
     }
 
     /**
@@ -444,7 +446,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     /**
      * @When I disable category :categoryReference
      *
-     * @param $categoryReference
+     * @param string $categoryReference
      */
     public function disableCategory(string $categoryReference)
     {
@@ -463,7 +465,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
     public function categoryIsEnabled(string $categoryReference)
     {
         $categoryIsEnabled = $this->getCategoryIsEnabled($categoryReference);
-        ASSERT::assertTrue($categoryIsEnabled);
+        Assert::assertTrue($categoryIsEnabled);
     }
 
     /**
@@ -515,6 +517,29 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         }
 
         $this->getSharedStorage()->set($categoryReference, (int) $foundCategory['id_category']);
+    }
+
+    /**
+     * @Given category ":reference" is the default one
+     *
+     * @param string $reference
+     */
+    public function assertIsDefaultCategory(string $reference): void
+    {
+        $defaultCategoryId = (int) Configuration::get('PS_HOME_CATEGORY');
+
+        if (!$this->getSharedStorage()->exists($reference)) {
+            throw new RuntimeException(sprintf(
+                'Category referenced as "%s" was not set in sharedStorage',
+                $reference
+            ));
+        }
+
+        Assert::assertEquals(
+            $defaultCategoryId,
+            $this->getSharedStorage()->get($reference),
+            'Unexpected default category'
+        );
     }
 
     /**
@@ -622,24 +647,21 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
         if (isset($testCaseData['Description'])) {
             $description = [$this->defaultLanguageId => $testCaseData['Description']];
         }
-
+        $additionalDescription = [$this->defaultLanguageId => self::EMPTY_VALUE];
+        if (isset($testCaseData['Additional description'])) {
+            $additionalDescription = [$this->defaultLanguageId => $testCaseData['Additional description']];
+        }
         $metaTitle = [$this->defaultLanguageId => self::EMPTY_VALUE];
         if (isset($testCaseData['Meta title'])) {
             $metaTitle = [$this->defaultLanguageId => $testCaseData['Meta title']];
         }
-
         $metaDescription = [$this->defaultLanguageId => self::EMPTY_VALUE];
         if (isset($testCaseData['Meta description'])) {
             $metaDescription = [$this->defaultLanguageId => $testCaseData['Meta description']];
         }
-
         $linkRewrite = [$this->defaultLanguageId => self::EMPTY_VALUE];
         if (isset($testCaseData['Friendly URL'])) {
             $linkRewrite = [$this->defaultLanguageId => $testCaseData['Friendly URL']];
-        }
-
-        if ($parentCategoryId === null) {
-            $parentCategoryId = CategoryTreeIterator::ROOT_CATEGORY_ID;
         }
         if (isset($testCaseData['Category cover image'])) {
             $coverImage = $this->pretendImageUploaded($testCaseData, $categoryId);
@@ -665,12 +687,13 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
             [$this->defaultLanguageId => self::EMPTY_VALUE],
             $linkRewrite,
             $groupAssociationIds,
-            [0 => '1'],
-            $parentCategoryId === null || $parentCategoryId === 1 ? true : false,
+            [0 => 1],
+            $parentCategoryId === 1,
             $coverImage,
             null,
             $menuThumbNailsImages,
-            $subcategories
+            $subcategories,
+            $additionalDescription
         );
     }
 
@@ -679,7 +702,7 @@ class CategoryFeatureContext extends AbstractDomainFeatureContext
      *
      * @return int
      */
-    private function getParentCategoryId(array $testCaseData)
+    private function getParentCategoryId(array $testCaseData): int
     {
         $parentCategoryId = null;
         if (isset($testCaseData['Parent category'])) {

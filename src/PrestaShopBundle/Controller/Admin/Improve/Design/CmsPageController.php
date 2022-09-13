@@ -204,7 +204,7 @@ class CmsPageController extends FrameworkBundleAdminController
             if (null !== $cmsPageId) {
                 $this->addFlash(
                     'success',
-                    $this->trans('Successful creation.', 'Admin.Notifications.Success')
+                    $this->trans('Successful creation', 'Admin.Notifications.Success')
                 );
                 if (!$request->request->has('save-and-preview')) {
                     return $this->redirectToParentIndexPageByCmsPageId($cmsPageId);
@@ -223,7 +223,7 @@ class CmsPageController extends FrameworkBundleAdminController
         }
 
         return $this->render(
-            'PrestaShopBundle:Admin/Improve/Design/Cms:add.html.twig',
+            '@PrestaShop/Admin/Improve/Design/Cms/add.html.twig',
             [
                 'cmsPageForm' => $form->createView(),
                 'cmsCategoryParentId' => $categoryParentId,
@@ -278,7 +278,7 @@ class CmsPageController extends FrameworkBundleAdminController
             if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash(
                     'success',
-                    $this->trans('Successful update.', 'Admin.Notifications.Success')
+                    $this->trans('Successful update', 'Admin.Notifications.Success')
                 );
 
                 if ($request->request->has('save-and-preview')) {
@@ -300,6 +300,7 @@ class CmsPageController extends FrameworkBundleAdminController
         return $this->render(
             '@PrestaShop/Admin/Improve/Design/Cms/edit.html.twig',
             [
+                'cmsPageId' => $cmsPageId,
                 'cmsPageForm' => $form->createView(),
                 'cmsCategoryParentId' => $request->get('id_cms_category'),
                 'enableSidebar' => true,
@@ -336,7 +337,7 @@ class CmsPageController extends FrameworkBundleAdminController
             if (null !== $result->getIdentifiableObjectId()) {
                 $this->addFlash(
                     'success',
-                    $this->trans('Successful creation.', 'Admin.Notifications.Success')
+                    $this->trans('Successful creation', 'Admin.Notifications.Success')
                 );
 
                 return $this->redirectToIndexPageById($result->getIdentifiableObjectId());
@@ -396,7 +397,7 @@ class CmsPageController extends FrameworkBundleAdminController
             if ($result->isSubmitted() && $result->isValid()) {
                 $this->addFlash(
                     'success',
-                    $this->trans('Successful update.', 'Admin.Notifications.Success')
+                    $this->trans('Successful update', 'Admin.Notifications.Success')
                 );
 
                 return $this->redirectToIndexPageById($result->getIdentifiableObjectId());
@@ -450,7 +451,7 @@ class CmsPageController extends FrameworkBundleAdminController
 
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (Exception $exception) {
             $this->addFlash(
@@ -493,7 +494,7 @@ class CmsPageController extends FrameworkBundleAdminController
 
             $this->addFlash(
                 'success',
-                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+                $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
             );
         } catch (Exception $exception) {
             $this->addFlash(
@@ -551,7 +552,7 @@ class CmsPageController extends FrameworkBundleAdminController
 
         try {
             $updater->update($positionUpdate);
-            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
         } catch (PositionUpdateException $e) {
             $errors = [$e->toArray()];
             $this->flashErrors($errors);
@@ -603,7 +604,7 @@ class CmsPageController extends FrameworkBundleAdminController
 
         try {
             $updater->update($positionUpdate);
-            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
         } catch (PositionUpdateException $e) {
             $errors = [$e->toArray()];
             $this->flashErrors($errors);
@@ -906,7 +907,7 @@ class CmsPageController extends FrameworkBundleAdminController
 
             $this->addFlash(
                 'success',
-                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+                $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
             );
         } catch (Exception $exception) {
             $this->addFlash(
@@ -945,7 +946,7 @@ class CmsPageController extends FrameworkBundleAdminController
 
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (Exception $exception) {
             $this->addFlash(

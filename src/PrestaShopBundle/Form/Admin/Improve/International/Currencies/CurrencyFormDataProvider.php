@@ -26,9 +26,6 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\International\Currencies;
 
-use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleExchangeRateAutomatizationCommand;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CurrencyException;
 use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 
 /**
@@ -37,49 +34,21 @@ use PrestaShop\PrestaShop\Core\Form\FormDataProviderInterface;
 final class CurrencyFormDataProvider implements FormDataProviderInterface
 {
     /**
-     * @var int
-     */
-    private $cronExchangeRate;
-
-    /**
-     * @var CommandBusInterface
-     */
-    private $commandBus;
-
-    /**
-     * @param CommandBusInterface $commandBus
-     * @param int $cronExchangeRate
-     */
-    public function __construct(
-        CommandBusInterface $commandBus,
-        $cronExchangeRate
-    ) {
-        $this->cronExchangeRate = $cronExchangeRate;
-        $this->commandBus = $commandBus;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getData()
     {
         return [
             'exchange_rates' => [
-                'live_exchange_rate' => 0 !== (int) $this->cronExchangeRate,
             ],
         ];
     }
 
     /**
      * {@inheritdoc}
-     *
-     * @throws CurrencyException
      */
     public function setData(array $data)
     {
-        $command = new ToggleExchangeRateAutomatizationCommand($data['exchange_rates']['live_exchange_rate']);
-        $this->commandBus->handle($command);
-
         return [];
     }
 }

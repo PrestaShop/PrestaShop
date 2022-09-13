@@ -25,9 +25,9 @@
  */
 class HelperTreeCategoriesCore extends TreeCore
 {
-    const DEFAULT_TEMPLATE = 'tree_categories.tpl';
-    const DEFAULT_NODE_FOLDER_TEMPLATE = 'tree_node_folder_radio.tpl';
-    const DEFAULT_NODE_ITEM_TEMPLATE = 'tree_node_item_radio.tpl';
+    public const DEFAULT_TEMPLATE = 'tree_categories.tpl';
+    public const DEFAULT_NODE_FOLDER_TEMPLATE = 'tree_node_folder_radio.tpl';
+    public const DEFAULT_NODE_ITEM_TEMPLATE = 'tree_node_item_radio.tpl';
 
     private $_disabled_categories;
     private $_input_name;
@@ -143,7 +143,7 @@ class HelperTreeCategoriesCore extends TreeCore
                     }
                 }
 
-                $tree = Category::getCategoryInformations([$root_category], $lang);
+                $tree = Category::getCategoryInformation([$root_category], $lang);
 
                 $children = $this->fillTree($categories, $root_category);
 
@@ -298,7 +298,7 @@ class HelperTreeCategoriesCore extends TreeCore
             } elseif ($this->getContext()->shop->id) {
                 $this->setShop(new Shop($this->getContext()->shop->id));
             } elseif (!Shop::isFeatureActive()) {
-                $this->setShop(new Shop(Configuration::get('PS_SHOP_DEFAULT')));
+                $this->setShop(new Shop((int) Configuration::get('PS_SHOP_DEFAULT')));
             } else {
                 $this->setShop(new Shop(0));
             }

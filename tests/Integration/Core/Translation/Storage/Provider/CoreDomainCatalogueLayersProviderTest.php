@@ -45,7 +45,7 @@ class CoreDomainCatalogueLayersProviderTest extends KernelTestCase
      */
     protected $translationsDir;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         self::bootKernel();
         $this->translationsDir = self::$kernel->getContainer()->getParameter('test_translations_dir');

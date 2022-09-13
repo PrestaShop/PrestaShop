@@ -35,12 +35,12 @@ use PrestaShop\PrestaShop\Core\Domain\Tax\ValueObject\TaxId;
 class BulkDeleteTaxCommand
 {
     /**
-     * @var TaxId[]
+     * @var array<TaxId>
      */
     private $taxIds;
 
     /**
-     * @param TaxId[] $taxIds
+     * @param array<int> $taxIds
      *
      * @throws TaxException
      */
@@ -50,7 +50,7 @@ class BulkDeleteTaxCommand
     }
 
     /**
-     * @return TaxId[]
+     * @return array<TaxId>
      */
     public function getTaxIds()
     {
@@ -58,7 +58,7 @@ class BulkDeleteTaxCommand
     }
 
     /**
-     * @param int[] $taxIds
+     * @param array<int> $taxIds
      *
      * @throws TaxException
      */

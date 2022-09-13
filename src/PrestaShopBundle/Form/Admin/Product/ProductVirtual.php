@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Product;
 
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\DatePickerType;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
@@ -40,19 +41,19 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ProductVirtual extends CommonAbstractType
 {
     private $translator;
-    private $legacyContext;
+    /**
+     * @var Configuration
+     */
     private $configuration;
 
     /**
      * Constructor.
      *
      * @param object $translator
-     * @param object $legacyContext
      */
-    public function __construct($translator, $legacyContext)
+    public function __construct($translator)
     {
         $this->translator = $translator;
-        $this->legacyContext = $legacyContext;
         $this->configuration = $this->getConfiguration();
     }
 

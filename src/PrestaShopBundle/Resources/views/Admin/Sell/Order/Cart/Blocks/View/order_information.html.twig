@@ -23,38 +23,28 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-<div class="card">
-  <h3 class="card-header">
-    {{ 'Order information'|trans({}, 'Admin.Orderscustomers.Feature') }}
-  </h3>
+<div class="card" data-role="order-information">
+  <h3 class="card-header">{{ 'Order information'|trans({}, 'Admin.Orderscustomers.Feature') }}</h3>
   <div class="card-body">
-    <div class="row">
-      <div class="col">
-        {% if cartView.orderInformation.id %}
-          <h2>
-            <a href="{{ getAdminLink('AdminOrders', true, {'id_order': cartView.orderInformation.id, 'vieworder': 1}) }}">
-              {{ 'Order #%d'|trans({
-                '%d': cartView.orderInformation.id|format('"%06d')
-              }, 'Admin.Orderscustomers.Feature') }}
-            </a>
-          </h2>
-
-          <p class="mb-0">
-            {{ 'Made on:'|trans({}, 'Admin.Orderscustomers.Feature') }}
-            {{ cartView.orderInformation.placed_date }}
-          </p>
-        {% else %}
-          <h2>{{ 'No order was created from this cart.'|trans({}, 'Admin.Orderscustomers.Feature') }}</h2>
-
-          {% if cartView.customerInformation.id %}
-            <a href="{{ createOrderFromCartLink }}"
-               class="btn btn-outline-secondary"
-            >
-              {{ 'Create an order from this cart.'|trans({}, 'Admin.Orderscustomers.Feature') }}
-            </a>
-          {% endif %}
-        {% endif %}
-      </div>
-    </div>
+    {% if cartView.orderInformation.id %}
+      <h2>
+        <a href="{{ getAdminLink('AdminOrders', true, {'id_order': cartView.orderInformation.id, 'vieworder': 1}) }}">
+          {{ 'Order #%d'|trans({
+            '%d': cartView.orderInformation.id|format('"%06d')
+          }, 'Admin.Orderscustomers.Feature') }}
+        </a>
+      </h2>
+      <p class="mb-0">
+        {{ 'Made on:'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        {{ cartView.orderInformation.placed_date }}
+      </p>
+    {% else %}
+      <h2>{{ 'No order was created from this cart.'|trans({}, 'Admin.Orderscustomers.Feature') }}</h2>
+      {% if cartView.customerInformation.id %}
+        <a href="{{ createOrderFromCartLink }}" class="btn btn-outline-secondary">
+          {{ 'Create an order from this cart.'|trans({}, 'Admin.Orderscustomers.Feature') }}
+        </a>
+      {% endif %}
+    {% endif %}
   </div>
 </div>

@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Configure\AdvancedParameters\Webservice;
 
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
 use PrestaShop\PrestaShop\Core\Domain\Webservice\ValueObject\Key;
 use PrestaShopBundle\Form\Admin\Type\GeneratableTextType;
 use PrestaShopBundle\Form\Admin\Type\Material\MaterialMultipleChoiceTableType;
@@ -87,7 +88,17 @@ class WebserviceKeyType extends TranslatorAwareType
         $builder
             ->add('key', GeneratableTextType::class, [
                 'label' => $this->trans('Key', 'Admin.Advparameters.Feature'),
-                'help' => $this->trans('Webservice account key.', 'Admin.Advparameters.Feature'),
+                'help' => sprintf(
+                    '%s<br>%s',
+                    $this->trans('Webservice account key.', 'Admin.Advparameters.Feature'),
+                    $this->trans(
+                        'Key should be at least %length% characters long.',
+                        'Admin.Notifications.Info',
+                        [
+                            '%length%' => Key::LENGTH,
+                        ]
+                    )
+                ),
                 'generated_value_length' => Key::LENGTH,
                 'constraints' => [
                     new NotBlank([
@@ -99,6 +110,16 @@ class WebserviceKeyType extends TranslatorAwareType
                         'exactMessage' => $this->trans(
                             'Key length must be 32 character long.',
                             'Admin.Advparameters.Notification'
+                        ),
+                    ]),
+                    new TypedRegex([
+                        'type' => TypedRegex::TYPE_WEBSERVICE_KEY,
+                        'message' => $this->trans(
+                            'Only non-accented characters, numbers, and the following special characters are allowed: %allowed_characters%',
+                            'Admin.Advparameters.Notification',
+                            [
+                                '%allowed_characters%' => '@ ? # - _',
+                            ]
                         ),
                     ]),
                 ],

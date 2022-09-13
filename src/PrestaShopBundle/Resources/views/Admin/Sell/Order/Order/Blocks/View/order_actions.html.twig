@@ -66,7 +66,7 @@
     <form class="order-actions-invoice">
       <div class="input-group">
         <a href="{{ path('admin_orders_generate_invoice_pdf', {'orderId': orderForViewing.id}) }}"
-           class="btn btn-action">
+           class="btn btn-action" data-role="view-invoice">
           <i class="material-icons">receipt</i>
           {{ 'View invoice'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </a>
@@ -87,7 +87,7 @@
     <form class="order-actions-delivery">
       <div class="input-group">
         <a href="{{ path('admin_orders_generate_delivery_slip_pdf', {'orderId': orderForViewing.id}) }}"
-           class="btn btn-action">
+           class="btn btn-action" data-role="view-delivery-slip">
           <i class="material-icons">local_shipping</i>
           {{ 'View delivery slip'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </a>

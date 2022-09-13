@@ -53,6 +53,7 @@ class HelperViewCore extends Helper
             'toolbar_scroll' => $this->toolbar_scroll,
             'toolbar_btn' => $this->toolbar_btn,
             'link' => $this->context->link,
+            'controller_name' => $this->controller_name,
         ]);
 
         return parent::generate();

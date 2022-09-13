@@ -24,11 +24,16 @@
  *}
 <nav class="nav-bar d-none d-print-none d-md-block">
   <span class="menu-collapse" data-toggle-url="{$toggle_navigation_url}">
-    <i class="material-icons">chevron_left</i>
-    <i class="material-icons">chevron_left</i>
+    <i class="material-icons rtl-flip">chevron_left</i>
+    <i class="material-icons rtl-flip">chevron_left</i>
   </span>
 
   <div class="nav-bar-overflow">
+      <div class="logo-container">
+          <a id="header_logo" class="logo float-left" href="{$default_tab_link|escape:'html':'UTF-8'}"></a>
+          <span id="shop_version" class="header-version">{$ps_version}</span>
+      </div>
+
       <ul class="main-menu{if $collapse_menu} sidebar-closed{/if}">
       {foreach $tabs as $level1}
         {if $level1.active}

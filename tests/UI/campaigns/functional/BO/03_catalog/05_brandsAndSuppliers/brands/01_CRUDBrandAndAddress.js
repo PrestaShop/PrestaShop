@@ -8,7 +8,7 @@ const helper = require('@utils/helpers');
 const files = require('@utils/files');
 
 // Import login steps
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import data
 const BrandFaker = require('@data/faker/brand');

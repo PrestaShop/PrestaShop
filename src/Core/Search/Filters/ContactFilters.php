@@ -26,6 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Core\Search\Filters;
 
+use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\ContactGridDefinitionFactory;
 use PrestaShop\PrestaShop\Core\Search\Filters;
 
 /**
@@ -33,6 +34,11 @@ use PrestaShop\PrestaShop\Core\Search\Filters;
  */
 final class ContactFilters extends Filters
 {
+    /**
+     * @var string
+     */
+    protected $filterId = ContactGridDefinitionFactory::GRID_ID;
+
     /**
      * {@inheritdoc}
      */

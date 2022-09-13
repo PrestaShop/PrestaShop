@@ -42,21 +42,18 @@ class RequestSqlRepository implements RepositoryInterface, DoctrineQueryBuilderI
      * @var Connection
      */
     private $connection;
-
-    /**
-     * @var string
-     */
-    private $dbPrefix;
-
     /**
      * @var string
      */
     private $requestSqlTable;
 
+    /**
+     * @param Connection $connection
+     * @param string $dbPrefix
+     */
     public function __construct(Connection $connection, $dbPrefix)
     {
         $this->connection = $connection;
-        $this->dbPrefix = $dbPrefix;
         $this->requestSqlTable = $dbPrefix . 'request_sql';
     }
 

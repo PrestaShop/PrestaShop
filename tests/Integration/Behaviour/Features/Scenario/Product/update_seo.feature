@@ -1,5 +1,7 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-seo
-@reset-database-before-feature
+@restore-products-before-feature
+@restore-languages-after-feature
+@reset-img-after-feature
 @clear-cache-before-feature
 @update-seo
 Feature: Update product SEO options from Back Office (BO)
@@ -24,23 +26,33 @@ Feature: Update product SEO options from Back Office (BO)
       | locale | value |
       | en-US  |       |
     And product "product1" localized "link_rewrite" is:
-      | locale | value |
-      | en-US  |       |
+      | locale | value      |
+      | en-US  | just-boots |
     And I add product "product2" with following information:
       | name[en-US] | magical boots |
       | type        | virtual       |
     And product product2 should have following seo options:
       | redirect_type | 404 |
     And product product2 should not have a redirect target
-    And product "product1" localized "meta_title" is:
+    And product "product2" localized "meta_title" is:
       | locale | value |
       | en-US  |       |
-    And product "product1" localized "meta_description" is:
+    And product "product2" localized "meta_description" is:
       | locale | value |
       | en-US  |       |
-    And product "product1" localized "link_rewrite" is:
-      | locale | value |
-      | en-US  |       |
+    And product "product2" localized "link_rewrite" is:
+      | locale | value         |
+      | en-US  | magical-boots |
+      | fr-FR  |               |
+    And I add product "product3" with following information:
+      | name[en-US] | amazing boots |
+      | type        | standard      |
+    When I add new image "image1" named "app_icon.png" to product "product3"
+    When I add new image "image2" named "logo.jpg" to product "product3"
+    And product "product3" should have following images:
+      | image reference | is cover | legend[fr-FR] | legend[en-US] | position | image url                            | thumbnail url                                      |
+      | image1          | true     |               |               | 1        | http://myshop.com/img/p/{image1}.jpg | http://myshop.com/img/p/{image1}-small_default.jpg |
+      | image2          | false    |               |               | 2        | http://myshop.com/img/p/{image2}.jpg | http://myshop.com/img/p/{image2}-small_default.jpg |
 
   Scenario: I update product SEO
     When I update product product2 SEO information with following values:
@@ -61,9 +73,12 @@ Feature: Update product SEO options from Back Office (BO)
       | locale | value            |
       | en-US  | waterproof-boots |
       | fr-FR  |                  |
+    # Default no picture image
     And product product2 should have following seo options:
-      | redirect_type   | 301-product |
-      | redirect_target | product1    |
+      | redirect_type   | 301-product                                            |
+      | redirect_target | product1                                               |
+      | redirect_name   | just boots                                             |
+      | redirect_image  | http://myshop.com/img/p/{no_picture}-small_default.jpg |
 
   Scenario: Update product redirect type without providing redirect target
     Given I update product product2 SEO information with following values:
@@ -87,6 +102,7 @@ Feature: Update product SEO options from Back Office (BO)
     And product product2 should have following seo options:
       | redirect_type   | 301-product |
       | redirect_target | product1    |
+      | redirect_name   | just boots  |
     When I update product product2 SEO information with following values:
       | redirect_type   | 302-product |
       | redirect_target |             |
@@ -94,6 +110,7 @@ Feature: Update product SEO options from Back Office (BO)
     And product product2 should have following seo options:
       | redirect_type   | 301-product |
       | redirect_target | product1    |
+      | redirect_name   | just boots  |
     When I update product product2 SEO information with following values:
       | redirect_type   | 301-category |
       | redirect_target |              |
@@ -192,24 +209,28 @@ Feature: Update product SEO options from Back Office (BO)
     And product product2 should have following seo options:
       | redirect_type   | 301-product |
       | redirect_target | product1    |
+      | redirect_name   | just boots  |
     When I update product product2 SEO information with following values:
       | redirect_type   | 302-product |
       | redirect_target | product1    |
     And product product2 should have following seo options:
       | redirect_type   | 302-product |
       | redirect_target | product1    |
+      | redirect_name   | just boots  |
     When I update product product2 SEO information with following values:
       | redirect_type   | 301-category |
       | redirect_target | men          |
     And product product2 should have following seo options:
-      | redirect_type   | 301-category |
-      | redirect_target | men          |
+      | redirect_type   | 301-category         |
+      | redirect_target | men                  |
+      | redirect_name   | Home > Clothes > Men |
     When I update product product2 SEO information with following values:
       | redirect_type   | 302-category |
       | redirect_target | clothes      |
     And product product2 should have following seo options:
-      | redirect_type   | 302-category |
-      | redirect_target | clothes      |
+      | redirect_type   | 302-category   |
+      | redirect_target | clothes        |
+      | redirect_name   | Home > Clothes |
     And product "product2" localized "meta_title" should be:
       | locale | value               |
       | en-US  | product2 meta title |
@@ -233,9 +254,9 @@ Feature: Update product SEO options from Back Office (BO)
       | en-US  |       |
       | fr-FR  |       |
     And product "product2" localized "link_rewrite" should be:
-      | locale | value |
-      | en-US  |       |
-      | fr-FR  |       |
+      | locale | value         |
+      | en-US  | magical-boots |
+      | fr-FR  |               |
     When I update product product2 SEO information with following values:
       | meta_title[en-US]       | metatitl prod2            |
       | meta_description[en-US] | product2 meta description |
@@ -263,9 +284,9 @@ Feature: Update product SEO options from Back Office (BO)
       | en-US  |       |
       | fr-FR  |       |
     And product "product2" localized "link_rewrite" should be:
-      | locale | value |
-      | en-US  |       |
-      | fr-FR  |       |
+      | locale | value         |
+      | en-US  | magical-boots |
+      | fr-FR  |               |
     When I update product product2 SEO information with following values:
       | meta_title[fr-FR]       | la meta title1 |
       | meta_description[fr-FR] | la meta desc1  |
@@ -279,9 +300,9 @@ Feature: Update product SEO options from Back Office (BO)
       | en-US  |               |
       | fr-FR  | la meta desc1 |
     And product "product2" localized "link_rewrite" should be:
-      | locale | value    |
-      | en-US  |          |
-      | fr-FR  | la-boots |
+      | locale | value         |
+      | en-US  | magical-boots |
+      | fr-FR  | la-boots      |
 
   Scenario: Update product SEO multi-lang fields with invalid values
     Given I update product product1 SEO information with following values:
@@ -297,9 +318,9 @@ Feature: Update product SEO options from Back Office (BO)
       | en-US  |               |
       | fr-FR  | la meta desc1 |
     And product "product1" localized "link_rewrite" should be:
-      | locale | value    |
-      | en-US  |          |
-      | fr-FR  | la-boots |
+      | locale | value      |
+      | en-US  | just-boots |
+      | fr-FR  | la-boots   |
     When I update product product1 SEO information with following values:
       | meta_title[en-US] | #{ |
     Then I should get error that product meta_title is invalid
@@ -324,6 +345,74 @@ Feature: Update product SEO options from Back Office (BO)
       | en-US  |               |
       | fr-FR  | la meta desc1 |
     And product "product1" localized "link_rewrite" should be:
-      | locale | value    |
-      | en-US  |          |
-      | fr-FR  | la-boots |
+      | locale | value      |
+      | en-US  | just-boots |
+      | fr-FR  | la-boots   |
+
+  Scenario: I update product SEO with image
+    When I update product product2 SEO information with following values:
+      | meta_title[en-US]       | product2 meta title       |
+      | meta_description[en-US] | product2 meta description |
+      | link_rewrite[en-US]     | waterproof-boots          |
+      | redirect_type           | 301-product               |
+      | redirect_target         | product3                  |
+    Then product product2 should have following seo options:
+      | redirect_type   | 301-product                          |
+      | redirect_target | product3                             |
+      | redirect_name   | amazing boots                        |
+      | redirect_image  | http://myshop.com/img/p/{image1}.jpg |
+    When I update image "image2" with following information:
+      | cover | true |
+    Then product product2 should have following seo options:
+      | redirect_type   | 301-product                          |
+      | redirect_target | product3                             |
+      | redirect_name   | amazing boots                        |
+      | redirect_image  | http://myshop.com/img/p/{image2}.jpg |
+    When I update product product2 SEO information with following values:
+      | redirect_type   | 301-category |
+      | redirect_target | men          |
+    And product product2 should have following seo options:
+      | redirect_type   | 301-category                      |
+      | redirect_target | men                               |
+      | redirect_name   | Home > Clothes > Men              |
+      | redirect_image  | http://myshop.com/img/c/{men}.jpg |
+    When I update product product2 SEO information with following values:
+      | redirect_type   | 301-category |
+      | redirect_target | clothes      |
+    And product product2 should have following seo options:
+      | redirect_type   | 301-category                          |
+      | redirect_target | clothes                               |
+      | redirect_name   | Home > Clothes                        |
+      | redirect_image  | http://myshop.com/img/c/{clothes}.jpg |
+
+  Scenario: Empty friendly-urls should be auto-filled using product name value
+    And I add product "product4" with following information:
+      | type        | standard |
+      | name[en-US] |          |
+      | name[fr-FR] |          |
+    Then product "product4" localized "link_rewrite" should be:
+      | locale | value |
+      | en-US  |       |
+      | fr-FR  |       |
+    # This custom step allows to update only name without affecting link_rewrite,
+    # so that later we can assert that the UpdateProductSEOCommand updates the link_rewrite.
+    # (UpdateProductBasicInformationCommand also has a side effect which updates the link_rewrite,
+    # so we cannot use that command here if we want the test to be accurate)
+    When I update product "product4" name (not using commands) with following localized values:
+      | name[en-US] | en product 04 |
+      | name[fr-FR] | fr product 04 |
+    Then product "product4" localized "name" should be:
+      | locale | value         |
+      | en-US  | en product 04 |
+      | fr-FR  | fr product 04 |
+    And product "product4" localized "link_rewrite" should be:
+      | locale | value |
+      | en-US  |       |
+      | fr-FR  |       |
+    When I update product product4 SEO information with following values:
+      | link_rewrite[en-US] |  |
+      | link_rewrite[fr-FR] |  |
+    And product "product4" localized "link_rewrite" should be:
+      | locale | value         |
+      | en-US  | en-product-04 |
+      | fr-FR  | fr-product-04 |

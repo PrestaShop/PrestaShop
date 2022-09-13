@@ -122,10 +122,10 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
     public function deleteAction(int $taxRulesGroupId): RedirectResponse
     {
         try {
-            $this->getCommandBus()->handle(new DeleteTaxRulesGroupCommand((int) $taxRulesGroupId));
+            $this->getCommandBus()->handle(new DeleteTaxRulesGroupCommand($taxRulesGroupId));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -151,11 +151,11 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
         try {
             /** @var EditableTaxRulesGroup $editableTaxRulesGroup */
             $editableTaxRulesGroup = $this->getQueryBus()->handle(
-                new GetTaxRulesGroupForEditing((int) $taxRulesGroupId)
+                new GetTaxRulesGroupForEditing($taxRulesGroupId)
             );
 
             $this->getCommandBus()->handle(
-                new SetTaxRulesGroupStatusCommand((int) $taxRulesGroupId, !$editableTaxRulesGroup->isActive())
+                new SetTaxRulesGroupStatusCommand($taxRulesGroupId, !$editableTaxRulesGroup->isActive())
             );
 
             $this->addFlash(
@@ -247,7 +247,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new BulkDeleteTaxRulesGroupCommand($taxRulesGroupIds));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (Exception $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -269,11 +269,7 @@ class TaxRulesGroupController extends FrameworkBundleAdminController
             return [];
         }
 
-        foreach ($taxRulesGroupIds as $i => $taxRulesGroupId) {
-            $taxRulesGroupIds[$i] = (int) $taxRulesGroupId;
-        }
-
-        return $taxRulesGroupIds;
+        return array_map('intval', $taxRulesGroupIds);
     }
 
     /**

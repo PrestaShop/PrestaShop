@@ -29,7 +29,11 @@ class Import extends BOBasePage {
     this.fileTypeSelector = '#entity';
     this.importFileSecondStepPanelTitle = '#container-customer > h3';
     this.importProgressModal = '#importProgress';
+    this.progressValidateBarInfo = '#validate_progressbar_done';
+    this.progressImportBarInfo = '#import_progressbar_done';
+    this.importDetailsFinished = '#import_details_finished';
     this.importProgressModalCloseButton = '#import_close_button';
+    this.forceAllIDNumber = toggle => `#forceIDs_${toggle}`;
   }
 
   /*
@@ -52,11 +56,30 @@ class Import extends BOBasePage {
    * @param filePath {string} Value of file path to set on file input
    * @return {Promise<string>}
    */
-  async uploadSampleFile(page, fileType, filePath) {
+  async uploadFile(page, fileType, filePath) {
     await this.selectByVisibleText(page, this.fileTypeSelector, fileType);
     await page.setInputFiles(this.fileInputField, filePath);
 
     return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Is force all id numbers visible
+   * @param page {Page} Browser tab
+   * @returns {Promise<boolean>}
+   */
+  async isForceAllIDNumbersVisible(page) {
+    return this.elementVisible(page, this.forceAllIDNumber(1), 2000);
+  }
+
+  /**
+   * Enable/Disable force all ID numbers
+   * @param page {Page} Browser tab
+   * @param toEnable {boolean} True if we need to enable all id numbers
+   * @returns {Promise<void>}
+   */
+  async setForceAllIDNumbers(page, toEnable = true) {
+    await this.setChecked(page, this.forceAllIDNumber(toEnable ? 1 : 0));
   }
 
   /**
@@ -82,6 +105,18 @@ class Import extends BOBasePage {
   }
 
   /**
+   * Get import validation message
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getImportValidationMessage(page) {
+    await this.waitForVisibleSelector(page, `${this.progressValidateBarInfo}[style="width: 100%;"]`);
+    await this.waitForVisibleSelector(page, `${this.progressImportBarInfo}[style="width: 100%;"]`);
+
+    return this.getTextContent(page, this.importDetailsFinished);
+  }
+
+  /**
    * Close modal at the end of the import
    * @param page {Page} Browser tab
    * @return {Promise<boolean>}
@@ -90,7 +125,7 @@ class Import extends BOBasePage {
     await this.waitForVisibleSelector(page, this.importProgressModalCloseButton);
     await this.clickAndWaitForNavigation(page, this.importProgressModalCloseButton);
 
-    return this.elementVisible(page, this.fileTypeSelector, 2000);
+    return this.elementNotVisible(page, this.importProgressModalCloseButton, 1000);
   }
 }
 

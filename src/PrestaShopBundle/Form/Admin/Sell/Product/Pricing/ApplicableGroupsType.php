@@ -1,0 +1,147 @@
+<?php
+/**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ */
+
+declare(strict_types=1);
+
+namespace PrestaShopBundle\Form\Admin\Sell\Product\Pricing;
+
+use PrestaShop\PrestaShop\Core\Form\FormChoiceAttributeProviderInterface;
+use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
+use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
+
+class ApplicableGroupsType extends TranslatorAwareType
+{
+    /**
+     * @var FormChoiceProviderInterface|FormChoiceAttributeProviderInterface
+     */
+    protected $currencyByIdChoiceProvider;
+
+    /**
+     * @var FormChoiceProviderInterface
+     */
+    protected $countryByIdChoiceProvider;
+
+    /**
+     * @var FormChoiceProviderInterface
+     */
+    protected $groupByIdChoiceProvider;
+
+    /**
+     * @var FormChoiceProviderInterface
+     */
+    protected $shopByIdChoiceProvider;
+
+    /**
+     * @var string
+     */
+    protected $defaultCurrencySymbol;
+
+    /**
+     * @var bool
+     */
+    protected $isMultiShopEnabled;
+
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        $currencyByIdChoiceProvider,
+        FormChoiceProviderInterface $countryByIdChoiceProvider,
+        FormChoiceProviderInterface $groupByIdChoiceProvider,
+        FormChoiceProviderInterface $shopByIdChoiceProvider,
+        string $defaultCurrencySymbol,
+        bool $isMultiShopEnabled
+    ) {
+        parent::__construct($translator, $locales);
+        $this->currencyByIdChoiceProvider = $currencyByIdChoiceProvider;
+        $this->countryByIdChoiceProvider = $countryByIdChoiceProvider;
+        $this->groupByIdChoiceProvider = $groupByIdChoiceProvider;
+        $this->shopByIdChoiceProvider = $shopByIdChoiceProvider;
+        $this->defaultCurrencySymbol = $defaultCurrencySymbol;
+        $this->isMultiShopEnabled = $isMultiShopEnabled;
+    }
+
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        $currencies = array_merge([
+            $this->trans('All currencies', 'Admin.Global') => 0,
+        ], $this->currencyByIdChoiceProvider->getChoices());
+        $countries = array_merge([
+            $this->trans('All countries', 'Admin.Global') => 0,
+        ], $this->countryByIdChoiceProvider->getChoices());
+        $groups = array_merge([
+            $this->trans('All groups', 'Admin.Global') => 0,
+        ], $this->groupByIdChoiceProvider->getChoices());
+
+        $builder
+            ->add('currency_id', ChoiceType::class, [
+                'label' => false,
+                'placeholder' => false,
+                'choices' => $currencies,
+                'choice_attr' => $this->currencyByIdChoiceProvider->getChoicesAttributes(),
+                'required' => false,
+                'attr' => [
+                    'data-default-currency-symbol' => $this->defaultCurrencySymbol,
+                ],
+            ])
+            ->add('country_id', ChoiceType::class, [
+                'label' => false,
+                'placeholder' => false,
+                'choices' => $countries,
+                'required' => false,
+            ])
+            ->add('group_id', ChoiceType::class, [
+                'label' => false,
+                'required' => false,
+                'placeholder' => false,
+                'choices' => $groups,
+            ])
+        ;
+
+        if ($this->isMultiShopEnabled) {
+            $shops = array_merge([
+                $this->trans('All stores', 'Admin.Global') => 0,
+            ], $this->shopByIdChoiceProvider->getChoices());
+            $builder->add('shop_id', ChoiceType::class, [
+                'label' => false,
+                'required' => false,
+                'placeholder' => false,
+                'choices' => $shops,
+            ]);
+        }
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+        $resolver->setDefaults([
+            'columns_number' => 4,
+        ]);
+    }
+}

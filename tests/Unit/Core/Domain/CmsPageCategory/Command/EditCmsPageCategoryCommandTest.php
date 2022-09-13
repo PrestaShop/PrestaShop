@@ -50,6 +50,7 @@ class EditCmsPageCategoryCommandTest extends TestCase
         $this->expectException(CmsPageCategoryException::class);
 
         $incorrectTypeId = '1';
+        /** @phpstan-ignore-next-line */
         $command = new EditCmsPageCategoryCommand($incorrectTypeId);
     }
 
@@ -60,6 +61,7 @@ class EditCmsPageCategoryCommandTest extends TestCase
         $incorrectTypeId = '1';
         $command = new EditCmsPageCategoryCommand(1);
 
+        /* @phpstan-ignore-next-line */
         $command->setParentId($incorrectTypeId);
     }
 

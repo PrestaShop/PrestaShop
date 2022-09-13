@@ -26,38 +26,27 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Carrier;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class HandlingConfiguration is responsible for saving and loading Handling options configuration.
  */
-class HandlingConfiguration implements DataConfigurationInterface
+class HandlingConfiguration extends AbstractMultistoreConfiguration
 {
-    /**
-     * @var Configuration
-     */
-    private $configuration;
-
-    /**
-     * HandlingConfiguration constructor.
-     *
-     * @param Configuration $configuration
-     */
-    public function __construct(Configuration $configuration)
-    {
-        $this->configuration = $configuration;
-    }
+    private const CONFIGURATION_FIELDS = ['shipping_handling_charges', 'free_shipping_price', 'free_shipping_weight'];
 
     /**
      * {@inheritdoc}
      */
     public function getConfiguration()
     {
+        $shopConstraint = $this->getShopConstraint();
+
         return [
-            'shipping_handling_charges' => $this->configuration->get('PS_SHIPPING_HANDLING'),
-            'free_shipping_price' => $this->configuration->get('PS_SHIPPING_FREE_PRICE'),
-            'free_shipping_weight' => $this->configuration->get('PS_SHIPPING_FREE_WEIGHT'),
+            'shipping_handling_charges' => (float) $this->configuration->get('PS_SHIPPING_HANDLING', null, $shopConstraint),
+            'free_shipping_price' => (float) $this->configuration->get('PS_SHIPPING_FREE_PRICE', null, $shopConstraint),
+            'free_shipping_weight' => (float) $this->configuration->get('PS_SHIPPING_FREE_WEIGHT', null, $shopConstraint),
         ];
     }
 
@@ -67,23 +56,26 @@ class HandlingConfiguration implements DataConfigurationInterface
     public function updateConfiguration(array $configuration)
     {
         if ($this->validateConfiguration($configuration)) {
-            $this->configuration->set('PS_SHIPPING_HANDLING', $configuration['shipping_handling_charges']);
-            $this->configuration->set('PS_SHIPPING_FREE_PRICE', $configuration['free_shipping_price']);
-            $this->configuration->set('PS_SHIPPING_FREE_WEIGHT', $configuration['free_shipping_weight']);
+            $shopConstraint = $this->getShopConstraint();
+            $this->updateConfigurationValue('PS_SHIPPING_HANDLING', 'shipping_handling_charges', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_SHIPPING_FREE_PRICE', 'free_shipping_price', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_SHIPPING_FREE_WEIGHT', 'free_shipping_weight', $configuration, $shopConstraint);
         }
 
         return [];
     }
 
     /**
-     * {@inheritdoc}
+     * @return OptionsResolver
      */
-    public function validateConfiguration(array $configuration)
+    protected function buildResolver(): OptionsResolver
     {
-        return isset(
-            $configuration['shipping_handling_charges'],
-            $configuration['free_shipping_price'],
-            $configuration['free_shipping_weight']
-        );
+        $resolver = (new OptionsResolver())
+            ->setDefined(self::CONFIGURATION_FIELDS)
+            ->setAllowedTypes('shipping_handling_charges', 'float')
+            ->setAllowedTypes('free_shipping_price', 'float')
+            ->setAllowedTypes('free_shipping_weight', 'float');
+
+        return $resolver;
     }
 }

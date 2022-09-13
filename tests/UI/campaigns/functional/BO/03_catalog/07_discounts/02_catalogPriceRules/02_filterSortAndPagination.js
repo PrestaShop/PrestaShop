@@ -1,10 +1,12 @@
 require('module-alias/register');
 
-// Helpers to open and close browser
+// Import utils
 const helper = require('@utils/helpers');
+const basicHelper = require('@utils/basicHelper');
+const {getDateFormat} = require('@utils/date');
 
 // Common tests login BO
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -26,28 +28,12 @@ const PriceRuleFaker = require('@data/faker/catalogPriceRule');
 // Browser and tab
 let browserContext;
 let page;
+const today = getDateFormat('yyyy-mm-dd');
+const dateToCheck = getDateFormat('mm/dd/yyyy');
 
 let numberOfCatalogPriceRules = 0;
 
-// Today date
-const today = new Date();
-
-// Current day
-const day = (`0${today.getDate()}`).slice(-2);
-
-// Current month
-const month = (`0${today.getMonth() + 1}`).slice(-2);
-
-// Current year
-const year = today.getFullYear();
-
-// Date today format (yyyy-mm-dd)
-const todayDate = `${year}-${month}-${day}`;
-
-// Date today format (mm/dd/yyyy)
-const todayDateToCheck = `${month}/${day}/${year}`;
-
-const priceRuleData = new PriceRuleFaker({fromDate: todayDate, toDate: todayDate});
+const priceRuleData = new PriceRuleFaker({fromDate: today, toDate: today});
 /*
 Create 21 catalog price rules
 Filter catalog price rules by id, Name, Shop, Currency, Country, Group, From quantity, Reduction type,
@@ -100,7 +86,11 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
   describe('Create 21 catalog price rules in BO', async () => {
     const creationTests = new Array(21).fill(0, 0, 21);
     creationTests.forEach((test, index) => {
-      const priceRuleData = new PriceRuleFaker({name: `todelete${index}`, fromDate: todayDate, toDate: todayDate});
+      const priceRuleData = new PriceRuleFaker({
+        name: `todelete${index}`,
+        fromDate: today,
+        toDate: today,
+      });
 
       it('should go to new catalog price rule page', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToNewCatalogPriceRule${index}`, baseContext);
@@ -134,11 +124,6 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
       {
         args: {
           testIdentifier: 'filterName', filterType: 'input', filterBy: 'a!name', filterValue: priceRuleData.name,
-        },
-      },
-      {
-        args: {
-          testIdentifier: 'filterShop', filterType: 'input', filterBy: 's!name', filterValue: global.INSTALL.SHOP_NAME,
         },
       },
       {
@@ -219,12 +204,18 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
     const filterByDate = [
       {
         args: {
-          testIdentifier: 'filterDateBeginning', filterBy: 'from', firstDate: todayDate, secondDate: todayDate,
+          testIdentifier: 'filterDateBeginning',
+          filterBy: 'from',
+          firstDate: today,
+          secondDate: today,
         },
       },
       {
         args: {
-          testIdentifier: 'filterDateEnd', filterBy: 'to', firstDate: todayDate, secondDate: todayDate,
+          testIdentifier: 'filterDateEnd',
+          filterBy: 'to',
+          firstDate: today,
+          secondDate: today,
         },
       },
     ];
@@ -244,7 +235,7 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
             row,
             test.args.filterBy,
           );
-          await expect(textColumn).to.contains(todayDateToCheck);
+          await expect(textColumn).to.contains(dateToCheck);
         }
       });
 
@@ -273,16 +264,6 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
       {
         args: {
           testIdentifier: 'sortByNameDesc', sortBy: 'a!name', sortDirection: 'down',
-        },
-      },
-      {
-        args: {
-          testIdentifier: 'sortByShopAsc', sortBy: 's!name', sortDirection: 'up',
-        },
-      },
-      {
-        args: {
-          testIdentifier: 'sortByShopDesc', sortBy: 's!name', sortDirection: 'down',
         },
       },
       {
@@ -317,12 +298,12 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
       },
       {
         args: {
-          testIdentifier: 'sortByFromQuantityAsc', sortBy: 'from_quantity', sortDirection: 'up',
+          testIdentifier: 'sortByFromQuantityAsc', sortBy: 'from_quantity', sortDirection: 'up', isFloat: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByFromQuantityDesc', sortBy: 'from_quantity', sortDirection: 'down',
+          testIdentifier: 'sortByFromQuantityDesc', sortBy: 'from_quantity', sortDirection: 'down', isFloat: true,
         },
       },
       {
@@ -337,32 +318,32 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
       },
       {
         args: {
-          testIdentifier: 'sortByReductionAsc', sortBy: 'reduction', sortDirection: 'up',
+          testIdentifier: 'sortByReductionAsc', sortBy: 'reduction', sortDirection: 'up', isFloat: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByReductionDesc', sortBy: 'reduction', sortDirection: 'down',
+          testIdentifier: 'sortByReductionDesc', sortBy: 'reduction', sortDirection: 'down', isFloat: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByDateFromAsc', sortBy: 'from', sortDirection: 'up',
+          testIdentifier: 'sortByDateFromAsc', sortBy: 'from', sortDirection: 'up', isDate: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByDateFromDesc', sortBy: 'from', sortDirection: 'down',
+          testIdentifier: 'sortByDateFromDesc', sortBy: 'from', sortDirection: 'down', isDate: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByDateToAsc', sortBy: 'to', sortDirection: 'up',
+          testIdentifier: 'sortByDateToAsc', sortBy: 'to', sortDirection: 'up', isDate: true,
         },
       },
       {
         args: {
-          testIdentifier: 'sortByDateToDesc', sortBy: 'to', sortDirection: 'down',
+          testIdentifier: 'sortByDateToDesc', sortBy: 'to', sortDirection: 'down', isDate: true,
         },
       },
       {
@@ -387,7 +368,7 @@ describe('BO - Catalog - Discounts : Filter, sort and pagination catalog price r
           sortedTable = await sortedTable.map(text => parseFloat(text));
         }
 
-        const expectedResult = await catalogPriceRulesPage.sortArray(nonSortedTable, test.args.isFloat);
+        const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat, test.args.isDate);
 
         if (test.args.sortDirection === 'up') {
           await expect(sortedTable).to.deep.equal(expectedResult);

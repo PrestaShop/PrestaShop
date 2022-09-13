@@ -23,7 +23,7 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *}
 
-<{if isset($href) && $href}a style="display:block" href="{$href|escape:'html':'UTF-8'}"{else}div{/if} id="{$id|escape:'html':'UTF-8'}" data-toggle="tooltip" class="box-stats label-tooltip {$color|escape}" data-original-title="{$tooltip|escape}">
+<{if isset($href) && $href}a style="display:block" href="{$href|escape:'html':'UTF-8'}"{else}div{/if} id="{$id|escape:'html':'UTF-8'}" data-toggle="tooltip" class="box-stats label-tooltip {$color|escape}" data-original-title="{$tooltip|default|escape}">
 	<div class="kpi-content">
 	{if isset($icon) && $icon}
 		<i class="{$icon|escape}"></i>
@@ -35,8 +35,8 @@
 		</div>
 	{/if}
 		<span class="title">{$title|escape}</span>
-		<span cLass="subtitle">{$subtitle|escape}</span>
-		<span class="value">{$value|escape|replace:'&amp;':'&'}</span>
+		<span cLass="subtitle">{$subtitle|default|escape}</span>
+		<span class="value">{$value|default|escape|replace:'&amp;':'&'}</span>
 	</div>
 
 </{if isset($href) && $href}a{else}div{/if}>

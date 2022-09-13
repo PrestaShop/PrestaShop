@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_bestsellers/ps_bestsellers.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9862f1949f776f69155b6e6b330c7ee1">
+        <source>Top-sellers block</source>
+        <target>Top-sellers block</target>
+        <note>Line: 60</note>
+      </trans-unit>
+      <trans-unit id="94f6b12d006c2b82c1306e53910109f8">
+        <source>Adds a block displaying your store's top-selling products.</source>
+        <target>Adds a block displaying your store's top-selling products.</target>
+        <note>Line: 61</note>
+      </trans-unit>
+      <trans-unit id="26986c3388870d4148b1b5375368a83d">
+        <source>Products to display</source>
+        <target>Products to display</target>
+        <note>Line: 141</note>
+      </trans-unit>
+      <trans-unit id="2b21378492166b0e5a855e2da611659c">
+        <source>Determine the number of product to display in this block</source>
+        <target>Determine the number of product to display in this block</target>
+        <note>Line: 143</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

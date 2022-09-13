@@ -46,7 +46,7 @@ class LocaleCacheTest extends TestCase
     /**
      * {@inheritDoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         // Let's use a real cache adapter (easier to setup, and a php array is always available in any environment)
         $cacheAdapter = new ArrayAdapter();
@@ -63,6 +63,7 @@ class LocaleCacheTest extends TestCase
     public function testReadWrite()
     {
         $data = new CldrLocaleData();
+        /* @phpstan-ignore-next-line */
         $data->foo = ['bar', 'baz'];
 
         /* @noinspection PhpUnhandledExceptionInspection */

@@ -3,7 +3,7 @@ require('module-alias/register');
 const {expect} = require('chai');
 
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -102,7 +102,7 @@ describe('BO - International - Localization : Import a localization pack', async
       await testContext.addContextItem(this, 'testIdentifier', 'changeFoLanguage', baseContext);
 
       await foHomePage.changeLanguage(page, Languages.spanish.isoCode);
-      const shopLanguage = await foHomePage.getShopLanguage(page);
+      const shopLanguage = await foHomePage.getDefaultShopLanguage(page);
       await expect(Languages.spanish.name).to.contain(shopLanguage);
     });
 

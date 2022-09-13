@@ -1,0 +1,729 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="admin-dev/themes/default/template/controllers/stores/helpers/form/form.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e734ed12d2c2026532f66e0ebeedfc8c">
+        <source>e.g. 10:00AM - 9:30PM</source>
+        <target>e.g. 10:00AM - 9:30PM</target>
+        <note>Line: 67</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminGendersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="62c7ceb6de5c4d39e49c9762af6ddb4d">
+        <source>Image width in pixels. Enter "0" to use the original size.</source>
+        <target>Image width in pixels. Enter "0" to use the original size.</target>
+        <note>Line: 172</note>
+      </trans-unit>
+      <trans-unit id="aec8651b033be4d4056785d43763d7ca">
+        <source>Image height in pixels. Enter "0" to use the original size.</source>
+        <target>Image height in pixels. Enter "0" to use the original size.</target>
+        <note>Line: 179</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminGroupsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0822f76515fa1d9ce38504176cb23bae">
+        <source>The group defined for your un-identified visitors.</source>
+        <target>The group defined for your un-identified visitors.</target>
+        <note>Line: 111</note>
+      </trans-unit>
+      <trans-unit id="e3e0c764f81f1a3677d59aa238fddd14">
+        <source>The group defined for your identified guest customers (used in guest checkout).</source>
+        <target>The group defined for your identified guest customers (used in guest checkout).</target>
+        <note>Line: 119</note>
+      </trans-unit>
+      <trans-unit id="e820b12959b64dfff397100db68cd951">
+        <source>The group defined for your identified registered customers.</source>
+        <target>The group defined for your identified registered customers.</target>
+        <note>Line: 127</note>
+      </trans-unit>
+      <trans-unit id="a5fa9ffd3ddf89fe263675358032e7fb">
+        <source>Automatically apply this value as a discount on all products for members of this customer group.</source>
+        <target>Automatically apply this value as a discount on all products for members of this customer group.</target>
+        <note>Line: 359</note>
+      </trans-unit>
+      <trans-unit id="21e445ba767d4fd41332b6eceab2be1a">
+        <source>How prices are displayed in the order summary for this customer group.</source>
+        <target>How prices are displayed in the order summary for this customer group.</target>
+        <note>Line: 366</note>
+      </trans-unit>
+      <trans-unit id="eaf74fe1658ada757063c8ddc4381ef9">
+        <source>Customers in this group can view prices.</source>
+        <target>Customers in this group can view prices.</target>
+        <note>Line: 401</note>
+      </trans-unit>
+      <trans-unit id="c7a5c6872a29383d6ab0db08e6b40e15">
+        <source>Need to hide prices for all groups? Save time, enable catalog mode in Product Settings instead.</source>
+        <target>Need to hide prices for all groups? Save time, enable catalog mode in Product Settings instead.</target>
+        <note>Line: 402</note>
+      </trans-unit>
+      <trans-unit id="d38245fbe312b2dafef8450b67e94f50">
+        <source>%group_name% - All persons without a customer account or customers that are not logged in.</source>
+        <target>%group_name% - All persons without a customer account or customers that are not logged in.</target>
+        <note>Line: 647</note>
+      </trans-unit>
+      <trans-unit id="5125d0fd7b81fee95b7e4b7689a878a9">
+        <source>%group_name% - All persons who placed an order through Guest Checkout.</source>
+        <target>%group_name% - All persons who placed an order through Guest Checkout.</target>
+        <note>Line: 648</note>
+      </trans-unit>
+      <trans-unit id="96f090b06e329e3d192c0ea3701f8cb5">
+        <source>%group_name% - All persons who created an account on this site.</source>
+        <target>%group_name% - All persons who created an account on this site.</target>
+        <note>Line: 649</note>
+      </trans-unit>
+      <trans-unit id="a2ce271cf6d8afe81168fbfc4ccb492c">
+        <source>PrestaShop has three default customer groups:</source>
+        <target>PrestaShop has three default customer groups:</target>
+        <note>Line: 651</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminSearchConfController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="12399d580627a1a5889cdc44e6e48b5a">
+        <source>Enable the automatic indexing of products. If you enable this feature, the products will be indexed in the search automatically when they are saved. If the feature is disabled, you will have to index products manually by using the links provided in the field set.</source>
+        <target>Enable the automatic indexing of products. If you enable this feature, the products will be indexed in the search automatically when they are saved. If the feature is disabled, you will have to index products manually by using the links provided in the field set.</target>
+        <note>Line: 120</note>
+      </trans-unit>
+      <trans-unit id="a5cb89e5bcb48c0708ee6837a5944d3e">
+        <source>By default, to search for “blouse”, you have to enter “blous”, “blo”, etc (beginning of the word) – but not “lous” (within the word).</source>
+        <target>By default, to search for “blouse”, you have to enter “blous”, “blo”, etc (beginning of the word) – but not “lous” (within the word).</target>
+        <note>Line: 137</note>
+      </trans-unit>
+      <trans-unit id="d2e38e24e467d35cc5881e083e05b823">
+        <source>With this option enabled, it also gives the good result if you search for “lous”, “ouse”, or anything contained in the word.</source>
+        <target>With this option enabled, it also gives the good result if you search for “lous”, “ouse”, or anything contained in the word.</target>
+        <note>Line: 142</note>
+      </trans-unit>
+      <trans-unit id="9110055bdc92744713baa237b26f8ac7">
+        <source>Enable search within a whole word, rather than from its beginning only.</source>
+        <target>Enable search within a whole word, rather than from its beginning only.</target>
+        <note>Line: 148</note>
+      </trans-unit>
+      <trans-unit id="0e665a9cf278d49f43c4bb4cb9a7c29f">
+        <source>It checks if the searched term is contained in the indexed word. This may be resource-consuming.</source>
+        <target>It checks if the searched term is contained in the indexed word. This may be resource-consuming.</target>
+        <note>Line: 153</note>
+      </trans-unit>
+      <trans-unit id="1122eba5946331d2709712f64fa1d66b">
+        <source>By default, if you search "book", you will have "book", "bookcase" and "bookend".</source>
+        <target>By default, if you search "book", you will have "book", "bookcase" and "bookend".</target>
+        <note>Line: 165</note>
+      </trans-unit>
+      <trans-unit id="0b1d71ac92f27198d2bd1e6cd49cec1b">
+        <source>With this option enabled, it only gives one result “book”, as exact end of the indexed word is matching.</source>
+        <target>With this option enabled, it only gives one result “book”, as exact end of the indexed word is matching.</target>
+        <note>Line: 170</note>
+      </trans-unit>
+      <trans-unit id="c4474326e7d8129b7c04ada10f34f5b1">
+        <source>Enable more precise search with the end of the word.</source>
+        <target>Enable more precise search with the end of the word.</target>
+        <note>Line: 176</note>
+      </trans-unit>
+      <trans-unit id="efb6bc8d1ee1c5527d494ba15ee3109d">
+        <source>It checks if the searched term is the exact end of the indexed word.</source>
+        <target>It checks if the searched term is the exact end of the indexed word.</target>
+        <note>Line: 181</note>
+      </trans-unit>
+      <trans-unit id="b080303b551112c7b9dcdf6a21051f42">
+        <source>By default, the fuzzy search is enabled. It means spelling errors are allowed, e.g. you can search for "bird" with words like "burd", "bard" or "beerd".</source>
+        <target>By default, the fuzzy search is enabled. It means spelling errors are allowed, e.g. you can search for "bird" with words like "burd", "bard" or "beerd".</target>
+        <note>Line: 193</note>
+      </trans-unit>
+      <trans-unit id="39e61e5c1261f090e3c56f494a315f07">
+        <source>Disabling this option will require exact spelling for the search to match results.</source>
+        <target>Disabling this option will require exact spelling for the search to match results.</target>
+        <note>Line: 198</note>
+      </trans-unit>
+      <trans-unit id="2324c421f8c5376051c024f15232cd80">
+        <source>Enable approximate string matching.</source>
+        <target>Enable approximate string matching.</target>
+        <note>Line: 204</note>
+      </trans-unit>
+      <trans-unit id="a4b432b49016cf0de70c747fde4f815b">
+        <source>Note that this option is resource-consuming: the more you search, the longer it takes.</source>
+        <target>Note that this option is resource-consuming: the more you search, the longer it takes.</target>
+        <note>Line: 217</note>
+      </trans-unit>
+      <trans-unit id="6392d16e9ae94967fe13716b69e1d0b2">
+        <source>Only words fewer or equal to this maximum length will be searched.</source>
+        <target>Only words fewer or equal to this maximum length will be searched.</target>
+        <note>Line: 232</note>
+      </trans-unit>
+      <trans-unit id="2b610a936a358875e6f5a01564a3a0e6">
+        <source>This parameter will only be used if the fuzzy search is activated: the lower the value, the more tolerant your search will be.</source>
+        <target>This parameter will only be used if the fuzzy search is activated: the lower the value, the more tolerant your search will be.</target>
+        <note>Line: 237</note>
+      </trans-unit>
+      <trans-unit id="645115aba5ef431a04da95c746477544">
+        <source>Only words this size or larger will be indexed.</source>
+        <target>Only words this size or larger will be indexed.</target>
+        <note>Line: 253</note>
+      </trans-unit>
+      <trans-unit id="2c2666c9eee818342b0aff77dda51990">
+        <source>Please enter the index words separated by a "|".</source>
+        <target>Please enter the index words separated by a "|".</target>
+        <note>Line: 265</note>
+      </trans-unit>
+      <trans-unit id="786471035f60ea5955fd93f6998e8637">
+        <source>Enter each alias separated by a comma (e.g. 'prestshop,preztashop,prestasohp').</source>
+        <target>Enter each alias separated by a comma (e.g. 'prestshop,preztashop,prestasohp').</target>
+        <note>Line: 425</note>
+      </trans-unit>
+      <trans-unit id="88851f53412ccb796508fd5f48e7a44f">
+        <source><![CDATA[Forbidden characters: <>;=#{}]]></source>
+        <target><![CDATA[Forbidden characters: <>;=#{}]]></target>
+        <note>Line: 426</note>
+      </trans-unit>
+      <trans-unit id="01d2aac5d20787a1e873f2bdc79b514a">
+        <source>Search this word instead.</source>
+        <target>Search this word instead.</target>
+        <note>Line: 434</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminShopController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5c85aec638229f60a035c7a6ab3623c8">
+        <source>This field does not refer to the shop name visible in the front office.</source>
+        <target>This field does not refer to the shop name visible in the front office.</target>
+        <note>Line: 382</note>
+      </trans-unit>
+      <trans-unit id="1561fa99e3814c72f5206ab48b472335">
+        <source>Follow [1]this link[/1] to edit the shop name used on the front office.</source>
+        <target>Follow [1]this link[/1] to edit the shop name used on the front office.</target>
+        <note>Line: 383</note>
+      </trans-unit>
+      <trans-unit id="92aaf3cf7e8f1434886a8887e102391b">
+        <source>You can't edit the shop group because the current shop belongs to a group with the "share" option enabled.</source>
+        <target>You can't edit the shop group because the current shop belongs to a group with the "share" option enabled.</target>
+        <note>Line: 451</note>
+      </trans-unit>
+      <trans-unit id="fce5f624e66bd2e2f0296fc3bd2a8f64">
+        <source>This is the root category of the store that you've created. To define a new root category for your store, [1]please click here[/1].</source>
+        <target>This is the root category of the store that you've created. To define a new root category for your store, [1]please click here[/1].</target>
+        <note>Line: 461</note>
+      </trans-unit>
+      <trans-unit id="f0f7416fad0a9c9fc3163cabe68393c1">
+        <source>By selecting associated categories, you are choosing to share the categories between shops. Once associated between shops, any alteration of this category will impact every shop.</source>
+        <target>By selecting associated categories, you are choosing to share the categories between shops. Once associated between shops, any alteration of this category will impact every shop.</target>
+        <note>Line: 515</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminStatusesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a9c2e14555131d68a4ac37b604ee52a8">
+        <source>Upload an icon from your computer (File type: .gif, suggested size: 16x16).</source>
+        <target>Upload an icon from your computer (File type: .gif, suggested size: 16x16).</target>
+        <note>Line: 305</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminStoresController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f45ed1483cf46972b5f225656c9c8991">
+        <source>Whether or not to display this store.</source>
+        <target>Whether or not to display this store.</target>
+        <note>Line: 271</note>
+      </trans-unit>
+      <trans-unit id="b950eb0054205bc67aa88899eadded22">
+        <source>Storefront picture.</source>
+        <target>Storefront picture.</target>
+        <note>Line: 280</note>
+      </trans-unit>
+      <trans-unit id="d42de30e9e03274c5c83bd6ce5c27a6f">
+        <source>Displayed in emails sent to customers.</source>
+        <target>Displayed in emails sent to customers.</target>
+        <note>Line: 457</note>
+      </trans-unit>
+      <trans-unit id="49aaf34d99febc7c13881d121288cd8a">
+        <source>Shop registration information (e.g. SIRET or RCS).</source>
+        <target>Shop registration information (e.g. SIRET or RCS).</target>
+        <note>Line: 464</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/Contact/ContactType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="9cd9efd3eb168071eb0a199972c54aab">
+        <source>Contact name (e.g. Customer Support).</source>
+        <target>Contact name (e.g. Customer Support).</target>
+        <note>Line: 87</note>
+      </trans-unit>
+      <trans-unit id="daedf9c5c8f38ac4cf641f3fb3e1bdc4">
+        <source>Emails will be sent to this address.</source>
+        <target>Emails will be sent to this address.</target>
+        <note>Line: 114</note>
+      </trans-unit>
+      <trans-unit id="0f28459fa87b1b3ce6e8b17932f08c3a">
+        <source>If enabled, all messages will be saved in the "Customer Service" page under the "Customer" menu.</source>
+        <target>If enabled, all messages will be saved in the "Customer Service" page under the "Customer" menu.</target>
+        <note>Line: 127</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/CustomerPreferences/GeneralType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b9716d3d87447a2275318bf88ced7bf8">
+        <source>After a customer logs in, you can recall and display the content of his/her last shopping cart.</source>
+        <target>After a customer logs in, you can recall and display the content of his/her last shopping cart.</target>
+        <note>Line: 52</note>
+      </trans-unit>
+      <trans-unit id="4c80d371ca1a14e173c5480ee32f1c90">
+        <source>Send an email with a summary of the account information after registration.</source>
+        <target>Send an email with a summary of the account information after registration.</target>
+        <note>Line: 62</note>
+      </trans-unit>
+      <trans-unit id="59a84d54ad58aa4bea8aeacd11e47ab2">
+        <source>Minimum time required between two requests for a password reset.</source>
+        <target>Minimum time required between two requests for a password reset.</target>
+        <note>Line: 86</note>
+      </trans-unit>
+      <trans-unit id="e0cf416b39580f321e4641721698560f">
+        <source>Activate or deactivate B2B mode. When this option is enabled, B2B features will be made available.</source>
+        <target>Activate or deactivate B2B mode. When this option is enabled, B2B features will be made available.</target>
+        <note>Line: 97</note>
+      </trans-unit>
+      <trans-unit id="69b3bcd0dba13c9f1188ab86480afca4">
+        <source>Display or not the birth date field.</source>
+        <target>Display or not the birth date field.</target>
+        <note>Line: 107</note>
+      </trans-unit>
+      <trans-unit id="3bc07e4ecf0660962221cf030b935d9d">
+        <source>Display or not the partner offers tick box, to receive offers from the store's partners.</source>
+        <target>Display or not the partner offers tick box, to receive offers from the store's partners.</target>
+        <note>Line: 117</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/MaintenanceType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="122941b469f97a0c0750a62126fba6cd">
+        <source>We recommend that you deactivate your store while performing maintenance. Note that it will not disable the webservice.</source>
+        <target>We recommend that you deactivate your store while performing maintenance. Note that it will not disable the webservice.</target>
+        <note>Line: 80</note>
+      </trans-unit>
+      <trans-unit id="4db650b0232001140675125d740191be">
+        <source>Allow IP addresses to access the store, even in maintenance mode. Use a comma to separate them (e.g. 42.24.4.2,127.0.0.1,99.98.97.96).</source>
+        <target>Allow IP addresses to access the store, even in maintenance mode. Use a comma to separate them (e.g. 42.24.4.2,127.0.0.1,99.98.97.96).</target>
+        <note>Line: 97</note>
+      </trans-unit>
+      <trans-unit id="541fbadd38ba459b4257b5822e9d0518">
+        <source>Display a customized message when the store is disabled.</source>
+        <target>Display a customized message when the store is disabled.</target>
+        <note>Line: 117</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/General/PreferencesType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="500294c9fd031bb4f00a82b5d27dc22c">
+        <source>If you own an SSL certificate for your shop's domain name, you can activate SSL encryption (https://) for customer account identification and order processing.</source>
+        <target>If you own an SSL certificate for your shop's domain name, you can activate SSL encryption (https://) for customer account identification and order processing.</target>
+        <note>Line: 96</note>
+      </trans-unit>
+      <trans-unit id="d86a9baf93dba6b27dbbb04cef8d3aae">
+        <source>When enabled, all the pages of your shop will be SSL-secured.</source>
+        <target>When enabled, all the pages of your shop will be SSL-secured.</target>
+        <note>Line: 110</note>
+      </trans-unit>
+      <trans-unit id="a1202480ddcd8665114515ca380c0e5b">
+        <source>Enable or disable token in the Front Office to improve PrestaShop's security.</source>
+        <target>Enable or disable token in the Front Office to improve PrestaShop's security.</target>
+        <note>Line: 121</note>
+      </trans-unit>
+      <trans-unit id="4f70bd9998bb35643fa3dfc88d6a6373">
+        <source>Allow iframes on text fields like product description. We recommend that you leave this option disabled.</source>
+        <target>Allow iframes on text fields like product description. We recommend that you leave this option disabled.</target>
+        <note>Line: 131</note>
+      </trans-unit>
+      <trans-unit id="7ba34b929c8241268ab5eac35a772ab1">
+        <source>Clean the HTML content on text fields. We recommend that you leave this option enabled.</source>
+        <target>Clean the HTML content on text fields. We recommend that you leave this option enabled.</target>
+        <note>Line: 141</note>
+      </trans-unit>
+      <trans-unit id="71958504714b867b7f6f00f43b9c9bd0">
+        <source>You can choose among 6 different ways of rounding prices. "Round up away from zero ..." is the recommended behavior.</source>
+        <target>You can choose among 6 different ways of rounding prices. "Round up away from zero ..." is the recommended behavior.</target>
+        <note>Line: 158</note>
+      </trans-unit>
+      <trans-unit id="2b116a3c74c816d853b7d86abf838ebb">
+        <source>You can choose when to round prices: either on each item, each line or the total (of an invoice, for example).</source>
+        <target>You can choose when to round prices: either on each item, each line or the total (of an invoice, for example).</target>
+        <note>Line: 171</note>
+      </trans-unit>
+      <trans-unit id="7c6efc73556c295515e6f3c2129eee32">
+        <source>Enable suppliers page on your front office even when its module is disabled.</source>
+        <target>Enable suppliers page on your front office even when its module is disabled.</target>
+        <note>Line: 179</note>
+      </trans-unit>
+      <trans-unit id="8e17743ca02e7c24310531d34d0c89ff">
+        <source>Enable brands page on your front office even when its module is disabled.</source>
+        <target>Enable brands page on your front office even when its module is disabled.</target>
+        <note>Line: 187</note>
+      </trans-unit>
+      <trans-unit id="0678cf17f202cb7fd14d79054a2e628c">
+        <source>Enable best sellers page on your front office even when its respective module is disabled.</source>
+        <target>Enable best sellers page on your front office even when its respective module is disabled.</target>
+        <note>Line: 195</note>
+      </trans-unit>
+      <trans-unit id="3d1ffb24b2e1b1381ca7da9a9b5dd97a">
+        <source>The multistore feature allows you to manage several front offices from a single back office. If this feature is enabled, a Multistore page is available in the Advanced Parameters menu.</source>
+        <target>The multistore feature allows you to manage several front offices from a single back office. If this feature is enabled, a Multistore page is available in the Advanced Parameters menu.</target>
+        <note>Line: 203</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderPreferences/GeneralType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="406fff3ade73ad2eb4c4fefa8a1c2702">
+        <source>Display an overview of the addresses, shipping method and cart just before the order button (required in some European countries).</source>
+        <target>Display an overview of the addresses, shipping method and cart just before the order button (required in some European countries).</target>
+        <note>Line: 80</note>
+      </trans-unit>
+      <trans-unit id="e7c9a42ec01114dcd98e47bb1cb1ace6">
+        <source>Allow guest visitors to place an order without registering.</source>
+        <target>Allow guest visitors to place an order without registering.</target>
+        <note>Line: 86</note>
+      </trans-unit>
+      <trans-unit id="8690429442758955469bd5eb14c3db72">
+        <source>Disable the option to allow customers to reorder in one click from the order history page (required in some European countries).</source>
+        <target>Disable the option to allow customers to reorder in one click from the order history page (required in some European countries).</target>
+        <note>Line: 92</note>
+      </trans-unit>
+      <trans-unit id="96b2f955774aee5f11e61646b7d5ae43">
+        <source>Set to 0 to disable this feature.</source>
+        <target>Set to 0 to disable this feature.</target>
+        <note>Line: 98</note>
+      </trans-unit>
+      <trans-unit id="5ed533875d7388ffdbb60818e9596bdc">
+        <source>Automatically updates the shipping costs when you edit an order.</source>
+        <target>Automatically updates the shipping costs when you edit an order.</target>
+        <note>Line: 106</note>
+      </trans-unit>
+      <trans-unit id="df2a562b17ec12920cee57e20b02ab67">
+        <source>Allow the customer to ship orders to multiple addresses. This option will convert the customer's cart into one or more orders.</source>
+        <target>Allow the customer to ship orders to multiple addresses. This option will convert the customer's cart into one or more orders.</target>
+        <note>Line: 114</note>
+      </trans-unit>
+      <trans-unit id="4acdb94f4cbc425ad20d457ffa1d81c1">
+        <source>It allows you to delay shipping if your customers request it.</source>
+        <target>It allows you to delay shipping if your customers request it.</target>
+        <note>Line: 123</note>
+      </trans-unit>
+      <trans-unit id="fff92cdf417b8a468af180474057a575">
+        <source>Require customers to accept or decline terms of service before processing an order.</source>
+        <target>Require customers to accept or decline terms of service before processing an order.</target>
+        <note>Line: 129</note>
+      </trans-unit>
+      <trans-unit id="38cb366ab3534fefcbc7d051a3b122fd">
+        <source>Choose the page which contains your store's terms and conditions of use.</source>
+        <target>Choose the page which contains your store's terms and conditions of use.</target>
+        <note>Line: 135</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderPreferences/GiftOptionsType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8be74244c8fe462cb6d967a5ebdc57cb">
+        <source>Suggest gift-wrapping to customers.</source>
+        <target>Suggest gift-wrapping to customers.</target>
+        <note>Line: 81</note>
+      </trans-unit>
+      <trans-unit id="f2e28db133063334eb23fad936947493">
+        <source>Set a price for gift wrapping.</source>
+        <target>Set a price for gift wrapping.</target>
+        <note>Line: 87</note>
+      </trans-unit>
+      <trans-unit id="3993942430a9f4e82e50b2c39048d6b6">
+        <source>Set a tax for gift wrapping.</source>
+        <target>Set a tax for gift wrapping.</target>
+        <note>Line: 97</note>
+      </trans-unit>
+      <trans-unit id="f8aacaf7661fefb62d929d691b6bcfbe">
+        <source>Suggest recycled packaging to customer.</source>
+        <target>Suggest recycled packaging to customer.</target>
+        <note>Line: 107</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/OrderStates/OrderStateType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f0fe1aebeace842330fb048126151e06">
+        <source>Only letters, numbers and underscores ("_") are allowed.</source>
+        <target>Only letters, numbers and underscores ("_") are allowed.</target>
+        <note>Line: 201</note>
+      </trans-unit>
+      <trans-unit id="3d034f43e44ee495a11005507185a0a0">
+        <source>Email template for both .html and .txt.</source>
+        <target>Email template for both .html and .txt.</target>
+        <note>Line: 202</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/GeneralType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="bd92437d0543aa142ccea7c021c9efe9">
+        <source>Catalog mode disables the shopping cart on your store. Visitors will be able to browse your products catalog, but not buy them.</source>
+        <target>Catalog mode disables the shopping cart on your store. Visitors will be able to browse your products catalog, but not buy them.</target>
+        <note>Line: 73</note>
+      </trans-unit>
+      <trans-unit id="bbaceb858ee14af2da60e07d63fd8678">
+        <source>Display product prices when in catalog mode.</source>
+        <target>Display product prices when in catalog mode.</target>
+        <note>Line: 81</note>
+      </trans-unit>
+      <trans-unit id="4253b29d6b167dac066027993398716e">
+        <source><![CDATA[To hide prices for a specific group, go to [1]Customer Settings > Groups[/1].]]></source>
+        <target><![CDATA[To hide prices for a specific group, go to [1]Customer Settings > Groups[/1].]]></target>
+        <note>Line: 84</note>
+      </trans-unit>
+      <trans-unit id="2593c7ce3ff937293feb1e61c152e551">
+        <source>characters</source>
+        <target>characters</target>
+        <note>Line: 112</note>
+      </trans-unit>
+      <trans-unit id="fc216bdfbaab3c5e3e87c70720110a08">
+        <source>How to calculate quantity discounts.</source>
+        <target>How to calculate quantity discounts.</target>
+        <note>Line: 120</note>
+      </trans-unit>
+      <trans-unit id="07d295aa9281a95bf9c27348393f688a">
+        <source>When active, friendly URL will be updated on every save.</source>
+        <target>When active, friendly URL will be updated on every save.</target>
+        <note>Line: 137</note>
+      </trans-unit>
+      <trans-unit id="74be75bfd118a0c7a3df9308c45f44bb">
+        <source>Enable this option if you want to activate by default all your manually created new products.</source>
+        <target>Enable this option if you want to activate by default all your manually created new products.</target>
+        <note>Line: 148</note>
+      </trans-unit>
+      <trans-unit id="e607353e02cd0a8928344d8761ddb245">
+        <source>If a customer meets multiple conditions, specific prices will be applied in this order of priority, unless a different order has been set for a particular product.</source>
+        <target>If a customer meets multiple conditions, specific prices will be applied in this order of priority, unless a different order has been set for a particular product.</target>
+        <note>Line: 159</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PageType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="572a918fa0b6c312c2c8c3447ce57421">
+        <source>Display the "%add_to_cart_label%" button when a product has attributes</source>
+        <target>Display the "%add_to_cart_label%" button when a product has attributes</target>
+        <note>Line: 56</note>
+      </trans-unit>
+      <trans-unit id="26071fff3423bbdfda80e24ef3a0d6e3">
+        <source>Display or hide the "%add_to_cart_label%" button on category pages for products that have attributes forcing customers to see product details.</source>
+        <target>Display or hide the "%add_to_cart_label%" button on category pages for products that have attributes forcing customers to see product details.</target>
+        <note>Line: 66</note>
+      </trans-unit>
+      <trans-unit id="f9aa0af5fdadc92504092774a0afb472">
+        <source>In the volume discount table on the product page, display the discounted unit price instead of the unit discount. E.g. If you sell a product for $10 with a discount of $2 from 3 items purchased, the discounted unit price ($8) will be displayed instead of the unit discount ($2).</source>
+        <target>In the volume discount table on the product page, display the discounted unit price instead of the unit discount. E.g. If you sell a product for $10 with a discount of $2 from 3 items purchased, the discounted unit price ($8) will be displayed instead of the unit discount ($2).</target>
+        <note>Line: 96</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/PaginationType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="189091e5d4ecc3ebd81c491695fe0f0b">
+        <source>Number of products displayed per page. Default is 12</source>
+        <target>Number of products displayed per page. Default is 12</target>
+        <note>Line: 52</note>
+      </trans-unit>
+      <trans-unit id="c18179baaeadd4a2fc27fafd3d6f40b1">
+        <source>The order in which products are displayed in the product list.</source>
+        <target>The order in which products are displayed in the product list.</target>
+        <note>Line: 61</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/ProductPreferences/StockType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="f9a436259aa8fcb0e45a2081a259e90d">
+        <source>When selling packs of products, how do you want your stock to be calculated?</source>
+        <target>When selling packs of products, how do you want your stock to be calculated?</target>
+        <note>Line: 64</note>
+      </trans-unit>
+      <trans-unit id="8bd1967f496dd2a0dd64dae32a3bc6e5">
+        <source>If an attribute is not available in every product combination, it will not be displayed.</source>
+        <target>If an attribute is not available in every product combination, it will not be displayed.</target>
+        <note>Line: 82</note>
+      </trans-unit>
+      <trans-unit id="9175b705bec9604985209d1f2d88c785">
+        <source>Set to "0" to disable this feature.</source>
+        <target>Set to "0" to disable this feature.</target>
+        <note>Line: 93</note>
+      </trans-unit>
+      <trans-unit id="b5e585ab39ea18b6354e53370bfe7472">
+        <source>By default, the "%add_to_cart_label%" button is hidden when a product is unavailable. You can choose to have it displayed in all cases.</source>
+        <target>By default, the "%add_to_cart_label%" button is hidden when a product is unavailable. You can choose to have it displayed in all cases.</target>
+        <note>Line: 104</note>
+      </trans-unit>
+      <trans-unit id="fcebe56087b9373f15514831184fa572">
+        <source>In stock</source>
+        <target>In stock</target>
+        <note>Line: 124</note>
+      </trans-unit>
+      <trans-unit id="bdd3f1e97760014483e852ca58e8f3c1">
+        <source>On backorder</source>
+        <target>On backorder</target>
+        <note>Line: 138</note>
+      </trans-unit>
+      <trans-unit id="b55197a49e8c4cd8c314bc2aa39d6feb">
+        <source>Out of stock</source>
+        <target>Out of stock</target>
+        <note>Line: 152</note>
+      </trans-unit>
+      <trans-unit id="4b7f36059725914c3abe3fe69a42d860">
+        <source>Advised for European merchants to be legally compliant (eg: Delivered within 3-4 days)</source>
+        <target>Advised for European merchants to be legally compliant (eg: Delivered within 3-4 days)</target>
+        <note>Line: 163</note>
+      </trans-unit>
+      <trans-unit id="777ca35e6f4ddd56c7b8c16d8f74ad13">
+        <source>Delivered within 3-4 days</source>
+        <target>Delivered within 3-4 days</target>
+        <note>Line: 173</note>
+      </trans-unit>
+      <trans-unit id="29474c2b0b3e4d053abd526ed118b420">
+        <source>Advised for European merchants to be legally compliant (eg: Delivered within 5-7 days)</source>
+        <target>Advised for European merchants to be legally compliant (eg: Delivered within 5-7 days)</target>
+        <note>Line: 184</note>
+      </trans-unit>
+      <trans-unit id="02746d0355a6c94c9ca770302e9da1ca">
+        <source>Delivered within 5-7 days</source>
+        <target>Delivered within 5-7 days</target>
+        <note>Line: 194</note>
+      </trans-unit>
+      <trans-unit id="6e39e91b64484f1b075287486b74a9a2">
+        <source>Note that the label will be displayed only if backorders are denied.</source>
+        <target>Note that the label will be displayed only if backorders are denied.</target>
+        <note>Line: 205</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/SEOOptionsType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="6d6348525df68625d9758d6d071ac505">
+        <source>Enable this option if you want to display your product's attributes in its meta title.</source>
+        <target>Enable this option if you want to display your product's attributes in its meta title.</target>
+        <note>Line: 51</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Configure/ShopParameters/TrafficSeo/Meta/SetUpUrlType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3ff4fabe93bbb10c32a27c54ea13a5e1">
+        <source>Enable this option only if your server allows URL rewriting (recommended).</source>
+        <target>Enable this option only if your server allows URL rewriting (recommended).</target>
+        <note>Line: 92</note>
+      </trans-unit>
+      <trans-unit id="6a9bb0bb3f61904834f4f436bbcaa1d2">
+        <source>URL rewriting (mod_rewrite) is not active on your server, or it is not possible to check your server configuration. If you want to use Friendly URLs, you must activate this mod.</source>
+        <target>URL rewriting (mod_rewrite) is not active on your server, or it is not possible to check your server configuration. If you want to use Friendly URLs, you must activate this mod.</target>
+        <note>Line: 99</note>
+      </trans-unit>
+      <trans-unit id="3c0127b2ac978b5ebf97533cee742da0">
+        <source>Enable this option if you want to allow accented characters in your friendly URLs. You should only activate this option if you are using non-Latin characters; for all the Latin charsets, your SEO will be better without this option.</source>
+        <target>Enable this option if you want to allow accented characters in your friendly URLs. You should only activate this option if you are using non-Latin characters; for all the Latin charsets, your SEO will be better without this option.</target>
+        <note>Line: 113</note>
+      </trans-unit>
+      <trans-unit id="7dcc0875a9e200be4d760155c09c2945">
+        <source>Enable this option only if you have problems with URL rewriting.</source>
+        <target>Enable this option only if you have problems with URL rewriting.</target>
+        <note>Line: 134</note>
+      </trans-unit>
+      <trans-unit id="9e9ad9fb2adc8da0aaec808b3d4e73e4">
+        <source>Some of PrestaShop's features might not work correctly with a specific configuration of Apache's mod_security module. We recommend to turn it off.</source>
+        <target>Some of PrestaShop's features might not work correctly with a specific configuration of Apache's mod_security module. We recommend to turn it off.</target>
+        <note>Line: 142</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/OrderReturnStates/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a4bb440d400f4dc30f148b44d08680b4">
+        <source>Invalid characters: numbers and</source>
+        <target>Invalid characters: numbers and</target>
+        <note>Line: 43</note>
+      </trans-unit>
+      <trans-unit id="00b963b1cb1aad2142ae67ce65329944">
+        <source>Status will be highlighted in this color. HTML colors only.</source>
+        <target>Status will be highlighted in this color. HTML colors only.</target>
+        <note>Line: 49</note>
+      </trans-unit>
+      <trans-unit id="43f4ac702eaf88267f6946aeb559b251">
+        <source>Order's return status name.</source>
+        <target>Order's return status name.</target>
+        <note>Line: 41</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/OrderStates/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="83b262520a65657b95fd686817c56a09">
+        <source>Order status (e.g. 'Pending').</source>
+        <target>Order status (e.g. 'Pending').</target>
+        <note>Line: 41</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/TrafficSeo/Meta/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0210e7a00cf2cd3cca0e4d7ed3bdf86f">
+        <source>To add tags, click in the field, write something, and then press the "Enter" key.</source>
+        <target>To add tags, click in the field, write something, and then press the "Enter" key.</target>
+        <note>Line: 70</note>
+      </trans-unit>
+      <trans-unit id="6252c0f2c2ed83b7b06dfca86d4650bb">
+        <source>Invalid characters:</source>
+        <target>Invalid characters:</target>
+        <note>Line: 71</note>
+      </trans-unit>
+      <trans-unit id="219985722a429b6aaceef7d363e6a565">
+        <source>Name of the related page.</source>
+        <target>Name of the related page.</target>
+        <note>Line: 45</note>
+      </trans-unit>
+      <trans-unit id="14bc1d17bbcf8fb45debf11fb7c5f80b">
+        <source>Title of this page.</source>
+        <target>Title of this page.</target>
+        <note>Line: 49</note>
+      </trans-unit>
+      <trans-unit id="79c06fd4269a36582767dc4525699148">
+        <source>A short description of your shop.</source>
+        <target>A short description of your shop.</target>
+        <note>Line: 59</note>
+      </trans-unit>
+      <trans-unit id="d9f600637f31b203b55f6c91dabd4fde">
+        <source>List of keywords for search engines.</source>
+        <target>List of keywords for search engines.</target>
+        <note>Line: 69</note>
+      </trans-unit>
+      <trans-unit id="99de37a1ed381af8c01ccb18f70b1427">
+        <source>For instance, "contacts" for http://example.com/shop/contacts to redirect to http://example.com/shop/contact-form.php</source>
+        <target>For instance, "contacts" for http://example.com/shop/contacts to redirect to http://example.com/shop/contact-form.php</target>
+        <note>Line: 80</note>
+      </trans-unit>
+      <trans-unit id="7aa534250fe76a40d96078a07b6f44e8">
+        <source>Only letters and hyphens are allowed.</source>
+        <target>Only letters and hyphens are allowed.</target>
+        <note>Line: 81</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Configure/ShopParameters/preferences.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a3a0f3b2f4c12d1c11b9916c8c10c48c">
+        <source>If you want to enable SSL on all the pages of your shop, activate the "Enable on all the pages" option below.</source>
+        <target>If you want to enable SSL on all the pages of your shop, activate the "Enable on all the pages" option below.</target>
+        <note>Line: 53</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

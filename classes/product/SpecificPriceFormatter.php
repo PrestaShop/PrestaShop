@@ -63,7 +63,8 @@ class SpecificPriceFormatterCore
      *
      * @param array $specificPrice
      * @param bool $isTaxIncluded
-     * @param Context $context
+     * @param Currency $currency
+     * @param bool $displayDiscountPrice
      */
     public function __construct(array $specificPrice, bool $isTaxIncluded, Currency $currency, bool $displayDiscountPrice)
     {
@@ -90,22 +91,28 @@ class SpecificPriceFormatterCore
         if ($this->specificPrice['price'] >= 0) {
             // The price may be directly set
 
-            /** @var float $currentPriceDefaultCurrency current price with taxes in default currency */
-            $currentPriceDefaultCurrency = $this->calculateSpecificPrice(
-                $this->specificPrice['price'],
-                (bool) $this->specificPrice['reduction_tax'],
-                $tax_rate,
-                $ecotax_amount
-            );
+            /* @var float $currentPriceDefaultCurrency current price with taxes in default currency */
+            if ($this->isTaxIncluded) {
+                $currentPriceDefaultCurrency = ($this->specificPrice['price'] * (1 + $tax_rate / 100)) + (float) $ecotax_amount;
+            } else {
+                $currentPriceDefaultCurrency = $this->specificPrice['price'] + (float) $ecotax_amount;
+            }
 
             // Since this price is set in default currency,
             // we need to convert it into current currency
-            $this->specificPrice['id_currency'];
             $currentPriceCurrentCurrency = \Tools::convertPrice($currentPriceDefaultCurrency, $this->currency, true);
 
             if ($this->specificPrice['reduction_type'] == 'amount') {
-                $currentPriceCurrentCurrency -= ($this->specificPrice['reduction_tax'] ? $this->specificPrice['reduction'] : $this->specificPrice['reduction'] / (1 + $tax_rate / 100));
-                $this->specificPrice['reduction_with_tax'] = $this->specificPrice['reduction_tax'] ? $this->specificPrice['reduction'] : $this->specificPrice['reduction'] / (1 + $tax_rate / 100);
+                if (!$this->specificPrice['reduction_tax'] && $this->isTaxIncluded) {
+                    $this->specificPrice['reduction'] = $this->specificPrice['reduction'] * (1 + $tax_rate / 100);
+                }
+                if ($this->isTaxIncluded) {
+                    $currentPriceCurrentCurrency -= $this->specificPrice['reduction'];
+                    $this->specificPrice['reduction_with_tax'] = $this->specificPrice['reduction'];
+                } else {
+                    $currentPriceCurrentCurrency -= ($this->specificPrice['reduction_tax'] ? $this->specificPrice['reduction'] / (1 + $tax_rate / 100) : $this->specificPrice['reduction']);
+                    $this->specificPrice['reduction_with_tax'] = $this->specificPrice['reduction_tax'] ? $this->specificPrice['reduction'] / (1 + $tax_rate / 100) : $this->specificPrice['reduction'];
+                }
             } else {
                 $currentPriceCurrentCurrency *= 1 - $this->specificPrice['reduction'];
             }
@@ -157,29 +164,5 @@ class SpecificPriceFormatterCore
         $this->specificPrice['save'] = $priceFormatter->format((($initialPrice * $this->specificPrice['quantity']) - ($discountPrice * $this->specificPrice['quantity'])));
 
         return $this->specificPrice;
-    }
-
-    /**
-     * @param float $specificPriceValue
-     * @param bool $specificPriceReductionTax
-     * @param float $taxRate
-     * @param float $ecoTaxAmount
-     *
-     * @return mixed
-     */
-    private function calculateSpecificPrice(
-        $specificPriceValue,
-        $specificPriceReductionTax,
-        $taxRate,
-        $ecoTaxAmount
-    ) {
-        $specificPrice = $specificPriceValue;
-
-        // only apply tax rate when tax calculation method is set to PS_TAX_INC
-        if ($this->isTaxIncluded && $specificPriceReductionTax) {
-            $specificPrice = $specificPrice * (1 + $taxRate / 100) + (float) $ecoTaxAmount;
-        }
-
-        return $specificPrice;
     }
 }

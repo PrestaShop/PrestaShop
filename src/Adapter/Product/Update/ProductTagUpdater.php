@@ -46,12 +46,20 @@ class ProductTagUpdater
     private $tagRepository;
 
     /**
+     * @var ProductIndexationUpdater
+     */
+    private $productIndexationUpdater;
+
+    /**
      * @param TagRepository $tagRepository
+     * @param ProductIndexationUpdater $productIndexationUpdater
      */
     public function __construct(
-        TagRepository $tagRepository
+        TagRepository $tagRepository,
+        ProductIndexationUpdater $productIndexationUpdater
     ) {
         $this->tagRepository = $tagRepository;
+        $this->productIndexationUpdater = $productIndexationUpdater;
     }
 
     /**
@@ -67,24 +75,78 @@ class ProductTagUpdater
     {
         $productId = new ProductId((int) $product->id);
 
-        // delete all tags for product if array is empty
-        if (empty($localizedTagsList)) {
-            $this->tagRepository->deleteAllTags($productId);
-
+        // We check if the values have changed, it represents an additional query to check but it's better than performing
+        // an update of search indexes for nothing.
+        if (!$this->hasModification($productId, $localizedTagsList)) {
             return;
         }
 
-        foreach ($localizedTagsList as $localizedTags) {
-            // delete all this product tags for this lang
-            $this->tagRepository->deleteTagsByLanguage($productId, $localizedTags->getLanguageId());
+        // delete all tags for product if array is empty
+        if (empty($localizedTagsList)) {
+            $this->tagRepository->deleteAllTags($productId);
+        } else {
+            foreach ($localizedTagsList as $localizedTags) {
+                // delete all this product tags for this lang
+                $this->tagRepository->deleteTagsByLanguage($productId, $localizedTags->getLanguageId());
 
-            // empty tags means to delete all previous tags, which is already done above.
-            if ($localizedTags->isEmpty()) {
-                continue;
+                // empty tags means to delete all previous tags, which is already done above.
+                if ($localizedTags->isEmpty()) {
+                    continue;
+                }
+
+                // assign new tags to product
+                $this->tagRepository->addTagsByLanguage($productId, $localizedTags);
+            }
+        }
+
+        // Since tags have been modified we need to update the indexation values (only for active products)
+        if ($product->active) {
+            $this->productIndexationUpdater->updateIndexation($product);
+        }
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param LocalizedTags[] $localizedTagsList
+     *
+     * @return bool
+     */
+    private function hasModification(ProductId $productId, array $localizedTagsList): bool
+    {
+        $localizedProductTags = $this->tagRepository->getLocalizedProductTags($productId);
+        $currentTagLanguages = array_keys($localizedProductTags);
+        $updateTagLanguages = array_map(static function (LocalizedTags $localizedTags): int {
+            return $localizedTags->getLanguageId()->getValue();
+        }, $localizedTagsList);
+
+        if (array_diff($currentTagLanguages, $updateTagLanguages)) {
+            return true;
+        }
+
+        foreach ($localizedTagsList as $localizedTags) {
+            if (empty($localizedProductTags[$localizedTags->getLanguageId()->getValue()])) {
+                return true;
             }
 
-            // assign new tags to product
-            $this->tagRepository->addTagsByLanguage($productId, $localizedTags);
+            $currentTags = $this->stringifyTags($localizedProductTags[$localizedTags->getLanguageId()->getValue()] ?? []);
+            $updateTags = $this->stringifyTags($localizedTags->getTags());
+            if ($currentTags !== $updateTags) {
+                return true;
+            }
         }
+
+        return false;
+    }
+
+    /**
+     * @param string[] $tags
+     *
+     * @return string
+     */
+    private function stringifyTags(array $tags): string
+    {
+        asort($tags);
+
+        return implode(';', $tags);
     }
 }

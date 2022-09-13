@@ -59,7 +59,7 @@ final class GetLastEmptyCustomerCartHandler implements GetLastEmptyCustomerCartH
             $customer = new Customer($customerId);
 
             if ($customer->id !== $customerId) {
-                throw new CustomerNotFoundException($query->getCustomerId(), sprintf('Customer with id "%s" was not found.', $customerId));
+                throw new CustomerNotFoundException(sprintf('Customer with id "%d" was not found.', $customerId));
             }
 
             $cartId = $customer->getLastEmptyCart(false);

@@ -42,7 +42,7 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
      * Show payment preferences page.
      *
      * @AdminSecurity(
-     *     "is_granted(['read'], request.get('_legacy_controller'))",
+     *     "is_granted('read', request.get('_legacy_controller'))",
      *      message="Access denied."
      * )
      *
@@ -80,7 +80,7 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
      * Process payment modules preferences form.
      *
      * @AdminSecurity(
-     *     "is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     message="Access denied.",
      *     redirectRoute="admin_payment_preferences"
      * )
@@ -101,7 +101,7 @@ class PaymentPreferencesController extends FrameworkBundleAdminController
 
             $errors = $paymentPreferencesFormHandler->save($paymentPreferences);
             if (empty($errors)) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_payment_preferences');
             }

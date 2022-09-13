@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Product;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\Isbn;
 use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
 use PrestaShopBundle\Form\Admin\Type\TranslateType;
 use Symfony\Component\Form\Extension\Core\Type as FormType;
@@ -42,10 +43,8 @@ class ProductOptions extends CommonAbstractType
     private $translator;
     private $suppliers;
     private $context;
-    private $productAdapter;
     private $router;
     private $locales;
-    private $currencyDataprovider;
     private $fullAttachmentList;
     private $attachmentList;
 
@@ -54,25 +53,19 @@ class ProductOptions extends CommonAbstractType
      *
      * @param object $translator
      * @param object $legacyContext
-     * @param object $productDataProvider
      * @param object $supplierDataProvider
-     * @param object $currencyDataprovider
      * @param object $attachmentDataprovider
      * @param object $router
      */
     public function __construct(
         $translator,
         $legacyContext,
-        $productDataProvider,
         $supplierDataProvider,
-        $currencyDataprovider,
         $attachmentDataprovider,
         $router
     ) {
         $this->context = $legacyContext;
         $this->translator = $translator;
-        $this->productAdapter = $productDataProvider;
-        $this->currencyDataprovider = $currencyDataprovider;
         $this->locales = $legacyContext->getLanguages();
         $this->router = $router;
 
@@ -189,7 +182,7 @@ class ProductOptions extends CommonAbstractType
                 'required' => false,
                 'label' => $this->translator->trans('ISBN', [], 'Admin.Catalog.Feature'),
                 'constraints' => [
-                    new Assert\Regex('/^[0-9-]{0,32}$/'),
+                    new Assert\Regex(Isbn::VALID_PATTERN),
                 ],
                 'empty_data' => '',
             ])

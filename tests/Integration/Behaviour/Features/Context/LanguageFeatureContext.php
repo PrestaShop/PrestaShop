@@ -28,10 +28,41 @@ namespace Tests\Integration\Behaviour\Features\Context;
 
 use Configuration;
 use Language;
+use PHPUnit\Framework\Assert;
 use RuntimeException;
+use Tests\Resources\LanguageResetter;
 
 class LanguageFeatureContext extends AbstractPrestaShopFeatureContext
 {
+    /**
+     * @BeforeFeature @restore-languages-before-feature
+     */
+    public static function restoreLanguagesTablesBeforeFeature(): void
+    {
+        self::restoreLanguagesTables();
+    }
+
+    /**
+     * @AfterFeature @restore-languages-after-feature
+     */
+    public static function restoreLanguagesTablesAfterFeature(): void
+    {
+        self::restoreLanguagesTables();
+    }
+
+    private static function restoreLanguagesTables(): void
+    {
+        LanguageResetter::resetLanguages();
+    }
+
+    /**
+     *  @Given I restore languages tables
+     */
+    public function restoreLanguageTablesOnDemand(): void
+    {
+        self::restoreLanguagesTables();
+    }
+
     /**
      *  @Given /^language with iso code "([^"]*)" is the default one$/
      */
@@ -94,5 +125,19 @@ class LanguageFeatureContext extends AbstractPrestaShopFeatureContext
         if ($language->locale !== $locale) {
             throw new RuntimeException(sprintf('Currency "%s" has "%s" iso code, but "%s" was expected.', $reference, $language->locale, $locale));
         }
+    }
+
+    /**
+     *  @Given /^the robots.txt file has(n't|) a rule where the directory "([^"]*)" is allowed$/
+     */
+    public function robotsTxtAllowsDirectory(string $isAllowedString, string $directory): void
+    {
+        $isAllowed = $isAllowedString === '';
+        $robotsTxtFile = file_get_contents(_PS_ROOT_DIR_ . '/robots.txt');
+
+        Assert::assertSame(
+            $isAllowed,
+            strpos($robotsTxtFile, 'Disallow: ' . $directory . "\n") !== false
+        );
     }
 }

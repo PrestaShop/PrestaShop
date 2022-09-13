@@ -35,7 +35,7 @@ use PrestaShop\PrestaShop\Core\Localization\Locale\Repository as LocaleRepositor
 use PrestaShop\PrestaShop\Core\Module\Exception\ModuleErrorInterface;
 use PrestaShopBundle\Security\Voter\PageVoter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
@@ -46,7 +46,7 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Extends The Symfony framework bundle controller to add common functions for PrestaShop needs.
  */
-class FrameworkBundleAdminController extends Controller
+class FrameworkBundleAdminController extends AbstractController
 {
     public const PRESTASHOP_CORE_CONTROLLERS_TAG = 'prestashop.core.controllers';
 
@@ -71,10 +71,14 @@ class FrameworkBundleAdminController extends Controller
     /**
      * @Template
      *
-     * @return array Template vars
+     * @deprecated Since 8.0, to be removed in the next major version
+     *
+     * @return array|Response Template vars if the action uses template annotation, or a Response object
      */
     public function overviewAction()
     {
+        @trigger_error(__FUNCTION__ . 'is deprecated since version 8.0 and will be removed in the next major version.', E_USER_DEPRECATED);
+
         return [
             'is_shop_context' => (new Context())->isShopContext(),
             'layoutTitle' => empty($this->layoutTitle) ? '' : $this->trans($this->layoutTitle, 'Admin.Navigation.Menu'),
@@ -86,17 +90,17 @@ class FrameworkBundleAdminController extends Controller
      *
      * Parse all errors mapped by id html field
      *
-     * @param Form $form
+     * @param FormInterface $form
      *
-     * @return array[array[string]] Errors
+     * @return array<array<string>> Errors
      *
      * @throws \Symfony\Component\Translation\Exception\InvalidArgumentException
      */
-    public function getFormErrorsForJS(Form $form)
+    public function getFormErrorsForJS(FormInterface $form)
     {
         $errors = [];
 
-        if (empty($form)) {
+        if ($form->count() === 0) {
             return $errors;
         }
 
@@ -172,18 +176,16 @@ class FrameworkBundleAdminController extends Controller
      */
     protected function generateSidebarLink($section, $title = false)
     {
-        $version = $this->get('prestashop.core.foundation.version')->getVersion();
         $legacyContext = $this->get('prestashop.adapter.legacy.context');
 
         if (empty($title)) {
             $title = $this->trans('Help', 'Admin.Global');
         }
 
-        $docLink = urlencode('https://help.prestashop.com/' . $legacyContext->getEmployeeLanguageIso() . '/doc/'
-            . $section . '?version=' . $version . '&country=' . $legacyContext->getEmployeeLanguageIso());
+        $iso = (string) $legacyContext->getEmployeeLanguageIso();
 
         return $this->generateUrl('admin_common_sidebar', [
-            'url' => $docLink,
+            'url' => $this->get('prestashop.core.help.documentation')->generateLink($section, $iso),
             'title' => $title,
         ]);
     }
@@ -196,6 +198,16 @@ class FrameworkBundleAdminController extends Controller
     protected function getContext()
     {
         return $this->get('prestashop.adapter.legacy.context')->getContext();
+    }
+
+    /**
+     * @return string
+     *
+     * //@todo: is there a better way using currency iso_code?
+     */
+    protected function getContextCurrencyIso(): string
+    {
+        return $this->getContext()->currency->iso_code;
     }
 
     /**
@@ -256,19 +268,19 @@ class FrameworkBundleAdminController extends Controller
      */
     protected function authorizationLevel($controller)
     {
-        if ($this->isGranted(PageVoter::DELETE, $controller . '_')) {
+        if ($this->isGranted(PageVoter::DELETE, $controller)) {
             return PageVoter::LEVEL_DELETE;
         }
 
-        if ($this->isGranted(PageVoter::CREATE, $controller . '_')) {
+        if ($this->isGranted(PageVoter::CREATE, $controller)) {
             return PageVoter::LEVEL_CREATE;
         }
 
-        if ($this->isGranted(PageVoter::UPDATE, $controller . '_')) {
+        if ($this->isGranted(PageVoter::UPDATE, $controller)) {
             return PageVoter::LEVEL_UPDATE;
         }
 
-        if ($this->isGranted(PageVoter::READ, $controller . '_')) {
+        if ($this->isGranted(PageVoter::READ, $controller)) {
             return PageVoter::LEVEL_READ;
         }
 
@@ -372,7 +384,7 @@ class FrameworkBundleAdminController extends Controller
      * Get fallback error message when something unexpected happens.
      *
      * @param string $type
-     * @param string $code
+     * @param int $code
      * @param string $message
      *
      * @return string

@@ -1,14 +1,14 @@
 require('module-alias/register');
 
-// Helpers to open and close browser
+const {expect} = require('chai');
+
+// Import utils
 const helper = require('@utils/helpers');
-
-// Helper files to delete images
 const files = require('@utils/files');
+const testContext = require('@utils/testContext');
 
-
-// Common tests login BO
-const loginCommon = require('@commonTests/loginBO');
+// Import login steps
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -19,19 +19,11 @@ const addStorePage = require('@pages/BO/shopParameters/stores/add');
 // Import data
 const StoreFaker = require('@data/faker/store');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_shopParameters_contact_store_bulkActionsStores';
-
-// Import expect from chai
-const {expect} = require('chai');
-
 
 // Browser and tab
 let browserContext;
 let page;
-
 
 let numberOfStores = 0;
 
@@ -40,7 +32,7 @@ const storesToCreate = [
   new StoreFaker({name: 'todelete2'}),
 ];
 
-describe('Create stores then disable, enable and delete with Bulk actions', async () => {
+describe('BO - Shop Parameters - Contact : Enable/Disable/Delete with Bulk Actions store', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -57,7 +49,7 @@ describe('Create stores then disable, enable and delete with Bulk actions', asyn
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to contact page', async function () {
+  it('should go to \'Shop Parameters > Contact\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToContactPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -72,7 +64,7 @@ describe('Create stores then disable, enable and delete with Bulk actions', asyn
     await expect(pageTitle).to.contains(contactPage.pageTitle);
   });
 
-  it('should go to stores page', async function () {
+  it('should go to \'Stores\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToStoresPage', baseContext);
 
     await contactPage.goToStoresPage(page);
@@ -125,31 +117,14 @@ describe('Create stores then disable, enable and delete with Bulk actions', asyn
       await expect(numberOfStoresAfterFilter).to.be.at.most(numberOfStores);
 
       for (let i = 1; i <= numberOfStoresAfterFilter; i++) {
-        const textColumn = await storesPage.getTextColumn(
-          page,
-          i,
-          'sl!name',
-        );
-
+        const textColumn = await storesPage.getTextColumn(page, i, 'sl!name');
         await expect(textColumn).to.contains('todelete');
       }
     });
 
     const tests = [
-      {
-        args:
-          {
-            action: 'disable',
-            statusWanted: false,
-          },
-      },
-      {
-        args:
-          {
-            action: 'enable',
-            statusWanted: true,
-          },
-      },
+      {args: {action: 'disable', statusWanted: false}},
+      {args: {action: 'enable', statusWanted: true}},
     ];
 
     tests.forEach((test) => {

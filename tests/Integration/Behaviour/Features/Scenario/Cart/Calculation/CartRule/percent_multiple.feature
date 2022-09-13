@@ -1,6 +1,6 @@
 #./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s cart --tags calculation-cartrule-percent-multiple
 
-@reset-database-before-feature
+@restore-all-tables-before-feature
 @calculation-cartrule-percent-multiple
 Feature: Cart rule (percent) calculation with multiple cart rules
   As a customer

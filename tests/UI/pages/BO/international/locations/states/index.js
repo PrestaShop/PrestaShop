@@ -17,7 +17,7 @@ class States extends BOBasePage {
     this.pageTitle = 'States •';
 
     // Header selectors
-    this.addNewStateLink = '#page-header-desc-state-new_state';
+    this.addNewStateLink = 'a[data-role=page-header-desc-state-link]';
 
     // Form selectors
     this.gridForm = '#form-state';

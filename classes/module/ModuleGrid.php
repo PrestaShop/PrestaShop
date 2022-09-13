@@ -51,6 +51,12 @@ abstract class ModuleGridCore extends Module
     /** @var ModuleGridEngine grid engine */
     protected $_render;
 
+    /** @var int */
+    protected $_id_lang;
+
+    /** @var string */
+    protected $_csv;
+
     abstract protected function getData();
 
     public function setEmployee($id_employee)
@@ -197,5 +203,12 @@ abstract class ModuleGridCore extends Module
     public function getLang()
     {
         return $this->_id_lang;
+    }
+
+    /**
+     * @todo Set this method as abstracted ? Quid of module compatibility.
+     */
+    public function setOption($option, $layers = 1)
+    {
     }
 }

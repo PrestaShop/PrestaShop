@@ -62,7 +62,11 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
             $data['languageId'],
             $data['active'],
             $data['profileId'],
-            $data['shopAssociation']
+            $data['shopAssociation'],
+            false, // has enable gravatar
+            1, // Minimum password length, dummy data
+            72, // Maximum password length, dummy data
+            1 // Minimum password score, dummy data
         ));
 
         SharedStorage::getStorage()->set($employeeReference, $employeeIdObject->getValue());
@@ -103,7 +107,7 @@ class EmployeeFeatureContext extends AbstractDomainFeatureContext
 
         /** @var array $shopAssociation */
         $shopAssociation = [
-            SharedStorage::getStorage()->get($shopReference)->id,
+            SharedStorage::getStorage()->get($shopReference),
         ];
         $data['shopAssociation'] = $shopAssociation;
 

@@ -31,15 +31,60 @@ use Configuration;
 use Country;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\AddSupplierCommand;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\DeleteSupplierCommand;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Command\ToggleSupplierStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\Query\GetSupplierForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\EditableSupplier;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\ViewableSupplier;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
+use RuntimeException;
 use State;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
 class SupplierFeatureContext extends AbstractDomainFeatureContext
 {
+    /**
+     * @Then /^supplier "(.+)" should have following details for product "(.+)":$/
+     *
+     * @param string $supplierReference
+     * @param string $productName
+     * @param TableNode $expectedDataTable
+     */
+    public function assertViewableSupplierProduct(string $supplierReference, string $productName, TableNode $expectedDataTable): void
+    {
+        $viewableSupplier = $this->getSupplierForViewing($supplierReference);
+        $product = null;
+
+        foreach ($viewableSupplier->getSupplierProducts() as $supplierProduct) {
+            if ($supplierProduct['name'] === $productName) {
+                $product = $supplierProduct;
+                break;
+            }
+        }
+
+        if (!$product) {
+            throw new RuntimeException(sprintf('Product by name "%s" not found in viewable supplier', $productName));
+        }
+
+        $this->assertProductFromViewableSupplier($product, $expectedDataTable);
+    }
+
+    /**
+     * @Given /^supplier "(.+)" should have (\d+) products associated$/
+     *
+     * @param string $reference
+     * @param int $productsCount
+     */
+    public function assertSupplierProductsCount(string $reference, int $productsCount): void
+    {
+        $viewableSupplier = $this->getSupplierForViewing($reference);
+        $products = $viewableSupplier->getSupplierProducts();
+
+        Assert::assertEquals($productsCount, count($products), 'Unexpected supplier products count');
+    }
+
     /**
      * @When I add new supplier :supplierReference with following properties:
      *
@@ -74,6 +119,30 @@ class SupplierFeatureContext extends AbstractDomainFeatureContext
         } catch (SupplierException $e) {
             $this->setLastException($e);
         }
+    }
+
+    /**
+     * @When I toggle status for supplier :supplierReference
+     *
+     * @param string $supplierReference
+     *
+     * @throws SupplierException
+     */
+    public function toggleSupplier(string $supplierReference): void
+    {
+        $this->getCommandBus()->handle(new ToggleSupplierStatusCommand($this->getSharedStorage()->get($supplierReference)));
+    }
+
+    /**
+     * @When I delete supplier :supplierReference
+     *
+     * @param string $supplierReference
+     *
+     * @throws SupplierException
+     */
+    public function deleteSupplier(string $supplierReference): void
+    {
+        $this->getCommandBus()->handle(new DeleteSupplierCommand($this->getSharedStorage()->get($supplierReference)));
     }
 
     /**
@@ -179,7 +248,7 @@ class SupplierFeatureContext extends AbstractDomainFeatureContext
      */
     private function getCountryIdByName(string $name): int
     {
-        return Country::getIdByName(Configuration::get('PS_LANG_DEFAULT'), $name);
+        return Country::getIdByName((int) Configuration::get('PS_LANG_DEFAULT'), $name);
     }
 
     /**
@@ -193,9 +262,65 @@ class SupplierFeatureContext extends AbstractDomainFeatureContext
         $shopIds = [];
 
         foreach ($shopReferences as $shopReference) {
-            $shopIds[] = (int) ($this->getSharedStorage()->get($shopReference))->id;
+            $shopIds[] = $this->getSharedStorage()->get($shopReference);
         }
 
         return $shopIds;
+    }
+
+    /**
+     * @param string $reference
+     * @param int|null $langId
+     *
+     * @return ViewableSupplier
+     */
+    private function getSupplierForViewing(string $reference, ?int $langId = null): ViewableSupplier
+    {
+        $langId = $langId ?? $this->getDefaultLangId();
+        $supplierId = $this->getSharedStorage()->get($reference);
+
+        /** @var ViewableSupplier $viewableSupplier */
+        $viewableSupplier = $this->getQueryBus()->handle(new GetSupplierForViewing($supplierId, $langId));
+
+        return $viewableSupplier;
+    }
+
+    /**
+     * @param array<string, mixed> $productData
+     * @param TableNode $expectedDataTable
+     */
+    private function assertProductFromViewableSupplier(array $productData, TableNode $expectedDataTable): void
+    {
+        $expectedData = $expectedDataTable->getColumnsHash();
+
+        if (!empty($productData['combinations'])) {
+            // combinations are indexed by combinationId, but for cleaner assertion we need to have simple index here
+            $combinations = array_values($productData['combinations']);
+            Assert::assertCount(count($expectedData), $combinations, 'Unexpected count of product combinations in viewable supplier');
+
+            foreach ($expectedData as $key => $expectedRow) {
+                $actualData = $combinations[$key];
+                Assert::assertSame($actualData['attributes'], $expectedRow['attribute name']);
+                $this->assertSupplierProductRow($actualData, $expectedRow);
+            }
+
+            return;
+        }
+
+        $expectedProductRow = reset($expectedData);
+        $this->assertSupplierProductRow($productData, $expectedProductRow);
+    }
+
+    /**
+     * @param array<string, mixed> $actualData
+     * @param array<string, mixed> $expectedData
+     */
+    private function assertSupplierProductRow(array $actualData, array $expectedData): void
+    {
+        Assert::assertSame($actualData['supplier_reference'], $expectedData['supplier reference']);
+        Assert::assertSame($actualData['wholesale_price'], $expectedData['wholesale price']);
+        Assert::assertSame($actualData['ean13'], $expectedData['ean13']);
+        Assert::assertSame($actualData['upc'], $expectedData['upc']);
+        Assert::assertSame($actualData['quantity'], (int) $expectedData['quantity']);
     }
 }

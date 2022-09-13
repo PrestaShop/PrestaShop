@@ -3,23 +3,18 @@ require('module-alias/register');
 // Import utils
 const helper = require('@utils/helpers');
 const files = require('@utils/files');
+const {getDateFormat} = require('@utils/date');
 
-// Import login steps
-const loginCommon = require('@commonTests/loginBO');
+// Import common tests
+const loginCommon = require('@commonTests/BO/loginBO');
+const {createOrderByCustomerTest} = require('@commonTests/FO/createOrder');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const ordersPage = require('@pages/BO/orders/index');
-const viewOrderPage = require('@pages/BO/orders/view');
+const orderPageTabListBlock = require('@pages/BO/orders/view/tabListBlock');
+const orderPageProductsBlock = require('@pages/BO/orders/view/productsBlock');
 const creditSlipsPage = require('@pages/BO/orders/creditSlips/index');
-
-// Import FO pages
-const homePage = require('@pages/FO/home');
-const foLoginPage = require('@pages/FO/login');
-const productPage = require('@pages/FO/product');
-const cartPage = require('@pages/FO/cart');
-const checkoutPage = require('@pages/FO/checkout');
-const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 
 // Import data
 const {PaymentMethods} = require('@data/demo/paymentMethods');
@@ -37,33 +32,28 @@ const {expect} = require('chai');
 let browserContext;
 let page;
 
-// Today date
-const today = new Date();
-
-// Current day
-const day = (`0${today.getDate()}`).slice(-2);
-
-// Current month
-const month = (`0${today.getMonth() + 1}`).slice(-2);
-
-// Current year
-const year = today.getFullYear();
-
-// Date today format (yyy-mm-dd)
-const dateToday = `${year}-${month}-${day}`;
-
-// Date today format (mm/dd/yyyy)
-const dateTodayToCheck = `${month}/${day}/${year}`;
-
 let numberOfCreditSlips = 0;
+const todayDate = getDateFormat('yyyy-mm-dd');
+const todayDateToCheck = getDateFormat('mm/dd/yyyy');
+const orderByCustomerData = {
+  customer: DefaultCustomer,
+  product: 1,
+  productQuantity: 5,
+  paymentMethod: PaymentMethods.wirePayment.moduleName,
+};
 
 /*
-Create order
-Create 2 credit slips for the same order
-Filter Credit slips table( by ID, Order ID, Date issued From and To)
-Download the 2 credit slip files and check them
+Pre-condition:
+- Create order
+Scenario:
+- Create 2 credit slips for the same order
+- Filter Credit slips table( by ID, Order ID, Date issued From and To)
+- Download the 2 credit slip files and check them
  */
 describe('BO - Orders - Credit slips : Create, filter and check credit slips file', async () => {
+  // Pre-condition: Create order in FO
+  createOrderByCustomerTest(orderByCustomerData, baseContext);
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -72,90 +62,6 @@ describe('BO - Orders - Credit slips : Create, filter and check credit slips fil
 
   after(async () => {
     await helper.closeBrowserContext(browserContext);
-  });
-
-  describe('Create order in FO', async () => {
-    it('should go to FO page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
-
-      await homePage.goToFo(page);
-
-      await homePage.changeLanguage(page, 'en');
-
-      const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
-    });
-
-    it('should go to login page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToLoginPageFO', baseContext);
-
-      await homePage.goToLoginPage(page);
-      const pageTitle = await foLoginPage.getPageTitle(page);
-      await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
-    });
-
-    it('should sign in with default customer', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'sighInFO', baseContext);
-
-      await foLoginPage.customerLogin(page, DefaultCustomer);
-      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
-    });
-
-    it('should add product to cart', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'addProductToCart', baseContext);
-
-      // Go to home page
-      await foLoginPage.goToHomePage(page);
-
-      // Go to the first product page
-      await homePage.goToProductPage(page, 1);
-
-      // Add the product to the cart
-      await productPage.addProductToTheCart(page, 5);
-
-      const notificationsNumber = await cartPage.getCartNotificationsNumber(page);
-      await expect(notificationsNumber).to.be.equal(5);
-    });
-
-    it('should go to delivery step', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToDeliveryStep', baseContext);
-
-      // Proceed to checkout the shopping cart
-      await cartPage.clickOnProceedToCheckout(page);
-
-      // Address step - Go to delivery step
-      const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-      await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
-    });
-
-    it('should go to payment step', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToPaymentStep', baseContext);
-
-      // Delivery step - Go to payment step
-      const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-      await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
-    });
-
-    it('should choose payment method and confirm the order', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'confirmOrder', baseContext);
-
-      // Payment step - Choose payment step
-      await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
-
-      // Check the confirmation message
-      const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-      await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
-    });
-
-    it('should sign out from FO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'sighOutFO', baseContext);
-
-      await orderConfirmationPage.logout(page);
-
-      const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is connected').to.be.false;
-    });
   });
 
   describe('Create 2 credit slips for the same order', async () => {
@@ -181,14 +87,14 @@ describe('BO - Orders - Credit slips : Create, filter and check credit slips fil
 
       await ordersPage.goToOrder(page, 1);
 
-      const pageTitle = await viewOrderPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+      const pageTitle = await orderPageTabListBlock.getPageTitle(page);
+      await expect(pageTitle).to.contains(orderPageTabListBlock.pageTitle);
     });
 
     it(`should change the order status to '${Statuses.shipped.status}' and check it`, async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'updateCreatedOrderStatus', baseContext);
 
-      const result = await viewOrderPage.modifyOrderStatus(page, Statuses.shipped.status);
+      const result = await orderPageTabListBlock.modifyOrderStatus(page, Statuses.shipped.status);
       await expect(result).to.equal(Statuses.shipped.status);
     });
 
@@ -198,20 +104,24 @@ describe('BO - Orders - Credit slips : Create, filter and check credit slips fil
     ];
 
     tests.forEach((test, index) => {
-      it(`should create the partial refund n°${index}`, async function () {
+      it(`should create the partial refund n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `addPartialRefund${index + 1}`, baseContext);
 
-        await viewOrderPage.clickOnPartialRefund(page);
+        await orderPageTabListBlock.clickOnPartialRefund(page);
 
-        const textMessage = await viewOrderPage.addPartialRefundProduct(page, test.args.productID, test.args.quantity);
-        await expect(textMessage).to.contains(viewOrderPage.partialRefundValidationMessage);
+        const textMessage = await orderPageProductsBlock.addPartialRefundProduct(
+          page,
+          test.args.productID,
+          test.args.quantity,
+        );
+        await expect(textMessage).to.contains(orderPageProductsBlock.partialRefundValidationMessage);
       });
 
       it('should check the existence of the Credit slip document', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `checkCreditSlipDocument${index + 1}`, baseContext);
 
         // Get document name
-        const documentType = await viewOrderPage.getDocumentType(page, test.args.documentRow);
+        const documentType = await orderPageTabListBlock.getDocumentType(page, test.args.documentRow);
         await expect(documentType).to.be.equal('Credit slip');
       });
     });
@@ -297,7 +207,7 @@ describe('BO - Orders - Credit slips : Create, filter and check credit slips fil
       await testContext.addContextItem(this, 'testIdentifier', 'filterDateIssued', baseContext);
 
       // Filter credit slips
-      await creditSlipsPage.filterCreditSlipsByDate(page, dateToday, dateToday);
+      await creditSlipsPage.filterCreditSlipsByDate(page, todayDate, todayDate);
 
       // Check number of element
       const numberOfCreditSlipsAfterFilter = await creditSlipsPage.getNumberOfElementInGrid(page);
@@ -305,7 +215,7 @@ describe('BO - Orders - Credit slips : Create, filter and check credit slips fil
 
       for (let i = 1; i <= numberOfCreditSlipsAfterFilter; i++) {
         const textColumn = await creditSlipsPage.getTextColumnFromTableCreditSlips(page, i, 'date_add');
-        await expect(textColumn).to.contains(dateTodayToCheck);
+        await expect(textColumn).to.contains(todayDateToCheck);
       }
     });
 

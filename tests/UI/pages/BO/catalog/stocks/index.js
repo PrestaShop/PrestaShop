@@ -40,15 +40,15 @@ class Stocks extends BOBasePage {
     this.productList = 'table.table';
     this.productRows = `${this.productList} tbody tr`;
     this.productRow = row => `${this.productRows}:nth-child(${row})`;
-    this.productRowNameColumn = row => `${this.productRow(row)} td:nth-child(1) div.media-body p`;
-    this.productRowReferenceColumn = row => `${this.productRow(row)} td:nth-child(2)`;
-    this.productRowSupplierColumn = row => `${this.productRow(row)} td:nth-child(3)`;
-    this.productRowPhysicalColumn = row => `${this.productRow(row)} td:nth-child(5)`;
-    this.productRowReservedColumn = row => `${this.productRow(row)} td:nth-child(6)`;
-    this.productRowAvailableColumn = row => `${this.productRow(row)} td:nth-child(7)`;
+    this.productRowNameColumn = row => `${this.productRow(row)} td[data-role=product-name]`;
+    this.productRowReferenceColumn = row => `${this.productRow(row)} td[data-role=product-reference]`;
+    this.productRowSupplierColumn = row => `${this.productRow(row)} td[data-role=product-supplier-name]`;
+    this.productRowPhysicalColumn = row => `${this.productRow(row)} td[data-role=physical-quantity]`;
+    this.productRowReservedColumn = row => `${this.productRow(row)} td[data-role=reserved-quantity]`;
+    this.productRowAvailableColumn = row => `${this.productRow(row)} td[data-role=available-quantity]`;
 
     // Quantity column
-    this.productRowQuantityColumn = row => `${this.productRow(row)} td.qty-spinner`;
+    this.productRowQuantityColumn = row => `${this.productRow(row)} td[data-role=update-quantity]`;
     this.productRowQuantityColumnInput = row => `${this.productRowQuantityColumn(row)} div.edit-qty input`;
     this.productRowQuantityUpdateButton = row => `${this.productRowQuantityColumn(row)} button.check-button`;
 

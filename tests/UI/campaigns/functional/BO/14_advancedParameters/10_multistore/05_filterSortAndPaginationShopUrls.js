@@ -4,7 +4,11 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const basicHelper = require('@utils/basicHelper');
+const testContext = require('@utils/testContext');
+
+// Import login steps
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -15,9 +19,6 @@ const shopUrlPage = require('@pages/BO/advancedParameters/multistore/url');
 
 // Import data
 const ShopFaker = require('@data/faker/shop');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_advancedParameters_multistore_filterSortAndPaginationShopUrls';
 
@@ -33,7 +34,7 @@ Sort table by: Id, shop name, URL
 Delete the created shop urls
 Disable multistore
  */
-describe('Filter, sort and pagination shop Urls', async () => {
+describe('BO - Advanced Parameters - Multistore : Filter, sort and pagination shop Urls', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -49,8 +50,8 @@ describe('Filter, sort and pagination shop Urls', async () => {
   });
 
   // 1 : Enable multi store
-  describe('Enable multistore', async () => {
-    it('should go to \'Shop parameters > General\' page', async function () {
+  describe('Enable \'Multistore\'', async () => {
+    it('should go to \'Shop Parameters > General\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToGeneralPage', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -65,7 +66,7 @@ describe('Filter, sort and pagination shop Urls', async () => {
       await expect(pageTitle).to.contains(generalPage.pageTitle);
     });
 
-    it('should enable \'Multi store\'', async function () {
+    it('should enable \'Multistore\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'enableMultiStore', baseContext);
 
       const result = await generalPage.setMultiStoreStatus(page, true);
@@ -74,8 +75,8 @@ describe('Filter, sort and pagination shop Urls', async () => {
   });
 
   // 2 : Go to multistore page
-  describe('Go to multistore page', async () => {
-    it('should go to \'Advanced parameters > Multi store\' page', async function () {
+  describe('Go to \'Multistore\' page', async () => {
+    it('should go to \'Advanced Parameters > Multistore\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToMultiStorePage', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -88,7 +89,7 @@ describe('Filter, sort and pagination shop Urls', async () => {
       await expect(pageTitle).to.contains(multiStorePage.pageTitle);
     });
 
-    it('should go to shop Urls page', async function () {
+    it('should go to \'Shop Urls\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToShopUrlsPage', baseContext);
 
       await multiStorePage.goToShopURLPage(page, 1);
@@ -99,8 +100,8 @@ describe('Filter, sort and pagination shop Urls', async () => {
   });
 
   // 3 : Create 20 shop urls
-  Array(20).fill(0, 0, 20).forEach((test, index) => {
-    describe(`Create shop Url n°${index + 1}`, async () => {
+  describe('Create 20 shop Urls', async () => {
+    Array(20).fill(0, 0, 20).forEach((test, index) => {
       const ShopUrlData = new ShopFaker({name: `ToDelete${index + 1}Shop`});
       it('should go to add shop URL', async function () {
         await testContext.addContextItem(this, 'testIdentifier', `goToAddURL${index}`, baseContext);
@@ -111,7 +112,7 @@ describe('Filter, sort and pagination shop Urls', async () => {
         await expect(pageTitle).to.contains(addShopUrlPage.pageTitleCreate);
       });
 
-      it('should set shop URL', async function () {
+      it(`should create shop URl n°${index + 1}`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `addURL${index}`, baseContext);
 
         const textResult = await addShopUrlPage.setVirtualUrl(page, ShopUrlData);
@@ -157,7 +158,7 @@ describe('Filter, sort and pagination shop Urls', async () => {
 
   // 5 : Pagination
   describe('Pagination next and previous', async () => {
-    it('should change the item number to 20 per page', async function () {
+    it('should change the items number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
       const paginationNumber = await shopUrlPage.selectPaginationLimit(page, '20');
@@ -178,7 +179,7 @@ describe('Filter, sort and pagination shop Urls', async () => {
       expect(paginationNumber).to.equal('1');
     });
 
-    it('should change the item number to 50 per page', async function () {
+    it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo50', baseContext);
 
       const paginationNumber = await shopUrlPage.selectPaginationLimit(page, '50');
@@ -238,7 +239,7 @@ describe('Filter, sort and pagination shop Urls', async () => {
           sortedTable = await sortedTable.map(text => parseFloat(text));
         }
 
-        const expectedResult = await shopUrlPage.sortArray(nonSortedTable, test.args.isFloat);
+        const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
         if (test.args.sortDirection === 'up') {
           await expect(sortedTable).to.deep.equal(expectedResult);
         } else {
@@ -264,8 +265,8 @@ describe('Filter, sort and pagination shop Urls', async () => {
 
 
   // 8 : Disable multi store
-  describe('Disable multistore', async () => {
-    it('should go to "Shop parameters > General" page', async function () {
+  describe('Disable \'Multistore\'', async () => {
+    it('should go to \'Shop Parameters > General\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToGeneralPage2', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -280,7 +281,7 @@ describe('Filter, sort and pagination shop Urls', async () => {
       await expect(pageTitle).to.contains(generalPage.pageTitle);
     });
 
-    it('should disable "Multi store"', async function () {
+    it('should disable \'Multistore\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'disableMultiStore', baseContext);
 
       const result = await generalPage.setMultiStoreStatus(page, false);

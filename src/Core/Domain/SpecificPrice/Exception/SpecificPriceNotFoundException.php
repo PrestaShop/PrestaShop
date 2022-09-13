@@ -24,10 +24,23 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\Exception\SpecificPriceNotFoundException as ProductSpecificPriceNotFoundException;
+
+@trigger_error(
+    sprintf(
+        '%s is deprecated since version 8.0.0 and will be removed in the next major version.',
+        SpecificPriceNotFoundException::class
+    ),
+    E_USER_DEPRECATED
+);
+
 /**
- * Thrown when requested specific price could not be found
+ * @deprecated since 8.0.0 and will be removed in the next major version.
+ * @see ProductSpecificPriceNotFoundException
  */
 class SpecificPriceNotFoundException extends SpecificPriceException
 {

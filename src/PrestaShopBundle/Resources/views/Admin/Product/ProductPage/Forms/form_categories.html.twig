@@ -23,8 +23,10 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 <h2>{{ "Categories"|trans({}, 'Admin.Catalog.Feature') }}
-  <span class="help-box" data-toggle="popover"
-    data-content="{{ "Where should the product be available on your site? The main category is where the product appears by default: this is the category which is seen in the product page's URL. Disabled categories are written in italics."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+  <span class="help-box" 
+        data-toggle="popover"
+        data-content="{{ "Where should the product be available on your site? The main category is where the product appears by default: this is the category which is seen in the product page's URL. Disabled categories are written in italics."|trans({}, 'Admin.Catalog.Help') }}" >
+  </span>
 </h2>
 <div class="categories-tree js-categories-tree">
   <fieldset class="form-group">
@@ -49,8 +51,10 @@
 <div id="add-categories">
   <h2>
     {{ "Create a new category"|trans({}, 'Admin.Catalog.Feature') }}
-    <span class="help-box" data-toggle="popover"
-      data-content="{{ "If you want to quickly create a new category, you can do it here. Don’t forget to then go to the Categories page to fill in the needed details (description, image, etc.).  A new category will not automatically appear in your shop's menu, please read the Help about it."|trans({}, 'Admin.Catalog.Help') }}" ></span>
+    <span class="help-box" 
+          data-toggle="popover"
+          data-content="{{ "If you want to quickly create a new category, you can do it here. Don’t forget to then go to the Categories page to fill in the needed details (description, image, etc.).  A new category will not automatically appear in your shop's menu, please read the Help about it."|trans({}, 'Admin.Catalog.Help') }}" >
+    </span>
   </h2>
   <div id="add-categories-content" class="hide">
     <div id="form_step1_new_category" data-action="{{ path('admin_category_simple_add_form', {'id_product': productId }) }}">

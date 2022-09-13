@@ -32,27 +32,28 @@
   </section>
 </template>
 
-<script>
-  import ProductsActions from './products-actions';
-  import ProductsTable from './products-table';
+<script lang="ts">
+  import Vue from 'vue';
+  import ProductsActions from './products-actions.vue';
+  import ProductsTable from './products-table.vue';
 
-  const DEFAULT_SORT = 'asc';
+  const DEFAULT_SORT = 'desc';
 
-  export default {
+  export default Vue.extend({
     computed: {
-      isLoading() {
+      isLoading(): boolean {
         return this.$store.state.isLoading;
       },
     },
     methods: {
-      sort(sortDirection) {
+      sort(sortDirection: string): void {
         this.$emit('fetch', sortDirection);
       },
     },
     mounted() {
       this.$store.dispatch('updatePageIndex', 1);
       this.$store.dispatch('updateKeywords', []);
-      this.$store.dispatch('updateOrder', 'product');
+      this.$store.dispatch('updateOrder', 'product_id');
       this.$store.dispatch('isLoading');
       this.$emit('resetFilters');
       this.$emit('fetch', DEFAULT_SORT);
@@ -61,5 +62,5 @@
       ProductsActions,
       ProductsTable,
     },
-  };
+  });
 </script>

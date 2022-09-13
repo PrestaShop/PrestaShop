@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags order-out-of-stock
-@reset-database-before-feature
+@restore-all-tables-before-feature
 @reset-product-price-cache
 @order-out-of-stock
 Feature: Order from Back Office (BO)

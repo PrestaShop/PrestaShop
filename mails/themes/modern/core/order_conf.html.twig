@@ -1,5 +1,5 @@
 {% extends '@MailThemes/modern/components/order_layout.html.twig' %}
-        
+
 {% block title %}{{ 'Order confirmation'|trans({}, 'Emails.Body', locale) }}{% endblock %}
 
 {% block content %}
@@ -179,17 +179,17 @@
                                       <th bgcolor="#FDFDFD">{{ 'Total price'|trans({}, 'Emails.Body', locale)|raw }}</th>
                                     </tr>
                                     {% if templateType == 'html' %}
-{products}
-{% endif %}
+                                      {products}
+                                    {% endif %}
                                     {% if templateType == 'txt' %}
-{products_txt}
-{% endif %}
+                                      {products_txt}
+                                    {% endif %}
                                     {% if templateType == 'html' %}
-{discounts}
-{% endif %}
+                                      {discounts}
+                                    {% endif %}
                                     {% if templateType == 'txt' %}
-{discounts_txt}
-{% endif %}
+                                      {discounts_txt}
+                                    {% endif %}
                                     <tr class="order_summary">
                                       <td bgcolor="#FDFDFD" colspan="3" align="{{ align_right }}">
                                         {{ 'Products'|trans({}, 'Emails.Body', locale)|raw }}
@@ -202,12 +202,14 @@
                                       </td>
                                       <td bgcolor="#FDFDFD" colspan="3"> {total_discounts} </td>
                                     </tr>
+                                    {% if giftWrapping == 1 %}
                                     <tr class="order_summary">
                                       <td bgcolor="#FDFDFD" colspan="3" align="{{ align_right }}">
                                         {{ 'Gift-wrapping'|trans({}, 'Emails.Body', locale)|raw }}
                                       </td>
                                       <td bgcolor="#FDFDFD" colspan="3"> {total_wrapping} </td>
                                     </tr>
+                                    {% endif %}
                                     <tr class="order_summary">
                                       <td bgcolor="#FDFDFD" colspan="3" align="{{ align_right }}">
                                         {{ 'Shipping'|trans({}, 'Emails.Body', locale)|raw }}
@@ -371,11 +373,11 @@
                                                 </p>
                                                 <p style="border: 1px solid #DFDFDF;background-color: #FEFEFE;padding:20px;font-size:14px">
                                                   {% if templateType == 'html' %}
-{invoice_block_html}
-{% endif %}
+                                                    {invoice_block_html}
+                                                  {% endif %}
                                                   {% if templateType == 'txt' %}
-{invoice_block_txt}
-{% endif %}
+                                                    {invoice_block_txt}
+                                                  {% endif %}
                                                 </p>
                                               </td>
                                             </tr>
@@ -451,7 +453,7 @@
               </div>
               <!--[if mso | IE]></td></tr></table></td></tr><![endif]-->
               <!-- SECOND TEXT ENDING -->
-              
+
 
 {% endblock %}
 

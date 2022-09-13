@@ -133,7 +133,8 @@ trans('Webservice', 'Admin.Navigation.Menu');
 trans('Zones', 'Admin.Navigation.Menu');
 trans('Modules Catalog', 'Admin.Navigation.Menu');
 trans('Module Manager', 'Admin.Navigation.Menu');
-trans('Experimental Features', 'Admin.Navigation.Menu');
+trans('New & Experimental Features', 'Admin.Navigation.Menu');
+trans('Security', 'Admin.Navigation.Menu');
 
 // subtab
 trans('Modules', 'Admin.Navigation.Menu');

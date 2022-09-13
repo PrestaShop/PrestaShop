@@ -25,12 +25,14 @@
  */
 
 /**
- * @property AttributeGroup $object
+ * @property AttributeGroup|ProductAttribute $object
  */
 class AdminAttributesGroupsControllerCore extends AdminController
 {
+    /** @var bool */
     public $bootstrap = true;
     protected $id_attribute;
+    /** @var string */
     protected $position_identifier = 'id_attribute_group';
     protected $attribute_name;
 
@@ -80,9 +82,10 @@ class AdminAttributesGroupsControllerCore extends AdminController
                 'confirm' => $this->trans('Delete selected items?', [], 'Admin.Notifications.Info'),
             ],
         ];
-        $this->fieldImageSettings = ['name' => 'texture', 'dir' => 'co'];
-
-        $this->image_dir = 'co';
+        $this->fieldImageSettings = [
+            'name' => 'texture',
+            'dir' => 'co',
+        ];
     }
 
     /**
@@ -103,7 +106,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
     {
         if (($id = (int) Tools::getValue('id_attribute_group'))) {
             $this->table = 'attribute';
-            $this->className = 'Attribute';
+            $this->className = 'ProductAttribute';
             $this->identifier = 'id_attribute';
             $this->position_identifier = 'id_attribute';
             $this->position_group_identifier = 'id_attribute_group';
@@ -351,15 +354,13 @@ class AdminAttributesGroupsControllerCore extends AdminController
 
         // Override var of Controller
         $this->table = 'attribute';
-        $this->className = 'Attribute';
+        $this->className = 'ProductAttribute';
         $this->identifier = 'id_attribute';
         $this->lang = true;
         $this->tpl_folder = 'attributes/';
 
-        // Create object Attribute
-        if (!$obj = new Attribute((int) Tools::getValue($this->identifier))) {
-            return;
-        }
+        // Create object ProductAttribute
+        $obj = new ProductAttribute((int) Tools::getValue($this->identifier));
 
         $str_attributes_groups = '';
         foreach ($attributes_groups as $attribute_group) {
@@ -408,7 +409,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
             /** @var AttributeGroup $object */
             $object = new $this->className();
             foreach (Language::getLanguages(false) as $language) {
-                if ($object->isAttribute(
+                if (ProductAttribute::isAttribute(
                     (int) Tools::getValue('id_attribute_group'),
                     Tools::getValue('name_' . $language['id_lang']),
                     $language['id_lang']
@@ -483,14 +484,14 @@ class AdminAttributesGroupsControllerCore extends AdminController
     {
         if (Combination::isFeatureActive()) {
             if ($this->display == 'edit' || $this->display == 'add') {
-                if (!($this->object = $this->loadObject(true))) {
+                /** @var AttributeGroup|null $object */
+                $object = $this->loadObject(true);
+                if (!($this->object = $object)) {
                     return;
                 }
                 $this->content .= $this->renderForm();
             } elseif ($this->display == 'editAttributes') {
-                if (!$this->object = new Attribute((int) Tools::getValue('id_attribute'))) {
-                    return;
-                }
+                $this->object = new ProductAttribute((int) Tools::getValue('id_attribute'));
 
                 $this->content .= $this->renderFormAttributes();
             } elseif ($this->display != 'view' && !$this->ajax) {
@@ -576,7 +577,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
             case 'view':
                 $this->toolbar_btn['newAttributes'] = [
                     'href' => $this->context->link->getAdminLink('AdminAttributesGroups', true, [], ['updateattribute' => 1, 'id_attribute_group' => (int) Tools::getValue('id_attribute_group')]),
-                    'desc' => $this->trans('Add New Values', [], 'Admin.Catalog.Feature'),
+                    'desc' => $this->trans('Add new values', [], 'Admin.Catalog.Feature'),
                     'class' => 'toolbar-new',
                 ];
 
@@ -634,7 +635,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
                         if (Validate::isLoadedObject($obj = new AttributeGroup((int) $id))) {
                             $bread_extended[] = '<a href="' . Context::getContext()->link->getAdminLink('AdminAttributesGroups') . '&id_attribute_group=' . $id . '&viewattribute_group">' . $obj->name[$this->context->employee->id_lang] . '</a>';
                         }
-                        if (Validate::isLoadedObject($obj = new Attribute((int) $this->id_attribute))) {
+                        if (Validate::isLoadedObject($obj = new ProductAttribute((int) $this->id_attribute))) {
                             $bread_extended[] = $this->trans(
                                 'Edit: %value%',
                                 [
@@ -644,10 +645,10 @@ class AdminAttributesGroupsControllerCore extends AdminController
                             );
                         }
                     } else {
-                        $bread_extended[] = $this->trans('Edit Value', [], 'Admin.Catalog.Feature');
+                        $bread_extended[] = $this->trans('Edit value', [], 'Admin.Catalog.Feature');
                     }
                 } else {
-                    $bread_extended[] = $this->trans('Add New Value', [], 'Admin.Catalog.Feature');
+                    $bread_extended[] = $this->trans('Add new value', [], 'Admin.Catalog.Feature');
                 }
 
                 break;
@@ -686,7 +687,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
     {
         if (Tools::isSubmit('updateattribute') || Tools::isSubmit('deleteattribute') || Tools::isSubmit('submitAddattribute') || Tools::isSubmit('submitBulkdeleteattribute')) {
             $this->table = 'attribute';
-            $this->className = 'Attribute';
+            $this->className = 'ProductAttribute';
             $this->identifier = 'id_attribute';
 
             if ($this->display == 'edit') {
@@ -698,7 +699,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
     public function processPosition()
     {
         if (Tools::getIsset('viewattribute_group')) {
-            $object = new Attribute((int) Tools::getValue('id_attribute'));
+            $object = new ProductAttribute((int) Tools::getValue('id_attribute'));
             self::$currentIndex = self::$currentIndex . '&viewattribute_group';
         } else {
             $object = new AttributeGroup((int) Tools::getValue('id_attribute_group'));
@@ -707,7 +708,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
         if (!Validate::isLoadedObject($object)) {
             $this->errors[] = $this->trans('An error occurred while updating the status for an object.', [], 'Admin.Notifications.Error') .
                 ' <b>' . $this->table . '</b> ' . $this->trans('(cannot load object)', [], 'Admin.Notifications.Error');
-        } elseif (!$object->updatePosition((int) Tools::getValue('way'), (int) Tools::getValue('position'))) {
+        } elseif (!$object->updatePosition((bool) Tools::getValue('way'), (int) Tools::getValue('position'))) {
             $this->errors[] = $this->trans('Failed to update the position.', [], 'Admin.Notifications.Error');
         } else {
             $id_identifier_str = ($id_identifier = (int) Tools::getValue($this->identifier)) ? '&' . $this->identifier . '=' . $id_identifier : '';
@@ -745,7 +746,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
         if (!Tools::getValue($this->identifier) && (int) Tools::getValue('id_attribute') && !Tools::getValue('attributeOrderby')) {
             // Override var of Controller
             $this->table = 'attribute';
-            $this->className = 'Attribute';
+            $this->className = 'ProductAttribute';
             $this->identifier = 'id_attribute';
         }
 
@@ -754,23 +755,18 @@ class AdminAttributesGroupsControllerCore extends AdminController
             self::$currentIndex = self::$currentIndex . '&id_attribute_group=' . (int) Tools::getValue('id_attribute_group', 0) . '&viewattribute_group';
         }
 
-        // If it's an attribute, load object Attribute()
+        // If it's an attribute, load object ProductAttribute()
         if (Tools::getValue('updateattribute') || Tools::isSubmit('deleteattribute') || Tools::isSubmit('submitAddattribute')) {
             if (true !== $this->access('edit')) {
                 $this->errors[] = $this->trans('You do not have permission to edit this.', [], 'Admin.Notifications.Error');
 
                 return;
-            } elseif (!$object = new Attribute((int) Tools::getValue($this->identifier))) {
-                $this->errors[] = $this->trans('An error occurred while updating the status for an object.', [], 'Admin.Notifications.Error') .
-                    ' <b>' . $this->table . '</b> ' .
-                    $this->trans('(cannot load object)', [], 'Admin.Notifications.Error');
-
-                return;
             }
+            $object = new ProductAttribute((int) Tools::getValue($this->identifier));
 
             if (Tools::getValue('position') !== false && Tools::getValue('id_attribute')) {
                 $_POST['id_attribute_group'] = $object->id_attribute_group;
-                if (!$object->updatePosition((int) Tools::getValue('way'), (int) Tools::getValue('position'))) {
+                if (!$object->updatePosition((bool) Tools::getValue('way'), (int) Tools::getValue('position'))) {
                     $this->errors[] = $this->trans('Failed to update the position.', [], 'Admin.Notifications.Error');
                 } else {
                     Tools::redirectAdmin(self::$currentIndex . '&conf=5&token=' . Tools::getAdminTokenLite('AdminAttributesGroups') . '#details_details_' . $object->id_attribute_group);
@@ -795,7 +791,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
                     $_POST['position'] = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue($sql);
                 }
                 $_POST['id_parent'] = 0;
-                $this->processSave($this->token);
+                $this->processSave();
             }
         } else {
             if (Tools::isSubmit('submitBulkdelete' . $this->table)) {
@@ -897,7 +893,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
     {
         // If we are deleting attributes instead of attribute_groups
         if (Tools::getIsset('attributeBox')) {
-            $this->className = 'Attribute';
+            $this->className = 'ProductAttribute';
             $this->table = 'attribute';
             $this->boxes = Tools::getValue($this->table . 'Box');
         }
@@ -913,7 +909,7 @@ class AdminAttributesGroupsControllerCore extends AdminController
     /* Modify group attribute position */
     public function ajaxProcessUpdateGroupsPositions()
     {
-        $way = (int) Tools::getValue('way');
+        $way = (bool) Tools::getValue('way');
         $id_attribute_group = (int) Tools::getValue('id_attribute_group');
         $positions = Tools::getValue('attribute_group');
 
@@ -928,8 +924,9 @@ class AdminAttributesGroupsControllerCore extends AdminController
             $pos = explode('_', $value);
 
             if (isset($pos[2]) && (int) $pos[2] === $id_attribute_group) {
-                if ($group_attribute = new AttributeGroup((int) $pos[2])) {
-                    if (isset($position) && $group_attribute->updatePosition($way, $position)) {
+                $group_attribute = new AttributeGroup((int) $pos[2]);
+                if (Validate::isLoadedObject($group_attribute)) {
+                    if ($group_attribute->updatePosition($way, $position)) {
                         echo 'ok position ' . (int) $position . ' for attribute group ' . (int) $pos[2] . '\r\n';
                     } else {
                         echo '{"hasError" : true, "errors" : "Can not update the ' . (int) $id_attribute_group . ' attribute group to position ' . (int) $position . ' "}';
@@ -946,9 +943,8 @@ class AdminAttributesGroupsControllerCore extends AdminController
     /* Modify attribute position */
     public function ajaxProcessUpdateAttributesPositions()
     {
-        $way = (int) Tools::getValue('way');
+        $way = (bool) Tools::getValue('way');
         $id_attribute = (int) Tools::getValue('id_attribute');
-        $id_attribute_group = (int) Tools::getValue('id_attribute_group');
         $positions = Tools::getValue('attribute');
 
         if (is_array($positions)) {
@@ -956,8 +952,9 @@ class AdminAttributesGroupsControllerCore extends AdminController
                 $pos = explode('_', $value);
 
                 if ((isset($pos[1], $pos[2])) && (int) $pos[2] === $id_attribute) {
-                    if ($attribute = new Attribute((int) $pos[2])) {
-                        if (isset($position) && $attribute->updatePosition($way, $position)) {
+                    $attribute = new ProductAttribute((int) $pos[2]);
+                    if (Validate::isLoadedObject($attribute)) {
+                        if ($attribute->updatePosition($way, $position)) {
                             echo 'ok position ' . (int) $position . ' for attribute ' . (int) $pos[2] . '\r\n';
                         } else {
                             echo '{"hasError" : true, "errors" : "Can not update the ' . (int) $id_attribute . ' attribute to position ' . (int) $position . ' "}';

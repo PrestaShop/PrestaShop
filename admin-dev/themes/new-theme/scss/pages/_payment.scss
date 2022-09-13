@@ -31,15 +31,6 @@
       }
     }
 
-    #modules_list_container_content {
-      .tab-pane {
-        @include media-breakpoint-down(sm) {
-          // stylelint-disable-next-line
-          overflow: scroll;
-        }
-      }
-    }
-
     .tab-content {
       @include media-breakpoint-down(sm) {
         padding: 0 0.5rem;
@@ -75,12 +66,6 @@
                 .btn-group {
                   margin-top: 0;
                 }
-              }
-            }
-
-            .module_name {
-              .text-muted {
-                display: block;
               }
             }
           }

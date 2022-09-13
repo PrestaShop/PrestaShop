@@ -29,12 +29,12 @@
   <div class="module-item-list">
   {% for module in paymentModules %}
     <div class="row module-item-wrapper-list border-bottom mb-sm-3">
-      <div class="col-12 col-sm-2 col-md-1 col-lg-1">
+      <div class="col-sm-2 col-md-1 col-lg-1">
         <div class="module-logo-thumb-list text-center">
           <img src="{{ module.attributes.img }}" alt="{{ module.attributes.displayName }}"/>
         </div>
       </div>
-      <div class="col-12 col-sm-6 col-md-8 col-lg-9 pl-0">
+      <div class="col-sm-6 col-md-8 col-lg-9 pl-0">
         <p class="mb-0">
           {{ module.attributes.displayName|raw }}
           <span class="text-muted">
@@ -46,7 +46,7 @@
         </p>
       </div>
       {% if module.attributes.is_configurable %}
-      <div class="col-12 col-sm-4 col-md-3 col-lg-2 mb-3">
+      <div class="col-sm-4 col-md-3 col-lg-2 mb-3">
         <div class="text-center">
           <a href="{{ path('admin_module_configure_action', {'module_name': module.attributes.name}) }}"
              class="btn btn-primary-reverse btn-outline-primary light-button"
@@ -59,12 +59,5 @@
     </div>
   {% endfor %}
   </div>
-  {% else %}
-    <div class="alert alert-warning" role="alert">
-      <p class="alert-text">
-        {{ 'It seems there are no recommended payment solutions for your country.'|trans({}, 'Admin.Payment.Notification') }} <br>
-        <a target="_blank" rel="noopener noreferrer nofollow" href="https://www.prestashop.com/en/contact-us">{{ 'Do you think there should be one? Let us know!'|trans({}, 'Admin.Shipping.Feature') }}</a>
-      </p>
-    </div>
   {% endif %}
 {% endblock %}

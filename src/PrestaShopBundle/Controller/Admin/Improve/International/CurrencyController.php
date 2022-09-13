@@ -32,7 +32,6 @@ use PrestaShop\PrestaShop\Core\Domain\Currency\Command\BulkToggleCurrenciesStatu
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\DeleteCurrencyCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\RefreshExchangeRatesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Command\ToggleCurrencyStatusCommand;
-use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\AutomateExchangeRatesUpdateException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\BulkDeleteCurrenciesException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\BulkToggleCurrenciesException;
 use PrestaShop\PrestaShop\Core\Domain\Currency\Exception\CannotDeleteDefaultCurrencyException;
@@ -103,7 +102,7 @@ class CurrencyController extends FrameworkBundleAdminController
     /**
      * @deprecated since 1.7.8 and will be removed in next major. Use CommonController:searchGridAction instead
      *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -145,7 +144,7 @@ class CurrencyController extends FrameworkBundleAdminController
         try {
             $result = $this->getCurrencyFormHandler()->handle($currencyForm);
             if (null !== $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_currencies_index');
             }
@@ -184,7 +183,7 @@ class CurrencyController extends FrameworkBundleAdminController
             $result = $this->getCurrencyFormHandler()->handleFor($currencyId, $currencyForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_currencies_index');
             }
@@ -276,7 +275,7 @@ class CurrencyController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_currencies_index');
         }
 
-        $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
+        $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
 
         return $this->redirectToRoute('admin_currencies_index');
     }
@@ -377,7 +376,7 @@ class CurrencyController extends FrameworkBundleAdminController
         try {
             $this->getCommandBus()->handle(new RefreshExchangeRatesCommand());
 
-            $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+            $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
         } catch (CannotRefreshExchangeRatesException $exception) {
             $this->addFlash('error', $exception->getMessage());
         }
@@ -525,7 +524,7 @@ class CurrencyController extends FrameworkBundleAdminController
 
             $this->addFlash(
                 'success',
-                $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+                $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
             );
         } catch (CurrencyException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages($e)));
@@ -586,15 +585,6 @@ class CurrencyController extends FrameworkBundleAdminController
                 CurrencyConstraintException::EMPTY_BULK_DELETE => $this->trans(
                     'You must select at least one item to perform a bulk action.',
                     'Admin.Notifications.Error'
-                ),
-            ],
-            AutomateExchangeRatesUpdateException::class => [
-                AutomateExchangeRatesUpdateException::CRON_TASK_MANAGER_MODULE_NOT_INSTALLED => $this->trans(
-                    'Please install the %module_name% module before using this feature.',
-                    'Admin.International.Notification',
-                    [
-                        '%module_name%' => 'cronjobs',
-                    ]
                 ),
             ],
             DefaultCurrencyInMultiShopException::class => [

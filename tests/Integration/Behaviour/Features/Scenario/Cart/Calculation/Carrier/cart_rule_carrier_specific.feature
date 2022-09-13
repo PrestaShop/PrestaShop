@@ -1,4 +1,4 @@
-@reset-database-before-feature
+@restore-all-tables-before-feature
 Feature: Cart calculation with carrier specific cart rules
   As a customer
   I must be able to have correct cart total when selecting carriers

@@ -27,7 +27,7 @@
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
 
 {% block content %}
-  {% if multistoreIsUsed %}{{ ps.infotip(multistoreInfoTip, true) }}{% endif %}
+  {% include '@PrestaShop/Admin/Common/multistore-infotip.html.twig' %}
   {% if requestSqlForm.vars.errors is not empty %}
     <div class="alert alert-danger">
       {% for error in requestSqlForm.vars.errors %}
@@ -36,15 +36,12 @@
     </div>
   {% endif %}
 
-  <div class="row justify-content-center">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/Blocks/form.html.twig' %}
+  {% include '@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/Blocks/form.html.twig' %}
 
-      {% block sql_manager_db_tables_panel %}
-        {% include '@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/Blocks/db_tables_panel.html.twig' %}
-      {% endblock %}
-    </div>
-  </div>
+  {% block sql_manager_db_tables_panel %}
+    {% include '@PrestaShop/Admin/Configure/AdvancedParameters/RequestSql/Blocks/db_tables_panel.html.twig' %}
+  {% endblock %}
+
 {% endblock %}
 
 {% block javascripts %}

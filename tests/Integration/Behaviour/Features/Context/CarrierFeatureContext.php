@@ -27,6 +27,7 @@
 namespace Tests\Integration\Behaviour\Features\Context;
 
 use Address;
+use Behat\Behat\Context\Environment\InitializedContextEnvironment;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Carrier;
 use CartRule;
@@ -87,7 +88,12 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
     /** @BeforeScenario */
     public function before(BeforeScenarioScope $scope)
     {
-        $this->customerFeatureContext = $scope->getEnvironment()->getContext(CustomerFeatureContext::class);
+        /** @var InitializedContextEnvironment $environment */
+        $environment = $scope->getEnvironment();
+        /** @var CustomerFeatureContext $customerFeatureContext */
+        $customerFeatureContext = $environment->getContext(CustomerFeatureContext::class);
+
+        $this->customerFeatureContext = $customerFeatureContext;
     }
 
     /**
@@ -102,9 +108,9 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @param $zoneName
+     * @param string $zoneName
      */
-    public function checkZoneWithNameExists($zoneName)
+    public function checkZoneWithNameExists(string $zoneName): void
     {
         $this->checkFixtureExists($this->zones, 'Zone', $zoneName);
     }
@@ -124,24 +130,24 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
         $this->previousCountries[$countryName] = clone $country;
         $this->countries[$countryName] = $country;
         $country->id_zone = $this->zones[$zoneName]->id;
-        $country->active = 1;
+        $country->active = true;
         $country->save();
     }
 
     /**
-     * @param $countryName
+     * @param string $countryName
      *
      * @return Country
      */
-    public function getCountryWithName($countryName)
+    public function getCountryWithName($countryName): Country
     {
         return $this->countries[$countryName];
     }
 
     /**
-     * @param $countryName
+     * @param string $countryName
      */
-    public function checkCountryWithNameExists($countryName)
+    public function checkCountryWithNameExists(string $countryName): void
     {
         $this->checkFixtureExists($this->countries, 'Country', $countryName);
     }
@@ -163,19 +169,19 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @param $stateName
+     * @param string $stateName
      *
      * @return State
      */
-    public function getStateWithName($stateName)
+    public function getStateWithName(string $stateName): State
     {
         return $this->states[$stateName];
     }
 
     /**
-     * @param $stateName
+     * @param string $stateName
      */
-    public function checkStateWithNameExists($stateName)
+    public function checkStateWithNameExists(string $stateName): void
     {
         $this->checkFixtureExists($this->states, 'State', $stateName);
     }
@@ -213,9 +219,9 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @param $addressName
+     * @param string $addressName
      */
-    public function checkAddressWithNameExists($addressName)
+    public function checkAddressWithNameExists(string $addressName): void
     {
         $this->checkFixtureExists($this->addresses, 'Address', $addressName);
     }
@@ -225,11 +231,11 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function createCarrier($carrierName)
     {
-        $carrier = new Carrier(null, Configuration::get('PS_LANG_DEFAULT'));
+        $carrier = new Carrier(null, (int) Configuration::get('PS_LANG_DEFAULT'));
         $carrier->name = $carrierName;
         $carrier->shipping_method = Carrier::SHIPPING_METHOD_PRICE;
         $carrier->delay = '28 days later';
-        $carrier->active = 1;
+        $carrier->active = true;
         $carrier->add();
         $this->carriers[$carrierName] = $carrier;
         SharedStorage::getStorage()->set($carrierName, $carrier->id);
@@ -270,19 +276,19 @@ class CarrierFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @param $carrierName
+     * @param string $carrierName
      */
-    public function checkCarrierWithNameExists($carrierName)
+    public function checkCarrierWithNameExists(string $carrierName): void
     {
         $this->checkFixtureExists($this->carriers, 'Carrier', $carrierName);
     }
 
     /**
-     * @param $carrierName
+     * @param string $carrierName
      *
      * @return Carrier
      */
-    public function getCarrierWithName($carrierName)
+    public function getCarrierWithName(string $carrierName): Carrier
     {
         return $this->carriers[$carrierName];
     }

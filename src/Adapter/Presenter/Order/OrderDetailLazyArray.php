@@ -103,7 +103,7 @@ class OrderDetailLazyArray extends AbstractLazyArray
      */
     public function getOrderDate()
     {
-        return Tools::displayDate($this->order->date_add, null, false);
+        return Tools::displayDate($this->order->date_add, false);
     }
 
     /**
@@ -224,7 +224,7 @@ class OrderDetailLazyArray extends AbstractLazyArray
             if (isset($shipping['carrier_name']) && $shipping['carrier_name']) {
                 $orderShipping[$shippingId] = $shipping;
                 $orderShipping[$shippingId]['shipping_date'] =
-                    Tools::displayDate($shipping['date_add'], null, false);
+                    Tools::displayDate($shipping['date_add'], false);
                 $orderShipping[$shippingId]['shipping_weight'] =
                     ($shipping['weight'] > 0) ? sprintf('%.3f', $shipping['weight']) . ' ' .
                         Configuration::get('PS_WEIGHT_UNIT') : '-';

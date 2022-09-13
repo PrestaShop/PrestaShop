@@ -23,6 +23,24 @@ class CommonPage {
   }
 
   /**
+   * Go to FO page
+   * @param page {Page} Browser tab
+   * @return {Promise<void>}
+   */
+  async goToFo(page) {
+    await this.goTo(page, global.FO.URL);
+  }
+
+  /**
+   * Go to BO page
+   * @param page {Page} Browser tab
+   * @return {Promise<void>}
+   */
+  async goToBO(page) {
+    await this.goTo(page, global.BO.URL);
+  }
+
+  /**
    * Get current url
    * @param page {Page} Browser tab
    * @returns {Promise<string>}
@@ -98,7 +116,7 @@ class CommonPage {
     if (waitForSelector) {
       await this.waitForVisibleSelector(page, selector);
     }
-    const textContent = await page.$eval(selector, el => el.textContent);
+    const textContent = await page.textContent(selector);
 
     return textContent.replace(/\s+/g, ' ').trim();
   }
@@ -111,9 +129,7 @@ class CommonPage {
    * @returns {Promise<string>}
    */
   async getAttributeContent(page, selector, attribute) {
-    await page.waitForSelector(selector, {state: 'attached'});
-    return page.$eval(selector, (el, attr) => el
-      .getAttribute(attr), attribute);
+    return page.getAttribute(selector, attribute);
   }
 
   /**
@@ -196,11 +212,8 @@ class CommonPage {
    * @return {Promise<void>}
    */
   async setValue(page, selector, value) {
-    await this.waitForSelectorAndClick(page, selector);
-    await page.click(selector, {clickCount: 3});
-    // Delete text from input before typing
-    await page.waitForTimeout(100);
-    await page.press(selector, 'Delete');
+    await this.clearInput(page, selector);
+
     if (value !== null) {
       await page.type(selector, value.toString());
     }
@@ -212,12 +225,10 @@ class CommonPage {
    * @param selector {string} String to locate the element for the deletion
    * @returns {Promise<void>}
    */
-  async deleteTextFromInput(page, selector) {
-    await this.waitForSelectorAndClick(page, selector);
-    await page.click(selector, {clickCount: 3});
-    // Delete text from input before typing
-    await page.waitForTimeout(100);
-    await page.press(selector, 'Delete');
+  async clearInput(page, selector) {
+    await this.waitForVisibleSelector(page, selector);
+    // eslint-disable-next-line no-return-assign,no-param-reassign
+    await page.$eval(selector, el => el.value = '');
   }
 
   /**
@@ -271,26 +282,11 @@ class CommonPage {
    * @param page {Page} Browser tab
    * @param selector {string} String to locate the select
    * @param textValue {string/number} Value to select
+   * @param force {boolean} Forcing the value of the select
    * @returns {Promise<void>}
    */
-  async selectByVisibleText(page, selector, textValue) {
-    let found = false;
-    let options = await page.$$eval(
-      `${selector} option`,
-      all => all.map(
-        option => ({
-          textContent: option.textContent,
-          value: option.value,
-        })),
-    );
-
-    options = await options.filter(option => textValue === option.textContent.trim());
-    if (options.length !== 0) {
-      const elementValue = await options[0].value;
-      await page.selectOption(selector, elementValue);
-      found = true;
-    }
-    if (!found) throw new Error(`${textValue} was not found as option of select`);
+  async selectByVisibleText(page, selector, textValue, force = false) {
+    await page.selectOption(selector, {label: textValue.toString()}, {force});
   }
 
   /**
@@ -312,12 +308,13 @@ class CommonPage {
    * Go to Page and wait for navigation
    * @param page {Page} Browser tab
    * @param selector {string} String to locate the element
-   * @param waitUntil {string} The event to wait after click (load/networkidle/domcontentloaded)
+   * @param waitUntil {'load'|'domcontentloaded'|'networkidle'|'commit'} The event to wait after click
+   * @param timeout {number} Time to wait for navigation
    * @return {Promise<void>}
    */
-  async clickAndWaitForNavigation(page, selector, waitUntil = 'networkidle') {
+  async clickAndWaitForNavigation(page, selector, waitUntil = 'networkidle', timeout = 30000) {
     await Promise.all([
-      page.waitForNavigation({waitUntil}),
+      page.waitForNavigation({waitUntil, timeout}),
       page.click(selector),
     ]);
   }
@@ -338,8 +335,8 @@ class CommonPage {
    * @param selector {string} String to locate the checkbox
    * @return {Promise<boolean>}
    */
-  async isCheckboxSelected(page, selector) {
-    return page.$eval(selector, el => el.checked);
+  isChecked(page, selector) {
+    return page.isChecked(selector);
   }
 
   /**
@@ -349,10 +346,8 @@ class CommonPage {
    * @param valueWanted {boolean} Value wanted on the selector
    * @return {Promise<void>}
    */
-  async changeCheckboxValue(page, checkboxSelector, valueWanted = true) {
-    if (valueWanted !== (await this.isCheckboxSelected(page, checkboxSelector))) {
-      await page.click(checkboxSelector);
-    }
+  async setChecked(page, checkboxSelector, valueWanted = true) {
+    await page.setChecked(checkboxSelector, valueWanted);
   }
 
   /**
@@ -363,44 +358,35 @@ class CommonPage {
    * @return {Promise<void>}
    */
   async setHiddenCheckboxValue(page, checkboxSelector, valueWanted = true) {
-    const checkboxElement = await page.$(checkboxSelector);
-    if (valueWanted !== (await checkboxElement.isChecked())) {
+    if (valueWanted !== (await this.isChecked(page, checkboxSelector))) {
       const parentElement = await this.getParentElement(page, checkboxSelector);
       await parentElement.click();
     }
   }
 
   /**
-   * Sort array of strings or numbers
-   * @param arrayToSort {Array} Array to sort
-   * @param isFloat {boolean} True if array values type are float
-   * @param isDate {boolean} True if array values type are date
-   * @return {Promise<[]>}
+   * Select, unselect checkbox with icon click
+   * @param page {Page} Browser tab
+   * @param checkboxSelector {string} Selector of checkbox
+   * @param valueWanted {boolean} True if we want to select checkBox, else otherwise
+   * @return {Promise<void>}
    */
-  async sortArray(arrayToSort, isFloat = false, isDate = false) {
-    if (isFloat) {
-      return arrayToSort.sort((a, b) => a - b);
+  async setCheckedWithIcon(page, checkboxSelector, valueWanted = true) {
+    if (valueWanted !== (await this.isChecked(page, checkboxSelector))) {
+      // The selector is not visible, that why '+ i' is required here
+      await page.$eval(`${checkboxSelector} + i`, el => el.click());
     }
-
-    if (isDate) {
-      return arrayToSort.sort((a, b) => new Date(a) - new Date(b));
-    }
-
-    return arrayToSort.sort((a, b) => a.localeCompare(b));
   }
 
   /**
    * Drag and drop element
    * @param page {Page} Browser tab
-   * @param selectorToDrag {string} String to locate the element to drag
-   * @param selectorWhereToDrop String to locate the element where to drop
+   * @param source {string} String to locate the element to drag
+   * @param target {string} String to locate the element where to drop
    * @return {Promise<void>}
    */
-  async dragAndDrop(page, selectorToDrag, selectorWhereToDrop) {
-    await page.hover(selectorToDrag);
-    await page.mouse.down();
-    await page.hover(selectorWhereToDrop);
-    await page.mouse.up();
+  async dragAndDrop(page, source, target) {
+    await page.dragAndDrop(source, target);
   }
 
   /**
@@ -478,6 +464,19 @@ class CommonPage {
     ]);
 
     return download.path();
+  }
+
+  /**
+   * Wait for title to be filled
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async waitForPageTitleToLoad(page) {
+    let isTitleEmpty = true;
+    for (let i = 0; i < 20 && isTitleEmpty; i++) {
+      isTitleEmpty = (await this.getPageTitle(page) === '');
+      await page.waitForTimeout(100);
+    }
   }
 }
 

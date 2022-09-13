@@ -30,5 +30,10 @@ namespace PrestaShop\PrestaShop\Core\FeatureFlag;
 
 class FeatureFlagSettings
 {
+    public const STABILITY_STABLE = 'stable';
+    public const STABILITY_BETA = 'beta';
+
     public const FEATURE_FLAG_PRODUCT_PAGE_V2 = 'product_page_v2';
+
+    public const FEATURE_FLAG_PRODUCT_PAGE_V2_MULTI_SHOP = 'product_page_v2_multi_shop';
 }

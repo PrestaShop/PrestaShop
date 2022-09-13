@@ -47,7 +47,10 @@ class BackupController extends FrameworkBundleAdminController
     /**
      * Show backup page.
      *
-     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))",
+     *           message="You do not have permission to update this.",
+     *          redirectRoute="admin_product_catalog"
+     * )
      *
      * @param Request $request
      * @param BackupFilters $filters
@@ -77,7 +80,6 @@ class BackupController extends FrameworkBundleAdminController
         return $this->render('@PrestaShop/Admin/Configure/AdvancedParameters/Backup/index.html.twig', [
             'backupGrid' => $this->presentGrid($backupGrid),
             'backupForm' => $backupForm->createView(),
-            'isHostMode' => $configuration->get('_PS_HOST_MODE_'),
             'dbPrefix' => $configuration->get('_DB_PREFIX_'),
             'hasDownloadFile' => $hasDownloadFile,
             'downloadFile' => $downloadFile,
@@ -94,7 +96,7 @@ class BackupController extends FrameworkBundleAdminController
     /**
      * Show file download view.
      *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      * @DemoRestricted(redirectRoute="admin_backups_index")
      *
      * @param Request $request
@@ -120,7 +122,7 @@ class BackupController extends FrameworkBundleAdminController
     /**
      * Return a backup content as a download.
      *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller')~'_')")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      * @DemoRestricted(redirectRoute="admin_backup")
      *
      * @param string $downloadFileName
@@ -137,7 +139,11 @@ class BackupController extends FrameworkBundleAdminController
     /**
      * Process backup options saving.
      *
-     * @AdminSecurity("is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))")
+     * @AdminSecurity(
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
+     *          message="You do not have permission to update this.",
+     *          redirectRoute="admin_backups_index"
+     * )
      * @DemoRestricted(redirectRoute="admin_backups_index")
      *
      * @param Request $request
@@ -167,7 +173,10 @@ class BackupController extends FrameworkBundleAdminController
     /**
      * Create new backup.
      *
-     * @AdminSecurity("is_granted(['create'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('create', request.get('_legacy_controller'))",
+     *          message="You do not have permission to create this.",
+     *          redirectRoute="admin_backups_index"
+     * )
      * @DemoRestricted(redirectRoute="admin_backups_index")
      *
      * @return RedirectResponse
@@ -205,7 +214,10 @@ class BackupController extends FrameworkBundleAdminController
     /**
      * Process backup file deletion.
      *
-     * @AdminSecurity("is_granted(['delete'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))",
+     *          message="You do not have permission to delete this.",
+     *          redirectRoute="admin_backups_index"
+     * )
      * @DemoRestricted(redirectRoute="admin_backups_index")
      *
      * @param string $deleteFileName
@@ -230,7 +242,7 @@ class BackupController extends FrameworkBundleAdminController
             return $this->redirectToRoute('admin_backups_index');
         }
 
-        $this->addFlash('success', $this->trans('Successful deletion.', 'Admin.Notifications.Success'));
+        $this->addFlash('success', $this->trans('Successful deletion', 'Admin.Notifications.Success'));
 
         return $this->redirectToRoute('admin_backups_index');
     }
@@ -238,7 +250,10 @@ class BackupController extends FrameworkBundleAdminController
     /**
      * Process bulk backup deletion.
      *
-     * @AdminSecurity("is_granted(['delete'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('delete', request.get('_legacy_controller'))",
+     *          message="You do not have permission to delete this.",
+     *          redirectRoute="admin_backups_index"
+     * )
      * @DemoRestricted(redirectRoute="admin_backups_index")
      *
      * @param Request $request
@@ -287,7 +302,7 @@ class BackupController extends FrameworkBundleAdminController
 
         $this->addFlash(
             'success',
-            $this->trans('The selection has been successfully deleted.', 'Admin.Notifications.Success')
+            $this->trans('The selection has been successfully deleted', 'Admin.Notifications.Success')
         );
 
         return $this->redirectToRoute('admin_backups_index');

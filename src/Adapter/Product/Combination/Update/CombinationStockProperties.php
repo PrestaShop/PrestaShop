@@ -28,13 +28,14 @@ declare(strict_types=1);
 namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Update;
 
 use DateTimeInterface;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\StockModification;
 
 class CombinationStockProperties
 {
     /**
-     * @var int|null
+     * @var StockModification|null
      */
-    private $quantity;
+    private $stockModification;
 
     /**
      * @var int|null
@@ -62,7 +63,7 @@ class CombinationStockProperties
     private $availableDate;
 
     /**
-     * @param int|null $quantity
+     * @param StockModification|null $stockModification
      * @param int|null $minimalQuantity
      * @param string|null $location
      * @param int|null $lowStockThreshold
@@ -70,27 +71,28 @@ class CombinationStockProperties
      * @param DateTimeInterface|null $availableDate
      */
     public function __construct(
-        ?int $quantity = null,
+        ?StockModification $stockModification = null,
         ?int $minimalQuantity = null,
         ?string $location = null,
         ?int $lowStockThreshold = null,
         ?bool $lowStockAlertEnabled = null,
         ?DateTimeInterface $availableDate = null
     ) {
-        $this->quantity = $quantity;
+        $this->stockModification = $stockModification;
         $this->minimalQuantity = $minimalQuantity;
         $this->location = $location;
         $this->lowStockThreshold = $lowStockThreshold;
         $this->lowStockAlertEnabled = $lowStockAlertEnabled;
         $this->availableDate = $availableDate;
+        $this->stockModification = $stockModification;
     }
 
     /**
-     * @return int|null
+     * @return StockModification|null
      */
-    public function getQuantity(): ?int
+    public function getStockModification(): ?StockModification
     {
-        return $this->quantity;
+        return $this->stockModification;
     }
 
     /**

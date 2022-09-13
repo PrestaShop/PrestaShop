@@ -51,6 +51,11 @@ class ProductSupplierForEditing
     /**
      * @var string
      */
+    private $supplierName;
+
+    /**
+     * @var string
+     */
     private $reference;
 
     /**
@@ -81,6 +86,7 @@ class ProductSupplierForEditing
         int $productSupplierId,
         int $productId,
         int $supplierId,
+        string $supplierName,
         string $reference,
         string $priceTaxExcluded,
         int $currencyId,
@@ -89,6 +95,7 @@ class ProductSupplierForEditing
         $this->productSupplierId = $productSupplierId;
         $this->productId = $productId;
         $this->supplierId = $supplierId;
+        $this->supplierName = $supplierName;
         $this->reference = $reference;
         $this->priceTaxExcluded = $priceTaxExcluded;
         $this->currencyId = $currencyId;
@@ -117,6 +124,14 @@ class ProductSupplierForEditing
     public function getSupplierId(): int
     {
         return $this->supplierId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSupplierName(): string
+    {
+        return $this->supplierName;
     }
 
     /**

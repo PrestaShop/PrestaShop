@@ -49,8 +49,8 @@ interface PositionUpdateHandlerInterface
      *      3 => 3
      * ];
      *
-     * @param string|int $parentId
      * @param PositionDefinitionInterface $positionDefinition
+     * @param string|int $parentId
      *
      * @return array
      */
@@ -72,8 +72,9 @@ interface PositionUpdateHandlerInterface
      *
      * @param PositionDefinitionInterface $positionDefinition
      * @param array $newPositions
+     * @param string|int $parentId
      *
      * @throws PositionUpdateException
      */
-    public function updatePositions(PositionDefinitionInterface $positionDefinition, array $newPositions);
+    public function updatePositions(PositionDefinitionInterface $positionDefinition, array $newPositions, $parentId = null);
 }

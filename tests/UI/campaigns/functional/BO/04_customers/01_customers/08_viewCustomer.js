@@ -5,9 +5,10 @@ const {expect} = require('chai');
 // Import utils
 const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
+const {getDateFormat} = require('@utils/date');
 
 // Import login steps
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -15,7 +16,7 @@ const customersPage = require('@pages/BO/customers');
 const addCustomerPage = require('@pages/BO/customers/add');
 const viewCustomerPage = require('@pages/BO/customers/view');
 const addAddressPage = require('@pages/BO/customers/addresses/add');
-const viewOrderPage = require('@pages/BO/orders/view');
+const orderPageCustomerBlock = require('@pages/BO/orders/view/customerBlock');
 const viewCartPage = require('@pages/BO/orders/shoppingCarts/view');
 
 // Import FO pages
@@ -37,6 +38,7 @@ const baseContext = 'functional_BO_customers_customers_viewCustomer';
 
 let browserContext;
 let page;
+const today = getDateFormat('mm/dd/yyyy');
 
 let numberOfCustomers = 0;
 
@@ -45,13 +47,6 @@ const createCustomerData = new CustomerFaker({defaultCustomerGroup: 'Customer'})
 const editCustomerData = new CustomerFaker({defaultCustomerGroup: 'Visitor'});
 const address = new AddressFaker({city: 'Paris', country: 'France'});
 const createAddressData = new AddressFaker({country: 'France'});
-
-// Get today date format 'mm/dd/yyyy'
-const today = new Date();
-const mm = (`0${today.getMonth() + 1}`).slice(-2); // Current month
-const dd = (`0${today.getDate()}`).slice(-2); // Current day
-const yyyy = today.getFullYear(); // Current year
-const todayDate = `${mm}/${dd}/${yyyy}`;
 
 // Get customer birth date format 'mm/dd/yyyy'
 const mmBirth = `0${createCustomerData.monthOfBirth}`.slice(-2);
@@ -188,7 +183,7 @@ describe('BO - Customers - Customers : View information about customer', async (
       {args: {blockName: 'Carts', number: 0}},
       {args: {blockName: 'Messages', number: 0}},
       {args: {blockName: 'Vouchers', number: 0}},
-      {args: {blockName: 'Groups', number: 3}},
+      {args: {blockName: 'Groups', number: 1}},
     ].forEach((test) => {
       it(`should check ${test.args.blockName} number`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `check${test.args.blockName}Number`, baseContext);
@@ -335,7 +330,7 @@ describe('BO - Customers - Customers : View information about customer', async (
 
       await expect(cardHeaderText).to.contains(createCustomerData.socialTitle);
       await expect(cardHeaderText).to.contains(`birth date: ${customerBirthDate}`);
-      await expect(cardHeaderText).to.contains(todayDate);
+      await expect(cardHeaderText).to.contains(today);
       await expect(cardHeaderText).to.contains(Languages.english.name);
       await expect(cardHeaderText).to.contains('Newsletter');
       await expect(cardHeaderText).to.contains('Partner offers');
@@ -350,7 +345,7 @@ describe('BO - Customers - Customers : View information about customer', async (
       {args: {blockName: 'Vouchers', number: 0}},
       {args: {blockName: 'Last emails', number: 2}},
       {args: {blockName: 'Last connections', number: 1}},
-      {args: {blockName: 'Groups', number: 3}},
+      {args: {blockName: 'Groups', number: 1}},
     ].forEach((test) => {
       it(`should check ${test.args.blockName} number`, async function () {
         await testContext.addContextItem(
@@ -369,7 +364,7 @@ describe('BO - Customers - Customers : View information about customer', async (
 
       const carts = await viewCustomerPage.getTextFromElement(page, 'Orders');
 
-      expect(carts).to.contains(todayDate);
+      expect(carts).to.contains(today);
       expect(carts).to.contains('Bank transfer');
       expect(carts).to.contains(Statuses.awaitingBankWire.status);
       expect(carts).to.contains('€0.00');
@@ -379,7 +374,7 @@ describe('BO - Customers - Customers : View information about customer', async (
       await testContext.addContextItem(this, 'testIdentifier', 'checkCarts', baseContext);
 
       const carts = await viewCustomerPage.getTextFromElement(page, 'Carts');
-      expect(carts).to.contains(todayDate);
+      expect(carts).to.contains(today);
       expect(carts).to.contains(Products.demo_1.finalPrice);
     });
 
@@ -407,7 +402,7 @@ describe('BO - Customers - Customers : View information about customer', async (
 
       const carts = await viewCustomerPage.getTextFromElement(page, 'Messages');
 
-      expect(carts).to.contains(todayDate);
+      expect(carts).to.contains(today);
       expect(carts).to.contains('Open');
       expect(carts).to.contains('test message');
     });
@@ -417,8 +412,7 @@ describe('BO - Customers - Customers : View information about customer', async (
 
       const carts = await viewCustomerPage.getTextFromElement(page, 'Last connections');
 
-      expect(carts).to.contains(todayDate);
-      expect(carts).to.contains('Direct link');
+      expect(carts).to.contains(today);
     });
 
     it('should check groups', async function () {
@@ -470,7 +464,7 @@ describe('BO - Customers - Customers : View information about customer', async (
 
       expect(cardHeaderText).to.contains(editCustomerData.socialTitle);
       expect(cardHeaderText).to.contains(`birth date: ${editCustomerBirthDate}`);
-      expect(cardHeaderText).to.contains(todayDate);
+      expect(cardHeaderText).to.contains(today);
       expect(cardHeaderText).to.contains(Languages.english.name);
       expect(cardHeaderText).to.contains('Newsletter');
       expect(cardHeaderText).to.contains('Partner offers');
@@ -488,27 +482,27 @@ describe('BO - Customers - Customers : View information about customer', async (
   // 6 : Edit order then check customer information page
   describe('Edit order then view customer and check information', async () => {
     it('should go to view order page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToViewOrderPage', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'goToorderPageCustomerBlock', baseContext);
 
       await viewCustomerPage.goToPage(page, 'Orders');
-      const pageTitle = await viewOrderPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(viewOrderPage.pageTitle);
+      const pageTitle = await orderPageCustomerBlock.getPageTitle(page);
+      await expect(pageTitle).to.contains(orderPageCustomerBlock.pageTitle);
     });
 
     it('should modify order status', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'modifyOrderStatus', baseContext);
 
-      const result = await viewOrderPage.modifyOrderStatus(page, Statuses.shipped.status);
+      const result = await orderPageCustomerBlock.modifyOrderStatus(page, Statuses.shipped.status);
       await expect(result).to.equal(Statuses.shipped.status);
     });
 
     it('should go to \'Customers > Customers\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToCustomersPageAfterEditOrder', baseContext);
 
-      await viewOrderPage.goToSubMenu(
+      await orderPageCustomerBlock.goToSubMenu(
         page,
-        viewOrderPage.customersParentLink,
-        viewOrderPage.customersLink,
+        orderPageCustomerBlock.customersParentLink,
+        orderPageCustomerBlock.customersLink,
       );
 
       const pageTitle = await customersPage.getPageTitle(page);
@@ -539,7 +533,7 @@ describe('BO - Customers - Customers : View information about customer', async (
 
       const carts = await viewCustomerPage.getTextFromElement(page, 'Orders');
 
-      expect(carts).to.contains(todayDate);
+      expect(carts).to.contains(today);
       expect(carts).to.contains('Bank transfer');
       expect(carts).to.contains(Statuses.shipped.status);
       expect(carts).to.contains(Products.demo_1.finalPrice);
@@ -557,7 +551,7 @@ describe('BO - Customers - Customers : View information about customer', async (
 
       const purchasedProduct = await viewCustomerPage.getTextFromElement(page, 'Purchased products');
 
-      expect(purchasedProduct).to.contains(todayDate);
+      expect(purchasedProduct).to.contains(today);
       expect(purchasedProduct).to.contains(Products.demo_1.name);
     });
   });

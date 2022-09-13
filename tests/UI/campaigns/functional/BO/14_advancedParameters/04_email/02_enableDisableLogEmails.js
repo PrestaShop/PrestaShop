@@ -4,21 +4,25 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const testContext = require('@utils/testContext');
+
+// Import login steps
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const emailPage = require('@pages/BO/advancedParameters/email');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_advancedParameters_email_enableDisableLogEmails';
 
 let browserContext;
 let page;
 
-describe('Enable/Disable log emails', async () => {
+/*
+Enable/Disable log emails
+Check the existence of E-mail table
+ */
+describe('BO - Advanced Parameters - E-mail : Enable/Disable log emails', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -33,7 +37,7 @@ describe('Enable/Disable log emails', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Advanced parameters > E-mail\' page', async function () {
+  it('should go to \'Advanced Parameters > E-mail\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToEmailPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -59,8 +63,8 @@ describe('Enable/Disable log emails', async () => {
       await expect(result).to.contains(emailPage.successfulUpdateMessage);
     });
 
-    it('should check the existence of log emails table', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', `checkLogEmailsTable${index}`, baseContext);
+    it('should check the existence of E-mail table', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `checkEmailTable${index}`, baseContext);
 
       const isVisible = await emailPage.isLogEmailsTableVisible(page);
       await expect(isVisible).to.equal(test.args.exist);

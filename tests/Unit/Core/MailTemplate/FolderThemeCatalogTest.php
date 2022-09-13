@@ -70,7 +70,7 @@ class FolderThemeCatalogTest extends TestCase
      */
     private $moduleLayouts;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->tempDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'mail_layouts';
@@ -114,7 +114,7 @@ class FolderThemeCatalogTest extends TestCase
         $layout = $coreLayouts[0];
         $this->assertInstanceOf(LayoutInterface::class, $layout);
         $coreFolder = implode(DIRECTORY_SEPARATOR, [
-            realpath($this->tempDir),
+            '@MailThemes',
             'classic',
             MailTemplateInterface::CORE_CATEGORY,
         ]);
@@ -166,7 +166,8 @@ class FolderThemeCatalogTest extends TestCase
 
     public function testInvalidTheme()
     {
-        $this->expectException(InvalidArgumentException::class, 'Invalid requested theme "unknown", only available themes are: classic, modern');
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid requested theme "unknown", only available themes are: classic, modern');
 
         /** @var HookDispatcherInterface $dispatcherMock */
         $dispatcherMock = $this->getMockBuilder(HookDispatcherInterface::class)
@@ -202,8 +203,8 @@ class FolderThemeCatalogTest extends TestCase
             $caughtException = $e;
         }
         $this->assertNotNull($caughtException);
-        $this->assertContains('Invalid mail themes folder', $caughtException->getMessage());
-        $this->assertContains(': no such directory', $caughtException->getMessage());
+        $this->assertStringContainsString('Invalid mail themes folder', $caughtException->getMessage());
+        $this->assertStringContainsString(': no such directory', $caughtException->getMessage());
     }
 
     public function testListThemesWithoutCoreFolder()
@@ -212,7 +213,7 @@ class FolderThemeCatalogTest extends TestCase
         //No bug occurs if the folder does not exist
         $this->fs->remove(implode(DIRECTORY_SEPARATOR, [$this->tempDir, 'classic', MailTemplateInterface::CORE_CATEGORY]));
 
-        /** @var ThemeCollectionInterface $themeList */
+        /** @var ThemeCollectionInterface $themes */
         $themes = $catalog->listThemes();
         /** @var ThemeInterface $theme */
         $theme = $themes[0];
@@ -225,7 +226,7 @@ class FolderThemeCatalogTest extends TestCase
     {
         $catalog = new FolderThemeCatalog($this->tempDir, new FolderThemeScanner(), $this->createHookDispatcherMock(4));
         $this->fs->remove(implode(DIRECTORY_SEPARATOR, [$this->tempDir, 'classic', MailTemplateInterface::MODULES_CATEGORY]));
-        /** @var ThemeCollectionInterface $themeList */
+        /** @var ThemeCollectionInterface $themes */
         $themes = $catalog->listThemes();
         /** @var ThemeInterface $theme */
         $theme = $themes[0];
@@ -283,7 +284,7 @@ class FolderThemeCatalogTest extends TestCase
         ;
 
         $dispatcherMock
-            ->expects($this->at(0))
+            ->expects($this->once())
             ->method('dispatchWithParameters')
             ->with(
                 $this->equalTo(ThemeCatalogInterface::LIST_MAIL_THEMES_HOOK),

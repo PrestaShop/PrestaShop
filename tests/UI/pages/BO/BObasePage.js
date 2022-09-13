@@ -15,13 +15,14 @@ class BOBasePage extends CommonPage {
     super();
 
     // Successful Messages
-    this.successfulCreationMessage = 'Successful creation.';
-    this.successfulUpdateMessage = 'Successful update.';
-    this.successfulDeleteMessage = 'Successful deletion.';
-    this.successfulMultiDeleteMessage = 'The selection has been successfully deleted.';
+    this.successfulCreationMessage = 'Successful creation';
+    this.successfulUpdateMessage = 'Successful update';
+    this.successfulDeleteMessage = 'Successful deletion';
+    this.successfulMultiDeleteMessage = 'The selection has been successfully deleted';
 
     // Access denied message
     this.accessDeniedMessage = 'Access denied';
+    this.pageNotFoundMessage = 'Page not found';
 
     // top navbar
     this.userProfileIconNonMigratedPages = '#employee_infos';
@@ -78,6 +79,7 @@ class BOBasePage extends CommonPage {
     this.customersParentLink = 'li#subtab-AdminParentCustomer';
     this.customersLink = '#subtab-AdminCustomers';
     this.addressesLink = '#subtab-AdminAddresses';
+    this.outstandingLink = '#subtab-AdminOutstanding';
 
     // Customer Service
     this.customerServiceParentLink = '#subtab-AdminParentCustomerThreads';
@@ -95,6 +97,8 @@ class BOBasePage extends CommonPage {
 
     // Design
     this.designParentLink = '#subtab-AdminParentThemes';
+    // Theme & Logo
+    this.themeAndLogoParentLink = '#subtab-AdminThemesParent';
     // Email theme
     this.emailThemeLink = '#subtab-AdminParentMailTheme';
     // Pages
@@ -146,6 +150,8 @@ class BOBasePage extends CommonPage {
 
     // Advanced Parameters
     this.advancedParametersLink = '#subtab-AdminAdvancedParameters';
+    // Performance
+    this.performanceLink = '#subtab-AdminPerformance';
     // E-mail
     this.emailLink = '#subtab-AdminEmails';
     // Import
@@ -158,14 +164,12 @@ class BOBasePage extends CommonPage {
     this.webserviceLink = '#subtab-AdminWebservice';
     // Logs
     this.logsLink = '#subtab-AdminLogs';
+    // New & Experimental Features
+    this.featureFlagLink = '#subtab-AdminFeatureFlag';
     // Multistore
     this.multistoreLink = '#subtab-AdminShopGroup';
     // Deprecated tab used for regression test
     this.menuTabLink = '#subtab-AdminTabs';
-
-    // welcome module
-    this.onboardingCloseButton = 'button.onboarding-button-shut-down';
-    this.onboardingStopButton = 'a.onboarding-button-stop';
 
     // Growls
     this.growlDiv = '#growls';
@@ -212,6 +216,7 @@ class BOBasePage extends CommonPage {
   async quickAccessToPage(page, linkId) {
     await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
     await this.clickAndWaitForNavigation(page, this.quickAccessLink(linkId));
+    await this.waitForPageTitleToLoad(page);
   }
 
   /**
@@ -245,9 +250,9 @@ class BOBasePage extends CommonPage {
    * @param page {Page} Browser tab
    * @returns {Promise<void>}
    */
-  async manageQuickAccess(page) {
+  async goToManageQuickAccessPage(page) {
     await this.waitForSelectorAndClick(page, this.quickAccessDropdownToggle);
-    await this.waitForSelectorAndClick(page, this.manageYourQuickAccessLink);
+    await this.clickAndWaitForNavigation(page, this.manageYourQuickAccessLink);
   }
 
   /**
@@ -285,26 +290,6 @@ class BOBasePage extends CommonPage {
     }
     await this.waitForVisibleSelector(page, this.userProfileLogoutLink);
     await this.clickAndWaitForNavigation(page, this.userProfileLogoutLink);
-  }
-
-  /**
-   * Close the onboarding modal if exists
-   * @param page {Page} Browser tab
-   * @param timeout {number} Timeout to wait for selector by milliseconds
-   * @returns {Promise<void>}
-   */
-  async closeOnboardingModal(page, timeout = 1000) {
-    if (await this.elementVisible(page, this.onboardingCloseButton, timeout)) {
-      // Close popup
-      await page.click(this.onboardingCloseButton);
-      await this.waitForHiddenSelector(page, this.onboardingCloseButton);
-
-      // Close menu block
-      if (await this.elementVisible(page, this.onboardingStopButton, timeout)) {
-        await page.click(this.onboardingStopButton);
-        await this.waitForHiddenSelector(page, this.onboardingStopButton);
-      }
-    }
   }
 
   /**
@@ -472,12 +457,12 @@ class BOBasePage extends CommonPage {
    */
   async navigateToPageWithInvalidToken(page, url, continueToPage = true) {
     await this.goTo(page, url);
-    await this.waitForVisibleSelector(page, this.invalidTokenContinuelink);
-
-    await this.clickAndWaitForNavigation(
-      page,
-      continueToPage ? this.invalidTokenContinuelink : this.invalidTokenCancellink,
-    );
+    if (await this.elementVisible(page, this.invalidTokenContinuelink, 10000)) {
+      await this.clickAndWaitForNavigation(
+        page,
+        continueToPage ? this.invalidTokenContinuelink : this.invalidTokenCancellink,
+      );
+    }
   }
 }
 

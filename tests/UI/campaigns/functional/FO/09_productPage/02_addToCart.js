@@ -3,14 +3,17 @@ require('module-alias/register');
 const {expect} = require('chai');
 
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 const files = require('@utils/files');
 
 // Import pages
+// FO
 const homePage = require('@pages/FO/home');
 const searchResultsPage = require('@pages/FO/searchResults');
 const productPage = require('@pages/FO/product');
 const cartPage = require('@pages/FO/cart');
+
+// BO
 const boDashboardPage = require('@pages/BO/dashboard');
 const boProductsPage = require('@pages/BO/catalog/products');
 const boAddProductPage = require('@pages/BO/catalog/products/add');
@@ -48,7 +51,7 @@ Change image from product page
 Check share links
  */
 
-describe('Add product to cart', async () => {
+describe('FO - product page : Add product to cart', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

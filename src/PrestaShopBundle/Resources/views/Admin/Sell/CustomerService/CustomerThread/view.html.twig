@@ -23,48 +23,37 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-  <div class="row">
-    <div class="col">
-      <div class="card">
-        <h3 class="card-header">
-          {{ 'Thread'|trans({}, 'Admin.Orderscustomers.Feature') }}
-          <strong>#{{ customerThreadView.customerThreadId.value }}</strong>
-        </h3>
-        <div class="card-body">
-          {% block customer_thread_actions %}
-            {% include '@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/thread_actions.html.twig' %}
-          {% endblock %}
+  <div class="card">
+    <h3 class="card-header">
+      {{ 'Thread'|trans({}, 'Admin.Orderscustomers.Feature') }}
+      <strong>#{{ customerThreadView.customerThreadId.value }}</strong>
+    </h3>
+    <div class="card-body">
+      {% block customer_thread_actions %}
+        {% include '@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/thread_actions.html.twig' %}
+      {% endblock %}
 
-          {% block customer_information %}
-            {% include '@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/customer_information.html.twig' %}
-          {% endblock %}
+      {% block customer_information %}
+        {% include '@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/customer_information.html.twig' %}
+      {% endblock %}
 
-          {% block customer_thread_messages %}
-            {% include '@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/thread_messages.html.twig' %}
-          {% endblock %}
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col">
-      {% block customer_thread_reply %}
-        {% include '@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/your_answer.html.twig' %}
+      {% block customer_thread_messages %}
+        {% include '@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/thread_messages.html.twig' %}
       {% endblock %}
     </div>
   </div>
 
-  <div class="row">
-    <div class="col">
-      {% block customer_thread_timeline %}
-        {% include '@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/timeline.html.twig' %}
-      {% endblock %}
-    </div>
-  </div>
+  {% block customer_thread_reply %}
+    {% include '@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/your_answer.html.twig' %}
+  {% endblock %}
+
+  {% block customer_thread_timeline %}
+    {% include '@PrestaShop/Admin/Sell/CustomerService/CustomerThread/Block/timeline.html.twig' %}
+  {% endblock %}
+
 {% endblock %}
 
 {% block javascripts %}

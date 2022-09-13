@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags order-multi-shop
-@reset-database-before-feature
+@restore-all-tables-before-feature
 @mock-context-on-scenario
 @clear-cache-before-feature
 @order-multi-shop
@@ -292,7 +292,7 @@ Feature: Order from Back Office (BO)
   Scenario: In All Shop Context, Update product in order
     # Create Shop Group & Shops
     When I add a shop group "shopGroup1" with name "Shop Group 1"
-    And I add a shop "shop2" with name "Shop 2" and color "blue" for the group "Shop Group 1"
+    And I add a shop "shop2" with name "Shop 2" and color "blue" for the group "shopGroup1"
     And I copy "country" shop data from "test_shop" to "Shop 2"
     And I copy "currency" shop data from "test_shop" to "Shop 2"
     Then I should have 2 shop groups
@@ -344,4 +344,3 @@ Feature: Order from Back Office (BO)
     And I edit product "Product B in Shop 2" to order "order_product_B" with following products details:
       | amount        | 30                      |
       | price         | 78.90                   |
-    Then I should get no error

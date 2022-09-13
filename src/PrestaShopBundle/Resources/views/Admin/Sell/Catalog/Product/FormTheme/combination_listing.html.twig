@@ -1,0 +1,113 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+{% extends '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+
+{%- block combination_item_row -%}
+  <tr id="combination-list-row-{{ form.vars.name }}" class="combination combination-list-row">
+    {# Special case to keep both inputs in the same cell #}
+    {% for child in form.children %}
+      <td>
+        {# When value is null we are displaying the prototype #}
+        {% if value is null %}
+          {% set widgetAttr = {value: placeholder_data[child.vars.name]} %}
+        {% else %}
+          {% set widgetAttr = {} %}
+        {% endif %}
+        {{ form_widget(child, widgetAttr) }}
+        {{ form_errors(child) }}
+      </td>
+    {% endfor %}
+  </tr>
+{%- endblock -%}
+
+{%- block combination_list_row -%}
+  {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+  {%- set attr = attr|merge({'data-prototype': form_row(prototype), 'data-prototype-name': prototype.vars.name }) -%}
+  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' combinations-table grid-table table grid-ordering-column')|trim }) -%}
+  <table {{ block('widget_attributes') }}>
+    {# Early render of the _token so that it is not included in the tbody which will be emptied by the JS #}
+    {% if form._token %}
+      {{ form_widget(form._token) }}
+    {% endif %}
+    <thead class="thead-default">
+    <tr class="column-headers">
+      <th scope="col" id="combination-bulk-cell">
+        <div class="dropdown" id="bulk-all-selection-dropdown">
+          <button
+            id="bulk-all-selection-dropdown-button"
+            type="button"
+            class="md-checkbox dropdown-toggle"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <label for="bulk-all-preview" data-label="(%combinations_number% / %total_combinations%)"><span></span></label>
+            <input type="checkbox" id="bulk-all-preview" class="bulk-select-all">
+            <i class="md-checkbox-control"></i>
+          </button>
+
+          <div class="dropdown-menu">
+            <label
+              class="md-checkbox dropdown-item"
+              for="bulk-select-all-in-page"
+              data-label="{{'Select results on this page (%combinations_number%)'|trans({}, 'Admin.Actions')}}"
+            >
+              <span></span>
+              <input type="checkbox" id="bulk-select-all-in-page" class="bulk-select-all">
+              <i class="md-checkbox-control"></i>
+            </label>
+
+            <label
+              class="md-checkbox dropdown-item"
+              for="bulk-select-all"
+              data-label="{{'Select all results (%combinations_number%)'|trans({}, 'Admin.Actions')}}"
+            >
+              <span></span>
+              <input type="checkbox" id="bulk-select-all" class="bulk-select-all">
+              <i class="md-checkbox-control"></i>
+            </label>
+          </div>
+        </div>
+      </th>
+
+      {% for child in prototype.children %}
+        {# Exception: is_selected header has already been rendered manually #}
+        {% if child.vars.name != 'is_selected' %}
+          <th scope="col">
+            {% if child.vars.attr['data-order-by'] is defined %}
+              {{ ps.sortable_column_header(child.vars.label, child.vars.attr['data-order-by']) }}
+            {% else %}
+              {{ child.vars.label }}
+            {% endif %}
+          </th>
+        {% endif %}
+      {% endfor %}
+    </tr>
+    </thead>
+    <tbody>
+    {{- block('form_rows') -}}
+    </tbody>
+  </table>
+{%- endblock -%}

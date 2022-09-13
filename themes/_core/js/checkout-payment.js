@@ -25,6 +25,19 @@
 import $ from 'jquery';
 import prestashop from 'prestashop';
 
+prestashop.checkout = prestashop.checkout || {};
+
+prestashop.checkout.onCheckOrderableCartResponse = (resp, paymentObject) => {
+  if (resp.errors === true) {
+    prestashop.emit('orderConfirmationErrors', {
+      resp,
+      paymentObject,
+    });
+    return true;
+  }
+  return false;
+};
+
 class Payment {
   constructor() {
     this.confirmationSelector = prestashop.selectors.checkout.confirmationSelector;
@@ -36,13 +49,26 @@ class Payment {
   }
 
   init() {
+    // eslint-disable-next-line no-unused-vars
+    prestashop.on('orderConfirmationErrors', ({resp, paymentObject}) => {
+      if (resp.cartUrl !== '') {
+        location.href = resp.cartUrl;
+      }
+    });
+
     const $body = $('body');
 
     $body.on('change', `${this.conditionsSelector} input[type="checkbox"]`, $.proxy(this.toggleOrderButton, this));
     $body.on('change', 'input[name="payment-option"]', $.proxy(this.toggleOrderButton, this));
+    // call toggle once on init to handle situation where everything
+    // is already ok (like 0 price order, payment already preselected and so on)
+    this.toggleOrderButton();
+
     $body.on('click', `${this.confirmationSelector} button`, $.proxy(this.confirm, this));
 
-    this.collapseOptions();
+    if (!this.getSelectedOption()) {
+      this.collapseOptions();
+    }
   }
 
   collapseOptions() {
@@ -134,15 +160,26 @@ class Payment {
     });
   }
 
-  confirm() {
+  async confirm() {
     const option = this.getSelectedOption();
     const termsAccepted = this.haveTermsBeenAccepted();
 
     if (option === undefined || termsAccepted === false) {
       this.showNativeFormErrors();
-
       return;
     }
+
+    // We ask cart controller, if everything in the cart is still orderable
+    const resp = await $.post(window.prestashop.urls.pages.order, {
+      ajax: 1,
+      action: 'checkCartStillOrderable',
+    });
+
+    // We process the information and allow other modules to intercept this
+    const isRedirected = prestashop.checkout.onCheckOrderableCartResponse(resp, this);
+
+    // If there is a redirect, we deny the form submit below, to allow the redirect to complete
+    if (isRedirected) return;
 
     $(`${this.confirmationSelector} button`).addClass('disabled');
     $(`#pay-with-${option}-form form`).submit();

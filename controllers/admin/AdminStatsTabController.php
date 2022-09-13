@@ -167,9 +167,9 @@ abstract class AdminStatsTabControllerCore extends AdminController
         return $tpl->fetch();
     }
 
-    public function checkModulesNames($a, $b)
+    public function checkModulesNames($a, $b): int
     {
-        return (bool) ($a['displayName'] > $b['displayName']);
+        return strcasecmp($a['displayName'], $b['displayName']);
     }
 
     protected function getModules()
@@ -196,7 +196,7 @@ abstract class AdminStatsTabControllerCore extends AdminController
             }
 
             if ($module_instance && $module_instance->active) {
-                $hook = Hook::exec('displayAdminStatsModules', null, $module_instance->id);
+                $hook = Hook::exec('displayAdminStatsModules', [], $module_instance->id);
             }
         }
 

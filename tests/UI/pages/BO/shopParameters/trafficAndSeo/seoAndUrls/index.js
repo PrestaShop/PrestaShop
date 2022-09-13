@@ -318,7 +318,7 @@ class SeoAndUrls extends BOBasePage {
    * @return {Promise<string>}
    */
   async enableDisableFriendlyURL(page, toEnable = true) {
-    await page.check(this.friendlyUrlToggleInput(toEnable ? 1 : 0));
+    await this.setChecked(page, this.friendlyUrlToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveSeoAndUrlFormButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -331,7 +331,7 @@ class SeoAndUrls extends BOBasePage {
    * @return {Promise<string>}
    */
   async enableDisableAccentedURL(page, toEnable = true) {
-    await page.check(this.accentedUrlToggleInput(toEnable ? 1 : 0));
+    await this.setChecked(page, this.accentedUrlToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveSeoAndUrlFormButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -344,7 +344,7 @@ class SeoAndUrls extends BOBasePage {
    * @return {Promise<string>}
    */
   async setStatusAttributesInProductMetaTitle(page, toEnable = true) {
-    await page.check(this.displayAttributesToggleInput(toEnable ? 1 : 0));
+    await this.setChecked(page, this.displayAttributesToggleInput(toEnable ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveSeoOptionsFormButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);

@@ -23,11 +23,26 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+/**
+ * @property SmartyCustom|null $smarty
+ */
 class SmartyDevTemplateCore extends Smarty_Internal_Template
 {
-    /** @var SmartyCustom|null */
-    public $smarty = null;
-
+    /**
+     * @param SmartyDevTemplateCore|null $template
+     * @param null $cache_id
+     * @param null $compile_id
+     * @param object $parent
+     * @param false $display
+     * @param bool $merge_tpl_vars
+     * @param false $no_output_filter
+     *
+     * @return string
+     *
+     * @throws SmartyException
+     */
+    // @phpstan-ignore-next-line
     public function fetch($template = null, $cache_id = null, $compile_id = null, $parent = null, $display = false, $merge_tpl_vars = true, $no_output_filter = false)
     {
         if (null !== $template) {
@@ -36,8 +51,9 @@ class SmartyDevTemplateCore extends Smarty_Internal_Template
             $tpl = $this->template_resource;
         }
 
-        return "\n<!-- begin $tpl -->\n"
-            . parent::fetch($template, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter)
-            . "\n<!-- end $tpl -->\n";
+        // @phpstan-ignore-next-line
+        $fetch = parent::fetch($template, $cache_id, $compile_id, $parent);
+
+        return "\n<!-- begin $tpl -->\n" . $fetch . "\n<!-- end $tpl -->\n";
     }
 }

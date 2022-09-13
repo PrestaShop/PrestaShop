@@ -66,7 +66,9 @@ class TaxRulesGroupCore extends ObjectModel
     {
         if (!$this->deleted && $this->isUsed()) {
             $current_tax_rules_group = new TaxRulesGroup((int) $this->id);
-            if ((!$new_tax_rules_group = $current_tax_rules_group->duplicateObject()) || !$current_tax_rules_group->historize($new_tax_rules_group)) {
+            /** @var TaxRulesGroup|false $new_tax_rules_group */
+            $new_tax_rules_group = $current_tax_rules_group->duplicateObject();
+            if (!$new_tax_rules_group || !$current_tax_rules_group->historize($new_tax_rules_group)) {
                 return false;
             }
 
@@ -134,7 +136,7 @@ class TaxRulesGroupCore extends ObjectModel
 
     public static function getTaxRulesGroups($only_active = true)
     {
-        return static::getTaxRulesGroupsData($only_active);
+        return self::getTaxRulesGroupsData($only_active);
     }
 
     /**
@@ -236,7 +238,7 @@ class TaxRulesGroupCore extends ObjectModel
      */
     public static function getIdByName($name)
     {
-        return Db::getInstance()->getValue(
+        return (int) Db::getInstance()->getValue(
             'SELECT `id_tax_rules_group`
 			FROM `' . _DB_PREFIX_ . 'tax_rules_group` rg
 			WHERE `name` = \'' . pSQL($name) . '\''
@@ -263,31 +265,5 @@ class TaxRulesGroupCore extends ObjectModel
 		FROM `' . _DB_PREFIX_ . 'order_detail`
 		WHERE `id_tax_rules_group` = ' . (int) $this->id
         );
-    }
-
-    /**
-     * @deprecated since 1.5
-     */
-    public static function getTaxesRate($id_tax_rules_group, $id_country, $id_state, $zipcode)
-    {
-        Tools::displayAsDeprecated();
-        $rate = 0;
-        foreach (TaxRulesGroup::getTaxes($id_tax_rules_group, $id_country, $id_state, $zipcode) as $tax) {
-            $rate += (float) $tax->rate;
-        }
-
-        return $rate;
-    }
-
-    /**
-     * Return taxes associated to this para.
-     *
-     * @deprecated since 1.5
-     */
-    public static function getTaxes($id_tax_rules_group, $id_country, $id_state, $id_county)
-    {
-        Tools::displayAsDeprecated();
-
-        return [];
     }
 }

@@ -4,17 +4,19 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const testContext = require('@utils/testContext');
 
-// Import pages
+// Import login steps
+const loginCommon = require('@commonTests/BO/loginBO');
+
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const orderSettingsPage = require('@pages/BO/shopParameters/orderSettings');
+
+// Import FO pages
 const productPage = require('@pages/FO/product');
 const homePage = require('@pages/FO/home');
 const cartPage = require('@pages/FO/cart');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_orderSettings_general_minimumPurchaseTotalRequired';
 
@@ -25,9 +27,14 @@ const newPurchaseTotalRequired = 100;
 const defaultPurchaseTotalRequired = 0;
 
 const alertMessage = `A minimum shopping cart total of €${newPurchaseTotalRequired}.00 (tax excl.)`
-+ ' is required to validate your order.';
+  + ' is required to validate your order.';
 
-describe('Test minimum purchase total required in order to validate the order', async () => {
+/*
+Update minimum purchase total value
+Go to FO and check the alert message
+ */
+describe('BO - Shop Parameters - Order Settings : Test minimum purchase total required in order '
+  + 'to validate the order', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

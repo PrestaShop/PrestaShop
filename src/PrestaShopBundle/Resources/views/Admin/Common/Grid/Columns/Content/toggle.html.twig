@@ -26,16 +26,20 @@
 {% set id_primary_key = record[id_property_name] %}
 {% set record_id = record[id_property_name] %}
 
-{% set isValid = record[column.id] is same as('1') %}
+{% set isValid = record[column.id] == 1 %}
 
 <div class="text-center">
   <div 
     class="ps-switch ps-switch-sm ps-switch-nolabel ps-switch-center ps-togglable-row"
     data-toggle-url="{{ path(column.options.route, {(column.options.route_param_name) : id_primary_key})}}"
   >
-  <input type="radio" name="input-{{ column.options.route }}-{{ id_primary_key }}" id="input-false-{{ column.options.route }}-{{ id_primary_key }}" value="0" {% if not isValid %}checked{% endif %}>
+  <input type="radio" name="input-{{ column.options.route }}-{{ id_primary_key }}" 
+         id="input-false-{{ column.options.route }}-{{ id_primary_key }}" 
+         value="0" {% if not isValid %}checked{% endif %}>
       <label for="input-false-{{ column.options.route }}-{{ id_primary_key }}">Off</label>
-      <input type="radio" name="input-{{ column.options.route }}-{{ id_primary_key }}" id="input-true-{{ column.options.route }}-{{ id_primary_key }}" value="1" {% if isValid %}checked{% endif %}>
+      <input type="radio" name="input-{{ column.options.route }}-{{ id_primary_key }}" 
+             id="input-true-{{ column.options.route }}-{{ id_primary_key }}" 
+             value="1" {% if isValid %}checked{% endif %}>
       <label for="input-true-{{ column.options.route }}-{{ id_primary_key }}">On</label>
       <span class="slide-button"></span>
   </div>

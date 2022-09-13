@@ -4,21 +4,25 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const testContext = require('@utils/testContext');
 
-// Importing pages
+// Import login steps
+const loginCommon = require('@commonTests/BO/loginBO');
+
+// Import pages
 const dashboardPage = require('@pages/BO/dashboard');
 const generalPage = require('@pages/BO/shopParameters/general');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_general_general_enableDisableMultiStore';
 
 let browserContext;
 let page;
 
-describe('Enable/Disable multi store', async () => {
+/*
+Enable/Disable multistore
+Check the existence of multistore page
+ */
+describe('BO - Shop Parameters - General : Enable/Disable multi store', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

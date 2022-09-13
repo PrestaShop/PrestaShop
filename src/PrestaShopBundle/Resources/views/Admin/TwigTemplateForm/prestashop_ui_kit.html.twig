@@ -47,7 +47,7 @@
 {# Labels #}
 
 {% block form_label -%}
-  {% spaceless %}
+  {% apply spaceless %}
     {% if label is same as(null) %}
       <div class="{{ block('form_label_class') }}"></div>
     {% elseif label is same as(false) %}
@@ -56,30 +56,30 @@
       {% set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' ' ~ block('form_label_class'))|trim}) %}
       {{- parent() -}}
     {% endif %}
-  {% endspaceless %}
+  {% endapply %}
 {%- endblock form_label %}
 
 {% block form_label_class -%}
-  form-control-label
+  form-control-label{% if form.vars.attr.disabled is defined and form.vars.attr.disabled %} disabled{% endif %}
 {%- endblock form_label_class %}
 
 {# Rows #}
 
 {% block form_row -%}
-  {% spaceless %}
+  {% apply spaceless %}
     {# In horizontal theme when using a title for label it needs to be outside of the row div #}
     {% if label_tag_name is defined %}
       {{ form_label(form) }}
     {% endif %}
 
     {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
-    {% set multistoreCheckboxName = multistore_field_prefix ~ form.vars.name %}
     {% set disabledField = false %}
     {% if form.vars.attr.disabled is defined and form.vars.attr.disabled %}
       {% set disabledField = true %}
     {% endif %}
 
     <div class="{{ block('form_row_class') }}{{ block('widget_type_class') }}{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}{% if (attr.visible is defined and not attr.visible) %} d-none{% endif %}">
+      {% set multistoreCheckboxName = multistore_field_prefix ~ form.vars.name %}
       {% if attribute(form.parent, multistoreCheckboxName) is defined %}
         {{ form_errors(attribute(form.parent, multistoreCheckboxName)) }}
         {{ form_widget(attribute(form.parent, multistoreCheckboxName)) }}
@@ -99,7 +99,7 @@
       {{- block('form_external_link') -}}
       {{- block('form_alert') -}}
     </div>
-  {% endspaceless %}
+  {% endapply %}
 
   {% if column_breaker %}
     <div class="form-group form-column-breaker"></div>

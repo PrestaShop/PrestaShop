@@ -23,15 +23,16 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+/**
+ * @property SmartyCustom|null $smarty
+ */
 class SmartyCustomTemplateCore extends Smarty_Internal_Template
 {
-    /** @var SmartyCustom|null */
-    public $smarty = null;
-
     public function fetch($template = null, $cache_id = null, $compile_id = null, $parent = null, $display = false, $merge_tpl_vars = true, $no_output_filter = false)
     {
         if ($this->smarty->caching) {
-            $tpl = parent::fetch($template, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter);
+            $tpl = parent::fetch($template, $cache_id, $compile_id, $parent);
             if (property_exists($this, 'cached')) {
                 $filepath = str_replace($this->smarty->getCacheDir(), '', $this->cached->filepath);
                 if ($this->smarty->is_in_lazy_cache($this->template_resource, $this->cache_id, $this->compile_id) != $filepath) {
@@ -41,7 +42,7 @@ class SmartyCustomTemplateCore extends Smarty_Internal_Template
 
             return $tpl;
         } else {
-            return parent::fetch($template, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter);
+            return parent::fetch($template, $cache_id, $compile_id, $parent);
         }
     }
 }

@@ -43,7 +43,7 @@ class CacheMemcachedCore extends Cache
         $this->connect();
         if ($this->isConnected()) {
             $this->memcached->setOption(Memcached::OPT_PREFIX_KEY, _DB_PREFIX_);
-            if ($this->memcached->getOption(Memcached::HAVE_IGBINARY)) {
+            if (Memcached::HAVE_IGBINARY) {
                 $this->memcached->setOption(Memcached::OPT_SERIALIZER, Memcached::SERIALIZER_IGBINARY);
             }
         }
@@ -79,10 +79,7 @@ class CacheMemcachedCore extends Cache
             $this->memcached->addServer($server['ip'], $server['port'], (int) $server['weight']);
         }
 
-        $versions = $this->memcached->getVersion();
-        $this->is_connected = is_array($versions)
-            ? in_array('255.255.255', $versions, true) === false
-            : false;
+        $this->is_connected = in_array('255.255.255', $this->memcached->getVersion(), true) === false;
     }
 
     /**

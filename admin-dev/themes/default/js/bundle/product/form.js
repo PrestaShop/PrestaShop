@@ -1874,7 +1874,8 @@ window.priceCalculation = (function () {
           ps_round(price - getEcotaxTaxIncluded(),
             displayPricePrecision,
           ),
-          rates, computationMethod),
+          rates,
+          computationMethod),
         displayPricePrecision,
       );
     },
@@ -2211,7 +2212,8 @@ window.seo = (function () {
 
   /** Hide or show the input product selector */
   function hideShowRedirectToProduct() {
-    if (redirectTypeElem.val() === '404') {
+    redirectTypeValue = redirectTypeElem.val();
+    if (redirectTypeValue === '404' || redirectTypeValue === '410') {
       $('#id-product-redirected').hide();
     } else {
       updateRemoteUrl();

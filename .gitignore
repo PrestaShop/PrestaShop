@@ -1,6 +1,7 @@
 # Cache, temp and personal files
 
 /.htaccess
+/.htpasswd
 *.log
 npm-debug.log.*
 .sass-cache/
@@ -75,51 +76,19 @@ npm-debug.log.*
 !/upload/index.php
 !/upload/.htaccess
 
-/vendor/*
 /docs/phpdoc-sf/
 *.hot-update.js
 *.hot-update.json
 
-tests-legacy/resources/modules/followup/
-tests-legacy/resources/modules/ps_emailalerts/
-tests-legacy/resources/modules/ps_emailsubscription/mails/
-tests-legacy/resources/modules/referralprogram/
-
-# themes listed in the modules_to_hook section of the theme.yml
-tests-legacy/resources/modules/blockreassurance
-tests-legacy/resources/modules/ps_contactinfo
-tests-legacy/resources/modules/ps_languageselector
-tests-legacy/resources/modules/ps_currencyselector
-tests-legacy/resources/modules/ps_customersignin
-tests-legacy/resources/modules/ps_shoppingcart
-tests-legacy/resources/modules/ps_mainmenu
-tests-legacy/resources/modules/ps_searchbar
-tests-legacy/resources/modules/ps_imageslider
-tests-legacy/resources/modules/ps_customtext
-tests-legacy/resources/modules/ps_socialfollow
-tests-legacy/resources/modules/ps_linklist
-tests-legacy/resources/modules/ps_customeraccountlinks
-tests-legacy/resources/modules/ps_categorytree
-tests-legacy/resources/modules/ps_facetedsearch
-tests-legacy/resources/modules/ps_sharebuttons
-
-# Installed with test data maybe via API push
-tests-legacy/resources/modules/ps_reminder
-
-tests/Resources/img/l/*
-!tests/Resources/img/l/.gitkeep
-tests/Resources/img/p/*
-!tests/Resources/img/p/.gitkeep
-tests/Resources/img/os/*
-!tests/Resources/img/os/.gitkeep
-tests/Resources/img/genders/*
-!tests/Resources/img/genders/.gitkeep
-tests/Resources/img/c/*
-!tests/Resources/img/c/.gitkeep
+tests/Resources/img/*
 tests/Resources/img/tmp/*
 tests/Resources/img/tmp/.gitkeep
 !tests/Resources/download/.gitkeep
 tests/Resources/download/*
+tests/Unit/.phpunit.result.cache
+.phpunit.result.cache
+tests/Integration/.phpunit.result.cache
+tests-legacy/.phpunit.result.cache
 
 /admin-dev/autoupgrade/*
 !/admin-dev/autoupgrade/index.php
@@ -156,6 +125,9 @@ themes/*/cache/*
 themes/core.js.map
 themes/core.js
 
+# Install folder
+/install-dev/theme/custom/*
+!/install-dev/theme/custom/.gitkeep
 
 # Config
 
@@ -174,11 +146,9 @@ app/config/config.php
 modules/*
 override/*
 themes/*/
-!themes/classic
-themes/classic/assets
+themes/classic
 !themes/_core
 !themes/_libraries
-themes/classic/assets/css/*_rtl.css
 
 # Vendors and dependencies
 
@@ -191,6 +161,7 @@ php-cs-fixer
 # Translations and emails templates
 
 translations/*
+!translations/default
 mails/*
 !mails/themes/
 !mails/_partials/
@@ -211,8 +182,6 @@ themes/default-bootstrap/modules/*/mails/*
 /bin/
 /.web-server-pid
 /app/Resources/geoip/GeoLite2-City.mmdb
-/app/Resources/translations/*
-!/app/Resources/translations/default
 /app/config/parameters.yml
 /app/config/parameters.php
 /build/
@@ -228,134 +197,16 @@ themes/default-bootstrap/modules/*/mails/*
 /var/sessions/*
 !var/sessions/.gitkeep
 !var/SymfonyRequirements.php
+!/var/modules
+/var/modules/*
+!/var/modules/.gitkeep
 /vendor/
 /web/bundles/
 
-
-# Created by https://www.gitignore.io/api/linux,osx,windows,sublimetext,phpstorm
-
-### Linux ###
-*~
-
-# KDE directory preferences
-.directory
-
-# Linux trash folder which might appear on any partition or disk
-.Trash-*
-
-
-### OSX ###
-.DS_Store
-.AppleDouble
-.LSOverride
-
-# Icon must end with two \r
-Icon
-
-
-# Thumbnails
-._*
-
-# Files that might appear in the root of a volume
-.DocumentRevisions-V100
-.fseventsd
-.Spotlight-V100
-.TemporaryItems
-.Trashes
-.VolumeIcon.icns
-
-# Directories potentially created on remote AFP share
-.AppleDB
-.AppleDesktop
-Network Trash Folder
-Temporary Items
-.apdisk
-
-
-### Windows ###
-# Windows image file caches
-Thumbs.db
-ehthumbs.db
-
-# Folder config file
-Desktop.ini
-
-# Recycle Bin used on file shares
-$RECYCLE.BIN/
-
-# Windows Installer files
-*.cab
-*.msi
-*.msm
-*.msp
-
-# Windows shortcuts
-*.lnk
-
-
-### SublimeText ###
-# cache files for sublime text
-*.tmlanguage.cache
-*.tmPreferences.cache
-*.stTheme.cache
-
-# workspace files are user-specific
-*.sublime-workspace
-
-# project files should be checked into the repository, unless a significant
-# proportion of contributors will probably not be using SublimeText
-# *.sublime-project
-
-# sftp configuration file
-sftp-config.json
-
-
-### PhpStorm ###
-# Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio
-
-*.iml
-
-## Directory-based project format:
-.idea/
-
-## File-based project format:
-*.ipr
-*.iws
-
-## Plugin-specific files:
-
-# IntelliJ
-/out/
-
-# mpeltonen/sbt-idea plugin
-.idea_modules/
-
-# JIRA plugin
-atlassian-ide-plugin.xml
-
-# Crashlytics plugin (for Android Studio and IntelliJ)
-com_crashlytics_export_strings.xml
-crashlytics.properties
-crashlytics-build.properties
-
-### NetBeans ###
-nbproject/
-nbbuild/
-dist/
-nbdist/
-nbactions.xml
-nb-configuration.xml
-.nb-gradle/
-
-### Eclipse ###
-.buildpath
-.project
-.settings/
-.externalToolBuilders/
-
-### Release creation ###
+# Release creation
 tools/build/releases/*
 !tools/build/releases/.gitkeep
 
-## Docker configuration
+# Docker configuration
 install.lock
+docker-compose.override.yml

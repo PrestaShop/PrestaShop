@@ -4,44 +4,26 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const basicHelper = require('@utils/basicHelper');
+const testContext = require('@utils/testContext');
+const {getDateFormat} = require('@utils/date');
 
-// Import pages
+// Import login steps
+const loginCommon = require('@commonTests/BO/loginBO');
+
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard/index');
 const logsPage = require('@pages/BO/advancedParameters/logs');
-const foLoginPage = require('@pages/FO/login');
-const homePage = require('@pages/FO/home');
-const productPage = require('@pages/FO/product');
-const cartPage = require('@pages/FO/cart');
-const checkoutPage = require('@pages/FO/checkout');
-const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_advancedParameters_logs_filterSortAndPagination';
 
 // Import data
-const {PaymentMethods} = require('@data/demo/paymentMethods');
-const {DefaultCustomer} = require('@data/demo/customer');
 const {DefaultEmployee} = require('@data/demo/employees');
 
 let browserContext;
 let page;
-
 let numberOfLogs = 0;
-
-const today = new Date();
-
-// Current day
-const day = (`0${today.getDate()}`).slice(-2);
-// Current month
-const month = (`0${today.getMonth() + 1}`).slice(-2);
-// Current year
-const year = today.getFullYear();
-
-// Date today (yyy-mm-dd)
-const dateToday = `${year}-${month}-${day}`;
+const today = getDateFormat('mm/dd/yyyy');
 
 /*
 Erase all logs
@@ -52,7 +34,7 @@ Filter logs table by : Id, Employee, Severity, Message, Object type, Object ID, 
 Sort logs table by : Id, Employee, Severity, Message, Object type, Object ID, Error code, Date
  */
 
-describe('Filter, sort and pagination logs', async () => {
+describe('BO - Advanced Parameters - Logs : Filter, sort and pagination logs table', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -67,7 +49,7 @@ describe('Filter, sort and pagination logs', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to "Advanced parameters > Logs" page', async function () {
+  it('should go to \'Advanced Parameters > Logs\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToLogsPageToEraseLogs', baseContext);
 
     await dashboardPage.goToSubMenu(page, dashboardPage.advancedParametersLink, dashboardPage.logsLink);
@@ -88,9 +70,9 @@ describe('Filter, sort and pagination logs', async () => {
     await expect(numberOfLogs).to.be.equal(0);
   });
 
-  // Login and logout 5 times to have 5 logs
-  describe('Logout then login 5 times to have 5 logs', async () => {
-    const tests = new Array(5).fill(0, 0, 5);
+  // Login and logout 11 times to have 11 logs
+  describe('Logout then login 11 times to have 11 logs', async () => {
+    const tests = new Array(11).fill(0, 0, 11);
 
     tests.forEach((test, index) => {
       it(`should logout from BO n°${index + 1}`, async function () {
@@ -100,104 +82,29 @@ describe('Filter, sort and pagination logs', async () => {
       it(`should login in BO n°${index + 1}`, async function () {
         await loginCommon.loginBO(this, page);
       });
-
-      it('should go to "Advanced parameters > Logs" page', async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `goToLogsPage${index}`, baseContext);
-
-        await dashboardPage.goToSubMenu(page, dashboardPage.advancedParametersLink, dashboardPage.logsLink);
-
-        const pageTitle = await logsPage.getPageTitle(page);
-        await expect(pageTitle).to.contains(logsPage.pageTitle);
-
-        const numberOfElements = await logsPage.getNumberOfElementInGrid(page);
-        await expect(numberOfElements).to.be.equal(numberOfLogs + index + 1);
-      });
-    });
-  });
-
-  // Create 6 orders to have 6 logs
-  describe('Create 6 orders to have 6 logs', async () => {
-    it('should go to FO page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
-
-      // Click on view my shop
-      page = await dashboardPage.viewMyShop(page);
-
-      // Change language on FO
-      await homePage.changeLanguage(page, 'en');
-
-      const isHomePage = await homePage.isHomePage(page);
-      await expect(isHomePage, 'Fail to open FO home page').to.be.true;
     });
 
-    it('should go to login page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToLoginFO', baseContext);
+    it('should go to \'Advanced parameters > Logs\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToLogsPage', baseContext);
 
-      await homePage.goToLoginPage(page);
+      await dashboardPage.goToSubMenu(page, dashboardPage.advancedParametersLink, dashboardPage.logsLink);
 
-      const pageTitle = await foLoginPage.getPageTitle(page);
-      await expect(pageTitle, 'Fail to open FO login page').to.contains(foLoginPage.pageTitle);
+      const pageTitle = await logsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(logsPage.pageTitle);
     });
 
-    it('should sign in with default customer', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'signInFO', baseContext);
+    it('should check the number of logs', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkLogsNumber', baseContext);
 
-      await foLoginPage.customerLogin(page, DefaultCustomer);
-
-      const isCustomerConnected = await foLoginPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is not connected').to.be.true;
-    });
-
-    const tests = new Array(6).fill(0, 0, 6);
-
-    tests.forEach((test, index) => {
-      it(`should create the order n°${index + 1}`, async function () {
-        await testContext.addContextItem(this, 'testIdentifier', `createOrder${index}`, baseContext);
-
-        // Go to home page
-        await foLoginPage.goToHomePage(page);
-
-        // Go to the first product page
-        await homePage.goToProductPage(page, 1);
-
-        // Add the created product to the cart
-        await productPage.addProductToTheCart(page);
-
-        // Proceed to checkout the shopping cart
-        await cartPage.clickOnProceedToCheckout(page);
-
-        // Address step - Go to delivery step
-        const isStepAddressComplete = await checkoutPage.goToDeliveryStep(page);
-        await expect(isStepAddressComplete, 'Step Address is not complete').to.be.true;
-
-        // Delivery step - Go to payment step
-        const isStepDeliveryComplete = await checkoutPage.goToPaymentStep(page);
-        await expect(isStepDeliveryComplete, 'Step Address is not complete').to.be.true;
-
-        // Payment step - Choose payment step
-        await checkoutPage.choosePaymentAndOrder(page, PaymentMethods.wirePayment.moduleName);
-
-        // Check the confirmation message
-        const cardTitle = await orderConfirmationPage.getOrderConfirmationCardTitle(page);
-        await expect(cardTitle).to.contains(orderConfirmationPage.orderConfirmationCardTitle);
-      });
-    });
-
-    it('should sign out from FO', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'signOutFO', baseContext);
-
-      await orderConfirmationPage.logout(page);
-      const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
-      await expect(isCustomerConnected, 'Customer is connected').to.be.false;
+      const numberOfElements = await logsPage.getNumberOfElementInGrid(page);
+      await expect(numberOfElements).to.be.equal(11);
     });
   });
 
   // 1 - Pagination
   describe('Pagination next and previous', async () => {
-    it('should go to "Advanced parameters > Logs" page', async function () {
+    it('should go to \'Advanced parameters > Logs\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToLogsPageToFilter', baseContext);
-
-      page = await orderConfirmationPage.closePage(browserContext, page, 0);
 
       await dashboardPage.goToSubMenu(page, dashboardPage.advancedParametersLink, dashboardPage.logsLink);
 
@@ -208,7 +115,7 @@ describe('Filter, sort and pagination logs', async () => {
       await expect(numberOfElements).to.be.equal(numberOfLogs + 11);
     });
 
-    it('should change the item number to 10 per page', async function () {
+    it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
       const paginationNumber = await logsPage.selectPaginationLimit(page, '10');
@@ -229,7 +136,7 @@ describe('Filter, sort and pagination logs', async () => {
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
-    it('should change the item number to 20 per page', async function () {
+    it('should change the items number to 20 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
       const paginationNumber = await logsPage.selectPaginationLimit(page, '20');
@@ -238,7 +145,7 @@ describe('Filter, sort and pagination logs', async () => {
   });
 
   // 2 - Filter logs
-  describe('Filter Logs', async () => {
+  describe('Filter Logs table', async () => {
     [
       {
         args:
@@ -255,7 +162,7 @@ describe('Filter, sort and pagination logs', async () => {
             testIdentifier: 'filterByEmployee',
             filterType: 'input',
             filterBy: 'employee',
-            filterValue: DefaultEmployee.firstName,
+            filterValue: DefaultEmployee.lastName,
           },
       },
       {
@@ -336,14 +243,14 @@ describe('Filter, sort and pagination logs', async () => {
     it('should filter logs by date sent \'From\' and \'To\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterByDateSent', baseContext);
 
-      await logsPage.filterLogsByDate(page, dateToday, dateToday);
+      await logsPage.filterLogsByDate(page, today, today);
 
       const numberOfEmailsAfterFilter = await logsPage.getNumberOfElementInGrid(page);
       await expect(numberOfEmailsAfterFilter).to.be.at.most(numberOfLogs + 11);
 
       for (let row = 1; row <= numberOfEmailsAfterFilter; row++) {
         const textColumn = await logsPage.getTextColumn(page, row, 'date_add');
-        await expect(textColumn).to.contains(dateToday);
+        await expect(textColumn).to.contains(today);
       }
     });
 
@@ -455,7 +362,7 @@ describe('Filter, sort and pagination logs', async () => {
           },
       },
     ].forEach((test) => {
-      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' And check result`, async function () {
+      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
         let nonSortedTable = await logsPage.getAllRowsColumnContent(page, test.args.sortBy);
@@ -467,7 +374,7 @@ describe('Filter, sort and pagination logs', async () => {
           sortedTable = await sortedTable.map(text => parseFloat(text));
         }
 
-        const expectedResult = await logsPage.sortArray(nonSortedTable, test.args.isFloat);
+        const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
         if (test.args.sortDirection === 'asc') {
           await expect(sortedTable).to.deep.equal(expectedResult);
         } else {

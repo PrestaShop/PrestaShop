@@ -45,7 +45,7 @@ class ReaderTest extends TestCase
     /**
      * {@inheritDoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->reader = new Reader();
     }
@@ -57,12 +57,12 @@ class ReaderTest extends TestCase
      * When asking for a specific locale to this reader
      * Then the expected Locale data should be retrieved
      *
-     * @param $localeCode
-     * @param $expectedData
+     * @param string $localeCode
+     * @param array $expectedData
      *
      * @throws LocalizationException
      */
-    public function testReadLocaleData($localeCode, $expectedData)
+    public function testReadLocaleData(string $localeCode, array $expectedData): void
     {
         $localeData = $this->reader->readLocaleData($localeCode);
 
@@ -124,7 +124,7 @@ class ReaderTest extends TestCase
         );
     }
 
-    public function provideLocaleData()
+    public function provideLocaleData(): array
     {
         return [
             'root' => [

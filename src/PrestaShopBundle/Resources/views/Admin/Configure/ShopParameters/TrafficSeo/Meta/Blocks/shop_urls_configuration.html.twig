@@ -24,59 +24,57 @@
  *#}
 
 {% trans_default_domain "Admin.Shopparameters.Feature" %}
-{% form_theme shopUrlsForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
+{% form_theme shopUrlsForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
 {% block shop_urls_configuration %}
 
   {% set cardHeaderLabel = 'Set shop URL'|trans %}
-  {% if isShopFeatureActive and not isHostMode %}
+  {% if isShopFeatureActive %}
     <div class="card">
       <h3 class="card-header">
-        <i class="material-icons">settings</i> {{ cardHeaderLabel }}
+        <i class="material-icons">settings</i>
+        {{ cardHeaderLabel }}
       </h3>
-      <div class="card-block row">
-        <div class="card-text">
-          <div class="row">
-            <div class="col-sm">
-              <div class="alert alert-info" role="alert">
-                <div class="alert-text">
-                  {{ 'The multistore option is enabled. If you want to change the URL of your shop, you must go to the "Multistore" page under the "Advanced Parameters" menu.'|trans({}, 'Admin.Shopparameters.Notification') }}
-                </div>
-              </div>
+      <div class="card-body">
+        <div class="form-wrapper">
+
+          <div class="alert alert-info" role="alert">
+            <div class="alert-text">
+              {{ 'The multistore option is enabled. If you want to change the URL of your shop, you must go to the "Multistore" page under the "Advanced Parameters" menu.'|trans({}, 'Admin.Shopparameters.Notification') }}
             </div>
           </div>
+
         </div>
       </div>
     </div>
   {% endif %}
 
-  {% if not isShopFeatureActive and not isHostMode and doesMainShopUrlExist %}
+  {% if not isShopFeatureActive and doesMainShopUrlExist %}
     <div class="card">
-    <h3 class="card-header">
-      <i class="material-icons">settings</i> {{ cardHeaderLabel }}
+      <h3 class="card-header">
+        <i class="material-icons">settings</i>
+        {{ cardHeaderLabel }}
 
-      <span
-        class="help-box"
-        data-container="body"
-        data-toggle="popover"
-        data-trigger="hover"
-        data-placement="right"
-        data-content="{{ 'Here you can set the URL for your shop. If you migrate your shop to a new URL, remember to change the values below.'|trans({}, 'Admin.Shopparameters.Notification') }}"
-        title=""
-      >
+        <span class="help-box"
+              data-container="body"
+              data-toggle="popover"
+              data-trigger="hover"
+              data-placement="right"
+              data-content="{{ 'Here you can set the URL for your shop. If you migrate your shop to a new URL, remember to change the values below.'|trans({}, 'Admin.Shopparameters.Notification') }}"
+              title="">
         </span>
-    </h3>
-    <div class="card-block row">
-      <div class="card-text">
-        {{ form_widget(shopUrlsForm) }}
+      </h3>
+      <div class="card-body">
+        <div class="form-wrapper">
+          {{ form_widget(shopUrlsForm) }}
+        </div>
       </div>
-    </div>
 
-    <div class="card-footer">
-      <div class="d-flex justify-content-end">
-        <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+      <div class="card-footer">
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+        </div>
       </div>
     </div>
-  </div>
   {% endif %}
 {% endblock %}

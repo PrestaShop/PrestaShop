@@ -38,7 +38,7 @@
 				<tr>
 					<td class="{{$smarty.capture.moduleStatutClass}} text-center" style="width: 1%;">
 						{if (isset($module->id) && $module->id > 0) || !isset($module->type) || $module->type != 'addonsMustHave'}
-						<input type="checkbox" name="modules" value="{$module->name|escape:'html':'UTF-8'}" class="noborder" title="{l s='Module %1s ' sprintf=[$module->name]}"{if !isset($module->confirmUninstall) OR empty($module->confirmUninstall)} data-rel="false"{else} data-rel="{$module->confirmUninstall|addslashes}"{/if}/>
+						<input type="checkbox" name="modules" value="{$module->name|escape:'html':'UTF-8'}" class="noborder" title="{l|escape s='Module %1s ' sprintf=[$module->name]}"{if !isset($module->confirmUninstall) OR empty($module->confirmUninstall)} data-rel="false"{else} data-rel="{$module->confirmUninstall|addslashes}"{/if}/>
 						{/if}
 					</td>
 					<td class="fixed-width-xs">
@@ -100,21 +100,9 @@
 											</a>
 										{/if}
 									{else}
-										{if isset($module->trusted) && $module->trusted}
-											{if $module->trusted == 2}
-												<a class="btn btn-success untrustedaddon" href="#" data-target="#moduleNotTrustedCountry" data-toggle="modal" data-link="{$module->options.install_url|escape:'html':'UTF-8'}" data-module-name="{$module->displayName|escape:'html':'UTF-8'}">
-													<i class="icon-plus-sign-alt"></i>&nbsp;{l s='Install'}
-												</a>
-											{else}
-												<a class="btn btn-success" href="{$module->options.install_url|escape:'html':'UTF-8'}">
-													<i class="icon-plus-sign-alt"></i>&nbsp;{l s='Install'}
-												</a>
-											{/if}
-										{else}
-										<a class="btn btn-success untrustedaddon" href="#" data-target="#moduleNotTrusted" data-toggle="modal" data-link="{$module->options.install_url|escape:'html':'UTF-8'}" data-module-display-name="{$module->displayName|escape:'html':'UTF-8'}" data-module-name="{$module->name|escape:'html':'UTF-8'}" data-module-image="{if isset($module->image)}{$module->image}{else}{$modules_uri}/{$module->name}/{$module->logo}{/if}" data-author-name="{$module->author|escape:'html':'UTF-8'}" data-author-uri="{if isset($module->author_uri)}{$module->author_uri|escape:'html':'UTF-8'}{/if}">
-											<i class="icon-plus-sign-alt"></i>&nbsp;{l s='Install'}
-										</a>
-										{/if}
+                    <a class="btn btn-success" href="{$module->options.install_url|escape:'html':'UTF-8'}">
+                      <i class="icon-plus-sign-alt"></i>&nbsp;{l s='Install'}
+                    </a>
 									{/if}
 
 									{if !isset($module->not_on_disk) && isset($module->id)}

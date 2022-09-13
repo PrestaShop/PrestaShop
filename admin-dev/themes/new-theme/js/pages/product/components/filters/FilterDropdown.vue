@@ -68,10 +68,12 @@
   </div>
 </template>
 
-<script>
-  export default {
+<script lang="ts">
+  import Vue from 'vue';
+
+  export default Vue.extend({
     name: 'FilterDropdown',
-    data() {
+    data(): {selectedFilters: Array<Record<string, any>>} {
       return {
         selectedFilters: [],
       };
@@ -94,17 +96,17 @@
       this.$parent.$on('clearAll', this.clear);
     },
     computed: {
-      nbFiles() {
+      nbFiles(): string | null {
         return this.selectedFilters.length > 0
           ? `(${this.selectedFilters.length})`
           : null;
       },
     },
     methods: {
-      isChecked(filter) {
+      isChecked(filter: Record<string, any>): boolean {
         return this.selectedFilters.includes(filter);
       },
-      toggleFilter(filter) {
+      toggleFilter(filter: Record<string, any>): void {
         if (this.selectedFilters.includes(filter)) {
           this.$emit('removeFilter', filter, this.parentId);
           this.selectedFilters = this.selectedFilters.filter(
@@ -115,14 +117,14 @@
           this.selectedFilters.push(filter);
         }
       },
-      preventClose(event) {
+      preventClose(event: Event): void {
         event.stopPropagation();
       },
-      clear() {
+      clear(): void {
         this.selectedFilters = [];
       },
     },
-  };
+  });
 </script>
 
 <style lang="scss" type="text/scss">

@@ -26,38 +26,27 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Carrier;
 
-use PrestaShop\PrestaShop\Adapter\Configuration;
-use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Configuration\AbstractMultistoreConfiguration;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class CarrierOptionsConfiguration is responsible for saving and loading Carrier Options configuration.
  */
-class CarrierOptionsConfiguration implements DataConfigurationInterface
+class CarrierOptionsConfiguration extends AbstractMultistoreConfiguration
 {
-    /**
-     * @var Configuration
-     */
-    private $configuration;
-
-    /**
-     * CarrierOptionsConfiguration constructor.
-     *
-     * @param Configuration $configuration
-     */
-    public function __construct(Configuration $configuration)
-    {
-        $this->configuration = $configuration;
-    }
+    private const CONFIGURATION_FIELDS = ['default_carrier', 'carrier_default_order_by', 'carrier_default_order_way'];
 
     /**
      * {@inheritdoc}
      */
     public function getConfiguration()
     {
+        $shopConstraint = $this->getShopConstraint();
+
         return [
-            'default_carrier' => $this->configuration->getInt('PS_CARRIER_DEFAULT'),
-            'carrier_default_order_by' => $this->configuration->getInt('PS_CARRIER_DEFAULT_SORT'),
-            'carrier_default_order_way' => $this->configuration->getInt('PS_CARRIER_DEFAULT_ORDER'),
+            'default_carrier' => (int) $this->configuration->get('PS_CARRIER_DEFAULT', null, $shopConstraint),
+            'carrier_default_order_by' => (int) $this->configuration->get('PS_CARRIER_DEFAULT_SORT', null, $shopConstraint),
+            'carrier_default_order_way' => (int) $this->configuration->get('PS_CARRIER_DEFAULT_ORDER', null, $shopConstraint),
         ];
     }
 
@@ -67,23 +56,26 @@ class CarrierOptionsConfiguration implements DataConfigurationInterface
     public function updateConfiguration(array $configuration)
     {
         if ($this->validateConfiguration($configuration)) {
-            $this->configuration->set('PS_CARRIER_DEFAULT', $configuration['default_carrier']);
-            $this->configuration->set('PS_CARRIER_DEFAULT_SORT', $configuration['carrier_default_order_by']);
-            $this->configuration->set('PS_CARRIER_DEFAULT_ORDER', $configuration['carrier_default_order_way']);
+            $shopConstraint = $this->getShopConstraint();
+            $this->updateConfigurationValue('PS_CARRIER_DEFAULT', 'default_carrier', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_CARRIER_DEFAULT_SORT', 'carrier_default_order_by', $configuration, $shopConstraint);
+            $this->updateConfigurationValue('PS_CARRIER_DEFAULT_ORDER', 'carrier_default_order_way', $configuration, $shopConstraint);
         }
 
         return [];
     }
 
     /**
-     * {@inheritdoc}
+     * @return OptionsResolver
      */
-    public function validateConfiguration(array $configuration)
+    protected function buildResolver(): OptionsResolver
     {
-        return isset(
-            $configuration['default_carrier'],
-            $configuration['carrier_default_order_by'],
-            $configuration['carrier_default_order_way']
-        );
+        $resolver = (new OptionsResolver())
+            ->setDefined(self::CONFIGURATION_FIELDS)
+            ->setAllowedTypes('default_carrier', 'int')
+            ->setAllowedTypes('carrier_default_order_by', 'int')
+            ->setAllowedTypes('carrier_default_order_way', 'int');
+
+        return $resolver;
     }
 }

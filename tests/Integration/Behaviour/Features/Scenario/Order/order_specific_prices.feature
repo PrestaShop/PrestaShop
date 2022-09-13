@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags order-specific-prices
-@reset-database-before-feature
+@restore-all-tables-before-feature
 @order-specific-prices
 Feature: Order from Back Office (BO)
   In order to manage orders for FO customers

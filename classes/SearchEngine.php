@@ -78,5 +78,7 @@ class SearchEngineCore extends ObjectModel
                 return $str;
             }
         }
+
+        return '';
     }
 }

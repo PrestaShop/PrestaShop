@@ -30,3 +30,9 @@
       {% include '@PrestaShop/Admin/Configure/ShopParameters/Blocks/customer_preferences_general.html.twig' %}
     {{ form_end(generalForm) }}
 {% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+
+  <script src="{{ asset('themes/new-theme/public/customer_preferences.bundle.js') }}"></script>
+{% endblock %}

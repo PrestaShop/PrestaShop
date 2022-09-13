@@ -31,7 +31,7 @@ use PrestaShop\PrestaShop\Core\Domain\Shop\Exception\ShopException;
 /**
  * Shop identity
  */
-class ShopId
+class ShopId implements ShopIdInterface
 {
     /**
      * @var int

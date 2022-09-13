@@ -16,15 +16,17 @@ class Addresses extends FOBasePage {
 
     this.pageTitle = 'Addresses';
     this.addressPageTitle = 'Address';
-    this.addAddressSuccessfulMessage = 'Address successfully added!';
-    this.updateAddressSuccessfulMessage = 'Address successfully updated!';
-    this.deleteAddressSuccessfulMessage = 'Address successfully deleted!';
+    this.addAddressSuccessfulMessage = 'Address successfully added.';
+    this.updateAddressSuccessfulMessage = 'Address successfully updated.';
+    this.deleteAddressSuccessfulMessage = 'Address successfully deleted.';
+    this.deleteAddressErrorMessage = 'Could not delete the address since it is used in the shopping cart.';
 
     // Selectors
+    this.addressBlock = 'article.address';
+    this.addressBodyTitle = `${this.addressBlock} .address-body h4`;
     this.createNewAddressLink = '#content div.addresses-footer a[data-link-action=\'add-address\']';
     this.editAddressLink = 'a[data-link-action=\'edit-address\']';
     this.deleteAddressLink = 'a[data-link-action=\'delete-address\']';
-    this.countrySelect = '#content  select[name=\'id_country\']';
   }
 
   /*
@@ -37,26 +39,24 @@ class Addresses extends FOBasePage {
    * @constructor
    */
   async openNewAddressForm(page) {
-    await this.clickAndWaitForNavigation(page, this.createNewAddressLink);
+    if (await this.elementVisible(page, this.createNewAddressLink, 2000)) {
+      await this.clickAndWaitForNavigation(page, this.createNewAddressLink);
+    }
   }
 
   /**
-   * Is country exist
+   * Get address position from its alias
    * @param page {Page} Browser tab
-   * @param countryName {string} String of the country name
-   * @returns {Promise<boolean>}
+   * @param alias {string} Alias of the address
+   * @return {Promise<number>}
    */
-  async isCountryExist(page, countryName) {
-    let options = await page.$$eval(
-      `${this.countrySelect} option`,
-      all => all.map(
-        option => ({
-          textContent: option.textContent,
-          value: option.value,
-        })),
+  async getAddressPosition(page, alias) {
+    const titles = await page.$$eval(
+      this.addressBodyTitle,
+      all => all.map(address => address.textContent),
     );
-    options = await options.filter(option => countryName === option.textContent);
-    return options.length !== 0;
+
+    return titles.indexOf(alias) + 1;
   }
 
   /**
@@ -88,7 +88,7 @@ class Addresses extends FOBasePage {
       deleteButtons[position === 'last' ? (deleteButtons.length - 1) : (position - 1)].click(),
     ]);
 
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getTextContent(page, this.notificationsBlock);
   }
 }
 

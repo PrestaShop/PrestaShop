@@ -1,14 +1,6 @@
 <?php
 declare(strict_types = 1);
 
-function requireFileIfItExists(string $filepath) : bool {
-    if (file_exists($filepath)) {
-        require_once $filepath;
-        return true;
-    }
-    return false;
-}
-
 define('_PS_ROOT_DIR_', __DIR__. '/../../../');
 
 // Add module composer autoloader
@@ -18,13 +10,20 @@ require_once _PS_ROOT_DIR_ . 'vendor/autoload.php';
 define('_PS_ADMIN_DIR_', _PS_ROOT_DIR_ . '/admin-dev/');
 define('PS_ADMIN_DIR', _PS_ADMIN_DIR_);
 
-requireFileIfItExists(_PS_ROOT_DIR_ . '/tools/smarty/Smarty.class.php');
 require_once _PS_ROOT_DIR_ . '/config/defines.inc.php';
 require_once _PS_ROOT_DIR_ . '/config/autoload.php';
 require_once _PS_ROOT_DIR_ . '/config/bootstrap.php';
 require_once _PS_ROOT_DIR_ . '/install-dev/classes/exception.php';
 require_once _PS_ROOT_DIR_ . '/install-dev/classes/session.php';
 require_once _PS_ROOT_DIR_ . '/var/SymfonyRequirements.php';
+require_once _PS_ROOT_DIR_ . '/admin-dev/functions.php';
+include_once _PS_TOOL_DIR_ . 'profiling/Profiler.php';
+include_once _PS_TOOL_DIR_ . 'profiling/Controller.php';
+include_once _PS_TOOL_DIR_ . 'profiling/ObjectModel.php';
+include_once _PS_TOOL_DIR_ . 'profiling/Db.php';
+include_once _PS_TOOL_DIR_ . 'profiling/Hook.php';
+include_once _PS_TOOL_DIR_ . 'profiling/Module.php';
+include_once _PS_TOOL_DIR_ . 'profiling/Tools.php';
 
 // Make sure loader php-parser is coming from php stan composer
 
@@ -75,15 +74,16 @@ $constantsToDefine = [
     '_PARENT_THEME_NAME_' => 'string',
     '__PS_BASE_URI__' => 'string',
     '_PS_API_URL_' => 'string',
+    '_PS_CACHE_ENABLED_' => 'int',
+    '_PS_CACHING_SYSTEM_' => 'string',
+    '_PS_CREATION_DATE_' => 'string',
     '_PS_INSTALL_PATH_' => 'string',
     '_PS_INSTALL_DATA_PATH_' => 'string',
     '_PS_INSTALL_LANGS_PATH_' => 'string',
     '_PS_INSTALL_FIXTURES_PATH_' => 'string',
     '_PS_INSTALL_VERSION_' => 'string',
-    '_PS_INSTALLER_PHP_UPGRADE_DIR_' => 'string',
-    '_PS_INSTALLER_SQL_UPGRADE_DIR_' => 'string',
     '_PS_PRICE_DISPLAY_PRECISION_' => 'int',
-    '_PS_PRICE_COMPUTE_PRECISION_' => 'string',
+    '_PS_PRICE_COMPUTE_PRECISION_' => 'int',
     '_PS_OS_CHEQUE_' => 'int',
     '_PS_OS_PAYMENT_' => 'int',
     '_PS_OS_PREPARATION_' => 'int',
@@ -106,6 +106,36 @@ $constantsToDefine = [
     '_THEME_PROD_PIC_DIR_' => 'string',
     '_NEW_COOKIE_KEY_' => 'string',
     '_MAIL_DIR_' => 'string',
+    '_PS_IMG_' => 'string',
+    '_PS_PARENT_THEME_DIR_' => 'string',
+    '_PS_API_MODULES_LIST_16_' => 'string',
+    '_PS_CURRENCY_FEED_URL_' => 'string',
+    '_PS_DEFAULT_THEME_NAME_' => 'string',
+    '_PS_INSTALL_CONTROLLERS_PATH_' => 'string',
+    '_PS_INSTALL_MAXIMUM_PHP_VERSION_' => 'string',
+    '_PS_INSTALL_MAXIMUM_PHP_VERSION_ID_' => 'int',
+    '_PS_INSTALL_MINIMUM_PHP_VERSION_' => 'string',
+    '_PS_INSTALL_MINIMUM_PHP_VERSION_ID_' => 'int',
+    '_PS_JS_DIR_' => 'string',
+    '_PS_PARENT_THEME_URI_' => 'string',
+    '_PS_TAB_MODULE_LIST_URL_' => 'string',
+    '_PS_THEME_SELECTED_DIR_' => 'string',
+    '_PS_THEME_URI_' => 'string',
+    '_PS_TMP_IMG_' => 'string',
+    '_THEME_CAT_DIR_' => 'string',
+    '_THEME_CSS_DIR_' => 'string',
+    '_THEME_DIR_' => 'string',
+    '_THEME_EMPLOYEE_DIR_' => 'string',
+    '_THEME_GENDERS_DIR_' => 'string',
+    '_THEME_IMG_DIR_' => 'string',
+    '_THEME_JS_DIR_' => 'string',
+    '_THEME_LANG_DIR_' => 'string',
+    '_THEME_MANU_DIR_' => 'string',
+    '_THEME_SHIP_DIR_' => 'string',
+    '_THEME_STORE_DIR_' => 'string',
+    '_THEME_SUP_DIR_' => 'string',
+    '_THEME_PROFILE_DIR_' => 'string',
+    '_THEMES_DIR_' => 'string',
 ];
 
 foreach ($constantsToDefine as $key => $value) {
@@ -138,7 +168,8 @@ if (!defined('_PS_VERSION_')) {
         '/install/install_version.php',
     ];
     foreach ($legacyInstallationFileDefiningConstant as $file) {
-        if (requireFileIfItExists(_PS_ROOT_DIR_ . $file)) {
+        if (file_exists(_PS_ROOT_DIR_ . $file)) {
+            require_once _PS_ROOT_DIR_ . $file;
             define('_PS_VERSION_', _PS_INSTALL_VERSION_);
             break;
         }

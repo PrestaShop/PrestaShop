@@ -1,10 +1,11 @@
 require('module-alias/register');
 
-// Helpers to open and close browser
+// Import utils
 const helper = require('@utils/helpers');
+const basicHelper = require('@utils/basicHelper');
 
 // Common tests login BO
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -76,7 +77,7 @@ describe('BO - Catalog - Attributes & Features : Change attribute position', asy
       nonSortedTable = await nonSortedTable.map(text => parseFloat(text));
       sortedTable = await sortedTable.map(text => parseFloat(text));
 
-      const expectedResult = await attributesPage.sortArray(nonSortedTable, true);
+      const expectedResult = await basicHelper.sortArray(nonSortedTable, true);
 
       await expect(sortedTable).to.deep.equal(expectedResult);
     });

@@ -183,11 +183,11 @@
 
 {% block choice_tree_item_widget -%}
   <li{% if defaultHidden is defined and defaultHidden is same as(true) %} class="more"{% endif %}>
-        {% set checked = (form.vars.submitted_values is defined and submitted_values[child.id_category] is defined) ? 'checked="checked"' : '' %}
+        {% set checked = (form.vars.submitted_values is defined and submitted_values[child.id_category] is defined) %}
         {% if multiple -%}
             <div class="checkbox">
                 <label>
-                    <input type="checkbox" name="{{ form.vars.full_name }}[tree][]" value="{{ child.id_category }}" class="category" {{ checked }}>
+                    <input type="checkbox" name="{{ form.vars.full_name }}[tree][]" value="{{ child.id_category }}"{% if checked %} checked="checked"{% endif %} class="category">
                     {% if child.active is defined and child.active == 0 %}
                         <i>{{ child.name }}</i>
                     {%- else -%}
@@ -200,8 +200,8 @@
             </div>
         {%- else -%}
             <div class="radio">
-                <label>
-                    <input type="radio" name="form[{{ form.vars.id }}][tree]" value="{{ child.id_category }}" {{ checked }} class="category"{% if required %} required{% endif %}>
+              <label>
+                <input type="radio" name="form[{{ form.vars.id }}][tree]" value="{{ child.id_category }}"{% if checked %} checked="checked"{% endif %} class="category"{% if required %} required{% endif %}>
                     {{ child.name }}
                     {% if defaultCategory is defined %}
                         <input type="radio" value="{{ child.id_category }}" name="ignore" class="default-category" />
@@ -334,40 +334,42 @@
 {%- endblock translate_textarea_widget %}
 
 {% block date_picker_widget %}
-  {% spaceless %}
-    {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' datepicker')|trim)}) %}
+  {% apply spaceless %}
+    {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' datepicker form-control')|trim)}) %}
     {%- set attr = attr|merge({'aria-label': '%inputId% input'|trans({'%inputId%': form.vars.id}, 'Admin.Global')}) -%}
     <div class="input-group datepicker">
-      <input type="text" class="form-control" data-format="{{ date_format }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+      <input type="text" data-format="{{ date_format }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
       <div class="input-group-append">
         <div class="input-group-text">
           <i class="material-icons">date_range</i>
         </div>
       </div>
     </div>
-  {% endspaceless %}
+  {% endapply %}
 {% endblock date_picker_widget %}
 
 {% block date_range_widget %}
-  {% spaceless %}
+  {% apply spaceless %}
     {{ form_widget(form.from) }}
+    {{ form_errors(form.from) }}
     {{ form_widget(form.to) }}
-  {% endspaceless %}
+    {{ form_errors(form.to) }}
+  {% endapply %}
 {% endblock date_range_widget %}
 
 {% block color_picker_widget %}
-  {% spaceless %}
-    {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' colorpicker')|trim)}) %}
+  {% apply spaceless %}
+    {%  set attr = attr|merge({'class': ((attr.class|default('') ~ ' form-control colorpicker')|trim)}) %}
     <div class="input-group colorpicker">
-      <input type="text" class="form-control" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+      <input type="text" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
     </div>
-  {% endspaceless %}
+  {% endapply %}
 {% endblock color_picker_widget %}
 
 {% block search_and_reset_widget %}
-    {% spaceless %}
+    {% apply spaceless %}
         <button type="submit"
-                class="btn btn-primary grid-search-button d-block float-right"
+                class="btn btn-primary grid-search-button d-block"
                 title="{{ 'Search'|trans({}, 'Admin.Actions') }}"
                 name="{{ full_name }}[search]"
         >
@@ -376,10 +378,9 @@
         </button>
       {% if show_reset_button %}
           <div class="js-grid-reset-button">
-          <div class="clearfix"></div>
             <button type="reset"
                     name="{{ full_name }}[reset]"
-                    class="btn btn-link js-reset-search btn d-block grid-reset-button float-right"
+                    class="btn btn-link js-reset-search btn d-block grid-reset-button"
                     data-url="{{ reset_url }}"
                     data-redirect="{{ redirect_url }}"
             >
@@ -388,20 +389,28 @@
             </button>
           </div>
       {% endif %}
-    {% endspaceless %}
+    {% endapply %}
 {% endblock search_and_reset_widget %}
 
 {% block switch_widget %}
-    {% spaceless %}
+    {% apply spaceless %}
     <span class="ps-switch">
         {% for choice in choices %}
             {% set inputId = id ~'_' ~ choice.value %}
-            <input id="{{inputId}}" {{ block('attributes') }} name="{{ full_name }}" value="{{ choice.value }}" {%- if choice is selectedchoice(value) -%}checked="" {%- endif -%} {%- if disabled -%}disabled="" {%- endif -%} type="radio" aria-label="{{ choice.label|trans({}, choice_translation_domain) }}">
+            <input id="{{inputId}}"
+                {{ block('attributes') }}
+                name="{{ full_name }}"
+                value="{{ choice.value }}"
+                {% if choice is selectedchoice(value) %}checked=""{% endif %}
+                {% if disabled %}disabled=""{% endif %}
+                type="radio"
+                aria-label="{{ choice.label|trans({}, choice_translation_domain) }}"
+                >
             <label for="{{inputId}}">{{ choice.label|trans({}, choice_translation_domain) }}</label>
         {% endfor %}
         <span class="slide-button"></span>
     </span>
-    {% endspaceless %}
+    {% endapply %}
 {% endblock switch_widget %}
 
 {% block _form_step6_attachments_widget %}
@@ -570,7 +579,7 @@
 {# Material design widgets #}
 
 {% block material_choice_table_widget %}
-  {% spaceless %}
+  {% apply spaceless %}
     <div class="choice-table">
       <table class="table table-bordered mb-0">
         <thead>
@@ -578,7 +587,13 @@
             <th class="checkbox">
               <div class="md-checkbox">
                 <label>
-                  <input type="checkbox" class="js-choice-table-select-all">
+                  <input
+                    type="checkbox"
+                    class="js-choice-table-select-all"
+                    {% if isCheckSelectAll %}
+                      checked
+                    {% endif %}
+                  >
                   <i class="md-checkbox-control"></i>
                   {{ 'Select all'|trans({}, 'Admin.Actions') }}
                 </label>
@@ -597,11 +612,11 @@
         </tbody>
       </table>
     </div>
-  {% endspaceless %}
+  {% endapply %}
 {% endblock material_choice_table_widget %}
 
 {% block material_multiple_choice_table_widget %}
-  {% spaceless %}
+  {% apply spaceless %}
     <div class="choice-table{% if headers_fixed %}-headers-fixed{% endif %} table-responsive">
       <table class="table">
         <thead>
@@ -650,7 +665,7 @@
         </tbody>
       </table>
     </div>
-  {% endspaceless %}
+  {% endapply %}
 {% endblock material_multiple_choice_table_widget %}
 
 {% block translatable_widget -%}
@@ -676,11 +691,11 @@
                 {% endif %}
                 aria-haspopup="true"
                 aria-expanded="false"
-                id="{{ form.vars.id }}"
+                id="{{ form.vars.id }}_dropdown"
         >
           {{ form.vars.default_locale.iso_code }}
         </button>
-        <div class="dropdown-menu locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}">
+        <div class="dropdown-menu locale-dropdown-menu" aria-labelledby="{{ form.vars.id }}_dropdown">
           {% for locale in locales %}
             <span class="dropdown-item js-locale-item" data-locale="{{ locale.iso_code }}">{{ locale.name }}</span>
           {% endfor %}
@@ -819,7 +834,7 @@
 
 {% block form_hint %}
   {% if hint %}
-    <div class="row col-lg hint-box">
+    <div class="hint-box">
       <div class="alert alert-info">{{ hint|raw }}</div>
     </div>
   {% endif %}
@@ -845,19 +860,3 @@
     </datalist>
   {% endif %}
 {% endblock text_widget %}
-
-{% block submittable_input_widget %}
-  {%- set attr = attr|merge({'class': (attr.class|default('') ~ ' ps-submittable-input-wrapper')|trim}) -%}
-  <div {{ block('widget_attributes') }}>
-    {%- set typeAttr = form.vars.type_attr|merge({
-      'class': (form.vars.type_attr.class|default('') ~ ' submittable-input')|trim,
-      'data-initial-value': value,
-      'value': value,
-    }) -%}
-
-    {{ form_widget(form.value, {'attr': typeAttr}) }}
-    <button type="button" class="check-button d-none">
-      <i class="material-icons">check</i>
-    </button>
-  </div>
-{% endblock submittable_input_widget %}

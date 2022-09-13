@@ -25,7 +25,7 @@
 <div class="form-group">
 	<label class="control-label col-lg-3 required">
 		<span class="label-tooltip" data-toggle="tooltip"
-		title="{l s='This will be displayed in the cart summary, as well as on the invoice.' d='Admin.Catalog.Help'}">
+		title="{l|escape s='This will be displayed in the cart summary, as well as on the invoice.' d='Admin.Catalog.Help'}">
 			{l s='Name' d='Admin.Global'}
 		</span>
 	</label>
@@ -60,7 +60,7 @@
 <div class="form-group">
 	<label class="control-label col-lg-3">
 		<span class="label-tooltip" data-toggle="tooltip"
-		title="{l s='For your eyes only. This will never be displayed to the customer.' d='Admin.Catalog.Help'}">
+		title="{l|escape s='For your eyes only. This will never be displayed to the customer.' d='Admin.Catalog.Help'}">
 			{l s='Description' d='Admin.Global'}
 		</span>
 	</label>
@@ -72,7 +72,7 @@
 <div class="form-group">
 	<label class="control-label col-lg-3">
 		<span class="label-tooltip" data-toggle="tooltip"
-		title="{{l s='This is the code users should enter to apply the voucher to a cart. Either create your own code or generate one by clicking on "%generate_label%".' d='Admin.Catalog.Help'  sprintf=['%generate_label%' => {l s='Generate' d='Admin.Actions'}]}|escape:"html"}">
+		title="{{l|escape s='This is the code users should enter to apply the voucher to a cart. Either create your own code or generate one by clicking on "%generate_label%".' d='Admin.Catalog.Help'  sprintf=['%generate_label%' => {l s='Generate' d='Admin.Actions'}]}|escape:"html"}">
 			{l s='Code' d='Admin.Global'}
 		</span>
 	</label>
@@ -90,7 +90,7 @@
 <div class="form-group" id="cart-rules-highlight"{if !$currentTab->getFieldValue($currentObject, 'code')} style="display: none;"{/if}>
 	<label class="control-label col-lg-3">
 		<span class="label-tooltip" data-toggle="tooltip"
-		title="{l s='If the voucher is not yet in the cart, it will be displayed in the cart summary.' d='Admin.Catalog.Help'}">
+		title="{l|escape s='If the voucher is not yet in the cart, it will be displayed in the cart summary.' d='Admin.Catalog.Help'}">
 			{l s='Highlight' d='Admin.Catalog.Feature'}
 		</span>
 	</label>
@@ -108,7 +108,7 @@
 <div class="form-group">
 	<label class="control-label col-lg-3">
 		<span class="label-tooltip" data-toggle="tooltip"
-		title="{l s='Only applicable if the voucher value is greater than the cart total.' d='Admin.Catalog.Help'}
+		title="{l|escape s='Only applicable if the voucher value is greater than the cart total.' d='Admin.Catalog.Help'}
 		{l s='If you do not allow partial use, the voucher value will be lowered to the total order amount. If you allow partial use, however, a new voucher will be created with the remainder.' d='Admin.Catalog.Help'}">
 			{l s='Partial use' d='Admin.Catalog.Feature'}
 		</span>
@@ -127,7 +127,7 @@
 <div class="form-group">
 	<label class="control-label col-lg-3">
 		<span class="label-tooltip" data-toggle="tooltip"
-		title="{l s='Cart rules are applied by priority. A cart rule with a priority of "1" will be processed before a cart rule with a priority of "2".' d='Admin.Catalog.Help'}">
+		title="{l|escape s='Cart rules are applied by priority. A cart rule with a priority of "1" will be processed before a cart rule with a priority of "2".' d='Admin.Catalog.Help'}">
 			{l s='Priority' d='Admin.Global'}
 		</span>
 	</label>

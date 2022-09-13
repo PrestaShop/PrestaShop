@@ -55,16 +55,16 @@
   </div>
 </template>
 
-<script>
-
-  import FilterDropdown from '@pages/product/components/filters/FilterDropdown';
+<script lang="ts">
+  import Vue from 'vue';
+  import FilterDropdown from '@pages/product/components/filters/FilterDropdown.vue';
   import ProductEventMap from '@pages/product/product-event-map';
 
   const CombinationEvents = ProductEventMap.combinations;
 
-  export default {
+  export default Vue.extend({
     name: 'Filters',
-    data() {
+    data(): {selectedFilters: Record<string, any>} {
       return {
         selectedFilters: {},
       };
@@ -83,7 +83,7 @@
       FilterDropdown,
     },
     computed: {
-      selectedFiltersNumber() {
+      selectedFiltersNumber(): Record<string, any> | number {
         if (!this.selectedFilters) {
           return 0;
         }
@@ -98,7 +98,7 @@
       /**
        * This methods is used to initialize product filters
        */
-      addFilter(filter, parentId) {
+      addFilter(filter: Record<string, any>, parentId: number): void {
         // If absent set new field with set method so that it's reactive
         if (!this.selectedFilters[parentId]) {
           this.$set(this.selectedFilters, parentId, []);
@@ -107,26 +107,32 @@
         this.selectedFilters[parentId].push(filter);
         this.updateFilters();
       },
-      removeFilter(filter, parentId) {
+      removeFilter(filter: Record<string, any>, parentId: number): void {
         if (!this.selectedFilters[parentId]) {
           return;
         }
 
         this.selectedFilters[parentId] = this.selectedFilters[parentId].filter(
-          (e) => filter.id !== e.id,
+          (e: Record<string, any>) => filter.id !== e.id,
         );
+
+        if (this.selectedFilters[parentId].length === 0) {
+          // remove parent array if it became empty after filters removal
+          this.selectedFilters.splice(parentId, 1);
+        }
+
         this.updateFilters();
       },
-      clearAll() {
+      clearAll(): void {
         this.selectedFilters = [];
         this.$emit('clearAll');
         this.eventEmitter.emit(CombinationEvents.updateAttributeGroups, this.selectedFilters);
       },
-      updateFilters() {
+      updateFilters(): void {
         this.eventEmitter.emit(CombinationEvents.updateAttributeGroups, this.selectedFilters);
       },
     },
-  };
+  });
 </script>
 
 <style lang="scss" type="text/scss">

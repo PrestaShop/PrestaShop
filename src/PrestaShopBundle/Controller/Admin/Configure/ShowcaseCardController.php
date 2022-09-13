@@ -51,7 +51,9 @@ class ShowcaseCardController extends FrameworkBundleAdminController
      *
      * @see ShowcaseCard
      *
-     * @AdminSecurity("is_granted(['create', 'update'], 'CONFIGURE')")
+     * @AdminSecurity(
+     *     "is_granted('create', 'CONFIGURE') && is_granted('update', 'CONFIGURE')"
+     * )
      * @DemoRestricted(redirectRoute="admin_metas_index")
      *
      * @return JsonResponse

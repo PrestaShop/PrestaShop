@@ -24,38 +24,37 @@
  *#}
 
 {% block translateMailsBodyFormBlock %}
-<div class="row justify-content-center">
-  <div class="col-xl-12">
-    {{ form_start(translateMailsBodyForm, {'action': path('admin_mail_theme_translate_body')}) }}
-    <div class="card">
-      <h3 class="card-header">
-        <i class="material-icons">email</i> {{ 'Translate emails'|trans({}, 'Admin.Actions') }}
-      </h3>
 
-      <div class="card-block row">
-        <div class="card-text">
-          <div class="form-group row">
-            <label class="form-control-label">
-              {{ 'Select your language'|trans({}, 'Admin.International.Feature') }}
-            </label>
-            <div class="col-sm">
-              {{ form_errors(translateMailsBodyForm.language) }}
-              {{ form_widget(translateMailsBodyForm.language) }}
-            </div>
+  {{ form_start(translateMailsBodyForm, {'action': path('admin_mail_theme_translate_body')}) }}
+  <div class="card">
+    <h3 class="card-header">
+      <i class="material-icons">email</i>
+      {{ 'Translate emails'|trans({}, 'Admin.Actions') }}
+    </h3>
+
+    <div class="card-body">
+      <div class="form-wrapper">
+        <div class="form-group row">
+          <label class="form-control-label">
+            {{ 'Select your language'|trans({}, 'Admin.International.Feature') }}
+          </label>
+          <div class="col-sm">
+            {{ form_errors(translateMailsBodyForm.language) }}
+            {{ form_widget(translateMailsBodyForm.language) }}
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="card-footer">
-        <div class="d-flex justify-content-end">
-          <button class="btn btn-primary">
-            <i class="material-icons">email</i>
-            <span>{{ 'Translate emails'|trans({}, 'Admin.Actions') }}</span>
-          </button>
-        </div>
+    <div class="card-footer">
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-primary">
+          <i class="material-icons">email</i>
+          <span>{{ 'Translate emails'|trans({}, 'Admin.Actions') }}</span>
+        </button>
       </div>
     </div>
-    {{ form_end(translateMailsBodyForm) }}
   </div>
-</div>
+  {{ form_end(translateMailsBodyForm) }}
+
 {% endblock %}

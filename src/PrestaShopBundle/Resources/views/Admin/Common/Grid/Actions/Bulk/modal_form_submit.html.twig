@@ -29,5 +29,8 @@
         data-form-submit-url="{{ path(action.options.submit_route) }}"
         data-modal-id="{{ action.options.modal_id }}"
 >
+  {% if action.icon is not empty %}
+    <i class="material-icons">{{ action.icon }}</i>
+  {% endif %}
   {{ action.name }}
 </button>

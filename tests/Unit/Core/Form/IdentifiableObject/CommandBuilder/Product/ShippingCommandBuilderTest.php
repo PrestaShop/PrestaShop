@@ -31,27 +31,110 @@ namespace Tests\Unit\Core\Form\IdentifiableObject\CommandBuilder\Product;
 use Generator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductShippingCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\ShippingCommandsBuilder;
 
 class ShippingCommandBuilderTest extends AbstractProductCommandBuilderTest
 {
     /**
-     * @dataProvider getExpectedCommands
+     * @dataProvider getExpectedSingleShopCommands
      *
      * @param array $formData
      * @param array $expectedCommands
      */
-    public function testBuildCommand(array $formData, array $expectedCommands): void
+    public function testBuildSingleShopCommands(array $formData, array $expectedCommands): void
     {
-        $builder = new ShippingCommandsBuilder();
-        $builtCommands = $builder->buildCommands($this->getProductId(), $formData);
+        $builder = new ShippingCommandsBuilder(self::MODIFY_ALL_SHOPS_PREFIX);
+        $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
+        $this->assertEquals($expectedCommands, $builtCommands);
+    }
+
+    /**
+     * @dataProvider getExpectedMultiShopCommands
+     *
+     * @param array $formData
+     * @param array $expectedCommands
+     */
+    public function testBuildMultiShopCommands(array $formData, array $expectedCommands): void
+    {
+        $builder = new ShippingCommandsBuilder(self::MODIFY_ALL_SHOPS_PREFIX);
+        $builtCommands = $builder->buildCommands($this->getProductId(), $formData, $this->getSingleShopConstraint());
         $this->assertEquals($expectedCommands, $builtCommands);
     }
 
     /**
      * @return Generator
      */
-    public function getExpectedCommands(): Generator
+    public function getExpectedMultiShopCommands(): Generator
+    {
+        $command = $this->getAllShopsCommand();
+        $command->setCarrierReferenceIds([1, 2, 3]);
+        yield [
+            [
+                'shipping' => [
+                    'carriers' => ['1', '2', '3'],
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'carriers' => true,
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getAllShopsCommand();
+        $localizedNotes = [
+            '1' => 'test4',
+            '3' => 'test5',
+        ];
+        $command->setLocalizedDeliveryTimeOutOfStockNotes($localizedNotes);
+        yield [
+            [
+                'shipping' => [
+                    'delivery_time_notes' => [
+                        'out_of_stock' => $localizedNotes,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'out_of_stock' => true,
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = $this->getAllShopsCommand();
+        $command->setAdditionalShippingCost('-0.55');
+        yield [
+            [
+                'shipping' => [
+                    'additional_shipping_cost' => '-0.55',
+                    self::MODIFY_ALL_SHOPS_PREFIX . 'additional_shipping_cost' => true,
+                ],
+            ],
+            [$command],
+        ];
+
+        $singleShopCommand = $this->getSingleShopCommand();
+        $singleShopCommand->setDeliveryTimeNoteType(DeliveryTimeNoteType::TYPE_DEFAULT);
+        $allShopsCommand = $this->getAllShopsCommand();
+        $localizedNotes = [
+            '1' => 'test9',
+            '3' => 'test19',
+        ];
+        $allShopsCommand->setLocalizedDeliveryTimeOutOfStockNotes($localizedNotes);
+        yield [
+            [
+                'shipping' => [
+                    'delivery_time_note_type' => 1,
+                    'delivery_time_notes' => [
+                        'out_of_stock' => $localizedNotes,
+                        self::MODIFY_ALL_SHOPS_PREFIX . 'out_of_stock' => true,
+                    ],
+                ],
+            ],
+            [$singleShopCommand, $allShopsCommand],
+        ];
+    }
+
+    /**
+     * @return Generator
+     */
+    public function getExpectedSingleShopCommands(): Generator
     {
         yield [
             [
@@ -60,17 +143,16 @@ class ShippingCommandBuilderTest extends AbstractProductCommandBuilderTest
             [],
         ];
 
-        $command = new UpdateProductShippingCommand($this->getProductId()->getValue());
         yield [
             [
                 'shipping' => [
                     'not_handled' => 0,
                 ],
             ],
-            [$command],
+            [],
         ];
 
-        $command = new UpdateProductShippingCommand($this->getProductId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setWeight('10');
         $command->setWidth('10.5');
         $command->setHeight('109');
@@ -89,7 +171,7 @@ class ShippingCommandBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = new UpdateProductShippingCommand($this->getProductId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setAdditionalShippingCost('-0.55');
         yield [
             [
@@ -100,8 +182,8 @@ class ShippingCommandBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = new UpdateProductShippingCommand($this->getProductId()->getValue());
-        $command->setCarrierReferences(['1', '2', '3']);
+        $command = $this->getSingleShopCommand();
+        $command->setCarrierReferenceIds([1, 2, 3]);
         yield [
             [
                 'shipping' => [
@@ -111,7 +193,7 @@ class ShippingCommandBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = new UpdateProductShippingCommand($this->getProductId()->getValue());
+        $command = $this->getSingleShopCommand();
         $command->setDeliveryTimeNoteType(DeliveryTimeNoteType::TYPE_DEFAULT);
         yield [
             [
@@ -122,7 +204,7 @@ class ShippingCommandBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = new UpdateProductShippingCommand($this->getProductId()->getValue());
+        $command = $this->getSingleShopCommand();
         $localizedNotes = [
             '1' => 'test1',
             '2' => 'test2',
@@ -139,7 +221,7 @@ class ShippingCommandBuilderTest extends AbstractProductCommandBuilderTest
             [$command],
         ];
 
-        $command = new UpdateProductShippingCommand($this->getProductId()->getValue());
+        $command = $this->getSingleShopCommand();
         $localizedNotes = [
             '1' => 'test4',
             '3' => 'test5',
@@ -155,5 +237,15 @@ class ShippingCommandBuilderTest extends AbstractProductCommandBuilderTest
             ],
             [$command],
         ];
+    }
+
+    private function getSingleShopCommand(): UpdateProductShippingCommand
+    {
+        return new UpdateProductShippingCommand($this->getProductId()->getValue(), $this->getSingleShopConstraint());
+    }
+
+    private function getAllShopsCommand(): UpdateProductShippingCommand
+    {
+        return new UpdateProductShippingCommand($this->getProductId()->getValue(), ShopConstraint::allShops());
     }
 }

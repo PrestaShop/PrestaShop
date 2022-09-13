@@ -1,6 +1,10 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags add-payment-to-order
-@reset-database-before-feature
+@restore-all-tables-before-feature
+@clear-cache-before-feature
 @reboot-kernel-before-feature
+@restore-currencies-after-feature
+@reboot-kernel-after-feature
+@restore-currencies-before-scenario
 @add-payment-to-order
 Feature: Add payment to Order from Back Office (BO)
   In order to manage orders for FO customers
@@ -78,6 +82,7 @@ Feature: Add payment to Order from Back Office (BO)
       | paymentMethod  | Payments by check   |
       | transactionId  | test123             |
       | amount         | $6.00               |
+      | employee       | Puff Daddy          |
     And order "bo_order1" should have the following details:
       | total_paid_real | 6.000000 |
 
@@ -94,6 +99,7 @@ Feature: Add payment to Order from Back Office (BO)
       | paymentMethod  | Payments by check   |
       | transactionId  | test123             |
       | amount         | €6.00               |
+      | employee       | Puff Daddy          |
     And order "bo_order1" should have the following details:
       | total_paid_real | 6.820000 |
 

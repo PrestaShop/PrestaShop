@@ -36,28 +36,19 @@
           </button>
         </div>
         <div class="modal-body">
-          <div class="row">
-            <div class="col">
-              <div class="form-group">
-                <label class="form-control-label" for="{{ addProductToOrderForm.product_id.vars.id }}">
-                  {{ 'Product'|trans({}, 'Admin.Global') }}
-                </label>
 
-                {{ form_widget(addProductToOrderForm.product_id) }}
-              </div>
-            </div>
+          <div class="form-group">
+            <label class="form-control-label" for="{{ addProductToOrderForm.product_id.vars.id }}">
+              {{ 'Product'|trans({}, 'Admin.Global') }}
+            </label>
+            {{ form_widget(addProductToOrderForm.product_id) }}
           </div>
 
-          <div class="row">
-            <div class="col">
-              <div class="form-group">
-                <label class="form-control-label" for="{{ addProductToOrderForm.combination_id.vars.id }}">
-                  {{ 'Combination'|trans({}, 'Admin.Global') }}
-                </label>
-
-                {{ form_widget(addProductToOrderForm.combination_id) }}
-              </div>
-            </div>
+          <div class="form-group">
+            <label class="form-control-label" for="{{ addProductToOrderForm.combination_id.vars.id }}">
+              {{ 'Combination'|trans({}, 'Admin.Global') }}
+            </label>
+            {{ form_widget(addProductToOrderForm.combination_id) }}
           </div>
 
           <div class="row">
@@ -91,17 +82,13 @@
             </div>
           </div>
 
-          <div class="row">
-            <div class="col">
-              <div class="form-group">
-                <label class="form-control-label" for="{{ addProductToOrderForm.quantity.vars.id }}">
-                  {{ 'Quantity'|trans({}, 'Admin.Global') }}
-                </label>
-
-                {{ form_widget(addProductToOrderForm.quantity) }}
-              </div>
-            </div>
+          <div class="form-group">
+            <label class="form-control-label" for="{{ addProductToOrderForm.quantity.vars.id }}">
+              {{ 'Quantity'|trans({}, 'Admin.Global') }}
+            </label>
+            {{ form_widget(addProductToOrderForm.quantity) }}
           </div>
+
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">

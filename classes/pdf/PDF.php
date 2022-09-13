@@ -59,11 +59,11 @@ class PDFCore
      */
     protected $smarty;
 
-    const TEMPLATE_INVOICE = 'Invoice';
-    const TEMPLATE_ORDER_RETURN = 'OrderReturn';
-    const TEMPLATE_ORDER_SLIP = 'OrderSlip';
-    const TEMPLATE_DELIVERY_SLIP = 'DeliverySlip';
-    const TEMPLATE_SUPPLY_ORDER_FORM = 'SupplyOrderForm';
+    public const TEMPLATE_INVOICE = 'Invoice';
+    public const TEMPLATE_ORDER_RETURN = 'OrderReturn';
+    public const TEMPLATE_ORDER_SLIP = 'OrderSlip';
+    public const TEMPLATE_DELIVERY_SLIP = 'DeliverySlip';
+    public const TEMPLATE_SUPPLY_ORDER_FORM = 'SupplyOrderForm';
 
     /**
      * @param PrestaShopCollection|ObjectModel|array $objects
@@ -115,6 +115,8 @@ class PDFCore
         if (count($this->objects) > 1) { // when bulk mode only
             $this->send_bulk_flag = true;
         }
+
+        $this->setFilename();
     }
 
     /**
@@ -137,20 +139,16 @@ class PDFCore
                 continue;
             }
 
-            if (empty($this->filename)) {
-                $this->filename = $template->getFilename();
-                if (count($this->objects) > 1) {
-                    $this->filename = $template->getBulkFilename();
-                }
-            }
-
             $template->assignHookData($object);
 
             $this->pdf_renderer->createHeader($template->getHeader());
-            $this->pdf_renderer->createFooter($template->getFooter());
             $this->pdf_renderer->createPagination($template->getPagination());
             $this->pdf_renderer->createContent($template->getContent());
             $this->pdf_renderer->writePage();
+            // The footer must be added after adding the page, or TCPDF will
+            // add the footer for the next page from on the last page of this
+            // page group, which could mean the wrong store info is rendered.
+            $this->pdf_renderer->createFooter($template->getFooter());
             $render = true;
 
             unset($template);
@@ -162,7 +160,7 @@ class PDFCore
                 ob_clean();
             }
 
-            return $this->pdf_renderer->render($this->filename, $display);
+            return $this->pdf_renderer->render($this->getFilename(), $display);
         }
     }
 
@@ -191,5 +189,48 @@ class PDFCore
         }
 
         return $class;
+    }
+
+    /**
+     * Get the PDF filename based on the objects.
+     *
+     * @return string
+     */
+    public function getFilename(): string
+    {
+        if (empty($this->filename)) {
+            $this->setFilename();
+        }
+
+        return $this->filename;
+    }
+
+    /**
+     * Set the PDF filename based on the objects.
+     *
+     * @return bool
+     */
+    public function setFilename(): bool
+    {
+        $bulk = (1 < count($this->objects));
+
+        foreach ($this->objects as $object) {
+            $template = $this->getTemplateObject($object);
+            if (!$template) {
+                continue;
+            }
+
+            if ($bulk) {
+                $this->filename = $template->getBulkFilename();
+            } else {
+                $this->filename = $template->getFilename();
+            }
+
+            if (!empty($this->filename)) {
+                break;
+            }
+        }
+
+        return !empty($this->filename);
     }
 }

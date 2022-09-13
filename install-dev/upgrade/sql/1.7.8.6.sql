@@ -1,4 +1,0 @@
-SET SESSION sql_mode='';
-SET NAMES 'utf8mb4';
-
-ALTER TABLE `PREFIX_state` MODIFY COLUMN `name` VARCHAR(80) NOT NULL;

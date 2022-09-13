@@ -304,6 +304,9 @@ class StockManager
         }
         $templateVars = [
             '{qty}' => $newQuantity,
+            '{product_id}' => $product->id,
+            '{product_attribute_id}' => $id_product_attribute,
+            '{product_reference}' => $product->reference,
             '{last_qty}' => $lowStockThreshold,
             '{product}' => $productName,
         ];
@@ -382,7 +385,7 @@ class StockManager
 
         if ($product->id) {
             $stockManager = ServiceLocator::get('\\PrestaShop\\PrestaShop\\Adapter\\StockManager');
-            $stockAvailable = $stockManager->getStockAvailableByProduct($product, $productAttributeId);
+            $stockAvailable = $stockManager->getStockAvailableByProduct($product, $productAttributeId, $params['id_shop'] ?? null);
 
             if ($stockAvailable->id) {
                 $stockMvt = new StockMvt();

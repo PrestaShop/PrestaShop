@@ -19,7 +19,7 @@ class AddTaxRules extends BOBasePage {
 
     // Selectors
     // Header buttons
-    this.addNewTaxRuleButton = '#page-header-desc-tax_rule-new';
+    this.addNewTaxRuleButton = 'a[data-role=page-header-desc-tax_rule-link]';
 
     // New tax rule group form
     this.taxRuleGroupForm = '#tax_rules_group_form';
@@ -48,7 +48,7 @@ class AddTaxRules extends BOBasePage {
    */
   async createEditTaxRulesGroup(page, taxRuleGroupData) {
     await this.setValue(page, this.nameInput, taxRuleGroupData.name);
-    await page.check(this.statusInput(taxRuleGroupData.enabled ? 'on' : 'off'));
+    await this.setChecked(page, this.statusInput(taxRuleGroupData.enabled ? 'on' : 'off'));
     // Save Tax rules group
     await this.clickAndWaitForNavigation(page, this.saveTaxButton);
 

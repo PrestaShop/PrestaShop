@@ -45,7 +45,7 @@ use PrestaShop\PrestaShop\Adapter\Entity\ImageManager;
 use PrestaShop\PrestaShop\Adapter\Entity\ImageType;
 use PrestaShop\PrestaShop\Adapter\Entity\Language as EntityLanguage;
 use PrestaShop\PrestaShop\Adapter\Entity\LocalizationPack;
-use PrestaShop\PrestaShop\Adapter\Entity\Module;
+use PrestaShop\PrestaShop\Adapter\Entity\Module as ModuleEntity;
 use PrestaShop\PrestaShop\Adapter\Entity\PrestaShopCollection;
 use PrestaShop\PrestaShop\Adapter\Entity\Search;
 use PrestaShop\PrestaShop\Adapter\Entity\Shop;
@@ -53,17 +53,24 @@ use PrestaShop\PrestaShop\Adapter\Entity\ShopGroup;
 use PrestaShop\PrestaShop\Adapter\Entity\ShopUrl;
 use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 use PrestaShop\PrestaShop\Adapter\Entity\Validate;
+use PrestaShop\PrestaShop\Adapter\Module\Module;
 use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeManagerBuilder;
+use PrestaShop\PrestaShop\Core\Module\ConfigReader as ModuleConfigReader;
+use PrestaShop\PrestaShop\Core\Theme\ConfigReader as ThemeConfigReader;
 use PrestaShopBundle\Cache\LocalizationWarmer;
 use PrestaShopBundle\Service\Database\Upgrade as UpgradeDatabase;
+use PrestaShopException;
 use PrestashopInstallerException;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
 
 class Install extends AbstractInstall
 {
     public const SETTINGS_FILE = 'config/settings.inc.php';
     public const BOOTSTRAP_FILE = 'config/bootstrap.php';
+
+    public const DEFAULT_THEME = 'classic';
 
     protected $logger;
 
@@ -198,7 +205,7 @@ class Install extends AbstractInstall
         ];
 
         array_walk($parameters['parameters'], function (&$param) {
-            $param = str_replace('%', '%%', $param);
+            $param = str_replace('%', '%%', $param ?? '');
         });
 
         $parameters = array_replace_recursive(
@@ -476,7 +483,7 @@ class Install extends AbstractInstall
         $xml_loader->setTranslator($this->translator);
         $xml_loader->setLanguages($languages);
 
-        if (isset($this->xml_loader_ids) && $this->xml_loader_ids) {
+        if ($this->xml_loader_ids) {
             $xml_loader->setIds($this->xml_loader_ids);
         }
 
@@ -666,7 +673,7 @@ class Install extends AbstractInstall
         }
 
         $list = [
-            'products' => _PS_PROD_IMG_DIR_,
+            'products' => _PS_PRODUCT_IMG_DIR_,
             'categories' => _PS_CAT_IMG_DIR_,
             'manufacturers' => _PS_MANU_IMG_DIR_,
             'suppliers' => _PS_SUPP_IMG_DIR_,
@@ -704,14 +711,14 @@ class Install extends AbstractInstall
 
     public function getLocalizationPackContent($version, $country)
     {
-        if (static::$_cache_localization_pack_content === null || array_key_exists($country, static::$_cache_localization_pack_content)) {
+        if (self::$_cache_localization_pack_content === null || array_key_exists($country, self::$_cache_localization_pack_content)) {
             $localizationWarmer = new LocalizationWarmer($version, $country);
             $localization_file_content = $localizationWarmer->warmUp(_PS_CACHE_DIR_ . 'sandbox' . DIRECTORY_SEPARATOR);
 
-            static::$_cache_localization_pack_content[$country] = $localization_file_content;
+            self::$_cache_localization_pack_content[$country] = $localization_file_content;
         }
 
-        return isset(static::$_cache_localization_pack_content[$country]) ? static::$_cache_localization_pack_content[$country] : false;
+        return self::$_cache_localization_pack_content[$country] ?? false;
     }
 
     /**
@@ -835,7 +842,7 @@ class Install extends AbstractInstall
 
         $locale = new LocalizationPack();
         $this->callWithUnityAutoincrement(function () use ($locale, $localization_file_content) {
-            $locale->loadLocalisationPack($localization_file_content, false, true);
+            $locale->loadLocalisationPack($localization_file_content, [], true);
         });
 
         // Create default employee
@@ -888,207 +895,170 @@ class Install extends AbstractInstall
         return true;
     }
 
-    public function getModulesList()
+    /**
+     * Get all modules present on the disk
+     */
+    public function getModulesOnDisk(): array
     {
-        return [
-            'blockwishlist',
-            'contactform',
-            'dashactivity',
-            'dashtrends',
-            'dashgoals',
-            'dashproducts',
-            'graphnvd3',
-            'gridhtml',
-            'gsitemap',
-            'pagesnotfound',
-            'productcomments',
-            'ps_banner',
-            'ps_categorytree',
-            'ps_checkpayment',
-            'ps_contactinfo',
-            'ps_crossselling',
-            'ps_currencyselector',
-            'ps_customeraccountlinks',
-            'ps_customersignin',
-            'ps_customtext',
-            'ps_dataprivacy',
-            'ps_emailsubscription',
-            'ps_facetedsearch',
-            'ps_faviconnotificationbo',
-            'ps_featuredproducts',
-            'ps_imageslider',
-            'ps_languageselector',
-            'ps_linklist',
-            'ps_mainmenu',
-            'ps_searchbar',
-            'ps_sharebuttons',
-            'ps_shoppingcart',
-            'ps_socialfollow',
-            'ps_themecusto',
-            'ps_wirepayment',
-            'statsbestcategories',
-            'statsbestcustomers',
-            'statsbestproducts',
-            'statsbestsuppliers',
-            'statsbestvouchers',
-            'statscarrier',
-            'statscatalog',
-            'statscheckup',
-            'statsdata',
-            'statsforecast',
-            'statslive',
-            'statsnewsletter',
-            'statspersonalinfos',
-            'statsproduct',
-            'statsregistrations',
-            'statssales',
-            'statssearch',
-            'statsstock',
-            'welcome',
-        ];
-    }
+        $modulesOnDisk = (new Finder())->directories()->depth('== 0')->in(_PS_MODULE_DIR_);
 
-    public function getAddonsModulesList($params = [])
-    {
-        /**
-         * TODO: Remove blacklist once 1.7 is out.
-         */
-        $blacklist = [
-            'bankwire',
-            'blockadvertising',
-            'blockbanner',
-            'blockbestsellers',
-            'blockcart',
-            'blockcategories',
-            'blockcms',
-            'blockcmsinfo',
-            'blockcontact',
-            'blockcontactinfos',
-            'blockcurrencies',
-            'blockcustomerprivacy',
-            'blockfacebook',
-            'blocklanguages',
-            'blocklayered',
-            'blocklink',
-            'blockmanufacturer',
-            'blockmyaccount',
-            'blockmyaccountfooter',
-            'blocknewproducts',
-            'blocknewsletter',
-            'blockpaymentlogo',
-            'blockpermanentlinks',
-            'blockrss',
-            'blocksearch',
-            'blocksharefb',
-            'blocksocial',
-            'blockstore',
-            'blockspecials',
-            'blocksupplier',
-            'blocktags',
-            'blocktopmenu',
-            'blockuserinfo',
-            'blockviewed',
-            'cheque',
-            'crossselling',
-            'homefeatured',
-            'homeslider',
-            'onboarding',
-            'productscategory',
-            'producttooltip',
-            'sendtoafriend',
-            'socialsharing',
-        ];
+        $configReader = new ModuleConfigReader(_PS_MODULE_DIR_);
+        $isoCode = Context::getContext()->language->iso_code;
 
-        $addons_modules = [];
-        $content = Tools::addonsRequest('install-modules', $params);
-        $xml = @simplexml_load_string($content, null, LIBXML_NOCDATA);
+        $modules = [];
+        foreach ($modulesOnDisk as $module) {
+            $moduleData = $configReader->read(
+                $module->getFileName(),
+                $isoCode
+            );
 
-        if ($xml !== false && isset($xml->module)) {
-            foreach ($xml->module as $modaddons) {
-                if (in_array($modaddons->name, $blacklist)) {
+            if ($moduleData !== null) {
+                if ($moduleData->get('name') !== $module->getFilename()) {
                     continue;
                 }
-                $addons_modules[] = ['id_module' => $modaddons->id, 'name' => $modaddons->name];
+
+                $modules[$module->getFileName()] = $moduleData;
             }
         }
 
-        return $addons_modules;
+        return $modules;
     }
 
     /**
-     * PROCESS : installModules
-     * Download module from addons and Install all modules in ~/modules/ directory.
+     * Get all themes present on the disk
      */
-    public function installModulesAddons($module = null)
+    public function getThemesOnDisk(): array
     {
-        $addons_modules = $module ? [$module] : $this->getAddonsModulesList();
-        $modules = [];
+        $themesOnDisk = (new Finder())->directories()->depth('== 0')->in(_PS_ALL_THEMES_DIR_);
+        $configReader = new ThemeConfigReader(_PS_ALL_THEMES_DIR_);
+        $themes = [];
+        foreach ($themesOnDisk as $theme) {
+            $themeConfig = $configReader->read(
+                $theme->getFileName()
+            );
 
-        foreach ($addons_modules as $addons_module) {
-            if (file_put_contents(_PS_MODULE_DIR_ . $addons_module['name'] . '.zip', Tools::addonsRequest('module', ['id_module' => $addons_module['id_module']]))) {
-                if (Tools::ZipExtract(_PS_MODULE_DIR_ . $addons_module['name'] . '.zip', _PS_MODULE_DIR_)) {
-                    $modules[] = (string) $addons_module['name']; //if the module has been unziped we add the name in the modules list to install
-                    unlink(_PS_MODULE_DIR_ . $addons_module['name'] . '.zip');
-                }
+            if ($themeConfig !== null) {
+                $themes[] = $themeConfig;
             }
         }
 
-        return count($modules) ? $this->installModules($modules) : true;
+        return $this->sortThemesByDisplayname($themes);
+    }
+
+    /**
+     * Sort addons categories by order field.
+     *
+     * @param array $themes
+     *
+     * @return array
+     */
+    private function sortThemesByDisplayName(array $themes): array
+    {
+        uasort(
+            $themes,
+            function ($a, $b) {
+                $a = !isset($a['display_name']) ? 0 : $a['display_name'];
+                $b = !isset($b['display_name']) ? 0 : $b['display_name'];
+
+                return $a <=> $b;
+            }
+        );
+
+        // Convert array to object to be consistent with current API call
+        return $themes;
     }
 
     /**
      * PROCESS : installModules
      * Download module from addons and Install all modules in ~/modules/ directory.
      *
-     * @param array|string|null $module Module to install. If not provided, installs all modules.
+     * @param array $modules Modules to  install
      *
      * @return bool
      */
-    public function installModules($module = null)
+    public function installModules(array $modules): bool
     {
-        if ($module && !is_array($module)) {
-            $module = [$module];
+        ModuleEntity::updateTranslationsAfterInstall(false);
+
+        $result = $this->executeAction(
+            $modules,
+            'install',
+            $this->translator->trans(
+                'Cannot install module "%module%"',
+                ['%module%' => '%module%'],
+                'Install'
+            )
+        );
+        if ($result === false) {
+            return false;
         }
 
-        $modules = $module ? $module : $this->getModulesList();
+        ModuleEntity::updateTranslationsAfterInstall(true);
+        EntityLanguage::updateModulesTranslations($modules);
 
-        Module::updateTranslationsAfterInstall(false);
+        return true;
+    }
 
+    public function postInstall(): bool
+    {
+        $moduleCollection = ModuleManagerBuilder::getInstance()->buildRepository()->getInstalledModules();
+        $modules = array_map(function (Module $module): string {
+            return $module->get('name');
+        }, iterator_to_array($moduleCollection));
+
+        return $this->executeAction(
+            $modules,
+            'postInstall',
+            $this->translator->trans(
+                'Cannot execute post install on module "%module%"',
+                ['%module%' => '%module%'],
+                'Install'
+            )
+        );
+    }
+
+    protected function executeAction(array $modules, string $action, string $errorMessage): bool
+    {
         $moduleManagerBuilder = ModuleManagerBuilder::getInstance();
         $moduleManager = $moduleManagerBuilder->build();
 
         $errors = [];
         foreach ($modules as $module_name) {
-            if (!file_exists(_PS_MODULE_DIR_ . $module_name . '/' . $module_name . '.php')) {
+            $moduleException = null;
+
+            if ($action === 'install' && $moduleManager->isInstalled($module_name)) {
                 continue;
             }
 
-            $moduleException = null;
-
             try {
-                $moduleInstalled = $moduleManager->install($module_name);
-            } catch (\PrestaShopException $e) {
-                $moduleInstalled = false;
+                $moduleActionIsExecuted = $moduleManager->{$action}($module_name);
+            } catch (PrestaShopException $e) {
+                $moduleActionIsExecuted = false;
                 $moduleException = $e->getMessage();
             }
 
-            if (!$moduleInstalled) {
-                $module_errors = [$this->translator->trans('Cannot install module "%module%"', ['%module%' => $module_name], 'Install')];
-                if (null !== $moduleException) {
-                    $module_errors[] = $moduleException;
+            if (!$moduleActionIsExecuted) {
+                $moduleErrors = [
+                    str_replace(
+                        '%module%',
+                        $module_name,
+                        $errorMessage
+                    ),
+                ];
+
+                if (!empty($moduleException)) {
+                    $moduleErrors[] = $moduleException;
                 }
-                $errors[$module_name] = $module_errors;
+
+                $errors[$module_name] = $moduleErrors;
             }
         }
 
-        if ($errors) {
+        if (count($errors) > 0) {
             $this->setError($errors);
 
             return false;
         }
-
-        Module::updateTranslationsAfterInstall(true);
-        EntityLanguage::updateModulesTranslations($modules);
 
         return true;
     }
@@ -1127,7 +1097,7 @@ class Install extends AbstractInstall
 
         // Install XML data (data/xml/ folder)
         $xml_loader->setFixturesPath($fixtures_path);
-        if (isset($this->xml_loader_ids) && $this->xml_loader_ids) {
+        if ($this->xml_loader_ids) {
             $xml_loader->setIds($this->xml_loader_ids);
         }
 
@@ -1175,7 +1145,7 @@ class Install extends AbstractInstall
         return true;
     }
 
-    public function installTheme($themeName = null)
+    public function installTheme(string $themeName = null): bool
     {
         $themeName = $themeName ?: _THEME_NAME_;
         $builder = new ThemeManagerBuilder(

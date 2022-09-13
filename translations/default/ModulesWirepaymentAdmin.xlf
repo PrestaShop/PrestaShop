@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_wirepayment/ps_wirepayment.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="48c6aa380e9fc3a3a605273d7af50016">
+        <source>Wire payment</source>
+        <target>Wire payment</target>
+        <note>Line: 77</note>
+      </trans-unit>
+      <trans-unit id="7d8eb5539dc2cc45a0ca92bb5ee15210">
+        <source>Accept wire payments by displaying your account details during the checkout.</source>
+        <target>Accept wire payments by displaying your account details during the checkout.</target>
+        <note>Line: 78</note>
+      </trans-unit>
+      <trans-unit id="cbe0a99684b145e77f3e14174ac212e3">
+        <source>Are you sure about removing these details?</source>
+        <target>Are you sure about removing these details?</target>
+        <note>Line: 79</note>
+      </trans-unit>
+      <trans-unit id="0ea0227283d959415eda0cfa31d9f718">
+        <source>Account owner and account details must be configured before using this module.</source>
+        <target>Account owner and account details must be configured before using this module.</target>
+        <note>Line: 81</note>
+      </trans-unit>
+      <trans-unit id="a02758d758e8bec77a33d7f392eb3f8a">
+        <source>No currency has been set for this module.</source>
+        <target>No currency has been set for this module.</target>
+        <note>Line: 84</note>
+      </trans-unit>
+      <trans-unit id="bfa43217dfe8261ee7cb040339085677">
+        <source>Account details are required.</source>
+        <target>Account details are required.</target>
+        <note>Line: 129</note>
+      </trans-unit>
+      <trans-unit id="ccab155f173ac76f79eb192703f86b18">
+        <source>Account owner is required.</source>
+        <target>Account owner is required.</target>
+        <note>Line: 131</note>
+      </trans-unit>
+      <trans-unit id="8bc212f48680748479bbd322d4d73d3f">
+        <source>Account details</source>
+        <target>Account details</target>
+        <note>Line: 280</note>
+      </trans-unit>
+      <trans-unit id="857216dd1b374de9bf54068fcd78a8f3">
+        <source>Account owner</source>
+        <target>Account owner</target>
+        <note>Line: 274</note>
+      </trans-unit>
+      <trans-unit id="6b154cafbab54ba3a1e76a78c290c02a">
+        <source>Such as bank branch, IBAN number, BIC, etc.</source>
+        <target>Such as bank branch, IBAN number, BIC, etc.</target>
+        <note>Line: 282</note>
+      </trans-unit>
+      <trans-unit id="f9a1a1bb716cbae0503d351ea2af4b34">
+        <source>Bank address</source>
+        <target>Bank address</target>
+        <note>Line: 287</note>
+      </trans-unit>
+      <trans-unit id="da22c93ccb398c72070f4000cc7b59a1">
+        <source>Customization</source>
+        <target>Customization</target>
+        <note>Line: 300</note>
+      </trans-unit>
+      <trans-unit id="873a2778bdb25b9dcca6de640216c4a9">
+        <source>Reservation period</source>
+        <target>Reservation period</target>
+        <note>Line: 306</note>
+      </trans-unit>
+      <trans-unit id="120cf2b5eab7f28e5fb03b8fb7bbd07b">
+        <source>Number of days the items remain reserved</source>
+        <target>Number of days the items remain reserved</target>
+        <note>Line: 307</note>
+      </trans-unit>
+      <trans-unit id="6b8d5618e646b2ad407158c1da89ca0c">
+        <source>Information to the customer</source>
+        <target>Information to the customer</target>
+        <note>Line: 312</note>
+      </trans-unit>
+      <trans-unit id="65ed2ab0c7edcccc96fcedaa594f94c6">
+        <source>Information on the bank transfer (processing time, starting of the shipping...)</source>
+        <target>Information on the bank transfer (processing time, starting of the shipping...)</target>
+        <note>Line: 314</note>
+      </trans-unit>
+      <trans-unit id="9b07982b472390295e7da7d430c8ec1d">
+        <source>Display the invitation to pay in the order confirmation page</source>
+        <target>Display the invitation to pay in the order confirmation page</target>
+        <note>Line: 319</note>
+      </trans-unit>
+      <trans-unit id="b8a891b1e28c2049da81774493d8779c">
+        <source>Your country's legislation may require you to send the invitation to pay by email only. Disabling the option will hide the invitation on the confirmation page.</source>
+        <target>Your country's legislation may require you to send the invitation to pay by email only. Disabling the option will hide the invitation on the confirmation page.</target>
+        <note>Line: 322</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_wirepayment/views/templates/hook/infos.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c1be305030739396775edaca9813f77d">
+        <source>This module allows you to accept secure payments by bank wire.</source>
+        <target>This module allows you to accept secure payments by bank wire.</target>
+        <note>Line: 22</note>
+      </trans-unit>
+      <trans-unit id="cfc0561623b37471f267aa911092b3ac">
+        <source>If the client chooses to pay by bank wire, the order status will change to 'Waiting for Payment'.</source>
+        <target>If the client chooses to pay by bank wire, the order status will change to 'Waiting for Payment'.</target>
+        <note>Line: 23</note>
+      </trans-unit>
+      <trans-unit id="5fb4bbf993c23848433caf58e6b2816d">
+        <source>That said, you must manually confirm the order upon receiving the bank wire.</source>
+        <target>That said, you must manually confirm the order upon receiving the bank wire.</target>
+        <note>Line: 24</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

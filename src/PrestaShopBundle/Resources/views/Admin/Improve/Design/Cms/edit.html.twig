@@ -26,12 +26,8 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-  <div class="row justify-content-center">
-    <div class="col">
-      {{ include('@PrestaShop/Admin/Improve/Design/Cms/Blocks/form.html.twig', {}) }}
-      <span class="js-preview-url" data-preview-url="{{ previewUrl }}"></span>
-    </div>
-  </div>
+  {{ include('@PrestaShop/Admin/Improve/Design/Cms/Blocks/form.html.twig', {}) }}
+  <span class="js-preview-url" data-preview-url="{{ previewUrl }}"></span>
 {% endblock %}
 
 {% block javascripts %}

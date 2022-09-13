@@ -324,7 +324,7 @@ $(document).ready(function(){
 			
 		});
 	    }
-	},$('#new_folder').val());
+	},'',$('#new_folder').val());
     });
     
     $('.view-controller button').on('click',function(){

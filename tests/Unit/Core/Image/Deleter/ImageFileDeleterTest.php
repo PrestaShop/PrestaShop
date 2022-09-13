@@ -44,7 +44,7 @@ class ImageFileDeleterTest extends TestCase
      */
     private $root;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->fs = new Filesystem();
         $this->root = vfsStream::setup();
@@ -116,7 +116,7 @@ class ImageFileDeleterTest extends TestCase
             $this->root->url() . '/tmp/manufacturer_mini_2_1.jpg',
             $this->root->url() . '/tmp/carrier_mini_1_1.jpg',
             $this->root->url() . '/tmp/carrier_mini_2_1.jpg',
-            $this->root->url() . '/tmp/' . str_shuffle(md5(time())) . '.jpg',
+            $this->root->url() . '/tmp/' . str_shuffle(md5((string) time())) . '.jpg',
         ];
 
         $this->fs->mkdir($this->root->url() . '/tmp');

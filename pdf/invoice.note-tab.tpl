@@ -34,7 +34,7 @@
 					<td class="grey">{l s='Note' d='Shop.Pdf' pdf='true'}</td>
 				</tr>
 				<tr>
-					<td class="note">{$order_invoice->note|nl2br}</td>
+					<td class="note">{$order_invoice->note|escape:"html"}</td>
 				</tr>
 			</table>
 		</td>

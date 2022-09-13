@@ -37,16 +37,6 @@ use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
 final class SlipPdfConfiguration implements DataConfigurationInterface
 {
     /**
-     * @var Configuration
-     */
-    private $configuration;
-
-    public function __construct(Configuration $configuration)
-    {
-        $this->configuration = $configuration;
-    }
-
-    /**
      * Returns configuration used to manage Slip pdf in back office.
      *
      * @return array
@@ -76,6 +66,10 @@ final class SlipPdfConfiguration implements DataConfigurationInterface
                     'domain' => 'Admin.Catalog.Notification',
                     'parameters' => [],
                 ];
+            }
+
+            if (!empty($errors)) {
+                return $errors;
             }
 
             if (empty(Invoice::getByDeliveryDateInterval($configuration['date_from'], $configuration['date_to']))) {

@@ -4,7 +4,10 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const testContext = require('@utils/testContext');
+
+// Import login steps
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -15,9 +18,6 @@ const addSeoAndUrlPage = require('@pages/BO/shopParameters/trafficAndSeo/seoAndU
 const {orderReturn, pdfOrderReturn} = require('@data/demo/seoPages');
 const SeoPageFaker = require('@data/faker/seoPage');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_shopParameters_TrafficAndSeo_seoAndUrls_CRUDSeoPage';
 
 let browserContext;
@@ -27,7 +27,7 @@ const createSeoPageData = new SeoPageFaker(orderReturn);
 const editSeoPageData = new SeoPageFaker(pdfOrderReturn);
 let numberOfSeoPages = 0;
 
-describe('Create, update and delete seo page', async () => {
+describe('BO - Shop Parameters - Traffic & SEO : Create, update and delete seo page', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -42,7 +42,7 @@ describe('Create, update and delete seo page', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Shop parameters > SEO and Urls\' page', async function () {
+  it('should go to \'Shop Parameters > Traffic & SEO\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToSeoAndUrlsPage', baseContext);
 
     await dashboardPage.goToSubMenu(

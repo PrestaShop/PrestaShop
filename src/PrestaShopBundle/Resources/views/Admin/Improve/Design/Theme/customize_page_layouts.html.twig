@@ -26,49 +26,45 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-  <div class="row">
-    <div class="col-12">
-      {{ form_start(pageLayoutCustomizationForm) }}
-        <div class="row justify-content-center">
-          <div class="col-xl-10">
-            <div class="card">
-              <h3 class="card-header">
-                <i class="material-icons">settings</i>
-                {{ 'Choose layouts'|trans({}, 'Admin.Actions') }}
-              </h3>
-              <div class="card-body">
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th>{{ 'Page'|trans({}, 'Admin.Global') }}</th>
-                      <th>{{ 'Description'|trans({}, 'Admin.Global') }}</th>
-                      <th>{{ 'Layout'|trans({}, 'Admin.Global') }}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% for customizablePage in pages %}
-                      <tr>
-                        <td>{{ customizablePage.title|default(customizablePage.page) }}</td>
-                        <td>{{ customizablePage.description }}</td>
-                        <td>{{ form_widget(pageLayoutCustomizationForm['layouts'][customizablePage.page]) }}</td>
-                      </tr>
-                    {% endfor %}
-                  </tbody>
-                </table>
+  {{ form_start(pageLayoutCustomizationForm) }}
+  <div class="row justify-content-center">
+    <div class="col-xl-10">
+      <div class="card">
+        <h3 class="card-header">
+          <i class="material-icons">settings</i>
+          {{ 'Choose layouts'|trans({}, 'Admin.Actions') }}
+        </h3>
+        <div class="card-body">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>{{ 'Page'|trans({}, 'Admin.Global') }}</th>
+                <th>{{ 'Description'|trans({}, 'Admin.Global') }}</th>
+                <th>{{ 'Layout'|trans({}, 'Admin.Global') }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for customizablePage in pages %}
+                <tr>
+                  <td>{{ customizablePage.title|default(customizablePage.page) }}</td>
+                  <td>{{ customizablePage.description }}</td>
+                  <td>{{ form_widget(pageLayoutCustomizationForm['layouts'][customizablePage.page]) }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
 
-                {% block page_layout_customization_form_rest %}
-                  {{ form_rest(pageLayoutCustomizationForm) }}
-                {% endblock %}
-              </div>
-              <div class="card-footer">
-                <div class="d-flex justify-content-end">
-                  <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
-                </div>
-              </div>
-            </div>
+          {% block page_layout_customization_form_rest %}
+            {{ form_rest(pageLayoutCustomizationForm) }}
+          {% endblock %}
+        </div>
+        <div class="card-footer">
+          <div class="d-flex justify-content-end">
+            <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
           </div>
         </div>
-      {{ form_end(pageLayoutCustomizationForm) }}
+      </div>
     </div>
   </div>
+  {{ form_end(pageLayoutCustomizationForm) }}
 {% endblock %}

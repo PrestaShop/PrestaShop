@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\Repository;
 
+use Doctrine\DBAL\Connection;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\LocalizedTags;
@@ -41,6 +42,26 @@ use Tag;
  */
 class TagRepository
 {
+    /**
+     * @var Connection
+     */
+    private $connection;
+
+    /**
+     * @var string
+     */
+    private $dbPrefix;
+
+    /**
+     * @param Connection $connection
+     * @param string $dbPrefix
+     */
+    public function __construct(Connection $connection, string $dbPrefix)
+    {
+        $this->connection = $connection;
+        $this->dbPrefix = $dbPrefix;
+    }
+
     public function addTagsByLanguage(ProductId $productId, LocalizedTags $localizedTags): void
     {
         $productIdValue = $productId->getValue();
@@ -109,5 +130,34 @@ class TagRepository
                 sprintf('Error occurred when trying to delete product #%d tags', $productIdValue
             ));
         }
+    }
+
+    /**
+     * @param ProductId $productId
+     *
+     * @return array Localized tags for a product
+     */
+    public function getLocalizedProductTags(ProductId $productId): array
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('t.id_lang, t.name')
+            ->from($this->dbPrefix . 'tag', 't')
+            ->leftJoin('t', $this->dbPrefix . 'product_tag', 'pt', 'pt.id_tag = t.id_tag')
+            ->where('pt.id_product = :productId')
+            ->setParameter('productId', $productId->getValue())
+        ;
+
+        $result = $qb->execute()->fetchAllAssociative();
+        if (empty($result)) {
+            return [];
+        }
+
+        $localizedTags = [];
+        foreach ($result as $row) {
+            $localizedTags[(int) $row['id_lang']][] = $row['name'];
+        }
+
+        return $localizedTags;
     }
 }

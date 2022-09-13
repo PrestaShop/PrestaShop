@@ -26,6 +26,7 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
+use Behat\Behat\Context\Environment\InitializedContextEnvironment;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\TableNode;
 use Cache;
@@ -52,7 +53,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     protected $countryFeatureContext;
 
     /**
-     * @var ProductFeatureContext
+     * @var LegacyProductFeatureContext
      */
     protected $productFeatureContext;
 
@@ -87,11 +88,24 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     /** @BeforeScenario */
     public function before(BeforeScenarioScope $scope)
     {
-        $this->countryFeatureContext = $scope->getEnvironment()->getContext(CountryFeatureContext::class);
-        $this->productFeatureContext = $scope->getEnvironment()->getContext(ProductFeatureContext::class);
-        $this->carrierFeatureContext = $scope->getEnvironment()->getContext(CarrierFeatureContext::class);
-        $this->customerFeatureContext = $scope->getEnvironment()->getContext(CustomerFeatureContext::class);
-        $this->categoryFeatureContext = $scope->getEnvironment()->getContext(CategoryFeatureContext::class);
+        /** @var InitializedContextEnvironment $environment */
+        $environment = $scope->getEnvironment();
+        /** @var CountryFeatureContext $countryFeatureContext */
+        $countryFeatureContext = $environment->getContext(CountryFeatureContext::class);
+        /** @var LegacyProductFeatureContext $productFeatureContext */
+        $productFeatureContext = $environment->getContext(LegacyProductFeatureContext::class);
+        /** @var CarrierFeatureContext $carrierFeatureContext */
+        $carrierFeatureContext = $environment->getContext(CarrierFeatureContext::class);
+        /** @var CustomerFeatureContext $customerFeatureContext */
+        $customerFeatureContext = $environment->getContext(CustomerFeatureContext::class);
+        /** @var CategoryFeatureContext $categoryFeatureContext */
+        $categoryFeatureContext = $environment->getContext(CategoryFeatureContext::class);
+
+        $this->countryFeatureContext = $countryFeatureContext;
+        $this->productFeatureContext = $productFeatureContext;
+        $this->carrierFeatureContext = $carrierFeatureContext;
+        $this->customerFeatureContext = $customerFeatureContext;
+        $this->categoryFeatureContext = $categoryFeatureContext;
     }
 
     /**
@@ -139,7 +153,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
         $cartRule->date_from = $now->format('Y-m-d H:i:s');
         $now->add(new DateInterval('P1Y'));
         $cartRule->date_to = $now->format('Y-m-d H:i:s');
-        $cartRule->active = 1;
+        $cartRule->active = true;
         $cartRule->add();
         $this->cartRules[$cartRuleName] = $cartRule;
         SharedStorage::getStorage()->set($cartRuleName, $cartRule->id);
@@ -234,7 +248,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $this->checkCartRuleWithNameExists($cartRuleName);
         $this->carrierFeatureContext->checkCarrierWithNameExists($carrierName);
-        $this->cartRules[$cartRuleName]->carrier_restriction = 1;
+        $this->cartRules[$cartRuleName]->carrier_restriction = true;
         $this->cartRules[$cartRuleName]->save();
         Db::getInstance()->execute('
           INSERT INTO ' . _DB_PREFIX_ . "cart_rule_carrier(`id_cart_rule`, `id_carrier`)
@@ -251,7 +265,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     {
         $this->checkCartRuleWithNameExists($cartRuleName);
         $this->countryFeatureContext->checkCountryWithIsoCodeExists($country);
-        $this->cartRules[$cartRuleName]->country_restriction = 1;
+        $this->cartRules[$cartRuleName]->country_restriction = true;
         $this->cartRules[$cartRuleName]->save();
 
         $idCartRule = (int) $this->cartRules[$cartRuleName]->id;
@@ -269,7 +283,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     public function cartRuleIsRestrictedToCheapestProduct($cartRuleName)
     {
         $this->checkCartRuleWithNameExists($cartRuleName);
-        $this->cartRules[$cartRuleName]->product_restriction = 1;
+        $this->cartRules[$cartRuleName]->product_restriction = true;
         $this->cartRules[$cartRuleName]->reduction_product = -1;
         $this->cartRules[$cartRuleName]->save();
     }
@@ -290,7 +304,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     public function cartRuleIsRestrictedToEveryOrder($cartRuleName)
     {
         $this->checkCartRuleWithNameExists($cartRuleName);
-        $this->cartRules[$cartRuleName]->product_restriction = 0;
+        $this->cartRules[$cartRuleName]->product_restriction = false;
         $this->cartRules[$cartRuleName]->reduction_product = 0;
         $this->cartRules[$cartRuleName]->save();
     }
@@ -301,7 +315,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     public function cartRuleIsDisabled($cartRuleName)
     {
         $this->checkCartRuleWithNameExists($cartRuleName);
-        $this->cartRules[$cartRuleName]->active = 0;
+        $this->cartRules[$cartRuleName]->active = false;
         $this->cartRules[$cartRuleName]->save();
     }
 
@@ -311,7 +325,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     public function enableCartRule($cartRuleName)
     {
         $this->checkCartRuleWithNameExists($cartRuleName);
-        $this->cartRules[$cartRuleName]->active = 1;
+        $this->cartRules[$cartRuleName]->active = true;
         $this->cartRules[$cartRuleName]->save();
     }
 
@@ -321,7 +335,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     public function cartRuleDoesNotApplyToDiscountedProduct($cartRuleName)
     {
         $this->checkCartRuleWithNameExists($cartRuleName);
-        $this->cartRules[$cartRuleName]->reduction_exclude_special = 1;
+        $this->cartRules[$cartRuleName]->reduction_exclude_special = true;
         $this->cartRules[$cartRuleName]->save();
     }
 
@@ -342,7 +356,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     public function cartRuleOffersFreeShipping($cartRuleName)
     {
         $this->checkCartRuleWithNameExists($cartRuleName);
-        $this->cartRules[$cartRuleName]->free_shipping = 1;
+        $this->cartRules[$cartRuleName]->free_shipping = true;
         $this->cartRules[$cartRuleName]->save();
     }
 
@@ -383,9 +397,9 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @When /^I use the discount "(.+)"$/
      *
-     * @param $cartRuleName
+     * @param string $cartRuleName
      */
-    public function iAddCartRuleNamedToMyCart($cartRuleName)
+    public function iAddCartRuleNamedToMyCart(string $cartRuleName): void
     {
         $this->checkCartRuleWithNameExists($cartRuleName);
         $this->getCurrentCart()->addCartRule($this->cartRules[$cartRuleName]->id);
@@ -414,9 +428,9 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @param $cartRuleName
+     * @param string $cartRuleName
      */
-    public function checkCartRuleWithNameExists($cartRuleName)
+    public function checkCartRuleWithNameExists(string $cartRuleName): void
     {
         $this->checkFixtureExists($this->cartRules, 'Cart rule', $cartRuleName);
     }
@@ -424,7 +438,7 @@ class CartRuleFeatureContext extends AbstractPrestaShopFeatureContext
     /**
      * @Then /^customer "(.+)" should have (\d+) cart rule(?:s)? that apply to (?:him|her)$/
      */
-    public function checkCartRuleCountForCustomer($customerName, $expectedCount)
+    public function checkCartRuleCountForCustomer(string $customerName, int $expectedCount)
     {
         $this->customerFeatureContext->checkCustomerWithNameExists($customerName);
         $customer = $this->customerFeatureContext->getCustomerWithName($customerName);

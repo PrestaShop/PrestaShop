@@ -28,39 +28,89 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product;
 
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\RemoveAllProductTagsCommand;
+use PrestaShop\PrestaShop\Core\Domain\Product\Command\SetProductTagsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductSeoCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilder;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\DataField;
 
 /**
  * Builder used to build UpdateSEO
  */
-class SEOCommandsBuilder implements ProductCommandsBuilderInterface
+class SEOCommandsBuilder implements MultiShopProductCommandsBuilderInterface
 {
-    public function buildCommands(ProductId $productId, array $formData): array
+    /**
+     * @var string
+     */
+    private $modifyAllNamePrefix;
+
+    /**
+     * @param string $modifyAllNamePrefix
+     */
+    public function __construct(string $modifyAllNamePrefix)
     {
+        $this->modifyAllNamePrefix = $modifyAllNamePrefix;
+    }
+
+    public function buildCommands(
+        ProductId $productId,
+        array $formData,
+        ShopConstraint $singleShopConstraint
+    ): array {
         if (!isset($formData['seo'])) {
             return [];
         }
+        $config = new CommandBuilderConfig($this->modifyAllNamePrefix);
+        $config
+            ->addMultiShopField('[seo][meta_title]', 'setLocalizedMetaTitles', DataField::TYPE_ARRAY)
+            ->addMultiShopField('[seo][meta_description]', 'setLocalizedMetaDescriptions', DataField::TYPE_ARRAY)
+            ->addMultiShopField('[seo][link_rewrite]', 'setLocalizedLinkRewrites', DataField::TYPE_ARRAY)
+            ->addMultiShopCompoundField('setRedirectOption', [
+                '[seo][redirect_option][type]' => DataField::TYPE_STRING,
+                '[seo][redirect_option][target][id]' => [
+                    'type' => DataField::TYPE_INT,
+                    'default' => 0,
+                ],
+            ])
+        ;
+        $commandBuilder = new CommandBuilder($config);
+        $commands = $commandBuilder->buildCommands(
+            $formData,
+            new UpdateProductSeoCommand($productId->getValue(), $singleShopConstraint),
+            new UpdateProductSeoCommand($productId->getValue(), ShopConstraint::allShops())
+        );
 
         $seoData = $formData['seo'] ?? [];
-        $redirectionData = $formData['seo']['redirect_option'] ?? [];
-        $command = new UpdateProductSeoCommand($productId->getValue());
+        if (isset($seoData['tags'])) {
+            if (!empty($seoData['tags'])) {
+                if (!is_array($seoData['tags'])) {
+                    throw new InvalidArgumentException('Expected tags to be a localized array');
+                }
 
-        if (isset($seoData['meta_title'])) {
-            $command->setLocalizedMetaTitles($seoData['meta_title']);
-        }
-        if (isset($seoData['meta_description'])) {
-            $command->setLocalizedMetaDescriptions($seoData['meta_description']);
-        }
-        if (isset($seoData['link_rewrite'])) {
-            $command->setLocalizedLinkRewrites($seoData['link_rewrite']);
+                $parsedTags = [];
+                $allEmpty = true;
+                foreach ($seoData['tags'] as $langId => $rawTags) {
+                    $parsedTags[$langId] = !empty($rawTags) ? explode(',', $rawTags) : [];
+                    $allEmpty = $allEmpty && empty($rawTags);
+                }
+
+                if ($allEmpty) {
+                    $commands[] = new RemoveAllProductTagsCommand($productId->getValue());
+                } else {
+                    $commands[] = new SetProductTagsCommand(
+                        $productId->getValue(),
+                        $parsedTags
+                    );
+                }
+            } else {
+                $commands[] = new RemoveAllProductTagsCommand($productId->getValue());
+            }
         }
 
-        if (isset($redirectionData['type'])) {
-            $targetId = (int) ($redirectionData['target'] ?? 0);
-            $command->setRedirectOption($redirectionData['type'], $targetId);
-        }
-
-        return [$command];
+        return $commands;
     }
 }

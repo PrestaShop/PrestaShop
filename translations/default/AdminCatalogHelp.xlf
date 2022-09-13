@@ -1,0 +1,987 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="admin-dev/themes/default/template/controllers/cart_rules/actions.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="de11e2e4296bb20487b6430508866e06">
+        <source>Does not apply to the shipping costs</source>
+        <target>Does not apply to the shipping costs</target>
+        <note>Line: 73</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/cart_rules/conditions.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="3fde87028c9327c15017b46e6d84ac80">
+        <source>Optional: The cart rule will be available to everyone if you leave this field blank.</source>
+        <target>Optional: The cart rule will be available to everyone if you leave this field blank.</target>
+        <note>Line: 28</note>
+      </trans-unit>
+      <trans-unit id="fc36a619a1f71bfe01203191c5c95675">
+        <source>The default period is one month.</source>
+        <target>The default period is one month.</target>
+        <note>Line: 45</note>
+      </trans-unit>
+      <trans-unit id="5b41d7dc2da5ea15baf3e2d62d820ac2">
+        <source>You can choose a minimum amount for the cart either with or without the taxes and shipping.</source>
+        <target>You can choose a minimum amount for the cart either with or without the taxes and shipping.</target>
+        <note>Line: 74</note>
+      </trans-unit>
+      <trans-unit id="cfc9489072f04e808ce4e01948b7fef8">
+        <source>The cart rule will be applied to the first "X" customers only.</source>
+        <target>The cart rule will be applied to the first "X" customers only.</target>
+        <note>Line: 116</note>
+      </trans-unit>
+      <trans-unit id="15391e9d908034a4458cd78296a945a8">
+        <source>A customer will only be able to use the cart rule "X" time(s).</source>
+        <target>A customer will only be able to use the cart rule "X" time(s).</target>
+        <note>Line: 128</note>
+      </trans-unit>
+      <trans-unit id="ced8a99398578936b21103cba545cd66">
+        <source>This restriction applies to the country of delivery.</source>
+        <target>This restriction applies to the country of delivery.</target>
+        <note>Line: 151</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="admin-dev/themes/default/template/controllers/cart_rules/informations.tpl" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="092ff92c5c5fb215f214c07d9221e949">
+        <source>This will be displayed in the cart summary, as well as on the invoice.</source>
+        <target>This will be displayed in the cart summary, as well as on the invoice.</target>
+        <note>Line: 28</note>
+      </trans-unit>
+      <trans-unit id="7560e0cd0768c203f178a95dbb586297">
+        <source>For your eyes only. This will never be displayed to the customer.</source>
+        <target>For your eyes only. This will never be displayed to the customer.</target>
+        <note>Line: 63</note>
+      </trans-unit>
+      <trans-unit id="b9fe1289d4d385c85d61f262aea8de40">
+        <source>Caution! If you leave this field blank, the rule will automatically be applied to benefiting customers.</source>
+        <target>Caution! If you leave this field blank, the rule will automatically be applied to benefiting customers.</target>
+        <note>Line: 86</note>
+      </trans-unit>
+      <trans-unit id="9c0cc5911e6caceaa3f19e4bcf264ab0">
+        <source>If the voucher is not yet in the cart, it will be displayed in the cart summary.</source>
+        <target>If the voucher is not yet in the cart, it will be displayed in the cart summary.</target>
+        <note>Line: 93</note>
+      </trans-unit>
+      <trans-unit id="b51a203cee37965537db75688feaef75">
+        <source>Only applicable if the voucher value is greater than the cart total.</source>
+        <target>Only applicable if the voucher value is greater than the cart total.</target>
+        <note>Line: 111</note>
+      </trans-unit>
+      <trans-unit id="45ec8a24a8f55af16fad097e8a4fb9fe">
+        <source>If you do not allow partial use, the voucher value will be lowered to the total order amount. If you allow partial use, however, a new voucher will be created with the remainder.</source>
+        <target>If you do not allow partial use, the voucher value will be lowered to the total order amount. If you allow partial use, however, a new voucher will be created with the remainder.</target>
+        <note>Line: 112</note>
+      </trans-unit>
+      <trans-unit id="0fcc630f536dae07ee7c1ac612654c1d">
+        <source>Cart rules are applied by priority. A cart rule with a priority of "1" will be processed before a cart rule with a priority of "2".</source>
+        <target>Cart rules are applied by priority. A cart rule with a priority of "1" will be processed before a cart rule with a priority of "2".</target>
+        <note>Line: 130</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminAttributesGroupsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="22cbf85c41427960736dc10cfec5faf4">
+        <source>Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").</source>
+        <target>Choose a color with the color picker, or enter an HTML color (e.g. "lightblue", "#CC6600").</target>
+        <note>Line: 315</note>
+      </trans-unit>
+      <trans-unit id="f2d1c5443636295e9720caac90ea8d93">
+        <source>Your internal name for this attribute.</source>
+        <target>Your internal name for this attribute.</target>
+        <note>Line: 207</note>
+      </trans-unit>
+      <trans-unit id="b5e6921c2d093fbcb0088c9466ee9983">
+        <source>The public name for this attribute, displayed to the customers.</source>
+        <target>The public name for this attribute, displayed to the customers.</target>
+        <note>Line: 216</note>
+      </trans-unit>
+      <trans-unit id="580de47d3bc3e99a0b6aba55066a983a">
+        <source>The way the attribute's values will be presented to the customers in the product's page.</source>
+        <target>The way the attribute's values will be presented to the customers in the product's page.</target>
+        <note>Line: 229</note>
+      </trans-unit>
+      <trans-unit id="71c476c94d0a0e3dfc0826afd03d2dda">
+        <source>Choose the attribute group for this value.</source>
+        <target>Choose the attribute group for this value.</target>
+        <note>Line: 277</note>
+      </trans-unit>
+      <trans-unit id="dd24a1142c1070a0efbdf43b4f0167cc">
+        <source>Upload an image file containing the color texture from your computer.</source>
+        <target>Upload an image file containing the color texture from your computer.</target>
+        <note>Line: 323</note>
+      </trans-unit>
+      <trans-unit id="ba353198430b2004efeb1ac6d1f410d0">
+        <source>This will override the HTML color!</source>
+        <target>This will override the HTML color!</target>
+        <note>Line: 324</note>
+      </trans-unit>
+      <trans-unit id="7d5672f569de406c85249db6f1c99ec0">
+        <source>Save then add another value</source>
+        <target>Save then add another value</target>
+        <note>Line: 566</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminCustomerThreadsController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7db5022f86dda7b39e31e754afd5c6a0">
+        <source>Allow customers to upload files using the contact page.</source>
+        <target>Allow customers to upload files using the contact page.</target>
+        <note>Line: 151</note>
+      </trans-unit>
+      <trans-unit id="1f2b974152999d549b89994879e452a3">
+        <source>Please fill out the message fields that appear by default when you answer a thread on the customer service page.</source>
+        <target>Please fill out the message fields that appear by default when you answer a thread on the customer service page.</target>
+        <note>Line: 156</note>
+      </trans-unit>
+      <trans-unit id="61b7dba4b2704903e5a2434e1f3ab878">
+        <source>URL for your IMAP server (ie.: mail.server.com).</source>
+        <target>URL for your IMAP server (ie.: mail.server.com).</target>
+        <note>Line: 168</note>
+      </trans-unit>
+      <trans-unit id="d60419d8fec86275eb0752ce43556e6f">
+        <source>Port to use to connect to your IMAP server.</source>
+        <target>Port to use to connect to your IMAP server.</target>
+        <note>Line: 174</note>
+      </trans-unit>
+      <trans-unit id="b8453d9982fb11c704dca368e5107677">
+        <source>User to use to connect to your IMAP server.</source>
+        <target>User to use to connect to your IMAP server.</target>
+        <note>Line: 180</note>
+      </trans-unit>
+      <trans-unit id="849dafe04c2f54cb0dc079da9ca15a8f">
+        <source>Password to use to connect your IMAP server.</source>
+        <target>Password to use to connect your IMAP server.</target>
+        <note>Line: 185</note>
+      </trans-unit>
+      <trans-unit id="e9d5cadd20f10058a5bb0823aed17584">
+        <source>Delete messages after synchronization. If you do not enable this option, the synchronization will take more time.</source>
+        <target>Delete messages after synchronization. If you do not enable this option, the synchronization will take more time.</target>
+        <note>Line: 190</note>
+      </trans-unit>
+      <trans-unit id="eca83facb7294ab0f66e1dec9fc66efd">
+        <source>Create new threads for unrecognized emails.</source>
+        <target>Create new threads for unrecognized emails.</target>
+        <note>Line: 195</note>
+      </trans-unit>
+      <trans-unit id="38033ed4d12ca354e503266bd9a59105">
+        <source>Use POP3 instead of IMAP.</source>
+        <target>Use POP3 instead of IMAP.</target>
+        <note>Line: 200</note>
+      </trans-unit>
+      <trans-unit id="3abb33532b4b4e0201dbdde08eced7ee">
+        <source>Do not use RSH or SSH to establish a preauthenticated IMAP sessions.</source>
+        <target>Do not use RSH or SSH to establish a preauthenticated IMAP sessions.</target>
+        <note>Line: 206</note>
+      </trans-unit>
+      <trans-unit id="89884c64df4330255f1fc07dadfb5dd4">
+        <source>Use the Secure Socket Layer (TLS/SSL) to encrypt the session.</source>
+        <target>Use the Secure Socket Layer (TLS/SSL) to encrypt the session.</target>
+        <note>Line: 211</note>
+      </trans-unit>
+      <trans-unit id="f5c4e8df7daa8f49d8f68ae25deab8c7">
+        <source>Validate certificates from the TLS/SSL server.</source>
+        <target>Validate certificates from the TLS/SSL server.</target>
+        <note>Line: 216</note>
+      </trans-unit>
+      <trans-unit id="244789498d5c439efc7a4a05975dc391">
+        <source>Do not validate certificates from the TLS/SSL server. This is only needed if a server uses self-signed certificates.</source>
+        <target>Do not validate certificates from the TLS/SSL server. This is only needed if a server uses self-signed certificates.</target>
+        <note>Line: 221</note>
+      </trans-unit>
+      <trans-unit id="eabd6d4298e21426642606fe653585c9">
+        <source>Force use of start-TLS to encrypt the session, and reject connection to servers that do not support it.</source>
+        <target>Force use of start-TLS to encrypt the session, and reject connection to servers that do not support it.</target>
+        <note>Line: 226</note>
+      </trans-unit>
+      <trans-unit id="5b035ec3dccf9e9d875e0b830062a9ff">
+        <source>Do not use start-TLS to encrypt the session, even with servers that support it.</source>
+        <target>Do not use start-TLS to encrypt the session, even with servers that support it.</target>
+        <note>Line: 231</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminFeaturesController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="21d883f3177ec09a845d9963eca239b1">
+        <source>Save and add another value</source>
+        <target>Save and add another value</target>
+        <note>Line: 246</note>
+      </trans-unit>
+      <trans-unit id="07fc7dc79c8046bb36d97b4332dab1ca">
+        <source>Back to the list</source>
+        <target>Back to the list</target>
+        <note>Line: 270</note>
+      </trans-unit>
+      <trans-unit id="d8aac6665c79faf4f411fe0da93ab23c">
+        <source>Add new feature values</source>
+        <target>Add new feature values</target>
+        <note>Line: 266</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="controllers/admin/AdminSuppliersController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="dd0479e67d24cd2c2868d4c6b2dcba9a">
+        <source>Company name for this supplier</source>
+        <target>Company name for this supplier</target>
+        <note>Line: 146</note>
+      </trans-unit>
+      <trans-unit id="b51bea4eee9d9ef6bd9a6849337013d5">
+        <source>Phone number for this supplier</source>
+        <target>Phone number for this supplier</target>
+        <note>Line: 168</note>
+      </trans-unit>
+      <trans-unit id="c24c0c9cd7bdb34eaff67028b0cb8349">
+        <source>Mobile phone number for this supplier.</source>
+        <target>Mobile phone number for this supplier.</target>
+        <note>Line: 177</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/Core/Grid/Definition/Factory/ProductGridDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d56b081f1e66fdf5130276c68d528780">
+        <source>Search reference</source>
+        <target>Search reference</target>
+        <note>Line: 297</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/ProductController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="cc2ac103a9c1411fd67952983e25978a">
+        <source>Create a new product: CTRL+P</source>
+        <target>Create a new product: CTRL+P</target>
+        <note>Line: 378</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Controller/Admin/Sell/Catalog/FeatureController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7aad0283b11e41230d9d1fc7372c3862">
+        <source>Add new feature value</source>
+        <target>Add new feature value</target>
+        <note>Line: 220</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Catalog/Category/AbstractCategoryType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="88fe88f4033791ef6f38fbb7f7c58f04">
+        <source>To have a different title from the category name, enter it here.</source>
+        <target>To have a different title from the category name, enter it here.</target>
+        <note>Line: 158</note>
+      </trans-unit>
+      <trans-unit id="0a7ca3ce7cde025a585cd02d7382b48f">
+        <source>To have a different description than your category summary in search results page, write it here.</source>
+        <target>To have a different description than your category summary in search results page, write it here.</target>
+        <note>Line: 191</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Improve/Design/Pages/CmsPageCategoryType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="461832a83a68a8e85f96044921b51704">
+        <source><![CDATA[Unless the 'Accented URL' option is enabled (in Shop parameters > Traffic & SEO), only letters, numbers, underscores (_), and hyphens (-) are allowed.]]></source>
+        <target><![CDATA[Unless the 'Accented URL' option is enabled (in Shop parameters > Traffic & SEO), only letters, numbers, underscores (_), and hyphens (-) are allowed.]]></target>
+        <note>Line: 193</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Product/ProductInformation.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="7bb36e0f484d91aeba5d83fe2af63d28">
+        <source>Search for a product</source>
+        <target>Search for a product</target>
+        <note>Line: 204</note>
+      </trans-unit>
+      <trans-unit id="9242ed633bcac07574f63fba6e184fd8">
+        <source>Enter your product name</source>
+        <target>Enter your product name</target>
+        <note>Line: 226</note>
+      </trans-unit>
+      <trans-unit id="7f6c27a96363effdda77216cf1251400">
+        <source><![CDATA[The summary is a short sentence describing your product.<br />It will appears at the top of your shop's product page, in product lists, and in search engines' results page (so it's important for SEO). To give more details about your product, use the "Description" tab.]]></source>
+        <target><![CDATA[The summary is a short sentence describing your product.<br />It will appears at the top of your shop's product page, in product lists, and in search engines' results page (so it's important for SEO). To give more details about your product, use the "Description" tab.]]></target>
+        <note>Line: 257</note>
+      </trans-unit>
+      <trans-unit id="1fbfcc9642d39544207c67f66ec3bc00">
+        <source>Search and add a related product</source>
+        <target>Search and add a related product</target>
+        <note>Line: 347</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Product/ProductOptions.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8246ddfaa2c607ace3ae3a4643d957d1">
+        <source>Use a comma to create separate tags. E.g.: dress, cotton, party dresses.</source>
+        <target>Use a comma to create separate tags. E.g.: dress, cotton, party dresses.</target>
+        <note>Line: 112</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Product/ProductPrice.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="420f46a170eef476454fa134085a85a2">
+        <source>Per kilo, per litre</source>
+        <target>Per kilo, per litre</target>
+        <note>Line: 235</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Product/ProductQuantity.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="16a5534d559007de7e8f5b4f17112203">
+        <source>Leave empty to disable</source>
+        <target>Leave empty to disable</target>
+        <note>Line: 197</note>
+      </trans-unit>
+      <trans-unit id="e63e2ba42470a41ba75e0d7ea35a410f">
+        <source>Combine several attributes, e.g.: "Size: all", "Color: red".</source>
+        <target>Combine several attributes, e.g.: "Size: all", "Color: red".</target>
+        <note>Line: 104</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Product/ProductSeo.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="8533d8d42f2c7ef3078797984ea14675">
+        <source>This description will appear in search engines. You need a single sentence, shorter than 160 characters (including spaces)</source>
+        <target>This description will appear in search engines. You need a single sentence, shorter than 160 characters (including spaces)</target>
+        <note>Line: 135</note>
+      </trans-unit>
+      <trans-unit id="26511e4120f7b4f3135a21b9f35efed8">
+        <source>To which product the page should redirect?</source>
+        <target>To which product the page should redirect?</target>
+        <note>Line: 180</note>
+      </trans-unit>
+      <trans-unit id="024db530212734e5c28319bc4754ad85">
+        <source>To which category the page should redirect?</source>
+        <target>To which category the page should redirect?</target>
+        <note>Line: 182</note>
+      </trans-unit>
+      <trans-unit id="2719055d3b2b4fc865a78df22462c96b">
+        <source>If no category is selected the Main Category is used</source>
+        <target>If no category is selected the Main Category is used</target>
+        <note>Line: 183</note>
+      </trans-unit>
+      <trans-unit id="af809f35e40bd6f644509ad566ecf38c">
+        <source>To have a different title from the product name, enter it here.</source>
+        <target>To have a different title from the product name, enter it here.</target>
+        <note>Line: 99</note>
+      </trans-unit>
+      <trans-unit id="b0ea2bd9df4b8ee746b4e5fd28503851">
+        <source>Public title for the product's page, and for search engines. Leave blank to use the product name. The number of remaining characters is displayed to the left of the field.</source>
+        <target>Public title for the product's page, and for search engines. Leave blank to use the product name. The number of remaining characters is displayed to the left of the field.</target>
+        <note>Line: 110</note>
+      </trans-unit>
+      <trans-unit id="5f99bb8ecd940f311cb66fadfc467a2b">
+        <source>To have a different description than your product summary in search results pages, write it here.</source>
+        <target>To have a different description than your product summary in search results pages, write it here.</target>
+        <note>Line: 124</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Manufacturer/ManufacturerType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0205bdbccc495138a109bd8710053565">
+        <source>Upload a brand logo from your computer.</source>
+        <target>Upload a brand logo from your computer.</target>
+        <note>Line: 132</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Combination/BulkCombinationPriceType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c4b69e0455faf0784b6a8b2fd9634d16">
+        <source>If the price of this combination is different from the initial retail price, enter the value of the impact (negative or positive).</source>
+        <target>If the price of this combination is different from the initial retail price, enter the value of the impact (negative or positive).</target>
+        <note>Line: 93</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Combination/CombinationFormType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="762d425093de542e7ab628b44ff68515">
+        <source>This interface allows you to specify the suppliers of the current combination.</source>
+        <target>This interface allows you to specify the suppliers of the current combination.</target>
+        <note>Line: 88</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Description/DescriptionType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0834dbec80c240be5b2fda7c96b79b50">
+        <source>Search product</source>
+        <target>Search product</target>
+        <note>Line: 157</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Image/ImageDropzoneType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5f9f342e4e78d83ab2ebb44531de3500">
+        <source>Using another image as cover will automatically uncheck this box.</source>
+        <target>Using another image as cover will automatically uncheck this box.</target>
+        <note>Line: 59</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Options/ProductAttachmentsType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="01551d2cf1e9ca414b6c81189ad807a5">
+        <source>Search file</source>
+        <target>Search file</target>
+        <note>Line: 72</note>
+      </trans-unit>
+      <trans-unit id="5dd59b2b8170b45c4aa3173bf731c2e6">
+        <source>Instructions, size guide, or any file you want to add to a product.</source>
+        <target>Instructions, size guide, or any file you want to add to a product.</target>
+        <note>Line: 105</note>
+      </trans-unit>
+      <trans-unit id="7820643a79c96efc93df99b4644879d8">
+        <source>Customers can download these files on the product page.</source>
+        <target>Customers can download these files on the product page.</target>
+        <note>Line: 106</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Pricing/PricingType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="127a2d0e467657187c3a043fb6179b17">
+        <source>Set specific prices for customers meeting certain conditions.</source>
+        <target>Set specific prices for customers meeting certain conditions.</target>
+        <note>Line: 96</note>
+      </trans-unit>
+      <trans-unit id="5a533ff8b0bb46f6ddbe100864e44771">
+        <source>Define which condition should apply first when a customer is eligible for multiple specific prices.</source>
+        <target>Define which condition should apply first when a customer is eligible for multiple specific prices.</target>
+        <note>Line: 101</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Pricing/SpecificPricesType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1ffce2188d1a60720990e3f6ca9e8b0c">
+        <source>Add new specific price</source>
+        <target>Add new specific price</target>
+        <note>Line: 47</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Pricing/UnitPriceType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="dfeaf70424e17fcd26f016ace18f2139">
+        <source>Indicate the price for a single unit of the product. For instance, if you're selling fabrics, it would be the price per meter.</source>
+        <target>Indicate the price for a single unit of the product. For instance, if you're selling fabrics, it would be the price per meter.</target>
+        <note>Line: 129</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/SEO/SEOType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b51716b6494f24132f3543c516d59742">
+        <source>Public title for the product page, and for search engines. Leave blank to use the product name. The number of remaining characters is displayed to the right of the field.</source>
+        <target>Public title for the product page, and for search engines. Leave blank to use the product name. The number of remaining characters is displayed to the right of the field.</target>
+        <note>Line: 103</note>
+      </trans-unit>
+      <trans-unit id="390348fb4642f64089e6e9ee71f25a7c">
+        <source>This description will appear in search engines. It should be a single sentence, shorter than 160 characters (including spaces).</source>
+        <target>This description will appear in search engines. It should be a single sentence, shorter than 160 characters (including spaces).</target>
+        <note>Line: 132</note>
+      </trans-unit>
+      <trans-unit id="a132c5ad0de6c917b5422b923608c87b">
+        <source>Separate each tag with a comma or press the Enter key.</source>
+        <target>Separate each tag with a comma or press the Enter key.</target>
+        <note>Line: 186</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Stock/StockOptionsType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="1f24923e0351fff041635c7064d7d94c">
+        <source><![CDATA[The email will be sent to all users who have access to the Stock page. To modify permissions, go to [1]Advanced Parameters > Team[/1].]]></source>
+        <target><![CDATA[The email will be sent to all users who have access to the Stock page. To modify permissions, go to [1]Advanced Parameters > Team[/1].]]></target>
+        <note>Line: 79</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Product/Stock/StockType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="44b7964ba71aa4c1ad9a99f5485371ce">
+        <source>Search combination</source>
+        <target>Search combination</target>
+        <note>Line: 104</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Form/Admin/Sell/Supplier/SupplierType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="afd7431f75b5801226c9ee37acc1a504">
+        <source>Will appear in the list of suppliers.</source>
+        <target>Will appear in the list of suppliers.</target>
+        <note>Line: 150</note>
+      </trans-unit>
+      <trans-unit id="e865605842d16d0d11c266c731e00507">
+        <source>Upload a supplier logo from your computer.</source>
+        <target>Upload a supplier logo from your computer.</target>
+        <note>Line: 278</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/CatalogPage/Lists/products_table.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="542f59279cd5d73dfbdb069ce0833b0a">
+        <source>Search name</source>
+        <target>Search name</target>
+        <note>Line: 119</note>
+      </trans-unit>
+      <trans-unit id="84645920bd0fb266cb4acdbc00003e62">
+        <source>Search category</source>
+        <target>Search category</target>
+        <note>Line: 141</note>
+      </trans-unit>
+      <trans-unit id="3ce14776b1408d0dc406766fd0c6a45d">
+        <source>Search ref.</source>
+        <target>Search ref.</target>
+        <note>Line: 130</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Blocks/footer.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="82e3cb7a4be4e299701a182197dc9410">
+        <source>Save the product and stay on the current page: ALT+SHIFT+S</source>
+        <target>Save the product and stay on the current page: ALT+SHIFT+S</target>
+        <note>Line: 75</note>
+      </trans-unit>
+      <trans-unit id="548f88021c5b960f7eccd9ee81871aad">
+        <source>Permanently delete this product.</source>
+        <target>Permanently delete this product.</target>
+        <note>Line: 33</note>
+      </trans-unit>
+      <trans-unit id="94e4259ad6f05c74b84eb6cca4d60ce6">
+        <source>See how your product sheet will look online: ALT+SHIFT+V</source>
+        <target>See how your product sheet will look online: ALT+SHIFT+V</target>
+        <note>Line: 48</note>
+      </trans-unit>
+      <trans-unit id="ad7478afcd575d882738a42546bc041a">
+        <source>Enable or disable the product on your shop: ALT+SHIFT+O</source>
+        <target>Enable or disable the product on your shop: ALT+SHIFT+O</target>
+        <note>Line: 56</note>
+      </trans-unit>
+      <trans-unit id="ac6f66dc450bc768229c1329aa7a48b1">
+        <source>Save and duplicate this product, then go to the new product: ALT+SHIFT+D</source>
+        <target>Save and duplicate this product, then go to the new product: ALT+SHIFT+D</target>
+        <note>Line: 84</note>
+      </trans-unit>
+      <trans-unit id="b110e989a1143b7f44cd5691324d4d11">
+        <source>Save and go back to the catalog: ALT+SHIFT+Q</source>
+        <target>Save and go back to the catalog: ALT+SHIFT+Q</target>
+        <note>Line: 95</note>
+      </trans-unit>
+      <trans-unit id="37163a2847189335a934c83e8ae32677">
+        <source>Save and create a new product: ALT+SHIFT+P</source>
+        <target>Save and create a new product: ALT+SHIFT+P</target>
+        <note>Line: 105</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Blocks/header.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="bb03c14d14caa07e21f97cbe5eab022d">
+        <source>Is the product a pack (a combination of at least two existing products), a virtual product (downloadable file, service, etc.), or simply a standard, physical product?</source>
+        <target>Is the product a pack (a combination of at least two existing products), a virtual product (downloadable file, service, etc.), or simply a standard, physical product?</target>
+        <note>Line: 43</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Forms/form_categories.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c5abe76b24973299661ce389d1a092e1">
+        <source>Search categories</source>
+        <target>Search categories</target>
+        <note>Line: 35</note>
+      </trans-unit>
+      <trans-unit id="61010671991185f436b35030f599d327">
+        <source>Where should the product be available on your site? The main category is where the product appears by default: this is the category which is seen in the product page's URL. Disabled categories are written in italics.</source>
+        <target>Where should the product be available on your site? The main category is where the product appears by default: this is the category which is seen in the product page's URL. Disabled categories are written in italics.</target>
+        <note>Line: 28</note>
+      </trans-unit>
+      <trans-unit id="b78db8ba6d89ef3a49b95e6f92235997">
+        <source>If you want to quickly create a new category, you can do it here. Don’t forget to then go to the Categories page to fill in the needed details (description, image, etc.).  A new category will not automatically appear in your shop's menu, please read the Help about it.</source>
+        <target>If you want to quickly create a new category, you can do it here. Don’t forget to then go to the Categories page to fill in the needed details (description, image, etc.).  A new category will not automatically appear in your shop's menu, please read the Help about it.</target>
+        <note>Line: 56</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Forms/form_combination.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="53f3eb21de0c7a8c909a86be984996f6">
+        <source>Does this combination have a different price? Is it cheaper or more expensive than the default retail price?</source>
+        <target>Does this combination have a different price? Is it cheaper or more expensive than the default retail price?</target>
+        <note>Line: 169</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Forms/form_combinations.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="268bf51f15b2210472b2d42dd883214a">
+        <source><![CDATA[Combinations are the different variations of a product, with attributes like its size, weight or color taking different values. To create a combination, you need to create your product attributes first. Go to Catalog > Attributes & Features for this!]]></source>
+        <target><![CDATA[Combinations are the different variations of a product, with attributes like its size, weight or color taking different values. To create a combination, you need to create your product attributes first. Go to Catalog > Attributes & Features for this!]]></target>
+        <note>Line: 32</note>
+      </trans-unit>
+      <trans-unit id="ab80db7e778c7415ca2f34deb46d5f44">
+        <source><![CDATA[To add combinations, you first need to create proper attributes and values in [1]%attributes_and_features_label%[/1]. <br> When done, you may enter the wanted attributes (like "size" or "color") and their respective values ("XS", "red", "all", etc.) in the field below; or simply select them from the right column. Then click on "%generate_label%": it will automatically create all the combinations for you!]]></source>
+        <target><![CDATA[To add combinations, you first need to create proper attributes and values in [1]%attributes_and_features_label%[/1]. <br> When done, you may enter the wanted attributes (like "size" or "color") and their respective values ("XS", "red", "all", etc.) in the field below; or simply select them from the right column. Then click on "%generate_label%": it will automatically create all the combinations for you!]]></target>
+        <note>Line: 38</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Forms/form_seo.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c533675166b567256cae22139534b713">
+        <source>This is the human-readable URL, as generated from the product's name. You can change it if you want.</source>
+        <target>This is the human-readable URL, as generated from the product's name. You can change it if you want.</target>
+        <note>Line: 59</note>
+      </trans-unit>
+      <trans-unit id="eb8b9b044f3b64b5ba5f7b047963714c">
+        <source>When your product is disabled, choose to which page you’d like to redirect the customers visiting its page by typing the product or category name.</source>
+        <target>When your product is disabled, choose to which page you’d like to redirect the customers visiting its page by typing the product or category name.</target>
+        <note>Line: 100</note>
+      </trans-unit>
+      <trans-unit id="40464c1dbd8778600fba3f37d36e79dd">
+        <source>No redirection (404) = Do not redirect anywhere and display a 404 "Not Found" page.</source>
+        <target>No redirection (404) = Do not redirect anywhere and display a 404 "Not Found" page.</target>
+        <note>Line: 127</note>
+      </trans-unit>
+      <trans-unit id="f7a43e85317698bc7bcc9be2b76dbaa0">
+        <source>No redirection (410) = Do not redirect anywhere and display a 410 "Gone" page.</source>
+        <target>No redirection (410) = Do not redirect anywhere and display a 410 "Gone" page.</target>
+        <note>Line: 128</note>
+      </trans-unit>
+      <trans-unit id="462864be2a8d87de471c82d553000030">
+        <source>Permanent redirection (301) = Permanently display another product or category instead.</source>
+        <target>Permanent redirection (301) = Permanently display another product or category instead.</target>
+        <note>Line: 129</note>
+      </trans-unit>
+      <trans-unit id="50565048560ec8a9fe1f6ddec57a917a">
+        <source>Temporary redirection (302) = Temporarily display another product or category instead.</source>
+        <target>Temporary redirection (302) = Temporarily display another product or category instead.</target>
+        <note>Line: 130</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Forms/form_shipping.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="305c255586949e297af4d74bb1bc9563">
+        <source>Display delivery time for a product is advised for merchants selling in Europe to comply with the local laws.</source>
+        <target>Display delivery time for a product is advised for merchants selling in Europe to comply with the local laws.</target>
+        <note>Line: 74</note>
+      </trans-unit>
+      <trans-unit id="8b2ff26690065c221599c196cb6adc82">
+        <source>If a carrier has a tax, it will be added to the shipping fees. Does not apply to free shipping.</source>
+        <target>If a carrier has a tax, it will be added to the shipping fees. Does not apply to free shipping.</target>
+        <note>Line: 117</note>
+      </trans-unit>
+      <trans-unit id="de95b43bceeb4b998aed4aed5cef1ae7">
+        <source>edit</source>
+        <target>edit</target>
+        <note>Line: 83</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Forms/form_supplier_choice.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="aa25978d6b02e4e469c205afa9de0c46">
+        <source>This interface allows you to specify the suppliers of the current product and its combinations, if any.</source>
+        <target>This interface allows you to specify the suppliers of the current product and its combinations, if any.</target>
+        <note>Line: 34</note>
+      </trans-unit>
+      <trans-unit id="5f5641c7f2d62db16c4d12ce2bcf5898">
+        <source>You can specify supplier references according to previously associated suppliers.</source>
+        <target>You can specify supplier references according to previously associated suppliers.</target>
+        <note>Line: 35</note>
+      </trans-unit>
+      <trans-unit id="d57ad4a0ab142c03bb1ced551f66ce9b">
+        <source><![CDATA[When using the advanced stock management tool (see Shop Parameters > Products settings), the values you define (price, references) will be used in supply orders.]]></source>
+        <target><![CDATA[When using the advanced stock management tool (see Shop Parameters > Products settings), the values you define (price, references) will be used in supply orders.]]></target>
+        <note>Line: 39</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Forms/form_supplier_combination.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="738971709fcd7de4b5f8a87eb1e663a1">
+        <source>You can specify product reference(s) for each associated supplier. Click "%save_label%" after changing selected suppliers to display the associated product references.</source>
+        <target>You can specify product reference(s) for each associated supplier. Click "%save_label%" after changing selected suppliers to display the associated product references.</target>
+        <note>Line: 29</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Forms/form_warehouse_combination.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="e3e5475e756a5faa16b7c97ca591c5d9">
+        <source>This interface allows you to specify the warehouse in which the product is stocked.</source>
+        <target>This interface allows you to specify the warehouse in which the product is stocked.</target>
+        <note>Line: 30</note>
+      </trans-unit>
+      <trans-unit id="d96fc45d9d293e923893a37d598ee960">
+        <source>It is also possible to specify the location within the warehouse for each product or combination.</source>
+        <target>It is also possible to specify the location within the warehouse for each product or combination.</target>
+        <note>Line: 31</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Panels/combinations.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5f4efe2735311bfd3e5784705fb0110f">
+        <source>Number of days this file can be accessed by customers. Set to zero for unlimited access.</source>
+        <target>Number of days this file can be accessed by customers. Set to zero for unlimited access.</target>
+        <note>Line: 150</note>
+      </trans-unit>
+      <trans-unit id="dbcf3c5f67528da5cf59dc0c042748da">
+        <source>Upload a file from your computer (%maxUploadSize% max.)</source>
+        <target>Upload a file from your computer (%maxUploadSize% max.)</target>
+        <note>Line: 101</note>
+      </trans-unit>
+      <trans-unit id="c312034c9f17a264365e734de442ca0a">
+        <source>The full filename with its extension (e.g. Book.pdf)</source>
+        <target>The full filename with its extension (e.g. Book.pdf)</target>
+        <note>Line: 117</note>
+      </trans-unit>
+      <trans-unit id="48da1c11d36bd8b34f13821e996c7f97">
+        <source>Number of downloads allowed per customer. Set to 0 for unlimited downloads.</source>
+        <target>Number of downloads allowed per customer. Set to 0 for unlimited downloads.</target>
+        <note>Line: 128</note>
+      </trans-unit>
+      <trans-unit id="f049153f2c655d6d1ebd123f04b432cf">
+        <source>If set, the file will not be downloadable after this date. Leave blank if you do not wish to attach an expiration date.</source>
+        <target>If set, the file will not be downloadable after this date. Leave blank if you do not wish to attach an expiration date.</target>
+        <note>Line: 139</note>
+      </trans-unit>
+      <trans-unit id="ea8d1b4f32f86030683d8f9252c0a3e1">
+        <source>The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity.</source>
+        <target>The minimum quantity required to buy this product (set to 1 to disable this feature). E.g.: if set to 3, customers will be able to purchase the product only if they take at least 3 in quantity.</target>
+        <note>Line: 43</note>
+      </trans-unit>
+      <trans-unit id="1914ce33841a6e52c0577751d9004159">
+        <source><![CDATA[The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]]]></source>
+        <target><![CDATA[The email will be sent to all the users who have the right to run the stock page. To modify the permissions, go to [1]Advanced Parameters > Team[/1]]]></target>
+        <note>Line: 74</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Panels/essentials.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0745d3d4082ad910137e24fd2901ca63">
+        <source>Combinations are the different variations of a product, with attributes like its size, weight or color taking different values. Does your product require combinations?</source>
+        <target>Combinations are the different variations of a product, with attributes like its size, weight or color taking different values. Does your product require combinations?</target>
+        <note>Line: 153</note>
+      </trans-unit>
+      <trans-unit id="0a4595dd800cb3338d233a177f422758">
+        <source>Advanced settings in [1][2]Combinations[/1]</source>
+        <target>Advanced settings in [1][2]Combinations[/1]</target>
+        <note>Line: 171
+Comment: First tag [1][/1] is for a HTML link. Second tag [2] is an icon (no closing tag needed).</note>
+      </trans-unit>
+      <trans-unit id="01cfe41b8ece41634e85248382166271">
+        <source>Your reference code for this product. Allowed special characters: .-_#.</source>
+        <target>Your reference code for this product. Allowed special characters: .-_#.</target>
+        <note>Line: 183</note>
+      </trans-unit>
+      <trans-unit id="e2c7ed083cb894812fb5d2539f5e7ecb">
+        <source>How many products should be available for sale?</source>
+        <target>How many products should be available for sale?</target>
+        <note>Line: 200</note>
+      </trans-unit>
+      <trans-unit id="5e8b5ad38b1c0a76d41c2ebaa74c11f5">
+        <source>Advanced settings in [1][2]Quantities[/1]</source>
+        <target>Advanced settings in [1][2]Quantities[/1]</target>
+        <note>Line: 212
+Comment: First tag [1][/1] is for a HTML link. Second tag [2] is an icon (no closing tag needed).</note>
+      </trans-unit>
+      <trans-unit id="1423e14cddc8aa38062c77d9b8fe8910">
+        <source>This is the retail price at which you intend to sell this product to your customers. The tax included price will change according to the tax rule you select.</source>
+        <target>This is the retail price at which you intend to sell this product to your customers. The tax included price will change according to the tax rule you select.</target>
+        <note>Line: 222</note>
+      </trans-unit>
+      <trans-unit id="143cb6dd5281d68859217704ad9c9f60">
+        <source>Advanced settings in [1][2]Pricing[/1]</source>
+        <target>Advanced settings in [1][2]Pricing[/1]</target>
+        <note>Line: 253
+Comment: First tag [1][/1] is for a HTML link. Second tag [2] is an icon (no closing tag needed).</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Panels/options.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="c268a2747d5680c617c361cd505c4576">
+        <source>MPN is used internationally to identify the Manufacturer Part Number.</source>
+        <target>MPN is used internationally to identify the Manufacturer Part Number.</target>
+        <note>Line: 143</note>
+      </trans-unit>
+      <trans-unit id="39bd7eba8aa2033579b5ae60bf0c774d">
+        <source>This type of product code is widely used in the United States, Canada, the United Kingdom, Australia, New Zealand and in other countries.</source>
+        <target>This type of product code is widely used in the United States, Canada, the United Kingdom, Australia, New Zealand and in other countries.</target>
+        <note>Line: 132</note>
+      </trans-unit>
+      <trans-unit id="0041a5c39ca241f883f4e0516a32d290">
+        <source>This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.</source>
+        <target>This type of product code is specific to Europe and Japan, but is widely used internationally. It is a superset of the UPC code: all products marked with an EAN will be accepted in North America.</target>
+        <note>Line: 119</note>
+      </trans-unit>
+      <trans-unit id="633bf9436b67e19cd61db84ccab7fee2">
+        <source>ISBN is used internationally to identify books and their various editions.</source>
+        <target>ISBN is used internationally to identify books and their various editions.</target>
+        <note>Line: 108</note>
+      </trans-unit>
+      <trans-unit id="6fcccfb9dbed970c59c18752f6372703">
+        <source>Tags are meant to help your customers find your products via the search bar.</source>
+        <target>Tags are meant to help your customers find your products via the search bar.</target>
+        <note>Line: 62</note>
+      </trans-unit>
+      <trans-unit id="cfd69f4f64142b71ff1ddd21b0053026">
+        <source>Choose terms and keywords that your customers will use to search for this product and make sure you are consistent with the tags you may have already used.</source>
+        <target>Choose terms and keywords that your customers will use to search for this product and make sure you are consistent with the tags you may have already used.</target>
+        <note>Line: 65</note>
+      </trans-unit>
+      <trans-unit id="8a08a645644d632f79ad988808ba2174">
+        <source>You can manage tag aliases in the [1]Search section[/1]. If you add new tags, you have to rebuild the index.</source>
+        <target>You can manage tag aliases in the [1]Search section[/1]. If you add new tags, you have to rebuild the index.</target>
+        <note>Line: 66</note>
+      </trans-unit>
+      <trans-unit id="19f31a842add8b13595ddb3a41a1ff27">
+        <source>Not all shops sell new products. This option enables you to indicate the condition of the product. It can be required on some marketplaces.</source>
+        <target>Not all shops sell new products. This option enables you to indicate the condition of the product. It can be required on some marketplaces.</target>
+        <note>Line: 91</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Product/ProductPage/Panels/pricing.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="a4a8ceb87fae812bfac552e0169bb0f9">
+        <source>This is the price at which you intend to sell this product to your customers. The tax included price will change according to the tax rule you select.</source>
+        <target>This is the price at which you intend to sell this product to your customers. The tax included price will change according to the tax rule you select.</target>
+        <note>Line: 31</note>
+      </trans-unit>
+      <trans-unit id="6f8599613753d920188c3548a7d8fcb7">
+        <source>Some products can be purchased by unit (per bottle, per pound, etc.), and this is the price for one unit. For instance, if you’re selling fabrics, it would be the price per meter.</source>
+        <target>Some products can be purchased by unit (per bottle, per pound, etc.), and this is the price for one unit. For instance, if you’re selling fabrics, it would be the price per meter.</target>
+        <note>Line: 54</note>
+      </trans-unit>
+      <trans-unit id="eee67d763dcf287ca5d096650341f387">
+        <source>The cost price is the price you paid for the product. Do not include the tax. It should be lower than the retail price: the difference between the two will be your margin.</source>
+        <target>The cost price is the price you paid for the product. Do not include the tax. It should be lower than the retail price: the difference between the two will be your margin.</target>
+        <note>Line: 110</note>
+      </trans-unit>
+      <trans-unit id="959f5f13ee3cc4199a335d1738351596">
+        <source>You can set specific prices for customers belonging to different groups, different countries, etc.</source>
+        <target>You can set specific prices for customers belonging to different groups, different countries, etc.</target>
+        <note>Line: 127</note>
+      </trans-unit>
+      <trans-unit id="fbade15b99b07c58fab7be777c0f4c0c">
+        <source>Sometimes one customer can fit into multiple price rules. Priorities allow you to define which rules apply first.</source>
+        <target>Sometimes one customer can fit into multiple price rules. Priorities allow you to define which rules apply first.</target>
+        <note>Line: 174</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Security/compromised.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="607e1d854783c8229998ac2b5b6923d3">
+        <source>Invalid token</source>
+        <target>Invalid token</target>
+        <note>Line: 32</note>
+      </trans-unit>
+      <trans-unit id="d24ec28b066e46d9d9ec3c1f39aa89ee">
+        <source>[1]Invalid token[/1]: direct access to this link may lead to a potential security breach.</source>
+        <target>[1]Invalid token[/1]: direct access to this link may lead to a potential security breach.</target>
+        <note>Line: 40</note>
+      </trans-unit>
+      <trans-unit id="f364944e8422977932bd21eb2d96963a">
+        <source>Do you want to display this page?</source>
+        <target>Do you want to display this page?</target>
+        <note>Line: 44</note>
+      </trans-unit>
+      <trans-unit id="a0d31e7f783700b99e15ce8621dc6381">
+        <source>Yes, I understand the risks</source>
+        <target>Yes, I understand the risks</target>
+        <note>Line: 47</note>
+      </trans-unit>
+      <trans-unit id="a5b0a810681c7fca4581d7f7524009f4">
+        <source>Take me out of there!</source>
+        <target>Take me out of there!</target>
+        <note>Line: 50</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Categories/Blocks/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="5d57e03bdb23114707da20a5d5937b82">
+        <source>Click on "%displayed_label%" to index the category on your shop.</source>
+        <target>Click on "%displayed_label%" to index the category on your shop.</target>
+        <note>Line: 44</note>
+      </trans-unit>
+      <trans-unit id="19318118b1173f172418b3282cb037d7">
+        <source><![CDATA[If you want a category to appear in the menu of your shop, go to [1]Modules > Module Manager[/1] and configure your menu module.]]></source>
+        <target><![CDATA[If you want a category to appear in the menu of your shop, go to [1]Modules > Module Manager[/1] and configure your menu module.]]></target>
+        <note>Line: 48</note>
+      </trans-unit>
+      <trans-unit id="42f9ee5026d32792987af851a2ea0343">
+        <source>This is the main image for your category, displayed in the category page. The category description will overlap this image and appear in its top-left corner.</source>
+        <target>This is the main image for your category, displayed in the category page. The category description will overlap this image and appear in its top-left corner.</target>
+        <note>Line: 91</note>
+      </trans-unit>
+      <trans-unit id="c5d262df2fa3b92141eb8bb37b1fb9b7">
+        <source>Displays a small image in the parent category's page, if the theme allows it.</source>
+        <target>Displays a small image in the parent category's page, if the theme allows it.</target>
+        <note>Line: 106</note>
+      </trans-unit>
+      <trans-unit id="9cbbbb4e43f08deda211ff24e6fd542f">
+        <source>The category thumbnail appears in the menu as a small image representing the category, if the theme allows it.</source>
+        <target>The category thumbnail appears in the menu as a small image representing the category, if the theme allows it.</target>
+        <note>Line: 132</note>
+      </trans-unit>
+      <trans-unit id="09e2683b6b92b326691cd992f6e5684b">
+        <source>Only letters, numbers, underscore (_) and the minus (-) character are allowed.</source>
+        <target>Only letters, numbers, underscore (_) and the minus (-) character are allowed.</target>
+        <note>Line: 177</note>
+      </trans-unit>
+      <trans-unit id="463848257c086c4816d9f4c020a8d19e">
+        <source>Mark all of the customer groups which you would like to have access to this category.</source>
+        <target>Mark all of the customer groups which you would like to have access to this category.</target>
+        <note>Line: 182</note>
+      </trans-unit>
+      <trans-unit id="53d98bd116f47fdfe15c8eb4525c5e99">
+        <source>You now have three default customer groups.</source>
+        <target>You now have three default customer groups.</target>
+        <note>Line: 190</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Monitoring/index.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b40b4b1a0589005b45e9fa351c1b91f3">
+        <source>An empty category is a category that has no product directly associated to it. An empty category may however contain products through its subcategories.</source>
+        <target>An empty category is a category that has no product directly associated to it. An empty category may however contain products through its subcategories.</target>
+        <note>Line: 40</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="src/PrestaShopBundle/Resources/views/Admin/Sell/Catalog/Product/Combination/empty_state.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="d87fdec724af7ed0338f394852787788">
+        <source>To add combinations, you first need to create proper attributes and values in [1]%attributes_and_features_label%[/1].</source>
+        <target>To add combinations, you first need to create proper attributes and values in [1]%attributes_and_features_label%[/1].</target>
+        <note>Line: 34</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

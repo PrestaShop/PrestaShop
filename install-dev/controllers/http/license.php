@@ -30,35 +30,27 @@
 class InstallControllerHttpLicense extends InstallControllerHttp implements HttpConfigureInterface
 {
     /**
-     * Process license form
-     *
-     * @see HttpConfigureInterface::process()
+     * {@inheritdoc}
      */
-    public function processNextStep()
+    public function processNextStep(): void
     {
-        $this->session->licence_agrement = Tools::getValue('licence_agrement');
+        $this->session->licence_agrement = (bool) Tools::getValue('licence_agrement');
         $this->session->configuration_agrement = Tools::getValue('configuration_agrement');
     }
 
     /**
-     * Licence agrement must be checked to validate this step
-     *
-     * @see HttpConfigureInterface::validate()
+     * {@inheritdoc}
      */
-    public function validate()
+    public function validate(): bool
     {
-        return $this->session->licence_agrement;
-    }
-
-    public function process()
-    {
+        return (bool) $this->session->licence_agrement;
     }
 
     /**
-     * Display license step
+     * {@inheritdoc}
      */
-    public function display()
+    public function display(): void
     {
-        $this->displayTemplate('license');
+        $this->displayContent('license');
     }
 }

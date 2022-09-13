@@ -1,18 +1,21 @@
 require('module-alias/register');
 
 const {expect} = require('chai');
+
 // Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const testContext = require('@utils/testContext');
 
-// Import pages
+// Import login steps
+const loginCommon = require('@commonTests/BO/loginBO');
+
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const productSettingsPage = require('@pages/BO/shopParameters/productSettings');
+
+// Import FO pages
 const homePageFO = require('@pages/FO/home');
 const categoryPageFO = require('@pages/FO/category');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_productSettings_pagination_updateDefaultProductsOrder';
 
@@ -24,7 +27,7 @@ Update default products order to this values :
 'Product name - Ascending/Descending', 'Product price - Ascending/Descending', 'Position inside category - Ascending'
 And check that order in FO
  */
-describe('Update default product order', async () => {
+describe('BO - Shop Parameters - Product Settings : Update default product order', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

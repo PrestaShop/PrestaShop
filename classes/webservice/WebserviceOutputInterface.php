@@ -39,11 +39,11 @@ interface WebserviceOutputInterface
 
     public function renderField($field);
 
-    public function renderNodeHeader($obj, $params, $more_attr = null);
+    public function renderNodeHeader($obj, $params, $more_attr = null, $has_child = true);
 
     public function renderNodeFooter($obj, $params);
 
-    public function renderAssociationHeader($obj, $params, $assoc_name);
+    public function renderAssociationHeader($obj, $params, $assoc_name, $closed_tags = false);
 
     public function renderAssociationFooter($obj, $params, $assoc_name);
 
@@ -54,4 +54,10 @@ interface WebserviceOutputInterface
     public function renderErrorsFooter();
 
     public function renderErrors($message, $code = null);
+
+    public function setLanguages($languages);
+
+    public function renderAssociationWrapperHeader();
+
+    public function renderAssociationWrapperFooter();
 }

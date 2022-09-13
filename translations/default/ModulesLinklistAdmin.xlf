@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ps_linklist/ps_linklist.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b5750478c3c490d2c1df5dfdfdd6b7a4">
+        <source>Link List</source>
+        <target>Link List</target>
+        <note>Line: 97</note>
+      </trans-unit>
+      <trans-unit id="9ede56949facc87ba81f56a749d952c3">
+        <source>Give more visibility to your content/static pages (CMS, external pages, or else), where you want and when you want, to make your visitors feel like shopping on your store.</source>
+        <target>Give more visibility to your content/static pages (CMS, external pages, or else), where you want and when you want, to make your visitors feel like shopping on your store.</target>
+        <note>Line: 98</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_linklist/src/Controller/Admin/Improve/Design/LinkBlockController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="0a41f7ebbcf8a28362f8635ca8341d28">
+        <source>New block</source>
+        <target>New block</target>
+        <note>Line: 289</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_linklist/src/Core/Grid/Definition/Factory/LinkBlockDefinitionFactory.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="83ef1503b3bd9858cc923a74e5f9e917">
+        <source>Name of the block</source>
+        <target>Name of the block</target>
+        <note>Line: 95</note>
+      </trans-unit>
+      <trans-unit id="b718adec73e04ce3ec720dd11a06a308">
+        <source>ID</source>
+        <target>ID</target>
+        <note>Line: 88</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_linklist/src/Form/Type/CustomUrlType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="b78a3223503896721cca1303f776159b">
+        <source>Title</source>
+        <target>Title</target>
+        <note>Line: 37</note>
+      </trans-unit>
+      <trans-unit id="e6b391a8d2c4d45902a23a8b6585703d">
+        <source>URL</source>
+        <target>URL</target>
+        <note>Line: 41</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_linklist/src/Form/Type/LinkBlockType.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="220b3899aa8f180e5e2f3238c7d873d3">
+        <source>Name of the block cannot be longer than %limit% characters</source>
+        <target>Name of the block cannot be longer than %limit% characters</target>
+        <note>Line: 123</note>
+      </trans-unit>
+      <trans-unit id="8b12d77641baf3ee673f6508bde7b707">
+        <source>Content pages</source>
+        <target>Content pages</target>
+        <note>Line: 143</note>
+      </trans-unit>
+      <trans-unit id="f4e01b4c717593dd98723eaa3c68b423">
+        <source>Product pages</source>
+        <target>Product pages</target>
+        <note>Line: 149</note>
+      </trans-unit>
+      <trans-unit id="af1b98adf7f686b84cd0b443e022b7a0">
+        <source>Categories</source>
+        <target>Categories</target>
+        <note>Line: 155</note>
+      </trans-unit>
+      <trans-unit id="1accac49de3b88324dc4cd52712d9f53">
+        <source>Static content</source>
+        <target>Static content</target>
+        <note>Line: 161</note>
+      </trans-unit>
+      <trans-unit id="943336f1b4259f6599f4715e6799fac1">
+        <source>Custom content</source>
+        <target>Custom content</target>
+        <note>Line: 177</note>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="modules/ps_linklist/views/templates/admin/link_block/form.html.twig" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="daf3043cd80ce98935908b37e2a7c97b">
+        <source>Edit the link block.</source>
+        <target>Edit the link block.</target>
+        <note>Line: 37</note>
+      </trans-unit>
+      <trans-unit id="ef7c1780c75500dc68d71a6824d10c6b">
+        <source>New link block</source>
+        <target>New link block</target>
+        <note>Line: 39</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

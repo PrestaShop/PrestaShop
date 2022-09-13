@@ -27,7 +27,6 @@
 namespace PrestaShop\PrestaShop\Core\ConstraintValidator\Factory;
 
 use PrestaShop\PrestaShop\Core\ConstraintValidator\CustomerNameValidator;
-use PrestaShop\PrestaShop\Core\String\CharacterCleaner;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidatorFactoryInterface;
 use Symfony\Component\Validator\ConstraintValidatorInterface;
@@ -35,27 +34,12 @@ use Symfony\Component\Validator\ConstraintValidatorInterface;
 class CustomerNameValidatorFactory implements ConstraintValidatorFactoryInterface
 {
     /**
-     * @var CharacterCleaner
-     */
-    private $characterCleaner;
-
-    /**
-     * CustomerNameValidatorFactory constructor.
-     *
-     * @param CharacterCleaner $characterCleaner
-     */
-    public function __construct(CharacterCleaner $characterCleaner)
-    {
-        $this->characterCleaner = $characterCleaner;
-    }
-
-    /**
      * @param Constraint $constraint
      *
      * @return ConstraintValidatorInterface
      */
     public function getInstance(Constraint $constraint)
     {
-        return new CustomerNameValidator($this->characterCleaner);
+        return new CustomerNameValidator();
     }
 }

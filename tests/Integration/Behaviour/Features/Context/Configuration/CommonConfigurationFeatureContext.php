@@ -42,7 +42,7 @@ class CommonConfigurationFeatureContext extends AbstractConfigurationFeatureCont
             Tools::$round_mode = null;
         }
         if ($index === 'PS_ECOTAX_TAX_RULES_GROUP_ID') {
-            $value = (int) SharedStorage::getStorage()->get($value);
+            $value = $value === 'none' ? 0 : (int) SharedStorage::getStorage()->get($value);
         }
         $this->setConfiguration($index, $value);
     }

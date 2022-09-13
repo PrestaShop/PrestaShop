@@ -26,6 +26,7 @@
 
 namespace tests\Unit\Core\Webservice;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Hosting\HostingInformation;
@@ -41,7 +42,7 @@ class ServerRequirementsCheckerTest extends TestCase
     private $mockedTranslator;
 
     /**
-     * @var Configuration
+     * @var Configuration|MockObject
      */
     private $mockedConfiguration;
 
@@ -55,7 +56,7 @@ class ServerRequirementsCheckerTest extends TestCase
      */
     private $mockedPhpExtensionChecker;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->mockedTranslator = $this->createMock(TranslatorInterface::class);
         $this->mockedTranslator

@@ -26,41 +26,27 @@
 {% trans_default_domain 'Admin.Payment.Feature' %}
 
 {% block content %}
-  <div class="container">
-
+  {% if isSingleShopContext %}
     {% if paymentModules|length < 2 %}
-      <div class="card-block row alert-block">
-        <div class="card-text">
-          <div class="row">
-            <div class="col-sm">
-              <div class="alert alert-info" role="alert">
-                <div class="alert-text">
-                  {{ 'We recommend providing at least two different payment methods. Only one payment method could be problematic if this option cannot be used by a customer because it will prevent him/her from ordering.'|trans({}, 'Admin.Payment.Notification') }}
-                </div>
-              </div>
-            </div>
-          </div>
+      <div class="alert alert-info" role="alert">
+        <div class="alert-text">
+          {{ 'We recommend providing at least two different payment methods. Only one payment method could be problematic if this option cannot be used by a customer because it will prevent him/her from ordering.'|trans({}, 'Admin.Payment.Notification') }}
         </div>
       </div>
     {% endif %}
 
-    <div class="row">
-      <div class="col">
-        {% if isSingleShopContext %}
-          <div class="card">
-            <h3 class="card-header">
-              <i class="material-icons">credit_card</i> {{ 'Active payment'|trans }}
-            </h3>
-            <div class="card-block">
-              {% include '@PrestaShop/Admin/Improve/Payment/PaymentMethods/Blocks/payment_modules_list.html.twig' %}
-            </div>
-          </div>
-        {% else %}
-          <div class="alert alert-warning" role="alert">
-            <p class="alert-text">{{ 'You have more than one shop and must select one to configure payment.'|trans({}, 'Admin.Payment.Notification') }}</p>
-          </div>
-        {% endif %}
+    <div class="card">
+      <h3 class="card-header">
+        <i class="material-icons">credit_card</i>
+        {{ 'Active payment'|trans }}
+      </h3>
+      <div class="card-body">
+        {% include '@PrestaShop/Admin/Improve/Payment/PaymentMethods/Blocks/payment_modules_list.html.twig' %}
       </div>
     </div>
-  </div>
+  {% else %}
+    <div class="alert alert-info" role="alert">
+      <p class="alert-text">{{ 'Note that this page is available in a single shop context only. Switch context to work on it.'|trans({}, 'Admin.Notifications.Info') }}</p>
+    </div>
+  {% endif %}
 {% endblock %}

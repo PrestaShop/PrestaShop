@@ -27,9 +27,6 @@
 namespace PrestaShopBundle\Controller\Admin;
 
 use Context;
-use PrestaShop\PrestaShop\Adapter\Module\AdminModuleDataProvider;
-use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleManagerBuilder;
 use PrestaShop\PrestaShop\Core\Domain\Notification\Command\UpdateEmployeeNotificationLastElementCommand;
 use PrestaShop\PrestaShop\Core\Domain\Notification\Query\GetNotificationLastElements;
 use PrestaShop\PrestaShop\Core\Domain\Notification\QueryResult\NotificationsResults;
@@ -38,7 +35,6 @@ use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\FilterableGridDefinitionF
 use PrestaShop\PrestaShop\Core\Grid\Definition\Factory\GridDefinitionFactoryInterface;
 use PrestaShop\PrestaShop\Core\Kpi\Row\KpiRowInterface;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
-use PrestaShopBundle\Service\DataProvider\Admin\RecommendedModules;
 use PrestaShopBundle\Service\Grid\ControllerResponseBuilder;
 use PrestaShopBundle\Service\Grid\ResponseBuilder;
 use ReflectionClass;
@@ -203,51 +199,6 @@ class CommonController extends FrameworkBundleAdminController
     }
 
     /**
-     * This will allow you to retrieve an HTML code with a list of recommended modules depending on the domain.
-     *
-     * @Template("@PrestaShop/Admin/Common/recommendedModules.html.twig")
-     *
-     * @param string $domain
-     * @param int $limit
-     * @param int $randomize
-     *
-     * @return array Template vars
-     */
-    public function recommendedModulesAction($domain, $limit = 0, $randomize = 0)
-    {
-        /** @var RecommendedModules $recommendedModules */
-        $recommendedModules = $this->get('prestashop.data_provider.modules.recommended');
-        $moduleIdList = $recommendedModules->getRecommendedModuleIdList($domain, ($randomize == 1));
-
-        /** @var AdminModuleDataProvider $modulesProvider */
-        $modulesProvider = $this->get('prestashop.core.admin.data_provider.module_interface');
-        $modulesRepository = ModuleManagerBuilder::getInstance()->buildRepository();
-
-        $modules = [];
-        foreach ($moduleIdList as $id) {
-            try {
-                $module = $modulesRepository->getModule($id);
-            } catch (\Exception $e) {
-                continue;
-            }
-            $modules[] = $module;
-        }
-
-        if ($randomize == 1) {
-            shuffle($modules);
-        }
-
-        $modules = $recommendedModules->filterInstalledAndBadModules($modules);
-        $collection = AddonsCollection::createFrom($modules);
-        $modules = $modulesProvider->generateAddonsUrls($collection);
-
-        return [
-            'domain' => $domain,
-            'modules' => array_slice($modules, 0, $limit, true),
-        ];
-    }
-
-    /**
      * Render a right sidebar with content from an URL.
      *
      * @param string $url
@@ -351,7 +302,7 @@ class CommonController extends FrameworkBundleAdminController
      * @param string $redirectRoute
      * @param array $redirectQueryParamsToKeep
      *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @return RedirectResponse
      */

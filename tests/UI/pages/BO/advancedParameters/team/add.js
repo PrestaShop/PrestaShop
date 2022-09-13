@@ -23,6 +23,7 @@ class AddEmployee extends BOBasePage {
     this.emailInput = '#employee_email';
     this.passwordInput = '#employee_password';
     this.defaultPageSpan = '.select2-selection[aria-labelledby=\'select2-employee_default_page-container\']';
+    this.searchDefaultPageInput = '.select2-search__field';
     this.languageSelect = '#employee_language';
     this.statusToggleInput = toggle => `#employee_active_${toggle}`;
     this.permissionProfileSelect = '#employee_profile';
@@ -47,9 +48,11 @@ class AddEmployee extends BOBasePage {
     await this.setValue(page, this.passwordInput, employeeData.password);
     await this.selectByVisibleText(page, this.permissionProfileSelect, employeeData.permissionProfile);
     await this.selectByVisibleText(page, this.languageSelect, employeeData.language);
-    await this.selectDefaultPage(page, employeeData.defaultPage);
+    if (employeeData.permissionProfile !== 'Translator') {
+      await this.selectDefaultPage(page, employeeData.defaultPage);
+    }
     // replace toggle by 1 in the selector if active = YES / 0 if active = NO
-    await page.check(this.statusToggleInput(employeeData.active ? 1 : 0));
+    await this.setChecked(page, this.statusToggleInput(employeeData.active ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);
@@ -66,7 +69,7 @@ class AddEmployee extends BOBasePage {
       page.click(this.defaultPageSpan),
       this.waitForVisibleSelector(page, `${this.defaultPageSpan}[aria-expanded='true']`),
     ]);
-    await page.keyboard.type(defaultPage);
+    await this.setValue(page, this.searchDefaultPageInput, defaultPage);
     await page.keyboard.press('Enter');
   }
 

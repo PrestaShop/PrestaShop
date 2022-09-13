@@ -26,6 +26,40 @@
 
 /**
  * Manage session for install script
+ *
+ * @property string $last_step
+ * @property string|null $lang
+ * @property array $process_validated
+ * @property string $install_type
+ * @property bool $database_clear
+ * @property string $step
+ * @property string $database_server
+ * @property string $database_login
+ * @property string $database_password
+ * @property string $database_name
+ * @property string $database_prefix
+ * @property string $database_engine
+ * @property string $shop_name
+ * @property array $xml_loader_ids
+ * @property int $shop_activity
+ * @property string $shop_country
+ * @property string $admin_firstname
+ * @property string $admin_lastname
+ * @property string $admin_password
+ * @property string $admin_password_confirm
+ * @property string $admin_email
+ * @property string $shop_timezone
+ * @property bool $configuration_agrement
+ * @property bool $licence_agrement
+ * @property bool $enable_ssl
+ * @property int $rewrite_engine
+ * @property bool $use_smtp
+ * @property string $smtp_encryption
+ * @property int $smtp_port
+ * @property array $content_modules
+ * @property string $content_theme
+ * @property bool $content_install_fixtures
+ * @property int $moduleAction
  */
 class InstallSession
 {
@@ -44,12 +78,12 @@ class InstallSession
 
     public function __construct()
     {
-        session_name('install_'.substr(md5($_SERVER['HTTP_HOST']), 0, 12));
+        session_name('install_' . substr(md5($_SERVER['HTTP_HOST']), 0, 12));
         $session_started = session_start();
         if (!($session_started)
         || (!isset($_SESSION['session_mode']) && (isset($_GET['_']) || isset($_POST['submitNext']) || isset($_POST['submitPrevious']) || isset($_POST['language'])))) {
             static::$_cookie_mode = true;
-            static::$_cookie = new Cookie('ps_install', null, time() + 7200, null, true);
+            static::$_cookie = new Cookie('ps_install', '', time() + 7200, null, true);
         }
         if ($session_started && !isset($_SESSION['session_mode'])) {
             $_SESSION['session_mode'] = 'session';
@@ -94,7 +128,7 @@ class InstallSession
                 return;
             }
             if (is_array($value)) {
-                $value = 'serialized_array:'.serialize($value);
+                $value = 'serialized_array:' . serialize($value);
             }
             static::$_cookie->{$varname} = $value;
         } else {

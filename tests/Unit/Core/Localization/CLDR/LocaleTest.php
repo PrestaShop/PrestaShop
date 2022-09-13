@@ -65,7 +65,7 @@ class LocaleTest extends TestCase
     /**
      * {@inheritDoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $localeData = new LocaleData();
         $localeData->setLocaleCode('fr-FR');
@@ -94,7 +94,7 @@ class LocaleTest extends TestCase
 
         $this->stubCurrencyData = new CurrencyData();
         $this->stubCurrencyData->setIsoCode('PCE');
-        $this->stubCurrencyData->setNumericIsoCode(333);
+        $this->stubCurrencyData->setNumericIsoCode('333');
         $this->stubCurrencyData->setDecimalDigits(2);
         $this->stubCurrencyData->setDisplayNames([
             'default' => 'PrestaShop Peace',

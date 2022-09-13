@@ -38,8 +38,11 @@
     </div>
   </div>
 </template>
-<script>
-  export default {
+
+<script lang="ts">
+  import Vue from 'vue';
+
+  export default Vue.extend({
     props: {
       thumbnail: {
         type: String,
@@ -47,11 +50,11 @@
       },
     },
     computed: {
-      displayThumb() {
+      displayThumb(): boolean {
         return !!this.thumbnail;
       },
     },
-  };
+  });
 </script>
 
 <style lang="scss" scoped>

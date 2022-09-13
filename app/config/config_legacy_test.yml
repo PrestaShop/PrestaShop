@@ -1,2 +1,2 @@
 imports:
-    - { resource: config_legacy.yml }
+  - { resource: config_legacy_dev.yml }

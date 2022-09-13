@@ -26,10 +26,10 @@
 
 namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider;
 
+use PrestaShop\PrestaShop\Adapter\Group\GroupDataProvider;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
-use PrestaShop\PrestaShop\Core\Group\Provider\DefaultGroupsProviderInterface;
 
 /**
  * Provides data for category add/edit category forms
@@ -52,26 +52,26 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
     private $contextShopRootCategoryId;
 
     /**
-     * @var DefaultGroupsProviderInterface
+     * @var GroupDataProvider
      */
-    private $defaultGroupsProvider;
+    private $groupDataProvider;
 
     /**
      * @param CommandBusInterface $queryBus
      * @param int $contextShopId
      * @param int $contextShopRootCategoryId
-     * @param DefaultGroupsProviderInterface $defaultGroupsProvider
+     * @param GroupDataProvider $groupDataProvider
      */
     public function __construct(
         CommandBusInterface $queryBus,
         $contextShopId,
         $contextShopRootCategoryId,
-        DefaultGroupsProviderInterface $defaultGroupsProvider
+        GroupDataProvider $groupDataProvider
     ) {
         $this->queryBus = $queryBus;
         $this->contextShopId = $contextShopId;
         $this->contextShopRootCategoryId = $contextShopRootCategoryId;
-        $this->defaultGroupsProvider = $defaultGroupsProvider;
+        $this->groupDataProvider = $groupDataProvider;
     }
 
     /**
@@ -87,6 +87,7 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
             'active' => $editableCategory->isActive(),
             'id_parent' => $editableCategory->getParentId(),
             'description' => $editableCategory->getDescription(),
+            'additional_description' => $editableCategory->getAdditionalDescription(),
             'meta_title' => $editableCategory->getMetaTitle(),
             'meta_description' => $editableCategory->getMetaDescription(),
             'meta_keyword' => $editableCategory->getMetaKeywords(),
@@ -101,15 +102,11 @@ final class CategoryFormDataProvider implements FormDataProviderInterface
      */
     public function getDefaultData()
     {
-        $defaultGroups = $this->defaultGroupsProvider->getGroups();
+        $allGroupIds = $this->groupDataProvider->getAllGroupIds();
 
         return [
             'id_parent' => $this->contextShopRootCategoryId,
-            'group_association' => [
-                $defaultGroups->getVisitorsGroup()->getId(),
-                $defaultGroups->getGuestsGroup()->getId(),
-                $defaultGroups->getCustomersGroup()->getId(),
-            ],
+            'group_association' => $allGroupIds,
             'shop_association' => $this->contextShopId,
             'active' => true,
         ];

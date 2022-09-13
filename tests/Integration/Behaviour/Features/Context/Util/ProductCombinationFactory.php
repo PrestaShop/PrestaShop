@@ -28,11 +28,11 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Behaviour\Features\Context\Util;
 
-use Attribute;
 use Combination;
 use Configuration;
 use PrestaShopDatabaseException;
 use PrestaShopException;
+use ProductAttribute;
 use StockAvailable;
 
 class ProductCombinationFactory
@@ -49,19 +49,20 @@ class ProductCombinationFactory
     public static function makeCombinations(int $productId, array $combinationDetailsList): array
     {
         $combinations = [];
-        $attributesList = Attribute::getAttributes((int) Configuration::get('PS_LANG_DEFAULT'));
+        $attributesList = ProductAttribute::getAttributes((int) Configuration::get('PS_LANG_DEFAULT'));
 
         foreach ($combinationDetailsList as $combinationDetails) {
             $combinationName = $combinationDetails->getReference();
             $combination = new Combination();
             $combination->reference = $combinationName;
             $combination->id_product = $productId;
-            $combination->quantity = $combinationDetails->getQuantity();
             if ($combinationDetails->getPrice()) {
                 $combination->price = $combinationDetails->getPrice();
             }
             $combination->add();
-            StockAvailable::setQuantity($productId, $combination->id, (int) $combination->quantity);
+
+            StockAvailable::setQuantity($productId, $combination->id, (int) $combinationDetails->getQuantity());
+
             $combinations[] = $combination;
             $combinationAttributesIds = [];
             foreach ($combinationDetails->getAttributes() as $combinationAttribute) {

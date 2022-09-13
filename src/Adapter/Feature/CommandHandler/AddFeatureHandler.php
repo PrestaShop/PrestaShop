@@ -62,6 +62,6 @@ final class AddFeatureHandler extends AbstractObjectModelHandler implements AddF
 
         $this->associateWithShops($feature, $command->getShopAssociation());
 
-        return new FeatureId($feature->id);
+        return new FeatureId((int) $feature->id);
     }
 }

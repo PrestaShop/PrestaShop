@@ -25,9 +25,13 @@
  */
 class AddressesControllerCore extends FrontController
 {
+    /** @var bool */
     public $auth = true;
+    /** @var string */
     public $php_self = 'addresses';
+    /** @var string */
     public $authRedirection = 'addresses';
+    /** @var bool */
     public $ssl = true;
 
     /**
@@ -51,11 +55,6 @@ class AddressesControllerCore extends FrontController
      */
     public function initContent()
     {
-        if (count($this->context->customer->getSimpleAddresses()) <= 0) {
-            $link = '<a href="' . $this->context->link->getPageLink('address', true) . '">' . $this->trans('Add a new address', [], 'Shop.Theme.Actions') . '</a>';
-            $this->warning[] = $this->trans('No addresses are available. %s', [$link], 'Shop.Notifications.Success');
-        }
-
         parent::initContent();
         $this->setTemplate('customer/addresses');
     }

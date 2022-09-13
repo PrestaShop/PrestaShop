@@ -7,7 +7,7 @@ const helper = require('@utils/helpers');
 const testContext = require('@utils/testContext');
 
 // Import login steps
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import data
 const {DefaultCustomer} = require('@data/demo/customer');

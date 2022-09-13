@@ -19,7 +19,7 @@ class TaxRules extends BOBasePage {
 
     // Selectors
     // HEADER buttons
-    this.addNewTaxRulesGroupLink = 'a#page-header-desc-tax_rules_group-new_tax_rules_group';
+    this.addNewTaxRulesGroupLink = 'a[data-role=page-header-desc-tax_rules_group-link]';
 
     // Form selectors
     this.gridForm = '#form-tax_rules_group';

@@ -22,6 +22,8 @@ class Product extends FOBasePage {
     this.productQuantity = '#quantity_wanted';
     this.shortDescription = '#product-description-short';
     this.productDescription = '#description';
+    this.custumizedTextarea = '.product-customization-item .product-message';
+    this.saveCustomizationButton = 'button[name=\'submitCustomizedData\']';
     this.addToCartButton = '#add-to-cart-or-refresh button[data-button-action="add-to-cart"]';
     this.blockCartModal = '#blockcart-modal';
     this.proceedToCheckoutButton = `${this.blockCartModal} div.cart-content-btn a`;
@@ -89,14 +91,14 @@ class Product extends FOBasePage {
   }
 
   /**
-   * Get Product information (Product name, price, description)
-   * @param page {Page} Browser tab
-   * @returns {Promise<{price: (number), name: (string), description: (string)}>}
+   * Get Product information (Product name, price, short description, description)
+   * @param page
+   * @returns {Promise<{price: number, name: string, description: string, shortDescription: string}>}
    */
   async getProductInformation(page) {
     return {
       name: await this.getTextContent(page, this.productName),
-      price: await this.getPriceFromText(page, this.productPrice, 'content'),
+      price: await this.getPriceFromText(page, this.productPrice),
       shortDescription: await this.getTextContent(page, this.shortDescription, false),
       description: await this.getTextContent(page, this.productDescription),
     };
@@ -261,12 +263,21 @@ class Product extends FOBasePage {
    * @param quantity {number} Quantity of the product that customer wants
    * @param combination {{size: ?string, color: ?string}}  Product's combination data to add to cart
    * @param proceedToCheckout {boolean} True to click on proceed to checkout button on modal
+   * @param customizedText {string} Value of customization
    * @returns {Promise<void>}
    */
-  async addProductToTheCart(page, quantity = 1, combination = {color: null, size: null}, proceedToCheckout = true) {
+  async addProductToTheCart(page, quantity = 1, combination = {
+    color: null,
+    size: null,
+  }, proceedToCheckout = true, customizedText = 'text') {
     await this.selectCombination(page, quantity, combination);
     if (quantity !== 1) {
       await this.setValue(page, this.productQuantity, quantity.toString());
+    }
+
+    if (await this.elementVisible(page, this.custumizedTextarea, 2000)) {
+      await this.setValue(page, this.custumizedTextarea, customizedText);
+      await this.waitForSelectorAndClick(page, this.saveCustomizationButton);
     }
 
     await this.waitForSelectorAndClick(page, this.addToCartButton);
@@ -275,6 +286,7 @@ class Product extends FOBasePage {
     if (proceedToCheckout) {
       await this.waitForVisibleSelector(page, this.proceedToCheckoutButton);
       await this.clickAndWaitForNavigation(page, this.proceedToCheckoutButton);
+      await this.waitForPageTitleToLoad(page);
     } else {
       await this.waitForSelectorAndClick(page, this.continueShoppingButton);
       await this.waitForHiddenSelector(page, this.continueShoppingButton);
@@ -422,7 +434,7 @@ class Product extends FOBasePage {
    * @returns {Promise<number>}
    */
   getNumberOfComments(page) {
-    return this.getNumberFromText(page, this.commentCount);
+    return page.$$eval(this.productReviewRows, rows => rows.length);
   }
 
   /**

@@ -25,10 +25,10 @@
  */
 class OrderStateCore extends ObjectModel
 {
-    /** @var array<string> Name */
+    /** @var string|array<int, string> Name */
     public $name;
 
-    /** @var array<string> Template name if there is any e-mail to send */
+    /** @var string|array<int, string> Template name if there is any e-mail to send */
     public $template;
 
     /** @var bool Send an e-mail to customer ? */
@@ -66,7 +66,7 @@ class OrderStateCore extends ObjectModel
     public $pdf_delivery;
 
     /** @var bool True if carrier has been deleted (staying in database as deleted) */
-    public $deleted = 0;
+    public $deleted = false;
 
     /**
      * @see ObjectModel::$definition
@@ -104,17 +104,17 @@ class OrderStateCore extends ObjectModel
         ],
     ];
 
-    const FLAG_NO_HIDDEN = 1;  /* 00001 */
-    const FLAG_LOGABLE = 2;  /* 00010 */
-    const FLAG_DELIVERY = 4;  /* 00100 */
-    const FLAG_SHIPPED = 8;  /* 01000 */
-    const FLAG_PAID = 16; /* 10000 */
+    public const FLAG_NO_HIDDEN = 1;  /* 00001 */
+    public const FLAG_LOGABLE = 2;  /* 00010 */
+    public const FLAG_DELIVERY = 4;  /* 00100 */
+    public const FLAG_SHIPPED = 8;  /* 01000 */
+    public const FLAG_PAID = 16; /* 10000 */
 
     /**
      * Get all available order statuses.
      *
      * @param int $id_lang Language id for status name
-     * @param bool $getDeletedStates
+     * @param bool $filterDeleted
      *
      * @return array Order statuses
      */
@@ -174,7 +174,7 @@ class OrderStateCore extends ObjectModel
      */
     public static function existsLocalizedNameInDatabase(string $name, int $idLang, ?int $excludeIdOrderState): bool
     {
-        return (bool) DB::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
+        return (bool) Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue(
             'SELECT COUNT(*) AS count' .
             ' FROM ' . _DB_PREFIX_ . 'order_state_lang osl' .
             ' INNER JOIN ' . _DB_PREFIX_ . 'order_state os ON (os.`id_order_state` = osl.`id_order_state` AND osl.`id_lang` = ' . $idLang . ')' .

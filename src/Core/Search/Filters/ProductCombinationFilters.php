@@ -94,6 +94,6 @@ class ProductCombinationFilters extends Filters
      */
     public static function generateFilterId(int $productId): string
     {
-        return static::FILTER_PREFIX . $productId;
+        return self::FILTER_PREFIX . $productId;
     }
 }

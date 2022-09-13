@@ -34,14 +34,16 @@ use Doctrine\DBAL\Statement;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Module\Configuration\ModuleSelfConfigurator;
-use PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository;
 use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Module\ModuleRepository;
 use Symfony\Component\Filesystem\Filesystem;
 
 class ModuleSelfConfiguratorTest extends TestCase
 {
+    /**
+     * @var ModuleSelfConfigurator
+     */
     public $moduleSelfConfigurator;
-
     /**
      * @var ConfigurationMock
      */
@@ -54,33 +56,34 @@ class ModuleSelfConfiguratorTest extends TestCase
      * @var ModuleRepository
      */
     private $moduleRepository;
-
+    /**
+     * @var string
+     */
     public $defaultDir;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->configuration = new ConfigurationMock();
         $this->connection = new ConnectionMock([], new Driver());
         $this->mockModuleRepository();
 
-        $this->defaultDir = __DIR__ . '/../../../Resources/module-self-config-files';
+        $this->defaultDir = dirname(__DIR__, 3) . '/Resources/module-self-config-files';
+
         parent::setUp();
     }
 
     private function getModuleSelfConfigurator(
-        $moduleRepository = null,
-        $configuration = null,
-        $connection = null,
-        $filesystem = null
+        ModuleRepository $moduleRepository = null,
+        Configuration $configuration = null,
+        Connection $connection = null,
+        Filesystem $filesystem = null
     ): ModuleSelfConfigurator {
-        $moduleSelfConfigurator = new ModuleSelfConfigurator(
+        return new ModuleSelfConfigurator(
             $moduleRepository ?: $this->moduleRepository,
             $configuration ?: $this->configuration,
             $connection ?: $this->connection,
             $filesystem ?: new Filesystem()
         );
-
-        return $moduleSelfConfigurator;
     }
 
     public function testSuccessfulConfiguration(): void
@@ -208,8 +211,8 @@ class ModuleSelfConfiguratorTest extends TestCase
         // Then clean
         $filesystem = new Filesystem();
         $filesystem->remove([
-            __DIR__ . '/../../../Resources/modules/ganalytics/ganalytics_copy.php',
-            __DIR__ . '/../../../Resources/modules/ganalytics/avatar.jpg',
+            dirname(__DIR__, 3) . '/Resources/modules/ganalytics/ganalytics_copy.php',
+            dirname(__DIR__, 3) . '/Resources/modules/ganalytics/avatar.jpg',
         ]);
     }
 
@@ -300,7 +303,7 @@ class ModuleSelfConfiguratorTest extends TestCase
             ->method('hasValidInstance')
             ->willReturn(true);
 
-        $this->moduleRepository = $this->getMockBuilder('PrestaShop\PrestaShop\Core\Addon\Module\ModuleRepository')
+        $this->moduleRepository = $this->getMockBuilder(ModuleRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -346,17 +349,22 @@ class ConnectionMock extends Connection
 
     public function beginTransaction()
     {
+        return true;
     }
 
     public function commit()
     {
         $this->executedSql = array_merge($this->executedSql, $this->sql);
         $this->sql = [];
+
+        return true;
     }
 
     public function rollBack()
     {
         $this->sql = [];
+
+        return true;
     }
 
     public function prepare($statement)
@@ -369,11 +377,13 @@ class ConnectionMock extends Connection
 
 class StatementMock extends Statement
 {
+    /** @phpstan-ignore-next-line */
     public function __construct($sql, Connection $conn)
     {
     }
 
     public function execute($params = null)
     {
+        return true;
     }
 }

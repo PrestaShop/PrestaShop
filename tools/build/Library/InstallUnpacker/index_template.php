@@ -25,10 +25,10 @@
  */
 set_time_limit(0);
 
-define('_PS_INSTALL_MINIMUM_PHP_VERSION_ID_', 70103);
-define('_PS_INSTALL_MINIMUM_PHP_VERSION_', '7.1.3');
-define('_PS_INSTALL_MAXIMUM_PHP_VERSION_ID_', 70499);
-define('_PS_INSTALL_MAXIMUM_PHP_VERSION_', '7.4');
+define('_PS_INSTALL_MINIMUM_PHP_VERSION_ID_', 70205);
+define('_PS_INSTALL_MINIMUM_PHP_VERSION_', '7.2.5');
+define('_PS_INSTALL_MAXIMUM_PHP_VERSION_ID_', 81099);
+define('_PS_INSTALL_MAXIMUM_PHP_VERSION_', '8.1');
 define('_PS_VERSION_', '%ps-version-placeholder%');
 
 define('ZIP_NAME', 'prestashop.zip');
@@ -188,8 +188,6 @@ if (isset($_POST['extract'])) {
 
     @chmod('install/index.php', 0644);
     @chmod('admin/index.php', 0644);
-    @chmod('admin/ajax.php', 0644);
-    @chmod('admin/ajax-tab.php', 0644);
     @chmod('index.php', 0644);
 
     $zip->close();

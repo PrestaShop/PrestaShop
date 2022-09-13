@@ -3,17 +3,20 @@ require('module-alias/register');
 const {expect} = require('chai');
 
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 const files = require('@utils/files');
 
-// Importing pages
+// Import pages
+// FO
 const homePage = require('@pages/FO/home');
 const cartPage = require('@pages/FO/cart');
 const productPage = require('@pages/FO/product');
+const searchResultsPage = require('@pages/FO/searchResults');
+
+// BO
 const boDashboardPage = require('@pages/BO/dashboard');
 const boProductsPage = require('@pages/BO/catalog/products');
 const boAddProductPage = require('@pages/BO/catalog/products/add');
-const searchResultsPage = require('@pages/FO/searchResults');
 
 // Import test context
 const testContext = require('@utils/testContext');
@@ -70,7 +73,7 @@ Select color on hover from product list
 Change image from quick view
  */
 
-describe('Product quick view', async () => {
+describe('FO - product page : Product quick view', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -254,16 +257,35 @@ describe('Product quick view', async () => {
 
   // 6 - Change combination from quick view
   describe('Change combination from quick view modal', async () => {
-    it('should change combination on popup and check it in cart page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'changeCombination', baseContext);
+    it('should quick view the first product', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'quickViewProduct', baseContext);
 
       await homePage.quickViewProduct(page, 1);
+
+      const isModalVisible = await homePage.isQuickViewProductModalVisible(page);
+      await expect(isModalVisible).to.be.true;
+    });
+
+    it('should change combination on popup and proceed to checkout', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'changeCombination', baseContext);
+
       await homePage.changeCombinationAndAddToCart(page, combination);
 
       await homePage.proceedToCheckout(page);
 
+      const pageTitle = await cartPage.getPageTitle(page);
+      await expect(pageTitle).to.equal(cartPage.pageTitle);
+    });
+
+    it('should check the products number in the cart', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkProductsNumber', baseContext);
+
       const notificationsNumber = await homePage.getCartNotificationsNumber(page);
       await expect(notificationsNumber).to.be.equal(combination.quantity);
+    });
+
+    it('should check product details', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'checkProductDetails', baseContext);
 
       let result = await cartPage.getProductDetail(page, 1);
       await Promise.all([
@@ -286,30 +308,50 @@ describe('Product quick view', async () => {
 
   // 7 - Select color on hover from product list
   describe('Select color on hover on product list', async () => {
-    it('should select color on hover on product list and check it on product page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'selectColor', baseContext);
+    let imageFirstColor;
+    let imageSecondColor;
+
+    it('should go to home page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToHomeToSelectColor', baseContext);
 
       await cartPage.goToHomePage(page);
 
       const isHomePage = await homePage.isHomePage(page);
       await expect(isHomePage).to.be.true;
+    });
+
+    it('should select color \'Ẁhite\' and be on product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'selectColor1', baseContext);
 
       await homePage.selectProductColor(page, 1, 'White');
 
-      let pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await productPage.getPageTitle(page);
       await expect(pageTitle.toUpperCase()).to.contains(firstProductData.name);
+    });
 
-      const imageFirstColor = await productPage.getProductImageUrls(page);
+    it('should get product image Url and go back to home page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'getProductImage1', baseContext);
+
+      imageFirstColor = await productPage.getProductImageUrls(page);
 
       await productPage.goToHomePage(page);
+      const isHomePage = await homePage.isHomePage(page);
+      await expect(isHomePage).to.be.true;
+    });
+
+    it('should select color \'Black\' and be on product page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'selectColor2', baseContext);
 
       await homePage.selectProductColor(page, 1, 'Black');
 
-      pageTitle = await productPage.getPageTitle(page);
+      const pageTitle = await productPage.getPageTitle(page);
       await expect(pageTitle.toUpperCase()).to.contains(firstProductData.name);
+    });
 
-      const imageSecondColor = await productPage.getProductImageUrls(page);
+    it('should product image be different from the ', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'getProductImage2', baseContext);
 
+      imageSecondColor = await productPage.getProductImageUrls(page);
       await expect(imageFirstColor.coverImage).to.not.equal(imageSecondColor.coverImage);
     });
   });

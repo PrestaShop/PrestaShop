@@ -24,41 +24,32 @@
  *#}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% trans_default_domain "Admin.Advparameters.Feature" %}
-{% form_theme logsByEmailForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
+{% form_theme logsByEmailForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
 {% block content %}
   {% block logs_severity_level_meaning %}
-    <div class="row">
-      {{ include('@PrestaShop/Admin/Configure/AdvancedParameters/LogsPage/Blocks/severity_levels.html.twig') }}
-    </div>
+    {{ include('@PrestaShop/Admin/Configure/AdvancedParameters/LogsPage/Blocks/severity_levels.html.twig') }}
   {% endblock %}
 
   {% block logs_main_panel %}
-    <div class="row">
-      <div class="col">
-        {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {'grid': grid }) }}
-      </div>
-    </div>
+    {{ include('@PrestaShop/Admin/Common/Grid/grid_panel.html.twig', {'grid': grid }) }}
   {% endblock %}
 
   {% block logs_by_mail %}
     {{ form_start(logsByEmailForm, {'action': path('admin_logs_save_settings')}) }}
-    <div class="row justify-content-center">
-      <div class="col">
-        <div class="card">
-          <h3 class="card-header">
-            <i class="material-icons">business_center</i> {{ 'Logs by email'|trans }}
-          </h3>
-          <div class="card-block row">
-            <div class="card-text">
-                {{ form_widget(logsByEmailForm) }}
-            </div>
-          </div>
-          <div class="card-footer">
-            <div class="d-flex justify-content-end">
-              <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
-            </div>
-          </div>
+    <div class="card">
+      <h3 class="card-header">
+        <i class="material-icons">business_center</i>
+        {{ 'Logs by email'|trans }}
+      </h3>
+      <div class="card-body">
+        <div class="form-wrapper">
+          {{ form_widget(logsByEmailForm) }}
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-primary">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
         </div>
       </div>
     </div>

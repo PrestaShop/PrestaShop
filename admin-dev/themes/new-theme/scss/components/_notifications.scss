@@ -70,7 +70,7 @@
       margin-left: -8px;
       border-color: transparent;
       border-width: 8px;
-      border-bottom-color: #bbcdd2;
+      border-bottom-color: $gray-300;
     }
 
     .nav {
@@ -126,7 +126,7 @@
               margin-top: 1rem;
               font-size: 1.625rem;
               // To be changed to var when UIKit sources are imported
-              color: #363a41;
+              color: $gray-700;
               opacity: 1;
             }
           }
@@ -137,14 +137,14 @@
             display: block;
             width: 100%;
 
-            .mobile & {
-              bottom: 3.125rem;
+            @include media-breakpoint-down("sm") {
+              top: 7.75rem;
             }
           }
 
           @include media-breakpoint-down("sm") {
             // To be changed to var when UIKit sources are imported
-            color: #363a41;
+            color: $gray-700;
           }
         }
       }
@@ -208,10 +208,6 @@
 
     #messages-tab::before {
       content: "\E0BE";
-    }
-
-    .no-notification {
-      top: 7.75rem;
     }
 
     &.show {

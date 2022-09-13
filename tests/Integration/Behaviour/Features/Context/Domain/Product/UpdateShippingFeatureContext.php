@@ -36,6 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductShippingComma
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 use RuntimeException;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
@@ -50,22 +51,31 @@ class UpdateShippingFeatureContext extends AbstractProductFeatureContext
      */
     public function updateProductShipping(string $productReference, TableNode $table): void
     {
-        $data = $this->localizeByRows($table);
-        $productId = $this->getSharedStorage()->get($productReference);
+        $this->updateShipping($productReference, $table, ShopConstraint::shop($this->getDefaultShopId()));
+    }
 
-        try {
-            $command = new UpdateProductShippingCommand($productId);
-            $unhandledData = $this->setUpdateShippingCommandData($data, $command);
+    /**
+     * @When I update product :productReference shipping information for shop :shopReference with following values:
+     *
+     * @param string $productReference
+     * @param string $shopReference
+     * @param TableNode $table
+     */
+    public function updateProductShippingForShop(string $productReference, string $shopReference, TableNode $table): void
+    {
+        $shopId = $this->getSharedStorage()->get(trim($shopReference));
+        $this->updateShipping($productReference, $table, ShopConstraint::shop($shopId));
+    }
 
-            Assert::assertEmpty(
-                $unhandledData,
-                sprintf('Not all provided values handled in scenario. %s', var_export($unhandledData, true))
-            );
-
-            $this->getCommandBus()->handle($command);
-        } catch (ProductException $e) {
-            $this->setLastException($e);
-        }
+    /**
+     * @When I update product :productReference shipping information for all shops with following values:
+     *
+     * @param string $productReference
+     * @param TableNode $table
+     */
+    public function updateProductShippingForAllShops(string $productReference, TableNode $table): void
+    {
+        $this->updateShipping($productReference, $table, ShopConstraint::allShops());
     }
 
     /**
@@ -89,31 +99,51 @@ class UpdateShippingFeatureContext extends AbstractProductFeatureContext
      * @param string $productReference
      * @param TableNode $tableNode
      */
-    public function assertShippingInformation(string $productReference, TableNode $tableNode): void
+    public function assertShippingInformationForDefaultShop(string $productReference, TableNode $tableNode): void
     {
-        $data = $this->localizeByRows($tableNode);
-        $productShippingInformation = $this->getProductForEditing($productReference)->getShippingInformation();
+        $this->assertShippingInfo($productReference, $tableNode);
+    }
 
-        if (isset($data['carriers'])) {
-            $expectedReferenceIds = $this->getCarrierReferenceIds($data['carriers']);
-            $actualReferenceIds = $productShippingInformation->getCarrierReferences();
+    /**
+     * @Then product :productReference should have following shipping information for shops ":shopReferences":
+     *
+     * @param string $productReference
+     * @param TableNode $tableNode
+     * @param string $shopReferences
+     */
+    public function assertShippingInfoForShops(string $productReference, TableNode $tableNode, string $shopReferences): void
+    {
+        $shopReferences = explode(',', $shopReferences);
 
-            Assert::assertEquals(
-                $expectedReferenceIds,
-                $actualReferenceIds,
-                'Unexpected carrier references in product shipping information'
+        foreach ($shopReferences as $shopReference) {
+            $shopId = $this->getSharedStorage()->get(trim($shopReference));
+            $this->assertShippingInfo($productReference, $tableNode, $shopId);
+        }
+    }
+
+    /**
+     * @param string $productReference
+     * @param TableNode $table
+     * @param ShopConstraint $shopConstraint
+     */
+    private function updateShipping(string $productReference, TableNode $table, ShopConstraint $shopConstraint): void
+    {
+        $data = $this->localizeByRows($table);
+        $productId = $this->getSharedStorage()->get($productReference);
+
+        try {
+            $command = new UpdateProductShippingCommand($productId, $shopConstraint);
+            $unhandledData = $this->setUpdateShippingCommandData($data, $command);
+
+            Assert::assertEmpty(
+                $unhandledData,
+                sprintf('Not all provided values handled in scenario. %s', var_export($unhandledData, true))
             );
 
-            unset($data['carriers']);
+            $this->getCommandBus()->handle($command);
+        } catch (ProductException $e) {
+            $this->setLastException($e);
         }
-
-        $this->assertNumberShippingFields($data, $productShippingInformation);
-        $this->assertDeliveryTimeNotes($data, $productShippingInformation);
-
-        // Assertions checking isset() can hide some errors if it doesn't find array key,
-        // to make sure all provided fields were checked we need to unset every asserted field
-        // and finally, if provided data is not empty, it means there are some unnasserted values left
-        Assert::assertEmpty($data, sprintf('Some provided product shipping fields haven\'t been asserted: %s', var_export($data, true)));
     }
 
     /**
@@ -146,6 +176,41 @@ class UpdateShippingFeatureContext extends AbstractProductFeatureContext
                 unset($expectedValues[$field]);
             }
         }
+    }
+
+    /**
+     * @param string $productReference
+     * @param TableNode $tableNode
+     * @param int|null $shopId
+     */
+    private function assertShippingInfo(string $productReference, TableNode $tableNode, ?int $shopId = null): void
+    {
+        $data = $this->localizeByRows($tableNode);
+        $productShippingInformation = $this->getProductForEditing(
+            $productReference,
+            $shopId
+        )->getShippingInformation();
+
+        if (isset($data['carriers'])) {
+            $expectedReferenceIds = $this->getCarrierReferenceIds($data['carriers']);
+            $actualReferenceIds = $productShippingInformation->getCarrierReferences();
+
+            Assert::assertEquals(
+                $expectedReferenceIds,
+                $actualReferenceIds,
+                'Unexpected carrier references in product shipping information'
+            );
+
+            unset($data['carriers']);
+        }
+
+        $this->assertNumberShippingFields($data, $productShippingInformation);
+        $this->assertDeliveryTimeNotes($data, $productShippingInformation);
+
+        // Assertions checking isset() can hide some errors if it doesn't find array key,
+        // to make sure all provided fields were checked we need to unset every asserted field
+        // and finally, if provided data is not empty, it means there are some unnasserted values left
+        Assert::assertEmpty($data, sprintf('Some provided product shipping fields haven\'t been asserted: %s', var_export($data, true)));
     }
 
     /**
@@ -242,7 +307,7 @@ class UpdateShippingFeatureContext extends AbstractProductFeatureContext
         }
 
         if (isset($data['carriers'])) {
-            $command->setCarrierReferences($this->getCarrierReferenceIds($data['carriers']));
+            $command->setCarrierReferenceIds($this->getCarrierReferenceIds($data['carriers']));
             unset($unhandledValues['carriers']);
         }
 

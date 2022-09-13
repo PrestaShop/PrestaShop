@@ -70,7 +70,7 @@ class ModuleCatalogueLayersProviderTest extends KernelTestCase
      */
     private $moduleExtractorExcludedDirs = ['vendor', 'lib', 'tests'];
 
-    public function setUp()
+    public function setUp(): void
     {
         self::bootKernel();
         /*

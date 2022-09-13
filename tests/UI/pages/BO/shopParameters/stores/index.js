@@ -20,7 +20,7 @@ class Stores extends BOBasePage {
     this.alertSuccessBlockParagraph = '.alert-success';
 
     // Header selectors
-    this.newStoreLink = '#page-header-desc-store-new_store';
+    this.newStoreLink = 'a[data-role=page-header-desc-store-link]';
 
     // Form selectors
     this.gridForm = '#form-store';

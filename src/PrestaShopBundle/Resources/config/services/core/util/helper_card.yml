@@ -80,8 +80,8 @@ services:
           'it': 'https://docs.prestashop-project.org/1.7-documentation/v/italian/guida-utente/migliorare-negozio/gestire-spedizioni/corrieri'
           '_fallback': 'https://docs.prestashop-project.org/1.7-documentation/user-guide/improving-shop/managing-shipping/carriers'
         'combinations':
-            'en': 'https://docs.prestashop-project.org/1.7-documentation/user-guide/selling/managing-catalog/managing-products#managingproducts-creatingaproductwithcombinations'
-            'fr': "https://docs.prestashop-project.org/1.7-documentation/v/french/guide-utilisateur/vendre/gerer-catalogue/gerer-produits#creation-dun-produit-avec-des-declinaisons"
-            'es': 'https://docs.prestashop-project.org/1.7-documentation/v/spanish/guia-usuario/vender/gestionar-catalogo/gestionar-productos#gestionarlosproductos-crearunproductoconcombinaciones'
-            'it': 'https://docs.prestashop-project.org/1.7-documentation/v/italian/guida-utente/vendere/gestire-catalogo/gestire-prodotti#gestireprodotti-creareunprodottoconcombinazioni'
-            '_fallback': 'https://docs.prestashop-project.org/1.7-documentation/user-guide/selling/managing-catalog/managing-products#managingproducts-creatingaproductwithcombinations'
+          'en': 'https://docs.prestashop-project.org/1.7-documentation/user-guide/selling/managing-catalog/managing-products#managingproducts-creatingaproductwithcombinations'
+          'fr': "https://docs.prestashop-project.org/1.7-documentation/v/french/guide-utilisateur/vendre/gerer-catalogue/gerer-produits#creation-dun-produit-avec-des-declinaisons"
+          'es': 'https://docs.prestashop-project.org/1.7-documentation/v/spanish/guia-usuario/vender/gestionar-catalogo/gestionar-productos#gestionarlosproductos-crearunproductoconcombinaciones'
+          'it': 'https://docs.prestashop-project.org/1.7-documentation/v/italian/guida-utente/vendere/gestire-catalogo/gestire-prodotti#gestireprodotti-creareunprodottoconcombinazioni'
+          '_fallback': 'https://docs.prestashop-project.org/1.7-documentation/user-guide/selling/managing-catalog/managing-products#managingproducts-creatingaproductwithcombinations'

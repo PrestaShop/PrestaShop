@@ -53,7 +53,7 @@ class Environment implements EnvironmentInterface
     public function __construct($isDebug = null, $name = null)
     {
         if (null === $isDebug) {
-            $this->isDebug = defined(_PS_MODE_DEV_) ? _PS_MODE_DEV_ : true;
+            $this->isDebug = defined('_PS_MODE_DEV_') ? _PS_MODE_DEV_ : true;
         } else {
             $this->isDebug = $isDebug;
         }
@@ -61,7 +61,7 @@ class Environment implements EnvironmentInterface
         if (null !== $name) {
             $this->name = $name;
         } else {
-            if (defined(_PS_ENV_)) {
+            if (defined('_PS_ENV_')) {
                 $this->name = _PS_ENV_;
             } else {
                 $this->name = $this->isDebug ? 'dev' : 'prod';

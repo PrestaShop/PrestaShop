@@ -39,8 +39,8 @@ class EmployeeFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function logsInBackOffice($employeeEmail)
     {
-        $employeeId = Employee::employeeExists($employeeEmail);
+        $employee = new Employee();
 
-        Context::getContext()->employee = new Employee($employeeId);
+        Context::getContext()->employee = $employee->getByEmail($employeeEmail);
     }
 }

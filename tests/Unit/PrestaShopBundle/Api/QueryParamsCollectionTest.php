@@ -45,7 +45,7 @@ class QueryParamsCollectionTest extends TestCase
      */
     private $queryParams;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->queryParams = new QueryStockParamsCollection();
     }
@@ -53,15 +53,13 @@ class QueryParamsCollectionTest extends TestCase
     /**
      * @dataProvider getInvalidPaginationParams
      *
-     * @test
-     *
-     * @param $pageIndex
-     * @param $pageSize
+     * @param int $pageIndex
+     * @param int $pageSize
      */
-    public function itShouldRaiseAnExceptionOnInvalidPaginationParams($pageIndex, $pageSize)
+    public function testItShouldRaiseAnExceptionOnInvalidPaginationParams(int $pageIndex, int $pageSize): void
     {
         try {
-            $this->itShouldMakeQueryParamsFromARequest(
+            $this->testItShouldMakeQueryParamsFromARequest(
                 'product',
                 $pageIndex,
                 $pageSize,
@@ -81,35 +79,34 @@ class QueryParamsCollectionTest extends TestCase
     /**
      * @return array
      */
-    public function getInvalidPaginationParams()
+    public function getInvalidPaginationParams(): array
     {
         return [
             [
-                $pageIndex = 0,
-                $pageSize = 100,
+                0,
+                100,
             ],
             [
-                $pageIndex = 1,
-                $pageSize = 100 + 1,
+                1,
+                100 + 1,
             ],
         ];
     }
 
     /**
      * @dataProvider getQueryParams
-     * @test
      *
-     * @param $order
-     * @param $pageIndex
-     * @param $pageSize
-     * @param $expectedSqlClauses
+     * @param string $order
+     * @param int|string|null $pageIndex
+     * @param int|string|null $pageSize
+     * @param array $expectedSqlClauses
      */
-    public function itShouldMakeQueryParamsFromARequest(
-        $order,
+    public function testItShouldMakeQueryParamsFromARequest(
+        string $order,
         $pageIndex,
         $pageSize,
-        $expectedSqlClauses
-    ) {
+        array $expectedSqlClauses
+    ): void {
         $requestMock = $this->mockRequest(
             [
                 'order' => $order,
@@ -129,26 +126,25 @@ class QueryParamsCollectionTest extends TestCase
 
         $expectedSqlClauses[2] = [QueryParamsCollection::SQL_CLAUSE_WHERE => ''];
 
-        $this->assertInternalType('array', $sqlParts);
+        $this->assertIsArray($sqlParts);
 
         $this->assertEquals($expectedSqlClauses, $sqlParts);
     }
 
     /**
      * @dataProvider getQueryParams
-     * @test
      *
-     * @param $order
-     * @param $pageIndex
-     * @param $pageSize
-     * @param $expectedSqlClauses
+     * @param string $order
+     * @param int|string|null $pageIndex
+     * @param int|string|null $pageSize
+     * @param array $expectedSqlClauses
      */
-    public function itShouldMakeQueryParamsWithProductFilterFromARequest(
-        $order,
+    public function testItShouldMakeQueryParamsWithProductFilterFromARequest(
+        string $order,
         $pageIndex,
         $pageSize,
-        $expectedSqlClauses
-    ) {
+        array $expectedSqlClauses
+    ): void {
         $requestMock = $this->mockRequest(
             [
                 'order' => $order,
@@ -169,7 +165,7 @@ class QueryParamsCollectionTest extends TestCase
         $expectedSqlClauses[1]['product_id'] = 1;
         $expectedSqlClauses[2] = [QueryParamsCollection::SQL_CLAUSE_WHERE => 'AND {product_id} = :product_id'];
 
-        $this->assertInternalType('array', $sqlParts);
+        $this->assertIsArray($sqlParts);
 
         $this->assertEquals($expectedSqlClauses, $sqlParts);
     }
@@ -227,17 +223,16 @@ class QueryParamsCollectionTest extends TestCase
 
     /**
      * @dataProvider getFilterParams
-     * @test
      *
-     * @param $params
-     * @param $expectedSql
-     * @param $message
+     * @param array $params
+     * @param array $expectedSql
+     * @param string $message
      */
-    public function itShouldMakeQueryParamsWithFilterFromARequest(
-        $params,
-        $expectedSql,
-        $message
-    ) {
+    public function testItShouldMakeQueryParamsWithFilterFromARequest(
+        array $params,
+        array $expectedSql,
+        string $message
+    ): void {
         $requestMock = $this->mockRequest(array_merge(
             $params,
             ['_attributes' => $this->mockAttributes([])]
@@ -460,7 +455,6 @@ AND EXISTS(SELECT 1
             }
         });
 
-        /** @var \Symfony\Component\HttpFoundation\ParameterBag $queryMock */
         $queryMock = $this->createMock(ParameterBag::class);
         $queryMock->method('all')->willReturn($params);
 
@@ -483,7 +477,7 @@ AND EXISTS(SELECT 1
     /**
      * @param array $params
      *
-     * @return ParameterBag
+     * @return Request
      */
     private function mockRequest(array $params)
     {

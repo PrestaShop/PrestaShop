@@ -25,9 +25,9 @@
  */
 class TaxCore extends ObjectModel
 {
-    const TAX_DEFAULT_PRECISION = 3;
+    public const TAX_DEFAULT_PRECISION = 3;
 
-    /** @var array<int,string> Name */
+    /** @var array<int,string>|string Name */
     public $name;
 
     /** @var float Rate (%) */
@@ -37,7 +37,7 @@ class TaxCore extends ObjectModel
     public $active;
 
     /** @var bool true if the tax has been historized */
-    public $deleted = 0;
+    public $deleted = false;
 
     /**
      * @see ObjectModel::$definition
@@ -106,7 +106,7 @@ class TaxCore extends ObjectModel
             $res = $this->add();
 
             // change tax id in the tax rule table
-            $res &= TaxRule::swapTaxId($historized_tax->id, $this->id);
+            $res = $res && TaxRule::swapTaxId($historized_tax->id, $this->id);
 
             return $res;
         } elseif (parent::update($null_values)) {
@@ -143,7 +143,7 @@ class TaxCore extends ObjectModel
     /**
      * Get all available taxes.
      *
-     * @param int $id_lang
+     * @param int|bool $id_lang
      * @param bool $active_only (true by default)
      *
      * @return array Taxes
@@ -177,7 +177,7 @@ class TaxCore extends ObjectModel
      * Return the tax id associated to the specified name.
      *
      * @param string $tax_name
-     * @param bool $active (true by default)
+     * @param bool|int $active (true by default)
      */
     public static function getTaxIdByName($tax_name, $active = 1)
     {
@@ -225,30 +225,6 @@ class TaxCore extends ObjectModel
         $tax_calculator = $tax_manager->getTaxCalculator();
 
         return $tax_calculator->getTotalRate();
-    }
-
-    /**
-     * Return the product tax rate using the tax rules system.
-     *
-     * @param int $id_product
-     * @param int $id_country
-     * @param int $id_state
-     * @param string $zipcode
-     *
-     * @return Tax
-     *
-     * @deprecated since 1.5
-     */
-    public static function getProductTaxRateViaRules($id_product, $id_country, $id_state, $zipcode)
-    {
-        Tools::displayAsDeprecated();
-
-        if (!isset(self::$_product_tax_via_rules[$id_product . '-' . $id_country . '-' . $id_state . '-' . $zipcode])) {
-            $tax_rate = TaxRulesGroup::getTaxesRate((int) Product::getIdTaxRulesGroupByIdProduct((int) $id_product), (int) $id_country, (int) $id_state, $zipcode);
-            self::$_product_tax_via_rules[$id_product . '-' . $id_country . '-' . $zipcode] = $tax_rate;
-        }
-
-        return self::$_product_tax_via_rules[$id_product . '-' . $id_country . '-' . $zipcode];
     }
 
     /**

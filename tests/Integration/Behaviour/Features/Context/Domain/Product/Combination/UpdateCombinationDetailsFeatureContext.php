@@ -75,8 +75,8 @@ class UpdateCombinationDetailsFeatureContext extends AbstractCombinationFeatureC
             $expectedDetails->getImpactOnWeight()->equals($actualDetails->getImpactOnWeight()),
             sprintf(
                 'Unexpected combination impact on weight. Expected "%s" got "%s"',
-                var_export($expectedDetails, true),
-                var_export($actualDetails, true)
+                var_export($expectedDetails->getImpactOnWeight(), true),
+                var_export($actualDetails->getImpactOnWeight(), true)
             )
         );
     }
@@ -98,7 +98,7 @@ class UpdateCombinationDetailsFeatureContext extends AbstractCombinationFeatureC
             $details['mpn'],
             $details['reference'],
             $details['upc'],
-            new DecimalNumber($details['impact on weight'])
+            new DecimalNumber($details['impact on weight'] ?? '0')
         );
     }
 

@@ -27,17 +27,12 @@
 namespace PrestaShop\PrestaShop\Adapter\Module;
 
 use Context;
-use Doctrine\Common\Cache\CacheProvider;
 use Employee;
 use Module as LegacyModule;
-use PrestaShop\PrestaShop\Core\Addon\AddonListFilterOrigin;
-use PrestaShop\PrestaShop\Core\Addon\AddonsCollection;
-use PrestaShopBundle\Service\DataProvider\Admin\AddonsInterface;
+use PrestaShop\PrestaShop\Core\Module\ModuleCollection;
 use PrestaShopBundle\Service\DataProvider\Admin\CategoriesProvider;
 use PrestaShopBundle\Service\DataProvider\Admin\ModuleInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Router;
-use Symfony\Component\Translation\TranslatorInterface;
 use Tools;
 
 /**
@@ -48,49 +43,57 @@ use Tools;
  */
 class AdminModuleDataProvider implements ModuleInterface
 {
-    public const _CACHEKEY_MODULES_ = '_addons_modules';
-
     public const _DAY_IN_SECONDS_ = 86400; /* Cache for One Day */
 
     /**
      * @const array giving a translation domain key for each module action
      */
     public const _ACTIONS_TRANSLATION_DOMAINS_ = [
-        'install' => 'Admin.Actions',
-        'uninstall' => 'Admin.Actions',
-        'enable' => 'Admin.Actions',
-        'disable' => 'Admin.Actions',
-        'enable_mobile' => 'Admin.Modules.Feature',
-        'disable_mobile' => 'Admin.Modules.Feature',
-        'reset' => 'Admin.Actions',
-        'upgrade' => 'Admin.Actions',
-        'configure' => 'Admin.Actions',
+        Module::ACTION_INSTALL => 'Admin.Actions',
+        Module::ACTION_UNINSTALL => 'Admin.Actions',
+        Module::ACTION_ENABLE => 'Admin.Actions',
+        Module::ACTION_DISABLE => 'Admin.Actions',
+        Module::ACTION_ENABLE_MOBILE => 'Admin.Modules.Feature',
+        Module::ACTION_DISABLE_MOBILE => 'Admin.Modules.Feature',
+        Module::ACTION_RESET => 'Admin.Actions',
+        Module::ACTION_UPGRADE => 'Admin.Actions',
+        Module::ACTION_CONFIGURE => 'Admin.Actions',
     ];
 
     /**
-     * @var array of defined and callable module actions
+     * @const array giving a translation label for each module action
      */
-    protected $moduleActions = ['install', 'uninstall', 'enable', 'disable', 'enable_mobile', 'disable_mobile', 'reset', 'upgrade'];
+    public const ACTIONS_TRANSLATION_LABELS = [
+        Module::ACTION_INSTALL => 'Install',
+        Module::ACTION_UNINSTALL => 'Uninstall',
+        Module::ACTION_ENABLE => 'Enable',
+        Module::ACTION_DISABLE => 'Disable',
+        Module::ACTION_ENABLE_MOBILE => 'Enable mobile',
+        Module::ACTION_DISABLE_MOBILE => 'Disable mobile',
+        Module::ACTION_RESET => 'Reset',
+        Module::ACTION_UPGRADE => 'Upgrade',
+        Module::ACTION_CONFIGURE => 'Configure',
+    ];
 
     /**
-     * @var int
+     * @var array<string> of defined and callable module actions
      */
-    private $languageISO;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    protected $moduleActions = [
+        Module::ACTION_INSTALL,
+        Module::ACTION_ENABLE,
+        Module::ACTION_CONFIGURE,
+        Module::ACTION_UPGRADE,
+        Module::ACTION_ENABLE_MOBILE,
+        Module::ACTION_DISABLE_MOBILE,
+        Module::ACTION_DISABLE,
+        Module::ACTION_RESET,
+        Module::ACTION_UNINSTALL,
+    ];
 
     /**
      * @var Router|null
      */
     private $router = null;
-
-    /**
-     * @var AddonsInterface
-     */
-    private $addonsDataProvider;
 
     /**
      * @var CategoriesProvider
@@ -101,11 +104,6 @@ class AdminModuleDataProvider implements ModuleInterface
      * @var ModuleDataProvider
      */
     private $moduleProvider;
-
-    /**
-     * @var CacheProvider|null
-     */
-    private $cacheProvider;
 
     /**
      * @var Employee|null
@@ -128,21 +126,12 @@ class AdminModuleDataProvider implements ModuleInterface
     public $failed = false;
 
     public function __construct(
-        TranslatorInterface $translator,
-        LoggerInterface $logger,
-        AddonsInterface $addonsDataProvider,
         CategoriesProvider $categoriesProvider,
         ModuleDataProvider $modulesProvider,
-        CacheProvider $cacheProvider = null,
         Employee $employee = null
     ) {
-        list($this->languageISO) = explode('-', $translator->getLocale());
-
-        $this->logger = $logger;
-        $this->addonsDataProvider = $addonsDataProvider;
         $this->categoriesProvider = $categoriesProvider;
         $this->moduleProvider = $modulesProvider;
-        $this->cacheProvider = $cacheProvider;
         $this->employee = $employee;
     }
 
@@ -155,27 +144,6 @@ class AdminModuleDataProvider implements ModuleInterface
     }
 
     /**
-     * Clear the modules information from Addons cache.
-     */
-    public function clearCatalogCache()
-    {
-        if ($this->cacheProvider) {
-            $this->cacheProvider->delete($this->languageISO . self::_CACHEKEY_MODULES_);
-        }
-        $this->catalog_modules = [];
-    }
-
-    /**
-     * Clears module list cache.
-     */
-    public function clearModuleListCache()
-    {
-        if (file_exists(LegacyModule::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST)) {
-            @unlink(LegacyModule::CACHE_FILE_DEFAULT_COUNTRY_MODULES_LIST);
-        }
-    }
-
-    /**
      * @deprecated since version 1.7.3.0
      *
      * @return array
@@ -184,36 +152,8 @@ class AdminModuleDataProvider implements ModuleInterface
     {
         return LegacyModule::getModulesOnDisk(
             true,
-            $this->addonsDataProvider->isAddonsAuthenticated(),
             (int) Context::getContext()->employee->id
         );
-    }
-
-    /**
-     * @param array $filters
-     *
-     * @return array
-     */
-    public function getCatalogModules(array $filters = [])
-    {
-        if (count($this->catalog_modules) === 0 && !$this->failed) {
-            $this->loadCatalogData();
-        }
-
-        return $this->applyModuleFilters(
-                $this->catalog_modules,
-            $filters
-        );
-    }
-
-    /**
-     * @param array $filter
-     *
-     * @return array
-     */
-    public function getCatalogModulesNames(array $filter = [])
-    {
-        return array_keys($this->getCatalogModules($filter));
     }
 
     /**
@@ -262,114 +202,79 @@ class AdminModuleDataProvider implements ModuleInterface
     }
 
     /**
-     * @param AddonsCollection $addons
+     * @param ModuleCollection $modules
      * @param string|null $specific_action
      *
-     * @return AddonsCollection
+     * @return ModuleCollection
      */
-    public function generateAddonsUrls(AddonsCollection $addons, $specific_action = null)
+    public function setActionUrls(ModuleCollection $modules, ?string $specific_action = null): ModuleCollection
     {
-        foreach ($addons as $addon) {
+        foreach ($modules as $module) {
             $urls = [];
+            $moduleAttributes = $module->getAttributes();
+            $moduleDatabaseAttributes = $module->getDatabaseAttributes();
+
             foreach ($this->moduleActions as $action) {
+                if ($action === 'configure') {
+                    $urls[$action] = $this->router->generate('admin_module_configure_action', [
+                        'module_name' => $moduleAttributes->get('name'),
+                    ]);
+                    continue;
+                }
                 $urls[$action] = $this->router->generate('admin_module_manage_action', [
                     'action' => $action,
-                    'module_name' => $addon->attributes->get('name'),
+                    'module_name' => $moduleAttributes->get('name'),
                 ]);
             }
-            $urls['configure'] = $this->router->generate('admin_module_configure_action', [
-                'module_name' => $addon->attributes->get('name'),
-            ]);
 
-            if ($addon->database->has('installed') && $addon->database->getBoolean('installed')) {
-                if (!$addon->database->getBoolean('active')) {
-                    $url_active = 'enable';
+            if ($module->isInstalled()) {
+                unset($urls['install']);
+                if (!$module->isActive()) {
                     unset(
-                        $urls['install'],
-                        $urls['disable']
+                        $urls['disable'],
+                        $urls['enableMobile'],
+                        $urls['disableMobile']
                     );
-                } elseif ($addon->attributes->getBoolean('is_configurable')) {
-                    $url_active = 'configure';
-                    unset(
-                        $urls['enable'],
-                        $urls['install']
-                    );
+                    if ($moduleDatabaseAttributes->get('active') === null) {
+                        unset($urls['enable']);
+                    }
                 } else {
-                    $url_active = 'disable';
                     unset(
-                        $urls['install'],
                         $urls['enable'],
-                        $urls['configure']
+                        $urls[$module->isActiveOnMobile() ? 'enableMobile' : 'disableMobile']
                     );
                 }
 
-                if (!$addon->attributes->getBoolean('is_configurable')) {
+                if (!$module->canBeUpgraded()) {
+                    unset($urls['upgrade']);
+                }
+
+                if (!$module->isConfigurable()) {
                     unset($urls['configure']);
                 }
-
-                if ($addon->canBeUpgraded()) {
-                    $url_active = 'upgrade';
-                } else {
-                    unset(
-                        $urls['upgrade']
-                    );
-                }
-                if (!$addon->database->getBoolean('active_on_mobile')) {
-                    unset($urls['disable_mobile']);
-                } else {
-                    unset($urls['enable_mobile']);
-                }
-                if (!$addon->canBeUpgraded()) {
-                    unset(
-                        $urls['upgrade']
-                    );
-                }
-            } elseif (
-                !$addon->attributes->has('origin') ||
-                $addon->disk->getBoolean('is_present') ||
-                in_array($addon->attributes->get('origin'), ['native', 'native_all', 'partner', 'customer'], true)
-            ) {
-                $url_active = 'install';
-                unset(
-                    $urls['uninstall'],
-                    $urls['enable'],
-                    $urls['disable'],
-                    $urls['enable_mobile'],
-                    $urls['disable_mobile'],
-                    $urls['reset'],
-                    $urls['upgrade'],
-                    $urls['configure']
-                );
             } else {
-                $url_active = 'buy';
+                $urls = ['install' => $urls['install']];
             }
 
-            $urls = $this->filterAllowedActions($urls, $addon->attributes->get('name'));
-            $addon->attributes->set('urls', $urls);
-            $addon->attributes->set('actionTranslationDomains', self::_ACTIONS_TRANSLATION_DOMAINS_);
-            if ($specific_action && array_key_exists($specific_action, $urls)) {
-                $addon->attributes->set('url_active', $specific_action);
-            } elseif ($url_active === 'buy' || array_key_exists($url_active, $urls)) {
-                $addon->attributes->set('url_active', $url_active);
+            $filteredUrls = $this->filterAllowedActions($urls, $moduleAttributes->get('name'));
+
+            if ($specific_action && array_key_exists($specific_action, $filteredUrls)) {
+                $urlActive = $specific_action;
             } else {
-                $addon->attributes->set('url_active', key($urls));
+                $urlActive = key($filteredUrls);
             }
 
-            $categoryParent = $this->categoriesProvider->getParentCategory($addon->attributes->get('categoryName'));
-            $addon->attributes->set('categoryParent', $categoryParent);
+            $moduleAttributes->set('urls', $filteredUrls);
+            $moduleAttributes->set('url_active', $urlActive);
+            $moduleAttributes->set('actionTranslationDomains', self::_ACTIONS_TRANSLATION_DOMAINS_);
+            $moduleAttributes->set('actionTranslationLabels', self::ACTIONS_TRANSLATION_LABELS);
+            $moduleAttributes->set(
+                'categoryParent',
+                $this->categoriesProvider->getParentCategory($moduleAttributes->get('categoryName'))
+            );
         }
 
-        return $addons;
-    }
-
-    /**
-     * @param int $moduleId
-     *
-     * @return array
-     */
-    public function getModuleAttributesById($moduleId)
-    {
-        return (array) $this->addonsDataProvider->request('module', ['id_module' => $moduleId]);
+        return $modules;
     }
 
     /**
@@ -424,98 +329,5 @@ class AdminModuleDataProvider implements ModuleInterface
         }
 
         return $modules;
-    }
-
-    /**
-     * Load module catalogue. If not in cache, query Addons API.
-     */
-    protected function loadCatalogData()
-    {
-        if ($this->cacheProvider && $this->cacheProvider->contains($this->languageISO . self::_CACHEKEY_MODULES_)) {
-            $this->catalog_modules = $this->cacheProvider->fetch($this->languageISO . self::_CACHEKEY_MODULES_);
-        }
-
-        if (!$this->catalog_modules) {
-            $params = ['format' => 'json'];
-            $requests = [
-                AddonListFilterOrigin::ADDONS_MUST_HAVE => 'must-have',
-                AddonListFilterOrigin::ADDONS_SERVICE => 'service',
-                AddonListFilterOrigin::ADDONS_NATIVE => 'native',
-                AddonListFilterOrigin::ADDONS_NATIVE_ALL => 'native_all',
-            ];
-            if ($this->addonsDataProvider->isAddonsAuthenticated()) {
-                $requests[AddonListFilterOrigin::ADDONS_CUSTOMER] = 'customer';
-            }
-
-            try {
-                $listAddons = [];
-                // We execute each addons request
-                foreach ($requests as $action_filter_value => $action) {
-                    if (!$this->addonsDataProvider->isAddonsUp()) {
-                        continue;
-                    }
-                    // We add the request name in each product returned by Addons,
-                    // so we know whether is bought
-
-                    $addons = $this->addonsDataProvider->request($action, $params);
-                    /** @var \stdClass $addon */
-                    foreach ($addons as $addonsType => $addon) {
-                        if (empty($addon->name)) {
-                            $this->logger->error(sprintf('The addon with id %s does not have name.', $addon->id));
-
-                            continue;
-                        }
-
-                        $addon->origin = $action;
-                        $addon->origin_filter_value = $action_filter_value;
-                        $addon->categoryParent = $this->categoriesProvider
-                            ->getParentCategory($addon->categoryName);
-                        if (isset($addon->version)) {
-                            $addon->version_available = $addon->version;
-                        }
-                        if (!isset($addon->product_type)) {
-                            $addon->productType = isset($addonsType) ? rtrim($addonsType, 's') : 'module';
-                        } else {
-                            $addon->productType = $addon->product_type;
-                        }
-                        $listAddons[$addon->name] = $addon;
-                    }
-                }
-
-                if (!empty($listAddons)) {
-                    $this->catalog_modules = $listAddons;
-                    if ($this->cacheProvider) {
-                        $this->cacheProvider->save($this->languageISO . self::_CACHEKEY_MODULES_, $this->catalog_modules, self::_DAY_IN_SECONDS_);
-                    }
-                } else {
-                    $this->fallbackOnCatalogCache();
-                }
-            } catch (\Exception $e) {
-                if (!$this->fallbackOnCatalogCache()) {
-                    $this->logger->error('Data from PrestaShop Addons is invalid, and cannot fallback on cache.');
-                }
-            }
-        }
-    }
-
-    /**
-     * If cache exists, get the Catalogue from the cache.
-     *
-     * @return array Module loaded from the cache
-     */
-    protected function fallbackOnCatalogCache()
-    {
-        // Fallback on data from cache if exists
-        if ($this->cacheProvider) {
-            $this->catalog_modules = $this->cacheProvider->fetch($this->languageISO . self::_CACHEKEY_MODULES_);
-        }
-
-        if (!$this->catalog_modules) {
-            $this->catalog_modules = [];
-        }
-
-        $this->failed = true;
-
-        return $this->catalog_modules;
     }
 }

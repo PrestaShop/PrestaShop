@@ -2,6 +2,9 @@ imports:
     - { resource: ../common.yml }
 
 services:
+    _defaults:
+        public: true
+
     prestashop.core.filter.front_end_object.main:
         class: PrestaShop\PrestaShop\Core\Filter\FrontEndObject\MainFilter
         arguments:
@@ -46,6 +49,9 @@ services:
 
     prestashop.adapter.module.repository.module_repository:
       class: 'PrestaShop\PrestaShop\Adapter\Module\Repository\ModuleRepository'
+      arguments:
+        - !php/const _PS_ROOT_DIR_
+        - !php/const _PS_MODULE_DIR_
 
     prestashop.translation.translator_language_loader:
       class: PrestaShopBundle\Translation\TranslatorLanguageLoader

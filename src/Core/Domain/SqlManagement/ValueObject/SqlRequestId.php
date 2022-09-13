@@ -45,7 +45,7 @@ class SqlRequestId
      */
     public function __construct($requestSqlId)
     {
-        if (!is_numeric($requestSqlId) || $requestSqlId <= 0) {
+        if (!is_int($requestSqlId) || $requestSqlId <= 0) {
             throw new SqlRequestException(sprintf('Invalid SqlRequest id: %s', var_export($requestSqlId, true)));
         }
 

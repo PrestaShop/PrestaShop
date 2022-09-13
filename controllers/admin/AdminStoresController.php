@@ -306,7 +306,7 @@ class AdminStoresControllerCore extends AdminController
 
         $hours = [];
 
-        $hours_temp = ($this->getFieldValue($obj, 'hours'));
+        $hours_temp = $this->getFieldValue($obj, 'hours');
         if (is_array($hours_temp) && !empty($hours_temp)) {
             $langs = Language::getLanguages(false);
             $hours_temp = array_map('json_decode', $hours_temp);
@@ -350,9 +350,9 @@ class AdminStoresControllerCore extends AdminController
             /* If the selected country does not contain states */
             $id_state = (int) Tools::getValue('id_state');
             $id_country = (int) Tools::getValue('id_country');
-            $country = new Country((int) $id_country);
+            $country = new Country($id_country);
 
-            if ($id_country && $country && !(int) $country->contains_states && $id_state) {
+            if ($id_country && !(int) $country->contains_states && $id_state) {
                 $this->errors[] = $this->trans('You\'ve selected a state for a country that does not contain states.', [], 'Admin.Advparameters.Notification');
             }
 
@@ -391,7 +391,7 @@ class AdminStoresControllerCore extends AdminController
                 }
                 $encodedHours[$lang['id_lang']] = json_encode($hours);
             }
-            $_POST['hours'] = (1 < count($langs)) ? $encodedHours : json_encode($hours);
+            $_POST['hours'] = (1 < count($langs)) ? $encodedHours : json_encode($hours ?? []);
         }
 
         if (!count($this->errors)) {
@@ -406,7 +406,7 @@ class AdminStoresControllerCore extends AdminController
         $ret = parent::postImage($id);
         $generate_hight_dpi_images = (bool) Configuration::get('PS_HIGHT_DPI');
 
-        if (($id_store = (int) Tools::getValue('id_store')) && isset($_FILES) && count($_FILES) && file_exists(_PS_STORE_IMG_DIR_ . $id_store . '.jpg')) {
+        if (($id_store = (int) Tools::getValue('id_store')) && count($_FILES) && file_exists(_PS_STORE_IMG_DIR_ . $id_store . '.jpg')) {
             $images_types = ImageType::getImagesTypes('stores');
             foreach ($images_types as $image_type) {
                 ImageManager::resize(

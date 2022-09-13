@@ -4,7 +4,10 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const testContext = require('@utils/testContext');
+
+// Import login steps
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import data
 const EmployeeFaker = require('@data/faker/employee');
@@ -13,9 +16,6 @@ const EmployeeFaker = require('@data/faker/employee');
 const dashboardPage = require('@pages/BO/dashboard/index');
 const employeesPage = require('@pages/BO/advancedParameters/team/index');
 const addEmployeePage = require('@pages/BO/advancedParameters/team/add');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_advancedParams_team_employees_employeesBulkActions';
 
@@ -39,7 +39,7 @@ const secondEmployeeData = new EmployeeFaker(
 );
 
 // Create Employees, Then disable / Enable and Delete with Bulk actions
-describe('Create Employees, Then disable / Enable and Delete with Bulk actions', async () => {
+describe('BO - Advanced Parameters - Team : Create/Disable/Enable and bulk delete Employees', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -54,7 +54,7 @@ describe('Create Employees, Then disable / Enable and Delete with Bulk actions',
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to "Advanced parameters>Team" page', async function () {
+  it('should go to \'Advanced Parameters > Team\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToAdvancedParamsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -123,7 +123,7 @@ describe('Create Employees, Then disable / Enable and Delete with Bulk actions',
     ];
 
     statuses.forEach((employeeStatus) => {
-      it(`should ${employeeStatus.args.status} employees with Bulk Actions and check Result`, async function () {
+      it(`should ${employeeStatus.args.status} employees with Bulk Actions and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${employeeStatus.args.status}Employee`, baseContext);
 
         const disableTextResult = await employeesPage.bulkSetStatus(
@@ -144,7 +144,7 @@ describe('Create Employees, Then disable / Enable and Delete with Bulk actions',
 
     // 3 : Delete employee with bulk actions
     describe('Delete employees with Bulk Actions', async () => {
-      it('should delete employees with Bulk Actions and check Result', async function () {
+      it('should delete employees with Bulk Actions and check result', async function () {
         await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteEmployee', baseContext);
 
         const deleteTextResult = await employeesPage.deleteBulkActions(page);

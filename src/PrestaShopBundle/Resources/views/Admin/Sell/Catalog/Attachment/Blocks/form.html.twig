@@ -23,17 +23,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{% form_theme attachmentForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
+{% form_theme attachmentForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
 {% block attachment_form %}
-  {{ form_start(attachmentForm) }}
+  {# Add data attribute to allow form iframe modal to easily get the data #}
+  {{ form_start(attachmentForm, {'attr': {'data-attachment-id': attachmentId|default('')}}) }}
     <div class="card">
       <h3 class="card-header">
-        <i class="material-icons">person</i>
+        <i class="material-icons">attachment</i>
         {{ 'File'|trans({}, 'Admin.Global') }}
       </h3>
-      <div class="card-block row">
-        <div class="card-text">
+      <div class="card-body">
+        <div class="form-wrapper">
           {{ form_errors(attachmentForm) }}
           {{ form_widget(attachmentForm) }}
 
@@ -50,10 +51,10 @@
         </div>
       </div>
       <div class="card-footer">
-          <a href="{{ pathWithBackUrl('admin_attachments_index') }}" class="btn btn-outline-secondary">
+          <a href="{{ pathWithBackUrl('admin_attachments_index') }}" class="btn btn-outline-secondary cancel-btn">
           {{ 'Cancel'|trans({}, 'Admin.Actions') }}
         </a>
-        <button class="btn btn-primary float-right">
+        <button class="btn btn-primary float-right submit-btn">
           {{ 'Save'|trans({}, 'Admin.Actions') }}
         </button>
       </div>

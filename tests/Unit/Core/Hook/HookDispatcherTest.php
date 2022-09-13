@@ -40,7 +40,7 @@ use PrestaShopBundle\Service\Hook\RenderingHookEvent;
 class HookDispatcherTest extends TestCase
 {
     /**
-     * @var HookDispatcherAdapter
+     * @var HookDispatcherAdapter|MockObject
      */
     private $hookDispatcherAdapter;
 
@@ -49,7 +49,7 @@ class HookDispatcherTest extends TestCase
      */
     private $hookDispatcher;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->hookDispatcherAdapter = $this->createMock(HookDispatcherAdapter::class);
         $this->hookDispatcher = new HookDispatcher($this->hookDispatcherAdapter);
@@ -128,7 +128,7 @@ class HookDispatcherTest extends TestCase
         $this->assertEquals(['hello' => 'World'], $renderedHook->getContent());
     }
 
-    private function createHook($name = 'hookName', $parameters = [])
+    private function createHook(string $name = 'hookName', array $parameters = []): HookInterface
     {
         $hookStub = $this->createMock(HookInterface::class);
 
@@ -142,10 +142,8 @@ class HookDispatcherTest extends TestCase
      * The event dispatcher puts every parameter dispatched in an array.
      *
      * @param array $parameters
-     *
-     * @return MockObject|RenderingHookEvent
      */
-    private function createRenderingHookEvent($parameters = [])
+    private function createRenderingHookEvent(array $parameters = []): RenderingHookEvent
     {
         $parametersDispatched = [];
         foreach ($parameters as $key => $parameter) {

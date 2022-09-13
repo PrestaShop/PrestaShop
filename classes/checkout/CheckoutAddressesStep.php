@@ -141,7 +141,7 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
             );
             if ($deletionResult) {
                 $this->context->controller->success[] = $this->getTranslator()->trans(
-                    'Address successfully deleted!',
+                    'Address successfully deleted.',
                     [],
                     'Shop.Notifications.Success'
                 );
@@ -261,14 +261,10 @@ class CheckoutAddressesStepCore extends AbstractCheckoutStep
 
         /** @var OrderControllerCore $controller */
         $controller = $this->context->controller;
-        if (isset($controller)) {
+        if ($controller instanceof OrderController) {
             $warnings = $controller->checkoutWarning;
-            $addressWarning = isset($warnings['address'])
-                ? $warnings['address']
-                : false;
-            $invalidAddresses = isset($warnings['invalid_addresses'])
-                ? $warnings['invalid_addresses']
-                : [];
+            $addressWarning = $warnings['address'] ?? false;
+            $invalidAddresses = $warnings['invalid_addresses'] ?? [];
 
             $errors = [];
             if (in_array($idAddressDelivery, $invalidAddresses)) {

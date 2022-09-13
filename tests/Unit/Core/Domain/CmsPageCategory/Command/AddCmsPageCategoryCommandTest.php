@@ -64,6 +64,7 @@ class AddCmsPageCategoryCommandTest extends TestCase
             [
                 1 => 'hashtag',
             ],
+            /* @phpstan-ignore-next-line */
             $incorrectId,
             true
         );

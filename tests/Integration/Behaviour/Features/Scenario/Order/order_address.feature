@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags order-address
-@reset-database-before-feature
+@restore-all-tables-before-feature
 @order-address
 @clear-cache-before-feature
 Feature: Order from Back Office (BO)

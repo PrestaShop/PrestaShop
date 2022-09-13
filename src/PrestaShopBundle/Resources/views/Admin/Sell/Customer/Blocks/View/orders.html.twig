@@ -52,101 +52,85 @@
         </div>
       </div>
 
-      <div class="row">
-        <div class="col">
-          {% if validOrdersCount %}
-            <table class="table">
-              <thead>
-              <tr>
-                <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
-                <th>{{ 'Date'|trans({}, 'Admin.Global') }}</th>
-                <th>{{ 'Payment'|trans({}, 'Admin.Global') }}</th>
-                <th>{{ 'Status'|trans({}, 'Admin.Global') }}</th>
-                <th>{{ 'Products'|trans({}, 'Admin.Global') }}</th>
-                <th>{{ 'Total spent'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
-                <th class="text-right">{{ 'Actions'|trans({}, 'Admin.Global') }}</th>
+      {% if validOrdersCount %}
+        <table class="table">
+          <thead>
+            <tr>
+              <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
+              <th>{{ 'Date'|trans({}, 'Admin.Global') }}</th>
+              <th>{{ 'Payment'|trans({}, 'Admin.Global') }}</th>
+              <th>{{ 'Status'|trans({}, 'Admin.Global') }}</th>
+              <th>{{ 'Products'|trans({}, 'Admin.Global') }}</th>
+              <th>{{ 'Total spent'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
+              <th class="text-right">{{ 'Actions'|trans({}, 'Admin.Global') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for order in customerInformation.ordersInformation.validOrders %}
+              {% set orderViewUrl = getAdminLink('AdminOrders', true, {'id_order': order.orderId, 'vieworder': 1}) %}
+
+              <tr class="customer-valid-order">
+                <td class="customer-valid-order-id js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderId }}</td>
+                <td class="customer-valid-order-date js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderPlacedDate }}</td>
+                <td class="customer-valid-order-payment js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.paymentMethodName }}</td>
+                <td class="customer-valid-order-status js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderStatus }}</td>
+                <td class="customer-valid-order-products js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderProductsCount }}</td>
+                <td class="customer-valid-order-total js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.totalPaid }}</td>
+                <td class="customer-valid-order-actions text-right">
+                  <div class="btn-group-action">
+                    <div class="btn-group">
+                      <a href="{{ orderViewUrl }}" class="btn tooltip-link dropdown-item view-link" data-toggle="pstooltip" data-placement="top" data-original-title="{{ 'View'|trans({}, 'Admin.Actions') }}">
+                        <i class="material-icons">zoom_in</i>
+                      </a>
+                    </div>
+                  </div>
+                </td>
               </tr>
-              </thead>
-              <tbody>
-              {% for order in customerInformation.ordersInformation.validOrders %}
-                {% set orderViewUrl = getAdminLink('AdminOrders', true, {'id_order': order.orderId, 'vieworder': 1}) %}
+            {% endfor %}
+          </tbody>
+        </table>
+      {% endif %}
 
-                <tr class="customer-valid-order">
-                  <td class="customer-valid-order-id js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderId }}</td>
-                  <td class="customer-valid-order-date js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderPlacedDate }}</td>
-                  <td class="customer-valid-order-payment js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.paymentMethodName }}</td>
-                  <td class="customer-valid-order-status js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderStatus }}</td>
-                  <td class="customer-valid-order-products js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderProductsCount }}</td>
-                  <td class="customer-valid-order-total js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.totalPaid }}</td>
-                  <td class="customer-valid-order-actions text-right">
-                    <div class="btn-group-action">
-                      <div class="btn-group">
-                        <a href="{{ orderViewUrl }}"
-                           class="btn tooltip-link dropdown-item view-link"
-                           data-toggle="pstooltip"
-                           data-placement="top"
-                           data-original-title="{{ 'View'|trans({}, 'Admin.Actions') }}"
-                        >
-                          <i class="material-icons">zoom_in</i>
-                        </a>
-                      </div>
+
+      {% if invalidOrdersCount %}
+        <table class="table">
+          <thead>
+            <tr>
+              <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
+              <th>{{ 'Date'|trans({}, 'Admin.Global') }}</th>
+              <th>{{ 'Payment'|trans({}, 'Admin.Global') }}</th>
+              <th>{{ 'Status'|trans({}, 'Admin.Global') }}</th>
+              <th>{{ 'Products'|trans({}, 'Admin.Global') }}</th>
+              <th>{{ 'Total spent'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
+              <th class="text-right">{{ 'Actions'|trans({}, 'Admin.Global') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for order in customerInformation.ordersInformation.invalidOrders %}
+              {% set orderViewUrl = getAdminLink('AdminOrders', true, {'id_order': order.orderId, 'vieworder': 1}) %}
+
+              <tr class="customer-invalid-order">
+                <td class="customer-invalid-order-id js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderId }}</td>
+                <td class="customer-invalid-order-date js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderPlacedDate }}</td>
+                <td class="customer-invalid-order-payment js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.paymentMethodName }}</td>
+                <td class="customer-invalid-order-status js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderStatus }}</td>
+                <td class="customer-invalid-order-products js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderProductsCount }}</td>
+                <td class="customer-invalid-order-total js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.totalPaid }}</td>
+                <td class="text-right customer-invalid-order-actions">
+                  <div class="btn-group-action">
+                    <div class="btn-group">
+                      <a href="{{ orderViewUrl }}" class="btn tooltip-link dropdown-item grid-view-row-link" data-toggle="pstooltip" data-placement="top" data-original-title="{{ 'View'|trans({}, 'Admin.Actions') }}">
+                        <i class="material-icons">zoom_in</i>
+                      </a>
                     </div>
-                  </td>
-                </tr>
-              {% endfor %}
-              </tbody>
-            </table>
-          {% endif %}
-        </div>
-      </div>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% endif %}
 
-      <div class="row">
-        <div class="col">
-          {% if invalidOrdersCount %}
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>{{ 'ID'|trans({}, 'Admin.Global') }}</th>
-                  <th>{{ 'Date'|trans({}, 'Admin.Global') }}</th>
-                  <th>{{ 'Payment'|trans({}, 'Admin.Global') }}</th>
-                  <th>{{ 'Status'|trans({}, 'Admin.Global') }}</th>
-                  <th>{{ 'Products'|trans({}, 'Admin.Global') }}</th>
-                  <th>{{ 'Total spent'|trans({}, 'Admin.Orderscustomers.Feature') }}</th>
-                  <th class="text-right">{{ 'Actions'|trans({}, 'Admin.Global') }}</th>
-                </tr>
-              </thead>
-              <tbody>
-              {% for order in customerInformation.ordersInformation.invalidOrders %}
-                {% set orderViewUrl = getAdminLink('AdminOrders', true, {'id_order': order.orderId, 'vieworder': 1}) %}
-
-                <tr class="customer-invalid-order">
-                  <td class="customer-invalid-order-id js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderId }}</td>
-                  <td class="customer-invalid-order-date js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderPlacedDate }}</td>
-                  <td class="customer-invalid-order-payment js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.paymentMethodName }}</td>
-                  <td class="customer-invalid-order-status js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderStatus }}</td>
-                  <td class="customer-invalid-order-products js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.orderProductsCount }}</td>
-                  <td class="customer-invalid-order-total js-linkable-item cursor-pointer" data-linkable-href="{{ orderViewUrl }}">{{ order.totalPaid }}</td>
-                  <td class="text-right customer-invalid-order-actions">
-                    <div class="btn-group-action">
-                      <div class="btn-group">
-                        <a href="{{ orderViewUrl }}"
-                           class="btn tooltip-link dropdown-item grid-view-row-link"
-                           data-toggle="pstooltip"
-                           data-placement="top"
-                           data-original-title="{{ 'View'|trans({}, 'Admin.Actions') }}"
-                        >
-                          <i class="material-icons">zoom_in</i>
-                        </a>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-              {% endfor %}
-              </tbody>
-            </table>
-          {% endif %}
-        </div>
-      </div>
     {% else %}
       <p class="text-muted text-center">
         {{ '%firstname% %lastname% has not placed any orders yet'|trans({'%firstname%': customerInformation.personalInformation.firstName, '%lastname%': customerInformation.personalInformation.lastName}, 'Admin.Orderscustomers.Feature') }}

@@ -1,0 +1,43 @@
+admin_products_specific_prices_list:
+  path: /{productId}/specific-prices/list
+  methods: [ GET ]
+  options:
+    expose: true
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\SpecificPriceController::listAction
+    _legacy_controller: AdminProducts
+  requirements:
+    productId: \d+
+
+admin_products_specific_prices_create:
+  path: /{productId}/specific-prices/create
+  methods: [ GET, POST ]
+  options:
+    expose: true
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\SpecificPriceController::createAction
+    _legacy_controller: AdminProducts
+  requirements:
+    productId: \d+
+
+admin_products_specific_prices_edit:
+  path: /specific-prices/{specificPriceId}/edit
+  methods: [ GET, POST ]
+  options:
+    expose: true
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\SpecificPriceController::editAction
+    _legacy_controller: AdminProducts
+  requirements:
+    specificPriceId: \d+
+
+admin_products_specific_prices_delete:
+  path: /specific-prices/{specificPriceId}/delete
+  methods: [ DELETE ]
+  options:
+    expose: true
+  defaults:
+    _controller: PrestaShopBundle\Controller\Admin\Sell\Catalog\Product\SpecificPriceController::deleteAction
+    _legacy_controller: AdminProducts
+  requirements:
+    specificPriceId: \d+

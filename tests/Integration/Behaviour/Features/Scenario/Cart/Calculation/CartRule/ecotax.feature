@@ -1,6 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s cart --tags cart-calculation-cartrule-ecotax
 
-@reset-database-before-feature
+@restore-all-tables-before-feature
 @clear-cache-before-scenario
 @cart-calculation-cartrule-ecotax
 Feature: Cart rule (percent) calculation with one cart rule

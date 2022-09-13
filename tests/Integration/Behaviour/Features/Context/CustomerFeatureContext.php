@@ -32,7 +32,9 @@ use Context;
 use Country;
 use Customer;
 use Exception;
+use PrestaShop\PrestaShop\Adapter\ServiceLocator;
 use PrestaShop\PrestaShop\Adapter\Validate;
+use PrestaShop\PrestaShop\Core\Crypto\Hashing;
 use RuntimeException;
 
 class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
@@ -49,10 +51,13 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function createCustomer($customerName, $customerEmail)
     {
+        /** @var Hashing $crypto */
+        $crypto = ServiceLocator::get(Hashing::class);
+
         $customer = new Customer();
         $customer->firstname = 'fake';
         $customer->lastname = 'fake';
-        $customer->passwd = 'fakefake';
+        $customer->passwd = $crypto->hash('Correct Horse Battery Staple');
         $customer->email = $customerEmail;
         $customer->id_shop = Context::getContext()->shop->id;
         $customer->add();
@@ -66,13 +71,15 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
     public function customerExists($reference, $customerEmail)
     {
         $data = Customer::getCustomersByEmail($customerEmail);
-        $customer = new Customer($data[0]['id_customer']);
+        if (isset($data[0]['id_customer'])) {
+            $customer = new Customer($data[0]['id_customer']);
+        }
 
-        if (!Validate::isLoadedObject($customer)) {
+        if (empty($customer) || !Validate::isLoadedObject($customer)) {
             throw new Exception(sprintf('Customer with email "%s" does not exist.', $customerEmail));
         }
 
-        SharedStorage::getStorage()->set($reference, $customer->id);
+        SharedStorage::getStorage()->set($reference, (int) $customer->id);
     }
 
     /**
@@ -165,19 +172,19 @@ class CustomerFeatureContext extends AbstractPrestaShopFeatureContext
     }
 
     /**
-     * @param $customerName
+     * @param string $customerName
      */
-    public function checkCustomerWithNameExists($customerName)
+    public function checkCustomerWithNameExists(string $customerName): void
     {
         $this->checkFixtureExists($this->customers, 'Customer', $customerName);
     }
 
     /**
-     * @param $customerName
+     * @param string $customerName
      *
      * @return Customer
      */
-    public function getCustomerWithName($customerName)
+    public function getCustomerWithName(string $customerName): Customer
     {
         return $this->customers[$customerName];
     }

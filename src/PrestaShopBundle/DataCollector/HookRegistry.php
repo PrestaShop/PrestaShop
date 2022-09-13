@@ -27,7 +27,7 @@
 namespace PrestaShopBundle\DataCollector;
 
 use ModuleCore;
-use PrestaShop\PrestaShop\Core\Module\ModuleInterface;
+use PrestaShop\PrestaShop\Core\Module\Legacy\ModuleInterface;
 
 /**
  * Collect all hooks information dispatched during a request.
@@ -59,7 +59,7 @@ final class HookRegistry
      * @param string $hookName
      * @param array $hookArguments
      * @param string $file filepath where the "Hook::exec" call have been done
-     * @param string $line position in file where the "Hook::exec" call have been done
+     * @param int $line position in file where the "Hook::exec" call have been done
      */
     public function selectHook($hookName, $hookArguments, $file, $line)
     {

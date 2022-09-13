@@ -25,6 +25,7 @@
  */
 class SitemapControllerCore extends FrontController
 {
+    /** @var string */
     public $php_self = 'sitemap';
 
     /**
@@ -132,7 +133,7 @@ class SitemapControllerCore extends FrontController
         $links[] = [
             'id' => 'register-page',
             'label' => $this->trans('Create new account', [], 'Shop.Theme.Global'),
-            'url' => $this->context->link->getPageLink('authentication', null, null, ['create_account' => 1]),
+            'url' => $this->context->link->getPageLink('registration'),
         ];
 
         return $links;
@@ -151,12 +152,15 @@ class SitemapControllerCore extends FrontController
             ],
         ];
 
-        if (Configuration::isCatalogMode() && Configuration::get('PS_DISPLAY_BEST_SELLERS')) {
-            $links[] = [
-                'id' => 'best-sales-page',
-                'label' => $this->trans('Best sellers', [], 'Shop.Theme.Catalog'),
-                'url' => $this->context->link->getPageLink('best-sales'),
-            ];
+        if (!Configuration::isCatalogMode()) {
+            if (Configuration::get('PS_DISPLAY_BEST_SELLERS')) {
+                $links[] = [
+                    'id' => 'best-sales-page',
+                    'label' => $this->trans('Best sellers', [], 'Shop.Theme.Catalog'),
+                    'url' => $this->context->link->getPageLink('best-sales'),
+                ];
+            }
+
             $links[] = [
                 'id' => 'prices-drop-page',
                 'label' => $this->trans('Price drop', [], 'Shop.Theme.Catalog'),

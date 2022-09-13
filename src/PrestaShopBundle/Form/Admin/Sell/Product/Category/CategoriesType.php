@@ -28,26 +28,70 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\Category;
 
+use PrestaShop\PrestaShop\Core\Form\ConfigurableFormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
-use PrestaShopBundle\Form\Admin\Type\UnavailableType;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class CategoriesType extends TranslatorAwareType
 {
+    /**
+     * @var ConfigurableFormChoiceProviderInterface
+     */
+    private $defaultCategoryChoiceProvider;
+
+    /**
+     * @var EventSubscriberInterface
+     */
+    private $eventSubscriber;
+
+    /**
+     * @param TranslatorInterface $translator
+     * @param array $locales
+     * @param ConfigurableFormChoiceProviderInterface $defaultCategoryChoiceProvider
+     * @param EventSubscriberInterface $eventSubscriber
+     */
+    public function __construct(
+        TranslatorInterface $translator,
+        array $locales,
+        ConfigurableFormChoiceProviderInterface $defaultCategoryChoiceProvider,
+        EventSubscriberInterface $eventSubscriber
+    ) {
+        parent::__construct($translator, $locales);
+        $this->defaultCategoryChoiceProvider = $defaultCategoryChoiceProvider;
+        $this->eventSubscriber = $eventSubscriber;
+    }
+
     /**
      * {@inheritDoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('product_categories', CategoriesCollectionType::class)
-            ->add('create_category', UnavailableType::class, [
-                'label' => $this->trans('Create a new category', 'Admin.Catalog.Feature'),
-                'label_tag_name' => 'h2',
-                'label_help_box' => $this->trans('If you want to quickly create a new category, you can do it here. Don’t forget to then go to the Categories page to fill in the needed details (description, image, etc.). A new category will not automatically appear in your shop\'s menu, please read the Help about it.', 'Admin.Catalog.Help'),
+            ->add('product_categories', CategoryTagsCollectionType::class)
+            ->add('default_category_id', ChoiceType::class, [
+                'constraints' => [],
+                'choices' => $this->defaultCategoryChoiceProvider->getChoices(['product_id' => $options['product_id']]),
+                //@todo: wording - default or main?
+                'label' => $this->trans('Default category', 'Admin.Catalog.Feature'),
+                'attr' => [
+                    'data-toggle' => 'select2',
+                    'data-minimumResultsForSearch' => '7',
+                ],
+            ])
+            ->add('add_categories_btn', ButtonType::class, [
+                'label' => $this->trans('Add categories', 'Admin.Catalog.Feature'),
+                'attr' => [
+                    'class' => 'add-categories-btn btn-outline-primary',
+                ],
             ])
         ;
+
+        $builder->addEventSubscriber($this->eventSubscriber);
     }
 
     /**
@@ -56,9 +100,16 @@ class CategoriesType extends TranslatorAwareType
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-        $resolver->setDefaults([
-            'label' => false,
-            'required' => false,
-        ]);
+        $resolver
+            ->setDefaults([
+                'label' => false,
+                'required' => false,
+                'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/categories.html.twig',
+            ])
+            ->setRequired([
+                'product_id',
+            ])
+            ->setAllowedTypes('product_id', 'int')
+        ;
     }
 }

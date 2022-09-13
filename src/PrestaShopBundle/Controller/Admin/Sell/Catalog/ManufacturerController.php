@@ -132,7 +132,7 @@ class ManufacturerController extends FrameworkBundleAdminController
      * Show & process manufacturer creation.
      *
      * @AdminSecurity(
-     *     "is_granted(['create'], request.get('_legacy_controller'))"
+     *     "is_granted('create', request.get('_legacy_controller'))"
      * )
      *
      * @return Response
@@ -146,7 +146,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             $result = $this->getFormHandler()->handle($manufacturerForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_manufacturers_index');
             }
@@ -164,7 +164,7 @@ class ManufacturerController extends FrameworkBundleAdminController
     /**
      * View single manufacturer details
      *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param int $manufacturerId
      *
@@ -198,7 +198,7 @@ class ManufacturerController extends FrameworkBundleAdminController
      * Show & process manufacturer editing.
      *
      * @AdminSecurity(
-     *     "is_granted(['update'], request.get('_legacy_controller'))"
+     *     "is_granted('update', request.get('_legacy_controller'))"
      * )
      *
      * @param int $manufacturerId
@@ -217,7 +217,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             $result = $this->getFormHandler()->handleFor((int) $manufacturerId, $manufacturerForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_manufacturers_index');
             }
@@ -258,7 +258,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new DeleteManufacturerCommand((int) $manufacturerId));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (ManufacturerException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -283,7 +283,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new BulkDeleteManufacturerCommand($manufacturerIds));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (ManufacturerException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -377,7 +377,7 @@ class ManufacturerController extends FrameworkBundleAdminController
      * Export filtered manufacturers.
      *
      * @AdminSecurity(
-     *     "is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     redirectRoute="admin_manufacturers_index"
      * )
      * @DemoRestricted(redirectRoute="admin_manufacturers_index")
@@ -435,7 +435,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new DeleteAddressCommand((int) $addressId));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (AddressException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -448,7 +448,7 @@ class ManufacturerController extends FrameworkBundleAdminController
      * Export filtered manufacturer addresses.
      *
      * @AdminSecurity(
-     *     "is_granted(['read', 'update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     "is_granted('read', request.get('_legacy_controller')) && is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     redirectRoute="admin_manufacturers_index"
      * )
      * @DemoRestricted(redirectRoute="admin_manufacturers_index")
@@ -507,7 +507,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new BulkDeleteAddressCommand($addressIds));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (AddressException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));
@@ -541,7 +541,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             $result = $addressFormHandler->handle($addressForm);
 
             if (null !== $result->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_manufacturers_index');
             }
@@ -591,7 +591,7 @@ class ManufacturerController extends FrameworkBundleAdminController
             $result = $addressFormHandler->handleFor($addressId, $addressForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_manufacturers_index');
             }
@@ -681,7 +681,7 @@ class ManufacturerController extends FrameworkBundleAdminController
                         $iniConfig->getUploadMaxSizeInBytes(),
                     ]),
                 UploadedImageConstraintException::UNRECOGNIZED_FORMAT => $this->trans(
-                    'Image format not recognized, allowed formats are: .gif, .jpg, .png',
+                    'Image format not recognized, allowed formats are: .gif, .jpg, .png, .webp',
                     'Admin.Notifications.Error'
                 ),
             ],

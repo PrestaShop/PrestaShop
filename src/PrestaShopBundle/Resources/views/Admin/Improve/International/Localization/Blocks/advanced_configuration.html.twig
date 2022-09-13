@@ -24,7 +24,7 @@
  *#}
 
 {% trans_default_domain 'Admin.International.Feature' %}
-{% form_theme advancedForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
+{% form_theme advancedForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
 {% block localization_advanced_configuration %}
   <div class="card">
@@ -32,8 +32,8 @@
       <i class="material-icons">settings</i> {{ 'Advanced'|trans({}, 'Admin.Global') }}
     </h3>
 
-    <div class="card-block row">
-      <div class="card-text">
+    <div class="card-body">
+      <div class="form-wrapper">
         {{ form_widget(advancedForm) }}
       </div>
     </div>

@@ -33,26 +33,26 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class LangRepositoryTest extends KernelTestCase
 {
-    const SERVICE_NAME = 'prestashop.core.admin.lang.repository';
+    private const SERVICE_NAME = 'prestashop.core.admin.lang.repository';
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         self::bootKernel();
     }
 
-    public function testInterface()
+    public function testInterface(): void
     {
         /** @var LanguageRepositoryInterface $languageRepository */
-        $languageRepository = self::$kernel->getContainer()->get(static::SERVICE_NAME);
+        $languageRepository = self::$kernel->getContainer()->get(self::SERVICE_NAME);
         $this->assertNotNull($languageRepository);
         $this->assertInstanceOf(LanguageRepositoryInterface::class, $languageRepository);
     }
 
-    public function testGetByLocale()
+    public function testGetByLocale(): void
     {
         /** @var LanguageRepositoryInterface $languageRepository */
-        $languageRepository = self::$kernel->getContainer()->get(static::SERVICE_NAME);
+        $languageRepository = self::$kernel->getContainer()->get(self::SERVICE_NAME);
         $availableLocales = ['en-US'];
         foreach ($availableLocales as $availableLocale) {
             $language = $languageRepository->getOneByLocale($availableLocale);
@@ -67,10 +67,10 @@ class LangRepositoryTest extends KernelTestCase
         }
     }
 
-    public function testGetByIsoCode()
+    public function testGetByIsoCode(): void
     {
         /** @var LanguageRepositoryInterface $languageRepository */
-        $languageRepository = self::$kernel->getContainer()->get(static::SERVICE_NAME);
+        $languageRepository = self::$kernel->getContainer()->get(self::SERVICE_NAME);
         $availableLocales = ['en'];
         foreach ($availableLocales as $availableLocale) {
             $language = $languageRepository->getOneByIsoCode($availableLocale);
@@ -78,23 +78,18 @@ class LangRepositoryTest extends KernelTestCase
             $this->assertInstanceOf(LanguageInterface::class, $language);
         }
 
-        $notAvailableLocales = ['en-UK', 'fr'];
+        $notAvailableLocales = ['en-UK', 'jp'];
         foreach ($notAvailableLocales as $notAvailableLocale) {
             $language = $languageRepository->getOneByIsoCode($notAvailableLocale);
             $this->assertNull($language);
         }
     }
 
-    public function testGetLocaleByIsoCode()
+    public function testGetLocaleByIsoCode(): void
     {
         /** @var LangRepository $languageRepository */
-        $languageRepository = self::$kernel->getContainer()->get(static::SERVICE_NAME);
+        $languageRepository = self::$kernel->getContainer()->get(self::SERVICE_NAME);
         $locale = $languageRepository->getLocaleByIsoCode('en');
         $this->assertEquals('en-US', $locale);
-    }
-
-    protected function tearDown()
-    {
-        self::$kernel->shutdown();
     }
 }

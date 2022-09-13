@@ -4,11 +4,17 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const basicHelper = require('@utils/basicHelper');
+const testContext = require('@utils/testContext');
 
-// Import pages
+// Import login steps
+const loginCommon = require('@commonTests/BO/loginBO');
+
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const emailPage = require('@pages/BO/advancedParameters/email');
+
+// Import FO pages
 const foLoginPage = require('@pages/FO/login');
 const homePage = require('@pages/FO/home');
 const productPage = require('@pages/FO/product');
@@ -19,9 +25,6 @@ const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 // Import data
 const {PaymentMethods} = require('@data/demo/paymentMethods');
 const {DefaultCustomer} = require('@data/demo/customer');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_advancedParameters_email_sortAndPagination';
 
@@ -34,7 +37,7 @@ Pagination
 Sort by Id, Recipient, Template, Language, Subject, Send
 Delete by bulk actions
  */
-describe('Sort and pagination emails', async () => {
+describe('BO - Advanced Parameters - E-mail : Sort and pagination emails', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -51,7 +54,7 @@ describe('Sort and pagination emails', async () => {
 
   //  Erase list of mails
   describe('Erase emails', async () => {
-    it('should go to \'Advanced parameters > E-mail\' page', async function () {
+    it('should go to \'Advanced Parameters > E-mail\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEmailPageToEraseEmails', baseContext);
 
       await dashboardPage.goToSubMenu(
@@ -78,7 +81,7 @@ describe('Sort and pagination emails', async () => {
   });
 
   // 1 - Create 6 orders to have 12 emails in the list
-  describe('Create 6 orders to have email logs', async () => {
+  describe('Create 6 orders to have emails in the table', async () => {
     it('should go to FO page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToFO', baseContext);
 
@@ -152,14 +155,22 @@ describe('Sort and pagination emails', async () => {
       const isCustomerConnected = await orderConfirmationPage.isCustomerConnected(page);
       await expect(isCustomerConnected, 'Customer is connected').to.be.false;
     });
+
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goBackToBO', baseContext);
+
+      // Go Back to BO
+      page = await orderConfirmationPage.closePage(browserContext, page, 0);
+
+      const pageTitle = await emailPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(emailPage.pageTitle);
+    });
   });
 
   // 2 : Pagination
   describe('Pagination next and previous', async () => {
     it('should go to \'Advanced parameters > E-mail\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEmailPage', baseContext);
-
-      page = await orderConfirmationPage.closePage(browserContext, page, 0);
 
       await dashboardPage.goToSubMenu(
         page,
@@ -173,7 +184,7 @@ describe('Sort and pagination emails', async () => {
       await expect(pageTitle).to.contains(emailPage.pageTitle);
     });
 
-    it('should change the item number to 10 per page', async function () {
+    it('should change the items number to 10 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo10', baseContext);
 
       const paginationNumber = await emailPage.selectPaginationLimit(page, '10');
@@ -194,7 +205,7 @@ describe('Sort and pagination emails', async () => {
       expect(paginationNumber).to.contains('(page 1 / 2)');
     });
 
-    it('should change the item number to 50 per page', async function () {
+    it('should change the items number to 50 per page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'changeItemNumberTo20', baseContext);
 
       const paginationNumber = await emailPage.selectPaginationLimit(page, '20');
@@ -278,9 +289,9 @@ describe('Sort and pagination emails', async () => {
     },
   ];
 
-  describe('Sort emails table', async () => {
+  describe('Sort E-mail table', async () => {
     tests.forEach((test) => {
-      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' And check result`, async function () {
+      it(`should sort by '${test.args.sortBy}' '${test.args.sortDirection}' and check result`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', test.args.testIdentifier, baseContext);
 
         let nonSortedTable = await emailPage.getAllRowsColumnContent(page, test.args.sortBy);
@@ -293,7 +304,7 @@ describe('Sort and pagination emails', async () => {
           sortedTable = await sortedTable.map(text => parseFloat(text));
         }
 
-        const expectedResult = await emailPage.sortArray(nonSortedTable, test.args.isFloat);
+        const expectedResult = await basicHelper.sortArray(nonSortedTable, test.args.isFloat);
 
         if (test.args.sortDirection === 'asc') {
           await expect(sortedTable).to.deep.equal(expectedResult);

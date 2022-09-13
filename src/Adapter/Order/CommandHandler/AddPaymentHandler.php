@@ -69,7 +69,8 @@ final class AddPaymentHandler extends AbstractOrderHandler implements AddPayment
             $command->getPaymentTransactionId(),
             $currency,
             $command->getPaymentDate()->format('Y-m-d H:i:s'),
-            $orderInvoice
+            $orderInvoice,
+            $command->getEmployeeId()->getValue()
         );
 
         if (!$paymentAdded) {

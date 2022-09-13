@@ -43,23 +43,15 @@ final class RequestSqlQueryBuilder extends AbstractDoctrineQueryBuilder
     private $requestSqlTable;
 
     /**
-     * @var DoctrineSearchCriteriaApplicator
-     */
-    private $searchCriteriaApplicator;
-
-    /**
      * @param Connection $connection
      * @param string $dbPrefix
-     * @param DoctrineSearchCriteriaApplicator $searchCriteriaApplicator
      */
     public function __construct(
         Connection $connection,
-        $dbPrefix,
-        DoctrineSearchCriteriaApplicator $searchCriteriaApplicator
+        $dbPrefix
     ) {
         parent::__construct($connection, $dbPrefix);
 
-        $this->searchCriteriaApplicator = $searchCriteriaApplicator;
         $this->requestSqlTable = $dbPrefix . 'request_sql';
     }
 

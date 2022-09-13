@@ -27,7 +27,7 @@
 namespace PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler;
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierInfo;
+use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
 
 /**
  * Defines contract to handle @see GetCombinationSuppliers query
@@ -37,7 +37,7 @@ interface GetCombinationSuppliersHandlerInterface
     /**
      * @param GetCombinationSuppliers $query
      *
-     * @return ProductSupplierInfo[]
+     * @return ProductSupplierForEditing[]
      */
     public function handle(GetCombinationSuppliers $query): array;
 }

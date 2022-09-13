@@ -24,62 +24,77 @@
  */
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const keepLicense = require('uglify-save-license');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const FontPreloadPlugin = require('webpack-font-preload-plugin');
+const CssoWebpackPlugin = require('csso-webpack-plugin').default;
+const LicensePlugin = require('webpack-license-plugin');
+const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 
 module.exports = (env, argv) => {
   const devMode = argv.mode === 'development';
 
   const config = {
-    entry: [
-      './js/theme.js',
-    ],
+    entry: {
+      theme: './js/theme.js',
+      rtl: './scss/rtl.scss',
+    },
     output: {
       path: path.resolve(__dirname, 'public'),
       publicPath: '',
-      filename: 'bundle.js',
+      filename: '[name].bundle.js',
     },
     module: {
-      rules: [{
-        test: path.join(__dirname, 'js'),
-        use: [{
-          loader: 'babel-loader',
-          options: {
-            presets: [
-              ['@babel/preset-env', {modules: false}],
-            ],
+      rules: [
+        {
+          test: path.join(__dirname, 'js'),
+          use: [
+            {
+              loader: 'babel-loader',
+              options: {
+                presets: [['@babel/preset-env', {modules: false}]],
+              },
+            },
+          ],
+        },
+        {
+          test: /\.(scss|sass|css)$/,
+          use: [
+            {
+              loader: MiniCssExtractPlugin.loader,
+            },
+            {
+              loader: 'css-loader',
+            },
+            {
+              loader: 'postcss-loader',
+            },
+            {
+              loader: 'sass-loader',
+            },
+          ],
+        },
+        {
+          test: /\.(jpg|png|woff2?|eot|otf|ttf|svg|gif)$/,
+          type: 'asset/resource',
+          generator: {
+            filename: '[hash][ext]',
           },
-        }],
-      }, {
-        test: /\.(scss|sass|css)$/,
-        use: [
-          MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
+          exclude: /MaterialIcons-Regular\.(woff2?|ttf)$/,
+        },
+        {
+          test: /MaterialIcons-Regular\.(woff2?|ttf)$/,
+          type: 'asset/resource',
+          generator: {
+            filename: '[hash].preload[ext]',
           },
-          {
-            loader: 'postcss-loader',
-          },
-          {
-            loader: 'sass-loader',
-          },
-        ],
-      }, {
-        test: /.(gif|png|woff(2)?|eot|ttf|svg)(\?[a-z0-9=\.]+)?$/,
-        use: [{
-          loader: 'file-loader',
-          options: {
-            name: '[hash].[ext]',
-          },
-        }],
-      }],
+        },
+      ],
     },
-    optimization: {
-
-    },
+    optimization: {},
     plugins: [
+      new RemoveEmptyScriptsPlugin(),
       new CleanWebpackPlugin({
         root: path.resolve(__dirname),
         cleanOnceBeforeBuildPatterns: [
@@ -88,25 +103,44 @@ module.exports = (env, argv) => {
         ],
       }),
       new MiniCssExtractPlugin({
-        filename: 'theme.css',
+        filename: '[name].css',
+      }),
+      new HtmlWebpackPlugin({
+        filename: 'preload.tpl',
+        templateContent: '{{{preloadLinks}}}',
+        inject: false,
+      }),
+      new FontPreloadPlugin({
+        index: 'preload.tpl',
+        extensions: ['woff2'],
+        filter: /preload/,
+        // eslint-disable-next-line
+        replaceCallback: ({indexSource, linksAsString}) =>
+          indexSource.replace('{{{preloadLinks}}}', linksAsString.replace(/href="/g, 'href="{"`$admin_dir`"}')),
+      }),
+      new CssoWebpackPlugin({
+        forceMediaMerge: true,
+      }),
+      new LicensePlugin({
+        outputFilename: 'thirdPartyNotice.json',
+        licenseOverrides: {
+          'vazirmatn@32.102.0': 'OFL-1.1',
+        },
+        replenishDefaultLicenseTexts: true,
       }),
     ],
   };
 
   if (!devMode) {
-    config.optimization.minimizer = [
-      new UglifyJsPlugin({
-        sourceMap: false,
-        uglifyOptions: {
-          compress: {
-            drop_console: true,
-          },
-          output: {
-            comments: keepLicense,
-          },
-        },
-      }),
-    ];
+    config.optimization = {
+      minimize: true,
+      minimizer: [
+        new TerserPlugin({
+          parallel: true,
+          extractComments: false,
+        }),
+      ],
+    };
   }
 
   return config;

@@ -1,0 +1,304 @@
+/* stylelint-disable, declaration-no-important */
+
+@font-face {
+  font-family: Vazirmatn;
+  font-style: normal;
+  font-weight: 400;
+  src: url("~vazirmatn/fonts/webfonts/Vazirmatn-Regular.woff2") format("woff2");
+}
+@font-face {
+  font-family: Vazirmatn;
+  font-style: normal;
+  font-weight: 700;
+  src: url("~vazirmatn/fonts/webfonts/Vazirmatn-Bold.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: Vazirmatn;
+  font-style: normal;
+  font-weight: 300;
+  src: url("~vazirmatn/fonts/webfonts/Vazirmatn-Light.woff2") format("woff2");
+}
+
+body {
+  &.lang-fa,
+  &.lang-ar {
+    font-family: Vazirmatn, sans-serif;
+
+    .h1,
+    .h2,
+    .h3,
+    .h4,
+    .h5,
+    .h6,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    .modal-title,
+    .tooltip,
+    .popover,
+    .module-search-result-title {
+      font-family: Vazirmatn, sans-serif !important;
+    }
+
+    .serp-preview {
+      .serp-url,
+      .serp-title,
+      .serp-description {
+        font-family: Vazirmatn, sans-serif;
+      }
+    }
+  }
+}
+
+@keyframes showcase-img-appearance-rtl {
+  from {
+    opacity: 0;
+    transform: translate(-20px) translateX(-1);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate(0) translateX(-1);
+  }
+}
+
+.sidebar {
+  &.sidebar-right {
+    transform: translate(-100%, 0);
+  }
+}
+
+.employee-dropdown {
+  .dropdown-menu {
+    right: auto !important;
+    left: 0.3em !important;
+  }
+}
+
+.select2-container--open {
+  .select2-dropdown {
+    right: auto;
+    left: 0;
+  }
+}
+
+.notification-center {
+  .dropdown-menu {
+    right: auto;
+    left: 44px !important;
+  }
+}
+
+.popover {
+  right: auto;
+  left: 5px;
+  margin-right: 0;
+  margin-left: 8px;
+
+  .arrow {
+    right: auto !important;
+    left: -7px;
+    transform: scaleX(-1);
+  }
+}
+
+.img-rtl {
+  transform: scaleX(-1);
+  animation: showcase-img-appearance-rtl 0.4s;
+}
+
+#order_grid_table {
+  .dropdown-menu {
+    right: auto;
+    left: 0 !important;
+  }
+}
+
+.md-checkbox {
+  [type="checkbox"] {
+    &:checked {
+      + {
+        .md-checkbox-control {
+          &::after {
+            border-right-style: none;
+            border-left-style: solid;
+          }
+        }
+      }
+    }
+  }
+
+  .indeterminate {
+    + {
+      .md-checkbox-control {
+        &::after {
+          border-right-style: none;
+          border-left-style: solid;
+        }
+      }
+    }
+  }
+}
+
+.dropdown-menu {
+  &[x-placement="top-start"] {
+    right: 0;
+    left: auto !important;
+  }
+
+  &[x-placement="bottom-start"] {
+    right: 0;
+    left: auto !important;
+  }
+}
+
+.main-header {
+  #header-search-container {
+    .dropdown-menu {
+      right: auto;
+      left: 0 !important;
+    }
+  }
+}
+
+.bootstrap-datetimepicker-widget {
+  table {
+    th {
+      &.next,
+      &.prev {
+        transform: scaleX(-1);
+      }
+    }
+  }
+}
+
+.mce-window,
+.mce-menu {
+  right: auto !important;
+  left: 0;
+}
+
+ul {
+  &.category-tree {
+    .more {
+      >.checkbox {
+        &::before {
+          content: "\E5CB";
+        }
+      }
+
+      >.radio {
+        &::before {
+          content: "\E5CB";
+        }
+      }
+    }
+  }
+}
+
+.material-choice-tree-container {
+  ul {
+    &.choice-tree {
+      .collapsed {
+        >.checkbox {
+          &::before {
+            content: "\E5CB";
+          }
+        }
+
+        >.radio {
+          &::before {
+            content: "\E5CB";
+          }
+        }
+      }
+    }
+  }
+}
+
+.page-item {
+  &.next {
+    &.next {
+      .page-link {
+        &::after {
+          content: "\E314";
+        }
+      }
+    }
+
+    &.previous {
+      .page-link {
+        &::after {
+          content: "\E315";
+        }
+      }
+    }
+  }
+
+  &.previous {
+    &.next {
+      .page-link {
+        &::after {
+          content: "\E314";
+        }
+      }
+    }
+
+    &.previous {
+      .page-link {
+        &::after {
+          content: "\E315";
+        }
+      }
+    }
+  }
+}
+
+
+.combinations-filters-dropdown {
+  .dropdown-item {
+    .md-checkbox-container {
+      padding-right: 28px;
+      padding-left: 0 !important;
+    }
+  }
+}
+
+.mobile {
+  .content-div {
+    overflow: hidden;
+  }
+}
+
+.column-filters {
+  .datepicker {
+    flex-wrap: nowrap;
+  }
+}
+
+.table-responsive {
+  overflow-y: hidden;
+}
+
+.nav-bar-overflow {
+  .ps__rail-y {
+    left: 0 !important;
+  }
+}
+
+.material-icons {
+  &.rtl-flip {
+    transform: scaleX(-1);
+  }
+}
+
+.history-item {
+  i {
+    right: auto !important;
+    left: 1rem;
+  }
+}

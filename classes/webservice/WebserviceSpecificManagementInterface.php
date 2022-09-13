@@ -25,20 +25,20 @@
  */
 interface WebserviceSpecificManagementInterface
 {
-    public function setObjectOutput(WebserviceOutputBuilderCore $obj);
+    public function setObjectOutput(WebserviceOutputBuilder $obj);
 
     public function getObjectOutput();
 
-    public function setWsObject(WebserviceRequestCore $obj);
+    public function setWsObject(WebserviceRequest $obj);
 
     public function getWsObject();
 
     public function manage();
 
     /**
-     * This must be return an array with specific values as WebserviceRequest expects.
+     * This must be return a string with specific values as WebserviceRequest expects.
      *
-     * @return array
+     * @return string
      */
     public function getContent();
 }

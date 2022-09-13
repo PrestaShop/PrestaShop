@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s product --tags update-basic-information
-@reset-database-before-feature
+@restore-products-before-feature
 @update-basic-information
 Feature: Update product basic information from Back Office (BO)
   As a BO user
@@ -11,16 +11,16 @@ Feature: Update product basic information from Back Office (BO)
       | type        | standard  |
     And product "product1" type should be standard
     And product "product1" localized "name" should be:
-      | locale     | value     |
-      | en-US      | funny mug |
+      | locale | value     |
+      | en-US  | funny mug |
     When I update product "product1" basic information with following values:
       | name[en-US]              | photo of funny mug |
       | description[en-US]       | nice mug           |
       | description_short[en-US] | Just a nice mug    |
     Then product "product1" type should be standard
     And product "product1" localized "name" should be:
-      | locale     | value              |
-      | en-US      | photo of funny mug |
+      | locale | value              |
+      | en-US  | photo of funny mug |
     And product "product1" localized "description" should be:
       | locale | value    |
       | en-US  | nice mug |
@@ -91,3 +91,53 @@ Feature: Update product basic information from Back Office (BO)
     Then product "product1" localized "description" should be:
       | locale | value                |
       | en-US  | it's mug & it's nice |
+
+  Scenario: When product has empty names in some languages the default language is used to prefill them all
+    Given language "fr" with locale "fr-FR" exists
+    And I add product "empty_product" with following information:
+      | type | standard |
+    Then product "empty_product" localized "name" should be:
+      | locale | value |
+      | en-US  |       |
+      | fr-FR  |       |
+    When I update product "empty_product" basic information with following values:
+      | name[en-US] | english name |
+    Then product "empty_product" localized "name" should be:
+      | locale | value        |
+      | en-US  | english name |
+      | fr-FR  | english name |
+
+  Scenario: When product name is updated, empty friendly-urls are auto-filled
+    Given language "fr" with locale "fr-FR" exists
+    And I add product "empty_product2" with following information:
+      | type | standard |
+    Then product "empty_product2" localized "name" should be:
+      | locale | value |
+      | en-US  |       |
+      | fr-FR  |       |
+    And product "empty_product2" localized "link_rewrite" should be:
+      | locale | value |
+      | en-US  |       |
+      | fr-FR  |       |
+    When I update product "empty_product2" basic information with following values:
+      | name[en-US] | english name |
+      | name[fr-FR] | french name  |
+    Then product "empty_product2" localized "name" should be:
+      | locale | value        |
+      | en-US  | english name |
+      | fr-FR  | french name  |
+    And product "empty_product2" localized "link_rewrite" should be:
+      | locale | value        |
+      | en-US  | english-name |
+      | fr-FR  | french-name  |
+    When I update product "empty_product2" basic information with following values:
+      | name[en-US] | english name v2 |
+      | name[fr-FR] | french name v2  |
+    Then product "empty_product2" localized "name" should be:
+      | locale | value           |
+      | en-US  | english name v2 |
+      | fr-FR  | french name v2  |
+    And product "empty_product2" localized "link_rewrite" should be:
+      | locale | value        |
+      | en-US  | english-name |
+      | fr-FR  | french-name  |

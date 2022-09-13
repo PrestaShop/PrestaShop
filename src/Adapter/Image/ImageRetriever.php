@@ -34,6 +34,7 @@ use ImageType;
 use Language;
 use Link;
 use PrestaShopDatabaseException;
+use PrestaShopException;
 use Product;
 use Store;
 
@@ -144,7 +145,7 @@ class ImageRetriever
         if (get_class($object) === 'Product') {
             $type = 'products';
             $getImageURL = 'getImageLink';
-            $root = _PS_PROD_IMG_DIR_;
+            $root = _PS_PRODUCT_IMG_DIR_;
             $imageFolderPath = implode(DIRECTORY_SEPARATOR, [
                 rtrim($root, DIRECTORY_SEPARATOR),
                 rtrim(Image::getImgFolderStatic($id_image), DIRECTORY_SEPARATOR),
@@ -164,8 +165,7 @@ class ImageRetriever
         $urls = [];
         $image_types = ImageType::getImagesTypes($type, true);
 
-        $extPath = $imageFolderPath . DIRECTORY_SEPARATOR . 'fileType';
-        $ext = @file_get_contents($extPath) ?: 'jpg';
+        $ext = 'jpg';
 
         $mainImagePath = implode(DIRECTORY_SEPARATOR, [
             $imageFolderPath,
@@ -275,24 +275,29 @@ class ImageRetriever
      * @return array
      *
      * @throws PrestaShopDatabaseException
+     * @throws PrestaShopException if the image type is not found
      */
     public function getNoPictureImage(Language $language)
     {
         $urls = [];
         $type = 'products';
-        $image_types = ImageType::getImagesTypes($type, true);
+        $imageTypes = ImageType::getImagesTypes($type, true);
 
-        foreach ($image_types as $image_type) {
+        if (empty($imageTypes)) {
+            throw new PrestaShopException(sprintf('There is no image type defined for "%s".', $type));
+        }
+
+        foreach ($imageTypes as $imageType) {
             $url = $this->link->getImageLink(
                 '',
                 $language->iso_code . '-default',
-                $image_type['name']
+                $imageType['name']
             );
 
-            $urls[$image_type['name']] = [
+            $urls[$imageType['name']] = [
                 'url' => $url,
-                'width' => (int) $image_type['width'],
-                'height' => (int) $image_type['height'],
+                'width' => (int) $imageType['width'],
+                'height' => (int) $imageType['height'],
             ];
         }
 

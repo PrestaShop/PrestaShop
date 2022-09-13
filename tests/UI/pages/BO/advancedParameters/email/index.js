@@ -277,7 +277,7 @@ class Email extends BOBasePage {
    * @returns {Promise<string>}
    */
   async setLogEmails(page, toEnable) {
-    await page.check(this.logEmailsToggleInput(toEnable ? 1 : 0));
+    await this.setChecked(page, this.logEmailsToggleInput(toEnable ? 1 : 0));
     await page.$eval(this.saveEmailFormButton, el => el.click());
     await page.waitForNavigation();
 

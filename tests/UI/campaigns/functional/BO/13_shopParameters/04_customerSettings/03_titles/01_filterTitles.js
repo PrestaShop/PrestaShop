@@ -1,10 +1,13 @@
 require('module-alias/register');
 
-// Helpers to open and close browser
-const helper = require('@utils/helpers');
+const {expect} = require('chai');
 
-// Common tests login BO
-const loginCommon = require('@commonTests/loginBO');
+// Import utils
+const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -14,24 +17,15 @@ const titlesPage = require('@pages/BO/shopParameters/customerSettings/titles');
 // Import data
 const {Titles} = require('@data/demo/titles');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_shopParameters_customerSettings_titles_filterTitles';
-
-// Import expect from chai
-const {expect} = require('chai');
-
 
 // Browser and tab
 let browserContext;
 let page;
 
-
 let numberOfTitles = 0;
 
-
-describe('Filter titles by id, name and gender', async () => {
+describe('BO _ Shop Parameters - Customer Settings : Filter titles by id, name and gender', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -46,7 +40,7 @@ describe('Filter titles by id, name and gender', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to customer settings page', async function () {
+  it('should go to \'Shop Parameters > Customer Settings\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToCustomerSettingsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -61,7 +55,7 @@ describe('Filter titles by id, name and gender', async () => {
     await expect(pageTitle).to.contains(customerSettingPage.pageTitle);
   });
 
-  it('should go to titles page', async function () {
+  it('should go to \'Titles\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToTitlesPage', baseContext);
 
     await customerSettingPage.goToTitlesPage(page);
@@ -110,12 +104,7 @@ describe('Filter titles by id, name and gender', async () => {
         const numberOfTitlesAfterFilter = await titlesPage.getNumberOfElementInGrid(page);
         await expect(numberOfTitlesAfterFilter).to.be.at.most(numberOfTitles);
 
-        const textColumn = await titlesPage.getTextColumn(
-          page,
-          1,
-          test.args.filterBy,
-        );
-
+        const textColumn = await titlesPage.getTextColumn(page, 1, test.args.filterBy);
         await expect(textColumn).to.contains(test.args.filterValue);
       });
 

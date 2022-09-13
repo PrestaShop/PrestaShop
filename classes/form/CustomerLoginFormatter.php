@@ -60,8 +60,7 @@ class CustomerLoginFormatterCore implements FormFormatterInterface
                     'Password',
                     [],
                     'Shop.Forms.Labels'
-                ))
-                ->addConstraint('isPasswd'),
+                )),
         ];
     }
 }

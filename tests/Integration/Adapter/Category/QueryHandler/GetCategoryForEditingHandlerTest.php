@@ -33,7 +33,7 @@ use PrestaShop\PrestaShop\Core\Domain\Category\Exception\CategoryNotFoundExcepti
 use PrestaShop\PrestaShop\Core\Domain\Category\Query\GetCategoryForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Category\QueryResult\EditableCategory;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Tests\Resources\DatabaseDump;
 
 class GetCategoryForEditingHandlerTest extends KernelTestCase
 {
@@ -45,23 +45,41 @@ class GetCategoryForEditingHandlerTest extends KernelTestCase
      * @var int
      */
     private $rootCategory;
-    /**
-     * @var ContainerInterface|null
-     */
-    private $container;
+
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+        static::resetDatabase();
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+        static::resetDatabase();
+    }
+
+    protected static function resetDatabase(): void
+    {
+        DatabaseDump::restoreTables([
+            'category',
+            'category_lang',
+            'category_group',
+            'category_shop',
+            'layered_category',
+        ]);
+    }
 
     protected function setUp(): void
     {
         self::bootKernel();
-        $this->container = self::$kernel->getContainer();
 
-        $this->commandBus = $this->container->get('prestashop.core.command_bus');
-        $this->rootCategory = (int) $this->container->get('prestashop.adapter.legacy.configuration')->get('PS_ROOT_CATEGORY');
+        $this->commandBus = self::$container->get('prestashop.core.command_bus');
+        $this->rootCategory = (int) self::$container->get('prestashop.adapter.legacy.configuration')->get('PS_ROOT_CATEGORY');
     }
 
     public function testGetCategoryForEditingReturnsAnEditableCategoryIfExists(): void
     {
-        $categories = $this->container->get('prestashop.adapter.form.choice_provider.category_tree_choice_provider')->getChoices();
+        $categories = self::$container->get('prestashop.adapter.form.choice_provider.category_tree_choice_provider')->getChoices();
         $existingCategoryId = $categories[0]['id_category'];
         $command = new GetCategoryForEditing((int) $existingCategoryId);
 

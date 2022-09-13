@@ -29,13 +29,12 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\QueryHandler;
 
 use PrestaShop\PrestaShop\Adapter\Product\AbstractProductSupplierHandler;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Repository\CombinationRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Query\GetCombinationSuppliers;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryHandler\GetCombinationSuppliersHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 
-final class GetCombinationSuppliersHandler extends AbstractProductSupplierHandler implements GetCombinationSuppliersHandlerInterface
+class GetCombinationSuppliersHandler extends AbstractProductSupplierHandler implements GetCombinationSuppliersHandlerInterface
 {
     /**
      * @var CombinationRepository
@@ -43,23 +42,15 @@ final class GetCombinationSuppliersHandler extends AbstractProductSupplierHandle
     private $combinationRepository;
 
     /**
-     * @var ProductRepository
-     */
-    private $productRepository;
-
-    /**
      * @param ProductSupplierRepository $productSupplierRepository
      * @param CombinationRepository $combinationRepository
-     * @param ProductRepository $productRepository
      */
     public function __construct(
         ProductSupplierRepository $productSupplierRepository,
-        CombinationRepository $combinationRepository,
-        ProductRepository $productRepository
+        CombinationRepository $combinationRepository
     ) {
         parent::__construct($productSupplierRepository);
         $this->combinationRepository = $combinationRepository;
-        $this->productRepository = $productRepository;
     }
 
     /**

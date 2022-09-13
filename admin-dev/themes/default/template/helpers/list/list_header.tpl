@@ -59,12 +59,12 @@
 {/if}
 {* Display column names and arrows for ordering (ASC, DESC) *}
 {if $is_order_position}
-	<script type="text/javascript" src="../js/jquery/plugins/jquery.tablednd.js"></script>
+	<script type="text/javascript" src="{$js_dir}jquery/plugins/jquery.tablednd.js"></script>
 	<script type="text/javascript">
 		var come_from = '{$list_id|addslashes}';
 		var alternate = {if $order_way == 'DESC'}'1'{else}'0'{/if};
 	</script>
-	<script type="text/javascript" src="../js/admin/dnd.js"></script>
+	<script type="text/javascript" src="{$js_dir}admin/dnd.js"></script>
 {/if}
 {if !$simple_header}
 	<script type="text/javascript">
@@ -104,6 +104,9 @@
 
 {if isset($name_controller)}
 	{capture name=hookName assign=hookName}display{$name_controller|ucfirst}ListBefore{/capture}
+	{hook h=$hookName}
+{elseif isset($controller_name)}
+	{capture name=hookName assign=hookName}display{$controller_name|ucfirst}ListBefore{/capture}
 	{hook h=$hookName}
 {elseif isset($smarty.get.controller)}
 	{capture name=hookName assign=hookName}display{$smarty.get.controller|ucfirst|htmlentities}ListBefore{/capture}
@@ -291,17 +294,22 @@
 								{$params.title}
 							{/if}
 							{if (!isset($params.orderby) || $params.orderby) && !$simple_header && $show_filters}
+                {if $frameworkIndexUrl}
+                    {assign var="baseSortUrl" value="$frameworkIndexUrl"}
+                {else}
+                    {assign var="baseSortUrl" value="{$currentIndex|escape:'html':'UTF-8'}&token={$token|escape:'html':'UTF-8'}"}
+                {/if}
 								<a
                    class="{strip}desc-sort-column-{$key}-link
                           {if isset($order_by) && ($key == $order_by) && ($order_way == 'DESC')} active{/if}{/strip}"
-                   href="{$currentIndex|escape:'html':'UTF-8'}&amp;{$list_id}Orderby={$key|urlencode}&amp;{$list_id}Orderway=desc&amp;token={$token|escape:'html':'UTF-8'}{if isset($smarty.get.$identifier)}&amp;{$identifier}={$smarty.get.$identifier|intval}{/if}"
+                   href="{$baseSortUrl}&amp;{$list_id}Orderby={$key|urlencode}&amp;{$list_id}Orderway=desc{if isset($smarty.get.$identifier)}&amp;{$identifier}={$smarty.get.$identifier|intval}{/if}"
                 >
 									<i class="icon-caret-down"></i>
 								</a>
 								<a
                    class="{strip}asc-sort-column-{$key}-link
                           {if isset($order_by) && ($key == $order_by) && ($order_way == 'ASC')} active{/if}{/strip}"
-                   href="{$currentIndex|escape:'html':'UTF-8'}&amp;{$list_id}Orderby={$key|urlencode}&amp;{$list_id}Orderway=asc&amp;token={$token|escape:'html':'UTF-8'}{if isset($smarty.get.$identifier)}&amp;{$identifier}={$smarty.get.$identifier|intval}{/if}">
+                   href="{$baseSortUrl}&amp;{$list_id}Orderby={$key|urlencode}&amp;{$list_id}Orderway=asc{if isset($smarty.get.$identifier)}&amp;{$identifier}={$smarty.get.$identifier|intval}{/if}">
 									<i class="icon-caret-up"></i>
 								</a>
 							{/if}
@@ -347,14 +355,14 @@
 								{elseif $params.type == 'date' || $params.type == 'datetime'}
 									<div class="date_range row">
  										<div class="input-group fixed-width-md center">
-											<input type="text" class="filter datepicker date-input form-control" id="local_{$params.id_date}_0" name="local_{$params.name_date}[0]"  placeholder="{l s='From'}" />
+											<input type="text" class="filter datepicker date-input form-control" id="local_{$params.id_date}_0" name="local_{$params.name_date}[0]"  placeholder="{l s='From'}" autocomplete="off"/>
 											<input type="hidden" id="{$params.id_date}_0" name="{$params.name_date}[0]" value="{if isset($params.value.0)}{$params.value.0}{/if}">
 											<span class="input-group-addon">
 												<i class="icon-calendar"></i>
 											</span>
 										</div>
  										<div class="input-group fixed-width-md center">
-											<input type="text" class="filter datepicker date-input form-control" id="local_{$params.id_date}_1" name="local_{$params.name_date}[1]"  placeholder="{l s='To'}" />
+											<input type="text" class="filter datepicker date-input form-control" id="local_{$params.id_date}_1" name="local_{$params.name_date}[1]"  placeholder="{l s='To'}" autocomplete="off"/>
 											<input type="hidden" id="{$params.id_date}_1" name="{$params.name_date}[1]" value="{if isset($params.value.1)}{$params.value.1}{/if}">
 											<span class="input-group-addon">
 												<i class="icon-calendar"></i>
@@ -377,7 +385,7 @@
 									</div>
 								{elseif $params.type == 'select'}
 									{if isset($params.filter_key)}
-										<select class="filter{if isset($params.align) && $params.align == 'center'}center{/if}" onchange="$('#submitFilterButton{$list_id}').focus();$('#submitFilterButton{$list_id}').click();" name="{$list_id}Filter_{$params.filter_key}" {if isset($params.width)} style="width:{$params.width}px"{/if}>
+										<select class="filter{if isset($params.align) && $params.align == 'center'} center{/if}{if isset($params.class)} {$params.class|escape:'html':'UTF-8'}{/if}" onchange="$('#submitFilterButton{$list_id}').focus();$('#submitFilterButton{$list_id}').click();" name="{$list_id}Filter_{$params.filter_key}" {if isset($params.width)} style="width:{$params.width}px"{/if}>
 											<option value="" {if $params.value == ''} selected="selected" {/if}>-</option>
 											{if isset($params.list) && is_array($params.list)}
 												{foreach $params.list AS $option_value => $option_display}

@@ -29,9 +29,10 @@ namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences;
 use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Adapter\Currency\CurrencyDataProvider;
 use PrestaShopBundle\Form\Admin\Type\MoneyWithSuffixType;
-use PrestaShopBundle\Form\Admin\Type\TextWithUnitType;
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -81,6 +82,7 @@ class HandlingType extends TranslatorAwareType
                     'Handling charges',
                     'Admin.Shipping.Feature'
                 ),
+                'multistore_configuration_key' => 'PS_SHIPPING_HANDLING',
             ])
             ->add('free_shipping_price', MoneyType::class, [
                 'currency' => $defaultCurrency->iso_code,
@@ -94,8 +96,9 @@ class HandlingType extends TranslatorAwareType
                     'Free shipping starts at',
                     'Admin.Shipping.Feature'
                 ),
+                'multistore_configuration_key' => 'PS_SHIPPING_FREE_PRICE',
             ])
-            ->add('free_shipping_weight', TextWithUnitType::class, [
+            ->add('free_shipping_weight', NumberType::class, [
                 'unit' => $weightUnit,
                 'required' => false,
                 'empty_data' => '0',
@@ -107,6 +110,7 @@ class HandlingType extends TranslatorAwareType
                     new GreaterThanOrEqual(['value' => 0]),
                     new Type(['type' => 'numeric']),
                 ],
+                'multistore_configuration_key' => 'PS_SHIPPING_FREE_WEIGHT',
             ]);
     }
 
@@ -126,5 +130,15 @@ class HandlingType extends TranslatorAwareType
     public function getBlockPrefix()
     {
         return 'shipping_preferences_handling_block';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see MultistoreConfigurationTypeExtension
+     */
+    public function getParent(): string
+    {
+        return MultistoreConfigurationType::class;
     }
 }

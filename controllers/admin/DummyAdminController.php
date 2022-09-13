@@ -26,7 +26,7 @@
 declare(strict_types=1);
 
 use PrestaShop\PrestaShop\Adapter\SymfonyContainer;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * This class is used only because some parts of the Back Office require a Controller
@@ -93,7 +93,7 @@ class DummyAdminControllerCore extends AdminController
     }
 
     /**
-     * @return ContainerBuilder
+     * @return ContainerInterface|null
      */
     protected function buildContainer()
     {

@@ -3,6 +3,9 @@
 @import "~bootstrap/scss/functions";
 @import "~prestakit/scss/variables";
 
+// Config
+$enable-shadows: true;
+
 // Colors
 $gray-dark-text: #bebebe;
 $gray-dark-title: #bbcdd1;
@@ -15,7 +18,8 @@ $background-info: #dcf4f9;
 $purple: #34219e;
 $bright-status-text: #383838;
 $local-font: true;
-$info-block-background: #f8f8f8;
+$info-block-background: #f3f3f3;
+$widget-border-color: #e7e7e7;
 
 // Multishop
 $multishop-header-default-color: #383c43;
@@ -24,11 +28,25 @@ $multishop-header-allshop-color: $white;
 $multishop-header-allshop-background: #25b9d7;
 
 // Sizes
-
 $size-navbar-width: 13.13rem;
 $size-navbar-width-mini: 3.125rem;
 $size-navbar-link-height: 1.75rem;
 $size-header-height: 2.5rem;
 $size-header-toolbar-height: 5.313rem;
-$header-mobile-padding-y: 0.625rem;
+$header-mobile-padding-y: 0.525rem;
 $module-logo-size: 45px;
+
+// Serp
+$serp-url-light-color: #5f6368;
+$serp-url-dark-color: #202124;
+$serp-title-color: #1a0dab;
+$serp-description-color: #4d5156;
+
+// Sidebar Menu
+$sidebar-active-background-color: #22252a;
+$sidebar-active-icon-color: $primary;
+$sidebar-background-color: $dark-gray;
+$sidebar-primary-link-color: $white;
+$sidebar-secondary-link-color: #b6c3c7;
+$sidebar-title-color: #98aab0;
+$sidebar-logout-color: #ff7a7a;

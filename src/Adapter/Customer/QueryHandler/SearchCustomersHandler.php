@@ -27,6 +27,8 @@
 namespace PrestaShop\PrestaShop\Adapter\Customer\QueryHandler;
 
 use Customer;
+use Group;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Domain\Customer\Query\SearchCustomers;
 use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\SearchCustomersHandlerInterface;
 
@@ -37,6 +39,28 @@ use PrestaShop\PrestaShop\Core\Domain\Customer\QueryHandler\SearchCustomersHandl
  */
 final class SearchCustomersHandler implements SearchCustomersHandlerInterface
 {
+    /**
+     * @var Configuration
+     */
+    private $configuration;
+
+    /**
+     * @var int
+     */
+    private $contextLangId;
+
+    /**
+     * @param Configuration $configuration
+     * @param int $contextLangId
+     */
+    public function __construct(
+        Configuration $configuration,
+        int $contextLangId
+    ) {
+        $this->configuration = $configuration;
+        $this->contextLangId = $contextLangId;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -57,6 +81,18 @@ final class SearchCustomersHandler implements SearchCustomersHandlerInterface
                 continue;
             }
 
+            // Will we work with groups or not? We could ask inside the loop, but this is faster
+            $assignGroups = false;
+            if (Group::isFeatureActive()) {
+                $assignGroups = true;
+
+                // Get our group data and extract ids and names
+                $groupNames = [];
+                foreach (Group::getGroups($this->contextLangId) as $group) {
+                    $groupNames[$group['id_group']] = $group['name'];
+                }
+            }
+
             foreach ($customersResult as $customerArray) {
                 if (!$customerArray['active']) {
                     continue;
@@ -69,6 +105,21 @@ final class SearchCustomersHandler implements SearchCustomersHandlerInterface
                     $customerArray['email']
                 );
 
+                // Assign group names and default group information
+                $customerArray['groups'] = [];
+                if ($assignGroups) {
+                    $group_ids = explode(',', $customerArray['group_ids']);
+                    foreach ($group_ids as $id_group) {
+                        $customerArray['groups'][$id_group] = [
+                            'id_group' => $id_group,
+                            'name' => $groupNames[$id_group] ?? '',
+                            'default' => $id_group == $customerArray['id_default_group'],
+                        ];
+                    }
+                }
+                unset($customerArray['group_ids']);
+
+                // Removing some information that could be considered a security risk
                 unset(
                     $customerArray['passwd'],
                     $customerArray['secure_key'],
@@ -76,6 +127,15 @@ final class SearchCustomersHandler implements SearchCustomersHandlerInterface
                     $customerArray['reset_password_token'],
                     $customerArray['reset_password_validity']
                 );
+
+                $isB2BEnabled = $this->configuration->getBoolean('PS_B2B_ENABLE');
+
+                if (!$isB2BEnabled) {
+                    unset(
+                        $customerArray['company']
+                    );
+                }
+
                 $customers[$customerArray['id_customer']] = $customerArray;
             }
         }

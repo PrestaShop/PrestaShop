@@ -9,9 +9,7 @@ if (!defined('_PS_ADMIN_DIR_')) {
 require_once _PS_ADMIN_DIR_.'/../config/config.inc.php';
 require_once _PS_ADMIN_DIR_.'/init.php';
 
-if (function_exists('mb_internal_encoding')) {
-    mb_internal_encoding('UTF-8');
-}
+mb_internal_encoding('UTF-8');
 
 $products_accesses = Profile::getProfileAccess(Context::getContext()->employee->id_profile, Tab::getIdFromClassName('AdminProducts'));
 $cms_accesses = Profile::getProfileAccess(Context::getContext()->employee->id_profile, Tab::getIdFromClassName('AdminCmsContent'));
@@ -103,7 +101,7 @@ $duplicate_files=true;
 //**********************
 //Allowed extensions (lowercase insert)
 //**********************
-$ext_img = array('jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'svg'); //Images
+$ext_img = array('jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff', 'svg', 'webp'); //Images
 $ext_file = array('pdf'); //array('doc', 'docx','rtf', 'pdf', 'xls', 'xlsx', 'txt', 'csv','html','xhtml','psd','sql','log','fla','xml','ade','adp','mdb','accdb','ppt','pptx','odt','ots','ott','odb','odg','otp','otg','odf','ods','odp','css','ai'); //Files
 $ext_video = array('mov', 'mpeg', 'mp4', 'avi', 'mpg', 'wma', 'flv', 'webm'); //Video
 $ext_music = array(); //array('mp3', 'm4a', 'ac3', 'aiff', 'mid','ogg','wav'); //Audio
@@ -114,20 +112,11 @@ $ext=array_merge($ext_img, $ext_file, $ext_misc, $ext_video, $ext_music); //allo
 //**********************
 //Allowed mime types
 //**********************
-$mime_img = array('image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/tiff', 'image/svg');
+$mime_img = array('image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/tiff', 'image/svg', 'image/svg+xml', 'image/webp');
 $mime_file = array('application/pdf');
 $mime_video = array('video/mpeg', 'video/mp4', 'video/x-msvideo', 'audio/x-ms-wma', 'video/x-flv', 'video/webm');
 
 $mime = array_merge($mime_img, $mime_file, $mime_video);
-
-/******************
- * AVIARY config
-*******************/
-$aviary_active=false;
-$aviary_key="dvh8qudbp6yx2bnp";
-$aviary_secret="m6xaym5q42rpw433";
-$aviary_version=3;
-$aviary_language='en';
 
 //The filter and sorter are managed through both javascript and php scripts because if you have a lot of
 //file in a folder the javascript script can't sort all or filter all, so the filemanager switch to php script.

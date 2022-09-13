@@ -26,7 +26,6 @@
 
 namespace Tests\Unit\Core\ConstraintValidator;
 
-use PHPUnit\Framework\MockObject\Builder\InvocationMocker;
 use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\IsUrlRewrite;
 use PrestaShop\PrestaShop\Core\ConstraintValidator\IsUrlRewriteValidator;
@@ -45,19 +44,16 @@ class IsUrlRewriteValidatorTest extends ConstraintValidatorTestCase
     private $useAscendedChars;
 
     /**
-     * @var InvocationMocker
+     * @var ConfigurationInterface
      */
     private $configurationMockWithAscendingCharsOn;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->useAscendedChars = false;
 
-        $this->configurationMockWithAscendingCharsOff = $this->getMockBuilder(ConfigurationInterface::class)
-            ->getMock()
-        ;
-
-        $this->configurationMockWithAscendingCharsOn = $this->getMockBuilder(ConfigurationInterface::class)
+        $this->configurationMockWithAscendingCharsOn = $this
+            ->getMockBuilder(ConfigurationInterface::class)
             ->getMock()
         ;
 

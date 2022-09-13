@@ -64,7 +64,7 @@ class DefaultCatalogueFinderTest extends TestCase
         ],
     ];
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         self::$tempDir = implode(DIRECTORY_SEPARATOR, [sys_get_temp_dir(), 'DefaultCatalogueFinderTest']);
 
@@ -86,6 +86,7 @@ class DefaultCatalogueFinderTest extends TestCase
     public function testItFailsWhenFiltersAreNotStrings()
     {
         $this->expectException(InvalidArgumentException::class);
+        /* @phpstan-ignore-next-line */
         new DefaultCatalogueFinder('/tmp', ['filter', 1]);
     }
 

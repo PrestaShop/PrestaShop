@@ -85,20 +85,6 @@
     <access id="access_3_72"  id_profile="Logistician"   id_authorization_role="TAB_ADMINPARENTSTOCKMANAGEMENT_READ"/>
     <access id="access_3_73"  id_profile="Logistician"   id_authorization_role="TAB_ADMINPARENTSTOCKMANAGEMENT_UPDATE"/>
     <access id="access_3_74"  id_profile="Logistician"   id_authorization_role="TAB_ADMINPARENTSTOCKMANAGEMENT_DELETE"/>
-    <access id="access_3_75"  id_profile="Logistician"   id_authorization_role="TAB_ADMINSTOCKMVT_CREATE"/>
-    <access id="access_3_76"  id_profile="Logistician"   id_authorization_role="TAB_ADMINSTOCKMVT_READ"/>
-    <access id="access_3_77"  id_profile="Logistician"   id_authorization_role="TAB_ADMINSTOCKMVT_UPDATE"/>
-    <access id="access_3_78"  id_profile="Logistician"   id_authorization_role="TAB_ADMINSTOCKMVT_DELETE"/>
-    <!--<access id="access_3_98"  id_profile="Logistician"   id_authorization_role="Stock_instant_state" view="1" add="1" edit="1" delete="1"/>-->
-    <!--<access id="access_3_99"  id_profile="Logistician"   id_authorization_role="Stock_cover" view="1" add="1" edit="1" delete="1"/>-->
-    <access id="access_3_79" id_profile="Logistician"   id_authorization_role="TAB_ADMINSUPPLYORDERS_CREATE"/>
-    <access id="access_3_80" id_profile="Logistician"   id_authorization_role="TAB_ADMINSUPPLYORDERS_READ"/>
-    <access id="access_3_81" id_profile="Logistician"   id_authorization_role="TAB_ADMINSUPPLYORDERS_UPDATE"/>
-    <access id="access_3_82" id_profile="Logistician"   id_authorization_role="TAB_ADMINSUPPLYORDERS_DELETE"/>
-    <access id="access_3_83" id_profile="Logistician"   id_authorization_role="TAB_ADMINSTOCKCONFIGURATION_CREATE"/>
-    <access id="access_3_84" id_profile="Logistician"   id_authorization_role="TAB_ADMINSTOCKCONFIGURATION_READ"/>
-    <access id="access_3_85" id_profile="Logistician"   id_authorization_role="TAB_ADMINSTOCKCONFIGURATION_UPDATE"/>
-    <access id="access_3_86" id_profile="Logistician"   id_authorization_role="TAB_ADMINSTOCKCONFIGURATION_DELETE"/>
     <access id="access_3_87" id_profile="Logistician" id_authorization_role="TAB_IMPROVE_CREATE"/>
     <access id="access_3_88" id_profile="Logistician" id_authorization_role="TAB_IMPROVE_READ"/>
     <access id="access_3_89" id_profile="Logistician" id_authorization_role="TAB_IMPROVE_UPDATE"/>
@@ -234,15 +220,6 @@
     <access id="access_5_54"  id_profile="Salesman"      id_authorization_role="TAB_ADMINWEBSERVICE_READ"/>
     <access id="access_5_55"  id_profile="Salesman"      id_authorization_role="TAB_ADMINWEBSERVICE_UPDATE"/>
     <access id="access_5_56"  id_profile="Salesman"      id_authorization_role="TAB_ADMINWEBSERVICE_DELETE"/>
-    <!--<access id="access_5_92"  id_profile="Salesman"      id_authorization_role="Stats_1" view="1" add="1" edit="1" delete="1"/>-->
-    <access id="access_5_57"  id_profile="Salesman"      id_authorization_role="TAB_ADMINREFERRERS_CREATE"/>
-    <access id="access_5_58"  id_profile="Salesman"      id_authorization_role="TAB_ADMINREFERRERS_READ"/>
-    <access id="access_5_59"  id_profile="Salesman"      id_authorization_role="TAB_ADMINREFERRERS_UPDATE"/>
-    <access id="access_5_60"  id_profile="Salesman"      id_authorization_role="TAB_ADMINREFERRERS_DELETE"/>
-    <access id="access_5_61" id_profile="Salesman"      id_authorization_role="TAB_ADMINSUPPLYORDERS_READ"/>
-    <access id="access_5_87" id_profile="Salesman"      id_authorization_role="TAB_ADMINSUPPLYORDERS_DELETE"/>
-    <access id="access_5_88" id_profile="Salesman"      id_authorization_role="TAB_ADMINSUPPLYORDERS_UPDATE"/>
-    <access id="access_5_89" id_profile="Salesman"      id_authorization_role="TAB_ADMINSUPPLYORDERS_CREATE"/>
 	<access id="access_5_62" id_profile="Salesman" id_authorization_role="TAB_SELL_CREATE"/>
     <access id="access_5_63" id_profile="Salesman" id_authorization_role="TAB_SELL_READ"/>
     <access id="access_5_64" id_profile="Salesman" id_authorization_role="TAB_SELL_UPDATE"/>
@@ -259,10 +236,6 @@
     <access id="access_5_72" id_profile="Salesman" id_authorization_role="TAB_ADMINPARENTCUSTOMERTHREADS_READ"/>
     <access id="access_5_73" id_profile="Salesman" id_authorization_role="TAB_ADMINPARENTCUSTOMERTHREADS_UPDATE"/>
     <access id="access_5_74" id_profile="Salesman" id_authorization_role="TAB_ADMINPARENTCUSTOMERTHREADS_DELETE"/>
-    <access id="access_5_75" id_profile="Salesman" id_authorization_role="TAB_ADMINPARENTMETA_CREATE"/>
-    <access id="access_5_76" id_profile="Salesman" id_authorization_role="TAB_ADMINPARENTMETA_READ"/>
-    <access id="access_5_77" id_profile="Salesman" id_authorization_role="TAB_ADMINPARENTMETA_UPDATE"/>
-    <access id="access_5_78" id_profile="Salesman" id_authorization_role="TAB_ADMINPARENTMETA_DELETE"/>
     <access id="access_5_79" id_profile="Salesman" id_authorization_role="TAB_SHOPPARAMETERS_CREATE"/>
     <access id="access_5_80" id_profile="Salesman" id_authorization_role="TAB_SHOPPARAMETERS_READ"/>
     <access id="access_5_81" id_profile="Salesman" id_authorization_role="TAB_SHOPPARAMETERS_UPDATE"/>
@@ -271,6 +244,5 @@
     <access id="access_5_84" id_profile="Salesman"  id_authorization_role="TAB_ADMINADVANCEDPARAMETERS_READ"/>
     <access id="access_5_85" id_profile="Salesman"  id_authorization_role="TAB_ADMINADVANCEDPARAMETERS_UPDATE"/>
     <access id="access_5_86" id_profile="Salesman"  id_authorization_role="TAB_ADMINADVANCEDPARAMETERS_DELETE"/>
-	
   </entities>
 </entity_access>

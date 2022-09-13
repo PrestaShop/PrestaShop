@@ -4,18 +4,17 @@ require('module-alias/register');
 const helper = require('@utils/helpers');
 const mailHelper = require('@utils/mailHelper');
 
-// Import login steps
-const loginCommon = require('@commonTests/loginBO');
+// Import common tests
+const loginCommon = require('@commonTests/BO/loginBO');
+const {setupSmtpConfigTest, resetSmtpConfigTest} = require('@commonTests/BO/advancedParameters/configSMTP');
 
 // Import pages
 const loginPage = require('@pages/BO/login/index');
 const dashboardPage = require('@pages/BO/dashboard');
-const emailPage = require('@pages/BO/advancedParameters/email');
 const employeesPage = require('@pages/BO/advancedParameters/team/index');
 const addEmployeePage = require('@pages/BO/advancedParameters/team/add');
 
 // Import data
-const {DefaultCustomer} = require('@data/demo/customer');
 const EmployeeFaker = require('@data/faker/employee');
 
 // Import test context
@@ -30,12 +29,10 @@ let browserContext;
 let page;
 let numberOfEmployees = 0;
 
-// maildev config and vars
 let newMail;
-const {smtpServer, smtpPort} = global.maildevConfig;
 const resetPasswordMailSubject = 'Your new password';
 
-// new employee data
+// New employee data
 const createEmployeeData = new EmployeeFaker({
   defaultPage: 'Products',
   language: 'English (English)',
@@ -45,7 +42,21 @@ const createEmployeeData = new EmployeeFaker({
 // mailListener
 let mailListener;
 
+/*
+Pre-condition
+- Setup SMTP parameters
+Scenario:
+- Create new employee
+- Click on 'I forget my password'
+- Check if the email is received
+- Delete created employee
+Post-condition
+- Reset SMTP parameters
+ */
 describe('BO - Login : Password reminder', async () => {
+  // Pre-Condition : Setup config SMTP
+  setupSmtpConfigTest(baseContext);
+
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -54,6 +65,7 @@ describe('BO - Login : Password reminder', async () => {
     // Start listening to maildev server
     mailListener = mailHelper.createMailListener();
     mailHelper.startListener(mailListener);
+
     // Handle every new email
     mailListener.on('new', (email) => {
       newMail = email;
@@ -65,45 +77,6 @@ describe('BO - Login : Password reminder', async () => {
 
     // Stop listening to maildev server
     mailHelper.stopListener(mailListener);
-  });
-
-  describe('Go to BO to setup the smtp parameters', async () => {
-    it('should login in BO', async function () {
-      await loginCommon.loginBO(this, page);
-    });
-
-    it('should go to \'Advanced Parameters > E-mail\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToEmailSetupPageForSetupSmtpParams', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.emailLink,
-      );
-
-      await emailPage.closeSfToolBar(page);
-
-      const pageTitle = await emailPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(emailPage.pageTitle);
-    });
-
-    it('should fill the smtp parameters form fields', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'fillSmtpParametersFormField', baseContext);
-
-      const alertSuccessMessage = await emailPage.setupSmtpParameters(
-        page,
-        smtpServer,
-        DefaultCustomer.email,
-        DefaultCustomer.password,
-        smtpPort,
-      );
-
-      await expect(alertSuccessMessage).to.contains(emailPage.successfulUpdateMessage);
-    });
-
-    it('should logout from BO', async function () {
-      await loginCommon.logoutBO(this, page);
-    });
   });
 
   describe('Go to BO and create a new employee', async () => {
@@ -162,6 +135,7 @@ describe('BO - Login : Password reminder', async () => {
 
     it('should send reset password mail', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'sendResetPasswordMailAndCheckSuccess', baseContext);
+
       await loginPage.sendResetPasswordLink(page, createEmployeeData.email);
 
       const successTextContent = await loginPage.getResetPasswordSuccessMessage(page);
@@ -222,31 +196,6 @@ describe('BO - Login : Password reminder', async () => {
     });
   });
 
-  describe('Go to BO and reset to default mail parameters', async () => {
-    it('should go to \'Advanced Parameters > E-mail\' page', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'goToEmailSetupPageForResetSmtpParams', baseContext);
-
-      await dashboardPage.goToSubMenu(
-        page,
-        dashboardPage.advancedParametersLink,
-        dashboardPage.emailLink,
-      );
-
-      await emailPage.closeSfToolBar(page);
-
-      const pageTitle = await emailPage.getPageTitle(page);
-      await expect(pageTitle).to.contains(emailPage.pageTitle);
-    });
-
-    it('should reset parameters', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'resetMailParameters', baseContext);
-
-      const successParametersReset = await emailPage.resetDefaultParameters(page);
-      await expect(successParametersReset).to.contains(emailPage.successfulUpdateMessage);
-    });
-
-    it('should logout from BO', async function () {
-      await loginCommon.logoutBO(this, page);
-    });
-  });
+  // Post-Condition : Reset SMTP config
+  resetSmtpConfigTest(baseContext);
 });

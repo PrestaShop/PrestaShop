@@ -1,0 +1,109 @@
+{#**
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
+
+{# This form theme is the root one for all the product form so we define here which base theme is used for all the children #}
+{% use '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
+
+{% block image_dropzone_widget %}
+  {% set attr = attr|merge({
+    'class': (attr.class|default('') ~ ' image-dropzone')|trim,
+    'data-translations': translations|json_encode,
+    'data-locales': locales|json_encode,
+    'data-product-id': product_id,
+    'data-form-name': update_form_name,
+    'data-token': csrf_token(update_form_name)
+  }) %}
+
+  <div {{ block('widget_attributes') }}>
+  </div>
+{% endblock %}
+
+{% block related_product_row %}
+  {% set attr = attr|merge({'class': (attr.class|default('') ~ ' related-product entity-item')|trim}) %}
+  <li {{ block('widget_container_attributes') }}>
+    <div class="related-product-image">
+      {{ form_widget(form.image) }}
+    </div>
+    <div class="related-product-legend">
+      {{ form_widget(form.name, {prefix: '<i class="material-icons entity-item-delete">delete</i>'}) }}
+    </div>
+    {{ form_widget(form.id) }}
+  </li>
+{% endblock %}
+
+{% block packed_product_row %}
+  <li class="packed-product entity-item">
+    <div class="packed-product-image">
+      {{ form_widget(form.image) }}
+    </div>
+    <div class="packed-product-legend">
+      {{ form_widget(form.name, {prefix: '<i class="material-icons entity-item-delete">delete</i>'}) }}
+      {{ form_widget(form.reference)}}
+    </div>
+    <div class="form-group">
+      <div class="packed-product-quantity">
+        {{ form_widget(form.quantity) }}
+        {{ form_errors(form.quantity) }}
+      </div>
+    </div>
+    {{ form_widget(form.product_id) }}
+    {{ form_widget(form.unique_identifier) }}
+    {{ form_widget(form.combination_id) }}
+  </li>
+{% endblock %}
+
+
+{% block product_type_row %}
+  <div class="product-type-selector">
+    <div class="product-type-choices">
+      {% for choice in form.vars.choices %}
+        <button type="button" class="product-type-choice btn btn-outline-secondary" data-value="{{ choice.value }}" data-description="{{ choice.attr['data-description']|default(choice.label) }}">
+          {{ choice.label }}
+          {% if choice.attr['icon'] is defined %}<i class="material-icons">{{ choice.attr['icon'] }}</i>{% endif %}
+        </button>
+      {% endfor %}
+    </div>
+    <div class="product-type-description">
+      <i class="material-icons">arrow_forward</i>
+      <span class="product-type-description-content"></span>
+    </div>
+    {{ form_widget(form) }}
+  </div>
+{% endblock %}
+
+{% block price_summary_widget %}
+  <div {{ block('widget_attributes') }}>
+    <div class="price-summary-block">
+      <div class="price-summary-value price-tax-excluded-value"></div>
+      <div class="price-summary-value price-tax-included-value"></div>
+      <div class="price-summary-value unit-price-value"></div>
+    </div>
+    <div class="price-summary-block">
+      <div class="price-summary-value margin-value"></div>
+      <div class="price-summary-value margin-rate-value"></div>
+      <div class="price-summary-value wholesale-price-value"></div>
+    </div>
+  </div>
+{% endblock %}

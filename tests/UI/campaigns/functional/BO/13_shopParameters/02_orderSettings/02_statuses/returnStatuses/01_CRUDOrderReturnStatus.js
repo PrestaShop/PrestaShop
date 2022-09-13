@@ -1,10 +1,13 @@
 require('module-alias/register');
 
-// Helpers to open and close browser
-const helper = require('@utils/helpers');
+const {expect} = require('chai');
 
-// Common tests login BO
-const loginCommon = require('@commonTests/loginBO');
+// Import utils
+const helper = require('@utils/helpers');
+const testContext = require('@utils/testContext');
+
+// Import login steps
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -15,13 +18,7 @@ const addOrderReturnStatusPage = require('@pages/BO/shopParameters/orderSettings
 // Import data
 const OrderReturnStatusFaker = require('@data/faker/orderReturnStatus');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_shopParameters_orderSettings_statuses_returnStatuses_CRUDOrderReturnStatus';
-
-// Import expect from chai
-const {expect} = require('chai');
 
 let browserContext;
 let page;
@@ -36,7 +33,8 @@ Create new order return status
 Update order return status
 Delete order return status
  */
-describe('Create, update and delete order return status in BO', async () => {
+describe('BO - Shop Parameters - Order Settings - Statuses : Create, update '
+  + 'and delete order return status in BO', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);

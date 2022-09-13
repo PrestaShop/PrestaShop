@@ -39,11 +39,6 @@ class CustomizedConfigurationChecker
      */
     private $configuration;
 
-    /**
-     * @var Shop
-     */
-    private $shop;
-
     public function __construct(ShopConfigurationInterface $configuration)
     {
         $this->configuration = $configuration;

@@ -5,9 +5,10 @@ services:
   prestashop.adapter.mail_template.twig_renderer:
     class: 'PrestaShop\PrestaShop\Adapter\MailTemplate\MailTemplateTwigRenderer'
     arguments:
-      - '@templating.engine.twig'
+      - '@twig'
       - '@prestashop.core.mail_template.variables_builder'
       - '@prestashop.core.hook.dispatcher'
+      - "@=service('prestashop.adapter.legacy.configuration').getBoolean('PS_GIFT_WRAPPING')"
     calls:
       - method: 'addTransformation'
         arguments:

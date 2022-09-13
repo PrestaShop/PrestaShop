@@ -1,11 +1,50 @@
 services:
-    _defaults:
-        public: true
+  _defaults:
+    public: true
 
-    prestashop.core.module.configuration.payment_restrictions_configurator:
-        class: PrestaShop\PrestaShop\Core\Module\Configuration\PaymentRestrictionsConfigurator
-        arguments:
-            - '@doctrine.dbal.default_connection'
-            - '%database_prefix%'
-            - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
-            - '@prestashop.adapter.module.payment_module_provider'
+  prestashop.core.module.configuration.payment_restrictions_configurator:
+    class: PrestaShop\PrestaShop\Core\Module\Configuration\PaymentRestrictionsConfigurator
+    arguments:
+      - '@doctrine.dbal.default_connection'
+      - '%database_prefix%'
+      - '@=service("prestashop.adapter.legacy.context").getContext().shop.id'
+      - '@prestashop.adapter.module.payment_module_provider'
+
+  prestashop.core.admin.module.repository:
+    class: PrestaShop\PrestaShop\Core\Module\ModuleRepository
+    arguments:
+      - '@prestashop.adapter.data_provider.module'
+      - '@prestashop.adapter.admin.data_provider.module'
+      - '@doctrine.cache.provider'
+      - '@prestashop.adapter.hook.manager'
+      - "@=service('prestashop.adapter.legacy.configuration').get('_PS_MODULE_DIR_')"
+
+  prestashop.core.admin.module.repository.eventsubscriber:
+    class: PrestaShop\PrestaShop\Core\Module\EventSubscriber
+    arguments:
+      - '@prestashop.core.admin.module.repository'
+      - '@prestashop.adapter.cache.clearer.symfony_cache_clearer'
+    tags:
+      - { name: kernel.event_subscriber }
+
+  prestashop.module.sourcehandler.zip:
+    class: PrestaShop\PrestaShop\Core\Module\SourceHandler\ZipSourceHandler
+    arguments:
+      - '%modules_dir%'
+      - '@translator'
+
+  prestashop.module.factory.sourcehandler:
+    class: PrestaShop\PrestaShop\Core\Module\SourceHandler\SourceHandlerFactory
+    calls:
+      - [ 'addHandler', [ '@prestashop.module.sourcehandler.zip' ] ]
+
+  prestashop.module.manager:
+    class: PrestaShop\PrestaShop\Core\Module\ModuleManager
+    arguments:
+      - '@prestashop.core.admin.module.repository'
+      - '@prestashop.adapter.data_provider.module'
+      - '@prestashop.adapter.admin.data_provider.module'
+      - '@prestashop.module.factory.sourcehandler'
+      - '@translator'
+      - '@event_dispatcher'
+      - '@prestashop.adapter.hook.manager'

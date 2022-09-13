@@ -71,7 +71,9 @@ final class EditOrderStateHandler extends AbstractOrderStateHandler implements E
         // Check that we have templates for all languages when send_email is on
         $haveMissingTemplates = (
             !is_array($orderState->template) ||
-            count($orderState->template) != count(array_filter($orderState->template, 'strlen'))
+            count($orderState->template) != count(array_filter($orderState->template, function ($v) {
+                return (bool) strlen($v);
+            }))
         );
 
         if (true === $orderState->send_email && true === $haveMissingTemplates) {

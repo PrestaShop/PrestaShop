@@ -70,7 +70,7 @@ class TemplateFinderCore
 
     private function getTemplateHierarchy($template, $entity, $id)
     {
-        $entity = basename($entity);
+        $entity = basename($entity ?? '');
         $id = (int) $id;
 
         if (in_array($entity, $this->getProductListEntities())) {
@@ -102,6 +102,12 @@ class TemplateFinderCore
                 'cms/page-' . $id,
                 $template,
                 'cms/page',
+            ];
+        } elseif ('cms_category' === $entity) {
+            $templates = [
+                'cms/category-' . $id,
+                $template,
+                'cms/category',
             ];
         } else {
             $templates = [$template];
@@ -147,7 +153,7 @@ class TemplateFinderCore
     /**
      * Set productListSearch.
      *
-     * @param array $productListSearch
+     * @param array $productListSearchEntities
      *
      * @return TemplateFinderCore
      */

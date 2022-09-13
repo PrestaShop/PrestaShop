@@ -28,7 +28,7 @@
 
 {# Display "Old version -> New version" #}
 {% block addon_version %}
-  v{{ module.database.version }} <i class="material-icons" style="font-size: 10px; ">arrow_forward</i> v{{ module.attributes.version_available }}
+  v{{ module.database.version }} <i class="material-icons rtl-flip" style="font-size: 10px; ">arrow_forward</i> v{{ module.attributes.version_available }}
 {% endblock %}
 
 {# Display changelog instead of the description #}

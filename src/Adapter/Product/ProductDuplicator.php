@@ -52,6 +52,9 @@ use ShopGroup;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
+ * @todo for now this service is mainly oriented for single shop (only prices are handled for multi shop)
+ *       This service will likely have many things in common with ProductShopUpdater::copyToShop method, so it
+ *       might be interesting to refacto and merge them into one at some point
  * Duplicates product
  */
 class ProductDuplicator
@@ -155,6 +158,8 @@ class ProductDuplicator
     }
 
     /**
+     * @todo this function should actualy use the ProductIndexationUpdater service
+     *
      * @param Product $newProduct
      * @param int $oldProductId
      *
@@ -334,10 +339,10 @@ class ProductDuplicator
      * @param int $newProductId
      *
      * @return array<string, array<int, array<int, int>>> combination images
-     *                       [
-     *                       'old' => [1 {id product attribute} => [0 {index} => 1 {id image}]]
-     *                       'new' => [2 {id product attribute} => [0 {index} => 3 {id image}]]
-     *                       ]
+     *                                                    [
+     *                                                    'old' => [1 {id product attribute} => [0 {index} => 1 {id image}]]
+     *                                                    'new' => [2 {id product attribute} => [0 {index} => 3 {id image}]]
+     *                                                    ]
      *
      * @throws CannotDuplicateProductException
      * @throws CoreException

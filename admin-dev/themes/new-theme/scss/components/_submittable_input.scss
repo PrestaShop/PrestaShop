@@ -10,7 +10,7 @@
     height: 100%;
     padding: 0;
     cursor: pointer;
-    background: #bbcdd2;
+    background: $gray-300;
     border: none;
     outline: none;
     @include border-top-right-radius(4px);
@@ -31,6 +31,12 @@
   }
 
   .check-button.active {
-    background: #25b9d7;
+    background: $primary;
+  }
+
+  // Integer arrows need an offset to avoid being covered by the button
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    margin-right: 22px;
   }
 }

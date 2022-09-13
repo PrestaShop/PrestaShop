@@ -24,6 +24,9 @@
  *#}
 
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+{# Apply ui kit theme only on reduction type for now, but it should be used for the whole form #}
+{% form_theme catalogPriceRuleForm.reduction '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit_base.html.twig' %}
+
 {{ form_start(catalogPriceRuleForm) }}
 {{ form_errors(catalogPriceRuleForm) }}
 <div class="card">
@@ -31,8 +34,8 @@
     <i class="material-icons">attach_money</i>
     {{ 'Catalog price rules'|trans({}, 'Admin.Catalog.Feature') }}
   </h3>
-  <div class="card-block row">
-    <div class="card-text">
+  <div class="card-body">
+    <div class="form-wrapper">
       {{ ps.form_group_row(catalogPriceRuleForm.name, {}, {
         'label': 'Name'|trans({}, 'Admin.Global'),
       }) }}
@@ -73,17 +76,7 @@
         'label': 'To'|trans({}, 'Admin.Global'),
       }) }}
 
-      {{ ps.form_group_row(catalogPriceRuleForm.reduction.type, {'attr': {'class': 'js-reduction-type-source'}}, {
-        'label': 'Reduction type'|trans({}, 'Admin.Catalog.Feature'),
-      }) }}
-
-      <div class="js-include-tax-target">
-        {{ ps.form_group_row(catalogPriceRuleForm.include_tax, {'attr': {'class': 'js-include-tax-target'}}, {
-          'label': 'Reduction with or without taxes'|trans({}, 'Admin.Catalog.Feature'),
-        }) }}
-      </div>
-
-      {{ ps.form_group_row(catalogPriceRuleForm.reduction.value, {}, {
+      {{ ps.form_group_row(catalogPriceRuleForm.reduction, {'attr': {'class': 'js-reduction-type-source'}}, {
         'label': 'Reduction'|trans({}, 'Admin.Catalog.Feature'),
       }) }}
 

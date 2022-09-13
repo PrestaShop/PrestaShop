@@ -2,7 +2,7 @@ admin_metas_index:
   path: /
   methods: GET
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:index'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\MetaController::indexAction'
     _legacy_controller: AdminMeta
     _legacy_link: AdminMeta
 
@@ -10,7 +10,7 @@ admin_metas_search:
   path: /
   methods: POST
   defaults:
-    _controller: PrestaShopBundle:Admin\Common:searchGrid
+    _controller: PrestaShopBundle\Controller\Admin\CommonController::searchGridAction
     gridDefinitionFactoryServiceId: prestashop.core.grid.definition.factory.meta
     redirectRoute: admin_metas_index
     _legacy_controller: AdminMeta
@@ -18,17 +18,17 @@ admin_metas_search:
 
 admin_metas_create:
   path: /new
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:create'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\MetaController::createAction'
     _legacy_controller: AdminMeta
     _legacy_link: AdminMeta:addmeta
 
 admin_metas_edit:
   path: /{metaId}/edit
-  methods: [GET, POST]
+  methods: [ GET, POST ]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:edit'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\MetaController::editAction'
     _legacy_controller: AdminMeta
     _legacy_link: AdminMeta:updatemeta
     _legacy_parameters:
@@ -38,7 +38,7 @@ admin_metas_delete:
   path: /{metaId}/delete
   methods: DELETE
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:delete'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\MetaController::deleteAction'
     _legacy_controller: AdminMeta
     _legacy_link: AdminMeta:deletemeta
     _legacy_parameters:
@@ -48,43 +48,43 @@ admin_metas_delete_bulk:
   path: /delete
   methods: POST
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:deleteBulk'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\MetaController::deleteBulkAction'
     _legacy_controller: AdminMeta
     _legacy_link: AdminMeta:submitBulkdeletemeta
 
 admin_metas_set_up_urls_save:
   path: /set-up-urls
-  methods: [POST]
+  methods: [ PATCH, POST ]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:processSetUpUrlsForm'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\MetaController::processSetUpUrlsFormAction'
     _legacy_controller: AdminMeta
     _legacy_link: AdminMeta:submitOptionsmeta
 
 admin_metas_shop_urls_save:
   path: /shop-urls
-  methods: [POST]
+  methods: [ POST ]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:processShopUrlsForm'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\MetaController::processShopUrlsFormAction'
     _legacy_controller: AdminMeta
 
 admin_metas_url_schema_save:
   path: /url-schema
-  methods: [POST]
+  methods: [ PATCH, POST ]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:processUrlSchemaForm'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\MetaController::processUrlSchemaFormAction'
     _legacy_controller: AdminMeta
 
 admin_metas_seo_options_save:
   path: /seo-options
-  methods: [POST]
+  methods: [ PATCH, POST ]
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:processSeoOptionsForm'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\MetaController::processSeoOptionsFormAction'
     _legacy_controller: AdminMeta
 
 admin_metas_generate_robots_text_file:
   path: /generate/robots
   methods: POST
   defaults:
-    _controller: 'PrestaShopBundle:Admin\Configure\ShopParameters\Meta:generateRobotsFile'
+    _controller: 'PrestaShopBundle\Controller\Admin\Configure\ShopParameters\MetaController::generateRobotsFileAction'
     _legacy_controller: AdminMeta
     _legacy_link: AdminMeta:submitRobots

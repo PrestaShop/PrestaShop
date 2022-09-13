@@ -50,41 +50,45 @@
     var roundMode = {$round_mode|intval};
 {if isset($shop_context)}
   {if $shop_context == Shop::CONTEXT_ALL}
-    var youEditFieldFor = '{l s='This field will be modified for all your shops.' js=1 d='Admin.Notifications.Info'}';
+    var youEditFieldFor = '{l|escape s='This field will be modified for all your shops.' js=1 d='Admin.Notifications.Info'}';
   {elseif $shop_context == Shop::CONTEXT_GROUP}
-    var youEditFieldFor = '{l s='This field will be modified for all shops in this shop group:' js=1 d='Admin.Notifications.Info'} <b>{$shop_name|@addcslashes:'\''}</b>';
+    var youEditFieldFor = '{l|escape s='This field will be modified for all shops in this shop group:' js=1 d='Admin.Notifications.Info'} <b>{$shop_name|@addcslashes:'\''}</b>';
   {else}
-    var youEditFieldFor = '{l s='This field will be modified for this shop:' js=1 d='Admin.Notifications.Info'} <b>{$shop_name|@addcslashes:'\''}</b>';
+    var youEditFieldFor = '{l|escape s='This field will be modified for this shop:' js=1 d='Admin.Notifications.Info'} <b>{$shop_name|@addcslashes:'\''}</b>';
   {/if}
 {else}
     var youEditFieldFor = '';
 {/if}
-		var new_order_msg = '{l s='A new order has been placed on your shop.' js=1 d='Admin.Navigation.Header'}';
-		var order_number_msg = '{l s='Order number:' js=1 d='Admin.Navigation.Header'} ';
-		var total_msg = '{l s='Total' js=1 d='Admin.Global'} ';
-		var from_msg = '{l s='From:' js=1 d='Admin.Global'} ';
-		var see_order_msg = '{l s='View this order' js=1 d='Admin.Orderscustomers.Feature'}';
-		var new_customer_msg = '{l s='A new customer registered on your shop.' js=1 d='Admin.Navigation.Header'}';
-        var customer_name_msg = '{l s='registered' js=1 d='Admin.Navigation.Notification'} ';
-		var new_msg = '{l s='A new message was posted on your shop.' js=1 d='Admin.Navigation.Header'}';
-		var see_msg = '{l s='Read this message' js=1 d='Admin.Navigation.Header'}';
+		var new_order_msg = '{l|escape s='A new order has been placed on your shop.' js=1 d='Admin.Navigation.Header'}';
+		var order_number_msg = '{l|escape s='Order number:' js=1 d='Admin.Navigation.Header'} ';
+		var total_msg = '{l|escape s='Total' js=1 d='Admin.Global'} ';
+		var from_msg = '{l|escape s='From:' js=1 d='Admin.Global'} ';
+		var see_order_msg = '{l|escape s='View this order' js=1 d='Admin.Orderscustomers.Feature'}';
+		var new_customer_msg = '{l|escape s='A new customer registered on your shop.' js=1 d='Admin.Navigation.Header'}';
+        var customer_name_msg = '{l|escape s='registered' js=1 d='Admin.Navigation.Notification'} ';
+		var new_msg = '{l|escape s='A new message was posted on your shop.' js=1 d='Admin.Navigation.Header'}';
+		var see_msg = '{l|escape s='Read this message' js=1 d='Admin.Navigation.Header'}';
 		var token = '{$token|addslashes}';
 		var token_admin_orders = tokenAdminOrders = '{getAdminToken tab='AdminOrders'}';
 		var token_admin_customers = tokenAdminCustomers = '{getAdminToken tab='AdminCustomers'}';
 		var token_admin_customer_threads = tokenAdminCustomerThreads = '{getAdminToken tab='AdminCustomerThreads'}';
 		var currentIndex = '{$currentIndex|escape:'javascript':'UTF-8'|escape:'quotes'}';
 		var employee_token = '{getAdminToken tab='AdminEmployees'}';
-		var choose_language_translate = '{l s='Choose language:' js=1 d='Admin.Actions'}';
+		var choose_language_translate = '{l|escape s='Choose language:' js=1 d='Admin.Actions'}';
 		var default_language = '{$default_language|intval}';
-		var admin_modules_link = '{$link->getAdminLink("AdminModulesCatalog", true, ['route' => "admin_module_catalog_post"])|addslashes}';
 		var admin_notification_get_link = adminNotificationGetLink = '{$link->getAdminLink("AdminCommon")|addslashes}';
 		var admin_notification_push_link = adminNotificationPushLink ='{$link->getAdminLink("AdminCommon", true, ['route' => 'admin_common_notifications_ack'])|addslashes}';
 		var tab_modules_list = '{if isset($tab_modules_list) && $tab_modules_list}{$tab_modules_list|addslashes}{/if}';
-		var update_success_msg = '{l s='Successful update.' js=1 d='Admin.Notifications.Success'}';
-		var errorLogin = '{l s='PrestaShop was unable to log in to Addons. Please check your credentials and your Internet connection.' js=1 d='Admin.Notifications.Warning'}';
-		var search_product_msg = '{l s='Search for a product' js=1 d='Admin.Orderscustomers.Feature'}';
+		var update_success_msg = '{l|escape s='Successful update' js=1 d='Admin.Notifications.Success'}';
+		var search_product_msg = '{l|escape s='Search for a product' js=1 d='Admin.Orderscustomers.Feature'}';
 	</script>
 {/if}
+{$admin_path = "{__PS_BASE_URI__}{basename(_PS_ADMIN_DIR_)}/themes/default/public/"}
+
+{$preloadFilePath = "../public/preload.tpl"}
+
+{include file=$preloadFilePath admin_dir=$admin_path}
+
 {if isset($css_files)}
 {foreach from=$css_files key=css_uri item=media}
   <link href="{$css_uri|escape:'html':'UTF-8'}" rel="stylesheet" type="text/css"/>
@@ -108,14 +112,14 @@
 </head>
 
 {if $display_header}
-  <body class="lang-{$iso_user}{if $lang_is_rtl} lang-rtl{/if} ps_back-office{if $employee->bo_menu} page-sidebar{if $collapse_menu} page-sidebar-closed{/if}{else} page-topbar{/if} {$smarty.get.controller|escape|strtolower}">
+  <body class="lang-{$iso_user}{if $lang_is_rtl} lang-rtl{/if} ps_back-office{if $employee->bo_menu} page-sidebar{if $collapse_menu} page-sidebar-closed{/if}{else} page-topbar{/if} {$controller_name|escape|strtolower}">
   {* begin  HEADER *}
   <header id="header" class="bootstrap">
     <nav id="header_infos" role="navigation">
       <i class="material-icons js-mobile-menu">menu</i>
 
       {* Logo *}
-      <a id="header_logo" href="{$default_tab_link|escape:'html':'UTF-8'}" aria-label="{l s='PrestaShop logo' d='Admin.Navigation.Header'}"></a>
+      <a id="header_logo" href="{$default_tab_link|escape:'html':'UTF-8'}" aria-label="{l|escape s='PrestaShop logo' d='Admin.Navigation.Header'}"></a>
       <span id="shop_version">{$ps_version}</span>
 
       {* Quick access *}
@@ -125,7 +129,7 @@
             id="quick_select"
             class="btn btn-link dropdown-toggle"
             data-toggle="dropdown"
-          >{l s='Quick Access' d='Admin.Navigation.Header'} <i class="material-icons">arrow_drop_down</i></button>
+          >{l|escape s='Quick Access' d='Admin.Navigation.Header'} <i class="material-icons">arrow_drop_down</i></button>
           <ul class="dropdown-menu">
             {if !empty($quick_access)}
               {foreach $quick_access as $quick}
@@ -142,21 +146,21 @@
                 <a id="quick-remove-link" href="javascript:void(0);" class="ajax-quick-link" data-method="remove"
                   data-quicklink-id="{$matchQuickLink}">
                   <i class="material-icons">remove_circle</i>
-                  {l s='Remove from QuickAccess' d='Admin.Navigation.Header'}
+                  {l|escape s='Remove from QuickAccess' d='Admin.Navigation.Header'}
                 </a>
               </li>
             {else}
               <li>
                 <a id="quick-add-link" href="javascript:void(0);" class="ajax-quick-link" data-method="add">
                   <i class="material-icons">add_circle</i>
-                  {l s='Add current page to QuickAccess' d='Admin.Navigation.Header'}
+                  {l|escape s='Add current page to QuickAccess' d='Admin.Navigation.Header'}
                 </a>
               </li>
             {/if}
             <li>
               <a id="quick-manage-link" href="{$link->getAdminLink("AdminQuickAccesses")|addslashes}">
                 <i class="material-icons">settings</i>
-                {l s='Manage quick accesses' d='Admin.Navigation.Header'}
+                {l|escape s='Manage quick accesses' d='Admin.Navigation.Header'}
               </a>
             </li>
           </ul>
@@ -171,7 +175,7 @@
             var method = $(this).data('method');
 
             if(method == 'add')
-              var name = prompt('{l s='Please name this shortcut:' js=1 d='Admin.Navigation.Header'}', '{$quick_access_current_link_name.0|truncate:32}');
+              var name = prompt('{l|escape s='Please name this shortcut:' js=1 d='Admin.Navigation.Header'}', '{$quick_access_current_link_name.0|truncate:32}');
 
             if(method == 'add' && name || method == 'remove')
             {
@@ -218,16 +222,16 @@
 
       {if isset($debug_mode) && $debug_mode == true}
       <div class="component hide-mobile-sm">
-          <a class="shop-state label-tooltip" id="debug-mode"
-             data-toggle="tooltip"
-             data-placement="bottom"
-             data-html="true"
-             title="<p class='text-left'><strong>{l s='Your shop is in debug mode.' d='Admin.Navigation.Notification'}</strong></p><p class='text-left'>{l s='All the PHP errors and messages are displayed. When you no longer need it, [1]turn off[/1] this mode.' html=true sprintf=['[1]' => '<strong>', '[/1]' => '</strong>'] d='Admin.Navigation.Notification'}</p>"
+        <a class="shop-state label-tooltip" id="debug-mode"
+           data-toggle="tooltip"
+           data-placement="bottom"
+           data-html="true"
+           title="<p class=&quot;text-left&quot;><strong>{l|escape s='Your shop is in debug mode.' d='Admin.Navigation.Notification'}</strong></p><p class=&quot;text-left&quot;>{l|escape s='All the PHP errors and messages are displayed. When you no longer need it, [1]turn off[/1] this mode.' html=true sprintf=['[1]' => '<strong>', '[/1]' => '</strong>'] d='Admin.Navigation.Notification'}</p>"
              href="{$link->getAdminLink('AdminPerformance')|escape:'html':'UTF-8'}"
           >
-            <i class="material-icons">bug_report</i>
-            <span>{l s='Debug mode' d='Admin.Navigation.Header'}</span>
-          </a>
+          <i class="material-icons">bug_report</i>
+          <span>{l|escape s='Debug mode' d='Admin.Navigation.Header'}</span>
+        </a>
       </div>
       {/if}
 
@@ -238,10 +242,10 @@
            data-toggle="tooltip"
            data-placement="bottom"
            data-html="true"
-           title="<p class='text-left text-nowrap'><strong>{l s='Your shop is in maintenance.' d='Admin.Navigation.Notification'}</strong></p><p class='text-left'>{l s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Shop Parameters > Maintenance tab.' sprintf=['<br />'] d='Admin.Navigation.Notification'}</p>"
+           title="<p class=&quot;text-left text-nowrap&quot;><strong>{l|escape s='Your shop is in maintenance.' d='Admin.Navigation.Notification'}</strong></p><p class=&quot;text-left&quot;>{l|escape s='Your visitors and customers cannot access your shop while in maintenance mode.%s To manage the maintenance settings, go to Shop Parameters > Maintenance tab.' sprintf=['<br />'] d='Admin.Navigation.Notification'}</p>"
         >
           <i class="material-icons">build</i>
-          <span>{l s='Maintenance mode' d='Admin.Navigation.Header'}</span>
+          <span>{l|escape s='Maintenance mode' d='Admin.Navigation.Header'}</span>
         </a>
       </div>
       {/if}
@@ -265,7 +269,7 @@
             {else}
               <a id="header_shopname" class="shop-state" href="{$base_url|escape:'html':'UTF-8'}" target="_blank">
                 <i class="material-icons">visibility</i>
-                <span>{l s='View my shop' d='Admin.Navigation.Header'}</span>
+                <span>{l|escape s='View my shop' d='Admin.Navigation.Header'}</span>
               </a>
             {/if}
           </li>
@@ -288,19 +292,19 @@
                   {$active = "active"}
                   {if $show_new_orders}
                     <li class="nav-item {$active}">
-                      <a class="nav-link" data-toggle="tab" data-type="order" href="#orders-notifications" role="tab" id="orders-tab">{l s='Orders' d='Admin.Navigation.Header'}<span id="orders_notif_value" class="notif-counter"></span></a>
+                      <a class="nav-link" data-toggle="tab" data-type="order" href="#orders-notifications" role="tab" id="orders-tab">{l|escape s='Orders' d='Admin.Navigation.Header'}<span id="orders_notif_value" class="notif-counter"></span></a>
                     </li>
                     {$active = ""}
                   {/if}
                   {if $show_new_customers}
                     <li class="nav-item {$active}">
-                      <a class="nav-link" data-toggle="tab" data-type="customer" href="#customers-notifications" role="tab" id="customers-tab">{l s='Customers' d='Admin.Navigation.Header'}<span id="customers_notif_value" class="notif-counter"></span></a>
+                      <a class="nav-link" data-toggle="tab" data-type="customer" href="#customers-notifications" role="tab" id="customers-tab">{l|escape s='Customers' d='Admin.Navigation.Header'}<span id="customers_notif_value" class="notif-counter"></span></a>
                     </li>
                     {$active = ""}
                   {/if}
                   {if $show_new_messages}
                     <li class="nav-item {$active}">
-                      <a class="nav-link" data-toggle="tab" data-type="customer_message" href="#messages-notifications" role="tab" id="messages-tab">{l s='Messages' d='Admin.Global'}<span id="customer_messages_notif_value" class="notif-counter"></span></a>
+                      <a class="nav-link" data-toggle="tab" data-type="customer_message" href="#messages-notifications" role="tab" id="messages-tab">{l|escape s='Messages' d='Admin.Global'}<span id="customer_messages_notif_value" class="notif-counter"></span></a>
                     </li>
                     {$active = ""}
                   {/if}
@@ -312,7 +316,7 @@
                   {if $show_new_orders}
                     <div class="tab-pane {$active} empty" id="orders-notifications" role="tabpanel">
                       <p class="no-notification">
-                        {l s='No new order for now :(' d='Admin.Navigation.Notification'}<br>
+                        {l|escape s='No new order for now :(' d='Admin.Navigation.Notification'}<br>
                         {$no_order_tip}
                       </p>
                       <div class="notification-elements"></div>
@@ -322,7 +326,7 @@
                   {if $show_new_customers}
                     <div class="tab-pane {$active} empty" id="customers-notifications" role="tabpanel">
                       <p class="no-notification">
-                        {l s='No new customer for now :(' d='Admin.Navigation.Notification'}<br>
+                        {l|escape s='No new customer for now :(' d='Admin.Navigation.Notification'}<br>
                         {$no_customer_tip}
                       </p>
                       <div class="notification-elements"></div>
@@ -332,7 +336,7 @@
                   {if $show_new_messages}
                     <div class="tab-pane {$active} empty" id="messages-notifications" role="tabpanel">
                       <p class="no-notification">
-                        {l s='No new message for now.' d='Admin.Navigation.Notification'}<br>
+                        {l|escape s='No new message for now.' d='Admin.Navigation.Notification'}<br>
                         {$no_customer_message_tip}
                       </p>
                       <div class="notification-elements"></div>
@@ -361,20 +365,23 @@
                 <img class="imgm img-thumbnail" alt="" src="{$employee->getImage()}" width="60" height="60" />
               </span>
             </li>
-            <li class="text-left text-nowrap username" data-mobile="true" data-from="employee_links" data-target="menu">{l s='Welcome back %name%' sprintf=['%name%' => $employee->firstname] d='Admin.Navigation.Header'}</li>
-            <li class="employee-wrapper-profile"><a class="admin-link" href="{$link->getAdminLink('AdminEmployees', true, [], ['id_employee' => $employee->id|intval, 'updateemployee' => 1])|escape:'html':'UTF-8'}"><i class="material-icons">edit</i> {l s='Your profile' d='Admin.Navigation.Header'}</a></li>
+            <li class="text-left text-nowrap username" data-mobile="true" data-from="employee_links" data-target="menu">{l|escape s='Welcome back %name%' sprintf=['%name%' => $employee->firstname] d='Admin.Navigation.Header'}</li>
+            <li class="employee-wrapper-profile"><a class="admin-link" href="{$link->getAdminLink('AdminEmployees', true, [], ['id_employee' => $employee->id|intval, 'updateemployee' => 1])|escape:'html':'UTF-8'}"><i class="material-icons">edit</i> {l|escape s='Your profile' d='Admin.Navigation.Header'}</a></li>
             <li class="divider"></li>
-            <li><a href="{l s='https://www.prestashop.com/en/resources/documentations?utm_source=back-office&utm_medium=profile&utm_campaign=resources-en&utm_content=download17
-' d='Admin.Navigation.Header'}" target="_blank"><i class="material-icons">book</i> {l s='Resources' d='Admin.Navigation.Header'}</a></li>
-            <li><a href="{l s='https://www.prestashop.com/en/training?utm_source=back-office&utm_medium=profile&utm_campaign=training-en&utm_content=download17' d='Admin.Navigation.Header'}" target="_blank"><i class="material-icons">school</i> {l s='Training' d='Admin.Navigation.Header'}</a></li>
-            <li><a href="{l s='https://www.prestashop.com/en/experts?utm_source=back-office&utm_medium=profile&utm_campaign=expert-en&utm_content=download17' d='Admin.Navigation.Header'}" target="_blank"><i class="material-icons">person_pin_circle</i> {l s='Find an Expert' d='Admin.Navigation.Header'}</a></li>
-            <li><a href="{l s='https://addons.prestashop.com?utm_source=back-office&utm_medium=profile&utm_campaign=addons-en&utm_content=download17' d='Admin.Navigation.Header'}" target="_blank"><i class="material-icons">extension</i> {l s='PrestaShop Marketplace' d='Admin.Navigation.Header'}</a></li>
-            <li><a href="{l s='https://www.prestashop.com/en/contact?utm_source=back-office&utm_medium=profile&utm_campaign=help-center-en&utm_content=download17' d='Admin.Navigation.Header'}" target="_blank"><i class="material-icons">help</i> {l s='Help Center' d='Admin.Global'}</a></li>
-            {if $host_mode}
-              <li><a href="https://www.prestashop.com/cloud/" target="_blank" rel="noopener noreferrer nofollow"><i class="material-icons">settings_applications</i> {l s='My PrestaShop account' d='Admin.Navigation.Header'}</a></li>
-            {/if}
-            <li class="divider"></li>
-            <li class="signout text-center" data-mobile="true" data-from="employee_links" data-target="menu" data-after="true"><a id="header_logout" href="{$logout_link|escape:'html':'UTF-8'}"><i class="material-icons visible-xs">power_settings_new</i> {l s='Sign out' d='Admin.Navigation.Header'}</a></li>
+
+            {foreach from=$displayBackOfficeEmployeeMenu item=$menuItem}
+              {assign var=menuItemProperties value=$menuItem->getProperties()}
+              <li class="{$menuItem->getClass()}">
+                <a class="dropdown-item" href="{$menuItemProperties.link}" target="_blank" rel="noopener noreferrer nofollow">
+                  {if isset($menuItemProperties.icon)}<i class="material-icons">{$menuItemProperties.icon}</i> {/if}{$menuItem->getContent()}
+                </a>
+              </li>
+              {if $menuItem@last}
+                <p class="divider"></p>
+              {/if}
+            {/foreach}
+
+            <li class="signout text-center" data-mobile="true" data-from="employee_links" data-target="menu" data-after="true"><a id="header_logout" href="{$logout_link|escape:'html':'UTF-8'}"><i class="material-icons visible-xs">power_settings_new</i> {l|escape s='Sign out' d='Admin.Navigation.Header'}</a></li>
           </ul>
         </li>
       </ul>
@@ -396,7 +403,7 @@
 
 {if $install_dir_exists}
       <div class="alert alert-warning">
-        {l s='For security reasons, you must also delete the /install folder.' d='Admin.Login.Notification'}
+        {l|escape s='For security reasons, you must also delete the /install folder.' d='Admin.Login.Notification'}
       </div>
 {/if}
 

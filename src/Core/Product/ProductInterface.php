@@ -39,4 +39,5 @@ interface ProductInterface
     public const REDIRECT_TYPE_PRODUCT_MOVED_PERMANENTLY = RedirectType::TYPE_PRODUCT_PERMANENT;
     public const REDIRECT_TYPE_PRODUCT_FOUND = RedirectType::TYPE_PRODUCT_TEMPORARY;
     public const REDIRECT_TYPE_NOT_FOUND = RedirectType::TYPE_NOT_FOUND;
+    public const REDIRECT_TYPE_GONE = RedirectType::TYPE_GONE;
 }

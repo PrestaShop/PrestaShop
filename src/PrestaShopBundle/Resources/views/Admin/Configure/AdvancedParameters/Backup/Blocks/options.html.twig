@@ -24,7 +24,7 @@
  *#}
 
 {% trans_default_domain 'Admin.Advparameters.Feature' %}
-{% form_theme backupForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
+{% form_theme backupForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
 {% block backup_options_card %}
   {{ form_start(backupForm) }}
@@ -32,8 +32,8 @@
     <h3 class="card-header">
       <i class="material-icons">settings</i> {{ 'Backup options'|trans }}
     </h3>
-    <div class="card-block row">
-      <div class="card-text">
+    <div class="card-body">
+      <div class="form-wrapper">
         {{ form_widget(backupForm) }}
       </div>
     </div>

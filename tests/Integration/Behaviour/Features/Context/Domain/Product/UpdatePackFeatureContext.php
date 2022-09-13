@@ -29,7 +29,6 @@ declare(strict_types=1);
 namespace Tests\Integration\Behaviour\Features\Context\Domain\Product;
 
 use Behat\Gherkin\Node\TableNode;
-use Pack;
 use PHPUnit\Framework\Assert;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductException;
@@ -37,7 +36,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command\RemoveAllProductsFrom
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Command\SetPackProductsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Exception\ProductPackConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Query\GetPackedProducts;
-use PrestaShop\PrestaShop\Core\Domain\Product\Pack\QueryResult\PackedProduct;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\QueryResult\PackedProductDetails;
 use RuntimeException;
 
 class UpdatePackFeatureContext extends AbstractProductFeatureContext
@@ -94,13 +93,17 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
     {
         $packId = $this->getSharedStorage()->get($packReference);
 
-        $packedProducts = $this->getQueryBus()->handle(new GetPackedProducts($packId));
+        $packedProducts = $this->getQueryBus()->handle(
+            new GetPackedProducts(
+                $packId,
+                $this->getDefaultLangId()
+            )
+        );
         Assert::assertEmpty($packedProducts);
-        Assert::assertFalse(Pack::isPack($packId));
     }
 
     /**
-     * @Then pack :packReference should contain products with following quantities:
+     * @Then pack :packReference should contain products with following details:
      *
      * @param string $packReference
      * @param TableNode $table
@@ -109,35 +112,66 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
     {
         $data = $table->getColumnsHash();
         $packId = $this->getSharedStorage()->get($packReference);
-        $packedProducts = $this->getQueryBus()->handle(new GetPackedProducts($packId));
+        /** @var array<int, PackedProductDetails> $packedProducts */
+        $packedProducts = $this->getQueryBus()->handle(
+            new GetPackedProducts(
+                $packId,
+                $this->getDefaultLangId()
+            )
+        );
         $notExistingProducts = [];
 
-        foreach ($data as $row) {
-            $productReference = $row['product'];
-            $expectedQty = (int) $row['quantity'];
+        foreach ($data as $expectedPackedProduct) {
+            $productReference = $expectedPackedProduct['product'];
+            $expectedQuantity = (int) $expectedPackedProduct['quantity'];
+            $expectedName = $expectedPackedProduct['name'];
+            $expectedCombination = $expectedPackedProduct['combination'];
             $expectedPackedProductId = $this->getSharedStorage()->get($productReference);
-            $expectedCombinationId = $this->getExpectedCombinationId($row);
-
+            $expectedCombinationId = !empty($expectedPackedProduct['combination']) ? $this->getSharedStorage()->get($expectedPackedProduct['combination']) : 0;
             $foundProduct = false;
 
-            /**
-             * @var int
-             * @var PackedProduct $packedProduct
-             */
             foreach ($packedProducts as $key => $packedProduct) {
                 if ($packedProduct->getProductId() === $expectedPackedProductId) {
                     $foundProduct = true;
+
                     Assert::assertEquals(
-                        $expectedQty,
+                        $expectedName,
+                        $packedProduct->getProductName(),
+                        sprintf('Unexpected name of packed product "%s"', $productReference)
+                    );
+
+                    if ($expectedCombination !== '') {
+                        Assert::assertEquals(
+                            $expectedCombinationId,
+                            $packedProduct->getCombinationId(),
+                            sprintf('Unexpected combination (%s) of packed product "%s"', $expectedCombinationId, $productReference)
+                        );
+                    }
+
+                    Assert::assertEquals(
+                        $expectedQuantity,
                         $packedProduct->getQuantity(),
                         sprintf('Unexpected quantity of packed product "%s"', $productReference)
                     );
 
+                    $realImageUrl = $this->getRealImageUrl($expectedPackedProduct['image url']);
                     Assert::assertEquals(
-                        $expectedCombinationId,
-                        $packedProduct->getCombinationId(),
-                        sprintf('Unexpected packed product "%s" combination', $productReference)
+                        $realImageUrl,
+                        $packedProduct->getImageUrl(),
+                        sprintf(
+                            'Invalid product image url, expected %s but got %s instead.',
+                            $realImageUrl,
+                            $packedProduct->getImageUrl()
+                        )
                     );
+
+                    if (isset($expectedPackedProduct['reference'])) {
+                        Assert::assertEquals(
+                            $expectedPackedProduct['reference'],
+                            $packedProduct->getReference(),
+                            sprintf('Unexpected reference of packed product "%s"', $productReference)
+                        );
+                    }
 
                     //unset asserted product to check if there was any excessive actual products after loops
                     unset($packedProducts[$key]);
@@ -147,9 +181,9 @@ class UpdatePackFeatureContext extends AbstractProductFeatureContext
 
             if (!$foundProduct) {
                 if ($expectedCombinationId) {
-                    $notExistingProducts[$productReference][$row['combination']] = $expectedQty;
+                    $notExistingProducts[$productReference][$expectedPackedProduct['combination']] = $expectedQuantity;
                 } else {
-                    $notExistingProducts[$productReference] = $expectedQty;
+                    $notExistingProducts[$productReference] = $expectedQuantity;
                 }
             }
         }

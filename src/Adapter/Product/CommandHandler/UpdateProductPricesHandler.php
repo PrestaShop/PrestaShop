@@ -28,12 +28,15 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\Decimal\DecimalNumber;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductPricePropertiesFiller;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductPricesHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\ProductConstraintException;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use Product;
 
 /**
@@ -42,7 +45,7 @@ use Product;
 final class UpdateProductPricesHandler implements UpdateProductPricesHandlerInterface
 {
     /**
-     * @var ProductRepository
+     * @var ProductMultiShopRepository
      */
     private $productRepository;
 
@@ -52,15 +55,22 @@ final class UpdateProductPricesHandler implements UpdateProductPricesHandlerInte
     private $productPricePropertiesFiller;
 
     /**
-     * @param ProductRepository $productRepository
+     * @var ProductSupplierRepository
+     */
+    private $productSupplierRepository;
+
+    /**
+     * @param ProductMultiShopRepository $productRepository
      * @param ProductPricePropertiesFiller $productPricePropertiesFiller
      */
     public function __construct(
-        ProductRepository $productRepository,
-        ProductPricePropertiesFiller $productPricePropertiesFiller
+        ProductMultiShopRepository $productRepository,
+        ProductPricePropertiesFiller $productPricePropertiesFiller,
+        ProductSupplierRepository $productSupplierRepository
     ) {
         $this->productRepository = $productRepository;
         $this->productPricePropertiesFiller = $productPricePropertiesFiller;
+        $this->productSupplierRepository = $productSupplierRepository;
     }
 
     /**
@@ -68,10 +78,32 @@ final class UpdateProductPricesHandler implements UpdateProductPricesHandlerInte
      */
     public function handle(UpdateProductPricesCommand $command): void
     {
-        $product = $this->productRepository->get($command->getProductId());
+        $product = $this->productRepository->getByShopConstraint($command->getProductId(), $command->getShopConstraint());
         $updatableProperties = $this->fillUpdatableProperties($product, $command);
+        $this->productRepository->partialUpdate(
+            $product,
+            $updatableProperties,
+            $command->getShopConstraint(),
+            CannotUpdateProductException::FAILED_UPDATE_PRICES
+        );
 
-        $this->productRepository->partialUpdate($product, $updatableProperties, CannotUpdateProductException::FAILED_UPDATE_PRICES);
+        if (null !== $command->getWholesalePrice()) {
+            $this->updateDefaultSupplier($command->getProductId(), $command->getWholesalePrice());
+        }
+    }
+
+    /**
+     * @param ProductId $productId
+     * @param DecimalNumber $wholesalePrice
+     */
+    private function updateDefaultSupplier(ProductId $productId, DecimalNumber $wholesalePrice): void
+    {
+        $defaultSupplierId = $this->productSupplierRepository->getDefaultProductSupplierId($productId);
+        if (null !== $defaultSupplierId) {
+            $defaultProductSupplier = $this->productSupplierRepository->get($defaultSupplierId);
+            $defaultProductSupplier->product_supplier_price_te = (float) (string) $wholesalePrice;
+            $this->productSupplierRepository->update($defaultProductSupplier);
+        }
     }
 
     /**
@@ -88,17 +120,14 @@ final class UpdateProductPricesHandler implements UpdateProductPricesHandlerInte
             $product,
             $command->getPrice(),
             $command->getUnitPrice(),
-            $command->getWholesalePrice()
+            $command->getWholesalePrice(),
+            $command->getEcotax(),
+            $command->getShopConstraint()
         );
 
         if (null !== $command->getUnity()) {
             $product->unity = $command->getUnity();
             $updatableProperties[] = 'unity';
-        }
-
-        if (null !== $command->getEcotax()) {
-            $product->ecotax = (float) (string) $command->getEcotax();
-            $updatableProperties[] = 'ecotax';
         }
 
         $taxRulesGroupId = $command->getTaxRulesGroupId();

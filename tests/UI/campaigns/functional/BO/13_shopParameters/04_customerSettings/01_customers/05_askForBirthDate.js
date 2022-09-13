@@ -4,25 +4,33 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const testContext = require('@utils/testContext');
 
-// Import pages
+// Import login steps
+const loginCommon = require('@commonTests/BO/loginBO');
+
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const customerSettingsPage = require('@pages/BO/shopParameters/customerSettings');
 const {options} = require('@pages/BO/shopParameters/customerSettings/options');
+
+// Import FO pages
 const foHomePage = require('@pages/FO/home');
 const loginFOPage = require('@pages/FO/login');
 const foCreateAccountPage = require('@pages/FO/myAccount/add');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_customerSettings_customers_askForBirthDate';
 
 let browserContext;
 let page;
 
-describe('Enable ask for birth date', async () => {
+/*
+Enable ask for birthdate
+Go to FO > create account page and check that birthdate input is visible
+Disable ask for birthdate
+Go to FO > create account page and check that birthdate input is not visible
+ */
+describe('BO - Shop Parameters - Customer Settings : Enable/Disable ask for birth date', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -86,9 +94,16 @@ describe('Enable ask for birth date', async () => {
       // Check birthday
       const isBirthDateInputVisible = await foCreateAccountPage.isBirthDateVisible(page);
       await expect(isBirthDateInputVisible).to.be.equal(test.args.enable);
+    });
+
+    it('should go back to BO', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', `goBackToBO${index}`, baseContext);
 
       // Go back to BO
       page = await foCreateAccountPage.closePage(browserContext, page, 0);
+
+      const pageTitle = await customerSettingsPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(customerSettingsPage.pageTitle);
     });
   });
 });

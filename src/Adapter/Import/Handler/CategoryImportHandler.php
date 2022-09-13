@@ -165,12 +165,12 @@ final class CategoryImportHandler extends AbstractImportHandler
         parent::importRow($importConfig, $runtimeConfig, $dataRow);
 
         $entityFields = $runtimeConfig->getEntityFields();
-        $categoryId = $this->fetchDataValueByKey($dataRow, $entityFields, 'id');
+        $categoryId = (int) $this->fetchDataValueByKey($dataRow, $entityFields, 'id');
 
         $this->checkCategoryId($categoryId);
 
         if ($categoryId && ($importConfig->forceIds() || ObjectModel::existsInDatabase($categoryId, 'category'))) {
-            $category = new Category((int) $categoryId);
+            $category = new Category($categoryId);
         } else {
             $category = new Category();
         }
@@ -248,8 +248,8 @@ final class CategoryImportHandler extends AbstractImportHandler
             // Validation for parenting itself
             if ($isValidation && $category->parent == $category->id) {
                 $this->error($this->translator->trans(
-                'The category ID must be unique. It can\'t be the same as the one for the parent category (ID: %1$s).',
-                    $categoryId ?: null,
+                    'The category ID must be unique. It can\'t be the same as the one for the parent category (ID: %1$s).',
+                    [$categoryId ?: null],
                     'Admin.Advparameters.Notification'
                 ));
 
@@ -500,8 +500,8 @@ final class CategoryImportHandler extends AbstractImportHandler
                     '%1$s (ID: %2$s) cannot be %3$s',
                     [
                         !empty($categoryName) ? $this->tools->sanitize($categoryName) : 'No Name',
-                        !empty($categoryId) ? $this->tools->sanitize($categoryId) : 'No ID',
-                        $runtimeConfig->shouldValidateData() ? 'validated' : 'saved',
+                        !empty($categoryId) ? $this->tools->sanitize((string) $categoryId) : 'No ID',
+                        'saved',
                     ],
                     'Admin.Advparameters.Notification'
                 )
@@ -528,14 +528,18 @@ final class CategoryImportHandler extends AbstractImportHandler
                 }
 
                 // Get shops for each attributes
-                $shopData = explode($importConfig->getMultipleValueSeparator(), $shopData);
+                $multipleValueSeparator = $importConfig->getMultipleValueSeparator();
+                if (empty($multipleValueSeparator)) {
+                    return;
+                }
+                $shopData = explode($multipleValueSeparator, $shopData);
 
                 foreach ($shopData as $shop) {
                     if (!empty($shop)) {
                         if (!is_numeric($shop)) {
                             $category->addShop(Shop::getIdByName($shop));
                         } else {
-                            $category->addShop($shop);
+                            $category->addShop((int) $shop);
                         }
                     }
                 }

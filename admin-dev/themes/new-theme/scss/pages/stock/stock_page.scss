@@ -5,15 +5,34 @@
 @import "@scss/config/_bootstrap";
 /* stylelint-enable */
 
+.header-toolbar {
+  display: none;
+
+  @at-root .multishop-enabled & {
+    display: block;
+    border-bottom: none;
+  }
+}
+
+.content-div {
+  > #content-message-box,
+  > #ajax_confirmation {
+    display: none;
+  }
+}
+
 .adminstockmanagement .stock-app {
   padding: 0;
 
   .header-toolbar {
     z-index: 989;
+    display: block;
     padding-right: 0;
     padding-left: 0;
     margin: -($grid-gutter-width / 2);
+    margin-top: -1rem;
     margin-bottom: 1rem;
+    border-bottom: 0.0625rem solid $color-separator;
 
     @at-root .multishop-enabled & {
       top: 4.95rem;

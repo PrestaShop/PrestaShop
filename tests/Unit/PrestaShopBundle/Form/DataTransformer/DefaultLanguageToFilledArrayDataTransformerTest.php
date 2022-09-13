@@ -39,7 +39,7 @@ class DefaultLanguageToFilledArrayDataTransformerTest extends TestCase
      */
     private $defaultLanguageId;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -51,7 +51,7 @@ class DefaultLanguageToFilledArrayDataTransformerTest extends TestCase
      */
     public function testReverseTransformationItReturnsSameValueAsPassed($item)
     {
-        $dataTransformer = new DefaultLanguageToFilledArrayDataTransformer((string) $this->defaultLanguageId);
+        $dataTransformer = new DefaultLanguageToFilledArrayDataTransformer($this->defaultLanguageId);
         $result = $dataTransformer->reverseTransform($item);
 
         $this->assertEquals($item, $result);

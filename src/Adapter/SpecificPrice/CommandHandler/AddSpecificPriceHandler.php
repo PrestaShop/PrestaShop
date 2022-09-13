@@ -24,11 +24,13 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
+declare(strict_types=1);
+
 namespace PrestaShop\PrestaShop\Adapter\SpecificPrice\CommandHandler;
 
 use PrestaShop\PrestaShop\Adapter\SpecificPrice\AbstractSpecificPriceHandler;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Command\AddSpecificPriceCommand;
-use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\CommandHandler\AddSpecificPriceHandlerInterface;
+use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\CommandHandler\AddSpecificPriceHandlerInterface as DeprecatedInterface;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceConstraintException;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\Exception\SpecificPriceException;
 use PrestaShop\PrestaShop\Core\Domain\SpecificPrice\ValueObject\SpecificPriceId;
@@ -36,10 +38,19 @@ use PrestaShop\PrestaShop\Core\Util\DateTime\DateTime;
 use PrestaShopException;
 use SpecificPrice;
 
+@trigger_error(
+    sprintf(
+        '%s is deprecated since version 8.0.0 and will be removed in the next major version.',
+        AddSpecificPriceHandler::class
+    ),
+    E_USER_DEPRECATED
+);
+
 /**
- * Handles AddSpecificPriceCommand using legacy object model
+ * @deprecated since 8.0.0 and will be removed in next major version.
+ * @see AddSpecificPriceHandler
  */
-final class AddSpecificPriceHandler extends AbstractSpecificPriceHandler implements AddSpecificPriceHandlerInterface
+final class AddSpecificPriceHandler extends AbstractSpecificPriceHandler implements DeprecatedInterface
 {
     /**
      * @param AddSpecificPriceCommand $command
@@ -65,7 +76,7 @@ final class AddSpecificPriceHandler extends AbstractSpecificPriceHandler impleme
             throw new SpecificPriceException('An error occurred when trying to add new specific price');
         }
 
-        return new SpecificPriceId($specificPrice->id);
+        return new SpecificPriceId((int) $specificPrice->id);
     }
 
     /**
@@ -84,9 +95,9 @@ final class AddSpecificPriceHandler extends AbstractSpecificPriceHandler impleme
 
         $specificPrice->id_product = $command->getProductId()->getValue();
         $specificPrice->reduction_type = $command->getReduction()->getType();
-        $specificPrice->reduction = $command->getReduction()->getValue();
+        $specificPrice->reduction = (string) $command->getReduction()->getValue();
         $specificPrice->reduction_tax = $command->isIncludeTax();
-        $specificPrice->price = $command->getPrice();
+        $specificPrice->price = (string) $command->getPrice();
         $specificPrice->from_quantity = $command->getFromQuantity();
         $specificPrice->id_shop_group = $command->getShopGroupId() ?? 0;
         $specificPrice->id_shop = $command->getShopId() ?? 0;

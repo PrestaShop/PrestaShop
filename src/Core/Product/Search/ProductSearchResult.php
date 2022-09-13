@@ -37,7 +37,7 @@ class ProductSearchResult
      */
     private $totalProductsCount;
     /**
-     * @var FacetCollection
+     * @var FacetCollection|null
      */
     private $facetCollection;
     /**
@@ -106,7 +106,7 @@ class ProductSearchResult
     }
 
     /**
-     * @return FacetCollection
+     * @return FacetCollection|null
      */
     public function getFacetCollection()
     {

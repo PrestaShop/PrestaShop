@@ -29,10 +29,8 @@
   </h3>
   <div class="card-body">
     <div class="row">
-      <div class="col-3">
-        <span class="float-right">{{ 'Search for a voucher'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
-      </div>
-      <div class="col-4" id="cart-rules-search-block">
+      <label class="col-md-3 text-md-right col-form-label" for="search-cart-rules-input">{{ 'Search for a voucher'|trans({}, 'Admin.Orderscustomers.Feature') }}</label>
+      <div class="col-md-4 mb-2" id="cart-rules-search-block">
         <div class="col p-0">
           <input type="text" class="form-control" id="search-cart-rules-input">
           <ul id="search-cart-rules-result-box" class="position-absolute bg-white w-100 form-control d-none list-unstyled"></ul>
@@ -44,11 +42,8 @@
       </div>
       <div class="col">
         <span class="mr-2">{{ 'or'|trans({}, 'Admin.Global') }}</span>
-        <a
-          class="btn btn-primary"
-          id="js-add-cart-rule-btn"
-          href="{{ getAdminLink('AdminCartRules', true, {'liteDisplaying': 1, 'submitFormAjax': 1, 'addcart_rule': 1}) }}"
-        >
+        <a class="btn btn-primary" id="js-add-cart-rule-btn"
+          href="{{ getAdminLink('AdminCartRules', true, {'liteDisplaying': 1, 'submitFormAjax': 1, 'addcart_rule': 1}) }}">
           {{ 'Add new voucher'|trans({}, 'Admin.Orderscustomers.Feature') }}
         </a>
       </div>
@@ -86,4 +81,3 @@
 <script id="found-cart-rule-template" type="text/template">
   <li data-cart-rule-id="" class="js-found-cart-rule found-cart-rule"></li>
 </script>
-

@@ -26,16 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Core\Grid\Definition\Factory\Monitoring;
 
-use PrestaShop\PrestaShop\Core\Grid\Column\ColumnCollection;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\ActionColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\BulkActionColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\Common\IdentifierColumn;
-use PrestaShop\PrestaShop\Core\Grid\Column\Type\DataColumn;
-use PrestaShop\PrestaShop\Core\Grid\Filter\Filter;
-use PrestaShop\PrestaShop\Core\Grid\Filter\FilterCollection;
-use PrestaShopBundle\Form\Admin\Type\SearchAndResetType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-
 /**
  * Builds Grid definition for disabled product grid
  */
@@ -56,90 +46,11 @@ final class DisabledProductGridDefinitionFactory extends AbstractProductGridDefi
      */
     protected function getColumns()
     {
-        return (new ColumnCollection())
-            ->add(
-                (new BulkActionColumn('monitoring_products_bulk'))
-                    ->setOptions([
-                        'bulk_field' => 'id_product',
-                    ])
-            )
-            ->add(
-                (new IdentifierColumn('id_product'))
-                    ->setName($this->trans('ID', [], 'Admin.Global'))
-                    ->setOptions([
-                        'identifier_field' => 'id_product',
-                    ])
-            )
-            ->add(
-                (new DataColumn('reference'))
-                    ->setName($this->trans('Reference', [], 'Admin.Global'))
-                    ->setOptions([
-                        'field' => 'reference',
-                    ])
-            )
-            ->add(
-                (new DataColumn('name'))
-                    ->setName($this->trans('Name', [], 'Admin.Global'))
-                    ->setOptions([
-                        'field' => 'name',
-                    ])
-            )
-            ->add(
-                (new ActionColumn('actions'))
-                    ->setName($this->trans('Actions', [], 'Admin.Global'))
-                    ->setOptions([
-                        'actions' => $this->getRowActions(),
-                    ])
-            );
+        return parent::getColumns()->remove('active');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getFilters()
     {
-        return (new FilterCollection())
-            ->add(
-                (new Filter('id_product', TextType::class))
-                    ->setAssociatedColumn('id_product')
-                    ->setTypeOptions([
-                        'required' => false,
-                        'attr' => [
-                            'placeholder' => $this->trans('Search ID', [], 'Admin.Actions'),
-                        ],
-                    ])
-            )
-            ->add(
-                (new Filter('reference', TextType::class))
-                    ->setAssociatedColumn('reference')
-                    ->setTypeOptions([
-                        'required' => false,
-                        'attr' => [
-                            'placeholder' => $this->trans('Search reference', [], 'Admin.Actions'),
-                        ],
-                    ])
-            )
-            ->add(
-                (new Filter('name', TextType::class))
-                    ->setAssociatedColumn('name')
-                    ->setTypeOptions([
-                        'required' => false,
-                        'attr' => [
-                            'placeholder' => $this->trans('Search name', [], 'Admin.Actions'),
-                        ],
-                    ])
-            )
-            ->add(
-                (new Filter('actions', SearchAndResetType::class))
-                    ->setAssociatedColumn('actions')
-                    ->setTypeOptions([
-                        'reset_route' => 'admin_common_reset_search_by_filter_id',
-                        'reset_route_params' => [
-                            'filterId' => $this::GRID_ID,
-                        ],
-                        'redirect_route' => 'admin_monitorings_index',
-                    ])
-                    ->setAssociatedColumn('actions')
-            );
+        return parent::getFilters()->remove('active');
     }
 }

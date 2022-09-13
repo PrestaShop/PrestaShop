@@ -28,16 +28,14 @@ declare(strict_types=1);
 
 namespace Tests\Integration\PrestaShopBundle\Form\EventListener;
 
-use Generator;
+use PHPUnit\Framework\MockObject\MockObject;
+use PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
 use PrestaShopBundle\Form\Admin\Sell\Product\EventListener\ProductTypeListener;
-use PrestaShopBundle\Form\Admin\Type\CommonAbstractType;
-use Symfony\Component\Form\Exception\OutOfBoundsException;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Form\FormBuilderInterface;
+use PrestaShopBundle\Form\Admin\Sell\Product\ExtraModulesType;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
+use Tests\Integration\PrestaShopBundle\Form\TestProductFormType;
 
 class ProductTypeListenerTest extends FormListenerTestCase
 {
@@ -61,43 +59,58 @@ class ProductTypeListenerTest extends FormListenerTestCase
      */
     public function testFormTypeExistsInFormDependingOnProductType(string $productType, string $formTypeName, bool $shouldExist): void
     {
-        $form = $this->createForm(SimpleProductFormTest::class);
+        $form = $this->createForm(TestProductFormType::class);
         $this->assertFormTypeExistsInForm($form, $formTypeName, true);
         $this->adaptProductFormBasedOnProductType($form, $productType);
         $this->assertFormTypeExistsInForm($form, $formTypeName, $shouldExist);
     }
 
-    public function getFormTypeExpectationsBasedOnProductType(): Generator
+    public function getFormTypeExpectationsBasedOnProductType(): iterable
     {
-        yield [ProductType::TYPE_STANDARD, 'options.suppliers', true];
-        yield [ProductType::TYPE_PACK, 'options.suppliers', true];
-        yield [ProductType::TYPE_VIRTUAL, 'options.suppliers', true];
-        yield [ProductType::TYPE_COMBINATIONS, 'options.suppliers', false];
+        yield 'product_supplier in standard context' => [ProductType::TYPE_STANDARD, 'options.product_suppliers', true];
+        yield 'product_supplier in pack context' => [ProductType::TYPE_PACK, 'options.product_suppliers', true];
+        yield 'product_supplier in virtual context' => [ProductType::TYPE_VIRTUAL, 'options.product_suppliers', true];
+        yield 'product_supplier in combination context' => [ProductType::TYPE_COMBINATIONS, 'options.product_suppliers', false];
 
-        yield [ProductType::TYPE_STANDARD, 'stock', true];
-        yield [ProductType::TYPE_PACK, 'stock', true];
-        yield [ProductType::TYPE_VIRTUAL, 'stock', true];
-        yield [ProductType::TYPE_COMBINATIONS, 'stock', false];
+        yield 'stock in standard context' => [ProductType::TYPE_STANDARD, 'stock', true];
+        yield 'stock in pack context' => [ProductType::TYPE_PACK, 'stock', true];
+        yield 'stock in combination context' => [ProductType::TYPE_VIRTUAL, 'stock', true];
+        yield 'stock in virtual context' => [ProductType::TYPE_COMBINATIONS, 'stock', false];
 
-        yield [ProductType::TYPE_STANDARD, 'shipping', true];
-        yield [ProductType::TYPE_PACK, 'shipping', true];
-        yield [ProductType::TYPE_VIRTUAL, 'shipping', false];
-        yield [ProductType::TYPE_COMBINATIONS, 'shipping', true];
+        yield 'shipping in standard context' => [ProductType::TYPE_STANDARD, 'shipping', true];
+        yield 'shipping in pack context' => [ProductType::TYPE_PACK, 'shipping', true];
+        yield 'shipping in combination context' => [ProductType::TYPE_VIRTUAL, 'shipping', false];
+        yield 'shipping in virtual context' => [ProductType::TYPE_COMBINATIONS, 'shipping', true];
 
-        yield [ProductType::TYPE_STANDARD, 'stock.pack_stock_type', false];
-        yield [ProductType::TYPE_PACK, 'stock.pack_stock_type', true];
-        yield [ProductType::TYPE_VIRTUAL, 'stock.pack_stock_type', false];
-        yield [ProductType::TYPE_COMBINATIONS, 'stock.pack_stock_type', false];
+        yield 'pack in standard context' => [ProductType::TYPE_STANDARD, 'stock.packed_products', false];
+        yield 'pack in pack context' => [ProductType::TYPE_PACK, 'stock.packed_products', true];
+        yield 'pack in combination context' => [ProductType::TYPE_COMBINATIONS, 'stock.packed_products', false];
+        yield 'pack in virtual context' => [ProductType::TYPE_VIRTUAL, 'stock.packed_products', false];
 
-        yield [ProductType::TYPE_STANDARD, 'stock.virtual_product_file', false];
-        yield [ProductType::TYPE_PACK, 'stock.virtual_product_file', false];
-        yield [ProductType::TYPE_VIRTUAL, 'stock.virtual_product_file', true];
-        yield [ProductType::TYPE_COMBINATIONS, 'stock.virtual_product_file', false];
+        yield 'pack_stock_type in standard context' => [ProductType::TYPE_STANDARD, 'stock.pack_stock_type', false];
+        yield 'pack_stock_type in pack context' => [ProductType::TYPE_PACK, 'stock.pack_stock_type', true];
+        yield 'pack_stock_type in combination context' => [ProductType::TYPE_VIRTUAL, 'stock.pack_stock_type', false];
+        yield 'pack_stock_type in virtual context' => [ProductType::TYPE_COMBINATIONS, 'stock.pack_stock_type', false];
 
-        yield [ProductType::TYPE_STANDARD, 'shortcuts.stock', true];
-        yield [ProductType::TYPE_PACK, 'shortcuts.stock', true];
-        yield [ProductType::TYPE_VIRTUAL, 'shortcuts.stock', true];
-        yield [ProductType::TYPE_COMBINATIONS, 'shortcuts.stock', false];
+        yield 'virtual_product_file in standard context' => [ProductType::TYPE_STANDARD, 'stock.virtual_product_file', false];
+        yield 'virtual_product_file in pack context' => [ProductType::TYPE_PACK, 'stock.virtual_product_file', false];
+        yield 'virtual_product_file in combination context' => [ProductType::TYPE_VIRTUAL, 'stock.virtual_product_file', true];
+        yield 'virtual_product_file in virtual context' => [ProductType::TYPE_COMBINATIONS, 'stock.virtual_product_file', false];
+
+        yield 'combinations in standard context' => [ProductType::TYPE_STANDARD, 'combinations', false];
+        yield 'combinations in pack context' => [ProductType::TYPE_PACK, 'combinations', false];
+        yield 'combinations in virtual context' => [ProductType::TYPE_VIRTUAL, 'combinations', false];
+        yield 'combinations in combination context' => [ProductType::TYPE_COMBINATIONS, 'combinations', true];
+
+        yield 'ecotax_tax_excluded in standard context' => [ProductType::TYPE_STANDARD, 'pricing.retail_price.ecotax_tax_excluded', true];
+        yield 'ecotax_tax_excluded in pack context' => [ProductType::TYPE_PACK, 'pricing.retail_price.ecotax_tax_excluded', true];
+        yield 'ecotax_tax_excluded in virtual context' => [ProductType::TYPE_VIRTUAL, 'pricing.retail_price.ecotax_tax_excluded', false];
+        yield 'ecotax_tax_excluded in combination context' => [ProductType::TYPE_COMBINATIONS, 'pricing.retail_price.ecotax_tax_excluded', true];
+
+        yield 'ecotax_tax_included in standard context' => [ProductType::TYPE_STANDARD, 'pricing.retail_price.ecotax_tax_included', true];
+        yield 'ecotax_tax_included in pack context' => [ProductType::TYPE_PACK, 'pricing.retail_price.ecotax_tax_included', true];
+        yield 'ecotax_tax_included in virtual context' => [ProductType::TYPE_VIRTUAL, 'pricing.retail_price.ecotax_tax_included', false];
+        yield 'ecotax_tax_included in combination context' => [ProductType::TYPE_COMBINATIONS, 'pricing.retail_price.ecotax_tax_included', true];
     }
 
     /**
@@ -112,12 +125,12 @@ class ProductTypeListenerTest extends FormListenerTestCase
      */
     public function testFormTypeSwitching(string $initialProductType, string $newProductType): void
     {
-        $form = $this->createForm(SimpleProductFormTest::class);
+        $form = $this->createForm(TestProductFormType::class);
         $this->adaptProductFormBasedOnProductType($form, $initialProductType);
         $this->adaptProductFormBasedOnProductType($form, $newProductType);
     }
 
-    public function getFormTypeSwitching(): Generator
+    public function getFormTypeSwitching(): iterable
     {
         $productTypes = [
             ProductType::TYPE_STANDARD,
@@ -134,68 +147,175 @@ class ProductTypeListenerTest extends FormListenerTestCase
     }
 
     /**
-     * @param FormInterface $form
+     * @dataProvider getStockMovements
+     *
      * @param string $productType
+     * @param array $movementsData
+     * @param bool $shouldExist
      */
-    private function adaptProductFormBasedOnProductType(FormInterface $form, string $productType): void
+    public function testStockMovementsRemovedBasedOnItsContent(string $productType, array $movementsData, bool $shouldExist): void
     {
-        $listener = new ProductTypeListener();
-
         $formData = [
-            'header' => [
-                'type' => $productType,
+            'stock' => [
+                'quantities' => [
+                    'stock_movements' => $movementsData,
+                ],
             ],
         ];
+        $form = $this->createForm(TestProductFormType::class, [], $formData);
+
+        $this->assertFormTypeExistsInForm($form, 'stock.quantities.stock_movements', true);
+        $this->adaptProductFormBasedOnProductType($form, $productType, $formData);
+        $this->assertFormTypeExistsInForm($form, 'stock.quantities.stock_movements', $shouldExist);
+    }
+
+    public function getStockMovements(): iterable
+    {
+        yield [ProductType::TYPE_STANDARD, [], false];
+        yield [ProductType::TYPE_COMBINATIONS, [], false];
+        yield [ProductType::TYPE_PACK, [], false];
+        yield [ProductType::TYPE_VIRTUAL, [], false];
+
+        $stockMovements = [
+            [
+                'employee' => 'John Doe',
+                'delta_quantity' => 42,
+            ],
+            [
+                'employee' => 'John Doe',
+                'delta_quantity' => -15,
+            ],
+        ];
+
+        yield [ProductType::TYPE_STANDARD, $stockMovements, true];
+        yield [ProductType::TYPE_COMBINATIONS, $stockMovements, false];
+        yield [ProductType::TYPE_PACK, $stockMovements, true];
+        yield [ProductType::TYPE_VIRTUAL, $stockMovements, true];
+    }
+
+    /**
+     * @dataProvider getVirtualData
+     *
+     * @param array $formData
+     * @param bool $ecotaxExpected
+     */
+    public function testEcotaxForVirtualProduct(array $formData, bool $ecotaxExpected): void
+    {
+        $form = $this->createForm(TestProductFormType::class, [], $formData);
+
+        $this->assertFormTypeExistsInForm($form, 'pricing.retail_price.ecotax_tax_excluded', true);
+        $this->assertFormTypeExistsInForm($form, 'pricing.retail_price.ecotax_tax_included', true);
+        $this->adaptProductFormBasedOnProductType($form, $formData['header']['type'], $formData);
+        $this->assertFormTypeExistsInForm($form, 'pricing.retail_price.ecotax_tax_excluded', $ecotaxExpected);
+        $this->assertFormTypeExistsInForm($form, 'pricing.retail_price.ecotax_tax_included', $ecotaxExpected);
+    }
+
+    public function getVirtualData(): iterable
+    {
+        yield 'no initial type defined, virtual type defined, ecotax removed' => [
+            [
+                'header' => [
+                    'type' => ProductType::TYPE_VIRTUAL,
+                ],
+            ],
+            false,
+        ];
+
+        yield 'both initial and current are virtual, ecotax removed' => [
+            [
+                'header' => [
+                    'type' => ProductType::TYPE_VIRTUAL,
+                    'initial_type' => ProductType::TYPE_VIRTUAL,
+                ],
+            ],
+            false,
+        ];
+
+        yield 'initial standard and current virtual, ecotax present' => [
+            [
+                'header' => [
+                    'type' => ProductType::TYPE_VIRTUAL,
+                    'initial_type' => ProductType::TYPE_STANDARD,
+                ],
+            ],
+            true,
+        ];
+
+        yield 'initial virtual and current standard, ecotax present' => [
+            [
+                'header' => [
+                    'type' => ProductType::TYPE_VIRTUAL,
+                    'initial_type' => ProductType::TYPE_STANDARD,
+                ],
+            ],
+            true,
+        ];
+    }
+
+    /**
+     * @dataProvider getProductTypes
+     *
+     * @param string $productType
+     */
+    public function testExtraModules(string $productType): void
+    {
+        $form = $this->createForm(TestProductFormType::class);
+
+        $this->assertFormTypeExistsInForm($form, 'extra_modules', true);
+        $this->adaptProductFormBasedOnProductType($form, $productType);
+        $this->assertFormTypeExistsInForm($form, 'extra_modules', false);
+
+        $form = $this->createForm(TestProductFormType::class);
+        $this->assertFormTypeExistsInForm($form, 'extra_modules', true);
+        $this->adaptProductFormBasedOnProductType($form, $productType, [], [
+            [
+                'module' => 'test',
+            ],
+        ]);
+        $this->assertFormTypeExistsInForm($form, 'extra_modules', true);
+    }
+
+    public function getProductTypes(): iterable
+    {
+        yield 'combinations product' => [ProductType::TYPE_COMBINATIONS];
+        yield 'standard product' => [ProductType::TYPE_STANDARD];
+        yield 'pack product' => [ProductType::TYPE_PACK];
+        yield 'virtual product' => [ProductType::TYPE_VIRTUAL];
+    }
+
+    /**
+     * @param FormInterface $form
+     * @param string $productType
+     * @param array $extraData
+     * @param array $registeredModules
+     */
+    private function adaptProductFormBasedOnProductType(FormInterface $form, string $productType, array $extraData = [], array $registeredModules = []): void
+    {
+        $listener = new ProductTypeListener($this->buildHookInformationProvider($registeredModules));
+
+        $formData = empty($extraData) ? [] : $extraData;
+        $formData['header']['type'] = $productType;
+
         $eventMock = $this->createEventMock($formData, $form);
         $listener->adaptProductForm($eventMock);
     }
 
     /**
-     * @param FormInterface $form
-     * @param string $typeName
-     * @param bool $shouldExist
-     */
-    private function assertFormTypeExistsInForm(FormInterface $form, string $typeName, bool $shouldExist): void
-    {
-        if ($shouldExist) {
-            $this->assertNotNull($this->getFormChild($form, $typeName));
-        } else {
-            $this->expectException(OutOfBoundsException::class);
-            $this->getFormChild($form, $typeName);
-        }
-    }
-
-    /**
-     * @param FormInterface $form
-     * @param string $typeName
+     * @param array $registeredModules
      *
-     * @return FormInterface
+     * @return mixed|MockObject|HookInformationProvider
      */
-    private function getFormChild(FormInterface $form, string $typeName): FormInterface
+    private function buildHookInformationProvider(array $registeredModules = [])
     {
-        $typeNames = explode('.', $typeName);
-        $child = $form;
-        foreach ($typeNames as $typeName) {
-            $child = $child->get($typeName);
-        }
-
-        return $child;
-    }
-}
-
-class SimpleProductFormTest extends CommonAbstractType
-{
-    public function buildForm(FormBuilderInterface $builder, array $options)
-    {
-        $builder
-            ->add('shortcuts', FormType::class)
-            ->add('stock', FormType::class)
-            ->add('shipping', FormType::class)
-            ->add('options', FormType::class)
+        $hookInformationProvider = $this->getMockBuilder(HookInformationProvider::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $hookInformationProvider
+            ->method('getRegisteredModulesByHookName')
+            ->with(ExtraModulesType::HOOK_NAME)
+            ->willReturn($registeredModules)
         ;
-        $builder->get('shortcuts')->add('stock', FormType::class);
-        $builder->get('stock')->add('pack_stock_type', ChoiceType::class);
-        $builder->get('stock')->add('virtual_product_file', FormType::class);
-        $builder->get('options')->add('suppliers', ChoiceType::class);
+
+        return $hookInformationProvider;
     }
 }

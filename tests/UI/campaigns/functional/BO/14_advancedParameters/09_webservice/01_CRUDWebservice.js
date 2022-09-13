@@ -4,7 +4,10 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const testContext = require('@utils/testContext');
+
+// Import login steps
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard/index');
@@ -13,9 +16,6 @@ const addWebservicePage = require('@pages/BO/advancedParameters/webservice/add')
 
 // Import data
 const WebserviceFaker = require('@data/faker/webservice');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_modules_advancedParameters_webservice_CRUDWebservice';
 
@@ -28,7 +28,7 @@ const createWebserviceData = new WebserviceFaker({});
 const editWebserviceData = new WebserviceFaker({});
 
 // Create, Read, Update and Delete webservice key in BO
-describe('Create, Read, Update and Delete webservice key in BO', async () => {
+describe('BO - Advanced Parameters - Webservice : Create, Read, Update and Delete webservice key in BO', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -43,7 +43,7 @@ describe('Create, Read, Update and Delete webservice key in BO', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to "Advanced parameters > Webservice" page', async function () {
+  it('should go to \'Advanced Parameters > Webservice\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToWebservicePage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -87,7 +87,7 @@ describe('Create, Read, Update and Delete webservice key in BO', async () => {
   });
 
   // 2 : Update webservice key
-  describe('Update the webservice key created', async () => {
+  describe('Update webservice key', async () => {
     it('should filter list by key description', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'filterAfterUpdate', baseContext);
 

@@ -26,7 +26,7 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Language\CommandHandler;
 
-use Language;
+use PrestaShop\PrestaShop\Adapter\File\RobotsTextFileGenerator;
 use PrestaShop\PrestaShop\Core\Domain\Language\Command\ToggleLanguageStatusCommand;
 use PrestaShop\PrestaShop\Core\Domain\Language\CommandHandler\ToggleLanguageStatusHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
@@ -38,6 +38,19 @@ use PrestaShop\PrestaShop\Core\Domain\Language\Exception\LanguageException;
  */
 final class ToggleLanguageStatusHandler extends AbstractLanguageHandler implements ToggleLanguageStatusHandlerInterface
 {
+    /**
+     * @var RobotsTextFileGenerator
+     */
+    private $robotsTextFileGenerator;
+
+    /**
+     * @param RobotsTextFileGenerator $robotsTextFileGenerator
+     */
+    public function __construct(RobotsTextFileGenerator $robotsTextFileGenerator)
+    {
+        $this->robotsTextFileGenerator = $robotsTextFileGenerator;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -52,5 +65,6 @@ final class ToggleLanguageStatusHandler extends AbstractLanguageHandler implemen
         if (false === $language->update()) {
             throw new LanguageException(sprintf('Failed to toggle language "%s" to status %s', $language->id, var_export($command->getStatus(), true)));
         }
+        $this->robotsTextFileGenerator->generateFile();
     }
 }

@@ -4,7 +4,10 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const testContext = require('@utils/testContext');
+
+// Import login steps
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -13,9 +16,6 @@ const contactsPage = require('@pages/BO/shopParameters/contact/index');
 // Import data
 const {Contacts} = require('@data/demo/contacts');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_shopParameters_contact_filterContacts';
 
 let browserContext;
@@ -23,7 +23,7 @@ let page;
 let numberOfContacts = 0;
 
 // Filter Contacts
-describe('Filter Contacts', async () => {
+describe('BO - Shop Parameters - Contact : Filter Contacts table', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -38,7 +38,7 @@ describe('Filter Contacts', async () => {
     await loginCommon.loginBO(this, page);
   });
 
-  it('should go to \'Shop parameters>Contact\' page', async function () {
+  it('should go to \'Shop parameters > Contact\' page', async function () {
     await testContext.addContextItem(this, 'testIdentifier', 'goToContactsPage', baseContext);
 
     await dashboardPage.goToSubMenu(
@@ -80,22 +80,13 @@ describe('Filter Contacts', async () => {
       it(`should filter by ${test.args.filterBy} '${test.args.filterValue}'`, async function () {
         await testContext.addContextItem(this, 'testIdentifier', `${test.args.testIdentifier}`, baseContext);
 
-        await contactsPage.filterContacts(
-          page,
-          test.args.filterBy,
-          test.args.filterValue,
-        );
+        await contactsPage.filterContacts(page, test.args.filterBy, test.args.filterValue);
 
         const numberOfContactsAfterFilter = await contactsPage.getNumberOfElementInGrid(page);
         await expect(numberOfContactsAfterFilter).to.be.at.most(numberOfContacts);
 
         for (let i = 1; i <= numberOfContactsAfterFilter; i++) {
-          const textColumn = await contactsPage.getTextColumnFromTableContacts(
-            page,
-            i,
-            test.args.filterBy,
-          );
-
+          const textColumn = await contactsPage.getTextColumnFromTableContacts(page, i, test.args.filterBy);
           await expect(textColumn).to.contains(test.args.filterValue);
         }
       });

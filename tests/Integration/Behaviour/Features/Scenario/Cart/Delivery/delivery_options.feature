@@ -1,6 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s cart --tags delivery-options
 
-@reset-database-before-feature
+@restore-all-tables-before-feature
 @delivery-options
 @clear-cache-after-feature
 Feature: Compute correct delivery options

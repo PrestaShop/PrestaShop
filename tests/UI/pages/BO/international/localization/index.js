@@ -65,7 +65,7 @@ class Localization extends LocalizationBasePage {
     );
 
     // Choose if we download pack of data
-    await page.check(this.downloadPackDataToggleInput(downloadPackData ? 1 : 0));
+    await this.setChecked(page, this.downloadPackDataToggleInput(downloadPackData ? 1 : 0));
 
     // Import the pack
     await this.clickAndWaitForNavigation(page, this.importButton);
@@ -82,7 +82,7 @@ class Localization extends LocalizationBasePage {
    */
   async setDefaultLanguage(page, language, languageFromBrowser = true) {
     await this.selectByVisibleText(page, this.defaultLanguageSelector, language);
-    await page.check(this.languageFromBrowserToggleInput(languageFromBrowser ? 1 : 0));
+    await this.setChecked(page, this.languageFromBrowserToggleInput(languageFromBrowser ? 1 : 0));
     await this.clickAndWaitForNavigation(page, this.saveConfigurationFormButton);
 
     return this.getAlertSuccessBlockParagraphContent(page);

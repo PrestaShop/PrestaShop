@@ -210,7 +210,7 @@ class SupplyOrderDetailCore extends ObjectModel
     {
         $this->calculatePrices();
 
-        parent::update($null_values);
+        return parent::update($null_values);
     }
 
     /**
@@ -220,7 +220,7 @@ class SupplyOrderDetailCore extends ObjectModel
     {
         $this->calculatePrices();
 
-        parent::add($autodate, $null_values);
+        return parent::add($autodate, $null_values);
     }
 
     /**
@@ -234,7 +234,7 @@ class SupplyOrderDetailCore extends ObjectModel
         $this->price_te = Tools::ps_round((float) $this->unit_price_te * (int) $this->quantity_expected, 6);
 
         // calculates entry discount value
-        if ($this->discount_rate != null && (is_float($this->discount_rate) || is_numeric($this->discount_rate)) && $this->discount_rate > 0) {
+        if ($this->discount_rate != null && is_numeric($this->discount_rate) && $this->discount_rate > 0) {
             $this->discount_value_te = Tools::ps_round((float) $this->price_te * ($this->discount_rate / 100), 6);
         }
 
@@ -309,7 +309,8 @@ class SupplyOrderDetailCore extends ObjectModel
 
         /* Checks maximum fields sizes */
         foreach ($this->fieldsSize as $field => $max_length) {
-            if ($value = $this->{$field} && Tools::strlen($value) > $max_length) {
+            $value = $this->{$field};
+            if ($value && Tools::strlen($value) > $max_length) {
                 $errors[] = $this->trans(
                     'The %1$s field is too long (%2$d chars max).',
                     [SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities), $max_length],
@@ -321,7 +322,7 @@ class SupplyOrderDetailCore extends ObjectModel
         /* Checks fields validity */
         foreach ($this->fieldsValidate as $field => $function) {
             if ($value = $this->{$field}) {
-                if (!Validate::$function($value) && (!empty($value) || in_array($field, $this->fieldsRequired))) {
+                if (!Validate::$function($value)) {
                     $errors[] = '<b>' . SupplyOrderDetail::displayFieldName($field, get_class($this), $htmlentities) . '</b> ' . $this->trans('is invalid.', [], 'Shop.Notifications.Error');
                 } elseif ($field == 'passwd') {
                     if ($value = Tools::getValue($field)) {

@@ -21,7 +21,7 @@ define('lang_Confirm_Folder_del', 'Êtes-vous sûr de vouloir supprimer le dossi
 define('lang_Return_Files_List', 'Revenir à la liste des fichiers');
 define('lang_Preview', 'Aperçu');
 define('lang_Download', 'Télécharger');
-define('lang_Insert_Folder_Name', 'Insérer le nom du dossier:');
+define('lang_Insert_Folder_Name', 'Insérer le nom du dossier :');
 define('lang_Root', 'Racine');
 define('lang_Rename', 'Renommer');
 define('lang_Back', 'Retour');

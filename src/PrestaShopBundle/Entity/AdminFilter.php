@@ -346,15 +346,28 @@ class AdminFilter
             };
         };
 
+        $entNoquotesHtmlspecialchars = function (string $subject): string {
+            return htmlspecialchars($subject, ENT_NOQUOTES);
+        };
+
         return filter_var_array($filter, [
             'filter_category' => FILTER_SANITIZE_NUMBER_INT,
             'filter_column_id_product' => [
                 'filter' => FILTER_CALLBACK,
                 'options' => $filterMinMax(FILTER_SANITIZE_NUMBER_INT),
             ],
-            'filter_column_name' => FILTER_SANITIZE_STRING,
-            'filter_column_reference' => FILTER_SANITIZE_STRING,
-            'filter_column_name_category' => FILTER_SANITIZE_STRING,
+            'filter_column_name' => [
+                'filter' => FILTER_CALLBACK,
+                'options' => $entNoquotesHtmlspecialchars,
+            ],
+            'filter_column_reference' => [
+                'filter' => FILTER_CALLBACK,
+                'options' => 'htmlspecialchars',
+            ],
+            'filter_column_name_category' => [
+                'filter' => FILTER_CALLBACK,
+                'options' => 'htmlspecialchars',
+            ],
             'filter_column_price' => [
                 'filter' => FILTER_CALLBACK,
                 'options' => $filterMinMax(FILTER_SANITIZE_NUMBER_FLOAT),
@@ -366,8 +379,14 @@ class AdminFilter
             'filter_column_active' => FILTER_SANITIZE_NUMBER_INT,
             'last_offset' => FILTER_SANITIZE_NUMBER_INT,
             'last_limit' => FILTER_SANITIZE_NUMBER_INT,
-            'last_orderBy' => FILTER_SANITIZE_STRING,
-            'last_sortOrder' => FILTER_SANITIZE_STRING,
+            'last_orderBy' => [
+                'filter' => FILTER_CALLBACK,
+                'options' => 'htmlspecialchars',
+            ],
+            'last_sortOrder' => [
+                'filter' => FILTER_CALLBACK,
+                'options' => 'htmlspecialchars',
+            ],
         ]);
     }
 }

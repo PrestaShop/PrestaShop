@@ -38,26 +38,17 @@
   }
 } %}
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
+  {% include '@PrestaShop/Admin/Common/multistore-infotip.html.twig' %}
 
   {% block order_states_listing %}
-    <div class="row">
-      <div class="col-12">
-        {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': orderStatesGrid} %}
-        {% endembed %}
-      </div>
-    </div>
+    {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': orderStatesGrid} %}{% endembed %}
   {% endblock %}
 
   {% block order_return_states_listing %}
-    <div class="row">
-      <div class="col-12">
-        {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': orderReturnStatesGrid} %}
-        {% endembed %}
-      </div>
-    </div>
+    {% embed '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': orderReturnStatesGrid} %}{% endembed %}
   {% endblock %}
 
 {% endblock %}
@@ -68,4 +59,3 @@
   <script src="{{ asset('themes/default/js/bundle/pagination.js') }}"></script>
   <script src="{{ asset('themes/new-theme/public/order_states.bundle.js') }}"></script>
 {% endblock %}
-

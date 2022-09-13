@@ -29,7 +29,6 @@ namespace PrestaShop\PrestaShop\Adapter\Import;
 use PrestaShop\PrestaShop\Core\File\Converter\FileConverterInterface;
 use PrestaShop\PrestaShop\Core\Import\Exception\UnreadableFileException;
 use PrestaShop\PrestaShop\Core\Import\File\FileOpenerInterface;
-use PrestaShop\PrestaShop\Core\Import\ImportDirectory;
 use SplFileInfo;
 
 /**
@@ -43,20 +42,11 @@ final class CsvFileOpener implements FileOpenerInterface
     private $excelToCsvConverter;
 
     /**
-     * @var ImportDirectory
-     */
-    private $importDirectory;
-
-    /**
      * @param FileConverterInterface $excelToCsvConverter
-     * @param ImportDirectory $importDirectory
      */
-    public function __construct(
-        FileConverterInterface $excelToCsvConverter,
-        ImportDirectory $importDirectory
-    ) {
+    public function __construct(FileConverterInterface $excelToCsvConverter)
+    {
         $this->excelToCsvConverter = $excelToCsvConverter;
-        $this->importDirectory = $importDirectory;
     }
 
     /**

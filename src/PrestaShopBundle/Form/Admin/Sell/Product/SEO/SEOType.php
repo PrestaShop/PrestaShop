@@ -28,6 +28,9 @@ declare(strict_types=1);
 
 namespace PrestaShopBundle\Form\Admin\Sell\Product\SEO;
 
+use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\Constraints\TypedRegex;
+use PrestaShop\PrestaShop\Core\ConstraintValidator\TypedRegexValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\ProductSettings;
 use PrestaShopBundle\Form\Admin\Type\TextWithLengthCounterType;
 use PrestaShopBundle\Form\Admin\Type\TranslatableType;
@@ -57,22 +60,31 @@ class SEOType extends TranslatorAwareType
     private $forceFriendlyUrl;
 
     /**
+     * @var LegacyContext
+     */
+    private $legacyContext;
+
+    /**
      * @param TranslatorInterface $translator
      * @param array $locales
      * @param RouterInterface $router
      * @param bool $friendlyUrlEnabled
+     * @param bool $forceFriendlyUrl
+     * @param LegacyContext $legacyContext
      */
     public function __construct(
         TranslatorInterface $translator,
         array $locales,
         RouterInterface $router,
         bool $friendlyUrlEnabled,
-        bool $forceFriendlyUrl
+        bool $forceFriendlyUrl,
+        LegacyContext $legacyContext
     ) {
         parent::__construct($translator, $locales);
         $this->router = $router;
         $this->friendlyUrlEnabled = $friendlyUrlEnabled;
         $this->forceFriendlyUrl = $forceFriendlyUrl;
+        $this->legacyContext = $legacyContext;
     }
 
     /**
@@ -109,6 +121,7 @@ class SEOType extends TranslatorAwareType
                         ]),
                     ],
                 ],
+                'modify_all_shops' => true,
             ])
             ->add('meta_description', TranslatableType::class, [
                 'label' => $this->trans('Meta description', 'Admin.Catalog.Feature'),
@@ -137,6 +150,7 @@ class SEOType extends TranslatorAwareType
                         ]),
                     ],
                 ],
+                'modify_all_shops' => true,
             ])
             ->add('link_rewrite', TranslatableType::class, [
                 'label' => $this->trans('Friendly URL', 'Admin.Catalog.Feature'),
@@ -149,12 +163,43 @@ class SEOType extends TranslatorAwareType
                 ),
                 'alert_message' => $this->getFriendlyAlterMessages(),
                 'options' => [
+                    'constraints' => [
+                        new TypedRegex(TypedRegex::TYPE_LINK_REWRITE),
+                        new Length(['max' => ProductSettings::MAX_LINK_REWRITE_LENGTH]),
+                    ],
                     'attr' => [
                         'class' => 'serp-watched-url',
                     ],
                 ],
+                'modify_all_shops' => true,
             ])
-            ->add('redirect_option', RedirectOptionType::class)
+            ->add('redirect_option', RedirectOptionType::class, [
+                'product_id' => $options['product_id'],
+            ])
+            ->add('tags', TranslatableType::class, [
+                'required' => false,
+                'label' => $this->trans('Tags', 'Admin.Catalog.Feature'),
+                'label_tag_name' => 'h3',
+                'label_subtitle' => $this->trans('Enter the keywords that customers might search for when looking for this product.', 'Admin.Catalog.Feature'),
+                'help' => sprintf(
+                    '%s %s',
+                    $this->trans('Separate each tag with a comma or press the Enter key.', 'Admin.Catalog.Help'),
+                    $this->trans('Invalid characters: %s', 'Admin.Notifications.Info', [TypedRegexValidator::GENERIC_NAME_CHARS])
+                ),
+                'external_link' => [
+                    'href' => $this->legacyContext->getAdminLink('AdminTags', true),
+                    'text' => $this->trans('[1]Manage all tags[/1]', 'Admin.Catalog.Feature'),
+                ],
+                'options' => [
+                    'constraints' => [
+                        new TypedRegex(TypedRegex::TYPE_GENERIC_NAME),
+                    ],
+                    'attr' => [
+                        'class' => 'js-taggable-field',
+                    ],
+                    'required' => false,
+                ],
+            ])
         ;
     }
 
@@ -206,11 +251,19 @@ class SEOType extends TranslatorAwareType
     public function configureOptions(OptionsResolver $resolver)
     {
         parent::configureOptions($resolver);
-        $resolver->setDefaults([
-            'label' => $this->trans('Search Engine Optimization', 'Admin.Catalog.Feature'),
-            'label_tag_name' => 'h2',
-            'label_subtitle' => $this->trans('Improve your ranking and how your product page will appear in search engines results.', 'Admin.Catalog.Feature'),
-            'required' => false,
-        ]);
+        $resolver
+            ->setDefaults([
+                'label' => $this->trans('SEO', 'Admin.Catalog.Feature'),
+                'label_tab' => $this->trans('Search engine optimization', 'Admin.Catalog.Feature'),
+                'label_tag_name' => 'h3',
+                'label_subtitle' => $this->trans('Improve your ranking and how your product page will appear in search engines results.', 'Admin.Catalog.Feature'),
+                'required' => false,
+                'form_theme' => '@PrestaShop/Admin/Sell/Catalog/Product/FormTheme/product_seo.html.twig',
+            ])
+            ->setRequired([
+                'product_id',
+            ])
+            ->setAllowedTypes('product_id', 'int')
+        ;
     }
 }

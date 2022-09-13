@@ -46,7 +46,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class ProfilesController is responsible for displaying the
+ * Class ProfileController is responsible for displaying the
  * "Configure > Advanced parameters > Team > Profiles" page.
  */
 class ProfileController extends FrameworkBundleAdminController
@@ -90,7 +90,7 @@ class ProfileController extends FrameworkBundleAdminController
     /**
      * Used for applying filtering actions.
      *
-     * @AdminSecurity("is_granted(['read'], request.get('_legacy_controller'))")
+     * @AdminSecurity("is_granted('read', request.get('_legacy_controller'))")
      *
      * @param Request $request
      *
@@ -134,7 +134,7 @@ class ProfileController extends FrameworkBundleAdminController
             $handlerResult = $formHandler->handle($form);
 
             if (null !== $handlerResult->getIdentifiableObjectId()) {
-                $this->addFlash('success', $this->trans('Successful creation.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful creation', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_profiles_index');
             }
@@ -190,7 +190,7 @@ class ProfileController extends FrameworkBundleAdminController
             $handlerResult = $formHandler->handleFor((int) $profileId, $form);
 
             if ($handlerResult->isSubmitted() && $handlerResult->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_profiles_index');
             }
@@ -224,7 +224,7 @@ class ProfileController extends FrameworkBundleAdminController
      * Delete a profile.
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller')~'_')",
+     *     "is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this."
      * )
      * @DemoRestricted(redirectRoute="admin_profiles_index")
@@ -252,7 +252,7 @@ class ProfileController extends FrameworkBundleAdminController
      * Bulk delete profiles.
      *
      * @AdminSecurity(
-     *     "is_granted('delete', request.get('_legacy_controller')~'_')",
+     *     "is_granted('delete', request.get('_legacy_controller'))",
      *     message="You do not have permission to edit this."
      * )
      * @DemoRestricted(redirectRoute="admin_profiles_index")

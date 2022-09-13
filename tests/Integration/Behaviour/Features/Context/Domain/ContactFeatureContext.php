@@ -33,7 +33,6 @@ use PrestaShop\PrestaShop\Core\Domain\Contact\Command\EditContactCommand;
 use PrestaShop\PrestaShop\Core\Domain\Contact\Query\GetContactForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Contact\QueryResult\EditableContact;
 use PrestaShop\PrestaShop\Core\Domain\Contact\ValueObject\ContactId;
-use Tests\Integration\Behaviour\Features\Context\CommonFeatureContext;
 use Tests\Integration\Behaviour\Features\Context\SharedStorage;
 use Tests\Integration\Behaviour\Features\Context\Util\PrimitiveUtils;
 
@@ -41,17 +40,6 @@ class ContactFeatureContext extends AbstractDomainFeatureContext
 {
     private const DEFAULT_LOCALE_ID = 1; // EN locale
     private const DUMMY_CONTACT_ID = 1;
-
-    /**
-     * @var int
-     */
-    private $defaultLangId;
-
-    public function __construct()
-    {
-        $configuration = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.configuration');
-        $this->defaultLangId = $configuration->get('PS_LANG_DEFAULT');
-    }
 
     /**
      * @When I add new contact :reference with the following details:
@@ -62,7 +50,7 @@ class ContactFeatureContext extends AbstractDomainFeatureContext
     public function addNewContactWithTheFollowingDetails(TableNode $table, string $reference)
     {
         $data = $table->getRowsHash();
-        /** @var EditableContact $editablContact */
+        /** @var EditableContact $editableContact */
         $editableContact = $this->mapToEditableContact(self::DUMMY_CONTACT_ID, $data);
 
         $addContactCommand = new AddContactCommand(

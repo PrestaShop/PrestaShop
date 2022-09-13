@@ -40,7 +40,7 @@ services:
   prestashop.adapter.command_handler.update_product_quantity_in_cart_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\UpdateProductQuantityInCartHandler'
     arguments:
-        - '@prestashop.adapter.context_state_manager'
+      - '@prestashop.adapter.context_state_manager'
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateProductQuantityInCartCommand'
@@ -48,7 +48,7 @@ services:
   prestashop.adapter.command_handler.update_cart_carrier_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\UpdateCartCarrierHandler'
     arguments:
-        - '@prestashop.adapter.context_state_manager'
+      - '@prestashop.adapter.context_state_manager'
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Command\UpdateCartCarrierCommand'
@@ -56,7 +56,6 @@ services:
   prestashop.adapter.command_handler.add_cart_rule_to_cart_handler:
     class: 'PrestaShop\PrestaShop\Adapter\Cart\CommandHandler\AddCartRuleToCartHandler'
     arguments:
-      - '@translator'
       - '@prestashop.adapter.context_state_manager'
     tags:
       - name: tactician.handler
@@ -110,7 +109,6 @@ services:
       - '@=service("prestashop.adapter.legacy.context").getContext().language.id'
       - '@=service("prestashop.adapter.legacy.context").getContext().link'
       - '@prestashop.adapter.context_state_manager'
-      - '@translator'
     tags:
       - name: tactician.handler
         command: 'PrestaShop\PrestaShop\Core\Domain\Cart\Query\GetCartForOrderCreation'

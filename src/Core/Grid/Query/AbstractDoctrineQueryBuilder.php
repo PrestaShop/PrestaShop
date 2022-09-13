@@ -52,4 +52,21 @@ abstract class AbstractDoctrineQueryBuilder implements DoctrineQueryBuilderInter
         $this->connection = $connection;
         $this->dbPrefix = $dbPrefix;
     }
+
+    /**
+     * Escape percent in query for LIKE query
+     *      '20%' => '20\%'
+     *
+     * @param string $value
+     *
+     * @return string
+     */
+    protected function escapePercent(string $value): string
+    {
+        return str_replace(
+            '%',
+            '\%',
+            $value
+        );
+    }
 }

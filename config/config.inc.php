@@ -26,14 +26,12 @@
 
 use PrestaShop\PrestaShop\Core\Session\SessionHandler;
 
-$currentDir = dirname(__FILE__);
-
 /* Custom defines made by users */
-if (is_file($currentDir . '/defines_custom.inc.php')) {
-    include_once $currentDir . '/defines_custom.inc.php';
+if (is_file(__DIR__ . '/defines_custom.inc.php')) {
+    include_once __DIR__ . '/defines_custom.inc.php';
 }
 
-require_once $currentDir . '/defines.inc.php';
+require_once __DIR__ . '/defines.inc.php';
 
 require_once _PS_CONFIG_DIR_ . 'autoload.php';
 
@@ -56,16 +54,7 @@ if (!file_exists(_PS_ROOT_DIR_ . '/app/config/parameters.yml') && !file_exists(_
     Tools::redirectToInstall();
 }
 
-require_once $currentDir . DIRECTORY_SEPARATOR . 'bootstrap.php';
-
-/*
- * Improve PHP configuration on Windows
- *
- * @deprecated since 1.7.8.0
- */
-if ('WIN' === strtoupper(substr(PHP_OS, 0, 3))) {
-    Windows::improveFilesytemPerformances();
-}
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
 if (defined('_PS_CREATION_DATE_')) {
     $creationDate = _PS_CREATION_DATE_;
@@ -135,7 +124,7 @@ define('_PARENT_THEME_NAME_', $context->shop->theme->get('parent') ?: '');
 define('__PS_BASE_URI__', $context->shop->getBaseURI());
 
 /* Include all defines related to base uri and theme name */
-require_once $currentDir . '/defines_uri.inc.php';
+require_once __DIR__ . '/defines_uri.inc.php';
 
 global $_MODULES;
 $_MODULES = array();
@@ -154,7 +143,7 @@ define('_PS_PRICE_COMPUTE_PRECISION_', 2);
 Language::loadLanguages();
 
 /* Loading default country */
-$default_country = new Country(Configuration::get('PS_COUNTRY_DEFAULT'), Configuration::get('PS_LANG_DEFAULT'));
+$default_country = new Country((int) Configuration::get('PS_COUNTRY_DEFAULT'), (int) Configuration::get('PS_LANG_DEFAULT'));
 $context->country = $default_country;
 
 /* It is not safe to rely on the system's timezone settings, and this would generate a PHP Strict Standards notice. */
@@ -206,7 +195,7 @@ $context->cookie = $cookie;
 
 /* Create employee if in BO, customer else */
 if (defined('_PS_ADMIN_DIR_')) {
-    $employee = new Employee($cookie->id_employee);
+    $employee = new Employee((int) $cookie->id_employee);
     $context->employee = $employee;
 
     /* Auth on shops are recached after employee assignation */
@@ -219,7 +208,7 @@ if (defined('_PS_ADMIN_DIR_')) {
 
 /* if the language stored in the cookie is not available language, use default language */
 if (isset($cookie->id_lang) && $cookie->id_lang) {
-    $language = new Language($cookie->id_lang);
+    $language = new Language((int) $cookie->id_lang);
 }
 
 $isNotValidLanguage = !isset($language) || !Validate::isLoadedObject($language);
@@ -228,15 +217,14 @@ $isLanguageDefinedFromSession = (isset($language) && $language->isAssociatedToSh
 
 $useDefaultLanguage = $isNotValidLanguage || !$isLanguageDefinedFromSession;
 if ($useDefaultLanguage) {
-
     // Default value for most cases
-    $language = new Language(Configuration::get('PS_LANG_DEFAULT'));
+    $language = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
 
-    // if `PS_LANG_DEFAULT` not a valid language for current shop then 
+    // if `PS_LANG_DEFAULT` not a valid language for current shop then
     // use first valid language of the shop as default language.
     if($language->isMultishop() && !$language->isAssociatedToShop()) {
         $shopLanguages = $language->getLanguages(true, Context::getContext()->shop->id, false);
-        
+
         if(isset($shopLanguages[0]['id_lang'])) {
             $shopDefaultLanguage = new Language($shopLanguages[0]['id_lang']);
 
@@ -246,16 +234,21 @@ if ($useDefaultLanguage) {
         }
     }
 }
+if (!isset($language)) {
+    // Default value for most cases
+    $language = new Language((int) Configuration::get('PS_LANG_DEFAULT'));
+}
 
 $context->language = $language;
 
 /* Get smarty */
-require_once $currentDir . '/smarty.config.inc.php';
+require_once __DIR__ . '/smarty.config.inc.php';
+/* @phpstan-ignore-next-line */
 $context->smarty = $smarty;
 
 if (!defined('_PS_ADMIN_DIR_')) {
     if (isset($cookie->id_customer) && (int) $cookie->id_customer) {
-        $customer = new Customer($cookie->id_customer);
+        $customer = new Customer((int) $cookie->id_customer);
         if (!Validate::isLoadedObject($customer)) {
             $context->cookie->logout();
         } else {

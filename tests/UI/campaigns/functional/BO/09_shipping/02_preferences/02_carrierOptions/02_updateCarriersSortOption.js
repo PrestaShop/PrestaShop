@@ -5,10 +5,11 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
+const basicHelper = require('@utils/basicHelper');
 const testContext = require('@utils/testContext');
 
 // Common tests login BO
-const loginCommon = require('@commonTests/loginBO');
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -199,7 +200,7 @@ describe('BO - Shipping - Preferences : Update \'sort carriers by\' and \'Order 
 
         if (test.args.sortBy === 'Price') {
           const sortedCarriers = await foCheckoutPage.getAllCarriersPrices(page);
-          const expectedResult = await foCheckoutPage.sortArray(sortedCarriers, true);
+          const expectedResult = await basicHelper.sortArray(sortedCarriers, true);
           if (test.args.orderBy === 'Ascending') {
             await expect(sortedCarriers).to.deep.equal(expectedResult);
           } else {

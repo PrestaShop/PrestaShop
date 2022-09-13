@@ -4,25 +4,27 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const testContext = require('@utils/testContext');
 
-// Import pages
+// Import login steps
+const loginCommon = require('@commonTests/BO/loginBO');
+
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const orderSettingsPage = require('@pages/BO/shopParameters/orderSettings');
+
+// Import FO pages
 const productPage = require('@pages/FO/product');
 const homePage = require('@pages/FO/home');
 const cartPage = require('@pages/FO/cart');
 const checkoutPage = require('@pages/FO/checkout');
-
-// Import test context
-const testContext = require('@utils/testContext');
 
 const baseContext = 'functional_BO_shopParameters_orderSettings_enableGuestCheckout';
 
 let browserContext;
 let page;
 
-describe('Enable guest checkout', async () => {
+describe('BO - Shop Parameters - Order Settings : Enable/Disable guest checkout', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -53,8 +55,16 @@ describe('Enable guest checkout', async () => {
   });
 
   const tests = [
-    {args: {action: 'disable', exist: false, pwdRequired: true}},
-    {args: {action: 'enable', exist: true, pwdRequired: false}},
+    {
+      args: {
+        action: 'disable', exist: false, tabName: 'Create an account', pwdRequired: true,
+      },
+    },
+    {
+      args: {
+        action: 'enable', exist: true, tabName: 'Order as a guest', pwdRequired: false,
+      },
+    },
   ];
 
   tests.forEach((test, index) => {
@@ -91,8 +101,8 @@ describe('Enable guest checkout', async () => {
       await cartPage.clickOnProceedToCheckout(page);
 
       // Check guest checkout
-      const isNoticeVisible = await checkoutPage.isCreateAnAccountNoticeVisible(page);
-      await expect(isNoticeVisible).to.be.equal(test.args.exist);
+      const isNoticeVisible = await checkoutPage.getActiveLinkFromPersonalInformationBlock(page);
+      await expect(isNoticeVisible).to.be.equal(test.args.tabName);
 
       const isPasswordRequired = await checkoutPage.isPasswordRequired(page);
       await expect(isPasswordRequired).to.be.equal(test.args.pwdRequired);

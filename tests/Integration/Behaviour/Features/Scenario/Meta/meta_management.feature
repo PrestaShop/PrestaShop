@@ -1,5 +1,5 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s meta
-@reset-database-before-feature
+@restore-all-tables-before-feature
 Feature: Meta management (Traffic & Seo)
   PrestaShop allows BO users to manage page metadata - title, description, keywords, url_rewrite etc...
   As a BO user I must be able to create, edit, delete and update meta data.

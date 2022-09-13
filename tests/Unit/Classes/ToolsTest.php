@@ -103,11 +103,11 @@ class ToolsTest extends TestCase
         $this->setPostAndGet([
             '' => true,
             ' ' => true,
-            null => true,
         ]);
 
         $this->assertFalse(Tools::getValue('', true));
         $this->assertTrue(Tools::getValue(' '));
+        /* @phpstan-ignore-next-line : null for first parameter is there for testing the return value */
         $this->assertFalse(Tools::getValue(null, true));
     }
 
@@ -511,5 +511,319 @@ class ToolsTest extends TestCase
     public function testCeilf(float $expectedResult, float $value, int $precision): void
     {
         $this->assertSame($expectedResult, Tools::ceilf($value, $precision));
+    }
+
+    /**
+     * @param string $expectedPassword
+     * @param mixed $passwordGenerated
+     *
+     * @dataProvider passwordGenProvider
+     */
+    public function testPasswdGen(string $expectedPassword, $passwordGenerated): void
+    {
+        $message = 'The password generated ' . $passwordGenerated . ' no match with ' . $expectedPassword;
+
+        if (method_exists($this, 'assertMatchesRegularExpression')) {
+            $this->assertMatchesRegularExpression($expectedPassword, $passwordGenerated, $message);
+        } else {
+            $this->assertRegExp($expectedPassword, $passwordGenerated, $message);
+        }
+    }
+
+    public function passwordGenProvider(): array
+    {
+        $invalidPasswordLenghtGiven = '//';
+        $alphaNumericPasswordWithTencharacters = '/^(\w){10}$/';
+        $alphaNumericPasswordWithEightCharacters = '/^(\w{8})$/';
+        $numericPasswordWithTwelveCharacters = '/^(\d{12})$/';
+        $noNumerciPasswordWithNineCharacters = '/^[A-Z]{9}$/';
+        $randomPasswordWithTenCharacters = '/([A-Za-z0-9 _!#$%&()*+,\-.\\:\/;=?@^_]+){10}/';
+
+        return [
+            [$alphaNumericPasswordWithEightCharacters, Tools::passwdGen()],
+            [$numericPasswordWithTwelveCharacters, Tools::passwdGen(12, Tools::PASSWORDGEN_FLAG_NUMERIC)],
+            [$noNumerciPasswordWithNineCharacters, Tools::passwdGen(9, Tools::PASSWORDGEN_FLAG_NO_NUMERIC)],
+            [$randomPasswordWithTenCharacters, Tools::passwdGen(10, Tools::PASSWORDGEN_FLAG_RANDOM)],
+            [$alphaNumericPasswordWithTencharacters, Tools::passwdGen(10, Tools::PASSWORDGEN_FLAG_ALPHANUMERIC)],
+            [$invalidPasswordLenghtGiven, Tools::passwdGen(0)],
+            [$invalidPasswordLenghtGiven, Tools::passwdGen(0, Tools::PASSWORDGEN_FLAG_RANDOM)],
+            [$invalidPasswordLenghtGiven, Tools::passwdGen(0, Tools::PASSWORDGEN_FLAG_NUMERIC)],
+            [$invalidPasswordLenghtGiven, Tools::passwdGen(0, Tools::PASSWORDGEN_FLAG_NO_NUMERIC)],
+            [$invalidPasswordLenghtGiven, Tools::passwdGen(0, Tools::PASSWORDGEN_FLAG_ALPHANUMERIC)],
+            [$invalidPasswordLenghtGiven, Tools::passwdGen(-666)],
+            [$invalidPasswordLenghtGiven, Tools::passwdGen(-666, Tools::PASSWORDGEN_FLAG_RANDOM)],
+            [$invalidPasswordLenghtGiven, Tools::passwdGen(-666, Tools::PASSWORDGEN_FLAG_NUMERIC)],
+            [$invalidPasswordLenghtGiven, Tools::passwdGen(-666, Tools::PASSWORDGEN_FLAG_NO_NUMERIC)],
+            [$invalidPasswordLenghtGiven, Tools::passwdGen(-666, Tools::PASSWORDGEN_FLAG_ALPHANUMERIC)],
+        ];
+    }
+
+    /**
+     * @param bool|null $useSsl
+     * @param string $expectedReturn
+     *
+     * @dataProvider providerGetProtocol
+     */
+    public function testGetProtocol(?bool $useSsl, string $expectedReturn): void
+    {
+        $this->assertSame(Tools::getProtocol($useSsl), $expectedReturn);
+    }
+
+    public function providerGetProtocol(): array
+    {
+        return [
+            [true, 'https://'],
+            [false, 'http://'],
+            [null, 'http://'],
+        ];
+    }
+
+    /**
+     * @param int $expectedReturn
+     * @param array{"price_tmp": float} $a
+     * @param array{"price_tmp": float} $b
+     *
+     * @dataProvider providerCmpPriceAsc
+     */
+    public function testCmpPriceAsc(int $expectedReturn, $a, $b): void
+    {
+        $this->assertSame($expectedReturn, cmpPriceAsc($a, $b));
+    }
+
+    public function providerCmpPriceAsc(): iterable
+    {
+        yield [-1, ['price_tmp' => -0.001], ['price_tmp' => 0]];
+        yield [0, ['price_tmp' => 0], ['price_tmp' => 0]];
+        yield [1, ['price_tmp' => 0.001], ['price_tmp' => 0]];
+    }
+
+    /**
+     * @param int $expectedReturn
+     * @param array{"price_tmp": float} $a
+     * @param array{"price_tmp": float} $b
+     *
+     * @dataProvider providerCmpPriceDesc
+     */
+    public function testCmpPriceDesc(int $expectedReturn, $a, $b): void
+    {
+        $this->assertSame($expectedReturn, cmpPriceDesc($a, $b));
+    }
+
+    public function providerCmpPriceDesc(): iterable
+    {
+        yield [1, ['price_tmp' => -0.001], ['price_tmp' => 0]];
+        yield [0, ['price_tmp' => 0], ['price_tmp' => 0]];
+        yield [-1, ['price_tmp' => 0.001], ['price_tmp' => 0]];
+    }
+
+    /**
+     * @param string $expected
+     * @param string $chars
+     *
+     * @dataProvider providerReplaceAccentedChars
+     */
+    public function testReplaceAccentedChars(string $expected, string $chars): void
+    {
+        $this->assertSame(str_repeat($expected, mb_strlen($chars)), Tools::replaceAccentedChars($chars));
+    }
+
+    public function providerReplaceAccentedChars(): array
+    {
+        return [
+            ['(C)', '©'],
+            ['a', 'aàáâãäåāăąǎǟǡǻȁȃȧάαаأაḁẚạảấầẩẫậắằẳẵⱥａя'],
+            ['A', 'AÀÁÂÃÄÅĀĂĄǍǞǠǺȀȂȦȺΆΑАḀẠẢẤẦẨẪẬẮẰẲẴẶἈἊἌᾸᾹᾺＡЯ'],
+            ['aa', 'ꜳ'],
+            ['AA', 'Ꜳ'],
+            ['ae', 'æǣǽ'],
+            ['AE', 'ÆǢǼ'],
+            ['ao', 'ꜵ'],
+            ['AO', 'Ꜵ'],
+            ['au', 'ꜷ'],
+            ['AU', 'Ꜷ'],
+            ['av', 'ꜹꜻ'],
+            ['AV', 'ꜸꜺ'],
+            ['ay', 'ꜽ'],
+            ['AY', 'Ꜽ'],
+            ['b', 'bƀƃɓβϐбبბḃḅḇｂ'],
+            ['B', 'BƁƂɃБḂḄḆＢΒ'],
+            ['c', 'cçćĉċčƈȼцћḉｃч'],
+            ['C', 'CÇĆĈĊČƇȻЋЦḈＣЧ'],
+            ['ch', 'χ'],
+            ['CH', 'Χ'],
+            ['d', 'dðďđƌɖɗδḏḑḋḍḓꝺｄضђџдدდ'],
+            ['D', 'DÐĎĐƉƊƋΔДḊḌḎḐḒꝹＤЂЏ'],
+            ['dh', 'ذ'],
+            ['dz', 'ǆǳძ'],
+            ['Dz', 'ǅǲ'],
+            ['DZ', 'ǄǱ'],
+            ['e', 'eèéêëēĕėęěȅȇȩɇɛέεеэეḕḗḙḛḝẹẻẽếềểễệἐἒἔὲｅёє'],
+            ['E', 'EÈÉÊËĒĔĖĘĚƐȄȆȨΈΕЕЭḔḖḘḚḜẸẺẼẾỀỂỄỆἘἚἜῈＥЁЄ'],
+            ['f', 'fƒфفḟꝼｆ'],
+            ['F', 'FƑФḞꝻＦ'],
+            ['ff', 'ﬀ'],
+            ['fi', 'ﬁ'],
+            ['fl', 'ﬂ'],
+            ['ffi', 'ﬃ'],
+            ['ffl', 'ﬄ'],
+            ['st', 'ﬅﬆ'],
+            ['g', 'gĝğġģǥǧǵɠγгґგḡꞡｇ'],
+            ['G', 'GĜĞĠĢƓǤǦǴΓГҐḠꞠＧ'],
+            ['gh', 'غ'],
+            ['h', 'хhĥħȟحهჰḣḥḧḩḫẖⱨｈ'],
+            ['H', 'ХHĤĦȞḢḤḦḨḪⱧＨ'],
+            ['hv', 'ƕ'],
+            ['i', 'iìíîïĩīĭįıǐȉȋɨΐίιϊиіიḭḯỉịἰἲἴἶῐῑῒῖῗｉї'],
+            ['I', 'IÌÍÎÏĨĪĬĮİƗǏȈȊΊΙΪІИḬḮỈỊῘῙῚＩЇ'],
+            ['ij', 'ĳ'],
+            ['IJ', 'Ĳ'],
+            ['j', 'jĵǰɉйјჯｊ'],
+            ['J', 'JĴɈЙЈＪ'],
+            ['k', 'kķƙǩκкḱḳḵⱪꝁꝃꝅꞣｋ'],
+            ['K', 'KĶƘǨΚКḰḲḴⱩꝀꝂꝄꞢＫ'],
+            ['kh', 'خ'],
+            ['l', 'lĺļľŀłƚɫλлلლḷḹḻḽⱡꝇꝉｌљ'],
+            ['L', 'LĹĻĽĿŁȽΛЛḶḸḺḼⱠⱢꝆꝈＬЉ'],
+            ['lj', 'ǉ'],
+            ['Lj', 'ǈ'],
+            ['LJ', 'Ǉ'],
+            ['m', 'mɱμмمმḿṁṃｍ'],
+            ['M', 'MΜМḾṀṂⱮＭ'],
+            ['n', 'nñńņňŋƞǹɲνнنნṅṇṉṋꞑꞥｎњ'],
+            ['N', 'NÑŃŅŇŊƝǸΝНṄṆṈṊꞐꞤＮЊ'],
+            ['nj', 'ǌ'],
+            ['Nj', 'ǋ'],
+            ['NJ', 'Ǌ'],
+            ['o', 'oòóôõöøōŏőơǒǫǭǿȍȏȫȭȯȱοωόώоṍṏṑṓọỏốồổỗộớờởꝋꝍｏ'],
+            ['O', 'OÒÓÔÕÖØŌŎŐƠǑǪǬǾȌȎȪȬȮȰΌΏΟΩОṌṎṐṒỌỎỐỒỔỖỘỚỜỞỠỢὈꝊꝌＯὊὌὨὪὬ'],
+            ['oe', 'œ'],
+            ['OE', 'Œ'],
+            ['oi', 'ƣ'],
+            ['OI', 'Ƣ'],
+            ['oo', 'ꝏ'],
+            ['OO', 'Ꝏ'],
+            ['p', 'pƥπпფᵽṕṗꝑꝓꝕｐ'],
+            ['P', 'PƤΠПṔṖⱣꝐꝒꝔＰ'],
+            ['ph', 'φ'],
+            ['PH', 'Φ'],
+            ['ps', 'ψ'],
+            ['PS', 'Ψ'],
+            ['q', 'qꝗꝙｑ'],
+            ['Q', 'QꝖꝘＱ'],
+            ['r', 'rŕŗřȑȓɍɽρрرრṙṛṝṟῤꞧｒ'],
+            ['R', 'RŔŖŘȐȒɌΡРṘṚṜṞⱤꞦＲ'],
+            ['rh', 'ῥ'],
+            ['RH', 'Ῥ'],
+            ['s', 'sśŝşšſșȿςσсسصსṡṣṥṧṩẛꞩｓшщ'],
+            ['S', 'SŚŜŞŠȘΣСṠṢṤṦṨⱾꞨＳШЩ'],
+            ['sh', 'შ'],
+            ['ss', 'ß'],
+            ['SS', 'ẞ'],
+            ['sh', 'ش'],
+            ['t', 'tţťŧƭțʈτтṭṯṱẗⱦꞇｔتطთ'],
+            ['T', 'TŢŤŦƬƮȚȾΤТṪṬṮṰꞆＴ'],
+            ['th', 'θþϑث'],
+            ['TH', 'ÞΘ'],
+            ['u', 'uùúûüũūŭůűųưǔǖǘǚǜȕȗʉуუṳṵṷṹṻụủứừửữựｕю'],
+            ['U', 'UÙÚÛÜŨŪŬŮŰŲƯǓǕǗǙǛȔȖɄУṲṴṶṸṺỤỦỨỪỬỮỰＵЮ'],
+            ['v', 'vʋвვṽṿꝟｖ'],
+            ['V', 'VƲВṼṾꝞＶ'],
+            ['vy', 'ꝡ'],
+            ['VY', 'Ꝡ'],
+            ['w', 'wŵẁẃẅẇẉẘⱳｗ'],
+            ['W', 'WŴẀẂẄẆẈⱲＷ'],
+            ['x', 'xẋẍｘξ'],
+            ['X', 'XẊẌＸΞ'],
+            ['y', 'yýÿŷƴȳɏΰϋύыيẏẙỳỵỷỹỿὐｙῢῦῧὺῠῡυ'],
+            ['Y', 'YÝŶŸƳȲɎΎΫϒЫẎỲỴỶỸῨῩῪＹΥ'],
+            ['z', 'zźżžƶȥɀζзزზẑẓẕⱬｚжظ'],
+            ['Z', 'ZŹŻŽƵȤΖЗẐẒẔⱫⱿＺЖ'],
+            ['zh', 'ჟ'],
+        ];
+    }
+
+    /**
+     * @param array $expectedResult
+     * @param array $originalArray
+     * @param string $insertedArrayKey Key of the inserted array
+     * @param array $insertedArrayData Which data insert to new array?
+     * @param string $key Where to insert the new array?
+     *
+     * @dataProvider providerArrayInsertElementAfterKey
+     */
+    public function testArrayInsertElementAfterKey(array $expectedResult, array $originalArray, string $insertedArrayKey, array $insertedArrayData, string $key): void
+    {
+        $this->assertSame($expectedResult, Tools::arrayInsertElementAfterKey($originalArray, $key, $insertedArrayKey, $insertedArrayData));
+    }
+
+    public function providerArrayInsertElementAfterKey(): iterable
+    {
+        $originalArray = [
+            'field1' => [
+                'value1',
+            ],
+            'field2' => [
+                'value2',
+            ],
+            'field3' => [
+                'value3',
+            ],
+        ];
+
+        yield [
+            [
+                'field1' => [
+                    'value1',
+                ],
+                'field2' => [
+                    'value2',
+                ],
+                'field0' => [
+                    'value0',
+                ],
+                'field3' => [
+                    'value3',
+                ],
+            ],
+            $originalArray,
+            'field0',
+            [
+                'value0',
+            ],
+            'field2',
+        ];
+
+        yield [
+            [
+                'field1' => [
+                    'value1',
+                ],
+                'field2' => [
+                    'value2',
+                ],
+                'field3' => [
+                    'value3',
+                ],
+                'field0' => [
+                    'value0',
+                ],
+            ],
+            $originalArray,
+            'field0',
+            [
+                'value0',
+            ],
+            'field3',
+        ];
+
+        yield [
+            $originalArray, // The field does not exist, we return an original array
+            $originalArray,
+            'field0',
+            [
+                'value0',
+            ],
+            'field4',
+        ];
     }
 }

@@ -4,7 +4,10 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const testContext = require('@utils/testContext');
+
+// Import login steps
+const loginCommon = require('@commonTests/BO/loginBO');
 
 // Import pages
 const dashboardPage = require('@pages/BO/dashboard');
@@ -16,9 +19,6 @@ const viewQueryManagerPage = require('@pages/BO/advancedParameters/database/sqlM
 const SQLQueryFaker = require('@data/faker/sqlQuery');
 const {Tables} = require('@data/demo/sqlTables');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_advancedParams_database_sqlManager_CRUDSqlQuery';
 
 let browserContext;
@@ -29,7 +29,7 @@ const dbPrefix = global.INSTALL.DB_PREFIX;
 const sqlQueryData = new SQLQueryFaker({tableName: `${dbPrefix}alias`});
 const editSqlQueryData = new SQLQueryFaker({name: `edit${sqlQueryData.name}`, tableName: `${dbPrefix}access`});
 
-describe('CRUD SQL query', async () => {
+describe('BO - Advanced Parameters - Database : Create, View, update and delete SQL query', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -127,7 +127,7 @@ describe('CRUD SQL query', async () => {
   });
 
   describe('Update SQL query created', async () => {
-    it('should go to \'SQL Manager\' page', async function () {
+    it('should go to \'Advanced Parameters > Database\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDatabaseToUpdateSQLQuery', baseContext);
 
       await viewQueryManagerPage.goToSubMenu(
@@ -151,7 +151,7 @@ describe('CRUD SQL query', async () => {
       await expect(sqlQueryName).to.contains(sqlQueryData.name);
     });
 
-    it('should go to edit SQL query page', async function () {
+    it('should go to edit \'SQL Query\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToEditPage', baseContext);
 
       await sqlManagerPage.goToEditSQLQueryPage(page, 1);
@@ -208,7 +208,7 @@ describe('CRUD SQL query', async () => {
   });
 
   describe('Delete SQL query', async () => {
-    it('should go to \'SQL Manager\' page', async function () {
+    it('should go to \'Advanced Parameters > Database\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToDatabasePageToDeleteSQLQuery', baseContext);
 
       await viewQueryManagerPage.goToSubMenu(

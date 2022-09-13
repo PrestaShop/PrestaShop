@@ -26,18 +26,14 @@
 {% set enableSidebar = true %}
 {% set layoutTitle = 'Creating a new Customer'|trans({}, 'Admin.Orderscustomers.Feature') %}
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-  <div class="row justify-content-center">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Sell/Customer/Blocks/form.html.twig' %}
-    </div>
-  </div>
+  {% include '@PrestaShop/Admin/Sell/Customer/Blocks/form.html.twig' %}
 {% endblock %}
 
 {% block javascripts %}
   {{ parent() }}
 
-  {% include '@PrestaShop/Admin/Sell/Customer/Blocks/javascript.html.twig' %}
+  <script src="{{ asset('themes/new-theme/public/customer_form.bundle.js') }}"></script>
 {% endblock %}

@@ -27,23 +27,93 @@
 namespace PrestaShopBundle\Command;
 
 use Employee;
+use PrestaShop\PrestaShop\Adapter\Hook\HookInformationProvider;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use PrestaShop\PrestaShop\Core\Hook\Generator\HookDescriptionGenerator;
 use PrestaShop\PrestaShop\Core\Hook\HookDescription;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use PrestaShop\PrestaShop\Core\Hook\Provider\GridDefinitionHookByServiceIdsProvider;
+use PrestaShop\PrestaShop\Core\Hook\Provider\IdentifiableObjectHookByFormTypeProvider;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
 
 /**
  * Appends sql upgrade file with the sql which can be used to create new hooks.
  */
-class AppendHooksListForSqlUpgradeFileCommand extends ContainerAwareCommand
+class AppendHooksListForSqlUpgradeFileCommand extends Command
 {
+    /**
+     * @var string
+     */
+    private $env;
+
+    /**
+     * @var LegacyContext
+     */
+    private $legacyContext;
+
+    /**
+     * @var GridDefinitionHookByServiceIdsProvider
+     */
+    private $gridDefinitionHookByServiceIdsProvider;
+
+    /**
+     * @var IdentifiableObjectHookByFormTypeProvider
+     */
+    private $identifiableObjectHookByFormTypeProvider;
+
+    /**
+     * @var HookInformationProvider
+     */
+    private $hookInformationProvider;
+
+    /**
+     * @var HookDescriptionGenerator
+     */
+    private $hookDescriptionGenerator;
+
+    /**
+     * @var array
+     */
+    private $serviceIds;
+
+    /**
+     * @var array
+     */
+    private $optionFormHookNames;
+
+    /**
+     * @var array
+     */
+    private $formTypes;
+
+    public function __construct(
+        string $env,
+        LegacyContext $legacyContext,
+        GridDefinitionHookByServiceIdsProvider $gridDefinitionHookByServiceIdsProvider,
+        IdentifiableObjectHookByFormTypeProvider $identifiableObjectHookByFormTypeProvider,
+        HookInformationProvider $hookInformationProvider,
+        HookDescriptionGenerator $hookDescriptionGenerator,
+        array $serviceIds,
+        array $optionFormHookNames,
+        array $formTypes
+    ) {
+        parent::__construct();
+        $this->env = $env;
+        $this->legacyContext = $legacyContext;
+        $this->gridDefinitionHookByServiceIdsProvider = $gridDefinitionHookByServiceIdsProvider;
+        $this->identifiableObjectHookByFormTypeProvider = $identifiableObjectHookByFormTypeProvider;
+        $this->hookInformationProvider = $hookInformationProvider;
+        $this->hookDescriptionGenerator = $hookDescriptionGenerator;
+        $this->serviceIds = $serviceIds;
+        $this->optionFormHookNames = $optionFormHookNames;
+        $this->formTypes = $formTypes;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -52,25 +122,28 @@ class AppendHooksListForSqlUpgradeFileCommand extends ContainerAwareCommand
         $this
             ->setName('prestashop:update:sql-upgrade-file-hooks-listing')
             ->setDescription(
-                'Adds sql to sql upgrade file which contains hook insert opeartion'
+                'Adds sql to sql upgrade file which contains hook insert operation'
             )
             ->addArgument(
                 'ps-version',
                 InputArgument::REQUIRED,
                 'The prestashop version for which sql upgrade file will be searched'
             )
+            ->addArgument(
+                'autoupgrade-path',
+                InputArgument::REQUIRED,
+                'The path to the autoupgrade module path which contains the upgrade scripts'
+            )
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $container = $this->getContainer();
-
         $this->initContext();
 
         $io = new SymfonyStyle($input, $output);
 
-        if (!in_array($container->getParameter('kernel.environment'), ['dev', 'test'])) {
+        if (!in_array($this->env, ['dev', 'test'])) {
             $io->warning('Dev or test environment is required to fully list all the hooks');
 
             return 1;
@@ -87,8 +160,12 @@ class AppendHooksListForSqlUpgradeFileCommand extends ContainerAwareCommand
 
         $hookDescriptions = $this->getHookDescriptions($hookNames);
 
+        $prestashopVersion = $input->getArgument('ps-version');
         try {
-            $sqlUpgradeFile = $this->getSqlUpgradeFileByPrestaShopVersion($input->getArgument('ps-version'));
+            $sqlUpgradeFile = $this->getSqlUpgradeFileByPrestaShopVersion(
+                $prestashopVersion,
+                $input->getArgument('autoupgrade-path')
+            );
         } catch (FileNotFoundException $exception) {
             $io->error($exception->getMessage());
 
@@ -98,15 +175,15 @@ class AppendHooksListForSqlUpgradeFileCommand extends ContainerAwareCommand
             return 1;
         }
 
-        $sqlInsertStatement = $this->getSqlInsertStatement($hookDescriptions);
+        $sqlInsertStatement = $this->getSqlInsertStatement($hookDescriptions, $prestashopVersion);
 
-        $this->appendSqlToFile($sqlUpgradeFile->getFileInfo()->getPathName(), $sqlInsertStatement);
+        $this->appendSqlToFile($sqlUpgradeFile, $sqlInsertStatement);
 
         $io->success(
             sprintf(
                 'All %s hooks have been listed to file %s',
                 count($hookNames),
-                $sqlUpgradeFile->getFileInfo()->getPathName()
+                $sqlUpgradeFile
             )
         );
 
@@ -118,13 +195,11 @@ class AppendHooksListForSqlUpgradeFileCommand extends ContainerAwareCommand
      */
     private function initContext()
     {
-        /** @var LegacyContext $legacyContext */
-        $legacyContext = $this->getContainer()->get('prestashop.adapter.legacy.context');
         //We need to have an employee or the listing hooks don't work
         //see LegacyHookSubscriber
-        if (!$legacyContext->getContext()->employee) {
+        if (!$this->legacyContext->getContext()->employee) {
             //Even a non existing employee is fine
-            $legacyContext->getContext()->employee = new Employee();
+            $this->legacyContext->getContext()->employee = new Employee();
         }
     }
 
@@ -135,27 +210,13 @@ class AppendHooksListForSqlUpgradeFileCommand extends ContainerAwareCommand
      */
     private function getHookNames()
     {
-        $container = $this->getContainer();
+        $gridDefinitionHookNames = $this->gridDefinitionHookByServiceIdsProvider->getHookNames($this->serviceIds);
 
-        $gridServiceIds = $container->getParameter('prestashop.core.grid.definition.service_ids');
-        $optionsFormHookNames = $container->getParameter('prestashop.hook.option_form_hook_names');
-        $identifiableObjectFormTypes = $container->getParameter('prestashop.core.form.identifiable_object.form_types');
-
-        $gridDefinitionHooksProvider = $container->get(
-            'prestashop.core.hook.provider.grid_definition_hook_by_service_ids_provider'
-        );
-
-        $identifiableObjectFormTypeProvider = $container->get(
-            'prestashop.core.hook.provider.identifiable_object_hook_by_form_type_provider'
-        );
-
-        $gridDefinitionHookNames = $gridDefinitionHooksProvider->getHookNames($gridServiceIds);
-
-        $identifiableObjectHookNames = $identifiableObjectFormTypeProvider->getHookNames($identifiableObjectFormTypes);
+        $identifiableObjectHookNames = $this->identifiableObjectHookByFormTypeProvider->getHookNames($this->formTypes);
 
         return array_merge(
             $identifiableObjectHookNames,
-            $optionsFormHookNames,
+            $this->optionFormHookNames,
             $gridDefinitionHookNames
         );
     }
@@ -165,46 +226,33 @@ class AppendHooksListForSqlUpgradeFileCommand extends ContainerAwareCommand
      *
      * @param string $version
      *
-     * @return SplFileInfo|null
+     * @return string
      */
-    private function getSqlUpgradeFileByPrestaShopVersion($version)
+    private function getSqlUpgradeFileByPrestaShopVersion($version, $autoUpgradeModulePath)
     {
-        $sqlUpgradeFilesLocation = $this->getContainer()->get('kernel')->getRootDir() . '/../install-dev/upgrade/sql/';
-        $sqlUpgradeFile = $version . '.sql';
+        $sqlUpgradeFile = "$autoUpgradeModulePath/upgrade/sql/$version.sql";
 
-        $filesFinder = new Finder();
-        $filesFinder
-            ->files()
-            ->in($sqlUpgradeFilesLocation)
-            ->name($sqlUpgradeFile)
-        ;
-
-        $filesCount = $filesFinder->count();
-
-        if (1 !== $filesCount) {
-            throw new FileNotFoundException(sprintf('Expected to find 1 file but %s files found with name %s', $filesFinder->count(), $sqlUpgradeFile));
+        if (!file_exists($sqlUpgradeFile)) {
+            throw new FileNotFoundException(sprintf('File %s has not been found', $sqlUpgradeFile));
         }
 
-        foreach ($filesFinder as $sqlInfo) {
-            return $sqlInfo;
-        }
-
-        return null;
+        return $sqlUpgradeFile;
     }
 
     /**
      * Gets sql insert statement.
      *
      * @param HookDescription[] $hookDescriptions
+     * @param string $prestashopVersion
      *
      * @return string
      */
-    private function getSqlInsertStatement(array $hookDescriptions)
+    private function getSqlInsertStatement(array $hookDescriptions, string $prestashopVersion)
     {
         $valuesToInsert = [];
         foreach ($hookDescriptions as $hookDescription) {
             $valuesToInsert[] = sprintf(
-                '(NULL,"%s","%s","%s","1")',
+                "  (NULL, '%s', '%s', '%s', '1')",
                 pSQL($hookDescription->getName()),
                 pSQL($hookDescription->getTitle()),
                 pSQL($hookDescription->getDescription())
@@ -215,10 +263,12 @@ class AppendHooksListForSqlUpgradeFileCommand extends ContainerAwareCommand
             return '';
         }
 
-        return sprintf(
-            'INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`) VALUES %s;',
-            implode(',', $valuesToInsert)
-        );
+        $insertSQL = PHP_EOL . "/* Auto generated hooks added for version $prestashopVersion */" . PHP_EOL;
+        $insertSQL .= 'INSERT IGNORE INTO `PREFIX_hook` (`id_hook`, `name`, `title`, `description`, `position`) VALUES' . PHP_EOL;
+        $insertSQL .= implode(',' . PHP_EOL, $valuesToInsert);
+        $insertSQL .= PHP_EOL . ';';
+
+        return $insertSQL;
     }
 
     /**
@@ -243,8 +293,7 @@ class AppendHooksListForSqlUpgradeFileCommand extends ContainerAwareCommand
      */
     private function getWithoutRegisteredHooks(array $hookNames)
     {
-        $hooksProvider = $this->getContainer()->get('prestashop.adapter.legacy.hook');
-        $registeredHooks = $hooksProvider->getHooks();
+        $registeredHooks = $this->hookInformationProvider->getHooks();
         $registeredHookNames = array_column($registeredHooks, 'name');
 
         return array_diff($hookNames, $registeredHookNames);
@@ -259,11 +308,9 @@ class AppendHooksListForSqlUpgradeFileCommand extends ContainerAwareCommand
      */
     private function getHookDescriptions(array $hookNames)
     {
-        $descriptionGenerator = $this->getContainer()->get('prestashop.core.hook.generator.hook_description_generator');
-
         $descriptions = [];
         foreach ($hookNames as $hookName) {
-            $hookDescription = $descriptionGenerator->generate($hookName);
+            $hookDescription = $this->hookDescriptionGenerator->generate($hookName);
 
             $descriptions[] = $hookDescription;
         }

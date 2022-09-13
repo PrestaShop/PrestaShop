@@ -24,11 +24,15 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 use PrestaShop\PrestaShop\Adapter\Presenter\Order\OrderPresenter;
+use PrestaShop\PrestaShop\Core\Security\PasswordPolicyConfiguration;
 
 class GuestTrackingControllerCore extends FrontController
 {
+    /** @var bool */
     public $ssl = true;
+    /** @var bool */
     public $auth = false;
+    /** @var string */
     public $php_self = 'guest-tracking';
     protected $order;
 
@@ -79,14 +83,37 @@ class GuestTrackingControllerCore extends FrontController
 
         if (Tools::isSubmit('submitTransformGuestToCustomer') && Tools::getValue('password')) {
             $customer = new Customer((int) $this->order->id_customer);
+            /** @var string $password */
             $password = Tools::getValue('password');
 
-            if (strlen($password) < Validate::PASSWORD_LENGTH) {
+            if (empty($password)) {
                 $this->errors[] = $this->trans(
-                    'Your password must be at least %min% characters long.',
-                    ['%min%' => Validate::PASSWORD_LENGTH],
+                    'Enter a password to transform your guest account into a customer account.',
+                    [],
                     'Shop.Forms.Help'
                 );
+            } elseif (!Validate::isAcceptablePasswordLength($password)) {
+                $this->errors[] = $this->trans(
+                    'Your password length must be between %d and %d',
+                    [Configuration::get(PasswordPolicyConfiguration::CONFIGURATION_MINIMUM_LENGTH), Configuration::get(PasswordPolicyConfiguration::CONFIGURATION_MAXIMUM_LENGTH)],
+                    'Shop.Forms.Help'
+                );
+            } elseif (!Validate::isAcceptablePasswordScore($password)) {
+                $this->errors[] = $this->trans(
+                    'Customer password is too weak',
+                    [],
+                    'Shop.Forms.Help'
+                );
+            // Prevent error
+            // A) either on page refresh
+            // B) if we already transformed him in other window or through backoffice
+            } elseif ($customer->is_guest == 0) {
+                $this->errors[] = $this->trans(
+                    'A customer account has already been created from this guest account. Please sign in.',
+                    [],
+                    'Shop.Notifications.Error'
+                );
+            // Attempt to convert the customer
             } elseif ($customer->transformToCustomer($this->context->language->id, $password)) {
                 $this->success[] = $this->trans(
                     'Your guest account has been successfully transformed into a customer account. You can now log in as a registered shopper.',
@@ -94,7 +121,7 @@ class GuestTrackingControllerCore extends FrontController
                     'Shop.Notifications.Success'
                 );
             } else {
-                $this->success[] = $this->trans(
+                $this->errors[] = $this->trans(
                     'An unexpected error occurred while creating your account.',
                     [],
                     'Shop.Notifications.Error'
@@ -124,12 +151,14 @@ class GuestTrackingControllerCore extends FrontController
             );
         }
 
-        $presented_order = (new OrderPresenter())->present($this->order);
+        // Kept for backwards compatibility (is_customer), inline it in later versions
+        $registered_customer_exists = Customer::customerExists(Tools::getValue('email'), false, true);
 
         $this->context->smarty->assign([
-            'order' => $presented_order,
+            'order' => (new OrderPresenter())->present($this->order),
             'guest_email' => Tools::getValue('email'),
-            'is_customer' => Customer::customerExists(Tools::getValue('email'), false, true),
+            'registered_customer_exists' => $registered_customer_exists,
+            'is_customer' => $registered_customer_exists, // Kept for backwards compatibility
             'HOOK_DISPLAYORDERDETAIL' => Hook::exec('displayOrderDetail', ['order' => $this->order]),
         ]);
 

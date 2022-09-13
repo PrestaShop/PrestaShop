@@ -27,7 +27,7 @@
 
 {% set messagesToShow = 4 %}
 
-<div class="card mt-2 d-print-none">
+<div class="card mt-2" data-role="message-card" >
   <div class="card-header">
     <div class="row">
       <div class="col-md-6">
@@ -58,7 +58,7 @@
     </ul>
   {% endif %}
 
-  <div class="card-body">
+  <div class="card-body d-print-none">
     {{ form_start(orderMessageForm, {
       'action': path('admin_orders_send_message', { orderId: orderForViewing.id })
     }) }}
@@ -82,7 +82,7 @@
       <div class="col-sm">
         <a href="{{ path('admin_order_messages_index') }}" class="configure-link">
           {{ 'Configure predefined messages'|trans({}, 'Admin.Orderscustomers.Feature') }}
-          <i class="material-icons">arrow_right_alt</i>
+          <i class="material-icons rtl-flip">arrow_right_alt</i>
         </a>
       </div>
     </div>

@@ -31,7 +31,6 @@ namespace PrestaShopBundle\Form\Admin\Sell\Product\Options;
 use PrestaShop\PrestaShop\Core\Form\FormChoiceProviderInterface;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -86,28 +85,6 @@ class SuppliersType extends TranslatorAwareType
                 'placeholder' => false,
                 'label' => $this->trans('Default supplier', 'Admin.Catalog.Feature'),
                 'label_tag_name' => 'h4',
-                'choice_attr' => [
-                    'disabled' => true,
-                ],
-            ])
-            ->add('product_suppliers', CollectionType::class, [
-                'label' => $this->trans('Supplier reference(s)', 'Admin.Catalog.Feature'),
-                'label_tag_name' => 'h4',
-                'entry_type' => ProductSupplierType::class,
-                'allow_add' => true,
-                'allow_delete' => true,
-                'prototype_name' => '__PRODUCT_SUPPLIER_INDEX__',
-                'attr' => [
-                    'class' => 'product-suppliers-collection',
-                ],
-                'alert_message' => $this->trans(
-                    'You can specify product reference(s) for each associated supplier. Click "%save_label%" after changing selected suppliers to display the associated product references.',
-                    'Admin.Catalog.Help',
-                    [
-                        '%save_label%' => $this->trans('Save', 'Admin.Actions'),
-                    ]
-                ),
-                'alert_position' => 'prepend',
             ])
         ;
     }
@@ -120,7 +97,7 @@ class SuppliersType extends TranslatorAwareType
         parent::configureOptions($resolver);
         $resolver->setDefaults([
             'label' => $this->trans('Suppliers', 'Admin.Global'),
-            'label_tag_name' => 'h2',
+            'label_tag_name' => 'h3',
             'columns_number' => 2,
             'row_attr' => [
                 'class' => 'product-suppliers-block',

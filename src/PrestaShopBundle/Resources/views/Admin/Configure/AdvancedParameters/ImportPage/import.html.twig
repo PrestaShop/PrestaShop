@@ -28,25 +28,21 @@
 
 {% block content %}
   {% if importForm is defined %}
-    <div class="row row justify-content-center">
-      <div class="col">
-        <div class="row">
-          <div class="col-12 col-md-8">
-            {% block import_panel %}
-              {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Blocks/import_panel.html.twig' %}
-            {% endblock %}
-          </div>
+    <div class="row">
+      <div class="col-md-8">
+        {% block import_panel %}
+          {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Blocks/import_panel.html.twig' %}
+        {% endblock %}
+      </div>
 
-          <div class="col-12 col-md-4">
-            {% block import_available_fields %}
-              {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Blocks/import_available_fields.html.twig' %}
-            {% endblock %}
+      <div class="col-md-4">
+        {% block import_available_fields %}
+          {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Blocks/import_available_fields.html.twig' %}
+        {% endblock %}
 
-            {% block import_sample_files %}
-              {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Blocks/import_sample_files.html.twig' %}
-            {% endblock %}
-          </div>
-        </div>
+        {% block import_sample_files %}
+          {% include '@PrestaShop/Admin/Configure/AdvancedParameters/Blocks/import_sample_files.html.twig' %}
+        {% endblock %}
       </div>
     </div>
   {% endif %}

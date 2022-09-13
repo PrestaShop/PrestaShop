@@ -300,18 +300,32 @@ class Taxes extends BOBasePage {
    * @returns {Promise<string>}
    */
   async updateTaxOption(page, taxOptionData) {
-    await page.check(this.taxStatusToggleInput(taxOptionData.enabled ? 1 : 0));
+    await this.setChecked(page, this.taxStatusToggleInput(taxOptionData.enabled ? 1 : 0));
     if (taxOptionData.enabled) {
-      await page.check(this.displayTaxInCartToggleInput(taxOptionData.displayInShoppingCart ? 1 : 0));
+      await this.setChecked(page, this.displayTaxInCartToggleInput(taxOptionData.displayInShoppingCart ? 1 : 0));
     }
 
     await this.selectByVisibleText(page, this.taxAddressTypeSelect, taxOptionData.basedOn);
 
-    await page.check(this.useEcoTaxToggleInput(taxOptionData.useEcoTax ? 1 : 0));
+    await this.setChecked(page, this.useEcoTaxToggleInput(taxOptionData.useEcoTax ? 1 : 0));
 
     if (taxOptionData.useEcoTax && taxOptionData.ecoTax !== undefined) {
       await this.selectByVisibleText(page, this.ecoTaxSelect, taxOptionData.ecoTax);
     }
+
+    // Click on save tax Option
+    await this.clickAndWaitForNavigation(page, this.saveTaxOptionButton);
+    return this.getAlertSuccessBlockParagraphContent(page);
+  }
+
+  /**
+   * Enable/Disable eco tax
+   * @param page {Page} Browser tab
+   * @param enableEcoTax {boolean} True if we need to enable ecoTax
+   * @returns {Promise<string>}
+   */
+  async enableEcoTax(page, enableEcoTax = true) {
+    await this.setChecked(page, this.useEcoTaxToggleInput(enableEcoTax ? 1 : 0));
 
     // Click on save tax Option
     await this.clickAndWaitForNavigation(page, this.saveTaxOptionButton);

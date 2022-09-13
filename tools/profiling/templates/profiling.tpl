@@ -26,6 +26,7 @@
 {include file="./styles.tpl"}
 
 <div id="prestashop-profiling" class="container">
+  {include file="./links.tpl"}
   <div class="row">
     {include file="./summary.tpl" summary=$summary}
     {include file="./configuration.tpl" configuration=$configuration}
@@ -34,7 +35,6 @@
   <div class="row">
     {include file="./hooks.tpl" hooks=$hooks}
     {include file="./modules.tpl" modules=$modules}
-    {include file="./links.tpl"}
   </div>
 
   {include file="./stopwatch.tpl" stopwatchQueries=$stopwatchQueries}

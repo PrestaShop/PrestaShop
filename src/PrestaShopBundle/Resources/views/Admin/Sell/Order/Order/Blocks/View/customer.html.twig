@@ -1,27 +1,27 @@
 {#**
-  * Copyright since 2007 PrestaShop SA and Contributors
-  * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
-  *
-  * NOTICE OF LICENSE
-  *
-  * This source file is subject to the Open Software License (OSL 3.0)
-  * that is bundled with this package in the file LICENSE.md.
-  * It is also available through the world-wide-web at this URL:
-  * https://opensource.org/licenses/OSL-3.0
-  * If you did not receive a copy of the license and are unable to
-  * obtain it through the world-wide-web, please send an email
-  * to license@prestashop.com so we can send you a copy immediately.
-  *
-  * DISCLAIMER
-  *
-  * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
-  * versions in the future. If you wish to customize PrestaShop for your
-  * needs please refer to https://devdocs.prestashop.com/ for more information.
-  *
-  * @author    PrestaShop SA and Contributors <contact@prestashop.com>
-  * @copyright Since 2007 PrestaShop SA and Contributors
-  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
-  *#}
+ * Copyright since 2007 PrestaShop SA and Contributors
+ * PrestaShop is an International Registered Trademark & Property of PrestaShop SA
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.md.
+ * It is also available through the world-wide-web at this URL:
+ * https://opensource.org/licenses/OSL-3.0
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@prestashop.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade PrestaShop to newer
+ * versions in the future. If you wish to customize PrestaShop for your
+ * needs please refer to https://devdocs.prestashop.com/ for more information.
+ *
+ * @author    PrestaShop SA and Contributors <contact@prestashop.com>
+ * @copyright Since 2007 PrestaShop SA and Contributors
+ * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
+ *#}
 
 <div id="customerCard" class="customer card">
   <div class="card-header">
@@ -44,9 +44,7 @@
 
               <strong class="text-muted ml-2">#{{ orderForViewing.customer.id }}</strong>
             </h2>
-            {% if orderForViewing.customer.isGuest %}
-              <strong class="text-muted">Guest</strong>
-            {% endif %}
+
           </div>
           <div id="viewFullDetails" class="col-xxl-5 text-xxl-right">
             <a class="d-print-none" href="{{ path('admin_customers_view', {'customerId': orderForViewing.customer.id }) }}">
@@ -59,6 +57,15 @@
           </div>
         {% endif %}
       </div>
+
+      {% if orderForViewing.customer.groups %}
+        <div class="customer-groups mt-2">
+          {% for group in orderForViewing.customer.groups %}
+            <span class="badge">{{ group }}</span>
+          {% endfor %}
+        </div>
+      {% endif %}
+
     </div>
     {% if orderForViewing.customer is not null and orderForViewing.customer.id != 0 %}
       <div class="row mt-3">

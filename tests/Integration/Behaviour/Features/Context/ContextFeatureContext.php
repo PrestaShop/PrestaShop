@@ -26,13 +26,13 @@
 
 namespace Tests\Integration\Behaviour\Features\Context;
 
-use LegacyTests\Unit\ContextMocker;
 use PrestaShop\PrestaShop\Adapter\LegacyContext;
+use Tests\Integration\Utility\ContextMocker;
 
 class ContextFeatureContext extends AbstractPrestaShopFeatureContext
 {
     /**
-     * @var ContextMocker
+     * @var ContextMocker|null
      */
     protected $contextMocker;
 
@@ -43,7 +43,7 @@ class ContextFeatureContext extends AbstractPrestaShopFeatureContext
      */
     public function mockContext()
     {
-        /** @var LegacyContext $localeRepository */
+        /** @var LegacyContext $legacyContext */
         $legacyContext = CommonFeatureContext::getContainer()->get('prestashop.adapter.legacy.context');
         /*
          * We need to call this before initializing the ContextMocker because this method forcefully init

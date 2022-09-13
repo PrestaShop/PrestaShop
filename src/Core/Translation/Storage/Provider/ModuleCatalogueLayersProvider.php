@@ -63,11 +63,6 @@ class ModuleCatalogueLayersProvider implements CatalogueLayersProviderInterface
     private $defaultCatalogueFinder;
 
     /**
-     * @var DefaultCatalogueFinder
-     */
-    private $builtInDefaultTranslatedCatalogueFinder;
-
-    /**
      * @var FileTranslatedCatalogueFinder
      */
     private $fileTranslatedCatalogueFinder;

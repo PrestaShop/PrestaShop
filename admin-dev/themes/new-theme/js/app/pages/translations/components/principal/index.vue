@@ -85,9 +85,9 @@
             </div>
 
             <TranslationInput
-              v-for="(translation, key) in translationsCatalog"
+              v-for="(translation, key, index) in translationsCatalog"
               :key="key"
-              :id="key"
+              :id="index"
               :translated="translation"
               :label="translation.default"
               :extra-info="getDomain(translation.tree_domain)"
@@ -119,14 +119,15 @@
   </transition>
 </template>
 
-<script>
-  import PSButton from '@app/widgets/ps-button';
-  import PSPagination from '@app/widgets/ps-pagination';
-  import PSAlert from '@app/widgets/ps-alert';
+<script lang="ts">
+  import Vue from 'vue';
+  import PSButton from '@app/widgets/ps-button.vue';
+  import PSPagination from '@app/widgets/ps-pagination.vue';
+  import PSAlert from '@app/widgets/ps-alert.vue';
   import {EventBus} from '@app/utils/event-bus';
-  import TranslationInput from './translation-input';
+  import TranslationInput from './translation-input.vue';
 
-  export default {
+  export default Vue.extend({
     props: {
       modal: {
         type: Object,
@@ -135,42 +136,42 @@
       },
     },
     data: () => ({
-      originalTranslations: [],
-      modifiedTranslations: [],
+      originalTranslations: [] as Array<Record<string, any>>,
+      modifiedTranslations: [] as Array<Record<string, any>>,
     }),
     computed: {
-      principalReady() {
+      principalReady(): boolean {
         return !this.$store.state.principalLoading;
       },
-      translationsCatalog() {
+      translationsCatalog(): any {
         return this.$store.getters.catalog.data.data;
       },
-      saveAction() {
+      saveAction(): string {
         return this.$store.getters.catalog.data.info ? this.$store.getters.catalog.data.info.edit_url : '';
       },
-      resetAction() {
+      resetAction(): string {
         return this.$store.getters.catalog.data.info ? this.$store.getters.catalog.data.info.reset_url : '';
       },
-      pagesCount() {
+      pagesCount(): number {
         return this.$store.getters.totalPages;
       },
-      currentPagination() {
+      currentPagination(): number {
         return this.$store.getters.pageIndex;
       },
-      currentDomain() {
+      currentDomain(): string {
         return this.$store.state.currentDomain;
       },
-      currentDomainTotalTranslations() {
+      currentDomainTotalTranslations(): string {
         /* eslint-disable max-len */
         return (this.$store.state.currentDomainTotalTranslations <= 1)
           ? `- ${this.trans('label_total_domain_singular').replace('%nb_translation%', this.$store.state.currentDomainTotalTranslations)}`
           : `- ${this.trans('label_total_domain').replace('%nb_translations%', this.$store.state.currentDomainTotalTranslations)}`;
         /* eslint-enable max-len */
       },
-      currentDomainTotalMissingTranslations() {
+      currentDomainTotalMissingTranslations(): number {
         return this.$store.state.currentDomainTotalMissingTranslations;
       },
-      currentDomainTotalMissingTranslationsString() {
+      currentDomainTotalMissingTranslationsString(): string {
         let totalMissingTranslationsString = '';
 
         if (this.currentDomainTotalMissingTranslations) {
@@ -178,22 +179,22 @@
             totalMissingTranslationsString = this.trans('label_missing_singular');
           } else {
             totalMissingTranslationsString = this.trans('label_missing')
-              .replace('%d', this.currentDomainTotalMissingTranslations);
+              .replace('%d', <string><unknown> this.currentDomainTotalMissingTranslations);
           }
         }
 
         return totalMissingTranslationsString;
       },
-      noResult() {
+      noResult(): boolean {
         return (this.$store.getters.currentDomain === '' || typeof this.$store.getters.currentDomain === 'undefined');
       },
-      noResultInfo() {
+      noResultInfo(): string {
         return this.trans('no_result').replace('%s', this.$store.getters.searchTags.join(' - '));
       },
-      searchActive() {
+      searchActive(): number {
         return this.$store.getters.searchTags.length;
       },
-      searchInfo() {
+      searchInfo(): string {
         const transKey = (this.$store.state.totalTranslations <= 1) ? 'search_info_singular' : 'search_info';
 
         return this.trans(transKey)
@@ -207,12 +208,12 @@
        * get the translations and reset the modified translations into the state
        * @param {Number} pageIndex
        */
-      changePage: function changePage(pageIndex) {
+      changePage: function changePage(pageIndex: number): void {
         this.$store.dispatch('updatePageIndex', pageIndex);
         this.fetch();
         this.$store.state.modifiedTranslations = [];
       },
-      isEdited(input) {
+      isEdited(input: Record<string, any>): void {
         if (input.translation.edited) {
           this.$store.state.modifiedTranslations[input.id] = input.translation;
         } else {
@@ -222,7 +223,7 @@
           );
         }
       },
-      onPageChanged(pageIndex) {
+      onPageChanged(pageIndex: number): void {
         if (this.edited()) {
           this.modal.showModal();
           this.modal.$once('save', () => {
@@ -236,21 +237,21 @@
           this.changePage(pageIndex);
         }
       },
-      fetch() {
+      fetch(): void {
         this.$store.dispatch('getCatalog', {
           url: this.$store.getters.catalog.info.current_url_without_pagination,
           page_size: this.$store.state.translationsPerPage,
           page_index: this.$store.getters.pageIndex,
         });
       },
-      getDomain(domains) {
+      getDomain(domains: Array<string>): string {
         let domain = '';
         domains.forEach((d) => {
           domain += `${d} > `;
         });
         return domain.slice(0, -3);
       },
-      saveTranslations() {
+      saveTranslations(): void {
         const modifiedTranslations = this.getModifiedTranslations();
 
         if (modifiedTranslations.length) {
@@ -261,11 +262,11 @@
           });
         }
       },
-      getModifiedTranslations() {
+      getModifiedTranslations(): Array<Record<string, any>> {
         this.modifiedTranslations = [];
         const targetTheme = (window.data.type === 'modules') ? '' : window.data.selected;
 
-        Object.values(this.$store.state.modifiedTranslations).forEach((translation) => {
+        Object.values(this.$store.state.modifiedTranslations).forEach((translation: any): void => {
           this.modifiedTranslations.push({
             default: translation.default,
             edited: translation.edited,
@@ -277,12 +278,12 @@
 
         return this.modifiedTranslations;
       },
-      edited() {
+      edited(): boolean {
         return Object.keys(this.$store.state.modifiedTranslations).length > 0;
       },
     },
     mounted() {
-      EventBus.$on('resetTranslation', (el) => {
+      EventBus.$on('resetTranslation', (el: Record<string, any>) => {
         const translations = [];
 
         translations.push({
@@ -304,7 +305,7 @@
       PSPagination,
       PSAlert,
     },
-  };
+  });
 </script>
 
 <style lang="scss" scoped>

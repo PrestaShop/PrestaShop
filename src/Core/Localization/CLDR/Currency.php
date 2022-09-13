@@ -136,7 +136,9 @@ final class Currency implements CurrencyInterface
      *                             "one"     = talking about one unit of this currency (e.g.: "one euro")
      *                             "other"   = talking about several units of this currency (e.g.: "ten euros")
      *
-     * @return string The wanted display name
+     * @return string|null The wanted display name
+     *
+     * @throws LocalizationException When an invalid display name is passed
      */
     public function getDisplayName($countContext = CurrencyInterface::DISPLAY_NAME_COUNT_DEFAULT)
     {

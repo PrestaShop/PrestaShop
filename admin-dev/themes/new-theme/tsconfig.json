@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "outDir": "./public/",
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "module": "es6",
+    "target": "es5",
+    "strict": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "allowJs": true,
+    "baseUrl": "./",
+    "paths": {
+      "@app/*": ["js/app/*"],
+      "@js/*": ["js/*"],
+      "@pages/*": ["js/pages/*"],
+      "@components/*": ["js/components/*"],
+      "@scss/*": ["scss/*"],
+      "@node_modules/*": ["node_modules/*"],
+      "@vue/*": ["js/vue/*"],
+      "@PSTypes/*": ["js/types/*"]
+    },
+    "typeRoots": ["js/types", "node_modules/@types"]
+  },
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  }
+}

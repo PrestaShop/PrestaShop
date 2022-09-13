@@ -42,17 +42,9 @@ final class GetSupplierForEditingHandler extends AbstractSupplierHandler impleme
      */
     private $imageTagSourceParser;
 
-    /**
-     * @var int
-     */
-    private $contextShopId;
-
-    public function __construct(
-        ImageTagSourceParserInterface $imageTagSourceParser,
-        $contextShopId
-    ) {
+    public function __construct(ImageTagSourceParserInterface $imageTagSourceParser)
+    {
         $this->imageTagSourceParser = $imageTagSourceParser;
-        $this->contextShopId = $contextShopId;
     }
 
     /**

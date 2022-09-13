@@ -86,7 +86,7 @@ class GridPositionUpdaterTest extends TestCase
         $positionUpdate = new PositionUpdate(
             $collection,
             $this->getDefinition(),
-            42
+            '42'
         );
 
         return $positionUpdate;

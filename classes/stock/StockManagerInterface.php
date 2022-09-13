@@ -34,7 +34,7 @@ interface StockManagerInterface
     /**
      * Checks if the StockManager is available.
      *
-     * @return StockManagerInterface
+     * @return bool
      */
     public static function isAvailable();
 
@@ -45,7 +45,7 @@ interface StockManagerInterface
      * @param int $id_product_attribute
      * @param Warehouse $warehouse
      * @param int $quantity
-     * @param int $id_stock_movement_reason
+     * @param int|null $id_stock_movement_reason
      * @param float $price_te
      * @param bool $is_usable
      * @param int $id_supply_order optionnal

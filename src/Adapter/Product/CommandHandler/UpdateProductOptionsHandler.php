@@ -28,10 +28,8 @@ declare(strict_types=1);
 
 namespace PrestaShop\PrestaShop\Adapter\Product\CommandHandler;
 
-use PrestaShop\PrestaShop\Adapter\Manufacturer\Repository\ManufacturerRepository;
-use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductRepository;
+use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductMultiShopRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Update\ProductIndexationUpdater;
-use PrestaShop\PrestaShop\Core\ConfigurationInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductOptionsCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\CommandHandler\UpdateProductOptionsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Exception\CannotUpdateProductException;
@@ -43,14 +41,9 @@ use Product;
 final class UpdateProductOptionsHandler implements UpdateProductOptionsHandlerInterface
 {
     /**
-     * @var ProductRepository
+     * @var ProductMultiShopRepository
      */
-    private $productRepository;
-
-    /**
-     * @var ManufacturerRepository
-     */
-    private $manufacturerRepository;
+    private $productMultiShopRepository;
 
     /**
      * @var ProductIndexationUpdater
@@ -58,26 +51,15 @@ final class UpdateProductOptionsHandler implements UpdateProductOptionsHandlerIn
     private $productIndexationUpdater;
 
     /**
-     * @var ConfigurationInterface
-     */
-    private $configuration;
-
-    /**
-     * @param ProductRepository $productRepository
-     * @param ManufacturerRepository $manufacturerRepository
+     * @param ProductMultiShopRepository $productMultiShopRepository
      * @param ProductIndexationUpdater $productIndexationUpdater
-     * @param ConfigurationInterface $configuration
      */
     public function __construct(
-        ProductRepository $productRepository,
-        ManufacturerRepository $manufacturerRepository,
-        ProductIndexationUpdater $productIndexationUpdater,
-        ConfigurationInterface $configuration
+        ProductMultiShopRepository $productMultiShopRepository,
+        ProductIndexationUpdater $productIndexationUpdater
     ) {
-        $this->productRepository = $productRepository;
-        $this->manufacturerRepository = $manufacturerRepository;
+        $this->productMultiShopRepository = $productMultiShopRepository;
         $this->productIndexationUpdater = $productIndexationUpdater;
-        $this->configuration = $configuration;
     }
 
     /**
@@ -85,12 +67,24 @@ final class UpdateProductOptionsHandler implements UpdateProductOptionsHandlerIn
      */
     public function handle(UpdateProductOptionsCommand $command): void
     {
-        $product = $this->productRepository->get($command->getProductId());
-        $updatableProperties = $this->fillUpdatableProperties($product, $command);
+        $shopConstraint = $command->getShopConstraint();
+        $product = $this->productMultiShopRepository->getByShopConstraint(
+            $command->getProductId(),
+            $shopConstraint
+        );
+        $wasVisibleOnSearch = $this->productIndexationUpdater->isVisibleOnSearch($product);
 
-        $this->productRepository->partialUpdate($product, $updatableProperties, CannotUpdateProductException::FAILED_UPDATE_OPTIONS);
-        if (true === $command->isActive() && $this->configuration->get('PS_SEARCH_INDEXATION')) {
-            $this->productIndexationUpdater->updateIndexation($product->id);
+        $updatableProperties = $this->fillUpdatableProperties($product, $command);
+        $this->productMultiShopRepository->partialUpdate(
+            $product,
+            $updatableProperties,
+            $shopConstraint,
+            CannotUpdateProductException::FAILED_UPDATE_OPTIONS
+        );
+
+        $isVisibleOnSearch = $this->productIndexationUpdater->isVisibleOnSearch($product);
+        if ($wasVisibleOnSearch !== $isVisibleOnSearch) {
+            $this->productIndexationUpdater->updateIndexation($product);
         }
     }
 
@@ -104,11 +98,6 @@ final class UpdateProductOptionsHandler implements UpdateProductOptionsHandlerIn
     {
         $updatableProperties = [];
 
-        if (null !== $command->isActive()) {
-            $product->active = $command->isActive();
-            $updatableProperties[] = 'active';
-        }
-
         if (null !== $command->getVisibility()) {
             $product->visibility = $command->getVisibility()->getValue();
             $updatableProperties[] = 'visibility';
@@ -118,15 +107,19 @@ final class UpdateProductOptionsHandler implements UpdateProductOptionsHandlerIn
             $product->available_for_order = $command->isAvailableForOrder();
             $updatableProperties[] = 'available_for_order';
         }
+        $availableForOrder = $product->available_for_order;
+
+        if (null !== $command->showPrice() && !$availableForOrder) {
+            $product->show_price = $command->showPrice();
+            $updatableProperties[] = 'show_price';
+        } elseif ($availableForOrder && !$product->show_price) {
+            $product->show_price = true;
+            $updatableProperties[] = 'show_price';
+        }
 
         if (null !== $command->isOnlineOnly()) {
             $product->online_only = $command->isOnlineOnly();
             $updatableProperties[] = 'online_only';
-        }
-
-        if (null !== $command->showPrice()) {
-            $product->show_price = $command->showPrice();
-            $updatableProperties[] = 'show_price';
         }
 
         if (null !== $command->getCondition()) {

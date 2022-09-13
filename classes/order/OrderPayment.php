@@ -27,6 +27,9 @@ class OrderPaymentCore extends ObjectModel
 {
     public $order_reference;
     public $id_currency;
+    /**
+     * @var float
+     */
     public $amount;
     public $payment_method;
     public $conversion_rate;
@@ -36,6 +39,11 @@ class OrderPaymentCore extends ObjectModel
     public $card_expiration;
     public $card_holder;
     public $date_add;
+
+    /**
+     * @var int|null
+     */
+    public $id_employee;
 
     /**
      * @see ObjectModel::$definition
@@ -55,6 +63,7 @@ class OrderPaymentCore extends ObjectModel
             'card_expiration' => ['type' => self::TYPE_STRING, 'validate' => 'isAnything', 'size' => 254],
             'card_holder' => ['type' => self::TYPE_STRING, 'validate' => 'isAnything', 'size' => 254],
             'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'id_employee' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId', 'allow_null' => true],
         ],
     ];
 
@@ -72,24 +81,7 @@ class OrderPaymentCore extends ObjectModel
     /**
      * Get the detailed payment of an order.
      *
-     * @deprecated 1.5.3.0
-     *
-     * @param int $id_order
-     *
-     * @return array
-     */
-    public static function getByOrderId($id_order)
-    {
-        Tools::displayAsDeprecated();
-        $order = new Order($id_order);
-
-        return OrderPayment::getByOrderReference($order->reference);
-    }
-
-    /**
-     * Get the detailed payment of an order.
-     *
-     * @param int $order_reference
+     * @param string $order_reference
      *
      * @return array
      *
@@ -112,7 +104,7 @@ class OrderPaymentCore extends ObjectModel
      *
      * @param int $id_invoice Invoice ID
      *
-     * @return PrestaShopCollection Collection of OrderPayment
+     * @return PrestaShopCollection|array Collection of OrderPayment
      */
     public static function getByInvoiceId($id_invoice)
     {

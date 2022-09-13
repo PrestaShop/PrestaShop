@@ -25,39 +25,35 @@
 {% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
 {% block mailThemeConfigurationFormBlock %}
-  <div class="row justify-content-center">
-    <div class="col-xl-12">
-      {{ form_start(mailThemeConfigurationForm, {'action': path('admin_mail_theme_save_configuration')}) }}
-      <div class="card">
-        <h3 class="card-header">
-          <i class="material-icons">settings</i> {{ 'Configuration'|trans({}, 'Admin.Global') }}
-        </h3>
+{{ form_start(mailThemeConfigurationForm, {'action': path('admin_mail_theme_save_configuration')}) }}
+<div class="card">
+  <h3 class="card-header">
+    <i class="material-icons">settings</i>
+    {{ 'Configuration'|trans({}, 'Admin.Global') }}
+  </h3>
 
-        <div class="card-block row">
-          <div class="card-text">
-
-            <div class="form-group row">
-              {{ ps.label_with_help(
-                ('Select your default email theme'|trans({}, 'Admin.Design.Feature')),
-                ('This won\'t regenerate email templates, it only sets the default email theme for future generation (when a language is installed for example).'|trans({}, 'Admin.Design.Help'))
-              ) }}
-              <div class="col-sm">
-                {{ form_errors(mailThemeConfigurationForm.defaultTheme) }}
-                {{ form_widget(mailThemeConfigurationForm.defaultTheme) }}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card-footer">
-          <div class="d-flex justify-content-end">
-            <button class="btn btn-primary" id="save-configuration-form">
-              <span>{{ 'Save'|trans({}, 'Admin.Actions') }}</span>
-            </button>
-          </div>
+  <div class="card-body">
+    <div class="form-wrapper">
+      <div class="form-group row">
+        {{ ps.label_with_help(
+          ('Select your default email theme'|trans({}, 'Admin.Design.Feature')),
+          ('This won\'t regenerate email templates, it only sets the default email theme for future generation (when a language is installed for example).'|trans({}, 'Admin.Design.Help'))
+        ) }}
+        <div class="col-sm">
+          {{ form_errors(mailThemeConfigurationForm.defaultTheme) }}
+          {{ form_widget(mailThemeConfigurationForm.defaultTheme) }}
         </div>
       </div>
-      {{ form_end(mailThemeConfigurationForm) }}
     </div>
   </div>
+
+  <div class="card-footer">
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-primary" id="save-configuration-form">
+        <span>{{ 'Save'|trans({}, 'Admin.Actions') }}</span>
+      </button>
+    </div>
+  </div>
+</div>
+{{ form_end(mailThemeConfigurationForm) }}
 {% endblock %}

@@ -49,7 +49,7 @@ abstract class AbstractImageUploader
      *
      * @throws UploadedImageConstraintException
      */
-    protected function checkImageIsAllowedForUpload(UploadedFile $image)
+    public function checkImageIsAllowedForUpload(UploadedFile $image)
     {
         $maxFileSize = Tools::getMaxUploadSize();
 
@@ -61,7 +61,14 @@ abstract class AbstractImageUploader
             || !ImageManager::isCorrectImageFileExt($image->getClientOriginalName())
             || preg_match('/\%00/', $image->getClientOriginalName()) // prevent null byte injection
         ) {
-            throw new UploadedImageConstraintException(sprintf('Image format "%s", not recognized, allowed formats are: .gif, .jpg, .png', $image->getClientOriginalExtension()), UploadedImageConstraintException::UNRECOGNIZED_FORMAT);
+            throw new UploadedImageConstraintException(
+                sprintf(
+                    'Image format "%s", not recognized, allowed formats are: %s',
+                    $image->getClientOriginalExtension(),
+                    join(', ', ImageManager::EXTENSIONS_SUPPORTED)
+                ),
+                UploadedImageConstraintException::UNRECOGNIZED_FORMAT
+            );
         }
     }
 

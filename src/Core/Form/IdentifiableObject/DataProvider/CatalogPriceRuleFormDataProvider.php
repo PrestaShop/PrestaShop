@@ -81,10 +81,10 @@ final class CatalogPriceRuleFormDataProvider implements FormDataProviderInterfac
                 'from' => $from ? $from->format($dateTimeFormat) : '',
                 'to' => $to ? $to->format($dateTimeFormat) : '',
             ],
-            'include_tax' => $editableCatalogPriceRule->isTaxIncluded(),
             'reduction' => [
                 'type' => $editableCatalogPriceRule->getReduction()->getType(),
                 'value' => (string) $editableCatalogPriceRule->getReduction()->getValue(),
+                'include_tax' => $editableCatalogPriceRule->isTaxIncluded(),
             ],
         ];
 
@@ -102,6 +102,7 @@ final class CatalogPriceRuleFormDataProvider implements FormDataProviderInterfac
             'reduction' => [
                 'type' => Reduction::TYPE_AMOUNT,
                 'value' => 0,
+                'include_tax' => true,
             ],
         ];
     }

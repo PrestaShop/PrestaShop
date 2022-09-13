@@ -26,15 +26,16 @@
 
 use PrestaShopBundle\Install\AbstractInstall;
 use PrestaShopBundle\Install\LanguageList;
+use PrestaShopBundle\Translation\TranslatorComponent;
 
 abstract class InstallControllerConsole
 {
     /**
      * @var array List of installer steps
      */
-    protected static $steps = array('process');
+    protected static $steps = ['process'];
 
-    protected static $instances = array();
+    protected static $instances = [];
 
     /**
      * @var string Current step
@@ -44,7 +45,7 @@ abstract class InstallControllerConsole
     /**
      * @var array List of errors
      */
-    public $errors = array();
+    public $errors = [];
 
     public $controller;
 
@@ -69,6 +70,16 @@ abstract class InstallControllerConsole
     protected $model_database;
 
     /**
+     * @var Datas|null
+     */
+    public $datas;
+
+    /**
+     * @var TranslatorComponent|null
+     */
+    public $translator;
+
+    /**
      * Validate current step.
      */
     abstract public function validate();
@@ -77,34 +88,34 @@ abstract class InstallControllerConsole
     {
         if (!($argc - 1)) {
             $available_arguments = Datas::getInstance()->getArgs();
-            echo 'Arguments available:'.PHP_EOL;
+            echo 'Arguments available:' . PHP_EOL;
             foreach ($available_arguments as $key => $arg) {
                 $name = isset($arg['name']) ? $arg['name'] : $key;
-                echo '--'.$name."\t".(isset($arg['help']) ? $arg['help'] : '').(isset($arg['default']) ? "\t".'(Default: '.$arg['default'].')' : '').PHP_EOL;
+                echo '--' . $name . "\t" . (isset($arg['help']) ? $arg['help'] : '') . (isset($arg['default']) ? "\t" . '(Default: ' . $arg['default'] . ')' : '') . PHP_EOL;
             }
             exit;
         }
 
         $errors = Datas::getInstance()->getAndCheckArgs($argv);
         if (Datas::getInstance()->show_license) {
-            echo strip_tags(file_get_contents(_PS_INSTALL_PATH_.'theme/views/license_content.php'));
+            echo strip_tags(file_get_contents(_PS_INSTALL_PATH_ . 'theme/views/license_content.php'));
             exit;
         }
 
         if ($errors !== true) {
             if (count($errors)) {
                 foreach ($errors as $error) {
-                    echo $error.PHP_EOL;
+                    echo $error . PHP_EOL;
                 }
             }
             exit(1);
         }
 
-        if (!file_exists(_PS_INSTALL_CONTROLLERS_PATH_.'console/process.php')) {
+        if (!file_exists(_PS_INSTALL_CONTROLLERS_PATH_ . 'console/process.php')) {
             throw new PrestashopInstallerException("Controller file 'console/process.php' not found");
         }
 
-        require_once _PS_INSTALL_CONTROLLERS_PATH_.'console/process.php';
+        require_once _PS_INSTALL_CONTROLLERS_PATH_ . 'console/process.php';
         self::$instances['process'] = new InstallControllerConsoleProcess('process');
 
         $datas = Datas::getInstance();
@@ -151,18 +162,18 @@ abstract class InstallControllerConsole
         );
         if (count($errors)) {
             if (!is_array($errors)) {
-                $errors = array($errors);
+                $errors = [$errors];
             }
-            echo 'Errors :'. PHP_EOL;
+            echo 'Errors :' . PHP_EOL;
             foreach ($errors as $error_process) {
                 if (!is_array($error_process)) {
                     $error_process = [$error_process];
                 }
                 foreach ($error_process as $error) {
-                    echo(is_string($error) ? $error : print_r($error, true)).PHP_EOL;
+                    echo(is_string($error) ? $error : print_r($error, true)) . PHP_EOL;
                 }
             }
-            die;
+            exit(1);
         }
     }
 

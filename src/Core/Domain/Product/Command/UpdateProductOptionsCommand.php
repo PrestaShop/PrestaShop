@@ -35,6 +35,7 @@ use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductVisibility;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
 
 class UpdateProductOptionsCommand
 {
@@ -42,11 +43,6 @@ class UpdateProductOptionsCommand
      * @var ProductId
      */
     private $productId;
-
-    /**
-     * @var bool|null
-     */
-    private $active;
 
     /**
      * @var ProductVisibility|null
@@ -84,11 +80,18 @@ class UpdateProductOptionsCommand
     private $manufacturerId;
 
     /**
-     * @param int $productId
+     * @var ShopConstraint
      */
-    public function __construct(int $productId)
+    private $shopConstraint;
+
+    /**
+     * @param int $productId
+     * @param ShopConstraint $shopConstraint
+     */
+    public function __construct(int $productId, ShopConstraint $shopConstraint)
     {
         $this->productId = new ProductId($productId);
+        $this->shopConstraint = $shopConstraint;
     }
 
     /**
@@ -97,26 +100,6 @@ class UpdateProductOptionsCommand
     public function getProductId(): ProductId
     {
         return $this->productId;
-    }
-
-    /**
-     * @return bool|null
-     */
-    public function isActive(): ?bool
-    {
-        return $this->active;
-    }
-
-    /**
-     * @param bool $active
-     *
-     * @return UpdateProductOptionsCommand
-     */
-    public function setActive(bool $active): UpdateProductOptionsCommand
-    {
-        $this->active = $active;
-
-        return $this;
     }
 
     /**
@@ -262,5 +245,13 @@ class UpdateProductOptionsCommand
         ;
 
         return $this;
+    }
+
+    /**
+     * @return ShopConstraint
+     */
+    public function getShopConstraint(): ShopConstraint
+    {
+        return $this->shopConstraint;
     }
 }

@@ -32,11 +32,11 @@ use Symfony\Component\HttpKernel\Kernel;
 
 class AppKernel extends Kernel
 {
-    const VERSION = '1.7.8.7';
-    const MAJOR_VERSION_STRING = '1.7';
-    const MAJOR_VERSION = 17;
-    const MINOR_VERSION = 8;
-    const RELEASE_VERSION = 7;
+    const VERSION = '8.0.0';
+    const MAJOR_VERSION_STRING = '8';
+    const MAJOR_VERSION = 8;
+    const MINOR_VERSION = 0;
+    const RELEASE_VERSION = 0;
 
     /**
      * {@inheritdoc}
@@ -55,8 +55,6 @@ class AppKernel extends Kernel
             new PrestaShopBundle\PrestaShopBundle(),
             // PrestaShop Translation parser
             new PrestaShop\TranslationToolsBundle\TranslationToolsBundle(),
-            // REST API consumer
-            new Csa\Bundle\GuzzleBundle\CsaGuzzleBundle(),
             new League\Tactician\Bundle\TacticianBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
         );
@@ -64,11 +62,6 @@ class AppKernel extends Kernel
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {
             $bundles[] = new Symfony\Bundle\DebugBundle\DebugBundle();
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();
-            $bundles[] = new Sensio\Bundle\DistributionBundle\SensioDistributionBundle();
-        }
-
-        if ('dev' === $this->getEnvironment()) {
-            $bundles[] = new Symfony\Bundle\WebServerBundle\WebServerBundle();
         }
 
         /* Will not work until PrestaShop is installed */
@@ -86,15 +79,34 @@ class AppKernel extends Kernel
     /**
      * {@inheritdoc}
      */
-    public function reboot($warmupDir)
+    public function boot()
     {
-        parent::reboot($warmupDir);
+        parent::boot();
+        $this->cleanKernelReferences();
+    }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function shutdown()
+    {
+        parent::shutdown();
+        $this->cleanKernelReferences();
+    }
+
+    /**
+     * The kernel and especially its container is cached in several PrestaShop classes, services or components So we
+     * need to clear this cache everytime the kernel is shutdown, rebooted, reset, ...
+     *
+     * This is very important in test environment to avoid invalid mocks to stay accessible and used, but it's also
+     * important because we may need to reboot the kernel (during module installation, after currency is installed
+     * to reset CLDR cache, ...)
+     */
+    protected function cleanKernelReferences(): void
+    {
         // We have classes to access the container from legacy code, they need to be cleaned after reboot
         Context::getContext()->container = null;
         SymfonyContainer::resetStaticCache();
-        // @todo: do not want to risk right now but maybe Context::getContext()->controller->container needs refreshing
-        //        but only if it is a Symfony container (do not override front legacy container)
     }
 
     /**
@@ -200,7 +212,7 @@ class AppKernel extends Kernel
     {
         $activeModules = [];
         try {
-            $activeModules = (new ModuleRepository())->getActiveModules();
+            $activeModules = (new ModuleRepository(_PS_ROOT_DIR_, _PS_MODULE_DIR_))->getActiveModules();
         } catch (\Exception $e) {
             //Do nothing because the modules retrieval must not block the kernel, and it won't work
             //during the installation process

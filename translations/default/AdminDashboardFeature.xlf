@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="controllers/admin/AdminDashboardController.php" source-language="en-US" target-language="en" datatype="plaintext">
+    <body>
+      <trans-unit id="2938c7f7e560ed972f8a4f68e80ff834">
+        <source>Dashboard</source>
+        <target>Dashboard</target>
+        <note>Line: 55</note>
+      </trans-unit>
+      <trans-unit id="948a2986c50ad6bb8c90b4d93ae5c04d">
+        <source>Demo mode</source>
+        <target>Demo mode</target>
+        <note>Line: 57</note>
+      </trans-unit>
+      <trans-unit id="6894510fe0d12804bb8c93f374a485c0">
+        <source>Average bank fees per payment method</source>
+        <target>Average bank fees per payment method</target>
+        <note>Line: 75</note>
+      </trans-unit>
+      <trans-unit id="dc04176957901a0f880e073ea5187187">
+        <source>Average shipping fees per shipping method</source>
+        <target>Average shipping fees per shipping method</target>
+        <note>Line: 76</note>
+      </trans-unit>
+      <trans-unit id="cb3c93351f1f20809fdd6e938a4319c7">
+        <source>Other settings</source>
+        <target>Other settings</target>
+        <note>Line: 77</note>
+      </trans-unit>
+      <trans-unit id="e7c89563e25ff383dddc384817a7b857">
+        <source>Average gross margin percentage</source>
+        <target>Average gross margin percentage</target>
+        <note>Line: 194</note>
+      </trans-unit>
+      <trans-unit id="719d7270f0014508129eecfe03ffd84e">
+        <source>Other fees per order</source>
+        <target>Other fees per order</target>
+        <note>Line: 204</note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

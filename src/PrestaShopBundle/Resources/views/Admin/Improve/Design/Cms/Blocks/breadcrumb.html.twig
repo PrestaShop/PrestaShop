@@ -24,30 +24,25 @@
  *#}
 
 {% if cmsPageView.breadcrumb_tree is not empty %}
-  <div class="row">
-    <div class="col">
-      <div class="card">
-        <div class="card-block">
-          <nav>
-            <ol class="breadcrumb">
-              {% for category in cmsPageView.breadcrumb_tree %}
-                <li class="breadcrumb-item">
-                  {% set cmsPageRouteParameters = {} %}
+  <div class="card">
+    <div class="card-body">
+      <nav>
+        <ol class="breadcrumb">
+          {% for category in cmsPageView.breadcrumb_tree %}
+            <li class="breadcrumb-item">
+              {% set cmsPageRouteParameters = {} %}
 
-                  {% if category.cmsPageCategoryId.value != cmsPageView.root_category_id %}
-                    {% set cmsPageRouteParameters = {'id_cms_category' : category.cmsPageCategoryId.value} %}
-                  {% endif %}
+              {% if category.cmsPageCategoryId.value != cmsPageView.root_category_id %}
+                {% set cmsPageRouteParameters = {'id_cms_category' : category.cmsPageCategoryId.value} %}
+              {% endif %}
 
-                  <a href="{{ path('admin_cms_pages_index', cmsPageRouteParameters) }}">
-                    {{ category.name }}
-                  </a>
-                </li>
-              {% endfor %}
-            </ol>
-          </nav>
-        </div>
-      </div>
+              <a href="{{ path('admin_cms_pages_index', cmsPageRouteParameters) }}">
+                {{ category.name }}
+              </a>
+            </li>
+          {% endfor %}
+        </ol>
+      </nav>
     </div>
   </div>
 {% endif %}
-

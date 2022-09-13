@@ -36,27 +36,21 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-  {% if multistoreIsUsed %}{{ ps.infotip(multistoreInfoTip, true) }}{% endif %}
-  <div class="row">
-    <div class="col">
-      <div class="alert alert-warning" role="alert">
-        <p class="alert-text">{{ 'When you delete a language, all related translations in the database will be deleted.'|trans({}, 'Admin.International.Notification') }}</p>
-      </div>
+  {% include '@PrestaShop/Admin/Common/multistore-infotip.html.twig' %}
 
-      {% if not isHtaccessFileWriter %}
-        <div class="alert alert-info" role="alert">
-          <p class="alert-text">{{ 'Your .htaccess file must be writable.'|trans({}, 'Admin.International.Notification') }}</p>
-        </div>
-      {% endif %}
-    </div>
+  <div class="alert alert-warning" role="alert">
+    <p class="alert-text">{{ 'When you delete a language, all related translations in the database will be deleted.'|trans({}, 'Admin.International.Notification') }}</p>
   </div>
 
-  {% block language_listing %}
-    <div class="row">
-      <div class="col-sm">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with { 'grid': languageGrid } %}
-      </div>
+  {% if not isHtaccessFileWriter %}
+    <div class="alert alert-info" role="alert">
+      <p class="alert-text">{{ 'Your .htaccess file must be writable.'|trans({}, 'Admin.International.Notification') }}</p>
     </div>
+  {% endif %}
+
+
+  {% block language_listing %}
+    {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with { 'grid': languageGrid } %}
   {% endblock %}
 {% endblock %}
 

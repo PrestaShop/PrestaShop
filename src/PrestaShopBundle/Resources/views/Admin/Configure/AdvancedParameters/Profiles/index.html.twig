@@ -26,13 +26,9 @@
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-  {% if multistoreIsUsed %}{{ ps.infotip(multistoreInfoTip, true) }}{% endif %}
+  {% include '@PrestaShop/Admin/Common/multistore-infotip.html.twig' %}
   {% block profiles_list_panel %}
-    <div class="row">
-      <div class="col">
-        {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': grid} %}
-      </div>
-    </div>
+    {% include '@PrestaShop/Admin/Common/Grid/grid_panel.html.twig' with {'grid': grid} %}
   {% endblock %}
 {% endblock %}
 

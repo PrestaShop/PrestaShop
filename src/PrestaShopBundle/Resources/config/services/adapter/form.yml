@@ -71,11 +71,25 @@ services:
       - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_LANG_DEFAULT')"
 
   prestashop.adapter.form.choice_provider.feature_values_choice_provider:
-      class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeatureValuesChoiceProvider'
-      arguments:
-          - '@prestashop.adapter.feature.repository.feature_value_repository'
-          - '@prestashop.adapter.legacy.context'
-          - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_LANG_DEFAULT')"
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\FeatureValuesChoiceProvider'
+    arguments:
+      - '@prestashop.adapter.feature.repository.feature_value_repository'
+      - '@prestashop.adapter.legacy.context'
+      - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_LANG_DEFAULT')"
 
   prestashop.adapter.form.choice_provider.supplier_name_by_id_choice_provider:
     class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\SupplierNameByIdChoiceProvider'
+
+  prestashop.adapter.form.choice_provider.product_default_category_choice_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\ProductDefaultCategoryChoiceProvider'
+    arguments:
+      - "@=service('prestashop.adapter.legacy.configuration').getInt('PS_HOME_CATEGORY')"
+      - '@prestashop.adapter.category.repository.category_repository'
+
+  prestashop.adapter.form.choice_provider.combination_id_choice_provider:
+    class: 'PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider\CombinationIdChoiceProvider'
+    arguments:
+      - "@prestashop.adapter.product.combination.repository.combination_repository"
+      - '@prestashop.adapter.attribute.repository.attribute_repository'
+      - '@prestashop.core.product.combination.name_builder.combination_name_builder'
+      - '@=service("prestashop.adapter.legacy.context").getLanguage().id'

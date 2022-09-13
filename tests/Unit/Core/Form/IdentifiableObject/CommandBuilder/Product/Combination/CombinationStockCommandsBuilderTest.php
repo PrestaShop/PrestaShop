@@ -32,6 +32,7 @@ use DateTime;
 use Generator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Command\UpdateCombinationStockCommand;
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Product\Combination\CombinationStockCommandsBuilder;
+use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 
 class CombinationStockCommandsBuilderTest extends AbstractCombinationCommandBuilderTest
 {
@@ -60,25 +61,41 @@ class CombinationStockCommandsBuilderTest extends AbstractCombinationCommandBuil
             [],
         ];
 
-        $command = new UpdateCombinationStockCommand($this->getCombinationId()->getValue());
         yield [
             [
                 'stock' => [
                     'not_handled' => 0,
                 ],
             ],
-            [$command],
+            [],
         ];
 
         $command = new UpdateCombinationStockCommand($this->getCombinationId()->getValue());
-        $command->setQuantity(100);
+        $command->setDeltaQuantity(100);
         $command->setMinimalQuantity(1);
         yield [
             [
                 'stock' => [
                     'quantities' => [
-                        'quantity' => '100',
+                        'delta_quantity' => [
+                            // quantity is used for view only, the real value that is used now is delta
+                            'quantity' => 1000000,
+                            'delta' => 100,
+                        ],
                         'minimal_quantity' => 1,
+                    ],
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = new UpdateCombinationStockCommand($this->getCombinationId()->getValue());
+        $command->setFixedQuantity(134);
+        yield [
+            [
+                'stock' => [
+                    'quantities' => [
+                        'fixed_quantity' => 134,
                     ],
                 ],
             ],
@@ -117,7 +134,7 @@ class CombinationStockCommandsBuilderTest extends AbstractCombinationCommandBuil
             [
                 'stock' => [
                     'options' => [
-                        'low_stock_alert' => '0',
+                        'disabling_switch_low_stock_threshold' => '0',
                     ],
                 ],
             ],
@@ -130,6 +147,17 @@ class CombinationStockCommandsBuilderTest extends AbstractCombinationCommandBuil
             [
                 'stock' => [
                     'available_date' => '2022-10-10',
+                ],
+            ],
+            [$command],
+        ];
+
+        $command = new UpdateCombinationStockCommand($this->getCombinationId()->getValue());
+        $command->setAvailableDate(new NullDateTime());
+        yield [
+            [
+                'stock' => [
+                    'available_date' => '',
                 ],
             ],
             [$command],

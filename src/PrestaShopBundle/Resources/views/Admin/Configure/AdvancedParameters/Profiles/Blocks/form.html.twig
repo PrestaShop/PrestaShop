@@ -31,8 +31,8 @@
     <i class="material-icons">group</i>
     {{ 'Profile'|trans({}, 'Admin.Advparameters.Feature') }}
   </h3>
-  <div class="card-block row">
-    <div class="card-text">
+  <div class="card-body">
+    <div class="form-wrapper">
       {{ form_errors(profileForm) }}
 
       {{ ps.form_group_row(profileForm.name, {}, {

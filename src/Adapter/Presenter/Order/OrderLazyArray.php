@@ -307,7 +307,7 @@ class OrderLazyArray extends AbstractLazyArray
                 $historyId = 'current';
             }
             $orderHistory[$historyId] = $history;
-            $orderHistory[$historyId]['history_date'] = Tools::displayDate($history['date_add'], null, false);
+            $orderHistory[$historyId]['history_date'] = Tools::displayDate($history['date_add'], false);
             $orderHistory[$historyId]['contrast'] = (Tools::getBrightness($history['color']) > 128) ? 'dark' : 'bright';
         }
 
@@ -332,8 +332,7 @@ class OrderLazyArray extends AbstractLazyArray
 
         foreach ($customerMessages as $cmId => $customerMessage) {
             $messages[$cmId] = $customerMessage;
-            $messages[$cmId]['message'] = nl2br($customerMessage['message']);
-            $messages[$cmId]['message_date'] = Tools::displayDate($customerMessage['date_add'], null, true);
+            $messages[$cmId]['message_date'] = Tools::displayDate($customerMessage['date_add'], true);
             if (isset($customerMessage['elastname']) && $customerMessage['elastname']) {
                 $messages[$cmId]['name'] = $customerMessage['efirstname'] . ' ' . $customerMessage['elastname'];
             } elseif ($customerMessage['clastname']) {
@@ -402,8 +401,8 @@ class OrderLazyArray extends AbstractLazyArray
         $order = $this->order;
 
         $carrier = $this->getCarrier();
-        if (!empty($carrier['url']) && !empty($order->shipping_number)) {
-            return str_replace('@', $order->shipping_number, $carrier['url']);
+        if (!empty($carrier['url']) && !empty($order->getShippingNumber())) {
+            return str_replace('@', $order->getShippingNumber(), $carrier['url']);
         }
 
         return '';

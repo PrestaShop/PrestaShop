@@ -65,9 +65,9 @@ class AdminImagesControllerCore extends AdminController
             'stores' => ['title' => $this->trans('Stores', [], 'Admin.Global'), 'align' => 'center', 'type' => 'bool', 'callback' => 'printEntityActiveIcon', 'orderby' => false],
         ];
 
-        // No need to display the old image system migration tool except if product images are in _PS_PROD_IMG_DIR_
+        // No need to display the old image system migration tool except if product images are in _PS_PRODUCT_IMG_DIR_
         $this->display_move = false;
-        $dir = _PS_PROD_IMG_DIR_;
+        $dir = _PS_PRODUCT_IMG_DIR_;
         if (is_dir($dir)) {
             if ($dh = opendir($dir)) {
                 while (($file = readdir($dh)) !== false && $this->display_move == false) {
@@ -93,7 +93,13 @@ class AdminImagesControllerCore extends AdminController
                         'show' => true,
                         'required' => true,
                         'type' => 'radio',
-                        'choices' => ['jpg' => $this->trans('Use JPEG.', [], 'Admin.Design.Feature'), 'png' => $this->trans('Use PNG only if the base image is in PNG format.', [], 'Admin.Design.Feature'), 'png_all' => $this->trans('Use PNG for all images.', [], 'Admin.Design.Feature')],
+                        'choices' => [
+                            'jpg' => $this->trans('Use JPEG.', [], 'Admin.Design.Feature'),
+                            'png' => $this->trans('Use PNG only if the base image is in PNG format.', [], 'Admin.Design.Feature'),
+                            'png_all' => $this->trans('Use PNG for all images.', [], 'Admin.Design.Feature'),
+                            'webp' => $this->trans('Use WebP only if the base image is in WebP format.', [], 'Admin.Design.Feature'),
+                            'webp_all' => $this->trans('Use WebP for all images.', [], 'Admin.Design.Feature'),
+                        ],
                     ],
                     'PS_JPEG_QUALITY' => [
                         'title' => $this->trans('JPEG compression', [], 'Admin.Design.Feature'),
@@ -106,6 +112,20 @@ class AdminImagesControllerCore extends AdminController
                     'PS_PNG_QUALITY' => [
                         'title' => $this->trans('PNG compression', [], 'Admin.Design.Feature'),
                         'hint' => $this->trans('PNG compression is lossless: unlike JPG, you do not lose image quality with a high compression ratio. However, photographs will compress very badly.', [], 'Admin.Design.Help') . ' ' . $this->trans('Ranges from 0 (biggest file) to 9 (smallest file, slowest decompression).', [], 'Admin.Design.Help') . ' ' . $this->trans('Recommended: 7.', [], 'Admin.Design.Help'),
+                        'validation' => 'isUnsignedId',
+                        'required' => true,
+                        'cast' => 'intval',
+                        'type' => 'text',
+                    ],
+                    'PS_WEBP_QUALITY' => [
+                        'title' => $this->trans('WebP compression', [], 'Admin.Design.Feature'),
+                        'hint' => $this->trans(
+                                'Ranges from 0 (worst quality, smallest file) to 100 (best quality, biggest file).',
+                                [],
+                                'Admin.Design.Help'
+                            ) .
+                            ' ' .
+                            $this->trans('Recommended: %d.', [80], 'Admin.Design.Help'),
                         'validation' => 'isUnsignedId',
                         'required' => true,
                         'cast' => 'intval',
@@ -334,8 +354,8 @@ class AdminImagesControllerCore extends AdminController
     public function postProcess()
     {
         // When moving images, if duplicate images were found they are moved to a folder named duplicates/
-        if (file_exists(_PS_PROD_IMG_DIR_ . 'duplicates/')) {
-            $this->warnings[] = $this->trans('Duplicate images were found when moving the product images. This is likely caused by unused demonstration images. Please make sure that the folder %folder% only contains demonstration images, and then delete it.', ['%folder%' => _PS_PROD_IMG_DIR_ . 'duplicates/'], 'Admin.Design.Notification');
+        if (file_exists(_PS_PRODUCT_IMG_DIR_ . 'duplicates/')) {
+            $this->warnings[] = $this->trans('Duplicate images were found when moving the product images. This is likely caused by unused demonstration images. Please make sure that the folder %folder% only contains demonstration images, and then delete it.', ['%folder%' => _PS_PRODUCT_IMG_DIR_ . 'duplicates/'], 'Admin.Design.Notification');
         }
 
         if (Tools::isSubmit('submitRegenerate' . $this->table)) {
@@ -362,9 +382,13 @@ class AdminImagesControllerCore extends AdminController
                 } elseif ((int) Tools::getValue('PS_PNG_QUALITY') < 0
                     || (int) Tools::getValue('PS_PNG_QUALITY') > 9) {
                     $this->errors[] = $this->trans('Incorrect value for the selected PNG image compression.', [], 'Admin.Design.Notification');
+                } elseif ((int) Tools::getValue('PS_WEBP_QUALITY') < 0
+                    || (int) Tools::getValue('PS_WEBP_QUALITY') > 100) {
+                    $this->errors[] = $this->trans('Incorrect value for the selected WebP image compression.', [], 'Admin.Design.Notification');
                 } elseif (!Configuration::updateValue('PS_IMAGE_QUALITY', Tools::getValue('PS_IMAGE_QUALITY'))
                     || !Configuration::updateValue('PS_JPEG_QUALITY', Tools::getValue('PS_JPEG_QUALITY'))
-                    || !Configuration::updateValue('PS_PNG_QUALITY', Tools::getValue('PS_PNG_QUALITY'))) {
+                    || !Configuration::updateValue('PS_PNG_QUALITY', Tools::getValue('PS_PNG_QUALITY'))
+                    || !Configuration::updateValue('PS_WEBP_QUALITY', Tools::getValue('PS_WEBP_QUALITY'))) {
                     $this->errors[] = $this->trans('Unknown error.', [], 'Admin.Notifications.Error');
                 } else {
                     $this->confirmations[] = $this->_conf[6];
@@ -433,9 +457,9 @@ class AdminImagesControllerCore extends AdminController
 
         foreach ($toDel as $d) {
             foreach ($type as $imageType) {
-                if (preg_match('/^[0-9]+\-' . ($product ? '[0-9]+\-' : '') . $imageType['name'] . '\.jpg$/', $d)
+                if (preg_match('/^[0-9]+\-' . ($product ? '[0-9]+\-' : '') . $imageType['name'] . '(|2x)\.jpg$/', $d)
                     || (count($type) > 1 && preg_match('/^[0-9]+\-[_a-zA-Z0-9-]*\.jpg$/', $d))
-                    || preg_match('/^([[:lower:]]{2})\-default\-' . $imageType['name'] . '\.jpg$/', $d)) {
+                    || preg_match('/^([[:lower:]]{2})\-default\-' . $imageType['name'] . '(|2x)\.jpg$/', $d)) {
                     if (file_exists($dir . $d)) {
                         unlink($dir . $d);
                     }
@@ -453,7 +477,7 @@ class AdminImagesControllerCore extends AdminController
                     $toDel = scandir($dir . $imageObj->getImgFolder(), SCANDIR_SORT_NONE);
                     foreach ($toDel as $d) {
                         foreach ($type as $imageType) {
-                            if (preg_match('/^[0-9]+\-' . $imageType['name'] . '\.jpg$/', $d) || (count($type) > 1 && preg_match('/^[0-9]+\-[_a-zA-Z0-9-]*\.jpg$/', $d))) {
+                            if (preg_match('/^[0-9]+\-' . $imageType['name'] . '(|2x)\.jpg$/', $d) || (count($type) > 1 && preg_match('/^[0-9]+\-[_a-zA-Z0-9-]*\.jpg$/', $d))) {
                                 if (file_exists($dir . $imageObj->getImgFolder() . $d)) {
                                     unlink($dir . $imageObj->getImgFolder() . $d);
                                 }
@@ -463,13 +487,15 @@ class AdminImagesControllerCore extends AdminController
                 }
             }
         }
+
+        return true;
     }
 
     /**
      * Regenerate images.
      *
-     * @param $dir
-     * @param $type
+     * @param string $dir
+     * @param array $type
      * @param bool $productsImages
      *
      * @return bool|string
@@ -572,9 +598,9 @@ class AdminImagesControllerCore extends AdminController
     /**
      * Regenerate no-pictures images.
      *
-     * @param $dir
-     * @param $type
-     * @param $languages
+     * @param string $dir
+     * @param array $type
+     * @param array $languages
      *
      * @return bool
      */
@@ -587,7 +613,7 @@ class AdminImagesControllerCore extends AdminController
             foreach ($languages as $language) {
                 $file = $dir . $language['iso_code'] . '.jpg';
                 if (!file_exists($file)) {
-                    $file = _PS_PROD_IMG_DIR_ . Language::getIsoById((int) Configuration::get('PS_LANG_DEFAULT')) . '.jpg';
+                    $file = _PS_PRODUCT_IMG_DIR_ . Language::getIsoById((int) Configuration::get('PS_LANG_DEFAULT')) . '.jpg';
                 }
                 if (!file_exists($dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '.jpg')) {
                     if (!ImageManager::resize($file, $dir . $language['iso_code'] . '-default-' . stripslashes($image_type['name']) . '.jpg', (int) $image_type['width'], (int) $image_type['height'])) {
@@ -646,7 +672,7 @@ class AdminImagesControllerCore extends AdminController
             ['type' => 'categories', 'dir' => _PS_CAT_IMG_DIR_],
             ['type' => 'manufacturers', 'dir' => _PS_MANU_IMG_DIR_],
             ['type' => 'suppliers', 'dir' => _PS_SUPP_IMG_DIR_],
-            ['type' => 'products', 'dir' => _PS_PROD_IMG_DIR_],
+            ['type' => 'products', 'dir' => _PS_PRODUCT_IMG_DIR_],
             ['type' => 'stores', 'dir' => _PS_STORE_IMG_DIR_],
         ];
 

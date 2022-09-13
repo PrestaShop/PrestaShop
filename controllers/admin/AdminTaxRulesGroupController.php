@@ -218,10 +218,8 @@ class AdminTaxRulesGroupControllerCore extends AdminController
             return;
         }
         if (!isset($obj->id)) {
-            $this->no_back = false;
             $content = parent::renderForm();
         } else {
-            $this->no_back = true;
             $this->page_header_toolbar_btn['new'] = [
                 'href' => '#',
                 'desc' => $this->trans('Add a new tax rule', [], 'Admin.International.Feature'),
@@ -441,7 +439,7 @@ class AdminTaxRulesGroupControllerCore extends AdminController
                 $tr = new TaxRule();
 
                 // update or creation?
-                if (isset($id_rule) && $first) {
+                if ($first) {
                     $tr->id = $id_rule;
                     $first = false;
                 }
@@ -513,6 +511,19 @@ class AdminTaxRulesGroupControllerCore extends AdminController
         $this->deleteTaxRule([Tools::getValue('id_tax_rule')]);
     }
 
+    protected function displayAjaxUpdateTaxRule()
+    {
+        if ($this->access('view')) {
+            $id_tax_rule = Tools::getValue('id_tax_rule');
+            $tax_rules = new TaxRule((int) $id_tax_rule);
+            $output = [];
+            foreach (get_object_vars($tax_rules) as $key => $result) {
+                $output[$key] = $result;
+            }
+            die(json_encode($output));
+        }
+    }
+
     protected function deleteTaxRule(array $id_tax_rule_list)
     {
         $result = true;
@@ -528,9 +539,10 @@ class AdminTaxRulesGroupControllerCore extends AdminController
                 }
             }
         }
+        $idTaxRulesGroup = isset($tax_rules_group) ? (int) $tax_rules_group->id : 0;
 
         Tools::redirectAdmin(
-            self::$currentIndex . '&' . $this->identifier . '=' . (int) $tax_rules_group->id . '&conf=4&update' . $this->table . '&token=' . $this->token
+            self::$currentIndex . '&' . $this->identifier . '=' . $idTaxRulesGroup . '&conf=4&update' . $this->table . '&token=' . $this->token
         );
     }
 
@@ -545,19 +557,6 @@ class AdminTaxRulesGroupControllerCore extends AdminController
     {
         // @TODO: check if the rule already exists
         return $tr->validateController();
-    }
-
-    protected function displayAjaxUpdateTaxRule()
-    {
-        if ($this->access('view')) {
-            $id_tax_rule = Tools::getValue('id_tax_rule');
-            $tax_rules = new TaxRule((int) $id_tax_rule);
-            $output = [];
-            foreach ($tax_rules as $key => $result) {
-                $output[$key] = $result;
-            }
-            die(json_encode($output));
-        }
     }
 
     /**

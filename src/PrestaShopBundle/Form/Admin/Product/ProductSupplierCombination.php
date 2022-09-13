@@ -37,20 +37,17 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class ProductSupplierCombination extends CommonAbstractType
 {
-    private $translator;
     private $contextLegacy;
     private $currencyAdapter;
 
     /**
      * Constructor.
      *
-     * @param object $translator
      * @param object $contextLegacy
      * @param object $currencyAdapter
      */
-    public function __construct($translator, $contextLegacy, $currencyAdapter)
+    public function __construct($contextLegacy, $currencyAdapter)
     {
-        $this->translator = $translator;
         $this->contextLegacy = $contextLegacy->getContext();
         $this->currencyAdapter = $currencyAdapter;
     }

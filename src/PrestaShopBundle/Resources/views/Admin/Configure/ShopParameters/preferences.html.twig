@@ -24,49 +24,46 @@
  *#}
 {% extends '@PrestaShop/Admin/layout.html.twig' %}
 {% trans_default_domain "Admin.Shopparameters.Feature" %}
-{% form_theme generalForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
+{% form_theme generalForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
 {% block content %}
   {{ form_start(generalForm, {'attr' : {'class': 'form', 'id': 'configuration_form'} }) }}
-    <div class="row justify-content-center">
-      {% block preferences_form_general %}
-        <div class="col">
-          <div class="card">
-            <h3 class="card-header">
-              <i class="material-icons">settings</i> {{ 'General'|trans({}, 'Admin.Global') }}
-            </h3>
-            <div class="card-block row">
-              <div class="card-text">
-                  {% if not app.request.isSecure() %}
-                    <div class="form-group row">
-                        <label class="form-control-label ">
-                          {{ 'Enable SSL'|trans({}, 'Admin.Shopparameters.Feature') }}
-                        </label>
-                      <div class="col-sm">
-                        <div class="input-group">
-                          <div class="form-control-plaintext">
-                            <a class="d-block" href="{{ sslUri }}">
-                              {{ 'Please click here to check if your shop supports HTTPS.'|trans({}, 'Admin.Shopparameters.Feature') }}
-                            </a>
-                          </div>
-                        </div>
-                        <small class="form-text">
-                          {{ 'If you want to enable SSL on all the pages of your shop, activate the "Enable on all the pages" option below.'|trans({}, 'Admin.Shopparameters.Help') }}
-                        </small>
-                      </div>
-                    </div>
-                  {% endif %}
-                {{ form_widget(generalForm) }}
+  {% block preferences_form_general %}
+    <div class="card">
+      <h3 class="card-header">
+        <i class="material-icons">settings</i>
+        {{ 'General'|trans({}, 'Admin.Global') }}
+      </h3>
+      <div class="card-body">
+        <div class="form-wrapper">
+          {% if not app.request.isSecure() %}
+            <div class="form-group row">
+              <label class="form-control-label ">
+                {{ 'Enable SSL'|trans({}, 'Admin.Shopparameters.Feature') }}
+              </label>
+              <div class="col-sm">
+                <div class="input-group">
+                  <div class="form-control-plaintext">
+                    <a class="d-block" href="{{ sslUri }}">
+                      {{ 'Please click here to check if your shop supports HTTPS.'|trans({}, 'Admin.Shopparameters.Feature') }}
+                    </a>
+                  </div>
+                </div>
+                <small class="form-text">
+                  {{ 'If you want to enable SSL on all the pages of your shop, activate the "Enable on all the pages" option below.'|trans({}, 'Admin.Shopparameters.Help') }}
+                </small>
               </div>
             </div>
-            <div class="card-footer">
-              <div class="d-flex justify-content-end">
-                <button class="btn btn-primary" id="form-preferences-save-button">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
-              </div>
-            </div>
-          </div>
+          {% endif %}
+          {{ form_widget(generalForm) }}
         </div>
-      {% endblock %}
+      </div>
+      <div class="card-footer">
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-primary" id="form-preferences-save-button">{{ 'Save'|trans({}, 'Admin.Actions') }}</button>
+        </div>
+      </div>
     </div>
+  {% endblock %}
   {{ form_end(generalForm) }}
 {% endblock %}

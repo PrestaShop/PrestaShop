@@ -27,20 +27,35 @@
 namespace PrestaShop\PrestaShop\Core\Addon\Theme;
 
 use AbstractAssetManager;
-use Configuration;
+use PrestaShop\PrestaShop\Adapter\Configuration;
 use PrestaShop\PrestaShop\Core\Addon\AddonInterface;
+use PrestaShop\PrestaShop\Core\Util\ArrayFinder;
 use PrestaShop\PrestaShop\Core\Util\File\YamlParser;
-use Shudrum\Component\ArrayFinder\ArrayFinder;
 
 class Theme implements AddonInterface
 {
+    /**
+     * @var ArrayFinder
+     */
     private $attributes;
 
-    public function __construct(array $attributes)
-    {
+    /**
+     * @param array $attributes Theme attributes
+     * @param string|null $configurationCacheDirectory Default _PS_CACHE_DIR_
+     * @param string $themesDirectory Default _PS_ALL_THEMES_DIR_
+     */
+    public function __construct(
+        array $attributes,
+        ?string $configurationCacheDirectory = null,
+        string $themesDirectory = _PS_ALL_THEMES_DIR_
+    ) {
         if (isset($attributes['parent'])) {
-            $yamlParser = new YamlParser((new Configuration())->get('_PS_CACHE_DIR_'));
-            $parentAttributes = $yamlParser->parse(_PS_ALL_THEMES_DIR_ . '/' . $attributes['parent'] . '/config/theme.yml');
+            if (null === $configurationCacheDirectory) {
+                $configurationCacheDirectory = (new Configuration())->get('_PS_CACHE_DIR_');
+            }
+
+            $yamlParser = new YamlParser($configurationCacheDirectory);
+            $parentAttributes = $yamlParser->parse($themesDirectory . '/' . $attributes['parent'] . '/config/theme.yml');
             $parentAttributes['preview'] = 'themes/' . $attributes['parent'] . '/preview.png';
             $parentAttributes['parent_directory'] = rtrim($attributes['directory'], '/') . '/';
             $attributes = array_merge($parentAttributes, $attributes);
@@ -48,7 +63,7 @@ class Theme implements AddonInterface
 
         $attributes['directory'] = rtrim($attributes['directory'], '/') . '/';
 
-        if (file_exists(_PS_ALL_THEMES_DIR_ . $attributes['name'] . '/preview.png')) {
+        if (file_exists($themesDirectory . $attributes['name'] . '/preview.png')) {
             $attributes['preview'] = 'themes/' . $attributes['name'] . '/preview.png';
         }
 

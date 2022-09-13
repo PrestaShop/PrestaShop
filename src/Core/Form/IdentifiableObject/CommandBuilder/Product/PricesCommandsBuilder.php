@@ -30,46 +30,54 @@ namespace PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\Prod
 
 use PrestaShop\PrestaShop\Core\Domain\Product\Command\UpdateProductPricesCommand;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopConstraint;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilder;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\CommandBuilderConfig;
+use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\CommandBuilder\DataField;
 
 /**
  * Builder used to build UpdateProductPricesCommand
  */
-class PricesCommandsBuilder implements ProductCommandsBuilderInterface
+class PricesCommandsBuilder implements MultiShopProductCommandsBuilderInterface
 {
+    /**
+     * @var string
+     */
+    private $modifyAllNamePrefix;
+
+    /**
+     * @param string $modifyAllNamePrefix
+     */
+    public function __construct(string $modifyAllNamePrefix)
+    {
+        $this->modifyAllNamePrefix = $modifyAllNamePrefix;
+    }
+
     /**
      * {@inheritdoc}
      */
-    public function buildCommands(ProductId $productId, array $formData): array
+    public function buildCommands(ProductId $productId, array $formData, ShopConstraint $singleShopConstraint): array
     {
         if (!isset($formData['pricing'])) {
             return [];
         }
 
         $priceData = $formData['pricing'];
-        $command = new UpdateProductPricesCommand($productId->getValue());
+        $config = new CommandBuilderConfig($this->modifyAllNamePrefix);
+        $config
+            ->addMultiShopField('[retail_price][price_tax_excluded]', 'setPrice', DataField::TYPE_STRING)
+            ->addMultiShopField('[retail_price][ecotax_tax_excluded]', 'setEcotax', DataField::TYPE_STRING)
+            ->addMultiShopField('[retail_price][tax_rules_group_id]', 'setTaxRulesGroupId', DataField::TYPE_INT)
+            ->addMultiShopField('[on_sale]', 'setOnSale', DataField::TYPE_BOOL)
+            ->addMultiShopField('[wholesale_price]', 'setWholesalePrice', DataField::TYPE_STRING)
+            ->addMultiShopField('[unit_price][price_tax_excluded]', 'setUnitPrice', DataField::TYPE_STRING)
+            ->addMultiShopField('[unit_price][unity]', 'setUnity', DataField::TYPE_STRING)
+        ;
 
-        if (isset($priceData['retail_price']['price_tax_excluded'])) {
-            $command->setPrice((string) $priceData['retail_price']['price_tax_excluded']);
-        }
-        if (isset($priceData['retail_price']['ecotax'])) {
-            $command->setEcotax((string) $priceData['retail_price']['ecotax']);
-        }
-        if (isset($priceData['tax_rules_group_id'])) {
-            $command->setTaxRulesGroupId((int) $priceData['tax_rules_group_id']);
-        }
-        if (isset($priceData['on_sale'])) {
-            $command->setOnSale((bool) $priceData['on_sale']);
-        }
-        if (isset($priceData['wholesale_price'])) {
-            $command->setWholesalePrice((string) $priceData['wholesale_price']);
-        }
-        if (isset($priceData['unit_price']['price'])) {
-            $command->setUnitPrice((string) $priceData['unit_price']['price']);
-        }
-        if (isset($priceData['unit_price']['unity'])) {
-            $command->setUnity((string) $priceData['unit_price']['unity']);
-        }
+        $commandBuilder = new CommandBuilder($config);
+        $shopCommand = new UpdateProductPricesCommand($productId->getValue(), $singleShopConstraint);
+        $allShopsCommand = new UpdateProductPricesCommand($productId->getValue(), ShopConstraint::allShops());
 
-        return [$command];
+        return $commandBuilder->buildCommands($priceData, $shopCommand, $allShopsCommand);
     }
 }

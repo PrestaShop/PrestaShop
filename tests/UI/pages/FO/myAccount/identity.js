@@ -16,16 +16,23 @@ class AccountIdentity extends FOBasePage {
 
     this.pageTitle = 'Identity';
     this.successfulUpdateMessage = 'Information successfully updated.';
+    this.errorUpdateMessage = 'Could not update your information, please check your data.';
+    this.invalidEmailAlertMessage = 'Invalid email/password combination';
+    this.invalidNumberOfCharacters = 'Password must be between 8 and 72 characters long';
+    this.minimumScoreAlertMessage = 'The minimum score must be: Strong';
 
     // Selectors
     this.createAccountForm = '#customer-form';
-    this.genderRadioButton = id => `${this.createAccountForm} input[name='id_gender'][value='${id}']`;
-    this.firstNameInput = `${this.createAccountForm} input[name='firstname']`;
-    this.lastNameInput = `${this.createAccountForm} input[name='lastname']`;
-    this.newEmailInput = `${this.createAccountForm} input[name='email']`;
-    this.passwordInput = `${this.createAccountForm} input[name='password']`;
-    this.newPasswordInput = `${this.createAccountForm} input[name='new_password']`;
-    this.birthdateInput = `${this.createAccountForm} input[name='birthday']`;
+    this.genderRadioButton = id => `${this.createAccountForm} label[for='field-id_gender-${id}']`;
+    this.firstNameInput = `${this.createAccountForm} #field-firstname`;
+    this.lastNameInput = `${this.createAccountForm} #field-lastname`;
+    this.newEmailInput = `${this.createAccountForm} #field-email`;
+    this.invalidEmailAlertDanger = `${this.createAccountForm} div:nth-child(4) li.alert-danger`;
+    this.passwordInput = `${this.createAccountForm} #field-password`;
+    this.invalidPasswordAlertDanger = `${this.createAccountForm} div.field-password-policy li.alert-danger`;
+    this.invalidNewPasswordAlertDanger = `${this.createAccountForm} div:nth-child(6) div.help-block`;
+    this.newPasswordInput = `${this.createAccountForm} #field-new_password`;
+    this.birthdateInput = `${this.createAccountForm} #field-birthday`;
     this.customerPrivacyCheckbox = `${this.createAccountForm} input[name='customer_privacy']`;
     this.psgdprCheckbox = `${this.createAccountForm} input[name='psgdpr']`;
     this.newsletterCheckbox = `${this.createAccountForm} input[name=newsletter]`;
@@ -47,7 +54,6 @@ class AccountIdentity extends FOBasePage {
     await this.setValue(page, this.firstNameInput, customer.firstName);
     await this.setValue(page, this.lastNameInput, customer.lastName);
     await this.setValue(page, this.newEmailInput, customer.email);
-    await this.setValue(page, this.newEmailInput, customer.email);
     await this.setValue(page, this.passwordInput, oldPassword);
     await this.setValue(page, this.newPasswordInput, customer.password);
 
@@ -57,19 +63,46 @@ class AccountIdentity extends FOBasePage {
       `${customer.monthOfBirth}/${customer.dayOfBirth}/${customer.yearOfBirth}`,
     );
 
-    await page.click(this.customerPrivacyCheckbox);
+    await this.setChecked(page, this.customerPrivacyCheckbox);
     if (await this.elementVisible(page, this.psgdprCheckbox, 500)) {
-      await page.click(this.psgdprCheckbox);
+      await this.setChecked(page, this.psgdprCheckbox);
     }
 
     await this.clickAndWaitForNavigation(page, this.saveButton);
 
-    return this.getTextContent(page, this.alertSuccessBlock);
+    return this.getTextContent(page, this.notificationsBlock);
+  }
+
+  /**
+   * Get invalidEmailAlert
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  getInvalidEmailAlert(page) {
+    return this.getTextContent(page, this.invalidEmailAlertDanger);
+  }
+
+  /**
+   * Get invalid password alert
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getInvalidPasswordAlert(page) {
+    return this.getTextContent(page, this.invalidPasswordAlertDanger);
+  }
+
+  /**
+   * Get invalid new password alert
+   * @param page {Page} Browser tab
+   * @returns {Promise<string>}
+   */
+  async getInvalidNewPasswordAlert(page) {
+    return this.getTextContent(page, this.invalidNewPasswordAlertDanger);
   }
 
   /**
    * Unsubscribe from the newsletter from customer edit information page
-   * @param page {object} Browser tab
+   * @param page {Page} Browser tab
    * @param password {string} String for the password
    * @returns {Promise<string>}
    */

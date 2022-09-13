@@ -62,13 +62,13 @@ final class GetProfileForEditingHandler extends AbstractObjectModelHandler imple
         if (null === $imageTagSourceParser) {
             @trigger_error('The $imageTagSourceParser parameter should not be null, inject your main ImageTagSourceParserInterface service', E_USER_DEPRECATED);
         }
-        $this->imageTagSourceParser = $imageTagSourceParser ?? new ImageTagSourceParser(__PS_BASE_URI__);
+        $this->imageTagSourceParser = $imageTagSourceParser ?? new ImageTagSourceParser();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function handle(GetProfileForEditing $query)
+    public function handle(GetProfileForEditing $query): EditableProfile
     {
         $profileId = $query->getProfileId();
         $profile = $this->getProfile($profileId);

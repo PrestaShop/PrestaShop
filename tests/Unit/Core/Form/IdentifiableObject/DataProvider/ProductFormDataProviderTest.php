@@ -32,32 +32,43 @@ use DateTime;
 use DateTimeImmutable;
 use Generator;
 use PHPUnit\Framework\Assert;
-use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\Constraint\LogicalOr;
 use PHPUnit\Framework\TestCase;
 use PrestaShop\Decimal\DecimalNumber;
 use PrestaShop\PrestaShop\Core\CommandBus\CommandBusInterface;
+use PrestaShop\PrestaShop\Core\ConfigurationInterface;
+use PrestaShop\PrestaShop\Core\Domain\Attachment\QueryResult\AttachmentInformation;
 use PrestaShop\PrestaShop\Core\Domain\Manufacturer\ValueObject\NoManufacturerId;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\Query\GetProductCustomizationFields;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\QueryResult\CustomizationField;
 use PrestaShop\PrestaShop\Core\Domain\Product\Customization\ValueObject\CustomizationFieldType;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\Query\GetProductFeatureValues;
 use PrestaShop\PrestaShop\Core\Domain\Product\FeatureValue\QueryResult\ProductFeatureValue;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\Query\GetPackedProducts;
+use PrestaShop\PrestaShop\Core\Domain\Product\Pack\QueryResult\PackedProductDetails;
 use PrestaShop\PrestaShop\Core\Domain\Product\Pack\ValueObject\PackStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetProductForEditing;
+use PrestaShop\PrestaShop\Core\Domain\Product\Query\GetRelatedProducts;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\CategoriesInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\CategoryInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductBasicInformation;
-use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCategoriesInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductCustomizationOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductDetails;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductForEditing;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductPricesInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductRedirectTarget;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductSeoOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductShippingInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\ProductStockInformation;
+use PrestaShop\PrestaShop\Core\Domain\Product\QueryResult\RelatedProduct;
+use PrestaShop\PrestaShop\Core\Domain\Product\SpecificPrice\ValueObject\PriorityList;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\Query\GetEmployeesStockMovements;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\EmployeeStockMovement;
+use PrestaShop\PrestaShop\Core\Domain\Product\Stock\QueryResult\StockMovement;
 use PrestaShop\PrestaShop\Core\Domain\Product\Stock\ValueObject\OutOfStockType;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierForEditing;
-use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierInfo;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\DeliveryTimeNoteType;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductCondition;
@@ -68,7 +79,6 @@ use PrestaShop\PrestaShop\Core\Domain\Product\VirtualProductFile\QueryResult\Vir
 use PrestaShop\PrestaShop\Core\Form\IdentifiableObject\DataProvider\ProductFormDataProvider;
 use PrestaShop\PrestaShop\Core\Util\DateTime\NullDateTime;
 use RuntimeException;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 // @todo: ProductFormDataProvider needs to be split to multiple classes to allow easier testing
 class ProductFormDataProviderTest extends TestCase
@@ -77,149 +87,56 @@ class ProductFormDataProviderTest extends TestCase
     private const HOME_CATEGORY_ID = 49;
     private const DEFAULT_CATEGORY_ID = 51;
     private const DEFAULT_VIRTUAL_PRODUCT_FILE_ID = 69;
+    private const CONTEXT_LANG_ID = 1;
     private const DEFAULT_QUANTITY = 12;
+    private const DEFAULT_SHOP_ID = 99;
+    private const COVER_URL = 'http://localhost/cover.jpg';
+    private const DEFAULT_PRIORITY_LIST = [
+        PriorityList::PRIORITY_GROUP,
+        PriorityList::PRIORITY_CURRENCY,
+        PriorityList::PRIORITY_COUNTRY,
+        PriorityList::PRIORITY_SHOP,
+    ];
 
-    public function testGetDefaultData()
+    public function testGetDefaultData(): void
     {
         $queryBusMock = $this->createMock(CommandBusInterface::class);
-
-        $provider = $this->buildProvider($queryBusMock, false);
-
-        $expectedDefaultData = [
-            'header' => [
-                'type' => ProductType::TYPE_STANDARD,
-            ],
-            'basic' => [
-                'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
-            ],
-            'stock' => [
-                'quantities' => [
-                    'quantity' => 0,
-                    'minimal_quantity' => 0,
-                ],
-            ],
-            'pricing' => [
-                'retail_price' => [
-                    'price_tax_excluded' => 0,
-                    'price_tax_included' => 0,
-                ],
-                'tax_rules_group_id' => 42,
-                'wholesale_price' => 0,
-                'unit_price' => [
-                    'price' => 0,
-                ],
-            ],
-            'shipping' => [
-                'dimensions' => [
-                    'width' => 0,
-                    'height' => 0,
-                    'depth' => 0,
-                    'weight' => 0,
-                ],
-                'additional_shipping_cost' => 0,
-                'delivery_time_note_type' => DeliveryTimeNoteType::TYPE_DEFAULT,
-            ],
-            'options' => [
-                'visibility' => [
-                    'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
-                ],
-                'condition' => ProductCondition::NEW,
-            ],
-            'categories' => [
-                'product_categories' => [
-                    self::HOME_CATEGORY_ID => [
-                        'is_associated' => true,
-                        'is_default' => true,
-                    ],
-                ],
-            ],
-            'footer' => [
-                'active' => false,
-            ],
-            'shortcuts' => [
-                'retail_price' => [
-                    'price_tax_excluded' => 0,
-                    'price_tax_included' => 0,
-                    'tax_rules_group_id' => 42,
-                ],
-                'stock' => [
-                    'quantity' => 0,
-                ],
-            ],
-        ];
-
-        $defaultData = $provider->getDefaultData();
-        // assertSame is very important here We can't assume null and 0 are the same thing
-        $this->assertSame($expectedDefaultData, $defaultData);
-
-        $provider = $this->buildProvider($queryBusMock, true);
+        $provider = $this->buildProvider($queryBusMock);
 
         $expectedDefaultData = [
-            'header' => [
-                'type' => ProductType::TYPE_STANDARD,
-            ],
-            'basic' => [
-                'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
-            ],
-            'stock' => [
-                'quantities' => [
-                    'quantity' => 0,
-                    'minimal_quantity' => 0,
-                ],
-            ],
-            'pricing' => [
-                'retail_price' => [
-                    'price_tax_excluded' => 0,
-                    'price_tax_included' => 0,
-                ],
-                'tax_rules_group_id' => 42,
-                'wholesale_price' => 0,
-                'unit_price' => [
-                    'price' => 0,
-                ],
-            ],
-            'shipping' => [
-                'dimensions' => [
-                    'width' => 0,
-                    'height' => 0,
-                    'depth' => 0,
-                    'weight' => 0,
-                ],
-                'additional_shipping_cost' => 0,
-                'delivery_time_note_type' => DeliveryTimeNoteType::TYPE_DEFAULT,
-            ],
-            'options' => [
-                'visibility' => [
-                    'visibility' => ProductVisibility::VISIBLE_EVERYWHERE,
-                ],
-                'condition' => ProductCondition::NEW,
-            ],
-            'categories' => [
-                'product_categories' => [
-                    self::HOME_CATEGORY_ID => [
-                        'is_associated' => true,
-                        'is_default' => true,
-                    ],
-                ],
-            ],
-            'footer' => [
-                'active' => true,
-            ],
-            'shortcuts' => [
-                'retail_price' => [
-                    'price_tax_excluded' => 0,
-                    'price_tax_included' => 0,
-                    'tax_rules_group_id' => 42,
-                ],
-                'stock' => [
-                    'quantity' => 0,
-                ],
-            ],
+            'type' => ProductType::TYPE_STANDARD,
         ];
-
         $defaultData = $provider->getDefaultData();
-        // assertSame is very important here We can't assume null and 0 are the same thing
         $this->assertSame($expectedDefaultData, $defaultData);
+    }
+
+    public function testSwitchDefaultContextShop(): void
+    {
+        $configurationMock = $this->getDefaultConfigurationMock();
+        // The real test is performed by the mock here, which assert the correct shopId is used
+        $queryBusMock = $this->createQueryBusCheckingShopMock(self::DEFAULT_SHOP_ID);
+        $provider = new ProductFormDataProvider(
+            $queryBusMock,
+            $configurationMock,
+            self::CONTEXT_LANG_ID,
+            self::DEFAULT_SHOP_ID,
+            null
+        );
+
+        $formData = $provider->getData(self::PRODUCT_ID);
+        $this->assertNotNull($formData);
+        $contextShopId = 51;
+        $queryBusMock = $this->createQueryBusCheckingShopMock($contextShopId);
+        $provider = new ProductFormDataProvider(
+            $queryBusMock,
+            $configurationMock,
+            self::CONTEXT_LANG_ID,
+            self::DEFAULT_SHOP_ID,
+            $contextShopId
+        );
+
+        $formData = $provider->getData(self::PRODUCT_ID);
+        $this->assertNotNull($formData);
     }
 
     /**
@@ -231,16 +148,16 @@ class ProductFormDataProviderTest extends TestCase
     public function testGetData(array $productData, array $expectedData)
     {
         $queryBusMock = $this->createQueryBusMock($productData);
-        $provider = $this->buildProvider($queryBusMock, false);
+        $provider = $this->buildProvider($queryBusMock);
 
-        $formData = $provider->getData(static::PRODUCT_ID);
+        $formData = $provider->getData(self::PRODUCT_ID);
         Assert::assertSame($expectedData, $formData);
     }
 
     public function getExpectedData(): Generator
     {
         $datasetsByType = [
-            $this->getDatasetsForBasicInformation(),
+            $this->getDatasetsForDescription(),
             $this->getDatasetsForSeo(),
             $this->getDatasetsForRedirectOption(),
             $this->getDatasetsForProductSuppliers(),
@@ -253,6 +170,9 @@ class ProductFormDataProviderTest extends TestCase
             $this->getDatasetsForShipping(),
             $this->getDatasetsForOptions(),
             $this->getDatasetsForCategories(),
+            $this->getDatasetsForPackedProducts(),
+            $this->getDatasetsForRelatedProducts(),
+            $this->getDatasetsForCombinations(),
         ];
 
         foreach ($datasetsByType as $datasetByType) {
@@ -359,7 +279,7 @@ class ProductFormDataProviderTest extends TestCase
     /**
      * @return array
      */
-    private function getDatasetsForBasicInformation(): array
+    private function getDatasetsForDescription(): array
     {
         $datasets = [];
 
@@ -376,17 +296,22 @@ class ProductFormDataProviderTest extends TestCase
             1 => 'english',
             2 => 'french',
         ];
+        $newCover = 'http://localhost/super_cover.jpg';
         $productData = [
-            'type' => ProductType::TYPE_COMBINATIONS,
+            'type' => ProductType::TYPE_VIRTUAL,
             'name' => $localizedValues,
             'description' => $localizedValues,
             'description_short' => $localizedValues,
+            'cover_thumbnail' => $newCover,
         ];
         $expectedOutputData['header']['name'] = $localizedValues;
-        $expectedOutputData['header']['type'] = ProductType::TYPE_COMBINATIONS;
+        $expectedOutputData['header']['initial_type'] = ProductType::TYPE_VIRTUAL;
+        $expectedOutputData['header']['type'] = ProductType::TYPE_VIRTUAL;
+        $expectedOutputData['header']['initial_type'] = ProductType::TYPE_VIRTUAL;
+        $expectedOutputData['header']['cover_thumbnail'] = $newCover;
 
-        $expectedOutputData['basic']['description'] = $localizedValues;
-        $expectedOutputData['basic']['description_short'] = $localizedValues;
+        $expectedOutputData['description']['description'] = $localizedValues;
+        $expectedOutputData['description']['description_short'] = $localizedValues;
 
         $datasets[] = [
             $productData,
@@ -412,32 +337,48 @@ class ProductFormDataProviderTest extends TestCase
         ];
 
         $expectedOutputData = $this->getDefaultOutputData();
+
         $productData = [
             'price_tax_excluded' => new DecimalNumber('42.00'),
             'price_tax_included' => new DecimalNumber('50.40'),
             'ecotax' => new DecimalNumber('69.51'),
+            'ecotax_tax_included' => new DecimalNumber('72.2904'),
             'tax_rules_group_id' => 49,
             'on_sale' => true,
             'wholesale_price' => new DecimalNumber('66.56'),
             'unit_price' => new DecimalNumber('6.656'),
+            'unit_price_tax_included' => new DecimalNumber('7.9872'),
             'unity' => 'candies',
             'unit_price_ratio' => new DecimalNumber('5'),
         ];
         $expectedOutputData['pricing']['retail_price']['price_tax_excluded'] = 42.00;
         $expectedOutputData['pricing']['retail_price']['price_tax_included'] = 50.40;
-        $expectedOutputData['pricing']['retail_price']['ecotax'] = 69.51;
-        $expectedOutputData['pricing']['tax_rules_group_id'] = 49;
+        $expectedOutputData['pricing']['retail_price']['tax_rules_group_id'] = 49;
+        $expectedOutputData['pricing']['retail_price']['ecotax_tax_excluded'] = 69.51;
+        $expectedOutputData['pricing']['retail_price']['ecotax_tax_included'] = 72.2904;
         $expectedOutputData['pricing']['on_sale'] = true;
         $expectedOutputData['pricing']['wholesale_price'] = 66.56;
-        $expectedOutputData['pricing']['unit_price']['price'] = 6.656;
+        $expectedOutputData['pricing']['unit_price']['price_tax_excluded'] = 6.656;
+        $expectedOutputData['pricing']['unit_price']['price_tax_included'] = 7.9872;
         $expectedOutputData['pricing']['unit_price']['unity'] = 'candies';
 
-        // Not handled yet
-        // $expectedOutputData['price']['unit_price_ratio'] = 5;
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
 
-        $expectedOutputData['shortcuts']['retail_price']['price_tax_excluded'] = 42.00;
-        $expectedOutputData['shortcuts']['retail_price']['price_tax_included'] = 50.40;
-        $expectedOutputData['shortcuts']['retail_price']['tax_rules_group_id'] = 49;
+        // dataset 2
+        $priorities = [
+            PriorityList::PRIORITY_CURRENCY,
+            PriorityList::PRIORITY_COUNTRY,
+            PriorityList::PRIORITY_GROUP,
+            PriorityList::PRIORITY_SHOP,
+        ];
+        $productData['priority_list'] = new PriorityList($priorities);
+        $expectedOutputData['pricing']['priority_management'] = [
+            'use_custom_priority' => true,
+            'priorities' => $priorities,
+        ];
 
         $datasets[] = [
             $productData,
@@ -474,12 +415,28 @@ class ProductFormDataProviderTest extends TestCase
             'low_stock_threshold' => 5,
             'low_stock_alert' => true,
             'pack_stock_type' => PackStockType::STOCK_TYPE_PACK_ONLY,
-            'out_of_stock' => OutOfStockType::OUT_OF_STOCK_AVAILABLE,
+            'out_of_stock_type' => OutOfStockType::OUT_OF_STOCK_AVAILABLE,
             'available_now' => $localizedValues,
             'available_later' => $localizedValues,
             'available_date' => new DateTime('1969/07/20'),
+            'stock_movements' => [
+                [
+                    'id_stock_mvt' => 10,
+                    'delta_quantity' => +42,
+                    'employee_firstname' => 'Paul',
+                    'employee_lastname' => 'Atreide',
+                    'date_add' => '2021-05-24 15:24:32',
+                ],
+                [
+                    'id_stock_mvt' => 11,
+                    'delta_quantity' => -15,
+                    'employee_firstname' => 'Frodo',
+                    'employee_lastname' => 'Baggins',
+                    'date_add' => '2021-05-22 16:35:48',
+                ],
+            ],
         ];
-        $expectedOutputData['stock']['quantities']['quantity'] = 42;
+        $expectedOutputData['stock']['quantities']['delta_quantity']['quantity'] = 42;
         $expectedOutputData['stock']['quantities']['minimal_quantity'] = 7;
         $expectedOutputData['stock']['options']['stock_location'] = 'top shelf';
         $expectedOutputData['stock']['options']['low_stock_threshold'] = 5;
@@ -490,7 +447,18 @@ class ProductFormDataProviderTest extends TestCase
         $expectedOutputData['stock']['availability']['available_later_label'] = $localizedValues;
         $expectedOutputData['stock']['availability']['available_date'] = '1969-07-20';
 
-        $expectedOutputData['shortcuts']['stock']['quantity'] = 42;
+        $expectedOutputData['stock']['quantities']['stock_movements'] = [
+            [
+                'date_add' => '2021-05-24 15:24:32',
+                'employee' => 'Paul Atreide',
+                'delta_quantity' => 42,
+            ],
+            [
+                'date_add' => '2021-05-22 16:35:48',
+                'employee' => 'Frodo Baggins',
+                'delta_quantity' => -15,
+            ],
+        ];
 
         $datasets[] = [
             $productData,
@@ -509,18 +477,128 @@ class ProductFormDataProviderTest extends TestCase
 
         $expectedOutputData = $this->getDefaultOutputData();
         $productData = [
-            'categories' => [42, 51],
+            'categories' => [
+                ['id' => 42, 'localized_names' => [self::CONTEXT_LANG_ID => 'test1', 2 => 'test2']],
+                ['id' => 51, 'localized_names' => [self::CONTEXT_LANG_ID => 'test22', 3 => 'test3']],
+            ],
             'default_category' => 51,
         ];
 
-        $expectedOutputData['categories']['product_categories'] = [];
-        $expectedOutputData['categories']['product_categories'][42] = [
-            'is_associated' => true,
-            'is_default' => false,
+        $expectedOutputData['description']['categories']['product_categories'] = [
+            [
+                'id' => 42,
+                'name' => 'test1',
+            ],
         ];
-        $expectedOutputData['categories']['product_categories'][51] = [
-            'is_associated' => true,
-            'is_default' => true,
+        $expectedOutputData['description']['categories']['product_categories'][] = [
+            'id' => 51,
+            'name' => 'test22',
+        ];
+
+        $expectedOutputData['description']['categories']['default_category_id'] = 51;
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        return $datasets;
+    }
+
+    /**
+     * @return array
+     */
+    private function getDatasetsForPackedProducts(): array
+    {
+        $datasets = [];
+
+        $expectedOutputData = $this->getDefaultOutputData();
+        $productData = [
+            'packed_products' => [
+                0 => [
+                    'product_id' => 15,
+                    'productName' => 'wicked snowboard',
+                    'quantity' => 3,
+                    'reference' => 'demo_15',
+                    'combination_id' => 1,
+                    'image' => 'http://myshop.com/img/p/no_picture-small_default.jpg',
+                ],
+                1 => [
+                    'product_id' => 42,
+                    'productName' => 'cool glasses',
+                    'quantity' => 5,
+                    'reference' => 'demo_42',
+                    'combination_id' => 2,
+                    'image' => 'http://myshop.com/img/p/no_picture-small_default.jpg',
+                ],
+            ],
+        ];
+
+        $expectedOutputData['stock']['packed_products'] = [
+            0 => [
+                'product_id' => 15,
+                'name' => 'wicked snowboard',
+                'reference' => 'demo_15',
+                'combination_id' => 1,
+                'image' => 'http://myshop.com/img/p/no_picture-small_default.jpg',
+                'quantity' => 3,
+                'unique_identifier' => '15_1',
+            ],
+            1 => [
+                'product_id' => 42,
+                'name' => 'cool glasses',
+                'reference' => 'demo_42',
+                'combination_id' => 2,
+                'image' => 'http://myshop.com/img/p/no_picture-small_default.jpg',
+                'quantity' => 5,
+                'unique_identifier' => '42_2',
+            ],
+        ];
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        return $datasets;
+    }
+
+    /**
+     * @return array
+     */
+    private function getDatasetsForRelatedProducts(): array
+    {
+        $datasets = [];
+
+        $expectedOutputData = $this->getDefaultOutputData();
+        $productData = [
+            'related_products' => [
+                0 => [
+                    'id' => 15,
+                    'name' => 'wicked snowboard',
+                    'reference' => 'zebest',
+                    'image' => 'http://awesome.jpg',
+                ],
+                1 => [
+                    'id' => 42,
+                    'name' => 'cool glasses',
+                    'reference' => '',
+                    'image' => 'http://awesome.jpg',
+                ],
+            ],
+        ];
+
+        $expectedOutputData['description']['related_products'] = [
+            0 => [
+                'id' => 15,
+                'name' => 'wicked snowboard (ref: zebest)',
+                'image' => 'http://awesome.jpg',
+            ],
+            1 => [
+                'id' => 42,
+                'name' => 'cool glasses',
+                'image' => 'http://awesome.jpg',
+            ],
         ];
 
         $datasets[] = [
@@ -595,9 +673,13 @@ class ProductFormDataProviderTest extends TestCase
             $expectedOutputData,
         ];
 
-        $localizedValues = [
-            1 => 'english',
-            2 => 'french',
+        $localizedNames = [
+            1 => 'english name',
+            2 => 'french name',
+        ];
+        $localizedDescriptions = [
+            1 => 'english description',
+            2 => 'french description',
         ];
         $expectedOutputData = $this->getDefaultOutputData();
         $productData = [
@@ -613,19 +695,40 @@ class ProductFormDataProviderTest extends TestCase
             'ean13' => 'ean13_2',
             'mpn' => 'mpn_2',
             'reference' => 'reference_2',
+            'attachments' => [
+                new AttachmentInformation(
+                    1,
+                    $localizedNames,
+                    $localizedDescriptions,
+                    'test1',
+                    'image/jpeg',
+                    1042
+                ),
+            ],
         ];
-        $expectedOutputData['footer']['active'] = false;
+        $expectedOutputData['header']['active'] = false;
         $expectedOutputData['options']['visibility']['visibility'] = ProductVisibility::VISIBLE_IN_CATALOG;
         $expectedOutputData['options']['visibility']['available_for_order'] = false;
         $expectedOutputData['options']['visibility']['online_only'] = true;
         $expectedOutputData['options']['visibility']['show_price'] = false;
-        $expectedOutputData['options']['condition'] = ProductCondition::USED;
-        $expectedOutputData['options']['show_condition'] = true;
-        $expectedOutputData['options']['references']['isbn'] = 'isbn_2';
-        $expectedOutputData['options']['references']['upc'] = 'upc_2';
-        $expectedOutputData['options']['references']['ean_13'] = 'ean13_2';
-        $expectedOutputData['options']['references']['mpn'] = 'mpn_2';
-        $expectedOutputData['options']['references']['reference'] = 'reference_2';
+
+        $expectedOutputData['specifications']['references']['isbn'] = 'isbn_2';
+        $expectedOutputData['specifications']['references']['upc'] = 'upc_2';
+        $expectedOutputData['specifications']['references']['ean_13'] = 'ean13_2';
+        $expectedOutputData['specifications']['references']['mpn'] = 'mpn_2';
+        $expectedOutputData['specifications']['references']['reference'] = 'reference_2';
+
+        $expectedOutputData['specifications']['condition'] = ProductCondition::USED;
+        $expectedOutputData['specifications']['show_condition'] = true;
+
+        $expectedOutputData['specifications']['attachments']['attached_files'] = [
+            [
+                'attachment_id' => 1,
+                'name' => 'english name',
+                'file_name' => 'test1',
+                'mime_type' => 'image/jpeg',
+            ],
+        ];
 
         $datasets[] = [
             $productData,
@@ -642,13 +745,25 @@ class ProductFormDataProviderTest extends TestCase
     {
         $datasets = [];
 
+        $categoryName = 'Category 1';
+        $categoryImage = '/path/to/category/img.jpg';
+
         $expectedOutputData = $this->getDefaultOutputData();
         $productData = [
             'redirect_type' => RedirectType::TYPE_CATEGORY_TEMPORARY,
-            'id_type_redirected' => static::DEFAULT_CATEGORY_ID,
+            'redirect_target' => new ProductRedirectTarget(
+                self::DEFAULT_CATEGORY_ID,
+                ProductRedirectTarget::CATEGORY_TYPE,
+                $categoryName,
+                $categoryImage
+            ),
         ];
         $expectedOutputData['seo']['redirect_option']['type'] = RedirectType::TYPE_CATEGORY_TEMPORARY;
-        $expectedOutputData['seo']['redirect_option']['target'] = static::DEFAULT_CATEGORY_ID;
+        $expectedOutputData['seo']['redirect_option']['target'] = [
+            'id' => self::DEFAULT_CATEGORY_ID,
+            'name' => $categoryName,
+            'image' => $categoryImage,
+        ];
 
         $datasets[] = [
             $productData,
@@ -667,11 +782,8 @@ class ProductFormDataProviderTest extends TestCase
 
         $expectedOutputData = $this->getDefaultOutputData();
         $expectedOutputData['options']['suppliers']['default_supplier_id'] = 1;
-        $expectedOutputData['options']['suppliers']['supplier_ids'] = [
-            0 => 1,
-            1 => 2,
-        ];
-        $expectedOutputData['options']['suppliers']['product_suppliers'][1] = [
+        $expectedOutputData['options']['suppliers']['supplier_ids'] = [1, 2];
+        $expectedOutputData['options']['product_suppliers'][1] = [
             'supplier_id' => 1,
             'supplier_name' => 'test supplier 1',
             'product_supplier_id' => 1,
@@ -680,7 +792,7 @@ class ProductFormDataProviderTest extends TestCase
             'currency_id' => 1,
             'combination_id' => 0,
         ];
-        $expectedOutputData['options']['suppliers']['product_suppliers'][2] = [
+        $expectedOutputData['options']['product_suppliers'][2] = [
             'supplier_id' => 2,
             'supplier_name' => 'test supplier 2',
             'product_supplier_id' => 2,
@@ -693,29 +805,49 @@ class ProductFormDataProviderTest extends TestCase
         $productData = [
             'suppliers' => [
                 'default_supplier_id' => 1,
-                'product_suppliers' => [
-                    [
-                        'product_id' => self::PRODUCT_ID,
-                        'supplier_id' => 1,
-                        'supplier_name' => 'test supplier 1',
-                        'product_supplier_id' => 1,
-                        'price' => '0',
-                        'reference' => 'test supp ref 1',
-                        'currency_id' => 1,
-                        'combination_id' => 0,
-                    ],
-                    [
-                        'product_id' => self::PRODUCT_ID,
-                        'supplier_id' => 2,
-                        'supplier_name' => 'test supplier 2',
-                        'product_supplier_id' => 2,
-                        'price' => '0',
-                        'reference' => 'test supp ref 2',
-                        'currency_id' => 3,
-                        'combination_id' => 0,
-                    ],
+                'supplier_ids' => [1, 2],
+            ],
+            'product_suppliers' => [
+                [
+                    'product_id' => self::PRODUCT_ID,
+                    'supplier_id' => 1,
+                    'supplier_name' => 'test supplier 1',
+                    'product_supplier_id' => 1,
+                    'price' => '0',
+                    'reference' => 'test supp ref 1',
+                    'currency_id' => 1,
+                    'combination_id' => 0,
+                ],
+                [
+                    'product_id' => self::PRODUCT_ID,
+                    'supplier_id' => 2,
+                    'supplier_name' => 'test supplier 2',
+                    'product_supplier_id' => 2,
+                    'price' => '0',
+                    'reference' => 'test supp ref 2',
+                    'currency_id' => 3,
+                    'combination_id' => 0,
                 ],
             ],
+        ];
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        // We can have only the list of suppliers with no product suppliers infos (for product with combinations)
+        $expectedOutputData = $this->getDefaultOutputData();
+        $expectedOutputData['options']['suppliers']['default_supplier_id'] = 1;
+        $expectedOutputData['options']['suppliers']['supplier_ids'] = [1, 2];
+        $expectedOutputData['options']['product_suppliers'] = [];
+
+        $productData = [
+            'suppliers' => [
+                'default_supplier_id' => 1,
+                'supplier_ids' => [1, 2],
+            ],
+            'product_suppliers' => [],
         ];
 
         $datasets[] = [
@@ -734,7 +866,7 @@ class ProductFormDataProviderTest extends TestCase
         $datasets = [];
 
         $expectedOutputData = $this->getDefaultOutputData();
-        $expectedOutputData['basic']['manufacturer'] = 42;
+        $expectedOutputData['description']['manufacturer'] = 42;
 
         $productData = [
             'manufacturer_id' => 42,
@@ -756,8 +888,8 @@ class ProductFormDataProviderTest extends TestCase
         $datasets = [];
 
         $expectedOutputData = $this->getDefaultOutputData();
-        $expectedOutputData['basic']['features']['feature_values'] = [];
-        $expectedOutputData['basic']['features']['feature_values'][] = [
+        $expectedOutputData['specifications']['features']['feature_values'] = [];
+        $expectedOutputData['specifications']['features']['feature_values'][] = [
             'feature_id' => 42,
             'feature_value_id' => 51,
         ];
@@ -766,7 +898,7 @@ class ProductFormDataProviderTest extends TestCase
             1 => 'english',
             2 => 'french',
         ];
-        $expectedOutputData['basic']['features']['feature_values'][] = [
+        $expectedOutputData['specifications']['features']['feature_values'][] = [
             'feature_id' => 42,
             'feature_value_id' => 69,
             'custom_value' => $localizedValues,
@@ -828,7 +960,7 @@ class ProductFormDataProviderTest extends TestCase
             ],
         ];
 
-        $expectedOutputData['options']['customizations']['customization_fields'] = [
+        $expectedOutputData['specifications']['customizations']['customization_fields'] = [
             [
                 'id' => 1,
                 'name' => $localizedNames,
@@ -852,6 +984,50 @@ class ProductFormDataProviderTest extends TestCase
     }
 
     /**
+     * @return array
+     */
+    private function getDatasetsForCombinations(): array
+    {
+        $datasets = [];
+
+        $expectedOutputData = $this->getDefaultOutputData();
+        $productData = [];
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        $localizedValues = [
+            1 => 'english',
+            2 => 'french',
+        ];
+        $expectedOutputData = $this->getDefaultOutputData();
+        $productData = [
+            'type' => ProductType::TYPE_COMBINATIONS,
+            'out_of_stock_type' => OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE,
+            'available_now' => $localizedValues,
+            'available_later' => $localizedValues,
+        ];
+
+        $expectedOutputData['header']['type'] = ProductType::TYPE_COMBINATIONS;
+        $expectedOutputData['header']['initial_type'] = ProductType::TYPE_COMBINATIONS;
+        $expectedOutputData['combinations']['availability']['out_of_stock_type'] = OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE;
+        $expectedOutputData['combinations']['availability']['available_now_label'] = $localizedValues;
+        $expectedOutputData['combinations']['availability']['available_later_label'] = $localizedValues;
+        $expectedOutputData['stock']['availability']['available_now_label'] = $localizedValues;
+        $expectedOutputData['stock']['availability']['available_later_label'] = $localizedValues;
+        $expectedOutputData['stock']['availability']['out_of_stock_type'] = OutOfStockType::OUT_OF_STOCK_NOT_AVAILABLE;
+
+        $datasets[] = [
+            $productData,
+            $expectedOutputData,
+        ];
+
+        return $datasets;
+    }
+
+    /**
      * @param array $product
      *
      * @return ProductForEditing
@@ -859,8 +1035,9 @@ class ProductFormDataProviderTest extends TestCase
     private function createProductForEditing(array $product): ProductForEditing
     {
         return new ProductForEditing(
-            static::PRODUCT_ID,
+            self::PRODUCT_ID,
             $product['type'] ?? ProductType::TYPE_STANDARD,
+            $product['active'] ?? true,
             ProductCustomizationOptions::createNotCustomizable(),
             $this->createBasic($product),
             $this->createCategories($product),
@@ -871,7 +1048,8 @@ class ProductFormDataProviderTest extends TestCase
             $this->createSeoOptions($product),
             $product['attachments'] ?? [],
             $this->createProductStockInformation($product),
-            $this->createVirtualProductFile($product)
+            $this->createVirtualProductFile($product),
+            $product['cover_thumbnail'] ?? self::COVER_URL
         );
     }
 
@@ -883,29 +1061,29 @@ class ProductFormDataProviderTest extends TestCase
     private function createProductSupplierOptions(array $productData): ProductSupplierOptions
     {
         if (empty($productData['suppliers'])) {
-            return new ProductSupplierOptions(0, []);
+            return new ProductSupplierOptions(0, [], []);
         }
 
-        $suppliersInfo = [];
-        foreach ($productData['suppliers']['product_suppliers'] as $supplierInfo) {
-            $suppliersInfo[] = new ProductSupplierInfo(
-                $supplierInfo['supplier_name'],
-                $supplierInfo['supplier_id'],
-                new ProductSupplierForEditing(
+        $productSuppliers = [];
+        if (!empty($productData['product_suppliers'])) {
+            foreach ($productData['product_suppliers'] as $supplierInfo) {
+                $productSuppliers[] = new ProductSupplierForEditing(
                     $supplierInfo['product_supplier_id'],
                     $supplierInfo['product_id'],
                     $supplierInfo['supplier_id'],
+                    $supplierInfo['supplier_name'],
                     $supplierInfo['reference'],
                     $supplierInfo['price'],
                     $supplierInfo['currency_id'],
                     $supplierInfo['combination_id']
-                )
-            );
+                );
+            }
         }
 
         return new ProductSupplierOptions(
             $productData['suppliers']['default_supplier_id'],
-            $suppliersInfo
+            $productData['suppliers']['supplier_ids'],
+            $productSuppliers
         );
     }
 
@@ -936,6 +1114,56 @@ class ProductFormDataProviderTest extends TestCase
     /**
      * @param array $productData
      *
+     * @return PackedProductDetails[]
+     */
+    private function createPackedProductsDetails(array $productData): array
+    {
+        if (empty($productData['packed_products'])) {
+            return [];
+        }
+
+        $packedProducts = [];
+        foreach ($productData['packed_products'] as $packedProduct) {
+            $packedProducts[] = new PackedProductDetails(
+                (int) $packedProduct['product_id'],
+                (int) $packedProduct['quantity'],
+                $packedProduct['combination_id'],
+                $packedProduct['productName'],
+                $packedProduct['reference'],
+                $packedProduct['image']
+            );
+        }
+
+        return $packedProducts;
+    }
+
+    /**
+     * @param array $productData
+     *
+     * @return RelatedProduct[]
+     */
+    private function createRelatedProducts(array $productData): array
+    {
+        if (empty($productData['related_products'])) {
+            return [];
+        }
+
+        $relatedProducts = [];
+        foreach ($productData['related_products'] as $relatedProduct) {
+            $relatedProducts[] = new RelatedProduct(
+                (int) $relatedProduct['id'],
+                $relatedProduct['name'],
+                $relatedProduct['reference'],
+                $relatedProduct['image']
+            );
+        }
+
+        return $relatedProducts;
+    }
+
+    /**
+     * @param array $productData
+     *
      * @return CustomizationField[]
      */
     private function createProductCustomizationFields(array $productData): array
@@ -956,6 +1184,34 @@ class ProductFormDataProviderTest extends TestCase
         }
 
         return $customizationFields;
+    }
+
+    /**
+     * @param array $productData
+     *
+     * @return EmployeeStockMovement[]
+     */
+    private function createProductStockMovements(array $productData): array
+    {
+        if (!isset($productData['stock_movements'])) {
+            return [];
+        }
+
+        $stockMovements = [];
+        foreach ($productData['stock_movements'] as $stockMovement) {
+            $stockMovements[] = new EmployeeStockMovement(
+                $stockMovement['id_stock_mvt'],
+                42,
+                11,
+                $stockMovement['delta_quantity'],
+                42,
+                $stockMovement['employee_firstname'],
+                $stockMovement['employee_lastname'],
+                new DateTime($stockMovement['date_add'])
+            );
+        }
+
+        return $stockMovements;
     }
 
     /**
@@ -988,8 +1244,8 @@ class ProductFormDataProviderTest extends TestCase
     {
         return new ProductStockInformation(
             $product['pack_stock_type'] ?? PackStockType::STOCK_TYPE_DEFAULT,
-            $product['out_of_stock'] ?? OutOfStockType::OUT_OF_STOCK_DEFAULT,
-            $product['quantity'] ?? static::DEFAULT_QUANTITY,
+            $product['out_of_stock_type'] ?? OutOfStockType::OUT_OF_STOCK_DEFAULT,
+            $product['quantity'] ?? self::DEFAULT_QUANTITY,
             $product['minimal_quantity'] ?? 0,
             $product['low_stock_threshold'] ?? 0,
             $product['low_stock_alert'] ?? false,
@@ -1012,7 +1268,7 @@ class ProductFormDataProviderTest extends TestCase
             $product['meta_description'] ?? [],
             $product['link_rewrite'] ?? [],
             $product['redirect_type'] ?? RedirectType::TYPE_NOT_FOUND,
-            $product['id_type_redirected'] ?? 0
+            $product['redirect_target'] ?? null
         );
     }
 
@@ -1060,7 +1316,6 @@ class ProductFormDataProviderTest extends TestCase
     private function createOptions(array $product): ProductOptions
     {
         return new ProductOptions(
-            $product['active'] ?? true,
             $product['visibility'] ?? ProductVisibility::VISIBLE_EVERYWHERE,
             $product['available_for_order'] ?? true,
             $product['online_only'] ?? false,
@@ -1082,25 +1337,35 @@ class ProductFormDataProviderTest extends TestCase
             $product['price_tax_excluded'] ?? new DecimalNumber('19.86'),
             $product['price_tax_included'] ?? new DecimalNumber('23.832'),
             $product['ecotax'] ?? new DecimalNumber('19.86'),
+            $product['ecotax_tax_included'] ?? new DecimalNumber('20.6544'),
             $product['tax_rules_group_id'] ?? 1,
             $product['on_sale'] ?? false,
             $product['wholesale_price'] ?? new DecimalNumber('19.86'),
             $product['unit_price'] ?? new DecimalNumber('19.86'),
+            $product['unit_price_tax_included'] ?? new DecimalNumber('23.832'),
             $product['unity'] ?? '',
-            $product['unit_price_ratio'] ?? new DecimalNumber('1')
+            $product['unit_price_ratio'] ?? new DecimalNumber('1'),
+            $product['priority_list'] ?? null
         );
     }
 
     /**
      * @param array $product
      *
-     * @return ProductCategoriesInformation
+     * @return CategoriesInformation
      */
-    private function createCategories(array $product): ProductCategoriesInformation
+    private function createCategories(array $product): CategoriesInformation
     {
-        return new ProductCategoriesInformation(
-            $product['categories'] ?? [self::DEFAULT_CATEGORY_ID],
-            $product['default_category'] ?? self::DEFAULT_CATEGORY_ID
+        $categoriesInfo = [];
+        if (isset($product['categories'])) {
+            foreach ($product['categories'] as $category) {
+                $categoriesInfo[] = new CategoryInformation($category['id'], $category['localized_names']);
+            }
+        }
+
+        return new CategoriesInformation(
+            $categoriesInfo,
+            $product['default_category'] ?? self::HOME_CATEGORY_ID
         );
     }
 
@@ -1120,22 +1385,41 @@ class ProductFormDataProviderTest extends TestCase
     }
 
     /**
-     * @param array $productData
+     * @param int $expectedShopId
      *
-     * @return MockObject|CommandBusInterface
+     * @return CommandBusInterface
      */
-    private function createQueryBusMock(array $productData)
+    private function createQueryBusCheckingShopMock(int $expectedShopId): CommandBusInterface
     {
         $queryBusMock = $this->createMock(CommandBusInterface::class);
 
         $queryBusMock
             ->method('handle')
-            ->with($this->logicalOr(
-                $this->isInstanceOf(GetProductForEditing::class),
-                $this->isInstanceOf(GetProductSupplierOptions::class),
-                $this->isInstanceOf(GetProductFeatureValues::class),
-                $this->isInstanceOf(GetProductCustomizationFields::class)
-            ))
+            ->with($this->getHandledQueries())
+            ->willReturnCallback(function ($query) use ($expectedShopId) {
+                if ($query instanceof GetProductForEditing) {
+                    $this->assertEquals($expectedShopId, $query->getShopConstraint()->getShopId()->getValue());
+                }
+
+                return $this->createResultBasedOnQuery($query, []);
+            })
+        ;
+
+        return $queryBusMock;
+    }
+
+    /**
+     * @param array $productData
+     *
+     * @return CommandBusInterface
+     */
+    private function createQueryBusMock(array $productData): CommandBusInterface
+    {
+        $queryBusMock = $this->createMock(CommandBusInterface::class);
+
+        $queryBusMock
+            ->method('handle')
+            ->with($this->getHandledQueries())
             ->willReturnCallback(function ($query) use ($productData) {
                 return $this->createResultBasedOnQuery($query, $productData);
             })
@@ -1145,10 +1429,26 @@ class ProductFormDataProviderTest extends TestCase
     }
 
     /**
-     * @param $query
+     * @return LogicalOr
+     */
+    private function getHandledQueries(): LogicalOr
+    {
+        return $this->logicalOr(
+            $this->isInstanceOf(GetProductForEditing::class),
+            $this->isInstanceOf(GetProductSupplierOptions::class),
+            $this->isInstanceOf(GetProductFeatureValues::class),
+            $this->isInstanceOf(GetProductCustomizationFields::class),
+            $this->isInstanceOf(GetEmployeesStockMovements::class),
+            $this->isInstanceOf(GetRelatedProducts::class),
+            $this->isInstanceOf(GetPackedProducts::class)
+        );
+    }
+
+    /**
+     * @param mixed $query
      * @param array $productData
      *
-     * @return ProductForEditing|ProductSupplierOptions|ProductFeatureValue[]|CustomizationField[]|null
+     * @return ProductForEditing|ProductSupplierOptions|ProductFeatureValue[]|CustomizationField[]|StockMovement[]|RelatedProduct[]
      */
     private function createResultBasedOnQuery($query, array $productData)
     {
@@ -1157,6 +1457,9 @@ class ProductFormDataProviderTest extends TestCase
             GetProductSupplierOptions::class => $this->createProductSupplierOptions($productData),
             GetProductFeatureValues::class => $this->createProductFeatureValueOptions($productData),
             GetProductCustomizationFields::class => $this->createProductCustomizationFields($productData),
+            GetEmployeesStockMovements::class => $this->createProductStockMovements($productData),
+            GetRelatedProducts::class => $this->createRelatedProducts($productData),
+            GetPackedProducts::class => $this->createPackedProductsDetails($productData),
         ];
 
         $queryClass = get_class($query);
@@ -1173,25 +1476,50 @@ class ProductFormDataProviderTest extends TestCase
     private function getDefaultOutputData(): array
     {
         return [
-            'id' => static::PRODUCT_ID,
+            'id' => self::PRODUCT_ID,
             'header' => [
                 'type' => ProductType::TYPE_STANDARD,
+                'initial_type' => ProductType::TYPE_STANDARD,
                 'name' => [],
+                'cover_thumbnail' => self::COVER_URL,
+                'active' => true,
             ],
-            'basic' => [
+            'description' => [
                 'description' => [],
                 'description_short' => [],
-                'features' => [],
+                'categories' => [
+                    'product_categories' => [],
+                    'default_category_id' => self::HOME_CATEGORY_ID,
+                ],
                 'manufacturer' => NoManufacturerId::NO_MANUFACTURER_ID,
+                'related_products' => [],
+            ],
+            'specifications' => [
+                'references' => [
+                    'mpn' => 'mpn',
+                    'upc' => 'upc',
+                    'ean_13' => 'ean13',
+                    'isbn' => 'isbn',
+                    'reference' => 'reference',
+                ],
+                'features' => [],
+                'attachments' => [],
+                'show_condition' => false,
+                'condition' => ProductCondition::NEW,
+                'customizations' => [],
             ],
             'stock' => [
                 'quantities' => [
-                    'quantity' => static::DEFAULT_QUANTITY,
+                    'delta_quantity' => [
+                        'quantity' => self::DEFAULT_QUANTITY,
+                        'delta' => 0,
+                    ],
+                    'stock_movements' => [],
                     'minimal_quantity' => 0,
                 ],
                 'options' => [
                     'stock_location' => 'location',
-                    'low_stock_threshold' => null,
+                    'low_stock_threshold' => 0,
                     'low_stock_alert' => false,
                 ],
                 'virtual_product_file' => [
@@ -1204,19 +1532,26 @@ class ProductFormDataProviderTest extends TestCase
                     'available_later_label' => [],
                     'available_date' => '',
                 ],
+                'packed_products' => [],
             ],
             'pricing' => [
                 'retail_price' => [
                     'price_tax_excluded' => 19.86,
                     'price_tax_included' => 23.832,
-                    'ecotax' => 19.86,
+                    'tax_rules_group_id' => 1,
+                    'ecotax_tax_excluded' => 19.86,
+                    'ecotax_tax_included' => 20.6544,
                 ],
-                'tax_rules_group_id' => 1,
                 'on_sale' => false,
                 'wholesale_price' => 19.86,
                 'unit_price' => [
-                    'price' => 19.86,
+                    'price_tax_excluded' => 19.86,
+                    'price_tax_included' => 23.832,
                     'unity' => '',
+                ],
+                'priority_management' => [
+                    'use_custom_priority' => false,
+                    'priorities' => self::DEFAULT_PRIORITY_LIST,
                 ],
             ],
             'seo' => [
@@ -1225,8 +1560,9 @@ class ProductFormDataProviderTest extends TestCase
                 'link_rewrite' => [],
                 'redirect_option' => [
                     'type' => RedirectType::TYPE_NOT_FOUND,
-                    'target' => 0,
+                    'target' => null,
                 ],
+                'tags' => [],
             ],
             'shipping' => [
                 'dimensions' => [
@@ -1250,59 +1586,42 @@ class ProductFormDataProviderTest extends TestCase
                     'show_price' => true,
                     'online_only' => false,
                 ],
-                'tags' => [],
-                'show_condition' => false,
-                'condition' => ProductCondition::NEW,
-                'references' => [
-                    'mpn' => 'mpn',
-                    'upc' => 'upc',
-                    'ean_13' => 'ean13',
-                    'isbn' => 'isbn',
-                    'reference' => 'reference',
+                'suppliers' => [
+                    'default_supplier_id' => 0,
+                    'supplier_ids' => [],
                 ],
-                'customizations' => [],
-                'suppliers' => [],
-            ],
-            'categories' => [
-                'product_categories' => [
-                    self::DEFAULT_CATEGORY_ID => [
-                        'is_associated' => true,
-                        'is_default' => true,
-                    ],
-                ],
-            ],
-            'footer' => [
-                'active' => true,
-            ],
-            'shortcuts' => [
-                'retail_price' => [
-                    'price_tax_excluded' => 19.86,
-                    'price_tax_included' => 23.832,
-                    'tax_rules_group_id' => 1,
-                ],
-                'stock' => [
-                    'quantity' => static::DEFAULT_QUANTITY,
-                ],
+                'product_suppliers' => [],
             ],
         ];
     }
 
     /**
      * @param CommandBusInterface $queryBusMock
-     * @param $activation
      *
      * @return ProductFormDataProvider
      */
-    private function buildProvider(CommandBusInterface $queryBusMock, $activation): ProductFormDataProvider
+    private function buildProvider(CommandBusInterface $queryBusMock): ProductFormDataProvider
     {
-        $urlGeneratorMock = $this->getMockBuilder(UrlGeneratorInterface::class)->getMock();
-        $urlGeneratorMock->method('generate')->willReturnArgument(0);
-
         return new ProductFormDataProvider(
             $queryBusMock,
-            $activation,
-            42,
-            self::HOME_CATEGORY_ID
+            $this->getDefaultConfigurationMock(),
+            self::CONTEXT_LANG_ID,
+            self::DEFAULT_SHOP_ID,
+            null
         );
+    }
+
+    /**
+     * @return ConfigurationInterface
+     */
+    private function getDefaultConfigurationMock(): ConfigurationInterface
+    {
+        $configurationMock = $this->getMockBuilder(ConfigurationInterface::class)->getMock();
+
+        $configurationMock->method('get')->willReturnMap([
+            ['PS_SPECIFIC_PRICE_PRIORITIES', implode(';', self::DEFAULT_PRIORITY_LIST)],
+        ]);
+
+        return $configurationMock;
     }
 }

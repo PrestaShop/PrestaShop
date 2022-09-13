@@ -31,7 +31,6 @@ use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchProviderInterface;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchQuery;
 use PrestaShop\PrestaShop\Core\Product\Search\ProductSearchResult;
 use PrestaShop\PrestaShop\Core\Product\Search\SortOrder;
-use PrestaShop\PrestaShop\Core\Product\Search\SortOrderFactory;
 use Product;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -45,16 +44,10 @@ class NewProductsProductSearchProvider implements ProductSearchProviderInterface
      */
     private $translator;
 
-    /**
-     * @var SortOrderFactory
-     */
-    private $sortOrderFactory;
-
     public function __construct(
         TranslatorInterface $translator
     ) {
         $this->translator = $translator;
-        $this->sortOrderFactory = new SortOrderFactory($this->translator);
     }
 
     /**
@@ -62,21 +55,24 @@ class NewProductsProductSearchProvider implements ProductSearchProviderInterface
      * @param ProductSearchQuery $query
      * @param string $type
      *
-     * @return array
+     * @return array|int
      */
     private function getProductsOrCount(
         ProductSearchContext $context,
         ProductSearchQuery $query,
         $type = 'products'
     ) {
-        return Product::getNewProducts(
+        $isTypeProducts = $type === 'products';
+        $result = Product::getNewProducts(
             $context->getIdLang(),
             $query->getPage(),
             $query->getResultsPerPage(),
-            $type !== 'products',
+            !$isTypeProducts,
             $query->getSortOrder()->toLegacyOrderBy(),
             $query->getSortOrder()->toLegacyOrderWay()
         );
+
+        return $isTypeProducts ? $result : (int) $result;
     }
 
     /**

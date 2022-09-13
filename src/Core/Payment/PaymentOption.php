@@ -90,17 +90,9 @@ class PaymentOption implements HookContentClassInterface
      * The HTML MUST NOT contain a submit button, as
      * the Core will submit the form.
      *
-     * @var string
+     * @var string|null
      */
     private $form;
-
-    /**
-     * Custom HTML containing an iframe with the
-     * payment confirmation widget for modules like ATOS.
-     *
-     * @var string
-     */
-    private $iframe;
 
     /**
      * For internal reasons, the name of the module
@@ -251,7 +243,7 @@ class PaymentOption implements HookContentClassInterface
     /**
      * Set payment option form.
      *
-     * @param string $form
+     * @param string|null $form
      *
      * @return $this
      */

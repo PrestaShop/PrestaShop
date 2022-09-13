@@ -1,7 +1,10 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s order --tags multiple-currencies-to-order
-@reset-database-before-feature
-@reboot-kernel-before-feature
+@restore-all-tables-before-feature
 @clear-cache-before-feature
+@reboot-kernel-before-feature
+@restore-currencies-after-feature
+@reboot-kernel-after-feature
+@restore-currencies-before-scenario
 @multiple-currencies-to-order
 Feature: Multiple currencies for Order in Back Office (BO)
   In order to manage multiple currencies for orders in BO

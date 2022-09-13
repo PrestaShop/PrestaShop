@@ -4,11 +4,16 @@ const {expect} = require('chai');
 
 // Import utils
 const helper = require('@utils/helpers');
-const loginCommon = require('@commonTests/loginBO');
+const testContext = require('@utils/testContext');
 
-// Import pages
+// Import login steps
+const loginCommon = require('@commonTests/BO/loginBO');
+
+// Import BO pages
 const dashboardPage = require('@pages/BO/dashboard');
 const orderSettingsPage = require('@pages/BO/shopParameters/orderSettings');
+
+// Import FO pages
 const foLoginPage = require('@pages/FO/login');
 const homePage = require('@pages/FO/home');
 const myAccountPage = require('@pages/FO/myAccount');
@@ -17,16 +22,16 @@ const orderHistoryPage = require('@pages/FO/myAccount/orderHistory');
 // Import data
 const {DefaultCustomer} = require('@data/demo/customer');
 
-// Import test context
-const testContext = require('@utils/testContext');
-
 const baseContext = 'functional_BO_shopParameters_orderSettings_disableReorderingOption';
-
 
 let browserContext;
 let page;
 
-describe('Enable reordering option', async () => {
+/*
+Enable/disable reordering option
+Check reordering option in FO (Go to history page and check reodering link)
+ */
+describe('BO - Shop Parameters - Order Settings : Enable/Disable reordering option', async () => {
   // before and after functions
   before(async function () {
     browserContext = await helper.createBrowserContext(this.browser);
@@ -93,6 +98,7 @@ describe('Enable reordering option', async () => {
       await expect(isCustomerConnected).to.be.true;
 
       // Go to order history page
+      await homePage.goToMyAccountPage(page);
       await myAccountPage.goToHistoryAndDetailsPage(page);
 
       // Check reorder link

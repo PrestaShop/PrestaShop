@@ -74,7 +74,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 
         $this->title = Context::getContext()->getTranslator()->trans('Supply order form', [], 'Shop.Pdf');
 
-        $this->shop = new Shop((int) $this->order->id_shop);
+        $this->shop = Context::getContext()->shop;
     }
 
     /**
@@ -82,7 +82,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
      */
     public function getContent()
     {
-        $supply_order_details = $this->supply_order->getEntriesCollection((int) $this->supply_order->id_lang);
+        $supply_order_details = $this->supply_order->getEntriesCollection();
         $this->roundSupplyOrderDetails($supply_order_details);
 
         $this->roundSupplyOrder($this->supply_order);
@@ -167,6 +167,7 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
 
         $results = Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
+        /** @var array{base_te: float, tax_rate: float, total_tax_value: float} $result */
         foreach ($results as &$result) {
             $result['base_te'] = Tools::ps_round($result['base_te'], 2);
             $result['tax_rate'] = Tools::ps_round($result['tax_rate'], 2);
@@ -210,7 +211,6 @@ class HTMLTemplateSupplyOrderFormCore extends HTMLTemplate
      */
     public function getFooter()
     {
-        $this->address = $this->address_warehouse;
         $free_text = [];
         $free_text[] = Context::getContext()->getTranslator()->trans('TE: Tax excluded', [], 'Shop.Pdf');
         $free_text[] = Context::getContext()->getTranslator()->trans('TI: Tax included', [], 'Shop.Pdf');

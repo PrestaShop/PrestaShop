@@ -81,7 +81,7 @@ class TaxController extends FrameworkBundleAdminController
      * Process tax options configuration form.
      *
      * @AdminSecurity(
-     *     "is_granted(['update', 'create', 'delete'], request.get('_legacy_controller'))",
+     *     "is_granted('update', request.get('_legacy_controller')) && is_granted('create', request.get('_legacy_controller')) && is_granted('delete', request.get('_legacy_controller'))",
      *     redirectRoute="admin_taxes_index"
      * )
      * @DemoRestricted(redirectRoute="admin_taxes_index")
@@ -172,7 +172,7 @@ class TaxController extends FrameworkBundleAdminController
             if (null !== $result->getIdentifiableObjectId()) {
                 $this->addFlash(
                     'success',
-                    $this->trans('Successful creation.', 'Admin.Notifications.Success')
+                    $this->trans('Successful creation', 'Admin.Notifications.Success')
                 );
 
                 return $this->redirectToRoute('admin_taxes_index');
@@ -227,7 +227,7 @@ class TaxController extends FrameworkBundleAdminController
             $result = $taxFormHandler->handleFor((int) $taxId, $taxForm);
 
             if ($result->isSubmitted() && $result->isValid()) {
-                $this->addFlash('success', $this->trans('Successful update.', 'Admin.Notifications.Success'));
+                $this->addFlash('success', $this->trans('Successful update', 'Admin.Notifications.Success'));
 
                 return $this->redirectToRoute('admin_taxes_index');
             }
@@ -269,7 +269,7 @@ class TaxController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new DeleteTaxCommand((int) $taxId));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (TaxException $e) {
         }
@@ -385,7 +385,7 @@ class TaxController extends FrameworkBundleAdminController
             $this->getCommandBus()->handle(new BulkDeleteTaxCommand($taxIds));
             $this->addFlash(
                 'success',
-                $this->trans('Successful deletion.', 'Admin.Notifications.Success')
+                $this->trans('Successful deletion', 'Admin.Notifications.Success')
             );
         } catch (TaxException $e) {
             $this->addFlash('error', $this->getErrorMessageForException($e, $this->getErrorMessages()));

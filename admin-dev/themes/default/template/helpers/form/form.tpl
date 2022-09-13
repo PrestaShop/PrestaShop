@@ -69,7 +69,7 @@
 						{block name="input_row"}
 						<div class="form-group{if isset($input.form_group_class)} {$input.form_group_class}{/if}{if $input.type == 'hidden'} hide{/if}"{if $input.name == 'id_state'} id="contains_states"{if !$contains_states} style="display:none;"{/if}{/if}{if $input.name == 'dni'} id="dni_required"{if !$dni_required} style="display:none;"{/if}{/if}{if isset($tabs) && isset($input.tab)} data-tab-id="{$input.tab}"{/if}>
 						{if $input.type == 'hidden'}
-							<input type="hidden" name="{$input.name}" id="{$input.name}" value="{$fields_value[$input.name]|escape:'html':'UTF-8'}" />
+							<input type="hidden" name="{$input.name}" id="{$input.name}" value="{$fields_value[$input.name]|default|escape:'html':'UTF-8'}" />
 						{else}
 							{block name="label"}
 								{if isset($input.label)}
@@ -111,7 +111,7 @@
                     {/if}
 										{if $languages|count > 1}
 										<div class="translatable-field lang-{$language.id_lang}" {if $language.id_lang != $defaultFormLanguage}style="display:none"{/if}>
-											<div class="col-lg-9">
+											<div class="col-lg-10">
 										{/if}
 												{if $input.type == 'tags'}
 													{literal}
@@ -218,7 +218,7 @@
 										<input type="text"
 											name="{$input.name}"
 											id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}"
-											value="{if isset($input.string_format) && $input.string_format}{$value_text|string_format:$input.string_format|escape:'html':'UTF-8'}{else}{$value_text|escape:'html':'UTF-8'}{/if}"
+											value="{if isset($input.string_format) && $input.string_format}{$value_text|default|string_format:$input.string_format|escape:'html':'UTF-8'}{else}{$value_text|default|escape:'html':'UTF-8'}{/if}"
 											class="{if isset($input.class)}{$input.class}{/if}{if $input.type == 'tags'} tagify{/if}"
 											{if isset($input.size)} size="{$input.size}"{/if}
 											{if isset($input.maxchar) && $input.maxchar} data-maxchar="{$input.maxchar|intval}"{/if}
@@ -435,7 +435,7 @@
 										{foreach $languages as $language}
 											{if $languages|count > 1}
 											<div class="form-group translatable-field lang-{$language.id_lang}"{if $language.id_lang != $defaultFormLanguage} style="display:none;"{/if}>
-												<div class="col-lg-9">
+												<div class="col-lg-10">
 											{/if}
 													{if isset($input.maxchar) && $input.maxchar}
 													<div class="input-group">
@@ -480,7 +480,7 @@
 												<span class="text-count-down">{$input.maxchar|intval}</span>
 											</span>
 										{/if}
-										<textarea{if isset($input.readonly) && $input.readonly} readonly="readonly"{/if} name="{$input.name}" id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}" {if isset($input.cols)}cols="{$input.cols}"{/if} {if isset($input.rows)}rows="{$input.rows}"{/if} class="{if isset($input.autoload_rte) && $input.autoload_rte}rte autoload_rte{else}textarea-autosize{/if}{if isset($input.class)} {$input.class}{/if}"{if isset($input.maxlength) && $input.maxlength} maxlength="{$input.maxlength|intval}"{/if}{if isset($input.maxchar) && $input.maxchar} data-maxchar="{$input.maxchar|intval}"{/if}>{$fields_value[$input.name]|escape:'html':'UTF-8'}</textarea>
+										<textarea{if isset($input.readonly) && $input.readonly} readonly="readonly"{/if} name="{$input.name}" id="{if isset($input.id)}{$input.id}{else}{$input.name}{/if}" {if isset($input.cols)}cols="{$input.cols}"{/if} {if isset($input.rows)}rows="{$input.rows}"{/if} class="{if isset($input.autoload_rte) && $input.autoload_rte}rte autoload_rte{else}textarea-autosize{/if}{if isset($input.class)} {$input.class}{/if}"{if isset($input.maxlength) && $input.maxlength} maxlength="{$input.maxlength|intval}"{/if}{if isset($input.maxchar) && $input.maxchar} data-maxchar="{$input.maxchar|intval}"{/if}>{$fields_value[$input.name]|default|escape:'html':'UTF-8'}</textarea>
 										{if isset($input.maxchar) && $input.maxchar}
 											<script type="text/javascript">
 											$(document).ready(function(){
@@ -517,161 +517,6 @@
 											{/strip}
 										</div>
 									{/foreach}
-								{elseif $input.type == 'change-password'}
-									<div class="row">
-										<div class="col-lg-12">
-											<button type="button" id="{$input.name}-btn-change" class="btn btn-default">
-												<i class="icon-lock"></i>
-												{l s='Change password...'}
-											</button>
-											<div id="{$input.name}-change-container" class="form-password-change well hide">
-												<div class="form-group">
-													<label for="old_passwd" class="control-label col-lg-2 required">
-														{l s='Current password'}
-													</label>
-													<div class="col-lg-10">
-														<div class="input-group fixed-width-lg">
-															<span class="input-group-addon">
-																<i class="icon-unlock"></i>
-															</span>
-															<input type="password" id="old_passwd" name="old_passwd" class="form-control" value="" required="required" autocomplete="off">
-														</div>
-													</div>
-												</div>
-												<hr />
-												<div class="form-group">
-													<label for="{$input.name}" class="required control-label col-lg-2">
-														<span class="label-tooltip" data-toggle="tooltip" data-html="true" title="" data-original-title="{l s='Password should be at least 8 characters long.'}">
-															{l s='New password'}
-														</span>
-													</label>
-													<div class="col-lg-9">
-														<div class="input-group fixed-width-lg">
-															<span class="input-group-addon">
-																<i class="icon-key"></i>
-															</span>
-															<input type="password" id="{$input.name}" name="{$input.name}" class="{if isset($input.class)}{$input.class}{/if}" value="" required="required" autocomplete="off"/>
-														</div>
-														<span id="{$input.name}-output"></span>
-													</div>
-												</div>
-												<div class="form-group">
-													<label for="{$input.name}2" class="required control-label col-lg-2">
-														{l s='Confirm password'}
-													</label>
-													<div class="col-lg-4">
-														<div class="input-group fixed-width-lg">
-															<span class="input-group-addon">
-																<i class="icon-key"></i>
-															</span>
-															<input type="password" id="{$input.name}2" name="{$input.name}2" class="{if isset($input.class)}{$input.class}{/if}" value="" autocomplete="off"/>
-														</div>
-													</div>
-												</div>
-												<div class="form-group">
-													<div class="col-lg-10 col-lg-offset-2">
-														<input type="text" class="form-control fixed-width-md pull-left" id="{$input.name}-generate-field" disabled="disabled">
-														<button type="button" id="{$input.name}-generate-btn" class="btn btn-default">
-															<i class="icon-random"></i>
-															{l s='Generate password'}
-														</button>
-													</div>
-												</div>
-												<div class="row">
-													<div class="col-lg-12">
-														<button type="button" id="{$input.name}-cancel-btn" class="btn btn-default">
-															<i class="icon-remove"></i>
-															{l s='Cancel' d='Admin.Actions'}
-														</button>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<script>
-										$(function(){
-											var $oldPwd = $('#old_passwd');
-											var $passwordField = $('#{$input.name}');
-											var $output = $('#{$input.name}-output');
-											var $generateBtn = $('#{$input.name}-generate-btn');
-											var $generateField = $('#{$input.name}-generate-field');
-											var $cancelBtn = $('#{$input.name}-cancel-btn');
-
-											var feedback = [
-												{ badge: 'text-danger', text: '{l s="Invalid" js=1}' },
-												{ badge: 'text-warning', text: '{l s="Okay" js=1}' },
-												{ badge: 'text-success', text: '{l s="Good" js=1}' },
-												{ badge: 'text-success', text: '{l s="Fabulous" js=1}' }
-											];
-											$.passy.requirements.length.min = 8;
-											$.passy.requirements.characters = 'DIGIT';
-											$passwordField.passy(function(strength, valid) {
-												$output.text(feedback[strength].text);
-												$output.removeClass('text-danger').removeClass('text-warning').removeClass('text-success');
-												$output.addClass(feedback[strength].badge);
-												if (valid){
-													$output.show();
-												}
-												else {
-													$output.hide();
-												}
-											});
-											var $container = $('#{$input.name}-change-container');
-											var $changeBtn = $('#{$input.name}-btn-change');
-											var $confirmPwd = $('#{$input.name}2');
-
-											$changeBtn.on('click',function(){
-												$container.removeClass('hide');
-												$changeBtn.addClass('hide');
-											});
-											$generateBtn.click(function() {
-												$generateField.passy( 'generate', 8 );
-												var generatedPassword = $generateField.val();
-												$passwordField.val(generatedPassword);
-												$confirmPwd.val(generatedPassword);
-											});
-											$cancelBtn.on('click',function() {
-												$container.find("input").val("");
-												$container.addClass('hide');
-												$changeBtn.removeClass('hide');
-											});
-
-											$.validator.addMethod('password_same', function(value, element) {
-												return $passwordField.val() == $confirmPwd.val();
-											}, '{l s="Invalid password confirmation" js=1}');
-
-											$('#employee_form').validate({
-												rules: {
-													"email": {
-														email: true
-													},
-													"{$input.name}" : {
-														minlength: 8
-													},
-													"{$input.name}2": {
-														password_same: true
-													},
-													"old_passwd" : {},
-												},
-												// override jquery validate plugin defaults for bootstrap 3
-												highlight: function(element) {
-													$(element).closest('.form-group').addClass('has-error');
-												},
-												unhighlight: function(element) {
-													$(element).closest('.form-group').removeClass('has-error');
-												},
-												errorElement: 'span',
-												errorClass: 'help-block',
-												errorPlacement: function(error, element) {
-													if(element.parent('.input-group').length) {
-														error.insertAfter(element.parent());
-													} else {
-														error.insertAfter(element);
-													}
-												}
-											});
-										});
-									</script>
 								{elseif $input.type == 'password'}
 									<div class="input-group fixed-width-lg">
 										<span class="input-group-addon">
@@ -735,9 +580,8 @@
 									{$asso_shop}
 								{elseif $input.type == 'color'}
 								<div class="form-group">
-									<div class="col-lg-2">
-										<div class="row">
-											<div class="input-group">
+									<div class="col-lg-6">
+										<div class="input-group">
 												<input type="color"
 												data-hex="true"
 												{if isset($input.class)} class="{$input.class}"
@@ -745,7 +589,6 @@
 												name="{$input.name}"
 												value="{$fields_value[$input.name]|escape:'html':'UTF-8'}" />
 											</div>
-										</div>
 									</div>
 								</div>
 								{elseif $input.type == 'date'}
@@ -757,6 +600,7 @@
 												data-hex="true"
 												{if isset($input.class)} class="{$input.class}"
 												{else}class="datepicker"{/if}
+												autocomplete="off"
 												name="{$input.name}"
 												value="{$fields_value[$input.name]|escape:'html':'UTF-8'}" />
 											<span class="input-group-addon">
@@ -773,6 +617,7 @@
 												data-hex="true"
 												{if isset($input.class)} class="{$input.class}"
 												{else} class="datetimepicker"{/if}
+												autocomplete="off"
 												name="{$input.name}"
 												value="{$fields_value[$input.name]|escape:'html':'UTF-8'}" />
 											<span class="input-group-addon">
@@ -908,7 +753,6 @@
 		var module_dir = '{$smarty.const._MODULE_DIR_}';
 		var id_language = {$defaultFormLanguage|intval};
 		var languages = new Array();
-		var vat_number = {if $vat_number}1{else}0{/if};
 		// Multilang field setup must happen before document is ready so that calls to displayFlags() to avoid
 		// precedence conflicts with other document.ready() blocks
 		{foreach $languages as $k => $language}

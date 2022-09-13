@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Supplier\QueryHandler;
 
-use Context;
 use Currency;
 use PrestaShop\PrestaShop\Core\Domain\Language\ValueObject\LanguageId;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\Exception\SupplierException;
@@ -37,7 +36,6 @@ use PrestaShop\PrestaShop\Core\Domain\Supplier\QueryResult\ViewableSupplier;
 use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 use PrestaShop\PrestaShop\Core\Localization\Exception\LocalizationException;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
-use PrestaShopException;
 use Product;
 use Supplier;
 
@@ -52,20 +50,20 @@ final class GetSupplierForViewingHandler implements GetSupplierForViewingHandler
     private $locale;
 
     /**
-     * @var string
+     * @var int
      */
-    private $defaultCurrencyIsoCode;
+    private $defaultCurrencyId;
 
     /**
      * @param Locale $locale
-     * @param string|null $defaultCurrencyIsoCode
+     * @param int $defaultCurrencyId
      */
     public function __construct(
         Locale $locale,
-        ?string $defaultCurrencyIsoCode = null
+        int $defaultCurrencyId
     ) {
         $this->locale = $locale;
-        $this->defaultCurrencyIsoCode = $defaultCurrencyIsoCode ?? Context::getContext()->currency->iso_code;
+        $this->defaultCurrencyId = $defaultCurrencyId;
     }
 
     /**
@@ -96,7 +94,9 @@ final class GetSupplierForViewingHandler implements GetSupplierForViewingHandler
         $supplier = new Supplier($supplierId->getValue());
 
         if ($supplier->id !== $supplierId->getValue()) {
-            throw new SupplierNotFoundException(sprintf('Supplier with id "%s" was not found.', $supplierId->getValue()));
+            throw new SupplierNotFoundException(
+                sprintf('Supplier with id "%d" was not found.', $supplierId->getValue())
+            );
         }
 
         return $supplier;
@@ -116,77 +116,116 @@ final class GetSupplierForViewingHandler implements GetSupplierForViewingHandler
         $products = [];
         $supplierProducts = $supplier->getProductsLite($languageId->getValue());
 
-        try {
-            foreach ($supplierProducts as $productData) {
-                $product = new Product($productData['id_product'], false, $languageId->getValue());
-                $product->loadStockData();
+        foreach ($supplierProducts as $productData) {
+            $product = new Product($productData['id_product'], false, $languageId->getValue());
+            $product->loadStockData();
+            $combinations = $this->findProductSupplierCombinations($product, $supplier, $languageId);
 
-                $productCombinations = $product->getAttributeCombinations($languageId->getValue());
-                $combinations = [];
-
-                foreach ($productCombinations as $combination) {
-                    $attributeId = $combination['id_product_attribute'];
-                    if (!isset($combinations[$attributeId])) {
-                        $productInfo = Supplier::getProductInformationsBySupplier(
-                            $supplier->id,
-                            $product->id,
-                            $combination['id_product_attribute']
-                        );
-                        $isoCode = Currency::getIsoCodeById((int) $productInfo['id_currency'])
-                            ?: $this->defaultCurrencyIsoCode;
-                        $formattedWholesalePrice = null !== $productInfo['product_supplier_price_te']
-                            ? $this->locale->formatPrice($productInfo['product_supplier_price_te'], $isoCode)
-                            : null;
-                        $combinations[$attributeId] = [
-                            'reference' => $combination['reference'],
-                            'supplier_reference' => $combination['supplier_reference'],
-                            'wholesale_price' => $formattedWholesalePrice,
-                            'ean13' => $combination['ean13'],
-                            'upc' => $combination['upc'],
-                            'quantity' => $combination['quantity'],
-                            'attributes' => '',
-                        ];
-                    }
-                    $attribute = sprintf(
-                        '%s - %s',
-                        $combination['group_name'],
-                        $combination['attribute_name']
-                    );
-
-                    if (!empty($combinations[$attributeId]['attributes'])) {
-                        $attribute = sprintf(', %s', $attribute);
-                    }
-
-                    $combinations[$attributeId]['attributes'] = $attribute;
-                }
-
-                $productInfo = Supplier::getProductInformationsBySupplier(
-                    $supplier->id,
-                    $product->id,
-                    0
-                );
-                $product->wholesale_price = $productInfo['product_supplier_price_te'];
-                $product->supplier_reference = $productInfo['product_supplier_reference'];
-                $isoCode = Currency::getIsoCodeById((int) $productInfo['id_currency']) ?: $this->defaultCurrencyIsoCode;
-                $formattedWholesalePrice = null !== $product->wholesale_price
-                    ? $this->locale->formatPrice($product->wholesale_price, $isoCode)
-                    : null;
-                $products[] = [
-                    'id' => $product->id,
-                    'name' => $product->name,
-                    'reference' => $product->reference,
-                    'supplier_reference' => $product->supplier_reference,
-                    'wholesale_price' => $formattedWholesalePrice,
-                    'ean13' => $product->ean13,
-                    'upc' => $product->upc,
-                    'quantity' => $product->quantity,
-                    'combinations' => $combinations,
-                ];
+            if (empty($combinations)) {
+                $products[] = $this->buildNonCombinationSupplierProduct($product, $supplier);
+                continue;
             }
-        } catch (PrestaShopException $e) {
-            throw new SupplierException(sprintf('Failed to get products for supplier with id "%s".', $supplier->id));
+
+            $products[] = [
+                'id' => $product->id,
+                'name' => $product->name,
+                'combinations' => $combinations,
+            ];
         }
 
         return $products;
+    }
+
+    /**
+     * @param Product $product
+     * @param Supplier $supplier
+     *
+     * @return array<string, mixed>
+     *
+     * @throws LocalizationException
+     */
+    private function buildNonCombinationSupplierProduct(Product $product, Supplier $supplier): array
+    {
+        $productInfo = Supplier::getProductInformationsBySupplier($supplier->id, $product->id);
+        $product->wholesale_price = $productInfo['product_supplier_price_te'];
+        $product->supplier_reference = $productInfo['product_supplier_reference'];
+        $isoCode = Currency::getIsoCodeById((int) $productInfo['id_currency']) ?: Currency::getIsoCodeById($this->defaultCurrencyId);
+        $formattedWholesalePrice = null !== $product->wholesale_price
+            ? $this->locale->formatPrice($product->wholesale_price, $isoCode)
+            : null;
+
+        return [
+            'id' => $product->id,
+            'name' => $product->name,
+            'reference' => $product->reference,
+            'supplier_reference' => $product->supplier_reference,
+            'wholesale_price' => $formattedWholesalePrice,
+            'ean13' => $product->ean13,
+            'upc' => $product->upc,
+            'quantity' => $product->quantity,
+            'combinations' => [],
+        ];
+    }
+
+    /**
+     * @param Product $product
+     * @param Supplier $supplier
+     * @param LanguageId $languageId
+     *
+     * @return array<int, array<string, mixed>>
+     *
+     * @throws LocalizationException
+     */
+    private function findProductSupplierCombinations(Product $product, Supplier $supplier, LanguageId $languageId): array
+    {
+        $productCombinations = $product->getAttributeCombinations($languageId->getValue());
+        if (empty($productCombinations)) {
+            return [];
+        }
+
+        $combinations = [];
+        foreach ($productCombinations as $combination) {
+            $attributeId = $combination['id_product_attribute'];
+            if (!isset($combinations[$attributeId])) {
+                $combinationSupplierInfo = Supplier::getProductInformationsBySupplier(
+                    $supplier->id,
+                    $product->id,
+                    $combination['id_product_attribute']
+                );
+                if (!$combinationSupplierInfo) {
+                    continue;
+                }
+                $isoCode = Currency::getIsoCodeById((int) $combinationSupplierInfo['id_currency'])
+                    ?: Currency::getIsoCodeById($this->defaultCurrencyId);
+                $formattedWholesalePrice = null !== $combinationSupplierInfo['product_supplier_price_te']
+                    ? $this->locale->formatPrice($combinationSupplierInfo['product_supplier_price_te'], $isoCode)
+                    : null;
+                $combinations[$attributeId] = [
+                    'reference' => $combination['reference'],
+                    'supplier_reference' => $combinationSupplierInfo['product_supplier_reference'],
+                    'wholesale_price' => $formattedWholesalePrice,
+                    'ean13' => $combination['ean13'],
+                    'upc' => $combination['upc'],
+                    'quantity' => $combination['quantity'],
+                    'attributes' => $this->buildCombinationName($combination),
+                ];
+                continue;
+            }
+
+            // if combination info already filled, we only append attributes to combination name
+            $combinations[$attributeId]['attributes'] .= sprintf(', %s', $this->buildCombinationName($combination));
+        }
+
+        return $combinations;
+    }
+
+    /**
+     * @param array<string, mixed> $attributesInfo
+     *
+     * @return string
+     */
+    private function buildCombinationName(array $attributesInfo): string
+    {
+        return sprintf('%s - %s', $attributesInfo['group_name'], $attributesInfo['attribute_name']);
     }
 }

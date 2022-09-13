@@ -41,9 +41,6 @@ class OrderSubtotalLazyArray extends AbstractLazyArray
     /** @var Order */
     private $order;
 
-    /** @var Context */
-    private $context;
-
     /** @var TaxConfiguration */
     private $taxConfiguration;
 
@@ -63,7 +60,6 @@ class OrderSubtotalLazyArray extends AbstractLazyArray
      */
     public function __construct(Order $order)
     {
-        $this->context = Context::getContext();
         $this->taxConfiguration = new TaxConfiguration();
         $this->includeTaxes = $this->includeTaxes();
         $this->priceFormatter = new PriceFormatter();

@@ -33,14 +33,14 @@ class DispatcherCore
     /**
      * List of available front controllers types.
      */
-    const FC_FRONT = 1;
-    const FC_ADMIN = 2;
-    const FC_MODULE = 3;
+    public const FC_FRONT = 1;
+    public const FC_ADMIN = 2;
+    public const FC_MODULE = 3;
 
-    const REWRITE_PATTERN = '[_a-zA-Z0-9\x{0600}-\x{06FF}\pL\pS-]*?';
+    public const REWRITE_PATTERN = '[_a-zA-Z0-9\x{0600}-\x{06FF}\pL\pS-]*?';
 
     /**
-     * @var Dispatcher
+     * @var Dispatcher|null
      */
     public static $instance = null;
 
@@ -119,7 +119,7 @@ class DispatcherCore
             'rule' => '{category:/}{id}{-:id_product_attribute}-{rewrite}{-:ean13}.html',
             'keywords' => [
                 'id' => ['regexp' => '[0-9]+', 'param' => 'id_product'],
-                'id_product_attribute' => ['regexp' => '[0-9]+', 'param' => 'id_product_attribute'],
+                'id_product_attribute' => ['regexp' => '[0-9]*+', 'param' => 'id_product_attribute'],
                 'rewrite' => ['regexp' => self::REWRITE_PATTERN, 'param' => 'rewrite'],
                 'ean13' => ['regexp' => '[0-9\pL]*'],
                 'category' => ['regexp' => '[_a-zA-Z0-9-\pL]*'],
@@ -131,19 +131,6 @@ class DispatcherCore
                 'supplier' => ['regexp' => '[_a-zA-Z0-9-\pL]*'],
                 'price' => ['regexp' => '[0-9\.,]*'],
                 'tags' => ['regexp' => '[a-zA-Z0-9-\pL]*'],
-            ],
-        ],
-        /* Must be after the product and category rules in order to avoid conflict */
-        'layered_rule' => [
-            'controller' => 'category',
-            'rule' => '{id}-{rewrite}{/:selected_filters}',
-            'keywords' => [
-                'id' => ['regexp' => '[0-9]+', 'param' => 'id_category'],
-                /* Selected filters is used by the module blocklayered */
-                'selected_filters' => ['regexp' => '.*', 'param' => 'selected_filters'],
-                'rewrite' => ['regexp' => self::REWRITE_PATTERN],
-                'meta_keywords' => ['regexp' => '[_a-zA-Z0-9-\pL]*'],
-                'meta_title' => ['regexp' => '[_a-zA-Z0-9-\pL]*'],
             ],
         ],
     ];
@@ -187,7 +174,7 @@ class DispatcherCore
     protected $controller_not_found = 'pagenotfound';
 
     /**
-     * @var string Front controller to use
+     * @var int Front controller to use
      */
     protected $front_controller = self::FC_FRONT;
 
@@ -423,7 +410,7 @@ class DispatcherCore
                     );
                 }
 
-                $tab = Tab::getInstanceFromClassName($this->controller, Configuration::get('PS_LANG_DEFAULT'));
+                $tab = Tab::getInstanceFromClassName($this->controller, (int) Configuration::get('PS_LANG_DEFAULT'));
                 $retrocompatibility_admin_tab = null;
 
                 if ($tab->module) {
@@ -510,17 +497,13 @@ class DispatcherCore
             $controller = Controller::getController($controller_class);
 
             // Execute hook dispatcher
-            if (isset($params_hook_action_dispatcher)) {
-                Hook::exec('actionDispatcher', $params_hook_action_dispatcher);
-            }
+            Hook::exec('actionDispatcher', $params_hook_action_dispatcher);
 
             // Running controller
             $controller->run();
 
             // Execute hook dispatcher after
-            if (isset($params_hook_action_dispatcher)) {
-                Hook::exec('actionDispatcherAfter', $params_hook_action_dispatcher);
-            }
+            Hook::exec('actionDispatcherAfter', $params_hook_action_dispatcher);
         } catch (PrestaShopException $e) {
             $e->displayMessage();
         }
@@ -1098,7 +1081,7 @@ class DispatcherCore
     /**
      * Get list of all available FO controllers.
      *
-     * @var mixed
+     * @param mixed $dirs
      *
      * @return array
      */
@@ -1120,7 +1103,7 @@ class DispatcherCore
      * Get list of all available Module Front controllers.
      *
      * @param string $type
-     * @param string $module
+     * @param string|array|null $module
      *
      * @return array
      */
@@ -1198,7 +1181,7 @@ class DispatcherCore
     public static function getControllerPhpself(string $controller)
     {
         if (!class_exists($controller)) {
-            return;
+            return null;
         }
 
         $reflectionClass = new ReflectionClass($controller);

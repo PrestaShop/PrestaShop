@@ -35,7 +35,6 @@ class AdminStatesControllerCore extends AdminController
         $this->table = 'state';
         $this->className = 'State';
         $this->lang = false;
-        $this->requiredDatabase = true;
 
         parent::__construct();
 
@@ -58,12 +57,10 @@ class AdminStatesControllerCore extends AdminController
         $this->_use_found_rows = false;
 
         $countries_array = $zones_array = [];
-        $this->zones = Zone::getZones();
-        $this->countries = Country::getCountries($this->context->language->id, false, true, false);
-        foreach ($this->zones as $zone) {
+        foreach (Zone::getZones() as $zone) {
             $zones_array[$zone['id_zone']] = $zone['name'];
         }
-        foreach ($this->countries as $country) {
+        foreach (Country::getCountries($this->context->language->id, false, true, false) as $country) {
             $countries_array[$country['id_country']] = $country['name'];
         }
 
@@ -112,7 +109,7 @@ class AdminStatesControllerCore extends AdminController
 
     public function initPageHeaderToolbar()
     {
-        if (empty($this->display)) {
+        if ($this->display === null || $this->display === 'list') {
             $this->page_header_toolbar_btn['new_state'] = [
                 'href' => self::$currentIndex . '&addstate&token=' . $this->token,
                 'desc' => $this->trans('Add new state', [], 'Admin.International.Feature'),
@@ -135,7 +132,7 @@ class AdminStatesControllerCore extends AdminController
     public function renderForm()
     {
         // display multistore information message if multistore is used
-        if ($this->container->get('prestashop.adapter.multistore_feature')->isUsed()) {
+        if ($this->isMultistoreEnabled()) {
             $this->informations[] = $this->trans(
                 'Note that this feature is available in all shops context only. It will be added to all your stores.',
                 [],

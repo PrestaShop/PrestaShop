@@ -23,7 +23,9 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  *#}
 
-{% form_theme addressForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
+{% form_theme addressForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
+
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
 
 {{ form_start(addressForm) }}
 <div class="card">
@@ -32,8 +34,8 @@
     {{ 'Addresses'|trans({}, 'Admin.Navigation.Menu') }}
   </div>
 
-  <div class="card-block row">
-    <div class="card-text">
+  <div class="card-body">
+    <div class="form-wrapper">
       {{ form_errors(addressForm) }}
 
       {% block customer_information %}

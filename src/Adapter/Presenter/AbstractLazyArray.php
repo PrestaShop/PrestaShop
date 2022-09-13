@@ -30,9 +30,9 @@ use ArrayAccess;
 use ArrayIterator;
 use ArrayObject;
 use Countable;
-use Doctrine\Common\Util\Inflector;
 use Iterator;
 use JsonSerializable;
+use PrestaShop\PrestaShop\Core\Util\Inflector;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
@@ -94,11 +94,13 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
         foreach ($methods as $method) {
             $methodDoc = $method->getDocComment();
             if (strpos($methodDoc, '@arrayAccess') !== false) {
-                $this->arrayAccessList[$this->convertMethodNameToIndex($method->getName())] =
+                $this->arrayAccessList->offsetSet(
+                    $this->convertMethodNameToIndex($method->getName()),
                     [
                         'type' => 'method',
                         'value' => $method->getName(),
-                    ];
+                    ]
+                );
             }
         }
         $this->arrayAccessIterator = $this->arrayAccessList->getIterator();
@@ -111,6 +113,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      *
      * @throws RuntimeException
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         $arrayResult = [];
@@ -162,7 +165,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      *
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return $this->arrayAccessList->count();
     }
@@ -244,6 +247,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      *
      * @throws RuntimeException
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($index)
     {
         if (isset($this->arrayAccessList[$index])) {
@@ -294,7 +298,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      *
      * @return bool
      */
-    public function offsetExists($index)
+    public function offsetExists($index): bool
     {
         return isset($this->arrayAccessList[$index]);
     }
@@ -316,6 +320,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      *
      * @throws RuntimeException
      */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         $key = $this->arrayAccessIterator->key();
@@ -326,7 +331,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
     /**
      * Go to the next result inside the lazyArray.
      */
-    public function next()
+    public function next(): void
     {
         $this->arrayAccessIterator->next();
     }
@@ -336,6 +341,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      *
      * @return mixed|string
      */
+    #[\ReturnTypeWillChange]
     public function key()
     {
         return $this->arrayAccessIterator->key();
@@ -346,7 +352,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      *
      * @return bool
      */
-    public function valid()
+    public function valid(): bool
     {
         return $this->arrayAccessIterator->valid();
     }
@@ -354,7 +360,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
     /**
      * Go back to the first element of the lazyArray.
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->arrayAccessIterator->rewind();
     }
@@ -383,7 +389,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      *
      * @throws RuntimeException
      */
-    public function offsetSet($offset, $value, $force = false)
+    public function offsetSet($offset, $value, $force = false): void
     {
         if (!$force && $this->arrayAccessList->offsetExists($offset)) {
             $result = $this->arrayAccessList->offsetGet($offset);
@@ -403,7 +409,7 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
      *
      * @throws RuntimeException
      */
-    public function offsetUnset($offset, $force = false)
+    public function offsetUnset($offset, $force = false): void
     {
         $result = $this->arrayAccessList->offsetGet($offset);
         if ($force || $result['type'] === 'variable') {
@@ -423,6 +429,6 @@ abstract class AbstractLazyArray implements Iterator, ArrayAccess, Countable, Js
         // remove "get" prefix from the function name
         $strippedMethodName = substr($methodName, 3);
 
-        return Inflector::tableize($strippedMethodName);
+        return Inflector::getInflector()->tableize($strippedMethodName);
     }
 }

@@ -1,6 +1,6 @@
 # ./vendor/bin/behat -c tests/Integration/Behaviour/behat.yml -s cart --tags calculation-country-cart-rule-specific
 
-@reset-database-before-feature
+@restore-all-tables-before-feature
 @calculation-country-cart-rule-specific
 Feature: Cart calculation with country specific cart rules
   As a customer

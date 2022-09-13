@@ -23,13 +23,16 @@
  * @copyright Since 2007 PrestaShop SA and Contributors
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
+
+use PrestaShopBundle\Translation\TranslatorComponent;
+
 class TreeCore
 {
-    const DEFAULT_TEMPLATE_DIRECTORY = 'helpers/tree';
-    const DEFAULT_TEMPLATE = 'tree.tpl';
-    const DEFAULT_HEADER_TEMPLATE = 'tree_header.tpl';
-    const DEFAULT_NODE_FOLDER_TEMPLATE = 'tree_node_folder.tpl';
-    const DEFAULT_NODE_ITEM_TEMPLATE = 'tree_node_item.tpl';
+    public const DEFAULT_TEMPLATE_DIRECTORY = 'helpers/tree';
+    public const DEFAULT_TEMPLATE = 'tree.tpl';
+    public const DEFAULT_HEADER_TEMPLATE = 'tree_header.tpl';
+    public const DEFAULT_NODE_FOLDER_TEMPLATE = 'tree_node_folder.tpl';
+    public const DEFAULT_NODE_ITEM_TEMPLATE = 'tree_node_item.tpl';
 
     protected $_attributes;
     private $_context;
@@ -42,15 +45,15 @@ class TreeCore
     protected $_node_item_template;
     protected $_template;
 
-    /** @var string */
+    /** @var string|array|null */
     private $_template_directory;
     private $_title;
     private $_no_js;
 
-    /** @var TreeToolbar|ITreeToolbar */
+    /** @var TreeToolbar|ITreeToolbarCore|null */
     private $_toolbar;
 
-    /** @var Translator */
+    /** @var TranslatorComponent */
     public $translator;
 
     public function __construct($id, $data = null)
@@ -101,7 +104,7 @@ class TreeCore
 
     public function getAttribute($name)
     {
-        return $this->hasAttribute($name) ? $this->_attributes[$name] : null;
+        return $this->_attributes[$name] ?? null;
     }
 
     public function setAttributes($value)
@@ -269,9 +272,9 @@ class TreeCore
     }
 
     /**
-     * @param $value
+     * @param array|string $value
      *
-     * @return Tree
+     * @return self
      */
     public function setTemplateDirectory($value)
     {
@@ -426,7 +429,7 @@ class TreeCore
             $this->getContext()->smarty
         );
 
-        if (trim($this->getTitle()) != '' || $this->useToolbar()) {
+        if ($this->getTitle() !== null && trim($this->getTitle()) != '' || $this->useToolbar()) {
             //Create Tree Header Template
             $headerTemplate = $this->getContext()->smarty->createTemplate(
                 $this->getTemplateFile($this->getHeaderTemplate()),
@@ -502,6 +505,11 @@ class TreeCore
         return isset($this->_toolbar);
     }
 
+    /**
+     * @param string|array $directory
+     *
+     * @return string|array
+     */
     private function _normalizeDirectory($directory)
     {
         $last = $directory[strlen($directory) - 1];

@@ -34,11 +34,13 @@ use PrestaShop\PrestaShop\Adapter\Product\Repository\ProductSupplierRepository;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\Query\GetProductSupplierOptions;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryHandler\GetProductSupplierOptionsHandlerInterface;
 use PrestaShop\PrestaShop\Core\Domain\Product\Supplier\QueryResult\ProductSupplierOptions;
+use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductType;
+use PrestaShop\PrestaShop\Core\Domain\Supplier\ValueObject\SupplierId;
 
 /**
  * Handles @see GetProductSupplierOptions query
  */
-final class GetProductSupplierOptionsHandler extends AbstractProductSupplierHandler implements GetProductSupplierOptionsHandlerInterface
+class GetProductSupplierOptionsHandler extends AbstractProductSupplierHandler implements GetProductSupplierOptionsHandlerInterface
 {
     /**
      * @var ProductRepository
@@ -64,11 +66,21 @@ final class GetProductSupplierOptionsHandler extends AbstractProductSupplierHand
      */
     public function handle(GetProductSupplierOptions $query): ProductSupplierOptions
     {
-        $product = $this->productRepository->get($query->getProductId());
+        $defaultSupplier = $this->productSupplierRepository->getDefaultSupplierId($query->getProductId());
+        $supplierIds = $this->productSupplierRepository->getAssociatedSupplierIds($query->getProductId());
+        $productType = $this->productRepository->getProductType($query->getProductId());
+        $productSuppliers = [];
+        if ($productType->getValue() !== ProductType::TYPE_COMBINATIONS) {
+            $productSuppliers = $this->getProductSuppliersInfo($query->getProductId());
+        }
+        $supplierIntIds = array_map(function (SupplierId $supplierId) {
+            return $supplierId->getValue();
+        }, $supplierIds);
 
         return new ProductSupplierOptions(
-            (int) $product->id_supplier,
-            $this->getProductSuppliersInfo($query->getProductId())
+            null !== $defaultSupplier ? $defaultSupplier->getValue() : 0,
+            $supplierIntIds,
+            $productSuppliers
         );
     }
 }

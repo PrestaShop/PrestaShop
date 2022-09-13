@@ -30,5 +30,8 @@
         {{ attribute }}="{{ value }}"
         {% endfor %}
 >
+  {% if action.icon is not empty %}
+    <i class="material-icons">{{ action.icon }}</i>
+  {% endif %}
   {{ action.name }}
 </button>

@@ -54,7 +54,13 @@
                 {% if actions is defined %}
                     <div class="modal-footer">
                         {% if closable is defined and closable == true %}
-                            <button type="button" class="btn btn-outline-secondary btn-lg" data-dismiss="modal">{{ 'Close'|trans({}, 'Admin.Actions') }}</button>
+                            <button type="button" class="btn btn-outline-secondary btn-lg" data-dismiss="modal">
+                              {% if closeLabel is defined %}
+                                {{ closeLabel }}
+                              {% else %}
+                                {{ 'Close'|trans({}, 'Admin.Actions') }}
+                              {% endif %}
+                            </button>
                         {% endif %}
                         {% for action in actions %}
                             {% if action.type is defined and action.type == 'link' %}

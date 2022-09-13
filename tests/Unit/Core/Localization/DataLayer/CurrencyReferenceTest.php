@@ -85,9 +85,10 @@ class CurrencyReferenceTest extends TestCase
      */
     public function testRead(): void
     {
-        /** @var CurrencyData $currencyData */
+        /** @phpstan-ignore-next-line */
         $currencyData = $this->currencyReference->read(new LocalizedCurrencyId('PCE', 'fr-FR'));
 
+        /* @var CurrencyData $currencyData */
         $this->assertInstanceOf(
             CurrencyData::class,
             $currencyData
@@ -99,6 +100,7 @@ class CurrencyReferenceTest extends TestCase
         );
 
         // Same test with unknown cache key
+        /** @phpstan-ignore-next-line */
         $currencyData = $this->currencyReference->read(new LocalizedCurrencyId('unknown', 'unknown'));
 
         $this->assertNull($currencyData);

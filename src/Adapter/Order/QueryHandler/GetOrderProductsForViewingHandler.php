@@ -43,10 +43,10 @@ use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductCustomizatio
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductCustomizationsForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductForViewing;
 use PrestaShop\PrestaShop\Core\Domain\Order\QueryResult\OrderProductsForViewing;
-use PrestaShop\PrestaShop\Core\Domain\ValueObject\QuerySorting;
 use PrestaShop\PrestaShop\Core\Image\Parser\ImageTagSourceParserInterface;
 use PrestaShop\PrestaShop\Core\Localization\CLDR\ComputingPrecision;
 use PrestaShop\PrestaShop\Core\Localization\Locale;
+use PrestaShop\PrestaShop\Core\Util\Sorter;
 use Product;
 use Shop;
 use StockAvailable;
@@ -175,13 +175,14 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
 
         unset($product);
 
-        if (QuerySorting::DESC === $query->getProductsSorting()->getValue()) {
-            // reorder products by order_detail_id DESC
-            krsort($products);
-        } else {
-            // reorder products by order_detail_id ASC
-            ksort($products);
-        }
+        // Sort products by Reference ID (and if equals (like combination) by Supplier Reference)
+        $sorter = new Sorter();
+        $products = $sorter->natural(
+            $products,
+            $query->getProductsSorting()->getValue(),
+            'product_reference',
+            'product_supplier_reference'
+        );
 
         $productsForViewing = [];
 
@@ -229,17 +230,17 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
                     $pack_item['reference'],
                     $pack_item['supplier_reference'],
                     $pack_item['pack_quantity'],
-                    0,
-                    0,
+                    '0',
+                    '0',
                     $pack_item['current_stock'],
                     $packItemImagePath,
                     '0',
                     '0',
-                        '0',
+                    '0',
                     $this->locale->formatPrice(0, $currency->iso_code),
                     0,
                     $this->locale->formatPrice(0, $currency->iso_code),
-                        '0',
+                    '0',
                     $pack_item['location'],
                     null,
                     '',
@@ -304,8 +305,7 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
         }
 
         if (!isset($id_image) || !$id_image) {
-            $id_image = Db::getInstance()->getValue(
-                '
+            $id_image = Db::getInstance()->getValue('
                 SELECT `image_shop`.id_image
                 FROM `' . _DB_PREFIX_ . 'image` i' .
                 Shop::addSqlAssociation('image', 'i', true, 'image_shop.cover=1') . '
@@ -313,11 +313,7 @@ final class GetOrderProductsForViewingHandler extends AbstractOrderHandler imple
             );
         }
 
-        $pack_item['image'] = null;
+        $pack_item['image'] = $id_image ? new Image((int) $id_image) : null;
         $pack_item['image_size'] = null;
-
-        if ($id_image) {
-            $pack_item['image'] = new Image($id_image);
-        }
     }
 }

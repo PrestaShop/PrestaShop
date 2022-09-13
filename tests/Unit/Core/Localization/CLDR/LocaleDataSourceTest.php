@@ -64,7 +64,7 @@ class LocaleDataSourceTest extends TestCase
     /**
      * {@inheritDoc}
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->frStubLocaleData = $this->getStubLocaleData('fr-FR');
         $this->enStubLocaleData = $this->getStubLocaleData('en-US');
@@ -115,7 +115,7 @@ class LocaleDataSourceTest extends TestCase
 
         $stubCurrencyData = new CurrencyData();
         $stubCurrencyData->setIsoCode('PCE');
-        $stubCurrencyData->setNumericIsoCode(333);
+        $stubCurrencyData->setNumericIsoCode('333');
         $stubCurrencyData->setDecimalDigits(2);
 
         // Locale-specific data

@@ -162,7 +162,7 @@
     </div>
 
     {% if customerInformation.personalInformation.guest %}
-      {% form_theme transferGuestAccountForm 'PrestaShopBundle:Admin/TwigTemplateForm:prestashop_ui_kit.html.twig' %}
+      {% form_theme transferGuestAccountForm '@PrestaShop/Admin/TwigTemplateForm/prestashop_ui_kit.html.twig' %}
 
       <div class="customer-guest-status row mb-1">
         <div class="col-4 text-right">

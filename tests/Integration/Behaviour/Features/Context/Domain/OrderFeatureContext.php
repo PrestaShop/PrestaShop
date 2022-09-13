@@ -111,10 +111,10 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Given I add order :orderReference with the following details:
      *
-     * @param $orderReference
+     * @param string $orderReference
      * @param TableNode $table
      */
-    public function addOrderWithTheFollowingDetails($orderReference, TableNode $table)
+    public function addOrderWithTheFollowingDetails(string $orderReference, TableNode $table): void
     {
         $testCaseData = $table->getRowsHash();
 
@@ -124,7 +124,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $orderId = $this->getCommandBus()->handle(
             new AddOrderFromBackOfficeCommand(
                 $data['cartId'],
-                $data['employeeId'],
+                (int) $data['employeeId'],
                 $data['orderMessage'],
                 $data['paymentModuleName'],
                 $data['orderStateId']
@@ -190,8 +190,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $combinationId = isset($data['combination']) ? $this->getProductCombinationId($product, $data['combination']) : 0;
 
         if (empty($data['price_tax_incl'])) {
-            $taxCalculator = $this->getProductTaxCalculator((int) $orderId, $productId);
-            $data['price_tax_incl'] = !empty($taxCalculator) ? (string) $taxCalculator->addTaxes($data['price']) : $data['price'];
+            $data['price_tax_incl'] = (string) $this->getProductTaxCalculator((int) $orderId, $productId)
+                ->addTaxes($data['price']);
         }
 
         try {
@@ -255,7 +255,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             $this->getCommandBus()->handle(
                 new DeleteProductFromOrderCommand($orderId, $orderDetailId)
             );
-        } catch (OrderException | OrderNotFoundException $e) {
+        } catch (OrderException|OrderNotFoundException $e) {
             $this->setLastException($e);
         }
     }
@@ -284,11 +284,10 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         }
 
         if (empty($data['price_tax_incl'])) {
-            $taxCalculator = $this->getProductTaxCalculator((int) $orderId, $product->getProductId());
-            $data['price_tax_incl'] = !empty($taxCalculator) ? (string) $taxCalculator->addTaxes($data['price']) : $data['price'];
+            $data['price_tax_incl'] = (string) $this->getProductTaxCalculator((int) $orderId, $product->getProductId())
+                ->addTaxes($data['price']);
         }
 
-        $this->cleanLastException();
         try {
             $this->getCommandBus()->handle(
                 AddProductToOrderCommand::toExistingInvoice(
@@ -426,14 +425,13 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     /**
      * @Then order :orderReference should have :expectedCount cart rule(s)
      *
-     * @param string$orderReference
+     * @param string $orderReference
      * @param int $expectedCount
      */
     public function checkOrderCartRulesCount(string $orderReference, int $expectedCount)
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
 
-        /** @var OrderProductForViewing[] $orderProducts */
         $orderDiscounts = $this->getOrderDiscounts($orderId);
 
         if (count($orderDiscounts) == $expectedCount) {
@@ -458,7 +456,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     public function deleteCartRuleFromOrder(string $cartRuleName, string $orderReference)
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
-        /** @var OrderDiscountForViewing $discount */
         $discount = $this->getOrderDiscountByName($orderId, $cartRuleName);
         if (null === $discount) {
             throw new RuntimeException(
@@ -486,7 +483,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
 
-        /** @var OrderDiscountForViewing $discount */
         $discount = $this->getOrderDiscountByName($orderId, $cartRuleName);
         if (null === $discount) {
             throw new RuntimeException(
@@ -625,8 +621,10 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         if (!isset($invoiceIndexes[$invoicePosition])) {
             throw new RuntimeException(sprintf('Cannot interpret this invoice position %s', $invoicePosition));
         }
+        /** @var OrderInvoice $orderInvoice */
+        $orderInvoice = $invoicesCollection->offsetGet($invoiceIndexes[$invoicePosition]);
 
-        return $invoicesCollection->offsetGet($invoiceIndexes[$invoicePosition]);
+        return $orderInvoice;
     }
 
     /**
@@ -647,8 +645,8 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
         // If tax included price is not given, it is calculated
         if (!isset($data['price_tax_incl'])) {
-            $taxCalculator = $this->getProductTaxCalculator($orderId, (int) $productOrderDetail['product_id']);
-            $data['price_tax_incl'] = !empty($taxCalculator) ? (string) $taxCalculator->addTaxes($data['price']) : $data['price'];
+            $data['price_tax_incl'] = (string) $this->getProductTaxCalculator($orderId, (int) $productOrderDetail['product_id'])
+                ->addTaxes($data['price']);
         }
 
         try {
@@ -750,7 +748,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
 
         /** @var OrderForViewing $orderForViewing */
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
-        /** @var OrderState $currentOrderState */
         $currentOrderStateId = $orderForViewing->getHistory()->getCurrentOrderStatusId();
 
         /** @var OrderStateByIdChoiceProvider $orderStateChoiceProvider */
@@ -840,7 +837,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     {
         $orderId = SharedStorage::getStorage()->get($reference);
 
-        /** @var OrderDiscountForViewing $discount */
         $discount = $this->getOrderDiscountByName($orderId, self::ORDER_CART_RULE_FREE_SHIPPING);
         if (null === $discount) {
             throw new RuntimeException('Order should have free shipping.');
@@ -859,7 +855,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     {
         $orderId = SharedStorage::getStorage()->get($reference);
 
-        /** @var OrderDiscountForViewing $discount */
         $discount = $this->getOrderDiscountByName($orderId, $cartRuleName);
         if (null === $discount) {
             throw new RuntimeException(sprintf(
@@ -1224,9 +1219,9 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
      * @When I add discount to order :orderReference with following details:
      *
      * @param string $orderReference
-     * @param TableNode $data
+     * @param TableNode $table
      */
-    public function addCartRuleToOrder(string $orderReference, TableNode $table)
+    public function addCartRuleToOrder(string $orderReference, TableNode $table): void
     {
         $orderId = SharedStorage::getStorage()->get($orderReference);
         $data = $table->getRowsHash();
@@ -1513,6 +1508,10 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             $address = $orderPreview->getInvoiceAddressFormatted();
         }
 
+        if (!isset($address)) {
+            return;
+        }
+
         Assert::assertEquals(
             $address,
             $pyStringNode->getRaw(),
@@ -1625,27 +1624,6 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     }
 
     /**
-     * @deprecated
-     *
-     * @param TableNode $table
-     *
-     * @return array
-     *
-     * @throws RuntimeException
-     */
-    private function extractFirstRowFromProperties(TableNode $table): array
-    {
-        $hash = $table->getHash();
-        if (count($hash) != 1) {
-            throw new RuntimeException('Properties are invalid');
-        }
-        /** @var array $data */
-        $data = $hash[0];
-
-        return $data;
-    }
-
-    /**
      * @param array $testCaseData
      *
      * @return array
@@ -1745,7 +1723,7 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
     /**
      * @param int $orderId
      *
-     * @return OrderProductForViewing[]
+     * @return OrderDiscountForViewing[]
      */
     private function getOrderDiscounts(int $orderId): array
     {
@@ -1914,6 +1892,10 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
             $address = $orderForViewing->getInvoiceAddress();
         }
 
+        if (!isset($address)) {
+            return;
+        }
+
         $expectedDetails = $table->getRowsHash();
         $arrayActual = [
             'Address' => $address->getAddress1(),
@@ -1956,11 +1938,13 @@ class OrderFeatureContext extends AbstractDomainFeatureContext
         $orderForViewing = $this->getQueryBus()->handle(new GetOrderForViewing($orderId));
 
         if ($addressType == 'shipping') {
-            /** @var OrderShippingAddressForViewing $address */
             $address = $orderForViewing->getShippingAddressFormatted();
         } elseif ($addressType == 'invoice') {
-            /** @var OrderInvoiceAddressForViewing $address */
             $address = $orderForViewing->getInvoiceAddressFormatted();
+        }
+
+        if (!isset($address)) {
+            return;
         }
 
         Assert::assertEquals(

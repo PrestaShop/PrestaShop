@@ -42,22 +42,24 @@ abstract class AbstractCollection implements Iterator, Countable
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         return current($this->items);
     }
 
     /**
-     * @return mixed|false
+     * {@inheritdoc}
      */
-    public function next()
+    public function next(): void
     {
-        return next($this->items);
+        next($this->items);
     }
 
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function key()
     {
         return key($this->items);
@@ -66,7 +68,7 @@ abstract class AbstractCollection implements Iterator, Countable
     /**
      * {@inheritdoc}
      */
-    public function valid()
+    public function valid(): bool
     {
         return false !== $this->current();
     }
@@ -74,7 +76,7 @@ abstract class AbstractCollection implements Iterator, Countable
     /**
      * {@inheritdoc}
      */
-    public function rewind()
+    public function rewind(): void
     {
         reset($this->items);
     }
@@ -82,7 +84,7 @@ abstract class AbstractCollection implements Iterator, Countable
     /**
      * {@inheritdoc}
      */
-    public function count()
+    public function count(): int
     {
         return count($this->items);
     }

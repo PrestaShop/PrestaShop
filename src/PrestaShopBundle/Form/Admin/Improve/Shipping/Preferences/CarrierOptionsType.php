@@ -26,6 +26,7 @@
 
 namespace PrestaShopBundle\Form\Admin\Improve\Shipping\Preferences;
 
+use PrestaShopBundle\Form\Admin\Type\MultistoreConfigurationType;
 use PrestaShopBundle\Form\Admin\Type\TranslatorAwareType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -73,8 +74,8 @@ class CarrierOptionsType extends TranslatorAwareType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $carrierChoices = array_merge([
-            'Best price' => -1,
-            'Best grade' => -2,
+            'Best price' => (int) -1,
+            'Best grade' => (int) -2,
         ], $this->carriers);
 
         $builder
@@ -88,6 +89,11 @@ class CarrierOptionsType extends TranslatorAwareType
                     'Your shop\'s default carrier.',
                     'Admin.Shipping.Help'
                 ),
+                'multistore_configuration_key' => 'PS_CARRIER_DEFAULT',
+                'attr' => [
+                    'data-toggle' => 'select2',
+                    'data-minimumResultsForSearch' => '7',
+                ],
             ])
             ->add('carrier_default_order_by', ChoiceType::class, [
                 'choices' => $this->orderByChoices,
@@ -100,6 +106,7 @@ class CarrierOptionsType extends TranslatorAwareType
                     'This will only be visible in the front office.',
                     'Admin.Shipping.Help'
                 ),
+                'multistore_configuration_key' => 'PS_CARRIER_DEFAULT_SORT',
             ])
             ->add('carrier_default_order_way', ChoiceType::class, [
                 'choices' => $this->orderWayChoices,
@@ -112,6 +119,7 @@ class CarrierOptionsType extends TranslatorAwareType
                     'This will only be visible in the front office.',
                     'Admin.Shipping.Help'
                 ),
+                'multistore_configuration_key' => 'PS_CARRIER_DEFAULT_ORDER',
             ]);
     }
 
@@ -131,5 +139,15 @@ class CarrierOptionsType extends TranslatorAwareType
     public function getBlockPrefix()
     {
         return 'shipping_preferences_carrier_options_block';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see MultistoreConfigurationTypeExtension
+     */
+    public function getParent(): string
+    {
+        return MultistoreConfigurationType::class;
     }
 }

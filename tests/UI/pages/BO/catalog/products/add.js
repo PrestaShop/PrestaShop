@@ -35,6 +35,7 @@ class AddProduct extends BOBasePage {
     this.productPriceAtiInput = '#form_step1_price_ttc_shortcut';
     this.saveProductButton = 'input#submit[value=\'Save\']';
     this.goToCatalogButton = '#product_form_save_go_to_catalog_btn';
+    this.addNewProductButton = '#product_form_save_new_btn';
     this.previewProductLink = 'a#product_form_preview_btn';
     this.productOnlineSwitch = '.product-footer div.switch-input';
     this.productOnlineTitle = 'h2.for-switch.online-title';
@@ -53,6 +54,7 @@ class AddProduct extends BOBasePage {
     this.forNavListItemLink = id => `${this.formNavList} #tab_step${id} a`;
 
     // Selectors of Step 2 : Pricing
+    this.ecoTaxInput = '#form_step2_ecotax';
     this.addSpecificPriceButton = '#js-open-create-specific-price-form';
     this.specificPriceForm = '#specific_price_form';
     this.combinationSelect = '#form_step2_specific_price_sp_id_product_attribute';
@@ -85,6 +87,13 @@ class AddProduct extends BOBasePage {
     // Selector of Step 5 : SEO
     this.resetUrlButton = '#seo-url-regenerate';
     this.friendlyUrlInput = '#form_step5_link_rewrite_1';
+
+    // Selectors of step 6 : Options
+    this.customFieldsBlock = '#custom_fields';
+    this.addCustomizationFieldButton = `${this.customFieldsBlock} a[data-role='add-customization-field']`;
+    this.customFieldInput = row => `#form_step6_custom_fields_${row}_label_1`;
+    this.customFieldTypeSelect = row => `select#form_step6_custom_fields_${row}_type`;
+    this.customRequiredLabel = row => `${this.customFieldsBlock} li:nth-child(${row}) div.required-custom-field label`;
   }
 
   /*
@@ -153,7 +162,7 @@ class AddProduct extends BOBasePage {
 
     await this.setValueOnTinymceInput(page, this.productDescriptionIframe, productData.description);
     await this.setValueOnTinymceInput(page, this.productShortDescriptionIframe, productData.summary);
-    await this.selectByVisibleText(page, this.productTypeSelect, productData.type);
+    await this.selectByVisibleText(page, this.productTypeSelect, productData.type, true);
     await this.setValue(page, this.productReferenceInput, productData.reference);
     if (await this.elementVisible(page, this.productQuantityInput, 500)) {
       await this.setValue(page, this.productQuantityInput, productData.quantity);
@@ -268,7 +277,8 @@ class AddProduct extends BOBasePage {
    */
   async setCombinationsQuantity(page, quantity) {
     // Select all combinations
-    await page.check(this.productCombinationSelectAllCheckbox);
+    await this.waitForVisibleSelector(page, this.productCombinationSelectAllCheckbox);
+    await page.$eval(this.productCombinationSelectAllCheckbox, el => el.click());
 
     // Open combinations bulk form
     if (await this.elementNotVisible(page, this.productCombinationBulkQuantityInput, 1000)) {
@@ -346,7 +356,7 @@ class AddProduct extends BOBasePage {
   async deleteAllCombinations(page) {
     if (await this.hasCombinations(page)) {
       // Select all combinations
-      await page.check(this.productCombinationSelectAllCheckbox);
+      await this.setChecked(page, this.productCombinationSelectAllCheckbox);
 
       // Open combinations bulk form
       if (await this.elementNotVisible(page, this.productCombinationBulkQuantityInput, 1000)) {
@@ -399,6 +409,31 @@ class AddProduct extends BOBasePage {
     await this.goToFormStep(page, 5);
 
     return this.getAttributeContent(page, this.friendlyUrlInput, 'value');
+  }
+
+  /**
+   * Add customized value
+   * @param page {Page} Browser tab
+   * @param customizationData {{label: string, type: string, required: boolean}} Data to set on customized form
+   * @param row {number} Row of input
+   * @returns {Promise<string>}
+   */
+  async addCustomization(page, customizationData, row = 0) {
+    // Go to options tab : id = 6
+    await this.goToFormStep(page, 6);
+    await Promise.all([
+      page.click(this.addCustomizationFieldButton),
+      this.waitForVisibleSelector(page, this.customFieldInput(row)),
+    ]);
+
+    await this.setValue(page, this.customFieldInput(row), customizationData.label);
+    await this.selectByVisibleText(page, this.customFieldTypeSelect(row), customizationData.type);
+
+    if (customizationData.required) {
+      await this.waitForSelectorAndClick(page, this.customRequiredLabel(row + 1));
+    }
+
+    return this.saveProduct(page);
   }
 
   /**
@@ -466,6 +501,15 @@ class AddProduct extends BOBasePage {
    */
   async goToCatalogPage(page) {
     await this.clickAndWaitForNavigation(page, this.goToCatalogButton);
+  }
+
+  /**
+   * Go to add product page
+   * @param page
+   * @returns {Promise<void>}
+   */
+  async goToAddProductPage(page) {
+    await this.clickAndWaitForNavigation(page, this.addNewProductButton);
   }
 
   /**
@@ -566,6 +610,24 @@ class AddProduct extends BOBasePage {
     if (!productData.productHasCombinations) {
       await this.setQuantitiesSettings(page, productData);
     }
+    return this.saveProduct(page);
+  }
+
+  /**
+   * Set ecoTax value and save
+   * @param page
+   * @param ecoTax
+   * @returns {Promise<string>}
+   */
+  async addEcoTax(page, ecoTax) {
+    // Go to pricing tab : id = 2
+    await this.goToFormStep(page, 2);
+    await Promise.all([
+      page.click(this.addSpecificPriceButton),
+      this.waitForVisibleSelector(page, `${this.specificPriceForm}.show`),
+    ]);
+
+    await this.setValue(page, this.ecoTaxInput, ecoTax);
     return this.saveProduct(page);
   }
 }

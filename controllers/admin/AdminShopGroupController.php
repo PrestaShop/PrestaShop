@@ -112,13 +112,13 @@ class AdminShopGroupControllerCore extends AdminController
         $shops_tree->setNodeFolderTemplate('shop_tree_node_folder.tpl')->setNodeItemTemplate('shop_tree_node_item.tpl')
             ->setHeaderTemplate('shop_tree_header.tpl')->setActions([
                 new TreeToolbarLink(
-                    'Collapse All',
+                    'Collapse all',
                     '#',
                     '$(\'#' . $shops_tree->getId() . '\').tree(\'collapseAll\'); return false;',
                     'icon-collapse-alt'
                 ),
                 new TreeToolbarLink(
-                    'Expand All',
+                    'Expand all',
                     '#',
                     '$(\'#' . $shops_tree->getId() . '\').tree(\'expandAll\'); return false;',
                     'icon-expand-alt'
@@ -295,7 +295,7 @@ class AdminShopGroupControllerCore extends AdminController
             $disabled = false;
         }
 
-        $default_shop = new Shop(Configuration::get('PS_SHOP_DEFAULT'));
+        $default_shop = new Shop((int) Configuration::get('PS_SHOP_DEFAULT'));
         $this->tpl_form_vars = [
             'disabled' => $disabled,
             'checked' => (Tools::getValue('addshop_group') !== false) ? true : false,
@@ -344,6 +344,13 @@ class AdminShopGroupControllerCore extends AdminController
         return parent::postProcess();
     }
 
+    public function beforeUpdateOptions()
+    {
+        if (!(new Shop((int) Tools::getValue('PS_SHOP_DEFAULT')))->getBaseURL()) {
+            $this->errors[] = $this->trans('You must configure this store\'s URL before setting it as default.', [], 'Admin.Advparameters.Notification');
+        }
+    }
+
     protected function afterAdd($new_shop_group)
     {
         //Reset available quantitites
@@ -361,7 +368,7 @@ class AdminShopGroupControllerCore extends AdminController
         if ($this->fields_options && is_array($this->fields_options)) {
             $this->display = 'options';
             $this->show_toolbar = false;
-            $helper = new HelperOptions($this);
+            $helper = new HelperOptions();
             $this->setHelperDisplay($helper);
             $helper->id = $this->id;
             $helper->tpl_vars = $this->tpl_option_vars;

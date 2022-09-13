@@ -87,7 +87,7 @@ class CategoryDataProvider
      * @param int|null $root_category
      * @param bool|int $id_lang
      * @param bool $active
-     * @param int|null $groups
+     * @param array|null $groups
      * @param bool $use_shop_restriction
      * @param string $sql_filter
      * @param string $sql_sort

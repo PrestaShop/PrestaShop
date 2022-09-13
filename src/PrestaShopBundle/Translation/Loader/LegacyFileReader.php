@@ -66,8 +66,8 @@ class LegacyFileReader
             throw UnsupportedLocaleException::fileNotFound($filePath, $locale);
         }
 
-        // Load a global array $_MODULE
-        include_once $filePath;
+        // Load a global array $_MODULE (use include instead of include_once or the method will only work once)
+        include $filePath;
 
         return $_MODULE;
     }

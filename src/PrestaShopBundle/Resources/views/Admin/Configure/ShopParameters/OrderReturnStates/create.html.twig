@@ -26,14 +26,11 @@
 {% set enableSidebar = true %}
 {% set layoutTitle = 'Return statuses'|trans({}, 'Admin.Shopparameters.Feature') %}
 
-{% extends 'PrestaShopBundle:Admin:layout.html.twig' %}
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
 
 {% block content %}
-  <div class="row justify-content-center">
-    <div class="col">
-      {% include '@PrestaShop/Admin/Configure/ShopParameters/OrderReturnStates/Blocks/form.html.twig' %}
-    </div>
-  </div>
+  {% include '@PrestaShop/Admin/Common/multistore-infotip.html.twig' %}
+  {% include '@PrestaShop/Admin/Configure/ShopParameters/OrderReturnStates/Blocks/form.html.twig' %}
 {% endblock %}
 
 {% block javascripts %}

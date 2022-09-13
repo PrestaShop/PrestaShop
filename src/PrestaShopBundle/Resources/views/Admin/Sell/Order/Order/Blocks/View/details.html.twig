@@ -36,7 +36,7 @@
 {% endset %}
 
 {% set merchantReturnsTitle %}
-  {{ 'Merchandise returns'|trans({}, 'Admin.Orderscustomers.Feature') }} ({{ orderForViewing.returns.orderReturns|length }})
+  {{ 'Merchandise returns'|trans({}, 'Admin.Orderscustomers.Feature') }} (<span data-role="count">{{ orderForViewing.returns.orderReturns|length }}</span>)
 {% endset %}
 
 <div class="mt-2">
@@ -59,12 +59,14 @@
         {{ carriersTitle }}
       </a>
     </li>
-    <li class="nav-item">
-      <a class="nav-link" id="orderReturnsTab" data-toggle="tab" href="#orderReturnsTabContent" role="tab" aria-controls="orderReturnsTabContent" aria-expanded="true" aria-selected="false">
-        <i class="material-icons">replay</i>
-        {{ merchantReturnsTitle }}
-      </a>
-    </li>
+    {% if merchandiseReturnEnabled %}
+      <li class="nav-item">
+        <a class="nav-link" id="orderReturnsTab" data-toggle="tab" href="#orderReturnsTabContent" role="tab" aria-controls="orderReturnsTabContent" aria-expanded="true" aria-selected="false">
+          <i class="material-icons">replay</i>
+          {{ merchantReturnsTitle }}
+        </a>
+      </li>
+    {% endif %}
   </ul>
 
   <div class="tab-content">
@@ -98,16 +100,18 @@
         {% endblock %}
       {% endembed %}
     </div>
-    <div class="tab-pane d-print-block fade" id="orderReturnsTabContent" role="tabpanel" aria-labelledby="orderReturnsTab">
-      {% embed '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/details_card.html.twig' %}
-        {% block header %}
-          {{ merchantReturnsTitle }}
-        {% endblock %}
-        {% block body %}
-          {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/merchandise_returns.html.twig' %}
-        {% endblock %}
-      {% endembed %}
-    </div>
+    {% if merchandiseReturnEnabled %}
+      <div class="tab-pane d-print-block fade" id="orderReturnsTabContent" role="tabpanel" aria-labelledby="orderReturnsTab">
+        {% embed '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/details_card.html.twig' %}
+          {% block header %}
+            {{ merchantReturnsTitle }}
+          {% endblock %}
+          {% block body %}
+            {% include '@PrestaShop/Admin/Sell/Order/Order/Blocks/View/merchandise_returns.html.twig' %}
+          {% endblock %}
+        {% endembed %}
+      </div>
+    {% endif %}
 
     {% if orderForViewing.shipping.recycledPackaging %}
       <span class="badge badge-success">{{ 'Recycled packaging'|trans({}, 'Admin.Orderscustomers.Feature') }}</span>
