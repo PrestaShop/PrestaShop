@@ -34,6 +34,10 @@ use PrestaShop\PrestaShop\Core\Configuration\DataConfigurationInterface;
  */
 class SmartyCacheConfiguration implements DataConfigurationInterface
 {
+    private const DEFINES_FILE = _PS_ROOT_DIR_ . '/config/defines.inc.php';
+    private const CUSTOM_DEFINES_FILE = _PS_ROOT_DIR_ . '/config/defines_custom.inc.php';
+    private const PATTERN = '/(define\(\'_PS_SMARTY_CACHING_TYPE_\', \')([a-zA-Z]+)(\'\);)/Ui';
+
     /**
      * @var Configuration
      */
@@ -53,7 +57,7 @@ class SmartyCacheConfiguration implements DataConfigurationInterface
             'template_compilation' => $this->configuration->get('PS_SMARTY_FORCE_COMPILE'),
             'cache' => $this->configuration->getBoolean('PS_SMARTY_CACHE'),
             'multi_front_optimization' => $this->configuration->getBoolean('PS_SMARTY_LOCAL'),
-            'caching_type' => $this->configuration->get('PS_SMARTY_CACHING_TYPE'),
+            'caching_type' => $this->getSmartyCachingType(),
             'clear_cache' => $this->configuration->get('PS_SMARTY_CLEAR_CACHE'),
             'smarty_console' => $this->configuration->get('PS_SMARTY_CONSOLE'),
             'smarty_console_key' => $this->configuration->get('PS_SMARTY_CONSOLE_KEY'),
@@ -67,15 +71,22 @@ class SmartyCacheConfiguration implements DataConfigurationInterface
      */
     public function updateConfiguration(array $configuration)
     {
+        $errors = [];
         if ($this->validateConfiguration($configuration)) {
             $this->configuration->set('PS_SMARTY_FORCE_COMPILE', $configuration['template_compilation']);
             $this->configuration->set('PS_SMARTY_CACHE', $configuration['cache']);
             $this->configuration->set('PS_SMARTY_LOCAL', $configuration['multi_front_optimization']);
-            $this->configuration->set('PS_SMARTY_CACHING_TYPE', $configuration['caching_type']);
             $this->configuration->set('PS_SMARTY_CLEAR_CACHE', $configuration['clear_cache']);
+            if (!$this->setSmartyCachingType($configuration['caching_type'])) {
+                $errors[] = [
+                    'key' => 'Error: Could not write to file. Make sure that the correct permissions are set on the file %s',
+                    'domain' => 'Admin.Advparameters.Notification',
+                    'parameters' => [self::DEFINES_FILE],
+                ];
+            }
         }
 
-        return [];
+        return $errors;
     }
 
     /**
@@ -92,5 +103,42 @@ class SmartyCacheConfiguration implements DataConfigurationInterface
             $configuration['smarty_console'],
             $configuration['smarty_console_key']
         );
+    }
+
+    private function getSmartyCachingType(): string
+    {
+        return defined('_PS_SMARTY_CACHING_TYPE_')
+            ? _PS_SMARTY_CACHING_TYPE_
+            : 'filesystem'
+        ;
+    }
+
+    private function setSmartyCachingType(string $cachingType): bool
+    {
+        $replacement = '$1' . $cachingType . '$3';
+
+        $cleanedContent = false;
+        $file = self::CUSTOM_DEFINES_FILE;
+        if (is_readable(self::CUSTOM_DEFINES_FILE)) {
+            $content = file_get_contents(self::CUSTOM_DEFINES_FILE);
+            $cleanedContent = php_strip_whitespace(self::CUSTOM_DEFINES_FILE);
+        }
+
+        if (!$cleanedContent || !preg_match(self::PATTERN, $cleanedContent)) {
+            $content = file_get_contents(self::DEFINES_FILE);
+            $cleanedContent = php_strip_whitespace(self::DEFINES_FILE);
+            $file = self::DEFINES_FILE;
+            if (!$cleanedContent || !preg_match(self::PATTERN, $cleanedContent)) {
+                return false;
+            }
+        }
+
+        $status = file_put_contents($file, preg_replace(self::PATTERN, $replacement, $content));
+
+        if (function_exists('opcache_invalidate')) {
+            opcache_invalidate($file);
+        }
+
+        return $status !== false;
     }
 }
