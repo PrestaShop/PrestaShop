@@ -302,7 +302,7 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
      * Handles file upload
      *
      * Creates new attachment or replaces existing with a new file.
-     * [PUT] update existing attachment file
+     * [PUT] and [PATCH] update existing attachment file
      * [POST] create new attachment
      */
     public function executeFileAddAndEdit(): void
@@ -336,10 +336,14 @@ class WebserviceSpecificManagementAttachmentsCore implements WebserviceSpecificM
                 unlink(_PS_DOWNLOAD_DIR_ . $attachment->file);
             }
 
+            $defaultLanguage = Configuration::get('PS_LANG_DEFAULT');
+
             $attachment->file = $file['id'];
             $attachment->file_name = $file['file_name'];
             $attachment->mime = $file['mime_type'];
-            $attachment->name[Configuration::get('PS_LANG_DEFAULT')] = $_POST['name'] ?? $file['file_name'];
+            if ($attachment->name[$defaultLanguage] === null) {
+                $attachment->name[$defaultLanguage] = $_POST['name'] ?? $file['file_name'];
+            }
 
             if (!empty($attachment->id)) {
                 $attachment->update();
