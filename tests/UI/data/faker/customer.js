@@ -5,6 +5,7 @@ const {groupAccess} = require('@data/demo/groupAccess');
 
 const genders = Object.values(Titles).map(title => title.name);
 const groups = Object.values(groupAccess).map(group => group.name);
+const risksRating = ['None', 'Low', 'Medium', 'High'];
 
 /**
  * Create new customer to use on creation form on customer page on BO and FO
@@ -54,6 +55,18 @@ class CustomerData {
 
     /** @type {boolean} True to enable sending newsletter to the customer */
     this.newsletter = customerToCreate.newsletter === undefined ? false : customerToCreate.newsletter;
+
+    /** @type {string} Company for the customer */
+    this.company = customerToCreate.company || faker.company.companyName();
+
+    /** @type {Number} Allowed outstanding amount for the customer */
+    this.allowedOutstandingAmount = customerToCreate.allowedOutstandingAmount || faker.datatype.number({
+      min: 0,
+      max: 100,
+    });
+
+    /** @type {string} Risk rating for the customer */
+    this.riskRating = customerToCreate.riskRating || faker.helpers.arrayElement(risksRating);
   }
 }
 
