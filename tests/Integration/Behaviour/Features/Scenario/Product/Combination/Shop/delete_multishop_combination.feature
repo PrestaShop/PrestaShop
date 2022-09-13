@@ -42,43 +42,33 @@ Feature: Delete combination from Back Office (BO) in multiple shops
       | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
       | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
       | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
-    And I update combination "product1SWhite" from list with following values:
-      | reference       | S_White |
-      | impact on price | 5       |
+    And product "product1" should have no combinations for shops "shop2"
+    When I generate combinations in shop "shop2" for product product1 using following attributes:
+      | Size  | [S,M]              |
+      | Color | [White,Black,Blue] |
+    Then product "product1" should have following combinations for shops "shop2":
+      | id reference        | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SWhiteShop2 | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
+      | product1SBlackShop2 | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
+      | product1SBlueShop2  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | false      |
+      | product1MWhiteShop2 | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product1MBlackShop2 | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+      | product1MBlueShop2  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
+
+  Scenario: Delete combinations one by one from single shop
+    When I delete combination "product1SWhite" from shop "shop1"
     Then product "product1" should have following combinations for shops "shop1":
       | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
-      | product1SWhite | Size - S, Color - White | S_White   | [Size:S,Color:White] | 5               | 0        | true       |
-      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
+      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | true       |
       | product1SBlue  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | false      |
       | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
       | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
       | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
-    When I generate combinations in shop "shop2" for product product1 using following attributes:
-      | Size  | [S]     |
-      | Color | [White] |
-    Then product "product1" should have following combinations for shops "shop2":
-      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
-      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
-#    And I copy product product1 from shop shop1 to shop shop2
-#    Then product "product1" localized "name" for shops "shop1,shop2" should be:
-#      | locale | value       |
-#      | en-US  | magic staff |
-#    And product "product1" localized "description" for shops "shop1,shop2" should be:
-#      | locale | value                    |
-#      | en-US  | such a super magic staff |
-#    And product "product1" localized "description_short" for shops "shop1,shop2" should be:
-#      | locale | value             |
-#      | en-US  | super magic staff |
-#    And product product1 is not associated to shop shop3
-#    And product product1 is not associated to shop shop4
-
-  Scenario: Delete combinations one by one from multiple shops
-#    @todo: unfinished. Only a test scenario to see if generation works for multiple shops at all
-    Given product "product1" should have following combinations for shops "shop1,shop2":
-      | id reference   | combination name        | reference | attributes           | impact on price | quantity | is default |
-      | product1SWhite | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
-      | product1SBlack | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
-      | product1SBlue  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | false      |
-      | product1MWhite | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
-      | product1MBlack | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
-      | product1MBlue  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |
+    And product "product1" should have following combinations for shops "shop2":
+      | id reference        | combination name        | reference | attributes           | impact on price | quantity | is default |
+      | product1SWhiteShop2 | Size - S, Color - White |           | [Size:S,Color:White] | 0               | 0        | true       |
+      | product1SBlackShop2 | Size - S, Color - Black |           | [Size:S,Color:Black] | 0               | 0        | false      |
+      | product1SBlueShop2  | Size - S, Color - Blue  |           | [Size:S,Color:Blue]  | 0               | 0        | false      |
+      | product1MWhiteShop2 | Size - M, Color - White |           | [Size:M,Color:White] | 0               | 0        | false      |
+      | product1MBlackShop2 | Size - M, Color - Black |           | [Size:M,Color:Black] | 0               | 0        | false      |
+      | product1MBlueShop2  | Size - M, Color - Blue  |           | [Size:M,Color:Blue]  | 0               | 0        | false      |

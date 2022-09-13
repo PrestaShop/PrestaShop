@@ -146,10 +146,12 @@ class CombinationCreator
     {
         $product->setAvailableDate();
         $productId = new ProductId((int) $product->id);
-        $alreadyHasCombinations = $hasDefault = $this->combinationRepository->findDefaultCombination($productId);
+        $alreadyHasCombinations = $hasDefault = $this->combinationMultiShopRepository->findDefaultCombination(
+            $productId,
+            ShopConstraint::shop($shopId->getValue())
+        );
         $addedCombinationIds = [];
         foreach ($generatedCombinations as $generatedCombination) {
-            $associatedWithAttributes = false;
             // Product already has combinations so we need to filter existing ones
             if ($alreadyHasCombinations) {
                 $attributeIds = array_values($generatedCombination);

@@ -31,6 +31,7 @@ namespace PrestaShop\PrestaShop\Adapter\Product\Combination\Repository;
 use Combination;
 use Db;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Exception;
 use PrestaShop\PrestaShop\Adapter\Attribute\Repository\AttributeRepository;
 use PrestaShop\PrestaShop\Adapter\Product\Combination\Validate\CombinationValidator;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotAddCombinationException;
@@ -39,6 +40,7 @@ use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CannotDelete
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\Exception\CombinationNotFoundException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\ValueObject\CombinationId;
 use PrestaShop\PrestaShop\Core\Domain\Product\ValueObject\ProductId;
+use PrestaShop\PrestaShop\Core\Domain\Shop\ValueObject\ShopId;
 use PrestaShop\PrestaShop\Core\Exception\CoreException;
 use PrestaShop\PrestaShop\Core\Grid\Query\ProductCombinationQueryBuilder;
 use PrestaShop\PrestaShop\Core\Repository\AbstractObjectModelRepository;
@@ -268,6 +270,9 @@ class CombinationRepository extends AbstractObjectModelRepository
         $this->assertCombinationExists($combinationId);
         $this->attributeRepository->assertAllAttributesExist($attributeIds);
 
+        // @todo: need to check if these doesn't exist?
+        // especially when dealing with combination which has to be only added to another shop,
+        // then we get duplicate insert error :/
         $attributesList = [];
         foreach ($attributeIds as $attributeId) {
             $attributesList[] = [
@@ -318,8 +323,6 @@ class CombinationRepository extends AbstractObjectModelRepository
      * @param ProductId $productId
      *
      * @return Combination|null
-     *
-     * @throws CoreException
      */
     public function findDefaultCombination(ProductId $productId): ?Combination
     {

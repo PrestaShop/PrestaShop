@@ -133,7 +133,10 @@ class CombinationDeleter
     {
         $defaultCombination = $this->combinationMultiShopRepository->findDefaultCombination($productId, $shopConstraint);
         if (null !== $defaultCombination) {
-            $this->defaultCombinationUpdater->setDefaultCombination(new CombinationId((int) $defaultCombination->id));
+            $this->defaultCombinationUpdater->setDefaultCombination(
+                new CombinationId((int) $defaultCombination->id),
+                $shopConstraint
+            );
 
             return;
         }
@@ -143,6 +146,6 @@ class CombinationDeleter
             return;
         }
 
-        $this->defaultCombinationUpdater->setDefaultCombination($firstCombinationId);
+        $this->defaultCombinationUpdater->setDefaultCombination($firstCombinationId, $shopConstraint);
     }
 }

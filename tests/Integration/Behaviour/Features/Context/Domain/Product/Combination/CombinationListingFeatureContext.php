@@ -30,6 +30,7 @@ namespace Tests\Integration\Behaviour\Features\Context\Domain\Product\Combinatio
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\ExpectationFailedException;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\CombinationAttributeInformation;
 use PrestaShop\PrestaShop\Core\Domain\Product\Combination\QueryResult\EditableCombinationForListing;
 use PrestaShop\PrestaShop\Core\Search\Filters\ProductCombinationFilters;
@@ -78,7 +79,6 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
                 $shopReference
             );
         }
-
     }
 
     /**
@@ -102,13 +102,31 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
     }
 
     /**
+     * @Then product :productReference should have no combinations for shops ":shopReferences"
+     *
+     * @param string $productReference
+     */
+    public function assertProductHasNoCombinationsInShops(string $productReference, string $shopReferences): void
+    {
+        $shopReferences = explode(',', $shopReferences);
+        foreach ($shopReferences as $shopReference) {
+            $this->assertCombinations(
+                $productReference,
+                [],
+                true,
+                $shopReference
+            );
+        }
+    }
+
+    /**
      * @Given product ":productReference" combinations list search criteria is set to defaults
      *
      * @param string $productReference
      */
-    public function cleanSearchCriteria(string $productReference): void
+    public function cleanSearchCriteriaForDefaultShop(string $productReference): void
     {
-        $this->getSharedStorage()->clear($this->getSearchCriteriaKey($productReference));
+        $this->getSharedStorage()->clear($this->getSearchCriteriaKey($productReference, $this->getDefaultShopId()));
     }
 
     /**
@@ -162,14 +180,14 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
      * @param string $productReference
      * @param TableNode $tableNode
      */
-    public function storeSearchCriteria(string $productReference, TableNode $tableNode): void
+    public function storeSearchCriteriaForDefaultShop(string $productReference, TableNode $tableNode): void
     {
         $combinationFilters = $this->buildProductCombinationFiltersForDefaultShop(
             (int) $this->getSharedStorage()->get($productReference),
             $tableNode
         );
 
-        $this->getSharedStorage()->set($this->getSearchCriteriaKey($productReference), $combinationFilters);
+        $this->getSharedStorage()->set($this->getSearchCriteriaKey($productReference, $this->getDefaultShopId()), $combinationFilters);
     }
 
     /**
@@ -210,7 +228,7 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
             $shopId = $this->getDefaultShopId();
         }
 
-        $searchCriteriaKey = $this->getSearchCriteriaKey($productReference);
+        $searchCriteriaKey = $this->getSearchCriteriaKey($productReference, $shopId);
         if ($wholeList) {
             $combinationFilters = null;
         } elseif ($this->getSharedStorage()->exists($searchCriteriaKey)) {
@@ -242,9 +260,9 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
      *
      * @return string
      */
-    private function getSearchCriteriaKey(string $productReference): string
+    private function getSearchCriteriaKey(string $productReference, int $shopId): string
     {
-        return sprintf('combination_search_criteria_%s', $productReference);
+        return sprintf('combination_search_criteria_%s_%s', $productReference, $shopId);
     }
 
     /**
@@ -280,11 +298,16 @@ class CombinationListingFeatureContext extends AbstractCombinationFeatureContext
                 $editableCombinationForListing->getReference(),
                 'Unexpected combination reference'
             );
-            Assert::assertSame(
-                PrimitiveUtils::castStringBooleanIntoBoolean($expectedCombination['is default']),
-                $editableCombinationForListing->isDefault(),
-                'Unexpected default combination'
-            );
+            try {
+                Assert::assertSame(
+                    PrimitiveUtils::castStringBooleanIntoBoolean($expectedCombination['is default']),
+                    $editableCombinationForListing->isDefault(),
+                    'Unexpected default combination'
+                );
+            } catch (ExpectationFailedException $e) {
+                var_dump($e);
+            }
+
             Assert::assertEquals(
                 $expectedCombination['impact on price'],
                 (string) $editableCombinationForListing->getImpactOnPrice(),
