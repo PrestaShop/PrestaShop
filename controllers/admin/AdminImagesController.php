@@ -774,7 +774,7 @@ class AdminImagesControllerCore extends AdminController
 
         if ($this->display == 'edit') {
             $this->warnings[] = $this->trans('After modification, do not forget to regenerate thumbnails', [], 'Admin.Design.Notification');
-            $this->warnings[] = $this->trans('If you delete image format, make sure the theme you use does not rely on it', [], 'Admin.Design.Notification');
+            $this->warnings[] = $this->trans('Make sure the theme you use doesn't rely on this image format before deleting it.', [], 'Admin.Design.Notification');
         }
 
         parent::initContent();
