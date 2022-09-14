@@ -70,10 +70,10 @@ class ProductPackRepository extends AbstractObjectModelRepository
      * @param ShopConstraint $shopConstraint
      *
      * @return array<array<string, string>>
-     *                             e.g [
-     *                             ['id_product_item' => '1', 'id_product_attribute_item' => '1', 'name' => 'Product name', 'reference' => 'demo15', 'quantity' => '1'],
-     *                             ['id_product_item' => '2', 'id_product_attribute_item' => '1', 'name' => 'Product name2', 'reference' => 'demo16', 'quantity' => '1'],
-     *                             ]
+     *                                      e.g [
+     *                                      ['id_product_item' => '1', 'id_product_attribute_item' => '1', 'name' => 'Product name', 'reference' => 'demo15', 'quantity' => '1'],
+     *                                      ['id_product_item' => '2', 'id_product_attribute_item' => '1', 'name' => 'Product name2', 'reference' => 'demo16', 'quantity' => '1'],
+     *                                      ]
      *
      * @throws CoreException
      */
