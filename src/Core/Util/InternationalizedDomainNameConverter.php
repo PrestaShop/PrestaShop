@@ -52,5 +52,7 @@ class InternationalizedDomainNameConverter
 		if (defined('INTL_IDNA_VARIANT_2003')) {
 			return $parts[0] . '@' . idn_to_utf8($parts[1], 0, INTL_IDNA_VARIANT_2003);
 		}
+        
+        return $parts[0] . '@' . idn_to_utf8($parts[1]);
     }
 }
