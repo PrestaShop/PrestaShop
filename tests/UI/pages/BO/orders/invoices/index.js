@@ -176,7 +176,19 @@ class Invoice extends BOBasePage {
    */
   async setInputOptions(page, data) {
     await this.setValue(page, this.invoiceNumberInput, data.invoiceNumber);
+    await this.setValue(page, this.legalFreeTextInput, data.legalFreeText);
     await this.setValue(page, this.footerTextInput, data.footerText);
+  }
+
+  /**
+   * Set invoiceNumber, LegalFreeText, footerText to default data
+   * @param page {Page} Browser tab
+   * @returns {Promise<void>}
+   */
+  async clearInputOptions(page) {
+    await this.setValue(page, this.invoiceNumberInput, '0');
+    await this.clearInput(page, this.legalFreeTextInput);
+    await this.clearInput(page, this.footerTextInput);
   }
 
   /**
