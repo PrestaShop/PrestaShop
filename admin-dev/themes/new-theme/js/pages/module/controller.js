@@ -728,20 +728,18 @@ class AdminModuleController {
         self.displayOnUploadError(message);
       },
       complete: (file) => {
-
         try {
           const responseObject = JSON.parse(file.xhr.response);
 
           if (file.status !== 'error') {
             if (typeof responseObject.is_configurable === 'undefined') responseObject.is_configurable = null;
             if (typeof responseObject.module_name === 'undefined') responseObject.module_name = null;
-  
+
             self.displayOnUploadDone(responseObject);
           } else {
             self.displayOnUploadError(responseObject);
           }
-
-        } catch(e) {
+        } catch (e) {
           // Same as dropzone error message.
           self.displayOnUploadError('Invalid JSON response from server.');
         }

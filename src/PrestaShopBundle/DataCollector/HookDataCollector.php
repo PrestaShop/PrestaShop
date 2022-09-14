@@ -125,15 +125,26 @@ final class HookDataCollector extends DataCollector
     {
         foreach ($hooksList as &$hookList) {
             foreach ($hookList as &$hook) {
+                // Symfony Request object is quite heavy and is already given by debug tooling. Don't clone it again.
+                if (isset($hook['args']['request'])) {
+                    $hook['args']['request'] = 'Hook use client request as argument. For more details, cf. "Request/Response panel".';
+                }
+
                 $hook['args'] = $this->cloneVar($hook['args']);
 
                 foreach ($hook['modules'] as &$modulesByType) {
                     foreach ($modulesByType as $type => &$module) {
                         if (empty($module)) {
                             unset($modulesByType[$type]);
+                            continue;
                         }
 
                         if (array_key_exists('args', $module)) {
+                            // Symfony Request object is quite heavy and is already given by debug tooling. Don't clone it again.
+                            if (isset($module['args']['request'])) {
+                                $module['args']['request'] = 'Module use client request as argument. For more details, cf. "Request/Response panel".';
+                            }
+
                             $module['args'] = $this->cloneVar($module['args']);
                         }
                     }
