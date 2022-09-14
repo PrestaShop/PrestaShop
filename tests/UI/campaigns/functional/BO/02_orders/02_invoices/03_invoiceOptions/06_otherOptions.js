@@ -144,7 +144,7 @@ describe('BO - Orders - Invoices : Update \'Invoice number, Legal free text and 
     it('should check that the invoice contain the \'Legal free text\'', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'checkUpdatedLegalFreeText', baseContext);
 
-      // Check the existence of the Footer text
+      // Check the existence of the Legal free text
       const exist = await files.isTextInPDF(filePath, invoiceData.legalFreeText);
       await expect(exist, `PDF does not contains this text : ${invoiceData.legalFreeText}`).to.be.true;
     });
