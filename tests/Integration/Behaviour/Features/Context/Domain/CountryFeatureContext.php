@@ -188,8 +188,6 @@ class CountryFeatureContext extends AbstractDomainFeatureContext
         $realData = $serializer->normalize($result);
 
         DataComparator::assertDataSetsAreIdentical($expectedData, $realData);
-
-        $this->latestResult = null;
     }
 
     private function formatCountryDataIfNeeded(array $data)
