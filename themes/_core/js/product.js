@@ -230,7 +230,7 @@ function updateProduct(event, eventType, updateUrl) {
           .replaceWith(data.product_customization);
 
         // refill customizationId input value when updating quantity or combination
-        if (eventType === 'updatedProductQuantity' || eventType === 'updatedProductCombination' && data.id_customization) {
+        if ((eventType === 'updatedProductQuantity' || eventType === 'updatedProductCombination') && data.id_customization) {
           $(prestashop.selectors.cart.productCustomizationId).val(data.id_customization);
         } else {
           $(prestashop.selectors.product.inputCustomization).val(0);
