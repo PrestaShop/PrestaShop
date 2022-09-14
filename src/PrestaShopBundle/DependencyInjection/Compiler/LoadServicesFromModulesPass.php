@@ -83,30 +83,5 @@ class LoadServicesFromModulesPass implements CompilerPassInterface
                 $loader->load('services.yml');
             }
         }
-
-        //@todo: POC proposal. If accepted it probably needs to be moved to dedicated pass, but priority is important
-        //       (it should probably be after this ModulesPass. e.g. using same in ContainerInjectionPass doesn't work)
-        // we find all definitions in order to search all decorated services
-        // @todo: find a way to optimize and find all decorated services or all controllers (cannot find decorated controllers by tags)
-        $allDefinitions = $container->getDefinitions();
-        foreach ($allDefinitions as $definition) {
-            $decoratedService = $definition->getDecoratedService();
-            if (!$decoratedService || !$container->hasDefinition($decoratedService[0])) {
-                // skip service if it is not a decorator
-                continue;
-            }
-
-            $decoratedServiceDefinition = $container->getDefinition($decoratedService[0]);
-            // if the decorator service is controller
-            if ($decoratedServiceDefinition->hasTag('controller.service_arguments')) {
-                // then we remove controller.service_arguments tag from the decorated class and add it to the decorator
-                $decoratedServiceDefinition->clearTag('controller.service_arguments');
-                if ($definition->hasTag('controller.service_arguments')) {
-                    continue;
-                }
-
-                $definition->addTag('controller.service_arguments');
-            }
-        }
     }
 }
