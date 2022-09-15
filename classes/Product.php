@@ -5702,7 +5702,7 @@ class ProductCore extends ObjectModel
         $unitPriceRatio = self::computeUnitPriceRatio($row, $id_product_attribute, $quantity, $context);
         $row['unit_price_ratio'] = $unitPriceRatio;
         $row['unit_price_tax_excluded'] = $unitPriceRatio != 0 ? $priceTaxExcluded / $unitPriceRatio : 0.0;
-        $row['unit_price_tax_included'] = $unitPriceRatio != 0 ? $priceTaxIncluded / $unitPriceRatio : 0.0;
+        $row['unit_price_tax_included'] = $row['unit_price'] * (1 + $row['rate'] / 100);
 
         Hook::exec('actionGetProductPropertiesAfterUnitPrice', [
             'id_lang' => $id_lang,
