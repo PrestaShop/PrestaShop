@@ -268,28 +268,21 @@ export default class ProductFormModel {
       'price.priceTaxIncluded',
       priceTaxExcluded.times(taxRatio).plus(ecotaxTaxIncluded).toFixed(this.precision),
     );
-    const placeHolderWithoutTax = this.$taxRuleGroupHelpLabel.data('place-holder-without-state');
-    const placeHolderWithTax = this.$taxRuleGroupHelpLabel.data('place-holder-with-state');
 
-    let newString;
+    const taxPlaceholder = this.$taxRuleGroupHelpLabel.data(stateIsoCode ? 'place-holder-with-state' : 'place-holder-without-state');
 
-    if (stateIsoCode) {
-      newString = placeHolderWithTax.replace(
-        new RegExp('_TAX_RATE_HELP_PLACEHOLDER_', 'g'),
-        taxRatio.minus(1).times(100).toPrecision(),
-      );
-      newString = newString.replace(
-        new RegExp('_STATE_ISO_CODE_HELP_PLACEHOLDER_', 'g'),
-        stateIsoCode,
-      );
-    } else {
-      newString = placeHolderWithoutTax.replace(
-        new RegExp('_TAX_RATE_HELP_PLACEHOLDER_', 'g'),
-        taxRatio.minus(1).times(100).toPrecision(),
-      );
-    }
+    this.$taxRuleGroupHelpLabel.html(
+      taxPlaceholder
+        .replace(
+          new RegExp('_TAX_RATE_HELP_PLACEHOLDER_', 'g'),
+          taxRatio.minus(1).times(100).toPrecision(),
+        )
+        .replace(
+          new RegExp('_STATE_ISO_CODE_HELP_PLACEHOLDER_', 'g'),
+          stateIsoCode,
+        ),
+    );
 
-    this.$taxRuleGroupHelpLabel.html(newString);
     const unitPriceTaxExcluded = this.mapper.getBigNumber('price.unitPriceTaxExcluded') ?? new BigNumber(0);
     this.mapper.set('price.unitPriceTaxIncluded', this.addTax(unitPriceTaxExcluded));
   }

@@ -26,7 +26,6 @@
 
 namespace PrestaShop\PrestaShop\Adapter\Form\ChoiceProvider;
 
-use Address;
 use PrestaShop\PrestaShop\Adapter\Tax\TaxComputer;
 use PrestaShop\PrestaShop\Adapter\TaxRulesGroup\Repository\TaxRulesGroupRepository;
 use PrestaShop\PrestaShop\Core\Domain\Country\ValueObject\CountryId;
@@ -82,22 +81,21 @@ final class TaxRuleGroupChoiceProvider implements FormChoiceProviderInterface, F
      */
     public function getChoicesAttributes(): array
     {
-        $address = new Address();
-        $address->id_country = $this->countryId;
-
         $taxRates = [];
         foreach ($this->getRules() as $rule) {
             $taxRulesGroupId = new TaxRulesGroupId((int) $rule['id_tax_rules_group']);
             $stateId = $this->taxRulesGroupRepository->getTaxRulesGroupDefaultStateId($taxRulesGroupId, new CountryId($this->countryId));
             if (!$stateId) {
                 $taxRate = $this->taxComputer->getTaxRate($taxRulesGroupId, new CountryId($this->countryId));
+                $stateIsoCode = '';
             } else {
                 $taxRate = $this->taxComputer->getTaxRateByState($taxRulesGroupId, new CountryId($this->countryId), new StateId($stateId));
+                $state = new State($stateId);
+                $stateIsoCode = $state->iso_code;
             }
-            $state = new State($stateId);
             $taxRates[$rule['name']] = [
                 'data-tax-rate' => (string) $taxRate,
-                'data-state-iso-code' => $state->iso_code ?: '',
+                'data-state-iso-code' => $stateIsoCode,
             ];
         }
 
