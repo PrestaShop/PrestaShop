@@ -26,34 +26,63 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Exception;
+namespace PrestaShop\PrestaShop\Core\Form\ErrorMessage;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
-use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorCollection;
-use Throwable;
-
-/**
- * Exception thrown in case error happens in data provider validation
- * should be caught in the controller and configurationErrors used to display errors
- */
-class DataProviderException extends DomainException
+/** Common configuration error that can appear in any configuration page */
+class CommonConfigurationError implements ConfigurationErrorInterface
 {
-    /**
-     * @var ConfigurationErrorCollection
-     */
-    private $configurationErrors;
+    public const ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO = 1;
 
-    public function __construct($message = '', $code = 0, Throwable $previous = null, ?ConfigurationErrorCollection $configurationErrors = null)
+    /**
+     * @var int
+     */
+    private $errorCode;
+
+    /**
+     * @var string
+     */
+    private $fieldName;
+
+    /**
+     * @var int|null
+     */
+    private $languageId;
+
+    /**
+     * AdministrationConfigurationError constructor.
+     *
+     * @param int $errorCode
+     * @param string $fieldName
+     * @param int|null $languageId
+     */
+    public function __construct(int $errorCode, string $fieldName, ?int $languageId = null)
     {
-        parent::__construct($message, $code, $previous);
-        $this->configurationErrors = $configurationErrors ?: new ConfigurationErrorCollection();
+        $this->errorCode = $errorCode;
+        $this->fieldName = $fieldName;
+        $this->languageId = $languageId;
     }
 
     /**
-     * @return ConfigurationErrorCollection
+     * @return int
      */
-    public function getInvalidConfigurationDataErrors(): ConfigurationErrorCollection
+    public function getErrorCode(): int
     {
-        return $this->configurationErrors;
+        return $this->errorCode;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFieldName(): string
+    {
+        return $this->fieldName;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getLanguageId(): ?int
+    {
+        return $this->languageId;
     }
 }

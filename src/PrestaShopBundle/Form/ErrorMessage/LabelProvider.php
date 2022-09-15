@@ -26,34 +26,29 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Exception;
+namespace PrestaShopBundle\Form\ErrorMessage;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
-use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorCollection;
-use Throwable;
+use Symfony\Component\Form\FormInterface;
 
-/**
- * Exception thrown in case error happens in data provider validation
- * should be caught in the controller and configurationErrors used to display errors
- */
-class DataProviderException extends DomainException
+/** Responsible for finding what label is used for certain field in the form */
+class LabelProvider
 {
     /**
-     * @var ConfigurationErrorCollection
+     * @param FormInterface $form
+     * @param string $fieldName
+     *
+     * @return string
      */
-    private $configurationErrors;
-
-    public function __construct($message = '', $code = 0, Throwable $previous = null, ?ConfigurationErrorCollection $configurationErrors = null)
+    public function getLabel(FormInterface $form, string $fieldName): string
     {
-        parent::__construct($message, $code, $previous);
-        $this->configurationErrors = $configurationErrors ?: new ConfigurationErrorCollection();
-    }
+        $view = $form->createView();
+        foreach ($view->children as $child) {
+            if (isset($child->vars['name']) && $fieldName === $child->vars['name']) {
+                return $child->vars['label'] ?? $fieldName;
+            }
+        }
 
-    /**
-     * @return ConfigurationErrorCollection
-     */
-    public function getInvalidConfigurationDataErrors(): ConfigurationErrorCollection
-    {
-        return $this->configurationErrors;
+        /* If label not found return $fieldName as fallback */
+        return $fieldName;
     }
 }

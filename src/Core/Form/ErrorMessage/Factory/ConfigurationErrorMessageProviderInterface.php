@@ -24,36 +24,18 @@
  * @license   https://opensource.org/licenses/OSL-3.0 Open Software License (OSL 3.0)
  */
 
-declare(strict_types=1);
+namespace PrestaShop\PrestaShop\Core\Form\ErrorMessage\Factory;
 
-namespace PrestaShopBundle\Form\Exception;
+use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorInterface;
 
-use PrestaShop\PrestaShop\Core\Domain\Exception\DomainException;
-use PrestaShop\PrestaShop\Core\Form\ErrorMessage\ConfigurationErrorCollection;
-use Throwable;
-
-/**
- * Exception thrown in case error happens in data provider validation
- * should be caught in the controller and configurationErrors used to display errors
- */
-class DataProviderException extends DomainException
+/** Interface for configuration error factories which are responsible for returning error messages for configuration errors */
+interface ConfigurationErrorMessageProviderInterface
 {
     /**
-     * @var ConfigurationErrorCollection
+     * @param ConfigurationErrorInterface $error
+     * @param string $label
+     *
+     * @return string|null
      */
-    private $configurationErrors;
-
-    public function __construct($message = '', $code = 0, Throwable $previous = null, ?ConfigurationErrorCollection $configurationErrors = null)
-    {
-        parent::__construct($message, $code, $previous);
-        $this->configurationErrors = $configurationErrors ?: new ConfigurationErrorCollection();
-    }
-
-    /**
-     * @return ConfigurationErrorCollection
-     */
-    public function getInvalidConfigurationDataErrors(): ConfigurationErrorCollection
-    {
-        return $this->configurationErrors;
-    }
+    public function getErrorMessageForConfigurationError(ConfigurationErrorInterface $error, string $label): ?string;
 }

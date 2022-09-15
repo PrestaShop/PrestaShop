@@ -26,10 +26,14 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Exception;
+namespace PrestaShop\PrestaShop\Core\Form\ErrorMessage;
 
-class InvalidConfigurationDataError
+/** Configuration error specific to administration page */
+class AdministrationConfigurationError implements ConfigurationErrorInterface
 {
+    public const ERROR_COOKIE_LIFETIME_MAX_VALUE_EXCEEDED = 1;
+    public const ERROR_COOKIE_SAMESITE_NONE = 2;
+
     /**
      * @var int
      */
@@ -46,7 +50,7 @@ class InvalidConfigurationDataError
     private $languageId;
 
     /**
-     * InvalidConfigurationDataError constructor.
+     * AdministrationConfigurationError constructor.
      *
      * @param int $errorCode
      * @param string $fieldName

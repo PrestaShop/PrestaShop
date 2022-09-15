@@ -26,14 +26,15 @@
 
 declare(strict_types=1);
 
-namespace PrestaShopBundle\Form\Exception;
+namespace PrestaShop\PrestaShop\Core\Form\ErrorMessage;
 
 use PrestaShop\PrestaShop\Core\Data\AbstractTypedCollection;
 
-class InvalidConfigurationDataErrorCollection extends AbstractTypedCollection
+/** Collection of configuration form errors */
+class ConfigurationErrorCollection extends AbstractTypedCollection
 {
     protected function getType(): string
     {
-        return InvalidConfigurationDataError::class;
+        return ConfigurationErrorInterface::class;
     }
 }
