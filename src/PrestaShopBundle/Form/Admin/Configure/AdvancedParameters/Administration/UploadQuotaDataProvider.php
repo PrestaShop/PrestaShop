@@ -94,7 +94,6 @@ final class UploadQuotaDataProvider implements FormDataProviderInterface
 
         if (isset($data[UploadQuotaType::FIELD_MAX_SIZE_PRODUCT_IMAGE])) {
             $maxSizeProductImage = $data[UploadQuotaType::FIELD_MAX_SIZE_PRODUCT_IMAGE];
-
             if (!is_numeric($maxSizeProductImage) || $maxSizeProductImage < 0) {
                 $errors->add(new CommonConfigurationError(CommonConfigurationError::ERROR_NOT_NUMERIC_OR_LOWER_THAN_ZERO, UploadQuotaType::FIELD_MAX_SIZE_PRODUCT_IMAGE));
             }
