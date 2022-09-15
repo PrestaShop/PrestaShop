@@ -40,7 +40,7 @@ describe('FO - Home Page : Display all products', async () => {
       await loginCommon.loginBO(this, page);
     });
 
-    it('should go to \'Catalog > products\' page', async function () {
+    it('should go to \'Catalog > Products\' page', async function () {
       await testContext.addContextItem(this, 'testIdentifier', 'goToProductsPage', baseContext);
 
       await dashboardPage.goToSubMenu(
