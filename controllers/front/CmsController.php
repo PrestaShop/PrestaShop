@@ -168,11 +168,13 @@ class CmsControllerCore extends FrontController
 
         if ($cmsCategory->id_parent != 0) {
             foreach (array_reverse($cmsCategory->getParentsCategories()) as $category) {
-                $cmsSubCategory = new CMSCategory($category['id_cms_category']);
-                $breadcrumb['links'][] = [
-                    'title' => $cmsSubCategory->getName(),
-                    'url' => $this->context->link->getCMSCategoryLink($cmsSubCategory),
-                ];
+                if ($category['active']) {
+                    $cmsSubCategory = new CMSCategory($category['id_cms_category']);
+                    $breadcrumb['links'][] = [
+                        'title' => $cmsSubCategory->getName(),
+                        'url' => $this->context->link->getCMSCategoryLink($cmsSubCategory),
+                    ];
+                }
             }
         }
 
