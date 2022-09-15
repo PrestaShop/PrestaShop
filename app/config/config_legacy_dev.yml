@@ -1,14 +1,2 @@
 imports:
   - { resource: config_legacy.yml }
-
-doctrine:
-  orm:
-    metadata_cache_driver:
-      type: pool
-      pool: array
-    query_cache_driver:
-      type: pool
-      pool: array
-    result_cache_driver:
-      type: pool
-      pool: array

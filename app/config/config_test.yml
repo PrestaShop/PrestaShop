@@ -30,10 +30,3 @@ doctrine:
     connections:
       default:
         dbname: "test_%database_name%"
-  orm:
-    metadata_cache_driver:
-      type: pool
-      pool: array
-    query_cache_driver:
-      type: pool
-      pool: array
