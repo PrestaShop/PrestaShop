@@ -34,7 +34,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class UrlSchemaDataConfiguration is responsible for validating, updating and retrieving data used in
- * Shop parameters -> Traffix & Seo -> Seo & Urls -> Set Shop URL form field.
+ * Shop parameters -> Traffic & Seo -> Seo & Urls -> Set Shop URL form field.
  */
 final class UrlSchemaDataConfiguration extends AbstractMultistoreConfiguration
 {
