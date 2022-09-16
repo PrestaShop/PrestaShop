@@ -24,8 +24,8 @@ services:
   PrestaShopBundle\Controller\:
     resource: "%kernel.root_dir%/../src/PrestaShopBundle/Controller/*"
     exclude: "%kernel.root_dir%/../src/PrestaShopBundle/Controller/Api"
+    public: true
     tags:
-      - 'controller.service_arguments'
       - !php/const PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController::PRESTASHOP_CORE_CONTROLLERS_TAG
 
   logger:

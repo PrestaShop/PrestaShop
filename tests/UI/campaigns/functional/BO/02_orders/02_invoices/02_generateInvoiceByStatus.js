@@ -118,11 +118,25 @@ describe('BO - Orders - Invoices : Generate PDF file by status', async () => {
     });
 
     it('should choose the statuses, generate the invoice and check the file existence', async function () {
-      await testContext.addContextItem(this, 'testIdentifier', 'checkInvoiceExistence', baseContext);
+      await testContext.addContextItem(this, 'testIdentifier', 'selectStatusesAndCheckInvoiceExistence', baseContext);
 
       // Choose 2 status
       await invoicesPage.chooseStatus(page, Statuses.paymentAccepted.status);
       await invoicesPage.chooseStatus(page, Statuses.shipped.status);
+
+      // Generate PDF
+      filePath = await invoicesPage.generatePDFByStatusAndDownload(page);
+
+      // Check that file exist
+      const exist = await files.doesFileExist(filePath);
+      await expect(exist).to.be.true;
+    });
+
+    it('should choose one status, generate the invoice and check the file existence', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'selectOneStatusAndCheckInvoiceExistence', baseContext);
+
+      // Choose one status
+      await invoicesPage.chooseStatus(page, Statuses.paymentAccepted.status);
 
       // Generate PDF
       filePath = await invoicesPage.generatePDFByStatusAndDownload(page);

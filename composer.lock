@@ -7244,16 +7244,16 @@
         },
         {
             "name": "prestashop/translationtools-bundle",
-            "version": "v5.0.3",
+            "version": "v5.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PrestaShop/TranslationToolsBundle.git",
-                "reference": "d7ad81008913ec1d988acdbb1a342e19f569e74d"
+                "reference": "4aaef89ee0b4913157a76559bed52f4f35b2fb70"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PrestaShop/TranslationToolsBundle/zipball/d7ad81008913ec1d988acdbb1a342e19f569e74d",
-                "reference": "d7ad81008913ec1d988acdbb1a342e19f569e74d",
+                "url": "https://api.github.com/repos/PrestaShop/TranslationToolsBundle/zipball/4aaef89ee0b4913157a76559bed52f4f35b2fb70",
+                "reference": "4aaef89ee0b4913157a76559bed52f4f35b2fb70",
                 "shasum": ""
             },
             "require": {
@@ -7300,9 +7300,9 @@
             ],
             "support": {
                 "issues": "https://github.com/PrestaShop/TranslationToolsBundle/issues",
-                "source": "https://github.com/PrestaShop/TranslationToolsBundle/tree/v5.0.3"
+                "source": "https://github.com/PrestaShop/TranslationToolsBundle/tree/v5.0.4"
             },
-            "time": "2022-03-16T07:57:53+00:00"
+            "time": "2022-09-01T08:33:26+00:00"
         },
         {
             "name": "psr/cache",

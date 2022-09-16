@@ -31,6 +31,7 @@ namespace PrestaShopBundle\Controller\Admin\Configure\AdvancedParameters;
 use PrestaShop\PrestaShop\Core\Exception\InvalidArgumentException;
 use PrestaShopBundle\Controller\Admin\FrameworkBundleAdminController;
 use PrestaShopBundle\Security\Annotation\AdminSecurity;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -95,8 +96,12 @@ class FeatureFlagController extends FrameworkBundleAdminController
             'layoutTitle' => $this->trans('New & Experimental Features', 'Admin.Advparameters.Feature'),
             'requireBulkActions' => false,
             'showContentHeader' => true,
-            'stableFeatureFlagsForm' => $stableFeatureFlagsForm->createView(),
-            'betaFeatureFlagsForm' => $betaFeatureFlagsForm->createView(),
+            'stableFeatureFlagsForm' => $this->isFormEmpty($stableFeatureFlagsForm)
+                ? null
+                : $stableFeatureFlagsForm->createView(),
+            'betaFeatureFlagsForm' => $this->isFormEmpty($betaFeatureFlagsForm)
+                ? null
+                : $betaFeatureFlagsForm->createView(),
             'multistoreInfoTip' => $this->trans(
                 'Note that this page is available in all shops context only, this is why your context has just switched.',
                 'Admin.Notifications.Info'
@@ -104,5 +109,10 @@ class FeatureFlagController extends FrameworkBundleAdminController
             'multistoreIsUsed' => ($this->get('prestashop.adapter.multistore_feature')->isUsed()
                 && $this->get('prestashop.adapter.shop.context')->isShopContext()),
         ]);
+    }
+
+    private function isFormEmpty(FormInterface $form): bool
+    {
+        return $form->get('feature_flags')->count() === 0;
     }
 }

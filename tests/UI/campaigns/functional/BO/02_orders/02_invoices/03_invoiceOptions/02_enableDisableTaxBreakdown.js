@@ -24,6 +24,9 @@ const cartPage = require('@pages/FO/cart');
 const checkoutPage = require('@pages/FO/checkout');
 const orderConfirmationPage = require('@pages/FO/checkout/orderConfirmation');
 
+// Import common pages
+const {bulkDeleteProductsTest} = require('@commonTests/BO/catalog/createDeleteProduct');
+
 // Import data
 const TaxRuleGroup = require('@data/faker/taxRuleGroup');
 const TaxRule = require('@data/faker/taxRule');
@@ -76,6 +79,8 @@ Create new order in FO with the created product
 Generate the invoice and check the tax breakdown
 Disable tax breakdown
 Generate the invoice and check that there is no tax breakdown
+Delete the created tax rule with bulk action
+Post-condition: Delete Product with bulk action
  */
 describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
   // before and after functions
@@ -405,4 +410,69 @@ describe('BO - Orders - Invoices : Enable/Disable tax breakdown', async () => {
       });
     });
   });
+
+  // Delete tax rules created with bulk actions
+  describe('Delete tax rules with Bulk Actions', async () => {
+    it('should go to \'International > Taxes\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToTaxesPage1', baseContext);
+
+      await invoicesPage.goToSubMenu(
+        page,
+        invoicesPage.internationalParentLink,
+        invoicesPage.taxesLink,
+      );
+
+      const pageTitle = await taxesPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(taxesPage.pageTitle);
+    });
+
+    it('should go to \'Tax Rules\' page', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'goToTaxRulesPage1', baseContext);
+
+      await taxesPage.goToTaxRulesPage(page);
+
+      const pageTitle = await taxRulesPage.getPageTitle(page);
+      await expect(pageTitle).to.contains(taxRulesPage.pageTitle);
+    });
+
+    it('should filter list by name', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'filterForBulkDelete', baseContext);
+
+      await taxRulesPage.filterTable(
+        page,
+        'input',
+        'name',
+        taxRuleGroupToCreate.name,
+      );
+
+      const numberOfLinesAfterFilter = await taxRulesPage.getNumberOfElementInGrid(page);
+
+      for (let i = 1; i <= numberOfLinesAfterFilter; i++) {
+        const textColumn = await taxRulesPage.getTextColumnFromTable(
+          page,
+          i,
+          'name',
+        );
+
+        await expect(textColumn).to.contains(taxRuleGroupToCreate.name);
+      }
+    });
+
+    it('should delete tax rules with Bulk Actions and check result', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'bulkDeleteCarriers', baseContext);
+
+      const deleteTextResult = await taxRulesPage.bulkDeleteTaxRules(page);
+      await expect(deleteTextResult).to.be.contains(taxRulesPage.successfulMultiDeleteMessage);
+    });
+
+    it('should reset all filters', async function () {
+      await testContext.addContextItem(this, 'testIdentifier', 'resetFilterAfterDelete', baseContext);
+
+      const numberOfLinesAfterReset = await taxRulesPage.resetAndGetNumberOfLines(page);
+      await expect(numberOfLinesAfterReset).to.be.above(0);
+    });
+  });
+
+  // Post-condition: Delete the created products
+  bulkDeleteProductsTest(productData.name, `${baseContext}_postTest`);
 });

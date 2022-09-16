@@ -145,7 +145,7 @@
   {%- set type = type|default('text') -%}
   <div class="input-group">
     {{- block('form_unit_prepend') -}}
-    {{- block('form_widget_simple') -}}
+    <div class="w-100">{{- block('form_widget_simple') -}}</div>
     {{- block('form_unit') -}}
   </div>
   {{ block('form_help') }}

@@ -2718,7 +2718,12 @@ class AdminControllerCore extends Controller
     {
         @trigger_error(__FUNCTION__ . 'is deprecated. Use AdminController::trans instead.', E_USER_DEPRECATED);
 
-        return $this->translator->trans($string);
+        $parameters = [];
+        if ($htmlentities) {
+            $parameters['legacy'] = 'htmlspecialchars';
+        }
+
+        return $this->translator->trans($string, $parameters);
     }
 
     /**

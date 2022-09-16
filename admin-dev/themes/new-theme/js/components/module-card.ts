@@ -360,7 +360,7 @@ export default class ModuleCard {
     callback = () => true,
   ): boolean {
     const self = this;
-    const jqElementObj = element.closest(this.moduleItemActionsSelector);
+    let jqElementObj = element.closest(this.moduleItemActionsSelector);
     const form = element.closest('form');
     const spinnerObj = $(
       '<button class="btn-primary-reverse onclick unbind spinner "></button>',
@@ -450,7 +450,11 @@ export default class ModuleCard {
           BOEvent.emitEvent('Module Installed', 'CustomEvent', mainElement);
         };
 
-        jqElementObj.replaceWith(result[moduleTechName].action_menu_html);
+        // Since we replace the DOM content
+        // we need to update the jquery object reference to target the new content,
+        // and we need to hide the new content which is not hidden by default
+        jqElementObj = $(result[moduleTechName].action_menu_html).replaceAll(jqElementObj);
+        jqElementObj.hide();
       })
       .fail(() => {
         const moduleItem = jqElementObj.closest('module-item-list');
